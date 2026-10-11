@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Character, Not Mood",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d4663b7e21fb4b7a",
+  "sourceHash": "fnv1a64:2c9e6e0af8271ba6",
   "lessons": [
     {
       "id": "HI-C83-buraa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e8b39c4c7a5c9c1",
+      "sourceHash": "fnv1a64:cf01234271f206d9",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does बुरा (burā) मत मानो literally say? (Do not consider it bad.) Does बुरा (burā) bend? (Yes — it ends in -आ.) And मोटा, from the last chapter? (Also yes — same ending, same behaviour.)"
+              "text": "What does Hindi's \"no offence\" literally say? (Do not consider it bad.) Does बुरा (burā) bend? (Yes — it ends in -आ.) And मोटा, from the last chapter? (Also yes — same ending, same behaviour.)"
             }
           ]
         }
@@ -530,7 +530,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:eef7b565f00beaa9",
+      "sourceHash": "fnv1a64:ef1de34ddc2bac3d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -568,7 +568,7 @@
             },
             {
               "kind": "speech",
-              "text": "Built from शरम / शर्म (śaram), \"shame, modesty,\" plus the ending -ईला."
+              "text": "Built from a noun and an ending: शरम / शर्म (śaram, \"shame, modesty\") + -ईला becomes शर्मीला (śarmīlā)."
             }
           ]
         },

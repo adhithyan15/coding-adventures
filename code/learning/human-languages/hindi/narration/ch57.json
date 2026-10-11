@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "A Gift and a Feast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2eefd717d4575a18",
+  "sourceHash": "fnv1a64:90341eb332246567",
   "lessons": [
     {
       "id": "HI-C57-present",
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aed786e77178f0e0",
+      "sourceHash": "fnv1a64:a56a0ae04731b03c",
       "notice": null,
       "blocks": [
         {
@@ -601,7 +601,7 @@
             },
             {
               "kind": "speech",
-              "text": "Built on मीठा (mīṭhā), 'sweet', from Sanskrit मिष्ट (miṣṭa), with -ās making an abstract noun out of the adjective: not the sweet thing, but the quality itself."
+              "text": "मीठा (mīṭhā, 'sweet', from Sanskrit मिष्ट miṣṭa) + -आस (-ās) becomes मिठास (miṭhās), the long ī shortening to i: the ending makes an abstract noun out of the adjective, not the sweet thing but the quality itself."
             },
             {
               "kind": "speech",

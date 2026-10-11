@@ -43,7 +43,7 @@ reviews_of: [HI-C120-hastakshar]
 
 **पहचान** (*pahcān*) — "identity", and "recognition".
 
-**पहचान पत्र** — "an identity card". The same word is the knowing-again of a familiar face.
+**पहचान** + **पत्र** (*patra*, "a paper, a document") → **पहचान पत्र**, "an identity card". The same word is the knowing-again of a familiar face.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

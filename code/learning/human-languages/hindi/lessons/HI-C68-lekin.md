@@ -57,8 +57,8 @@ and **लेकिन** only says how the two halves stand to each other.
 Every letter in it is one you have: **ल**, **े**, **क**, **ि**, **न**.
 
 **लेकिन** is Arabic — **لكن** (*lākin*) — and it walked into Hindi through
-Persian, in the same company as **शुक्रिया**. Beside it Hindi keeps the
-inherited **पर**, from Sanskrit **परम्**, "beyond." Two words for *but*, one
+Persian, in the same company as **शुक्रिया**. Beside it Hindi keeps an
+inherited word for *but*, from Sanskrit **परम्**, "beyond." Two words for *but*, one
 Persianate and one Sanskritic, is exactly what this language looks like: it
 almost never replaced a word, it collected a second one.
 
@@ -70,7 +70,7 @@ almost never replaced a word, it collected a second one.
 [PAUSE 1s]
 - [YOU SAY: *chāy hai lekin dūdh nahīṁ hai*]
 - [YOU SAY: the three joiners in a row — *aur*, *yā*, *lekin*]
-- [YOU SAY: the other Hindi word for *but*, the inherited one — *par*]
+- [YOU SAY: the five pieces **लेकिन** is written with, in order]
 - [YOU RECALL: say *kuā̃*]
 
 ## Wrap-up Recall

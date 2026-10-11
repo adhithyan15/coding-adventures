@@ -43,7 +43,7 @@ reviews_of: [HI-C111-likhdijie]
 
 **सही** (*sahī*) — "right, correct".
 
-**सही जवाब** — "the right answer". Said alone, **सही!** agrees: "right!".
+**सही दाम** — "the right price". Said alone, **सही!** agrees: "right!".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ Grammar Lens: a rule you have been obeying for sixty-eight chapters.
 Every Hindi sentence in this book puts its verb at the end:
 मेरा नाम मीरा है — my name Mira is.
 मैं हिंदी बोलता हूँ — I Hindi speak.
-यह किताब है — this book is.
+घर मेरा है — house mine is.
 You have seen this a hundred times and no lesson has ever said it out loud. It is being said now because you are about to start joining clauses, and the moment a sentence has two halves you need to know where each half stops. The verb is the boundary marker. In चाय है लेकिन दूध नहीं है, the first है is what tells the ear the first clause has ended.
 English is the odd one here, not Hindi. Hindi's order is subject, object, verb — so is Japanese's, so is Turkish's, and so is roughly half the world's. English puts the verb in the middle and makes it look normal.
 The practical form of the rule: when you build a Hindi sentence, decide the verb first and then say it last. A learner who starts translating word by word from English will hit the verb too early, every time.

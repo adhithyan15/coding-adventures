@@ -47,7 +47,7 @@ Every Hindi sentence in this book puts its **verb at the end**:
 
 - **मेरा नाम मीरा है** — my name Mira **is**
 - **मैं हिंदी बोलता हूँ** — I Hindi **speak**
-- **यह किताब है** — this book **is**
+- **घर मेरा है** — house mine **is**
 
 You have seen this a hundred times and no lesson has ever said it out loud. It
 is being said now because you are about to start joining clauses, and the moment

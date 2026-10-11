@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e82f01fe7e48a93f",
+  "sourceHash": "fnv1a64:c25e92f2c4185f73",
   "lessons": [
     {
       "id": "HI-C17-dopahar-aadhi-raat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c875a2c807423606",
+      "sourceHash": "fnv1a64:45c56eafbb5b062c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आधी रात (ādhī rāt) = \"midnight,\" literally \"half night\" — आधी (ādhī, the feminine form of आधा, ādhā, \"half\") + रात (rāt, \"night\"). No erosion, no double meaning — structurally identical to Latin's media nox and Spanish's medianoche."
+              "text": "आधी रात (ādhī rāt) = \"midnight,\" literally \"half night\" — आधी (ādhī, \"half,\" in the form it takes before a feminine noun) + रात (rāt, \"night\"). No erosion, no double meaning — structurally identical to Latin's media nox and Spanish's medianoche."
             }
           ]
         },

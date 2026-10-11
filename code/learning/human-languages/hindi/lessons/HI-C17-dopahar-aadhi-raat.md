@@ -58,7 +58,7 @@ rather than a precisely dated fact.)
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]; assesses=[] -->
 
 **आधी रात** (*ādhī rāt*) = "**midnight**," literally "**half night**" —
-**आधी** (*ādhī*, the feminine form of **आधा**, *ādhā*, "half") + **रात**
+**आधी** (*ādhī*, "half," in the form it takes before a feminine noun) + **रात**
 (*rāt*, "night"). No erosion, no double meaning — structurally identical to
 Latin's *media nox* and Spanish's *medianoche*.
 

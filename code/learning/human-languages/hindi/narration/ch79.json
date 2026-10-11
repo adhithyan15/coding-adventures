@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "What It Costs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:bf6369d9f69f35e8",
+  "sourceHash": "fnv1a64:8fb03cb94e17e3d9",
   "lessons": [
     {
       "id": "HI-C72-money",
@@ -329,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55a3f8b8a7c05bca",
+      "sourceHash": "fnv1a64:b944f792e284b304",
       "notice": null,
       "blocks": [
         {
@@ -376,7 +376,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have also seen दाम (dām) before, standing in a row of look-alikes beside नाम and काम when you were learning to pick a name out of a line. Now it means something."
+              "text": "Set it beside नाम and शाम, two words you own: only the first letter changes, and the word changes with it."
             }
           ]
         },
