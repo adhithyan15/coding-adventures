@@ -18,6 +18,7 @@
     "text-block-shape",
     "start-stop-control-shapes",
     "fork-join-control-shapes",
+    "lightning-bolt-communication-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",

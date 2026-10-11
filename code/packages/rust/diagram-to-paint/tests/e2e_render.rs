@@ -3578,6 +3578,13 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Rect(rect) if rect.width == 10.0 && rect.height == 70.0
                 )).count() >= 2, "fork and join controls must lower to filled bar instructions");
             }
+            if fixture_name == "lightning-bolt-communication-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 35.0 && node.height == 70.0),
+                    "lightning bolts must use compact upstream dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                )).count() >= 3, "lightning bolts must lower to closed six-point paths");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

@@ -196,6 +196,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 DiagramShape::SmallCircle | DiagramShape::FramedCircle => (14.0, 14.0),
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
                 DiagramShape::ForkJoin => (70.0, 10.0),
+                DiagramShape::LightningBolt => (35.0, 70.0),
                 _ if horizontal_flow => (swimlane_node_width(&node.shape, &node.label), node_height),
                 _ => (node_width, node_height),
             };
@@ -290,6 +291,7 @@ fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
     match shape {
         DiagramShape::SmallCircle | DiagramShape::FramedCircle => 14.0,
         DiagramShape::ForkJoin => 10.0,
+        DiagramShape::LightningBolt => 35.0,
         _ => (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0),
     }
 }
@@ -705,7 +707,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -729,6 +731,8 @@ mod tests {
                     shape: DiagramShape::FramedCircle, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "fork".into(), label: "Fork".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::ForkJoin, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "bolt".into(), label: "Bolt".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LightningBolt, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -747,6 +751,8 @@ mod tests {
         assert_eq!((layout.nodes[9].width, layout.nodes[9].height), (14.0, 14.0));
         assert_eq!(layout.nodes[10].shape, DiagramShape::ForkJoin);
         assert_eq!((layout.nodes[10].width, layout.nodes[10].height), (10.0, 70.0));
+        assert_eq!(layout.nodes[11].shape, DiagramShape::LightningBolt);
+        assert_eq!((layout.nodes[11].width, layout.nodes[11].height), (35.0, 70.0));
     }
 
     #[test]

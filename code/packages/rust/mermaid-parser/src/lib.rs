@@ -6895,6 +6895,7 @@ fn parse_swimlane_shape_attributes(
                     "sm-circ" | "start" | "small-circle" => DiagramShape::SmallCircle,
                     "fr-circ" | "stop" | "framed-circle" => DiagramShape::FramedCircle,
                     "fork" | "join" => DiagramShape::ForkJoin,
+                    "bolt" | "com-link" | "lightning-bolt" => DiagramShape::LightningBolt,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
