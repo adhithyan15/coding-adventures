@@ -1,0 +1,11 @@
+{
+  "id": "SA-W65-kutra-controlled-question",
+  "pathSegment": "SA-PATH-64-READING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-064-READING",
+      "order": 3
+    }
+  ]
+}
