@@ -1014,6 +1014,8 @@ Internal storage recognizes `win-pane`, `internal-storage`, and `window-pane`
 aliases.
 Junctions recognize `f-circ`, `junction`, and `filled-circle` aliases and lower
 as compact filled circles.
+Loop limits recognize `notch-pent`, `loop-limit`, and `notched-pentagon`
+aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

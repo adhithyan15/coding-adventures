@@ -1111,7 +1111,7 @@ where
             }
             DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass
             | DiagramShape::Triangle | DiagramShape::InvertedTriangle | DiagramShape::NotchedRect
-            | DiagramShape::LinedRect => {
+            | DiagramShape::LinedRect | DiagramShape::LoopLimit => {
                 let commands = match node.shape {
                     DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
                     DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
@@ -1119,6 +1119,7 @@ where
                     DiagramShape::Triangle => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::InvertedTriangle => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::NotchedRect => polygon_path_commands(&notched_rect_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::LoopLimit => polygon_path_commands(&loop_limit_polygon_points(node.x, node.y, node.width, node.height)),
                     _ => lined_rect_path_commands(node.x, node.y, node.width, node.height),
                 };
                 PaintInstruction::Path(PaintPath {
@@ -1944,6 +1945,10 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = notched_rect_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::LoopLimit => {
+            let points = loop_limit_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::LinedRect => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: lined_rect_path_commands(node.x, node.y, node.width, node.height),
@@ -2631,6 +2636,17 @@ fn window_pane_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<Pat
         PathCommand::LineTo { x: x + width, y: y + frame },
         PathCommand::MoveTo { x: x + frame, y },
         PathCommand::LineTo { x: x + frame, y: y + height },
+    ]
+}
+
+fn loop_limit_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x + width * 0.1, y),
+        (x + width * 0.9, y),
+        (x + width, y + height * 0.2),
+        (x + width, y + height),
+        (x, y + height),
+        (x, y + height * 0.2),
     ]
 }
 

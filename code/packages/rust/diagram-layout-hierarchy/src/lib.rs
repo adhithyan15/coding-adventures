@@ -707,7 +707,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -755,6 +755,8 @@ mod tests {
                     shape: DiagramShape::WindowPane, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "junction".into(), label: "Junction".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::FilledCircle, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "loop-limit".into(), label: "Loop limit".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LoopLimit, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -795,6 +797,8 @@ mod tests {
         assert_eq!((layout.nodes[21].width, layout.nodes[21].height), (132.0, 54.0));
         assert_eq!(layout.nodes[22].shape, DiagramShape::FilledCircle);
         assert_eq!((layout.nodes[22].width, layout.nodes[22].height), (14.0, 14.0));
+        assert_eq!(layout.nodes[23].shape, DiagramShape::LoopLimit);
+        assert_eq!((layout.nodes[23].width, layout.nodes[23].height), (132.0, 54.0));
     }
 
     #[test]

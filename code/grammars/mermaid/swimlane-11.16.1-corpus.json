@@ -111,6 +111,10 @@
       "source": "swimlane-beta LR\nsubgraph Junctions\n  first@{ shape: f-circ }\n  second@{ shape: junction }\n  third@{ shape: filled-circle }\nend\nfirst --> second --> third"
     },
     {
+      "name": "loop-limit-shapes",
+      "source": "swimlane-beta LR\nsubgraph Loops\n  first@{ shape: notch-pent, label: \"First\" }\n  second@{ shape: loop-limit, label: \"Second\" }\n  third@{ shape: notched-pentagon, label: \"Third\" }\nend\nfirst --> second --> third"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

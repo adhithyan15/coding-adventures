@@ -28,6 +28,7 @@
     "divided-process-shapes",
     "internal-storage-shapes",
     "junction-shapes",
+    "loop-limit-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",
