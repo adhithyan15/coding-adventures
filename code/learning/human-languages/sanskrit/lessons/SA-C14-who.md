@@ -36,7 +36,7 @@ reviews_of: [SA-C14-there]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-03, SA-LEX-C14-DEIXIS-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: कः
 <!-- hl-knowledge: introduces=[SA-LEX-C14-DEIXIS-05]; assesses=[] -->

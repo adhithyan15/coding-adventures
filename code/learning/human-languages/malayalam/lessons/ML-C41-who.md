@@ -33,7 +33,7 @@ reviews_of: [ML-C41-there]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-03, ML-LEX-C41-DEIXIS-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: ആര്
 <!-- hl-knowledge: introduces=[ML-LEX-C41-DEIXIS-05]; assesses=[] -->

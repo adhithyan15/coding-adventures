@@ -33,7 +33,7 @@ reviews_of: [KA-C42-new]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-03, KA-LEX-C42-ADJ-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: ಹಳೆಯ
 <!-- hl-knowledge: introduces=[KA-LEX-C42-ADJ-05]; assesses=[] -->
