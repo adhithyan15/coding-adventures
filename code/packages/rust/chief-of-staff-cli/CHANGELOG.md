@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Create the synthetic Windows vault KEK through the existing owner-only
+  credential writer before replacing its bytes. Preserve protected ACLs and
+  every production secret-file check; all vault assertions remain enabled.
+
 - A vault reset is now just wiping the storage directory (VLT01 F12). The
   next `vault put` initializes a new vault, with a new vault id, and resets
   the anchor next to the KEK. A new end-to-end test checks two things: the

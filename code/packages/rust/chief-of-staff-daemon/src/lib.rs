@@ -4253,9 +4253,13 @@ hardware_key_timeout = 60
     /// A broker table for `executable`, pinned to `digest`.
     fn broker_config(executable: &Path, digest: [u8; 32]) -> ChiefConfig {
         let hex: String = digest.iter().map(|byte| format!("{byte:02x}")).collect();
+        // JSON string escaping is also valid in this TOML basic-string
+        // fixture. Preserve native backslashes instead of interpreting them
+        // as escapes, and keep the production absolute-path validator.
+        let executable =
+            serialize_json(&JsonValue::String(executable.to_str().unwrap().to_owned())).unwrap();
         parse_config(&format!(
-            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = \"{}\"\nsha256 = \"{hex}\"\n",
-            executable.display()
+            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = {executable}\nsha256 = \"{hex}\"\n"
         ))
         .unwrap()
     }
@@ -4282,7 +4286,7 @@ hardware_key_timeout = 60
     #[test]
     fn channel_keys_become_the_broker_s_slots_with_home_resolved() {
         let directory = TestDir::new();
-        let config = broker_config(Path::new("/unused"), [0; 32]);
+        let config = broker_config(&directory.0.join("unused"), [0; 32]);
         let keys = broker_key_files(&config, &directory.0).unwrap();
         let pipeline_id = config.data_plane().channel_keys()[0].pipeline_id();
         let channel = |key: usize| config.data_plane().channel_keys()[key].channel_id();
@@ -4759,7 +4763,16 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        // Observe the callback before stopping: a fixed sleep could stop a
+        // correctly scheduled worker before its first tick under CI load.
+        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        while !failure_seen.load(Ordering::Acquire) {
+            assert!(
+                std::time::Instant::now() < deadline,
+                "failure callback was not observed"
+            );
+            thread::sleep(Duration::from_millis(1));
+        }
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeDiscoveryClock)

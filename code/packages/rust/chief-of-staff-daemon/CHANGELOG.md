@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Use an absolute native broker fixture path with existing owned string
+  escaping. Preserve production path validation and exact key-slot assertions.
+- Observe the Hue failure callback before stopping the worker, with a bounded
+  test wait. Preserve its exact clock-error assertion and production scheduling.
+
 - **Each broker runs confined, and secret directories must be owner-only**
   (D18S P2.6d-3). With `[hosts.broker]` set, every broker launch first
   checks that each `channel_keys` file's directory, the vault's storage

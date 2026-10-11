@@ -1201,6 +1201,11 @@ hardware_key_timeout = 60
         );
         fs::write(&config, text).unwrap();
         let kek = directory.0.join(".chief-of-staff").join("vault.kek");
+        // The existing writer creates a protected owner-only Windows DACL.
+        // Overwriting this synthetic fixture's bytes preserves that ACL; the
+        // real daemon loader must still enforce its complete secret policy.
+        #[cfg(windows)]
+        drop(load_or_create_credential(&kek).unwrap());
         fs::write(&kek, [0x5a_u8; 32]).unwrap();
         #[cfg(unix)]
         {
