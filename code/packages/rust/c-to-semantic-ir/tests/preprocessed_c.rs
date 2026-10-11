@@ -7,6 +7,46 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 static SEQ: AtomicUsize = AtomicUsize::new(0);
 
 #[test]
+fn rooted_identifier_suffix_paste_in_header_reaches_lowering_and_reports_call_site() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_suffix_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("part.h"),
+        b"#define NAME tail\n#define NAMEpost 7\n#define SUFFIX(x) x ## post\n",
+    );
+    write_fresh(
+        &root.join("main.c"),
+        b"#include \"part.h\"\nint value(void) { return SUFFIX(NAME); }\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "suffix_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    write_fresh(
+        &root.join("bad.c"),
+        b"#include \"part.h\"\nint value(void) { return SUFFIX(4); }\n",
+    );
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "bad_suffix",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!(error.line, 2);
+}
+
+#[test]
 fn rooted_identifier_prefix_paste_uses_raw_argument_and_rescans() {
     let root = std::env::temp_dir().join(format!(
         "prep01_c_paste_{}_{}",

@@ -2,7 +2,7 @@
 //!
 //! The rooted C file-input frontend composes this dialect with `preprocess`.
 //! Its condition evaluator remains bounded. Single raw-token `#` stringize
-//! and identifier-prefix `##` paste subsets are supported.
+//! and identifier-prefix/suffix `##` paste subsets are supported.
 
 use coding_adventures_c_lexer::{is_c_keyword, try_tokenize_c};
 use coding_adventures_source_preprocessor::{
@@ -336,14 +336,16 @@ fn reject_unsupported_macro_operators(
                 && !body.iter().any(|token| token.value == "#")
                 && body[index - 1].type_ == TokenType::Name
                 && identifier(&body[index - 1].value)
-                && !names.iter().any(|name| name == &body[index - 1].value)
                 && body[index + 1].type_ == TokenType::Name
-                && names.iter().any(|name| name == &body[index + 1].value)
+                && identifier(&body[index + 1].value)
+                // One literal and one parameter, in either source order.
+                && (names.iter().any(|name| name == &body[index - 1].value)
+                    != names.iter().any(|name| name == &body[index + 1].value))
         });
         if !allowed {
             return Err(directive_error(
                 "define",
-                "only one literal-identifier ## parameter paste is supported",
+                "only one parameter/literal-identifier paste is supported",
             ));
         }
     }
@@ -701,11 +703,7 @@ mod tests {
             };
             assert_eq!(error.position().map(|position| position.line), Some(2), "{source}");
         }
-        for source in [
-            "#define S(x) # y\n",
-            "#define S(x) #\n",
-            "#define S #x\n",
-        ] {
+        for source in ["#define S(x) # y\n", "#define S(x) #\n", "#define S #x\n"] {
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", source);
             let dialect = CDialect::default();
@@ -722,6 +720,74 @@ mod tests {
         let dialect = CDialect::default();
         let tokens = dialect.lex(source, file).unwrap();
         assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err());
+    }
+
+    #[test]
+    fn bounded_identifier_suffix_paste_raw_plain_rescan_and_self_name() {
+        let source = "#define NAME tail\n#define post expanded\n#define NAMEpost 7\n#define SUFFIX(x) x ## post\n#define BOTH(x) x ## post x\n#define SELF(x) x ## LF\nSUFFIX(NAME)\nBOTH(NAME)\nSELF(SE)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|t| t.value.as_str()).collect();
+        assert_eq!(values, ["7", "7", "tail", "SELF"]);
+    }
+
+    #[test]
+    fn bounded_identifier_suffix_paste_preserves_direct_and_forwarded_loci() {
+        let source =
+            "#define INNER(x) x ## post\n#define OUTER(x) INNER(x)\nINNER(NAME)\nOUTER(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        for (i, line, expected) in [(0, 3, vec!["INNER"]), (1, 4, vec!["INNER", "OUTER"])] {
+            assert_eq!(result.tokens[i].value, "NAMEpost");
+            let locus = result.map.locus(i).unwrap();
+            assert_eq!(locus.position.file, file);
+            assert_eq!(locus.position.line, line);
+            let mut names = Vec::new();
+            let mut cursor = locus.expansion;
+            while let Some(id) = cursor {
+                names.push(result.map.expansion_site(id).unwrap().0);
+                cursor = result.map.expansion_parent(id);
+            }
+            assert_eq!(names, expected);
+        }
+    }
+
+    #[test]
+    fn bounded_identifier_suffix_paste_rejects_arguments_and_definitions() {
+        for (source, line) in [
+            ("#define P(x) x ## post\nP()\n", 2),
+            ("#define P(x) x ## post\nP(a+b)\n", 2),
+            ("#define P(x) x ## post\nP(4)\n", 2),
+            ("#define P(x) x ## post\nP(\"a\")\n", 2),
+            ("#define P(x) x ## post\nP('a')\n", 2),
+            ("#define P(x) x ## post\nP(+)\n", 2),
+            ("#define P(x) x ## nt\nP(i)\n", 2),
+            ("#define P(x) x ## t\nP(int32_)\n", 2),
+            ("#define P(x) x ## 4\n", 1),
+            ("#define P(x) x ## +\n", 1),
+            ("#define P(x) left ## right\n", 1),
+            ("#define P(a,b) a ## b\n", 1),
+            ("#define P(x) x ## post ## other\n", 1),
+            ("#define P(x) x ## post #x\n", 1),
+            ("#define P x ## post\n", 1),
+            ("#define P(x) x ##\n", 1),
+            ("#define P(x) ## post\n", 1),
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let error = preprocess(tokens, file, &dialect, &mut fs, Bounds::default())
+                .err()
+                .expect("unsupported paste");
+            assert_eq!(error.position().unwrap().line, line, "{source}");
+        }
     }
 
     #[test]
@@ -797,7 +863,6 @@ mod tests {
             assert!(preprocess(tokens, file, &dialect, &mut fs, bounds).is_err(), "{source}");
         }
         for source in [
-            "#define P(x) x ## tail\n",
             "#define P(x) ## x\n",
             "#define P(x) pre ##\n",
             "#define P(x) pre ## x ## y\n",
