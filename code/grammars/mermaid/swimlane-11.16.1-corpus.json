@@ -131,6 +131,10 @@
       "source": "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: bow-rect, label: \"First\" }\n  second@{ shape: stored-data, label: \"Second\" }\n  third@{ shape: bow-tie-rectangle, label: \"Third\" }\nend\nfirst --> second --> third"
     },
     {
+      "name": "summary-shapes",
+      "source": "swimlane-beta LR\nsubgraph Summary\n  first@{ shape: cross-circ }\n  second@{ shape: summary }\n  third@{ shape: crossed-circle }\nend\nfirst --> second --> third"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
