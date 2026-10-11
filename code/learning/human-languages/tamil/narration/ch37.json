@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:143977dc3e02acad",
+  "sourceHash": "fnv1a64:ce7ec7d492717046",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -767,7 +767,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b78f089565af4097",
+      "sourceHash": "fnv1a64:902ac97b3b54a543",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -790,7 +790,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words from a few chapters back. Ninai does which two English jobs? (Think and remember — ninaivu is memory.) And which word does the dictionary file eḻudu, to write, under? (Eḻu, to rise — a mark raised onto a surface.)"
+              "text": "Two words from a few chapters back. Ninai does which two English jobs? (Think and remember — ninaivu is memory.) And is eḻudu, to write, filed under eḻu, to rise? (No — the dictionary keeps them as two separate entries.)"
             },
             {
               "kind": "pause",

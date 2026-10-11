@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Through the Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:43c9a90321a4b91a",
+  "sourceHash": "fnv1a64:4333fcaa02a47d3d",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:771c619d1aebc27c",
+      "sourceHash": "fnv1a64:e3108296254cff6c",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Be careful with it, because you have met these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு (eḻu) is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
+              "text": "Be careful with it, because you have met these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு (eḻu) is \"to rise\". The Dravidian etymological dictionary does not connect them: it files them as two separate entries. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
             }
           ]
         },
