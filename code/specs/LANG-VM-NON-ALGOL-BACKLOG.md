@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited for Python arithmetic AST tokens
+Status date: 2026-10-11 — re-audited for native JavaScript division source parsing
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
