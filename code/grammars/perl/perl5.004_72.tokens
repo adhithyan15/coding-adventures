@@ -1,0 +1,24 @@
+# Perl 5.004_72 (1998-07-12) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_72 syntax is rejected by this grammar.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_72.tar.gz
+# Archive SHA-256: 0bca514f7e0581873bf275678aad47e88de6a561f96bca3a5d25e7a5c5db3db2
+# Own perly.y, keywords.h and complete scan_num are byte-identical to 5.004_71.
+# TMP_CRLF_PATCH makes CR whitespace; string/heredoc normalization is excluded.
+# Standalone subset: no pragmas, BEGIN, imports, hint mutation or overrides.
+# Retain 250 decimal digits: own tokenbuf256, six reserved, pre-copy bound.
+# Unsupported characters and leading-zero forms remain refused.
+# No full syntax, execution-version or platform-wide parity claim.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n\r]+/

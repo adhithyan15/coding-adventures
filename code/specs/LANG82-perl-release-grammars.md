@@ -618,3 +618,25 @@ Accept 250 digits; reject 251 digits, leading-zero forms, adjacent decrement,
 carriage returns, and unsupported input. Keep distinct physical files and
 leave later releases pending. LANG81 execution stays unchanged. No full-syntax,
 exhaustive-inventory, execution-version, or platform-wide rejection claim is made.
+
+
+Add a distinct, explicitly partial `5.004_72` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_72.tar.gz`
+archive, SHA-256 `0bca514f7e0581873bf275678aad47e88de6a561f96bca3a5d25e7a5c5db3db2`; `patchlevel.h` identifies subversion 72.
+Relative to `5.004_71`, `perly.y`, `keywords.h`, and complete `scan_num` are
+byte-identical. `toke.c` enables `TMP_CRLF_PATCH`: its carriage-return case
+falls through to whitespace. Represent CR alongside space, tab and LF in
+this release's bounded standalone arithmetic-print subset. Test CR, CRLF and
+LFCR between tokens, between statements, and at source boundaries; CR must
+not join separate integers or repair malformed tokens. Earlier pairs retain
+their declared whitespace contracts. Other patch changes normalize line
+endings in strings/heredocs, outside this subset; interpreter/global variable
+layout changes do not alter the represented grammar or decimal scanner.
+Retain the own-source 250-digit bound: `perlvars.h` declares a 256-byte
+`tokenbuf`, and `scan_num` reserves six bytes and checks before copying a digit.
+Accept 250 digits and reject 251 digits, leading-zero forms, adjacent decrement,
+unknown characters and unsupported constructs. Reject pragmas, `BEGIN`,
+imports, hint mutation, subroutines, keyword overrides, `our`, regexes, strings
+and heredocs, including when surrounded by CR. Keep distinct physical files,
+leave later releases pending and preserve LANG81 execution. No full-syntax,
+exhaustive-inventory, execution-version or platform-wide parity claim is made.
