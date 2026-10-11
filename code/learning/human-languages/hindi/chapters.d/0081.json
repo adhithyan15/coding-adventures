@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "HI-C74-late",
     "kind": "production",
-    "summary": "Complete HI-C74-late and say all five words in order, then say that the train is late.",
+    "summary": "Complete HI-C74-late and say all five words in order, then name the word an announcement uses when a train is late.",
     "assesses": [
       "HI-LEX-C74-SIGNS-01",
       "HI-LEX-C74-SIGNS-02",

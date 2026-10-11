@@ -45,15 +45,15 @@ reviews_of: [HI-C74-exit, HI-C64-quickly]
 
 Persian دیر (*der*), "late, a long while". It is a naming word rather than a
 describing one: Hindi does not say "the train is late", it says the train **is
-with lateness** — **गाड़ी देर से है**.
+with lateness**, using a small word for *with* that a later chapter teaches.
 
 Set it against **जल्दी**, which you already own for speed and for earliness. जल्दी
 and देर are the two ends of the same measure, and a station announcement will use
 one or the other of them about your train.
 
-That is where this chapter lands. **गाड़ी देर से है** is a sentence built
-entirely from words you now hold, and it is the single most useful thing a
-traveller can understand on a platform.
+That is where this chapter lands. Listen for **देर** in an announcement about
+**गाड़ी**, your train: it is the single most useful word a traveller can catch
+on a platform.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -67,7 +67,7 @@ it, and understand why the train has not come.
 
 [PAUSE 1s]
 - [YOU SAY: *der*]
-- [YOU SAY: *gāṛī der se hai*]
+- [YOU SAY: *gāṛī*, then *der* — the two words an announcement about a late train turns on]
 - [YOU CONTRAST: *jaldī* and *der*]
 - [YOU WRITE: निकास, then देर, and say all five in order]
 - [YOU RECALL: say *kharīdnā*]
@@ -76,5 +76,5 @@ it, and understand why the train has not come.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-05] -->
 
-[PAUSE 3s] How do you say the train is late? (*gāṛī der se hai*.) Say it once
-more.
+[PAUSE 3s] Which word in an announcement tells you the train is late? (*der*,
+lateness.) Which word sits at the other end of the same measure? (*jaldī*.)

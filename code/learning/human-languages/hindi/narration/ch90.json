@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Four Adjectives That Always Agree",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:491d0b6c36c6bff7",
+  "sourceHash": "fnv1a64:8118fec7a072286e",
   "lessons": [
     {
       "id": "HI-C82-lambaa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21b372226941f516",
+      "sourceHash": "fnv1a64:d1c59d982f2ade32",
       "notice": null,
       "blocks": [
         {
@@ -151,11 +151,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"लंबा (lambā) रास्ता\" — a long road, the same word doing the other job",
+              "instruction": "\"लंबा (lambā) दिन\" — a long day, the same word doing the other job",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"लंबा रास्ता\" — a long road, the same word doing the other job]"
+              "source": "[YOU SAY: \"लंबा दिन\" — a long day, the same word doing the other job]"
             },
             {
               "kind": "prompt",

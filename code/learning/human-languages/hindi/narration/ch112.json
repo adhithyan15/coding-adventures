@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Right, Wrong, Sure",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:61309d940b5fb0cf",
+  "sourceHash": "fnv1a64:9a7ee9e248f46666",
   "lessons": [
     {
       "id": "HI-C112-sahi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c18c1a3c20813d07",
+      "sourceHash": "fnv1a64:d2727dd3f12cf2a7",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "सही (sahī) जवाब — \"the right answer\". Said alone, सही (sahī)! agrees: \"right!\"."
+              "text": "सही (sahī) दाम — \"the right price\". Said alone, सही (sahī)! agrees: \"right!\"."
             }
           ]
         },

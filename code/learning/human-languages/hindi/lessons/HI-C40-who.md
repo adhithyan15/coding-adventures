@@ -43,18 +43,20 @@ reviews_of: [HI-C40-there]
 
 **कौन** — *kaun* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner is **कहाँ** *kahā̃*, which you will meet in a moment. The two of them
-differ by one sound at the front — **k-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the question word for place, comes in the next lesson, and it
+opens with the same **k-**. That is the pattern: the near words you know open
+with **y-** (**यह** *yah*, **यहाँ** *yahā̃*), the far ones with **v-** (**वह**
+*vah*, **वहाँ** *vahā̃*), and the asking words with **k-**. The last lesson of
+this chapter lays it out.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-05, HI-CONCEPT-C37-KITAAB-01, HI-CONCEPT-C37-KITAAB-02, HI-CONCEPT-C37-KITAAB-03, HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "कौन" three times, picturing something different each time]
+- [YOU SAY: "कौन" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *kitāb / pustak / pothā*]
 - [YOU READ: **पेट**]

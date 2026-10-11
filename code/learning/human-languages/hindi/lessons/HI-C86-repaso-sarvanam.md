@@ -51,8 +51,8 @@ before reading the table.
 | वह | *use* |
 | वे | *unhẽ* |
 
-Two of the obliques are visibly **को** attached — *āpko* plainly, *use* after
-wear. Three take the nasal ending. The set is small and none of it is arbitrary
+Two of the obliques visibly carry *ko*, *to*: *āpko* plainly (**आप** + **को** → **आपको**),
+*use* after wear. Three take the nasal ending. The set is small and none of it is arbitrary
 once you know that a postposition is hiding in each one.
 
 ## Grammar Lens: the fourth appearance of one decision
@@ -74,13 +74,13 @@ rather than learning four unrelated lists.
 
 [PAUSE 1s]
 - [YOU SAY: the six subject pronouns]
-- [YOU SAY: the obliques that take **को**, and the ones that take the nasal]
+- [YOU SAY: the obliques that take *ko*, and the ones that take the nasal]
 - [YOU SAY: the *tum* row across all four systems]
 - [YOU SAY: how many articles Hindi has, and what does the work instead]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-04, HI-LEX-C86-PRON-05, HI-LEX-C86-PRON-02] -->
 
-[PAUSE 3s] Which postposition is hiding inside every oblique pronoun? (**को**.)
+[PAUSE 3s] Which postposition shows plainly in *āpko*? (*ko*, *to*.)
 How many systems does the level decision now settle? (Four.) What translates
 English *the*? (Nothing.)

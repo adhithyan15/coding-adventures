@@ -597,14 +597,17 @@ const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
  * italian 34 → 0, german 29 → 1, kannada 13 → 2, malayalam 12 → 0, marathi
  * 11 → 4, bengali 10 → 2, telugu 10 → 0, arabic 10 → 0, urdu 9 → 5, tamil 8 → 0,
  * punjabi 7 → 2, russian 5 → 0, sanskrit 3 → 0, persian 2 → 2. Spanish, French,
- * Portuguese, Latin and Hindi were not worked; their pins are the counts then.
+ * Portuguese and Latin were not worked; their pins are the counts then. Hindi
+ * was worked next: 57 → 33.
  *
  * Every non-zero pin in a worked track is one shape, read in place each time: a
  * phrase the track teaches WHOLE before a later lesson unpacks one of its words.
  * A multi-word headword owns no single token (lessons.d: a-multi-word-headword-
  * owns-no-single-token-so-a-later-one), so every earlier use of the phrase reads
  * as borrowing the word. The phrase is genuinely taught; rewording it away would
- * break the lesson that unpacks it, which says so.
+ * break the lesson that unpacks it, which says so. Hindi adds one more shape of
+ * the same kind: a BUNDLE headword (पानी रोटी) that teaches separate words under
+ * one string, so each word reads as untaught until a late lesson re-teaches it.
  */
 const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   arabic: 0,
@@ -617,7 +620,17 @@ const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   // have said it since the second chapter as a single block."
   german: 1,
   gujarati: 0,
-  hindi: 57,
+  // Every Hindi hit names a word the learner was taught EARLIER, inside a
+  // multi-word headword, before a late vocabulary lesson gives it a headword of
+  // its own. Phrases: … या … (HI-C68-ya; four), मदद करना (HI-C35-madad; two),
+  // कितने साल के हो? (HI-C19-age-grammar; two), काम करना (HI-C05-karna; two),
+  // के साथ and के पीछे (HI-C93; two each), कुछ नहीं (HI-C113), शौक़ से (HI-C115),
+  // गर्मी है / ठंड है / बारिश हो रही है (HI-C20-mausam; four), एक मिनट (HI-C110).
+  // Bundles of separate words under one headword: पानी रोटी (HI-C15; six uses of
+  // रोटी), the six seasons (HI-C14-ritu; three of वसंत), and दोपहर आधी रात
+  // (HI-C17; two of दोपहर, one of रात). Splitting a bundle's headword would leave
+  // two lessons each claiming to introduce the same word.
+  hindi: 33,
   italian: 0,
   japanese: 0,
   // KA-S114 finds ◌ೊ in ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (KA-C06's headword, two lessons

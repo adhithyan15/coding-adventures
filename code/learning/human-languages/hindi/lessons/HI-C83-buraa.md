@@ -88,6 +88,6 @@ of the six words ahead do **not** bend.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C83-CHAR-01, HI-LEX-C41-ADJ-03, HI-LEX-C82-BODY-03] -->
 
-[PAUSE 3s] What does **बुरा मत मानो** literally say? (Do not consider it bad.)
+[PAUSE 3s] What does Hindi's "no offence" literally say? (Do not consider it bad.)
 Does **बुरा** bend? (Yes — it ends in **-आ**.) And **मोटा**, from the last
 chapter? (Also yes — same ending, same behaviour.)

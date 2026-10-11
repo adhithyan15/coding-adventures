@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Once More, Please",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ee803071e5518977",
+  "sourceHash": "fnv1a64:fb83d3e9d6d5f4b5",
   "lessons": [
     {
       "id": "HI-C110-dobara",
@@ -400,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4efbcdf57dc875c7",
+      "sourceHash": "fnv1a64:45d73c6c26824d2f",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +431,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is रुकना, \"to stop\", with the respectful ending of बोलिए. रुकिए (rukie), एक मिनट (ek minaṭ) — \"wait, one minute\"."
+              "text": "रुक (ruk, the stem of the verb \"to stop\") + -ie, the respectful ending of बोलिए becomes रुकिए (rukie). रुकिए (rukie), एक मिनट (ek minaṭ) — \"wait, one minute\"."
             }
           ]
         },
