@@ -12,7 +12,7 @@ headword: "ढोल"
 romanization: "ḍhol"
 gloss: "a drum"
 concept_tag: MR-ANCHOR-DHOL
-prerequisites: []
+prerequisites: [MR-C61-dahava]
 sounds: []
 roots: []
 duration:

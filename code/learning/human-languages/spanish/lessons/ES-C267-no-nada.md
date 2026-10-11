@@ -9,7 +9,7 @@ headword: "no ... nada"
 gloss: "the double negative — where Spanish stacks what English forbids"
 romanization: ""
 concept_tag: ES-DOUBLE-NEGATIVE
-prerequisites: []
+prerequisites: [ES-C267-no-verbo, ES-C16-ver]
 sounds: []
 roots: []
 duration:

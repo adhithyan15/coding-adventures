@@ -9,7 +9,7 @@ headword: اسم
 romanization: "ism"
 gloss: name
 concept_tag: WORD-NAME
-prerequisites: []
+prerequisites: [AR-W00-alif-mim-salam]
 sounds: [rtl-known-letters]
 roots: [s-m-w]
 duration:

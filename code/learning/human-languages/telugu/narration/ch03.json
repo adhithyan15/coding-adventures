@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:214974285418ed61",
+  "sourceHash": "fnv1a64:d234ea5e256a679f",
   "lessons": [
     {
       "id": "TE-C03-elaa",
@@ -1030,7 +1030,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a165be38b257a695",
+      "sourceHash": "fnv1a64:7d76390f28fedb34",
       "notice": {
         "modality": "pen",
         "needs": [

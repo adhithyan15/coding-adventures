@@ -8,7 +8,7 @@ type: word
 headword: uno, due, tre, quattro, cinque
 gloss: the numbers 1–5
 concept_tag: IT-NUM-1-5
-prerequisites: []
+prerequisites: [IT-C05-practice]
 sounds: [double-tt, c-before-i]
 roots: [unus-duo-tres-latin]
 etymology_hook: "uno/due/tre/quattro/cinque ← ūnus/duo/trēs/quattuor/quīnque — Italian stays closest to Latin (cinque keeps the -que; = Spanish cinco, French cinq)"

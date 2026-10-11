@@ -8,7 +8,7 @@ type: word
 headword: io
 gloss: I (first-person subject pronoun)
 concept_tag: PRONOUN-I
-prerequisites: []
+prerequisites: [IT-C02-practice]
 sounds: [io-glide]
 roots: [ego-latin]
 etymology_hook: "io ← Latin ego 'I' → English ego, egoist; Italian usually drops it (pro-drop)"

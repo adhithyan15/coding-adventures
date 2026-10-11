@@ -12,7 +12,7 @@ headword: नाम
 gloss: name
 romanization: "nām"
 concept_tag: WORD-NAME
-prerequisites: []
+prerequisites: [HI-C01-namaste]
 sounds: [matra-aa]
 roots: [naaman]
 duration:

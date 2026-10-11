@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d6d1dedec5f7d1ff",
+  "sourceHash": "fnv1a64:6e58095e57b4ff31",
   "lessons": [
     {
       "id": "IT-C06-numeri-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:638ef301e967296e",
+      "sourceHash": "fnv1a64:2e68952842d442ec",
       "notice": null,
       "blocks": [
         {

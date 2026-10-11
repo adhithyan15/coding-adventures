@@ -9,7 +9,7 @@ headword: "¿verdad?"
 gloss: "the tag question — asking someone to agree"
 romanization: ""
 concept_tag: ES-TAG-QUESTION
-prerequisites: []
+prerequisites: [ES-C267-pregunta-si-no]
 sounds: []
 roots: []
 duration:

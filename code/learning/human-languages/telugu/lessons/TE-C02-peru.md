@@ -9,7 +9,7 @@ headword: పేరు
 gloss: name
 romanization: "pēru"
 concept_tag: WORD-NAME
-prerequisites: []
+prerequisites: [TE-C01-namaskaram]
 sounds: [ee-sign]
 roots: [peer-dravidian]
 duration:

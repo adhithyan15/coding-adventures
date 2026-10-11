@@ -12,7 +12,7 @@ headword: "ईश्वर"
 romanization: "īśvar"
 gloss: "God"
 concept_tag: MR-ANCHOR-IISHVAR
-prerequisites: []
+prerequisites: [MR-R64-rows-closed]
 sounds: []
 roots: []
 duration:

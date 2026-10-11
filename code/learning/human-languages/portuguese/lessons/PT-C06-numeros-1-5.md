@@ -8,7 +8,7 @@ type: word
 headword: um, dois, três, quatro, cinco
 gloss: the numbers 1–5
 concept_tag: PT-NUM-1-5
-prerequisites: []
+prerequisites: [PT-C05-practice]
 sounds: [nasal-um, open-e]
 roots: [unus-duo-tres-latin]
 etymology_hook: "um/dois/três/quatro/cinco ← ūnus/duo/trēs/quattuor/quīnque; Portuguese uniquely keeps GENDER on 'two' (dois/duas). = Spanish uno/dos/tres/cuatro/cinco"

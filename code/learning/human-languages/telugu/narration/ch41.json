@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e844046fb11d5130",
+  "sourceHash": "fnv1a64:1ea3b3c419662e9b",
   "lessons": [
     {
       "id": "TE-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23dfba755a248dbc",
+      "sourceHash": "fnv1a64:24d949d6b497a93c",
       "notice": null,
       "blocks": [
         {

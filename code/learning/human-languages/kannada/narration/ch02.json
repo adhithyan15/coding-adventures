@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:35606a7be701d7db",
+  "sourceHash": "fnv1a64:3b3eb11c3a463efa",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ae29941308a6772",
+      "sourceHash": "fnv1a64:cd5fb97481b4df75",
       "notice": {
         "modality": "sight",
         "needs": [

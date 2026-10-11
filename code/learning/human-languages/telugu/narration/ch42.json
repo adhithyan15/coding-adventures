@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:d46e59fe6ba10637",
+  "sourceHash": "fnv1a64:9ed58e153cf60ca8",
   "lessons": [
     {
       "id": "TE-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fca8ae4030baa8f",
+      "sourceHash": "fnv1a64:06c30bf0e09fe035",
       "notice": null,
       "blocks": [
         {

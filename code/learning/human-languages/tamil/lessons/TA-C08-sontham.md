@@ -12,7 +12,7 @@ headword: "சொந்தம்"
 romanization: "sontham"
 gloss: "one's own; a relative"
 concept_tag: TA-ANCHOR-SONTHAM
-prerequisites: []
+prerequisites: [TA-C07-numbers-practice]
 sounds: []
 roots: []
 duration:

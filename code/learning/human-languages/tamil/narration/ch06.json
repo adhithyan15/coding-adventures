@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fccf85cd1815cb16",
+  "sourceHash": "fnv1a64:57b54915c13f6339",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -154,7 +154,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:af5549a6703340c5",
+      "sourceHash": "fnv1a64:f88a758dbe133370",
       "notice": {
         "modality": "pen",
         "needs": [

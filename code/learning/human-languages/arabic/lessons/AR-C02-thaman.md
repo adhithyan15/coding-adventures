@@ -12,7 +12,7 @@ headword: "ثمن"
 romanization: "thaman"
 gloss: "a price"
 concept_tag: AR-ANCHOR-THAMAN
-prerequisites: []
+prerequisites: [AR-C02-practice]
 sounds: []
 roots: []
 duration:

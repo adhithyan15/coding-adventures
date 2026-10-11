@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Describing Things",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3b3690a9abc1b1f6",
+  "sourceHash": "fnv1a64:0189954abb155138",
   "lessons": [
     {
       "id": "SA-C15-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c55f159d1147fd0b",
+      "sourceHash": "fnv1a64:e7b66932ace4e5f0",
       "notice": null,
       "blocks": [
         {

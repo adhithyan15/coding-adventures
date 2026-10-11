@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:75b5742ab5a3a4c3",
+  "sourceHash": "fnv1a64:fe0379b604a5b653",
   "lessons": [
     {
       "id": "TA-C08-sontham",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5b21e7a962bad63",
+      "sourceHash": "fnv1a64:cd874a9959a0809e",
       "notice": null,
       "blocks": [
         {

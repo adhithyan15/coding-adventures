@@ -8,7 +8,7 @@ type: word
 headword: el gimnasio
 gloss: gym, gymnasium
 concept_tag: ES-FITNESS-GIMNASIO
-prerequisites: []
+prerequisites: [ES-C37-abrir]
 sounds: [stress-penultimate]
 roots: [gymnasion-greek]
 etymology_hook: "gimnasio came through Latin gymnasium from Greek gymnasion, a place for exercise; English gymnasium and gym preserve the same travelled word"

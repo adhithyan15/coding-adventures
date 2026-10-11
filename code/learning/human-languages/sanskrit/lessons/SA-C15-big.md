@@ -12,7 +12,7 @@ headword: "महत्"
 gloss: "big"
 romanization: "mahat"
 concept_tag: SA-ADJ-BIG
-prerequisites: []
+prerequisites: [SA-R13-second-pass-five-parts-three-kinds-of-ancestry]
 sounds: []
 roots: []
 duration:

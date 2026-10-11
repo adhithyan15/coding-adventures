@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Rows Closed",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:72e353a6fdaed879",
+  "sourceHash": "fnv1a64:b1833e6e9757bb75",
   "lessons": [
     {
       "id": "MR-C64-dhol",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5ed007a18f9cad7",
+      "sourceHash": "fnv1a64:49d400610bc567af",
       "notice": null,
       "blocks": [
         {

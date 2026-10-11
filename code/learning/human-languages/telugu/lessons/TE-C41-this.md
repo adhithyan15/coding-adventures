@@ -9,7 +9,7 @@ headword: "ఇది"
 gloss: "this one — the thing near me"
 romanization: "idi"
 concept_tag: TE-DEIXIS-THIS
-prerequisites: []
+prerequisites: [TE-C40-second-pass-meal]
 sounds: []
 roots: []
 duration:

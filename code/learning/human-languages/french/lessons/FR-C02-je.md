@@ -8,7 +8,7 @@ type: word
 headword: je
 gloss: I
 concept_tag: PRONOUN-I
-prerequisites: []
+prerequisites: [FR-C01-bonjour]
 sounds: [soft-j, elision]
 roots: [ego]
 etymology_hook: "je ← Latin ego — the word for 'I' and the psychologist's ego are one ancient word, one worn to a whisper and one kept whole"

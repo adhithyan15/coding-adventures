@@ -12,7 +12,7 @@ type: writing
 headword: "म"
 gloss: the single character म — recognised inside words you already say
 romanization: "ma"
-prerequisites: []
+prerequisites: [HI-W01-na-ma]
 sounds: []
 roots: []
 duration:
