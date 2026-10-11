@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d4d94524ca4e184c",
+  "sourceHash": "fnv1a64:e0a207a64d525bf3",
   "lessons": [
     {
       "id": "TA-C42-come",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e14b6f567218373",
+      "sourceHash": "fnv1a64:fbb5dc2b96e7cab3",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "You met it beside its partner varu-; here it opens the run. One syllable, and a complete sentence: the first thing said at a doorway. It is the bare command, with nothing added, and the old warning still holds: the endings attach to varu-, not to vā."
+              "text": "You met it beside its partner varu-; here it opens the run. One syllable, and a complete sentence: the first thing said at a doorway. It is the bare command, with nothing added, and the old warning still holds: the tense endings attach to varu-, not to vā."
             }
           ]
         },
