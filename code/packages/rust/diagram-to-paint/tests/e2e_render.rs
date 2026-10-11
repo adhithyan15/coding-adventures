@@ -3668,6 +3668,12 @@ line "Target" [35, 50, 68, 82]"##,
                         ))
                 )).count() >= 4, "multi-documents must lower to three stacked wave-edged paths");
             }
+            if fixture_name == "multi-process-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 3
+                        && group.children.iter().all(|child| matches!(child, PaintInstruction::Rect(_)))
+                )).count() >= 4, "multi-processes must lower to three stacked rectangles");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

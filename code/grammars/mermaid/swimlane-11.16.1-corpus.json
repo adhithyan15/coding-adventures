@@ -123,6 +123,10 @@
       "source": "swimlane-beta LR\nsubgraph Records\n  first@{ shape: docs, label: \"First\" }\n  second@{ shape: documents, label: \"Second\" }\n  third@{ shape: st-doc, label: \"Third\" }\n  fourth@{ shape: stacked-document, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth"
     },
     {
+      "name": "multi-process-shapes",
+      "source": "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: st-rect, label: \"First\" }\n  second@{ shape: procs, label: \"Second\" }\n  third@{ shape: processes, label: \"Third\" }\n  fourth@{ shape: stacked-rectangle, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

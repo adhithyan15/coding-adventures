@@ -1020,6 +1020,8 @@ Manual inputs recognize `sl-rect`, `manual-input`, and `sloped-rectangle`
 aliases.
 Multi-documents recognize `docs`, `documents`, `st-doc`, and
 `stacked-document` aliases.
+Multi-processes recognize `st-rect`, `procs`, `processes`, and
+`stacked-rectangle` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint
