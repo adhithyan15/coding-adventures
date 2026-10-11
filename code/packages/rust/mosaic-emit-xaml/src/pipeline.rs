@@ -5962,13 +5962,21 @@ public sealed class __COMPONENT__MosaicTable : Grid
     protected override AutomationPeer OnCreateAutomationPeer() =>
         new __COMPONENT__MosaicTableAutomationPeer(this);
 
-    internal __COMPONENT__MosaicTableCell? FindCell(int row, int column)
+    internal __COMPONENT__MosaicTableCell? FindCell(int row, int column) =>
+        FindCellIn(this, row, column);
+
+    // Focus needs one realized cell, not a snapshot of the entire table.
+    // Preserve depth-first order and stop as soon as its coordinates match.
+    private static __COMPONENT__MosaicTableCell? FindCellIn(DependencyObject root, int row, int column)
     {
-        var cells = new List<__COMPONENT__MosaicTableCell>();
-        CollectDescendants(this, cells);
-        foreach (var cell in cells)
+        var count = VisualTreeHelper.GetChildrenCount(root);
+        for (var index = 0; index < count; index++)
         {
-            if (cell.Row == row && cell.Column == column) return cell;
+            var child = VisualTreeHelper.GetChild(root, index);
+            if (child is __COMPONENT__MosaicTableCell cell && cell.Row == row && cell.Column == column)
+                return cell;
+            var nested = FindCellIn(child, row, column);
+            if (nested is not null) return nested;
         }
         return null;
     }
@@ -27712,6 +27720,32 @@ PROJECTION
     }
 }
 "#.replace("PROJECTION", &emit_row_projection_property(&root)).replace("class Owner", "public class Owner");
+        let support = emit_native_table_support_source("Probe");
+        let start = support.find("    internal ProbeMosaicTableCell? FindCell(").unwrap();
+        let end = support[start..].find("    internal IReadOnlyList<ProbeMosaicTableHeaderCell> ColumnHeaders()").unwrap() + start;
+        let source = source.replace("var owner = new Owner();", "Check(FocusProbe.CheckLookup(), \"focus traversal\"); var owner = new Owner();");
+        let source = format!("{source}\n{}", r#"
+class DependencyObject { public List<DependencyObject> Children = new(); }
+class ProbeMosaicTableCell : DependencyObject { public int Row; public int Column; }
+static class VisualTreeHelper {
+    public static int Visits;
+    public static int GetChildrenCount(DependencyObject root) => root.Children.Count;
+    public static DependencyObject GetChild(DependencyObject root, int index) { Visits++; return root.Children[index]; }
+}
+class FocusProbe : DependencyObject {
+METHODS
+    public static bool CheckLookup() {
+        var tree = new FocusProbe(); var first = new ProbeMosaicTableCell { Row = 2, Column = 3 };
+        tree.Children.Add(first);
+        for (int i = 0; i < 1000; i++) tree.Children.Add(new DependencyObject());
+        VisualTreeHelper.Visits = 0;
+        if (!ReferenceEquals(tree.FindCell(2, 3), first) || VisualTreeHelper.Visits != 1) return false;
+        var last = new ProbeMosaicTableCell { Row = 9, Column = 8 };
+        tree.Children[1000].Children.Add(last);
+        return ReferenceEquals(tree.FindCell(9, 8), last) && tree.FindCell(99, 99) is null;
+    }
+}
+"#.replace("METHODS", &support[start..end]));
         fs::write(dir.join("Program.cs"), source).unwrap();
         let output = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).current_dir(&dir).output().unwrap();
         assert!(output.status.success(), "{}\n{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));

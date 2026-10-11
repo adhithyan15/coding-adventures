@@ -17,6 +17,8 @@ notifications. This is positional identity, not keyed reconciliation.
 Retained VMs refresh owner-dependent computed properties only when their observed
 value changes, and propagate refreshes through nested projections. This preserves
 selection styling without replacing the entire table on every runtime update.
+Native cell lookup also stops at the first coordinate match rather than allocating
+a list of all table descendants.
 See `code/specs/mosaic-xaml-projection-identity-20261011.md` for tests and native
 profiling evidence. Large-viewport work and persistence stalls remain open in
 #16865; this optimization is not a native release acceptance claim.
