@@ -1,6 +1,6 @@
 {
   "chapter": 88,
-  "title": "Nos --- Us, and the Word Inside -mos",
+  "title": "Nos --- Us, and the We the Verb Already Says",
   "label": "ch:pronoun-nos",
   "canDo": "I can say nos quieren, and say what nosotros is made of.",
   "spineNodes": [
@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "ES-C45-nos",
     "kind": "task",
-    "summary": "Complete ES-C45-nos: produce nos quieren and name the verb ending that is the same ancient word.",
+    "summary": "Complete ES-C45-nos: produce nos quieren and name the verb ending that already says we.",
     "assesses": [
       "ES-LEX-NOS-OBJECT",
       "ES-GRAMMAR-NOS-DIRECT-OBJECT",
