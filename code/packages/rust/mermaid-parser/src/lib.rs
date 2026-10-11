@@ -6906,6 +6906,7 @@ fn parse_swimlane_shape_attributes(
                     "curv-trap" | "curved-trapezoid" | "display" => DiagramShape::Display,
                     "div-rect" | "div-proc" | "divided-rectangle" | "divided-process" => DiagramShape::DividedRect,
                     "win-pane" | "internal-storage" | "window-pane" => DiagramShape::WindowPane,
+                    "f-circ" | "junction" | "filled-circle" => DiagramShape::FilledCircle,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

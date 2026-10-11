@@ -3639,6 +3639,14 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.commands.last().is_some_and(|command| matches!(command, PathCommand::LineTo { .. }))
                 )).count() >= 3, "internal storage must lower to framed window-pane paths");
             }
+            if fixture_name == "junction-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 14.0 && node.height == 14.0),
+                    "junctions must use compact upstream dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 7.0 && ellipse.ry == 7.0
+                        && ellipse.fill == ellipse.stroke
+                )).count() >= 3, "junctions must lower to filled circle instructions");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

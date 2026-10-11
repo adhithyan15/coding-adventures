@@ -107,6 +107,10 @@
       "source": "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: win-pane, label: \"Primary\" }\n  second@{ shape: internal-storage, label: \"Working\" }\n  third@{ shape: window-pane, label: \"Archive\" }\nend\nfirst --> second --> third"
     },
     {
+      "name": "junction-shapes",
+      "source": "swimlane-beta LR\nsubgraph Junctions\n  first@{ shape: f-circ }\n  second@{ shape: junction }\n  third@{ shape: filled-circle }\nend\nfirst --> second --> third"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

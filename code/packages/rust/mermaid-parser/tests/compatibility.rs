@@ -1740,6 +1740,15 @@ fn swimlane_internal_storage_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_junction_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Junctions\n  first@{ shape: f-circ }\n  second@{ shape: junction }\n  third@{ shape: filled-circle }\nend\nfirst --> second --> third",
+    ).expect("Swimlane junction aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::FilledCircle));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
