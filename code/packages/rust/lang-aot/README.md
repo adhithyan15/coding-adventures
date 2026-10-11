@@ -66,8 +66,10 @@ bound; non-sign-rooted operands and `abs` or `sign` overrides remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
-A single built-in `exp` may also map such a bounded chain before `entier`;
-nested exponential calls remain conservative to keep the finite bound explicit.
+A single built-in `exp` may also map such a bounded chain before `entier`,
+including a runtime conditional when every branch retains a proven runtime-real
+sign root; nested exponential calls and unproven branches remain conservative
+to keep the finite bound explicit.
 Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
