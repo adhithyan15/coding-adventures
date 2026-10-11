@@ -22,3 +22,8 @@ overlapping writes or put Semantic IR in native dynamic-language execution.
 A scope lookup also passed a wildcard directory as a ripgrep path on Windows;
 the command reported an invalid path. Search an existing directory with a glob
 filter instead, and do not count a failed lookup as evidence of absent files.
+
+The temporary overlap auditor initially used its Python grammar fallback for
+the C package. Extend its resource inputs to C, Ruby and Twig grammars before
+claiming that closure audit. A quoted inline Python replacement then failed
+PowerShell parsing without changing files; a direct patch corrected the helper.
