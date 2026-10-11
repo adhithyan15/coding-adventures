@@ -196,18 +196,27 @@ rather than letting them read as silent gaps.
     inventories toward #12022's zero-drop hard fail. Do not call the existing
     debt native completeness.
 
+### Native fidelity release checkpoint
+
+11. **P1 [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
+    — publish `task-app-v0.5.2`.** Roll the compatible native-fidelity fixes
+    accumulated after v0.5.1 into an immutable patch release. Keep the verified
+    web/native downloadable artifact matrix unchanged; Static HTML, Web
+    Components, and Paint remain CI-only, while signing and notarization remain
+    tracked by #13977.
+
 ### Tier C — reach, stated honestly
 
-11. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
+12. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
     #16041, and #16144.** The generated app carries the real runtime, launches
     on iPhone and iPad simulators, restores state from its sandbox, and
     quarantines corrupt state. Signing, device execution, and a downloadable
     iOS artifact remain outside that claim.
-12. **Android has no backend.** `compose` is Compose Desktop. An Android target
+13. **Android has no backend.** `compose` is Compose Desktop. An Android target
     is a new Mosaic backend, not a TaskApp task, and belongs to
     [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
     here. Recorded so its absence is a decision rather than an oversight.
-13. **Signing, notarization, and installers**
+14. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up

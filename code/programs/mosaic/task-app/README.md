@@ -220,6 +220,11 @@ The corrective `task-app-v0.5.1` patch carries that same boundary into the
 generated GitHub release notes themselves. Its web/native artifact matrix is
 identical to v0.5.0; no CI-only backend is promoted into a downloadable asset.
 
+The `task-app-v0.5.2` patch rolls forward the compatible native-fidelity and
+regression-gate fixes accumulated since v0.5.1. It retains the same verified
+web/native artifact matrix and the same explicit CI-only boundary for Static
+HTML, Web Components, and Paint.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:
