@@ -1045,6 +1045,7 @@ const SECURE_CLASS_WRITER = `
 import base64
 import os
 import pathlib
+import stat
 import sys
 import tempfile
 
@@ -1061,11 +1062,15 @@ if not relative_path.parts or any(
     raise RuntimeError("Resolved class-file path escapes the requested classpath root")
 
 def is_link_like(path):
-    # NTFS junctions are reparse points that is_symlink() does not report.
-    if path.is_symlink():
-        return True
-    isjunction = getattr(os.path, "isjunction", None)
-    return bool(isjunction and isjunction(path))
+    # lstat exposes junctions on Python before os.path.isjunction (3.12).
+    try:
+        metadata = os.lstat(path)
+    except FileNotFoundError:
+        return False
+    return stat.S_ISLNK(metadata.st_mode) or bool(
+        getattr(metadata, "st_file_attributes", 0)
+        & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+    )
 
 open_directory_flags = os.O_RDONLY
 if hasattr(os, "O_DIRECTORY"):
@@ -1084,7 +1089,10 @@ try:
     while True:
         try:
             metadata = os.lstat(current_root)
-            if not os.path.isdir(current_root) or os.path.islink(current_root):
+            if not stat.S_ISDIR(metadata.st_mode) or is_link_like(current_root):
+                raise RuntimeError("Refusing to write through symlinked or invalid directory")
+            # Windows realpath would otherwise erase an ancestor junction.
+            if os.name == "nt" and any(is_link_like(parent) for parent in current_root.parents):
                 raise RuntimeError("Refusing to write through symlinked or invalid directory")
             canonical_root = pathlib.Path(os.path.realpath(current_root))
             break

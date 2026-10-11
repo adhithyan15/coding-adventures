@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Reject Windows junction and reparse-point roots, ancestors and output components before canonicalization, including on Python 3.10. Regression tests verify that external targets stay untouched.
+
 - `writeClassFile` works on Windows. The secure writer walks the output
   directories through directory file descriptors (`os.open` + `dir_fd`), which
   Windows Python does not support (`PermissionError` opening the root). Where

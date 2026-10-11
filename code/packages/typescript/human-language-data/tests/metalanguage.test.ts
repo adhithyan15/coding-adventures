@@ -234,10 +234,12 @@ describe("the committed inventory", () => {
   });
 });
 
+// The committed corpus is immutable in this file; measure it once.
+const REAL_METALANGUAGE = measureMetalanguage(loadEverything().lessons, loadMetalanguage());
+
 describe("the committed corpus", () => {
   it("pins the first measurement", () => {
-    const { lessons } = loadEverything();
-    const r = measureMetalanguage(lessons, loadMetalanguage());
+    const r = REAL_METALANGUAGE;
     expect(r.summary.terms).toBe(54);
     expect(r.summary.lessonsUsingTerms).toBeGreaterThanOrEqual(2002) // FLOOR — content only grows; see the note at the top of this file; // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 preterite plural // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6). Every segment says letter, consonant, vowel sign or abugida, and none of those is introduced first -- the same debt HL11's Tamil segments added, now in four more tracks // HL12 payment two: +8 Hindi segments
 
@@ -257,8 +259,7 @@ describe("the committed corpus", () => {
   });
 
   it("reports the technical subset in the rendered lines", () => {
-    const { lessons } = loadEverything();
-    const text = renderMetalanguage(measureMetalanguage(lessons, loadMetalanguage())).join("\n");
+    const text = renderMetalanguage(REAL_METALANGUAGE).join("\n");
     expect(text).toContain("technical terms");
     expect(text).toContain("verb");
   });

@@ -353,12 +353,19 @@ try {
   }, 30_000);
 
   it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
+    const runtimeRoot = await mkdtemp(join(homedir(), "forme-windows-overlap-runtime-"));
+    roots.push(runtimeRoot);
+    const runtime = join(runtimeRoot, "node.exe");
+    await copyFile(process.execPath, runtime);
+    const factory = createWindowsSandboxFactory({
+      launcherPath, readinessTimeoutMs: 2_000,
+      runtimeExecutables: { node: runtime }, runtimeRoots: { node: runtimeRoot },
+    });
     const [first, second] = await Promise.all([
-      // Match the other overlapping-runtime test's startup budget. The second
-      // launch waits for the first ACL transaction; the same exit and isolation
-      // assertions still have to pass within this case's 15-second deadline.
-      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 5_000 }).launch(await nodeRequest()),
-      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 5_000 }).launch(await nodeRequest()),
+      // Both launches modify the same owned executable ACL. System installs
+      // can deny DACL writes to a non-administrator, before attestation.
+      factory.launch(await nodeRequest()),
+      factory.launch(await nodeRequest()),
     ]);
     first.stdin.end();
     second.stdin.end();

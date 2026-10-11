@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Give the overlapping Node ACL integration test the same five-second startup budget as the Python overlap test; preserve the 15-second case deadline and isolation assertions.
+- Exercise overlapping Node ACL grants on an owned copy of the trusted runtime executable. System-wide Node installs may deny DACL writes; retain the two-second startup and 15-second case deadlines and both exit assertions.
 
 ## 1.0.0 — 2026-10-05
 

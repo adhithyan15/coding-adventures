@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, realpathSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -104,7 +104,7 @@ describe("ir-to-jvm-class-file", () => {
     const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-symlink-"));
     const sink = mkdtempSync(join(tmpdir(), "ts-jvm-symlink-sink-"));
     try {
-      symlinkSync(sink, join(tempdir, "demo"));
+      symlinkSync(sink, join(tempdir, "demo"), process.platform === "win32" ? "junction" : "dir");
       const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
       expect(() => writeClassFile(artifact, tempdir)).toThrow(JvmBackendError);
     } finally {
@@ -117,7 +117,7 @@ describe("ir-to-jvm-class-file", () => {
     const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-root-link-"));
     const sink = mkdtempSync(join(tmpdir(), "ts-jvm-root-link-sink-"));
     try {
-      symlinkSync(sink, join(tempdir, "linked-root"));
+      symlinkSync(sink, join(tempdir, "linked-root"), process.platform === "win32" ? "junction" : "dir");
       const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
       expect(() => writeClassFile(artifact, join(tempdir, "linked-root", "nested"))).toThrow(
         JvmBackendError,
@@ -127,6 +127,32 @@ describe("ir-to-jvm-class-file", () => {
       rmSync(sink, { recursive: true, force: true });
     }
   });
+
+  it.runIf(process.platform === "win32").each(["root", "missing-child", "existing-child", "class-parent"])(
+    "rejects Windows junctions at %s without touching the target",
+    (location) => {
+      const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-junction-"));
+      const sink = mkdtempSync(join(tmpdir(), "ts-jvm-junction-sink-"));
+      const link = join(tempdir, location === "class-parent" ? "demo" : "linked-root");
+      try {
+        if (location === "existing-child") mkdirSync(join(sink, "nested"));
+        const before = readdirSync(sink, { recursive: true });
+        symlinkSync(sink, link, "junction");
+        const outputRoot = location === "class-parent" ? tempdir
+          : location === "root" ? link : join(link, "nested");
+        const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
+        expect(() => writeClassFile(artifact, outputRoot)).toThrow(JvmBackendError);
+        expect(readdirSync(sink, { recursive: true })).toEqual(before);
+      } finally {
+        // Remove the junction itself before removing either real directory.
+        try { unlinkSync(link); } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+        }
+        rmSync(tempdir, { recursive: true, force: true });
+        rmSync(sink, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("rejects output roots that are files instead of directories", () => {
     const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-file-root-"));

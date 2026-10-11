@@ -38,3 +38,7 @@ root ancestors before canonicalization and each output component before writing.
 Regressions cover a junction root, missing descendants and existing descendants.
 Corpus assertions may share one immutable measurement per file; invalid mock
 levels must fail before any corpus read. Preserve live CLI and baseline checks.
+
+The overlapping Windows Node ACL test uses one owned copy of the runtime for
+both launches, preserving the two-second startup and 15-second case deadlines.
+System-wide runtime ACL writes require privileges unrelated to this regression.

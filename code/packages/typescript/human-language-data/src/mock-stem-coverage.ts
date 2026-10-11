@@ -359,14 +359,14 @@ export function reportSpanishMockStemCoverage(
   root = defaultCurriculumRoot(),
   level: MockAuditLevel = "A2",
 ): { mock: number; forms: FormReport[] }[] {
-  const vocabulary = loadStemVocabulary(root);
-  const { taught } = spanishTaughtForms(root, level);
   // By LOOKUP, never interpolation. This function is exported from `index.ts`,
   // so its `level` is constrained only by a TypeScript type that does not
   // survive the package boundary: a JavaScript caller passing
   // `"../../../../../../etc"` read outside the curriculum root entirely before
   // this call went through `spanishMockDir`. Found by security review.
   const dir = spanishMockDir(level);
+  const vocabulary = loadStemVocabulary(root);
+  const { taught } = spanishTaughtForms(root, level);
   return [1, 2].map((mock) => {
     const paper = readFileSync(resolve(root, `${dir}/mock-${mock}-paper.md`), "utf8");
     const key = readFileSync(resolve(root, `${dir}/mock-${mock}-answer-key.md`), "utf8");

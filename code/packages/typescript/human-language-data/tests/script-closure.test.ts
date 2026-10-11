@@ -188,9 +188,12 @@ describe("track rollups", () => {
   });
 });
 
+const REAL_SCRIPT_LESSONS = loadEverything().lessons;
+const REAL_SCRIPT_CLOSURE = measureScriptClosure(REAL_SCRIPT_LESSONS);
+
 describe("the real corpus", () => {
-  const { lessons } = loadEverything();
-  const report = measureScriptClosure(lessons);
+  const lessons = REAL_SCRIPT_LESSONS;
+  const report = REAL_SCRIPT_CLOSURE;
 
   it("measures every non-Latin track and no Latin one", () => {
     expect(report.summary.tracksWithScript).toBeGreaterThanOrEqual(10);
@@ -375,7 +378,7 @@ describe("a headword without a romanization", () => {
   };
 
   it("is never added to a track that does not already carry the debt", () => {
-    const report = measureScriptClosure(loadEverything().lessons);
+    const report = REAL_SCRIPT_CLOSURE;
     for (const track of report.tracks) {
       expect(
         track.headwordsWithoutRomanization,
@@ -385,7 +388,7 @@ describe("a headword without a romanization", () => {
   });
 
   it("names only tracks that actually carry the debt, so the ceiling cannot rot into a floor", () => {
-    const report = measureScriptClosure(loadEverything().lessons);
+    const report = REAL_SCRIPT_CLOSURE;
     const carrying = new Set(
       report.tracks
         .filter((track) => track.headwordsWithoutRomanization > 0)
@@ -488,8 +491,7 @@ describe("an unknown script is unmeasured, not clean", () => {
   });
 
   it("reports zero unknown scripts for the real corpus", () => {
-    const { lessons } = loadEverything();
-    expect(measureScriptClosure(lessons).unknownScriptTracks).toEqual([]);
+    expect(REAL_SCRIPT_CLOSURE.unknownScriptTracks).toEqual([]);
   });
 });
 

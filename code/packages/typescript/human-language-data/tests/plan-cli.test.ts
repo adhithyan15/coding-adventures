@@ -139,7 +139,7 @@ afterAll(() => {
 // the head size (it is non-zero only for an unreadable inventory), so the last
 // case reads the same run instead of planning the whole corpus again. Memoising
 // is safe because the shared copy is clean whenever no case is mid-edit, and the
-// value is computed lazily, so either case alone still computes it for itself.
+// value is computed at import, so every selected case sees the same clean run.
 let cleanShared: { code: number; out: string; err: string } | undefined;
 function cleanSharedRun(): { code: number; out: string; err: string } {
   cleanShared ??= run(sharedRoot, 200);
@@ -187,6 +187,12 @@ function committedInventoryPairs(root = defaultCurriculumRoot()): Set<string> {
   );
 }
 
+// Immutable clean comparisons are computed once before timed assertions.
+cleanShared = run(sharedRoot, 200);
+vi.restoreAllMocks();
+const realPlan = run(defaultCurriculumRoot(), 200);
+vi.restoreAllMocks();
+
 describe("the plan CLI", () => {
   it("leads French and German with their exam gap on a clean corpus", () => {
     // HL16 adds one assessment-contract item per track ahead of content proxy
@@ -197,9 +203,7 @@ describe("the plan CLI", () => {
     // on the committed corpus is safe, and the pruned copy must plan identically.
     // If it ever differs, one of those directories has become an input and must
     // come off the list.
-    vi.restoreAllMocks();
-    const real = run(defaultCurriculumRoot(), 200);
-    expect({ code, out, err }).toEqual(real);
+    expect({ code, out, err }).toEqual(realPlan);
     expect(code).toBe(0);
     expect(out).toMatch(/exam-point — french/);
     expect(out).toMatch(/exam-point — german/);

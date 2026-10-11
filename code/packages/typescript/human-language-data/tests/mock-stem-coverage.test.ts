@@ -241,6 +241,10 @@ describe("the committed vocabulary", () => {
 });
 
 describe("the level is a closed set, not a path fragment", () => {
+  it("rejects an invalid level before reading an absent corpus", () => {
+    expect(() => reportSpanishMockStemCoverage(join(tmpdir(), "hl-absent-corpus-for-invalid-level"), "../../etc" as never)).toThrow(/unknown mock level/);
+  });
+
   it("refuses a level that would escape the curriculum root", () => {
     // `reportSpanishMockStemCoverage` is exported from `index.ts`, and a
     // TypeScript union does not survive the package boundary. A first draft
