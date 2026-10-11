@@ -83,6 +83,9 @@ conservative.
 An exact variable-free exponent chain evaluating to one may preserve that
 nonpositive range; other or dynamic exponents, sign-rooted exponents, and
 overrides remain conservative.
+Built-in `sign`, `entier`, `sin`, and `arctan` may preserve that nonpositive
+unit range, including nested combinations; non-monotone, unrestricted, and
+overridden wrappers remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The

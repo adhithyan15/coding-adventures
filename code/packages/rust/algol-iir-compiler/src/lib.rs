@@ -4166,11 +4166,30 @@ impl Compiler {
                 }
             }
         }
-        if node.rule_name != "proc_call" {
-            let children = direct_nodes(node);
-            if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_nonpositive_unit_sign_operand(children[0]);
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")?
+                .value
+                .clone();
+            let target_name = self.resolve_procedure_identity(&source_name);
+            if self.proc_sigs.contains_key(&target_name) {
+                return None;
             }
+            let actuals = self.standard_fn_actuals(node);
+            if actuals.len() != 1 {
+                return None;
+            }
+            return match target_name.as_str() {
+                "sign" | "entier" | "sin" | "arctan" => {
+                    self.builtin_nonpositive_unit_sign_operand(actuals[0])
+                }
+                _ => None,
+            };
+        }
+        let children = direct_nodes(node);
+        if direct_tokens(node).is_empty() && children.len() == 1 {
+            return self.builtin_nonpositive_unit_sign_operand(children[0]);
         }
         None
     }
@@ -14455,6 +14474,44 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "nonidentity or dynamic exponents, sign-rooted exponents, and overrides must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_monotone_nonpositive_exp_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(exp(sin(-abs(sign(pick()))))))); output(x) end",
+            "begin real procedure pick; pick := 0.0; real x; x := entier(sqrt(cos(exp(arctan(entier(sign(-abs(sign(pick()))))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a monotone built-in mapping of a nonpositive unit exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_monotone_nonpositive_exp_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(cos(-abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(-abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(sin(-pick()))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure sin(x); value x; real x; sin := 0.0; real result; result := entier(sqrt(cos(exp(sin(-abs(sign(pick()))))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "non-monotone, unrestricted, and overridden wrappers must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
