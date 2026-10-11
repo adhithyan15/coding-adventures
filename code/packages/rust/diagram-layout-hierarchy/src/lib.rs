@@ -707,7 +707,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -759,6 +759,8 @@ mod tests {
                     shape: DiagramShape::LoopLimit, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "manual-input".into(), label: "Manual input".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::ManualInput, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "multi-document".into(), label: "Documents".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::MultiDocument, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -803,6 +805,8 @@ mod tests {
         assert_eq!((layout.nodes[23].width, layout.nodes[23].height), (132.0, 54.0));
         assert_eq!(layout.nodes[24].shape, DiagramShape::ManualInput);
         assert_eq!((layout.nodes[24].width, layout.nodes[24].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[25].shape, DiagramShape::MultiDocument);
+        assert_eq!((layout.nodes[25].width, layout.nodes[25].height), (132.0, 54.0));
     }
 
     #[test]

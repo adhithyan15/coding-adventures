@@ -30,6 +30,7 @@
     "junction-shapes",
     "loop-limit-shapes",
     "manual-input-shapes",
+    "multi-document-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",

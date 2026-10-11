@@ -6909,6 +6909,7 @@ fn parse_swimlane_shape_attributes(
                     "f-circ" | "junction" | "filled-circle" => DiagramShape::FilledCircle,
                     "notch-pent" | "loop-limit" | "notched-pentagon" => DiagramShape::LoopLimit,
                     "sl-rect" | "manual-input" | "sloped-rectangle" => DiagramShape::ManualInput,
+                    "docs" | "documents" | "st-doc" | "stacked-document" => DiagramShape::MultiDocument,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

@@ -1018,6 +1018,8 @@ Loop limits recognize `notch-pent`, `loop-limit`, and `notched-pentagon`
 aliases.
 Manual inputs recognize `sl-rect`, `manual-input`, and `sloped-rectangle`
 aliases.
+Multi-documents recognize `docs`, `documents`, `st-doc`, and
+`stacked-document` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint
