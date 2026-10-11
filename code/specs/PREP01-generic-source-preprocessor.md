@@ -937,3 +937,34 @@ Other dialects continue to reject paste. No placemarker, variadic, general
 preprocessing-token concatenation, or arbitrary retokenization is claimed.
 Tests cover raw-versus-preexpanded spelling, rescan, each rejected shape,
 provenance, and tight budgets through the generic engine and rooted C path.
+
+
+## 12. Bounded C identifier-suffix paste stage
+
+Extend the single-paste function-like macro subset with the symmetric shape
+`<parameter> ## <literal identifier>`. Keep the existing prefix shape.
+Exactly one operand must be a parameter; its argument must contain exactly
+one raw identifier token. The literal operand must be an identifier that is
+not a parameter. Concatenate in source order and accept only a C `NAME`,
+excluding keywords. With `#define NAME tail`, `#define NAMEpost 7`, and
+`#define SUFFIX(x) x ## post`, `SUFFIX(NAME)` emits `7` after rescan.
+The parameter is not pre-expanded when used only next to paste. A separate
+plain occurrence still uses its pre-expanded value. This implements the
+preceded-or-followed rule in WG14 N843 sections 6.10.3.1 and 6.10.3.3:
+<https://www.open-std.org/jtc1/sc22/wg14/www/docs/n843.htm>.
+
+Resolve the raw operand without cloning it, project token and spelling bytes
+before invoking the dialect hook, charge aggregate synthesized bytes, and
+validate the returned token's type and exact concatenated spelling. Preserve
+the raw argument's physical locus and expansion chain, including forwarded
+arguments. Retain hide sets and ordinary rescan; a pasted self-name must not
+re-expand recursively. No new bound or dialect-specific policy belongs in
+the engine. Non-C dialects continue to decline the hook.
+
+Empty/multi-token, numeric, string, punctuation, and keyword-forming operands
+remain rejected. Two parameters, two literal operands, object-like paste,
+multiple paste operators, edge operators, and stringize combinations remain
+unsupported. Placemarker, variadic, and arbitrary-token paste remain pending.
+Tests cover suffix raw/plain use, rescan and self-name termination, direct and
+forwarded provenance, pre-hook budget rejection, invalid hook results, explicit
+unsupported shapes, and rooted C success/error locations.

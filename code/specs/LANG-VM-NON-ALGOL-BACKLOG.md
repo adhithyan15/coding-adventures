@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited after native JavaScript three-argument console
+Status date: 2026-10-11 — re-audited after partial Perl 5.004_69
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -440,21 +440,28 @@ lexer division/regex ambiguity in LANG78; that repair remains open. The next
 selection rotates to LANG82's distinct, own-archive-backed partial Perl
 5.004_69 pair, whose new hint-controlled constant hooks remain unsupported.
 
+PR #17236 delivered that distinct, explicitly partial Perl 5.004_69 pair
+and merged as `f46666f5f17d231b8132618e0b3ffb84d1f068ac` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 114
+explicitly partial pairs and 662 pending; full syntax and inventory
+exhaustiveness remain unproven. The next selection rotates to PREP01's
+bounded C identifier-suffix paste stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add the distinct, explicitly partial
-   Perl 5.004_69 pair from its own historical archive. Keep the standalone
-   decimal arithmetic-print subset; reject pragmas and hint mutation alongside
-   the established numeric and unsupported-input boundaries. Keep 5.004_01-t1
-   pending without its own source.
-2. **LANG78 JavaScript:** the three-argument numeric console stage is complete.
+1. **PREP01 C (selected):** add one raw identifier parameter followed by
+   one literal identifier suffix around `##`, using the generic macro engine.
+   Preserve prefix paste, raw/plain argument distinction, rescan, provenance,
+   and pre-allocation budgets. Full C `#if`, broader stringize, and general
+   paste remain open.
+2. **LANG82 continued:** the own-archive-backed partial Perl 5.004_69 pair
+   is complete for its declared subset. Continue distinct source-backed pairs;
+   keep 5.004_01-t1 pending without its own source and do not claim full syntax.
+3. **LANG78 JavaScript:** the three-argument numeric console stage is complete.
    A separate division/regex lexical-goal repair and broader native frontend
    semantics remain open, with Node only as a conformance oracle.
-3. **PREP01 C:** bounded identifier-prefix paste is complete; full C `#if`,
-   broader stringize, and broader token paste remain open. Preserve generic
-   bounds and provenance as those semantics advance.
 4. **LANG79 Python:** the three-argument numeric `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
