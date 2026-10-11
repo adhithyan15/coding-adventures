@@ -17208,6 +17208,14 @@ eight center lanes, Go endpoint convenience, and portable build-tool owners
 remain separate. The primary checkout stays untouched, and the protected
 parity checkout is reused to preserve restart continuity.
 
+The TypeScript regression suite fails seven checks against unchanged source
+and passes after repair (32 total native tests, 100% line and 95.23% branch
+coverage). Same-lane trig, point2d and bezier2d builds and 63/46/15 tests pass.
+The Arc2D BUILD now compiles TypeScript before its coverage gate. Neutral
+validation passes 23 records and 11 validator tests; inventory tests pass ten
+cases. Repository-plan validation, exact-head security review and live CI are
+still delivery gates, not implied by the native results.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
