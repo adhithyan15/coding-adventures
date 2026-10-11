@@ -1000,6 +1000,10 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::HorizontalCylinder => horizontal_cylinder_instruction(
+                (node.x, node.y, node.width, node.height),
+                Some(fill.clone()), stroke.clone(), stroke_width, stroke_dash.clone(),
+            ),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1182,6 +1186,7 @@ where
                 DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraces => (node.x + 22.0, node.y + 10.0, node.width - 44.0, node.height - 16.0),
                 DiagramShape::Document => (node.x + 8.0, node.y + 7.0, node.width - 16.0, node.height - 25.0),
+                DiagramShape::HorizontalCylinder => (node.x + 18.0, node.y + 10.0, node.width - 36.0, node.height - 16.0),
                 _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
             };
             text_children.push(text_node(
@@ -1999,6 +2004,11 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
+        DiagramShape::HorizontalCylinder => horizontal_cylinder_instruction(
+            (node.x, node.y, node.width, node.height),
+            Some(node.style.fill.clone()), node.style.stroke.clone(),
+            node.style.stroke_width, node.style.stroke_dash.clone(),
+        ),
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2348,6 +2358,77 @@ fn delay_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathComma
         PathCommand::LineTo { x, y: y + height },
         PathCommand::Close,
     ]
+}
+
+fn horizontal_cylinder_instruction(
+    bounds: (f64, f64, f64, f64),
+    fill: Option<String>,
+    stroke: String,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let radius_x = (height * 0.18).min(width / 4.0);
+    let kappa = 0.552_284_749_8;
+    let outer = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: x + radius_x, y },
+            PathCommand::CubicTo {
+                cx1: x + radius_x - radius_x * kappa, cy1: y,
+                cx2: x, cy2: y + height * (0.5 - kappa / 2.0),
+                x, y: y + height / 2.0,
+            },
+            PathCommand::CubicTo {
+                cx1: x, cy1: y + height * (0.5 + kappa / 2.0),
+                cx2: x + radius_x - radius_x * kappa, cy2: y + height,
+                x: x + radius_x, y: y + height,
+            },
+            PathCommand::LineTo { x: x + width - radius_x, y: y + height },
+            PathCommand::CubicTo {
+                cx1: x + width + radius_x * (kappa - 1.0), cy1: y + height,
+                cx2: x + width, cy2: y + height * (0.5 + kappa / 2.0),
+                x: x + width, y: y + height / 2.0,
+            },
+            PathCommand::CubicTo {
+                cx1: x + width, cy1: y + height * (0.5 - kappa / 2.0),
+                cx2: x + width + radius_x * (kappa - 1.0), cy2: y,
+                x: x + width - radius_x, y,
+            },
+            PathCommand::Close,
+        ],
+        fill,
+        fill_rule: None,
+        stroke: Some(stroke.clone()),
+        stroke_width: Some(stroke_width),
+        stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: stroke_dash.clone(),
+        stroke_dash_offset: None,
+    });
+    let rim = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: x + width - radius_x, y },
+            PathCommand::CubicTo {
+                cx1: x + width - radius_x - radius_x * kappa, cy1: y,
+                cx2: x + width - radius_x - radius_x * kappa, cy2: y + height,
+                x: x + width - radius_x, y: y + height,
+            },
+        ],
+        fill: None,
+        fill_rule: None,
+        stroke: Some(stroke),
+        stroke_width: Some(stroke_width),
+        stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash,
+        stroke_dash_offset: None,
+    });
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(), children: vec![outer, rim],
+        transform: None, opacity: None,
+    })
 }
 
 fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
