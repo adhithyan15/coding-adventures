@@ -47,7 +47,7 @@ hearing: which verb carries it.
 | *Zwanzig Jahre alt. Und du?* | Twenty years old. And you? |
 | *Ich bin achtzehn.* | I am eighteen. |
 | *Und du bist müde.* | And you are tired. |
-| *Aber nicht alt!* | But not old! |
+| *Müde, nicht alt!* | Tired, not old! |
 
 Every line runs on the same verb, and two of them drop it the way speech does —
 *zwanzig Jahre alt* answers the question on its own. Nothing here needs *haben*,

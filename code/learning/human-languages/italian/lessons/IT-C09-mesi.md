@@ -80,5 +80,5 @@ keep the doubled/assimilated look (*ottobre*, like *otto*). And two payoffs land
 
 [PAUSE 3s] Which god links *marzo* and *martedì*? (**Mars**.) Why is *dicembre*
 Latin for "ten"? (The Roman year began in March.) Which two months honour real
-**people**? (*Luglio* — Julius; *agosto* — Augustus.) Next: the **stagioni**, the
+**people**? (*Luglio* — Julius; *agosto* — Augustus.) Next: the
 seasons.

@@ -64,8 +64,8 @@ which is why *cinque* opens like English *chin*. The ordinal was not pulled, and
 it still opens **kw-**: *KWIN-to*.
 
 So this pair is a sound change caught halfway through: one word moved and its twin
-did not. Listen for the same split in *dieci* against *decimo*, five lessons
-ahead — the cardinal softened, the ordinal did not.
+did not. Listen for the same split in *dieci* against the word for "tenth," five
+lessons ahead — the cardinal softened, the ordinal did not.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-QUINTO-02, IT-SOUND-QUINTO-03] -->
@@ -80,5 +80,3 @@ ahead — the cardinal softened, the ordinal did not.
 
 [PAUSE 3s] Why do *cinque* and *quinto* not rhyme? (**The cardinal softened its opening to
 *ch-* and the ordinal kept *kw-*.**) Say the fifth floor. (**Il quinto piano**.)
-And which pair five lessons ahead does the same thing? (***Dieci*** against
-***decimo***.)

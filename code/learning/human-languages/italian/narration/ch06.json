@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2aac80fc15236a05",
+  "sourceHash": "fnv1a64:d089a0d145ed498d",
   "lessons": [
     {
       "id": "IT-C06-numeri-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e68952842d442ec",
+      "sourceHash": "fnv1a64:6bdbefb7eaf86478",
       "notice": null,
       "blocks": [
         {
@@ -89,7 +89,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "uno is also \"a/an,\" and it flexes by gender and the following sound: un (before most masc. nouns), uno (before tricky masc. clusters like s+consonant or z-), una (fem.). un caffè \"a/one coffee,\" una birra \"a/one beer.\" The others (due, tre…) don't change."
+              "text": "uno is also \"a/an,\" and it flexes by gender and the following sound: un (before most masc. nouns), uno (before tricky masc. clusters like s+consonant or z-), una (fem.). un giorno \"a/one day,\" una sera \"an/one evening.\" The others (due, tre…) don't change."
             }
           ]
         },
@@ -125,11 +125,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"un caffè, una birra\" — uno becomes un/una before a noun",
+              "instruction": "\"un giorno, una sera\" — uno becomes un/una before a noun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"un caffè, una birra\" — *uno* → un/una before a noun]"
+              "source": "[YOU SAY: \"un giorno, una sera\" — *uno* → un/una before a noun]"
             }
           ]
         },

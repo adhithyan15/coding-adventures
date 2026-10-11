@@ -62,8 +62,8 @@ Four sentences, one idea: *nāku telugu vaccu*, a **skill**; *nāku telusu*, a
 **taste**. Chapter 6's dative subject was no curiosity: it is how Telugu files
 what happens **to** you.
 
-A native verb does it too — **నచ్చు** (*naccu*), "to be pleasing": **నాకు ఇది
-నచ్చింది** (*nāku idi naccindi*). Tamil **நச்சு** and Kannada **ನಚ್ಚು** are the
+A native verb does it too — **నచ్చు** (*naccu*), "to be pleasing": **నాకు తెలుగు
+నచ్చింది** (*nāku telugu naccindi*). Tamil **நச்சு** and Kannada **ನಚ್ಚು** are the
 same verb: *iṣṭaṁ* displaced nothing.
 
 One shape takes an ordinary subject: **ఇష్టపడు** (*iṣṭapaḍu*), **నేను

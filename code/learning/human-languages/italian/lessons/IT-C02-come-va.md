@@ -40,7 +40,7 @@ same “going” picture as English.
 
 > **Come va?** = “How’s it going?”
 
-**Va** comes from **andare**, “to go.” Unlike *stai / sta*, this question does
+**Va** is a form of the Italian verb “to go.” Unlike *stai / sta*, this question does
 not force you to choose an informal or formal ending, so it is useful in either
 setting.
 
@@ -53,9 +53,9 @@ setting.
 Spanish also uses the “stand” picture in *¿cómo estás?*; French and German use a
 “go” picture. Italian keeps **both**, which makes it a bridge between them. The
 comparison is only a memory aid: in Italian, simply connect **stai** with
-*stare* and **va** with *andare*.
+*stare* and **va** with “go.”
 
-You will learn all six forms of *andare* much later. For now, **va** is one
+You will learn the whole verb “to go” much later. For now, **va** is one
 ready-made piece inside this question.
 
 ## Guided Practice
@@ -72,6 +72,6 @@ ready-made piece inside this question.
 <!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02] -->
 
 [PAUSE 3s] Which question uses “stand”? (**Come stai?**) Which uses “go”?
-(**Come va?**) What infinitive owns **va**? (**Andare**.) Must *Come va?* choose
+(**Come va?**) What does **va** mean? (**It goes**.) Must *Come va?* choose
 between *tu* and *Lei*? (**No**.) Next: answer with the original Italian
 “so-so.”

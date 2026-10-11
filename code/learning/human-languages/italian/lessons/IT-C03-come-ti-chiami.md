@@ -79,4 +79,4 @@ you're called, not *what* you are.
 [PAUSE 3s] What does *Come ti chiami?* literally ask? ("How do you call
 yourself?") What changes for the formal *Lei* version? (*ti chiami* → *si
 chiama*.) Which "how" word is it built on? (*come* ← *quōmodo*.) Next: the reply
-when you meet — **piacere**.
+when you meet — "a pleasure."

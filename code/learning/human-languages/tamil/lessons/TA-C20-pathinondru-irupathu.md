@@ -49,9 +49,9 @@ ten-echo compounding you've now seen across Kannada, Telugu, and Malayalam.
 ## You'll want to know: இருபது — transparently "two-tens"
 <!-- hl-knowledge: introduces=[TA-LEX-PATHINONDRU-IRUPATHU-02]; assesses=[] -->
 
-**இருபது** (*irupathu*, "**twenty**") = **இரு** (*iru*, an older word for
-"**two**," alongside the everyday **இரண்டு** *iraṇḍu*) + **பத்து** (*pathu*,
-"**ten**") — fully transparent as "**two-tens**," matching **Malayalam's**
+**இரு** + **பத்து** → **இருபது** (*irupathu*, "**twenty**"): an older word for
+"**two**," alongside the everyday **இரண்டு** *iraṇḍu*, plus *pathu*,
+"**ten**" — fully transparent as "**two-tens**," matching **Malayalam's**
 own *irupathu* almost letter-for-letter.
 
 ## Why it's said this way: Be honest: one shared Dravidian idea, four different other-family answers
@@ -80,8 +80,8 @@ Telugu, Kannada, and Malayalam all do.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-LEX-PATHINONDRU-IRUPATHU-01, TA-LEX-PATHINONDRU-IRUPATHU-02, TA-PRAGMATICS-PATHINONDRU-IRUPATHU-03] -->
 
-[PAUSE 3s] What two pieces build **இருபது** (twenty)? (**இரு** "two" +
-**பத்து** "ten" — "**two-tens**.") Do all four major Dravidian
+[PAUSE 3s] What two pieces build **இருபது** (twenty)? (**இரு** + **பத்து** → **இருபது**:
+"two" and "ten" — "**two-tens**.") Do all four major Dravidian
 languages build "twenty" the same compositional way? (**Yes** — Tamil and
 Malayalam keep it fully transparent today; Kannada shares the same
 compositional origin but its modern "two"/"ten" words no longer visibly

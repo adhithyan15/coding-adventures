@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Being, Going, and the Past with Essere",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:051d6aa81d3d3891",
+  "sourceHash": "fnv1a64:bf02a2c2da0ab030",
   "lessons": [
     {
       "id": "IT-C16-essere",
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:75af1ae1f3a06298",
+      "sourceHash": "fnv1a64:d7da5690173359e4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -347,7 +347,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is essere’s participle? (Stato, borrowed from stare.) What can sono stato mean? (“I have been” or “I have stayed.”) Which language keeps the two verbs fully separate? (Spanish.) Which fuses them most? (French.) Next: the two-stem verb andare, “to go.”"
+              "text": "What is essere’s participle? (Stato, borrowed from stare.) What can sono stato mean? (“I have been” or “I have stayed.”) Which language keeps the two verbs fully separate? (Spanish.) Which fuses them most? (French.) Next: the two-stem verb “to go.”"
             }
           ]
         }

@@ -71,6 +71,9 @@ the two roots are **not** related: Arabic and English inherited "ten" from
 two entirely separate language families, so this is a parallel, not a shared
 borrowing or common ancestor.
 
+And now the age question has its answer: **عمري عشرون سنة** (*ʿumrī
+ʿishrūna sana*) — "I am twenty years old," literally "my age [is] twenty years."
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02] -->
 
@@ -78,6 +81,7 @@ borrowing or common ancestor.
 - [YOU SAY: "aḥada ʿashar, ithnā ʿashar, thalāthata ʿashar" — 11, 12, 13, "X
   and ten"]
 - [YOU SAY: "ʿishrūn" — twenty, its OWN word, not "two-ten"]
+- [YOU SAY: "ʿumrī ʿishrūna sana" — my age is twenty years, no verb at all]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02] -->

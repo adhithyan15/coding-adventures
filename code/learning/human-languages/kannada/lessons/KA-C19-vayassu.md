@@ -52,7 +52,7 @@ before splitting toward different specific meanings.
 
 > **ನಿನ್ನ ವಯಸ್ಸು ಎಷ್ಟು?** — "How old are you?" — literally "**your age — how much?**" (*ninna vayassu eṣṭu?*)
 
-> **ನನ್ನ ವಯಸ್ಸು ಇಪ್ಪತ್ತು.** — "I am twenty years old." — literally "**my age [is] twenty**." (*nanna vayassu ippattu.*)
+> **ನನ್ನ ವಯಸ್ಸು ಹತ್ತು.** — "I am ten years old." — literally "**my age [is] ten**." (*nanna vayassu hattu.*)
 
 Just like Arabic's *ʿumr*, this is a **verbless** construction in the present
 tense — Kannada simply states "your age" and "how much," with no "is" needed.
@@ -66,7 +66,7 @@ in front of **ವಯಸ್ಸು**.
 [PAUSE 1s]
 - [YOU SAY: "vayassu" — age]
 - [YOU SAY: "ninna vayassu eṣṭu?" — how old are you?]
-- [YOU SAY: "nanna vayassu ippattu" — I am twenty, "my age [is] twenty"]
+- [YOU SAY: "nanna vayassu hattu" — I am ten, "my age [is] ten"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03, KA-ETYMON-C19-VAYASSU-01, KA-GRAMMAR-C19-VAYASSU-02] -->
@@ -74,5 +74,5 @@ in front of **ವಯಸ್ಸು**.
 [PAUSE 3s] What Sanskrit word is **ವಯಸ್ಸು** from, and what Latin word is its PIE
 cousin? (**वयस्**, *vayas*, "age/vigor" — cousin of Latin **vīs**, "force," both
 from PIE *wéyh₁os.) Does Kannada use a verb to state age? (**No** — "your age
-how-much," no verb needed.) How do you say "I am twenty"? (*Nanna vayassu
-ippattu* — "my age [is] twenty.")
+how-much," no verb needed.) How do you say "I am ten"? (*Nanna vayassu
+hattu* — "my age [is] ten.")

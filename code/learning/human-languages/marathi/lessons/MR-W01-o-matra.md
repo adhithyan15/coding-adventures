@@ -54,8 +54,8 @@ Put it on the consonant you have:
 
 > **ह** + **ो** → **हो**
 
-**ho.** That is a word: it is **yes**, and you have been saying it since your first
-lesson in Marathi.
+**ho.** That is a word: it is **yes**, and its own word lesson comes once the
+first letters are in your hand.
 
 One consonant and one mark, and a word you could already say became a word you can
 **read**. Nothing was memorised as a picture.

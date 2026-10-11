@@ -76,8 +76,8 @@ front:
 | **அ-** | points **away** — that one, there |
 | **எ-** | **asks** — which one |
 
-So **இவர்** is "this person," **அவர்** (*avar*) "that person," **எவர்** (*evar*)
-"which person." You have been using one front already: **என்ன** (*eṉṉa*),
+So **இவர்** is "this person"; the other two fronts give "that" and "which
+person." You have been using one front already: **என்ன** (*eṉṉa*),
 "what," is the **எ-** of asking.
 
 Two honest notes. **எ-** is the **question**, not a third distance. And Old

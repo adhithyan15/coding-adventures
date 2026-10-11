@@ -72,4 +72,4 @@ So *a presto* is **"until [it is] soon / at hand"** — see you before long.
 
 [PAUSE 3s] What does *presto* mean, and where has English borrowed it? ("Soon /
 quickly" — in music and magic.) What "stand" root does it share with *stare*?
-(Latin *stō/stāre*.) Next: "see you later" — **a più tardi**.
+(Latin *stō/stāre*.) Next: "see you later."

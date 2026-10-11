@@ -74,7 +74,7 @@ person**. The person is in the dative.
 [PAUSE 1s]
 - [YOU SAY: the three coats — "ich", "mich", "mir"]
 - [YOU SAY: "mir" (*meer*) — "to me"]
-- [YOU SAY: "es geht mir" — "it goes to me"]
+- [YOU SAY: "to me" then "mir" — the to-whom form]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MIR-01, GE-GRAMMAR-DATIVE-01] -->

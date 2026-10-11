@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 36,
-  "sourceHash": "fnv1a64:850d3530d8104759",
+  "sourceHash": "fnv1a64:2d7fca275add6918",
   "lessonIds": [
     "ML-C36-kutti",
     "ML-C36-makan",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch36.txt",
   "json": "malayalam/narration/ch36.json",
-  "textHash": "fnv1a64:43d7097dc925534c",
-  "jsonHash": "fnv1a64:fa760448047d27c1",
+  "textHash": "fnv1a64:fec7dc3b39cc135c",
+  "jsonHash": "fnv1a64:d9c5c081aefc8001",
   "findings": []
 }

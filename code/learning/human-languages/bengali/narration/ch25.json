@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Cloth, Shirt, Sari, and Glasses",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:46ec3c50bab77bc4",
+  "sourceHash": "fnv1a64:cb92396262fa17ba",
   "lessons": [
     {
       "id": "BN-C15-kapor",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2ffadfe3db284dbd",
+      "sourceHash": "fnv1a64:63bbf90781df5031",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -226,7 +226,7 @@
             },
             {
               "kind": "speech",
-              "text": "লাল জামা (jama) (lāl jāmā) — a red shirt."
+              "text": "আমার জামা (jama) (āmār jāmā) — my shirt."
             }
           ]
         },
@@ -275,11 +275,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lāl jāmā\" — a red shirt",
+              "instruction": "\"āmār jāmā\" — my shirt",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lāl jāmā\" — a red shirt]"
+              "source": "[YOU SAY: \"āmār jāmā\" — my shirt]"
             },
             {
               "kind": "prompt",

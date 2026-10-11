@@ -73,8 +73,8 @@ You already know its partner: back in Lesson 4 you learned **ت** with **two dot
 above**. Put those same two dots on a *hāʾ* loop and you get the feminine ending.
 Nothing new to memorise — just two known pieces combined.
 
-**Where you've seen it:** the farewell **مع السلامة** (*maʿa s-salāma*) ends in
-**ة** — *salāma* is feminine. That's the next lesson.
+**Where you'll see it:** the farewell you write in the next lesson ends in
+**ة** — its last word is feminine.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02] -->
@@ -92,5 +92,4 @@ Nothing new to memorise — just two known pieces combined.
 changes shape** dramatically by position — four very different coats.) What is
 **ة** made of, and what does its name mean? (*hāʾ*'s loop **+ tāʾ's two dots**;
 "**tied tāʾ**".) What does **ة** tell you about a word, and where can it appear?
-(That it is **feminine**; only at the **end**.) Next: assembling the farewell
-**مع السلامة**.
+(That it is **feminine**; only at the **end**.) Next: assembling the farewell.

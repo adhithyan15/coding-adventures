@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:819b054e1f6afaf5",
+  "sourceHash": "fnv1a64:6315ead785d9d4c8",
   "lessons": [
     {
       "id": "BN-C09-neowa",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:06bcedeb80874908",
+      "sourceHash": "fnv1a64:bfdccfbf67aac6f8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -428,7 +428,7 @@
             },
             {
               "kind": "speech",
-              "text": "আমাকে সাহায্য করুন (āmāke sāhājjo kôrun), \"please help me\"; āmāke is \"to me.\""
+              "text": "সাহায্য করুন (sāhājjo kôrun), \"please help\" — the polite request form of kôrā."
             }
           ]
         },
@@ -534,11 +534,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "please help me — \"āmāke sāhājjo kôrun\"",
+              "instruction": "please help — \"sāhājjo kôrun\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: please help me — \"āmāke sāhājjo kôrun\"]"
+              "source": "[YOU SAY: please help — \"sāhājjo kôrun\"]"
             },
             {
               "kind": "prompt",

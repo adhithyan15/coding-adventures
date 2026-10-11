@@ -54,7 +54,7 @@ with **तेव्हा** in the second half, and the second word is not optio
 
 You have met this machinery before without being told its name. **जेव्हा** is
 built on the relative stem **ज-**, **तेव्हा** on the demonstrative **त-**, and
-the same two stems sit under **जो/तो**. English keeps the pair in *when … then*
+the same two stems sit under Marathi's relative and pointing pronouns. English keeps the pair in *when … then*
 and drops the *then*; Latin kept both in *cum … tum*. Marathi keeps both, always.
 
 Because the frame is spoken in the order the events happen, it is also the

@@ -72,7 +72,7 @@ and body parts are where you feel it most:
 [PAUSE 1s]
 - [YOU SAY: "die Hand" — final **d** said as **t**]
 - [YOU SAY: the plural, and hear the *d* return — "die Hän**d**e"]
-- [YOU SAY: the Germanic set — "Hand, Arm, Finger, Fuß, Herz"]
+- [YOU SAY: the Germanic match — "Hand" beside English "hand", one word]
 - [YOU SAY: the gap — "*main*, *mano*, *mão* … but **Hand**"]
 
 ## Wrap-up Recall

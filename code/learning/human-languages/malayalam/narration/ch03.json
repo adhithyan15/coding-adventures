@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7d26e3938dd4e217",
+  "sourceHash": "fnv1a64:481130ff7ab59c10",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:71b9120d517b2d76",
+      "sourceHash": "fnv1a64:366af2d1305e76ee",
       "notice": {
         "modality": "sight",
         "needs": [

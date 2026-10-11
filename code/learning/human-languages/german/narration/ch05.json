@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 15,
-  "sourceHash": "fnv1a64:4c56cb67d28901bc",
+  "sourceHash": "fnv1a64:c91cd82d0e83f892",
   "lessons": [
     {
       "id": "GE-C05-wohnen",
@@ -1016,7 +1016,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d550f7cc53e514e",
+      "sourceHash": "fnv1a64:77e87dc513e7d68a",
       "notice": null,
       "blocks": [
         {
@@ -1127,11 +1127,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"wo\", \"wie\", \"wer\", \"wann\"",
+              "instruction": "the two of the family you own — \"wo\", \"wie\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"wo\", \"wie\", \"wer\", \"wann\"]"
+              "source": "[YOU SAY: the two of the family you own — \"wo\", \"wie\"]"
             }
           ]
         },

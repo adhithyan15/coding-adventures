@@ -68,10 +68,10 @@ relative, which is why both point at things rather than people.
 [PAUSE 1s]
 - [YOU SAY: "es" (*ess*) — "it"]
 - [YOU SAY: "it" then "es"; "that" then "das" — the same t/s swap, twice]
-- [YOU SAY: "es geht" — "it goes"]
+- [YOU SAY: "es" — "it," for a thing or a state]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ES-01, GE-ETYMON-ES-02] -->
 
 [PAUSE 3s] What is *es*? ("It.") Which English consonant turns up as *s* in
-German? (*T* — *it/es*, *that/das*, *what/was*.) Say "it goes." (*Es geht*.)
+German? (*T* — *it/es*, *that/das*, *what/was*.)

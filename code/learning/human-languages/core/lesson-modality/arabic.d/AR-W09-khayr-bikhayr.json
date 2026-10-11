@@ -3,7 +3,7 @@
     "id": "AR-W09-khayr-bikhayr",
     "language": "arabic",
     "chapter": 3,
-    "sequence": 290,
+    "sequence": 345,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:51150a65ec1d038e",
+    "sourceHash": "fnv1a64:4813fd90e8618b19",
     "detachableSegments": [
       "Script — Assemble خير — right to left",
       "Script — Then بخير — \"(I'm) well\""

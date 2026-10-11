@@ -82,5 +82,5 @@ things and drops the word *ore* entirely; the article **le** carries it. Only
 [PAUSE 3s] What word is *ora* from, and its sisters? (Latin *hōra* ← Greek *hṓrā*;
 French *heure*, German *Uhr*, English *hour*.) Why "*sono le* due" but "*è l'*una"?
 (Plural hours take *sono le …*; one o'clock is singular *è l'una*.) What word does
-the *le* stand in for? (*ore*, "hours" — feminine.) Next: **mezzogiorno** and
-**mezzanotte** — noon and midnight.
+the *le* stand in for? (*ore*, "hours" — feminine.) Next: noon and
+midnight.

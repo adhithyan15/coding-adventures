@@ -59,16 +59,15 @@ family tie to last chapter's **माझं** (*mājhaṁ*, "my"): the same firs
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-AAHE-COPULA, MR-LEX-BARAM-01] -->
 
 Pair **मी** with the copula **आहे**: **मी आहे** (*mī āhe*, "I am"). To answer
-that you are well, reach back to Chapter 4's **बरं** (*baraṁ*, "fine") in its
-gendered form: **मी बरा आहे** (*mī barā āhe*, a man) / **मी बरी आहे** (*mī barī
-āhe*, a woman) — "I am fine."
+that you are well, reach back to Chapter 4's **बरं** (*baraṁ*, "fine"): the
+next lesson gives it the gendered form that sits between **मी** and **आहे**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MI, MR-LEX-AAHE-COPULA, MR-LEX-BARAM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mī" — I; then "mī āhe" — I am]
-- [YOU SAY: "I am fine" for yourself (*mī barā/barī āhe*)]
+- [YOU SAY: "baraṁ" — fine — then "mī āhe" once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MI, MR-ETYMON-MI-AHAM-EGO, MR-LEX-MAJHE] -->

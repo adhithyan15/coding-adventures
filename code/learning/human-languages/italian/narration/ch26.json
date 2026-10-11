@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Primo, Secondo, Terzo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:08a1dfa07ab5548e",
+  "sourceHash": "fnv1a64:9a2ba134e0a448a3",
   "lessons": [
     {
       "id": "IT-C26-primo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c12bd83a71dc605",
+      "sourceHash": "fnv1a64:c4ab7f1c95944ef1",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +115,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This book has used primo once, and hidden it. The seasons lesson glossed primavera as \"the first green\" — prima vera, the first spring — and the word behind that gloss was never given. Now it is."
+              "text": "This book has used primo once, and hidden it. The seasons lesson glossed primavera as \"the first spring\" — Latin prīma vēra — and the word behind that gloss was never given. Now it is."
             },
             {
               "kind": "speech",
@@ -756,7 +756,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b331ba453f39be6",
+      "sourceHash": "fnv1a64:f28f478949b13cd8",
       "notice": null,
       "blocks": [
         {
@@ -865,7 +865,7 @@
             },
             {
               "kind": "speech",
-              "text": "So this pair is a sound change caught halfway through: one word moved and its twin did not. Listen for the same split in dieci against decimo, five lessons ahead — the cardinal softened, the ordinal did not."
+              "text": "So this pair is a sound change caught halfway through: one word moved and its twin did not. Listen for the same split in dieci against the word for \"tenth,\" five lessons ahead — the cardinal softened, the ordinal did not."
             }
           ]
         },
@@ -922,7 +922,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why do cinque and quinto not rhyme? (The cardinal softened its opening to ch- and the ordinal kept kw-.) Say the fifth floor. (Il quinto piano.) And which pair five lessons ahead does the same thing? (Dieci against decimo.)"
+              "text": "Why do cinque and quinto not rhyme? (The cardinal softened its opening to ch- and the ordinal kept kw-.) Say the fifth floor. (Il quinto piano.)"
             }
           ]
         }

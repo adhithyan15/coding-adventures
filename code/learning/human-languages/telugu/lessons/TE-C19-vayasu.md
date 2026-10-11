@@ -49,8 +49,8 @@ verbless grammar, just fused together by ordinary Telugu vowel sandhi.
 > **నీ వయసెంత?** — "How old are you?" — literally "**your age how-much**?"
   (*nī vayas-enta?* — from *nī vayasu* + *enta*, "how much," fused by regular
   vowel sandhi into *vayasenta*.)
-> **నా వయస్సు ఇరవై.** — "I am twenty years old." — literally "**my age**
-  [is] **twenty**." (*nā vayasu iravai.*)
+> **నా వయస్సు పది.** — "I am ten years old." — literally "**my age**
+  [is] **ten**." (*nā vayasu padi.*)
 
 Same shape as Kannada: a plain possessive ("your/my age") sitting next to the
 number, **no verb at all**. The only wrinkle is surface-level: everyday spoken
@@ -64,7 +64,7 @@ underlying grammar is identical to Kannada's, just written closer together.
 [PAUSE 1s]
 - [YOU SAY: "vayasu" — age]
 - [YOU SAY: "nī vayasenta?" — how old are you?]
-- [YOU SAY: "nā vayasu iravai" — I am twenty, "my age [is] twenty"]
+- [YOU SAY: "nā vayasu padi" — I am ten, "my age [is] ten"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C18-GANTA-01, TE-PRAGMATICS-C18-GANTA-02, TE-GRAMMAR-C18-GANTA-03, TE-ETYMON-C19-VAYASU-01, TE-GRAMMAR-C19-VAYASU-02] -->

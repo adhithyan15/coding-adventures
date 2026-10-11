@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bc46ab6a46cbc4b3",
+  "sourceHash": "fnv1a64:32833c2be13945a6",
   "lessons": [
     {
       "id": "GE-C03-danke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9849303726e08a36",
+      "sourceHash": "fnv1a64:784b8f83582f5798",
       "notice": null,
       "blocks": [
         {
@@ -118,11 +118,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"danke\" then \"denken\" — thanks, and the thinking inside it",
+              "instruction": "\"danke\" — thanks, with the thinking inside it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"danke\" then \"denken\" — thanks, and the thinking inside it]"
+              "source": "[YOU SAY: \"danke\" — thanks, with the thinking inside it]"
             },
             {
               "kind": "prompt",
@@ -148,7 +148,7 @@
             },
             {
               "kind": "speech",
-              "text": "What everyday verb is danke built from? (Denken, \"to think.\") What two English words share that same split? (Thank and think.) Where does the stress fall? (On the front: DAHN-kuh.)"
+              "text": "What everyday idea is danke built from? (Thinking — \"to think.\") What two English words share that same split? (Thank and think.) Where does the stress fall? (On the front: DAHN-kuh.)"
             }
           ]
         }
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28cbc995efa43e62",
+      "sourceHash": "fnv1a64:5bc4525f331e12ea",
       "notice": null,
       "blocks": [
         {
@@ -398,11 +398,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"danke\", \"Dank\", \"denken\"",
+              "instruction": "the family — \"danke\", \"Dank\" — thanks as a thought",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"danke\", \"Dank\", \"denken\"]"
+              "source": "[YOU SAY: the family — \"danke\", \"Dank\" — thanks as a thought]"
             }
           ]
         },
@@ -610,7 +610,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:100d0c8041c87a1c",
+      "sourceHash": "fnv1a64:70eb990958032242",
       "notice": null,
       "blocks": [
         {
@@ -656,7 +656,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is worth banking now, because German uses the trick everywhere — sehr, Ihnen, Jahr all hide a lengthening h."
+              "text": "This is worth banking now, because German uses the trick everywhere — several words in the next few lessons hide a lengthening h."
             }
           ]
         },
@@ -766,7 +766,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:81b0d36ae99f80e0",
+      "sourceHash": "fnv1a64:7813afad79c82b38",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -869,11 +869,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"es geht\" — \"it goes\"",
+              "instruction": "\"es\" — \"it,\" for a thing or a state",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"es geht\" — \"it goes\"]"
+              "source": "[YOU SAY: \"es\" — \"it,\" for a thing or a state]"
             }
           ]
         },
@@ -890,7 +890,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is es? (\"It.\") Which English consonant turns up as s in German? (T — it/es, that/das, what/was.) Say \"it goes.\" (Es geht.)"
+              "text": "What is es? (\"It.\") Which English consonant turns up as s in German? (T — it/es, that/das, what/was.)"
             }
           ]
         }
@@ -909,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e184f543bb924d7b",
+      "sourceHash": "fnv1a64:11fdb2f724241cf7",
       "notice": null,
       "blocks": [
         {
@@ -1010,11 +1010,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"es geht mir\" — \"it goes to me\"",
+              "instruction": "\"to me\" then \"mir\" — the to-whom form",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"es geht mir\" — \"it goes to me\"]"
+              "source": "[YOU SAY: \"to me\" then \"mir\" — the to-whom form]"
             }
           ]
         },

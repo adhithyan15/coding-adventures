@@ -73,7 +73,7 @@ says. Once you spot the family, each new one costs almost nothing.
 [PAUSE 1s]
 - [YOU SAY: "wo" (*voh*) — where]
 - [YOU SAY: "Wo wohnst du?" — no "do" needed]
-- [YOU SAY: the family — "wo", "wie", "wer", "wann"]
+- [YOU SAY: the two of the family you own — "wo", "wie"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WO-01, GE-ETYMON-WO-WHERE-02] -->
