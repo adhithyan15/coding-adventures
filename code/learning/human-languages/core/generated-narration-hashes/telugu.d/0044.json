@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 44,
-  "sourceHash": "fnv1a64:9fd11770fb5274b1",
+  "sourceHash": "fnv1a64:b5001f095e299914",
   "lessonIds": [
     "TE-C44-look",
     "TE-C44-listen",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "telugu/narration/ch44.txt",
   "json": "telugu/narration/ch44.json",
-  "textHash": "fnv1a64:0127d395f17f34ca",
-  "jsonHash": "fnv1a64:a3d2e85e60c1d0d3",
+  "textHash": "fnv1a64:16220a374829c851",
+  "jsonHash": "fnv1a64:64ae24e326711c36",
   "findings": []
 }

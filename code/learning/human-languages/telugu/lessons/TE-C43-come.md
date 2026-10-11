@@ -15,17 +15,17 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [TE-LEX-C32-RAA-01]
 introduces:
-  knowledge: [TE-LEX-COME]
+  knowledge: []
 practises:
-  knowledge: [TE-LEX-COME]
+  knowledge: [TE-LEX-C32-RAA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [TE-C32-raa]
 ---
 
 # రా (rā) — come
@@ -36,11 +36,11 @@ reviews_of: []
 [PAUSE 2s] A short run of everyday verbs, one at a time.
 
 ## You'll want to know: రా
-<!-- hl-knowledge: introduces=[TE-LEX-COME]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-RAA-01] -->
 
 **రా** (*rā*) — "come".
 
-The bare command, and one of the shortest words in the language: a single syllable that is a complete sentence.
+You met it beside its partner *vaccu-*; here it opens the run. The bare command, and one of the shortest words in the language: a single syllable that is a complete sentence. The old warning still holds: the endings attach to *vaccu-*, not to *rā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -48,7 +48,7 @@ The bare command, and one of the shortest words in the language: a single syllab
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-RAA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *rā*]
@@ -56,6 +56,6 @@ One more everyday action. Three more follow, and each reuses the ones before it.
 
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-RAA-01] -->
 
 [PAUSE 3s] What does రా mean? ("come".) Say it once more.

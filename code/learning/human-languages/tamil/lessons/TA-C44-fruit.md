@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C44-ASK-01]
 practises:
-  knowledge: [TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-COME]
+  knowledge: [TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-VAA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,7 +52,7 @@ The ழ in the middle is the letter this book has already spent a writing lesson
 The first of five things you might ask somebody for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-VAA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paḻam*]

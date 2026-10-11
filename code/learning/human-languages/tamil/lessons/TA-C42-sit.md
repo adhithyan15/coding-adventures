@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [TA-LEX-COME]
+  knowledge: [TA-LEX-VAA-01]
 introduces:
   knowledge: [TA-LEX-SIT]
 practises:
-  knowledge: [TA-LEX-COME, TA-LEX-SIT]
+  knowledge: [TA-LEX-VAA-01, TA-LEX-SIT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -31,7 +31,7 @@ reviews_of: [TA-C42-come]
 # உட்கார் (uṭkār) — sit
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01] -->
 
 [PAUSE 2s] Before the new one: what did *vā* mean?
 
@@ -48,7 +48,7 @@ Built from *uḷ*, 'inside', and *kār* — to settle oneself in. Tamil often bu
 One more everyday action. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME, TA-LEX-SIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01, TA-LEX-SIT] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uṭkār*]
@@ -56,6 +56,6 @@ One more everyday action. Three follow, and each reuses the ones before.
 - [YOU SAY: it after *vā*, so the two sit together]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME, TA-LEX-SIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01, TA-LEX-SIT] -->
 
 [PAUSE 3s] What does உட்கார் mean? ("sit".) Say it once more.

@@ -15,17 +15,17 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [TE-LEX-C32-CUUDU-01]
 introduces:
-  knowledge: [TE-LEX-LOOK]
+  knowledge: []
 practises:
-  knowledge: [TE-LEX-LOOK]
+  knowledge: [TE-LEX-C32-CUUDU-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [TE-C32-cuudu]
 ---
 
 # చూడు (cūḍu) — look
@@ -36,11 +36,11 @@ reviews_of: []
 [PAUSE 2s] Four verbs for taking things in and putting them out, one at a time.
 
 ## You'll want to know: చూడు
-<!-- hl-knowledge: introduces=[TE-LEX-LOOK]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-CUUDU-01] -->
 
 **చూడు** (*cūḍu*) — "look".
 
-Also 'to see' and 'to look after', the same three-way stem as its Kannada cousin *nōḍu* — the languages are close enough that the pattern travels.
+You met it earlier as "to see, to look"; here it opens the run. It also stretches to 'to look after', the same three meanings Kannada packs into *nōḍu*, although the two verbs themselves are not related.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -48,7 +48,7 @@ Also 'to see' and 'to look after', the same three-way stem as its Kannada cousin
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-LOOK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-CUUDU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cūḍu*]
@@ -56,6 +56,6 @@ One more. Three follow, and each reuses the ones before.
 
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-LOOK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-CUUDU-01] -->
 
 [PAUSE 3s] What does చూడు mean? ("look".) Say it once more.
