@@ -5,7 +5,7 @@ Human Languages curriculum gap report
 0 unknown prerequisites; 50 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 0 mixed, 23 version-2 schema tracks
-27669 drivable lessons (94% of the corpus)
+27743 drivable lessons (94% of the corpus)
 levels: 9434 pre-A1, 18550 A1, 1498 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (100% placed)
 ramp: 0 lessons above 3 new atoms (133 unmeasurable, 100% measurable); 62 chapters above 12
 script ramp: 0 lessons above 3 new glyphs; 0 opening more than 1 writing system at once
@@ -52,55 +52,55 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  27100 voice, 981 sight, 1485 pen of 29566 lessons; 94% drivable
+  27173 voice, 908 sight, 1485 pen of 29566 lessons; 94% drivable
   tables of more than 3 column(s) count as sight
-  27669 lessons have a voice CORE; 954 carry a detachable writing segment (569 rescued for the hands-free view)
-  arabic: 1292 voice, 52 sight, 39 pen; 97% drivable; 282 chapters, 1303 lessons reachable in chapter-prefix order; 45 rescued by a detachable writing segment
-  bengali: 1223 voice, 73 sight, 94 pen; 93% drivable; 262 chapters, 1266 lessons reachable in chapter-prefix order; 64 rescued by a detachable writing segment
+  27743 lessons have a voice CORE; 954 carry a detachable writing segment (570 rescued for the hands-free view)
+  arabic: 1293 voice, 51 sight, 39 pen; 97% drivable; 282 chapters, 1305 lessons reachable in chapter-prefix order; 45 rescued by a detachable writing segment
+  bengali: 1225 voice, 71 sight, 94 pen; 93% drivable; 262 chapters, 1271 lessons reachable in chapter-prefix order; 64 rescued by a detachable writing segment
   chinese: 144 voice, 31 sight, 75 pen; 60% drivable; 29 chapters, 24 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
-  french: 1344 voice, 19 sight, 13 pen; 98% drivable; 257 chapters, 1313 lessons reachable in chapter-prefix order; 4 rescued by a detachable writing segment
+  french: 1347 voice, 16 sight, 13 pen; 98% drivable; 257 chapters, 1328 lessons reachable in chapter-prefix order; 4 rescued by a detachable writing segment
   german: 1364 voice, 10 sight, 10 pen; 99% drivable; 251 chapters, 1333 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
-  gujarati: 614 voice, 54 sight, 140 pen; 86% drivable; 144 chapters, 641 lessons reachable in chapter-prefix order; 77 rescued by a detachable writing segment
-  hindi: 1242 voice, 73 sight, 92 pen; 91% drivable; 275 chapters, 1230 lessons reachable in chapter-prefix order; 42 rescued by a detachable writing segment
-  italian: 1285 voice, 23 sight, 4 pen; 98% drivable; 259 chapters, 1253 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
+  gujarati: 616 voice, 52 sight, 140 pen; 86% drivable; 144 chapters, 645 lessons reachable in chapter-prefix order; 77 rescued by a detachable writing segment
+  hindi: 1243 voice, 72 sight, 92 pen; 91% drivable; 275 chapters, 1232 lessons reachable in chapter-prefix order; 42 rescued by a detachable writing segment
+  italian: 1294 voice, 14 sight, 4 pen; 99% drivable; 259 chapters, 1279 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   japanese: 737 voice, 17 sight, 83 pen; 89% drivable; 142 chapters, 641 lessons reachable in chapter-prefix order; 8 rescued by a detachable writing segment
-  kannada: 1432 voice, 42 sight, 80 pen; 94% drivable; 307 chapters, 1410 lessons reachable in chapter-prefix order; 34 rescued by a detachable writing segment
-  latin: 1285 voice, 15 sight, 7 pen; 98% drivable; 280 chapters, 1276 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
-  malayalam: 1515 voice, 79 sight, 92 pen; 92% drivable; 338 chapters, 1483 lessons reachable in chapter-prefix order; 43 rescued by a detachable writing segment
-  marathi: 1297 voice, 66 sight, 104 pen; 92% drivable; 275 chapters, 1320 lessons reachable in chapter-prefix order; 52 rescued by a detachable writing segment
+  kannada: 1433 voice, 41 sight, 80 pen; 94% drivable; 307 chapters, 1415 lessons reachable in chapter-prefix order; 34 rescued by a detachable writing segment
+  latin: 1287 voice, 13 sight, 7 pen; 99% drivable; 280 chapters, 1279 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
+  malayalam: 1523 voice, 71 sight, 92 pen; 93% drivable; 338 chapters, 1501 lessons reachable in chapter-prefix order; 43 rescued by a detachable writing segment
+  marathi: 1298 voice, 65 sight, 104 pen; 92% drivable; 275 chapters, 1324 lessons reachable in chapter-prefix order; 52 rescued by a detachable writing segment
   marwadi: 797 voice, 42 sight, 58 pen; 89% drivable; 150 chapters, 635 lessons reachable in chapter-prefix order
   persian: 1426 voice, 21 sight, 35 pen; 97% drivable; 286 chapters, 1422 lessons reachable in chapter-prefix order; 7 rescued by a detachable writing segment
-  portuguese: 1280 voice, 12 sight, 4 pen; 99% drivable; 255 chapters, 1269 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
-  punjabi: 645 voice, 53 sight, 214 pen; 76% drivable; 171 chapters, 629 lessons reachable in chapter-prefix order; 50 rescued by a detachable writing segment
+  portuguese: 1284 voice, 8 sight, 4 pen; 99% drivable; 255 chapters, 1274 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
+  punjabi: 647 voice, 51 sight, 214 pen; 76% drivable; 171 chapters, 633 lessons reachable in chapter-prefix order; 50 rescued by a detachable writing segment
   russian: 1276 voice, 26 sight, 37 pen; 96% drivable; 257 chapters, 1277 lessons reachable in chapter-prefix order; 13 rescued by a detachable writing segment
-  sanskrit: 1279 voice, 38 sight, 74 pen; 94% drivable; 257 chapters, 1214 lessons reachable in chapter-prefix order; 22 rescued by a detachable writing segment
-  spanish: 1604 voice, 87 sight, 16 pen; 94% drivable; 511 chapters, 1535 lessons reachable in chapter-prefix order; 3 rescued by a detachable writing segment
-  tamil: 1280 voice, 53 sight, 103 pen; 92% drivable; 280 chapters, 1228 lessons reachable in chapter-prefix order; 36 rescued by a detachable writing segment
-  telugu: 1469 voice, 52 sight, 71 pen; 95% drivable; 314 chapters, 1460 lessons reachable in chapter-prefix order; 36 rescued by a detachable writing segment
-  urdu: 1270 voice, 43 sight, 40 pen; 96% drivable; 263 chapters, 1252 lessons reachable in chapter-prefix order; 23 rescued by a detachable writing segment
+  sanskrit: 1281 voice, 36 sight, 74 pen; 94% drivable; 257 chapters, 1216 lessons reachable in chapter-prefix order; 22 rescued by a detachable writing segment
+  spanish: 1634 voice, 57 sight, 16 pen; 96% drivable; 511 chapters, 1590 lessons reachable in chapter-prefix order; 3 rescued by a detachable writing segment
+  tamil: 1283 voice, 50 sight, 103 pen; 92% drivable; 280 chapters, 1241 lessons reachable in chapter-prefix order; 36 rescued by a detachable writing segment
+  telugu: 1470 voice, 51 sight, 71 pen; 95% drivable; 314 chapters, 1464 lessons reachable in chapter-prefix order; 37 rescued by a detachable writing segment
+  urdu: 1271 voice, 42 sight, 40 pen; 96% drivable; 263 chapters, 1258 lessons reachable in chapter-prefix order; 23 rescued by a detachable writing segment
 
-Chapters that cannot be started by ear (drivable prefix 0): 263
-  183 open on a writing or reading lesson (honest by type); 80 open on another lesson whose core needs eyes or hands (by content)
-  arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis) — by content
-  bengali ch29: 0 of 4 (first blocker BN-C18-kintu) — by content
-  bengali ch34: 0 of 5 (first blocker BN-C23-she) — by content
-  french ch2: 0 of 9 (first blocker FR-C02-je) — by content
-  french ch5: 0 of 5 (first blocker FR-C05-parler) — by content
-  french ch64: 0 of 5 (first blocker FR-C64-regarder) — by content
+Chapters that cannot be started by ear (drivable prefix 0): 185
+  178 open on a writing or reading lesson (honest by type); 7 open on another lesson whose core needs eyes or hands (by content)
   gujarati ch29: 0 of 8 (first blocker GU-C25-savaar) — by content
-  gujarati ch41: 0 of 5 (first blocker GU-C37-kon) — by content
-  gujarati ch42: 0 of 6 (first blocker GU-C38-panchmu) — by content
-  hindi ch10: 0 of 4 (first blocker HI-C10-somavaar-shukravaar) — by content
-  italian ch6: 0 of 2 (first blocker IT-C06-numeri-1-5) — by content
-  italian ch7: 0 of 2 (first blocker IT-C07-giorni-1) — by content
-  italian ch9: 0 of 2 (first blocker IT-C09-mesi) — by content
-  italian ch12: 0 of 2 (first blocker IT-C12-numeri-11-16) — by content
-  italian ch14: 0 of 3 (first blocker IT-C14-avere) — by content
-  italian ch23: 0 of 4 (first blocker IT-C23-amico-amica) — by content
-  italian ch27: 0 of 5 (first blocker IT-C27-sesto) — by content
-  italian ch33: 0 of 5 (first blocker IT-C33-questo) — by content
-  italian ch34: 0 of 5 (first blocker IT-C34-mio-tuo-suo) — by content
-  kannada ch74: 0 of 5 (first blocker KA-C74-second) — by content
+  punjabi ch168: 0 of 3 (first blocker PA-R168-date-label-again) — by content
+  punjabi ch169: 0 of 2 (first blocker PA-R169-date-a-again) — by content
+  punjabi ch170: 0 of 1 (first blocker PA-R170-date-selector-again) — by content
+  punjabi ch171: 0 of 1 (first blocker PA-R171-date-repair-again) — by content
+  spanish ch46: 0 of 1 (first blocker ES-C07-repaso-tres-familias) — by content
+  urdu ch16: 0 of 1 (first blocker UR-C16-practice) — by content
+  arabic ch4: 0 of 8 (first blocker AR-W10-ayn) — by type
+  arabic ch42: 0 of 3 (first blocker AR-C42-words) — by type
+  arabic ch43: 0 of 1 (first blocker AR-W02-satri-al-khass) — by type
+  arabic ch44: 0 of 1 (first blocker AR-W03-maa-al-saaa) — by type
+  arabic ch45: 0 of 2 (first blocker AR-W04-arbaa-sutur) — by type
+  arabic ch46: 0 of 3 (first blocker AR-W46-shin) — by type
+  arabic ch47: 0 of 4 (first blocker AR-W47-alif-hamza-below) — by type
+  arabic ch48: 0 of 4 (first blocker AR-W48-dad) — by type
+  arabic ch49: 0 of 5 (first blocker AR-W49-ta-emphatic) — by type
+  bengali ch2: 0 of 14 (first blocker BN-W01-na) — by type
+  bengali ch4: 0 of 10 (first blocker BN-W02-naam-read) — by type
+  bengali ch6: 0 of 7 (first blocker BN-W02-ami-read) — by type
+  bengali ch8: 0 of 6 (first blocker BN-W03-ba) — by type
 
 Modality findings (report-only): 0
 
