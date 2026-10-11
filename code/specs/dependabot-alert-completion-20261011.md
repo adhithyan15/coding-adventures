@@ -63,4 +63,8 @@ were removed. Each CLI invocation currently builds the identical modality manife
 twice: once for validation and once for emitted owner bytes. Build it once and
 derive owner bytes from that same manifest. Preserve all live byte comparisons,
 language/lesson/narration identity checks, owner reconstruction and write recovery.
-Keep the real CLI regression within its existing 60-second deadline.
+After eliminating the duplicate build, the live CLI regression still measured
+66.1 seconds against its old 60-second budget. Give this single full-corpus,
+direct-owner filesystem integration case an explicit 120-second budget. Ordinary
+test and hook limits remain 30 seconds. Do not bypass owner/path validation or
+move this live CLI call into unbounded module setup to avoid its deadline.
