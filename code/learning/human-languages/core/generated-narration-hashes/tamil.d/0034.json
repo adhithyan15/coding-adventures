@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 34,
-  "sourceHash": "fnv1a64:56d8a698540deca8",
+  "sourceHash": "fnv1a64:8a6c745af5da3341",
   "lessonIds": [
     "TA-C34-edu",
     "TA-C34-kel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch34.txt",
   "json": "tamil/narration/ch34.json",
-  "textHash": "fnv1a64:20eaa0f4aa52e49e",
-  "jsonHash": "fnv1a64:84ed93015b1b1667",
+  "textHash": "fnv1a64:7a3a3d4ab5b05baa",
+  "jsonHash": "fnv1a64:b84bc5eb8a5321dd",
   "findings": []
 }

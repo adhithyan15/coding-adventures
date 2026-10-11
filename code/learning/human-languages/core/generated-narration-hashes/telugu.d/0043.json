@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 43,
-  "sourceHash": "fnv1a64:4ad847d31ad4a203",
+  "sourceHash": "fnv1a64:2f943a021852dc15",
   "lessonIds": [
     "TE-C43-come",
     "TE-C43-sit",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "telugu/narration/ch43.txt",
   "json": "telugu/narration/ch43.json",
-  "textHash": "fnv1a64:a09ea8d6339ee676",
-  "jsonHash": "fnv1a64:40a01ef338d06b76",
+  "textHash": "fnv1a64:bf4391814753a672",
+  "jsonHash": "fnv1a64:91ea128b6edfb35b",
   "findings": []
 }

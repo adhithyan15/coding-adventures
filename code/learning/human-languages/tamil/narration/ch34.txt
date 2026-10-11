@@ -26,7 +26,7 @@ You have met this verb's near-twin already, hiding inside a meal. சாப்�
 verb: இடு iḍu. what it does: put it down.
 verb: எடு eḍu. what it does: pick it up.
 One standing vowel apart — இ against எ — pointing opposite ways. That is a gift to your memory and not an etymology: Tamil's dictionaries keep them as separate roots, and a tidy pair of opposites is exactly the resemblance that fools people. Use it to remember; never as evidence.
-What is inherited is eḍu itself. Malayalam has എടുക്കുക (eṭukkuka), the same verb; Kannada and Telugu say ಎತ್ತು / ఎత్తు (ettu), "to lift," from the same old root with a doubled t where Tamil keeps its retroflex.
+What is inherited is eḍu itself. Malayalam has എടുക്കുക (eṭukkuka), the same verb; the etymological dictionary files them together. Kannada and Telugu ಎತ್ತು / ఎత్తు (ettu), "to lift," look close but are filed under a separate root: perhaps a cousin, not a proven one.
 
 Guided Practice.
 [pause 1 second]
@@ -36,7 +36,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "nāṉ arisi eḍukkiṟēṉ" — I take rice]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins lifting — "eṭukkuka … ettu … ettu"]
+[your turn — say: the true cousin, then the look-alike — "eṭukkuka … ettu"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

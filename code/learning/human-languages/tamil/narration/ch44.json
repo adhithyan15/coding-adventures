@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ea809afc2a0d041",
+  "sourceHash": "fnv1a64:7cf2dcdddf6e1342",
   "lessons": [
     {
       "id": "TA-C44-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fbbc948f6a860b4",
+      "sourceHash": "fnv1a64:bc9c668edcdca494",
       "notice": null,
       "blocks": [
         {
