@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter text and button alignment (#17237)
+
+Flutter now lowers supported `text-align` declarations on `Text` and
+`HostButton` leaves through native text and button alignment APIs. Calendar
+headings and today's day number retain their authored centering, while project,
+notes, and task buttons retain their authored left alignment. Fresh strict
+generation retires all 14 alignment omissions and reduces Flutter's measured
+style inventory from 121 to 107. Unsupported values remain reported debt.
+
 ### Fixed — Flutter surfaces preserve authored corner radii (#17224)
 
 Flutter now lowers supported fixed `border-radius` declarations through native
