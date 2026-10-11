@@ -263,3 +263,7 @@ GitHub-hosted Windows CI is the final compiler gate for generated WinUI project
 shells. A local or self-hosted Windows runner with an interactive desktop remains
 the launch/interaction gate; portable tests validate the IR-to-XAML structure and
 package fixtures on every platform.
+
+Queued table focus validates retained cells against their current coordinates
+and table ancestry before reuse, falling back to tree lookup after replacement
+or reparenting. This avoids repeated whole-prefix walks for unchanged cells.

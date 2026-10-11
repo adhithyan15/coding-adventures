@@ -5965,6 +5965,13 @@ public sealed class __COMPONENT__MosaicTable : Grid
     internal __COMPONENT__MosaicTableCell? FindCell(int row, int column) =>
         FindCellIn(this, row, column);
 
+    // Retained projections usually retain their native cell too. Validate its
+    // current ownership and coordinates at callback time; replaced, detached,
+    // or reparented candidates must still resolve through the current tree.
+    internal __COMPONENT__MosaicTableCell? ResolveFocusCell(__COMPONENT__MosaicTableCell candidate, int row, int column) =>
+        candidate.Row == row && candidate.Column == column && ReferenceEquals(candidate.FindTable(), this)
+            ? candidate : FindCell(row, column);
+
     // Focus needs one realized cell, not a snapshot of the entire table.
     // Preserve depth-first order and stop as soon as its coordinates match.
     private static __COMPONENT__MosaicTableCell? FindCellIn(DependencyObject root, int row, int column)
@@ -6056,7 +6063,7 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
 
     // Authored containers handle Tapped before it bubbles to this wrapper.
     // Return a callback rather than focus immediately: adapter dispatch may
-    // discard this cell. Retain only the table and its logical coordinates.
+    // discard this cell. Revalidate the candidate when the callback executes.
     internal static Action? CapturePointerFocus(DependencyObject? source)
     {
         while (source is not null && source is not __COMPONENT__MosaicTableCell)
@@ -6067,7 +6074,7 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
         var row = cell.Row;
         var column = cell.Column;
         return () => table.DispatcherQueue.TryEnqueue(() =>
-            table.FindCell(row, column)?.Focus(FocusState.Pointer));
+            table.ResolveFocusCell(cell, row, column)?.Focus(FocusState.Pointer));
     }
 
     public int Row
@@ -6137,7 +6144,7 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
         // Reacquire the cell after bindings/layout, never retain a stale target.
         if (target.MosaicNavigate is not null)
             table!.DispatcherQueue.TryEnqueue(() =>
-                table.FindCell(nextRow, nextColumn)?.Focus(FocusState.Keyboard));
+                table.ResolveFocusCell(target, nextRow, nextColumn)?.Focus(FocusState.Keyboard));
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() =>
@@ -17238,11 +17245,11 @@ mod tests {
         assert!(r.code_behind.contains("new SheetEvent.Navigate(row.RowIndex, row.Index)"), "{}", r.code_behind);
         assert!(r.code_behind.contains("target.MosaicNavigate?.Invoke(target, EventArgs.Empty)"));
         assert!(r.code_behind.contains("ReferenceEquals(FocusManager.GetFocusedElement(XamlRoot), this)"));
-        assert!(r.code_behind.contains("table.FindCell(nextRow, nextColumn)?.Focus"));
+        assert!(r.code_behind.contains("table.ResolveFocusCell(target, nextRow, nextColumn)?.Focus"));
         let capture = r.code_behind.find("var restoreFocus = SheetMosaicTableCell.CapturePointerFocus").unwrap();
         let tap_body = &r.code_behind[capture..];
         assert!(tap_body.find("Dispatch?.Invoke").unwrap() < tap_body.find("restoreFocus?.Invoke()").unwrap());
-        assert!(r.code_behind.contains("table.FindCell(row, column)?.Focus(FocusState.Pointer)"));
+        assert!(r.code_behind.contains("table.ResolveFocusCell(cell, row, column)?.Focus(FocusState.Pointer)"));
         table.children[1].children[0].children[0].children[0].children[0].children.push(cell);
         let result = from_pipeline(&c, &layout_with_root("Sheet", table), &empty_style("Sheet"), None, &EmitOptions::default());
         assert!(result.is_err(), "multiple authored actions must not pick an arbitrary callback");
@@ -27726,7 +27733,7 @@ PROJECTION
         let source = source.replace("var owner = new Owner();", "Check(FocusProbe.CheckLookup(), \"focus traversal\"); var owner = new Owner();");
         let source = format!("{source}\n{}", r#"
 class DependencyObject { public List<DependencyObject> Children = new(); }
-class ProbeMosaicTableCell : DependencyObject { public int Row; public int Column; }
+class ProbeMosaicTableCell : DependencyObject { public int Row; public int Column; public FocusProbe? Table; public FocusProbe? FindTable() => Table; }
 static class VisualTreeHelper {
     public static int Visits;
     public static int GetChildrenCount(DependencyObject root) => root.Children.Count;
@@ -27742,7 +27749,22 @@ METHODS
         if (!ReferenceEquals(tree.FindCell(2, 3), first) || VisualTreeHelper.Visits != 1) return false;
         var last = new ProbeMosaicTableCell { Row = 9, Column = 8 };
         tree.Children[1000].Children.Add(last);
-        return ReferenceEquals(tree.FindCell(9, 8), last) && tree.FindCell(99, 99) is null;
+        if (!ReferenceEquals(tree.FindCell(9, 8), last) || tree.FindCell(99, 99) is not null) return false;
+        last.Table = tree; VisualTreeHelper.Visits = 0;
+        if (!ReferenceEquals(tree.ResolveFocusCell(last, 9, 8), last) || VisualTreeHelper.Visits != 0) return false;
+        // A replaced candidate is detached, even if its coordinates still match.
+        var replacement = new ProbeMosaicTableCell { Row = 9, Column = 8, Table = tree };
+        tree.Children[1000].Children[0] = replacement; last.Table = null;
+        if (!ReferenceEquals(tree.ResolveFocusCell(last, 9, 8), replacement)) return false;
+        // Reparenting must not focus a cell in another table.
+        last.Table = new FocusProbe();
+        if (!ReferenceEquals(tree.ResolveFocusCell(last, 9, 8), replacement)) return false;
+        // A retained candidate whose coordinates changed is not the target.
+        last.Table = tree; last.Row = 7;
+        if (!ReferenceEquals(tree.ResolveFocusCell(last, 9, 8), replacement)) return false;
+        last.Row = 9; last.Column = 7;
+        if (!ReferenceEquals(tree.ResolveFocusCell(last, 9, 8), replacement)) return false;
+        return tree.ResolveFocusCell(last, 99, 99) is null;
     }
 }
 "#.replace("METHODS", &support[start..end]));

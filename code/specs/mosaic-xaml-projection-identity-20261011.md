@@ -110,3 +110,17 @@ Retained Rust DLL, callback and allocation caveats still apply. Keep PR draft.
 ## Retained focus candidate follow-up
 
 Queued pointer and keyboard focus may reuse the original realized cell only if its current row and column still match the requested coordinates and its current nearest table ancestor is the dispatch table. Otherwise use the existing first-match lookup. The candidate lives only for the queued callback; there is no persistent native-element cache. This avoids a full preceding-tree walk for retained late-row cells while preserving replacement, detach, reparent and coordinate-change behavior. Compile the emitted resolution helper with executable tests for all those cases, then validate generated WinUI and native interaction before claiming performance acceptance.
+
+### Retained focus validation
+
+All 383 emitter unit tests and integration tests pass, including the executable
+emitted resolution helper cases. Generated Release WinUI builds with zero errors
+and two existing unused-event warnings; security review passed. Actual native
+A1, B2, W20, A20, Right-to-B20, L10 and E5 selections displayed correct labels and
+highlights. H6/H7 persisted values remained present. Next-render callback samples
+were 18.7307, 38.9987, 29.5246, 27.9534, 39.8952, 28.2211 and 218.3981 ms, with
+396624, 388720, 388272, 387944, 391656, 388560 and 388816 current-thread managed
+bytes. The final E5 sample included 198.5781 ms in persist-snapshot; it is retained
+as an outlier, not discarded. Raw phases are in mosaic-xaml-retained-focus-profile-20261011.jsonl.
+This small matched-sequence diagnostic supports reduced late-cell focus work but
+does not establish p95 acceptance. Persistence stalls remain open in #16865.
