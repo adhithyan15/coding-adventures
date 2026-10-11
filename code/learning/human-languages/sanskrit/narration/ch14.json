@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8644f134068c089a",
+  "sourceHash": "fnv1a64:9bc97c17b711efa4",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b9e846392615016",
+      "sourceHash": "fnv1a64:ac93d19c12f62eaa",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner, the far one, comes shortly. The two of them differ by one sound at the front — e- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson, and it is this same word with the e- taken off. So the e- at the front is what brings the thing near — and the last lesson of this chapter shows the pattern it belongs to."
             }
           ]
         },
@@ -102,7 +102,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (a- — near.)"
+              "text": "What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (e- — near.)"
             }
           ]
         }
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:098b4f4568bb74b7",
+      "sourceHash": "fnv1a64:3ca6d57374573553",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is एतत् etat, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is एतत् etat, which you have just met: the same word with an e- in front. Take the e- away and t- leads, and t- is far. The last lesson of this chapter shows the pattern it belongs to."
             }
           ]
         },
@@ -717,7 +717,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5772d91944b0c8e7",
+      "sourceHash": "fnv1a64:387006f629a3ac2d",
       "notice": null,
       "blocks": [
         {
@@ -752,7 +752,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is अत्र atra, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is अत्र atra, which you have just met. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -819,7 +819,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e014032bdfe0b880",
+      "sourceHash": "fnv1a64:53767b7dfa1ef5ec",
       "notice": null,
       "blocks": [
         {
@@ -850,11 +850,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner, the question word for place, comes shortly. Both are asking words, and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the question word for place, comes in the next lesson, and it opens with the same k-. Sanskrit asks with k-, where the far words you know, तत् tat and तत्र tatra, open with t-. It is the same old question sound that became the qu- of Latin quis and the wh- of English who."
             }
           ]
         },
@@ -872,11 +872,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कः (kaḥ)\" three times, picturing something different each time",
+              "instruction": "\"कः (kaḥ)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कः\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"कः\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -1090,7 +1090,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c6c2252cc2d27c6",
+      "sourceHash": "fnv1a64:48df1e0e9b532c12",
       "notice": null,
       "blocks": [
         {
@@ -1121,11 +1121,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is कः kaḥ, which you will meet just now. The two of them differ by one sound at the front — k- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is कः kaḥ, which you have just met: both open with k-, the asking sound. Its other partners, अत्र atra and तत्र tatra, differ from it only at the front. That is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -1143,11 +1143,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कुत्र (kutra)\" three times, picturing something different each time",
+              "instruction": "\"कुत्र (kutra)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कुत्र\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"कुत्र\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",
@@ -1192,7 +1192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75112cae5f05dd92",
+      "sourceHash": "fnv1a64:472e6613da2f9de6",
       "notice": null,
       "blocks": [
         {
@@ -1245,7 +1245,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same three beginnings run the thing-words too: एतत् etat and तत् tat start exactly like the first two rows. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with."
+              "text": "The thing-words share one of these beginnings, not both: तत् tat starts with the far t- of tatra, but एतत् etat does not start with a-. It is tat with an e- in front: \"that one\", brought near. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with."
             },
             {
               "kind": "speech",

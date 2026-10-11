@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Primo, Secondo, Terzo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b1a2107af39f872",
+  "sourceHash": "fnv1a64:9a2ba134e0a448a3",
   "lessons": [
     {
       "id": "IT-C26-primo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c12bd83a71dc605",
+      "sourceHash": "fnv1a64:c4ab7f1c95944ef1",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +115,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This book has used primo once, and hidden it. The seasons lesson glossed primavera as \"the first green\" — prima vera, the first spring — and the word behind that gloss was never given. Now it is."
+              "text": "This book has used primo once, and hidden it. The seasons lesson glossed primavera as \"the first spring\" — Latin prīma vēra — and the word behind that gloss was never given. Now it is."
             },
             {
               "kind": "speech",

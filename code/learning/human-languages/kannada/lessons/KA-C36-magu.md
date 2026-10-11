@@ -67,7 +67,7 @@ problem the opposite way: one shape, several endings.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02] -->
 
-[PAUSE 3s] Say "this is my child." (*Idu nanna magu*.) Does *magu* specify a
+[PAUSE 3s] Say "my child." (*Nanna magu*.) Does *magu* specify a
 gender? (**No.**) What is the Proto-Dravidian root underneath it, and what
 happens to it next? (***\*maka*** — the next two lessons put different
 endings on it for "son" and "daughter.")

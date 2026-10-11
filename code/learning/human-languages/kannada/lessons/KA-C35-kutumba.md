@@ -75,7 +75,7 @@ collective came later, and came borrowed.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02, KA-LEX-C34-ISHTA-01, KA-GRAMMAR-C34-ISHTA-02, KA-ETYMON-C34-ISHTA-03, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
 
-[PAUSE 3s] Say "this is my family." (*Idu nanna kuṭumba*.) Is *kuṭumba*
+[PAUSE 3s] Say "my family." (*Nanna kuṭumba*.) Is *kuṭumba*
 native Dravidian or a loan? (**A Sanskrit loan**, like *iṣṭa* and *sahāya*.)
 Name Chapter 12's six family words. (*Appa, amma, aṇṇa, tamma, akka,
 tangi*.) Which of those six means "family" as a group? (**None of them** —

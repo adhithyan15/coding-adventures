@@ -76,7 +76,7 @@ is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02] -->
 
-[PAUSE 3s] Say "this is my daughter." (*Ithu ente makaḷāṇŭ*.) How closely
+[PAUSE 3s] Say "my daughter." (*Ente makaḷ*.) How closely
 does Tamil match this word, compared with *makan*? (**Even closer** —
 *makaḷ* is **identical** sound for sound, where *makan* only nearly
 matched.) Ask "how old is your son?" using the age question's shape.

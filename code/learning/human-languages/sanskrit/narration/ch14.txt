@@ -12,7 +12,7 @@ You can already name things. This is how you POINT at them.
 You'll want to know: एतत्.
 एतत् — etat — this one — the thing near me.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner, the far one, comes shortly. The two of them differ by one sound at the front — e- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson, and it is this same word with the e- taken off. So the e- at the front is what brings the thing near — and the last lesson of this chapter shows the pattern it belongs to.
 
 Guided Practice.
 [pause 1 second]
@@ -23,7 +23,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (a- — near.)
+What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (e- — near.)
 
 
 Lesson 2 of 11.
@@ -77,7 +77,7 @@ You can already name things. This is how you POINT at them.
 You'll want to know: तत्.
 तत् — tat — that one — the thing over there.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is एतत् etat, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is एतत् etat, which you have just met: the same word with an e- in front. Take the e- away and t- leads, and t- is far. The last lesson of this chapter shows the pattern it belongs to.
 
 Guided Practice.
 [pause 1 second]
@@ -173,7 +173,7 @@ You can already name things. This is how you POINT at them.
 You'll want to know: तत्र.
 तत्र — tatra — there — where I am not.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is अत्र atra, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is अत्र atra, which you have just met. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 Guided Practice.
 [pause 1 second]
@@ -196,12 +196,12 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: कः.
 कः — kaḥ — who? — asking about a person.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner, the question word for place, comes shortly. Both are asking words, and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no one: it asks your listener to name the person.
+Its partner, the question word for place, comes in the next lesson, and it opens with the same k-. Sanskrit asks with k-, where the far words you know, तत् tat and तत्र tatra, open with t-. It is the same old question sound that became the qu- of Latin quis and the wh- of English who.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "कः (kaḥ)" three times, picturing something different each time]
+[your turn — say: "कः (kaḥ)" three times, asking about a different person each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -258,12 +258,12 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: कुत्र.
 कुत्र — kutra — where? — asking about a place.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is कः kaḥ, which you will meet just now. The two of them differ by one sound at the front — k- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no place: it asks your listener to point one out.
+Its partner is कः kaḥ, which you have just met: both open with k-, the asking sound. Its other partners, अत्र atra and तत्र tatra, differ from it only at the front. That is the whole system, and the last lesson of this chapter says so.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "कुत्र (kutra)" three times, picturing something different each time]
+[your turn — say: "कुत्र (kutra)" three times, asking about a different place each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -288,7 +288,7 @@ meaning: far. word: तत्र tatra.
 meaning: question. word: कुत्र kutra.
 Sanskrit is where Hindi's k- comes from: अत्र (atra), तत्र (tatra), कुत्र (kutra).
 Change the front, and the meaning walks from near to far to a question. Nothing else in the word moves.
-The same three beginnings run the thing-words too: एतत् etat and तत् tat start exactly like the first two rows. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with.
+The thing-words share one of these beginnings, not both: तत् tat starts with the far t- of tatra, but एतत् etat does not start with a-. It is tat with an e- in front: "that one", brought near. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with.
 This is worth more than the six words are. When you meet a new word in this family later, you will not have to be taught all three of it — you will be taught one and work out the others.
 
 Guided Practice.

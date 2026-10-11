@@ -22,6 +22,13 @@
 //            references. This is STRICTER than the exact pin was: it turns a
 //            snapshot into a ratchet that cannot slip back.
 //
+//            Forward references PER TRACK are the one exception, and are
+//            pinned EXACTLY (FORWARD_REFERENCE_CEILINGS below). A ceiling
+//            alone is half a ratchet: a cleared reference leaves slack under
+//            it, and the next lesson can spend that slack on a new one without
+//            any test noticing. Debt falls only in a deliberate pass, so the
+//            pass lowers the pin in the same change and the slack never exists.
+//
 //   RATIO    for debt that grows with honest content -- the reinforcement
 //            windows, and atoms never revisited. Every atom at the tail of a
 //            track is unrevisited until something follows it, so a floor would
@@ -571,12 +578,16 @@ const REAL_LESSONS = loadEverything().lessons;
 const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
 
 /**
- * Forward references per track: A CEILING THAT MAY ONLY FALL.
+ * Forward references per track: AN EXACT PIN THAT MAY ONLY BE LOWERED.
  *
  * A forward reference is a lesson that writes a target-language word a LATER
  * lesson teaches as its headword (`measureContinuity`, section (c)). Each track
- * is pinned here so the count can go down and never back up. Lower a pin when
- * you clear one; never raise it. When a new lesson pushes a track over, the fix
+ * is pinned here EXACTLY, so this is a full ratchet rather than a ceiling with
+ * slack under it: a count that rises fails and lists the new borrowings, and a
+ * count that falls ALSO fails, asking for the pin to be lowered to match in the
+ * same change, so the cleared reference cannot be quietly spent on a new one.
+ * Lower a pin when you clear one; never raise it. When a new lesson pushes a
+ * track over, the fix
  * is in the lessons — say the next word in English, swap in a word the reader
  * already owns, move the example to the lesson that teaches it, or write a
  * decomposition as one `parts + … → whole` line (the shape `forwardReferenceBody`
@@ -688,8 +699,9 @@ describe("the real corpus", () => {
     // #12350 removes ten previews from the opening chapter. The learner now
     // meets each German form in its owning lesson instead of seeing evening,
     // night, farewell, and Chapter 2 pronoun vocabulary early. The remaining
-    // track-wide debt is explicit and may fall, never grow: its ceiling now
-    // lives in FORWARD_REFERENCE_CEILINGS with every other track's (45 -> 1).
+    // track-wide debt is explicit and may fall, never grow: it is now pinned
+    // exactly in FORWARD_REFERENCE_CEILINGS with every other track's (45 -> 1).
+    // This test keeps only the chapter-1 rule; the pin itself is checked there.
     expect(german.length).toBeLessThanOrEqual(FORWARD_REFERENCE_CEILINGS.german!);
     expect(german.filter((reference) => reference.lessonId.startsWith("GE-C01-"))).toEqual([]);
   });
@@ -701,8 +713,8 @@ describe("the real corpus", () => {
 
     // #12352 removes ten previews from the opening chapter, including a food
     // word 69 lessons early and an introduction phrase ten lessons early. The
-    // remaining track-wide debt is explicit and may fall, never grow: its
-    // ceiling now lives in FORWARD_REFERENCE_CEILINGS (34 -> 0).
+    // remaining track-wide debt is explicit and may fall, never grow: it is now
+    // pinned exactly in FORWARD_REFERENCE_CEILINGS (34 -> 0).
     expect(italian.length).toBeLessThanOrEqual(FORWARD_REFERENCE_CEILINGS.italian!);
     expect(italian.filter((reference) => reference.lessonId.startsWith("IT-C01-"))).toEqual([]);
   });
@@ -713,17 +725,26 @@ describe("the real corpus", () => {
     );
   });
 
-  for (const [language, ceiling] of Object.entries(FORWARD_REFERENCE_CEILINGS)) {
-    it(`holds ${language}'s forward references at or under ${ceiling} (a ceiling that may only fall)`, () => {
+  for (const [language, pin] of Object.entries(FORWARD_REFERENCE_CEILINGS)) {
+    it(`holds ${language}'s forward references at exactly ${pin} (a pin that may only be lowered)`, () => {
       const found = REAL_CONTINUITY.forwardReferences.filter(
         (reference) => reference.language === language,
       );
-      // The listing is the failure message: a reader should see WHICH lesson
-      // borrowed WHICH word, not only that a number moved.
+      // The message depends on the direction, because the two failures want
+      // opposite fixes. A rise is a regression in the lessons: list WHICH lesson
+      // borrowed WHICH word, not only that a number moved. A fall is progress
+      // the table has not recorded yet: lower the pin so the slack is gone.
       const listing = found
         .map((reference) => `${reference.lessonId} uses ${reference.word} (${reference.taughtBy})`)
         .join("; ");
-      expect(found.length, listing).toBeLessThanOrEqual(ceiling);
+      const message =
+        found.length > pin
+          ? `${language} has ${found.length} forward references, above its pin of ${pin}. ` +
+            `Fix the lessons, not the pin: ${listing}`
+          : `${language} has ${found.length} forward references, below its pin of ${pin}. ` +
+            `Lower FORWARD_REFERENCE_CEILINGS.${language} to ${found.length} in this change.` +
+            (listing ? ` Remaining: ${listing}` : "");
+      expect(found.length, message).toBe(pin);
     });
   }
 

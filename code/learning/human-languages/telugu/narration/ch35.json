@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friends",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2dcbbd7f20ec9275",
+  "sourceHash": "fnv1a64:c8a718fa9d1fbd74",
   "lessons": [
     {
       "id": "TE-C35-kutumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3aa641a92d5928e9",
+      "sourceHash": "fnv1a64:2807d2a9e138e8c9",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my family.\" (Idi nā kuṭumbaṁ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like namaskāram and santōṣam.) Name the six family words from that earlier lesson. (Nānna, amma, anna, tammuḍu, akka, celli.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
+              "text": "Say \"my family.\" (Nā kuṭumbaṁ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like namaskāram and santōṣam.) Name the six family words from that earlier lesson. (Nānna, amma, anna, tammuḍu, akka, celli.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
             }
           ]
         }

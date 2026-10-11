@@ -70,7 +70,7 @@ in a family word rather than a greeting.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02] -->
 
-[PAUSE 3s] Say "this is my son." (*Ithu ente makanāṇŭ*.) Which sister keeps
+[PAUSE 3s] Say "my son." (*Ente makan*.) Which sister keeps
 almost the identical word? (**Tamil** — *makan*.) What did Kannada change?
 (**Softened *-k-* to *-g-*** and **dropped the final *-n***, giving *maga*.)
 What does *suhṛttŭ* literally mean? (**"Good-heart"** — *su* plus

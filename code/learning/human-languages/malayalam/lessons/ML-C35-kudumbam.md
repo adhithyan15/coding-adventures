@@ -45,8 +45,8 @@ nouns of all: the people you would actually say it to.
 
 > **എന്റെ കുടുംബം** — *ente kuṭumbaṁ* — "my family"
 
-*Ente*, "my," has been yours since your very first sentences; **‑ആണ്** is
-the same copula that closed *enikkŭ malayāḷaṁ iṣṭamāṇŭ*.
+*Ente*, "my," has been yours since your very first sentences: set it in
+front of the noun, and the noun itself does not change.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C35-KUDUMBAM-02]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
@@ -82,7 +82,7 @@ stayed native; the collective came later, and came borrowed.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
-[PAUSE 3s] Say "this is my family." (*Ithu ente kuṭumbamāṇŭ*.) Is *kuṭumbaṁ*
+[PAUSE 3s] Say "my family." (*Ente kuṭumbaṁ*.) Is *kuṭumbaṁ*
 native Dravidian or a loan? (**A Sanskrit loan**, like *iṣṭaṁ* and *sukhaṁ*
 — and dressed in the same **‑aṁ**.) Name the six family words you already
 know. (*Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti*.) Which of those six means

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b716b5ffaeeeb85a",
+  "sourceHash": "fnv1a64:0d0320da5e109e67",
   "lessons": [
     {
       "id": "GE-C04-sehen",
@@ -1937,7 +1937,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:f65100013906bf2f",
+      "sourceHash": "fnv1a64:4cb25f0421d2d589",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1987,9 +1987,9 @@
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "Plain: a becomes ä. Umlauted: Mann becomes Männer. How: ah becomes the e of bed.",
-                "Plain: o becomes ö. Umlauted: schon becomes schön. How: oh becomes a rounded eh.",
-                "Plain: u becomes ü. Umlauted: Buch becomes Bücher. How: oo becomes ee with rounded lips."
+                "Plain: a becomes ä. Umlauted: Nacht becomes Nächte (\"nights\"). How: ah becomes the e of bed.",
+                "Plain: o becomes ö. Umlauted: schon (\"already\") becomes schön. How: oh becomes a rounded eh.",
+                "Plain: u becomes ü. Umlauted: gut becomes Güte (\"goodness\"). How: oo becomes ee with rounded lips."
               ]
             },
             {
@@ -2046,7 +2046,7 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Base: Mann (man). Umlauted: Männer. What changed: plural.",
+                "Base: Nacht (night). Umlauted: Nächte. What changed: plural.",
                 "Base: Buch (book). Umlauted: Bücher. What changed: plural.",
                 "Base: groß (big). Umlauted: größer. What changed: comparative.",
                 "Base: Mann (man). Umlauted: Männchen. What changed: diminutive."
@@ -2054,7 +2054,7 @@
             },
             {
               "kind": "speech",
-              "text": "When a German word brightens its vowel, something grammatical happened to it — usually more than one, more, or smaller."
+              "text": "Only Nacht is a word you own yet; the other three are here for their dots, with their meanings beside them. When a German word brightens its vowel, something grammatical happened to it — usually more than one, more, or smaller."
             }
           ]
         },
@@ -2065,7 +2065,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two dots, side by side, sitting squarely above the vowel — not slanted, and not joined. Copy schön once with the model in view, then Bücher."
+              "text": "Two dots, side by side, sitting squarely above the vowel — not slanted, and not joined. Copy schön once with the model in view, then Nächte."
             },
             {
               "kind": "speech",
@@ -2087,20 +2087,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mann\" then \"Männer\" — hear the vowel brighten for the plural",
+              "instruction": "\"Nacht\" then \"Nächte\" — hear the vowel brighten for the plural",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mann\" then \"Männer\" — hear the vowel brighten for the plural]"
+              "source": "[YOU SAY: \"Nacht\" then \"Nächte\" — hear the vowel brighten for the plural]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Buch\" then \"Bücher\" — ee with rounded lips",
+              "instruction": "\"gut\" then \"Güte\" — ee with rounded lips",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Buch\" then \"Bücher\" — *ee* with rounded lips]"
+              "source": "[YOU SAY: \"gut\" then \"Güte\" — *ee* with rounded lips]"
             },
             {
               "kind": "prompt",
@@ -2146,7 +2146,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d5bb62373f9dc177",
+      "sourceHash": "fnv1a64:abaff07194346f8f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2188,11 +2188,11 @@
             },
             {
               "kind": "speech",
-              "text": "Der Mann isst das Essen in der Küche. — \"The man eats the food in the kitchen.\""
+              "text": "Guten Abend, gute Nacht, bis morgen! — \"Good evening, good night, see you tomorrow!\""
             },
             {
               "kind": "speech",
-              "text": "Three nouns, three capitals, two of them mid-sentence. Also capitalised: the polite Sie, and any word used as a noun (das Gute, \"the good\")."
+              "text": "Two nouns, two capitals, both mid-sentence. Guten is capitalised only because it opens the sentence; gute stays small; and morgen here means \"tomorrow\", which is no noun, so it stays small too. Also capitalised: the polite Sie, and any word used as a noun (das Gute, \"the good\")."
             },
             {
               "kind": "speech",
@@ -2251,7 +2251,7 @@
             },
             {
               "kind": "speech",
-              "text": "Copy Der Mann isst das Essen once, then write Guten Morgen and bis morgen one under the other and check every capital."
+              "text": "Copy Guten Abend, gute Nacht once, then write Guten Morgen and bis morgen one under the other and check every capital."
             }
           ]
         },
@@ -2269,20 +2269,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Der Mann isst das Essen\" — every noun capitalised",
+              "instruction": "\"Guten Abend, gute Nacht\" — every noun capitalised",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Der Mann isst das Essen\" — every noun capitalised]"
+              "source": "[YOU SAY: \"Guten Abend, gute Nacht\" — every noun capitalised]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"essen\" then \"das Essen\" — the capital flips it from doing to thing",
+              "instruction": "\"gut\" then \"das Gute\" — the capital flips it from describing to thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"essen\" then \"das Essen\" — the capital flips it from doing to thing]"
+              "source": "[YOU SAY: \"gut\" then \"das Gute\" — the capital flips it from describing to thing]"
             },
             {
               "kind": "prompt",
@@ -2308,7 +2308,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which words does German capitalise? (Every noun, anywhere — plus Sie.) What does the capital tell you? (That the word is a noun: essen versus das Essen.) Which language used to do this and stopped? (English, in the 1700s.)"
+              "text": "Which words does German capitalise? (Every noun, anywhere — plus Sie.) What does the capital tell you? (That the word is a noun: gut versus das Gute.) Which language used to do this and stopped? (English, in the 1700s.)"
             }
           ]
         }

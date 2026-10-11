@@ -46,9 +46,9 @@ reviews_of: []
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner, the far one, comes shortly. The two of them
-differ by one sound at the front — **e-** for near — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson, and it is this same word
+with the **e-** taken off. So the **e-** at the front is what brings the thing
+near — and the last lesson of this chapter shows the pattern it belongs to.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-01] -->
@@ -61,4 +61,4 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-01] -->
 
 [PAUSE 3s] What is *etat*? (this one — the thing near me.) What sound does it start with, and does
-that sound mean near, far, or a question? (**a-** — near.)
+that sound mean near, far, or a question? (**e-** — near.)

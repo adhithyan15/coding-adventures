@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 5,
-  "sourceHash": "fnv1a64:1b22032bebe07dc9",
+  "sourceHash": "fnv1a64:1680b493d13a9898",
   "lessonIds": [
     "RU-C05-brat",
     "RU-C05-sprashivat",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "russian/narration/ch05.txt",
   "json": "russian/narration/ch05.json",
-  "textHash": "fnv1a64:1389fff9037bb8bc",
-  "jsonHash": "fnv1a64:ddd8a7a16ab79dd7",
+  "textHash": "fnv1a64:73a5278aa3a521bf",
+  "jsonHash": "fnv1a64:9c1f67b49b0ca5c0",
   "findings": []
 }

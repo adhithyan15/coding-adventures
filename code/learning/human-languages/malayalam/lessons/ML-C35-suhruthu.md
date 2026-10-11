@@ -91,7 +91,7 @@ single new word.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02] -->
 
-[PAUSE 3s] Say "this is my friend." (*Ithu ente suhṛttāṇŭ*.) What does
+[PAUSE 3s] Say "my friend." (*Ente suhṛttŭ*.) What does
 *suhṛttŭ* literally mean, piece by piece? ("**Good**" *su* + "**heart**"
 *hṛd*.) Name the everyday spoken alternative, and what its ending is
 borrowed from. (*Kūṭṭukāran/kūṭṭukāri* — the **‑കാരൻ/‑കാരി** ending is

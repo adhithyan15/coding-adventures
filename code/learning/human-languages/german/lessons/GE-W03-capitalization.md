@@ -48,10 +48,12 @@ than it looks.
 
 Not just names or sentence starts — *every* noun:
 
-> **Der Mann** isst **das Essen** in **der Küche**.
-> — "The man eats the food in the kitchen."
+> Guten **Abend**, gute **Nacht**, bis morgen!
+> — "Good evening, good night, see you tomorrow!"
 
-Three nouns, three capitals, two of them mid-sentence. Also capitalised: the
+Two nouns, two capitals, both mid-sentence. *Guten* is capitalised only because
+it opens the sentence; *gute* stays small; and *morgen* here means "tomorrow",
+which is no noun, so it stays small too. Also capitalised: the
 polite *Sie*, and any word *used as* a noun (*das Gute*, "the good").
 
 (The word itself shows off two things you now know: the **ß**, and the initial
@@ -88,21 +90,21 @@ Capitalise the first letter of every noun, wherever it sits. Two tests if you
 are unsure: is there a *der/die/das* in front, or does it end in *-ung*, *-heit*
 or *-schaft*? Those are noun factories — *Zeitung*, *Freiheit*, *Freundschaft*.
 
-Copy **Der Mann isst das Essen** once, then write *Guten Morgen* and *bis
+Copy **Guten Abend, gute Nacht** once, then write *Guten Morgen* and *bis
 morgen* one under the other and check every capital.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-CAPITAL-IS-PART-OF-SPEECH-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Der Mann isst das Essen" — every noun capitalised]
-- [YOU SAY: "essen" then "das Essen" — the capital flips it from doing to thing]
+- [YOU SAY: "Guten Abend, gute Nacht" — every noun capitalised]
+- [YOU SAY: "gut" then "das Gute" — the capital flips it from describing to thing]
 - [YOU SAY: "Guten Morgen" then "bis morgen" — the same flip, in a word you own]
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-CAPITAL-IS-PART-OF-SPEECH-02] -->
 
 [PAUSE 3s] Which words does German capitalise? (Every noun, anywhere — plus
-*Sie*.) What does the capital tell you? (That the word is a noun: *essen* versus
-*das Essen*.) Which language used to do this and stopped? (English, in the
+*Sie*.) What does the capital tell you? (That the word is a noun: *gut* versus
+*das Gute*.) Which language used to do this and stopped? (English, in the
 1700s.)

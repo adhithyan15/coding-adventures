@@ -40,18 +40,18 @@ reviews_of: [TA-C40-there]
 
 **யார்** — *yār* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner, the question word for place, comes in the next lesson. Both are
-asking words, and that is not a coincidence. It is the whole system, and the
-last lesson of this chapter says so.
+*yār* opens with **yā-**, not with the **i-** of near or the **a-** of far
+that the four words before it share. It is the one word in this chapter outside
+that pattern, so learn it as itself: the asking word for people.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05, TA-LEX-VIDAI-01, TA-ETYMON-VIDAI-02, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "யார்" three times, picturing something different each time]
+- [YOU SAY: "யார்" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *viḍai*]
 - [YOU READ: **ஒரு**]
@@ -59,5 +59,5 @@ last lesson of this chapter says so.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05] -->
 
-[PAUSE 3s] What is *yār*? (who? — asking about a person.) What sound does it start with, and does
-that sound mean near, far, or a question? (**e-** — ask.)
+[PAUSE 3s] What is *yār*? (who? — asking about a person.) What sound does it start with: the i- of
+near, the a- of far, or neither? (**Neither** — **yā-**; it asks about a person.)

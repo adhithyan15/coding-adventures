@@ -73,7 +73,7 @@ carrying the same double duty in two unrelated language families.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
-[PAUSE 3s] Say "this is my child." (*Ithu ente kuṭṭiyāṇŭ*.) What two things
+[PAUSE 3s] Say "my child." (*Ente kuṭṭi*.) What two things
 can *kuṭṭi* mean? (**A human child**, or **the young of an animal** — like
 *pūccakkuṭṭi*, kitten.) Which English word carries the very same double
 duty? (**Kid**.) Name the six family people-words once more, and the group

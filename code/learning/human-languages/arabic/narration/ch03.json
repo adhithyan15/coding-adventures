@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:70748eaf43308ecc",
+  "sourceHash": "fnv1a64:ecd18d66e74c5e15",
   "lessons": [
     {
       "id": "AR-C03-haajj",
@@ -936,7 +936,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41d0657910e7775a",
+      "sourceHash": "fnv1a64:5f9486a46f632e34",
       "notice": null,
       "blocks": [
         {
@@ -952,7 +952,7 @@
             },
             {
               "kind": "speech",
-              "text": "The answer to kayfa ḥāluka? — and you have already written this word by hand. Nothing here is new; it is two old pieces stuck together."
+              "text": "The answer to kayfa ḥāluka? — and nothing here is new; it is two old pieces stuck together. Before this chapter ends you will write it by hand."
             }
           ]
         },
@@ -963,7 +963,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them from the writing set, where you assembled خير (khayr, bi-khayr) and then بخير (bi-khayr) letter by letter. Right to left: ب, خ, ي, ر."
+              "text": "(Skim if you read Arabic.) ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them a letter you have already written. The chapter's last writing lesson joins them into خير (khayr, bi-khayr) and then بخير (bi-khayr), letter by letter. Right to left: ب, خ, ي, ر."
             }
           ]
         },

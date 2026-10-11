@@ -84,7 +84,7 @@ behind **transfer**, **refer**, **fertile**; Greek *phérein* behind
 **metaphor**, a carrying-across. Russian keeps the load too — *brémya* is a
 burden, and *berémennaya*, *pregnant*, is literally *carrying*.
 
-Now the trap, because this track flags both kinds. **Брат** means **brother**,
+Now the trap, because this track flags both kinds. The word for **brother**, **брат**,
 sits one soft sign from *брать*, and is **not related**: *брат* is
 \**bʰréh₂ter*, English *brother*. And *byt'* is \**bʰuH-*, English *be*. Three
 roots that all begin **bʰ** — a family accent, not a shared word.
@@ -106,5 +106,5 @@ roots that all begin **bʰ** — a family accent, not a shared word.
 what is strange about it, then give the English pair that behaves the same way.
 (*Vzyat'*, a different root; *go* and **went**, as *идти* takes *shol*.) Which
 verb of yours is *vzyat'* related to? (*Ponimát'* — both on the old root for
-*take*.) And is *брать* related to *byt'*, "to be"? (**No** — different
-roots.)
+*take*.) And the word one soft sign away, meaning
+**brother**: related? (**No** — another root, like *byt'*.)

@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8e57f2d7abfd02b6",
+  "sourceHash": "fnv1a64:2cc79d71a6e78af0",
   "lessons": [
     {
       "id": "TA-C40-this",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:770113572a4eab5e",
+      "sourceHash": "fnv1a64:be0bfe7b3ed4e3b0",
       "notice": null,
       "blocks": [
         {
@@ -165,7 +165,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is இது idu, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is இது idu, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0870ea745683d909",
+      "sourceHash": "fnv1a64:7f2fd2feed9eeb8b",
       "notice": null,
       "blocks": [
         {
@@ -387,7 +387,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is இங்கே iṅgē, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is இங்கே iṅgē, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -454,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:287a2f3ce2a557f3",
+      "sourceHash": "fnv1a64:eb9b4fc73e7c5f43",
       "notice": null,
       "blocks": [
         {
@@ -485,11 +485,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner, the question word for place, comes in the next lesson. Both are asking words, and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "yār opens with yā-, not with the i- of near or the a- of far that the four words before it share. It is the one word in this chapter outside that pattern, so learn it as itself: the asking word for people."
             }
           ]
         },
@@ -507,11 +507,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"யார் (yār)\" three times, picturing something different each time",
+              "instruction": "\"யார் (yār)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"யார்\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"யார்\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -555,7 +555,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is yār? (who? — asking about a person.) What sound does it start with, and does that sound mean near, far, or a question? (e- — ask.)"
+              "text": "What is yār? (who? — asking about a person.) What sound does it start with: the i- of near, the a- of far, or neither? (Neither — yā-; it asks about a person.)"
             }
           ]
         }
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a1c8f74824d9775",
+      "sourceHash": "fnv1a64:e63e907cd6291a6b",
       "notice": null,
       "blocks": [
         {
@@ -605,11 +605,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is யார் yār, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partners are இங்கே iṅgē and அங்கே aṅgē, which you have already met. The three differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -627,11 +627,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"எங்கே (eṅgē)\" three times, picturing something different each time",
+              "instruction": "\"எங்கே (eṅgē)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"எங்கே\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"எங்கே\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",
@@ -676,7 +676,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3016ecfc5a56a23",
+      "sourceHash": "fnv1a64:5e9ecf090edaa841",
       "notice": null,
       "blocks": [
         {
@@ -703,7 +703,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You did not learn six words. You learned three beginnings and reused them."
+              "text": "Five of these six words are three beginnings, reused; only the person question stands apart."
             },
             {
               "kind": "table",

@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8a93504ae68781df",
+  "sourceHash": "fnv1a64:cda7b5f841d79b6c",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1cb4715d78be8b09",
+      "sourceHash": "fnv1a64:7682692eff501963",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ente, \"my,\" has been yours since your very first sentences; ‑ആണ് is the same copula that closed enikkŭ malayāḷaṁ iṣṭamāṇŭ."
+              "text": "Ente, \"my,\" has been yours since your very first sentences: set it in front of the noun, and the noun itself does not change."
             }
           ]
         },
@@ -153,7 +153,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my family.\" (Ithu ente kuṭumbamāṇŭ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like iṣṭaṁ and sukhaṁ — and dressed in the same ‑aṁ.) Name the six family words you already know. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
+              "text": "Say \"my family.\" (Ente kuṭumbaṁ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like iṣṭaṁ and sukhaṁ — and dressed in the same ‑aṁ.) Name the six family words you already know. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
             }
           ]
         }
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b4dc61bd04190315",
+      "sourceHash": "fnv1a64:68b41897e90b08c5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -336,7 +336,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my friend.\" (Ithu ente suhṛttāṇŭ.) What does suhṛttŭ literally mean, piece by piece? (\"Good\" su + \"heart\" hṛd.) Name the everyday spoken alternative, and what its ending is borrowed from. (Kūṭṭukāran/kūṭṭukāri — the ‑കാരൻ/‑കാരി ending is from Sanskrit kāra, \"maker.\")"
+              "text": "Say \"my friend.\" (Ente suhṛttŭ.) What does suhṛttŭ literally mean, piece by piece? (\"Good\" su + \"heart\" hṛd.) Name the everyday spoken alternative, and what its ending is borrowed from. (Kūṭṭukāran/kūṭṭukāri — the ‑കാരൻ/‑കാരി ending is from Sanskrit kāra, \"maker.\")"
             }
           ]
         }

@@ -478,9 +478,9 @@ You'll want to know: the umlaut.
 Umlaut — the two dots on ä ö ü, which shift the vowel forward in the mouth.
 Um-laut is "around-sound" (um, around + Laut, sound). Say the plain vowel, then brighten it toward ee:
 [a table of 3 rows, read aloud]
-Plain: a becomes ä. Umlauted: Mann becomes Männer. How: ah becomes the e of bed.
-Plain: o becomes ö. Umlauted: schon becomes schön. How: oh becomes a rounded eh.
-Plain: u becomes ü. Umlauted: Buch becomes Bücher. How: oo becomes ee with rounded lips.
+Plain: a becomes ä. Umlauted: Nacht becomes Nächte ("nights"). How: ah becomes the e of bed.
+Plain: o becomes ö. Umlauted: schon ("already") becomes schön. How: oh becomes a rounded eh.
+Plain: u becomes ü. Umlauted: gut becomes Güte ("goodness"). How: oo becomes ee with rounded lips.
 They look like the French tréma and do the opposite job: a tréma splits two vowels, an umlaut changes one.
 
 The word, taken apart.
@@ -494,21 +494,21 @@ With dots: Bär. Ghost e restored: Baer.
 Grammar Lens: the umlaut does real work.
 Umlauts are not decoration. Fronting a vowel is how German marks whole grammatical changes, so learn to expect it:
 [a table of 4 rows, read aloud]
-Base: Mann (man). Umlauted: Männer. What changed: plural.
+Base: Nacht (night). Umlauted: Nächte. What changed: plural.
 Base: Buch (book). Umlauted: Bücher. What changed: plural.
 Base: groß (big). Umlauted: größer. What changed: comparative.
 Base: Mann (man). Umlauted: Männchen. What changed: diminutive.
-When a German word brightens its vowel, something grammatical happened to it — usually more than one, more, or smaller.
+Only Nacht is a word you own yet; the other three are here for their dots, with their meanings beside them. When a German word brightens its vowel, something grammatical happened to it — usually more than one, more, or smaller.
 
 Writing — the two dots.
-Two dots, side by side, sitting squarely above the vowel — not slanted, and not joined. Copy schön once with the model in view, then Bücher.
+Two dots, side by side, sitting squarely above the vowel — not slanted, and not joined. Copy schön once with the model in view, then Nächte.
 Say each word as you finish it, and let the vowel brighten as you write the dots.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Mann" then "Männer" — hear the vowel brighten for the plural]
+[your turn — say: "Nacht" then "Nächte" — hear the vowel brighten for the plural]
 [pause 8 seconds for the answer]
-[your turn — say: "Buch" then "Bücher" — ee with rounded lips]
+[your turn — say: "gut" then "Güte" — ee with rounded lips]
 [pause 8 seconds for the answer]
 [your turn — say: "schön" then "schoen" — put the ghost e back down]
 [pause 8 seconds for the answer]
@@ -530,8 +530,8 @@ You met this rule with der Tag, and you used it to tell Morgen from morgen. Now 
 You'll want to know: Großschreibung.
 Großschreibung — "capital-writing." Every noun takes a capital, anywhere in the sentence.
 Not just names or sentence starts — every noun:
-Der Mann isst das Essen in der Küche. — "The man eats the food in the kitchen."
-Three nouns, three capitals, two of them mid-sentence. Also capitalised: the polite Sie, and any word used as a noun (das Gute, "the good").
+Guten Abend, gute Nacht, bis morgen! — "Good evening, good night, see you tomorrow!"
+Two nouns, two capitals, both mid-sentence. Guten is capitalised only because it opens the sentence; gute stays small; and morgen here means "tomorrow", which is no noun, so it stays small too. Also capitalised: the polite Sie, and any word used as a noun (das Gute, "the good").
 (The word itself shows off two things you now know: the ß, and the initial st said sht — GROHSS-shry-boong.)
 
 Grammar Lens: the capital is a part-of-speech signal.
@@ -547,20 +547,20 @@ English used to do this too: read a page of 1700s English and the Nouns are Capi
 
 Writing — applying the rule.
 Capitalise the first letter of every noun, wherever it sits. Two tests if you are unsure: is there a der/die/das in front, or does it end in -ung, -heit or -schaft? Those are noun factories — Zeitung, Freiheit, Freundschaft.
-Copy Der Mann isst das Essen once, then write Guten Morgen and bis morgen one under the other and check every capital.
+Copy Guten Abend, gute Nacht once, then write Guten Morgen and bis morgen one under the other and check every capital.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Der Mann isst das Essen" — every noun capitalised]
+[your turn — say: "Guten Abend, gute Nacht" — every noun capitalised]
 [pause 8 seconds for the answer]
-[your turn — say: "essen" then "das Essen" — the capital flips it from doing to thing]
+[your turn — say: "gut" then "das Gute" — the capital flips it from describing to thing]
 [pause 8 seconds for the answer]
 [your turn — say: "Guten Morgen" then "bis morgen" — the same flip, in a word you own]
 [pause 8 seconds for the answer]
 
 Wrap-up recall.
 [pause 3 seconds]
-Which words does German capitalise? (Every noun, anywhere — plus Sie.) What does the capital tell you? (That the word is a noun: essen versus das Essen.) Which language used to do this and stopped? (English, in the 1700s.)
+Which words does German capitalise? (Every noun, anywhere — plus Sie.) What does the capital tell you? (That the word is a noun: gut versus das Gute.) Which language used to do this and stopped? (English, in the 1700s.)
 
 
 Lesson 16 of 16.

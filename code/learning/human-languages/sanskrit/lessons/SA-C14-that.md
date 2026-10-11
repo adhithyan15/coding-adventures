@@ -46,9 +46,9 @@ reviews_of: [SA-C14-this]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **एतत्** *etat*, which you will meet just now. The two of them
-differ by one sound at the front — **t-** for far — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is **एतत्** *etat*, which you have just met: the same word with an
+**e-** in front. Take the e- away and **t-** leads, and **t-** is far. The last
+lesson of this chapter shows the pattern it belongs to.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-02] -->

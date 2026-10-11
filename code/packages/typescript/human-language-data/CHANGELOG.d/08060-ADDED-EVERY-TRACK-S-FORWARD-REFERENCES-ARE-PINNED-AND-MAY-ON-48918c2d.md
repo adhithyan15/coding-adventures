@@ -1,12 +1,14 @@
 ### Added — every track's forward references are pinned, and may only fall
 
-`tests/continuity.test.ts` now holds `FORWARD_REFERENCE_CEILINGS`, one
-ceiling per track on `measureContinuity`'s forward references (a lesson that
-writes a word a later lesson teaches as its headword). Every track in the
-corpus must have a pin, and each track's count must stay at or under it. A
-failure lists which lesson used which word, and which lesson owns it. The
-German and Italian chapter-1 tests now read their ceilings from that table
-(45 → 1 and 34 → 0).
+`tests/continuity.test.ts` now holds `FORWARD_REFERENCE_CEILINGS`, one pin
+per track on `measureContinuity`'s forward references (a lesson that writes a
+word a later lesson teaches as its headword). Every track in the corpus must
+have a pin, and each track's count must EQUAL it: a ceiling alone would leave
+slack under it once a reference is cleared, and a later lesson could spend
+that slack unnoticed. A count above the pin fails and lists which lesson used
+which word, and which lesson owns it; a count below the pin fails and asks for
+the pin to be lowered in the same change. The German and Italian chapter-1
+tests now read their ceilings from that table (45 → 1 and 34 → 0).
 
 The pins were taken after a pass over fourteen tracks that brought the corpus
 total from 1,173 to 1,028: italian 34 → 0, german 29 → 1, kannada 13 → 2,
