@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `592e19755859c60f3fb116e6b0a25dbfdd23cbe6`
+**Current audit base:** `b0cd9e15aa467712fde66804071bec1b12fc0ed8`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -38,14 +38,7 @@ shared/compiler/LANG Clippy. Full Go build-tool tests (739 passing events), vet
 and rebuild pass. The complete unfiltered LANG-AOT failure remains in #12032;
 no original filters or assertions were weakened.
 
-Latest main `592e19755859c60f3fb116e6b0a25dbfdd23cbe6` adds Mermaid Swimlane documents. Reconciliation
-source `d54f8a893e4790aa1ee758ef6fe0adc61174334b` passes a fresh reverse-dependency audit and all 14 affected
-Mermaid/diagram packages: 720 tests/docs across 32 targets, zero failures/ignores,
-and strict all-target Clippy. Neither Closurec nor LANG-AOT is in this changed
-consumer cone. Rust changes since the baseline are confined to the four newly
-validated packages; compiler, Go build-tool, CI and Miri runner objects are unchanged.
-The current actual non-forced production plan again selects Closurec's real
-command on all three native platforms. Planning is not native CI acceptance.
+Main `b0cd9e15aa467712fde66804071bec1b12fc0ed8` is reconciled at actual tested source `ff0aece78916375c6f0ab304b118594c3c6e22b3`. The five-package ALGOL/Python reverse-dependency cone passes 1,224 tests/docs across 106 targets, zero failures/1 existing ignores, including every 11 unchanged LANG-AOT BUILD command and 27 exact native ALGOL regressions; strict all-target Clippy passes for the complete affected cone. The earlier 14-package Mermaid/diagram suite passed 720 tests/docs at `d54f8a893e4790aa1ee758ef6fe0adc61174334b`; those package objects are unchanged. Rust changes since baseline remain confined to these seven newly validated upstream packages. Closurec, Go build-tool, CI definitions and Miri runner objects are unchanged from baseline. Actual non-forced production planning selects Closurec on all three native platforms; planning is not native CI. Receipts retain their real tested heads. The known complete unfiltered LANG-AOT failure remains in #12032; no production selections or assertions were weakened. Full local Miri remains **DEFERRED / PENDING**.
 
 Final exact-head independent security, required native CI, review-clean and
 conflict-free state remain delivery gates; current review/CI receipts are linked
