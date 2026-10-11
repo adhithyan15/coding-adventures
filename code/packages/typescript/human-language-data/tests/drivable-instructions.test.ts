@@ -364,6 +364,19 @@ describe("the classifier reads the core for steps", () => {
 // ---------------------------------------------------------------------------
 
 const { lessons } = loadEverything();
+
+it("guards Punjabi Chapter 172's printed-form warm-up before asking for a point", () => {
+  const lesson = lessons.find((row) => row.realization.lessonId === "PA-R172-form-order-again");
+  expect(lesson).toBeDefined();
+  if (lesson === undefined) return;
+
+  const narration = narrateLesson(lesson);
+  expect(narration.coreModality).not.toBe("voice");
+  expect(narration.notice?.waitUntilStopped).toContain("Warm-up");
+  const lines = renderLessonNarrationText(narration).split("\n");
+  expect(lines[lines.indexOf("Warm-up.") - 1]).toBe(STOP_GUARD);
+});
+
 const manifest = loadModalityManifest();
 const coreDrivableIds = new Set(
   manifest.lessons.filter((row) => row.coreDrivable).map((row) => row.id),

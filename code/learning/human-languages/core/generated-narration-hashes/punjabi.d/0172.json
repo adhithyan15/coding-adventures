@@ -1,15 +1,16 @@
 {
   "language": "punjabi",
   "chapter": 172,
-  "sourceHash": "fnv1a64:01eed8eae727c9b8",
+  "sourceHash": "fnv1a64:5996901c1e2b8d79",
   "lessonIds": [
+    "PA-R172-form-labels-oral-bridge",
     "PA-R172-form-order-again"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "punjabi/narration/ch172.txt",
   "json": "punjabi/narration/ch172.json",
-  "textHash": "fnv1a64:62fde609c3b55b55",
-  "jsonHash": "fnv1a64:f7336abeb4320e94",
+  "textHash": "fnv1a64:86eed580c7b1c8a0",
+  "jsonHash": "fnv1a64:ceb9e7d6746820ec",
   "findings": []
 }
