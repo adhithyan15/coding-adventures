@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited after partial Perl 5.004_69
+Status date: 2026-10-11 — re-audited for partial Perl 5.004_70
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements

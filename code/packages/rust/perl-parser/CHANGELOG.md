@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Require a distinct, own-archive-backed partial Perl 5.004_70 pair with
+  acceptance and numeric/unsupported-input boundaries. Reject constant-hook,
+  imported/global keyword-override, subroutine, and regex contexts.
+
 - Require a distinct, own-archive-backed partial Perl 5.004_69 pair, retaining
   the 250-digit decimal and unsupported-input boundaries. Explicitly reject
   constant-hook contexts, including pragmas, `BEGIN`, and hint mutation.
