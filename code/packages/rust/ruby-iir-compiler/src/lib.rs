@@ -92,6 +92,29 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
                     only_node(second, "expression")?,
                 ]
             }
+            "method_call"
+                if call.children.len() == 8
+                    && is_puts_callee(&call.children[0])
+                    && is_parenthesis(&call.children[1], true)
+                    && is_comma(&call.children[3])
+                    && is_comma(&call.children[5])
+                    && is_parenthesis(&call.children[7], false) =>
+            {
+                // A call_arg with extra children denotes a keyword, splat, or
+                // other form. Borrow only its sole expression after validating
+                // every wrapper; caller-supplied trees follow the same contract.
+                let mut expressions = Vec::with_capacity(3);
+                for index in [2, 4, 6] {
+                    let ASTNodeOrToken::Node(argument) = &call.children[index] else {
+                        return Err("unsupported Ruby puts arguments".into());
+                    };
+                    if argument.rule_name != "call_arg" {
+                        return Err("unsupported Ruby puts arguments".into());
+                    }
+                    expressions.push(only_node(argument, "expression")?);
+                }
+                expressions
+            }
             "method_call_no_paren" => {
                 let [callee, ASTNodeOrToken::Node(expression)] = call.children.as_slice() else {
                     return Err("native Ruby pilot requires puts one expression".into());
@@ -126,6 +149,22 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
                     "call_builtin",
                     None,
                     vec![Operand::Var("rb_puts_two_ints".into()), first, second],
+                    "void",
+                );
+            }
+            [first, second, third] => {
+                let first = compiler.compile_expression(first)?.operand;
+                let second = compiler.compile_expression(second)?.operand;
+                let third = compiler.compile_expression(third)?.operand;
+                compiler.emit(
+                    "call_builtin",
+                    None,
+                    vec![
+                        Operand::Var("rb_puts_three_ints".into()),
+                        first,
+                        second,
+                        third,
+                    ],
                     "void",
                 );
             }
@@ -231,6 +270,11 @@ pub fn run_source(source: &str) -> Result<String, String> {
         sink.push('\n');
         Ok(Value::Null)
     });
+    let captured_three = Arc::clone(&output);
+    vm.builtins_mut()
+        .register("rb_puts_three_ints", move |args| {
+            puts_three_ints(args, &captured_three)
+        });
     vm.execute(&mut module, "main", &[])
         .map_err(|error| error.to_string())?;
     let result = output
@@ -238,6 +282,35 @@ pub fn run_source(source: &str) -> Result<String, String> {
         .map_err(|_| "Ruby output lock poisoned")?
         .clone();
     Ok(result)
+}
+
+/// Render one three-integer call before touching its output sink. The only
+/// temporary strings have bounded i64 decimal lengths, and the combined size
+/// check ensures that a failing call cannot append a partial line or argument.
+fn puts_three_ints(args: &[Value], captured: &Mutex<String>) -> Result<Value, VMError> {
+    let [Value::Int(first), Value::Int(second), Value::Int(third)] = args else {
+        return Err(VMError::Custom(
+            "rb_puts_three_ints expects three integers".into(),
+        ));
+    };
+    let rendered = [first.to_string(), second.to_string(), third.to_string()];
+    let mut sink = captured
+        .lock()
+        .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
+    if rendered
+        .iter()
+        .try_fold(sink.len(), |size, value| {
+            size.checked_add(value.len())?.checked_add(1)
+        })
+        .is_none_or(|size| size > MAX_OUTPUT_BYTES)
+    {
+        return Err(VMError::Custom("Ruby output limit exceeded".into()));
+    }
+    for value in rendered {
+        sink.push_str(&value);
+        sink.push('\n');
+    }
+    Ok(Value::Null)
 }
 
 fn floor_div(left: i128, right: i128) -> i128 {
@@ -504,6 +577,228 @@ fn checked_i64(value: i128) -> Result<i128, String> {
 mod tests {
     use super::*;
 
+    fn parsed_three_puts() -> GrammarASTNode {
+        try_create_ruby_parser("puts(1, 2, 3)")
+            .unwrap()
+            .parse()
+            .unwrap()
+    }
+
+    fn puts_call_mut(ast: &mut GrammarASTNode) -> &mut GrammarASTNode {
+        let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
+            panic!("expected statement");
+        };
+        let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+            panic!("expected call");
+        };
+        call
+    }
+
+    #[test]
+    fn three_parenthesized_puts_arguments_execute_iir_in_source_order() {
+        assert_eq!(
+            run_source("puts(1 + 2, -7 / 2, (3 + 4) * 5)\nputs()\nputs 9\nputs(10, 11)").unwrap(),
+            "3\n-4\n35\n\n9\n10\n11\n"
+        );
+        assert_eq!(
+            run_source("puts(9223372036854775807, -9223372036854775807 - 1, 0)").unwrap(),
+            "9223372036854775807\n-9223372036854775808\n0\n"
+        );
+        let module = compile_source("puts(1 + 2, 7 / -2, 3 * 4)", "three").unwrap();
+        let instructions = &module.functions[0].instructions;
+        let call = instructions
+            .iter()
+            .find(|i| {
+                i.op == "call_builtin"
+                    && i.srcs.first() == Some(&Operand::Var("rb_puts_three_ints".into()))
+            })
+            .unwrap();
+        assert_eq!(call.srcs.len(), 4);
+        // Each source operand is the result of its expression, in source order;
+        // none of the arithmetic is replaced with a pre-rendered output string.
+        for (operand, expected_op) in call.srcs[1..].iter().zip(["add", "call_builtin", "mul"]) {
+            let Operand::Var(name) = operand else {
+                panic!("expected register");
+            };
+            let producer = instructions
+                .iter()
+                .find(|i| i.dest.as_ref() == Some(name))
+                .unwrap();
+            assert_eq!(producer.op, expected_op);
+        }
+        let ops: Vec<_> = instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(
+            ops,
+            [
+                "const",
+                "const",
+                "add",
+                "const",
+                "const",
+                "neg",
+                "call_builtin",
+                "const",
+                "const",
+                "mul",
+                "call_builtin",
+                "ret_void"
+            ]
+        );
+    }
+
+    #[test]
+    fn three_puts_rejects_unsupported_or_invalid_expressions_in_every_position() {
+        for bad in [
+            "x",
+            "'3'",
+            "010",
+            "9223372036854775808",
+            "9223372036854775807 + 1",
+            "1 / 0",
+        ] {
+            for index in 0..3 {
+                let mut arguments = ["1", "2", "3"];
+                arguments[index] = bad;
+                let source = format!("puts(99)\nputs({})", arguments.join(", "));
+                assert!(run_source(&source).is_err(), "{source}");
+            }
+        }
+        for source in [
+            "puts(1, 2, 3, 4)",
+            "puts 1, 2, 3",
+            "puts(1, 2, *3)",
+            "puts(1, 2, k: 3)",
+            "puts(1, 2, 3).foo",
+        ] {
+            assert!(compile_source(source, "unsupported").is_err(), "{source}");
+        }
+    }
+
+    #[test]
+    fn direct_ast_three_puts_validates_tokens_and_all_argument_wrappers() {
+        let ast = parsed_three_puts();
+        let mut valid = ast.clone();
+        assert_eq!(puts_call_mut(&mut valid).children.len(), 8);
+        assert!(compile_ast(&valid, "valid").is_ok());
+        for index in [0, 1, 3, 5, 7] {
+            for mutation in 0..3 {
+                let mut forged = ast.clone();
+                let ASTNodeOrToken::Token(token) = &mut puts_call_mut(&mut forged).children[index]
+                else {
+                    panic!("expected callee, comma or delimiter");
+                };
+                match mutation {
+                    0 => token.type_ = TokenType::String,
+                    1 => token.type_name = Some("STRING".into()),
+                    _ => token.value = "bad".into(),
+                }
+                assert!(
+                    compile_ast(&forged, "forged-token").is_err(),
+                    "index {index}, mutation {mutation}"
+                );
+            }
+        }
+        for index in [2, 4, 6] {
+            for mutation in 0..3 {
+                let mut forged = ast.clone();
+                let ASTNodeOrToken::Node(argument) =
+                    &mut puts_call_mut(&mut forged).children[index]
+                else {
+                    panic!("expected argument");
+                };
+                match mutation {
+                    0 => argument.rule_name = "expression".into(),
+                    1 => argument.children.clear(),
+                    _ => argument
+                        .children
+                        .push(ASTNodeOrToken::Node(empty_node("expression"))),
+                }
+                assert!(
+                    compile_ast(&forged, "forged-argument").is_err(),
+                    "index {index}, mutation {mutation}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn three_puts_ast_budgets_cover_the_third_argument_before_lowering() {
+        let ast = parsed_three_puts();
+        let mut wide = ast.clone();
+        let ASTNodeOrToken::Node(argument) = &mut puts_call_mut(&mut wide).children[6] else {
+            unreachable!();
+        };
+        argument.children = (0..MAX_AST_ITEMS)
+            .map(|_| ASTNodeOrToken::Node(empty_node("expression")))
+            .collect();
+        assert!(compile_ast(&wide, "wide-third")
+            .unwrap_err()
+            .contains("AST item limit"));
+
+        let mut text = ast.clone();
+        let ASTNodeOrToken::Node(argument) = &mut puts_call_mut(&mut text).children[6] else {
+            unreachable!();
+        };
+        argument.rule_name = "x".repeat(MAX_AST_FIELD_BYTES + 1);
+        assert!(compile_ast(&text, "text-third")
+            .unwrap_err()
+            .contains("AST text limit"));
+
+        for index in [2, 4, 6] {
+            let mut deep = ast.clone();
+            let mut nested = empty_node("expression");
+            for _ in 0..MAX_AST_DEPTH {
+                let mut parent = empty_node("expression");
+                parent.children.push(ASTNodeOrToken::Node(nested));
+                nested = parent;
+            }
+            let ASTNodeOrToken::Node(argument) = &mut puts_call_mut(&mut deep).children[index]
+            else {
+                unreachable!();
+            };
+            argument.children = vec![ASTNodeOrToken::Node(nested)];
+            assert!(
+                compile_ast(&deep, "deep-argument")
+                    .unwrap_err()
+                    .contains("depth limit"),
+                "index {index}"
+            );
+        }
+    }
+
+    #[test]
+    fn three_puts_output_boundary_and_invalid_values_preserve_the_sink() {
+        let args = [Value::Int(i64::MIN), Value::Int(i64::MAX), Value::Int(0)];
+        let rendered = "-9223372036854775808\n9223372036854775807\n0\n";
+        let sink = Mutex::new("p".repeat(MAX_OUTPUT_BYTES - rendered.len()));
+        puts_three_ints(&args, &sink).unwrap();
+        let output = sink.lock().unwrap();
+        assert_eq!(output.len(), MAX_OUTPUT_BYTES);
+        assert!(output.ends_with(rendered));
+        drop(output);
+
+        let prior = "p".repeat(MAX_OUTPUT_BYTES - rendered.len() + 1);
+        let sink = Mutex::new(prior.clone());
+        assert!(puts_three_ints(&args, &sink)
+            .unwrap_err()
+            .to_string()
+            .contains("output limit"));
+        assert_eq!(*sink.lock().unwrap(), prior);
+
+        for index in 0..3 {
+            let mut invalid = args.clone();
+            invalid[index] = Value::Null;
+            let sink = Mutex::new("earlier\n".into());
+            assert!(puts_three_ints(&invalid, &sink).is_err());
+            assert_eq!(*sink.lock().unwrap(), "earlier\n");
+        }
+        for count in [0, 1, 2, 4] {
+            let sink = Mutex::new("earlier\n".into());
+            assert!(puts_three_ints(&vec![Value::Int(1); count], &sink).is_err());
+            assert_eq!(*sink.lock().unwrap(), "earlier\n");
+        }
+    }
+
     fn empty_node(rule_name: &str) -> GrammarASTNode {
         GrammarASTNode {
             rule_name: rule_name.into(),
@@ -559,7 +854,7 @@ mod tests {
     fn empty_parenthesized_puts_emits_newline_in_source_order() {
         assert_eq!(run_source("puts()\nputs(7)\nputs()").unwrap(), "\n7\n\n");
         assert!(run_source("puts").is_err());
-        assert!(run_source("puts(1, 2, 3)").is_err());
+        assert!(run_source("puts(1, 2, 3, 4)").is_err());
 
         let module = compile_source("puts()", "empty").unwrap();
         let calls: Vec<_> = module.functions[0]
@@ -577,7 +872,7 @@ mod tests {
             run_source("puts(1 + 2, 7 / 2)\nputs()\nputs(9)").unwrap(),
             "3\n3\n\n9\n"
         );
-        assert!(compile_source("puts(1, 2, 3)", "too-many").is_err());
+        assert!(compile_source("puts(1, 2, 3, 4)", "too-many").is_err());
         assert!(compile_source("puts 1, 2", "bare-two").is_err());
         assert!(compile_source("puts(1, 2 / 0)", "bad-second").is_err());
         assert!(compile_source("puts(1, 9223372036854775808)", "wide-second").is_err());
@@ -744,7 +1039,7 @@ mod tests {
     fn unsupported_and_out_of_range_inputs_are_rejected() {
         for source in [
             "puts(x)",
-            "puts(1, 2, 3)",
+            "puts(1, 2, 3, 4)",
             "x = 1",
             "puts('hello')",
             "puts('123')",

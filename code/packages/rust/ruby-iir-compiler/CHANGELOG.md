@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Lower exactly three positional integer arguments in a parenthesized `puts`
+  call directly to IIR and Rust `vm-core`. Validate both commas and all argument
+  wrappers, preserve source-order expression evaluation, and check combined
+  output size before appending three newline-terminated values. Add forged-AST,
+  integer-range, third-argument budget, and atomic output-boundary coverage.
+
 - Lower exactly two positional integer arguments in a parenthesized `puts`
   call to a bounded Rust VM builtin, emitting two newline-terminated values
   atomically after both expressions execute. Validate direct-AST comma and
