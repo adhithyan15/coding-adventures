@@ -3600,6 +3600,13 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
                 )).count() >= 2, "documents must lower to closed wave-edged paths");
             }
+            if fixture_name == "delay-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 6
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 2
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 2, "delays must lower to closed half-rounded paths");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

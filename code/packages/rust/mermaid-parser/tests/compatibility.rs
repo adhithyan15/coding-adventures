@@ -1686,6 +1686,15 @@ fn swimlane_document_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_delay_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Waiting\n  first@{ shape: delay, label: \"Pause\" }\n  second@{ shape: half-rounded-rectangle, label: \"Resume later\" }\nend\nfirst --> second",
+    ).expect("Swimlane delay aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Delay));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
