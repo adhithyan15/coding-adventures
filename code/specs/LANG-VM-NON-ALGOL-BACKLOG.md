@@ -508,12 +508,20 @@ Canonical operator/grouping tokens, native IIR execution and existing bounds
 are preserved. The refreshed selection rotates to a distinct own-source
 partial Perl 5.004_72 pair, including its source-backed CR whitespace change.
 
+PR #17275 delivered the distinct own-source partial Perl 5.004_72 pair and
+merged as `87875d7dc74fdce6077daaf8189d9111dd72a502` after every exact-head
+workflow and required gate passed. Its source-backed CR whitespace and
+250-digit bound are retained; earlier pairs and LANG81 execution are unchanged.
+The refreshed inventory has 776 unique rows, 117 partial pairs and 659 pending,
+with none complete. The next selection rotates to PREP01 unsuffixed octal
+integer stringization, preserving raw spelling and generic bounds.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add the distinct own-source partial
-   Perl 5.004_72 pair with CR whitespace and the 250-digit decimal bound.
+1. **PREP01 C (selected):** admit one unsuffixed octal integer at stringize,
+   preserving exact spelling, raw/forwarded provenance and existing bounds.
 2. **LANG79 Python:** arithmetic AST token validation is complete; broader
    native frontend semantics remain open. Host Python is oracle only.
 3. **LANG78 JavaScript:** restricted numeric division is complete; general
