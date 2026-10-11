@@ -51,3 +51,9 @@ Load the immutable modality corpus and build its manifest once during module
 initialization, as the other real-corpus fixtures do. The same CI run passed
 207 human-language test files but exceeded the 30-second modality setup hook.
 Keep the actual assertions and CLI checks, with their existing deadlines.
+
+The default-config local modality rerun exposed repeated immutable artifact reads
+inside two assertions (122.6 seconds and 97.6 seconds). Load the real committed
+manifest once alongside the real lessons, retaining the live `--check` invocation
+and all equality checks. Use directory junctions for the directory-link rejection
+fixtures on Windows so non-administrator validation exercises the same boundaries.
