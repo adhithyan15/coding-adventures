@@ -28,3 +28,13 @@ widths, selection and captured inputs. Run emitter regression tests and compile
 a generated WinUI VisiCalc host. Profile real populated/blank selection and check
 keyboard/editor/persistence behavior. Record measured results and limitations;
 this change alone does not close #16865 or establish native release readiness.
+
+## Follow-up within this change
+
+The first retained-identity native sample reduced selection allocations to about
+2.35 MB but still took 159–244 ms on six selections and 1221 ms on one stalled
+selection. Retained rows must also compare computed helper values and notify
+only those that changed. Cache the last observed helper result, update it before
+raising the event, and leave direct getter reads current. Nested projection
+refreshes still propagate owner changes to descendants. Add a compiled check
+that an unchanged helper does not notify while changed helpers do.
