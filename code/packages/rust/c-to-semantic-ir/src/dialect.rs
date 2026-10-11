@@ -1,10 +1,10 @@
 //! C's directive syntax for the shared PREP01 engine.
 //!
 //! The rooted C file-input frontend composes this dialect with `preprocess`.
-//! Its condition evaluator remains bounded. A single raw-token `#` stringize
-//! subset is supported; `##` remains unsupported.
+//! Its condition evaluator remains bounded. Single raw-token `#` stringize
+//! and identifier-prefix `##` paste subsets are supported.
 
-use coding_adventures_c_lexer::try_tokenize_c;
+use coding_adventures_c_lexer::{is_c_keyword, try_tokenize_c};
 use coding_adventures_source_preprocessor::{
     macros::MacroTable, Bounds, Dialect, Directive, FileId, IncludeRequest, PpError,
 };
@@ -323,13 +323,31 @@ fn reject_unsupported_macro_operators(
     body: &[Token],
     params: Option<&[String]>,
 ) -> Result<(), PpError> {
-    for (index, token) in body.iter().enumerate() {
-        if token.value == "##" {
+    let paste_positions: Vec<_> = body
+        .iter()
+        .enumerate()
+        .filter_map(|(index, token)| (token.value == "##").then_some(index))
+        .collect();
+    if let Some(&index) = paste_positions.first() {
+        let allowed = params.is_some_and(|names| {
+            paste_positions.len() == 1
+                && index > 0
+                && index + 1 < body.len()
+                && !body.iter().any(|token| token.value == "#")
+                && body[index - 1].type_ == TokenType::Name
+                && identifier(&body[index - 1].value)
+                && !names.iter().any(|name| name == &body[index - 1].value)
+                && body[index + 1].type_ == TokenType::Name
+                && names.iter().any(|name| name == &body[index + 1].value)
+        });
+        if !allowed {
             return Err(directive_error(
                 "define",
-                "token paste is not supported yet",
+                "only one literal-identifier ## parameter paste is supported",
             ));
         }
+    }
+    for (index, token) in body.iter().enumerate() {
         if token.value == "#"
             && !params.is_some_and(|names| {
                 body.get(index + 1)
@@ -346,6 +364,27 @@ fn reject_unsupported_macro_operators(
 }
 
 impl Dialect for CDialect {
+    fn paste(&self, left: &Token, right: &Token) -> Option<Token> {
+        if left.type_ != TokenType::Name
+            || right.type_ != TokenType::Name
+            || left.effective_type_name() != "NAME"
+            || right.effective_type_name() != "NAME"
+            || !identifier(&left.value)
+            || !identifier(&right.value)
+        {
+            return None;
+        }
+        let spelling = format!("{}{}", left.value, right.value);
+        // Both operands are ASCII names, so their concatenation is a name
+        // unless the compiled C grammar classifies it as a keyword.
+        if is_c_keyword(&spelling) {
+            return None;
+        }
+        let mut result = right.clone();
+        result.value = spelling;
+        Some(result)
+    }
+
     fn stringize(&self, tokens: &[Token]) -> Option<Token> {
         let [raw] = tokens else { return None };
         let allowed = match raw.type_ {
@@ -683,6 +722,95 @@ mod tests {
         let dialect = CDialect::default();
         let tokens = dialect.lex(source, file).unwrap();
         assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err());
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_uses_raw_argument_then_rescans() {
+        let source = "#define NAME tail\n#define preNAME 7\n#define PREFIX(x) pre ## x\n#define BOTH(x) pre ## x x\nPREFIX(NAME)\nBOTH(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
+        assert_eq!(values, ["7", "7", "tail"]);
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_preserves_argument_provenance() {
+        let source = "#define PREFIX(x) pre ## x\nPREFIX(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        assert_eq!(result.tokens[0].value, "preNAME");
+        assert_eq!(result.map.locus(0).unwrap().position.line, 2);
+        let mut names = Vec::new();
+        let mut cursor = result.map.locus(0).unwrap().expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["PREFIX"]);
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_preserves_forwarded_argument_provenance() {
+        let source = "#define INNER(x) pre ## x\n#define OUTER(x) INNER(x)\nOUTER(NAME)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        assert_eq!(result.tokens[0].value, "preNAME");
+        assert_eq!(result.map.locus(0).unwrap().position.line, 3);
+        let mut names = Vec::new();
+        let mut cursor = result.map.locus(0).unwrap().expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["INNER", "OUTER"]);
+    }
+
+    #[test]
+    fn bounded_identifier_prefix_paste_rejects_unhandled_shapes_and_tight_spelling() {
+        for source in [
+            "#define P(x) pre ## x\nP()\n",
+            "#define P(x) pre ## x\nP(a+b)\n",
+            "#define P(x) pre ## x\nP(4)\n",
+            "#define P(x) pre ## x\nP(\"a\")\n",
+            "#define P(x) i ## x\nP(nt)\n",
+            "#define P(x) int32_ ## x\nP(t)\n",
+            "#define P(x) pre ## x\nP(NAME)\n",
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = if source.contains("P(NAME)") {
+                Bounds { token_spelling_bytes: 6, ..Bounds::default() }
+            } else {
+                Bounds::default()
+            };
+            assert!(preprocess(tokens, file, &dialect, &mut fs, bounds).is_err(), "{source}");
+        }
+        for source in [
+            "#define P(x) x ## tail\n",
+            "#define P(x) ## x\n",
+            "#define P(x) pre ##\n",
+            "#define P(x) pre ## x ## y\n",
+            "#define P(x) pre ## x #x\n",
+            "#define P(a,b) a ## b\n",
+            "#define P pre ## NAME\n",
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(), "{source}");
+        }
     }
 
     #[test]

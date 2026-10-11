@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after partial Perl 5.004_67
+Status date: 2026-10-08 — re-audited after bounded Python three-argument print
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -412,21 +412,29 @@ explicitly partial pairs and 664 pending. Neither complete syntax nor an
 exhaustive public-release inventory is claimed. The next selection rotates
 to LANG79's bounded three-positional-float Python `print` stage.
 
+PR #17163 delivered that bounded Python three-positional-float `print` stage
+and merged as `31b89d56ea0e5266aa945905c8210880570d0f76` after exact-head
+CI, CodeQL, and books checks passed. Direct Python AST lowering and Rust
+`vm-core` execution retain the existing bounds; host Python is only the
+conformance oracle. The next selection rotates to PREP01's bounded C
+identifier-prefix token paste stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG79 Python (selected):** accept exactly three positional float
-   expressions in `print` through Python AST to IIR and Rust `vm-core`.
-   Preserve existing bounds and use host Python only as a conformance oracle.
+1. **PREP01 C (selected):** accept one literal identifier `##` parameter paste
+   with one raw identifier argument, then rescan the combined identifier.
+   Preserve generic bounds and provenance; reject broader paste shapes.
 2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
    complete; broader native frontend semantics remain open, with Node only
    as a conformance oracle.
 3. **LANG82 continued:** the separate, explicitly partial Perl 5.004_67
    pair is complete. Keep 5.004_01-t1 pending until its own source is found;
    do not imply complete syntax or an exhaustive release inventory.
-4. **PREP01 C:** bounded raw-token stringize is complete. Full C `#if`,
-   broader stringize, and token paste remain open.
+4. **LANG79 Python:** the three-argument numeric `print` stage is complete;
+   broader native frontend semantics remain open, with host Python only as
+   a conformance oracle.
 5. **LANG80 Ruby:** the bounded two-argument integer `puts` stage is complete;
    broader native frontend semantics remain open, with host Ruby only as a
    conformance oracle.
