@@ -17,7 +17,8 @@
       "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:a00a14134c62195b",
+    "sourceHash": "fnv1a64:4147788d3125b6ca",
+    "delivery": "script",
     "authored": "pen",
     "authoredReason": "The learner preserves a handwritten first attempt and writes a separate correction."
   },

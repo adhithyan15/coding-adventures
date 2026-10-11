@@ -1,6 +1,7 @@
 ---
 schema_version: 2
 id: PA-R173-message-timed-again
+delivery: script
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 9160
 chapter: 173

@@ -16,10 +16,11 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:3d7203d22f34fdc8",
+    "sourceHash": "fnv1a64:f0b664d157f8bc29",
     "detachableSegments": [
       "Writing — independent timed return"
     ],
+    "delivery": "script",
     "authored": "pen",
     "authoredReason": "The learner independently writes a Gurmukhi message on a blank page."
   },

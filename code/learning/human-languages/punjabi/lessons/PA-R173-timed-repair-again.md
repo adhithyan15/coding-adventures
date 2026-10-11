@@ -1,6 +1,7 @@
 ---
 schema_version: 2
 id: PA-R173-timed-repair-again
+delivery: script
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 9170
 chapter: 173
