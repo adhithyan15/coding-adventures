@@ -147,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-si-futuro-say",
               "prompt": "Say: if I have time, I will speak Spanish.",
               "assesses": [
@@ -165,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-si-futuro-trap",
               "prompt": "Is si tendre tiempo correct?",
               "assesses": [
@@ -183,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-si-futuro-why",
               "prompt": "Why does only the second half get the future?",
               "assesses": [

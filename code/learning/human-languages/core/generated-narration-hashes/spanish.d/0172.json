@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 172,
-  "sourceHash": "fnv1a64:d20366cd3790c27e",
+  "sourceHash": "fnv1a64:a63ced8569be5d8d",
   "lessonIds": [
     "ES-C39-repaso-cambios"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch172.txt",
   "json": "spanish/narration/ch172.json",
-  "textHash": "fnv1a64:b0d7ab7e94213a7a",
-  "jsonHash": "fnv1a64:57328be6a967e40d",
+  "textHash": "fnv1a64:5a6d1b7ce6b99e7f",
+  "jsonHash": "fnv1a64:14d9fcc676a5117a",
   "findings": []
 }

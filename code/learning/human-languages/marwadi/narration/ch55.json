@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C55-milno-type",
-              "prompt": "Type the Marwadi for 'to meet'.",
+              "prompt": "Say the Marwadi for 'to meet'.",
               "assesses": [
                 "MW-LEX-C55-VERBS55-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C55-sikhno-type",
-              "prompt": "Type the Marwadi for 'to learn'.",
+              "prompt": "Say the Marwadi for 'to learn'.",
               "assesses": [
                 "MW-LEX-C55-VERBS55-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C55-bhulno-type",
-              "prompt": "Type the Marwadi for 'to forget'.",
+              "prompt": "Say the Marwadi for 'to forget'.",
               "assesses": [
                 "MW-LEX-C55-VERBS55-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C55-lavno-type",
-              "prompt": "Type the Marwadi for 'to bring'.",
+              "prompt": "Say the Marwadi for 'to bring'.",
               "assesses": [
                 "MW-LEX-C55-VERBS55-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C55-bhejno-type",
-              "prompt": "Type the Marwadi for 'to send'.",
+              "prompt": "Say the Marwadi for 'to send'.",
               "assesses": [
                 "MW-LEX-C55-VERBS55-05"
               ],

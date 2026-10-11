@@ -35,58 +35,62 @@ reviews_of: [RU-C01-privet, RU-C01-zdravstvuyte, RU-C01-spasibo, RU-C01-da, RU-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PRIVET] -->
 
-[PAUSE 2s] Six words, and — more importantly — you can now **read Cyrillic**
-well enough to sound them all out. Let's prove it.
+[PAUSE 2s] Six words, all of them now in your ear and your mouth. The writing
+lessons that follow put their letters in your hand; first, prove you can say
+every one.
 
-## Script — the four false friends, one more time
+## Sounds you'll need — the four false friends, one more time
 <!-- hl-knowledge: introduces=[RU-DIALOGUE-COURTESY-01]; assesses=[RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
-These are the letters that look Latin and lie. Say each sound aloud:
+Four letters in these words look Latin and lie. You will write them next; for
+now, say each sound aloud:
 
-- **в** wears the shape of a Latin B and says **v** — as in при**в**ет.
-- **р** wears the shape of a Latin P and says **r** — as in п**р**ивет.
-- **с** wears the shape of a Latin C and says **s** — as in **с**пасибо.
-- **н** wears the shape of a Latin H and says **n** — as in **н**ет.
+- the letter shaped like a Latin B says **v** — as in *privét*.
+- the letter shaped like a Latin P says **r** — as in *privét*.
+- the letter shaped like a Latin C says **s** — as in *spasíbo*.
+- the letter shaped like a Latin H says **n** — as in *nyet*.
 
-And the two easy vowel traps: **у** = "oo" (not y), **е** = "ye."
+And the two vowel traps: the letter shaped like a Latin y says "oo", and the
+one shaped like a Latin e says "ye."
 
-## Script — read them cold
+## Guided Practice — say them cold
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
-[PAUSE 1s] Sound out each — no romanization:
+[PAUSE 1s] Say each, then what it means:
 
-- **привет** → *privét* (hi)
-- **здравствуйте** → *zdrávstvuyte* (hello, formal)
-- **спасибо** → *spasíbo* (thank you)
-- **да** → *da* (yes)
-- **нет** → *nyet* (no)
-- **пожалуйста** → *pozhálusta* (please / you're welcome)
+- *privét* (hi)
+- *zdrávstvuyte* (hello, formal)
+- *spasíbo* (thank you)
+- *da* (yes)
+- *nyet* (no)
+- *pozhálusta* (please / you're welcome)
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 1s] Run the whole ritual, formal then informal:
 
-- Meet a stranger: **«Здравствуйте!»**
-- They thank you: **«Спасибо!»** → you answer **«Пожалуйста!»**
-- A friend waves: **«Привет!»**
-- Answer a question: **«Да!»** … or **«Нет!»**
+- Meet a stranger: *Zdrávstvuyte!*
+- They thank you: *Spasíbo!* → you answer *Pozhálusta!*
+- A friend waves: *Privét!*
+- Answer a question: *Da!* … or *Nyet!*
 
 ## What you've built — the thread through the chapter
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 Every word carried a hidden story:
 
-- **привет** shares its *-вет* "speak" root with **Soviet** (*совет*, a
+- *privét* shares its *-vet* "speak" root with **Soviet** (*sovét*, a
   council).
-- **здравствуйте** wishes you **health**; **спасибо** blesses you (*God save
+- *zdrávstvuyte* wishes you **health**; *spasíbo* blesses you (*God save
   you*).
-- **нет** is the ancient **\*ne** you already own in *no, not, never*.
-- **пожалуйста** asks for a **favour** — and doubles as "you're welcome."
+- *nyet* is the ancient **\*ne** you already own in *no, not, never*.
+- *pozhálusta* asks for a **favour** — and doubles as "you're welcome."
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 3s] Without looking: which greeting is formal and which is informal?
-(*здравствуйте* / *привет*.) Which word answers *спасибо*? (*пожалуйста*.) Name
-the four false-friend letters and their real sounds. (в=v, р=r, с=s, н=n.)
+(*zdrávstvuyte* / *privét*.) Which word answers *spasíbo*? (*pozhálusta*.) Name
+the four false-friend letters and their real sounds. (The B-shape says v, the
+P-shape r, the C-shape s, the H-shape n.)

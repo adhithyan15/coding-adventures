@@ -6,6 +6,7 @@ sequence: 510
 chapter: 9
 type: word
 headword: أحمر أزرق
+romanization: "aḥmar azraq"
 gloss: red and blue — the same gendered color template as black and white
 concept_tag: AR-COLOUR-RED-BLUE
 prerequisites: [AR-C09-aswad-abyad]
@@ -47,7 +48,7 @@ reviews_of: [AR-C09-aswad-abyad]
 Same recipe every time: masculine opens with **أ**, feminine drops that
 opening and closes with **‑اء** instead. Once you've internalized this
 template from black and white, the whole family of **classic, old** Arabic
-colors slots into it (yellow **أصفر/صفراء**, green **أخضر/خضراء**, too) — one
+colors slots into it (yellow **aṣfar/ṣafrāʾ**, green **akhḍar/khaḍrāʾ**, too) — one
 pattern, several colors. (Newer colors like brown, gray, purple, orange, and
 pink use a **different** pattern entirely, borrowed from nouns — so "every
 color" would overstate it; this template belongs specifically to Arabic's

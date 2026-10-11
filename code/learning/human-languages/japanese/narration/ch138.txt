@@ -31,7 +31,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "I get up", politely? (おきます, okimasu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'I get up (polite)'.
+Say the Japanese for 'I get up (polite)'.
 
 
 Lesson 2 of 5.
@@ -67,7 +67,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "I work", politely? (はたらきます, hatarakimasu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'I work (polite)'.
+Say the Japanese for 'I work (polite)'.
 
 
 Lesson 3 of 5.
@@ -103,7 +103,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "I walk", politely? (あるきます, arukimasu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'I walk (polite)'.
+Say the Japanese for 'I walk (polite)'.
 
 
 Lesson 4 of 5.
@@ -135,7 +135,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "I go home", politely? (かえります, kaerimasu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'I go home (polite)'.
+Say the Japanese for 'I go home (polite)'.
 
 
 Lesson 5 of 5.
@@ -174,4 +174,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 I get up? (おきます, okimasu.) I work? (はたらきます, hatarakimasu.) I walk? (あるきます, arukimasu.) I go home? (かえります, kaerimasu.) I go to bed? (ねます, nemasu.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'I go to bed (polite)'.
+Say the Japanese for 'I go to bed (polite)'.

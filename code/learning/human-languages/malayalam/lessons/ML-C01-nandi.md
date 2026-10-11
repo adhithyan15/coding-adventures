@@ -93,7 +93,7 @@ gratitude. (In casual speech you'll also hear the English *thanks*.)
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01] -->
 
-[PAUSE 3s] Read **നന്ദി**. Is it native or a Sanskrit loan, and which language
+[PAUSE 3s] [YOU READ: **നന്ദി**] Is it native or a Sanskrit loan, and which language
 has the twin word? (Native — root *nal*, "good"; Tamil's *naṉṟi*.) Which two
 Dravidian languages use the *Sanskrit* word for thanks instead? (Kannada,
 Telugu.)

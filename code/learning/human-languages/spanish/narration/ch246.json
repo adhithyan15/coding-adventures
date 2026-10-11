@@ -161,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-para-mi-say",
               "prompt": "Say: the coffee is for me.",
               "assesses": [
@@ -179,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-para-mi-third",
               "prompt": "Which persons actually change shape after a preposition?",
               "assesses": [
@@ -197,6 +199,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-para-mi-accent",
               "prompt": "Why does mi take an accent but ti does not?",
               "assesses": [

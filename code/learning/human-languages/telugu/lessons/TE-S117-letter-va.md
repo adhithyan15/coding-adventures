@@ -57,13 +57,16 @@ You already say these, and every one of them has వ somewhere inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 loops
-counterclockwise around the small lower-left bowl. Lift, then movement 2 sweeps
-around the broad lower and right body. Lift once more for movement 3, the
-separate chevron above.
+counterclockwise around the small lower-left bowl. Without lifting, movement 2
+sweeps around the broad lower and right body. Keep the pen down: movement 3
+climbs a short way up the chevron's left arm, and movement 4 draws the chevron
+down and up. The strip gives that short climb a panel of its own, so the three
+movements are numbered as four.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so keep the three movements
-clear instead of closing the two pen lifts.
+the printed shape here; Telugu handwriting varies, but most native writers draw
+వ as one unbroken stroke, so keep the pen on the paper until the chevron is
+finished.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-117] -->

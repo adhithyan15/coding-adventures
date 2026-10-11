@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कठै (kaṭhai) mean? ("Where".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'where'.
+Say the Marwadi for 'where'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उठै (uṭhai) mean? ("Over there".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'over there'.
+Say the Marwadi for 'over there'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आगै (āgai) mean? ("In front, ahead".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'in front, ahead'.
+Say the Marwadi for 'in front, ahead'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लारै (lārai) mean? ("Behind".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'behind'.
+Say the Marwadi for 'behind'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does माथै (māthai) mean? ("On top of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'on top of'.
+Say the Marwadi for 'on top of'.

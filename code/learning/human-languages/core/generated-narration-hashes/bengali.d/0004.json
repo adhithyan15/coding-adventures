@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 4,
-  "sourceHash": "fnv1a64:ec3c7e925aa0bc2e",
+  "sourceHash": "fnv1a64:91f84ab1c3facd6a",
   "lessonIds": [
     "BN-W02-naam-read",
     "BN-W02-i-matra",
@@ -14,11 +14,11 @@
     "BN-W02-chandrabindu",
     "BN-W02-hyan-read"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch04.txt",
   "json": "bengali/narration/ch04.json",
-  "textHash": "fnv1a64:e19ae246bc827fab",
-  "jsonHash": "fnv1a64:2d7c97320890b2de",
+  "textHash": "fnv1a64:daa0aef6254b060c",
+  "jsonHash": "fnv1a64:b9b3c06aa4962cb1",
   "findings": []
 }

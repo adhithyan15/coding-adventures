@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひたい (hitai) mean? ("The forehead".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the forehead'.
+Say the Japanese for 'the forehead'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かんごし (kangoshi) mean? ("A nurse".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a nurse'.
+Say the Japanese for 'a nurse'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しろ (shiro) mean? ("A castle; the colour white".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a castle'.
+Say the Japanese for 'a castle'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does どうろ (douro) mean? ("A road, a highway".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a road, a highway'.
+Say the Japanese for 'a road, a highway'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほどう (hodou) mean? ("A pavement".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a pavement'.
+Say the Japanese for 'a pavement'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 The laundry? (せんたくもの, sentakumono.) Detergent? (せんざい, senzai.) A teacup? (ゆのみ, yunomi.) A rice pot? (かま, kama.) A chopping board? (まないた, manaita.) A ladle? (おたま, otama.) The water supply? (すいどう, suidou.) A kettle? (やかん, yakan.) A tray? (おぼん, obon.) A can? (かん, kan.) A parcel? (つつみ, tsutsumi.) An envelope? (ふうとう, fuutou.) A gift? (おくりもの, okurimono.) A ball? (まり, mari.) A bell? (かね, kane.) A hakama? (はかま, hakama.) A cotton kimono? (ゆかた, yukata.) A flame? (ほのお, honoo.) A lamp? (あかり, akari.) Light? (ひかり, hikari.) A gate? (もん, mon.) A wood? (はやし, hayashi.) A bud? (つぼみ, tsubomi.) A rock? (いわ, iwa.) A pebble? (こいし, koishi.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a road, a highway'.
+Say the Japanese for 'a road, a highway'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Mud? (どろ, doro.) Dust? (ほこり, hokori.) Foam? (あわ, awa.) Dew; the rainy season? (つゆ, tsuyu.) A slope? (さか, saka.) A shellfish? (かい, kai.) A sea bream? (たい, tai.) A shark? (さめ, same.) A squirrel? (りす, risu.) A wild boar? (いのしし, inoshishi.) A wild duck? (かも, kamo.) An eagle? (わし, washi.) A hawk? (たか, taka.) An owl? (ふくろう, fukurou.) A silkworm? (かいこ, kaiko.) A fly? (はえ, hae.) A snail? (かたつむり, katatsumuri.) A tail? (しっぽ, shippo.) A heel? (かかと, kakato.) A shin? (すね, sune.) The forehead? (ひたい, hitai.) A nurse? (かんごし, kangoshi.) A castle; the colour white? (しろ, shiro.) A road? (どうろ, douro.) A pavement? (ほどう, hodou.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'mud'.
+Say the Japanese for 'mud'.

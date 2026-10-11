@@ -125,7 +125,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-nana-recall",
               "prompt": "Which two numbers so far have a native word standing beside a borrowed reading?",
               "assesses": [
@@ -190,16 +191,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:42bedc3f16b7164c",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice — read, copy, recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice — read, copy, recall."
       },
       "blocks": [
         {
@@ -296,6 +301,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-hachi-recall",
               "prompt": "Does eight have a native word beside its borrowed reading in the everyday count?",
               "assesses": [
@@ -433,7 +439,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -466,6 +472,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-ku-recall",
               "prompt": "Nine has two everyday readings. Is either of them the native word?",
               "assesses": [
@@ -499,19 +506,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b411303a33faaead",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -569,7 +581,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ら once. ろ starts the same way and ends differently: a short stroke across the top, then down and round to the left and back up, closing the loop instead of leaving a hook."
+              "text": "Write ら once. ろ (ro) starts the same way and ends differently: a short stroke across the top, then down and round to the left and back up, closing the loop instead of leaving a hook."
             },
             {
               "kind": "speech",
@@ -616,6 +628,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W15-ro-write",
               "prompt": "Write the hiragana sign for the mora ro.",
               "assesses": [
@@ -669,7 +682,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ろ from memory — R1, one lesson back",
+              "instruction": "ろ (ro) from memory — R1, one lesson back",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -736,7 +749,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -778,6 +791,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-roku-recall",
               "prompt": "The sign く (ku) does two jobs in this count. Name both.",
               "assesses": [
@@ -811,19 +825,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7aeddb63f714ad1a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -945,6 +964,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W15-small-yu-write",
               "prompt": "How many beats is じゅ, and how many is いっ?",
               "assesses": [
@@ -1077,7 +1097,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1110,6 +1130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-juu-recall",
               "prompt": "Say what nijuu means and what juuni means, and say why they are different.",
               "assesses": [
@@ -1245,6 +1266,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R15-six-to-ten-run",
               "prompt": "Write six to ten in hiragana, in order.",
               "assesses": [
@@ -1268,6 +1290,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R15-six-to-ten-build",
               "prompt": "Say thirteen and say thirty, and say which part of each does the work.",
               "assesses": [

@@ -81,7 +81,7 @@ borrowing. A Hindi adjective bends when it ends in **-आ**; otherwise it stays
 put. Loanwords land on the "no" side so often because they mostly arrive ending
 in a consonant.
 
-That means you do not have to remember a list. **Look at the ending.**
+That means you do not have to remember a list. **Listen for the ending.**
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C80-EASE-01, HI-LEX-C80-EASE-02, HI-GRAMMAR-C41-ADJ-SYSTEM] -->

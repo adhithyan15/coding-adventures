@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-CAFE, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE, ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR]
+  knowledge: [ES-LEX-CAFE, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE, ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR, ES-ETYMON-MANEANA]
 skills: [listening, speaking]
 modes: [interpersonal, presentational]
 strands: [meaning-output]
@@ -55,7 +55,9 @@ You can ask for something and stay polite doing it.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE, ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE, ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR, ES-ETYMON-MANEANA] -->
 
 [PAUSE 3s] Run it once more from memory. If a word does not come, go back one
 lesson rather than pushing on — this chapter is short on purpose.
+
+[PAUSE 2s] And from the farewells: why does *mañana* mean both *morning* and *tomorrow*? (Latin *(hōra) maneana*, **the early hour** — the next early hour you see is tomorrow morning.)

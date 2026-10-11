@@ -47,7 +47,9 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 You already say this one, and it has క inside it:
 
-- **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
+- *namaskāram* — hello / greetings ("a making of a bow"), where it opens the
+  syllable *kā*. In front of it the word stacks an *s* — **స** *sa* with its
+  vowel stripped by the mark **్** — onto ka: **స్క** *ska*.
 
 ## Writing: క — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-03] -->
@@ -65,12 +67,12 @@ slowly, and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-03] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find క in the ones that have it]
+- [YOU LOOK: at the letters you have met so far, and find క among them]
 
-> నమస్కారం  ·  ధన్యవాదములు
+> న  ·  మ  ·  ర  ·  క  ·  ధ  ·  వ  ·  ద
 
 - [YOU TRACE: క three times, saying *ka* as you finish each one]
-- [YOU LOOK: back at any page of this chapter and find క once more]
+- [YOU SAY: which syllable of *namaskāram* క begins (*kā*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-03] -->

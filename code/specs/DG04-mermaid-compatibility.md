@@ -997,7 +997,33 @@ asymmetric, parallelogram, and trapezoid nodes), expanded `cloud`, `bang`,
 hourglass/collate, triangle/extract, flipped-triangle/manual-file, text-block,
 notched-rectangle/card, lined/shaded-process, compact start/stop control, and
 fork/join shape attributes, and aliases for the classic shapes represented
-by the shared IR.
+by the shared IR. Lightning-bolt communication links recognize the `bolt`,
+`com-link`, and `lightning-bolt` aliases and lower as compact label-free paths.
+Comment nodes recognize left (`brace`, `comment`, and `brace-l`), right
+(`brace-r`), and paired (`braces`) curly-brace forms with preserved labels.
+Wave-edged document nodes recognize both `doc` and `document` aliases.
+Delay nodes recognize `delay` and `half-rounded-rectangle` aliases.
+Horizontal-cylinder direct-access storage recognizes `h-cyl`, `das`, and
+`horizontal-cylinder` aliases.
+Lined-cylinder disk storage recognizes `lin-cyl`, `disk`, and
+`lined-cylinder` aliases.
+Display nodes recognize `curv-trap`, `curved-trapezoid`, and `display` aliases.
+Divided processes recognize `div-rect`, `div-proc`, `divided-rectangle`, and
+`divided-process` aliases.
+Internal storage recognizes `win-pane`, `internal-storage`, and `window-pane`
+aliases.
+Junctions recognize `f-circ`, `junction`, and `filled-circle` aliases and lower
+as compact filled circles.
+Loop limits recognize `notch-pent`, `loop-limit`, and `notched-pentagon`
+aliases.
+Manual inputs recognize `sl-rect`, `manual-input`, and `sloped-rectangle`
+aliases.
+Multi-documents recognize `docs`, `documents`, `st-doc`, and
+`stacked-document` aliases.
+Multi-processes recognize `st-rect`, `procs`, `processes`, and
+`stacked-rectangle` aliases.
+Stored data recognizes `bow-rect`, `stored-data`, and `bow-tie-rectangle`
+aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

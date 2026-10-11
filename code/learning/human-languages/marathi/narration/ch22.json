@@ -76,6 +76,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R18-script-warmup-check",
               "prompt": "Hear dhanyavad; give its meaning and write it in Devanagari.",
               "assesses": [
@@ -153,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R18-script-a-r4-check",
               "prompt": "Write dhanyavad, visarga, independent aa, and bha at long distance.",
               "assesses": [
@@ -232,6 +234,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R18-script-b-r4-check",
               "prompt": "Write e-mark, anusvara, and ta at long distance.",
               "assesses": [
@@ -310,6 +313,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R18-script-c-r4-check",
               "prompt": "Write da, dha, and ba at long distance.",
               "assesses": [
@@ -388,6 +392,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R18-script-d-r4-check",
               "prompt": "Write ya, lla, and va at long distance.",
               "assesses": [
@@ -503,6 +508,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R22-marks-r4-check",
               "prompt": "From their sounds alone, name all six marks (sahā khuṇā) and say for each whether it is written before, above, below, or on its own.",
               "assesses": [
@@ -601,6 +607,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R22-two-rows-r4-check",
               "prompt": "Rebuild both four-step rows from the voice-and-breath pattern, then name the one that sits inside the word for my.",
               "assesses": [
@@ -700,8 +707,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R22-curled-r4-check",
-              "prompt": "Name the four curled letters, say what the dot under a romanized letter means, and name the lip letter that is ba with the voice off.",
+              "prompt": "Name the four curled letters, say what the dot under a letter means, and name the lip letter that is ba with the voice off.",
               "assesses": [
                 "MR-SCRIPT-TTA-01",
                 "MR-SCRIPT-TTHA-01",
@@ -797,6 +805,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R22-sibilants-r4-check",
               "prompt": "Name the plain l, the two sibilants said alike, and the three standalone vowels, and say what a letter surviving a merged sound tells you about writing systems.",
               "assesses": [

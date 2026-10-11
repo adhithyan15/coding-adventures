@@ -4,7 +4,7 @@
   "chapter": 412,
   "title": "Gym and Sport",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:85b557e408a5b8ce",
+  "sourceHash": "fnv1a64:d4582698377033b0",
   "lessons": [
     {
       "id": "ES-C412-gimnasio",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97e286f7f8b44b9c",
+      "sourceHash": "fnv1a64:38c65f55c9a1ac89",
       "notice": null,
       "blocks": [
         {

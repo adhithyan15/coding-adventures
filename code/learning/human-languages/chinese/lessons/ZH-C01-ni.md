@@ -50,21 +50,19 @@ Chinese is not written with letters. It is written with **characters**, each an
 evenly sized square block, and each block built from smaller recurring pieces
 called **components**.
 
-**你** has two of them, left and right:
+**你** has two of them: a narrow piece on the left, a wider one on the right.
 
-> **亻** + **尔** → **你**
+The narrow left piece is the "person" component, *rén*. On its own, the
+character for a person is two legs walking. Pushed to the left edge of a block,
+it is squashed upright: one short slant over one vertical.
 
-**亻** is the "person" component. On its own the character for a person is **人**
-— two legs walking. Push it to the left edge of a block and it is squashed
-upright into **亻**: one short slant over one vertical. Same piece, standing
-sideways to make room.
-
-**尔** on the right is there for its *sound*, not its meaning. Chinese builds
-most of its characters this way — one component pointing at the meaning, another
-at the pronunciation.
+The right piece, *ěr*, is there for its *sound*, not its meaning.
+Chinese builds most of its characters this way — one component pointing at the
+meaning, another at the pronunciation.
 
 Stroke order is a real, taught system here: top before bottom, left before right.
-So **亻** first, then **尔**.
+So the person piece first, then the sound piece. The writing lessons hand you
+each piece, stroke by stroke.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-LEX-NI]; assesses=[ZH-SCRIPT-NI] -->
@@ -86,12 +84,12 @@ can see.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NI, ZH-SCRIPT-NI, ZH-TONE-LEXICAL] -->
 
 - [YOU SAY: **nǐ** — low and dipping, not flat]
-- [YOU READ: **你** — name its left piece, then its right piece]
+- [YOU READ: **你** — point to the person piece, then the sound piece]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NI, ZH-TONE-LEXICAL] -->
 <!-- hl-activity: {"id":"ZH-C01-ni-meaning","kind":"text","assesses":["ZH-LEX-NI"],"prompt":"Type the Mandarin word, in pinyin with its tone mark, that means 'you' (one person).","answer":"nǐ","accepted":["ni3","ni"],"feedback":{"correct":"Right: nǐ, third tone, low and dipping.","incorrect":"It is nǐ — third tone, written with the hook accent."},"response_seconds":8} -->
 
-Which component of **你** tells you the word is about a person? (**亻**.)
+Which half of **你** is the person? (The narrow left one.)
 
 Source: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)

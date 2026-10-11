@@ -524,7 +524,7 @@
     {
       "id": "BN-C25-ke-who",
       "sequence": 1870,
-      "title": "কে (-ke) (ke) — who?",
+      "title": "কে (ke) — who?",
       "headword": "কে",
       "romanization": "ke",
       "gloss": "who? — the interrogative head on the pronoun frame, and a word that looks exactly like the object ending it is not",
@@ -568,11 +568,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "কে (-ke)? — ke? — who?"
+              "text": "কে? — ke? — who?"
             },
             {
               "kind": "speech",
-              "text": "সে কে (-ke)? — she ke? — who is he?"
+              "text": "সে কে? — she ke? — who is he?"
             },
             {
               "kind": "speech",
@@ -587,13 +587,13 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "where: stuck to the back of a noun. what it is: -কে (-ke), the object ending.",
-                "where: standing on its own. what it is: কে (-ke), who?"
+                "where: stuck to the back of a noun. what it is: -কে (ke), the object ending.",
+                "where: standing on its own. what it is: কে (ke), who?"
               ]
             },
             {
               "kind": "speech",
-              "text": "You now have both of the questions a stranger opens with. এটা কী? asks about a thing; কে (-ke)? asks about a person — and the two are told apart only by their vowel, so say them carefully."
+              "text": "You now have both of the questions a stranger opens with. এটা কী? asks about a thing; কে (ke)? asks about a person — and the two are told apart only by their vowel, so say them carefully."
             }
           ]
         },
@@ -620,7 +620,7 @@
             },
             {
               "kind": "speech",
-              "text": "কে (-ke) — who."
+              "text": "কে (ke) — who."
             },
             {
               "kind": "speech",
@@ -699,7 +699,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you tell the question কে (-ke) from the ending -কে (-ke)? (By where it sits — alone, or stuck to a noun.) Which letter opens every question word in this book? (ক-.) And which column do the answers come from? (ত-.)"
+              "text": "How do you tell the question কে (ke) from the ending -কে (ke)? (By where it sits — alone, or stuck to a noun.) Which letter opens every question word in this book? (ক-.) And which column do the answers come from? (ত-.)"
             },
             {
               "kind": "speech",

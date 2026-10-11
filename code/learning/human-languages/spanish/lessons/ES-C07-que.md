@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-QUE, ES-ETYMON-QUID]
 practises:
-  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-QUESTION-ACCENT, ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-LEX-QUE, ES-ETYMON-QUID]
+  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-QUESTION-ACCENT, ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-LEX-QUE, ES-ETYMON-QUID, ES-ETYMON-QUESTION-QU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -45,7 +45,7 @@ the **accent** and the **¿ ?**.
   the diacrítica: *qué* = "what?"; *que* = "that"). Question words wear the accent.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[ES-LEX-QUE, ES-ETYMON-QUID]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-LEX-QUE, ES-ETYMON-QUID]; assesses=[ES-ETYMON-QUESTION-QU] -->
 
 **qué** comes from Latin **quid**, *"what"* — the neuter of *quis*, "who." It's a
 small function word with a few learned English descendants:

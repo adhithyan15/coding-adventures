@@ -42,14 +42,14 @@ French wore *decem* down to a bare **-ze**, Italian kept **-dici**.
 ## Grammar Lens: six fusions
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-NUMERI-11-16-02]; assesses=[] -->
 
-| | Italian | ← Latin | build |
-|---|---|---|---|
-| 11 | **undici** | *ūndecim* | un + dici |
-| 12 | **dodici** | *duodecim* | do + dici |
-| 13 | **tredici** | *trēdecim* | tre + dici |
-| 14 | **quattordici** | *quattuordecim* | quattor + dici |
-| 15 | **quindici** | *quīndecim* | quin + dici |
-| 16 | **sedici** | *sēdecim* | se + dici |
+| Italian | ← Latin | build |
+|---|---|---|
+| **undici** (11) | *ūndecim* | un + dici |
+| **dodici** (12) | *duodecim* | do + dici |
+| **tredici** (13) | *trēdecim* | tre + dici |
+| **quattordici** (14) | *quattuordecim* | quattor + dici |
+| **quindici** (15) | *quīndecim* | quin + dici |
+| **sedici** (16) | *sēdecim* | se + dici |
 
 Every one is **digit + -dici**, and **-dici** is Latin **decem**, "ten" — the same
 ten you say as **dieci** (10). Compare the sisters and Italian's clarity jumps

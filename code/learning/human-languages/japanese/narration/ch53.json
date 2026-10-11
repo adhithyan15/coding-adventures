@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C53-tsumetai-type",
-              "prompt": "Type the Japanese for 'cold (to the touch)'.",
+              "prompt": "Say the Japanese for 'cold (to the touch)'.",
               "assesses": [
                 "JA-LEX-C53-ADJ53-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C53-oishii-type",
-              "prompt": "Type the Japanese for 'tasty'.",
+              "prompt": "Say the Japanese for 'tasty'.",
               "assesses": [
                 "JA-LEX-C53-ADJ53-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C53-atsui-type",
-              "prompt": "Type the Japanese for 'hot'.",
+              "prompt": "Say the Japanese for 'hot'.",
               "assesses": [
                 "JA-LEX-C53-ADJ53-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C53-samui-type",
-              "prompt": "Type the Japanese for 'cold (weather)'.",
+              "prompt": "Say the Japanese for 'cold (weather)'.",
               "assesses": [
                 "JA-LEX-C53-ADJ53-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C53-asa-type",
-              "prompt": "Type the Japanese for 'morning'.",
+              "prompt": "Say the Japanese for 'morning'.",
               "assesses": [
                 "JA-LEX-C53-ADJ53-05"
               ],

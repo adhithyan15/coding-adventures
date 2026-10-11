@@ -18,7 +18,8 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "reading-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3739f82d3be35eb6",
       "notice": {
@@ -26,7 +27,9 @@
         "needs": [
           "your eyes, to read the printed text yourself"
         ],
-        "waitUntilStopped": [],
+        "waitUntilStopped": [
+          "Reading"
+        ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
@@ -163,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C64-words-family",
               "prompt": "Which three words end in -अम्?",
               "assesses": [
@@ -222,7 +226,8 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "reading-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:8a4377bcc2bb9f1a",
       "notice": {
@@ -230,7 +235,9 @@
         "needs": [
           "your eyes, to read the printed text yourself"
         ],
-        "waitUntilStopped": [],
+        "waitUntilStopped": [
+          "Reading"
+        ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
@@ -377,6 +384,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C64-lines-count",
               "prompt": "Six lines. How many different things do they say?",
               "assesses": [
@@ -591,6 +599,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C64-prathama-pathanam-absent",
               "prompt": "What is there, but not here?",
               "assesses": [

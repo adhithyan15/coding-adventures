@@ -52,10 +52,10 @@ and т, and hasn't reached **я**. [YOU READ: **я** here]
 
 You'll draw it when the track gets there. And be careful with its shape. **я
 looks like a mirrored Latin R and has nothing to do with R.** (It descends from
-ѧ, the "little yus" — not from R at all.)
+*ę*, the "little yus" — not from R at all.)
 
 It is also the **last** letter of the alphabet, 33rd of 33, and Russian has a
-rebuke built on that: «**Я — последняя буква в алфавите**», "*я* is the last
+rebuke built on that: «*Ya — poslédnyaya búkva v alfavíte*», "*я* is the last
 letter of the alphabet." You say it to someone who talks about themselves too
 much. The letter's position is the joke — don't put yourself first.
 
@@ -69,8 +69,8 @@ there has been an Indo-European family:
 
 Russian **я**, Latin *ego*, German *ich*, English **I**, Greek *egṓ*.
 
-All from PIE \**eǵh₂(om)*. Russian's route ran through Proto-Slavic \**azъ*,
-which East Slavic reshaped — a *j-* was added at the front (\**azъ* → *язъ*) and
+All from PIE \**eǵh₂(om)*. Russian's route ran through Proto-Slavic \**azŭ*,
+which East Slavic reshaped — a *j-* was added at the front (\**azŭ* → \**yazŭ*) and
 the ending fell away — leaving the **one letter** you now say. It is the most
 extreme change in the family, and the reason *я* sounds nothing like *ego* while
 being the same word.
@@ -84,13 +84,13 @@ part of the mind that says *I*.
 [PAUSE 1s]
 - [YOU SAY: "я" — *ya*]
 - [YOU SAY: the family — "**я** … *ego* … *ich* … **I**"]
-- [YOU SAY: the erosion — "\**azъ* … **я**"]
+- [YOU SAY: the erosion — "\**azŭ* … **я**"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-SCRIPT-YA-NOT-R, RU-ETYMON-YA-EGO] -->
 
-[PAUSE 3s] Say "I". (**Я** — one letter, said *ya*.) What must you not mistake it
+[PAUSE 3s] Say "I". (**я** — one letter, said *ya*.) What must you not mistake it
 for? (A **Latin R** — the shape is a coincidence.) Why has it changed so little
 in meaning? (**Pronouns are the least borrowable words** a language has.) Name
 three relatives. (*Ego*, *ich*, *I* — and Greek *egṓ*.) What did Russian's come from?
-(Proto-Slavic \**azъ*, with a *j-* added at the front and the ending lost.) Next: the two words for "you."
+(Proto-Slavic \**azŭ*, with a *j-* added at the front and the ending lost.) Next: the two words for "you."

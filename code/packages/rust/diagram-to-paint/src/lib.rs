@@ -919,13 +919,18 @@ where
                 stroke_dash_offset: None,
             }),
             DiagramShape::Ellipse | DiagramShape::DoubleCircle
-            | DiagramShape::SmallCircle | DiagramShape::FramedCircle => PaintInstruction::Ellipse(PaintEllipse {
+            | DiagramShape::SmallCircle | DiagramShape::FramedCircle
+            | DiagramShape::FilledCircle => PaintInstruction::Ellipse(PaintEllipse {
                 base: PaintBase::default(),
                 cx: node.x + node.width / 2.0,
                 cy: node.y + node.height / 2.0,
                 rx: node.width / 2.0,
                 ry: node.height / 2.0,
-                fill: Some(if node.shape == DiagramShape::SmallCircle { stroke.clone() } else { fill.clone() }),
+                fill: Some(if matches!(node.shape, DiagramShape::SmallCircle | DiagramShape::FilledCircle) {
+                    stroke.clone()
+                } else {
+                    fill.clone()
+                }),
                 stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width),
                 stroke_dash: stroke_dash.clone(),
@@ -942,6 +947,110 @@ where
                 stroke_width: Some(stroke_width),
                 corner_radius: None,
                 stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::LightningBolt => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: polygon_path_commands(&lightning_bolt_polygon_points(
+                    node.x, node.y, node.width, node.height,
+                )),
+                fill: Some(fill.clone()),
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::CurlyBraceLeft | DiagramShape::CurlyBraceRight | DiagramShape::CurlyBraces => {
+                let left = brace_path_instruction(
+                    (node.x, node.y, node.width, node.height), true,
+                    &stroke, stroke_width, stroke_dash.clone(),
+                );
+                let right = brace_path_instruction(
+                    (node.x, node.y, node.width, node.height), false,
+                    &stroke, stroke_width, stroke_dash.clone(),
+                );
+                match node.shape {
+                    DiagramShape::CurlyBraceLeft => left,
+                    DiagramShape::CurlyBraceRight => right,
+                    _ => PaintInstruction::Group(PaintGroup {
+                        base: PaintBase::default(), children: vec![left, right],
+                        transform: None, opacity: None,
+                    }),
+                }
+            }
+            DiagramShape::Document => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: document_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()),
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::MultiDocument => multi_document_instruction(
+                (node.x, node.y, node.width, node.height),
+                Some(fill.clone()), &stroke, stroke_width, stroke_dash.clone(),
+            ),
+            DiagramShape::MultiProcess => multi_process_instruction(
+                (node.x, node.y, node.width, node.height),
+                Some(fill.clone()), &stroke, stroke_width, stroke_dash.clone(),
+            ),
+            DiagramShape::StoredData => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: stored_data_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::Delay => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: delay_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()),
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::HorizontalCylinder => horizontal_cylinder_instruction(
+                (node.x, node.y, node.width, node.height),
+                Some(fill.clone()), stroke.clone(), stroke_width, stroke_dash.clone(),
+            ),
+            DiagramShape::LinedCylinder => lined_cylinder_instruction(
+                (node.x, node.y, node.width, node.height),
+                Some(fill.clone()), stroke.clone(), stroke_width, stroke_dash.clone(),
+            ),
+            DiagramShape::Display => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: display_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::DividedRect => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: divided_rect_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::WindowPane => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: window_pane_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
@@ -1018,7 +1127,7 @@ where
             }
             DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass
             | DiagramShape::Triangle | DiagramShape::InvertedTriangle | DiagramShape::NotchedRect
-            | DiagramShape::LinedRect => {
+            | DiagramShape::LinedRect | DiagramShape::LoopLimit | DiagramShape::ManualInput => {
                 let commands = match node.shape {
                     DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
                     DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
@@ -1026,6 +1135,8 @@ where
                     DiagramShape::Triangle => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::InvertedTriangle => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::NotchedRect => polygon_path_commands(&notched_rect_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::LoopLimit => polygon_path_commands(&loop_limit_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::ManualInput => polygon_path_commands(&manual_input_polygon_points(node.x, node.y, node.width, node.height)),
                     _ => lined_rect_path_commands(node.x, node.y, node.width, node.height),
                 };
                 PaintInstruction::Path(PaintPath {
@@ -1116,16 +1227,37 @@ where
         }
         if !matches!(node.shape,
             DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
+            | DiagramShape::LightningBolt | DiagramShape::FilledCircle
         ) {
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
             });
+            let (label_x, label_y, label_width, label_height) = match node.shape {
+                DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
+                DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
+                DiagramShape::CurlyBraces => (node.x + 22.0, node.y + 10.0, node.width - 44.0, node.height - 16.0),
+                DiagramShape::Document => (node.x + 8.0, node.y + 7.0, node.width - 16.0, node.height - 25.0),
+                DiagramShape::MultiDocument => (node.x + 8.0, node.y + 19.0, node.width - 28.0, node.height - 31.0),
+                DiagramShape::MultiProcess => (node.x + 8.0, node.y + 20.0, node.width - 28.0, node.height - 28.0),
+                DiagramShape::HorizontalCylinder => (node.x + 18.0, node.y + 10.0, node.width - 36.0, node.height - 16.0),
+                DiagramShape::LinedCylinder => (node.x + 8.0, node.y + 20.0, node.width - 16.0, node.height - 24.0),
+                DiagramShape::Display => (node.x + 22.0, node.y + 10.0, node.width - 42.0, node.height - 16.0),
+                DiagramShape::DividedRect => (node.x + 8.0, node.y + 16.0, node.width - 16.0, node.height - 22.0),
+                DiagramShape::WindowPane => (node.x + 18.0, node.y + 16.0, node.width - 26.0, node.height - 22.0),
+                DiagramShape::ManualInput => (
+                    node.x + 8.0,
+                    node.y + node.height / 3.0 + 4.0,
+                    node.width - 16.0,
+                    node.height * 2.0 / 3.0 - 8.0,
+                ),
+                _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
+            };
             text_children.push(text_node(
                 &node.label,
-                node.x + 8.0,
-                node.y + 10.0,
-                node.width - 16.0,
-                node.height - 16.0,
+                label_x,
+                label_y,
+                label_width,
+                label_height,
                 options.label_font.clone(),
                 text_color,
             ));
@@ -1838,6 +1970,14 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = notched_rect_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::LoopLimit => {
+            let points = loop_limit_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
+        DiagramShape::ManualInput => {
+            let points = manual_input_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::LinedRect => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: lined_rect_path_commands(node.x, node.y, node.width, node.height),
@@ -1863,7 +2003,9 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_dash: None,
             stroke_dash_offset: None,
         }),
-        DiagramShape::SmallCircle => node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone())),
+        DiagramShape::SmallCircle | DiagramShape::FilledCircle => {
+            node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone()))
+        }
         DiagramShape::FramedCircle => {
             let inner_inset = node.width.min(node.height) * 9.0 / 28.0;
             PaintInstruction::Group(PaintGroup {
@@ -1888,6 +2030,104 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             corner_radius: None,
             stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
+        }),
+        DiagramShape::LightningBolt => {
+            let points = lightning_bolt_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
+        DiagramShape::CurlyBraceLeft | DiagramShape::CurlyBraceRight | DiagramShape::CurlyBraces => {
+            let left = brace_path_instruction(
+                (node.x, node.y, node.width, node.height), true,
+                &node.style.stroke, node.style.stroke_width, node.style.stroke_dash.clone(),
+            );
+            let right = brace_path_instruction(
+                (node.x, node.y, node.width, node.height), false,
+                &node.style.stroke, node.style.stroke_width, node.style.stroke_dash.clone(),
+            );
+            match node.shape {
+                DiagramShape::CurlyBraceLeft => left,
+                DiagramShape::CurlyBraceRight => right,
+                _ => PaintInstruction::Group(PaintGroup {
+                    base: PaintBase::default(), children: vec![left, right],
+                    transform: None, opacity: None,
+                }),
+            }
+        }
+        DiagramShape::Document => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: document_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()),
+            fill_rule: None,
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
+        DiagramShape::MultiDocument => multi_document_instruction(
+            (node.x, node.y, node.width, node.height),
+            Some(node.style.fill.clone()), &node.style.stroke,
+            node.style.stroke_width, node.style.stroke_dash.clone(),
+        ),
+        DiagramShape::MultiProcess => multi_process_instruction(
+            (node.x, node.y, node.width, node.height),
+            Some(node.style.fill.clone()), &node.style.stroke,
+            node.style.stroke_width, node.style.stroke_dash.clone(),
+        ),
+        DiagramShape::StoredData => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: stored_data_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
+        DiagramShape::Delay => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: delay_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()),
+            fill_rule: None,
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
+        DiagramShape::HorizontalCylinder => horizontal_cylinder_instruction(
+            (node.x, node.y, node.width, node.height),
+            Some(node.style.fill.clone()), node.style.stroke.clone(),
+            node.style.stroke_width, node.style.stroke_dash.clone(),
+        ),
+        DiagramShape::LinedCylinder => lined_cylinder_instruction(
+            (node.x, node.y, node.width, node.height),
+            Some(node.style.fill.clone()), node.style.stroke.clone(),
+            node.style.stroke_width, node.style.stroke_dash.clone(),
+        ),
+        DiagramShape::Display => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: display_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
+        DiagramShape::DividedRect => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: divided_rect_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
+        DiagramShape::WindowPane => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: window_pane_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
         }),
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
@@ -2150,6 +2390,389 @@ fn polygon_path_commands(points: &[(f64, f64)]) -> Vec<PathCommand> {
     commands.extend(points[1..].iter().map(|&(x, y)| PathCommand::LineTo { x, y }));
     commands.push(PathCommand::Close);
     commands
+}
+
+fn lightning_bolt_polygon_points(x: f64, y: f64, width: f64, height: f64) -> [(f64, f64); 6] {
+    let gap = (width * 0.2).min(height * 0.1);
+    [
+        (x + width, y),
+        (x, y + height * 0.5 + gap / 2.0),
+        (x + width - 2.0 * gap, y + height * 0.5 + gap / 2.0),
+        (x, y + height),
+        (x + width, y + height * 0.5 - gap / 2.0),
+        (x + 2.0 * gap, y + height * 0.5 - gap / 2.0),
+    ]
+}
+
+fn brace_path_instruction(
+    bounds: (f64, f64, f64, f64),
+    left: bool,
+    stroke: &str,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let edge = if left { x } else { x + width };
+    let inner = if left { x + 14.0 } else { x + width - 14.0 };
+    let control = if left { x + 7.0 } else { x + width - 7.0 };
+    let middle = y + height / 2.0;
+    PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: inner, y },
+            PathCommand::CubicTo { cx1: control, cy1: y, cx2: control, cy2: y + height * 0.12, x: control, y: y + height * 0.3 },
+            PathCommand::CubicTo { cx1: control, cy1: middle - height * 0.08, cx2: edge, cy2: middle - height * 0.08, x: edge, y: middle },
+            PathCommand::CubicTo { cx1: edge, cy1: middle + height * 0.08, cx2: control, cy2: middle + height * 0.08, x: control, y: y + height * 0.7 },
+            PathCommand::CubicTo { cx1: control, cy1: y + height * 0.88, cx2: control, cy2: y + height, x: inner, y: y + height },
+        ],
+        fill: None,
+        fill_rule: None,
+        stroke: Some(stroke.into()),
+        stroke_width: Some(stroke_width),
+        stroke_cap: Some(StrokeCap::Round),
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash,
+        stroke_dash_offset: None,
+    })
+}
+
+fn document_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width, y },
+        PathCommand::LineTo { x: x + width, y: y + height * 0.82 },
+        PathCommand::CubicTo {
+            cx1: x + width * 0.75,
+            cy1: y + height * 1.08,
+            cx2: x + width * 0.25,
+            cy2: y + height * 0.62,
+            x,
+            y: y + height * 0.88,
+        },
+        PathCommand::Close,
+    ]
+}
+
+fn multi_document_instruction(
+    bounds: (f64, f64, f64, f64),
+    fill: Option<String>,
+    stroke: &str,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let document_width = (width - 12.0).max(1.0);
+    let document_height = (height - 12.0).max(1.0);
+    let layers = [(12.0, 0.0), (6.0, 6.0), (0.0, 12.0)].map(|(dx, dy)| {
+        PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: document_path_commands(x + dx, y + dy, document_width, document_height),
+            fill: fill.clone(), fill_rule: None, stroke: Some(stroke.into()),
+            stroke_width: Some(stroke_width), stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+            stroke_dash_offset: None,
+        })
+    });
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(), children: layers.into(), transform: None, opacity: None,
+    })
+}
+
+fn multi_process_instruction(
+    bounds: (f64, f64, f64, f64),
+    fill: Option<String>,
+    stroke: &str,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let process_width = (width - 12.0).max(1.0);
+    let process_height = (height - 12.0).max(1.0);
+    let layers = [(12.0, 0.0), (6.0, 6.0), (0.0, 12.0)].map(|(dx, dy)| {
+        PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(), x: x + dx, y: y + dy,
+            width: process_width, height: process_height,
+            fill: fill.clone(), stroke: Some(stroke.into()),
+            stroke_width: Some(stroke_width), corner_radius: None,
+            stroke_dash: stroke_dash.clone(), stroke_dash_offset: None,
+        })
+    });
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(), children: layers.into(), transform: None, opacity: None,
+    })
+}
+
+fn stored_data_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = (height * 0.15).min(width * 0.12);
+    vec![
+        PathCommand::MoveTo { x: x + radius, y },
+        PathCommand::LineTo { x: x + width - radius, y },
+        PathCommand::CubicTo {
+            cx1: x + width, cy1: y + height * 0.2,
+            cx2: x + width, cy2: y + height * 0.8,
+            x: x + width - radius, y: y + height,
+        },
+        PathCommand::LineTo { x: x + radius, y: y + height },
+        PathCommand::CubicTo {
+            cx1: x, cy1: y + height * 0.8,
+            cx2: x, cy2: y + height * 0.2,
+            x: x + radius, y,
+        },
+        PathCommand::Close,
+    ]
+}
+
+fn delay_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = (height / 2.0).min(width / 2.0);
+    let kappa = 0.552_284_749_8;
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width - radius, y },
+        PathCommand::CubicTo {
+            cx1: x + width - radius + radius * kappa,
+            cy1: y,
+            cx2: x + width,
+            cy2: y + radius - radius * kappa,
+            x: x + width,
+            y: y + radius,
+        },
+        PathCommand::CubicTo {
+            cx1: x + width,
+            cy1: y + radius + radius * kappa,
+            cx2: x + width - radius + radius * kappa,
+            cy2: y + height,
+            x: x + width - radius,
+            y: y + height,
+        },
+        PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+    ]
+}
+
+fn horizontal_cylinder_instruction(
+    bounds: (f64, f64, f64, f64),
+    fill: Option<String>,
+    stroke: String,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let radius_x = (height * 0.18).min(width / 4.0);
+    let kappa = 0.552_284_749_8;
+    let outer = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: x + radius_x, y },
+            PathCommand::CubicTo {
+                cx1: x + radius_x - radius_x * kappa, cy1: y,
+                cx2: x, cy2: y + height * (0.5 - kappa / 2.0),
+                x, y: y + height / 2.0,
+            },
+            PathCommand::CubicTo {
+                cx1: x, cy1: y + height * (0.5 + kappa / 2.0),
+                cx2: x + radius_x - radius_x * kappa, cy2: y + height,
+                x: x + radius_x, y: y + height,
+            },
+            PathCommand::LineTo { x: x + width - radius_x, y: y + height },
+            PathCommand::CubicTo {
+                cx1: x + width + radius_x * (kappa - 1.0), cy1: y + height,
+                cx2: x + width, cy2: y + height * (0.5 + kappa / 2.0),
+                x: x + width, y: y + height / 2.0,
+            },
+            PathCommand::CubicTo {
+                cx1: x + width, cy1: y + height * (0.5 - kappa / 2.0),
+                cx2: x + width + radius_x * (kappa - 1.0), cy2: y,
+                x: x + width - radius_x, y,
+            },
+            PathCommand::Close,
+        ],
+        fill,
+        fill_rule: None,
+        stroke: Some(stroke.clone()),
+        stroke_width: Some(stroke_width),
+        stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: stroke_dash.clone(),
+        stroke_dash_offset: None,
+    });
+    let rim = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: x + width - radius_x, y },
+            PathCommand::CubicTo {
+                cx1: x + width - radius_x - radius_x * kappa, cy1: y,
+                cx2: x + width - radius_x - radius_x * kappa, cy2: y + height,
+                x: x + width - radius_x, y: y + height,
+            },
+        ],
+        fill: None,
+        fill_rule: None,
+        stroke: Some(stroke),
+        stroke_width: Some(stroke_width),
+        stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash,
+        stroke_dash_offset: None,
+    });
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(), children: vec![outer, rim],
+        transform: None, opacity: None,
+    })
+}
+
+fn lined_cylinder_instruction(
+    bounds: (f64, f64, f64, f64),
+    fill: Option<String>,
+    stroke: String,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let radius_y = (height * 0.16).min(14.0);
+    let kappa = 0.552_284_749_8;
+    let outer = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x, y: y + radius_y },
+            PathCommand::CubicTo {
+                cx1: x, cy1: y + radius_y - radius_y * kappa,
+                cx2: x + width * 0.224, cy2: y,
+                x: x + width / 2.0, y,
+            },
+            PathCommand::CubicTo {
+                cx1: x + width * 0.776, cy1: y,
+                cx2: x + width, cy2: y + radius_y - radius_y * kappa,
+                x: x + width, y: y + radius_y,
+            },
+            PathCommand::LineTo { x: x + width, y: y + height - radius_y },
+            PathCommand::CubicTo {
+                cx1: x + width, cy1: y + height - radius_y + radius_y * kappa,
+                cx2: x + width * 0.776, cy2: y + height,
+                x: x + width / 2.0, y: y + height,
+            },
+            PathCommand::CubicTo {
+                cx1: x + width * 0.224, cy1: y + height,
+                cx2: x, cy2: y + height - radius_y + radius_y * kappa,
+                x, y: y + height - radius_y,
+            },
+            PathCommand::Close,
+        ],
+        fill,
+        fill_rule: None,
+        stroke: Some(stroke.clone()),
+        stroke_width: Some(stroke_width),
+        stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: stroke_dash.clone(),
+        stroke_dash_offset: None,
+    });
+    let top_rim = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: x + width, y: y + radius_y },
+            PathCommand::CubicTo {
+                cx1: x + width, cy1: y + radius_y + radius_y * kappa,
+                cx2: x, cy2: y + radius_y + radius_y * kappa,
+                x, y: y + radius_y,
+            },
+        ],
+        fill: None, fill_rule: None, stroke: Some(stroke.clone()),
+        stroke_width: Some(stroke_width), stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+        stroke_dash_offset: None,
+    });
+    let offset = height * 0.1;
+    let storage_line = PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x, y: y + radius_y + offset },
+            PathCommand::CubicTo {
+                cx1: x + width * 0.25, cy1: y + radius_y + offset + radius_y * 0.45,
+                cx2: x + width * 0.75, cy2: y + radius_y + offset + radius_y * 0.45,
+                x: x + width, y: y + radius_y + offset,
+            },
+        ],
+        fill: None, fill_rule: None, stroke: Some(stroke),
+        stroke_width: Some(stroke_width), stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round), stroke_dash,
+        stroke_dash_offset: None,
+    });
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(), children: vec![outer, top_rim, storage_line],
+        transform: None, opacity: None,
+    })
+}
+
+fn display_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = (height / 2.0).min(width / 3.0);
+    let point = height / 4.0;
+    let kappa = 0.552_284_749_8;
+    vec![
+        PathCommand::MoveTo { x: x + width - radius, y },
+        PathCommand::LineTo { x: x + point, y },
+        PathCommand::LineTo { x, y: y + height / 2.0 },
+        PathCommand::LineTo { x: x + point, y: y + height },
+        PathCommand::LineTo { x: x + width - radius, y: y + height },
+        PathCommand::CubicTo {
+            cx1: x + width - radius + radius * kappa, cy1: y + height,
+            cx2: x + width, cy2: y + radius + radius * kappa,
+            x: x + width, y: y + radius,
+        },
+        PathCommand::CubicTo {
+            cx1: x + width, cy1: y + radius - radius * kappa,
+            cx2: x + width - radius + radius * kappa, cy2: y,
+            x: x + width - radius, y,
+        },
+        PathCommand::Close,
+    ]
+}
+
+fn divided_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let divider_y = y + height * 0.2;
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width, y },
+        PathCommand::LineTo { x: x + width, y: y + height },
+        PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+        PathCommand::MoveTo { x, y: divider_y },
+        PathCommand::LineTo { x: x + width, y: divider_y },
+    ]
+}
+
+fn window_pane_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let frame = 10.0_f64.min(width / 3.0).min(height / 3.0);
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width, y },
+        PathCommand::LineTo { x: x + width, y: y + height },
+        PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+        PathCommand::MoveTo { x, y: y + frame },
+        PathCommand::LineTo { x: x + width, y: y + frame },
+        PathCommand::MoveTo { x: x + frame, y },
+        PathCommand::LineTo { x: x + frame, y: y + height },
+    ]
+}
+
+fn loop_limit_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x + width * 0.1, y),
+        (x + width * 0.9, y),
+        (x + width, y + height * 0.2),
+        (x + width, y + height),
+        (x, y + height),
+        (x, y + height * 0.2),
+    ]
+}
+
+fn manual_input_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x, y + height / 3.0),
+        (x, y + height),
+        (x + width, y + height),
+        (x + width, y),
+    ]
 }
 
 fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {

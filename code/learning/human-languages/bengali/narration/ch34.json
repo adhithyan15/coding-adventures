@@ -3,8 +3,8 @@
   "language": "bengali",
   "chapter": 34,
   "title": "Somebody Else",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:24a2fc738e64a884",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7e0f97ee1695c039",
   "lessons": [
     {
       "id": "BN-C23-she",
@@ -14,20 +14,13 @@
       "romanization": "she",
       "gloss": "he, she — one word for both, and the first time in this book that anybody can be talked about rather than talked to",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50e994eaedfb3372",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3f2b25c6587e9026",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -96,7 +89,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter two taught you that Bengali grades you for respect. It grades the third person the same way, on the same ladder, and the careful form arrives in the next lesson. What the table shows is that সে (she) is the plain one: it is what you use of a child, a friend, a younger sibling — and what you must not use of somebody's grandmother."
+              "text": "Chapter two taught you that Bengali grades you for respect. It grades the third person the same way, on the same ladder, and the careful form arrives in the next lesson. What those three rows show is that সে (she) is the plain one: it is what you use of a child, a friend, a younger sibling — and what you must not use of somebody's grandmother."
             }
           ]
         },
@@ -132,11 +125,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pointing and then naming — ei bhāiṭi … she bhālo",
+              "instruction": "first the brother beside you, then something about him — ei bhāiṭi … she bhālo",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: pointing and then naming — *ei bhāiṭi* … *she bhālo*]"
+              "source": "[YOU SAY: first the brother beside you, then something about him — *ei bhāiṭi* … *she bhālo*]"
             },
             {
               "kind": "prompt",
@@ -366,7 +359,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say that shirt. Then say what ও does when it stands between two things."
+              "text": "Say that shirt. Then say what ও (o) does when it stands between two things."
             }
           ]
         },
@@ -381,7 +374,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter thirty-two promised this letter a third job, and here it is. ও on its own, in front of a verb, is a person: the one nearby, the one you could gesture at."
+              "text": "Chapter thirty-two promised this letter a third job, and here it is. ও (o) on its own, in front of a verb, is a person: the one nearby, the one you could gesture at."
             },
             {
               "kind": "speech",
@@ -418,7 +411,7 @@
             },
             {
               "kind": "speech",
-              "text": "ও — that one, over there."
+              "text": "ও (o) — that one, over there."
             },
             {
               "kind": "speech",
@@ -496,7 +489,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three jobs of ও, and what tells them apart? (Also, that, him or her — told apart by where it sits.) Which of the plain third-person words is for somebody not present? (সে (she).) And how many careful forms are there? (One — তিনি (tini) covers every distance.)"
+              "text": "What are the three jobs of ও (o), and what tells them apart? (Also, that, him or her — told apart by where it sits.) Which of the plain third-person words is for somebody not present? (সে (she).) And how many careful forms are there? (One — তিনি (tini) covers every distance.)"
             },
             {
               "kind": "speech",
@@ -856,7 +849,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does Bengali mark he against she? (No.) How many rungs of respect does the third person have? (Two — সে and তিনি (tini).) What sorts এ, ও and সে from each other? (How far away the person is.) And what ending makes a possessive? (-র.)"
+              "text": "Does Bengali mark he against she? (No.) How many rungs of respect does the third person have? (Two — সে and তিনি (tini).) What sorts এ, ও (o) and সে from each other? (How far away the person is.) And what ending makes a possessive? (-র.)"
             },
             {
               "kind": "speech",

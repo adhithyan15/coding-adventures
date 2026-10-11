@@ -101,6 +101,6 @@ point: an echo half is written out in full even though it carries no meaning.
 
 [PAUSE 3s] Give the Punjabi for sorry. (*Māf karo*.) What does it mean word for
 word? (Make pardoned.) Which verb do both of this chapter's courtesies share?
-(**ਕਰਨਾ**.) Write **ਠੀਕ-ਠਾਕ** once from memory.
+(**ਕਰਨਾ**.) [YOU WRITE: **ਠੀਕ-ਠਾਕ** once from memory]
 
 Sources: [Wiktionary: maaf](https://en.wiktionary.org/wiki/%E0%A8%AE%E0%A8%BE%E0%A8%AB%E0%A8%BC); [Wiktionary: muaf (Arabic)](https://en.wiktionary.org/wiki/%D9%85%D8%B9%D8%A7%D9%81).

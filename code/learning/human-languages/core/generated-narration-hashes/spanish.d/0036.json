@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 36,
-  "sourceHash": "fnv1a64:9cb96abd65af388f",
+  "sourceHash": "fnv1a64:155f5a0f86b2ee04",
   "lessonIds": [
     "ES-C07-beber",
     "ES-C07-que",
@@ -13,6 +13,6 @@
   "text": "spanish/narration/ch36.txt",
   "json": "spanish/narration/ch36.json",
   "textHash": "fnv1a64:80d5f301db7493fd",
-  "jsonHash": "fnv1a64:b7309f2360140ca5",
+  "jsonHash": "fnv1a64:ae50616f2863f7d8",
   "findings": []
 }

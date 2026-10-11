@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C71-tsuno-type",
-              "prompt": "Type the Japanese for 'a horn'.",
+              "prompt": "Say the Japanese for 'a horn'.",
               "assesses": [
                 "JA-LEX-C71-THINGS71-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C71-ana-type",
-              "prompt": "Type the Japanese for 'a hole'.",
+              "prompt": "Say the Japanese for 'a hole'.",
               "assesses": [
                 "JA-LEX-C71-THINGS71-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C71-ine-type",
-              "prompt": "Type the Japanese for 'a rice plant'.",
+              "prompt": "Say the Japanese for 'a rice plant'.",
               "assesses": [
                 "JA-LEX-C71-THINGS71-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C71-oi-type",
-              "prompt": "Type the Japanese for 'a nephew'.",
+              "prompt": "Say the Japanese for 'a nephew'.",
               "assesses": [
                 "JA-LEX-C71-THINGS71-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C71-mei-type",
-              "prompt": "Type the Japanese for 'a niece'.",
+              "prompt": "Say the Japanese for 'a niece'.",
               "assesses": [
                 "JA-LEX-C71-THINGS71-05"
               ],
@@ -847,8 +852,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R71-first-pass-describing-words-and-time-type",
-              "prompt": "Type the Japanese for 'a nephew'.",
+              "prompt": "Say the Japanese for 'a nephew'.",
               "assesses": [
                 "JA-LEX-C71-THINGS71-04"
               ],
@@ -1011,8 +1017,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R71-second-pass-places-clothes-and-more-type",
-              "prompt": "Type the Japanese for 'a dream'.",
+              "prompt": "Say the Japanese for 'a dream'.",
               "assesses": [
                 "JA-LEX-C63-WORLD63-01"
               ],

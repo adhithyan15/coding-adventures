@@ -3,9 +3,134 @@
   "language": "telugu",
   "chapter": 3,
   "title": "How Are You?",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c0b9bc5592bd0723",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d234ea5e256a679f",
   "lessons": [
+    {
+      "id": "TE-C03-elaa",
+      "sequence": 144,
+      "title": "ఎలా (elā) — \"how,\" another of the e- questions",
+      "headword": "ఎలా",
+      "romanization": "elā",
+      "gloss": "how",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3d118026baa19054",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met ఏమిటి (ēmiṭi, \"what\") in Chapter 2. Here is its sibling — and, like all of Telugu's question-words, it begins with e-."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Telugu.) ఎ (independent short e) + లా (lā, la + the long-ā sign) becomes ఎలా (elā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎలా (elā, \"how\") is native Dravidian, on the interrogative base ఎ- (e-) you already met in ēmiṭi. Telugu gathers nearly all its questions under this e-: ēmiṭi (what), elā (how), evaru (who), ekkaḍa (where), eppuḍu (when), enduku (why). It is the same Dravidian question-root that heads Tamil's eppaḍi and Kannada's ēnu — a family older than the Sanskrit words that Telugu otherwise borrows so freely."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎ (independent short e) + లా (lā) becomes ఎలా (elā) (elā)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"elā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"elā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the e- question family — ēmiṭi, elā, evaru, ekkaḍa, eppuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the e- question family — *ēmiṭi, elā, evaru, ekkaḍa, eppuḍu*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What base do Telugu's question-words share, and which cousins head their own? (The interrogative e-; Tamil's eppaḍi, Kannada's ēnu.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-S142-digit-3",
       "sequence": 145,
@@ -32,7 +157,7 @@
           "Script you'll notice: ౩",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౩ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౩ and Guided Practice."
       },
       "blocks": [
         {
@@ -156,131 +281,6 @@
       ]
     },
     {
-      "id": "TE-C03-elaa",
-      "sequence": 150,
-      "title": "ఎలా (elā) — \"how,\" another of the e- questions",
-      "headword": "ఎలా",
-      "romanization": "elā",
-      "gloss": "how",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ba211cffd0a780df",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You met ఏమిటి (ēmiṭi, \"what\") in Chapter 2. Here is its sibling — and, like all of Telugu's question-words, it begins with e-."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Telugu.) ఎ (independent short e) + లా (lā, la + the long-ā sign) becomes ఎలా (elā)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ఎలా (elā, \"how\") is native Dravidian, on the interrogative base ఎ- (e-) you already met in ēmiṭi. Telugu gathers nearly all its questions under this e-: ēmiṭi (what), elā (how), evaru (who), ekkaḍa (where), eppuḍu (when), enduku (why). It is the same Dravidian question-root that heads Tamil's eppaḍi and Kannada's ēnu — a family older than the Sanskrit words that Telugu otherwise borrows so freely."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ఎ (independent short e) + లా (lā) becomes ఎలా (elā) (elā)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"elā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"elā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the e- question family — ēmiṭi, elā, evaru, ekkaḍa, eppuḍu",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the e- question family — *ēmiṭi, elā, evaru, ekkaḍa, eppuḍu*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What base do Telugu's question-words share, and which cousins head their own? (The interrogative e-; Tamil's eppaḍi, Kannada's ēnu.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "TE-C03-miiru-elaa-unnaaru",
       "sequence": 160,
       "title": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?)",
@@ -302,7 +302,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -417,7 +417,7 @@
     {
       "id": "TE-S122-letter-u",
       "sequence": 165,
-      "title": "ఉ — one character, met inside words you already say",
+      "title": "ఉ (u) — one character, met inside words you already say",
       "headword": "ఉ",
       "romanization": "u",
       "gloss": "the single character ఉ — recognised inside words you already say",
@@ -440,7 +440,7 @@
           "Script you'll notice: ఉ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఉ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఉ and Guided Practice."
       },
       "blocks": [
         {
@@ -500,7 +500,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఉ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఉ (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -593,7 +593,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -742,7 +742,7 @@
           "Script you'll notice: ౪",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౪ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౪ and Guided Practice."
       },
       "blocks": [
         {
@@ -758,7 +758,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ఉ — what does it do? And one from further back: ◌ి?"
+              "text": "Before the new one: ఉ (u) — what does it do? And one from further back: ◌ి?"
             },
             {
               "kind": "pause",
@@ -891,7 +891,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1030,7 +1030,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a197546ebfc5a75",
+      "sourceHash": "fnv1a64:7d76390f28fedb34",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1041,7 +1041,7 @@
           "Script you'll notice: బ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: బ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: బ and Guided Practice."
       },
       "blocks": [
         {
@@ -1103,11 +1103,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 rises around the upper-left curve. Lift, then movement 2 turns around the lower-left bowl. Movement 3 sweeps right and rises around the lower-right bowl. Lift once more; movement 4 curves left around the upper-right shoulder."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 rises around the upper-left curve. Without lifting, movement 2 curves down through the shoulder that joins it to the lower-left bowl, and movement 3 turns around that bowl. Movement 4 sweeps right and rises around the lower-right bowl, and movement 5 curves left around the upper-right shoulder. The strip gives the short joining curve a panel of its own, so the four movements are numbered as five."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the four calm movements and the small spaces between them."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but nearly every native writer draws బ (ba) as one unbroken stroke, so keep the pen on the paper from the first curve to the last."
             }
           ]
         },
@@ -1177,7 +1177,7 @@
     {
       "id": "TE-S06-letter-ra",
       "sequence": 185,
-      "title": "ర — one character, met inside words you already say",
+      "title": "ర (ra) — one character, met inside words you already say",
       "headword": "ర",
       "romanization": "ra",
       "gloss": "the single character ర — recognised inside words you already say",
@@ -1189,7 +1189,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fecd57d32f7a1458",
+      "sourceHash": "fnv1a64:f34851c4f4d6f844",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1200,7 +1200,7 @@
           "Script you'll notice: ర",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ర and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ర and Guided Practice."
       },
       "blocks": [
         {
@@ -1272,11 +1272,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 loops counterclockwise around the main bowl. Lift; movement 2 travels down and up through the separate upper chevron, from left to right."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 loops counterclockwise around the main bowl. Without lifting, movement 2 climbs a short way up the chevron's left arm, and movement 3 travels down and up through the upper chevron, from left to right. The strip gives that short climb a panel of its own, so the two movements are numbered as three."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the two movements clear and make the short lift between them."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but most native writers draw ర (ra) as one unbroken stroke, so keep the pen on the paper from the bowl to the end of the chevron."
             }
           ]
         },
@@ -1369,7 +1369,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1507,7 +1507,7 @@
           "Script you'll notice: ౫",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౫ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౫ and Guided Practice."
       },
       "blocks": [
         {

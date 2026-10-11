@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE]
 practises:
-  knowledge: [ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE, ES-LEX-ORDINALS, ES-GRAMMAR-APOCOPE-PATTERN, ES-LEX-LIBRO, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN]
+  knowledge: [ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE, ES-LEX-ORDINALS, ES-GRAMMAR-APOCOPE-PATTERN, ES-LEX-LIBRO, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-ETYMON-SEGUNDO-SEQUI]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -73,10 +73,12 @@ Spanish does to a word leaning on a masculine noun.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE, ES-ETYMON-SEGUNDO-SEQUI] -->
 
 [PAUSE 2s] Where does an ordinal stand? (**Before** the noun, unlike other
 adjectives.)
 
 [PAUSE 2s] And which two lose their *o*? (***Primero*** and ***tercero***, in
 front of a masculine noun.)
+
+[PAUSE 2s] And *segundo*: what did Latin *secundus* mean before it meant two? (**Following** — from *sequi*, to follow.)

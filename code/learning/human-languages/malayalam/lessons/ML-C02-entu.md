@@ -55,7 +55,8 @@ reviews_of: [ML-C02-nii-ningal, ML-C02-enre-peru-aanu]
 [PAUSE 1s]
 - [YOU SAY: "entŭ"]
 - [YOU SAY: the question family — entŭ, ār, eviṭe]
-- [YOU RECALL: say *enṟe*, then read **ആണ്**]
+- [YOU RECALL: say *enṟe*]
+- [YOU READ: **ആണ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENTU-01] -->

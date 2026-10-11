@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-POR-EJEMPLO, ES-SEMANTIC-EVIDENCE-MARKED]
 practises:
-  knowledge: [ES-LEX-POR-EJEMPLO, ES-SEMANTIC-EVIDENCE-MARKED]
+  knowledge: [ES-LEX-POR-EJEMPLO, ES-SEMANTIC-EVIDENCE-MARKED, ES-LEX-EN-MI-OPINION, ES-SEMANTIC-CLAIM-MARKED]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -58,7 +58,7 @@ English **exemplary**, **sample** and **example** are all the same word arriving
 by different routes; *sample* is the most worn-down of the three.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[ES-SEMANTIC-EVIDENCE-MARKED]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-SEMANTIC-EVIDENCE-MARKED]; assesses=[ES-LEX-EN-MI-OPINION, ES-SEMANTIC-CLAIM-MARKED] -->
 
 This is the second move of an argument, and the order matters: claim first,
 example second. *En mi opinión, es difícil. Por ejemplo, …*
@@ -75,7 +75,7 @@ what the word says. That is worth knowing in both languages.
 - [YOU SAY: what *exemplum* means literally (a thing taken out)]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POR-EJEMPLO, ES-SEMANTIC-EVIDENCE-MARKED] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-POR-EJEMPLO, ES-SEMANTIC-EVIDENCE-MARKED, ES-SEMANTIC-CLAIM-MARKED] -->
 
 [PAUSE 3s] What does *exemplum* mean, taken apart? (A thing taken *out* of a pile.)
 Which comes first, the claim or the example? (The claim.)

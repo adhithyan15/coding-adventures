@@ -42,13 +42,13 @@ wrong numbers on them. Here's why.
 ## You'll want to know: The five
 <!-- hl-knowledge: introduces=[LA-LEX-NUMBERS-6-10-01]; assesses=[] -->
 
-| | numeral | Latin | said |
-|---|---|---|---|
-| 6 | **VI** | **sex** | *sex* |
-| 7 | **VII** | **septem** | *SEP-tem* |
-| 8 | **VIII** | **octō** | *OK-toh* |
-| 9 | **IX** | **novem** | *NO-wem* |
-| 10 | **X** | **decem** | *DEK-em* |
+| numeral | Latin | said |
+|---|---|---|
+| **VI** (6) | **sex** | *sex* |
+| **VII** (7) | **septem** | *SEP-tem* |
+| **VIII** (8) | **octō** | *OK-toh* |
+| **IX** (9) | **novem** | *NO-wem* |
+| **X** (10) | **decem** | *DEK-em* |
 
 The numerals climb by adding to five — **VI VII VIII** (five-and-one, -two,
 -three) — then **IX** (one *before* ten) and **X**. (Remember *v* = *w*, so

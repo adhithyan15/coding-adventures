@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 61,
   "title": "The Turning Season",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:80dac16e3bd9c214",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:43040dbf6086e550",
   "lessons": [
     {
       "id": "SA-C61-rtu",
@@ -14,22 +14,13 @@
       "romanization": "ṛtuḥ",
       "gloss": "a season — the fixed turn of the year, and the first word in this book that opens with ऋ",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d27b62b0f11772a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:c2b34d938cf6da88",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -63,15 +54,24 @@
             },
             {
               "kind": "speech",
-              "text": "The word comes from the root ऋ, \"to go, to move\" — a season is a turn that comes round. That is worth holding, because the same root gives one of the most important words in the whole language: ऋतम् (ṛtam), the fixed order of things, the way the world turns as it should. A season is one turn of that order."
+              "text": "The word comes from the root ऋ (ṛ), \"to go, to move\" — a season is a turn that comes round. That is worth holding, because the same root gives one of the most important words in the whole language: ऋतम् (ṛtam), the fixed order of things, the way the world turns as it should. A season is one turn of that order."
             },
             {
               "kind": "speech",
               "text": "The far end of that family reaches English. From the same root, through Latin rītus, comes English rite — a thing done at its proper turn. And ars, \"art\", is a cousin: skill as things fitted together in their proper order."
             },
             {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the first letter.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the first letter.]"
+            },
+            {
               "kind": "speech",
-              "text": "Look at the first letter. ऋ is the independent vowel ṛ — and it is the first word in this book that begins with it. You have written its small form, the ृ hanging under a consonant, in गृहम् and हृदयम्. This is the full-size letter it becomes when nothing carries it."
+              "text": "ऋ is the independent vowel ṛ — and it is the first word in this book that begins with it. You have written its small form, the ृ hanging under a consonant, in गृहम् and हृदयम्. This is the full-size letter it becomes when nothing carries it."
             },
             {
               "kind": "speech",
@@ -184,7 +184,7 @@
           "Script: ऋ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: ऋ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: ऋ and Guided Practice."
       },
       "blocks": [
         {
@@ -318,7 +318,7 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "the full ऋ at the front of ऋतुः (ṛtuḥ) and the small ृ under the ग of गृहम्",
+              "instruction": "the full ऋ (ṛ) at the front of ऋतुः (ṛtuḥ) and the small ृ under the ग of गृहम्",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

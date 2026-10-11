@@ -127,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-vamos-form",
               "prompt": "Say we go.",
               "assesses": [
@@ -145,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-vamos-why",
               "prompt": "Why does the present of ir begin with v when the infinitive has none?",
               "assesses": [
@@ -166,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-vamos-english",
               "prompt": "Name the English pair that works the same way.",
               "assesses": [
@@ -331,6 +334,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-van-form",
               "prompt": "Say they go.",
               "assesses": [
@@ -350,6 +354,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-van-four",
               "prompt": "They are (permanently), and they are (right now): which two forms?",
               "assesses": [
@@ -370,6 +375,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-van-lesson",
               "prompt": "What usually explains a Spanish verb that looks chaotic?",
               "assesses": [

@@ -42,12 +42,15 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-L-01]; assesses=[RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01] -->
 
-> л
+> л   Л
+
+The capital, **Л**, is the same two legs drawn to full height.
 
 **l**, the *l* of English *love*. A **new shape**: nothing in Latin looks like it.
 
-Two strokes meeting at a peak, with the left leg kicking out. Written quickly it
-leans, and in some fonts it is nearly a triangle with an open base.
+Two legs meeting at a peak, with the left leg kicking out; the hand draws both
+without lifting the pen. Written quickly it leans, and in some fonts it is
+nearly a triangle with an open base.
 
 Careful with one thing. In handwriting **л** and **м** are close relatives, and
 you are about to meet **м**. The difference is the top: **л** comes to a **point**,

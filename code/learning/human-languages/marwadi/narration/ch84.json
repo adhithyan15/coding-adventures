@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C84-gav-type",
-              "prompt": "Type the Marwadi for 'a village'.",
+              "prompt": "Say the Marwadi for 'a village'.",
               "assesses": [
                 "MW-LEX-C84-TOWN84-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C84-sahar-type",
-              "prompt": "Type the Marwadi for 'a city'.",
+              "prompt": "Say the Marwadi for 'a city'.",
               "assesses": [
                 "MW-LEX-C84-TOWN84-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C84-kurto-type",
-              "prompt": "Type the Marwadi for 'a kurta, a long shirt'.",
+              "prompt": "Say the Marwadi for 'a kurta, a long shirt'.",
               "assesses": [
                 "MW-LEX-C84-TOWN84-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C84-pajamo-type",
-              "prompt": "Type the Marwadi for 'pyjama trousers'.",
+              "prompt": "Say the Marwadi for 'pyjama trousers'.",
               "assesses": [
                 "MW-LEX-C84-TOWN84-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C84-juti-type",
-              "prompt": "Type the Marwadi for 'a shoe'.",
+              "prompt": "Say the Marwadi for 'a shoe'.",
               "assesses": [
                 "MW-LEX-C84-TOWN84-05"
               ],

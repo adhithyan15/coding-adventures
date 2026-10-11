@@ -6,6 +6,7 @@ sequence: 610
 chapter: 17
 type: phrase
 headword: كم عمرك؟
+romanization: "kam ʿumruka"
 gloss: how old are you? — literally "how much [is] your lifetime?"; age as a NOUN you possess, not a verb you conjugate
 concept_tag: AR-AGE
 prerequisites: [AR-C16-al-saa]

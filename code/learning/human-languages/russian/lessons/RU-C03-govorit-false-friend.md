@@ -40,7 +40,7 @@ reviews_of: [RU-C03-govorit]
 ## The word, taken apart — and a false friend
 <!-- hl-knowledge: introduces=[RU-ETYMON-GOVORIT-NOT-GOVERN]; assesses=[] -->
 
-**говорить** is built on the old Slavic noun \**govorъ*, "a murmur, a din, the
+**говорить** is built on the old Slavic noun \**govorŭ*, "a murmur, a din, the
 noise of many voices." Russian still keeps **говор** for the buzz of a crowd or
 a regional way of talking. Most etymologists read the root as **imitative** —
 the word sounds like what it names — which is honest but means there is no tidy

@@ -10,6 +10,7 @@ delivery: script
 chapter: 25
 type: writing
 headword: "नाव · शहर · भाषा"
+romanization: "nāv · śahar · bhāṣā"
 gloss: choose which known profile detail belongs in each of the first three form rows
 prerequisites: [MR-A1M18-independent-message, MR-A1F03-last-three-delayed]
 sounds: []

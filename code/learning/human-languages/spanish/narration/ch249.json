@@ -144,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-maria-ven-say",
               "prompt": "Tell Maria to come, naming her first.",
               "assesses": [
@@ -162,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-maria-ven-mark",
               "prompt": "What marks the person being addressed?",
               "assesses": [
@@ -180,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-maria-ven-noa",
               "prompt": "Does the person you address take the personal a?",
               "assesses": [

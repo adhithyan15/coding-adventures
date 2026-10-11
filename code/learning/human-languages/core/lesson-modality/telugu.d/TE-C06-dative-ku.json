@@ -3,19 +3,19 @@
     "id": "TE-C06-dative-ku",
     "language": "telugu",
     "chapter": 6,
-    "sequence": 310,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "sequence": 302,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:c99fd7445630aabe"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07a9d8c0f785d681"
   },
   "findings": []
 }

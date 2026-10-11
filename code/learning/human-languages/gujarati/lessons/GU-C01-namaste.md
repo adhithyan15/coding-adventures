@@ -23,7 +23,7 @@ introduces_senses: []
 introduces_culture_claims: [GU-CULTURE-NAMASTE-SANSKRIT-RESPECTFUL-GREETING-01]
 practises:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
-skills: [listening, speaking]
+skills: [listening, speaking, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -57,6 +57,17 @@ six pieces of this word are familiar will the book ask you to read or copy it.
 "a bow to you." Gujarati inherited the greeting through its Indo-Aryan history.
 You do not need to remember the two historical pieces yet; they are simply a
 memory hook for the greeting's respectful shape.
+
+## Writing — let your finger meet one sign
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Here is the first printed sign of the greeting's written form: **ન**. Follow
+that sign once with your finger while you say *namaste*.
+
+Do not write it yet, and do not try to read it. The sign gets its own short
+lesson later in this chapter; tracing a typeface here does not claim a
+handwriting stroke order.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01] -->

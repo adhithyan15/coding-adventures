@@ -82,7 +82,9 @@ opens both **ஒரு** and **ஒன்று**, and the next lesson pays it.
 - [YOU SAY: "oru tēnīr vēṇḍum"]
 - [YOU SAY: decline a second one — "vēṇḍām"]
 - [YOU CONTRAST: "oṉṟu" alone, "oru tēnīr" in front of a noun]
-- [YOU RECALL: say *ūr*, then read **நண்பன்**, then say *ivar*]
+- [YOU RECALL: say *ūr*]
+- [YOU READ: **நண்பன்**]
+- [YOU RECALL: say *ivar*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-NUMBERS-1-5-01, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-GRAMMAR-DATIVE-UKKU-01, TA-LEX-EVVALAVU-01, TA-LEX-TENEER-01, TA-SCRIPT-CA-ONE-LETTER-01, TA-SCRIPT-U-SIGN-01] -->

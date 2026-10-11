@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [TE-LEX-LOOK]
+  knowledge: [TE-LEX-C32-CUUDU-01]
 introduces:
   knowledge: [TE-LEX-LISTEN]
 practises:
-  knowledge: [TE-LEX-LOOK, TE-LEX-LISTEN]
+  knowledge: [TE-LEX-C32-CUUDU-01, TE-LEX-LISTEN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -31,7 +31,7 @@ reviews_of: [TE-C44-look]
 # ఆలకించు (ālakiñcu) — listen
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-LOOK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-CUUDU-01] -->
 
 [PAUSE 2s] Before the new one: what did *cūḍu* mean?
 
@@ -48,7 +48,7 @@ reviews_of: [TE-C44-look]
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-LOOK, TE-LEX-LISTEN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-CUUDU-01, TE-LEX-LISTEN] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ālakiñcu*]
@@ -56,6 +56,6 @@ One more. Three follow, and each reuses the ones before.
 - [YOU SAY: it after *cūḍu*, so the two sit together]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-LOOK, TE-LEX-LISTEN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C32-CUUDU-01, TE-LEX-LISTEN] -->
 
 [PAUSE 3s] What does ఆలకించు mean? ("listen".) Say it once more.

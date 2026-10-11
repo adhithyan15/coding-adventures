@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かさ (kasa) mean? ("An umbrella".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an umbrella'.
+Say the Japanese for 'an umbrella'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does がっこう (gakkou) mean? ("A school".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a school'.
+Say the Japanese for 'a school'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しゅくだい (shukudai) mean? ("Homework".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'homework'.
+Say the Japanese for 'homework'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もんだい (mondai) mean? ("A problem, a question".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a problem, a question'.
+Say the Japanese for 'a problem, a question'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こたえ (kotae) mean? ("An answer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an answer'.
+Say the Japanese for 'an answer'.

@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:14c855344e5d26db",
+  "sourceHash": "fnv1a64:b5001f095e299914",
   "lessons": [
     {
       "id": "TE-C44-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:430b93c4ff216a0f",
+      "sourceHash": "fnv1a64:ee951af80c08516d",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Also 'to see' and 'to look after', the same three-way stem as its Kannada cousin nōḍu — the languages are close enough that the pattern travels."
+              "text": "You met it earlier as \"to see, to look\"; here it opens the run. It also stretches to 'to look after', the same three meanings Kannada packs into nōḍu, although the two verbs themselves are not related."
             }
           ]
         },
@@ -128,7 +128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77b41b783ea28f2e",
+      "sourceHash": "fnv1a64:b6caf5c05a0ad26a",
       "notice": null,
       "blocks": [
         {

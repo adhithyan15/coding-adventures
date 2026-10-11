@@ -138,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-ahora-hoy-now",
               "prompt": "Say: right now I am eating.",
               "assesses": [
@@ -156,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-ahora-hoy-inside",
               "prompt": "Which word you already knew is hiding inside ahora?",
               "assesses": [
@@ -174,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-ahora-hoy-vs",
               "prompt": "Which of ahora and manana is the one you are inside of?",
               "assesses": [
@@ -363,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-hoy-word",
               "prompt": "The word for today?",
               "assesses": [
@@ -381,6 +385,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-hoy-latin",
               "prompt": "Which Latin word wore down into hoy, and what did it mean?",
               "assesses": [
@@ -400,6 +405,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-hoy-tense",
               "prompt": "Say: today I am going to eat with her.",
               "assesses": [

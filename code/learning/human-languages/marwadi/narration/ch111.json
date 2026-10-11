@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C111-chavno-type",
-              "prompt": "Type the Marwadi for 'to want'.",
+              "prompt": "Say the Marwadi for 'to want'.",
               "assesses": [
                 "MW-LEX-C111-WANT111-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C111-ichchha-type",
-              "prompt": "Type the Marwadi for 'a wish'.",
+              "prompt": "Say the Marwadi for 'a wish'.",
               "assesses": [
                 "MW-LEX-C111-WANT111-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C111-man-type",
-              "prompt": "Type the Marwadi for 'the mind, a wish'.",
+              "prompt": "Say the Marwadi for 'the mind, a wish'.",
               "assesses": [
                 "MW-LEX-C111-WANT111-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C111-as-type",
-              "prompt": "Type the Marwadi for 'hope'.",
+              "prompt": "Say the Marwadi for 'hope'.",
               "assesses": [
                 "MW-LEX-C111-WANT111-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C111-mag-type",
-              "prompt": "Type the Marwadi for 'a demand'.",
+              "prompt": "Say the Marwadi for 'a demand'.",
               "assesses": [
                 "MW-LEX-C111-WANT111-05"
               ],

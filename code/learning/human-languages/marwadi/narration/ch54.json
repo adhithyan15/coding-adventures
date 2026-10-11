@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C54-kholno-type",
-              "prompt": "Type the Marwadi for 'to open'.",
+              "prompt": "Say the Marwadi for 'to open'.",
               "assesses": [
                 "MW-LEX-C54-VERBS54-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C54-hasno-type",
-              "prompt": "Type the Marwadi for 'to laugh'.",
+              "prompt": "Say the Marwadi for 'to laugh'.",
               "assesses": [
                 "MW-LEX-C54-VERBS54-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C54-rovno-type",
-              "prompt": "Type the Marwadi for 'to cry'.",
+              "prompt": "Say the Marwadi for 'to cry'.",
               "assesses": [
                 "MW-LEX-C54-VERBS54-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C54-gavno-type",
-              "prompt": "Type the Marwadi for 'to sing'.",
+              "prompt": "Say the Marwadi for 'to sing'.",
               "assesses": [
                 "MW-LEX-C54-VERBS54-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C54-nachno-type",
-              "prompt": "Type the Marwadi for 'to dance'.",
+              "prompt": "Say the Marwadi for 'to dance'.",
               "assesses": [
                 "MW-LEX-C54-VERBS54-05"
               ],

@@ -46,7 +46,7 @@ This lesson is the verb that wasn't there.
 > **быть** — *byt'* — **to be**
 
 Four letters, and you have met all four already: **б** from *спасибо*, **ы**
-from *ты*, **т** from *привет*, and the soft sign **ь** from *очень*. Nothing
+from *ты*, **т** from *привет*, and the soft sign **ь** from *óchen*. Nothing
 new to decode — which is rare, and worth enjoying.
 
 The **ь** is not a sound; it softens the **т** in front of it. That ending
@@ -58,18 +58,18 @@ The **ь** is not a sound; it softens the **т** in front of it. That ending
 
 English: *I am a student.* Russian:
 
-> **Я студент.** — *ya studént* — literally **"I student."**
+> *ya studént* — literally **"I student."**
 
 There is no word between them. Not a short one, not a quiet one — **none**.
 Russian does not use *быть* in the present tense; you link two things by
 setting them side by side.
 
 The verb was not lost. Push the sentence into the past and it walks back in:
-**Я был студентом** — *ya byl studéntom* — "I was a student." The present is
+*ya byl studéntom* — "I was a student." The present is
 the one place it goes silent.
 
 Chapter 1 already showed you the survivor: **нет** is *не* + *есть*, "not-is."
-*Есть* means **there is**, never *am*.
+*Yest'* means **there is**, never *am*.
 
 ## The word, taken apart — the verb English broke in half
 <!-- hl-knowledge: introduces=[RU-ETYMON-BYT-BE]; assesses=[] -->
@@ -91,7 +91,7 @@ English **is**.
 
 [PAUSE 1s]
 - [YOU SAY: "быть" — *byt'*, with a soft final t]
-- [YOU SAY: "Я студент" — and feel the gap where English puts *am*]
+- [YOU SAY: "Ya studént" — and feel the gap where English puts *am*]
 - [YOU SAY: the two roots Russian keeps apart — "быть … есть"]
 - [YOU SAY: the English pair — "**be** … **is**"]
 
@@ -99,7 +99,7 @@ English **is**.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-BYT, RU-GRAMMAR-ZERO-COPULA, RU-ETYMON-BYT-BE] -->
 
 [PAUSE 3s] Say "to be." (**Быть**.) Now say "I am a student."
-(**Я студент** — two words, and no verb.) Is the verb gone from the language?
-(No — **был** returns in the past; only the present drops it.) Which English
+(*Ya studént* — two words, and no verb.) Is the verb gone from the language?
+(No — *byl* returns in the past; only the present drops it.) Which English
 word is *быть*? (**Be** — same root, \**bʰuH-*.) And which English word is
-*есть*? (**Is**.) Next: жить, "to live."
+*есть*? (**Is**.) Next: *zhit'*, "to live."

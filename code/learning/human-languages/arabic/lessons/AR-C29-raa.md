@@ -69,10 +69,10 @@ The family this root grows is the good part:
 - **رَأْي** (*raʾy*) — "an **opinion**." Literally a *seeing*. English does
   the very same thing with "**in my view**" and "the way **I see it**" —
   two unrelated languages reaching for one metaphor.
-- **مِرْآة** (*mirʾāh*) — "a **mirror**." This is the **instrument** shape,
+- *mirʾāh* — "a **mirror**." This is the **instrument** shape,
   *mi-* plus the root: "the thing you see with." It is a sibling of the
   *ma-* place shape behind *madhhab* and *maqāla*.
-- **رُؤْيا** (*ruʾyā*) — "a **vision**, a dream."
+- *ruʾyā* — "a **vision**, a dream."
 
 Seeing, opinion, mirror, vision: four words, one skeleton, no memorising
 four unrelated forms.
@@ -92,5 +92,5 @@ four unrelated forms.
 *yāʾ* **without its dots** — sounding like a long **ā**, only ever at the end
 of a word.) What does **رَأْي** mean, and what English turn of phrase makes
 the same move? (**"An opinion"** — literally a seeing, like "**in my
-view**.") What is **مِرْآة**, and what pattern builds it? (**A mirror** —
+view**.") What is *mirʾāh*, and what pattern builds it? (**A mirror** —
 the *mi-* **instrument** shape, "the thing you see with.")

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たつ (tatsu) mean? ("To stand".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to stand'.
+Say the Japanese for 'to stand'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なく (naku) mean? ("To cry".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to cry'.
+Say the Japanese for 'to cry'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すむ (sumu) mean? ("To live (somewhere)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to live (somewhere)'.
+Say the Japanese for 'to live (somewhere)'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やすむ (yasumu) mean? ("To rest".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to rest'.
+Say the Japanese for 'to rest'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たのしむ (tanoshimu) mean? ("To enjoy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to enjoy'.
+Say the Japanese for 'to enjoy'.

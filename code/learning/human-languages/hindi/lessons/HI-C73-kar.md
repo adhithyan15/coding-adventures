@@ -45,7 +45,7 @@ much shorter way that it uses far more often.
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-KAR-01]; assesses=[HI-LEX-LOOK, HI-LEX-COME, HI-CONCEPT-C05-KARNA-01, HI-GRAMMAR-VERB-FINAL-01] -->
 
 > **मैं किताब देखकर आता हूँ.** — *maiṁ kitāb dekhkar ātā hūṁ.* —
-> **I look at the book and come.** (Literally: *having looked, I come.*)
+> **"I look at the book and come."** (Literally: *having looked, I come.*)
 
 The move is the same shape as **सकना**: **take the -ना off the first verb and
 put -कर on the bare stem.**

@@ -1,5 +1,7 @@
 // Devanagari vowel signs and other marks get a filmstrip only where a lesson
-// teaches the sign BY ITSELF. Their cited source — native writers' pen traces
+// teaches the sign BY ITSELF. Twelve signs have one: ा ु ू े ं ़ ् ृ ँ, and
+// ी ो ः, which are drawn without the piece of headline Noto prints on them
+// (it is the word's headline, drawn last across the whole word). Their cited source — native writers' pen traces
 // in HP Labs India's LipiTk Devanagari recognizer — was written one sign at a
 // time, with no consonant and no headline, so it says how the sign is drawn
 // but not when it is drawn against its consonant or the shared headline.
@@ -25,21 +27,21 @@ import { lesson } from "./fixture.js";
 
 const LIPITK = "https://lipitk.sourceforge.net/lipi-reco.htm";
 const hindi = (id: string, headword: string) => lesson(id, { language: "hindi", headword });
-/** The nine signs that carry a cited ductus, plus two letters. */
-const CITED = new Set(["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ", "क", "म"]);
+/** The twelve signs that carry a cited ductus, plus two letters. */
+const CITED = new Set(["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ", "ी", "ो", "ः", "क", "म"]);
 const hasDuctus = (script: string, glyph: string) => script === "devanagari" && CITED.has(glyph);
 
 describe("Devanagari signs drawn alone", () => {
   it("gives Devanagari no written-order row, so no sign is placed against a consonant", () => {
     expect(WRITTEN_SIGN_SIDES.devanagari).toBeUndefined();
     expect(FUSED_SIGN_PAIRS.devanagari).toBeUndefined();
-    for (const grapheme of ["कि", "कु", "के", "कं", "क्", "कृ", "कँ", "क़", "ु", "े"]) {
+    for (const grapheme of ["कि", "की", "कु", "के", "को", "कं", "कः", "क्", "कृ", "कँ", "क़", "ु", "े", "ी", "ो", "ः"]) {
       expect(writtenPiecesOf(grapheme, "devanagari"), grapheme).toBeUndefined();
     }
   });
 
   it("takes a sign taught alone as one glyph, never as a sequence", () => {
-    for (const sign of ["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ"]) {
+    for (const sign of ["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ", "ी", "ो", "ः"]) {
       expect(writingSequenceOf(hindi("HI-1", sign), "devanagari"), sign).toBeUndefined();
       expect(writingLetterOf(hindi("HI-1", sign)), sign).toBe(sign);
     }
@@ -51,6 +53,8 @@ describe("Devanagari signs drawn alone", () => {
       hindi("HI-W2", "कु"),
       hindi("HI-W3", "मेरा"),
       hindi("HI-W4", "कि"),
+      hindi("HI-W5", "ी"),
+      hindi("HI-W6", "की"),
     ]);
     // A consonant-plus-sign headword is still one candidate glyph ("कु"), but
     // no ductus is cited for that pair, so it is refused; a word is not even
@@ -59,16 +63,20 @@ describe("Devanagari signs drawn alone", () => {
       ["HI-W1", "ु", undefined],
       ["HI-W2", "कु", undefined],
       ["HI-W4", "कि", undefined],
+      ["HI-W5", "ी", undefined],
+      ["HI-W6", "की", undefined],
     ]);
     expect(withDerivedFilmstrips([], candidates, hasDuctus).map((target) => target.lessonId)).toEqual([
       "HI-W1",
+      "HI-W5",
     ]);
   });
 
-  it("cites a ductus on exactly the nine signs, and a place only for ā and the nukta", () => {
+  it("cites a ductus on exactly the twelve signs, and a place only for ā and the nukta", () => {
     const script = loadScripts(defaultCurriculumRoot()).devanagari!;
     const cited = (script.marks ?? []).filter((mark) => mark.strokeOrderSource !== undefined);
-    expect(cited.map((mark) => mark.mark)).toEqual(["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ"]);
+    // In the records' own order (devanagari.json `marks`).
+    expect(cited.map((mark) => mark.mark)).toEqual(["ा", "ी", "ु", "ू", "े", "ो", "ं", "़", "्", "ृ", "ँ", "ः"]);
     for (const mark of cited) {
       expect(mark.strokeOrderSource?.url, mark.mark).toBe(LIPITK);
       expect(mark.strokeOrderSource?.variation, mark.mark).toMatch(
@@ -76,6 +84,17 @@ describe("Devanagari signs drawn alone", () => {
           ? /written by itself, with no consonant beside it.*that place is cited separately \(compositionSource\), and it is the one Devanagari sign a composed word may hold/
           : /written by itself, with no consonant beside it.*composes no Devanagari word from it/,
       );
+    }
+    // ी, ो and ः are drawn without the piece of headline Noto prints on
+    // them, and their records say why: it is the word's headline.
+    for (const mark of cited.filter((entry) => ["ी", "ो", "ः"].includes(entry.mark))) {
+      expect(mark.strokeOrderSource?.variation, mark.mark).toContain(
+        "The path leaves that piece undrawn, so the strip shows it in grey",
+      );
+    }
+    // ि ै ौ have no majority form in the traces, so no ductus.
+    for (const glyph of ["ि", "ै", "ौ"]) {
+      expect(script.marks?.find((mark) => mark.mark === glyph)?.strokeOrderSource, glyph).toBeUndefined();
     }
     // The nukta carries the carrier-first convention cited to Unicode before
     // the traces were; ā carries its place after its consonant's body and

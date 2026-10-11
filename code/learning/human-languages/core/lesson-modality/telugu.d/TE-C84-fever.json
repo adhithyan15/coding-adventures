@@ -4,18 +4,18 @@
     "language": "telugu",
     "chapter": 84,
     "sequence": 3020,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:eb7ae89de52c299e"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18e3f330cda715e8"
   },
   "findings": []
 }

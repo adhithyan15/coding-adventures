@@ -37,7 +37,7 @@ reviews_of: [FA-C05-khoda]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODA, FA-SCRIPT-KHODA] -->
 
-[PAUSE 2s] [YOU READ: **خدا**, then say **khodâ**]
+[PAUSE 2s] [YOU SAY: **khodâ**, “God,” the word from the last lesson]
 
 Keep it separate: this lesson adds only the second word behind the farewell.
 

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C127-khilo-type",
-              "prompt": "Type the Marwadi for 'a nail'.",
+              "prompt": "Say the Marwadi for 'a nail'.",
               "assesses": [
                 "MW-LEX-C127-THINGS127-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C127-hathoro-type",
-              "prompt": "Type the Marwadi for 'a hammer'.",
+              "prompt": "Say the Marwadi for 'a hammer'.",
               "assesses": [
                 "MW-LEX-C127-THINGS127-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C127-kulhari-type",
-              "prompt": "Type the Marwadi for 'an axe'.",
+              "prompt": "Say the Marwadi for 'an axe'.",
               "assesses": [
                 "MW-LEX-C127-THINGS127-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C127-hal-type",
-              "prompt": "Type the Marwadi for 'a plough'.",
+              "prompt": "Say the Marwadi for 'a plough'.",
               "assesses": [
                 "MW-LEX-C127-THINGS127-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C127-bailgari-type",
-              "prompt": "Type the Marwadi for 'a bullock cart'.",
+              "prompt": "Say the Marwadi for 'a bullock cart'.",
               "assesses": [
                 "MW-LEX-C127-THINGS127-05"
               ],

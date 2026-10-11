@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C128-pagri-type",
-              "prompt": "Type the Marwadi for 'a turban'.",
+              "prompt": "Say the Marwadi for 'a turban'.",
               "assesses": [
                 "MW-LEX-C128-THINGS128-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C128-ghaghro-type",
-              "prompt": "Type the Marwadi for 'a long skirt'.",
+              "prompt": "Say the Marwadi for 'a long skirt'.",
               "assesses": [
                 "MW-LEX-C128-THINGS128-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C128-lugro-type",
-              "prompt": "Type the Marwadi for 'a woman's wrap'.",
+              "prompt": "Say the Marwadi for 'a woman's wrap'.",
               "assesses": [
                 "MW-LEX-C128-THINGS128-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C128-kachali-type",
-              "prompt": "Type the Marwadi for 'a bodice'.",
+              "prompt": "Say the Marwadi for 'a bodice'.",
               "assesses": [
                 "MW-LEX-C128-THINGS128-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C128-angarkhi-type",
-              "prompt": "Type the Marwadi for 'a long coat'.",
+              "prompt": "Say the Marwadi for 'a long coat'.",
               "assesses": [
                 "MW-LEX-C128-THINGS128-05"
               ],

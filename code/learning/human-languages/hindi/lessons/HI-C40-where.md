@@ -36,7 +36,7 @@ reviews_of: [HI-C40-who]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-04, HI-LEX-C40-DEIXIS-05] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: कहाँ
 <!-- hl-knowledge: introduces=[HI-LEX-C40-DEIXIS-06]; assesses=[] -->

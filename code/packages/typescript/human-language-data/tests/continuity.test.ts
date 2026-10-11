@@ -27,7 +27,11 @@
 //            track is unrevisited until something follows it, so a floor would
 //            bless the debt growing and a ceiling would fail on a legitimate
 //            new lesson. The share is what the raw number was always a proxy
-//            for, and it is the thing that should fall.
+//            for, and it is the thing that should fall. The per-track corpus
+//            pins do hold one slice of it at zero: atoms the track has gone a
+//            whole R1 window past without ever practising again
+//            (`atomsNeverRevisitedPastTheTail`), which excludes exactly the
+//            tail that made a raw ceiling unworkable.
 //
 // The running annotations stay. They are the valuable part -- they record WHY
 // each number moved, which is the institutional memory of this corpus. It is
@@ -47,6 +51,7 @@ import {
   REINFORCEMENT_WINDOWS,
 } from "../src/continuity.js";
 import { parseLesson } from "../src/parse.js";
+import { atomsNeverRevisitedPastTheTail } from "./corpus/assert-language-corpus.js";
 
 /** A lesson with a declared order, an optional headword, and atom directives. */
 function lesson(opts: {
@@ -231,6 +236,35 @@ describe("reinforcement windows", () => {
       // number grows with honest content and only its SHARE is meaningful;
     expect(report.summary.missedByWindow.R3).toBe(0);
     expect(report.summary.missedByWindow.R4).toBe(0);
+  });
+
+  it("gates a never-practised atom only once the track has gone a whole R1 past it", () => {
+    // Synthetic on purpose: the real corpus is held at zero by the per-track
+    // corpus pins, and a non-vacuity check that read the debt off the corpus
+    // would go red the day the debt was paid. Six lessons, three atoms:
+    //   A at 0, never practised, five lessons follow   -> gated
+    //   B at 1, practised at 4                         -> fine
+    //   C at 4, never practised, only one lesson after -> the tail, not judged
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, introduces: ["A"] }),
+      lesson({ id: "ES-2", chapter: 1, sequence: 20, introduces: ["B"] }),
+      ...filler(3, 2),
+      lesson({ id: "ES-5", chapter: 1, sequence: 50, introduces: ["C"], practises: ["B"] }),
+      lesson({ id: "ES-6", chapter: 1, sequence: 60 }),
+    ]);
+    expect(report.summary.atomsNeverRevisited).toBe(2);
+    expect(atomsNeverRevisitedPastTheTail(report).map((finding) => finding.atom)).toEqual(["A"]);
+
+    // Exactly R1 after the introducer is enough to be judged; one short is not.
+    const atTheEdge = (after: number) =>
+      atomsNeverRevisitedPastTheTail(
+        measureContinuity([
+          lesson({ id: "ES-1", chapter: 1, sequence: 10, introduces: ["A"] }),
+          ...filler(2, after),
+        ]),
+      ).length;
+    expect(atTheEdge(REINFORCEMENT_WINDOWS[0].to)).toBe(1);
+    expect(atTheEdge(REINFORCEMENT_WINDOWS[0].to - 1)).toBe(0);
   });
 
   it("uses practises, not reviews_of, because reviews_of names lessons", () => {
@@ -524,12 +558,23 @@ describe("forward references", () => {
   });
 });
 
+// The real corpus, loaded and measured ONCE, at import.
+//
+// Each case below used to call loadEverything() and, four of them,
+// measureContinuity() over all ~29,500 lessons inside its own 30s budget. Alone
+// that fits; in a loaded full run the first case to pay for it timed out while
+// every assertion held ("keeps Spanish reading order explicit", twice). Import
+// time carries no per-test budget, and the measurement is a pure function of
+// the lessons, so every case can read the same result. See
+// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md.
+const REAL_LESSONS = loadEverything().lessons;
+const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
+
 describe("the real corpus", () => {
   // Exact corpus state is checked per language in tests/corpus/*.test.ts.
   // Keep this shared file for algorithm fixtures and cross-track invariants only.
   it("keeps Spanish reading order explicit", () => {
-    const { lessons } = loadEverything();
-    const spanish = measureContinuity(lessons).tracks.find((track) => track.language === "spanish");
+    const spanish = REAL_CONTINUITY.tracks.find((track) => track.language === "spanish");
     expect(spanish).toMatchObject({
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
@@ -548,8 +593,7 @@ describe("the real corpus", () => {
     // 25 -> 30 after HL-C88 inserted the three friends chapters at 23, which is
     // why chapter 25 now holds -mente rather than the comer family.
     // The lesson ids are stable slugs and deliberately do NOT renumber with it.
-    const { lessons } = loadEverything();
-    const chapter = lessons
+    const chapter = REAL_LESSONS
       .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 25)
       .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
       .map((lesson) => lesson.realization.lessonId);
@@ -557,8 +601,7 @@ describe("the real corpus", () => {
   });
 
   it("keeps the later forward-reference debt without Chapters 7-8 vocabulary leaks", () => {
-    const { lessons } = loadEverything();
-    const found = measureContinuity(lessons).forwardReferences;
+    const found = REAL_CONTINUITY.forwardReferences;
     const of = (word: string) => found.find((f) => f.language === "spanish" && f.word === word);
 
     // Chapter 7 now builds with previously learned café. Pan still leaks elsewhere;
@@ -573,8 +616,7 @@ describe("the real corpus", () => {
   });
 
   it("keeps German Chapter 1 free of untaught target-language previews", () => {
-    const { lessons } = loadEverything();
-    const german = measureContinuity(lessons).forwardReferences.filter(
+    const german = REAL_CONTINUITY.forwardReferences.filter(
       (reference) => reference.language === "german",
     );
 
@@ -587,8 +629,7 @@ describe("the real corpus", () => {
   });
 
   it("keeps Italian Chapter 1 free of untaught target-language previews", () => {
-    const { lessons } = loadEverything();
-    const italian = measureContinuity(lessons).forwardReferences.filter(
+    const italian = REAL_CONTINUITY.forwardReferences.filter(
       (reference) => reference.language === "italian",
     );
 

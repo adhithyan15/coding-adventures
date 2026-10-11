@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C49-takai-type",
-              "prompt": "Type the Japanese for 'tall'.",
+              "prompt": "Say the Japanese for 'tall'.",
               "assesses": [
                 "JA-LEX-C49-ADJ49-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C49-hikui-type",
-              "prompt": "Type the Japanese for 'low'.",
+              "prompt": "Say the Japanese for 'low'.",
               "assesses": [
                 "JA-LEX-C49-ADJ49-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C49-yasui-type",
-              "prompt": "Type the Japanese for 'cheap'.",
+              "prompt": "Say the Japanese for 'cheap'.",
               "assesses": [
                 "JA-LEX-C49-ADJ49-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C49-hayai-type",
-              "prompt": "Type the Japanese for 'fast'.",
+              "prompt": "Say the Japanese for 'fast'.",
               "assesses": [
                 "JA-LEX-C49-ADJ49-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C49-yasashii-type",
-              "prompt": "Type the Japanese for 'easy'.",
+              "prompt": "Say the Japanese for 'easy'.",
               "assesses": [
                 "JA-LEX-C49-ADJ49-05"
               ],

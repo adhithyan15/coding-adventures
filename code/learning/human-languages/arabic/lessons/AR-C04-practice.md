@@ -45,11 +45,11 @@ reviews_of: [AR-C04-maa-with, AR-C04-al-salama, AR-C04-maa-salama, AR-C04-ila-li
 | A | **السلام عليكم** (*as-salāmu ʿalaykum*) | peace [be] upon you |
 | B | **وعليكم السلام** (*wa-ʿalaykum as-salām*) | and upon you, peace |
 | A | **ما اسمك؟** (*mā ismuka?*) | what [is] your name? |
-| B | **اسمي …، تشرفنا.** (*ismī …, tasharrafnā*) | my name [is] …, we are honoured |
-| A | **كيف حالك؟** (*kayfa ḥāluka?*) | how [is] your state? |
-| B | **الحمد لله، بخير.** (*al-ḥamdu lillāh, bi-khayr*) | the praise [is] to God — in goodness |
+| B | *ismī …, tasharrafnā* | my name [is] …, we are honoured |
+| A | *kayfa ḥāluka?* | how [is] your state? |
+| B | *al-ḥamdu lillāh, bi-khayr* | the praise [is] to God — in goodness |
 | A | **مع السلامة** (*maʿa s-salāma*) | with safety |
-| B | **إلى اللقاء** (*ilā l-liqāʾ*) | until the meeting |
+| B | *ilā l-liqāʾ* | until the meeting |
 
 ## Why it's said this way — The root ledger
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C04-PRACTICE-02]; assesses=[] -->
@@ -73,8 +73,8 @@ Six roots:
 - What is **ة**, and what builds **مع** and **السلامة**? (That loop plus
   *tāʾ*'s two dots, word-final, feminine; **م** + throat **ع**; **ال** +
   **سلام** + **ة**.)
-- Which two shapes in **إلى اللقاء** are unwritten? (**ق**, a deeper *k*;
-  **ى**, dotless *yāʾ*, said *ā*.)
+- Which two letters of *ilā l-liqāʾ* have you not yet met? (*qāf*, a deeper
+  *k*; *alif maqṣūra*, a dotless *yāʾ* said *ā*.)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02, AR-CONCEPT-W12-MAA-SALAMA-01, AR-CONCEPT-W12-MAA-SALAMA-02] -->

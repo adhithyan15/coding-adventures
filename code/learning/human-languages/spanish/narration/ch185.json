@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-sintesis-el-letrero-read",
               "prompt": "What does the sign SE COMPRAN LIBROS tell you?",
               "assesses": [
@@ -147,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-sintesis-el-letrero-unknown",
               "prompt": "A sign has a word you do not know. Ask somebody, politely.",
               "assesses": [
@@ -166,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-sintesis-el-letrero-eat",
               "prompt": "Say the food is good here, the way a sign would.",
               "assesses": [
@@ -186,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-sintesis-el-letrero-authority",
               "prompt": "Why does leaving the person out give a sign its authority?",
               "assesses": [

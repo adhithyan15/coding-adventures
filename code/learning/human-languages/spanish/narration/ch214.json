@@ -142,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-si-report",
               "prompt": "Report it: Trabaja? (he asked)",
               "assesses": [
@@ -160,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-si-marks",
               "prompt": "Does the reported version keep its question marks?",
               "assesses": [
@@ -178,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-si-same",
               "prompt": "Where have you met this si before?",
               "assesses": [

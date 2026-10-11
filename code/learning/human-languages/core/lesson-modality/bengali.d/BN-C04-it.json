@@ -4,18 +4,18 @@
     "language": "bengali",
     "chapter": 4,
     "sequence": 269,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:9348d2765d0c72ac"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8791fceed60fc210"
   },
   "findings": []
 }

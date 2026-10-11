@@ -8,7 +8,7 @@ type: word
 headword: arrivederci
 gloss: goodbye (literally "until we see each other again")
 concept_tag: FAREWELL
-prerequisites: []
+prerequisites: [IT-C02-practice]
 sounds: [r-tap, soft-c]
 roots: [re-videre-latin]
 etymology_hook: "arrivederci = a + ri(re-) + vedere 'see' + ci 'us' — 'to our seeing-again', twin of au revoir / auf Wiedersehen"

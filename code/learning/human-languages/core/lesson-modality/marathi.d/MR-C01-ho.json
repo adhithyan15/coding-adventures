@@ -4,10 +4,11 @@
     "language": "marathi",
     "chapter": 4,
     "sequence": 42,
-    "modality": "sight",
-    "derived": "sight",
+    "modality": "pen",
+    "derived": "pen",
     "drivable": false,
     "reasons": [
+      "writing-block",
       "script-block"
     ],
     "coreModality": "voice",
@@ -15,9 +16,10 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dc2f656183fbadd6",
+    "sourceHash": "fnv1a64:5586c1e9bb910246",
     "detachableSegments": [
-      "The letters in this word"
+      "The letters in this word",
+      "Writing — the first return, from spoken names"
     ]
   },
   "findings": []

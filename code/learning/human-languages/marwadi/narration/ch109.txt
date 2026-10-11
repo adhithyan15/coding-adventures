@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पड़णो (paṛṇo) mean? ("To fall".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to fall'.
+Say the Marwadi for 'to fall'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does थकणो (thakṇo) mean? ("To get tired".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to get tired'.
+Say the Marwadi for 'to get tired'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जीतणो (jītṇo) mean? ("To win".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to win'.
+Say the Marwadi for 'to win'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हारणो (hārṇo) mean? ("To lose (a game)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to lose (a game)'.
+Say the Marwadi for 'to lose (a game)'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मारणो (mārṇo) mean? ("To hit".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to hit'.
+Say the Marwadi for 'to hit'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A gate? (दरवाजो, darvājo.) A gateway? (पोळ, poḷ.) A mansion? (हवेली, havelī.) A fair? (मेळो, meḷo.) A weekly market? (हाट, hāṭ.) This? (यो, yo.) Like this? (इसो, iso.) Like that? (उसो, uso.) Which? (किसो, kiso.) Who? (कुण, kuṇ.) All? (सगळा, sagḷā.) Another? (दूजो, dūjo.) Our own? (आपणो, āpṇo.) Someone? (कोई, koī.) Each? (हरेक, harek.) To bathe? (न्हावणो, nhāvṇo.) To cook? (पकावणो, pakāvṇo.) To make? (बणावणो, baṇāvṇo.) To break? (तोड़णो, toṛṇo.) To join? (जोड़णो, joṛṇo.) To buy? (खरीदणो, kharīdṇo.) To uncover? (उघाड़णो, ughāṛṇo.) To call? (बुलावणो, bulāvṇo.) To ask for? (मांगणो, māṅgṇo.) To look? (जोवणो, jovṇo.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to lose (a game)'.
+Say the Marwadi for 'to lose (a game)'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 To stay? (रैवणो, raivṇo.) To read? (बांचणो, bā̃chṇo.) To know? (जाणणो, jāṇṇo.) To fill? (भरणो, bharṇo.) To pull? (खींचणो, khī̃chṇo.) To push? (ठेलणो, ṭhelṇo.) To lift? (उठावणो, uṭhāvṇo.) To drop? (गेरणो, gerṇo.) To burn? (बाळणो, bāḷṇo.) To sew? (सीवणो, sīvṇo.) To weave? (बुणणो, buṇṇo.) To dye? (रंगणो, raṅgṇo.) To apply? (लगावणो, lagāvṇo.) To remove? (हटावणो, haṭāvṇo.) To spread out? (बिछावणो, bichhāvṇo.) To wake someone? (जगावणो, jagāvṇo.) To save? (बचावणो, bachāvṇo.) To get down? (उतरणो, utarṇo.) To swim? (तैरणो, tairṇo.) To jump? (कूदणो, kūdṇo.) To fall? (पड़णो, paṛṇo.) To get tired? (थकणो, thakṇo.) To win? (जीतणो, jītṇo.) To lose? (हारणो, hārṇo.) To hit? (मारणो, mārṇo.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to stay, to live'.
+Say the Marwadi for 'to stay, to live'.

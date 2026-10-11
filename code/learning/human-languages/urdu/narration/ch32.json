@@ -120,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C32-pehla-source",
               "prompt": "Is pehla built from ek?",
               "assesses": [
@@ -239,6 +240,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C32-dusra-tisra-inside",
               "prompt": "Which number can you hear inside dusra?",
               "assesses": [
@@ -361,6 +363,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C32-chautha-build",
               "prompt": "Build tenth and twentieth from das and bis.",
               "assesses": [
@@ -463,6 +466,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C32-practice-order",
               "prompt": "Say first, second, third, fourth in Urdu.",
               "assesses": [
@@ -565,6 +569,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-R32-close-recall",
               "prompt": "Say ten and tenth in Urdu.",
               "assesses": [

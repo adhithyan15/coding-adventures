@@ -1,18 +1,18 @@
 {
   "language": "spanish",
   "chapter": 70,
-  "sourceHash": "fnv1a64:3e03257315f2e5b4",
+  "sourceHash": "fnv1a64:4b05b3d0e3d7fe3e",
   "lessonIds": [
     "ES-C12-hacer",
     "ES-C12-decir",
     "ES-C12-yo-go",
     "ES-C12-practice"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 2,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "spanish/narration/ch70.txt",
   "json": "spanish/narration/ch70.json",
-  "textHash": "fnv1a64:1c728b1feda63f93",
-  "jsonHash": "fnv1a64:df55fd9472261c3c",
+  "textHash": "fnv1a64:7adc8ffce868a625",
+  "jsonHash": "fnv1a64:b2526e1e5986e186",
   "findings": []
 }

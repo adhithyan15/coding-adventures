@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **കൊടി** — *koṭi* — "a flag".
 
-Say it: *koṭi*. Look at its shape as you say it: the next lesson takes one
+Say it: *koṭi*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ൊ**, and writes it on its own.
 
 ## Guided Practice

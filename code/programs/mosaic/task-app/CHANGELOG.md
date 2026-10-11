@@ -4,8 +4,60 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.1` accumulate here until the next version is
+Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
+
+## [0.5.2] - 2026-10-11
+
+### Fixed — Flutter leaves preserve bounded fill widths (#17251)
+
+Flutter now lowers `width: 100%` on text, input, and button leaves when the
+parent supplies a finite horizontal constraint. Bounded columns use an
+infinite-width `SizedBox` that resolves against the parent, while direct row
+children and matching conditional branches use exactly one parent-owned
+`Expanded`. Fresh strict generation retires all 16 TaskApp fill-width
+omissions and reduces Flutter's measured style inventory from 107 to 91. The
+seven calendar weekday `14.2857%` widths remain explicit debt.
+
+### Fixed — Flutter text and button alignment (#17237)
+
+Flutter now lowers supported `text-align` declarations on `Text` and
+`HostButton` leaves through native text and button alignment APIs. Calendar
+headings and today's day number retain their authored centering, while project,
+notes, and task buttons retain their authored left alignment. Fresh strict
+generation retires all 14 alignment omissions and reduces Flutter's measured
+style inventory from 121 to 107. Unsupported values remain reported debt.
+
+### Fixed — Flutter surfaces preserve authored corner radii (#17224)
+
+Flutter now lowers supported fixed `border-radius` declarations through native
+decorations, clips, and input borders across TaskApp's draggable cards,
+calendar events, text chips, inputs, and timeline grid. The rounded text
+surface also paints its authored background in the same decoration. Fresh
+strict generation retires all 15 radius omissions and eight coupled background
+omissions, reducing Flutter's measured style inventory from 144 to 121.
+Relative, negative, and otherwise unsafe radius values remain explicit debt.
+
+### Fixed — Qt calendar events preserve text styling and elision (#17146)
+
+Qt `HostDraggable` now passes supported authored color and font size to its
+descendant labels and lowers the calendar event's complete
+hidden/ellipsis/nowrap trio to native surface clipping and single-line right
+elision. Fresh strict generation retires all five remaining calendar-event
+omissions and reduces the honest Qt style inventory from 113 to 108; partial
+or unsupported values remain reported debt.
+
+### Fixed — Qt draggable cards preserve their authored surfaces (#17128)
+
+Qt `HostDraggable` now lowers TaskApp's card fill, padding, internal gap,
+uniform border, overdue left accent, radius, and grab cursor on the same native
+surface that owns drag and elevation behavior. Fresh strict generation retires
+20 of the 22 board-card omissions surfaced by #17126; the two raw CSS
+`box-shadow` values remain explicit debt because native shadowing comes from
+the separate `elevation` token. The generic draggable-surface and per-edge
+reporting fixes retire 36 previously omitted declarations while exposing five
+existing calendar-event text omissions tracked by #17146, reducing the honest
+Qt inventory from 144 to 113.
 
 ### Fixed — Qt elevation effects leave the style-debt inventory (#17126)
 

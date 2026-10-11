@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 228,
-  "sourceHash": "fnv1a64:d9abeba6e8a62ead",
+  "sourceHash": "fnv1a64:ab410a9b289a982f",
   "lessonIds": [
     "ES-C60-mal",
     "ES-C60-apocope"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch228.txt",
   "json": "spanish/narration/ch228.json",
-  "textHash": "fnv1a64:e395308471b93fb2",
-  "jsonHash": "fnv1a64:5652509d882d0ec4",
+  "textHash": "fnv1a64:4eddb52aa047f7d5",
+  "jsonHash": "fnv1a64:72947bfbc4d920b2",
   "findings": []
 }

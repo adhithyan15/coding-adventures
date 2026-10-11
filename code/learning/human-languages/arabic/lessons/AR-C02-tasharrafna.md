@@ -6,6 +6,7 @@ sequence: 210
 chapter: 2
 type: phrase
 headword: تشرفنا
+romanization: "tasharrafnā"
 gloss: pleased to meet you (literally "we have been honoured")
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [AR-C02-ismii]
@@ -50,7 +51,7 @@ reviews_of: [AR-C02-ismii, AR-C02-maa-ismuka]
 ("honour"), *sharīf* ("noble" — the *Sharif* of Mecca, and distantly the title
 behind English *sheriff*). *tasharrafnā* means literally "**we have been
 honoured**" — to meet you is presented as an honour received. A more literal
-option is **فرصة سعيدة** (*furṣa saʿīda*, "a happy occasion").
+option is *furṣa saʿīda* ("a happy occasion").
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-TASHARRAFNA-01, AR-CONCEPT-C02-TASHARRAFNA-02] -->

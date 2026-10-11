@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C83-kono-type",
-              "prompt": "Type the Japanese for 'this (next to me)'.",
+              "prompt": "Say the Japanese for 'this (next to me)'.",
               "assesses": [
                 "JA-LEX-C83-DEF83-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C83-ano-type",
-              "prompt": "Type the Japanese for 'that (over there)'.",
+              "prompt": "Say the Japanese for 'that (over there)'.",
               "assesses": [
                 "JA-LEX-C83-DEF83-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C83-dono-type",
-              "prompt": "Type the Japanese for 'which'.",
+              "prompt": "Say the Japanese for 'which'.",
               "assesses": [
                 "JA-LEX-C83-DEF83-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C83-konna-type",
-              "prompt": "Type the Japanese for 'this kind of'.",
+              "prompt": "Say the Japanese for 'this kind of'.",
               "assesses": [
                 "JA-LEX-C83-DEF83-04"
               ],
@@ -702,8 +706,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C83-anna-type",
-              "prompt": "Type the Japanese for 'that kind of'.",
+              "prompt": "Say the Japanese for 'that kind of'.",
               "assesses": [
                 "JA-LEX-C83-DEF83-05"
               ],

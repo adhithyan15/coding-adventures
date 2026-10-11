@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bringing, Getting, Waiting, Buying",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7ff5695d9db780ff",
+  "sourceHash": "fnv1a64:b5c497e85627fc5a",
   "lessons": [
     {
       "id": "PT-C21-trazer",
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed7563b8ec1c0301",
+      "sourceHash": "fnv1a64:d246f5f4f5f309e0",
       "notice": null,
       "blocks": [
         {

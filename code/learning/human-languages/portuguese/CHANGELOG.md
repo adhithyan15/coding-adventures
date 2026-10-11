@@ -1,5 +1,37 @@
 # Changelog
 
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus).
+
+- **PT-ETYMON-ESCREVER-03** → PT-C21-esperar. Its taken-apart block already explains the prop-up *e-* "in the same way that **escrever** grew from Latin *scrībere*" (R2). This was already practised and not declared.
+- **PT-ETYMON-JOGAR-BRINCAR-TOCAR-03** → PT-C26-boca's warm-up. After "three ways to play" it now asks which one plays with Latin *iocus* (a joke) and which one strikes (*tocar*, English *touch*) (R2).
+
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **PT-C06-numeros-6-10**, **PT-C07-dias-2**: the Latin source sits beside its Portuguese word.
+- **PT-C08-meio-dia-meia-noite**: `Portuguese = its parts | ← Latin | literally`. "And look at **noite**" is now "And now take **noite**".
+- **PT-C12-numeros-16-20**: the numeral is in the word cell, as in PT-C12-numeros-11-15.
+- All four lessons can now be done by ear.
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **PT-C02-tudo** → PT-C02-como and PT-C01-bom: its `reviews_of`, and the answer *Tudo bom*.
+- **PT-C03-eu** → PT-C02-tudo-bem: "*Eu* estou bem, e você?" reuses the *e você?* that lesson teaches.
+- **PT-C04-adeus** → PT-C02-practice: "You can greet, ask *tudo bem?*, and reply", and its `reviews_of`.
+- **PT-C06-numeros-1-5** → PT-C05-practice, its `reviews_of`. That closure also holds the *bom* its nasal-*um* note cites.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **Four etymology tables** (PT-C06-numeros-1-5, PT-C07-dias-1, PT-C09-meses, PT-C12-numeros-11-15) are now three labelled columns: the Latin source beside the Portuguese word, the ordinal beside its cardinal, and the numeral in the word cell. Every value is kept, and the narrator reads them.
+- Hands-free prefixes, each 0 before: chapter 6 → 1 of 2, 7 → 1 of 2, 9 → 2 of 2, 12 → 1 of 2.
+
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 
 Narration reads bare prose aloud as written, so a prose instruction to read

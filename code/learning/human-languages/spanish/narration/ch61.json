@@ -184,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-oso-decode",
               "prompt": "You have never seen misterioso. What is it?",
               "assesses": [
@@ -202,6 +203,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-oso-agree",
               "prompt": "Say: a famous teacher, about a woman.",
               "assesses": [
@@ -220,6 +222,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-oso-verb",
               "prompt": "Ser or estar for nervioso, and why?",
               "assesses": [

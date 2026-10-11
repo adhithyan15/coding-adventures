@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆめ (yume) mean? ("A dream".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a dream'.
+Say the Japanese for 'a dream'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まつり (matsuri) mean? ("A festival".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a festival'.
+Say the Japanese for 'a festival'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にし (nishi) mean? ("West".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'west'.
+Say the Japanese for 'west'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひがし (higashi) mean? ("East".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'east'.
+Say the Japanese for 'east'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みなみ (minami) mean? ("South".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'south'.
+Say the Japanese for 'south'.

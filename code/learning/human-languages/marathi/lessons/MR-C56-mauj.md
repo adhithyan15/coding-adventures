@@ -42,7 +42,7 @@ variety: standard
 
 **मौज** — *mauj* — "fun, enjoyment".
 
-Say it: *mauj*. Look at its shape as you say it: the next lesson takes one
+Say it: *mauj*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ौ**, and writes it on its own.
 
 ## Guided Practice

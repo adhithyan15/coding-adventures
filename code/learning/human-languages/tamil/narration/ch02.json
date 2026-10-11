@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:2062f4c0a998ee19",
+  "sourceHash": "fnv1a64:9e98d0f4544374cc",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95b4bcbb6bab9261",
+      "sourceHash": "fnv1a64:839a4b2fe9586e46",
       "notice": null,
       "blocks": [
         {

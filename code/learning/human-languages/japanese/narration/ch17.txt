@@ -5,8 +5,9 @@ Japanese, chapter 17: The Other Five, and Where the Count Stops.
 Lesson 1 of 9.
 む (mu) — three strokes, one of them a dot.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Warm-up.
 [pause 25 seconds]
 Three recalls, then one sign.
@@ -17,22 +18,24 @@ Three recalls, then one sign.
 [your turn — recall: write ね — R4, eighty lessons back]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the shape.
 む — mu.
 Three strokes, in this order, as KanjiVG records them: a horizontal across the upper left; then a long stroke from above it running down and looping at the foot; then a small separate mark up on the right.
 That third mark is the one to watch. It is not attached to anything, and a む (mu) without it is not a む (mu).
 ね also ends in a loop at the foot. The difference is what comes before it and that separate mark on the right.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
-Trace む (mu) once, counting three lifts.
+Trace む (mu) once, counting three strokes: two lifts, one before each stroke after the first.
 Copy it; hide it; write it again.
 Check one thing: is the right-hand mark there, and separate?
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 How many strokes? (Three.)
 Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
-[question — say your answer, then pause 12 seconds]
-Write the hiragana sign for the mora mu, and say which stroke is easiest to forget.
+[once you have stopped driving — question: Write the hiragana sign for the mora mu, and say which stroke is easiest to forget.]
 
 
 Lesson 2 of 9.
@@ -52,7 +55,7 @@ You'll Want to Know — hear and say.
 む (mu) from last lesson, then the small っ and つ.
 Last chapter said of ろく: six has one everyday reading; no native word stands beside it. That was true of the borrowed count and it is worth putting straight now. The native word for six exists — it is む (mu), and you are holding it. What it does not do is stand inside the borrowed count the way よん does.
 
-Guided Practice — read, copy, recall.
+Guided Practice.
 [once you have stopped driving — write: むっつ (muttsu)]
 Say roku and muttsu: same number, two words, no shared sound. Then run the count so far: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu.
 
@@ -87,7 +90,7 @@ the reading: native word, used instead. four: よん. seven: なな.
 the reading: native count. four: よっつ. seven: ななつ (nanatsu).
 Two places in ten where the native word walked into the borrowed count and stayed, and both of them are places where the borrowed reading collides with another word. This is the seam, and you have now seen both ends of it.
 
-Guided Practice — read, copy, recall.
+Guided Practice.
 [once you have stopped driving — write: ななつ (nanatsu)]
 Say nana, then nanatsu: the same word, once as a number and once as a count of things.
 
@@ -101,7 +104,7 @@ Name the two numbers where a native word is used inside the borrowed count.
 Lesson 4 of 9.
 や (ya) — the long stroke goes first.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, Guided Practice and Wrap-up Recall.
 
 Warm-up.
 [pause 25 seconds]
@@ -113,22 +116,24 @@ Three recalls, then one sign.
 [your turn — recall: say slowly — R4, eighty lessons back]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the shape.
 や — ya.
 Three strokes, and the order is the surprise. KanjiVG has them as: first the long sweep, starting low on the left and running up and away to the right; then a short tick at the top; then the long stroke that comes down through the middle and out to the bottom right.
 Look at the finished shape and you would guess the descender was drawn first. It is not. Draw the sweep, then the tick, then the descender.
 よ is already yours and shares the same first sound. It is built the other way round — the crossing stroke comes down first there.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 Trace や (ya) in the KanjiVG order, saying "sweep, tick, down".
 Copy it; hide it; write it again.
 Write よ beside it and say both.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 Which stroke is first? (The sweep.)
 Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
-[question — say your answer, then pause 12 seconds]
-Write the hiragana sign for the mora ya, and name the stroke that comes first.
+[once you have stopped driving — question: Write the hiragana sign for the mora ya, and name the stroke that comes first.]
 
 
 Lesson 5 of 9.
@@ -148,7 +153,7 @@ You'll Want to Know — hear and say.
 Eight is the plain case. はち is the borrowed word, やっつ (yattsu) is the native one, neither has walked into the other's count, and there is nothing to disentangle. The last chapter used はち for exactly the same job — to show what the ordinary case looks like once the odd ones have been seen.
 Say the run: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu, nanatsu, yattsu. Eight of ten, and two signs left to buy.
 
-Guided Practice — read, copy, recall.
+Guided Practice.
 [once you have stopped driving — write: やっつ (yattsu)]
 Say hachi, then yattsu. Then run the eight in order without stopping.
 
@@ -162,7 +167,7 @@ Give both words for eight and say whether either one is used inside the other co
 Lesson 6 of 9.
 の (no) — one stroke, and the last sign of the chapter.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, Guided Practice and Wrap-up Recall.
 
 Warm-up.
 [pause 25 seconds]
@@ -174,22 +179,24 @@ Three recalls, then the fifth and last sign.
 [your turn — recall: say please say it — R4, eighty lessons back]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the shape.
 の — no.
 One stroke. KanjiVG's data holds a single path: start high and to the right of centre, run down and left, round the bottom, up the left side and across the top, finishing by crossing what you have just drawn.
 ひ, from the start of this chapter, was also one stroke and never closed. の (no) closes and then keeps going.
 This is the fifth sign this chapter has bought, and the last. Everything after it is words.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 Trace の (no) once without lifting.
 Copy it; hide it; write it again.
 Write ひ and の (no) side by side: one stroke each, one open, one crossed.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 How many signs has this chapter bought? (Five, and this is the last.)
 Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
-[question — say your answer, then pause 12 seconds]
-Write the hiragana sign for the mora no, and say how many strokes it takes.
+[once you have stopped driving — question: Write the hiragana sign for the mora no, and say how many strokes it takes.]
 
 
 Lesson 7 of 9.
@@ -212,7 +219,7 @@ The first two signs of ここのつ (kokonotsu) spell ここ, the word for here 
 They are the same two signs, and it means nothing. kokono- is simply the native word for nine; it is not built on here and there is no story joining them. Say so and move on — an accident that gets explained is worse than one that gets named.
 What it does mean is that you can write this four-beat word straight away, which no other word in the chapter has managed.
 
-Guided Practice — read, copy, recall.
+Guided Practice.
 [once you have stopped driving — write: ここのつ (kokonotsu)]
 Say hachi, ku, then yattsu, kokonotsu — both counts, two numbers each. Then say ku and kokonotsu again. Then say koko and kokonotsu and remind yourself that the second is not made of the first.
 
@@ -242,7 +249,7 @@ Two signs, both old, and no つ at all.
 Nine words in this count carry the つ that does the counting. The tenth drops it, and that is not a spelling quirk — it is the edge of the count. とお (tō) is where the native series ends. There is no eleven things in it.
 Above ten, Japanese has only the borrowed count and a counter word, which is exactly the machinery the next chapter is for. じゅう goes on to ninety-nine; とお (tō) goes nowhere.
 
-Guided Practice — read, copy, recall.
+Guided Practice.
 [once you have stopped driving — write: とお (tō)]
 Say juu, then tō: same number, and only one of them can be built on. Then say kokonotsu, tō and stop.
 
@@ -281,7 +288,7 @@ Count things from one to ten in the native series, without stopping.
 Name the two numbers where the same native word is used in BOTH counts, and give both of its forms.
 
 What you've built this chapter.
-Ten words, and five signs: ひ, ふ, む (mu), や (ya), の. Five of the ten words cost nothing at all — みっつ, よっつ, いつつ, ななつ (nanatsu) and とお (tō) were spelled entirely out of signs you already had.
+Ten words, and five signs: ひ, ふ, む (mu), や (ya), の (no). Five of the ten words cost nothing at all — みっつ, よっつ, いつつ, ななつ (nanatsu) and とお (tō) were spelled entirely out of signs you already had.
 Two things about the shape of what you now hold:
 The native count stops at ten. とお (tō) carries no つ and nothing is built on it. The borrowed count runs to ninety-nine on じゅう alone.
 At four and seven the native word is the one used in both counts. Nowhere else.

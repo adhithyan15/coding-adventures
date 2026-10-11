@@ -37,7 +37,7 @@ reviews_of: [FA-C03-shoma-to, FA-C02-esm-e-man]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER] -->
 
-[PAUSE 2s] Which “you” is safe for a new adult? (**شما**, *shomâ*.) Now add the
+[PAUSE 2s] Which “you” is safe for a new adult? (*shomâ*.) Now add the
 question engine that will follow “your name.”
 
 ## You'll want to know first — چیست
@@ -49,7 +49,7 @@ From the right: **چ** *ch*, **ی** long *i*, **س** *s*, **ت** *t*.
 [YOU READ: the word from the right]
 
 **چ** is one of Persian's four additions to the Arabic alphabet: it uses the
-same base shape as **ج**, with three dots below. Meet only this joined form now.
+same base shape as the letter *jim*, with three dots below. Meet only this joined form now.
 
 ## Grammar Lens: two words compressed
 <!-- hl-knowledge: introduces=[FA-GRAMMAR-CHI-AST-FUSION]; assesses=[] -->

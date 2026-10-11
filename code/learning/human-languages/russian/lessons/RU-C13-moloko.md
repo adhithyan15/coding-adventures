@@ -37,7 +37,7 @@ reviews_of: [RU-C12-otets, RU-C06-voda]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OTETS, RU-LEX-MAT, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE] -->
 
-[PAUSE 2s] *Мать* and *отец* just closed the family — remember *папа*'s odd
+[PAUSE 2s] *Mat'* and *atéts* just closed the family — remember *папа*'s odd
 masculine ending on the way past — and now a new chapter, back to the
 water-coffee-tea-bread drink shelf to add three more words, starting with
 one whose English cousin shares not just a sound, but the very gesture the
@@ -51,7 +51,7 @@ word describes.
 Stress on the last syllable, and the two unstressed **о**s both reduce
 toward *a* — the *akanye* rule from your very first lessons, doing real work
 here: *ma-la-KÓ*, not *mo-lo-KO*. The **-о** ending gives the third gender,
-same row as *ухо* and *сердце*.
+same row as *úkho* and *sérdtse*.
 
 ## The word, taken apart — a root that names the hand's motion, not the drink
 <!-- hl-knowledge: introduces=[RU-ETYMON-MOLOKO-MILK]; assesses=[RU-LEX-VODA, RU-ETYMON-VODA-WATER] -->
@@ -67,12 +67,12 @@ of a hand closing around an udder.
 One honest complication: some etymologists treat the Slavic word as a
 **borrowing** from early Germanic rather than an independent inheritance
 from the same PIE root — the same kind of hedge this book already gave
-*думать* and its link to **doom**. Either way, *молоко* and *milk* share the
+*dúmat'* and its link to **doom**. Either way, *молоко* and *milk* share the
 same ultimate ancestor; the only open question is how directly.
 
 Ask for it the way you already know:
 
-> **Молоко, пожалуйста.** — *malakó, pazhálusta* — **Milk, please.**
+> *Malakó, pazhálusta.* — **Milk, please.**
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-MOLOKO, RU-ETYMON-MOLOKO-MILK, RU-LEX-OTETS, RU-LEX-VODA, RU-GRAMMAR-REQUEST-PATTERN] -->
@@ -81,12 +81,12 @@ Ask for it the way you already know:
 - [YOU SAY: "молоко" — *ma-la-KÓ*, neuter, both о's reduced]
 - [YOU SAY: "молоко, milk, Milch, mulgeō" — the hand's motion, four
   languages]
-- [YOU SAY: "Молоко, пожалуйста." — the request pattern, holding steady]
+- [YOU SAY: "Malakó, pazhálusta." — the request pattern, holding steady]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-MOLOKO, RU-ETYMON-MOLOKO-MILK, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-GRAMMAR-REQUEST-PATTERN] -->
 
-[PAUSE 3s] Say "milk," with its gender. (**Молоко** — **neuter**.) What did
+[PAUSE 3s] Say "milk," with its gender. (*Malakó* — **neuter**.) What did
 its PIE root originally describe — the liquid, or something else? (**The
 hand motion of milking.**) Name two Germanic cousins. (**Milk, Milch.**) Ask
-for milk politely. (**Молоко, пожалуйста.**)
+for milk politely. (*Malakó, pazhálusta.*)

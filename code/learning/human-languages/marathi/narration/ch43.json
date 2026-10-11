@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 43,
   "title": "Near, Opposite, Far",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:516aa999785d88c6",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:df5492f3149b53bc",
   "lessons": [
     {
       "id": "MR-C43-javal",
@@ -14,20 +14,13 @@
       "romanization": "javaḷ",
       "gloss": "near, close to — the postposition a direction-asker actually gets answered with",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3400668ac0bbc5bd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:dbd8b802c1586833",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -70,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the answer a real person gives when you ask कुठे? and the true answer is not a single named point. It takes the same oblique stem as everything else in this column — पुणे becomes पुण्या- — so nothing new has to be learned about the noun."
+              "text": "This is the answer a real person gives when you ask कुठे? and the true answer is not a single named point. It takes the same oblique stem as every other place word here — पुणे becomes पुण्या- — so nothing new has to be learned about the noun."
             },
             {
               "kind": "speech",
@@ -123,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C43-javal-r1",
               "prompt": "Say that your house is near Pune.",
               "assesses": [
@@ -265,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C43-samor-r1",
               "prompt": "Say 'in front of the house' and 'near the house', and name the difference.",
               "assesses": [
@@ -411,6 +406,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C43-laamb-r1",
               "prompt": "Say that your house is far, then that it is near Pune.",
               "assesses": [
@@ -535,6 +531,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R43-how-far-run",
               "prompt": "Ask where a house is, then answer three ways: near Pune, in front of the room, far.",
               "assesses": [

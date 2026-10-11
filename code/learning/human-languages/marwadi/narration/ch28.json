@@ -70,6 +70,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-ghano-meaning",
               "prompt": "What does ghaṇo do to the word after it?",
               "assesses": [
@@ -102,16 +103,23 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bf0203421176bb03",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "You'll want to know",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -169,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-ghano-delayed",
               "prompt": "From ghaṇo, write the word that means very.",
               "assesses": [
@@ -275,6 +284,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-price-answer-meaning",
               "prompt": "What does ye ghaṇo mahaṅgo hai say?",
               "assesses": [
@@ -390,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-price-answer-write",
               "prompt": "Write the line that says this is very expensive.",
               "assesses": [
@@ -492,6 +503,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R23-answer-two-recall",
               "prompt": "Write the price question, then the reply that says it costs too much.",
               "assesses": [
@@ -586,6 +598,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-thodu-meaning",
               "prompt": "What does thoṛu mean, and how does it differ from ghaṇo?",
               "assesses": [
@@ -618,16 +631,23 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b4def7748217272d",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "You'll want to know",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -685,6 +705,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-thodu-delayed",
               "prompt": "From thoṛu, write the word that means a little.",
               "assesses": [
@@ -778,6 +799,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-karo-meaning",
               "prompt": "What does karo ask somebody to do?",
               "assesses": [
@@ -810,16 +832,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f4ce765e49ea682f",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -877,6 +905,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-karo-delayed",
               "prompt": "From karo, write the word that asks for something to be made so.",
               "assesses": [
@@ -974,6 +1003,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-bargain-request-meaning",
               "prompt": "What does thoṛu sasto karo ask for?",
               "assesses": [
@@ -1085,6 +1115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-bargain-request-write",
               "prompt": "Write the line that asks for a little off the price.",
               "assesses": [
@@ -1191,6 +1222,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R23-bargain-two-recall",
               "prompt": "Write a little, then the word that asks for something to be made so.",
               "assesses": [
@@ -1307,6 +1339,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-counter-four-payoff",
               "prompt": "Complete all four scored checks, then write the third turn of the exchange.",
               "assesses": [
@@ -1409,6 +1442,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R23-script-close-recall",
               "prompt": "Write the mark that goes under a letter, then the one that goes above the headstroke.",
               "assesses": [

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほね (hone) mean? ("A bone".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bone'.
+Say the Japanese for 'a bone'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あご (ago) mean? ("The chin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the chin'.
+Say the Japanese for 'the chin'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほお (hoo) mean? ("A cheek".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a cheek'.
+Say the Japanese for 'a cheek'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まゆ (mayu) mean? ("An eyebrow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an eyebrow'.
+Say the Japanese for 'an eyebrow'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はだ (hada) mean? ("Skin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'skin'.
+Say the Japanese for 'skin'.

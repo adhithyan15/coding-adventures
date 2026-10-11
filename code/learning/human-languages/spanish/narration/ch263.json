@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "Uno... Otro --- Splitting a Pair",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:df23922ff10b58d7",
+  "sourceHash": "fnv1a64:a04f1a1997acf03e",
   "lessons": [
     {
       "id": "ES-C67-uno-otro",
@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-uno-otro-split",
               "prompt": "Two books. Say: one is big, the other is good.",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-uno-otro-article",
               "prompt": "Is un otro libro correct?",
               "assesses": [
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-uno-otro-latin",
               "prompt": "Did Latin alter mean any other, or the other of two?",
               "assesses": [
@@ -243,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d43b091b7d59931",
+      "sourceHash": "fnv1a64:b70f4bedd533c14a",
       "notice": null,
       "blocks": [
         {
@@ -349,6 +352,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-uno-otro-ninguno-distancias",
               "prompt": "The three place words, nearest to furthest.",
               "assesses": [
@@ -369,6 +373,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-uno-otro-ninguno-pareja",
               "prompt": "Split a pair across a sentence: one is red, the ___ is not.",
               "assesses": [
@@ -388,6 +393,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-uno-otro-ninguno-rechazo",
               "prompt": "Turn both of them down: neither one nor the other.",
               "assesses": [
@@ -407,6 +413,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-uno-otro-ninguno-lejos",
               "prompt": "Ask for the one over there, away from you both.",
               "assesses": [

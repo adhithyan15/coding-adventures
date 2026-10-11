@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C68-jangal-type",
-              "prompt": "Type the Marwadi for 'a forest'.",
+              "prompt": "Say the Marwadi for 'a forest'.",
               "assesses": [
                 "MW-LEX-C68-NATURE68-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C68-nadi-type",
-              "prompt": "Type the Marwadi for 'a river'.",
+              "prompt": "Say the Marwadi for 'a river'.",
               "assesses": [
                 "MW-LEX-C68-NATURE68-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C68-bhato-type",
-              "prompt": "Type the Marwadi for 'a stone'.",
+              "prompt": "Say the Marwadi for 'a stone'.",
               "assesses": [
                 "MW-LEX-C68-NATURE68-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C68-ret-type",
-              "prompt": "Type the Marwadi for 'sand'.",
+              "prompt": "Say the Marwadi for 'sand'.",
               "assesses": [
                 "MW-LEX-C68-NATURE68-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C68-khet-type",
-              "prompt": "Type the Marwadi for 'a field'.",
+              "prompt": "Say the Marwadi for 'a field'.",
               "assesses": [
                 "MW-LEX-C68-NATURE68-05"
               ],

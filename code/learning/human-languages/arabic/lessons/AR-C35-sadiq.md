@@ -61,13 +61,12 @@ A friend, in Arabic, is defined by honesty rather than proximity. The family
 agrees:
 
 - **صِدْق** (*ṣidq*) — "**truth**, sincerity."
-- **صادِق** (*ṣādiq*) — "**truthful**," the **doer** shape worn by **قائِل**
-  (*qāʾil*, a sayer) and **كاتِب** (*kātib*, a writer).
+- **صادِق** (*ṣādiq*) — "**truthful**," the **doer** shape worn by *qāʾil* (a sayer) and **كاتِب** (*kātib*, a writer).
 - **صَدَقة** (*ṣadaqa*) — "**voluntary alms**." A gift given for its own sake:
   a **true** gift, as against one owed.
 - **أَصْدِقاء** (*aṣdiqāʾ*) — "**friends**."
 
-And now the pattern. **صَديق** is **فَعيل** (*faʿīl*) — the shape of
+And now the pattern. **صَديق** is *faʿīl* — the shape of
 **حَليب** (*ḥalīb*), the milked thing, and **مَليح** (*malīḥ*), the salty one.
 Root plus *faʿīl* hands back a quality made into a person or a thing.
 

@@ -31,7 +31,7 @@ variety: standard-punjabi
 reviews_of: [PA-C02-mera-naam-hai, PA-C01-shukriya]
 ---
 
-# ਖ਼ੁਸ਼ੀ ਹੋਈ (khushī hoī) — "pleased to meet you"
+# Khushī hoī — "pleased to meet you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SHUKRIYA-01] -->
@@ -43,8 +43,9 @@ from Persian, not Sanskrit.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **ਖ਼ੁਸ਼ੀ** (*khushī*): note **two** *pair bindis* (dots beneath) — **ਖ਼** (*kh*)
-and **ਸ਼** (*sh*) — both marking Perso-Arabic sounds, exactly as you saw on **ਸ਼**
-in *shukrīā* (Chapter 1).
+and **ਸ਼** (*sh*) — both marking Perso-Arabic sounds. The same dotted **ਸ਼**
+spells the *sh* of *shukrīā*, the Chapter 1 thanks you have so far only heard.
+The short second word, *hoī*, stays spoken for now.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PA-PHRASE-KHUSHI-HOI-02, PA-ETYMON-KHUSH-PERSIAN-02]; assesses=[PA-LEX-SHUKRIYA-01] -->

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 442,
   "title": "La Gestion",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a22c272da6429b41",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:30ba771dc8b69229",
   "lessons": [
     {
       "id": "ES-C442-administracion",
@@ -14,20 +14,13 @@
       "romanization": "la administración",
       "gloss": "the administration — built on the word for the LESSER one, which is what a servant was",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:127d01116088cd75",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3b28aa3124123bb5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -121,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "So when you see the word on a form, expect the impersonal grammar that comes with it. The vocabulary and the sentence shape travel together, and recognising one tells you to expect the other."
+              "text": "So when you meet the word on a form, expect the impersonal grammar that comes with it. The vocabulary and the sentence shape travel together, and recognising one tells you to expect the other."
             }
           ]
         },
@@ -963,7 +956,7 @@
     {
       "id": "ES-C442-sintesis-gestion",
       "sequence": 11270,
-      "title": "(una cita con la administración) — read it, then do it yourself",
+      "title": "(una cita con la administración)",
       "headword": "(una cita con la administración)",
       "romanization": "(una cita con la administración)",
       "gloss": "the payoff — book an appointment from a public-sector page, and notice who is never named",

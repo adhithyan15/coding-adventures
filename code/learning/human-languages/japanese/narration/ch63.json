@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C63-yume-type",
-              "prompt": "Type the Japanese for 'a dream'.",
+              "prompt": "Say the Japanese for 'a dream'.",
               "assesses": [
                 "JA-LEX-C63-WORLD63-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C63-matsuri-type",
-              "prompt": "Type the Japanese for 'a festival'.",
+              "prompt": "Say the Japanese for 'a festival'.",
               "assesses": [
                 "JA-LEX-C63-WORLD63-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C63-nishi-type",
-              "prompt": "Type the Japanese for 'west'.",
+              "prompt": "Say the Japanese for 'west'.",
               "assesses": [
                 "JA-LEX-C63-WORLD63-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C63-higashi-type",
-              "prompt": "Type the Japanese for 'east'.",
+              "prompt": "Say the Japanese for 'east'.",
               "assesses": [
                 "JA-LEX-C63-WORLD63-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C63-minami-type",
-              "prompt": "Type the Japanese for 'south'.",
+              "prompt": "Say the Japanese for 'south'.",
               "assesses": [
                 "JA-LEX-C63-WORLD63-05"
               ],

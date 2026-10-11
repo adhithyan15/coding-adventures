@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 25,
-  "sourceHash": "fnv1a64:e01f8cb9ede31e9c",
+  "sourceHash": "fnv1a64:13490c4d381973be",
   "lessonIds": [
     "AR-C25-yawm"
   ],
@@ -10,6 +10,6 @@
   "text": "arabic/narration/ch25.txt",
   "json": "arabic/narration/ch25.json",
   "textHash": "fnv1a64:9dc30df69b459536",
-  "jsonHash": "fnv1a64:c38fe16bc3547ddf",
+  "jsonHash": "fnv1a64:4b7abd500ac68414",
   "findings": []
 }

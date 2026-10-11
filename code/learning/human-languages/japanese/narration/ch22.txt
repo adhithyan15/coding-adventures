@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あせ (ase) mean? ("Sweat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sweat'.
+Say the Japanese for 'sweat'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なみだ (namida) mean? ("Tears".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'tears'.
+Say the Japanese for 'tears'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こえ (koe) mean? ("A voice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a voice'.
+Say the Japanese for 'a voice'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ねつ (netsu) mean? ("A fever".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a fever'.
+Say the Japanese for 'a fever'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いたい (itai) mean? ("Painful, it hurts".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'painful, it hurts'.
+Say the Japanese for 'painful, it hurts'.

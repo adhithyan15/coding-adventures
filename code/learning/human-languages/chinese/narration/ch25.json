@@ -31,7 +31,7 @@
           "Script — a turn, and a hook",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a turn, and a hook and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — a turn, and a hook and Guided Practice."
       },
       "blocks": [
         {
@@ -178,7 +178,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many strokes does 了 have? (Two.) Which characters use fewer? (一 and 二.) What must the second stroke end with? (A hook to the left.)"
+              "text": "How many strokes does 了 (le) have? (Two.) Which characters use fewer? (一 and 二.) What must the second stroke end with? (A hook to the left.)"
             },
             {
               "kind": "speech",
@@ -313,7 +313,7 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish spends an imperfect, a preterite with two irregular sets, a present perfect and two participles on the same job. English has read, have read, had read, was reading. Mandarin has 了 and, when it needs one, a word for yesterday."
+              "text": "Spanish spends an imperfect, a preterite with two irregular sets, a present perfect and two participles on the same job. English has read, have read, had read, was reading. Mandarin has 了 (le) and, when it needs one, a word for yesterday."
             },
             {
               "kind": "speech",
@@ -476,7 +476,7 @@
             },
             {
               "kind": "speech",
-              "text": "This 了 hangs off a whole finished sentence, not off any one word in it. That is why it goes last and why nothing may follow it."
+              "text": "This 了 (le) hangs off a whole finished sentence, not off any one word in it. That is why it goes last and why nothing may follow it."
             },
             {
               "kind": "speech",
@@ -488,7 +488,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two slots, two jobs, one character. Behind the verb, 了 closes an action. At the end of the sentence, it opens a new state. This is what a language does when it refuses to inflect: it moves a small word around instead of reshaping a big one."
+              "text": "Two slots, two jobs, one character. Behind the verb, 了 (le) closes an action. At the end of the sentence, it opens a new state. This is what a language does when it refuses to inflect: it moves a small word around instead of reshaping a big one."
             }
           ]
         },
@@ -539,7 +539,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does this 了 go? (At the very end of the sentence.) What does it say? (Something has changed.) Is it the same character as the last lesson's? (Yes — same two strokes, different slot, different job.)"
+              "text": "Where does this 了 (le) go? (At the very end of the sentence.) What does it say? (Something has changed.) Is it the same character as the last lesson's? (Yes — same two strokes, different slot, different job.)"
             }
           ]
         }
@@ -639,7 +639,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "了 is not a past tense. It marks aspect — whether an event is complete — and says nothing at all about when it happened."
+              "text": "了 (le) is not a past tense. It marks aspect — whether an event is complete — and says nothing at all about when it happened."
             },
             {
               "kind": "speech",
@@ -651,7 +651,7 @@
             },
             {
               "kind": "speech",
-              "text": "The second sentence is not in the past. 了 says the reading is over, and whether that was this morning or will be by tonight is settled by a time word, not by the verb and not by 了."
+              "text": "The second sentence is not in the past. 了 (le) says the reading is over, and whether that was this morning or will be by tonight is settled by a time word, not by the verb and not by 了 (le)."
             },
             {
               "kind": "speech",
@@ -667,7 +667,7 @@
               "rowCount": 2,
               "utterances": [
                 "when it happened, a time word — yesterday, now, tomorrow.",
-                "whether it is finished, a particle — 了."
+                "whether it is finished, a particle — 了 (le)."
               ]
             },
             {
@@ -676,7 +676,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the single largest shape difference between Mandarin and the languages this book's reader is likeliest to arrive from, and 了 is where a beginner first meets it. 了 is one of several aspect particles; the others come later."
+              "text": "This is the single largest shape difference between Mandarin and the languages this book's reader is likeliest to arrive from, and 了 (le) is where a beginner first meets it. 了 (le) is one of several aspect particles; the others come later."
             }
           ]
         },
@@ -727,7 +727,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is 了 a past tense? (No — it is aspect.) What does it actually mark? (Whether the event is finished.) What settles when something happened? (A time word, not the verb.)"
+              "text": "Is 了 (le) a past tense? (No — it is aspect.) What does it actually mark? (Whether the event is finished.) What settles when something happened? (A time word, not the verb.)"
             }
           ]
         }

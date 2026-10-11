@@ -8,7 +8,7 @@ type: word
 headword: je
 gloss: I
 concept_tag: PRONOUN-I
-prerequisites: []
+prerequisites: [FR-C01-bonjour]
 sounds: [soft-j, elision]
 roots: [ego]
 etymology_hook: "je ← Latin ego — the word for 'I' and the psychologist's ego are one ancient word, one worn to a whisper and one kept whole"
@@ -43,7 +43,7 @@ from a word you already own whole in English.
 <!-- hl-knowledge: introduces=[FR-LEX-JE-01]; assesses=[] -->
 
 - **je** = *zhuh* — a soft *j* (as in *measure*) plus a light *uh*.
-- Before a vowel it **elides**: *je ai* → **j'ai** ("I have"). You'll see the
+- Before a vowel it **elides**: *je ai* → **j'ai** ("I have"). You'll meet the
   same squeeze in *je m'appelle*.
 
 ## The word, taken apart

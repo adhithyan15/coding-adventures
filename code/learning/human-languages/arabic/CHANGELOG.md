@@ -1,5 +1,107 @@
 # Changelog
 
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **AR-W06-harakat-and-hamza** (ḥarakāt): `mark | name | where | sound | example` is now `mark and name | where | sound, on bāʾ` (cells such as **َ** *fatḥa* and "a": **بَ** = *ba*).
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **AR-C02-ism** → AR-W00-alif-mim-salam: its letters section says ا, س and م "are from Chapter 1". That lesson writes ا and م, after the lesson that writes س.
+- **AR-C02-thaman** → AR-C02-practice: the anchor-word warm-up asks for "the last thing you learned", the link the other anchor-word lessons already make.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **AR-C08-al-ahad-al-khamis**: the weekday table's "literally" and "from the number" columns are now one column ("the **first**", from *wāḥid*, "one"). The table is three labelled columns, so the narrator reads it instead of skipping it.
+- Hands-free prefix: chapter 8 0 → 2 of 2.
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **7 anchor-word lessons** (AR-C01-iid, AR-C01-kukh, AR-C01-thabit, AR-C02-ahlan, AR-C02-mudarris, AR-C02-thaman, AR-C03-haajj): the anchor word's "Look at its shape as you say it: …" is now `[YOU LOOK: at its shape as you say it.]`, so the narration says it after "once you have stopped driving" and the rest of the lesson, which teaches the word by ear, is drivable at the core.
+- Chapter 3 now starts by ear: hands-free prefix 0 → 1 of 10. Chapter 2's prefix runs one lesson further, 8 → 9 of 17.
+
+## Fixed — the last sixteen script headwords declare their romanization
+
+The script-closure report's `headwordsWithoutRomanization` counted sixteen Arabic
+lessons whose headword is in Arabic script with no `romanization:` (16 -> 0). Each
+now declares the value its own title, body or review lesson already gave:
+
+- AR-C01-al — *al-*; AR-C02-ii-my — *-ī*; AR-C02-ism — *ism*;
+  AR-C02-ismii — *ismī …*; AR-C02-maa — *mā*; AR-C05-naam — *naʿam*;
+  AR-C05-la — *lā*; AR-C11-ras — *raʾs*; AR-C25-yawm — *yawm*;
+  AR-C26-layl — *layl*.
+- AR-C08-al-jumua-as-sabt — *al-jumʿa as-sabt*, AR-C10-ab-umm — *ab umm* and
+  AR-C10-akh-ukht — *akh ukht*: one space between the words, as
+  AR-C08-al-ahad-al-khamis and the AR-C09 colour lessons do.
+- AR-C16-al-saa — *as-sāʿa*, with the sun-letter assimilation the lesson's own
+  *kam as-sāʿa?* uses.
+- AR-C02-maa-ismuka — *mā ismuka* and AR-C17-kam-umruka — *kam ʿumruka*: the
+  masculine citation form without the question mark, as AR-C03-kayfa-haluka's
+  *kayfa ḥāluka* is. The title's *mā ismuka / ismuki* is not used because chapter 2's
+  narration already writes "(mā ismuka)" after the phrase, and a longer value would
+  have been paired a second time beside it.
+
+Every headword glyph was already taught by an earlier script lesson, so closure
+violations (0), `exposureExemptedGlyphs` and `exposureOnly` are unchanged. The book's
+section short titles (contents and PDF bookmarks) in chapters 1, 2, 5, 8, 10, 11, 16,
+17, 25 and 26 now pair script with romanization, and the narration pairs these
+headwords where chapter text mentions them without one. In chapter 2's narration a
+standalone ي now carries both readings, "(yāʾ)" and "(-ī)", because
+AR-W05-ya-and-my-name romanizes the same headword *yāʾ* and the chapter-wide pairing
+applies each lesson's value.
+
+## Fixed — no lesson announced as drivable asks a driver to read, write or gesture
+
+A lesson whose core is `voice` is announced as "you can do this one in the car", and
+only its detachable sections (writing, the letters in a word, script) wait behind the
+stop guard. The modality rule now reads the sections a driver hears plainly for a step
+that needs eyes or hands (reason `eyes-or-hands-step`, human-language-data); before it,
+such steps in the core of a lesson with a letters or writing section were read out at
+the wheel.
+
+- **Rewritten, still drivable (5).** The chapter 1 wrap-ups of AR-C01-masa-al-khayr,
+  AR-C01-sabah-al-khayr and AR-C01-shukran open "[PAUSE 3s] [YOU READ: **…**]" instead of
+  "Read **…**."; the questions after it are unchanged. AR-R17-the-letters-that-wrote-my-name
+  and AR-R45-the-last-page defer their warm-up writing as "[YOU WRITE: **…** by hand, right
+  to left …]", and AR-R45 keeps "Then say the one sentence …" as speech.
+
+## Fixed — lessons stop asking for letters they have not taught
+
+Script closure found 67 Arabic violations; there are now none.
+
+- **Twenty-two headwords declare their romanization** (37 -> 16 without one):
+  AR-C01-salam, AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C01-shukran,
+  AR-C02-anta-anti, AR-C02-tasharrafna, AR-C06-min-fadlik, AR-C07-asif,
+  AR-C08-al-ahad-al-khamis, both AR-C09 colour lessons, AR-C11-yad,
+  AR-C12-al-fusul, AR-C13-maa-khubz, AR-C14-ashhur,
+  AR-C15-ad-duhr-muntasaf-al-layl, AR-C18-al-taqs, AR-C19-wahid-khamsa,
+  AR-C20-ahada-ashar-ishrun, AR-C21-kalb-qitt, AR-C22-akhdar-asfar and
+  AR-C23-afwan. Each value is the one the lesson's own title or table
+  already gave. AR-C01-salam's headword is now سلام (was the bare
+  romanization), as Urdu's first lesson does, so its one-shape writing
+  microstep traces a letter of its own word.
+- **Other words whose letters are not yet taught are romanized**, most of
+  them letters the ch46-49 runway teaches (د ذ ف ق ز ط ظ ض إ آ ى): replies
+  (*ṣabāḥ an-nūr*, *ʿafwan*), roots (*ʿ-dh-r*, *q-w-l*, *dh-h-b*), pattern
+  names (*faʿala*, *faʿīl*, *afʿāl*), cross-references and recap tables
+  (which keep a dash in the script column, as Hindi and Bengali do).
+- **ؤ and ئ, which no lesson teaches, are described, not shown**: AR-C31-qaraa
+  names hamza's seats in words, and *qāriʾ*, *suʾāl*, *sāʾil* and *raʾīs*
+  are romanized.
+- AR-C18-al-taqs gives *al-jaw bārid* and *innahā tumṭir* in romanization;
+  AR-C16-al-saa gives *as-sāʿa al-wāḥida*.
+- AR-W05-ya-and-my-name previews the kasra (**ـِ**) in its closing line,
+  so AR-C02-mudarris introduces three new marks rather than four.
+
+Regenerated: book chapters, narration, modality and hash ledgers.
+
 ## Added — chapter 2 ends on a checkpoint that covers its writing lessons
 
 Chapter 2's payoff was the spoken recap **AR-C02-practice** (sequence 220, the

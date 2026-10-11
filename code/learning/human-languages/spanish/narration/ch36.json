@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Beber, and Two Ways to Ask",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9cb96abd65af388f",
+  "sourceHash": "fnv1a64:155f5a0f86b2ee04",
   "lessons": [
     {
       "id": "ES-C07-beber",
@@ -165,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-beber-coffee",
               "prompt": "Say 'I drink coffee' in Spanish.",
               "assesses": [
@@ -201,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88d66569eb1c1021",
+      "sourceHash": "fnv1a64:d6c0bd00efce0b40",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +337,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-que-ask-drinking",
               "prompt": "Ask one friend 'What do you drink?' in Spanish.",
               "assesses": [
@@ -497,6 +499,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-donde-live-in-madrid",
               "prompt": "Say 'I live in Madrid' in Spanish.",
               "assesses": [
@@ -666,6 +669,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-practice-yo-forms",
               "prompt": "Give the yo forms of comer, vivir, and beber, in that order.",
               "assesses": [
@@ -689,6 +693,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-practice-ask-what",
               "prompt": "Ask one friend 'What do you drink?' in Spanish.",
               "assesses": [
@@ -711,6 +716,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-practice-live-in-madrid",
               "prompt": "Answer 'Where do you live?' with Madrid.",
               "assesses": [

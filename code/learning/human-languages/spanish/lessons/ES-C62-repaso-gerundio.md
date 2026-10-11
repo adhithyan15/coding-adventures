@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-TWO-ENDINGS, ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-PERSONAL-A, ES-GRAMMAR-PERSONAL-A-WHY]
+  knowledge: [ES-GRAMMAR-GERUND-AR, ES-GRAMMAR-GERUND-ER-IR, ES-GRAMMAR-GERUND-TWO-ENDINGS, ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND, ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-PERSONAL-A, ES-GRAMMAR-PERSONAL-A-WHY, ES-ETYMON-GERUND-NDUM]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -53,7 +53,7 @@ comer*.
 front of a person, and nothing in front of a house.
 
 ## Grammar Lens: both of these are Latin's absence
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-GERUND-ER-IR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PROGRESSIVE-NOT-FUTURE, ES-GRAMMAR-GERUND-ER-IR, ES-ETYMON-GERUND-NDUM] -->
 
 [PAUSE 2s] The gerund is what is left of a Latin form after its case endings
 fell off — which is why it has exactly one shape and agrees with nothing.

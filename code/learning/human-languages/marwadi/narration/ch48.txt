@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does राजी (rājī) mean? ("Happy, content".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'happy, content'.
+Say the Marwadi for 'happy, content'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उदास (udās) mean? ("Sad".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sad'.
+Say the Marwadi for 'sad'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does डाक्टर (ḍākṭar) mean? ("A doctor".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a doctor'.
+Say the Marwadi for 'a doctor'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बेटो (beṭo) mean? ("A son".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a son'.
+Say the Marwadi for 'a son'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बेटी (beṭī) mean? ("A daughter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a daughter'.
+Say the Marwadi for 'a daughter'.

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C64-kona-type",
-              "prompt": "Type the Japanese for 'powder, flour'.",
+              "prompt": "Say the Japanese for 'powder, flour'.",
               "assesses": [
                 "JA-LEX-C64-WORLD64-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C64-goma-type",
-              "prompt": "Type the Japanese for 'sesame'.",
+              "prompt": "Say the Japanese for 'sesame'.",
               "assesses": [
                 "JA-LEX-C64-WORLD64-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C64-uni-type",
-              "prompt": "Type the Japanese for 'a sea urchin'.",
+              "prompt": "Say the Japanese for 'a sea urchin'.",
               "assesses": [
                 "JA-LEX-C64-WORLD64-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C64-iwashi-type",
-              "prompt": "Type the Japanese for 'a sardine'.",
+              "prompt": "Say the Japanese for 'a sardine'.",
               "assesses": [
                 "JA-LEX-C64-WORLD64-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C64-aji-type",
-              "prompt": "Type the Japanese for 'a flavour, a taste'.",
+              "prompt": "Say the Japanese for 'a flavour, a taste'.",
               "assesses": [
                 "JA-LEX-C64-WORLD64-05"
               ],

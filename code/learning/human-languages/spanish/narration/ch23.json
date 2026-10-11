@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 23,
   "title": "-cion --- About Two Thousand Words, At Once",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cfb2397206818aed",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1fbca3fc70e5894b",
   "lessons": [
     {
       "id": "ES-C56-cion",
@@ -14,20 +14,13 @@
       "romanization": "-ción",
       "gloss": "one ending that hands you about two thousand words you already know in English",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dee3ad24e61f188b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3ee2a2d5289f3985",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -76,7 +69,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those without the English column and you can still read them."
+              "text": "Drop the English half of each pair and the Spanish still makes sense on its own."
             },
             {
               "kind": "speech",
@@ -139,6 +132,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-cion-make",
               "prompt": "Turn the English word information into Spanish.",
               "assesses": [
@@ -158,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-cion-gender",
               "prompt": "What gender is every -cion word?",
               "assesses": [
@@ -178,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-cion-why",
               "prompt": "Why is this a rule rather than a coincidence?",
               "assesses": [

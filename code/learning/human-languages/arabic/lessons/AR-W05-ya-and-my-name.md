@@ -93,5 +93,5 @@ you introduce yourself.
 [PAUSE 3s] Where do *yāʾ*'s dots sit, and how many? (**Two, below.**) Name *yāʾ*'s
 **three** jobs. (Consonant *y*; long vowel *ī*; the suffix *-ī* "**my**.") Spell
 **اسمي** letter by letter, right to left. (*alif · sīn · mīm · yāʾ* — "my name.")
-Next: the little **vowel marks** — and how one of them flips *أنت* from "you (m.)"
-to "you (f.)."
+Next: the little **vowel marks** — and how one of them, the small stroke below
+(**ـِ**), flips *أنت* from "you (m.)" to "you (f.)."

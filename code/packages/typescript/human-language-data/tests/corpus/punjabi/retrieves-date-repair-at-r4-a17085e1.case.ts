@@ -35,11 +35,11 @@ it("retrieves the taught Punjabi date repair at R4 without scored A1 writing", (
 
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 573 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 573 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair))).toEqual([`R4|${atom}`]);
   // The distinct three-field order is tracked in #17144, not silently credited here.
   expect([...currentPairs].filter((pair) => !previousPairs.has(pair))).toEqual([
     "R4|PA-FORM-AGE-PHONE-DATE-ORDER-01",
   ]);
-  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 573 });
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 573 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
 });

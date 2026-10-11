@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-falsos-amigos-exito",
               "prompt": "Exito is not exit. What does it mean, and why?",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-falsos-amigos-actual",
               "prompt": "Actualmente decodes to actually. What does it really mean?",
               "assesses": [
@@ -186,6 +188,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-falsos-amigos-method",
               "prompt": "An ending gives you a word that makes the sentence strange. What do you do?",
               "assesses": [

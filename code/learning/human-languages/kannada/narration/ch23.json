@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 23,
   "title": "Day",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:85146a112c66868b",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:e77e9e39f367589b",
   "lessons": [
     {
       "id": "KA-C23-dina",
@@ -148,20 +148,13 @@
       "romanization": "kathe",
       "gloss": "a story",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9e9ade06113ac3a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:973f54ac1bd21686",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -191,7 +184,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: kathe. Look at its shape as you say it: the next lesson takes one piece of it, ಥ (tha), and writes it on its own."
+              "text": "Say it: kathe."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ಥ (tha), and writes it on its own."
             }
           ]
         },
@@ -271,7 +277,7 @@
           "Script you'll notice: ಥ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಥ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಥ and Guided Practice."
       },
       "blocks": [
         {

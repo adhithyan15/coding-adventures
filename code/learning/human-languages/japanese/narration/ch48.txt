@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にわとり (niwatori) mean? ("A chicken".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a chicken'.
+Say the Japanese for 'a chicken'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちいさい (chiisai) mean? ("Small".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'small'.
+Say the Japanese for 'small'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いい (ii) mean? ("Good".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'good'.
+Say the Japanese for 'good'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ながい (nagai) mean? ("Long".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'long'.
+Say the Japanese for 'long'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みじかい (mijikai) mean? ("Short".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'short'.
+Say the Japanese for 'short'.

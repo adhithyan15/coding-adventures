@@ -124,6 +124,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C20-avval-source",
               "prompt": "Is avval built from the Persian word for one?",
               "assesses": [
@@ -243,6 +244,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C20-dovvom-sevvom-om-rule",
               "prompt": "What ending turns a Persian cardinal into an ordinal?",
               "assesses": [
@@ -366,6 +368,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C20-chaharom-build",
               "prompt": "Build tenth and twentieth from dah and bist.",
               "assesses": [
@@ -472,6 +475,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C20-practice-order",
               "prompt": "Say first, second, third, fourth in Persian.",
               "assesses": [

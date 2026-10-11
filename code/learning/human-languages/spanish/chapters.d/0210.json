@@ -2,16 +2,19 @@
   "chapter": 210,
   "title": "Synthesis --- Supposing Out Loud",
   "label": "ch:sintesis-condiciones",
-  "canDo": "I can speak about a world that does not exist.",
+  "canDo": "I can speak about a world that does not exist, and say it depends when the condition is still open.",
   "spineNodes": [
     "SPINE-EXPRESS-CONDITION"
   ],
   "payoff": {
-    "lesson": "ES-C56-sintesis-condiciones",
+    "lesson": "ES-C56-depende",
     "kind": "task",
-    "summary": "I can speak about a world that does not exist.",
+    "summary": "I can speak about a world that does not exist, and say it depends when the condition is still open.",
     "assesses": [
+      "ES-LEX-DEPENDE",
+      "ES-SEMANTIC-CONDITION-UNSTATED",
       "ES-GRAMMAR-SI-UNREAL-CONDITION"
-    ]
+    ],
+    "note": "ES-C56-depende (sequence 2287) is the chapter's last lesson and assesses both atoms the chapter introduces (2/2), plus the unreal condition its can-do promises. The synthesis ES-C56-sintesis-condiciones (2285) introduces nothing and comes before depende, so as payoff it could assess none of the chapter's atoms (0/2). Depende now closes on an open condition (depende) beside a closed one (si tuviera tiempo, comería en casa), recalled from the chapters before, so the payoff still asks for speech about a world that does not exist; the can-do names the open condition too."
   }
 }

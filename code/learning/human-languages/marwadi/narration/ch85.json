@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C85-mojo-type",
-              "prompt": "Type the Marwadi for 'a sock'.",
+              "prompt": "Say the Marwadi for 'a sock'.",
               "assesses": [
                 "MW-LEX-C85-CLOTHES85-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C85-jeb-type",
-              "prompt": "Type the Marwadi for 'a pocket'.",
+              "prompt": "Say the Marwadi for 'a pocket'.",
               "assesses": [
                 "MW-LEX-C85-CLOTHES85-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C85-anguthi-type",
-              "prompt": "Type the Marwadi for 'a ring'.",
+              "prompt": "Say the Marwadi for 'a ring'.",
               "assesses": [
                 "MW-LEX-C85-CLOTHES85-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C85-ghari-type",
-              "prompt": "Type the Marwadi for 'a watch, a clock'.",
+              "prompt": "Say the Marwadi for 'a watch, a clock'.",
               "assesses": [
                 "MW-LEX-C85-CLOTHES85-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C85-topi-type",
-              "prompt": "Type the Marwadi for 'a cap'.",
+              "prompt": "Say the Marwadi for 'a cap'.",
               "assesses": [
                 "MW-LEX-C85-CLOTHES85-05"
               ],

@@ -10,6 +10,7 @@ delivery: script
 chapter: 25
 type: writing
 headword: "आवडते पेय · आवडती कृती · मित्राचे नाव"
+romanization: "āvaḍte pey · āvaḍtī kṛtī · mitrāce nāv"
 gloss: choose the requested favorite and friend details without copying Marathi answers
 prerequisites: [MR-A1F04-first-three-select]
 sounds: []

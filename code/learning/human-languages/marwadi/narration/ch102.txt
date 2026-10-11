@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सगळा (sagḷā) mean? ("All, everyone".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'all, everyone'.
+Say the Marwadi for 'all, everyone'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दूजो (dūjo) mean? ("Another, the second".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'another, the second'.
+Say the Marwadi for 'another, the second'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आपणो (āpṇo) mean? ("Our own, one's own".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'our own, one's own'.
+Say the Marwadi for 'our own, one's own'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कोई (koī) mean? ("Someone, any".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'someone, any'.
+Say the Marwadi for 'someone, any'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हरेक (harek) mean? ("Each, every".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'each, every'.
+Say the Marwadi for 'each, every'.

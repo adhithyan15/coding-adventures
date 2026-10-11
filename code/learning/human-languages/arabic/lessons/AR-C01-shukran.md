@@ -6,6 +6,7 @@ sequence: 70
 chapter: 1
 type: word
 headword: شكرا
+romanization: "shukran"
 gloss: thank you (shukran)
 concept_tag: COURTESY-THANKS
 prerequisites: [AR-C01-as-salamu-alaykum]
@@ -65,20 +66,20 @@ the source of Hindi/Urdu *shukriyā* ("thanks").
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[AR-CULTURE-SHUKRAN-22]; assesses=[] -->
 
-The reply is gentle: **عفوا** (*ʿafwan*), "it's nothing / you're pardoned" —
+The reply is gentle: *ʿafwan*, "it's nothing / you're pardoned" —
 from a root meaning to forgive or waive. You thank; they wave it away.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-SHIN-KAF-20, AR-CONCEPT-SHUKRAN-21, AR-CULTURE-SHUKRAN-22] -->
 
 [PAUSE 1s]
-- [YOU SAY: read right to left — shuk · ran → "shukran"]
+- [YOU SAY: its beats — shuk · ran → "shukran"]
 - [YOU SAY: how ش is just س with three dots]
 - [YOU SAY: the pattern echo — *shākir/mashkūr* like *kātib/maktūb*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-SHIN-KAF-20, AR-CONCEPT-SHUKRAN-21, AR-CULTURE-SHUKRAN-22] -->
 
-[PAUSE 3s] Read **شكرا**. What is its root, and what two familiar patterns do
+[PAUSE 3s] [YOU READ: **شكرا**] What is its root, and what two familiar patterns do
 *shākir* and *mashkūr* follow? (*sh–k–r*; the *kātib* / *maktūb* patterns — doer
 and done-to.) The reply to *shukran*? (*ʿafwan*.)

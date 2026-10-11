@@ -6,6 +6,7 @@ sequence: 590
 chapter: 15
 type: phrase
 headword: الظهر منتصف الليل
+romanization: "aẓ-ẓuhr muntaṣaf al-layl"
 gloss: noon (also the name of the midday Islamic prayer) and midnight ("the half of the night")
 concept_tag: AR-TIME-NOON-MIDNIGHT
 prerequisites: [AR-C14-ashhur]

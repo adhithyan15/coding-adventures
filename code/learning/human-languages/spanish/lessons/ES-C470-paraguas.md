@@ -42,7 +42,7 @@ first half, the other lends it its shape.
 
 > Me he dejado el **paraguas** en el ascensor.
 
-Look at it before you are told anything: **para** plus **aguas**. A verb and a
+Hear it before you are told anything: **para** plus **aguas**. A verb and a
 plural noun fused into one word, which is the move *el cumpleaños* taught you
 — *cumple* plus *años*, a sentence that hardened.
 

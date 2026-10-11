@@ -137,8 +137,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-meaning",
-              "prompt": "Type the Urdu word khudā, meaning 'God'.",
+              "prompt": "Say the Urdu word khudā, meaning 'God'.",
               "assesses": [
                 "UR-LEX-KHUDA"
               ],
@@ -171,20 +172,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ac024f39dc5b8b78",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -268,6 +272,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W05-ye-dots",
               "prompt": "How many dots does the standalone ye carry?",
               "assesses": [
@@ -408,8 +413,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-hafiz-meaning",
-              "prompt": "Type the Urdu word hāfiz, meaning 'guardian' or 'protector'.",
+              "prompt": "Say the Urdu word hāfiz, meaning 'guardian' or 'protector'.",
               "assesses": [
                 "UR-LEX-HAFIZ"
               ],
@@ -541,8 +547,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-hafiz-goodbye",
-              "prompt": "Type the standard Urdu expression for 'goodbye'.",
+              "prompt": "Say the standard Urdu expression for 'goodbye'.",
               "assesses": [
                 "UR-LEX-KHUDA-HAFIZ"
               ],
@@ -585,7 +592,7 @@
         "waitUntilStopped": [
           "Script Bridge — shared history, local spacing"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script Bridge — shared history, local spacing until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script Bridge — shared history, local spacing."
       },
       "blocks": [
         {
@@ -667,8 +674,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-hafiz-more-spacing",
-              "prompt": "Type the Urdu goodbye with its conventional space between the two words.",
+              "prompt": "Say the Urdu goodbye with its conventional space between the two words.",
               "assesses": [
                 "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING"
               ],
@@ -700,7 +708,8 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:89a9e85d7a29bb60",
       "notice": {
@@ -708,14 +717,16 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -858,6 +869,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W05-he-middle",
               "prompt": "What does gol he look like in the MIDDLE of a word?",
               "assesses": [
@@ -903,7 +915,7 @@
           "Guided Practice",
           "Script — the farewell and two new letters"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Guided Practice and Script — the farewell and two new letters until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Script — the farewell and two new letters."
       },
       "blocks": [
         {
@@ -1049,8 +1061,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-practice-final-line",
-              "prompt": "The short Urdu interaction is ending. Type the final expression.",
+              "prompt": "The short Urdu interaction is ending. Say the final expression.",
               "assesses": [
                 "UR-DIALOGUE-TAKE-LEAVE"
               ],

@@ -67,7 +67,7 @@ must be said. It cannot be left out, because the verb won't tell you who acts.
 - [YOU SAY: "ñān" — start with the "ny" sound]
 - [YOU SAY: the pair — *ñān* (I), *enṟe* (my)]
 - [YOU SAY: can Malayalam drop "I" like Tamil? (No — its verbs don't mark person)]
-- [YOU RECALL: read **എന്ത്**]
+- [YOU READ: **എന്ത്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01] -->

@@ -17,6 +17,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MR-W01-ii-matra",
+      "sourceHash": "fnv1a64:c24e7929dee55c52",
+      "svgHash": "fnv1a64:067e381021405371",
+      "svg": "marathi/book/figures/MR-W01-ii-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MR-W01-ka",
       "sourceHash": "fnv1a64:3300e9b74414013d",
       "svgHash": "fnv1a64:80a016a33cc7a661",
@@ -35,6 +42,13 @@
       "sourceHash": "fnv1a64:72ce50f6dec24179",
       "svgHash": "fnv1a64:677884c6a47ec9f2",
       "svg": "marathi/book/figures/MR-W01-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W01-o-matra",
+      "sourceHash": "fnv1a64:7c3eb084cfdd2979",
+      "svgHash": "fnv1a64:c76e2fe5f76a85af",
+      "svg": "marathi/book/figures/MR-W01-o-matra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -91,6 +105,13 @@
       "sourceHash": "fnv1a64:c22328b3520abec5",
       "svgHash": "fnv1a64:8092566e5078aa4a",
       "svg": "marathi/book/figures/MR-W02-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W02-visarga",
+      "sourceHash": "fnv1a64:4f431ce91aba7764",
+      "svgHash": "fnv1a64:20bdbb07ba779b99",
+      "svg": "marathi/book/figures/MR-W02-visarga-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

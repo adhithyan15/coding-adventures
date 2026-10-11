@@ -120,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C54-thoda-r1",
               "prompt": "Ask for a little water and a little tea, then say there is a lot of water.",
               "assesses": [
@@ -263,6 +264,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C54-puresa-r1",
               "prompt": "Say there is enough water, then stop somebody pouring, then refuse the offer entirely.",
               "assesses": [
@@ -409,6 +411,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C54-barach-r1",
               "prompt": "Say the four amounts of water in order, smallest first.",
               "assesses": [
@@ -553,6 +556,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C54-kiti-excl-r1",
               "prompt": "Ask how many brothers, then exclaim how beautiful, and say which mark each one takes.",
               "assesses": [
@@ -673,6 +677,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R54-how-much-run",
               "prompt": "Ask for a little water, say there is a lot, then exclaim how small the room is.",
               "assesses": [

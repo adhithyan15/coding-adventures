@@ -50,7 +50,7 @@ The first word, **فکر** *fekr*, is a noun: “thought.” From the right — 
 **ک** *k*, **ر** *r*.
 
 The second, **کردن** *kardan*, is the verb, and it means **to do, to make**. Its
-ending is the *-dan* you have collected since **بودن** *budan*. Word for word,
+ending is the *-dan* you have collected since *budan*. Word for word,
 the phrase is *thought to-do*.
 
 ## Grammar Lens: Persian asks less of you than you fear
@@ -64,15 +64,14 @@ it has exactly **one** set of personal endings — *-am, -i, -ad, -im, -id, -and
 What it asks instead is the present stem, and this: many of its commonest verbs
 are **two words**. A noun sits in front, and a plain verb behind it does the
 grammatical work. **کردن** *kardan* is the workhorse — put almost any noun in
-front of it and you have a verb. You met the same instinct in **خوشوقتم**
-*khoshvaghtam*, which welded *khosh*, “good,” to *vaqt*, “time.”
+front of it and you have a verb. You met the same instinct in *khoshvaghtam*, which welded *khosh*, “good,” to *vaqt*, “time.”
 
 ## The word, taken apart — a borrowed thought, an ancient doing
 <!-- hl-knowledge: introduces=[FA-STEM-KON]; assesses=[FA-SCRIPT-GAF] -->
 
 The halves come from opposite ends of Persian's history.
 
-**فکر** *fekr* is a loan from Arabic **فِكْر** *fikr*, “thought,” on the root
+**فکر** *fekr* is a loan from Arabic *fikr*, “thought,” on the root
 *f-k-r*, and it takes Persian grammar completely.
 
 **کردن** *kardan* is as Persian as a word gets: Old Persian *kar-*, “to do,”
@@ -82,8 +81,8 @@ from the Indo-European root \**kʷer-*, “to make.” That root gave Sanskrit
 family resemblance, and this book says which is which.
 
 The present stem is **کن** *kon*: *mi-konam*, “I do.” Store **kardan, kon-**,
-and note the opening **ک** *kâf* — the shape **گ** *gâf* is built from, as
-**گفتن** *goftan* wears it with a second bar.
+and note the opening **ک** *kâf* — the shape *gâf* is built from, as
+*goftan* wears it with a second bar.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-FEKR-KARDAN, FA-GRAMMAR-COMPOUND-VERB-KARDAN, FA-STEM-KON, FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-GRAMMAR-PRESENT-STEM, FA-SCRIPT-GAF, FA-MORPH-KHOSH-VAQT-AM] -->
@@ -91,7 +90,7 @@ and note the opening **ک** *kâf* — the shape **گ** *gâf* is built from, as
 - [YOU SAY: **fekr kardan** — to think]
 - [YOU SPLIT: **fekr**, thought — **kardan**, to do]
 - [YOU SAY: the pair as one item — **kardan, kon-**]
-- [YOU READ: **ک** in **کردن**, then **گ** in **گفتن** — one bar apart]
+- [YOU READ: **ک** in **کردن**, then *gâf* in *goftan* — one bar apart]
 - [YOU RETRIEVE: the two words welded inside **khoshvaghtam**]
 - [YOU NAME: the ending that marks **kardan** as an infinitive]
 

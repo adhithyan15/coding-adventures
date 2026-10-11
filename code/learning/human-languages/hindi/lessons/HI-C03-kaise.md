@@ -69,7 +69,7 @@ respectful "you" (*āp*) takes a plural verb, "how are **you**?" uses the plural
 
 क (*ka*) + ै (the *ai*-mātrā) → कै (*kai*);
 स (*sa*) + े (the *e*-mātrā) → से (*se*).
-Read कै·से → *kaise*.
+[YOU READ: कै·से → *kaise*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C03-KAISE-01] -->

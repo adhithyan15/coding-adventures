@@ -1156,5 +1156,29 @@ export const scriptInventoryEvidence = {
     expect(kannadaConsonantTtha.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*slug "tta".*retroflex ಠ \(U\+0CA0\).*"ta" animates retroflex ಟ.*"thha" dental ಥ.*three pen-down runs.*round bowl.*left side.*base.*right side.*after a lift.*top bar.*hook.*second lift.*dot.*mirror copy.*231×208, 105 KB.*Noto Sans Kannada.*two-lift order/i,
     );
+    // ಞ cites Chimple's consonant lesson LIDO_kn2_0304, whose data.json pairs
+    // the trace image with the question ಞ: two hidden paths, so two strokes
+    // (the body, then the hook at the top right). The recorded bahama trace
+    // agrees, and the two repositories count as one source.
+    const kannadaNya = scripts.kannada!.letters.find(
+      (entry) => entry.glyph === "ಞ",
+    )!;
+    expect(kannadaNya.penLifts).toBe(1);
+    expect(kannadaNya.strokeOrder).toEqual([
+      "arch over the left hump",
+      "without lifting, arch over the middle and down the right",
+      "without lifting, sweep clockwise round the bottom",
+      "without lifting, come over the top and down the tail",
+      "lift, then arch over the right hook",
+    ]);
+    expect(kannadaNya.strokeOrderSource?.url).toBe(
+      "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn2_0304.zip",
+    );
+    expect(kannadaNya.strokeOrderSource?.citation).toMatch(
+      /^Chimple \(Sutara Learning Foundation, Bangalore\), LIDO tracing lesson LIDO_kn2_0304, .* paths for ಞ, trace image file-p3fr4091\.svg$/,
+    );
+    expect(kannadaNya.strokeOrderSource?.variation).toMatch(
+      /sha256 5152886c21070d1d.*no licence, so only facts are cited.*two strokes and one lift.*bahama.*MPL-2\.0.*one source, not two.*confidence is medium/,
+    );
   },
 };

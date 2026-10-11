@@ -42,7 +42,7 @@ variety: modern-standard-arabic
 
 **ثابت** — *thābit* — "steady, firm".
 
-Say it: *thābit*. Look at its shape as you say it: the next lesson takes one
+Say it: *thābit*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ب ت ث — مرحبا**, and writes it on its own.
 
 ## Guided Practice

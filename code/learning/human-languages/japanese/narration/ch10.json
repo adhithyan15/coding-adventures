@@ -9,7 +9,7 @@
     {
       "id": "JA-W10-se",
       "sequence": 570,
-      "title": "せ — close the opener",
+      "title": "せ (se) — close the opener",
       "headword": "せ",
       "romanization": "se",
       "gloss": "the hiragana sign for the mora se",
@@ -18,19 +18,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:543ba16b7afc4d71",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -100,6 +105,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W10-se-write",
               "prompt": "Write the hiragana sign for se.",
               "assesses": [
@@ -122,7 +128,7 @@
     {
       "id": "JA-W10-o",
       "sequence": 580,
-      "title": "お — the respectful opening sign",
+      "title": "お (o) — the respectful opening sign",
       "headword": "お",
       "romanization": "o",
       "gloss": "the hiragana sign for the mora o",
@@ -131,20 +137,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:0c334f9f43fa0d34",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -187,7 +197,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "お once",
+              "instruction": "お (o) once",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -196,7 +206,7 @@
             {
               "kind": "prompt",
               "action": "COPY",
-              "instruction": "お once with the model visible",
+              "instruction": "お (o) once with the model visible",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -229,6 +239,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W10-o-first",
               "prompt": "Write the first hiragana sign in onegaishimasu.",
               "assesses": [
@@ -260,19 +271,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:e74c1a01ec7b3e04",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -288,7 +304,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write お, then known が, い, し (shi), ま, す. Say the whole request ending once. One written mora remains between お and が."
+              "text": "Write お (o), then known が, い, し (shi), ま, す. Say the whole request ending once. One written mora remains between お (o) and が."
             }
           ]
         },
@@ -342,6 +358,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W10-ne-write",
               "prompt": "Write the hiragana sign for ne.",
               "assesses": [
@@ -473,6 +490,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C10-sukoshi-meaning",
               "prompt": "What Japanese word makes the requested change only a little?",
               "assesses": [
@@ -504,19 +522,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:48feb4a16e4f5fda",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -586,6 +609,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W10-shi-write",
               "prompt": "Write the one-stroke hiragana sign for shi.",
               "assesses": [
@@ -717,6 +741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C10-yukkuri-timing",
               "prompt": "Say slowly and mark the held beat in yukkuri.",
               "assesses": [
@@ -740,7 +765,7 @@
     {
       "id": "JA-W10-yu",
       "sequence": 630,
-      "title": "ゆ — open yukkuri",
+      "title": "ゆ (yu) — open yukkuri",
       "headword": "ゆ",
       "romanization": "yu",
       "gloss": "the hiragana sign for the mora yu",
@@ -749,20 +774,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:08bae1d7f2e81135",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -823,7 +852,7 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "point to ゆ at the start of ゆっくり (yukkuri)",
+              "instruction": "point to ゆ (yu) at the start of ゆっくり (yukkuri)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -847,6 +876,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W10-yu-write",
               "prompt": "Write the hiragana sign for yu.",
               "assesses": [
@@ -973,6 +1003,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C10-itte-kudasai-request",
               "prompt": "Ask politely: please say it.",
               "assesses": [
@@ -1099,6 +1130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C10-mou-sukoshi-write",
               "prompt": "From sound alone, write a little more in hiragana.",
               "assesses": [
@@ -1234,6 +1266,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C10-wakarimashita-success",
               "prompt": "The repetition worked. Respond politely: understood.",
               "assesses": [
@@ -1360,6 +1393,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C10-koko-write",
               "prompt": "Write here in hiragana using the same known sign twice.",
               "assesses": [
@@ -1489,6 +1523,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C10-slower-please-performance",
               "prompt": "Ask politely for the line a little more slowly.",
               "assesses": [

@@ -3,8 +3,8 @@
   "language": "arabic",
   "chapter": 3,
   "title": "How Are You?",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6b304328b29f0b60",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:40706d5aba5281a6",
   "lessons": [
     {
       "id": "AR-C03-haajj",
@@ -14,20 +14,13 @@
       "romanization": "ḥājj",
       "gloss": "a pilgrim",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:046ef017657d11e9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:a1c0f472dc7a88b5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ḥājj. Look at its shape as you say it: the next lesson takes one piece of it, ح، خ، ج (ḥāʾ, khāʾ, jīm), and writes it on its own."
+              "text": "Say it: ḥājj."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ḥāʾ, khāʾ, jīm, and writes it on its own."
             }
           ]
         },
@@ -138,7 +144,7 @@
           "Script — Where you've seen it — خير",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The hook-and-tail family, Script — Draw them, Script — Where you've seen it — خير and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The hook-and-tail family, Script — Draw them, Script — Where you've seen it — خير and Guided Practice."
       },
       "blocks": [
         {
@@ -280,6 +286,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "AR-W07-hook-family-ha-kha-dot-position",
               "prompt": "Where is the dot on خ?",
               "assesses": [
@@ -326,7 +333,7 @@
           "Script — ر (rā) — the little downward curve that breaks",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ك (kāf) — the angular k, Script — ر (rā) — the little downward curve that breaks and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — ك (kāf) — the angular k, Script — ر (rā) — the little downward curve that breaks and Guided Practice."
       },
       "blocks": [
         {
@@ -482,7 +489,7 @@
           "Script — Then بخير — \"(I'm) well\"",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — Assemble خير — right to left, Script — Then بخير — \"(I'm) well\" and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — Assemble خير — right to left, Script — Then بخير — \"(I'm) well\" and Guided Practice."
       },
       "blocks": [
         {
@@ -1080,7 +1087,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:815804bc30614305",
+      "sourceHash": "fnv1a64:f09091348a3caecf",
       "notice": null,
       "blocks": [
         {
@@ -1137,7 +1144,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) kayfa ḥāluka? (\"How is your state?\")"
+              "text": "— kayfa ḥāluka? (\"How is your state?\")"
             },
             {
               "kind": "speech",
@@ -1156,7 +1163,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "That same بـ opens the most-spoken phrase in the language: بسم الله (bismillāh, \"in the name of God\") — bi- + ism (the very word from Chapter 2!) + allāh. One tiny letter, doing the same job."
+              "text": "That same بـ opens the most-spoken phrase in the language: bismillāh (\"in the name of God\") — bi- + ism (the very word from Chapter 2!) + allāh. One tiny letter, doing the same job."
             }
           ]
         },
@@ -1241,7 +1248,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56fb56016c78c612",
+      "sourceHash": "fnv1a64:42cc5817c8d4c682",
       "notice": null,
       "blocks": [
         {
@@ -1341,7 +1348,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) kayfa ḥāluka?"
+              "text": "— kayfa ḥāluka?"
             },
             {
               "kind": "speech",
@@ -1434,7 +1441,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d37e358fd17cf98",
+      "sourceHash": "fnv1a64:8eb29d9e14e7c6a6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1444,7 +1451,7 @@
           "Script — the letters, from memory",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the letters, from memory and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the letters, from memory and Guided Practice."
       },
       "blocks": [
         {
@@ -1481,8 +1488,8 @@
               "utterances": [
                 "A. Arabic: السلام عليكم (as-salāmu ʿalaykum). literally: peace [be] upon you.",
                 "B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and upon you, peace.",
-                "A. Arabic: كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) (kayfa ḥāluka?) literally: how [is] your state?",
-                "B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.",
+                "A. Arabic: kayfa ḥāluka? literally: how [is] your state?",
+                "B. Arabic: al-ḥamdu lillāh, bi-khayr. literally: the praise [is] to God — in goodness.",
                 "B. Arabic: وأنت؟ ما اسمك؟ (wa-anta? mā ismuka?) literally: and you? what [is] your name?"
               ]
             },
@@ -1536,7 +1543,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter of كيف (kayfa) حالك is new, and which of بخير (bi-khayr) and الحمد لله (al-ḥamdu lillāh)? (ف; none.) Where does حال (ḥāl) break? (After the alif.)"
+              "text": "Which letter of kayfa ḥāluka is new, and which of بخير (bi-khayr) and al-ḥamdu lillāh? (fāʾ; none.) Where does حال (ḥāl) break? (After the alif.)"
             }
           ]
         },

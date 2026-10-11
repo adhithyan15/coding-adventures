@@ -66,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "च can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one."
+              "text": "च (ca) can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one."
             }
           ]
         },
@@ -202,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "Everything the last lesson said about च is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence."
+              "text": "Everything the last lesson said about च (ca) is true of वा (vā), unchanged. It is an enclitic; it goes after the second item; it cannot open a sentence."
             },
             {
               "kind": "speech",
@@ -314,7 +314,7 @@
         "waitUntilStopped": [
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {

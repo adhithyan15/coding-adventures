@@ -117,6 +117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-shiyi-build",
               "prompt": "Build seventeen from shi and qi.",
               "assesses": [
@@ -264,6 +265,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-ershi-order",
               "prompt": "What is the difference between shiyi and ershi?",
               "assesses": [
@@ -297,20 +299,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9a97ff361407d22f",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — six strokes, five of them familiar",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — six strokes, five of them familiar and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — six strokes, five of them familiar and Guided Practice."
       },
       "blocks": [
         {
@@ -414,6 +419,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W21-bai-box",
               "prompt": "Which stroke of 百 (bǎi) comes last?",
               "assesses": [
@@ -557,6 +563,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-bai-sandhi",
               "prompt": "Is the 一 in yibai said on the same tone as 一 counted alone?",
               "assesses": [
@@ -697,6 +704,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-digits-price",
               "prompt": "A Chinese price tag says 20. How do you say it aloud?",
               "assesses": [
@@ -812,6 +820,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-practice-build",
               "prompt": "Say sixty-eight and ninety-nine in Mandarin.",
               "assesses": [
@@ -946,6 +955,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R21-close-recall",
               "prompt": "Write ten and a hundred in characters.",
               "assesses": [

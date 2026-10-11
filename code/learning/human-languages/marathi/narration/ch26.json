@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 26,
   "title": "Give, Bring, Put",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b2fa0d51a1fe546d",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d94e672daf39bc0c",
   "lessons": [
     {
       "id": "MR-C22-dene",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -174,7 +174,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -320,7 +320,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88245db4f11dd744",
+      "sourceHash": "fnv1a64:1df2beae85161dcc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -329,7 +329,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -422,11 +422,11 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "dyā and āṇā — handing over against carrying here",
+              "instruction": "dyā and āṇā — giving against bringing here",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **dyā** and **āṇā** — handing over against carrying here]"
+              "source": "[YOU CONTRAST: **dyā** and **āṇā** — giving against bringing here]"
             },
             {
               "kind": "prompt",
@@ -484,7 +484,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -672,6 +672,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R22-request-verbs-check",
               "prompt": "Ask politely for water to be given, tea to be brought, and milk to be put down.",
               "assesses": [

@@ -79,6 +79,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C14-hear-sasta-meaning",
               "prompt": "What does sastā say about a price?",
               "assesses": [
@@ -194,6 +195,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C14-sasta-dictation",
               "prompt": "From sastā, write cheap.",
               "assesses": [
@@ -297,6 +299,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C14-hear-samaan-meaning",
               "prompt": "What does sāmān name in a shop?",
               "assesses": [
@@ -421,6 +424,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C14-samaan-dictation",
               "prompt": "From sāmān, write goods.",
               "assesses": [
@@ -529,6 +533,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R14-shopping-new-two-recall",
               "prompt": "Write cheap and goods in order.",
               "assesses": [
@@ -641,6 +646,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C14-shopping-five-payoff",
               "prompt": "Complete all four scored checks, then write shop, item, price, cheap, and goods.",
               "assesses": [
@@ -757,6 +763,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R14-shopping-close-recall",
               "prompt": "After the four-skill pass, write all five shopping words without a model.",
               "assesses": [

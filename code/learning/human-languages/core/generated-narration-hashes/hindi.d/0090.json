@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 90,
-  "sourceHash": "fnv1a64:64e58696b294e200",
+  "sourceHash": "fnv1a64:491d0b6c36c6bff7",
   "lessonIds": [
     "HI-C82-lambaa",
     "HI-C82-patlaa",
@@ -10,11 +10,11 @@
     "HI-C82-repaso-shareer",
     "HI-C82-sintesis-shareer"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "hindi/narration/ch90.txt",
   "json": "hindi/narration/ch90.json",
-  "textHash": "fnv1a64:87e7780e173c95d6",
-  "jsonHash": "fnv1a64:9a4f7a9e32448919",
+  "textHash": "fnv1a64:79345b8053de1fc2",
+  "jsonHash": "fnv1a64:6c4abe64cbc07834",
   "findings": []
 }

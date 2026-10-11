@@ -40,10 +40,10 @@ keeps both rewrites in plain view.
 ## The two days, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-WEEKEND-01, ES-ETYMON-WEEKEND-02]; assesses=[] -->
 
-| Spanish | ← Latin | meaning | note |
-|---|---|---|---|
-| **sábado** | *sabbatum* | "**Sabbath**" | the planet-god (Saturn) is gone — replaced by the Hebrew *shabbāt*, "to rest" |
-| **domingo** | *diēs Dominica* | "the **Lord's** day" | *Dominica* ← *Dominus*, "lord/master" — Spanish kept this one much less worn-down than French's *dimanche* |
+| Spanish ← Latin | meaning | note |
+|---|---|---|
+| **sábado** ← *sabbatum* | "**Sabbath**" | the planet-god (Saturn) is gone — replaced by the Hebrew *shabbāt*, "to rest" |
+| **domingo** ← *diēs Dominica* | "the **Lord's** day" | *Dominica* ← *Dominus*, "lord/master" — Spanish kept this one much less worn-down than French's *dimanche* |
 
 Two different rewrites:
 

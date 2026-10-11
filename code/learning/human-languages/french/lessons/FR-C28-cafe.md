@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-CAFE-01, FR-ETYMON-CAFE-02, FR-LEX-PLEASE-02, FR-GRAMMAR-PLEASE-REGISTER-04]
+  knowledge: [FR-LEX-CAFE-01, FR-ETYMON-CAFE-02, FR-LEX-PLEASE-02, FR-GRAMMAR-PLEASE-REGISTER-04, FR-ETYMON-LEVER-05, FR-ETYMON-FERMER-11]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,7 +34,9 @@ reviews_of: [FR-C19-sil-vous-plait, FR-C27-fermer]
 # le café — coffee, one word the whole road agrees on
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-PLEASE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-PLEASE-02, FR-ETYMON-LEVER-05, FR-ETYMON-FERMER-11] -->
+
+[PAUSE 2s] First, two words from the last chapter, taken apart. *Se lever* is built on a Latin word for what? (***Levis***, **light** — rising un-weighs you, as in *elevate*.) And a Roman door was not closed, it was made what? (**Firm** — *firmāre*, the root of *confirm*.)
 
 [PAUSE 2s] You already know how to ask nicely — **s'il vous plaît**. Now
 something worth asking for: the first of four everyday words for what's on the

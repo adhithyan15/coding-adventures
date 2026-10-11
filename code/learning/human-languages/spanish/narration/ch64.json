@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Review --- the Eight Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9045db96c0ac2d3f",
+  "sourceHash": "fnv1a64:4b8db60dba084a8b",
   "lessons": [
     {
       "id": "ES-C09-repaso-ocho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4cc3c3266ed2f096",
+      "sourceHash": "fnv1a64:5d4d418b4f0db867",
       "notice": null,
       "blocks": [
         {
@@ -130,6 +130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ocho-sort",
               "prompt": "Which of -ista and -oso names a person?",
               "assesses": [
@@ -149,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ocho-gender",
               "prompt": "An -ncia word you have never seen. What gender?",
               "assesses": [
@@ -167,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ocho-reach",
               "prompt": "Decode la posibilidad.",
               "assesses": [
@@ -198,6 +201,16 @@
             {
               "kind": "speech",
               "text": "Which ending has no upper limit? (-mente.) Which reaches about two thousand words? (-ción.) And what did you memorise to get them? (Nothing.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the endings still carry a Latin meaning. -oso? (-ōsus, full of.) -ario? (-ārius, belonging to — then the place a thing is kept.) -ncia? (-entia, a quality made into a thing.)"
             }
           ]
         }

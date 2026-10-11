@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C21-hone-type",
-              "prompt": "Type the Japanese for 'a bone'.",
+              "prompt": "Say the Japanese for 'a bone'.",
               "assesses": [
                 "JA-LEX-C21-BODY21-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C21-ago-type",
-              "prompt": "Type the Japanese for 'the chin'.",
+              "prompt": "Say the Japanese for 'the chin'.",
               "assesses": [
                 "JA-LEX-C21-BODY21-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C21-hoo-type",
-              "prompt": "Type the Japanese for 'a cheek'.",
+              "prompt": "Say the Japanese for 'a cheek'.",
               "assesses": [
                 "JA-LEX-C21-BODY21-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C21-mayu-type",
-              "prompt": "Type the Japanese for 'an eyebrow'.",
+              "prompt": "Say the Japanese for 'an eyebrow'.",
               "assesses": [
                 "JA-LEX-C21-BODY21-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C21-hada-type",
-              "prompt": "Type the Japanese for 'skin'.",
+              "prompt": "Say the Japanese for 'skin'.",
               "assesses": [
                 "JA-LEX-C21-BODY21-05"
               ],

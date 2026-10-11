@@ -8,7 +8,7 @@ type: review
 headword: (review)
 gloss: three joints and two constants — everything reporting asks of you, said aloud rather than laid out in a table
 concept_tag: ES-REPORT-REVIEW
-prerequisites: [ES-C57-pregunto-donde]
+prerequisites: [ES-C57-pregunto-donde, ES-C56-depende]
 sounds: []
 roots: []
 teaches_cells: []
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-REPORTED-QUE-OBLIGATORY, ES-GRAMMAR-REPORTED-BACKSHIFT, ES-GRAMMAR-REPORTED-YESNO-SI, ES-GRAMMAR-REPORTED-WH-ACCENT, ES-GRAMMAR-DECIR-PRETERITE, ES-GRAMMAR-J-STEM-PRETERITE-PLURAL, ES-ETYMON-DIJO-DIXIT]
+  knowledge: [ES-GRAMMAR-REPORTED-QUE-OBLIGATORY, ES-GRAMMAR-REPORTED-BACKSHIFT, ES-GRAMMAR-REPORTED-YESNO-SI, ES-GRAMMAR-REPORTED-WH-ACCENT, ES-GRAMMAR-DECIR-PRETERITE, ES-GRAMMAR-J-STEM-PRETERITE-PLURAL, ES-ETYMON-DIJO-DIXIT, ES-LEX-DEPENDE, ES-SEMANTIC-CONDITION-UNSTATED]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -77,10 +77,12 @@ sentence — it marks the word that does the asking.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-REPORTED-BACKSHIFT, ES-ETYMON-DIJO-DIXIT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-REPORTED-BACKSHIFT, ES-ETYMON-DIJO-DIXIT, ES-LEX-DEPENDE, ES-SEMANTIC-CONDITION-UNSTATED] -->
 
 [PAUSE 2s] Which tense does the inner verb land in, every time? (The
 **imperfect**.)
 
 [PAUSE 2s] And one word to keep, for the pleasure of it: what is the *j* of
 *dijo*, historically? (A Latin ***x***. *Dīxit*, *dixo*, *dijo*.)
+
+[PAUSE 2s] And one answer from before: someone asks if you will come, and you will not commit yet. One word. (***Depende*** — a condition you decline to name; Latin *pendere*, to hang.)

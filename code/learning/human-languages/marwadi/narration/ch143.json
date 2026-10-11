@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C143-tato-type",
-              "prompt": "Type the Marwadi for 'hot (to the touch)'.",
+              "prompt": "Say the Marwadi for 'hot (to the touch)'.",
               "assesses": [
                 "MW-LEX-C143-QUAL143-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C143-kharo-type",
-              "prompt": "Type the Marwadi for 'salty'.",
+              "prompt": "Say the Marwadi for 'salty'.",
               "assesses": [
                 "MW-LEX-C143-QUAL143-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C143-khato-type",
-              "prompt": "Type the Marwadi for 'sour'.",
+              "prompt": "Say the Marwadi for 'sour'.",
               "assesses": [
                 "MW-LEX-C143-QUAL143-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C143-karvo-type",
-              "prompt": "Type the Marwadi for 'bitter'.",
+              "prompt": "Say the Marwadi for 'bitter'.",
               "assesses": [
                 "MW-LEX-C143-QUAL143-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C143-tikho-type",
-              "prompt": "Type the Marwadi for 'spicy, sharp'.",
+              "prompt": "Say the Marwadi for 'spicy, sharp'.",
               "assesses": [
                 "MW-LEX-C143-QUAL143-05"
               ],

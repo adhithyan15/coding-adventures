@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-DREI-01, GE-ETYMON-DREI-THREE-02, GE-LEX-ZWEI-01, GE-ETYMON-GUT-SHIFT-03, GE-ETYMON-GERMANIC-SIBLINGS-02, GE-GRAMMAR-SOUND-LAW-01]
+  knowledge: [GE-LEX-DREI-01, GE-ETYMON-DREI-THREE-02, GE-LEX-ZWEI-01, GE-ETYMON-GUT-SHIFT-03, GE-ETYMON-GERMANIC-SIBLINGS-02, GE-GRAMMAR-SOUND-LAW-01, GE-ETYMON-MACHEN-MAKE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -55,7 +55,7 @@ the hard ones, for an English speaker: *three* and *drei* are the same word two
 doors apart, while *tres* is the same word across the street.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[GE-GRAMMAR-SOUND-LAW-01]; assesses=[GE-ETYMON-GUT-SHIFT-03, GE-ETYMON-GERMANIC-SIBLINGS-02] -->
+<!-- hl-knowledge: introduces=[GE-GRAMMAR-SOUND-LAW-01]; assesses=[GE-ETYMON-GUT-SHIFT-03, GE-ETYMON-GERMANIC-SIBLINGS-02, GE-ETYMON-MACHEN-MAKE-02] -->
 
 The differences are not random. A **sound law** is a change that happened to
 *every* word in a language at once, so once you know one you can predict the
@@ -78,7 +78,7 @@ consonant before deciding they are unrelated. Often they are the same word,
 one law apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SOUND-LAW-01, GE-ETYMON-GERMANIC-SIBLINGS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SOUND-LAW-01, GE-ETYMON-GERMANIC-SIBLINGS-02, GE-ETYMON-MACHEN-MAKE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tres", "three", "drei" — one word, three roads]

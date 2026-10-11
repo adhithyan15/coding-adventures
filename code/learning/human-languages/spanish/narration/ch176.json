@@ -108,6 +108,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-para-you",
               "prompt": "Say it is for you.",
               "assesses": [
@@ -128,6 +129,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-para-when",
               "prompt": "Say by tomorrow.",
               "assesses": [
@@ -147,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-para-arrow",
               "prompt": "Which Latin piece inside para means toward, and which English words carry it?",
               "assesses": [

@@ -3940,6 +3940,18 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_direct_sign_operand(then_node)?;
+            let else_operand = self.builtin_direct_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_value(then_operand)
+                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         if let Some(child) = single_parenthesized_child(node) {
             return self.builtin_direct_sign_operand(child);
         }
@@ -4068,6 +4080,18 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_nonpositive_unit_sign_operand(then_node)?;
+            let else_operand = self.builtin_nonpositive_unit_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_value(then_operand)
+                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         if let Some(child) = single_parenthesized_child(node) {
             return self.builtin_nonpositive_unit_sign_operand(child);
         }
@@ -4077,6 +4101,15 @@ impl Compiler {
                 "+" => self.builtin_nonpositive_unit_sign_operand(child),
                 _ => None,
             };
+        }
+        if pieces(node)
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            if let Some(base) = literal_power_identity_base(node, true) {
+                return self.builtin_nonpositive_unit_sign_operand(base);
+            }
+            return None;
         }
         if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
             let sequence = pieces(node);
@@ -4120,9 +4153,7 @@ impl Compiler {
         }
         if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
             let sequence = pieces(node);
-            if sequence.len() == 3
-                && matches!(sequence.get(1), Some(Piece::Op(op)) if op == "*")
-            {
+            if sequence.len() == 3 {
                 let (Some(Piece::Node(left)), Some(Piece::Node(right))) =
                     (sequence.first(), sequence.get(2))
                 else {
@@ -4135,23 +4166,54 @@ impl Compiler {
                         && (self.static_integer_scalar_value(operand) == Some(-1)
                             || self.static_real_arithmetic_value(operand) == Some(-1.0))
                 };
-                if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(left) {
-                    if is_static_negative_unit(right) {
-                        return Some(operand);
+                match sequence.get(1) {
+                    Some(Piece::Op(op)) if op == "*" => {
+                        if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(left) {
+                            if is_static_negative_unit(right) {
+                                return Some(operand);
+                            }
+                        }
+                        if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(right) {
+                            if is_static_negative_unit(left) {
+                                return Some(operand);
+                            }
+                        }
                     }
-                }
-                if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(right) {
-                    if is_static_negative_unit(left) {
-                        return Some(operand);
+                    Some(Piece::Op(op)) if op == "/" => {
+                        if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(left) {
+                            if is_static_negative_unit(right) {
+                                return Some(operand);
+                            }
+                        }
                     }
+                    _ => {}
                 }
             }
         }
-        if node.rule_name != "proc_call" {
-            let children = direct_nodes(node);
-            if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_nonpositive_unit_sign_operand(children[0]);
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")?
+                .value
+                .clone();
+            let target_name = self.resolve_procedure_identity(&source_name);
+            if self.proc_sigs.contains_key(&target_name) {
+                return None;
             }
+            let actuals = self.standard_fn_actuals(node);
+            if actuals.len() != 1 {
+                return None;
+            }
+            return match target_name.as_str() {
+                "sign" | "entier" | "sin" | "arctan" => {
+                    self.builtin_nonpositive_unit_sign_operand(actuals[0])
+                }
+                _ => None,
+            };
+        }
+        let children = direct_nodes(node);
+        if direct_tokens(node).is_empty() && children.len() == 1 {
+            return self.builtin_nonpositive_unit_sign_operand(children[0]);
         }
         None
     }
@@ -4160,6 +4222,18 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_nonnegative_unit_sign_operand(then_node)?;
+            let else_operand = self.builtin_nonnegative_unit_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_value(then_operand)
+                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         if let Some(child) = single_parenthesized_child(node) {
             return self.builtin_nonnegative_unit_sign_operand(child);
         }
@@ -4246,6 +4320,18 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_sign_operand(then_node)?;
+            let else_operand = self.builtin_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_value(then_operand)
+                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         if let Some(child) = single_parenthesized_child(node) {
             return self.builtin_sign_operand(child);
         }
@@ -14368,6 +14454,235 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_divisive_nonpositive_exp_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(exp(abs(sign(pick())) / (-1))))); output(x) end",
+            "begin real procedure pick; pick := 0.0; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(cos(exp(sqrt(abs(sign(pick()))) / (0.0 - 1.0))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a negative-unit-divided nonpositive exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_divisive_nonpositive_exp_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp((-1) / abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / 1)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := -1; result := entier(sqrt(cos(exp(abs(sign(pick())) / divisor)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / (-1) * 1)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure abs(x); value x; real x; abs := 0.0; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / (-1))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "denominator roots, positive or dynamic divisors, extra factors, and overrides must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_powered_nonpositive_exp_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(exp((-abs(sign(pick()))) ^ 1)))); output(x) end",
+            "begin real procedure pick; pick := 0.0; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(cos(exp((0 - sqrt(abs(sign(pick())))) ^ (1 ^ 1))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over an identity-powered nonpositive unit exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_powered_nonpositive_exp_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp((-abs(sign(pick()))) ^ 2)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer exponent; real result; exponent := 1; result := entier(sqrt(cos(exp((-abs(sign(pick()))) ^ exponent)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp((-1) ^ (-abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure abs(x); value x; real x; abs := 0.0; real result; result := entier(sqrt(cos(exp((-abs(sign(pick()))) ^ 1)))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "nonidentity or dynamic exponents, sign-rooted exponents, and overrides must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_monotone_nonpositive_exp_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(exp(sin(-abs(sign(pick()))))))); output(x) end",
+            "begin real procedure pick; pick := 0.0; real x; x := entier(sqrt(cos(exp(arctan(entier(sign(-abs(sign(pick()))))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a monotone built-in mapping of a nonpositive unit exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_monotone_nonpositive_exp_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(cos(-abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(-abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(sin(-pick()))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure sin(x); value x; real x; sin := 0.0; real result; result := entier(sqrt(cos(exp(sin(-abs(sign(pick()))))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "non-monotone, unrestricted, and overridden wrappers must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_conditional_nonpositive_exp_sign_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(sqrt(cos(exp(if choose() then sin(-abs(sign(left()))) else arctan(-abs(sign(right()))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(cos(exp(if choose() then sign(-abs(sign(left()))) else entier(-abs(sign(right()))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a branch-total conditional nonpositive unit exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_conditional_nonpositive_exp_sign_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(if choose() then -abs(sign(left())) else abs(sign(right())))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(if choose() then sin(-abs(sign(left()))) else -right())))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(sqrt(cos(exp(if choose() then -abs(sign(left())) else -abs(sign(right())))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure sin(x); value x; real x; sin := 0.0; real result; result := entier(sqrt(cos(exp(if choose() then arctan(-abs(sign(left()))) else sin(-abs(sign(right()))))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain a proven nonpositive unit runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_conditional_nonnegative_exp_sign_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(sqrt(cos(exp(-(if choose() then sqrt(abs(sign(left()))) else cos(sign(right()))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(cos(exp(-(if choose() then sign(abs(sign(left()))) else entier(abs(sign(right())))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a negated branch-total conditional nonnegative unit exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_conditional_nonnegative_exp_sign_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(-(if choose() then abs(sign(left())) else -abs(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(-(if choose() then sqrt(abs(sign(left()))) else right()))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(sqrt(cos(exp(-(if choose() then abs(sign(left())) else abs(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure abs(x); value x; real x; abs := 0.0; real result; result := entier(sqrt(cos(exp(-(if choose() then sqrt(abs(sign(left()))) else abs(sign(right()))))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain a proven nonnegative unit runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_conditional_sign_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(sqrt(cos(if choose() then sin(sign(left())) else arctan(sign(right()))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(cos(if choose() then sign(left()) else entier(abs(sign(right())))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a branch-total conditional unit sign range for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_conditional_sign_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else right()))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(sqrt(cos(if choose() then sign(left()) else sign(right())))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else exp(sign(right()))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure sin(x); value x; real x; sin := 0.0; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else arctan(sign(right()))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain a proven unit-bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_provenance_crosses_nested_sqrt_entier_sign_widening() {
         for source in [
             "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(sqrt(abs(sign(pick()))))); output(x) end",
@@ -14417,6 +14732,44 @@ mod tests {
                     && instr.srcs.first().and_then(Operand::as_var)
                         == Some("__basic_print_real")
             }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_single_exp_sign_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(exp(if choose() then sin(sign(left())) else arctan(sign(right())))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(exp(if choose() then sign(left()) else entier(abs(sign(right()))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a single exponential preserves a branch-total conditional sign range for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_single_exp_sign_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(exp(if choose() then sin(sign(left())) else sin(right()))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(exp(if choose() then sign(left()) else sign(right()))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(exp(if choose() then sin(sign(left())) else exp(sign(right())))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure sin(x); value x; real x; sin := 0.0; real result; result := entier(exp(if choose() then sin(sign(left())) else arctan(sign(right())))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain a proven bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
         }
     }
 

@@ -35,7 +35,7 @@ reviews_of: [IT-C10-fratello-sorella, IT-C14-eta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-FRATELLO-SORELLA-02, IT-LEX-ZUCCHERO-02, IT-GRAMMAR-ZUCCHERO-04, IT-LEX-LATTE-02] -->
 
-[PAUSE 2s] Chapter 22 left you at the table with *il caffè, il tè, il latte*
+[PAUSE 2s] Chapter 22 left you at breakfast with *il caffè, il tè, il latte*
 and *lo zucchero* — and its **lo**, remember, was for a cluster like *z-*.
 Chapter 10 gave you your family. Introducing someone rarely stops there — you
 also name the people you've chosen, not just the people you were born to.
@@ -71,8 +71,8 @@ their own vowel into the next one:
 | feminine | la amica *(wrong)* | **l'amica** |
 
 *L'acqua* (Chapter 11) was your first example; *l'amico* and *l'amica* are
-the second and third, and the first place you can see the SAME elided form
-covering two different genders side by side.
+the second and third, and the first place the SAME elided form covers two
+different genders side by side.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-AMICO-AMICA-02, IT-ETYMON-AMICO-AMICA-03, IT-GRAMMAR-AMICO-AMICA-04, IT-LEX-ETA-02, IT-GRAMMAR-ETA-05] -->

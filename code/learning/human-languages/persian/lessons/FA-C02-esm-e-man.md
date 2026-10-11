@@ -47,7 +47,7 @@ careful sentence for your own name.
 
 Say its words in this order:
 
-> **اسمِ من ... است** — *esm-e man ... ast*
+> **اسم من ... است** — *esm-e man ... ast*
 
 - **اسم** *esm* = name. You already recognize **ا**, **س**, and **م**.
 - The small spoken **-e** after *esm* links “name” to its owner. This linker is
@@ -74,7 +74,7 @@ one pattern into a full grammar table yet.
 
 Replace the dots with your name:
 
-> **اسم من سارا است.** — *esm-e man Sârâ ast.* — My name is Sara.
+> *esm-e man Sârâ ast.* — My name is Sara.
 
 - [YOU SAY: **esm-e man Sârâ ast**]
 - [YOU SAY: replace **Sârâ** with your own name]
@@ -84,7 +84,7 @@ for now; it makes every part visible.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-ESM-E-MAN-AST, FA-SCRIPT-ESM-MAN-AST, FA-GRAMMAR-EZAFE-OWNER] -->
-<!-- hl-activity: {"id":"FA-C02-esm-e-man-sara","kind":"text","assesses":["FA-LEX-ESM-E-MAN-AST"],"prompt":"Type the careful Persian sentence 'My name is Sara.'","answer":"اسم من سارا است","accepted":["esm-e man Sara ast","esm-e man Sârâ ast"],"feedback":{"correct":"Right: اسم من سارا است keeps the ezafe spoken and the careful copula visible.","incorrect":"Use اسم من سارا است — esm-e man Sârâ ast."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"FA-C02-esm-e-man-sara","kind":"text","assesses":["FA-LEX-ESM-E-MAN-AST"],"prompt":"Type the careful Persian sentence 'My name is Sara.'","answer":"esm-e man Sârâ ast","accepted":["esm-e man Sara ast"],"feedback":{"correct":"Right: esm-e man Sârâ ast keeps the ezafe spoken and the careful copula visible.","incorrect":"Use esm-e man Sârâ ast."},"response_seconds":10} -->
 
 What links *esm* to *man*? The spoken **-e**, or ezafe. Say “My name is …” once
 with your own name.

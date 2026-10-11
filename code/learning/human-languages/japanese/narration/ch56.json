@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C56-ato-type",
-              "prompt": "Type the Japanese for 'after, later'.",
+              "prompt": "Say the Japanese for 'after, later'.",
               "assesses": [
                 "JA-LEX-C56-TIME56-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C56-mae-type",
-              "prompt": "Type the Japanese for 'before'.",
+              "prompt": "Say the Japanese for 'before'.",
               "assesses": [
                 "JA-LEX-C56-TIME56-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C56-ue-type",
-              "prompt": "Type the Japanese for 'above, on top'.",
+              "prompt": "Say the Japanese for 'above, on top'.",
               "assesses": [
                 "JA-LEX-C56-TIME56-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C56-naka-type",
-              "prompt": "Type the Japanese for 'inside'.",
+              "prompt": "Say the Japanese for 'inside'.",
               "assesses": [
                 "JA-LEX-C56-TIME56-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C56-hidari-type",
-              "prompt": "Type the Japanese for 'left'.",
+              "prompt": "Say the Japanese for 'left'.",
               "assesses": [
                 "JA-LEX-C56-TIME56-05"
               ],

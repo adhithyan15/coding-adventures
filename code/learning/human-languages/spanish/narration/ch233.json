@@ -146,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-o-ask",
               "prompt": "Offer a choice: coffee or water?",
               "assesses": [
@@ -164,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-o-swap",
               "prompt": "Say: seven or eight.",
               "assesses": [
@@ -182,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-o-why",
               "prompt": "Is the o-to-u swap about spelling or about sound?",
               "assesses": [

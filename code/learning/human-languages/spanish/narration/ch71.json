@@ -131,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-poner-singular-forms",
               "prompt": "Give the learned singular present forms of poner: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -151,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-poner-meaning",
               "prompt": "What two English verbs does poner cover?",
               "assesses": [

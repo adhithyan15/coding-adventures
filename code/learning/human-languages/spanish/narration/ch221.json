@@ -167,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-este-say",
               "prompt": "Say: this book.",
               "assesses": [
@@ -185,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-este-agree",
               "prompt": "Now: this house.",
               "assesses": [
@@ -203,6 +205,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-este-article",
               "prompt": "Is el este libro possible?",
               "assesses": [

@@ -4,14 +4,14 @@
   "chapter": 18,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:34da59aa4d024b17",
+  "sourceHash": "fnv1a64:2b09263efcf5e205",
   "lessons": [
     {
       "id": "AR-C18-al-taqs",
       "sequence": 620,
-      "title": "الطقس — weather and ritual, one root",
+      "title": "الطقس (aṭ-ṭaqs) — weather and ritual, one root",
       "headword": "الطقس",
-      "romanization": "",
+      "romanization": "aṭ-ṭaqs",
       "gloss": "weather — the SAME root also gives \"rite, religious ceremony\"; hot/cold are verbless adjectives, but rain gets its own personal verb",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93f13cebf55ff849",
+      "sourceHash": "fnv1a64:2cfaf19c81694673",
       "notice": null,
       "blocks": [
         {
@@ -53,7 +53,7 @@
         {
           "index": 2,
           "type": "input",
-          "title": "You'll want to know — الجو حار / بارد — hot and cold, still verbless",
+          "title": "You'll want to know — الجو حار / bārid — hot and cold, still verbless",
           "segments": [
             {
               "kind": "speech",
@@ -61,7 +61,7 @@
             },
             {
               "kind": "speech",
-              "text": "الجو بارد. — \"It's cold.\" — literally \"the atmosphere [is] cold.\" (al-jaw bārid.)"
+              "text": "al-jaw bārid. — \"It's cold.\" — literally \"the atmosphere [is] cold.\""
             },
             {
               "kind": "speech",
@@ -72,15 +72,15 @@
         {
           "index": 3,
           "type": "input",
-          "title": "You'll want to know — إنها تمطر — but rain gets its OWN personal verb",
+          "title": "You'll want to know — innahā tumṭir — but rain gets its OWN personal verb",
           "segments": [
             {
               "kind": "speech",
-              "text": "إنها تمطر. — \"It's raining.\" — literally \"she is raining.\" (innahā tumṭir — from مطر, maṭar, \"rain,\" the same root gives تمطر, tumṭir, \"is raining.\")"
+              "text": "innahā tumṭir. — \"It's raining.\" — literally \"she is raining.\" (From مطر, maṭar, \"rain\"; the same root gives tumṭir, \"is raining.\")"
             },
             {
               "kind": "speech",
-              "text": "Unlike hot and cold, rain isn't a verbless adjective sentence — Arabic uses an actual personal verb, tumṭir (\"is raining\"), with a feminine dummy pronoun, إنها (innahā, \"she/it\"), standing in as the subject. So within Arabic's own weather vocabulary, hot/cold stay verbless while rain gets a real, conjugated verb — echoing the same \"rain behaves differently from other weather\" pattern Latin shows in its dedicated pluit."
+              "text": "Unlike hot and cold, rain isn't a verbless adjective sentence — Arabic uses an actual personal verb, tumṭir (\"is raining\"), with a feminine dummy pronoun, innahā (\"she/it\"), standing in as the subject. So within Arabic's own weather vocabulary, hot/cold stay verbless while rain gets a real, conjugated verb — echoing the same \"rain behaves differently from other weather\" pattern Latin shows in its dedicated pluit."
             }
           ]
         },
@@ -137,7 +137,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the plural of طقس mean, and what's the connection to \"weather\"? (طقوس, \"rites, religious ceremonies\" — sharing the same root.) Do الجو حار and الجو بارد use a verb? (No — verbless, like kam ʿumruka?.) Does إنها تمطر use a verb? (Yes — tumṭir, \"is raining,\" with a feminine dummy pronoun.)"
+              "text": "What does the plural of طقس mean, and what's the connection to \"weather\"? (طقوس, \"rites, religious ceremonies\" — sharing the same root.) Do الجو حار and al-jaw bārid use a verb? (No — verbless, like kam ʿumruka?.) Does innahā tumṭir use a verb? (Yes — tumṭir, \"is raining,\" with a feminine dummy pronoun.)"
             }
           ]
         }

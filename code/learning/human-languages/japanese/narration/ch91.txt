@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やむ (yamu) mean? ("To stop (rain)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to stop (rain)'.
+Say the Japanese for 'to stop (rain)'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しまう (shimau) mean? ("To put away".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to put away'.
+Say the Japanese for 'to put away'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひろう (hirou) mean? ("To pick up".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to pick up'.
+Say the Japanese for 'to pick up'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does てつだう (tetsudau) mean? ("To help".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to help'.
+Say the Japanese for 'to help'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まよう (mayou) mean? ("To get lost".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to get lost'.
+Say the Japanese for 'to get lost'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A street corner? (まちかど, machikado.) Within the city? (しない, shinai.) The suburbs? (こうがい, kougai.) The opposite side? (はんたいがわ, hantaigawa.) Upstream? (かわかみ, kawakami.) This? (この, kono.) That? (あの, ano.) Which? (どの, dono.) This kind of? (こんな, konna.) That kind of? (あんな, anna.) What kind of? (どんな, donna.) Other? (ほか, hoka.) Everybody? (みんな, minna.) This sort of? (こういう, kouiu.) That sort of? (ああいう, aaiu.) To hit? (うつ, utsu.) To breathe in? (すう, suu.) To sow; to wind? (まく, maku.) To cook? (たく, taku.) To put on? (はく, haku.) To bloom? (さく, saku.) To solve? (とく, toku.) To hold in one's arms? (だく, daku.) To step on? (ふむ, fumu.) To bite? (かむ, kamu.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to help'.
+Say the Japanese for 'to help'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 To pile up? (つむ, tsumu.) To ask for? (たのむ, tanomu.) To go forward? (すすむ, susumu.) To hang out to dry? (ほす, hosu.) To point; to hold up? (さす, sasu.) To copy? (うつす, utsusu.) To try out? (ためす, tamesu.) To put back? (もどす, modosu.) To leave behind? (のこす, nokosu.) To knock down? (たおす, taosu.) To break? (こわす, kowasu.) To boil? (わかす, wakasu.) To turn round? (まわす, mawasu.) To grab? (つかむ, tsukamu.) To fold? (たたむ, tatamu.) To be surprised? (おどろく, odoroku.) To arrive? (とどく, todoku.) To receive? (いただく, itadaku.) To go regularly? (かよう, kayou.) To wrap? (つつむ, tsutsumu.) To stop? (やむ, yamu.) To put away? (しまう, shimau.) To pick up? (ひろう, hirou.) To help? (てつだう, tetsudau.) To get lost? (まよう, mayou.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to pile up'.
+Say the Japanese for 'to pile up'.

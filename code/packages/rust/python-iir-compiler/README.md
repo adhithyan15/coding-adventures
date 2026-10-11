@@ -22,3 +22,8 @@ path/to/source.py` from the Rust workspace.
 also caps tree items, depth, and text bytes before lowering. `run_source`
 returns `PythonRunError` on failure; its `output` field contains any successful
 earlier `print` calls, and `pyvm` writes those bytes before the error message.
+
+Direct AST arithmetic also requires canonical unary/binary operator tokens
+and grouping delimiters, including token kind, effective type and spelling.
+Forged syntax tokens fail before execution; supported source expressions and
+the existing resource bounds retain their behavior.

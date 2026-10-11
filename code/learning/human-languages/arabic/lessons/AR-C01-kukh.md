@@ -42,7 +42,7 @@ variety: modern-standard-arabic
 
 **كوخ** — *kūkh* — "a hut".
 
-Say it: *kūkh*. Look at its shape as you say it: the next lesson takes one
+Say it: *kūkh*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ك و — السلام عليكم**, and writes it on its own.
 
 ## Guided Practice

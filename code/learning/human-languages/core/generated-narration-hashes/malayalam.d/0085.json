@@ -1,18 +1,18 @@
 {
   "language": "malayalam",
   "chapter": 85,
-  "sourceHash": "fnv1a64:4e6ed72b8c40669a",
+  "sourceHash": "fnv1a64:8d645453bfd42af4",
   "lessonIds": [
     "ML-C85-kudikkuka",
     "ML-C85-gemination",
     "ML-C85-stress",
     "ML-R85-sounds-recall"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "malayalam/narration/ch85.txt",
   "json": "malayalam/narration/ch85.json",
-  "textHash": "fnv1a64:78cf99a7b971415a",
-  "jsonHash": "fnv1a64:797075c6e90d79a4",
+  "textHash": "fnv1a64:9597090269d03765",
+  "jsonHash": "fnv1a64:102bac7aa0128094",
   "findings": []
 }

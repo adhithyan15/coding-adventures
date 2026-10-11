@@ -18,16 +18,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3d3e9afa4c3b1108",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -64,6 +68,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F01-naav-check",
               "prompt": "Which printed Marathi label asks for the person's name?",
               "assesses": [
@@ -142,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F01-shahar-check",
               "prompt": "Which label asks for the city?",
               "assesses": [
@@ -219,6 +225,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F01-bhasha-check",
               "prompt": "Which label asks which language the person uses?",
               "assesses": [
@@ -297,6 +304,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F01-avdate-pey-check",
               "prompt": "Complete the printed label for the neuter word pey: आवड__ पेय",
               "assesses": [
@@ -375,6 +383,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F01-avadti-kruti-check",
               "prompt": "Complete the printed label for feminine kruti: आवड__ कृती",
               "assesses": [
@@ -453,6 +462,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F01-mitrache-naav-check",
               "prompt": "Which label asks for the friend's name?",
               "assesses": [
@@ -540,6 +550,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F02-first-three-copy-check",
               "prompt": "Give the three labels in order: name, city, language.",
               "assesses": [
@@ -628,6 +639,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-A1F02-last-three-copy-check",
               "prompt": "Complete the two favorite labels: आवड__ पेय; आवड__ कृती.",
               "assesses": [
@@ -672,8 +684,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -714,6 +728,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F03-first-three-delayed-check",
               "prompt": "After a delay, write name, city, language as Marathi form labels.",
               "assesses": [
@@ -754,8 +769,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -796,6 +813,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-A1F03-last-three-delayed-check",
               "prompt": "After a delay, write favorite drink, favorite activity, and friend's name as Marathi form labels.",
               "assesses": [

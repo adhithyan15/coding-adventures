@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C105-raivno-type",
-              "prompt": "Type the Marwadi for 'to stay, to live'.",
+              "prompt": "Say the Marwadi for 'to stay, to live'.",
               "assesses": [
                 "MW-LEX-C105-ACT105-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C105-bachno-type",
-              "prompt": "Type the Marwadi for 'to read'.",
+              "prompt": "Say the Marwadi for 'to read'.",
               "assesses": [
                 "MW-LEX-C105-ACT105-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C105-janno-type",
-              "prompt": "Type the Marwadi for 'to know'.",
+              "prompt": "Say the Marwadi for 'to know'.",
               "assesses": [
                 "MW-LEX-C105-ACT105-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C105-bharno-type",
-              "prompt": "Type the Marwadi for 'to fill'.",
+              "prompt": "Say the Marwadi for 'to fill'.",
               "assesses": [
                 "MW-LEX-C105-ACT105-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C105-khichno-type",
-              "prompt": "Type the Marwadi for 'to pull'.",
+              "prompt": "Say the Marwadi for 'to pull'.",
               "assesses": [
                 "MW-LEX-C105-ACT105-05"
               ],

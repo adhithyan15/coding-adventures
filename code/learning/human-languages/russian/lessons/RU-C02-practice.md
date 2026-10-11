@@ -38,19 +38,19 @@ reviews_of: [RU-C02-ya, RU-C02-ty-vy, RU-C02-vy-formality, RU-C02-menya-zovut, R
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-TY-VY] -->
 
 [PAUSE 2s] Give the three words the chapter opened with: *I*, familiar *you*,
-formal *you*. (*Я*, *ты*, *вы*.) Everything below is built from those.
+formal *you*. (*Ya*, *ty*, *vy*.) Everything below is built from those.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT, RU-PRAGMATICS-VY-POLITENESS] -->
 
 Two strangers meet. Say both voices aloud, one after the other:
 
-> — **Здравствуйте!** — *Zdrávstvuyte!*
-> — **Как вас зовут?** — *Kak vas zovút?*
-> — **Меня зовут Анна. А вас?** — *Menyá zovút Anna. A vas?*
-> — **Меня зовут Иван. Очень приятно.** — *Menyá zovút Iván. Óchen priyátno.*
+> — *Zdrávstvuyte!*
+> — *Kak vas zovút?*
+> — *Menyá zovút Anna. A vas?*
+> — *Menyá zovút Iván. Óchen priyátno.*
 
-Everything in it is formal, because *вы* is the safe opening with an adult you
+Everything in it is formal, because *vy* is the safe opening with an adult you
 do not know.
 
 ## Grammar Lens: what moves when the exchange goes informal
@@ -58,39 +58,39 @@ do not know.
 
 With one friend, exactly two pieces change:
 
-- the greeting — **Здравствуйте** becomes **Привет**;
+- the greeting — *Zdrávstvuyte* becomes **Привет**;
 - the object pronoun — **вас** becomes **тебя**.
 
-So *Как вас зовут?* becomes *Как тебя зовут?* The verb **зовут** does not move,
-and **меня** in the answer does not move either — you are still the one being
+So *Kak vas zovút?* becomes *Kak tebyá zovút?* The verb *zovút* does not move,
+and *menyá* in the answer does not move either — you are still the one being
 called, whoever is asking.
 
 ## Grammar Lens: why the shapes change at all
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-MENYA-OBJECT-CASE, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-NAMING-HOW-FRAME] -->
 
-*Я* becomes *меня* because the calling lands **on** you rather than coming
-**from** you; *ты* and *вы* become *тебя* and *вас* for the same reason.
+*Ya* becomes *menyá* because the calling lands **on** you rather than coming
+**from** you; *ty* and *vy* become *тебя* and *вас* for the same reason.
 
-And *зовут* is a plural verb with nobody behind it — "**they** call me," where
+And *zovút* is a plural verb with nobody behind it — "**they** call me," where
 *they* is no one in particular. That is why the Russian question asks **how**
 people call you, not **what** your name is: naming is something people do, not
 something you own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-TY-VY-REGISTER, RU-PRAGMATICS-VY-POLITENESS, RU-GRAMMAR-NAMING-HOW-FRAME] -->
-<!-- hl-activity: {"id":"RU-C02-practice-informal-question","kind":"text","assesses":["RU-GRAMMAR-OBJECT-PRONOUNS"],"prompt":"Turn Как вас зовут? into the form you use with one friend.","answer":"Как тебя зовут?","accepted":["Kak tebya zovut?","Как тебя зовут","Kak tebya zovut"],"feedback":{"correct":"Correct: вас becomes тебя, and зовут stays exactly where it was.","incorrect":"Only the object pronoun changes: вас becomes тебя, giving Как тебя зовут?"},"response_seconds":10} -->
+<!-- hl-activity: {"id":"RU-C02-practice-informal-question","kind":"text","assesses":["RU-GRAMMAR-OBJECT-PRONOUNS"],"prompt":"Turn Kak vas zovút? into the form you use with one friend.","answer":"Kak tebyá zovút?","accepted":["Kak tebya zovut?","Kak tebyá zovút","Kak tebya zovut"],"feedback":{"correct":"Correct: вас becomes тебя, and zovút stays exactly where it was.","incorrect":"Only the object pronoun changes: вас becomes тебя, giving Kak tebyá zovút?"},"response_seconds":10} -->
 
 [PAUSE 1s]
 - [YOU SAY: the full formal exchange, both voices]
 - [YOU SAY: the same exchange to one friend]
-- [YOU SAY: your own answer — "Меня зовут…" and your name]
+- [YOU SAY: your own answer — "Menyá zovút…" and your name]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-PRAGMATICS-VY-POLITENESS, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE, RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME] -->
 
 [PAUSE 3s] Run the formal exchange from memory, then switch it for one friend.
 Which two pieces changed? (The greeting, and *вас → тебя*.) Which word never
-moved? (*Зовут*.) Which form do you choose for an adult you have just met, and
-why? (*Вы* — a plural used as respect, and the safer default.) Who is doing the
-calling in *меня зовут*? (Nobody in particular — a bare plural verb.) And why is
-the question *как* rather than *что*? (Russian asks **how** people call you.)
+moved? (*Zovút*.) Which form do you choose for an adult you have just met, and
+why? (*Vy* — a plural used as respect, and the safer default.) Who is doing the
+calling in *menyá zovút*? (Nobody in particular — a bare plural verb.) And why is
+the question *kak* rather than *shto*? (Russian asks **how** people call you.)

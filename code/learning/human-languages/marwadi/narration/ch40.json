@@ -9,7 +9,7 @@
     {
       "id": "MW-C40-signs",
       "sequence": 3420,
-      "title": "(reading) (cāy · roṭī · kapṛā · rikśā · paisā · bhāv) (ye kapṛā dikhāvo. ye kitṇe kū hai?) (ye kitṇe kū hai? · ye ghaṇo mahaṅgo hai.) — six words off a signboard",
+      "title": "(reading) (cāy · roṭī · kapṛā · rikśā · paisā · bhāv) — six words off a signboard",
       "headword": "(reading)",
       "romanization": "cāy · roṭī · kapṛā · rikśā · paisā · bhāv",
       "gloss": "six words off a signboard — the first time the book asks you to read rather than to learn",
@@ -18,7 +18,8 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "reading-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9981095a66a812d0",
       "notice": {
@@ -26,7 +27,9 @@
         "needs": [
           "your eyes, to read the printed text yourself"
         ],
-        "waitUntilStopped": [],
+        "waitUntilStopped": [
+          "Reading"
+        ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
@@ -153,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C40-signs-drink",
               "prompt": "Which sign is over the tea stall?",
               "assesses": [
@@ -204,7 +208,7 @@
     {
       "id": "MW-C40-notices",
       "sequence": 3430,
-      "title": "(reading) (cāy · roṭī · kapṛā · rikśā · paisā · bhāv) (ye kapṛā dikhāvo. ye kitṇe kū hai?) (ye kitṇe kū hai? · ye ghaṇo mahaṅgo hai.) — six lines off a counter",
+      "title": "(reading) (ye kitṇe kū hai? · ye ghaṇo mahaṅgo hai.) — six lines off a counter",
       "headword": "(reading)",
       "romanization": "ye kitṇe kū hai? · ye ghaṇo mahaṅgo hai.",
       "gloss": "six lines off a counter — a word with a sentence behind it, which is the smallest thing a notice can be",
@@ -363,6 +367,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C40-notices-refuse",
               "prompt": "Which line refuses the offer?",
               "assesses": [
@@ -414,7 +419,7 @@
     {
       "id": "MW-C40-pehlo-path",
       "sequence": 3440,
-      "title": "(reading) (cāy · roṭī · kapṛā · rikśā · paisā · bhāv) (ye kapṛā dikhāvo. ye kitṇe kū hai?) (ye kitṇe kū hai? · ye ghaṇo mahaṅgo hai.) — the whole bargain",
+      "title": "(reading) (ye kapṛā dikhāvo. ye kitṇe kū hai?) — the whole bargain",
       "headword": "(reading)",
       "romanization": "ye kapṛā dikhāvo. ye kitṇe kū hai?",
       "gloss": "the first passage — a whole bargain read straight through, and not one new word in it",
@@ -573,6 +578,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C40-pehlo-path-hinge",
               "prompt": "Which single word turns the bargain around?",
               "assesses": [

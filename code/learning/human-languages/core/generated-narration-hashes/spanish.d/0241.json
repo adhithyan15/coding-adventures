@@ -1,15 +1,15 @@
 {
   "language": "spanish",
   "chapter": 241,
-  "sourceHash": "fnv1a64:80b20521595b5b7f",
+  "sourceHash": "fnv1a64:7728b2ddea1a5c7c",
   "lessonIds": [
     "ES-C63-hablasteis"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch241.txt",
   "json": "spanish/narration/ch241.json",
-  "textHash": "fnv1a64:5755c2c83ee15214",
-  "jsonHash": "fnv1a64:326d16093498cd9b",
+  "textHash": "fnv1a64:216a5396ef35169d",
+  "jsonHash": "fnv1a64:3bc276f4bb4cf1c5",
   "findings": []
 }

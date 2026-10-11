@@ -49,31 +49,31 @@ The **г** is the letter *говорить* introduced: Greek gamma, a hard **g*
 *go*. Both **о**s lean towards *a* away from the stress, as *говорить*'s do —
 **pa-ma-GAT'**.
 
-> **Я помогаю.** — *ya pamagáyu* — **I help.**
+> *ya pamagáyu* — **I help.**
 
-Same **-ю**, and **ты помогаешь** files it with *знать*.
+Same **-ю**, and *ty pamagáyesh* files it with *znat'*.
 
 One honest limit: the person you help takes a case
 this book has not reached,
-so keep the sentence bare. **Я помогаю** alone is ordinary Russian.
+so keep the sentence bare. *Ya pamagáyu* alone is ordinary Russian.
 
 ## Grammar Lens: a partner that does not end in -ть
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-SPRASHIVAT, RU-LEX-BRAT] -->
 
 Every infinitive so far ended in **-ть**. The partner of *помогать* does not:
-it is **помочь**, ending in **-чь**, and *ya pamagú, ty pamózhesh*.
+it is *pomóch'*, ending in **-ch'**, and *ya pamagú, ty pamózhesh*.
 
 A small handful of Russian verbs end that way, and they are built on old roots
 about power. The shape is a signpost, not an exception to memorise blind.
 
-Three pairs cover the chapter so far: **брать · взять**, **спрашивать ·
-спросить**, **помогать · помочь**.
+Three pairs cover the chapter so far: **брать · vzyat'**, **spráshivat' ·
+спросить**, **помогать** · *pomóch'*.
 
 ## The word, taken apart — help is power lent
 <!-- hl-knowledge: introduces=[RU-ETYMON-POMOGAT-MIGHT]; assesses=[RU-LEX-ZHIT, RU-ETYMON-ZHIT-QUICK, RU-ETYMON-SPRASHIVAT-PRAY] -->
 
-**помогать** is **по-** plus **-могать**, and under it sits **мочь**, "to be
-able" — *я могу*, *ya magú*, "I can."
+**помогать** is **по-** plus **-могать**, and under it sits *moch'*, "to be
+able" — *ya magú*, "I can."
 
 That root is Indo-European \**magʰ-*, "**to be able, to have power**", and English
 holds several pieces of it:
@@ -84,10 +84,10 @@ holds several pieces of it:
 - German **mögen** and **Macht**; and Greek *mēkhanḗ*, "a contrivance", which is
   English **machine** and **mechanic**.
 
-Note what did **not** happen here. *Могу* and *may* still mean the same thing
-after five thousand years. That is not the usual outcome: *жить*'s root handed
+Note what did **not** happen here. *Magú* and *may* still mean the same thing
+after five thousand years. That is not the usual outcome: *zhit'*'s root handed
 English **quick**, which once meant **alive** and now means *fast*. Some roots
-keep their sense, some drift out of recognition, and *спрашивать*'s went from
+keep their sense, some drift out of recognition, and *spráshivat'*'s went from
 *ask* all the way to *pray*. Each one has to be checked rather than guessed.
 
 ## Guided Practice
@@ -95,16 +95,16 @@ keep their sense, some drift out of recognition, and *спрашивать*'s we
 
 [PAUSE 1s]
 - [YOU SAY: "помогать" — *pa-ma-GAT'*, both *o*s leaning to *a*]
-- [YOU SAY: "Я помогаю"]
-- [YOU SAY: the three pairs — "брать·взять, спрашивать·спросить, помогать·помочь"]
-- [YOU SAY: "могу" then English "may, might" — one meaning, two languages]
+- [YOU SAY: "Ya pamagáyu"]
+- [YOU SAY: the three pairs — "брать·vzyat', spráshivat'·спросить, помогать·pomóch'"]
+- [YOU SAY: "magú" then English "may, might" — one meaning, two languages]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POMOGAT, RU-ETYMON-POMOGAT-MIGHT, RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-SPRASHIVAT, RU-ETYMON-SPRASHIVAT-PRAY, RU-LEX-BRAT, RU-LEX-ZHIT, RU-ETYMON-ZHIT-QUICK, RU-SCRIPT-GE-GAMMA, RU-LEX-GOVORIT, RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U] -->
 
-[PAUSE 3s] Say "I help." (**Я помогаю**.) Which verb is hiding inside it, and
-what does it mean? (**Мочь** — to be able; *я могу*.) Name the partner and say
-what is odd about its ending. (**Помочь**, in **-чь** rather than **-ть**.) Give
+[PAUSE 3s] Say "I help." (*Ya pamagáyu*.) Which verb is hiding inside it, and
+what does it mean? (*Moch'* — to be able; *ya magú*.) Name the partner and say
+what is odd about its ending. (*Pomóch'*, in **-ch'** rather than **-ть**.) Give
 two English cousins of \**magʰ-*. (*May*, *might*, *dismay*, *machine*.) And
 which English word from your verbs no longer means what its root meant?
-(**Quick**, from *жить*'s root — it meant *alive*.)
+(**Quick**, from *zhit'*'s root — it meant *alive*.)

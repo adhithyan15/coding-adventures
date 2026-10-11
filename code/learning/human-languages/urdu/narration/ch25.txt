@@ -154,7 +154,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two pieces is ہمارا (hamārā) made of? (ہم and کا, fused.) Which possessive is written as two words? (آپ کا.) And what does the ending agree with? (The noun after it — gender, and oblique or not.)
+What two pieces is ہمارا (hamārā) made of? (ہم (ham) and کا, fused.) Which possessive is written as two words? (آپ کا.) And what does the ending agree with? (The noun after it — gender, and oblique or not.)
 Source: Unicode Arabic chart.
 
 
@@ -200,5 +200,5 @@ Three chapters ago no Urdu noun in this book had ever changed shape, been more t
 
 Wrap-up Recall.
 [pause 4 seconds]
-Which ending means plural, and a postposition is coming? (-وں.) Which two of the four cells collide, and what settles them? (Plural direct and oblique singular; whether a postposition follows.) What is ہمارا (hamārā) made of? (ہم and کا.) And which three words in this book use a plural form for one person? (آپ, ان, ہم.)
+Which ending means plural, and a postposition is coming? (-وں.) Which two of the four cells collide, and what settles them? (Plural direct and oblique singular; whether a postposition follows.) What is ہمارا (hamārā) made of? (ہم (ham) and کا.) And which three words in this book use a plural form for one person? (آپ, ان, ہم (ham).)
 Source: Unicode Arabic chart.

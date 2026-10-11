@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [ZH-SKILL-CONNECTED-READING, ZH-SKILL-READ-WORDS, ZH-LEX-NE-01, ZH-LEX-DUI-01, ZH-LEX-SUI-01, ZH-LEX-ZHONGGUOREN-01]
+  knowledge: [ZH-SKILL-CONNECTED-READING, ZH-SKILL-READ-WORDS, ZH-LEX-NE-01, ZH-LEX-DUI-01, ZH-LEX-SUI-01, ZH-LEX-ZHONGGUOREN-01, ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01]
 skills: [reading]
 modes: [interpretive]
 strands: [meaning-input]
@@ -79,7 +79,7 @@ a verb waits forever.
 once, and it works because every character was paid for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ZH-SKILL-CONNECTED-READING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-SKILL-CONNECTED-READING, ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01] -->
 
 <!-- hl-activity: {"id":"ZH-C29-diyi-ke-age","kind":"text","assesses":["ZH-SKILL-CONNECTED-READING"],"prompt":"How old is the writer?","answer":"18","accepted":["十八","eighteen"],"feedback":{"correct":"十八岁.","incorrect":"十八岁 -- eighteen."},"response_seconds":13} -->
 

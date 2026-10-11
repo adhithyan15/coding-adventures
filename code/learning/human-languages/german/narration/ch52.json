@@ -168,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GE-C52-words-drink",
               "prompt": "Which of the six would you drink?",
               "assesses": [
@@ -372,6 +373,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GE-C52-saetze-must",
               "prompt": "Which line says something is necessary?",
               "assesses": [
@@ -587,6 +589,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GE-C52-erste-lesung-weil",
               "prompt": "Which word sends the verb to the end?",
               "assesses": [

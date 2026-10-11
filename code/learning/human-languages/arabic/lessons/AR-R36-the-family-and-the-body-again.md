@@ -62,7 +62,7 @@ the oldest words take the cheapest endings.
 ## Why it's said this way: roots still at work
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C11-RAS-02, AR-CONCEPT-C10-AB-UMM-02] -->
 
-**رئيس** *raʾīs*, **president** or **chief**, is built on *head* with nothing
+*raʾīs*, **president** or **chief**, is built on *head* with nothing
 borrowed — Arabic reached for its own oldest word, the way English reached for
 Latin *caput* to make *capital* and *captain*.
 
@@ -77,7 +77,7 @@ Latin *caput* to make *capital* and *captain*.
 
 **مع** needed no new letters when you first wrote it. And **السلامة** is not a new
 word: it is **الـ** wrapped round the very first word you learned to draw, with a
-tied *tāʾ* closing it — the same **ة** that closes **ملعقة**, the spoon in your
+tied *tāʾ* closing it — the same **ة** that closes *milʿaqa*, the spoon in your
 hand.
 
 ## Guided Practice
@@ -92,5 +92,5 @@ hand.
 
 [PAUSE 4s] Name the word in this set that has changed least from its Hebrew
 cousin. (**يد**.) Say what separates **أخ** from **أخت**. (**One added letter**.)
-Name the letter that closes both **السلامة** and **ملعقة**. (**ة**, the tied
-*tāʾ*.) And give the chief built on the word for head. (**رئيس**.)
+Name the letter that closes both **السلامة** and *milʿaqa*. (**ة**, the tied
+*tāʾ*.) And give the chief built on the word for head. (*raʾīs*.)

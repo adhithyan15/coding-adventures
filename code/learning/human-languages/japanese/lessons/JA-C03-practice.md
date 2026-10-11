@@ -34,7 +34,7 @@ reviews_of: [JA-W03-arigatou-read, JA-W03-sa, JA-W03-ma, JA-W03-su, JA-C01-gozai
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ARIGATOU-READ-01] -->
 
-[PAUSE 2s] Write ありがとう. Five signs, no help.
+[PAUSE 2s] [YOU WRITE: ありがとう — five signs, no help]
 
 ## Script — the second half
 <!-- hl-knowledge: introduces=[JA-SCRIPT-GOZAIMASU-READ-01]; assesses=[JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-SA-01, JA-SCRIPT-MA-01, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-I-01] -->

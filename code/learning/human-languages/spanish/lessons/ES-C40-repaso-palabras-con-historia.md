@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-WEEKEND-01, ES-LEX-SEASONS-01, ES-LEX-MONTHS-01, ES-LEX-NOON-MIDNIGHT-01, ES-GRAMMAR-TELLING-TIME-03, ES-GRAMMAR-WEATHER-05, ES-LEX-VEINTE-06, ES-LEX-ROJO-01, ES-LEX-AZUL-03, ES-LEX-VERDE-01, ES-LEX-AMARILLO-03]
+  knowledge: [ES-LEX-WEEKEND-01, ES-LEX-SEASONS-01, ES-LEX-MONTHS-01, ES-LEX-NOON-MIDNIGHT-01, ES-GRAMMAR-TELLING-TIME-03, ES-GRAMMAR-WEATHER-05, ES-LEX-VEINTE-06, ES-LEX-ROJO-01, ES-LEX-AZUL-03, ES-LEX-VERDE-01, ES-LEX-AMARILLO-03, ES-ETYMON-WEEKEND-02, ES-ETYMON-AZUL-04, ES-ETYMON-HORA-02, ES-ETYMON-VEINTE-07, ES-ETYMON-AMARILLO-04, ES-ETYMON-SEASONS-02, ES-ETYMON-VERANO-03]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -49,7 +49,7 @@ which needs no subject at all — *llueve*.
 [PAUSE 2s] The months, in order, from *enero* to *diciembre*.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ROJO-01, ES-LEX-AZUL-03, ES-LEX-VERDE-01, ES-LEX-AMARILLO-03, ES-LEX-WEEKEND-01, ES-LEX-VEINTE-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ROJO-01, ES-LEX-AZUL-03, ES-LEX-VERDE-01, ES-LEX-AMARILLO-03, ES-LEX-WEEKEND-01, ES-LEX-VEINTE-06, ES-ETYMON-WEEKEND-02, ES-ETYMON-AZUL-04, ES-ETYMON-HORA-02, ES-ETYMON-VEINTE-07, ES-ETYMON-AMARILLO-04] -->
 
 Ask one question of all of them — *where did you come from?* — and no two give
 the same answer.
@@ -69,7 +69,7 @@ word you meet from here on has one of those behind it, and asking which is how
 a vocabulary stops being a list.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ROJO-01, ES-LEX-AZUL-03, ES-LEX-VERDE-01, ES-LEX-AMARILLO-03, ES-GRAMMAR-TELLING-TIME-03, ES-GRAMMAR-WEATHER-05, ES-LEX-NOON-MIDNIGHT-01, ES-LEX-VEINTE-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ROJO-01, ES-LEX-AZUL-03, ES-LEX-VERDE-01, ES-LEX-AMARILLO-03, ES-GRAMMAR-TELLING-TIME-03, ES-GRAMMAR-WEATHER-05, ES-LEX-NOON-MIDNIGHT-01, ES-LEX-VEINTE-06, ES-ETYMON-AMARILLO-04] -->
 
 <!-- hl-activity: {"id":"ES-C40-repaso-palabras-con-historia-colores","kind":"text","assesses":["ES-LEX-ROJO-01","ES-LEX-AZUL-03","ES-LEX-VERDE-01","ES-LEX-AMARILLO-03"],"prompt":"Red, blue, green, yellow.","answer":"rojo, azul, verde, amarillo","accepted":["rojo azul verde amarillo"],"feedback":{"correct":"Four colours, four different histories.","incorrect":"Rojo, azul, verde, amarillo."},"response_seconds":12} -->
 <!-- hl-activity: {"id":"ES-C40-repaso-palabras-con-historia-hora","kind":"text","assesses":["ES-GRAMMAR-TELLING-TIME-03","ES-LEX-VEINTE-06"],"prompt":"Say it is two twenty.","answer":"son las dos y veinte","accepted":["las dos y veinte"],"feedback":{"correct":"Son las — plural, because the hours are.","incorrect":"Son las dos y veinte."},"response_seconds":10} -->
@@ -81,8 +81,10 @@ a vocabulary stops being a list.
 - [YOU SAY: *sábado*, *domingo* — then *lunes*, and hear the planet come back]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SEASONS-01, ES-LEX-MONTHS-01, ES-LEX-AZUL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SEASONS-01, ES-LEX-MONTHS-01, ES-LEX-AZUL-03, ES-ETYMON-AZUL-04, ES-ETYMON-SEASONS-02, ES-ETYMON-VERANO-03] -->
 
 [PAUSE 3s] Name the season after *el verano*. (*El otoño*.) The month after
 *noviembre*. (*Diciembre*.) And which of your colour words was borrowed rather
 than inherited? (***Azul***.)
+
+[PAUSE 2s] Which season is literally **first spring**, and which one is built on the same *vēr*? (*La primavera*; *el verano*.)

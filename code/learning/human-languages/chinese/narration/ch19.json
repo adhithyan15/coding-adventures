@@ -74,6 +74,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C19-hear-ma-tone",
               "prompt": "Which tone does ma carry?",
               "assesses": [
@@ -108,19 +109,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:80824268f37c3a61",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -163,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "The left half is doing real work even though it is not saying anything: 口 means mouth, and it marks 吗 as one of a family of characters that exist only to be spoken."
+              "text": "The left half is doing real work even though it is not saying anything: 口 means mouth, and it marks 吗 (ma) as one of a family of characters that exist only to be spoken."
             }
           ]
         },
@@ -174,7 +179,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace 吗 once. Say mouth, mouth, mouth — turn, turn-and-hook, long bar. Finish the whole 口 before starting the right half, and keep it small."
+              "text": "Trace 吗 (ma) once. Say mouth, mouth, mouth — turn, turn-and-hook, long bar. Finish the whole 口 before starting the right half, and keep it small."
             }
           ]
         },
@@ -190,8 +195,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W19-ma-observe-count",
-              "prompt": "How many strokes does 吗 use, and which half is written first?",
+              "prompt": "How many strokes does 吗 (ma) use, and which half is written first?",
               "assesses": [
                 "ZH-SCRIPT-MA-01"
               ],
@@ -215,7 +221,7 @@
     {
       "id": "ZH-W19-ma-guided",
       "sequence": 1840,
-      "title": "吗 — copy it, and keep the mouth small",
+      "title": "吗 (ma) — copy it, and keep the mouth small",
       "headword": "吗",
       "romanization": "ma",
       "gloss": "the question particle, copied with the six-part route visible",
@@ -223,16 +229,22 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d26446bb6fdd5322",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Guided Practice — Spaced Return"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Guided Practice — Spaced Return."
       },
       "blocks": [
         {
@@ -286,6 +298,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W19-ma-guided-last",
               "prompt": "What is the final stroke of 吗 (ma)?",
               "assesses": [
@@ -320,17 +333,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:a289f3252d426363",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -377,6 +396,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W19-ma-delayed-order",
               "prompt": "Which half of 吗 (ma) is completed first?",
               "assesses": [
@@ -542,6 +562,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C19-ma-read-write",
               "prompt": "Where in the sentence does 吗 (ma) go, and what does it change?",
               "assesses": [
@@ -629,6 +650,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C19-hear-nihaoma-meaning",
               "prompt": "What does nǐ hǎo ma mean?",
               "assesses": [
@@ -739,7 +761,7 @@
             },
             {
               "kind": "speech",
-              "text": "吗 is not written smaller for meaning nothing."
+              "text": "吗 (ma) is not written smaller for meaning nothing."
             }
           ]
         },
@@ -755,6 +777,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C19-nihaoma-write",
               "prompt": "Write how are you, without pinyin.",
               "assesses": [
@@ -787,16 +810,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:fd3826974b78caf9",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -839,6 +867,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R19-ma-two-r1-order",
               "prompt": "Write hello, then how are you.",
               "assesses": [
@@ -928,6 +957,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C19-hear-shima-use",
               "prompt": "When do you say shì ma?",
               "assesses": [
@@ -1039,6 +1069,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C19-shima-write",
               "prompt": "Write is that so, without pinyin.",
               "assesses": [
@@ -1132,6 +1163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C19-hear-haobuhao-shape",
               "prompt": "What three pieces make hǎo bu hǎo?",
               "assesses": [
@@ -1274,6 +1306,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C19-haobuhao-two-ways",
               "prompt": "Name Mandarin's two ways of asking a yes-or-no question.",
               "assesses": [
@@ -1383,6 +1416,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-R19-ma-three-r2-sort",
               "prompt": "Which of the three does NOT end in 吗 (ma)?",
               "assesses": [
@@ -1479,6 +1513,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-R19-listening-three-score",
               "prompt": "How many of the three did you catch by ear alone?",
               "assesses": [
@@ -1582,6 +1617,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-R19-reading-three-clue",
               "prompt": "Reading cold, what tells you a sentence is a question?",
               "assesses": [
@@ -1729,6 +1765,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C19-practice-four-scores",
               "prompt": "Give your four scores as listening, speaking, reading, writing.",
               "assesses": [
@@ -1774,7 +1811,7 @@
           "Script and tone, the two that were taught once",
           "Guided Practice — four skills, on old material"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and tone, the two that were taught once and Guided Practice — four skills, on old material until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and tone, the two that were taught once and Guided Practice — four skills, on old material."
       },
       "blocks": [
         {

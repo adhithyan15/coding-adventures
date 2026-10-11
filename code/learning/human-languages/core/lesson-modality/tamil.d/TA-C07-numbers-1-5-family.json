@@ -4,18 +4,18 @@
     "language": "tamil",
     "chapter": 7,
     "sequence": 430,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:65a2c1abb1ffff6c"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f29468880ff34474"
   },
   "findings": []
 }

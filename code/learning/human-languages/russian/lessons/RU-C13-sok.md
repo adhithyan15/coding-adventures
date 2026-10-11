@@ -38,7 +38,7 @@ reviews_of: [RU-C13-syr, RU-C13-moloko]
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SYR] -->
 
 [PAUSE 2s] The third drink on this chapter's shelf — and, like *скорого* and
-*встречи* before it, a root old enough to reconstruct and still without a
+*fstréchi* before it, a root old enough to reconstruct and still without a
 single confirmed English relative.
 
 ## You'll want to know first — сок
@@ -59,13 +59,13 @@ does **not** have is a surviving cousin anywhere in English or the rest of
 Germanic: the trail is well documented all the way back, and then simply
 stops before it reaches the language you already speak.
 
-That is worth holding next to *молоко* and *сыр*, the two words either side
-of it on this shelf: three drinks, three different outcomes. *Молоко*
-connects to English down to the hand motion. *Сыр* connects through a
+That is worth holding next to *malakó* and *syr*, the two words either side
+of it on this shelf: three drinks, three different outcomes. *Malakó*
+connects to English down to the hand motion. *Syr* connects through a
 Germanic side door, by way of *sour*. *Сок* connects to nothing at all —
 and all three are equally real, equally ancient Russian.
 
-> **Сок, пожалуйста.** — *sok, pazhálusta* — **Juice, please.**
+> *Sok, pazhálusta.* — **Juice, please.**
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SOK, RU-ETYMON-SOK-NO-COUSIN, RU-LEX-MOLOKO, RU-LEX-SYR] -->
@@ -73,9 +73,9 @@ and all three are equally real, equally ancient Russian.
 [PAUSE 1s]
 - [YOU SAY: "сок" — masculine, one syllable]
 - [YOU SAY: the honest gap — "\*sokʷós, well attested, no English cousin"]
-- [YOU SAY: the three-way contrast — "молоко, сыр, сок — hand motion,
+- [YOU SAY: the three-way contrast — "malakó, syr, сок — hand motion,
   sourness, and nothing at all"]
-- [YOU SAY: "Сок, пожалуйста." — juice, please]
+- [YOU SAY: "Sok, pazhálusta." — juice, please]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SOK, RU-ETYMON-SOK-NO-COUSIN, RU-LEX-MOLOKO, RU-LEX-SYR] -->
@@ -84,5 +84,5 @@ and all three are equally real, equally ancient Russian.
 have a confirmed English cousin? (**No** — a solid PIE root, but no
 surviving Germanic descendant.) Which of this chapter's three drink words
 connects to English through a hand motion, and which through a taste?
-(**Молоко** through milking; **сыр** through *sour*.) Ask for juice
-politely. (**Сок, пожалуйста.**)
+(*Malakó* through milking; *syr* through *sour*.) Ask for juice
+politely. (*Sok, pazhálusta.*)

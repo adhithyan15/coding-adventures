@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Review --- Five Sets, Finished",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:370df9b4ea729bb3",
+  "sourceHash": "fnv1a64:b309b76dbb481f15",
   "lessons": [
     {
       "id": "ES-C65-repaso-parejas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d6f71b65ff55137",
+      "sourceHash": "fnv1a64:09900b78917adb83",
       "notice": null,
       "blocks": [
         {
@@ -165,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-parejas-bare",
               "prompt": "Which says books in general -- compro libros, or compro unos libros?",
               "assesses": [
@@ -183,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-parejas-hora",
               "prompt": "What is hiding inside ahora?",
               "assesses": [
@@ -201,6 +203,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-parejas-dar",
               "prompt": "Which set of past endings does dar take?",
               "assesses": [
@@ -242,6 +245,16 @@
             {
               "kind": "speech",
               "text": "And which place word matches ese? (Ahí — the listener's side.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And hoy: which two Latin words wore down into it? (Hoc die — this day.)"
             }
           ]
         }
@@ -260,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65412ac7c0e32fd5",
+      "sourceHash": "fnv1a64:9f0ae46d5bd3b936",
       "notice": null,
       "blocks": [
         {
@@ -377,6 +390,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-isteis",
               "prompt": "You all ate, then you all had.",
               "assesses": [
@@ -396,6 +410,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-acento",
               "prompt": "Why does comiamos need its accent?",
               "assesses": [
@@ -416,6 +431,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-di",
               "prompt": "Dar is an -ar verb. Say I gave.",
               "assesses": [
@@ -435,6 +451,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-irregulares",
               "prompt": "We were, and we used to go.",
               "assesses": [
@@ -466,6 +483,16 @@
             {
               "kind": "speech",
               "text": "Which ending closed the preterite for everything that is not an -ar verb? (-isteis, strong stems included.) And how many verbs break the imperfect? (Three — ser, ir, ver.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now use both: tell a three-line story, the scene first and then two events. (Llovía. Me levanté, luego leí. — the imperfect holds the scene still; the preterite drops the events in.)"
             }
           ]
         }
@@ -623,6 +650,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-columna-vosotros-presente",
               "prompt": "You all go.",
               "assesses": [
@@ -641,6 +669,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-columna-vosotros-preterito",
               "prompt": "You all ate, and you all had.",
               "assesses": [
@@ -660,6 +689,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-columna-vosotros-posesivo",
               "prompt": "Nosotros gives nuestro. What does vosotros give?",
               "assesses": [

@@ -36,7 +36,7 @@ reviews_of: [SA-C15-good]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: नव
 <!-- hl-knowledge: introduces=[SA-LEX-C15-ADJ-04]; assesses=[] -->

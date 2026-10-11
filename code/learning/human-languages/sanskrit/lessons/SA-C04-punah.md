@@ -12,7 +12,7 @@ headword: पुनः
 gloss: again
 romanization: "punaḥ"
 concept_tag: SA-WORD-PUNAH
-prerequisites: []
+prerequisites: [SA-C04-gacchami]
 sounds: [inherent-a, visarga]
 roots: [punar-again]
 reviews_of: []

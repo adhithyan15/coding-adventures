@@ -37,7 +37,7 @@ reviews_of: [FA-C04-khubam, FA-C01-salam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-GRAMMAR-PERSONAL-COPULA-AM] -->
 
-[PAUSE 2s] Chapter 4 ended on **خوبم** *khubam*, “I am well.” That **-am**
+[PAUSE 2s] Chapter 4 ended on *khubam*, “I am well.” That **-am**
 carried “I am” with no verb beside it. This chapter names the verb it belongs
 to.
 
@@ -56,7 +56,7 @@ kind of break **ا** makes inside **سلام**.
 
 English names a verb with a word in front of it: *to be*, *to go*, *to know*.
 Persian names it with an ending on the back. Every Persian infinitive — every
-one, with no list of exceptions — finishes in **-تن** *-tan* or **-دن** *-dan*.
+one, with no list of exceptions — finishes in *-tan* or **-دن** *-dan*.
 
 **بودن** is *bu* + *dan*. Whenever a Persian word ends in *-tan* or *-dan*, you
 are holding a verb in its naming form.
@@ -74,8 +74,8 @@ root, worn smooth. So are German *bin*, Latin *fuī* “I was” — the ancesto
 English **future** — and Sanskrit *bhavati*.
 
 The resemblance runs through Persian's plainest words:
-**مادر** *mâdar* is **mother**, **پدر** *pedar* is
-**father**, **برادر** *barâdar* is **brother**, **دختر** *dokhtar* is
+*mâdar* is **mother**, *pedar* is
+**father**, *barâdar* is **brother**, *dokhtar* is
 **daughter**, **نام** *nâm* is **name**. Nobody borrowed these; both languages
 inherited them.
 
@@ -90,7 +90,7 @@ cousin has to be traced, not guessed.
 - [YOU READ: **بودن** from the right edge, in its two clumps]
 - [YOU NAME: the ending that marks a Persian infinitive — **-tan / -dan**]
 - [YOU CONNECT: **budan** ← \**bheu-* → English **be**, **been**]
-- [YOU RETRIEVE: the ending on **خوبم** that already meant “I am”]
+- [YOU RETRIEVE: the ending on *khubam* that already meant “I am”]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BUDAN, FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-ETYMON-BUDAN-BE] -->

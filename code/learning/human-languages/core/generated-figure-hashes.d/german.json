@@ -21,6 +21,13 @@
       "sourceHash": "fnv1a64:c28333a603e0bc42",
       "svgHash": "fnv1a64:f617e4afb7ac7925",
       "svg": "german/book/figures/GE-W01-hallo-guided-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GE-W02-umlauts",
+      "sourceHash": "fnv1a64:293303685a49e497",
+      "svgHash": "fnv1a64:119fbf1c079afe70",
+      "svg": "german/book/figures/GE-W02-umlauts-filmstrip.svg"
     }
   ]
 }

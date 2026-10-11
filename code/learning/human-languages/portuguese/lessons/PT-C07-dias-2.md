@@ -43,10 +43,10 @@ the key that explains why the counting started where it did.
 ## The two days, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-DIAS-2-02]; assesses=[] -->
 
-| Portuguese | ← Latin | meaning | shared with |
-|---|---|---|---|
-| **sábado** | *Sabbatum* ← Hebrew *shabbāt* | the "**Sabbath**," rest-day | Spanish *sábado*, Italian *sabato*, French *samedi* |
-| **domingo** | *(diēs) Dominica* ← *Dominus* | "the **Lord's** day" | Spanish *domingo*, Italian *domenica* |
+| Portuguese ← Latin | meaning | shared with |
+|---|---|---|
+| **sábado** ← *Sabbatum* ← Hebrew *shabbāt* | the "**Sabbath**," rest-day | Spanish *sábado*, Italian *sabato*, French *samedi* |
+| **domingo** ← *(diēs) Dominica* ← *Dominus* | "the **Lord's** day" | Spanish *domingo*, Italian *domenica* |
 
 - **sábado** is the **Sabbath**, from Hebrew *shabbāt* "to rest" — the one weekend
   name every Romance language shares (even numbering-mad Portuguese kept it).

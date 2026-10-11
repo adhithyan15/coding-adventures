@@ -251,7 +251,7 @@
           "Script you'll notice: ◌ा",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ा and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ा and Guided Practice."
       },
       "blocks": [
         {
@@ -300,7 +300,7 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ा = ना — nā."
+              "text": "Worked through: न + ◌ा (ā) = ना — nā."
             },
             {
               "kind": "speech",
@@ -667,7 +667,7 @@
           "Script you'll notice: म",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: म and Guided Practice."
       },
       "blocks": [
         {
@@ -854,16 +854,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:67590d241a8f30be",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -873,7 +877,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say मम (mama) — “my.” Point to its two equal parts: म + म. Nothing here is new vocabulary, and no new shape is hiding in the word."
+              "text": "Say मम (mama) — “my.” Point to its two equal parts: म (ma) + म (ma). Nothing here is new vocabulary, and no new shape is hiding in the word."
             }
           ]
         },
@@ -884,7 +888,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep मम (mama) visible and follow the numbered strip: write the body of the first म, then the body of the second, and only then draw one śirorekhā left to right across both, so the word hangs from one line. Most native writers leave the headline for last; some draw it first."
+              "text": "Keep मम (mama) visible and follow the numbered strip: write the body of the first म (ma), then the body of the second, and only then draw one śirorekhā left to right across both, so the word hangs from one line. Most native writers leave the headline for last; some draw it first."
             },
             {
               "kind": "speech",
@@ -899,7 +903,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "How many written syllables did the word need? (Two: म + म.) What made the two letters look like one word? (Their joined headline.)"
+              "text": "How many written syllables did the word need? (Two: म (ma) + म (ma).) What made the two letters look like one word? (Their joined headline.)"
             }
           ]
         }
@@ -918,17 +922,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bd4111a9cb055e05",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -938,7 +947,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at मम (mama) for five seconds. Find the two copies of म and the headline that joins them. Then cover the word."
+              "text": "Look at मम (mama) for five seconds. Find the two copies of म (ma) and the headline that joins them. Then cover the word."
             }
           ]
         },
@@ -982,16 +991,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7d6496e730164137",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -1179,16 +1192,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:35fff4806a3dafe8",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -1213,7 +1230,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write मम (mama): the body of each म, then one headline across the word."
+              "text": "Write मम (mama): the body of each म (ma), then one headline across the word."
             },
             {
               "kind": "speech",
@@ -1255,17 +1272,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:df5af99aec6654d5",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -1275,7 +1297,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at मम नाम (mama nāma) for five seconds. Point to the word space and to ◌ा. Then cover the model."
+              "text": "Look at मम नाम (mama nāma) for five seconds. Point to the word space and to ◌ा (ā). Then cover the model."
             }
           ]
         },
@@ -1319,16 +1341,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ba2c7f43a7bc7cab",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -1463,17 +1489,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b6dfb0cf9d34bc52",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -1483,7 +1514,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at नमः for five seconds. Point to न, म, and the visarga ः. Say namaḥ, “a bow, a salutation.” Then cover the model."
+              "text": "Look at नमः for five seconds. Point to न, म (ma), and the visarga ः. Say namaḥ, “a bow, a salutation.” Then cover the model."
             }
           ]
         },
@@ -1527,16 +1558,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3aa3b5663cd25845",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -1566,7 +1601,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the word from sound and meaning alone. Stop after one attempt. Now uncover and compare: नमः (namaḥ). Check न, म, and the final visarga in that order. Repair only the first difference."
+              "text": "Write the word from sound and meaning alone. Stop after one attempt. Now uncover and compare: नमः (namaḥ). Check न, म (ma), and the final visarga in that order. Repair only the first difference."
             }
           ]
         },
@@ -1719,7 +1754,7 @@
         "waitUntilStopped": [
           "Script — the chapter's two shapes"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the chapter's two shapes until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the chapter's two shapes."
       },
       "blocks": [
         {
@@ -1957,7 +1992,7 @@
     {
       "id": "SA-S203-vowel-sign-u",
       "sequence": 201,
-      "title": "◌ु — one character, met inside words you already say",
+      "title": "◌ु (u) — one character, met inside words you already say",
       "headword": "ु",
       "romanization": "u",
       "gloss": "the single character ◌ु — recognised inside words you already say",
@@ -1980,7 +2015,7 @@
           "Script you'll notice: ◌ु",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ु and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ु and Guided Practice."
       },
       "blocks": [
         {
@@ -2029,11 +2064,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ु = नु — nu."
+              "text": "Worked through: न + ◌ु (u) = नु — nu."
             },
             {
               "kind": "speech",
-              "text": "You already say this word, and ◌ु is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
+              "text": "You already say this word, and ◌ु (u) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
             },
             {
               "kind": "speech",
@@ -2048,7 +2083,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ु yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ु (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",

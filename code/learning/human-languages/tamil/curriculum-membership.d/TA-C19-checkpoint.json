@@ -1,0 +1,11 @@
+{
+  "id": "TA-C19-checkpoint",
+  "pathSegment": "TA-PATH-023",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-023-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

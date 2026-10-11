@@ -23,6 +23,8 @@
 
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
+use std::collections::HashSet;
+use std::sync::OnceLock;
 
 mod _grammar;
 
@@ -43,6 +45,24 @@ pub fn try_tokenize_c(source: &str) -> Result<Vec<Token>, String> {
     create_c_lexer(source)
         .tokenize()
         .map_err(|e| format!("{e:?}"))
+}
+
+/// Whether the compiled C token grammar reserves `word` as a keyword.
+///
+/// The set is built once from the same generated grammar used by `try_tokenize_c`.
+/// Macro paste can call this for every expansion without rebuilding the lexer.
+pub fn is_c_keyword(word: &str) -> bool {
+    static KEYWORDS: OnceLock<HashSet<String>> = OnceLock::new();
+    KEYWORDS
+        .get_or_init(|| {
+            let grammar = _grammar::token_grammar();
+            grammar
+                .keywords
+                .into_iter()
+                .chain(grammar.reserved_keywords)
+                .collect()
+        })
+        .contains(word)
 }
 
 #[cfg(test)]
@@ -155,6 +175,18 @@ mod tests {
         // NAME — so the grammar sees a type, not an identifier.
         for kw in ["uint8_t", "int64_t", "size_t", "unsigned"] {
             assert_eq!(kinds(kw), vec!["KEYWORD"], "for `{kw}`");
+        }
+    }
+
+    #[test]
+    fn cached_keyword_lookup_agrees_with_the_compiled_c_grammar() {
+        for keyword in _grammar::token_grammar().keywords {
+            assert!(is_c_keyword(&keyword), "{keyword}");
+            assert_eq!(kinds(&keyword), vec!["KEYWORD"], "{keyword}");
+        }
+        for name in ["preNAME", "int32_tail", "_name"] {
+            assert!(!is_c_keyword(name), "{name}");
+            assert_eq!(kinds(name), vec!["NAME"], "{name}");
         }
     }
 }

@@ -14,10 +14,10 @@
     "KA-R04-second-pass-going-and-coming-back"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "kannada/narration/ch04.txt",
   "json": "kannada/narration/ch04.json",
-  "textHash": "fnv1a64:0da153756e17399d",
-  "jsonHash": "fnv1a64:bfa3872f9b8ed0f2",
+  "textHash": "fnv1a64:5e10b9a9c2f32d2a",
+  "jsonHash": "fnv1a64:e287781a02f3624e",
   "findings": []
 }

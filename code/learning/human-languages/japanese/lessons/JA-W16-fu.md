@@ -61,13 +61,14 @@ accident. They are separate.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-FU-01] -->
 
-1. Trace **ふ** once, counting the four lifts aloud.
+1. Trace **ふ** once, counting the four strokes aloud. That is three lifts,
+   one before each stroke after the first.
 2. Copy it once; hide it; write it again.
 3. Check only one thing: are the bottom two marks separate?
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-FU-01] -->
-<!-- hl-activity: {"id":"JA-W16-fu-write","kind":"text","assesses":["JA-SCRIPT-FU-01"],"prompt":"Write the hiragana sign for the mora fu, and say how many strokes it takes.","answer":"\u3075, four strokes","accepted":["fu, four","\u3075"],"feedback":{"correct":"Four: tick, body, left mark, right mark.","incorrect":"Count the lifts: there are four."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"JA-W16-fu-write","kind":"text","assesses":["JA-SCRIPT-FU-01"],"prompt":"Write the hiragana sign for the mora fu, and say how many strokes it takes.","answer":"\u3075, four strokes","accepted":["fu, four","\u3075"],"feedback":{"correct":"Four: tick, body, left mark, right mark.","incorrect":"Count the strokes: there are four, with a lift before each one after the first."},"response_seconds":12} -->
 
 How many strokes? (**Four.**)
 

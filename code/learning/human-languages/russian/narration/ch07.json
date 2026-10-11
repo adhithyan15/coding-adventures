@@ -4,12 +4,12 @@
   "chapter": 7,
   "title": "Friend and Siblings",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f53db69acfff78c5",
+  "sourceHash": "fnv1a64:5c26b61c0b96467f",
   "lessons": [
     {
       "id": "RU-C07-drug",
       "sequence": 320,
-      "title": "друг (drug) — \"friend,\" the word that explains why ты exists",
+      "title": "друг (drug) — \"friend,\" the word that explains why ty exists",
       "headword": "друг",
       "romanization": "drug",
       "gloss": "friend (male, or unspecified) — masculine, and the reason you own ты at all",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba22124d99d3ced8",
+      "sourceHash": "fnv1a64:fbd4767961ed8904",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "A new chapter, and the first word in it names exactly who Chapter 2's informal ты was built for."
+              "text": "A new chapter, and the first word in it names exactly who Chapter 2's informal ty was built for."
             }
           ]
         },
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Consonant-final, so masculine — the ending rule holding steady for the third time. Every letter is one you already read — none of them the throat-rasp х that хлеб just taught you; that one waits for a later word."
+              "text": "Consonant-final, so masculine — the ending rule holding steady for the third time. Every letter is one you already read — none of them the throat-rasp х that khleb just taught you; that one waits for a later word."
             },
             {
               "kind": "speech",
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the noun Chapter 2's whole ты/вы choice was about. Ты is for a друг (drug) — someone close enough that formality would feel wrong. Вы is for the stranger, the elder, the shopkeeper: everyone друг (drug) does not cover."
+              "text": "This is the noun Chapter 2's whole ty/vy choice was about. Ty is for a друг (drug) — someone close enough that formality would feel wrong. Vy is for the stranger, the elder, the shopkeeper: everyone друг (drug) does not cover."
             }
           ]
         },
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "Unlike хлеб's tidy modern cousin loaf, this is a root that mostly vanished from English rather than one that thrived in it — worth saying plainly rather than stretching for a connection that isn't really there."
+              "text": "Unlike khleb's tidy modern cousin loaf, this is a root that mostly vanished from English rather than one that thrived in it — worth saying plainly rather than stretching for a connection that isn't really there."
             }
           ]
         },
@@ -100,11 +100,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"ты for a друг (drug), вы for everyone else\"",
+              "instruction": "the pair — \"ty for a друг (drug), vy for everyone else\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"ты for a друг, вы for everyone else\"]"
+              "source": "[YOU SAY: the pair — \"ty for a друг, vy for everyone else\"]"
             },
             {
               "kind": "prompt",
@@ -118,11 +118,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "last chapter's letter — \"х, the throat-rasp from хлеб\"",
+              "instruction": "last chapter's letter — \"х, the throat-rasp from khleb\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: last chapter's letter — \"х, the throat-rasp from хлеб\"]"
+              "source": "[YOU SAY: last chapter's letter — \"х, the throat-rasp from khleb\"]"
             }
           ]
         },
@@ -139,7 +139,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"friend.\" (Друг.) Which pronoun goes with a друг (drug), and which is for everyone else? (Ты for a friend; вы otherwise.) What did друг (drug)'s root originally mean? (To accompany, to be loyal — Gothic gadrauhts, \"warrior\"; English dryhten, now archaic.) Is друг (drug) related to the English word it looks like on the page? (No — pure spelling coincidence.) And what English word is хлеб's modern cousin? (Loaf.)"
+              "text": "Say \"friend.\" (Друг.) Which pronoun goes with a друг (drug), and which is for everyone else? (Ty for a friend; vy otherwise.) What did друг (drug)'s root originally mean? (To accompany, to be loyal — Gothic gadrauhts, \"warrior\"; English dryhten, now archaic.) Is друг (drug) related to the English word it looks like on the page? (No — pure spelling coincidence.) And what English word is khleb's modern cousin? (Loaf.)"
             }
           ]
         }
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fd0e9e69085edf6",
+      "sourceHash": "fnv1a64:3c8d9f8a7c69d554",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 5 told you брат (brat) meant \"brother\" and was not related to the verb брать, \"to take\" — a warning, in passing, about a word not yet properly taught. Here it is, properly taught."
+              "text": "Chapter 5 told you брат meant \"brother\" and was not related to the verb brat', \"to take\" — a warning, in passing, about a word not yet properly taught. Here it is, properly taught."
             }
           ]
         },
@@ -323,7 +323,7 @@
             },
             {
               "kind": "speech",
-              "text": "Consonant-final, so the ending rule holds a fourth time. And here is the minimal pair Chapter 5 flagged: брат (brother) against брать (to take, romanized brat') — one soft sign, and nothing else, separates them. Say brat with a hard final t for \"brother\"; brat' with a soft one for \"to take.\""
+              "text": "Consonant-final, so the ending rule holds a fourth time. And here is the minimal pair Chapter 5 flagged: брат (brother) against brat' (to take, romanized brat') — one soft sign, and nothing else, separates them. Say brat with a hard final t for \"brother\"; brat' with a soft one for \"to take.\""
             }
           ]
         },
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall Chapter 5's other two bʰ- words, because the three sit right next to each other and mean three different things: брать (bʰer-, \"to carry\" becomes bear, birth), быть (bʰuH-, \"to be\" becomes English be), and now брат (brat) (bʰréh₂tēr, \"brother\"). Three roots, one shared opening sound, no shared meaning — a family accent, not a family."
+              "text": "Recall Chapter 5's other two bʰ- words, because the three sit right next to each other and mean three different things: brat' (bʰer-, \"to carry\" becomes bear, birth), byt' (bʰuH-, \"to be\" becomes English be), and now брат (bʰréh₂tēr, \"brother\"). Three roots, one shared opening sound, no shared meaning — a family accent, not a family."
             }
           ]
         },
@@ -365,11 +365,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the minimal pair — \"брат (brat), брать\" — one soft sign apart",
+              "instruction": "the minimal pair — \"брат, brat'\" — one soft sign apart",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the minimal pair — \"брат, брать\" — one soft sign apart]"
+              "source": "[YOU SAY: the minimal pair — \"брат, brat'\" — one soft sign apart]"
             },
             {
               "kind": "prompt",
@@ -383,11 +383,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the chapter so far — \"друг, подруга, брат\" (drug, podrúga, brat)",
+              "instruction": "the chapter so far — drug, podrúga, brat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the chapter so far — \"друг, подруга, брат\" (*drug, podrúga, brat*)]"
+              "source": "[YOU SAY: the chapter so far — *drug, podrúga, brat*]"
             }
           ]
         },
@@ -404,7 +404,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"brother.\" (Брат.) What one sound separates it from брать, \"to take\"? (A soft sign — none in брат (brat), one in брать.) Is брат (brat)'s resemblance to English brother real or a trap? (Real — inherited, like Latin frāter and Sanskrit bhrātar.) Name Chapter 5's two other bʰ- words, and what each one means. (Быть, \"to be\"; брать, \"to take\" — three different roots, one shared sound.)"
+              "text": "Say \"brother.\" (Брат.) What one sound separates it from brat', \"to take\"? (A soft sign — none in брат, one in brat'.) Is брат's resemblance to English brother real or a trap? (Real — inherited, like Latin frāter and Sanskrit bhrātar.) Name Chapter 5's two other bʰ- words, and what each one means. (Byt', \"to be\"; brat', \"to take\" — three different roots, one shared sound.)"
             }
           ]
         }
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1530bfb840ef41ff",
+      "sourceHash": "fnv1a64:69e0b03556e466e5",
       "notice": null,
       "blocks": [
         {
@@ -472,11 +472,11 @@
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: who gets ты",
+          "title": "Grammar Lens: who gets ty",
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 2 gave you ты for someone close and вы for everyone else — the same choice English used to make with thou and you, before thou died out and you took over both jobs. This chapter has now named exactly who sits on the ты side of that line: a друг (drug), a подруга (podrúga), a брат (brat), a сестра (sestrá) — the people close enough that formality would be strange. Everyone else still gets вы."
+              "text": "Chapter 2 gave you ty for someone close and vy for everyone else — the same choice English used to make with thou and you, before thou died out and you took over both jobs. This chapter has now named exactly who sits on the ty side of that line: a drug, a podrúga, a брат (brat), a сестра (sestrá) — the people close enough that formality would be strange. Everyone else still gets vy."
             }
           ]
         },
@@ -512,11 +512,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four people — \"друг, подруга, брат, сестра\" (drug, podrúga, brat, sestrá)",
+              "instruction": "the four people — drug, podrúga, brat, sestrá",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four people — \"друг, подруга, брат, сестра\" (*drug, podrúga, brat, sestrá*)]"
+              "source": "[YOU SAY: the four people — *drug, podrúga, brat, sestrá*]"
             },
             {
               "kind": "prompt",
@@ -542,7 +542,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"sister,\" with its gender. (Сестра — feminine.) Is its resemblance to English sister real? (Yes — both from PIE swésōr.) Name all four people this chapter taught, and which pronoun goes with every one of them. (Друг, подруга (podrúga), брат (brat), сестра (sestrá) — all ты.) What pair of English words used to make the same close/distant choice Russian's ты/вы still makes? (Thou and you.)"
+              "text": "Say \"sister,\" with its gender. (Сестра — feminine.) Is its resemblance to English sister real? (Yes — both from PIE swésōr.) Name all four people this chapter taught, and which pronoun goes with every one of them. (Drug, podrúga, brat, sestrá — all ty.) What pair of English words used to make the same close/distant choice Russian's ty/vy still makes? (Thou and you.)"
             }
           ]
         }

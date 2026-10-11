@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-MUY, ES-LEX-BASTANTE, ES-LEX-MAL, ES-GRAMMAR-DEGREE-MUY, ES-GRAMMAR-DEGREE-SCALE, ES-GRAMMAR-APOCOPE-PATTERN, ES-ETYMON-BASTANTE-BASTAR, ES-LEX-MALO]
+  knowledge: [ES-LEX-MUY, ES-LEX-BASTANTE, ES-LEX-MAL, ES-GRAMMAR-DEGREE-MUY, ES-GRAMMAR-DEGREE-SCALE, ES-GRAMMAR-APOCOPE-PATTERN, ES-ETYMON-BASTANTE-BASTAR, ES-LEX-MALO, ES-LEX-TAMPOCO, ES-ETYMON-TAMPOCO-TAN-POCO]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -79,9 +79,11 @@ you already know, that is usually what has happened — not a new word to learn.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEGREE-MUY] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEGREE-MUY, ES-LEX-TAMPOCO, ES-ETYMON-TAMPOCO-TAN-POCO] -->
 
 [PAUSE 2s] Which of the three refuses to stand in front of a noun? (***Muy***.)
 
 [PAUSE 2s] And which one refuses to stand alone as an answer? (***Muy*** again —
 *muy bien*, never just *muy*.)
+
+[PAUSE 2s] Say *me neither*, then take the word apart. (***Yo tampoco*** — *tan* + *poco*, the *poco* at the bottom of this scale.)

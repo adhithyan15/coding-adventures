@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-BIS-01, GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-TSCHUESS-01]
+  knowledge: [GE-LEX-BIS-01, GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-TSCHUESS-01, GE-ETYMON-TSCHUESS-ADIEU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -77,8 +77,10 @@ The next three lessons each supply one time word to pour into the slot.
 - [YOU SAY: "bis …" and leave the slot open]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BIS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BIS-01, GE-ETYMON-TSCHUESS-ADIEU-02] -->
 
 [PAUSE 3s] What does *bis* mean? ("Until, up to.") What has to follow it to make
 a goodbye? (A word for time.) Which Spanish and French words do the same job?
 (*Hasta* and *à*.)
+
+[PAUSE 2s] And the casual goodbye you already have, *tschüss*: which French word is it, worn down? (***Adieu*** — *à Dieu*, the same *à*.)

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C126-shiawase-type",
-              "prompt": "Type the Japanese for 'happy'.",
+              "prompt": "Say the Japanese for 'happy'.",
               "assesses": [
                 "JA-LEX-C126-QUAL126-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C126-nemutai-type",
-              "prompt": "Type the Japanese for 'drowsy'.",
+              "prompt": "Say the Japanese for 'drowsy'.",
               "assesses": [
                 "JA-LEX-C126-QUAL126-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C126-anshin-type",
-              "prompt": "Type the Japanese for 'relieved'.",
+              "prompt": "Say the Japanese for 'relieved'.",
               "assesses": [
                 "JA-LEX-C126-QUAL126-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C126-futsuu-type",
-              "prompt": "Type the Japanese for 'ordinary'.",
+              "prompt": "Say the Japanese for 'ordinary'.",
               "assesses": [
                 "JA-LEX-C126-QUAL126-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C126-umai-type",
-              "prompt": "Type the Japanese for 'tasty'.",
+              "prompt": "Say the Japanese for 'tasty'.",
               "assesses": [
                 "JA-LEX-C126-QUAL126-05"
               ],

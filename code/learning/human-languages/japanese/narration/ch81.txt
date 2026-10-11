@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あたり (atari) mean? ("The area around".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the area around'.
+Say the Japanese for 'the area around'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふもと (fumoto) mean? ("The foot of a mountain".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the foot of a mountain'.
+Say the Japanese for 'the foot of a mountain'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とかい (tokai) mean? ("The city".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the city'.
+Say the Japanese for 'the city'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あいだ (aida) mean? ("Between".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'between'.
+Say the Japanese for 'between'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちほう (chihou) mean? ("A region".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a region'.
+Say the Japanese for 'a region'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 The afternoon? (ごご, gogo.) The middle of the night? (よなか, yonaka.) Early morning? (あさがた, asagata.) The evening meal? (ゆうはん, yuuhan.) The morning sun? (あさひ, asahi.) Sunset? (ひのいり, hinoiri.) Tonight? (こんや, konya.) The day after tomorrow? (あさって, asatte.) The day before yesterday? (おととい, ototoi.) Every morning? (まいあさ, maiasa.) Every week? (まいしゅう, maishuu.) The weekend? (しゅうまつ, shuumatsu.) The end? (おわり, owari.) On the way? (とちゅう, tochuu.) Half past? (はん, han.) Every year? (まいとし, maitoshi.) This year? (ことし, kotoshi.) This week? (こんしゅう, konshuu.) The year before last? (おととし, ototoshi.) Oversleeping? (あさねぼう, asanebou.) Midnight? (まよなか, mayonaka.) A whole week? (いっしゅうかん, isshuukan.) One whole day? (いちにち, ichinichi.) Half a day? (はんにち, hannichi.) The first of the month? (ついたち, tsuitachi.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'between'.
+Say the Japanese for 'between'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 The second of the month? (ふつか, futsuka.) The third of the month? (みっか, mikka.) The fourth of the month? (よっか, yokka.) The fifth of the month; some day? (いつか, itsuka.) The sixth of the month? (むいか, muika.) Where? (どこ, doko.) Nearby? (ちかく, chikaku.) Behind? (うしろ, ushiro.) Beside? (よこ, yoko.) The very middle? (まんなか, mannaka.) The other side? (むこう, mukou.) This side of? (てまえ, temae.) A corner? (かど, kado.) Stairs? (かいだん, kaidan.) A corridor? (ろうか, rouka.) A crossroads? (こうさてん, kousaten.) A traffic light? (しんごう, shingou.) A direction? (ほうがく, hougaku.) A shortcut? (ちかみち, chikamichi.) The surroundings? (まわり, mawari.) The area around? (あたり, atari.) The foot of a mountain? (ふもと, fumoto.) The city? (とかい, tokai.) Between? (あいだ, aida.) A region? (ちほう, chihou.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the second of the month'.
+Say the Japanese for 'the second of the month'.

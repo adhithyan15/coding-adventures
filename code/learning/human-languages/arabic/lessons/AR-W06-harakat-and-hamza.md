@@ -47,11 +47,11 @@ and "you (f.)" is a **single dash**.
 These are small marks written **around** a consonant, not letters in their own
 right. On the letter *bāʾ* (**ب**):
 
-| mark | name | where | sound | example |
-|---|---|---|---|---|
-| **َ** | *fatḥa* | a slash **above** | "a" | **بَ** = *ba* |
-| **ِ** | *kasra* | a slash **below** | "i" | **بِ** = *bi* |
-| **ُ** | *ḍamma* | a tiny *wāw* **above** | "u" | **بُ** = *bu* |
+| mark and name | where | sound, on *bāʾ* |
+|---|---|---|
+| **َ** *fatḥa* | a slash **above** | "a": **بَ** = *ba* |
+| **ِ** *kasra* | a slash **below** | "i": **بِ** = *bi* |
+| **ُ** *ḍamma* | a tiny *wāw* **above** | "u": **بُ** = *bu* |
 
 Stop at these three vowel marks. The next four-minute micro-lesson adds the
 separate ideas “no vowel,” “double this consonant,” and the *-an* ending. Their

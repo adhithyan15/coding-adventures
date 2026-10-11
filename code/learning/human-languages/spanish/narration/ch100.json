@@ -124,6 +124,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-por-que-se-old",
               "prompt": "What did Old Spanish say instead of se lo?",
               "assesses": [
@@ -142,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-por-que-se-two",
               "prompt": "Is the se of se lo digo the same word as the se of se llama?",
               "assesses": [
@@ -162,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-por-que-se-why",
               "prompt": "Which two Latin pronouns were squeezed together to make gelo?",
               "assesses": [

@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-HALLO-01, GE-LEX-WIE-GEHTS-02, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-UND-DIR-02, GE-LEX-ES-GEHT-01, GE-LEX-BITTE-01, GE-GRAMMAR-DATIVE-01, GE-LEX-DIR-01, GE-LEX-UND-01]
+  knowledge: [GE-LEX-HALLO-01, GE-LEX-WIE-GEHTS-02, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-UND-DIR-02, GE-LEX-ES-GEHT-01, GE-LEX-BITTE-01, GE-GRAMMAR-DATIVE-01, GE-LEX-DIR-01, GE-LEX-UND-01, GE-ETYMON-BITTE-BITTEN-02, GE-ETYMON-SEHR-SORE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, fluency]
@@ -68,8 +68,10 @@ exchange, and it is the commonest beginner slip there is.
 [REPEAT x2] "Wie geht's? — Gut, danke, und dir?"
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ES-GEHT-01, GE-LEX-BITTE-01, GE-GRAMMAR-DATIVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ES-GEHT-01, GE-LEX-BITTE-01, GE-GRAMMAR-DATIVE-01, GE-ETYMON-BITTE-BITTEN-02, GE-ETYMON-SEHR-SORE-02] -->
 
 [PAUSE 3s] Run the casual exchange without looking. Which answer is the so-so
 one? (*Es geht.*) Which word answers *danke*? (*Bitte.*) Why *dir* and not *du*?
 (The question means "how goes it *to you*" — the to-whom form.)
+
+[PAUSE 2s] Which English word is hiding in *sehr*? (***Sore*** — as in *sorely missed*.) And *bitte* is the asking-form of which word, cousin of English *bid*? (***Bitten***, to ask.)

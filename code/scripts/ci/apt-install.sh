@@ -235,11 +235,16 @@ APT_UPDATE_TIMEOUT="${APT_UPDATE_TIMEOUT:-120}"
 # so far were all in `update`, which the tighter cap above covers.
 APT_INSTALL_TIMEOUT="${APT_INSTALL_TIMEOUT:-600}"
 
+# `--print-uris` (the .deb cache's listing, below) reads only the local index
+# that `update` already fetched -- no network -- and returns in about a
+# second. Thirty seconds bounds it without spending a step's budget on it.
+APT_LIST_TIMEOUT="${APT_LIST_TIMEOUT:-30}"
+
 # Bash evaluates the operands of `-ge` and `$(( ))` as arithmetic, and an
 # arithmetic "number" like `a[$(cmd)]` runs cmd. Only someone who already
 # controls the runner's environment could set these, but a plain-digits check
 # costs nothing and makes the knobs mean only what they say.
-for knob in APT_ATTEMPTS APT_RETRY_DELAY APT_UPDATE_TIMEOUT APT_INSTALL_TIMEOUT; do
+for knob in APT_ATTEMPTS APT_RETRY_DELAY APT_UPDATE_TIMEOUT APT_INSTALL_TIMEOUT APT_LIST_TIMEOUT; do
   if [[ ! ${!knob} =~ ^[0-9]+$ ]]; then
     echo "error: $knob must be a non-negative integer, got '${!knob}'." >&2
     exit 2
@@ -301,9 +306,184 @@ apt_with_retry() {
   done
 }
 
-# Neither of these is allowed to fail quietly: the whole point is that update
+# ## Not downloading at all: a verified .deb cache (#17191)
+#
+# The layers above assume a bad mirror is a STALLED one -- silent, or nearly
+# so -- and that the next attempt lands somewhere healthy. The books job then
+# met a mirror that was neither: it served the 180 MB TeX download at a steady
+# ~150 KB/s on every attempt.
+#
+#     Get:6 ... texlive-plain-generic all 2023.20240207-1 [29.0 MB]
+#     error: apt-get install failed on all 3 attempt(s) (no result after 270s)
+#
+# At that rate the download alone takes about twenty minutes, so no choice of
+# per-attempt cap fits inside a 20-minute step: each attempt was making real
+# progress when it was cut off. The remedy is to stop depending on mirror speed
+# for packages that do not change between runs.
+#
+# APT_DEB_CACHE names a directory the workflow persists between runs (with
+# actions/cache). Before `install`, every .deb found there is checked against
+# the SHA512 (or SHA256) that the Packages index records for it -- the index
+# `update` has just fetched and verified against the archive's signed Release
+# file, read back with `apt-cache show` -- and only an exact match (hash and
+# size) is copied into apt's archive directory, where apt then uses it instead
+# of downloading. After a successful install the directory is refilled with
+# exactly the archives this install used, so it never accumulates superseded
+# versions.
+#
+# The cache is a file that came back from outside this run, so this script
+# does not rely on whatever apt might or might not re-check about a file that
+# is already sitting in its archive directory: nothing gets there from the
+# cache unless its hash matches the signed index. That keeps the archive the
+# only authority over what is installed.
+#
+# The cache can only ever save time. A missing, empty, stale or tampered cache
+# means that package downloads as before; no failure in seeding or refilling
+# the cache fails the install.
+#
+# Testing hooks for this part:
+#   APT_DEB_CACHE     the persisted directory (unset: no caching at all)
+#   APT_ARCHIVES_DIR  apt's archive directory (default /var/cache/apt/archives)
+#   APT_LIST_TIMEOUT  wall-clock seconds for the listing (default 30, above)
+#   APT_CACHE         the apt-cache binary (default `apt-cache`)
+
+APT_DEB_CACHE="${APT_DEB_CACHE:-}"
+APT_ARCHIVES_DIR="${APT_ARCHIVES_DIR:-/var/cache/apt/archives}"
+APT_CACHE="${APT_CACHE:-apt-cache}"
+
+# The local file name apt gives an archive: package_version_arch.deb, with an
+# epoch's colon spelled %3a. Anything else -- a slash above all -- is refused,
+# so a hostile line can never name a path outside the two directories.
+DEB_NAME='^[A-Za-z0-9][A-Za-z0-9.+~%_-]*\.deb$'
+
+# The strongest hash the signed index records for one archive, as "ALGO hex".
+#
+#   strong_hash_for <package> <decoded URI> <size>
+#
+# `--print-uris` names each archive's hash, but it prints the MD5 sum when the
+# index has one -- and Ubuntu's always does -- so its own field cannot be the
+# check. The same index carries SHA256 and SHA512 for every archive, and
+# `apt-cache show` prints them. A package can have several stanzas (versions,
+# pockets, sources), so the one chosen is the stanza whose whole pool path
+# (`Filename:`, e.g. pool/main/l/latexmk/latexmk_4.83-1_all.deb) ends the URI
+# apt would fetch, right after a slash, and whose size matches too.
+strong_hash_for() {
+  "$APT_CACHE" show -- "$1" 2>/dev/null | awk -v uri="$2" -v size="$3" '
+    BEGIN { RS = ""; FS = "\n" }
+    {
+      file = ""; bytes = ""; sha256 = ""; sha512 = ""
+      for (i = 1; i <= NF; i++) {
+        if ($i ~ /^Filename: /) { file = substr($i, 11) }
+        else if ($i ~ /^Size: /) { bytes = substr($i, 7) }
+        else if ($i ~ /^SHA256: /) { sha256 = substr($i, 9) }
+        else if ($i ~ /^SHA512: /) { sha512 = substr($i, 9) }
+      }
+      tail = length(uri) - length(file)
+      if (file != "" && tail > 0 && substr(uri, tail) == "/" file && bytes == size) {
+        if (sha512 != "") { print "SHA512 " sha512; exit }
+        if (sha256 != "") { print "SHA256 " sha256; exit }
+      }
+    }'
+}
+
+seed_archives_from_cache() {
+  [[ -n "$APT_DEB_CACHE" && -d "$APT_DEB_CACHE" ]] || return 0
+
+  # One line per archive apt would download (the hash field is ignored; see
+  # strong_hash_for above):
+  #   'http://.../pool/main/l/latexmk/latexmk_4.83-1_all.deb' latexmk_1%3a4.83-1_all.deb 203324 MD5Sum:...
+  local uris
+  if ! uris=$($SUDO env DEBIAN_FRONTEND=noninteractive \
+    timeout --kill-after=15 "$APT_LIST_TIMEOUT" \
+    "$APT_GET" "${APT_OPTS[@]}" -qq --print-uris install -y "$@"); then
+    echo "deb cache: could not list the archives to fetch; downloading all of them" >&2
+    return 0
+  fi
+
+  local seeded=0 rejected=0 absent=0
+  local uri name size _hash pool cached staged expected algo want got
+  while read -r uri name size _hash; do
+    [[ -n "${size:-}" ]] || continue
+    if [[ ! $name =~ $DEB_NAME || ! $size =~ ^[0-9]+$ ]]; then
+      rejected=$((rejected + 1))
+      continue
+    fi
+    cached="$APT_DEB_CACHE/$name"
+    if [[ ! -f "$cached" || -L "$cached" ]]; then
+      absent=$((absent + 1))
+      continue
+    fi
+    # Size first: it is free, and a wrong size is already a rejection, so a
+    # huge or truncated file is never read end to end.
+    if [[ "$(stat -c %s "$cached")" != "$size" ]]; then
+      rejected=$((rejected + 1))
+      continue
+    fi
+    # The index names the pool path (no epoch, `+` as is); the URI names the
+    # same path percent-encoded. Decode it to compare like with like. The
+    # result is only ever compared as a string, never used as a path.
+    pool="${uri//\'/}"
+    pool=$(printf '%b' "${pool//%/\\x}")
+    expected=$(strong_hash_for "${name%%_*}" "$pool" "$size")
+    algo="${expected%% *}"
+    want="${expected#* }"
+    case "$algo" in
+      SHA256|SHA512) ;;
+      # No strong hash in the index for this file: nothing to trust it on.
+      *) rejected=$((rejected + 1)); continue ;;
+    esac
+    # Copy first, then hash the COPY: a root-owned file in apt's own partial
+    # directory, which nothing else in the job can rewrite between the check
+    # and apt's use of it. Only a match is moved into place.
+    staged="$APT_ARCHIVES_DIR/partial/$name.from-cache"
+    if ! $SUDO mkdir -p "$APT_ARCHIVES_DIR/partial" ||
+      ! $SUDO cp -- "$cached" "$staged"; then
+      rejected=$((rejected + 1))
+      continue
+    fi
+    case "$algo" in
+      SHA256) got=$(sha256sum < "$staged") ;;
+      SHA512) got=$(sha512sum < "$staged") ;;
+    esac
+    got="${got%% *}"
+    if [[ "$got" == "${want,,}" && "$(stat -c %s "$staged")" == "$size" ]] &&
+      $SUDO mv -f -- "$staged" "$APT_ARCHIVES_DIR/$name"; then
+      seeded=$((seeded + 1))
+    else
+      $SUDO rm -f -- "$staged"
+      rejected=$((rejected + 1))
+    fi
+  done <<< "$uris"
+
+  echo "deb cache: seeded $seeded verified archive(s); $absent not cached; $rejected rejected"
+}
+
+refill_cache_from_archives() {
+  [[ -n "$APT_DEB_CACHE" ]] || return 0
+
+  mkdir -p "$APT_DEB_CACHE"
+  local deb kept=0
+  shopt -s nullglob
+  rm -f -- "$APT_DEB_CACHE"/*.deb
+  for deb in "$APT_ARCHIVES_DIR"/*.deb; do
+    [[ -f "$deb" && ! -L "$deb" ]] || continue
+    cp -- "$deb" "$APT_DEB_CACHE/" && kept=$((kept + 1))
+  done
+  shopt -u nullglob
+
+  echo "deb cache: kept $kept archive(s) in $APT_DEB_CACHE for the next run"
+}
+
+# Both cache steps run in `||` context, which switches `set -e` off inside
+# them; every failure path in them is handled explicitly for that reason, so
+# keep the `||` if this is ever refactored.
+#
+# Neither apt call is allowed to fail quietly: the whole point is that update
 # keeps meaning "the archive we depend on is reachable". Retrying is not
 # swallowing -- the last attempt's failure is still this script's exit status,
-# and a package that genuinely does not exist fails every attempt.
+# and a package that genuinely does not exist fails every attempt. The cache
+# steps around install are the opposite: they may fail, and only say so.
 apt_with_retry "$APT_UPDATE_TIMEOUT" update
+seed_archives_from_cache "$@" || echo "deb cache: seeding failed; downloading instead" >&2
 apt_with_retry "$APT_INSTALL_TIMEOUT" install -y "$@"
+refill_cache_from_archives || echo "deb cache: could not refill $APT_DEB_CACHE" >&2

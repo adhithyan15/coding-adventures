@@ -174,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ML-C69-words-flower",
               "prompt": "Which word is the flower?",
               "assesses": [
@@ -232,7 +233,8 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "reading-type"
+        "reading-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d9136980498ba617",
       "notice": {
@@ -241,7 +243,8 @@
           "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [
-          "Reading"
+          "Reading",
+          "You'll want to know"
         ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
@@ -399,6 +402,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ML-C69-lines-verb",
               "prompt": "Which verb tells you WHERE a thing is?",
               "assesses": [
@@ -614,6 +618,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ML-C69-adyathe-vaayana-absent",
               "prompt": "What is not here?",
               "assesses": [
@@ -673,20 +678,23 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b572b35d3fb39f70",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: six letters, one killer, two hangers",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: six letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: six letters, one killer, two hangers and Guided Practice."
       },
       "blocks": [
         {

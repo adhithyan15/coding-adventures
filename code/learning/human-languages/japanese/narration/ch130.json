@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C130-masshiro-type",
-              "prompt": "Type the Japanese for 'pure white'.",
+              "prompt": "Say the Japanese for 'pure white'.",
               "assesses": [
                 "JA-LEX-C130-QUAL130-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C130-makkuro-type",
-              "prompt": "Type the Japanese for 'pitch black'.",
+              "prompt": "Say the Japanese for 'pitch black'.",
               "assesses": [
                 "JA-LEX-C130-QUAL130-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C130-makka-type",
-              "prompt": "Type the Japanese for 'bright red'.",
+              "prompt": "Say the Japanese for 'bright red'.",
               "assesses": [
                 "JA-LEX-C130-QUAL130-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C130-aimai-type",
-              "prompt": "Type the Japanese for 'vague'.",
+              "prompt": "Say the Japanese for 'vague'.",
               "assesses": [
                 "JA-LEX-C130-QUAL130-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C130-tashika-type",
-              "prompt": "Type the Japanese for 'certain, sure'.",
+              "prompt": "Say the Japanese for 'certain, sure'.",
               "assesses": [
                 "JA-LEX-C130-QUAL130-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R130-first-pass-describing-words-type",
-              "prompt": "Type the Japanese for 'vague'.",
+              "prompt": "Say the Japanese for 'vague'.",
               "assesses": [
                 "JA-LEX-C130-QUAL130-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R130-second-pass-describing-people-and-colours-type",
-              "prompt": "Type the Japanese for 'happy'.",
+              "prompt": "Say the Japanese for 'happy'.",
               "assesses": [
                 "JA-LEX-C126-QUAL126-01"
               ],

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C64-pyalo-type",
-              "prompt": "Type the Marwadi for 'a cup'.",
+              "prompt": "Say the Marwadi for 'a cup'.",
               "assesses": [
                 "MW-LEX-C64-HOME64-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C64-thali-type",
-              "prompt": "Type the Marwadi for 'a plate'.",
+              "prompt": "Say the Marwadi for 'a plate'.",
               "assesses": [
                 "MW-LEX-C64-HOME64-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C64-chamcho-type",
-              "prompt": "Type the Marwadi for 'a spoon'.",
+              "prompt": "Say the Marwadi for 'a spoon'.",
               "assesses": [
                 "MW-LEX-C64-HOME64-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C64-chhuri-type",
-              "prompt": "Type the Marwadi for 'a knife'.",
+              "prompt": "Say the Marwadi for 'a knife'.",
               "assesses": [
                 "MW-LEX-C64-HOME64-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C64-botal-type",
-              "prompt": "Type the Marwadi for 'a bottle'.",
+              "prompt": "Say the Marwadi for 'a bottle'.",
               "assesses": [
                 "MW-LEX-C64-HOME64-05"
               ],

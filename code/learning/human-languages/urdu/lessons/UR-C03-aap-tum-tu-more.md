@@ -44,6 +44,9 @@ reviews_of: [UR-C03-aap-tum-tu]
 *tvam*, English **thou**, and Latin *tū* are relatives. **Āp** followed another
 route: a word connected with “self/oneself” became honorific address.
 
+On the page, *tū* is **تو**: the same **ت** *t* that opens **تم**, then **و**,
+which carries the long *ū*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-ETYMON-TUM-THOU] -->
 

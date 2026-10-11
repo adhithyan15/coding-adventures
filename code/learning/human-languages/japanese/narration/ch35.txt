@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さとう (satou) mean? ("Sugar".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sugar'.
+Say the Japanese for 'sugar'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うどん (udon) mean? ("Udon noodles".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'udon noodles'.
+Say the Japanese for 'udon noodles'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すし (sushi) mean? ("Sushi".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sushi'.
+Say the Japanese for 'sushi'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あさごはん (asagohan) mean? ("Breakfast".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'breakfast'.
+Say the Japanese for 'breakfast'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おかし (okashi) mean? ("Sweets, snacks".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sweets, snacks'.
+Say the Japanese for 'sweets, snacks'.

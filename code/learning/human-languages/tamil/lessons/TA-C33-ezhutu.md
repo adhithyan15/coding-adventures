@@ -11,8 +11,8 @@ romanization: eḻudu
 concept_tag: VERB-WRITE
 prerequisites: [TA-C33-padi, TA-C07-numbers-6-10-family, TA-W03-pulli-vanakkam]
 sounds: [tamil-retroflex-zha, tamil-vowel-sign-u, tamil-geminate-tta]
-roots: [dravidian-ezhu-rise, tamil-ezhuttu-letter]
-etymology_hook: "the etymological dictionary files எழுது under எழு 'to rise', a written line being a raised mark; and its ழ is the sound in தமிழ் itself, kept by Tamil and Malayalam and dropped by Kannada and Telugu"
+roots: [dravidian-ezhutu-write, tamil-ezhuttu-letter]
+etymology_hook: "எழுது looks like எழு 'to rise', but the etymological dictionary files them as separate entries; and its ழ is the sound in தமிழ் itself, kept by Tamil and Malayalam and dropped by Kannada and Telugu"
 duration:
   max_seconds: 255
 requires:
@@ -73,16 +73,16 @@ everywhere. And the family already voted — Chapter 7 gave you Tamil **ēḻu**
 against Kannada **ēḷu**. Kannada and Telugu each had a letter for it and let it
 go; **Tamil and Malayalam kept it.**
 
-## The word, taken apart - writing as raising
+## The word, taken apart - two entries, not one
 <!-- hl-knowledge: introduces=[TA-ETYMON-EZHUTU-03]; assesses=[TA-ETYMON-PADI-02] -->
 
-The Dravidian etymological dictionary files **எழுது** under **எழு** (*eḻu*),
-"**to rise**" — a written line being a mark raised onto a surface. Standard
-rather than proven, but native, unlike the open question *paḍi* left you with.
-Beside it sits **எழுத்தாளர்** (*eḻuttāḷar*), a writer.
+**எழுது** looks like **எழு** (*eḻu*), "**to rise**," but the Dravidian
+etymological dictionary keeps them as **separate entries**. Native, unlike
+*paḍi*'s open question. Beside it sits **எழுத்தாளர்** (*eḻuttāḷar*), a
+writer.
 
 The cousin is exact: Malayalam **എഴുതുക** (*eḻutuka*), same verb, same **ഴ**.
-Kannada and Telugu, having dropped the sound, dropped the verb.
+Kannada and Telugu write with other verbs.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-EZHUTU-01, TA-SOUND-EZHUTU-02, TA-ETYMON-EZHUTU-03, TA-LEX-PADI-01, TA-ETYMON-PADI-02, TA-LEX-PURI-01, TA-LEX-NINAI-01, TA-GRAMMAR-PO-02, TA-ETYMON-NUMBERS-6-10-FAMILY-01, TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-PULLI-VANAKKAM-02] -->

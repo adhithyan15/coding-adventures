@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C62-khirki-type",
-              "prompt": "Type the Marwadi for 'a window'.",
+              "prompt": "Say the Marwadi for 'a window'.",
               "assesses": [
                 "MW-LEX-C62-HOME62-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C62-kursi-type",
-              "prompt": "Type the Marwadi for 'a chair'.",
+              "prompt": "Say the Marwadi for 'a chair'.",
               "assesses": [
                 "MW-LEX-C62-HOME62-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C62-mej-type",
-              "prompt": "Type the Marwadi for 'a table'.",
+              "prompt": "Say the Marwadi for 'a table'.",
               "assesses": [
                 "MW-LEX-C62-HOME62-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C62-bhit-type",
-              "prompt": "Type the Marwadi for 'a wall'.",
+              "prompt": "Say the Marwadi for 'a wall'.",
               "assesses": [
                 "MW-LEX-C62-HOME62-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C62-chhat-type",
-              "prompt": "Type the Marwadi for 'a roof'.",
+              "prompt": "Say the Marwadi for 'a roof'.",
               "assesses": [
                 "MW-LEX-C62-HOME62-05"
               ],

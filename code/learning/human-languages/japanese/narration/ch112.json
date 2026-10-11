@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C112-nouka-type",
-              "prompt": "Type the Japanese for 'a farmhouse'.",
+              "prompt": "Say the Japanese for 'a farmhouse'.",
               "assesses": [
                 "JA-LEX-C112-THINGS112-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C112-daiku-type",
-              "prompt": "Type the Japanese for 'a carpenter'.",
+              "prompt": "Say the Japanese for 'a carpenter'.",
               "assesses": [
                 "JA-LEX-C112-THINGS112-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C112-kashu-type",
-              "prompt": "Type the Japanese for 'a singer'.",
+              "prompt": "Say the Japanese for 'a singer'.",
               "assesses": [
                 "JA-LEX-C112-THINGS112-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C112-shigoto-type",
-              "prompt": "Type the Japanese for 'work, a job'.",
+              "prompt": "Say the Japanese for 'work, a job'.",
               "assesses": [
                 "JA-LEX-C112-THINGS112-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C112-yasumi-type",
-              "prompt": "Type the Japanese for 'a holiday, a break'.",
+              "prompt": "Say the Japanese for 'a holiday, a break'.",
               "assesses": [
                 "JA-LEX-C112-THINGS112-05"
               ],

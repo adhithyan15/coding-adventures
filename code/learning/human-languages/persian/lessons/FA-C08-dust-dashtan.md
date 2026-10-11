@@ -49,13 +49,13 @@ last verb is a compound too — but not with *kardan*.
 *u*, **س** *s*, **ت** *t*.
 
 **داشتن** *dâshtan* is the verb, **to have, to hold**. Its present stem is
-**دار** *dâr*: the pair is **dâshtan, dâr-**.
+*dâr*: the pair is **dâshtan, dâr-**.
 
 So *dust dâshtan* is, word for word, **to have as friend**. *Dust dâram* is “I
 love” — literally “I hold [it] a friend,” built out of friendship rather than
 passion.
 
-Notice what changed. **کردن** *kardan* made a noun into a *doing*. **داشتن**
+Notice what changed. *kardan* made a noun into a *doing*. **داشتن**
 *dâshtan* makes it a *holding*. Two light verbs, one pattern.
 
 ## The word, taken apart — the chosen one, and the held one

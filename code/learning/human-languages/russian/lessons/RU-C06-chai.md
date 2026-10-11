@@ -32,7 +32,7 @@ variety: standard-contemporary
 reviews_of: [RU-C06-kofe, RU-C06-voda]
 ---
 
-# чай — "tea," which went overland while кофе went by sea
+# чай — "tea," which went overland while *kófe* went by sea
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KOFE] -->
@@ -56,31 +56,31 @@ history. Its real cousins are below.)*
 ## Grammar Lens: asking politely, at last
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-REQUEST-PATTERN]; assesses=[RU-LEX-KOFE] -->
 
-You have owned **пожалуйста** since Chapter 1 and had nothing new to attach it
+You have owned *pazhálusta* since Chapter 1 and had nothing new to attach it
 to. Now you do: name the thing, add the word.
 
-> **Чай, пожалуйста.** — *chai, pazhálusta* — **Tea, please.**
-> **Кофе, пожалуйста.** — *kófe, pazhálusta* — **Coffee, please.**
+> *Chai, pazhálusta.* — **Tea, please.**
+> *Kófe, pazhálusta.* — **Coffee, please.**
 
 Both words sit here exactly as they do alone — *чай* is already the shape a
-request needs, and *кофе* never changes shape at all. That is not an
+request needs, and *kófe* never changes shape at all. That is not an
 accident of this chapter: it is the simplest version of a pattern you will
 meet in its fuller, case-shifting form once this book reaches nouns that
-*do* change for a request. For now, name the thing, add *пожалуйста*, and you
+*do* change for a request. For now, name the thing, add *pazhálusta*, and you
 are understood.
 
 ## The word, taken apart — one Chinese word, two roads west
 <!-- hl-knowledge: introduces=[RU-ETYMON-CHAI-ROUTE]; assesses=[RU-LEX-VODA, RU-ETYMON-KOFE-ROUTE] -->
 
 **чай** is Mandarin Chinese **chá**, and it reached Russia by the
-opposite road from *кофе*. Persian traders on the Silk Road bought it from
+opposite road from *kófe*. Persian traders on the Silk Road bought it from
 northern China as *cha-ye khatai*, "tea of Cathay," and their Turkic-speaking
 customers misheard the trailing syllable as part of the word itself — giving
 **Turkish *çay*, Persian *chāy*,** and, at the end of the same overland chain,
 **Russian *чай***.
 
-Compare last lesson's *кофе*: **Arabic → Turkish → Dutch, by ship**, arriving
-in Peter the Great's Russia from the west. *Чай* came **overland, from the
+Compare last lesson's *kófe*: **Arabic → Turkish → Dutch, by ship**, arriving
+in Peter the Great's Russia from the west. *Chai* came **overland, from the
 east**, along a caravan route that also carried it into Hindi (*chai*) and
 Arabic (*shai*). One plant; two words for it in English (**tea** took the
 same Chinese root by sea, through Dutch traders on the coast) — and Russian
@@ -92,15 +92,15 @@ happens to have picked the **eastern** branch, while English picked the
 
 [PAUSE 1s]
 - [YOU SAY: "чай" — one syllable, masculine]
-- [YOU SAY: "Чай, пожалуйста. Кофе, пожалуйста."]
+- [YOU SAY: "Chai, pazhálusta. Kófe, pazhálusta."]
 - [YOU SAY: the fork — "chá overland to chai; chá by sea to tea"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-GRAMMAR-REQUEST-PATTERN, RU-LEX-KOFE, RU-ETYMON-KOFE-ROUTE] -->
 
-[PAUSE 3s] Say "tea," with its gender. (**Чай** — **masculine**.) Ask for it
-politely. (**Чай, пожалуйста.**) Which route did *чай* travel, and which did
-*кофе* travel? (**Чай**: overland, Chinese → Persian → Turkic → Russian.
-**Кофе**: by sea, Arabic → Turkish → Dutch → Russian.) Which English word took
+[PAUSE 3s] Say "tea," with its gender. (*Chai* — **masculine**.) Ask for it
+politely. (*Chai, pazhálusta.*) Which route did *чай* travel, and which did
+*kófe* travel? (*Chai*: overland, Chinese → Persian → Turkic → Russian.
+*Kófe*: by sea, Arabic → Turkish → Dutch → Russian.) Which English word took
 the same Chinese root as *чай*, but by the other route? (**Tea** — by sea,
 through Dutch.)

@@ -514,11 +514,14 @@ export function renderScriptFilmstripFigure(
   // point) says what its frames draw, in that order, and that the pale shape
   // behind them is the printed word, not one letter.
   const word = [...entry.glyph].length > 1;
+  // A digit drawn alone (Kannada ೧, Malayalam ൧) is not a letter, and the
+  // description a screen reader speaks should not call it one.
+  const single = DIGIT_GLYPH.test(entry.glyph) ? "digit" : "letter";
   const drawn = word
     ? `(${entry.script}): each letter's body in reading order, then one headline over the whole word; ` +
       `the movement being added is drawn in ink over the finished word, whose outline (each letter's ` +
       `at the font's advance) is read from ${entry.font}.`
-    : `(${entry.script}), the movement being added drawn in ink over the finished letter, ` +
+    : `(${entry.script}), the movement being added drawn in ink over the finished ${single}, ` +
       `whose outline is read from ${entry.font}.`;
   parts.push(
     `<desc>${escapeXml(
@@ -741,9 +744,21 @@ export function scriptSequenceFilmstripFigureSource(
     kind: "script-filmstrip-sequence",
     lessonId,
     text,
-    // Only a phrase names its unit: every strip drawn before phrases keeps
-    // the source (and so the hash) it always had.
-    ...(unit === "Word" ? { unit } : {}),
+    // Only a phrase and a strip of digits name their unit, so every other
+    // strip keeps the source (and so the hash) it always had:
+    //
+    //     unit     in the source?   why
+    //     -------  ---------------  ------------------------------------------
+    //     Letter   no               the entries decide it, and its strips
+    //     Part     no                 print what they always printed
+    //     Word     yes              the caller says so; entries cannot
+    //     Digit    yes              its strips' printed words changed
+    //
+    // A digit strip USED to print "Letter 1 of 2" from these same entries.
+    // When it began to print "Digit 1 of 2", its SVG changed while its
+    // entries did not, so the unit goes into the source: a figure's source
+    // hash moves whenever the figure it describes does.
+    ...(unit === "Word" || unit === "Digit" ? { unit } : {}),
     layout: {
       FRAME_WIDTH,
       MAX_COLUMNS,
@@ -759,7 +774,7 @@ export function scriptSequenceFilmstripFigureSource(
   });
 }
 
-/** "Letter 2", "Letters 1 and 3", "Letters 1, 2 and 4" (or "Part 2", …). */
+/** "Letter 2", "Letters 1 and 3", "Letters 1, 2 and 4" (or "Part 2", "Digits 1 and 2", …). */
 export function letterNumbers(numbers: readonly number[], unit: SequenceUnit = "Letter"): string {
   if (numbers.length === 1) return `${unit} ${numbers[0]}`;
   const head = numbers.slice(0, -1).join(", ");
@@ -779,8 +794,11 @@ export function letterNumbers(numbers: readonly number[], unit: SequenceUnit = "
  * own headline: "Word 2 of 2". Only the caller knows a phrase from a list, so
  * the unit is passed in (`renderScriptSequenceFilmstripFigure`), never
  * guessed from the entries.
+ *
+ * A strip of DIGITS (Persian ۰ ۱, Malayalam ൧ ൨ ൩) says "Digit 1 of 2": a
+ * digit is not a letter, and the lesson teaches it as a number's shape.
  */
-export type SequenceUnit = "Letter" | "Part" | "Word";
+export type SequenceUnit = "Letter" | "Part" | "Word" | "Digit";
 
 /** A ledger glyph made only of combining signs is a vowel sign drawn alone. */
 const SIGN_GLYPH = /^\p{M}+$/u;
@@ -817,9 +835,28 @@ export function writtenOrderNote(script: string): string {
   return WRITTEN_ORDER_NOTES[script] ?? SIGN_FIRST_NOTE;
 }
 
-/** "Part" when any group is a vowel sign, else "Letter". */
+/** A ledger glyph that is one decimal digit (`\p{Nd}`): ۰, ൧, ೨, 7. */
+const DIGIT_GLYPH = /^\p{Nd}$/u;
+
+/**
+ * What a strip's groups are called, read from their glyphs:
+ *
+ *     glyphs              any sign?   every one a digit?   unit
+ *     ------------------  ----------  -------------------  ------
+ *     ே, ம, ை, ச          yes         -                    Part
+ *     வ, க                no          no                   Letter
+ *     ۰, ۱                no          yes                  Digit
+ *     ക, ൧                no          no                   Letter
+ *
+ * A sign makes the strip one of parts whatever else is in it, because the
+ * parts are then in written order. A strip mixing letters and digits (none
+ * is drawn today) stays "Letter", the name it had before digits were told
+ * apart; only a strip that is digits through and through says "Digit".
+ */
 export function sequenceUnit(entries: readonly FilmstripEntry[]): SequenceUnit {
-  return entries.some((entry) => SIGN_GLYPH.test(entry.glyph)) ? "Part" : "Letter";
+  if (entries.some((entry) => SIGN_GLYPH.test(entry.glyph))) return "Part";
+  if (entries.length > 0 && entries.every((entry) => DIGIT_GLYPH.test(entry.glyph))) return "Digit";
+  return "Letter";
 }
 
 /**

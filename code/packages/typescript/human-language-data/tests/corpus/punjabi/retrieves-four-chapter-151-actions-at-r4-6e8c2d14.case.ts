@@ -54,7 +54,7 @@ it("retrieves four familiar Chapter 151 actions at R4 without granting A1 mock c
 
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 579 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 579 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair)).sort()).toEqual(
     atoms.map((atom) => `R4|${atom}`).sort(),
   );
@@ -63,5 +63,5 @@ it("retrieves four familiar Chapter 151 actions at R4 without granting A1 mock c
     "R4|PA-LEX-C152-ACT152-04",
     "R4|PA-LEX-C152-ACT152-05",
   ]);
-  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 577 });
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 577 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
 });

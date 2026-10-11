@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C35-satou-type",
-              "prompt": "Type the Japanese for 'sugar'.",
+              "prompt": "Say the Japanese for 'sugar'.",
               "assesses": [
                 "JA-LEX-C35-FOOD35-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C35-udon-type",
-              "prompt": "Type the Japanese for 'udon noodles'.",
+              "prompt": "Say the Japanese for 'udon noodles'.",
               "assesses": [
                 "JA-LEX-C35-FOOD35-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C35-sushi-type",
-              "prompt": "Type the Japanese for 'sushi'.",
+              "prompt": "Say the Japanese for 'sushi'.",
               "assesses": [
                 "JA-LEX-C35-FOOD35-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C35-asagohan-type",
-              "prompt": "Type the Japanese for 'breakfast'.",
+              "prompt": "Say the Japanese for 'breakfast'.",
               "assesses": [
                 "JA-LEX-C35-FOOD35-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C35-okashi-type",
-              "prompt": "Type the Japanese for 'sweets, snacks'.",
+              "prompt": "Say the Japanese for 'sweets, snacks'.",
               "assesses": [
                 "JA-LEX-C35-FOOD35-05"
               ],

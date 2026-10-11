@@ -46,7 +46,7 @@
         {
           "index": 1,
           "type": "pronunciation",
-          "title": "Sounds you'll need: Read the cedilla",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",

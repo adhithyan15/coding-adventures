@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **డప్పు** — *ḍappu* — "a drum".
 
-Say it: *ḍappu*. Look at its shape as you say it: the next lesson takes one
+Say it: *ḍappu*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **డ**, and writes it on its own.
 
 ## Guided Practice

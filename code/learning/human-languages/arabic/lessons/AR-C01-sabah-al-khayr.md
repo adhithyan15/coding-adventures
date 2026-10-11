@@ -6,6 +6,7 @@ sequence: 50
 chapter: 1
 type: word
 headword: صباح الخير
+romanization: "ṣabāḥ al-khayr"
 gloss: good morning (ṣabāḥ al-khayr — "morning of goodness")
 concept_tag: GREETING-MORNING
 prerequisites: [AR-C01-al]
@@ -63,7 +64,7 @@ its *l* — **خ** is a *moon letter* — a clean contrast with *as-salām*.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[AR-CULTURE-SABAH-REPLY-16]; assesses=[] -->
 
-The reply mirrors it beautifully: **صباح النور** (*ṣabāḥ an-nūr*) — "morning of
+The reply mirrors it beautifully: *ṣabāḥ an-nūr* — "morning of
 the **light**" (*al-* + *nūr*, sun-letter *n* assimilated). You wish someone
 goodness; they wish you light back.
 
@@ -78,6 +79,6 @@ goodness; they wish you light back.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-SAD-KHA-14, AR-CONCEPT-SABAH-15, AR-CULTURE-SABAH-REPLY-16] -->
 
-[PAUSE 3s] Read **صباح الخير**. What are the two roots? (*ṣ–b–ḥ* "morning,"
+[PAUSE 3s] [YOU READ: **صباح الخير**] What are the two roots? (*ṣ–b–ḥ* "morning,"
 *kh–y–r* "goodness.") Why is it *al-khayr* but *as-salām*? (خ is a moon letter —
 *l* stays; *s* is a sun letter — *l* assimilates.)

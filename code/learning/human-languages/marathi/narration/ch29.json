@@ -57,6 +57,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R25-twelve-verbs-check",
               "prompt": "Name the four verbs of a visit: sitting, feeling, sleeping, walking.",
               "assesses": [
@@ -147,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R25-dative-frame-check",
               "prompt": "Say that you feel fine, that you are sleepy, and that you get it — all on the mala frame.",
               "assesses": [
@@ -236,6 +238,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R25-recognition-script-check",
               "prompt": "How is cha said before a long aa in most Marathi mouths?",
               "assesses": [
@@ -333,6 +336,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R25-recognition-words-check",
               "prompt": "Give friend and family in Marathi, and say which gender kutumb takes.",
               "assesses": [

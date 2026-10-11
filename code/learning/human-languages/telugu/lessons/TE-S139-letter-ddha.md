@@ -61,13 +61,15 @@ You already say this one, and the breathed letter is inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left
-curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts
-and sweeps right and upward around the lower-right bowl. Movement 4 curves
-left around the upper-right shoulder. Movement 5 draws the separate top
-flourish. Movement 6 finishes with the separate lower stem.
+curve. Movement 2 turns right around the lower-left bowl. Without lifting,
+movement 3 sweeps right and upward around the lower-right bowl, and movement 4
+curves left around the upper-right shoulder. Lift; movement 5 draws the
+separate top flourish. Lift once more; movement 6 finishes with the separate
+lower stem.
 
 This is one attested school-style order. Telugu handwriting varies, so keep
-the six movements distinct and let the round shape grow from them.
+the six movements distinct, with the round body as one unbroken run, and let
+the round shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-139] -->

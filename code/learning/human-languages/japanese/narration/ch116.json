@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C116-masu-type",
-              "prompt": "Type the Japanese for 'a trout'.",
+              "prompt": "Say the Japanese for 'a trout'.",
               "assesses": [
                 "JA-LEX-C116-THINGS116-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C116-funa-type",
-              "prompt": "Type the Japanese for 'a crucian carp'.",
+              "prompt": "Say the Japanese for 'a crucian carp'.",
               "assesses": [
                 "JA-LEX-C116-THINGS116-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C116-hamachi-type",
-              "prompt": "Type the Japanese for 'a young yellowtail'.",
+              "prompt": "Say the Japanese for 'a young yellowtail'.",
               "assesses": [
                 "JA-LEX-C116-THINGS116-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C116-sanma-type",
-              "prompt": "Type the Japanese for 'a Pacific saury'.",
+              "prompt": "Say the Japanese for 'a Pacific saury'.",
               "assesses": [
                 "JA-LEX-C116-THINGS116-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C116-asari-type",
-              "prompt": "Type the Japanese for 'a short-neck clam'.",
+              "prompt": "Say the Japanese for 'a short-neck clam'.",
               "assesses": [
                 "JA-LEX-C116-THINGS116-05"
               ],

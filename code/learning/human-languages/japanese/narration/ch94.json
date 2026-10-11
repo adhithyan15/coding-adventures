@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C94-konomu-type",
-              "prompt": "Type the Japanese for 'to like, to prefer'.",
+              "prompt": "Say the Japanese for 'to like, to prefer'.",
               "assesses": [
                 "JA-LEX-C94-LIKE94-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C94-konomi-type",
-              "prompt": "Type the Japanese for 'a liking, taste'.",
+              "prompt": "Say the Japanese for 'a liking, taste'.",
               "assesses": [
                 "JA-LEX-C94-LIKE94-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C94-shumi-type",
-              "prompt": "Type the Japanese for 'a hobby'.",
+              "prompt": "Say the Japanese for 'a hobby'.",
               "assesses": [
                 "JA-LEX-C94-LIKE94-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C94-tanoshimi-type",
-              "prompt": "Type the Japanese for 'something to look forward to'.",
+              "prompt": "Say the Japanese for 'something to look forward to'.",
               "assesses": [
                 "JA-LEX-C94-LIKE94-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C94-ai-type",
-              "prompt": "Type the Japanese for 'love'.",
+              "prompt": "Say the Japanese for 'love'.",
               "assesses": [
                 "JA-LEX-C94-LIKE94-05"
               ],

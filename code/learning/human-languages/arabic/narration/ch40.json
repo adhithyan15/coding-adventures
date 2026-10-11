@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Why, That, and When",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:636463b4175f8c41",
+  "sourceHash": "fnv1a64:da1c5498614c97d5",
   "lessons": [
     {
       "id": "AR-C40-limadha",
@@ -710,7 +710,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f52eaed312d640dd",
+      "sourceHash": "fnv1a64:47e5a9cec8961e69",
       "notice": null,
       "blocks": [
         {
@@ -746,7 +746,7 @@
               "rowCount": 2,
               "utterances": [
                 "word, spelled out: ملعقة milʿaqa — mīm, lām, ʿayn, qāf, ة. root: ل-ع-ق. what the root means: he licked, he lapped.",
-                "word, spelled out: طبق ṭabaq — ṭāʾ, bāʾ, qāf. root: ط-ب-ق. what the root means: to cover, to fit over."
+                "word, spelled out: ṭabaq — ṭāʾ, bāʾ, qāf. root: ṭ-b-q. what the root means: to cover, to fit over."
               ]
             },
             {
@@ -755,7 +755,7 @@
             },
             {
               "kind": "speech",
-              "text": "أطباق is the plural of طبق, in the same broken shape as أكواب. One broken plural is a surprise; two in the same shape is a pattern, and a pattern is something you can use on the next word."
+              "text": "aṭbāq is the plural of ṭabaq, in the same broken shape as أكواب. One broken plural is a surprise; two in the same shape is a pattern, and a pattern is something you can use on the next word."
             }
           ]
         },
@@ -819,7 +819,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "عفوا ʿafwan answers thanks as you are welcome, and the same word, on a different tone, means excuse me and pardon. The reason is the root ʿ-f-w, to erase: a debt, an intrusion or a mistake, all wiped away by one word."
+              "text": "ʿafwan answers thanks as you are welcome, and the same word, on a different tone, means excuse me and pardon. The reason is the root ʿ-f-w, to erase: a debt, an intrusion or a mistake, all wiped away by one word."
             }
           ]
         },
@@ -836,7 +836,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say what the root under ملعقة means. (He licked.) Say what the root under الغد means. (To set out at dawn.) Give the literal wish inside تصبح على خير. (That you wake into goodness.) And give the root under عفوا. (ʿ-f-w, to erase.)"
+              "text": "Say what the root under ملعقة means. (He licked.) Say what the root under الغد means. (To set out at dawn.) Give the literal wish inside تصبح على خير. (That you wake into goodness.) And give the root under ʿafwan. (ʿ-f-w, to erase.)"
             }
           ]
         }

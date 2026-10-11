@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE, ES-ETYMON-GELO, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]
+  knowledge: [ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE, ES-ETYMON-GELO, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-ETYMON-NOS-OTROS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -34,7 +34,7 @@ reviews_of: [ES-C47-me-lo, ES-C47-se-lo, ES-C47-por-que-se]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE] -->
 
-[PAUSE 2s] Nothing new. Two facts before the table: which pronoun leads, and
+[PAUSE 2s] Nothing new. Two facts before the summary: which pronoun leads, and
 what happens to *le* in front of *lo*?
 
 ## What you've built
@@ -50,7 +50,7 @@ Every pair Spanish permits, in one place:
 | nos | " | **nos lo**, **nos la**, … |
 | os | " | **os lo**, **os la**, … |
 
-Read the whole table as **two facts**, because that is all it is:
+Take the whole set as **two facts**, because that is all it is:
 
 1. The person comes first. Always.
 2. *Le* and *les* turn into *se* in front of the thing. Only there.
@@ -80,14 +80,18 @@ does.
 
 [PAUSE 1s]
 
-- [YOU SAY: "me lo, te lo, se lo, nos lo, os lo" — the whole first column]
+- [YOU SAY: "me lo, te lo, se lo, nos lo, os lo" — every person, with *lo*]
 - [YOU SAY: "se lo digo, se la hago" and notice that only the middle row changed]
 
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE, ES-ETYMON-NOS-OTROS] -->
 
 [PAUSE 3s] Which row is the only one that changes? (***Le*** and ***les*** →
-***se***.) How many new pronouns did you learn here? (**None**.) Next: all of
+***se***.) How many new pronouns did you learn here? (**None**.)
+
+[PAUSE 2s] And the *nos* inside *nosotros*: which Latin word is it, and what was added to it? (***Nōs***, **we**, plus *otros*, "others" — "we others".)
+
+Next: all of
 it in a conversation, at speed.

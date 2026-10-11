@@ -33,7 +33,7 @@ reviews_of: [ML-C42-good]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-02, ML-LEX-C42-ADJ-03] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: പുതിയ
 <!-- hl-knowledge: introduces=[ML-LEX-C42-ADJ-04]; assesses=[] -->

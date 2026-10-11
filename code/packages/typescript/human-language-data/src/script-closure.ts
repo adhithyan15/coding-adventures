@@ -54,7 +54,7 @@
 // Report-only, per the HL05 and HL08 precedent.
 
 import type { ParsedLesson } from "./parse.js";
-import { SCRIPT_SYSTEMS, belongsToAny, readingOrder } from "./ramp.js";
+import { SCRIPT_SYSTEMS, belongsToAny, distinctNonAsciiCodePoints, readingOrder } from "./ramp.js";
 import { hasOwn } from "./constants.js";
 
 /** One lesson asking the reader to decode glyphs nobody taught them. */
@@ -220,7 +220,9 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
       }
 
       const bodyGlyphs = new Set<string>();
-      for (const ch of new Set(lesson.body)) {
+      // ASCII never belongs to a target script, so the walk skips it before asking;
+      // see `distinctNonAsciiCodePoints` for why the set is otherwise `new Set(body)`.
+      for (const ch of distinctNonAsciiCodePoints(lesson.body)) {
         if (belongsToAny(ch, target)) bodyGlyphs.add(ch);
       }
       for (const ch of headwordGlyphs) shown.add(ch);

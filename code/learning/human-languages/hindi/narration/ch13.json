@@ -245,7 +245,7 @@
     {
       "id": "HI-S08-letter-sa",
       "sequence": 605,
-      "title": "स — one character, met inside words you already say",
+      "title": "स (sa) — one character, met inside words you already say",
       "headword": "स",
       "romanization": "sa",
       "gloss": "the single character स — recognised inside words you already say",
@@ -268,7 +268,7 @@
           "Script you'll notice: स",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: स and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: स and Guided Practice."
       },
       "blocks": [
         {
@@ -333,7 +333,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has स somewhere inside it:"
+              "text": "You already say these, and every one of them has स (sa) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -457,7 +457,7 @@
           "Script you'll notice: च",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: च and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: च and Guided Practice."
       },
       "blocks": [
         {

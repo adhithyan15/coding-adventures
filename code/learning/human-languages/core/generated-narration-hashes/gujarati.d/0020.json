@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 20,
-  "sourceHash": "fnv1a64:f175b5e1ffa95496",
+  "sourceHash": "fnv1a64:82549bac16a0b3fb",
   "lessonIds": [
     "GU-R16-naam-r4",
     "GU-R16-maarun-r4",
@@ -11,10 +11,10 @@
     "GU-R16-wellbeing-r3"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "gujarati/narration/ch20.txt",
   "json": "gujarati/narration/ch20.json",
-  "textHash": "fnv1a64:2f09519fdf630d65",
-  "jsonHash": "fnv1a64:474fedd909f57876",
+  "textHash": "fnv1a64:335dd676dd1568b9",
+  "jsonHash": "fnv1a64:de4f0f48e5f86154",
   "findings": []
 }

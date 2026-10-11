@@ -43,10 +43,9 @@ and the expression for the end. Do not add a new middle line.
 ## The exchange — the complete interaction
 <!-- hl-knowledge: introduces=[FA-DIALOGUE-TAKE-LEAVE]; assesses=[] -->
 
-> A: **سلام! حال شما چطور است؟**
+> A: **سلام!** *Hâl-e shomâ chetor ast?*
 > *Salâm! Hâl-e shomâ chetor ast?*
-> B: **خوبم، ممنون.**
-> *Khubam, mamnun.*
+> B: *Khubam, mamnun.*
 > A: **خداحافظ.**
 > *Khodâ hâfez.*
 > B: **خداحافظ.**

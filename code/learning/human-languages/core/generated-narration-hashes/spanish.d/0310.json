@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 310,
-  "sourceHash": "fnv1a64:f4328984c0669a9e",
+  "sourceHash": "fnv1a64:9ba1b4213805035a",
   "lessonIds": [
     "ES-C310-llave",
     "ES-C310-ducha",
@@ -9,11 +9,11 @@
     "ES-C310-luz",
     "ES-C310-bano"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 0,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "spanish/narration/ch310.txt",
   "json": "spanish/narration/ch310.json",
-  "textHash": "fnv1a64:e7cfbeb4e9d1d57d",
-  "jsonHash": "fnv1a64:cffbc5302c3b5a79",
+  "textHash": "fnv1a64:d1c56af3ac5221c5",
+  "jsonHash": "fnv1a64:8c002e1137d7dd76",
   "findings": []
 }

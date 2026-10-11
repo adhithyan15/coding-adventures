@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Sandals, Stew, Soup, Salad, Kebab",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:15d6209be092681f",
+  "sourceHash": "fnv1a64:0b98cca7f0fb9817",
   "lessons": [
     {
       "id": "FA-C98-sandal",
@@ -634,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a36a011651d79c19",
+      "sourceHash": "fnv1a64:bce0328684f8ba99",
       "notice": null,
       "blocks": [
         {
@@ -725,7 +725,7 @@
             },
             {
               "kind": "speech",
-              "text": "To be able to? (توانستن, tavânestan.) A skill? (مهارت, mahârat.) Ability? (توانایی, tavânâyi.) A right? (حق, hagh.) A chance? (فرصت, forsat.) A tool? (ابزار, abzâr.) An owner? (صاحب, sâheb.) Power? (قدرت, ghodrat.) A wish? (آرزو, ârezu.) Hope? (امید, omid.) A plan? (برنامه, barnâme.) A need? (نیاز, niyâz.) A decision? (تصمیم, tasmim.) A goal? (هدف, hadaf.) A request? (خواهش, khâhesh.) Why?? (چرا, cherâ.) Because? (زیرا, zirâ.) Because? (چون, chon.) A reason? (دلیل, dalil.) A cause? (سبب, sabab.) Therefore? (بنابراین, banâbarin.) A pillow? (بالش, bâlesh.) A blanket? (پتو, patu.) A curtain? (پرده, parde.) A nail? (میخ, mikh.)"
+              "text": "To be able to? (توانستن, tavânestan.) A skill? (مهارت, mahârat.) Ability? (توانایی, tavânâyi.) A right? (حق, hagh.) A chance? (فرصت, forsat.) A tool? (ابزار, abzâr.) An owner? (صاحب, sâheb.) Power? (قدرت, ghodrat.) A wish? (آرزو, ârezu.) Hope? (امید, omid.) A plan? (برنامه, barnâme.) A need? (نیاز, niyâz.) A decision? (تصمیم, tasmim.) A goal? (هدف, hadaf.) A request? (خواهش, khâhesh.) Asking why? (چرا, cherâ.) Because? (زیرا, zirâ.) Because? (چون, chon.) A reason? (دلیل, dalil.) A cause? (سبب, sabab.) Therefore? (بنابراین, banâbarin.) A pillow? (بالش, bâlesh.) A blanket? (پتو, patu.) A curtain? (پرده, parde.) A nail? (میخ, mikh.)"
             }
           ]
         }

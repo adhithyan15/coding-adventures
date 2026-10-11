@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C129-kamij-type",
-              "prompt": "Type the Marwadi for 'a shirt'.",
+              "prompt": "Say the Marwadi for 'a shirt'.",
               "assesses": [
                 "MW-LEX-C129-THINGS129-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C129-chappal-type",
-              "prompt": "Type the Marwadi for 'sandals'.",
+              "prompt": "Say the Marwadi for 'sandals'.",
               "assesses": [
                 "MW-LEX-C129-THINGS129-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C129-mochri-type",
-              "prompt": "Type the Marwadi for 'embroidered shoes'.",
+              "prompt": "Say the Marwadi for 'embroidered shoes'.",
               "assesses": [
                 "MW-LEX-C129-THINGS129-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C129-karo-type",
-              "prompt": "Type the Marwadi for 'a thick bangle'.",
+              "prompt": "Say the Marwadi for 'a thick bangle'.",
               "assesses": [
                 "MW-LEX-C129-THINGS129-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C129-churi-type",
-              "prompt": "Type the Marwadi for 'a bangle'.",
+              "prompt": "Say the Marwadi for 'a bangle'.",
               "assesses": [
                 "MW-LEX-C129-THINGS129-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R129-first-pass-things-in-the-house-type",
-              "prompt": "Type the Marwadi for 'a thick bangle'.",
+              "prompt": "Say the Marwadi for 'a thick bangle'.",
               "assesses": [
                 "MW-LEX-C129-THINGS129-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R129-second-pass-tools-and-clothes-type",
-              "prompt": "Type the Marwadi for 'scissors'.",
+              "prompt": "Say the Marwadi for 'scissors'.",
               "assesses": [
                 "MW-LEX-C125-THINGS125-01"
               ],

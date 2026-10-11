@@ -35,8 +35,12 @@
 > the verified downloadable artifact matrix unchanged. Its independent audit
 > found that generated notes retained the Paint heading but dropped the
 > paragraph stating the CI-only host and artifact boundary. Corrective
-> `task-app-v0.5.1` work is tracked by
+> `task-app-v0.5.1` published from
 > [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168).
+> The compatible native-fidelity fixes accumulated since that patch are the
+> selected `task-app-v0.5.2` checkpoint in
+> [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262); the
+> verified downloadable artifact matrix remains unchanged.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
@@ -100,7 +104,10 @@ links existing Mosaic work instead of duplicating it.
    records the completed Paint coverage without adding a Paint artifact. Its
    generated notes omitted the explicit CI-only backend boundary; the
    immutable corrective `task-app-v0.5.1` patch is tracked by
-   [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168).**
+   [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168).
+   The selected compatible native-fidelity patch `task-app-v0.5.2` is tracked
+   by [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
+   without expanding the downloadable platform matrix.**
 8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
    **Done in #13602.**

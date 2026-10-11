@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 86,
   "title": "Review --- Four Pronouns, One Slot",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e778ab8310bd775d",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:ec58b6131a0a8cef",
   "lessons": [
     {
       "id": "ES-C42-repaso-objeto",
@@ -14,20 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — four pronouns, one slot, and the single question that chooses between them",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95a7d92583aeabfd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:34159c4063de330a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Before the table: where does an object pronoun go?"
+              "text": "Nothing new in this chapter. Before the summary: where does an object pronoun go?"
             }
           ]
         },
@@ -73,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time."
+              "text": "Take the four examples in turn. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time."
             }
           ]
         },
@@ -149,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-repaso-objeto-four",
               "prompt": "Name the four object pronouns you now hold.",
               "assesses": [
@@ -171,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-repaso-objeto-question",
               "prompt": "What single question chooses between all four?",
               "assesses": [
@@ -190,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-repaso-objeto-hard",
               "prompt": "Which two of the four depend on knowing a noun's gender?",
               "assesses": [
@@ -222,7 +218,21 @@
             },
             {
               "kind": "speech",
-              "text": "Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for."
+              "text": "Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And tú with te: which old English pair is the same pair, inherited twice? (Thou and thee.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter has no new forms either — it asks what these words are actually for."
             }
           ]
         }

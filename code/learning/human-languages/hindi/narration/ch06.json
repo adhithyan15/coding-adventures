@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7ee3878283d9e0f2",
+  "sourceHash": "fnv1a64:5fa40c8715193685",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -63,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "If you did the writing track you'll recognise some pieces: क (Lesson 2), त (Lesson 2), न (Lesson 1), र (Lesson 4), and the ा mātrā (Lesson 3)."
+              "text": "If you did the writing track you'll recognise some pieces: क (Lesson 2), त (Lesson 2), न (Lesson 1), र (ra) (Lesson 4), and the ा mātrā (Lesson 3)."
             },
             {
               "kind": "speech",
@@ -457,7 +457,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0110c461cbfe90a4",
+      "sourceHash": "fnv1a64:95e412060cfbd865",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -468,7 +468,7 @@
           "Script you'll notice: म",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: म and Guided Practice."
       },
       "blocks": [
         {
@@ -560,7 +560,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write म yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write म (ma) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -634,7 +634,7 @@
     {
       "id": "HI-S110-letter-ra",
       "sequence": 486,
-      "title": "र — one character, met inside words you already say",
+      "title": "र (ra) — one character, met inside words you already say",
       "headword": "र",
       "romanization": "ra",
       "gloss": "the single character र — recognised inside words you already say",
@@ -646,7 +646,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b1cf2797b0718c9a",
+      "sourceHash": "fnv1a64:f7fa4d9a19af8224",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -657,7 +657,7 @@
           "Script you'll notice: र",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: र and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: र and Guided Practice."
       },
       "blocks": [
         {
@@ -761,7 +761,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows three movements; most native writers draw र in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
+              "text": "The source shows three movements; most native writers draw र (ra) in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

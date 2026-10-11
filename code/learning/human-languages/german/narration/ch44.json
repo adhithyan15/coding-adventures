@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Arm, Finger, Foot, Heart",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9f7078a0a39a5892",
+  "sourceHash": "fnv1a64:a53a5cc15e42547b",
   "lessons": [
     {
       "id": "GE-C31-arm",
@@ -583,7 +583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98e4da50b5294d3b",
+      "sourceHash": "fnv1a64:b9fb10868a13bf83",
       "notice": null,
       "blocks": [
         {
@@ -685,6 +685,16 @@
             {
               "kind": "speech",
               "text": "What sound does z make in Herz? (ts.) Which sound change links Herz to heart? (k becoming h in the Germanic line.) Does German use one word or two for sorry and excuse me? (One.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two more Germanic pairs: the English cousins of es regnet and of gelb? (Rain and yellow — inherited, not borrowed from Latin.)"
             }
           ]
         }

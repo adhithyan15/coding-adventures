@@ -1,5 +1,27 @@
 # Changelog
 
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus). Eleven were already practised and not declared. Twelve got one short spoken question each.
+
+- **Declared:** GE-C06-zahlen-1-5's table already gives the *zwei*/*vier*/*fünf* cognate stories, and GE-C06-zahlen-6-10's gives *sechs*/*sieben*/*neun* (GE-ETYMON-ZWEI…NEUN). GE-C06-grimm has "*machen* is *make*" (GE-ETYMON-MACHEN-MAKE-02). GE-C18-nein-more's table has "**nein** (*ni*-ein)" (GE-ETYMON-NEIN-04). GE-C19-bitte-requests has "bitten, bitte, bid, bead" (GE-ETYMON-BITTE-BITTEN-02). GE-R20's "*un-guilting*" covers GE-ETYMON-ENTSCHULDIGUNG-03, and GE-C21-das-wetter-more's "Just like *Wetter*/'weather'" covers GE-ETYMON-WETTER-03.
+- **Recalls:** *Abend*/*eve* and *Nacht*/*night* in GE-C01-practice. *bitte*/*bitten* and *sehr*/*sore* in GE-C03-practice. *Ihnen* as "to them" in GE-C03-formal-practice. *wieder* and *withdraw* in GE-C04-auf-wiedersehen. *tschüss* and *adieu* in GE-C04-bis. The umlaut's ghost *e* in GE-C06-zahlen-1-5. *ja*/*yea* in GE-C18-ja-more. The *n-* of no and *bitte* as asking in GE-R20 (which now names GE-C18-nein-more as a prerequisite). *regnet*/*rain* and *gelb*/*yellow* in GE-R31 (which now names GE-C23-gruen-gelb-more).
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **GE-C02-ich** → GE-C01-guten-tag and GE-C01-nacht: its `reviews_of`, and the soft *ch* it sets against "the throat-scrape of *Nacht*".
+- **GE-C03-danke** → GE-C02-practice: "You can introduce yourself in German", and its `reviews_of`.
+
+## Added — the umlaut lesson prints a stroke-order filmstrip
+
+GE-W02-umlauts (ä ö ü) now prints a strip (3 -> 4 German lessons). ü was
+already cited; ä and ö are drawn BY ANALOGY with it, not from a source of their
+own, and their records in `data/scripts/latin.json` say so: the a or o as the
+Grundschrift-App writes it, then the left dot, then the right dot. R (from the
+Grundschrift-App) is now cited too, but its lessons still print no strip.
+
 ## Fixed — chapter 30's payoff moves to its closing practice and covers the chapter
 
 Chapter 30 (Head and Hand) had its payoff on GE-C17-hand, which assessed 4 of

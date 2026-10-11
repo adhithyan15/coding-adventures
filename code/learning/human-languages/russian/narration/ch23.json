@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C23-dva-answer",
               "prompt": "Someone asks skolko. Answer: two.",
               "assesses": [
@@ -253,6 +254,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C23-tri-count",
               "prompt": "Count aloud from one to three in Russian.",
               "assesses": [
@@ -383,6 +385,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C23-chetyre-kw",
               "prompt": "Which language kept the original kw of four whole?",
               "assesses": [
@@ -512,6 +515,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C23-pyat-count",
               "prompt": "Count aloud from one to five in Russian.",
               "assesses": [
@@ -619,6 +623,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C23-practice-back",
               "prompt": "Count backwards from five to one in Russian.",
               "assesses": [

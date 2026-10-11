@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ea1e994c6b6448e0",
+  "sourceHash": "fnv1a64:bc46ab6a46cbc4b3",
   "lessons": [
     {
       "id": "GE-C03-danke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b0ded35a2fc98ca",
+      "sourceHash": "fnv1a64:9849303726e08a36",
       "notice": null,
       "blocks": [
         {
@@ -2359,7 +2359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a06688c929400ba",
+      "sourceHash": "fnv1a64:13a362e0df6eb7e9",
       "notice": null,
       "blocks": [
         {
@@ -2479,6 +2479,16 @@
             {
               "kind": "speech",
               "text": "Run the casual exchange without looking. Which answer is the so-so one? (Es geht.) Which word answers danke? (Bitte.) Why dir and not du? (The question means \"how goes it to you\" — the to-whom form.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word is hiding in sehr? (Sore — as in sorely missed.) And bitte is the asking-form of which word, cousin of English bid? (Bitten, to ask.)"
             }
           ]
         }
@@ -2497,7 +2507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c3690d705450a1b",
+      "sourceHash": "fnv1a64:ff9633f2fff0149d",
       "notice": null,
       "blocks": [
         {
@@ -2624,6 +2634,16 @@
             {
               "kind": "speech",
               "text": "Which greeting opens the formal exchange? (Guten Tag.) Which dative pronoun appears twice? (Ihnen.) What changes from the casual version? (Dir becomes Ihnen — nothing else.) Where does German keep its politeness? (In the pronoun.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Taken literally, who is Ihnen aimed at? (Them — to them: the polite you speaks of you as though you were a group.)"
             }
           ]
         }

@@ -6,6 +6,7 @@ sequence: 190
 chapter: 2
 type: word
 headword: ما
+romanization: "mā"
 gloss: what
 concept_tag: QUESTION-WHAT
 prerequisites: [AR-C02-anta-anti]

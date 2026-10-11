@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 114,
   "title": "Review --- One Question, Three Answers",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bd589184220eddd8",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:92eb645489a5ffaa",
   "lessons": [
     {
       "id": "ES-C48-repaso-dos-pasados",
@@ -14,20 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — one question, asked of every past sentence, and the three answers it can have",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8148ad28894189c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:039ed4e3a16209dc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Before the table: do the two past tenses differ in when?"
+              "text": "Nothing new. Before the summary: do the two past tenses differ in when?"
             }
           ]
         },
@@ -149,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-repaso-dos-pasados-question",
               "prompt": "State the one question that chooses the tense.",
               "assesses": [
@@ -168,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-repaso-dos-pasados-scene",
               "prompt": "In estudiaba cuando hablo Ana, which verb is the scene?",
               "assesses": [
@@ -188,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-repaso-dos-pasados-state",
               "prompt": "Which two rows of the table are NOT the same event seen twice?",
               "assesses": [

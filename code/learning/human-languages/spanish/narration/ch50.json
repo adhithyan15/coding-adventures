@@ -108,6 +108,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-somos-form",
               "prompt": "Say we are.",
               "assesses": [
@@ -126,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-somos-why",
               "prompt": "Why do ser's forms look so unlike each other?",
               "assesses": [
@@ -263,6 +265,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-son-form",
               "prompt": "Say they are.",
               "assesses": [
@@ -282,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-son-latin",
               "prompt": "What Latin form is son worn down from?",
               "assesses": [
@@ -421,6 +425,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sois-form",
               "prompt": "Vosotros, from ser.",
               "assesses": [
@@ -439,6 +444,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sois-where",
               "prompt": "The same thing in Peru: which form?",
               "assesses": [
@@ -582,6 +588,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ser-we",
               "prompt": "We are.",
               "assesses": [
@@ -600,6 +607,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ser-they",
               "prompt": "They are.",
               "assesses": [
@@ -618,6 +626,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ser-odd",
               "prompt": "Which of the six does not begin with s, and why?",
               "assesses": [

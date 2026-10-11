@@ -3,8 +3,8 @@
   "language": "chinese",
   "chapter": 18,
   "title": "Looking and reading",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:10c8381053274850",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:57f5ee2c0afa25d2",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -14,20 +14,13 @@
       "romanization": "kàn",
       "gloss": "to look at or watch",
       "script": "chinese",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efd58fca76bd0b36",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:d094e5275bddf9ea",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say Chinese language and China in Mandarin. Keep those answers separate, then put the cards away."
+              "text": "Say Chinese language and China in Mandarin. Keep those answers separate."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the cards, and put them away.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the cards, and put them away.]"
             }
           ]
         },
@@ -53,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kàn — look at; watch."
+              "text": "kàn — \"look at\"; \"watch\"."
             },
             {
               "kind": "speech",
@@ -73,6 +75,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-kan-meaning",
               "prompt": "What does kàn mean?",
               "assesses": [
@@ -108,19 +111,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3a2b15d8e09beb83",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — the shape."
       },
       "blocks": [
         {
@@ -174,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W18-kan-observe-count",
               "prompt": "How many strokes does 看 (kàn) use?",
               "assesses": [
@@ -205,16 +212,23 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:0618044bb23ee058",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Guided Practice — Spaced Return",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice, Guided Practice — Spaced Return and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -268,6 +282,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W18-kan-guided-parts",
               "prompt": "What familiar shape finishes 看 (kàn)?",
               "assesses": [
@@ -302,17 +317,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b20e0a5d8dda6845",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Guided Practice — Spaced Return",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice, Guided Practice — Spaced Return and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -376,6 +398,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W18-kan-delayed-write",
               "prompt": "Write 看 (kàn) after the model has been hidden.",
               "assesses": [
@@ -406,16 +429,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5728a57127879b95",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "The word, taken apart",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The word, taken apart, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -473,6 +502,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-kan-read-write",
               "prompt": "Read 看 (kàn), give its meaning, then copy it once.",
               "assesses": [
@@ -555,6 +585,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-kanjian-meaning",
               "prompt": "What does kànjiàn mean?",
               "assesses": [
@@ -659,7 +690,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "one copy of 看见 (kànjiàn) — leave a clear boundary between the nine-stroke 看 and the four-stroke 见",
+              "instruction": "one copy of 看见 (kànjiàn) — leave a clear boundary between the nine-stroke 看 (kàn) and the four-stroke 见",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -679,6 +710,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-kanjian-write",
               "prompt": "Write kànjiàn, to see, without pinyin.",
               "assesses": [
@@ -766,6 +798,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-haokan-meaning",
               "prompt": "What does hǎokàn mean?",
               "assesses": [
@@ -799,16 +832,23 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c0ef82ffe194f096",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "The word, taken apart",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, The word, taken apart, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -824,7 +864,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say good-looking as hǎokàn. Write 好 and 看 separately."
+              "text": "Say good-looking as hǎokàn. Write 好 and 看 (kàn) separately."
             }
           ]
         },
@@ -850,7 +890,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy 好看 (hǎokàn) once. Keep both characters full-sized instead of squeezing 看."
+              "text": "Copy 好看 (hǎokàn) once. Keep both characters full-sized instead of squeezing 看 (kàn)."
             }
           ]
         },
@@ -866,6 +906,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-haokan-write",
               "prompt": "Write hǎokàn, good-looking, without pinyin.",
               "assesses": [
@@ -960,6 +1001,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-looking-three-r1-order",
               "prompt": "Write look, see, and good-looking in that order.",
               "assesses": [
@@ -1042,6 +1084,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-shu-meaning",
               "prompt": "What does shū mean?",
               "assesses": [
@@ -1073,19 +1116,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:1778a00075fcf88d",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — the shape."
       },
       "blocks": [
         {
@@ -1139,6 +1185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W18-shu-observe-count",
               "prompt": "How many strokes does 书 (shū) use?",
               "assesses": [
@@ -1170,16 +1217,22 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:74f0b1f638c6eb1e",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Guided Practice — Spaced Return"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Guided Practice — Spaced Return."
       },
       "blocks": [
         {
@@ -1233,6 +1286,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W18-shu-guided-last",
               "prompt": "What is the final stroke of 书 (shū)?",
               "assesses": [
@@ -1266,17 +1320,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:48bbccd34e9d2795",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Guided Practice — Spaced Return",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice, Guided Practice — Spaced Return and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1340,6 +1401,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W18-shu-delayed-write",
               "prompt": "Write 书 (shū) after the model has been hidden.",
               "assesses": [
@@ -1453,6 +1515,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-shu-read-write",
               "prompt": "Read 书 (shū), give its meaning, then write it once.",
               "assesses": [
@@ -1477,7 +1540,7 @@
     {
       "id": "ZH-C18-hear-kanshu",
       "sequence": 1740,
-      "title": "Hear kànshū — read a book",
+      "title": "Hear kànshū",
       "headword": "kànshū",
       "romanization": "kànshū",
       "gloss": "to read a book or read books",
@@ -1534,6 +1597,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-kanshu-meaning",
               "prompt": "What does kànshū mean?",
               "assesses": [
@@ -1567,16 +1631,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6fe1fcad9f309f60",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1592,7 +1662,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say read a book as kànshū. Write 看 and 书 separately."
+              "text": "Say read a book as kànshū. Write 看 (kàn) and 书 (shū) separately."
             }
           ]
         },
@@ -1618,7 +1688,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy 看书 (kànshū) once. Keep the long upright in 书 centred after the denser 看."
+              "text": "Copy 看书 (kànshū) once. Keep the long upright in 书 (shū) centred after the denser 看 (kàn)."
             }
           ]
         },
@@ -1634,6 +1704,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-kanshu-write",
               "prompt": "Write kànshū, read a book, without pinyin.",
               "assesses": [
@@ -1724,6 +1795,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-looking-three-r2-order",
               "prompt": "Write good-looking, look, and see in that order.",
               "assesses": [
@@ -1749,7 +1821,7 @@
     {
       "id": "ZH-R18-book-reading-r1",
       "sequence": 1770,
-      "title": "Retrieval 1 — book or read a book?",
+      "title": "Retrieval 1",
       "headword": "书 — 看书",
       "romanization": "shū — kànshū",
       "gloss": "first cold contrast of book and read a book",
@@ -1820,6 +1892,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-book-reading-r1-order",
               "prompt": "Write book, then read a book.",
               "assesses": [
@@ -1897,6 +1970,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-R18-listening-five-contrast",
               "prompt": "Which sound means read a book: kànjiàn or kànshū?",
               "assesses": [
@@ -1964,7 +2038,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "five unpointed cards in a shuffled order — 好看 (hǎokàn), 书, 看见 (kànjiàn), 看书 (kànshū), 看 — each cold, then give its meaning",
+              "instruction": "five unpointed cards in a shuffled order — 好看 (hǎokàn), 书 (shū), 看见 (kànjiàn), 看书 (kànshū), 看 (kàn) — each cold, then give its meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1988,6 +2062,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-reading-five-endings",
               "prompt": "Read 看见 (kànjiàn) and 看书 (kànshū), then give their meanings.",
               "assesses": [
@@ -2084,6 +2159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-writing-five-order",
               "prompt": "Without a model, write look, see, good-looking, book, and read a book.",
               "assesses": [
@@ -2119,16 +2195,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bdf2ae3b45783454",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -2174,7 +2256,7 @@
             },
             {
               "kind": "speech",
-              "text": "Reading, /5: read 看书 (kànshū), 好看 (hǎokàn), 书, 看见 (kànjiàn), 看 cold, without pinyin."
+              "text": "Reading, /5: read 看书 (kànshū), 好看 (hǎokàn), 书 (shū), 看见 (kànjiàn), 看 (kàn) cold, without pinyin."
             },
             {
               "kind": "speech",
@@ -2198,6 +2280,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-practice-pass",
               "prompt": "Without pinyin or a model, write look, see, good-looking, book, and read a book.",
               "assesses": [

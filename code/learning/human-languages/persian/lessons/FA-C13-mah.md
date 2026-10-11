@@ -37,7 +37,7 @@ reviews_of: [FA-C13-khorshid]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHORSHID, FA-ETYMON-KHORSHID] -->
 
-[PAUSE 2s] Say **خورشید** (*khorshid*), and the two old pieces fused inside it. The sky's
+[PAUSE 2s] Say *khorshid*, and the two old pieces fused inside it. The sky's
 other light gives Persian one more word doing double duty.
 
 ## You'll want to know first — one word
@@ -54,7 +54,7 @@ Three letters, all already yours: **م ا ه** — *m*, long *â*, *h*.
 "moon." The same root split into two related English words, **moon** and
 **month** — a month was, for most of human history, one full cycle of the
 moon — and Persian's single word still holds both senses together, the way
-**زبان** later holds "tongue" and "language" in one word. Latin kept the
+*zabân* later holds "tongue" and "language" in one word. Latin kept the
 root as **mensis** (→ **month**, **menstrual**), Greek as **mēn**, and
 Sanskrit as **māsa**.
 
@@ -72,6 +72,6 @@ Sanskrit as **māsa**.
 
 [PAUSE 3s] What two English words does **ماه**'s root split into? (**Moon**
 and **month**.) Which earlier Persian word did the same double duty for
-tongue and language? (**زبان**.)
+tongue and language? (*zabân*.)
 
 Source: [Wiktionary: ماه](https://en.wiktionary.org/wiki/%D9%85%D8%A7%D9%87).

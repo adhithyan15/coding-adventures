@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चोखो (chokho) mean? ("Good, fine".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'good, fine'.
+Say the Marwadi for 'good, fine'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खराब (kharāb) mean? ("Bad, spoiled".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'bad, spoiled'.
+Say the Marwadi for 'bad, spoiled'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सांकड़ो (sā̃kṛo) mean? ("Narrow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'narrow'.
+Say the Marwadi for 'narrow'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चौड़ो (chauṛo) mean? ("Wide".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'wide'.
+Say the Marwadi for 'wide'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गैरो (gairo) mean? ("Deep".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'deep'.
+Say the Marwadi for 'deep'.

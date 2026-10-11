@@ -47,8 +47,8 @@ your name, ask for theirs, close warmly.
 |---|---|
 | اسمي ميرا. (*ismī Mira*) | My name is Mira. |
 | ما اسمك؟ (*mā ismuka*) | What's your name? |
-| اسمي أرون. (*ismī Arun*) | My name is Arun. |
-| تشرفنا. (*tasharrafnā*) | Pleased to meet you. |
+| *ismī Arun* | My name is Arun. |
+| *tasharrafnā* | Pleased to meet you. |
 
 ## You'll want to know — the pieces
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C02-PRACTICE-02]; assesses=[] -->
@@ -62,8 +62,8 @@ Every piece comes from the root-and-suffix engine: two roots (*s–m–w*,
 
 - Which letters build **اسم** and **ما**, and what does the **ي** of **اسمي**
   add? (**ا س م**, **م ا**, none new; "my.")
-- Which letters of **أنت** and **تشرفنا** are new? (**أ**, *alif* on a *hamza*
-  seat; **ت**, two dots above; **ف**. A final vowel mark splits *anta* / *anti*.)
+- Which letters of *anta* and *tasharrafnā* are new? (The *alif* on a *hamza*
+  seat; **ت**, two dots above; *fāʾ*. A final vowel mark splits *anta* / *anti*.)
 
 ## Guided Practice — from memory
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-ISM-02, AR-CONCEPT-C02-II-MY-02, AR-CONCEPT-C02-ANTA-ANTI-02, AR-CONCEPT-C02-MAA-02, AR-CONCEPT-C02-MAA-ISMUKA-02, AR-CONCEPT-C02-TASHARRAFNA-02] -->

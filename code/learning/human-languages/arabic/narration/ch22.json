@@ -4,14 +4,14 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fe495313eecc3cf5",
+  "sourceHash": "fnv1a64:59e5089b28139737",
   "lessons": [
     {
       "id": "AR-C22-akhdar-asfar",
       "sequence": 660,
-      "title": "أخضر, أصفر — \"greens\" you'd recognize, and a hidden zero",
+      "title": "أخضر, أصفر (akhḍar, aṣfar) — \"greens\" you'd recognize, and a hidden zero",
       "headword": "أخضر, أصفر",
-      "romanization": "",
+      "romanization": "akhḍar, aṣfar",
       "gloss": "green and yellow — akhdar's root also gives \"vegetables\" (echoing English's own \"greens\"), and asfar shares its root with sifr, \"zero\" — the very word behind English \"zero\" and \"cipher\"",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec774fd58f3703bc",
+      "sourceHash": "fnv1a64:2ee7e7945575640d",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c4703ee5fb4a84a",
+      "sourceHash": "fnv1a64:4b5cd72e33c79ae6",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "رئيس raʾīs — president, chief — is built straight on head, the same way English capital and captain grow out of Latin caput."
+              "text": "raʾīs — president, chief — is built straight on head, the same way English capital and captain grow out of Latin caput."
             },
             {
               "kind": "speech",
@@ -292,7 +292,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name which word in this set has changed least from its Hebrew cousin. (يد — both yad.) Give the word for president and its literal base. (رئيس, from head.) Say what turns أخ into its feminine. (One added letter — أخت.) And give the literal wording of the age question. (How much is your lifetime.)"
+              "text": "Name which word in this set has changed least from its Hebrew cousin. (يد — both yad.) Give the word for president and its literal base. (raʾīs, from head.) Say what turns أخ into its feminine. (One added letter — أخت.) And give the literal wording of the age question. (How much is your lifetime.)"
             }
           ]
         }

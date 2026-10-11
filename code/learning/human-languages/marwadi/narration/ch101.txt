@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does यो (yo) mean? ("This".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'this'.
+Say the Marwadi for 'this'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does इसो (iso) mean? ("Like this, such".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'like this, such'.
+Say the Marwadi for 'like this, such'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उसो (uso) mean? ("Like that".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'like that'.
+Say the Marwadi for 'like that'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does किसो (kiso) mean? ("Which, what kind of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'which, what kind of'.
+Say the Marwadi for 'which, what kind of'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कुण (kuṇ) mean? ("Who".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'who'.
+Say the Marwadi for 'who'.

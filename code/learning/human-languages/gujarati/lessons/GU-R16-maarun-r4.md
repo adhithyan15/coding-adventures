@@ -43,7 +43,7 @@ reviews_of: [GU-C02-maarun]
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C02-NAAM-01] -->
 <!-- hl-activity: {"id":"GU-R16-maarun-r4-listening","kind":"text","assesses":["GU-CONCEPT-C02-MAARUN-01","GU-CONCEPT-C02-NAAM-01"],"prompt":"Hear mārũ nām. Which word means my, and which means name?","answer":"mārũ means my; nām means name","accepted":[],"feedback":{"correct":"The two-word owner phrase stayed in order.","incorrect":"Hear mārũ — my, nām — name once, then answer again without help."},"response_seconds":25} -->
 
-[YOU SAY: *mārũ nām*] Give each meaning, then read **મારું નામ** once. Position
+[YOU SAY: *mārũ nām*] Give each meaning. [YOU READ: **મારું નામ** once.] Position
 98 is 61 lessons after *mārũ* first appeared at position 37, closing its R4
 window without adding a form.
 

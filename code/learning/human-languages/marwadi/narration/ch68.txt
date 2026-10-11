@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जंगळ (jaṅgaḷ) mean? ("A forest".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a forest'.
+Say the Marwadi for 'a forest'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नदी (nadī) mean? ("A river".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a river'.
+Say the Marwadi for 'a river'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भाटो (bhāṭo) mean? ("A stone".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a stone'.
+Say the Marwadi for 'a stone'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रेत (ret) mean? ("Sand".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sand'.
+Say the Marwadi for 'sand'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खेत (khet) mean? ("A field".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a field'.
+Say the Marwadi for 'a field'.

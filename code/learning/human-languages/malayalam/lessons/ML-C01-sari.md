@@ -80,7 +80,7 @@ the four are worth seeing side by side.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SARI-01, ML-CONCEPT-C01-ONE-WORD-FOUR-SCRIPTS-01] -->
 
-[PAUSE 3s] Read **ശരി**. What does it mean, and how do its Tamil, Kannada, and
+[PAUSE 3s] [YOU READ: **ശരി**] What does it mean, and how do its Tamil, Kannada, and
 Telugu twins sound? ("Okay, correct"; *sari*, *sari*, *sarē*.) Why does
 Malayalam keep a separate **ശ** (*ś*) letter where Tamil uses one all-purpose
 sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant

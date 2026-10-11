@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 10,
-  "sourceHash": "fnv1a64:fa228301d7be826f",
+  "sourceHash": "fnv1a64:acc419ee5c9839f9",
   "lessonIds": [
     "SA-C10-paniyam",
     "SA-S108-letter-sa",
@@ -14,10 +14,10 @@
     "SA-W10-asti-dictation"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch10.txt",
   "json": "sanskrit/narration/ch10.json",
-  "textHash": "fnv1a64:fb8976abf36c17b3",
-  "jsonHash": "fnv1a64:56ab7f7002db7ce3",
+  "textHash": "fnv1a64:12db98bc332d7284",
+  "jsonHash": "fnv1a64:e66b0eb73864e60c",
   "findings": []
 }

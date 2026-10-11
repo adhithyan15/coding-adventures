@@ -3,7 +3,7 @@
   "language": "kannada",
   "chapter": 4,
   "title": "Farewells",
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "sourceHash": "fnv1a64:b79c287a941309dc",
   "lessons": [
     {
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -132,7 +132,7 @@
     {
       "id": "KA-S04-vowel-sign-i",
       "sequence": 215,
-      "title": "◌ಿ — one character, met inside words you already say",
+      "title": "◌ಿ (i) — one character, met inside words you already say",
       "headword": "ಿ",
       "romanization": "i",
       "gloss": "the single character ಿ — recognised inside words you already say",
@@ -155,7 +155,7 @@
           "Script you'll notice: ◌ಿ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ಿ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ಿ and Guided Practice."
       },
       "blocks": [
         {
@@ -200,7 +200,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ಿ somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ಿ (i) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -227,7 +227,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ಿ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ಿ (i) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -249,7 +249,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ಿ in the ones that have it",
+              "instruction": "at these words, and find ◌ಿ (i) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -271,7 +271,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ಿ once more",
+              "instruction": "back at any page of this chapter and find ◌ಿ (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -320,7 +320,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -481,7 +481,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -604,7 +604,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -722,7 +722,7 @@
           "Script you'll notice: ಳ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಳ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಳ and Guided Practice."
       },
       "blocks": [
         {
@@ -903,7 +903,7 @@
           "Script you'll notice: ಬ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಬ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಬ and Guided Practice."
       },
       "blocks": [
         {
@@ -979,7 +979,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 0. The whole letter is one run, from the curled tip inside the head to the tip of the tall right side. ಬ has no curled bar on top, so there is nothing to lift for."
+              "text": "Pen lifts: 0. The whole letter is one run, from the curled tip inside the head to the tip of the tall right side. ಬ (ba) has no curled bar on top, so there is nothing to lift for."
             },
             {
               "kind": "speech",
@@ -1023,7 +1023,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಬ once more",
+              "instruction": "back at any page of this chapter and find ಬ (ba) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

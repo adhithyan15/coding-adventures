@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Building a Paragraph --- Plan, Add, Join, Refer Back",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3da742b28a088e33",
+  "sourceHash": "fnv1a64:f32644187fb29698",
   "lessons": [
     {
       "id": "ES-C273-en-primer-lugar",
@@ -643,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c09145f476241ad",
+      "sourceHash": "fnv1a64:27ac523890ae2f6d",
       "notice": null,
       "blocks": [
         {
@@ -651,6 +651,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the four, two moves from the argument chapter. Which word brings in an example, and does the example prove the claim? (Por ejemplo — no, it is one example taken out of the pile.) Which word grants a point before you turn it? (Aunque — aunque llueve, salgo.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,

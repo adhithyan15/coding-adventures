@@ -53,14 +53,17 @@ You already say these, and every one of them has త somewhere inside it:
 ## Writing: త — observe, then trace
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->
 
-Watch the numbered filmstrip once before your pen moves. The first pen-down run
-uses six small movements: curl up inside the left shoulder, turn down around the
-left bowl, sweep right around the broad bottom, curve up around the right bowl,
-turn down inside it, then curve left across the upper shoulder. Lift once. The
-second run sweeps up through the separate top flourish.
+Watch the numbered filmstrip once before your pen moves. The whole letter is
+one pen-down run. Movements 1–6 carry it round the body: curl up inside the left
+shoulder, turn down around the left bowl, sweep right around the broad bottom,
+curve up around the right bowl, turn down inside it, then curve left across the
+upper shoulder. Keep the pen on the paper. Movement 7 climbs a short way up the
+flourish's left arm, and movement 8 sweeps up through the top flourish.
 
-Trace the same route slowly. The numbers divide a long connected body into
-manageable turns; they do not ask you to lift until the top flourish.
+Trace the same route slowly. The numbers divide one long connected line into
+manageable turns; they do not ask you to lift. Writers differ on this letter:
+about half of native writers draw it without a lift, and nearly as many lift
+once before the flourish. This route keeps the pen down from start to finish.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->

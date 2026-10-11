@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C16-hear-bas-meaning",
               "prompt": "What vehicle does bas name?",
               "assesses": [
@@ -175,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-bas-dictation",
               "prompt": "From bas, write bus.",
               "assesses": [
@@ -264,6 +266,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C16-hear-gaadi-meaning",
               "prompt": "What does gāṛī name here?",
               "assesses": [
@@ -379,6 +382,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-gaadi-dictation",
               "prompt": "From gāṛī, write vehicle.",
               "assesses": [
@@ -469,6 +473,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C16-hear-thela-meaning",
               "prompt": "What does ṭhelā name?",
               "assesses": [
@@ -580,6 +585,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-thela-dictation",
               "prompt": "From ṭhelā, write cart.",
               "assesses": [
@@ -684,6 +690,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R16-transport-three-recall",
               "prompt": "Write bus, vehicle, and cart in order.",
               "assesses": [
@@ -797,6 +804,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-transport-three-payoff",
               "prompt": "Complete all four scored checks, then write the three words.",
               "assesses": [
@@ -899,6 +907,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R16-transport-close-recall",
               "prompt": "Which four skills must pass independently?",
               "assesses": [

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かご (kago) mean? ("A basket".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a basket'.
+Say the Japanese for 'a basket'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こま (koma) mean? ("A spinning top".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a spinning top'.
+Say the Japanese for 'a spinning top'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いかだ (ikada) mean? ("A raft".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a raft'.
+Say the Japanese for 'a raft'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふえ (fue) mean? ("A flute".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a flute'.
+Say the Japanese for 'a flute'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たいこ (taiko) mean? ("A drum".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a drum'.
+Say the Japanese for 'a drum'.

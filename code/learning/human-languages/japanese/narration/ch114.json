@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C114-hakusai-type",
-              "prompt": "Type the Japanese for 'Chinese cabbage'.",
+              "prompt": "Say the Japanese for 'Chinese cabbage'.",
               "assesses": [
                 "JA-LEX-C114-THINGS114-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C114-ninniku-type",
-              "prompt": "Type the Japanese for 'garlic'.",
+              "prompt": "Say the Japanese for 'garlic'.",
               "assesses": [
                 "JA-LEX-C114-THINGS114-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C114-anko-type",
-              "prompt": "Type the Japanese for 'sweet bean paste'.",
+              "prompt": "Say the Japanese for 'sweet bean paste'.",
               "assesses": [
                 "JA-LEX-C114-THINGS114-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C114-hachimitsu-type",
-              "prompt": "Type the Japanese for 'honey'.",
+              "prompt": "Say the Japanese for 'honey'.",
               "assesses": [
                 "JA-LEX-C114-THINGS114-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C114-ami-type",
-              "prompt": "Type the Japanese for 'a net'.",
+              "prompt": "Say the Japanese for 'a net'.",
               "assesses": [
                 "JA-LEX-C114-THINGS114-05"
               ],

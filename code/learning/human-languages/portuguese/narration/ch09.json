@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 9,
   "title": "Months and Seasons",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ebd86939f62e7889",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f5603ae6b6ac06ed",
   "lessons": [
     {
       "id": "PT-C09-meses",
@@ -14,22 +14,13 @@
       "romanization": "os meses",
       "gloss": "the months — Roman gods, emperors, and the numbers 7–10",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edb745eb91697e5f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The months, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The months, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:29c3f7c826c603b5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -54,17 +45,28 @@
           "title": "The months, taken apart",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 12,
+              "kind": "table",
               "headers": [
-                "Portuguese",
-                "from Latin",
+                "Portuguese from Latin",
                 "who / what",
                 "Spanish twin"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 12 rows, and it has more columns than can be held in the ear at once. Its columns are: Portuguese, from Latin, who / what, Spanish twin. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 12,
+              "utterances": [
+                "Portuguese from Latin: janeiro from Januarius. who / what: Janus, god of beginnings. Spanish twin: enero.",
+                "Portuguese from Latin: fevereiro from Februarius. who / what: the Februa purification. Spanish twin: febrero.",
+                "Portuguese from Latin: março from Martius. who / what: Mars, the war-god. Spanish twin: marzo.",
+                "Portuguese from Latin: abril from Aprilis. who / what: aperire \"to open\". Spanish twin: abril.",
+                "Portuguese from Latin: maio from Maius. who / what: Maia, growth-goddess. Spanish twin: mayo.",
+                "Portuguese from Latin: junho from Junius. who / what: Juno, queen of gods. Spanish twin: junio.",
+                "Portuguese from Latin: julho from Julius. who / what: Julius Caesar. Spanish twin: julio.",
+                "Portuguese from Latin: agosto from Augustus. who / what: emperor Augustus. Spanish twin: agosto.",
+                "Portuguese from Latin: setembro from september. who / what: \"7th\" (septem). Spanish twin: septiembre.",
+                "Portuguese from Latin: outubro from october. who / what: \"8th\" (octo). Spanish twin: octubre.",
+                "Portuguese from Latin: novembro from november. who / what: \"9th\" (novem). Spanish twin: noviembre.",
+                "Portuguese from Latin: dezembro from december. who / what: \"10th\" (decem). Spanish twin: diciembre."
+              ]
             },
             {
               "kind": "speech",

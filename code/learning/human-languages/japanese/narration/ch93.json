@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C93-machidooshii-type",
-              "prompt": "Type the Japanese for 'long-awaited'.",
+              "prompt": "Say the Japanese for 'long-awaited'.",
               "assesses": [
                 "JA-LEX-C93-WANT93-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C93-inori-type",
-              "prompt": "Type the Japanese for 'a prayer'.",
+              "prompt": "Say the Japanese for 'a prayer'.",
               "assesses": [
                 "JA-LEX-C93-WANT93-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C93-chuumon-type",
-              "prompt": "Type the Japanese for 'an order'.",
+              "prompt": "Say the Japanese for 'an order'.",
               "assesses": [
                 "JA-LEX-C93-WANT93-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C93-kouho-type",
-              "prompt": "Type the Japanese for 'a candidate, a choice'.",
+              "prompt": "Say the Japanese for 'a candidate, a choice'.",
               "assesses": [
                 "JA-LEX-C93-WANT93-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C93-yotei-type",
-              "prompt": "Type the Japanese for 'a plan'.",
+              "prompt": "Say the Japanese for 'a plan'.",
               "assesses": [
                 "JA-LEX-C93-WANT93-05"
               ],

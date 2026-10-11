@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-EN-PRIMER-LUGAR, ES-SEMANTIC-TEXT-PLAN, ES-LEX-ADEMAS, ES-SEMANTIC-ADDITIVE-ESCALATING, ES-LEX-POR-LO-TANTO, ES-SEMANTIC-COHESION-CHAIN, ES-LEX-LO-CUAL, ES-SEMANTIC-ANAPHORA]
+  knowledge: [ES-LEX-EN-PRIMER-LUGAR, ES-SEMANTIC-TEXT-PLAN, ES-LEX-ADEMAS, ES-SEMANTIC-ADDITIVE-ESCALATING, ES-LEX-POR-LO-TANTO, ES-SEMANTIC-COHESION-CHAIN, ES-LEX-LO-CUAL, ES-SEMANTIC-ANAPHORA, ES-LEX-POR-EJEMPLO, ES-SEMANTIC-EVIDENCE-MARKED, ES-LEX-AUNQUE, ES-SEMANTIC-CONCESSION-LEADING]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output]
@@ -30,7 +30,9 @@ reviews_of: [ES-C273-en-primer-lugar, ES-C273-ademas, ES-C273-por-lo-tanto, ES-C
 # One paragraph, four joins
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-EN-PRIMER-LUGAR, ES-LEX-ADEMAS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-EN-PRIMER-LUGAR, ES-LEX-ADEMAS, ES-LEX-POR-EJEMPLO, ES-SEMANTIC-EVIDENCE-MARKED, ES-LEX-AUNQUE, ES-SEMANTIC-CONCESSION-LEADING] -->
+
+[PAUSE 2s] Before the four, two moves from the argument chapter. Which word brings in an example, and does the example prove the claim? (*Por ejemplo* — **no**, it is one example taken out of the pile.) Which word grants a point before you turn it? (***Aunque*** — *aunque llueve, salgo*.)
 
 [PAUSE 2s] Four pieces, and the point of them is that they only show their value
 at length. A single sentence never needed any of this.

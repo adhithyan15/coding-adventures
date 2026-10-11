@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 7,
-  "sourceHash": "fnv1a64:f53db69acfff78c5",
+  "sourceHash": "fnv1a64:5c26b61c0b96467f",
   "lessonIds": [
     "RU-C07-drug",
     "RU-C07-podruga",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "russian/narration/ch07.txt",
   "json": "russian/narration/ch07.json",
-  "textHash": "fnv1a64:bbfb9bc97611ca2f",
-  "jsonHash": "fnv1a64:ac5c2b1880405619",
+  "textHash": "fnv1a64:9d33204edaa6065e",
+  "jsonHash": "fnv1a64:9cf757fade387727",
   "findings": []
 }

@@ -136,6 +136,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-tres-ses-two",
               "prompt": "Of the three se's, which two are really one word?",
               "assesses": [
@@ -157,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-tres-ses-test",
               "prompt": "What single thing right after se tells you it is the impostor?",
               "assesses": [
@@ -176,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-tres-ses-which",
               "prompt": "Which se is in como se dice?",
               "assesses": [

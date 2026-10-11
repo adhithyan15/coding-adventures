@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कोयलो (koylo) mean? ("Coal".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'coal'.
+Say the Marwadi for 'coal'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छाणो (chhāṇo) mean? ("A dung cake".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a dung cake'.
+Say the Marwadi for 'a dung cake'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बोरो (boro) mean? ("A sack".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a sack'.
+Say the Marwadi for 'a sack'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रस्सी (rassī) mean? ("A rope".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a rope'.
+Say the Marwadi for 'a rope'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खूंटी (khū̃ṭī) mean? ("A peg".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a peg'.
+Say the Marwadi for 'a peg'.

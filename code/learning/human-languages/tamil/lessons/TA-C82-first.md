@@ -47,7 +47,7 @@ the four growing distances this book measures.
 
 **முதல்** (*mutal*) — "**first**".
 
-You already know this word. Look at **முதலில்** (*mutalil*), "first of all",
+You already know this word. Think of **முதலில்** (*mutalil*), "first of all",
 which this book already taught as a way of putting one thing before another:
 
 > **முதல்** + **இல்** → **முதலில்**

@@ -167,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ncia-decode",
               "prompt": "You have never seen preferencia. What is it?",
               "assesses": [
@@ -185,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ncia-article",
               "prompt": "Which article goes with distancia, el or la?",
               "assesses": [
@@ -203,6 +205,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ncia-build",
               "prompt": "Say: a big difference.",
               "assesses": [

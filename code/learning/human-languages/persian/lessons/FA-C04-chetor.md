@@ -45,14 +45,14 @@ about the manner of that state with one question word.
 
 > **چطور؟** — *chetor?* — **how? / in what manner?**
 
-You already met **چ** *ch* in **چیست**. Here it is followed by **ط** *t*, **و**
+You already met **چ** *ch* in *chist*. Here it is followed by **ط** *t*, **و**
 *o*, and **ر** *r*. The short *e* is not written. Learn the sound from the
 whole word: *che-tor*.
 
 ## The word, taken apart — a two-language compound
 <!-- hl-knowledge: introduces=[FA-ETYMON-CHE-TOR]; assesses=[] -->
 
-Persian Online takes **چطور** apart as Persian **چه** *che*, “what,” plus the
+Persian Online takes **چطور** apart as Persian *che*, “what,” plus the
 Arabic loan **طور** *tor*, “manner.” The literal picture is “in what manner?”
 That layered history is useful memory, but **chetor** is one everyday Persian
 question word now.

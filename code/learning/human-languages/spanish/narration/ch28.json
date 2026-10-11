@@ -142,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-f-a-h-why",
               "prompt": "Why is the Spanish h silent?",
               "assesses": [
@@ -162,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-f-a-h-hablar",
               "prompt": "Which English word is hablar's friend, once you put the f back?",
               "assesses": [
@@ -181,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-f-a-h-decode",
               "prompt": "You meet hierro and have never seen it. Decode it.",
               "assesses": [
@@ -200,6 +203,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-f-a-h-limit",
               "prompt": "Is every Spanish h a dead f?",
               "assesses": [

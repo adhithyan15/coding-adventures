@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — PREP01 bounded identifier-suffix paste
+
+- Resolve exactly one raw parameter operand on either side of `##` without
+  copying its text. Preserve plain-use pre-expansion, rescan, and argument loci.
+- Project and charge token/spelling/aggregate byte costs before the dialect
+  hook. Test exact-bound success, pre-hook overspend, prior cumulative spend,
+  declined and malformed hook outputs, and unsupported operand pairs.
+
+## Unreleased — PREP01 bounded token paste
+
+- Route a dialect-approved literal identifier `##` parameter through the paste
+  hook using one raw argument token, while ordinary uses still pre-expand.
+- Precharge the resulting token and bytes before allocation, retain argument
+  provenance, and reject hook results that exceed the projected spelling.
+
 ## Unreleased — PREP01 bounded stringize
 
 - Route function-like macro `#parameter` through the dialect hook with raw

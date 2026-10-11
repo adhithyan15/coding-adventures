@@ -3,7 +3,7 @@
   "language": "punjabi",
   "chapter": 11,
   "title": "Friend, Family, Brother, and Sister",
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "sourceHash": "fnv1a64:d503acae9ea2e22f",
   "lessons": [
     {
@@ -29,7 +29,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -174,7 +174,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -223,7 +223,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਪਰਿਵਾਰ comes straight from Sanskrit parivāra, and unlike dost or roṭī, this one splits cleanly into two working pieces: pari-, \"around,\" plus vṛ-, \"to cover, to surround.\" A parivāra is, word for word, what encloses you — the same pari- that opens parikramā, a walk made around something sacred, and a vṛ- that also sits inside varṇa, \"covering\" — the word Sanskrit used for both colour and social class."
+              "text": "ਪਰਿਵਾਰ (parivār) comes straight from Sanskrit parivāra, and unlike dost or roṭī, this one splits cleanly into two working pieces: pari-, \"around,\" plus vṛ-, \"to cover, to surround.\" A parivāra is, word for word, what encloses you — the same pari- that opens parikramā, a walk made around something sacred, and a vṛ- that also sits inside varṇa, \"covering\" — the word Sanskrit used for both colour and social class."
             },
             {
               "kind": "speech",
@@ -296,6 +296,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C11-parivar-split",
               "prompt": "parivar splits into two Sanskrit pieces meaning 'around' and 'to cover'. What is the whole word's literal sense?",
               "assesses": [
@@ -341,7 +342,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -493,6 +494,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C11-bhara-tone",
               "prompt": "bharā's bh is said as which consonant, and what tone does the vowel after it carry?",
               "assesses": [
@@ -537,7 +539,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -568,7 +570,7 @@
             },
             {
               "kind": "speech",
-              "text": "Said pàiṇ — the same ਭ becomes p + low tone shift as ਭਰਾ (bharā), now on a different vowel, closed by the curled-back ਣ you already read in ਜਾਣਨਾ."
+              "text": "Said pàiṇ — the same ਭ (bha) becomes p + low tone shift as ਭਰਾ (bharā), now on a different vowel, closed by the curled-back ਣ you already read in ਜਾਣਨਾ."
             }
           ]
         },
@@ -579,7 +581,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਭ bh, already yours from bharā — the second word in this book to use it. ੈ the ai-sign, from ਹੈ. ਣ retroflex n. Three letters, none of them new, and the tone is the same rule as last lesson, run again."
+              "text": "ਭ (bha) bh, already yours from bharā — the second word in this book to use it. ੈ the ai-sign, from ਹੈ. ਣ retroflex n. Three letters, none of them new, and the tone is the same rule as last lesson, run again."
             }
           ]
         },
@@ -663,6 +665,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C11-bhain-cognate",
               "prompt": "Is bhaiṇ the same word as English sister by unbroken descent, the way bharā is the same word as brother?",
               "assesses": [
@@ -710,7 +713,7 @@
           "Script you'll notice: ਭ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ਭ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਭ and Guided Practice."
       },
       "blocks": [
         {
@@ -762,7 +765,7 @@
             },
             {
               "kind": "speech",
-              "text": "ਭ + ਰ + ਾ becomes ਭਰਾ (bharā) ਭਰਾ — bharā — brother."
+              "text": "ਭ (bha) + ਰ + ਾ becomes ਭਰਾ (bharā) ਭਰਾ — bharā — brother."
             },
             {
               "kind": "speech",

@@ -69,6 +69,8 @@
 // learner who finishes a lesson without knowing that part of it never reached them.
 
 import { compileLessonActivity } from "./activity.js";
+import { activityNeedsEyesOrHands } from "./drivable-instructions.js";
+import { activityPromptForTheEar, headingForTheEar } from "./for-the-ear.js";
 import { canonicalChapterHash } from "./hash.js";
 import {
   deriveLessonModality,
@@ -78,7 +80,7 @@ import {
   type ModalityReasonCode,
 } from "./modality.js";
 import type { ParsedLesson } from "./parse.js";
-import { closingBracket, joinQualifier, joinWrappedLines, parseDeliveryCue } from "./delivery-cue.js";
+import { joinQualifier } from "./delivery-cue.js";
 import {
   collapseSpaces,
   DEFAULT_LINEARISABLE_TABLE_COLUMNS,
@@ -91,219 +93,32 @@ import {
   type TableRefusalReason,
 } from "./speech.js";
 import type { CompiledLessonActivity, LessonBlockType } from "./types.js";
+import {
+  splitNarrationCues,
+  type NarrationPause,
+  type NarrationPrompt,
+  type NarrationRepeat,
+} from "./narration-cues.js";
 
-// ---------------------------------------------------------------------------
-// Vocabulary
-// ---------------------------------------------------------------------------
-
-/**
- * How long to leave for a learner to answer an unscored rehearsal cue.
- *
- * Eight seconds, matching `RESPONSE_SECONDS_PER_PROMPT` in `report.ts` — the same
- * number the duration estimator already uses to budget a lesson's runtime. Using two
- * different numbers for "how long does a `[YOU SAY: …]` take" would make the report's
- * timing estimate a fiction the narration then contradicts.
- *
- * Scored activities never use this: they carry their own authored `response_seconds`.
- */
-export const PROMPT_RESPONSE_SECONDS = 8;
-
-/**
- * Cue verbs that ask for a hand or an eye rather than a voice.
- *
- * `[YOU SAY: …]` and `[YOU ANSWER: …]` are things a driver can do. `[YOU WRITE: …]`
- * and `[YOU TRACE: …]` are not, so the narration says so out loud instead of asking
- * a driver to pick up a pen:
- *
- *     authored                     narrated
- *     ---------------------------  -----------------------------------------------
- *     [YOU SAY: hola]              [your turn — say: hola]  [pause 8 seconds …]
- *     [YOU COPY: **ا** once]       [once you have stopped driving — copy: ا once]
- *
- * This set used to stop at six verbs, on the theory that a new verb that was
- * genuinely manual would be caught by the lesson's `type: writing` or its script
- * block long before it got here. It was not. `[YOU COPY: …]` sat in three drivable
- * lessons (MW-C01-raam-raam-saa, FA-C01-practice, TA-C01-practice) and
- * `[YOU CIRCLE: …]` in a fourth (TE-R152-jhari-recall), none of them a writing
- * lesson, and the narration read all four to a driver as an ordinary turn. Forty
- * drivable `[YOU LOOK: at **था** and put your finger on …]` cues and about a hundred
- * and thirty drivable `[YOU READ: **でぐち** …]` cues did the same to the eyes. So
- * the default is no longer trusted on its own: {@link SPOKEN_CUE_ACTIONS} lists the
- * verbs that are NOT here, and a corpus test (`cue-action-classification.test.ts`)
- * fails on any head verb in neither set. The next new verb is a decision somebody
- * makes, not a default nobody noticed.
- *
- * Each verb, and what it needs besides a voice:
- *
- *   verb       needs  why
- *   ---------  -----  --------------------------------------------------------------
- *   WRITE      hand   a pen on paper — the case this set was made for
- *   TRACE      hand   a finger or pen following a letter's outline
- *   COPY       hand   writing again from a visible model ("**வ** once beside the
- *                     visible model"); copying a SOUND is authored as SAY, not COPY
- *   CIRCLE     hand   a pen ring round a letter on the page
- *   COVER      hand   a hand over the page before writing from memory — every COVER
- *                     in the corpus is "cover, then write"
- *   DRAW       hand   no cue uses these four yet. They are the pen verbs the prose
- *   UNDERLINE  hand   detector in tests/drivable-writing-imperatives.ts already
- *   MARK       hand   treats as writing, or their nearest siblings, so the first
- *   TICK       hand   cue to use one is deferred rather than read out
- *   TAP        hand   tapping out beats with a finger ("*yu | hold | ku | ri*") —
- *                     the same family as GESTURE
- *   GESTURE    hand   a movement that carries the meaning
- *   CLAP       hand   clapping out beats; TAP's louder sibling. No cue heads with it:
- *                     the 24 drivable "[YOU SAY: *denwa*, clapping three beats]" drills
- *                     now count the beats aloud instead
- *   SHOW       hand   holding up fingers or a thing. No cue heads with it either; four
- *                     drivable number drills nested it ("[YOU HEAR: *añcŭ*; YOU SHOW: 5]")
- *                     and now say the number. The gesture check in
- *                     tests/drivable-writing-imperatives.ts reads a nested cue's verb with
- *                     {@link isManualCueAction}, so listing SHOW here is what it catches
- *   LABEL      hand   writing a label against something on the page
- *   FEEL       hand   a hand at the throat or the mouth, feeling the sound
- *   TEST       hand   the corpus's one TEST is FEEL by another name: "hand at the
- *                     mouth — **chār** still, **chhe** breathed"
- *   POINT      eye    a finger on a printed letter
- *   LOOK       eye    looking at a printed word ("at ಆರು and find the ರ")
- *   READ       eye    reading printed script, which is the eyes' job whatever the
- *                     mouth does next — READ ALOUD included (see below)
- *   FIND       eye    finding a sign inside a printed word
- *   CHECK      eye    checking a written shape ("compact left side; open right
- *                     side") — the corpus's one CHECK is a handwriting check
- *   STACK      eye    placing a component on the page ("point below 五, where 口
- *                     will go")
- *
- * A cue action can be several words — `READ ALOUD`, `COVER AND WRITE`,
- * `WRITE FROM THE HEARD OR ROMANIZED CUE` — and {@link isManualCueAction} counts the
- * cue as manual when ANY of its words is listed here, so a `[YOU SAY AND WRITE: …]`
- * cannot slip through on the strength of its first word.
- */
-export const MANUAL_CUE_ACTIONS: ReadonlySet<string> = new Set([
-  "WRITE",
-  "TRACE",
-  "COPY",
-  "CIRCLE",
-  "COVER",
-  "DRAW",
-  "UNDERLINE",
-  "MARK",
-  "TICK",
-  "TAP",
-  "GESTURE",
-  "CLAP",
-  "SHOW",
-  "LABEL",
-  "FEEL",
-  "TEST",
-  "POINT",
-  "LOOK",
-  "READ",
-  "FIND",
-  "CHECK",
-  "STACK",
-]);
-
-/**
- * Cue verbs a driver can do with the voice and the ear alone.
- *
- * The narration never consults this set — anything outside {@link MANUAL_CUE_ACTIONS}
- * is already spoken — so it exists for the corpus test that demands every cue's head
- * verb (the first word of its action) be classified one way or the other. A verb is
- * here only when its uses in the corpus can be done by ear: `HEAR` and `LISTEN` are
- * the ears; `NOTICE`, `CONTRAST`, `SPLIT` and their siblings ask for a thought said
- * aloud; `COUNT` counts beats and endings as well as dots, and its dot-counting cues
- * sit in lessons that already need eyes.
- *
- * Words that only ever follow a head verb (`ALOUD`, `AND`, `THE`, `BY`, …) are not
- * listed. They are not verbs, and {@link isManualCueAction} only asks whether they
- * are manual, which they are not.
- */
-export const SPOKEN_CUE_ACTIONS: ReadonlySet<string> = new Set([
-  // Speaking, asking and answering.
-  "SAY", "ANSWER", "ASK", "REPLY", "REQUEST", "GREET", "OFFER", "GRANT", "CLOSE",
-  "PUSH", "ADMIT", "HEDGE", "QUALIFY", "REJECT", "STATE", "EXPLAIN", "NAME", "SPELL",
-  "LIST", "PRODUCE", "TRANSLATE", "PARAPHRASE", "NOTE", "REPAIR", "USE", "KEEP",
-  "ADD", "FRAME", "JOIN", "COMBINE", "SWAP", "SWITCH", "TURN", "FLIP", "CONVERT",
-  // Sounds made with the mouth alone.
-  "HUM", "NASALIZE",
-  // Remembering.
-  "RECALL", "RETRIEVE", "RETURN",
-  // Listening.
-  "HEAR", "LISTEN",
-  // Working on words in the head, then saying the result.
-  "BUILD", "REBUILD", "RUN", "SEGMENT", "SPLIT", "STRIP", "SEPARATE", "DERIVE",
-  "APPLY", "PAIR", "MATCH", "CONNECT", "CONTRAST", "COMPARE", "CLASSIFY", "SORT",
-  "CHOOSE", "DECIDE", "IDENTIFY", "NOTICE", "COUNT",
-]);
-
-/**
- * True when a cue action needs a hand or an eye: when ANY word of it is one of the
- * {@link MANUAL_CUE_ACTIONS}.
- *
- *     WRITE             manual
- *     READ ALOUD        manual  (READ)
- *     COVER AND BUILD   manual  (COVER)
- *     SAY WHY           spoken
- *     CHOOSE BY CONTEXT spoken
- *
- * Before this was a function the narration looked only at the first word, which for
- * every action in today's corpus gives the same answer. Reading every word costs
- * nothing and means a hand-on verb later in a compound action is still heard.
- *
- * `parseDeliveryCue` always hands over upper-case words joined by one space, but this
- * is exported, and a caller passing `"write"` or `"SAY\tWRITE"` must not be told
- * "spoken" — that is the unsafe answer for a driver. So the action is upper-cased and
- * split on any whitespace run first (one linear pass each).
- */
-export function isManualCueAction(action: string): boolean {
-  return action
-    .toUpperCase()
-    .split(/\s+/)
-    .some((word) => MANUAL_CUE_ACTIONS.has(word));
-}
-
-/** A silence the lesson asked for. `perItem` marks `[PAUSE 1s each]` over a list. */
-export interface NarrationPause {
-  kind: "pause";
-  seconds: number;
-  perItem: boolean;
-  /** The cue exactly as authored, so a reader can trace any segment to its source. */
-  source: string;
-}
-
-/** `[REPEAT x2]` — say the previous utterance again, this many times. */
-export interface NarrationRepeat {
-  kind: "repeat";
-  times: number;
-  source: string;
-}
-
-/**
- * `[YOU SAY: …]` and its siblings: the learner does something.
- *
- * `scored` is permanently `false` — see the header. A prompt is a rehearsal, not an
- * assessment; the field exists so a consumer can tell prompts and activities apart
- * without knowing this module's rules.
- */
-export interface NarrationPrompt {
-  kind: "prompt";
-  /** The cue verb, uppercased: `SAY`, `WRITE`, `BUILD`, … */
-  action: string;
-  /**
-   * The author's words between the verb and the colon, spoken with the verb:
-   * `(m.)` in `[YOU SAY (m.): …]`, `the pattern` in `[YOU RUN the pattern: …]`.
-   * Absent when the cue has none, which is almost every cue.
-   */
-  qualifier?: string;
-  /** What to do, already stripped of Markdown. */
-  instruction: string;
-  /** True when the learner can do this with their mouth alone. */
-  spoken: boolean;
-  scored: false;
-  /** Silence to leave afterwards, in seconds. */
-  responseSeconds: number;
-  source: string;
-}
+// The cue vocabulary and the paragraph splitter moved to `narration-cues.ts` so the
+// modality rules can read a lesson exactly as this narrator does without importing
+// it (see that file's header). Re-exported here so every existing import keeps
+// working: this module is still where a consumer asks what a cue sounds like.
+export {
+  isManualCueAction,
+  MANUAL_CUE_ACTIONS,
+  parseNarrationCue,
+  PROMPT_RESPONSE_SECONDS,
+  SPOKEN_CUE_ACTIONS,
+  splitNarrationCues,
+} from "./narration-cues.js";
+export type {
+  CueSplit,
+  NarrationCue,
+  NarrationPause,
+  NarrationPrompt,
+  NarrationRepeat,
+} from "./narration-cues.js";
 
 /** Ordinary prose, ready to say. */
 export interface NarrationSpeech {
@@ -336,12 +151,31 @@ export interface NarrationTableSkipped {
   text: string;
 }
 
-/** A scored retrieval contract from `hl-activity`, ready for a voice agent to grade. */
+/**
+ * A scored retrieval contract from `hl-activity`, ready for a voice agent to grade.
+ *
+ * Like a {@link NarrationPrompt}, it carries the narrator's verdict on whether it
+ * can be asked at the wheel. The app shows every prompt above a text box, so some
+ * ask for what only a hand or an eye can give — "Write son in Chinese characters",
+ * "Type 'a car' in hiragana", "Read this shuffled pair: આજ — રાત" — and those are
+ * `spoken: false` and said as a deferral, exactly like a `[YOU WRITE: …]` cue (the
+ * test is `activityNeedsEyesOrHands` in `drivable-instructions.ts`, which also
+ * defers a question whose accepted answers are all script, or that grades a
+ * script atom with a script answer). Every
+ * other prompt is asked, worded for the ear: "Type the Japanese for 'a stick'" is
+ * spoken "Say the Japanese for 'a stick'" (`activityPromptForTheEar`).
+ */
 export interface NarrationActivity {
   kind: "activity";
   scored: true;
+  /** False when the prompt needs eyes or hands: it is said as a deferral, not asked. */
+  spoken: boolean;
   id: string;
-  /** Authored prompt, Markdown stripped. */
+  /**
+   * The prompt as the narration says it, Markdown stripped: worded for the ear when
+   * `spoken`, as authored when deferred (by then the learner has stopped and can do
+   * what it asks).
+   */
   prompt: string;
   assesses: string[];
   responseSeconds: number;
@@ -359,8 +193,6 @@ export type NarrationSegment =
   | NarrationTableSkipped
   | NarrationActivity;
 
-/** Any directive a bracketed cue can turn into. */
-export type NarrationCue = NarrationPause | NarrationRepeat | NarrationPrompt;
 
 /** One `## …` section of a lesson, narrated. */
 export interface NarrationBlock {
@@ -402,6 +234,13 @@ export interface LessonNarration {
   gloss: string;
   script: string;
   modality: Modality;
+  /**
+   * What the lesson needs once its detachable sections (writing, inline letters) are
+   * set aside — HL08's `coreModality`. A lesson whose core is `voice` can be done in
+   * the car even when `modality` is `pen` or `sight`: its hands-on part is read in
+   * place, announced in the notice, and left until the driver has stopped.
+   */
+  coreModality: Modality;
   derivedModality: Modality;
   modalityReasons: ModalityReasonCode[];
   /** Fingerprint of the lesson AST this narration was generated from. */
@@ -415,8 +254,22 @@ export interface ChapterNarration {
   language: string;
   chapter: number;
   title: string;
-  /** How many lessons, from the front, are drivable — HL08's number for a commuter. */
+  /**
+   * How many lessons, from the front, are drivable — HL08's number for a commuter.
+   *
+   * Counted on each lesson's CORE modality, the same definition `modality.ts`
+   * (`drivablePrefix`) and the book's "Hands-free start" line use. A lesson that is
+   * `voice` apart from a detachable writing or letters section counts: the narration
+   * reads that section in place and its notice tells the driver to leave it until
+   * they have stopped, so the rest of the lesson is a car lesson.
+   */
   drivablePrefix: number;
+  /**
+   * How many of those {@link drivablePrefix} lessons carry such a part to come back
+   * to — full modality `pen` or `sight`, core `voice`. Zero when every counted lesson
+   * is voice through and through. Kept so the chapter header can say so honestly.
+   */
+  prefixWithPartsSetAside: number;
   lessonIds: string[];
   /** Combined fingerprint of every lesson AST in the chapter, as the book uses. */
   sourceHash: string;
@@ -445,121 +298,8 @@ export interface RomanizationPair {
   romanization: string;
 }
 
-// ---------------------------------------------------------------------------
-// Cue parsing
-// ---------------------------------------------------------------------------
-//
-// The grammar of a cue — where its bracket closes and what its words mean — lives
-// in `delivery-cue.ts`, shared with the printed book. This section only decides
-// what each cue *sounds like*. It used to own a private copy of the grammar, and
-// the two copies disagreed: a `[YOU SAY (m.): …]` was a cue to neither, so the
-// voice read the brackets out as prose, and a cue wrapped across two source lines
-// was a cue to this file but raw text to the book. One grammar, two renderings.
-
 function isDigit(character: string | undefined): boolean {
   return character !== undefined && character >= "0" && character <= "9";
-}
-
-/**
- * Turn the inside of one `[…]` into a directive, or return null if it is not a cue.
- *
- * Returning null matters as much as returning a cue: lessons are full of ordinary
- * brackets — Markdown links, parenthetical asides, `[bonjour]` glosses — and treating
- * one of those as a directive would delete real teaching content from the script.
- * Only the three authored shapes count:
- *
- *   `PAUSE 2s`        `PAUSE 1s each`        `REPEAT x2`        `YOU SAY: …`
- *
- * and the prompt shape may carry a qualifier between its verb and its colon —
- * `YOU SAY (m.): …`, `YOU RUN the pattern: …` — which is spoken with the verb.
- */
-export function parseNarrationCue(inner: string): NarrationCue | null {
-  const cue = parseDeliveryCue(inner);
-  if (!cue) return null;
-  const source = `[${joinWrappedLines(inner)}]`;
-  switch (cue.kind) {
-    case "pause":
-      return { kind: "pause", seconds: cue.seconds, perItem: cue.perItem, source };
-    case "repeat":
-      return { kind: "repeat", times: cue.times, source };
-    case "prompt": {
-      const prompt: NarrationPrompt = {
-        kind: "prompt",
-        action: cue.action,
-        instruction: speakableInline(cue.content),
-        spoken: !isManualCueAction(cue.action),
-        scored: false,
-        responseSeconds: PROMPT_RESPONSE_SECONDS,
-        source,
-      };
-      // Present only when authored, so every unqualified prompt's JSON is
-      // byte-for-byte what it was before qualifiers were understood.
-      if (cue.qualifier !== "") prompt.qualifier = speakableInline(cue.qualifier);
-      return prompt;
-    }
-  }
-}
-
-/** A span of a paragraph: either words to say or a directive to obey. */
-type CueSplit = { text: string } | { cue: NarrationCue };
-
-/**
- * Split a paragraph into prose spans and cues.
- *
- * The bracket scan ({@link closingBracket}) tracks depth, because the corpus nests
- * brackets inside cues for real — `[YOU SAY: the pattern — "[nā] [pēru]"]` — and
- * stopping at the first `]` would cut the cue in half and leave the tail as garbled
- * prose. Its lookahead is bounded, so the walk stays linear in the paragraph.
- *
- * A bracket run that is not a cue is handed back **including its brackets**, and with
- * any following `(…)` attached, so that Markdown links survive intact for
- * {@link speakableInline} to resolve.
- */
-export function splitNarrationCues(text: string): CueSplit[] {
-  const parts: CueSplit[] = [];
-  let buffer = "";
-  let index = 0;
-  const flush = (): void => {
-    if (buffer.trim() !== "") parts.push({ text: buffer });
-    buffer = "";
-  };
-  while (index < text.length) {
-    const character = text[index];
-    if (character === "\\" && index + 1 < text.length) {
-      buffer += text.slice(index, index + 2);
-      index += 2;
-      continue;
-    }
-    if (character !== "[") {
-      buffer += character;
-      index += 1;
-      continue;
-    }
-    const close = closingBracket(text, index);
-    if (close === -1) {
-      // An unbalanced `[`. Keep it as prose rather than swallowing the rest of the
-      // paragraph — losing content is the one outcome this module refuses.
-      buffer += character;
-      index += 1;
-      continue;
-    }
-    const cue = parseNarrationCue(text.slice(index + 1, close));
-    if (cue) {
-      flush();
-      parts.push({ cue });
-      index = close + 1;
-      continue;
-    }
-    let end = close + 1;
-    if (text[end] === "(") {
-      const paren = text.indexOf(")", end);
-      if (paren !== -1) end = paren + 1;
-    }
-    buffer += text.slice(index, end);
-    index = end;
-  }
-  flush();
-  return parts;
 }
 
 // ---------------------------------------------------------------------------
@@ -596,17 +336,46 @@ export function splitNarrationCues(text: string): CueSplit[] {
  *    Telugu and Devanagari do not put spaces between letters, so "is this occurrence a
  *    word?" has to be asked explicitly: a match counts only when the characters on
  *    either side of it are not letters or combining marks.
+ *
+ * 4. **One reading per headword.** Two lessons in a chapter can romanize the same
+ *    headword differently: Arabic teaches ي as the letter *yāʾ* and, a few lessons
+ *    later, as the suffix *-ī* "my". Pairing both gave `ي (yāʾ) (-ī)` — two
+ *    pronunciations read aloud back to back. Only the first pair for a headword
+ *    applies; the sort is stable, so callers put the lesson's own pair first.
  */
 export function pairRomanization(text: string, pairs: readonly RomanizationPair[]): string {
   let out = text;
   const ordered = [...pairs].sort((left, right) => right.headword.length - left.headword.length);
+  const readings = new Map<string, string[]>();
+  for (const { headword, romanization } of ordered) {
+    if (romanization !== "") readings.set(headword, [...(readings.get(headword) ?? []), romanization]);
+  }
+  const seen = new Set<string>();
   for (const { headword, romanization } of ordered) {
     if (headword === "" || romanization === "" || headword === romanization) continue;
+    if (seen.has(headword)) continue;
+    seen.add(headword);
     if (!out.includes(headword)) continue;
-    if (out.includes(romanization)) continue;
-    out = replaceWholeWord(out, headword, `${headword} (${romanization})`);
+    // Asked of `out`, so a compound's inserted reading suppresses its parts
+    // (مع السلامة (maʿa s-salāma) must not become مع (maʿa) …) — but as a WHOLE
+    // word: a substring test let "(ai)" hide இ's "i", and the author's "kuṭumba"
+    // hide कुटुंब's "kuṭumb".
+    if (containsWholeWord(out, romanization)) continue;
+    out = replaceWholeWord(out, headword, `${headword} (${romanization})`, readings.get(headword) ?? []);
   }
   return out;
+}
+
+/** Does `needle` occur in `text` with no letter, mark or digit on either side? */
+function containsWholeWord(text: string, needle: string): boolean {
+  let cursor = 0;
+  while (cursor <= text.length) {
+    const found = text.indexOf(needle, cursor);
+    if (found === -1) return false;
+    if (!isWordCharacter(text[found - 1]) && !isWordCharacter(text[found + needle.length])) return true;
+    cursor = found + 1;
+  }
+  return false;
 }
 
 /** Single-character class test. Not a pattern over the text — no backtracking to have. */
@@ -617,13 +386,36 @@ function isWordCharacter(character: string | undefined): boolean {
 }
 
 /**
+ * Does one of this headword's readings already follow, in brackets?
+ *
+ * Then the author has said how to read it right there — "ي (yāʾ)" — and adding
+ * another lesson's reading would put two side by side: "ي (-ī) (yāʾ)". Only a
+ * KNOWN reading counts: "خداحافظ ("goodbye")" is a gloss, not a pronunciation,
+ * and still gets paired, or a voice engine would be handed bare script. Looks
+ * only at the next few characters, so it stays linear.
+ */
+function readingFollows(text: string, from: number, readings: readonly string[]): boolean {
+  let index = from;
+  while (index < text.length && index - from < 3 && text[index] === " ") index++;
+  if (text[index] !== "(") return false;
+  index++;
+  while (index < text.length && (text[index] === "*" || text[index] === "_")) index++;
+  return readings.some((reading) => reading !== "" && text.startsWith(reading, index));
+}
+
+/**
  * Replace every whole-word occurrence of `needle`, left to right.
  *
  * `indexOf` from a moving cursor, so the walk is linear and the replacement text is
  * never rescanned — which also means a headword that happens to appear inside its own
  * romanization cannot send this into a loop.
  */
-function replaceWholeWord(text: string, needle: string, replacement: string): string {
+function replaceWholeWord(
+  text: string,
+  needle: string,
+  replacement: string,
+  readings: readonly string[] = [],
+): string {
   let out = "";
   let cursor = 0;
   while (cursor <= text.length) {
@@ -631,7 +423,7 @@ function replaceWholeWord(text: string, needle: string, replacement: string): st
     if (found === -1) break;
     const before = found > 0 ? text[found - 1] : undefined;
     const after = text[found + needle.length];
-    if (isWordCharacter(before) || isWordCharacter(after)) {
+    if (isWordCharacter(before) || isWordCharacter(after) || readingFollows(text, found + needle.length, readings)) {
       out += text.slice(cursor, found + needle.length);
       cursor = found + needle.length;
       continue;
@@ -658,9 +450,30 @@ function numberOrNull(value: string): number | null {
 
 /** The `# …` heading, or the headword when a lesson has none. */
 export function narrationTitle(lesson: ParsedLesson): string {
+  return speakableInline(authoredTitle(lesson));
+}
+
+/** The `# …` heading as authored (Markdown intact), or the headword. */
+function authoredTitle(lesson: ParsedLesson): string {
   const firstLine = lesson.preamble.split(/\r?\n/).find((line) => line.trim() !== "") ?? "";
-  const raw = firstLine.startsWith("# ") ? firstLine.slice(2) : lesson.realization.headword;
-  return speakableInline(raw);
+  return firstLine.startsWith("# ") ? firstLine.slice(2) : lesson.realization.headword;
+}
+
+/**
+ * The title as the narration opens a lesson with it: {@link narrationTitle}, said
+ * for the ear (`headingForTheEar`). It is the first thing a driver hears, before any
+ * notice or guard, so it may not ask for an eye or a hand:
+ *
+ *   "(el mensaje del vecino) — read it, then answer"  → "(el mensaje del vecino)"
+ *   "ಬರೆ (bare) — write"                              → unchanged: "write" is the gloss
+ *   "Read two, say one" (all step, no label)          → the headword instead, when IT
+ *                                                       asks for nothing; else ""
+ */
+export function narrationTitleForTheEar(lesson: ParsedLesson): string {
+  const context = { headword: lesson.realization.headword, gloss: lesson.realization.gloss };
+  const title = headingForTheEar(authoredTitle(lesson), context);
+  if (title !== "") return speakableInline(title);
+  return speakableInline(headingForTheEar(lesson.realization.headword));
 }
 
 /** Peel `>` blockquote markers off the front of a line, leaving the content. */
@@ -866,6 +679,12 @@ function noticeNeeds(entry: LessonModality, skipped: NarrationTableSkipped[]): s
       needs.push("your eyes, because the lesson points at something written down");
     }
     if (reason === "wide-table") needs.push(`your eyes for ${tables}`);
+    // Said in the listener's terms rather than the rule's: what the step asks them to
+    // do. The sections that carry such a step are named in the notice's
+    // `waitUntilStopped` list, and the stop guard is spoken again when each begins.
+    if (reason === "eyes-or-hands-step") {
+      needs.push("your eyes or your hands for the steps that ask you to read, point, write or gesture");
+    }
   }
   return needs;
 }
@@ -880,13 +699,37 @@ function buildNotice(
       segment.kind === "table-skipped",
     ),
   );
+  // A lesson whose CORE is voice is a car lesson with a part to come back to: the
+  // chapter header counts it as drivable, so its notice must not call it "not a
+  // driving lesson". It names every section that was set aside to reach that core
+  // (a detachable block that is not itself voice), so the driver hears exactly which
+  // part to leave — a `## Writing — …` block with no bracketed cue was otherwise
+  // never named, and "come back to the parts that need looking at" pointed nowhere.
+  const coreDrivable = entry.coreModality === "voice";
+  const setAside = new Set(
+    entry.blocks
+      .filter((block) => block.detachable && block.modality !== "voice")
+      .map((block) => block.index),
+  );
+  // A section with an eyes-or-hands step (see `eyesOrHandsSteps` in
+  // drivable-instructions.ts) is named here too: its step is spoken plainly, so the
+  // stop guard at its top is the only warning a driver hears at the moment it matters.
+  // Only kept sections carry such a step (a detachable one is set aside whole), so a
+  // lesson with one is never core voice; it is the section that made the lesson
+  // undrivable, and the listener is told which.
+  const askingForEyesOrHands = new Set(
+    entry.blocks.filter((block) => block.eyesOrHandsSteps.length > 0).map((block) => block.index),
+  );
   const waitUntilStopped = blocks
     .filter((block) =>
       block.type === "script" ||
+      (coreDrivable && setAside.has(block.index)) ||
+      askingForEyesOrHands.has(block.index) ||
       block.segments.some(
         (segment) =>
           segment.kind === "table-skipped" ||
-          (segment.kind === "prompt" && !segment.spoken),
+          (segment.kind === "prompt" && !segment.spoken) ||
+          (segment.kind === "activity" && !segment.spoken),
       ),
     )
     .map((block) => block.title)
@@ -898,21 +741,49 @@ function buildNotice(
   // questions are about what was read), so its notice must not offer a split the rule
   // denies. It says what the chapter header says of a chapter that starts with one —
   // save it for when you have stopped — and drops the "not fully" hedge to match.
+  //
+  //   lesson                      opening
+  //   --------------------------  -----------------------------------------------------
+  //   core voice, full pen        "… you can do this one in the car, but part of it
+  //                                needs your hands."
+  //   core voice, full sight      "… you can do this one in the car, but part of it
+  //                                needs your eyes."
+  //   pen                         "… this one needs your hands, so it is not a driving
+  //                                lesson."
+  //   reading (sight)             "… this one needs your eyes, so it is not a driving
+  //                                lesson."
+  //   other sight                 "… this one needs your eyes, so it is not fully a
+  //                                driving lesson."
+  //
+  // A reading lesson's core is never voice (the text is the lesson), so the first two
+  // rows and the reading row cannot meet.
   const isReading = entry.reasons.includes("reading-type");
-  const opening =
-    entry.modality === "pen"
+  const organ = entry.modality === "pen" ? "your hands" : "your eyes";
+  const opening = coreDrivable
+    ? `Before we start: you can do this one in the car, but part of it needs ${organ}.`
+    : entry.modality === "pen"
       ? "Before we start: this one needs your hands, so it is not a driving lesson."
       : isReading
         ? "Before we start: this one needs your eyes, so it is not a driving lesson."
         : "Before we start: this one needs your eyes, so it is not fully a driving lesson.";
   const needsSentence =
-    needs.length > 0 ? ` You will want ${joinList(needs)}.` : "";
+    needs.length > 0
+      ? coreDrivable
+        ? ` For that part you will want ${joinList(needs)}.`
+        : ` You will want ${joinList(needs)}.`
+      : "";
+  // The section titles go LAST, after a colon. Titles carry their own dashes, colons
+  // and commas ("Writing — let your finger meet one shape", "The ten, in three
+  // families"), and spoken in the middle of a sentence ("leave the section called
+  // Writing — let your finger meet one shape until you have stopped") the listener
+  // cannot hear where the title ends and the instruction resumes. At the end of the
+  // sentence nothing follows them but a full stop.
   const plural = waitUntilStopped.length !== 1;
-  const sections = plural ? "the sections" : "the section";
+  const sections = plural ? "these sections" : "this section";
   const skipSentence = isReading
     ? " The questions are about what you read, so save the whole lesson for when you have stopped."
     : waitUntilStopped.length > 0
-      ? ` You can listen to everything else now — leave ${sections} called ${joinList(waitUntilStopped)} until you have stopped, and I will say so again when we reach ${plural ? "them" : "it"}.`
+      ? ` You can listen to everything else now. I will say so again when we reach ${plural ? "them" : "it"}, but leave ${sections} until you have stopped: ${joinList(waitUntilStopped.map((title) => title.replace(/[.!?]+$/u, "")))}.`
       : " You can listen to all of it now and come back to the parts that need looking at once you have stopped.";
 
   return {
@@ -941,9 +812,13 @@ export function narrateLesson(
 ): LessonNarration {
   const maxColumns = options.maxLinearisableTableColumns ?? DEFAULT_LINEARISABLE_TABLE_COLUMNS;
   const entry = deriveLessonModality(lesson, { maxLinearisableTableColumns: maxColumns });
+  // The lesson's own pair first: when a neighbour romanizes the same headword
+  // differently (ي is *yāʾ* in the letter lesson and *-ī* in the "my" lesson),
+  // this lesson's reading is the one it is teaching, and pairRomanization keeps
+  // only the first pair per headword.
   const pairs: RomanizationPair[] = [
-    ...(options.glossary ?? []),
     { headword: lesson.realization.headword, romanization: lesson.realization.romanization },
+    ...(options.glossary ?? []),
   ].filter(
     (pair) =>
       pair.headword.trim() !== "" &&
@@ -971,11 +846,27 @@ export function narrateLesson(
     for (const activity of block.activities ?? []) {
       try {
         const compiled: CompiledLessonActivity = compileLessonActivity(activity, block, index);
+        // Asked at the wheel only when a driver can answer it aloud; otherwise said
+        // as a deferral, like a `[YOU WRITE: …]` cue. See `NarrationActivity`.
+        //
+        // The verdict reads the authored prompt (it drops emphasis markers itself),
+        // and the activity's atoms and accepted answers: a question that accepts
+        // only script ("Which taught character is … woman?" — 女) or grades a
+        // script atom with a script answer cannot be answered aloud, whatever its
+        // prompt says.
+        // The ear rewording reads the prompt with its Markdown already stripped, so
+        // an italic `*Type*` or `_in rōmaji_` is reworded exactly as a plain one is:
+        // it used to see only `**bold**`, and an emphasised "Type" reached the
+        // narration unchanged.
+        const spoken = activityNeedsEyesOrHands(compiled).length === 0;
+        const plain = speakableInline(compiled.prompt);
+        const prompt = spoken ? activityPromptForTheEar(plain) : plain;
         segments.push({
           kind: "activity",
           scored: true,
+          spoken,
           id: compiled.id,
-          prompt: pairRomanization(speakableInline(compiled.prompt), pairs),
+          prompt: pairRomanization(prompt, pairs),
           assesses: compiled.assesses,
           responseSeconds: compiled.responseSeconds,
           acceptedResponses: compiled.acceptedResponses,
@@ -1006,6 +897,26 @@ export function narrateLesson(
     });
   });
 
+  // The notice names, by title, every section it sets aside, and the renderer
+  // speaks the stop guard BEFORE each of those titles — so a set-aside title may
+  // say "Writing — trace the silent t" in full. In a lesson announced as drivable
+  // (core `voice`), every OTHER title reaches a driver with no guard in front of
+  // it, so it is said for the ear: a label that asks for an eye or a hand ("Guided
+  // Practice — read, copy, recall") keeps its label and loses the asking
+  // (`headingForTheEar`). The notice is built first, from the authored titles, so
+  // it still names the sections it sets aside exactly as written.
+  //
+  // A lesson whose core is not `voice` keeps its titles as authored: its notice has
+  // already said "it is not a driving lesson" before any of them.
+  const notice = buildNotice(entry, blocks);
+  const coreDrivable = entry.coreModality === "voice";
+  const setAside = new Set(notice?.waitUntilStopped ?? []);
+  for (const block of blocks) {
+    if (!coreDrivable || block.index < 0 || setAside.has(block.title)) continue;
+    const authored = lesson.blocks[block.index]?.title ?? "";
+    block.title = speakableInline(headingForTheEar(authored));
+  }
+
   const skipped = blocks.flatMap((block) =>
     block.segments.filter((segment) => segment.kind === "table-skipped"),
   );
@@ -1025,16 +936,20 @@ export function narrateLesson(
     language: lesson.language,
     chapter: entry.chapter,
     sequence: numberOrNull(stringValue(lesson.frontmatter.sequence)),
-    title: pairRomanization(narrationTitle(lesson), pairs),
+    title: pairRomanization(
+      coreDrivable ? narrationTitleForTheEar(lesson) : narrationTitle(lesson),
+      pairs,
+    ),
     headword: lesson.realization.headword,
     romanization: lesson.realization.romanization,
     gloss: speakableInline(lesson.realization.gloss),
     script: lesson.script,
     modality: entry.modality,
+    coreModality: entry.coreModality,
     derivedModality: entry.derived,
     modalityReasons: entry.reasons,
     sourceHash: lesson.sourceHash,
-    notice: buildNotice(entry, blocks),
+    notice,
     blocks,
     findings,
   };
@@ -1065,16 +980,23 @@ export function narrateChapter(
   ];
   const ordered = orderLessons(lessons, options);
   const narrated = ordered.map((lesson) => narrateLesson(lesson, { ...options, glossary }));
+  // The core, not the full modality, gates the prefix — see `drivablePrefix` in
+  // `modality.ts`, which this mirrors so the header, the modality report and the
+  // book's "Hands-free start" line can never disagree about the same chapter.
   let drivablePrefix = 0;
   for (const lesson of narrated) {
-    if (lesson.modality !== "voice") break;
+    if (lesson.coreModality !== "voice") break;
     drivablePrefix += 1;
   }
+  const prefixWithPartsSetAside = narrated
+    .slice(0, drivablePrefix)
+    .filter((lesson) => lesson.modality !== "voice").length;
   return {
     language,
     chapter,
     title: options.chapterTitle ?? `Chapter ${chapter}`,
     drivablePrefix,
+    prefixWithPartsSetAside,
     lessonIds: narrated.map((lesson) => lesson.lessonId),
     sourceHash: canonicalChapterHash([...ordered]),
     lessons: narrated,
@@ -1132,7 +1054,20 @@ function promptLine(segment: NarrationPrompt): string[] {
   ];
 }
 
+/**
+ * A scored question. Asked, with its answer gap, when a driver can answer it aloud;
+ * otherwise said as a deferral in the same bracketed shape as a deferred cue, with no
+ * answer gap, because leaving silence after "Write son in Chinese characters" would
+ * tell a driver the course expects it now.
+ *
+ *   spoken    [question — say your answer, then pause 12 seconds]
+ *             Say the Japanese for 'a stick, a pole'.
+ *   deferred  [once you have stopped driving — question: Write son in Chinese characters.]
+ */
 function activityLines(segment: NarrationActivity): string[] {
+  if (!segment.spoken) {
+    return [`[once you have stopped driving — question: ${segment.prompt}]`];
+  }
   return [
     `[question — say your answer, then pause ${plural(segment.responseSeconds, "second")}]`,
     segment.prompt,
@@ -1161,6 +1096,14 @@ function segmentLines(segment: NarrationSegment): string[] {
   }
 }
 
+/**
+ * Spoken at the top of every section a lesson's notice set aside for later. It is
+ * bracketed like the deferred hands-on cues ("[once you have stopped driving — …]")
+ * so a voice assistant and a reader hear the same instruction in the same shape.
+ */
+export const STOP_GUARD =
+  "[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]";
+
 /** One lesson as a continuous script. */
 export function renderLessonNarrationText(lesson: LessonNarration): string {
   // The `# …` line is already written as "headword — gloss", and by the time it gets
@@ -1168,17 +1111,50 @@ export function renderLessonNarrationText(lesson: LessonNarration): string {
   // second "headword — gloss" line underneath it said the same thing twice, which
   // sounds like a stutter rather than emphasis. The gloss is only added when the
   // title carries no dash and therefore is not already a definition.
-  const heading = lesson.title === "" ? lesson.headword : lesson.title;
+  //
+  // The title is already said for the ear (`narrationTitleForTheEar`), but the gloss
+  // is added here, so the joined line is judged here, by the same rule: a gloss that
+  // itself asks for an eye or a hand is cut back to the part before the asking.
+  //
+  //   title                          gloss                                   opening
+  //   -----------------------------  --------------------------------------  ------------------------------
+  //   (una oferta y una despedida)   the payoff — read a job advert and …    (una oferta y una despedida) —
+  //                                                                            the payoff
+  //   ಬರೆ (bare)                     write                                   ಬರೆ (bare) — write  (a gloss)
+  //
+  // Only for a lesson announced as drivable, like the titles themselves (see
+  // `narrateLesson`); any other lesson opens with its words as authored.
+  const forTheEar = lesson.coreModality === "voice";
+  const heading =
+    lesson.title !== "" ? lesson.title : forTheEar ? headingForTheEar(lesson.headword) : lesson.headword;
+  const context = { headword: lesson.headword, gloss: lesson.gloss };
+  const joined = heading === "" ? lesson.gloss : `${heading} — ${lesson.gloss}`;
   const opening =
     heading.includes("—") || heading.includes(" - ") || lesson.gloss === ""
       ? heading
-      : `${heading} — ${lesson.gloss}`;
+      : forTheEar
+        ? headingForTheEar(joined, context)
+        : joined;
   const lines: string[] = [];
   if (opening.trim() !== "") lines.push(endSentence(opening));
   if (lesson.notice) lines.push("", lesson.notice.text);
+  // The notice promises "I will say so again when we reach it" for every section it
+  // names in `waitUntilStopped`. This keeps that promise: the moment such a section
+  // begins, before a word of its content, the script says to leave it while driving.
+  // Without it the hands-on instructions of a lesson the header now calls drivable
+  // (a `## Writing — …` trace in lesson one) played straight through at the wheel.
+  // Both lists carry the same `speakableInline` titles, so a plain match is exact.
+  //
+  // The guard comes BEFORE the title, not after it. A set-aside title is the
+  // section's own words and may ask for the very thing the guard warns about
+  // ("Script you'll notice: Read ன்னி", "Writing — trace the silent t"); said first,
+  // it reached a driver one line before the warning did. With the guard first, a
+  // driver who skips ahead skips the whole section, its title included.
+  const setAside = new Set(lesson.notice?.waitUntilStopped ?? []);
   for (const block of lesson.blocks) {
     if (block.segments.length === 0) continue;
     lines.push("");
+    if (block.title !== "" && setAside.has(block.title)) lines.push(STOP_GUARD);
     if (block.title !== "") lines.push(endSentence(block.title));
     for (const segment of block.segments) lines.push(...segmentLines(segment));
   }
@@ -1194,7 +1170,9 @@ export function renderChapterNarrationText(
   const count = chapter.lessons.length;
   // The second line counts the lessons and then says how far a driver gets. Every
   // branch is worded for the count it can see, because a sentence built for "many"
-  // reads wrong at one and two:
+  // reads wrong at one and two. `k` is the drivable prefix, counted on each lesson's
+  // CORE (see `narrateChapter`), and "entirely" is only said when none of those k
+  // lessons has a part set aside (`prefixWithPartsSetAside`, d below, is 0):
   //
   //   lessons  drivable  says
   //   -------  --------  ------------------------------------------------------------
@@ -1206,23 +1184,62 @@ export function renderChapterNarrationText(
   //   n > 1    0         "The first lesson already needs your eyes or your hands, …"
   //   n > 1    1         "You can do the first one in the car; …"
   //   n > 2    k > 1     "You can do the first k of them in the car; …"
+  //
+  // A lesson whose core is voice but which carries a writing or letters section
+  // (`## Writing — observe and trace`) still counts: the narration reads that section
+  // in place, and the lesson's own notice opens by saying the rest can be done in the
+  // car and names the section to leave until the driver has stopped. The header
+  // makes the same promise, in one more sentence, worded for d and k:
+  //
+  //   d      k       adds
+  //   -----  ------  ------------------------------------------------------------------
+  //   0      any     nothing — and the sentence above keeps "entirely"
+  //   1      1, n=1  "It has a part that needs your eyes or your hands; that part …"
+  //   1      1, n>1  "That lesson has a part that needs your eyes or your hands; …"
+  //   1      2       "One of the two has a part that needs …; that part waits …"
+  //   1      k > 2   "Of those k, one has a part that needs …; that part waits …"
+  //   k      k > 1   "Each of those has a part that needs …; those parts wait …"
+  //   1<d<k  k > 2   "Of those k, d have a part that needs …; those parts wait …"
+  //
+  // So Punjabi chapter 1, whose first lesson is a greeting plus a one-line
+  // finger-trace of ਸ, now says "You can do the first 3 of them in the car; … Of
+  // those 3, one has a part that needs your eyes or your hands; that part waits until
+  // you have stopped." It used to tell a driver to stop before lesson one.
+  const k = chapter.drivablePrefix;
+  const d = chapter.prefixWithPartsSetAside;
+  const byEar = d === 0 ? "entirely by ear" : "by ear";
   const drivable =
-    chapter.drivablePrefix === count
+    k === count
       ? count === 1
-        ? "It can be done entirely by ear."
+        ? `It can be done ${byEar}.`
         : count === 2
-          ? "Both can be done entirely by ear."
-          : `All ${count} can be done entirely by ear.`
-      : chapter.drivablePrefix === 0
+          ? `Both can be done ${byEar}.`
+          : `All ${count} can be done ${byEar}.`
+      : k === 0
         ? count === 1
           ? "It needs your eyes or your hands, so save it for when you have stopped."
           : "The first lesson already needs your eyes or your hands, so save this one for when you have stopped."
-        : chapter.drivablePrefix === 1
+        : k === 1
           ? "You can do the first one in the car; after that you will want to have stopped."
-          : `You can do the first ${chapter.drivablePrefix} of them in the car; after that you will want to have stopped.`;
+          : `You can do the first ${k} of them in the car; after that you will want to have stopped.`;
+  const part = "a part that needs your eyes or your hands";
+  const setAside =
+    d === 0
+      ? ""
+      : k === 1
+        ? count === 1
+          ? ` It has ${part}; that part waits until you have stopped.`
+          : ` That lesson has ${part}; that part waits until you have stopped.`
+        : d === 1
+          ? k === 2
+            ? ` One of the two has ${part}; that part waits until you have stopped.`
+            : ` Of those ${k}, one has ${part}; that part waits until you have stopped.`
+          : d === k
+            ? ` Each of those has ${part}; those parts wait until you have stopped.`
+            : ` Of those ${k}, ${d} have ${part}; those parts wait until you have stopped.`;
   const lines: string[] = [
     `${titleCase(track)}, chapter ${chapter.chapter}: ${chapter.title}.`,
-    `${plural(count, "lesson")}. ${drivable}`,
+    `${plural(count, "lesson")}. ${drivable}${setAside}`,
   ];
   chapter.lessons.forEach((lesson, index) => {
     lines.push("", "", `Lesson ${index + 1} of ${count}.`, renderLessonNarrationText(lesson));

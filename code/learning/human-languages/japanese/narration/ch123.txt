@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おとなしい (otonashii) mean? ("Well-behaved, quiet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'well-behaved, quiet'.
+Say the Japanese for 'well-behaved, quiet'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なつかしい (natsukashii) mean? ("Dear, missed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'dear, missed'.
+Say the Japanese for 'dear, missed'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くやしい (kuyashii) mean? ("Frustrating".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'frustrating'.
+Say the Japanese for 'frustrating'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あやしい (ayashii) mean? ("Suspicious".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'suspicious'.
+Say the Japanese for 'suspicious'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くわしい (kuwashii) mean? ("Detailed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'detailed'.
+Say the Japanese for 'detailed'.

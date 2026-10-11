@@ -42,7 +42,7 @@ variety: standard
 
 **फणस** — *phaṇas* — "a jackfruit".
 
-Say it: *phaṇas*. Look at its shape as you say it: the next lesson takes one
+Say it: *phaṇas*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **फ**, and writes it on its own.
 
 ## Guided Practice

@@ -1,17 +1,17 @@
 {
   "language": "kannada",
   "chapter": 38,
-  "sourceHash": "fnv1a64:865808952bac9b07",
+  "sourceHash": "fnv1a64:3c0dd54ca8f4c4a0",
   "lessonIds": [
     "KA-C38-hrudaya",
     "KA-C38-namah",
     "KA-S132-sign-visarga"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 2,
   "text": "kannada/narration/ch38.txt",
   "json": "kannada/narration/ch38.json",
-  "textHash": "fnv1a64:7429d059862cafcf",
-  "jsonHash": "fnv1a64:95cda9e95a1ad227",
+  "textHash": "fnv1a64:eb020a52bb847c81",
+  "jsonHash": "fnv1a64:869230769a7ccae9",
   "findings": []
 }

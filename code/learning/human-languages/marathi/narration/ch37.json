@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C37-kon-r1",
               "prompt": "Ask who your friend is.",
               "assesses": [
@@ -249,6 +250,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C37-kiti-r1",
               "prompt": "Ask how many sisters, then answer with two.",
               "assesses": [
@@ -374,6 +376,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R37-who-how-many-run",
               "prompt": "Match each asking word to the shape of its answer: a thing, a person, a number.",
               "assesses": [

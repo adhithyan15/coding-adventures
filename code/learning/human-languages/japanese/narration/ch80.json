@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C80-kousaten-type",
-              "prompt": "Type the Japanese for 'a crossroads'.",
+              "prompt": "Say the Japanese for 'a crossroads'.",
               "assesses": [
                 "JA-LEX-C80-LOC80-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C80-shingou-type",
-              "prompt": "Type the Japanese for 'a traffic light'.",
+              "prompt": "Say the Japanese for 'a traffic light'.",
               "assesses": [
                 "JA-LEX-C80-LOC80-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C80-hougaku-type",
-              "prompt": "Type the Japanese for 'a direction'.",
+              "prompt": "Say the Japanese for 'a direction'.",
               "assesses": [
                 "JA-LEX-C80-LOC80-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C80-chikamichi-type",
-              "prompt": "Type the Japanese for 'a shortcut'.",
+              "prompt": "Say the Japanese for 'a shortcut'.",
               "assesses": [
                 "JA-LEX-C80-LOC80-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C80-mawari-type",
-              "prompt": "Type the Japanese for 'the surroundings'.",
+              "prompt": "Say the Japanese for 'the surroundings'.",
               "assesses": [
                 "JA-LEX-C80-LOC80-05"
               ],

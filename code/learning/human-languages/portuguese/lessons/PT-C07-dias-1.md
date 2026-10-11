@@ -56,13 +56,13 @@ markets were held on feast-days.)
 ## Grammar Lens: The pattern: [ordinal] + feira
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-DIAS-1-03]; assesses=[] -->
 
-| Portuguese | means | ← ordinal of | (cardinal you learned) |
-|---|---|---|---|
-| **segunda**-feira (Mon) | "2nd feast-day" | *secundus* "second" | *dois* (2) |
-| **terça**-feira (Tue) | "3rd" | *tertius* "third" | *três* (3) |
-| **quarta**-feira (Wed) | "4th" | *quartus* "fourth" | *quatro* (4) |
-| **quinta**-feira (Thu) | "5th" | *quintus* "fifth" | *cinco* (5) |
-| **sexta**-feira (Fri) | "6th" | *sextus* "sixth" | *seis* (6) |
+| Portuguese | means | ← ordinal of (and the cardinal you learned) |
+|---|---|---|
+| **segunda**-feira (Mon) | "2nd feast-day" | *secundus* "second"; *dois* (2) |
+| **terça**-feira (Tue) | "3rd" | *tertius* "third"; *três* (3) |
+| **quarta**-feira (Wed) | "4th" | *quartus* "fourth"; *quatro* (4) |
+| **quinta**-feira (Thu) | "5th" | *quintus* "fifth"; *cinco* (5) |
+| **sexta**-feira (Fri) | "6th" | *sextus* "sixth"; *seis* (6) |
 
 So *quarta-feira* is literally "**fourth** feast-day," and you can hear *quatro*
 (4) inside *quarta*. In everyday speech the "-feira" is often dropped: "*Até

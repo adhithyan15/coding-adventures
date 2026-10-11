@@ -165,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-si-say",
               "prompt": "Say: if I have time, I speak Spanish.",
               "assesses": [
@@ -183,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-si-accent",
               "prompt": "Which one means yes, si or si with an accent?",
               "assesses": [
@@ -201,6 +203,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-si-etymon",
               "prompt": "What is the Latin word for yes built out of?",
               "assesses": [

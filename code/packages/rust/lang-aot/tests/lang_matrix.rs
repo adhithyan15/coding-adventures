@@ -2084,6 +2084,60 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — division by an exact negative unit maps a nonnegative unit
+    // sign-rooted range before exp, cosine, sqrt, entier, and widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / (-1))))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an exact identity power preserves a nonpositive unit
+    // sign-rooted range before exp, cosine, sqrt, entier, and widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp((-abs(sign(pick()))) ^ 1)))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — monotone built-ins preserve a nonpositive unit sign-rooted
+    // range before exp, cosine, sqrt, entier, and widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(arctan(entier(sign(-abs(sign(pick()))))))))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — every arm of a runtime conditional preserves a nonpositive
+    // unit runtime-real sign root before exp, cosine, sqrt, and widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(if choose() then sin(-abs(sign(left()))) else arctan(-abs(sign(right()))))))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — every arm of a runtime conditional preserves a nonnegative
+    // unit runtime-real sign root under negation before exp and widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(-(if choose() then sqrt(abs(sign(left()))) else cos(sign(right()))))))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — every arm of a runtime conditional preserves a unit-bounded
+    // runtime-real sign root before cosine, sqrt, entier, and widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else arctan(sign(right()))))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — nested sqrt calls preserve an abs-normalized bounded sign
     // result before entier and real widening.
     Prog {
@@ -2108,6 +2162,13 @@ fn main() { out(1, VALUE); }\n",
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(exp(sign(pick()))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(exp(if choose() then sin(sign(left())) else arctan(sign(right())))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -13669,6 +13730,173 @@ fn algol_sqrt_cos_multiplicative_nonpositive_exp_sign_widening_runs_on_every_ava
 }
 
 #[test]
+fn algol_sqrt_cos_divisive_nonpositive_exp_sign_widening_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(cos(exp(abs(sign(pick())) / (-1))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-cos divisive-nonpositive-exp-sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos divisive-nonpositive-exp-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_cos_powered_nonpositive_exp_sign_widening_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(cos(exp((-abs(sign(pick()))) ^ 1)))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-cos powered-nonpositive-exp-sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos powered-nonpositive-exp-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_cos_monotone_nonpositive_exp_sign_widening_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(cos(exp(arctan(entier(sign(-abs(sign(pick()))))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-cos monotone-nonpositive-exp-sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos monotone-nonpositive-exp-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_cos_conditional_nonpositive_exp_sign_widening_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(cos(exp(if choose() then sin(-abs(sign(left()))) else arctan(-abs(sign(right()))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-cos conditional-nonpositive-exp-sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos conditional-nonpositive-exp-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_cos_conditional_nonnegative_exp_sign_widening_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(cos(exp(-(if choose() then sqrt(abs(sign(left()))) else cos(sign(right()))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-cos conditional-nonnegative-exp-sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos conditional-nonnegative-exp-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_cos_conditional_sign_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(cos(if choose() then sin(sign(left())) else arctan(sign(right()))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-cos conditional-sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos conditional-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_nested_sqrt_entier_sign_widening_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -13736,6 +13964,33 @@ fn algol_single_exp_entier_sign_widening_runs_on_every_available_standard_backen
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but single-exp-entier-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_single_exp_sign_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(exp(if choose() then sin(sign(left())) else arctan(sign(right())))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL conditional single-exp sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional single-exp sign widening did not complete"
             );
             continue;
         };

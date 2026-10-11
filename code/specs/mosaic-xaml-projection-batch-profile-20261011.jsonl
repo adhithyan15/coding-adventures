@@ -1,0 +1,16 @@
+{"phase":"apply-props","milliseconds":28.611,"bytes":589192}
+{"phase":"dispatch-ffi","milliseconds":3.5331,"bytes":325832}
+{"phase":"persist-snapshot","milliseconds":35.2214,"bytes":37520}
+{"phase":"dispatch-total","milliseconds":41.1615,"bytes":405640}
+{"phase":"dispatch-ffi","milliseconds":1.9291,"bytes":20320}
+{"phase":"persist-snapshot","milliseconds":1.8632,"bytes":37272}
+{"phase":"dispatch-total","milliseconds":3.8776,"bytes":58720}
+{"phase":"apply-props","milliseconds":9.4193,"bytes":288304}
+{"phase":"interaction-handler","milliseconds":15.2677,"bytes":359248}
+{"phase":"interaction-next-render","milliseconds":187.9267,"bytes":8446656}
+{"phase":"dispatch-ffi","milliseconds":0.672,"bytes":20320}
+{"phase":"persist-snapshot","milliseconds":1.4614,"bytes":37272}
+{"phase":"dispatch-total","milliseconds":2.1878,"bytes":58720}
+{"phase":"apply-props","milliseconds":4.0889,"bytes":288304}
+{"phase":"interaction-handler","milliseconds":6.3967,"bytes":350392}
+{"phase":"interaction-next-render","milliseconds":251.0274,"bytes":7666224}

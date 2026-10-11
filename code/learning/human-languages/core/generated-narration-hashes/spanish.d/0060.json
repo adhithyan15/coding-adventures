@@ -1,15 +1,15 @@
 {
   "language": "spanish",
   "chapter": 60,
-  "sourceHash": "fnv1a64:f69b95deb485ee11",
+  "sourceHash": "fnv1a64:b885465b9af815de",
   "lessonIds": [
     "ES-C09-sintesis-describir"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch60.txt",
   "json": "spanish/narration/ch60.json",
-  "textHash": "fnv1a64:90d16e78f2a4cef8",
-  "jsonHash": "fnv1a64:3a309836116b4925",
+  "textHash": "fnv1a64:e4e2f8bc3d2d165b",
+  "jsonHash": "fnv1a64:c72e9521d5197b5a",
   "findings": []
 }

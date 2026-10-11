@@ -8,7 +8,7 @@ type: word
 headword: adeus
 gloss: goodbye (literally "to God")
 concept_tag: FAREWELL
-prerequisites: []
+prerequisites: [PT-C02-practice]
 sounds: [nasal-eu, final-s-sh]
 roots: [ad-deum-latin]
 etymology_hook: "adeus ← a Deus 'to God' — the exact twin of Spanish adiós, French adieu, Italian addio"

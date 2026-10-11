@@ -45,10 +45,10 @@ reviews_of: [UR-W07-alif-madda, UR-C03-aap-tum-tu]
 > پ
 
 A **shallow open curve** lying along the baseline, like a small flat-bottomed
-boat — and then a lift, and **three dots placed underneath it**, arranged as a
-triangle with its point downward.
+boat — and then **three dots placed underneath it**, arranged as a triangle
+with its point downward, each after its own lift.
 
-Two parts, one lift. Its name is **پ** *pe* and it says **p**.
+Two parts, three lifts. Its name is **پ** *pe* and it says **p**.
 
 The shapes it wears by position follow the pattern you have already seen twice:
 
@@ -96,7 +96,7 @@ in on both sides.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-PE-01, UR-LEX-AAP-TUM-TU] -->
 
-- [YOU WRITE: پ — the boat, then a lift, then three dots beneath]
+- [YOU WRITE: پ — the boat, then three dots beneath, lifting before each one]
 - [YOU WRITE: آپ, then پیر, then اپنا]
 - [YOU POINT: the pe in پیر and the pe in آپ, and say what changed]
 - [YOU SAY: **āp**, and say who you would use it with rather than *tum*]

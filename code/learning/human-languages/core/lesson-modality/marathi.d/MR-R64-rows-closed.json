@@ -8,13 +8,14 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:bcbe2b342203089e",
     "detachableSegments": [
       "Script: the five pairs, written out once"

@@ -36,7 +36,7 @@ reviews_of: [HI-C41-big]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-01] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: छोटा
 <!-- hl-knowledge: introduces=[HI-LEX-C41-ADJ-02]; assesses=[] -->

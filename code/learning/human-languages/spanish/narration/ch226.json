@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-muy-say",
               "prompt": "Say: I am very tired.",
               "assesses": [
@@ -174,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-muy-which",
               "prompt": "Which form goes in front of a noun -- muy or mucho?",
               "assesses": [
@@ -192,6 +194,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-muy-alone",
               "prompt": "Can muy stand on its own as an answer?",
               "assesses": [

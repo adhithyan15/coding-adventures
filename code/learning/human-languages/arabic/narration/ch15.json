@@ -4,14 +4,14 @@
   "chapter": 15,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b4a1d28b6f0cd49a",
+  "sourceHash": "fnv1a64:a6de25bc14521232",
   "lessons": [
     {
       "id": "AR-C15-ad-duhr-muntasaf-al-layl",
       "sequence": 590,
       "title": "الظهر, منتصف الليل — noon and midnight",
       "headword": "الظهر منتصف الليل",
-      "romanization": "",
+      "romanization": "aẓ-ẓuhr muntaṣaf al-layl",
       "gloss": "noon (also the name of the midday Islamic prayer) and midnight (\"the half of the night\")",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86bf1195fc44b2d1",
+      "sourceHash": "fnv1a64:910137b8e2eefbb4",
       "notice": null,
       "blocks": [
         {

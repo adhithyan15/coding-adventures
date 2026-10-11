@@ -40,13 +40,13 @@ of these you simply learn on their own.
 ## You'll want to know: The five
 <!-- hl-knowledge: introduces=[TE-LEX-C07-NUMBERS-6-10-01]; assesses=[] -->
 
-| | numeral | word | said |
-|---|---|---|---|
-| 6 | **౬** | **ఆరు** | *āru* |
-| 7 | **౭** | **ఏడు** | *ēḍu* |
-| 8 | **౮** | **ఎనిమిది** | *enimidi* |
-| 9 | **౯** | **తొమ్మిది** | *tommidi* |
-| 10 | **౧౦** | **పది** | *padi* |
+| numeral | word | said |
+|---|---|---|
+| **౬** (6) | **ఆరు** | *āru* |
+| **౭** (7) | **ఏడు** | *ēḍu* |
+| **౮** (8) | **ఎనిమిది** | *enimidi* |
+| **౯** (9) | **తొమ్మిది** | *tommidi* |
+| **౧౦** (10) | **పది** | *padi* |
 
 ## The word, taken apart - Seven, and a lost sound
 <!-- hl-knowledge: introduces=[TE-ETYMON-C07-NUMBERS-6-10-02]; assesses=[] -->
@@ -61,10 +61,10 @@ plain **ḍ** — *ēḍu*. One inherited sound, three fates across the three sc
 
 Here Telugu strays furthest from its cousins —
 
-| | Tamil | Malayalam | Telugu |
-|---|---|---|---|
-| 8 | *eṭṭu* | *eṭṭu* | **enimidi** |
-| 9 | *oṉpatu* | *onpatu* | **tommidi** |
+| number | Tamil / Malayalam | Telugu |
+|---|---|---|
+| 8 | *eṭṭu* / *eṭṭu* | **enimidi** |
+| 9 | *oṉpatu* / *onpatu* | **tommidi** |
 
 You can't reach *enimidi* and *tommidi* from Tamil by regular sound-change the
 way you can *reṇḍu* from *iraṇṭu*: *tommidi* is a different word entirely, and

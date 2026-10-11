@@ -377,8 +377,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C21-practice-name-reply",
-              "prompt": "You have been asked quid tibi nomen est? Type the first three Latin words of your reply.",
+              "prompt": "You have been asked quid tibi nomen est? Say the first three Latin words of your reply.",
               "assesses": [
                 "LA-DIALOGUE-MEETING-01"
               ],
