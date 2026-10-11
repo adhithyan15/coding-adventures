@@ -123,7 +123,8 @@ Before lowering a caller-supplied arithmetic AST, require unary `+`/`-` and
 binary `+`/`-`/`*`/`/` tokens to have the canonical lexer token kind, no
 conflicting effective-type override, and the exact supported spelling.
 Arithmetic `paren_expr` nodes must contain actual opening and closing
-parenthesis tokens around the existing expression-list wrapper. Matching
+parenthesis tokens around the grammar's existing `paren_body` wrapper,
+which must contain exactly one `expression` node. Matching
 text alone does not validate an operator or delimiter. Reject a node in
 place of a token and invalid spellings even if the other fields look valid.
 
