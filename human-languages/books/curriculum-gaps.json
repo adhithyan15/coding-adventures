@@ -16,7 +16,7 @@
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
-    "laterChapterLessonsWithoutPrerequisites": 50,
+    "laterChapterLessonsWithoutPrerequisites": 5,
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
@@ -59,16 +59,6 @@
         "chapter": 1
       },
       {
-        "lessonId": "AR-C02-ism",
-        "language": "arabic",
-        "chapter": 2
-      },
-      {
-        "lessonId": "AR-C02-thaman",
-        "language": "arabic",
-        "chapter": 2
-      },
-      {
         "lessonId": "BN-C01-nomoshkar",
         "language": "bengali",
         "chapter": 1
@@ -84,39 +74,9 @@
         "chapter": 1
       },
       {
-        "lessonId": "FR-C02-je",
-        "language": "french",
-        "chapter": 2
-      },
-      {
-        "lessonId": "FR-C03-aller",
-        "language": "french",
-        "chapter": 3
-      },
-      {
-        "lessonId": "FR-C03-merci",
-        "language": "french",
-        "chapter": 3
-      },
-      {
-        "lessonId": "FR-C04-au-revoir",
-        "language": "french",
-        "chapter": 4
-      },
-      {
         "lessonId": "GE-C01-hallo",
         "language": "german",
         "chapter": 1
-      },
-      {
-        "lessonId": "GE-C02-ich",
-        "language": "german",
-        "chapter": 2
-      },
-      {
-        "lessonId": "GE-C03-danke",
-        "language": "german",
-        "chapter": 3
       },
       {
         "lessonId": "GU-C01-namaste",
@@ -129,64 +89,14 @@
         "chapter": 8
       },
       {
-        "lessonId": "GU-C04-pachha",
-        "language": "gujarati",
-        "chapter": 10
-      },
-      {
         "lessonId": "HI-C01-namaste",
         "language": "hindi",
         "chapter": 1
       },
       {
-        "lessonId": "HI-C02-naam",
-        "language": "hindi",
-        "chapter": 2
-      },
-      {
-        "lessonId": "HI-C04-phir",
-        "language": "hindi",
-        "chapter": 4
-      },
-      {
-        "lessonId": "HI-C42-come",
-        "language": "hindi",
-        "chapter": 42
-      },
-      {
-        "lessonId": "HI-S01-letter-ma",
-        "language": "hindi",
-        "chapter": 6
-      },
-      {
-        "lessonId": "HI-S110-letter-ra",
-        "language": "hindi",
-        "chapter": 6
-      },
-      {
         "lessonId": "IT-C01-ciao",
         "language": "italian",
         "chapter": 1
-      },
-      {
-        "lessonId": "IT-C02-stare",
-        "language": "italian",
-        "chapter": 2
-      },
-      {
-        "lessonId": "IT-C03-io",
-        "language": "italian",
-        "chapter": 3
-      },
-      {
-        "lessonId": "IT-C04-arrivederci",
-        "language": "italian",
-        "chapter": 4
-      },
-      {
-        "lessonId": "IT-C06-numeri-1-5",
-        "language": "italian",
-        "chapter": 6
       },
       {
         "lessonId": "JA-W01-i",
@@ -197,11 +107,6 @@
         "lessonId": "KA-C01-namaskara",
         "language": "kannada",
         "chapter": 1
-      },
-      {
-        "lessonId": "KA-C02-hesaru",
-        "language": "kannada",
-        "chapter": 2
       },
       {
         "lessonId": "KA-S01-letter-na",
@@ -229,24 +134,9 @@
         "chapter": 1
       },
       {
-        "lessonId": "ML-C02-peru",
-        "language": "malayalam",
-        "chapter": 2
-      },
-      {
         "lessonId": "MR-C01-namaskar",
         "language": "marathi",
         "chapter": 1
-      },
-      {
-        "lessonId": "MR-C64-dhol",
-        "language": "marathi",
-        "chapter": 64
-      },
-      {
-        "lessonId": "MR-C65-iishvar",
-        "language": "marathi",
-        "chapter": 65
       },
       {
         "lessonId": "MW-W01-ra",
@@ -262,26 +152,6 @@
         "lessonId": "PT-C01-ola",
         "language": "portuguese",
         "chapter": 1
-      },
-      {
-        "lessonId": "PT-C02-tudo",
-        "language": "portuguese",
-        "chapter": 2
-      },
-      {
-        "lessonId": "PT-C03-eu",
-        "language": "portuguese",
-        "chapter": 3
-      },
-      {
-        "lessonId": "PT-C04-adeus",
-        "language": "portuguese",
-        "chapter": 4
-      },
-      {
-        "lessonId": "PT-C06-numeros-1-5",
-        "language": "portuguese",
-        "chapter": 6
       },
       {
         "lessonId": "PA-C01-sat-sri-akal",
@@ -304,21 +174,6 @@
         "chapter": 2
       },
       {
-        "lessonId": "SA-C04-punah",
-        "language": "sanskrit",
-        "chapter": 4
-      },
-      {
-        "lessonId": "SA-C14-this",
-        "language": "sanskrit",
-        "chapter": 14
-      },
-      {
-        "lessonId": "SA-C15-big",
-        "language": "sanskrit",
-        "chapter": 15
-      },
-      {
         "lessonId": "SA-S02-letter-na",
         "language": "sanskrit",
         "chapter": 1
@@ -329,59 +184,9 @@
         "chapter": 1
       },
       {
-        "lessonId": "ES-C267-negar-preguntar",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-no-nada",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-no-verbo",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-pregunta-si-no",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-verdad-no",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C412-gimnasio",
-        "language": "spanish",
-        "chapter": 412
-      },
-      {
         "lessonId": "TA-C01-vanakkam",
         "language": "tamil",
         "chapter": 1
-      },
-      {
-        "lessonId": "TA-C02-peyar",
-        "language": "tamil",
-        "chapter": 2
-      },
-      {
-        "lessonId": "TA-C08-sontham",
-        "language": "tamil",
-        "chapter": 8
-      },
-      {
-        "lessonId": "TA-C42-come",
-        "language": "tamil",
-        "chapter": 42
-      },
-      {
-        "lessonId": "TA-S01-va",
-        "language": "tamil",
-        "chapter": 6
       },
       {
         "lessonId": "TA-S101-letter-pa",
@@ -394,31 +199,6 @@
         "chapter": 1
       },
       {
-        "lessonId": "TE-C02-peru",
-        "language": "telugu",
-        "chapter": 2
-      },
-      {
-        "lessonId": "TE-C41-this",
-        "language": "telugu",
-        "chapter": 41
-      },
-      {
-        "lessonId": "TE-C42-big",
-        "language": "telugu",
-        "chapter": 42
-      },
-      {
-        "lessonId": "TE-C43-come",
-        "language": "telugu",
-        "chapter": 43
-      },
-      {
-        "lessonId": "TE-C44-look",
-        "language": "telugu",
-        "chapter": 44
-      },
-      {
         "lessonId": "TE-S03-letter-ka",
         "language": "telugu",
         "chapter": 1
@@ -429,11 +209,6 @@
         "chapter": 1
       },
       {
-        "lessonId": "TE-S157-letter-ba",
-        "language": "telugu",
-        "chapter": 3
-      },
-      {
         "lessonId": "UR-C01-salam",
         "language": "urdu",
         "chapter": 1
@@ -441,104 +216,9 @@
     ],
     "laterChapterWithoutPrerequisites": [
       {
-        "lessonId": "AR-C02-ism",
-        "language": "arabic",
-        "chapter": 2
-      },
-      {
-        "lessonId": "AR-C02-thaman",
-        "language": "arabic",
-        "chapter": 2
-      },
-      {
-        "lessonId": "FR-C02-je",
-        "language": "french",
-        "chapter": 2
-      },
-      {
-        "lessonId": "FR-C03-aller",
-        "language": "french",
-        "chapter": 3
-      },
-      {
-        "lessonId": "FR-C03-merci",
-        "language": "french",
-        "chapter": 3
-      },
-      {
-        "lessonId": "FR-C04-au-revoir",
-        "language": "french",
-        "chapter": 4
-      },
-      {
-        "lessonId": "GE-C02-ich",
-        "language": "german",
-        "chapter": 2
-      },
-      {
-        "lessonId": "GE-C03-danke",
-        "language": "german",
-        "chapter": 3
-      },
-      {
         "lessonId": "GU-C02-naam",
         "language": "gujarati",
         "chapter": 8
-      },
-      {
-        "lessonId": "GU-C04-pachha",
-        "language": "gujarati",
-        "chapter": 10
-      },
-      {
-        "lessonId": "HI-C02-naam",
-        "language": "hindi",
-        "chapter": 2
-      },
-      {
-        "lessonId": "HI-C04-phir",
-        "language": "hindi",
-        "chapter": 4
-      },
-      {
-        "lessonId": "HI-C42-come",
-        "language": "hindi",
-        "chapter": 42
-      },
-      {
-        "lessonId": "HI-S01-letter-ma",
-        "language": "hindi",
-        "chapter": 6
-      },
-      {
-        "lessonId": "HI-S110-letter-ra",
-        "language": "hindi",
-        "chapter": 6
-      },
-      {
-        "lessonId": "IT-C02-stare",
-        "language": "italian",
-        "chapter": 2
-      },
-      {
-        "lessonId": "IT-C03-io",
-        "language": "italian",
-        "chapter": 3
-      },
-      {
-        "lessonId": "IT-C04-arrivederci",
-        "language": "italian",
-        "chapter": 4
-      },
-      {
-        "lessonId": "IT-C06-numeri-1-5",
-        "language": "italian",
-        "chapter": 6
-      },
-      {
-        "lessonId": "KA-C02-hesaru",
-        "language": "kannada",
-        "chapter": 2
       },
       {
         "lessonId": "KA-S111-vowel-sign-e",
@@ -551,144 +231,14 @@
         "chapter": 33
       },
       {
-        "lessonId": "ML-C02-peru",
-        "language": "malayalam",
-        "chapter": 2
-      },
-      {
-        "lessonId": "MR-C64-dhol",
-        "language": "marathi",
-        "chapter": 64
-      },
-      {
-        "lessonId": "MR-C65-iishvar",
-        "language": "marathi",
-        "chapter": 65
-      },
-      {
-        "lessonId": "PT-C02-tudo",
-        "language": "portuguese",
-        "chapter": 2
-      },
-      {
-        "lessonId": "PT-C03-eu",
-        "language": "portuguese",
-        "chapter": 3
-      },
-      {
-        "lessonId": "PT-C04-adeus",
-        "language": "portuguese",
-        "chapter": 4
-      },
-      {
-        "lessonId": "PT-C06-numeros-1-5",
-        "language": "portuguese",
-        "chapter": 6
-      },
-      {
         "lessonId": "SA-C02-nama",
         "language": "sanskrit",
         "chapter": 2
       },
       {
-        "lessonId": "SA-C04-punah",
-        "language": "sanskrit",
-        "chapter": 4
-      },
-      {
-        "lessonId": "SA-C14-this",
-        "language": "sanskrit",
-        "chapter": 14
-      },
-      {
-        "lessonId": "SA-C15-big",
-        "language": "sanskrit",
-        "chapter": 15
-      },
-      {
-        "lessonId": "ES-C267-negar-preguntar",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-no-nada",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-no-verbo",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-pregunta-si-no",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C267-verdad-no",
-        "language": "spanish",
-        "chapter": 267
-      },
-      {
-        "lessonId": "ES-C412-gimnasio",
-        "language": "spanish",
-        "chapter": 412
-      },
-      {
-        "lessonId": "TA-C02-peyar",
-        "language": "tamil",
-        "chapter": 2
-      },
-      {
-        "lessonId": "TA-C08-sontham",
-        "language": "tamil",
-        "chapter": 8
-      },
-      {
-        "lessonId": "TA-C42-come",
-        "language": "tamil",
-        "chapter": 42
-      },
-      {
-        "lessonId": "TA-S01-va",
-        "language": "tamil",
-        "chapter": 6
-      },
-      {
         "lessonId": "TA-S101-letter-pa",
         "language": "tamil",
         "chapter": 6
-      },
-      {
-        "lessonId": "TE-C02-peru",
-        "language": "telugu",
-        "chapter": 2
-      },
-      {
-        "lessonId": "TE-C41-this",
-        "language": "telugu",
-        "chapter": 41
-      },
-      {
-        "lessonId": "TE-C42-big",
-        "language": "telugu",
-        "chapter": 42
-      },
-      {
-        "lessonId": "TE-C43-come",
-        "language": "telugu",
-        "chapter": 43
-      },
-      {
-        "lessonId": "TE-C44-look",
-        "language": "telugu",
-        "chapter": 44
-      },
-      {
-        "lessonId": "TE-S157-letter-ba",
-        "language": "telugu",
-        "chapter": 3
       }
     ]
   },
