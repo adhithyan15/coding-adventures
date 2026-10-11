@@ -40,5 +40,14 @@ Corpus assertions may share one immutable measurement per file; invalid mock
 levels must fail before any corpus read. Preserve live CLI and baseline checks.
 
 The overlapping Windows Node ACL test uses one owned copy of the runtime for
-both launches, preserving the two-second startup and 15-second case deadlines.
-System-wide runtime ACL writes require privileges unrelated to this regression.
+both launches. Use the production five-second startup budget and a five-second
+child lifetime for the overlap fixture, matching the Python overlap test, while
+retaining its 15-second case deadline and both exit assertions. On run
+38163286318 the owned Node fixture took 2.3 seconds and was cancelled at its
+test-only two-second attestation limit; the earlier DACL privilege failure was
+already fixed. System-wide runtime ACL writes require unrelated privileges.
+
+Load the immutable modality corpus and build its manifest once during module
+initialization, as the other real-corpus fixtures do. The same CI run passed
+207 human-language test files but exceeded the 30-second modality setup hook.
+Keep the actual assertions and CLI checks, with their existing deadlines.
