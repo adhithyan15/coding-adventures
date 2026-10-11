@@ -106,4 +106,4 @@ Russian kept both halves as two verbs: **видеть** for the eyes, and the ol
 [PAUSE 3s] Say "to see." (**Видеть**.) Say "I see." (*Ya vízhu* — the **д**
 swapped to *zh*.) Does that swap happen anywhere else in the present?
 (**No** — the *I* form only.) What second meaning did \**weid-* carry?
-(**To know** — hence *wit*, *wise*, *Veda*.) Next: идти, "to go."
+(**To know** — hence *wit*, *wise*, *Veda*.) Next: "to go."

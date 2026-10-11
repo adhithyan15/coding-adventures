@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:158fd3693f8e3b24",
+  "sourceHash": "fnv1a64:0b447eada1397c86",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -310,7 +310,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ed8bff66af9c1bce",
+      "sourceHash": "fnv1a64:ad3aa5c456a26ab2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -361,7 +361,7 @@
             },
             {
               "kind": "speech",
-              "text": "Watch all of it happen in one short word. In سلام (salām), sīn reaches leftward into lām; lām and alif fuse into the fixed pair لا; then alif, which never joins leftward, forces a pen lift before final mīm."
+              "text": "Watch all of it happen in one short word. In سلام (salām), sīn reaches leftward into lām; lām and alif fuse into a fixed pair, ل + ا becomes لا; then alif, which never joins leftward, forces a pen lift before final mīm."
             }
           ]
         },

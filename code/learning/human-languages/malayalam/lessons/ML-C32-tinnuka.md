@@ -45,8 +45,8 @@ places it never reached.
 > **ഉണ്ണുക** — *uṇṇuka* — **to eat a meal, to dine**
 
 Two inherited verbs, both alive. *Tinnuka* is eating in general. *Uṇṇuka* is
-sitting down to a proper meal, and gives the noun **ഊണ്**
-(*ūṇŭ*), "lunch." The tenses are regular: *tinnunnu*, *tinnu*, *tinnuṁ*.
+sitting down to a proper meal, and gives the everyday noun for lunch, which
+comes later. The tenses are regular: *tinnunnu*, *tinnu*, *tinnuṁ*.
 
 ## Sounds you'll need: the letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

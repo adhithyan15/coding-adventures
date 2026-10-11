@@ -68,7 +68,6 @@ mean *sudden* in older writing.
 [PAUSE 1s]
 - [YOU SAY: "bald" (*balt*, hard *t*)]
 - [YOU SAY: "bald" and English "bold" — one word, two senses]
-- [YOU SAY: "bis bald" — until soon]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BALD-01, GE-ETYMON-BALD-BOLD-02] -->

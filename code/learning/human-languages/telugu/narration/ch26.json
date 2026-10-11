@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:11b5a9a6bf4a4829",
+  "sourceHash": "fnv1a64:68242c9ae5aabb67",
   "lessons": [
     {
       "id": "TE-C26-udayam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b94e62a1611d43a6",
+      "sourceHash": "fnv1a64:5f9acb944e6a969c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest cross-language twist. Kannada also has this exact Sanskrit root, ఉదయ (udaya) — but only inside its greeting, ಶುಭೋದಯ (śubhōdaya, \"good morning\"). Kannada's actual everyday noun for \"morning\" is a completely unrelated native word, ಬೆಳಗ್ಗೆ (beḷagge, \"the shining\"). Telugu doesn't split the job that way: ఉదయం (udayam) covers both the everyday noun AND, in శుభోదయం, the greeting root — one word, doing what Kannada spreads across two unrelated ones. And unlike రోజు (last lesson's genuine Persian surprise for \"day\"), Telugu's morning word holds no such twist — straightforwardly Sanskrit, start to finish."
+              "text": "Here's the honest cross-language twist. Kannada also has this exact Sanskrit root, ఉదయ (udaya) — but only inside its greeting, ಶುಭೋದಯ (śubhōdaya, \"good morning\"). Kannada's actual everyday noun for \"morning\" is a completely unrelated native word, ಬೆಳಗ್ಗೆ (beḷagge, \"the shining\"). Telugu doesn't split the job that way: ఉదయం (udayam) covers both the everyday noun AND, inside the good-morning greeting, the greeting root — one word, doing what Kannada spreads across two unrelated ones. And unlike రోజు (last lesson's genuine Persian surprise for \"day\"), Telugu's morning word holds no such twist — straightforwardly Sanskrit, start to finish."
             }
           ]
         },

@@ -8,7 +8,7 @@ chapter: 3
 type: writing
 headword: "ਟ · ਠ · ਡ"
 romanization: "ṭa · ṭha · ḍa"
-gloss: "three pieces of Gurmukhi, met inside a word you already say"
+gloss: "three pieces of Gurmukhi, met inside the word the next lesson teaches"
 prerequisites: [PA-S03-nanna-bihari-dulava, PA-C03-tusi-kivein-ho, PA-C03-main]
 sounds: []
 roots: []
@@ -57,13 +57,11 @@ memory:
 
 **ḍaḍḍā** — *ḍa*. A **retroflex** *d*, the voiced partner of ṭaiṅkā.
 
-Now put them where you have already heard them:
+Now see one of them inside the word the next lesson teaches:
 
 > **ਟ**  **ਠ**  **ਡ** — one row, one tongue position, three degrees of breath and voice
 >
 > **ਠ** + **ੀ** + **ਕ** → **ਠੀਕ** (*ṭhīk*)
->
-> **ਠੀਕ** — *ṭhīk* — **fine, all right**
 
 You are not being asked to write any of this. You are being asked to
 **recognise** it the next time it goes past.
@@ -83,8 +81,8 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-MA-01, PA-SCRIPT-RECOG-RA-01, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-SA-01, PA-SCRIPT-RECOG-TA-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-NANNA-01, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-DULAVA-01, PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-ETYMON-FIRST-PERSON-M-03, PA-SCRIPT-RECOG-TAINKA-01, PA-SCRIPT-RECOG-TTHA-01, PA-SCRIPT-RECOG-DDA-01] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at **ਠੀਕ** and point to each of today's pieces in turn]
-- [YOU SAY: *ṭa*, *ṭha*, *ḍa*, then the whole word — *ṭhīk*]
+- [YOU LOOK: at the word built above and point to the one of today's pieces it holds]
+- [YOU SAY: *ṭa*, *ṭha*, *ḍa* — then which one carries the puff of breath]
 - [YOU LOOK: back at the headword at the top of any earlier lesson in this
   chapter and find one shape you now know]
 
@@ -92,6 +90,7 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-TAINKA-01, PA-SCRIPT-RECOG-TTHA-01, PA-SCRIPT-RECOG-DDA-01] -->
 
 [PAUSE 3s] Name today's pieces: *ṭaiṅkā*, *ṭhaṭṭhā*, *ḍaḍḍā*. Which of them is a **mātrā** or a mark
-rather than a letter, and what does **ਠੀਕ** say? (*ṭhīk*, “fine, all right”.)
+rather than a letter? (None — all three are letters.) Which one carries a puff of
+breath? (*ṭhaṭṭhā*, **ਠ**.)
 
 Source: [Unicode Gurmukhi chart](https://www.unicode.org/charts/PDF/U0A00.pdf).

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Courtesy, Responses, and Leave-Taking",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:351733f654f060fe",
+  "sourceHash": "fnv1a64:438a319a445acc50",
   "lessons": [
     {
       "id": "MR-C01-ho",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b5274ccc5a35219d",
+      "sourceHash": "fnv1a64:0451965cd238809d",
       "notice": {
         "modality": "sight",
         "needs": [

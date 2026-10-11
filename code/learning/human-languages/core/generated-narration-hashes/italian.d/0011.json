@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 11,
-  "sourceHash": "fnv1a64:3075b31c8103dfd1",
+  "sourceHash": "fnv1a64:d2ff56b064fe005a",
   "lessonIds": [
     "IT-C11-pane",
     "IT-C11-acqua-vino"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "italian/narration/ch11.txt",
   "json": "italian/narration/ch11.json",
-  "textHash": "fnv1a64:e533f99a7f199a65",
-  "jsonHash": "fnv1a64:c8beea42da4a8a72",
+  "textHash": "fnv1a64:f23185ef5d1c3920",
+  "jsonHash": "fnv1a64:ed99de1f575cb4b9",
   "findings": []
 }

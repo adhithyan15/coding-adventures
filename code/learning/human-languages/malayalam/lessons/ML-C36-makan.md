@@ -42,7 +42,7 @@ starting with the son.
 
 > **മകൻ** — *makan* — **son**
 
-> **ഇത് എന്റെ മകനാണ്.** — *ithu ente makanāṇŭ.* — "This is my son."
+> **എന്റെ മകൻ** — *ente makan* — "my son"
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C36-MAKAN-02]; assesses=[ML-CONCEPT-C36-KUTTI-02] -->
@@ -60,7 +60,7 @@ in a family word rather than a greeting.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ithu ente makanāṇŭ" — this is my son]
+- [YOU SAY: "ente makan" — my son]
 - [YOU SAY: the two cousins — "makan" (Malayalam, Tamil) … "maga"
   (Kannada)]
 - [YOU SAY: general then specific — "kuṭṭi … makan"]
@@ -70,7 +70,7 @@ in a family word rather than a greeting.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02] -->
 
-[PAUSE 3s] Say "this is my son." (*Ithu ente makanāṇŭ*.) Which sister keeps
+[PAUSE 3s] Say "my son." (*Ente makan*.) Which sister keeps
 almost the identical word? (**Tamil** — *makan*.) What did Kannada change?
 (**Softened *-k-* to *-g-*** and **dropped the final *-n***, giving *maga*.)
 What does *suhṛttŭ* literally mean? (**"Good-heart"** — *su* plus

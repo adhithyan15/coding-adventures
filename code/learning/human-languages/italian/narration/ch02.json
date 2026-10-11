@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:8f2db9b22f43c517",
+  "sourceHash": "fnv1a64:598b4c2d4a200df2",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -436,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19f496b617226a81",
+      "sourceHash": "fnv1a64:2a20d38962f7e1f5",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +551,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word gives come, and which Spanish and French words are its siblings? (quōmodo becomes cómo, comment.) What two jobs does come do? (\"How?\" and \"like/as.\") Next: the verb it pairs with — stare."
+              "text": "What Latin word gives come, and which Spanish and French words are its siblings? (quōmodo becomes cómo, comment.) What two jobs does come do? (\"How?\" and \"like/as.\") Next: the verb it pairs with, the one that means \"to stand.\""
             }
           ]
         }
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2be6300b8ae38736",
+      "sourceHash": "fnv1a64:366623d86c962d84",
       "notice": null,
       "blocks": [
         {
@@ -586,7 +586,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like Spanish, Italian has two verbs for \"to be\" — essere (identity) and stare (state). \"How are you?\" runs on stare. Spanish's estar is this very verb, with a front e added on."
+              "text": "Like Spanish, Italian has two verbs for \"to be\" — one for identity, which comes much later, and stare (state). \"How are you?\" runs on stare. Spanish's estar is this very verb, with a front e added on."
             }
           ]
         },
@@ -619,7 +619,7 @@
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: essere vs stare, and the two forms you need",
+          "title": "Grammar Lens: the two be-verbs, and the two forms you need",
           "segments": [
             {
               "kind": "table",
@@ -631,7 +631,7 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "verb: essere. from: Latin esse. job: identity — sono Marco, \"I am Marco\".",
+                "verb: the identity one (later). from: Latin esse. job: identity — \"I am Marco\".",
                 "verb: stare. from: Latin stāre. job: state / how you are — sto bene, \"I'm well\"."
               ]
             },
@@ -702,7 +702,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is stare, and which Spanish verb is its twin? (\"To stand,\" stāre — Spanish estar.) Which Italian be-verb is for how you feel — essere or stare? (stare.) Next: ask it — Come stai?"
+              "text": "What Latin verb is stare, and which Spanish verb is its twin? (\"To stand,\" stāre — Spanish estar.) Which Italian be-verb is for how you feel — the identity one, or stare? (stare.) Next: ask it — Come stai?"
             }
           ]
         }
@@ -998,7 +998,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f7567dab36a56c5",
+      "sourceHash": "fnv1a64:f7a21b65ee1a0e07",
       "notice": null,
       "blocks": [
         {
@@ -1022,7 +1022,7 @@
             },
             {
               "kind": "speech",
-              "text": "Va comes from andare, “to go.” Unlike stai / sta, this question does not force you to choose an informal or formal ending, so it is useful in either setting."
+              "text": "Va is a form of the Italian verb “to go.” Unlike stai / sta, this question does not force you to choose an informal or formal ending, so it is useful in either setting."
             }
           ]
         },
@@ -1041,11 +1041,11 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish also uses the “stand” picture in ¿cómo estás?; French and German use a “go” picture. Italian keeps both, which makes it a bridge between them. The comparison is only a memory aid: in Italian, simply connect stai with stare and va with andare."
+              "text": "Spanish also uses the “stand” picture in ¿cómo estás?; French and German use a “go” picture. Italian keeps both, which makes it a bridge between them. The comparison is only a memory aid: in Italian, simply connect stai with stare and va with “go.”"
             },
             {
               "kind": "speech",
-              "text": "You will learn all six forms of andare much later. For now, va is one ready-made piece inside this question."
+              "text": "You will learn the whole verb “to go” much later. For now, va is one ready-made piece inside this question."
             }
           ]
         },
@@ -1111,7 +1111,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which question uses “stand”? (Come stai?) Which uses “go”? (Come va?) What infinitive owns va? (Andare.) Must Come va? choose between tu and Lei? (No.) Next: answer with the original Italian “so-so.”"
+              "text": "Which question uses “stand”? (Come stai?) Which uses “go”? (Come va?) What does va mean? (It goes.) Must Come va? choose between tu and Lei? (No.) Next: answer with the original Italian “so-so.”"
             }
           ]
         }
@@ -1376,7 +1376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0527551163af08cc",
+      "sourceHash": "fnv1a64:449da86d421d0662",
       "notice": null,
       "blocks": [
         {
@@ -1438,11 +1438,11 @@
             },
             {
               "kind": "speech",
-              "text": "stare — \"to be\" from stand (= Spanish estar); vs essere (identity)."
+              "text": "stare — \"to be\" from stand (= Spanish estar); not the identity be-verb."
             },
             {
               "kind": "speech",
-              "text": "Come stai? / sta? / va? — informal, formal, and the \"how's it going?\" form (va from andare, \"to go\")."
+              "text": "Come stai? / sta? / va? — informal, formal, and the \"how's it going?\" form (va, \"it goes\")."
             },
             {
               "kind": "speech",
@@ -1512,7 +1512,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb carries Come stai?, and what does it literally ask? (stare, \"to stand\" — \"how do you stand?\") What does prego answer, and from what root? (grazie; from pregare, \"to pray.\") Italian can ask \"how are you\" two ways — which verbs? (stare, stand; andare becomes va, go.) Next chapter: introducing yourself — mi chiamo, come ti chiami."
+              "text": "Which verb carries Come stai?, and what does it literally ask? (stare, \"to stand\" — \"how do you stand?\") What does prego answer, and from what root? (grazie; from pregare, \"to pray.\") Italian can ask \"how are you\" two ways — which verbs? (stare, stand; va, go.) Next chapter: introducing yourself — saying your name and asking someone theirs."
             }
           ]
         }

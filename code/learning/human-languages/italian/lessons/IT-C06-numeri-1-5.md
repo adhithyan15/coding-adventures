@@ -68,7 +68,7 @@ while Spanish softened it to *cinco* and French clipped it to *cinq*. And
 
 **uno** is also "a/an," and it flexes by gender and the following sound: **un**
 (before most masc. nouns), **uno** (before tricky masc. clusters like *s+consonant*
-or *z-*), **una** (fem.). *un caffè* "a/one coffee," *una birra* "a/one beer." The
+or *z-*), **una** (fem.). *un giorno* "a/one day," *una sera* "an/one evening." The
 others (*due, tre…*) don't change.
 
 ## Guided Practice
@@ -78,7 +78,7 @@ others (*due, tre…*) don't change.
 - [YOU SAY: "uno, due, tre, quattro, cinque" — count up]
 - [YOU SAY: each with its English cousin — "due/duo, tre/trio, quattro/quart,
   cinque/quintet"]
-- [YOU SAY: "un caffè, una birra" — *uno* → un/una before a noun]
+- [YOU SAY: "un giorno, una sera" — *uno* → un/una before a noun]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-NUMERI-1-5-02, IT-ETYMON-NUMERI-1-5-03, IT-GRAMMAR-NUMERI-1-5-04] -->

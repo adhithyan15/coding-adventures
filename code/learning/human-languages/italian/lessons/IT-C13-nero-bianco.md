@@ -75,7 +75,7 @@ Latin's white is still here — just doing other jobs.
 
 [PAUSE 1s]
 - [YOU SAY: "nero, bianco"]
-- [YOU SAY: "il vino bianco, il vino rosso" — Ch.11's wine, coloured]
+- [YOU SAY: "il vino bianco" — Ch.11's wine, coloured]
 - [YOU SAY: "il pane bianco" — Ch.11's bread]
 - [YOU SAY: "l'**alba**" — and hear Latin's forgotten white]
 
@@ -86,4 +86,4 @@ Latin's white is still here — just doing other jobs.
 come from? (**Germanic *blank***, "shining" — likely via the **Lombards**.) Why is
 that surprising? (Latin normally lends **to** Germanic, not the reverse.) Where
 did *albus* survive? (In **alba**, "dawn," and **albume** — no longer a colour.)
-Next: **rosso** and **blu**, and one more traveller.
+Next: red and blue, and one more traveller.

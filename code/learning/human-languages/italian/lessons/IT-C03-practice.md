@@ -72,7 +72,7 @@ swap is automatic. This slots between your greetings (Ch. 1–2) and farewells
 - [YOU SAY: the full informal meeting, both voices]
 - [YOU SAY: the same formally — *ti chiami → si chiama*, *tu → Lei*]
 - [YOU SAY: chain it all — greet, name, ask, how-are-you, goodbye:
-  "Ciao! Mi chiamo … Come ti chiami? … Come stai? … A domani!"]
+  "Ciao! Mi chiamo … Come ti chiami? … Come stai? … Ciao!"]
 
 [REPEAT x2] Run a whole first meeting start to finish.
 

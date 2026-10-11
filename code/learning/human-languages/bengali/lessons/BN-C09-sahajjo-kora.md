@@ -43,7 +43,7 @@ stuck.
 
 > **সাহায্য করা** — *sāhājjo kôrā* — **to help**
 
-আমাকে সাহায্য করুন (*āmāke sāhājjo kôrun*), "please help me"; *āmāke* is "to me."
+সাহায্য করুন (*sāhājjo kôrun*), "please help" — the polite request form of *kôrā*.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -95,7 +95,7 @@ Say *kôr* to a stranger and you were not rude by accident, but in grammar.
 [PAUSE 1s]
 - [YOU SAY: spelling, then sound — "sāhāyya … shāhājjo"]
 - [YOU SAY: the ladder — "sāhājjo kôr … kôro … kôrun"]
-- [YOU SAY: please help me — "āmāke sāhājjo kôrun"]
+- [YOU SAY: please help — "sāhājjo kôrun"]
 - [YOU SAY: the two noun-verbs of this chapter — "jijñāsā kôrā … sāhājjo kôrā"]
 
 ## Wrap-up Recall

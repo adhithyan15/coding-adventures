@@ -39,8 +39,7 @@ Kannada's question family.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*(Skim if you read Kannada.)* **ಹೇ** (*hē*, *ha* + the long-*ē* sign) + **ಗೆ**
-(*ge*) → **ಹೇಗೆ** (*hēge*).
+*(Skim if you read Kannada.)* **ಹೇ** (*hē*, *ha* + the long-*ē* sign) + **ಗೆ** (*ge*) → **ಹೇಗೆ** (*hēge*).
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02]; assesses=[] -->

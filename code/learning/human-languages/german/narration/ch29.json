@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "The Past That Takes To Be",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:6974ef74f86450db",
+  "sourceHash": "fnv1a64:82794eb98b6800b9",
   "lessons": [
     {
       "id": "GE-C16-perfekt-sein",
@@ -1161,7 +1161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9e677054c8ca6ae",
+      "sourceHash": "fnv1a64:1a96e266f9b450b0",
       "notice": null,
       "blocks": [
         {
@@ -1201,12 +1201,12 @@
               "utterances": [
                 "ein geschriebener Brief means a written letter.",
                 "der angekommene Zug means the arrived train.",
-                "die eingeschlafene Katze means the fallen-asleep cat."
+                "die eingeschlafene Mutter means the fallen-asleep mother."
               ]
             },
             {
               "kind": "speech",
-              "text": "Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle. (Katze, \"cat\", gets a lesson of its own later; here it is only carrying the ending.)"
+              "text": "Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle."
             },
             {
               "kind": "speech",
@@ -1248,20 +1248,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die eingeschlafene Katze\"",
+              "instruction": "\"die eingeschlafene Mutter\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die eingeschlafene Katze\"]"
+              "source": "[YOU SAY: \"die eingeschlafene Mutter\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)",
+              "instruction": "the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Mutter\" (ending)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)]"
+              "source": "[YOU SAY: the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Mutter\" (ending)]"
             },
             {
               "kind": "prompt",

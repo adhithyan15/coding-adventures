@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Please, Sorry, and Welcome",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:653f9f3a6eae71fd",
+  "sourceHash": "fnv1a64:201005a28b8a4baf",
   "lessons": [
     {
       "id": "BN-C13-doya-kore",
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:337a0debd020146a",
+      "sourceHash": "fnv1a64:ff824d4934f7c236",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -541,7 +541,7 @@
             },
             {
               "kind": "speech",
-              "text": "আমাদের বাড়িতে স্বাগতম (āmāder bāṛite shbagotom) — welcome to our house."
+              "text": "নমস্কার, স্বাগতম (nômoshkar, shbagotom) — hello, welcome."
             }
           ]
         },
@@ -590,11 +590,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmāder bāṛite shbagotom\" — welcome to our house",
+              "instruction": "\"nômoshkar, shbagotom\" — hello, welcome",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmāder bāṛite shbagotom\" — welcome to our house]"
+              "source": "[YOU SAY: \"nômoshkar, shbagotom\" — hello, welcome]"
             },
             {
               "kind": "prompt",

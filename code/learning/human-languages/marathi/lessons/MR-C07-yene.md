@@ -55,8 +55,8 @@ come," promising the return rather than announcing the departure.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **य** is *ya*, a soft English *y* as in *yes*. Add the *-e* stroke above and you
-have **ये** *ye* — the same stroke you have been putting on **णे** and on **हे**
-in *āhe*. Two syllables: *ye-ṇe*.
+have **ये** *ye* — the same stroke you have been putting on **णे** and on the
+last syllable of **आहे**. Two syllables: *ye-ṇe*.
 
 ## The word, taken apart — one root, two directions
 <!-- hl-knowledge: introduces=[MR-ETYMON-AA-YAA-COME]; assesses=[] -->

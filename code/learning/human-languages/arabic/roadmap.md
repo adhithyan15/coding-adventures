@@ -33,8 +33,8 @@ word lessons — never as a gated reading course.
   reproducing both the *-ī* "my" attachment **and** the *anta/anti* **gender**
   split, and the **zero copula** again (no word for "is") → **بخير** (*bi-khayr*,
   "in goodness") — where *khayr* is **not new**: it was already inside Ch. 1's
-  *ṣabāḥ al-khayr*, and was hand-written in `AR-W09`; *bi-* is a one-letter
-  preposition that attaches like *al-* (cf. *bismillāh*) → **الحمد لله** — *al-* +
+  *ṣabāḥ al-khayr*, and is hand-written in `AR-W09`, which follows it; *bi-* is
+  a one-letter preposition that attaches like *al-* (cf. *bismillāh*) → **الحمد لله** — *al-* +
   *ḥamd* + *li-* + *allāh* (itself *al-* + *ilāh*, "**the** god," cousin of Hebrew
   *El*), whose root **ḥ–m–d** "praise" also yields the names **Aḥmad** and
   **Muḥammad** ("the much-praised") → practice running the full greet-ask-answer

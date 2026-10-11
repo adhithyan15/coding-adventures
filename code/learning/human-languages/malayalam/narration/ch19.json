@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1f4b1b2ba9e643c8",
+  "sourceHash": "fnv1a64:92d8a5ecbe8e2bf1",
   "lessons": [
     {
       "id": "ML-C19-vayassu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30dce977f0ddff22",
+      "sourceHash": "fnv1a64:5c6897ac56edd140",
       "notice": null,
       "blocks": [
         {
@@ -61,11 +61,19 @@
             },
             {
               "kind": "speech",
-              "text": "എനിക്ക് ഇരുപത് വയസ്സുണ്ട്. — \"I am twenty years old.\" — literally \"to me twenty age exists.\" (enikkŭ irupatu vayassuṇṭŭ.)"
+              "text": "എനിക്ക് പത്ത് വയസ്സുണ്ട്. — \"I am ten years old.\" — literally \"to me ten age exists.\" (enikkŭ pattŭ vayassuṇṭŭ.)"
             },
             {
               "kind": "speech",
-              "text": "This is a real grammatical departure from Kannada and Telugu's plain \"your age how-much?\" Malayalam puts the person in the dative case (\"to you,\" not \"your\") and adds ഉണ്ട് (uṇṭŭ, \"exists, there is\") — the same existential verb Malayalam uses for ordinary possession and existence sentences generally. So the literal shape is \"to me, twenty years' worth of age exists\" — a dative-subject-plus-existential-verb construction, genuinely different from its two Dravidian cousins even though the age-word itself is identical."
+              "text": "This is a real grammatical departure from Kannada and Telugu's plain \"your age how-much?\" Malayalam puts the person in the dative case (\"to you,\" not \"your\") and glues on -uṇṭŭ, \"exists, there is\" — the same existential verb Malayalam uses for ordinary possession and existence sentences generally:"
+            },
+            {
+              "kind": "speech",
+              "text": "വയസ്സ് + ഉണ്ട് becomes വയസ്സുണ്ട്."
+            },
+            {
+              "kind": "speech",
+              "text": "So the literal shape is \"to me, ten years' worth of age exists\" — a dative-subject-plus-existential-verb construction, genuinely different from its two Dravidian cousins even though the age-word itself is identical."
             }
           ]
         },
@@ -101,11 +109,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enikkŭ irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"",
+              "instruction": "\"enikkŭ pattŭ vayassuṇṭŭ\" — I am ten, \"to me ten age exists\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"enikkŭ irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"]"
+              "source": "[YOU SAY: \"enikkŭ pattŭ vayassuṇṭŭ\" — I am ten, \"to me ten age exists\"]"
             }
           ]
         },
@@ -122,7 +130,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is Malayalam's വയസ്സ് the same Sanskrit word as Kannada's and Telugu's? (Yes.) Does Malayalam ask age the same simple way Kannada and Telugu do? (No — it uses a dative subject, \"to you,\" plus the existential verb ഉണ്ട്, \"exists.\") What does enikkŭ irupatu vayassuṇṭŭ literally mean? (\"To me twenty age exists.\")"
+              "text": "Is Malayalam's വയസ്സ് the same Sanskrit word as Kannada's and Telugu's? (Yes.) Does Malayalam ask age the same simple way Kannada and Telugu do? (No — it uses a dative subject, \"to you,\" plus the existential verb -uṇṭŭ, \"exists.\") What does enikkŭ pattŭ vayassuṇṭŭ literally mean? (\"To me ten age exists.\")"
             }
           ]
         }

@@ -42,7 +42,7 @@ someone you don't — the people a family is built around.
 
 > **കുട്ടി** — *kuṭṭi* — **child, kid**
 
-> **ഇത് എന്റെ കുട്ടിയാണ്.** — *ithu ente kuṭṭiyāṇŭ.* — "This is my child."
+> **എന്റെ കുട്ടി** — *ente kuṭṭi* — "my child"
 
 **കുട്ടി** is the general word — any child, before you say whose son or
 daughter.
@@ -62,7 +62,7 @@ carrying the same double duty in two unrelated language families.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02, ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C33-CINTIKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-01, ML-CONCEPT-C33-MANASSILAAKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ithu ente kuṭṭiyāṇŭ" — this is my child]
+- [YOU SAY: "ente kuṭṭi" — my child]
 - [YOU SAY: the animal sense — "pūcca … pūccakkuṭṭi" — cat, kitten]
 - [YOU SAY: the family and the friend, once more — "kuṭumbaṁ … suhṛttŭ"]
 - [YOU SAY: the six family people-words, and the group word — "acchan,
@@ -73,7 +73,7 @@ carrying the same double duty in two unrelated language families.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
-[PAUSE 3s] Say "this is my child." (*Ithu ente kuṭṭiyāṇŭ*.) What two things
+[PAUSE 3s] Say "my child." (*Ente kuṭṭi*.) What two things
 can *kuṭṭi* mean? (**A human child**, or **the young of an animal** — like
 *pūccakkuṭṭi*, kitten.) Which English word carries the very same double
 duty? (**Kid**.) Name the six family people-words once more, and the group

@@ -50,9 +50,9 @@ settle the same etymological question in the same way.
 ## Grammar Lens: Tell the time
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-MANI-HOMOPHONE-TIME-02]; assesses=[] -->
 
-> **ஒரு மணி.** — one o'clock, literally "one hour/bell"
+> **இரண்டு மணி.** — two o'clock, literally "two hour/bell"
 >
-> **இரண்டு மணி.** — two o'clock
+> **மூன்று மணி.** — three o'clock
 
 The number comes first; *maṇi* supplies the clock unit.
 
@@ -60,8 +60,8 @@ The number comes first; *maṇi* supplies the clock unit.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-01, TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-GRAMMAR-MANI-HOMOPHONE-TIME-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "oru maṇi" — one o'clock]
 - [YOU SAY: "iraṇṭu maṇi" — two o'clock]
+- [YOU SAY: "mūṉṟu maṇi" — three o'clock]
 - [YOU CHOOSE BY CONTEXT: clock → hour · jewelry/name → gem]
 
 ## Script — the puḷḷi and இல்லை

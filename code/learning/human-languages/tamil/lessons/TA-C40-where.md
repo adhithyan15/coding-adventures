@@ -40,18 +40,19 @@ reviews_of: [TA-C40-who]
 
 **எங்கே** — *eṅgē* — where? — asking about a place.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no place: it asks your listener to
+point one out.
 
-Its partner is **யார்** *yār*, which you will meet just now. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partners are **இங்கே** *iṅgē* and **அங்கே** *aṅgē*, which you have
+already met. The three differ by one sound at the front — **e-** for ask — and
+that is not a coincidence. It is the whole system, and the last lesson of this
+chapter says so.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-06] -->
 
 [PAUSE 1s]
-- [YOU SAY: "எங்கே" three times, picturing something different each time]
+- [YOU SAY: "எங்கே" three times, asking about a different place each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

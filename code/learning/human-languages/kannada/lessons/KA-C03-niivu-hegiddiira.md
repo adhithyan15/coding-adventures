@@ -39,8 +39,8 @@ reviews_of: [KA-C02-niinu-niivu, KA-C03-hege]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 The new word is **ಹೇಗಿದ್ದೀರಾ** (*hēgiddīrā*): *hēge* ("how") fused with
-**ಇದ್ದೀರಾ** (*iddīrā*, "are you"), from the verb **ಇರು** (*iru*, "to be, exist,
-stay") + the respectful-you ending. Note the doubled **ದ್ದ** (*dd*).
+**ಇದ್ದೀರಾ** (*iddīrā*, "are you"), from the verb "to be, exist, stay" + the
+respectful-you ending. Note the doubled **ದ್ದ** (*dd*).
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C03-HEGIDDIIRA-01]; assesses=[] -->

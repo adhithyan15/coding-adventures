@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Three Verbs Under One Roof",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:dc772465be575c60",
+  "sourceHash": "fnv1a64:3d76c9c08f712c62",
   "lessons": [
     {
       "id": "GE-C16-ich-war",
@@ -1006,7 +1006,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0283213c12ee08e0",
+      "sourceHash": "fnv1a64:e390a5553b3f0588",
       "notice": null,
       "blocks": [
         {
@@ -1066,7 +1066,7 @@
                 "Wo warst du? means Where were you?",
                 "Ich war in Berlin. means I was in Berlin.",
                 "Wie war es? means How was it?",
-                "Es war gut. Aber ich bin müde. means It was good. But I am tired."
+                "Es war gut, und ich bin müde. means It was good, and I am tired."
               ]
             },
             {

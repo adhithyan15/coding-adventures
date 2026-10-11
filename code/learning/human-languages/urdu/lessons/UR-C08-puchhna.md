@@ -56,8 +56,8 @@ From the right edge: **پ** *p*, then **و** carrying long *ū*, then **چ** *ch
 then **ھ**, then **ن** *n*, then **ا** long *ā*.
 
 Every shape is already earned, and two are the dot-counting pair: **پ** has three
-dots **below** a low scoop, **چ** three below the taller *jīm* body. Then **ھ**
-aspirates the **چ** into **چھ** *chh* — its job in *samajhnā* and *paṛhnā* too.
+dots **below** a low scoop, **چ** three below the taller *jīm* body. Then the **ھ**
+aspirates it, **چ** + **ھ** → **چھ** *chh* — its job in *samajhnā* and *paṛhnā* too.
 
 A written question still ends in the mirrored **؟**, closing **آپ کا نام کیا ہے؟** at the left-hand end of the line.
 

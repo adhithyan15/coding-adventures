@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f2840059f751b835",
+  "sourceHash": "fnv1a64:9cff393d5fb55bcb",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -21,7 +21,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:4fe833a181bf8395",
+      "sourceHash": "fnv1a64:4a49aea0c9a8da29",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -117,7 +117,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have been saying this sound since Chapter 1: السلام عليكم (as-salāmu ʿalaykum) — the ʿ in ʿalaykum is this letter. And the farewell you'll write two lessons from now, مع السلامة (as-salāma) (maʿa s-salāma), opens with it."
+              "text": "You have been saying this sound since Chapter 1: السلام عليكم (as-salāmu ʿalaykum) — the ʿ in ʿalaykum is this letter. And the farewell you'll write two lessons from now opens with it."
             }
           ]
         },
@@ -203,7 +203,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d771cbb144bec87",
+      "sourceHash": "fnv1a64:0135238cb4c4d4c7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -285,7 +285,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where you've seen it: the farewell مع السلامة (as-salāma) (maʿa s-salāma) ends in ة — salāma is feminine. That's the next lesson."
+              "text": "Where you'll see it: the farewell you write in the next lesson ends in ة — its last word is feminine."
             }
           ]
         },
@@ -351,7 +351,7 @@
             },
             {
               "kind": "speech",
-              "text": "What makes ه unusual among the letters you've learned? (Its loop changes shape dramatically by position — four very different coats.) What is ة made of, and what does its name mean? (hāʾ's loop + tāʾ's two dots; \"tied tāʾ\".) What does ة tell you about a word, and where can it appear? (That it is feminine; only at the end.) Next: assembling the farewell مع السلامة (as-salāma) (maʿa s-salāma)."
+              "text": "What makes ه unusual among the letters you've learned? (Its loop changes shape dramatically by position — four very different coats.) What is ة made of, and what does its name mean? (hāʾ's loop + tāʾ's two dots; \"tied tāʾ\".) What does ة tell you about a word, and where can it appear? (That it is feminine; only at the end.) Next: assembling the farewell."
             }
           ]
         }
@@ -371,7 +371,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:70f1483d00228753",
+      "sourceHash": "fnv1a64:f871958c2e9daf23",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -481,7 +481,7 @@
             },
             {
               "kind": "speech",
-              "text": "س, ل, ا — and remember the لا ligature, and that alif breaks…"
+              "text": "س, ل, ا — and remember the ligature, ل + ا becomes لا, and that alif breaks…"
             },
             {
               "kind": "speech",
