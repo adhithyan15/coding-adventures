@@ -5605,7 +5605,7 @@ fn emit_code_behind(
     let property_change_interface = if ctx.row_projections.is_empty() {
         ""
     } else {
-        ", INotifyPropertyChanged"
+        ", INotifyPropertyChanged, ISupportInitialize"
     };
     writeln!(
         out,
@@ -5630,18 +5630,34 @@ fn emit_code_behind(
         )
         .unwrap();
         writeln!(out).unwrap();
-        writeln!(
-            out,
-            "    private void NotifyRowProjectionChanged(string propertyName)"
-        )
-        .unwrap();
-        writeln!(out, "    {{").unwrap();
-        writeln!(
-            out,
-            "        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));"
-        )
-        .unwrap();
-        writeln!(out, "    }}").unwrap();
+        out.push_str(r#"    private int projectionBatchDepth;
+    private readonly List<string> pendingProjections = new();
+
+    // Runtime props describe one state. Avoid rebuilding rows for each
+    // intermediate dependency value while that state is being applied.
+    public void BeginInit() => projectionBatchDepth++;
+    public void EndInit()
+    {
+        if (projectionBatchDepth == 0)
+            throw new InvalidOperationException("EndInit requires BeginInit");
+        if (--projectionBatchDepth != 0) return;
+        var pending = pendingProjections.ToArray();
+        pendingProjections.Clear();
+        foreach (var propertyName in pending)
+            NotifyRowProjectionChanged(propertyName);
+    }
+
+    private void NotifyRowProjectionChanged(string propertyName)
+    {
+        if (projectionBatchDepth != 0)
+        {
+            if (!pendingProjections.Contains(propertyName))
+                pendingProjections.Add(propertyName);
+            return;
+        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+"#);
         writeln!(out).unwrap();
     }
 

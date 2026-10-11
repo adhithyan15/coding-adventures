@@ -1244,20 +1244,29 @@ public static class MosaicRuntimeHost
                         throw new InvalidOperationException(
                             $"Mosaic component has no writable property for required value '{requiredProp}'");
                 }
-                foreach (var (normalized, property) in componentProperties)
+                // Generated row projections observe the completed props state,
+                // not every intermediate assignment. Always release the batch
+                // on failure; batching does not roll back assigned properties.
+                var initialization = component as System.ComponentModel.ISupportInitialize;
+                initialization?.BeginInit();
+                try
                 {
-                    if (!values.TryGetValue(normalized, out var value))
-                        continue;
-                    var converted = ConvertValue(value, property.PropertyType);
-                    if (!converted.converted)
+                    foreach (var (normalized, property) in componentProperties)
                     {
-                        if (strict)
-                            throw new InvalidOperationException(
-                                $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
-                        continue;
+                        if (!values.TryGetValue(normalized, out var value))
+                            continue;
+                        var converted = ConvertValue(value, property.PropertyType);
+                        if (!converted.converted)
+                        {
+                            if (strict)
+                                throw new InvalidOperationException(
+                                    $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
+                            continue;
+                        }
+                        property.SetValue(component, converted.value);
                     }
-                    property.SetValue(component, converted.value);
                 }
+                finally { initialization?.EndInit(); }
                 appliedRevision = Revision(latestUpdate);
             }
         }

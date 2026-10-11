@@ -179,6 +179,13 @@ dispatch, snapshot/restore, buffer ownership, and teardown without a display.
 
 ### XAML interaction profiling
 
+During prop assignment, the XAML runtime uses `ISupportInitialize` when a
+component implements it. Generated row projections defer and deduplicate their
+notifications until the outermost batch ends, so observers see all assigned
+props together. The runtime ends the batch on setter failure too; this is not
+a rollback of props already assigned. Handwritten components without the
+interface keep immediate assignment behavior.
+
 Set `MOSAIC_PROFILE_PATH` to a writable JSONL file before launching a generated
 XAML app. The host buffers up to 4096 timing samples and appends them on normal
 process exit; no log files are written on the click path. Unset the variable to

@@ -161,6 +161,7 @@ fn the_emitted_xaml_host_answers_effects() {
     // host never produced.
     let mut transcript = String::new();
     for case in [
+        "props-batch",
         "unhandled",
         "answered",
         "batch-both",
