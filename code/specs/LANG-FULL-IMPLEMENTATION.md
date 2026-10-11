@@ -1379,6 +1379,9 @@ backend immediately) come before the enabler-dependent items.
   exact negative unit, may likewise map a nonnegative unit sign-rooted range
   before `exp`; extra factors, positive or dynamic units, denominator roots,
   repeated roots, and overrides remain conservative.
+  An exact variable-free exponent chain evaluating to one may preserve that
+  nonpositive range before `exp`; other or dynamic exponents, sign-rooted
+  exponents, and overrides remain conservative.
   Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain

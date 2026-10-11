@@ -80,6 +80,9 @@ Multiplication by one variable-free exact `-1`, or division by one such exact
 negative unit, may form that nonpositive range; extra factors, positive or
 dynamic units, denominator roots, repeated roots, and overrides remain
 conservative.
+An exact variable-free exponent chain evaluating to one may preserve that
+nonpositive range; other or dynamic exponents, sign-rooted exponents, and
+overrides remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
