@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cce9f1820175f38a",
+  "sourceHash": "fnv1a64:10b80a26eb75b140",
   "lessons": [
     {
       "id": "TA-C33-ninai",
@@ -749,7 +749,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c28892cfdd5df5f3",
+      "sourceHash": "fnv1a64:40a2bee2e924af04",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -834,15 +834,15 @@
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart - writing as raising",
+          "title": "The word, taken apart - two entries, not one",
           "segments": [
             {
               "kind": "speech",
-              "text": "The Dravidian etymological dictionary files எழுது (eḻudu) under எழு (eḻu), \"to rise\" — a written line being a mark raised onto a surface. Standard rather than proven, but native, unlike the open question paḍi left you with. Beside it sits எழுத்தாளர் (eḻuttāḷar), a writer."
+              "text": "எழுது (eḻudu) looks like எழு (eḻu), \"to rise,\" but the Dravidian etymological dictionary keeps them as separate entries. Native, unlike paḍi's open question. Beside it sits எழுத்தாளர் (eḻuttāḷar), a writer."
             },
             {
               "kind": "speech",
-              "text": "The cousin is exact: Malayalam എഴുതുക (eḻutuka), same verb, same ഴ. Kannada and Telugu, having dropped the sound, dropped the verb."
+              "text": "The cousin is exact: Malayalam എഴുതുക (eḻutuka), same verb, same ഴ. Kannada and Telugu write with other verbs."
             }
           ]
         },

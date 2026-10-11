@@ -33,7 +33,7 @@ reviews_of: [TA-C37-ivar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-IVAR-01, TA-GRAMMAR-IVAR-02, TA-ETYMON-NINAI-02, TA-ETYMON-EZHUTU-03] -->
 
-[PAUSE 2s] Two words from a few chapters back. *Ninai* does which two English jobs? (**Think** and **remember** — *ninaivu* is memory.) And which word does the dictionary file *eḻudu*, to write, under? (*Eḻu*, **to rise** — a mark raised onto a surface.)
+[PAUSE 2s] Two words from a few chapters back. *Ninai* does which two English jobs? (**Think** and **remember** — *ninaivu* is memory.) And is *eḻudu*, to write, filed under *eḻu*, to rise? (**No** — the dictionary keeps them as two separate entries.)
 
 [PAUSE 2s] Say the word for *this person*, the respectful one.
 
