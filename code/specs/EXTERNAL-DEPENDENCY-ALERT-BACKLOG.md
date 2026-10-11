@@ -24,7 +24,7 @@ was compared with the updated branch locks, with zero matches remaining:
    alerts in bulk: #524, #4947, #5693, #7145, #8108, #8702, #9804, #11876,
    #11920, #15839 and #15903. The github-actions version-update PRs are not
    alerts and are excluded.
-2. **A local audit of every lockfile, run on the status date:**
+2. **The original 2026-10-09 audit across ecosystems, with npm refreshed on 2026-10-11:**
    - `npm audit --package-lock-only` over all 510 `package-lock.json` files.
    - `cargo audit` over all 6 `Cargo.lock` files, against a fresh clone of the
      RustSec advisory-db.

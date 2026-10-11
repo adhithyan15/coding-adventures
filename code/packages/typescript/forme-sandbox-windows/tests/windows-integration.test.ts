@@ -30,6 +30,28 @@ afterAll(async () => Promise.all(suiteRoots.splice(0).map(root => rm(root, {
 }))));
 
 let trustedPythonPromise: Promise<{ readonly executable: string; readonly root: string }> | undefined;
+let trustedNodePromise: Promise<{ readonly executable: string; readonly root: string }> | undefined;
+
+async function trustedNodeExecutable(): Promise<{ readonly executable: string; readonly root: string }> {
+  trustedNodePromise ??= (async () => {
+    // Grant/revoke tests need DACL write authority over the executable; an
+    // administrator-owned system install does not grant that to ordinary users.
+    const root = await mkdtemp(join(homedir(), "forme-windows-node-runtime-"));
+    suiteRoots.push(root);
+    const executable = join(root, "node.exe");
+    await copyFile(process.execPath, executable);
+    return { executable, root };
+  })();
+  return trustedNodePromise;
+}
+
+async function trustedNodeFactory() {
+  const runtime = await trustedNodeExecutable();
+  return createWindowsSandboxFactory({
+    launcherPath, readinessTimeoutMs: 2_000,
+    runtimeExecutables: { node: runtime.executable }, runtimeRoots: { node: runtime.root },
+  });
+}
 
 function escapedDiagnosticPath(path: string): string {
   return path.split("\\").join("\\\\");
@@ -232,7 +254,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
   });
 
   it("round-trips protocol bytes through the trusted Node runtime", async () => {
-    const child = await createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 })
+    const child = await (await trustedNodeFactory())
       .launch(await nodeRequest());
     const stdout: Buffer[] = [];
     child.stdout.on("data", chunk => stdout.push(Buffer.from(chunk)));
@@ -353,14 +375,7 @@ try {
   }, 30_000);
 
   it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
-    const runtimeRoot = await mkdtemp(join(homedir(), "forme-windows-overlap-runtime-"));
-    roots.push(runtimeRoot);
-    const runtime = join(runtimeRoot, "node.exe");
-    await copyFile(process.execPath, runtime);
-    const factory = createWindowsSandboxFactory({
-      launcherPath, readinessTimeoutMs: 2_000,
-      runtimeExecutables: { node: runtime }, runtimeRoots: { node: runtimeRoot },
-    });
+    const factory = await trustedNodeFactory();
     const [first, second] = await Promise.all([
       // Both launches modify the same owned executable ACL. System installs
       // can deny DACL writes to a non-administrator, before attestation.
