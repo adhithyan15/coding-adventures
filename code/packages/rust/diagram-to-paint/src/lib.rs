@@ -1021,6 +1021,14 @@ where
                 (node.x, node.y, node.width, node.height), Some(fill.clone()),
                 &stroke, stroke_width, stroke_dash.clone(),
             ),
+            DiagramShape::PaperTape => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: paper_tape_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Delay => PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -1251,6 +1259,7 @@ where
                 DiagramShape::Document => (node.x + 8.0, node.y + 7.0, node.width - 16.0, node.height - 25.0),
                 DiagramShape::TaggedDocument => (node.x + 8.0, node.y + 7.0, node.width - 28.0, node.height - 25.0),
                 DiagramShape::TaggedProcess => (node.x + 8.0, node.y + 8.0, node.width - 28.0, node.height - 16.0),
+                DiagramShape::PaperTape => (node.x + 8.0, node.y + 12.0, node.width - 16.0, node.height - 24.0),
                 DiagramShape::MultiDocument => (node.x + 8.0, node.y + 19.0, node.width - 28.0, node.height - 31.0),
                 DiagramShape::MultiProcess => (node.x + 8.0, node.y + 20.0, node.width - 28.0, node.height - 28.0),
                 DiagramShape::HorizontalCylinder => (node.x + 18.0, node.y + 10.0, node.width - 36.0, node.height - 16.0),
@@ -2109,6 +2118,14 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             (node.x, node.y, node.width, node.height), Some(node.style.fill.clone()),
             &node.style.stroke, node.style.stroke_width, node.style.stroke_dash.clone(),
         ),
+        DiagramShape::PaperTape => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: paper_tape_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
         DiagramShape::Delay => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -2655,6 +2672,34 @@ fn tagged_process_instruction(
         transform: None,
         opacity: None,
     })
+}
+
+fn paper_tape_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    vec![
+        PathCommand::MoveTo { x, y: y + height * 0.88 },
+        PathCommand::CubicTo {
+            cx1: x + width * 0.17, cy1: y + height * 1.12,
+            cx2: x + width * 0.33, cy2: y + height * 0.64,
+            x: x + width * 0.5, y: y + height * 0.88,
+        },
+        PathCommand::CubicTo {
+            cx1: x + width * 0.67, cy1: y + height * 1.12,
+            cx2: x + width * 0.83, cy2: y + height * 0.64,
+            x: x + width, y: y + height * 0.88,
+        },
+        PathCommand::LineTo { x: x + width, y: y + height * 0.12 },
+        PathCommand::CubicTo {
+            cx1: x + width * 0.83, cy1: y - height * 0.12,
+            cx2: x + width * 0.67, cy2: y + height * 0.36,
+            x: x + width * 0.5, y: y + height * 0.12,
+        },
+        PathCommand::CubicTo {
+            cx1: x + width * 0.33, cy1: y - height * 0.12,
+            cx2: x + width * 0.17, cy2: y + height * 0.36,
+            x, y: y + height * 0.12,
+        },
+        PathCommand::Close,
+    ]
 }
 
 fn delay_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
