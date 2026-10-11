@@ -106,3 +106,7 @@ mosaic-xaml-focus-lookup-profile-20261011.jsonl. This small sequential sample is
 not a p95 acceptance claim. First selections remain slow. More warmed samples,
 late rows, scrolling, editing, realization counts and persistence stalls remain.
 Retained Rust DLL, callback and allocation caveats still apply. Keep PR draft.
+
+## Retained focus candidate follow-up
+
+Queued pointer and keyboard focus may reuse the original realized cell only if its current row and column still match the requested coordinates and its current nearest table ancestor is the dispatch table. Otherwise use the existing first-match lookup. The candidate lives only for the queued callback; there is no persistent native-element cache. This avoids a full preceding-tree walk for retained late-row cells while preserving replacement, detach, reparent and coordinate-change behavior. Compile the emitted resolution helper with executable tests for all those cases, then validate generated WinUI and native interaction before claiming performance acceptance.
