@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Qt calendar events preserve text styling and elision (#17146)
+
+Qt `HostDraggable` now passes supported authored color and font size to its
+descendant labels and lowers the calendar event's complete
+hidden/ellipsis/nowrap trio to native surface clipping and single-line right
+elision. Fresh strict generation retires all five remaining calendar-event
+omissions and reduces the honest Qt style inventory from 113 to 108; partial
+or unsupported values remain reported debt.
+
 ### Fixed — Qt draggable cards preserve their authored surfaces (#17128)
 
 Qt `HostDraggable` now lowers TaskApp's card fill, padding, internal gap,

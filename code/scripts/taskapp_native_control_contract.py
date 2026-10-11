@@ -95,9 +95,9 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
     },
     "qt": {
         # HostDraggable now lowers container paint, spacing, per-edge accents,
-        # and supported cursors. Its calendar-event text declarations are
-        # newly visible and remain pinned to #17146; raw CSS shadows remain
-        # explicit debt because Qt uses the separate Mosaic elevation token.
+        # supported cursors, inherited color/font size, and the complete
+        # hidden/ellipsis/nowrap trio. Raw CSS shadows remain explicit debt
+        # because Qt uses the separate Mosaic elevation token.
         "border-color": 1,
         "border-left-color": 2,
         "border-left-style": 2,
@@ -114,7 +114,7 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-width": 1,
         "box-shadow": 11,
         "box-sizing": 1,
-        "color": 3,
+        "color": 2,
         # The compact task identity uses flexible name sizing in Flutter. Qt
         # keeps the portable row structure and records that task-name flex
         # occurrence until the emitter grows an equivalent lowering (#16949).
@@ -122,19 +122,16 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "flex-shrink": 9,
         "flex-wrap": 1,
         "font": 1,
-        "font-size": 3,
+        "font-size": 2,
         "left": 6,
         "margin-bottom": 1,
         "margin-left": 1,
         "min-height": 1,
         "outline": 2,
-        "overflow": 1,
         "position": 6,
         "text-align": 6,
-        "text-overflow": 1,
         "top": 6,
         "transform": 2,
-        "white-space": 1,
         "width": 18,
     },
     "flutter": {

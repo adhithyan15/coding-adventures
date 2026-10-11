@@ -88,7 +88,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 38,
         "swiftui": 83,
         "compose": 50,
-        "qt": 113,
+        "qt": 108,
         "flutter": 144,
     }
 
@@ -120,6 +120,16 @@ def test_qt_elevation_is_no_longer_baselined() -> None:
     errors = validate_style_degradations("qt", report, "report.json")
 
     assert any("unbaselined style drop 'elevation'" in error for error in errors)
+
+
+@pytest.mark.parametrize("primitive", ["overflow", "text-overflow", "white-space"])
+def test_qt_draggable_ellipsis_trio_is_no_longer_baselined(primitive: str) -> None:
+    report = _report("qt")
+    report["styleDegradations"].append(_style_entry("qt", primitive))
+
+    errors = validate_style_degradations("qt", report, "report.json")
+
+    assert any(f"unbaselined style drop '{primitive}'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
