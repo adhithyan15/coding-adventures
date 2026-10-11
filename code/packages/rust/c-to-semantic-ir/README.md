@@ -1,11 +1,11 @@
 # c-to-semantic-ir
 
-C (integer-core subset) → **Semantic IR** — the mirror of the Ruby/Python
+C (integer-core subset) â†’ **Semantic IR** â€” the mirror of the Ruby/Python
 frontends for a *strict, typed* source language, and the last piece of the
-C→SIR→Ruby initiative.  It parses C with `coding-adventures-c-parser`, then
+Câ†’SIRâ†’Ruby initiative.  It parses C with `coding-adventures-c-parser`, then
 walks the CST assigning a concrete `IntSpec` to every expression and inserting
 `Expr::Convert` nodes per C's integer promotions / usual-arithmetic-conversions
-— so a C program's width/wrap/truncate semantics survive the narrow waist and
+â€” so a C program's width/wrap/truncate semantics survive the narrow waist and
 every backend reproduces its results.
 
 Implements [SIR27](../../../specs/SIR27-c-to-semantic-ir.md).
@@ -21,7 +21,7 @@ before parsing and lowering. Pathless `compile_source` uses the same bounded
 preprocessor with an in-memory primary source. Every active include fails
 closed because that API has no include roots. Full C `#if` expressions remain
 pending. Function-like macros can stringize one raw identifier, plain-decimal
-integer or unsuffixed hexadecimal integer argument token and paste one raw
+integer or unsuffixed hexadecimal/octal integer argument token and paste one raw
 identifier with a literal identifier prefix
 or suffix. The pasted name is rescanned; separate plain parameter occurrences
 still pre-expand, and keyword-forming concatenations fail explicitly.
@@ -30,7 +30,9 @@ Broader C stringizing and token paste remain pending.
 Stringization preserves spelling, not numeric value: `S(0X00aF)` with
 `#define S(x) #x` becomes `"0X00aF"`. A direct `S(H)` preserves `H`; an outer
 macro forwarding an expanded hex replacement can stringize that replacement.
-Suffixes, octal-style spellings, floats and multi-token arguments remain refused.
+Unsuffixed octal also preserves its zeroes: `S(00047)` becomes `"00047"`.
+Suffixes, decimal-digit spellings with a leading zero and 8/9, floats and
+multi-token arguments remain refused. Octal condition evaluation remains outside the decimal `#if` subset.
 Named C `INT_LIT` tokens are recognized explicitly, including the declared
 plain-decimal subset; the generic engine still precharges quote bytes and
 retains expansion provenance.
@@ -62,7 +64,7 @@ once the result is determined, so an unneeded zero divisor, arithmetic overflow,
 or invalid shift does not fail the directive. Those operations still fail when
 their clause is needed. Longer or mixed arithmetic and other unsupported C
 expressions fail explicitly. Shift
-counts must be 0–31, the left operand must be nonnegative, and left-shift
+counts must be 0â€“31, the left operand must be nonnegative, and left-shift
 results must fit signed 32-bit.
 Bitwise conditions accept only nonnegative signed 32-bit operands; longer or
 mixed expressions remain unsupported.
@@ -105,6 +107,6 @@ let module = compile_source(
 Functions (with typed params), local declarations & assignments, typed `+`/`-`/
 `*` arithmetic with `Convert`-per-operation, `(T)e` casts, `printf`, and
 `return`.  Verified end-to-end: the emitted **Ruby** (via `ruby`) and **C** (via
-`cc`) agree byte-for-byte with the C source's semantics — `(uint8_t)(200+100)==44`,
+`cc`) agree byte-for-byte with the C source's semantics â€” `(uint8_t)(200+100)==44`,
 `(int32_t)(2e9+2e9)==-294967296`.  Control flow, comparisons (C-vs-SIR
 truthiness), `/`/`%`/bitwise, pointers/structs are later milestones.
