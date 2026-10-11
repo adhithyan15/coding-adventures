@@ -8,8 +8,8 @@ const fixture = JSON.parse(await readFile(new URL("./data/index.landing", import
 describe("landing model", () => {
   it("validates the complete declarative source", () => {
     const model = parseLandingModel(fixture);
-    expect(model.paths).toHaveLength(3);
-    expect(model.labs).toHaveLength(16);
+    expect(model.paths).toHaveLength(4);
+    expect(model.labs).toHaveLength(17);
     expect(model.forme.pipeline).toHaveLength(6);
     expect(model.site.ogImage).toBe("assets/og.jpg");
   });
@@ -39,6 +39,6 @@ describe("landing renderer", () => {
     expect(output).toContain('id="forme"');
     expect(output).toContain("forme-asset:preview");
     expect(output).not.toContain("<script");
-    expect(output.match(/class="lab-card/g)).toHaveLength(16);
+    expect(output.match(/class="lab-card/g)).toHaveLength(17);
   });
 });
