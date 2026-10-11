@@ -546,3 +546,19 @@ reject 251 digits, leading-zero forms, adjacent decrement, carriage returns,
 and other unsupported input in the partial grammar. Leave later releases
 pending and make no full-syntax, exhaustive-inventory, or platform-wide
 rejection claim.
+
+Add a separate, explicitly partial `5.004_68` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_68.tar.gz`
+source archive, SHA-256
+`582b8818c3c890982fdb0b40bf9dd0cb55f5be17f649a3e11fc2f64c6e733273`.
+The archive's `patchlevel.h` identifies subversion 68. Relative to `5.004_67`,
+`perly.y` and `keywords.h` are byte-identical. `toke.c` changes prototype
+tracking and file-reference recognition for user subroutines, plus initial
+string-buffer allocation sizes; the complete `scan_num` definition and file
+tail are byte-identical. Keep only the standalone plain-decimal arithmetic
+`print` subset and its source-backed 250-digit numeric limit: `perlvars.h`
+declares a 256-byte `tokenbuf`, and the decimal scan reserves six bytes.
+Keep a distinct file pair for this release. Accept 250 digits; reject 251
+digits, leading-zero forms, adjacent decrement, carriage returns, and other
+unsupported input in the partial grammar. Leave later releases pending and
+make no full-syntax, exhaustive-inventory, or platform-wide rejection claim.

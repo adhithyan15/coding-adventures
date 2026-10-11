@@ -419,19 +419,26 @@ CI, CodeQL, and books checks passed. Direct Python AST lowering and Rust
 conformance oracle. The next selection rotates to PREP01's bounded C
 identifier-prefix token paste stage.
 
+PR #17170 delivered that bounded C identifier-prefix token paste stage and
+merged as `f05c5681a1bac49e046be6ec586bb0ec1adffd38` after exact-head CI,
+CodeQL, and books checks passed. The full CI rerun regenerated its expired
+build-plan artifact; Windows then passed. The next selection rotates to
+LANG82's distinct, own-archive-backed partial Perl 5.004_68 pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** accept one literal identifier `##` parameter paste
-   with one raw identifier argument, then rescan the combined identifier.
-   Preserve generic bounds and provenance; reject broader paste shapes.
+1. **LANG82 continued (selected):** add the separate, explicitly partial
+   Perl 5.004_68 pair from its own historical archive. Retain the bounded
+   arithmetic-print subset and existing positive, rejection, and 250-digit
+   boundary probes. Keep 5.004_01-t1 pending without its own source.
 2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
    complete; broader native frontend semantics remain open, with Node only
    as a conformance oracle.
-3. **LANG82 continued:** the separate, explicitly partial Perl 5.004_67
-   pair is complete. Keep 5.004_01-t1 pending until its own source is found;
-   do not imply complete syntax or an exhaustive release inventory.
+3. **PREP01 C:** bounded identifier-prefix paste is complete; full C `#if`,
+   broader stringize, and broader token paste remain open. Preserve generic
+   bounds and provenance as those semantics advance.
 4. **LANG79 Python:** the three-argument numeric `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
