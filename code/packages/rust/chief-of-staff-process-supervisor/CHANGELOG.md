@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Assert the exact native killed-child status in the never-ready regression:
+  Windows termination code 1, Unix signal status without a numeric code.
+  Keep `BootstrapTimeout`, reap/no-process-ID checks and all existing bounds.
+
 - **Each agent can have its own channel broker** (D18S P2.6d-2b; #13980).
   `with_channel_brokers(ChannelBrokers)` is opt-in; without it nothing
   changes.
