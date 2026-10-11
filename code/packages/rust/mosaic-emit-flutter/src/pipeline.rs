@@ -2074,18 +2074,30 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
 /// Whether this tree contains a non-empty Flutter flex container with an
 /// authored `gap`.
 ///
-/// `Row` and `Column` are the only Flutter widgets whose child lists receive
-/// UI85 spacing. A `Stack` is an overlay, and a multi-child `Box` happens to
-/// use an internal Column only as a lowering detail; giving either one flex
-/// gap semantics would turn an unsupported declaration into the wrong layout.
+/// Non-wrapping `Row` and `Column` are the only Flutter widgets whose child
+/// lists receive UI85 spacing through `_mosaicWithGap`. A wrapping `Row`
+/// lowers to `Wrap` and uses its native `spacing` / `runSpacing` arguments
+/// instead. A `Stack` is an overlay, and a multi-child `Box` happens to use an
+/// internal Column only as a lowering detail; giving either one flex gap
+/// semantics would turn an unsupported declaration into the wrong layout.
 fn layout_contains_flex_gap(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
+    let own_props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|props| parse_style_props(props));
+    let is_wrapping_row = node.tag == "Row"
+        && own_props.as_ref().is_some_and(|props| {
+            props
+                .get("flex-wrap")
+                .is_some_and(|value| value.trim().trim_matches('"') == "wrap")
+        });
     let own_gap = !node.children.is_empty()
         && matches!(node.tag.as_str(), "Row" | "Column")
-        && node
-            .part_name
-            .as_deref()
-            .and_then(|part| part_styles.get(part))
-            .is_some_and(|props| parse_style_props(props).contains_key("gap"));
+        && !is_wrapping_row
+        && own_props
+            .as_ref()
+            .is_some_and(|props| props.contains_key("gap"));
     own_gap
         || node
             .children
@@ -3904,7 +3916,7 @@ fn emit_container(
         child_ctx,
     )?;
 
-    let gap = if !wraps && matches!(widget, "Row" | "Column") {
+    let gap = if matches!(widget, "Row" | "Column") {
         style_prop(&props, "gap").map(|value| parse_pixel_value(value))
     } else {
         None
@@ -3916,12 +3928,25 @@ fn emit_container(
         .map(|alignment| format!("{inner_pad}crossAxisAlignment: {alignment},\n"))
         .unwrap_or_default();
     let body = if children.is_empty() {
-        if let Some(alignment) = cross_axis_alignment {
+        if wraps && gap.is_some() {
+            let gap = gap.as_deref().expect("checked above");
+            format!(
+                "{pad}const {emitted_widget}(spacing: {gap}, runSpacing: {gap}, children: [])\n"
+            )
+        } else if let Some(alignment) = cross_axis_alignment {
             format!("{pad}const {emitted_widget}(crossAxisAlignment: {alignment}, children: [])\n")
         } else {
             format!("{pad}const {emitted_widget}(children: [])\n")
         }
-    } else if let Some(gap) = gap {
+    } else if wraps {
+        let gap_args = gap
+            .as_deref()
+            .map(|gap| format!("{inner_pad}spacing: {gap},\n{inner_pad}runSpacing: {gap},\n"))
+            .unwrap_or_default();
+        format!(
+            "{pad}{emitted_widget}(\n{gap_args}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n"
+        )
+    } else if let Some(gap) = gap.as_deref() {
         let axis = if widget == "Row" {
             "Axis.horizontal"
         } else {
@@ -11845,10 +11870,16 @@ mod tests {
             parts: vec![
                 PartStyle {
                     name: "calendar-grid".into(),
-                    base: vec![StyleProp {
-                        name: "flex-wrap".into(),
-                        value: "\"wrap\"".into(),
-                    }],
+                    base: vec![
+                        StyleProp {
+                            name: "flex-wrap".into(),
+                            value: "\"wrap\"".into(),
+                        },
+                        StyleProp {
+                            name: "gap".into(),
+                            value: "\"8\"".into(),
+                        },
+                    ],
                     transitions: vec![],
                     states: vec![],
                 },
@@ -11868,6 +11899,9 @@ mod tests {
             .expect("wrapping calendar emits")
             .output;
         assert!(out.contains("Wrap("), "{out}");
+        assert!(out.contains("spacing: 8"), "{out}");
+        assert!(out.contains("runSpacing: 8"), "{out}");
+        assert!(!out.contains("_mosaicWithGap"), "{out}");
         assert!(out.contains("...cells.map((_)"), "{out}");
         assert!(
             out.contains("FractionallySizedBox(") && out.contains("widthFactor: 0.142857"),
