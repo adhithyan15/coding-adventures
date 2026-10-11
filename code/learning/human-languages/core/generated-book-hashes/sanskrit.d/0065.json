@@ -1,14 +1,16 @@
 {
   "language": "sanskrit",
   "chapter": 65,
-  "sourceHash": "fnv1a64:208c8740269b95a3",
+  "sourceHash": "fnv1a64:b6fa080562917be7",
   "lessonIds": [
     "SA-W65-letter-nga",
     "SA-R65-letters-first-pass",
     "SA-R65-letters-second-pass",
     "SA-W65-connected-text-guided-copy",
     "SA-W65-connected-text-delayed-copy",
-    "SA-W65-connected-text-independent-recall"
+    "SA-W65-connected-text-independent-recall",
+    "SA-W65-kutra-controlled-question",
+    "SA-W65-a1-timed-production"
   ],
   "tex": "sanskrit/book/chapters/ch65-the-last-letter-read.tex"
 }
