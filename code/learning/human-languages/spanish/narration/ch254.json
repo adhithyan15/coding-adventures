@@ -157,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-vuestro-say",
               "prompt": "Say: your house, speaking to several friends.",
               "assesses": [
@@ -175,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-vuestro-which",
               "prompt": "Which two possessives change for gender?",
               "assesses": [
@@ -193,6 +195,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-vuestro-count",
               "prompt": "How many possessives are there in the set now?",
               "assesses": [

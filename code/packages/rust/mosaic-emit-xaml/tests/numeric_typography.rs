@@ -1,5 +1,53 @@
 use mosaic_emit_xaml::{from_pipeline, EmitOptions, XamlEmitResult};
 
+#[test]
+fn generated_projection_batches_execute_with_nested_and_reentrant_updates() {
+    use std::{fs, process::Command};
+    if !Command::new("dotnet").arg("--version").output().is_ok_and(|o| o.status.success()) {
+        eprintln!("dotnet unavailable: skipping compiled projection batch probe");
+        return;
+    }
+    let result = fixture("BatchProbe", "slot: text-size").unwrap();
+    let start = result.code_behind.find("    private int projectionBatchDepth;").unwrap();
+    let tail = &result.code_behind[start..];
+    let end_marker = "PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));\n    }\n";
+    let end = tail.find(end_marker).unwrap() + end_marker.len();
+    // Compile the actual emitted methods without requiring the WinUI SDK.
+    let dir = std::env::temp_dir().join(format!("mosaic-batch-{}-{}", std::process::id(),
+        std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+    fs::create_dir_all(&dir).unwrap();
+    for name in ["Directory.Build.props", "Directory.Build.targets"] {
+        fs::write(dir.join(name), "<Project />").unwrap();
+    }
+    fs::write(dir.join("Probe.csproj"), "<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable></PropertyGroup></Project>").unwrap();
+    let source = format!(r#"using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+class Probe {{
+public event PropertyChangedEventHandler? PropertyChanged;
+public void Change(string name) => NotifyRowProjectionChanged(name);
+{}
+static void Main() {{
+    var p = new Probe(); var seen = new List<string>();
+    p.PropertyChanged += (_, e) => seen.Add(e.PropertyName!);
+    p.BeginInit(); p.Change("rows"); p.BeginInit(); p.Change("rows"); p.Change("headers");
+    p.EndInit(); if (seen.Count != 0) throw new Exception("nested batch flushed early");
+    p.EndInit(); if (string.Join(",", seen) != "rows,headers") throw new Exception("dedup/order");
+    p.Change("direct"); if (seen.Count != 3) throw new Exception("direct notification lost");
+    bool reentered = false;
+    p.PropertyChanged += (_, e) => {{ if (!reentered) {{ reentered = true; p.BeginInit(); p.Change("inner"); p.EndInit(); }} }};
+    p.BeginInit(); p.Change("outer"); p.EndInit();
+    if (string.Join(",", seen) != "rows,headers,direct,outer,inner") throw new Exception("reentrant batch lost");
+    bool failed = false; try {{ p.EndInit(); }} catch (InvalidOperationException) {{ failed = true; }}
+    if (!failed) throw new Exception("unmatched EndInit accepted");
+}}
+}}
+"#, &tail[..end]);
+    fs::write(dir.join("Program.cs"), source).unwrap();
+    let output = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).current_dir(&dir).output().unwrap();
+    assert!(output.status.success(), "{}\n{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
+}
+
 fn fixture(name: &str, value: &str) -> Result<XamlEmitResult, mosaic_emit_xaml::PipelineEmitError> {
     let model = mosmodel_compiler::compile(&format!(
         "component {name} {{ slot text-size : number ; slot headers : list<text> ; slot rows : list<list<text>> ; emit onAction ; }}"

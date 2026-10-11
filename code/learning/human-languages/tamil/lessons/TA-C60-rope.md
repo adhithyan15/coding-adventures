@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *kayiṟu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kayiṟu*, then *pasu*, and say which one holds the other]
-- [YOU RECALL: read **ஆடு**, then say *ney*]
+- [YOU READ: **ஆடு**]
+- [YOU RECALL: say *ney*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02] -->

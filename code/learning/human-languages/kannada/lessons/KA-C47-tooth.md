@@ -56,7 +56,7 @@ Two: a leg and a tooth.
 - [YOU SAY: *hallu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kālu*, then *hallu*, and say which of the two also names a fraction]
-- [YOU RECALL: read **ಅಜ್ಜ**]
+- [YOU READ: **ಅಜ್ಜ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02] -->

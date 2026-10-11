@@ -32,7 +32,7 @@ variety: general
 reviews_of: [GU-C37-ketla, GU-C37-kon, GU-C34-kemke, GU-C25-mahino]
 ---
 
-# પાંચમું (pā̃chmũ) — fifth, and the ending you can see
+# પાંચમું (pā̃chmũ) — fifth, and the ending you can hear
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-Q-KETLA-01, GU-Q-KON-01, GU-JOIN-KEMKE-01, GU-SCRIPT-MAHINO-01] -->
@@ -42,7 +42,7 @@ reviews_of: [GU-C37-ketla, GU-C37-kon, GU-C34-kemke, GU-C25-mahino]
 - [YOU RECALL: ask *how many* — **R1**, one lesson back]
 - [YOU RECALL: ask *who* — **R2**, five lessons back]
 - [YOU RECALL: say *because* — **R3**, twenty lessons back]
-- [YOU RECALL: write **મહિનો** — **R4**, eighty lessons back]
+- [YOU WRITE: **મહિનો** — **R4**, eighty lessons back]
 
 ## You'll want to know: પાંચ, with something behind it
 <!-- hl-knowledge: introduces=[GU-LEX-PANCHMU]; assesses=[GU-Q-KETLA-01, GU-LEX-NUMBERS-ONE-TO-FIVE, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-LEX-MAHINO-01] -->
@@ -53,7 +53,7 @@ also answer *which one in the line*, and **કેટલા** does not reach that
 
 > **પાંચમું** — *pā̃chmũ* — **fifth**
 
-Look at it before anything is said about it. **પાંચ** is still there, whole, and
+Hear it once before anything is said about it. **પાંચ** is still there, whole, and
 **-મું** sits behind it.
 
 That **-ું** is the neuter you met on **મારું**, so this word agrees like any

@@ -71,7 +71,7 @@ and **בֵּית לֶחֶם** (*Bēt Leḥem*) in Hebrew — one name, in which 
 one side of the seam, house of meat on the other.
 
 And notice what Arabic did **not** do. It had this root available for bread and
-did not use it. Arabic's bread is **خبز** (*khubz*), built on **خ-ب-ز**, "to
+did not use it. Arabic's bread is *khubz*, built on *kh-b-z*, "to
 bake" — the baked thing, as *ḥalīb* is the milked thing.
 
 ## Guided Practice
@@ -94,4 +94,4 @@ bake" — the baked thing, as *ḥalīb* is the milked thing.
 letters** — the whole root system.) What does Hebrew *leḥem* mean, and why is
 that no contradiction? (**Bread** — the root named the **staple food**.) Which
 English place name carries both? (**Bethlehem**.) What is Arabic's own word for
-bread, and where from? (***Khubz***, from **خ-ب-ز**, "to bake.")
+bread, and where from? (***Khubz***, from *kh-b-z*, "to bake.")

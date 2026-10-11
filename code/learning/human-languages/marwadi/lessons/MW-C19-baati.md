@@ -37,7 +37,8 @@ reviews_of: [MW-C19-hear-baati, MW-C19-roti, MW-W17-sha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAATI-01]; assesses=[MW-LEX-BAATI-01, MW-SCRIPT-ROTI-01, MW-SCRIPT-SHA-01] -->
 
-[PAUSE 18s] Say hard wheat rolls, then write flatbread and **श**.
+[PAUSE 18s] Say hard wheat rolls.
+[YOU WRITE: the word for flatbread, then **श**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAATI-01, MW-SCRIPT-BAATI-01] -->
@@ -51,8 +52,9 @@ only the opening syllable differs.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAATI-01, MW-SCRIPT-ROTI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **बाटी**. Then write **रोटी** beneath
-it and check that only the first syllable changed.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **बाटी**, then **रोटी** beneath it — check that only the first syllable changed]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAATI-01, MW-SCRIPT-BAATI-01] -->

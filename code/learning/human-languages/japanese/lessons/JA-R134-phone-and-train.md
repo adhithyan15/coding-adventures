@@ -37,7 +37,7 @@ reviews_of: [JA-C134-denwa, JA-W134-de, JA-C134-densha, JA-C134-kaban, JA-W134-b
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぶ** — **R1**, one lesson back]
+- [YOU WRITE: **ぶ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *to eat* — **R2**, five lessons back]
 - [YOU RECALL: say *a pond* — **R3**, twenty lessons back]
 - [YOU RECALL: say *suspicious* — **R4**, eighty lessons back]
@@ -45,7 +45,7 @@ reviews_of: [JA-C134-denwa, JA-W134-de, JA-C134-densha, JA-C134-kaban, JA-W134-b
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-DENWA, JA-SCRIPT-DE-01, JA-LEX-C134-DENSHA, JA-LEX-ANCHOR-KABAN, JA-SCRIPT-BA-01, JA-LEX-C134-BASHO, JA-LEX-ANCHOR-TABERU, JA-SCRIPT-BE-01, JA-LEX-C134-BENKYOU, JA-LEX-ANCHOR-SHINBUN, JA-SCRIPT-BU-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **でんわ** — a telephone]
 - [YOU READ: **でんしゃ** — a train]
@@ -61,9 +61,9 @@ each of those signs is one you already wrote, with the voicing mark added.
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-DE-01, JA-SCRIPT-BA-01, JA-SCRIPT-BE-01, JA-SCRIPT-BU-01, JA-LEX-C134-DENSHA, JA-LEX-C134-BASHO, JA-LEX-ANCHOR-SHINBUN] -->
 
-1. Write **て で**, **は ば**, **へ べ** and **ふ ぶ** in pairs.
-2. Write **でんしゃ** and **ばしょ** from memory, and say which one you can ride.
-3. Write **しんぶん**, and say *shinbun*.
+1. [YOU WRITE: **て で**, **は ば**, **へ べ** and **ふ ぶ**, in pairs]
+2. [YOU WRITE: **でんしゃ** and **ばしょ** from memory, and say which one you can ride]
+3. Say *shinbun*. [YOU WRITE: **しんぶん**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-BU-01, JA-LEX-ANCHOR-SHINBUN, JA-LEX-ANCHOR-TABERU] -->

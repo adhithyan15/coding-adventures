@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:a4d8cc11d79d46bc",
+  "lessonIds": [
+    "PA-R169-date-a-again",
+    "PA-R169-date-b-again"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch169.txt",
+  "json": "punjabi/narration/ch169.json",
+  "textHash": "fnv1a64:e7e10f2d9109a64a",
+  "jsonHash": "fnv1a64:8c6dad54d5bb6dc7",
+  "findings": []
+}

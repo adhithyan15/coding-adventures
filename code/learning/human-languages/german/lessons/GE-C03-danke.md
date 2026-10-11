@@ -8,7 +8,7 @@ type: word
 headword: danke
 gloss: thank you — which is really "I think of you"
 concept_tag: COURTESY-THANKS
-prerequisites: []
+prerequisites: [GE-C02-practice]
 sounds: [vowel-a-german]
 roots: [denken-german]
 etymology_hook: "danke comes from denken, to think: to thank was to keep someone in mind, and English thank and think share it"

@@ -41,7 +41,12 @@ reviews_of: [MR-C160-akhne]
 ## You'll want to know: वेळापत्रक
 <!-- hl-knowledge: introduces=[MR-LEX-C161-VACH161-01]; assesses=[] -->
 
-**वेळापत्रक** — *veḷāpatrak* — "a timetable". Read the board: **बस: सकाळी आठ वाजता.** The bus leaves at eight in the morning, so be there before eight.
+**वेळापत्रक** — *veḷāpatrak* — "a timetable".
+
+[YOU READ: the board]
+
+The board says **बस: सकाळी आठ वाजता.** The bus leaves at eight in the morning,
+so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

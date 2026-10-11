@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふた (futa) mean? ("A lid".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a lid'.
+Say the Japanese for 'a lid'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まと (mato) mean? ("A target".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a target'.
+Say the Japanese for 'a target'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひなた (hinata) mean? ("A sunny spot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sunny spot'.
+Say the Japanese for 'a sunny spot'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なまこ (namako) mean? ("A sea cucumber".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sea cucumber'.
+Say the Japanese for 'a sea cucumber'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あゆ (ayu) mean? ("A sweetfish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sweetfish'.
+Say the Japanese for 'a sweetfish'.

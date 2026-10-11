@@ -44,11 +44,15 @@ reviews_of: [TE-C151-chhaya, TE-S172-letter-chha]
 
 <!-- hl-activity: {"id":"TE-R151-chhaya-recall-write","kind":"text","assesses":["TE-LEX-C151-SHADE-01","TE-SCRIPT-RECOG-172"],"prompt":"Write the first base letter of ఛాయ, then say what the whole word means.","answer":"ఛ — shade or shadow","accepted":["ఛ, shade","ఛ, shadow","cha, shade","chha, shadow"],"feedback":{"correct":"ఛ begins ఛాయ — shade or shadow.","incorrect":"Begin with ఛ; the whole word ఛాయ means shade or shadow."},"response_seconds":15} -->
 
-Read **ఛాయ** once. Cover it, then write only its first base letter: **ఛ**.
+[YOU READ: **ఛాయ** once]
 
-Now uncover the word and check two things: the broad curved body and the short
-separate stem beneath it. Add the long **ా** sign only after the base letter is
-steady.
+[YOU COVER: the word]
+
+[YOU WRITE: only its first base letter — **ఛ**]
+
+[YOU CHECK: the uncovered word for two things — the broad curved body and the short separate stem beneath it]
+
+[YOU WRITE: the long **ా** sign only after the base letter is steady]
 
 - [YOU WRITE: **ఛ** once from memory]
 - [YOU BUILD: **ఛ** + **ా** + **య** = **ఛాయ**]

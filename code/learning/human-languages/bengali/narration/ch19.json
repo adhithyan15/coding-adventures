@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:4448aef2e42bd847",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -103,7 +106,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "পরিবার (pôribār)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: পরিবার]"
@@ -112,7 +115,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চা",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চা]"
@@ -163,20 +166,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:0664647aab1d16c9",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -244,7 +250,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভাই (bhāi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভাই]"
@@ -253,7 +259,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "পরিবার (pôribār) ভালো ভাই (bhāi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: পরিবার ভালো ভাই]"

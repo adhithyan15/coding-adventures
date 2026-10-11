@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C133-chana-type",
-              "prompt": "Type the Marwadi for 'chickpeas'.",
+              "prompt": "Say the Marwadi for 'chickpeas'.",
               "assesses": [
                 "MW-LEX-C133-THINGS133-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C133-mug-type",
-              "prompt": "Type the Marwadi for 'mung beans'.",
+              "prompt": "Say the Marwadi for 'mung beans'.",
               "assesses": [
                 "MW-LEX-C133-THINGS133-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C133-moth-type",
-              "prompt": "Type the Marwadi for 'moth beans'.",
+              "prompt": "Say the Marwadi for 'moth beans'.",
               "assesses": [
                 "MW-LEX-C133-THINGS133-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C133-til-type",
-              "prompt": "Type the Marwadi for 'sesame'.",
+              "prompt": "Say the Marwadi for 'sesame'.",
               "assesses": [
                 "MW-LEX-C133-THINGS133-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C133-gur-type",
-              "prompt": "Type the Marwadi for 'jaggery'.",
+              "prompt": "Say the Marwadi for 'jaggery'.",
               "assesses": [
                 "MW-LEX-C133-THINGS133-05"
               ],

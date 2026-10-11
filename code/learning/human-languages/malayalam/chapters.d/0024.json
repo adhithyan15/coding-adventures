@@ -9,9 +9,12 @@
   "payoff": {
     "lesson": "ML-C24-native-night-words",
     "kind": "task",
-    "summary": "Sort iravŭ from iruḷ by the job each one still does in the modern language.",
+    "summary": "Say rātri, find it shortened inside pātirā and keep it apart from Latin nox, then sort iravŭ from iruḷ by the job each one still does in the modern language.",
     "assesses": [
+      "ML-CONCEPT-C24-RATHRI-01",
+      "ML-CONCEPT-C24-RATHRI-02",
       "ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01"
-    ]
+    ],
+    "note": "ML-C24-native-night-words is the chapter's last lesson and assesses all three atoms it introduces: rātri (ML-C24-rathri) and the native iravŭ / iruḷ pair."
   }
 }

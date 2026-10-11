@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1ec03c789d8860b5",
+  "sourceHash": "fnv1a64:e4e3950e6467bb22",
   "lessons": [
     {
       "id": "SA-C41-wheel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f3143a5181d9093",
+      "sourceHash": "fnv1a64:c9fc48f478eb2299",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dhenuḥ, then read दधि",
+              "instruction": "say dhenuḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dhenuḥ*, then read **दधि**]"
+              "source": "[YOU RECALL: say *dhenuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दधि",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दधि**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f21bfc27861e9598",
+      "sourceHash": "fnv1a64:75106fd28f0d58ec",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "विहगः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **विहगः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read विहगः, then say śarkarā",
+              "instruction": "say śarkarā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **विहगः**, then say *śarkarā*]"
+              "source": "[YOU RECALL: say *śarkarā*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d39190602f5d7154",
+      "sourceHash": "fnv1a64:3f45eca78399c48c",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say matsyaḥ, then read नवनीतम्",
+              "instruction": "say matsyaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *matsyaḥ*, then read **नवनीतम्**]"
+              "source": "[YOU RECALL: say *matsyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नवनीतम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नवनीतम्**]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9055b858672830a",
+      "sourceHash": "fnv1a64:b1297887cdbd82d4",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "शुनकः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **शुनकः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read शुनकः, then say śākam",
+              "instruction": "say śākam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **शुनकः**, then say *śākam*]"
+              "source": "[YOU RECALL: say *śākam*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85f04c55b3c92963",
+      "sourceHash": "fnv1a64:e3b78b57cbdd451f",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sarpaḥ, then read मोदकः",
+              "instruction": "say sarpaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sarpaḥ*, then read **मोदकः**]"
+              "source": "[YOU RECALL: say *sarpaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मोदकः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मोदकः**]"
             }
           ]
         },

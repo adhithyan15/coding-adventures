@@ -36,7 +36,7 @@ reviews_of: [FA-C179-gush-dadan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C179-KONESH179-04, FA-LEX-C179-KONESH179-05] -->
 
-[PAUSE 2s] Before the new one: say the Persian for to look at, then the Persian for to listen.
+[PAUSE 2s] Before the new one: say the Persian for "to look at", then the Persian for "to listen".
 
 ## You'll want to know: مخلوط کردن
 <!-- hl-knowledge: introduces=[FA-LEX-C180-KONESH180-01]; assesses=[] -->
@@ -55,7 +55,7 @@ One more word for this chapter.
 - [YOU SAY: *makhlut kardan*]
 - [YOU SAY: *makhlut kardan*, once more]
 - [YOU SAY: say *makhlut kardan*]
-- [YOU RECALL: say the Persian for to look at, then the Persian for to listen, then say *makhlut kardan* again]
+- [YOU RECALL: say the Persian for "to look at", then the Persian for "to listen", then say *makhlut kardan* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C180-KONESH180-01, FA-LEX-C179-KONESH179-04, FA-LEX-C179-KONESH179-05] -->

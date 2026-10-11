@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 16,
   "title": "The Traditional Months",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3e3321378ccf557b",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:397a8d04c84e67fa",
   "lessons": [
     {
       "id": "KA-C16-tingalugalu",
@@ -137,20 +137,13 @@
       "romanization": "uttara",
       "gloss": "an answer; north",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a1d0ed6f2b870d2",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:714a19467057ac82",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -180,7 +173,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: uttara. Look at its shape as you say it: the next lesson takes one piece of it, ಉ, and writes it on its own."
+              "text": "Say it: uttara."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ಉ (u), and writes it on its own."
             }
           ]
         },
@@ -237,7 +243,7 @@
     {
       "id": "KA-S126-letter-u",
       "sequence": 445,
-      "title": "ಉ — one character, the standing half of a sign you already read",
+      "title": "ಉ (u) — one character, the standing half of a sign you already read",
       "headword": "ಉ",
       "romanization": "u",
       "gloss": "the single character ಉ — the standing half of a vowel sign you already read",
@@ -262,7 +268,7 @@
           "Script you'll notice: ಉ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ಉ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಉ and Guided Practice."
       },
       "blocks": [
         {
@@ -350,7 +356,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಉ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಉ (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -373,7 +379,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two and say which one carries the riding tail, not the standing letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two and say which one carries the riding tail, not the standing letter]"
@@ -395,7 +401,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಉ (u) and ು side by side, and say which one stands alone",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಉ and ು side by side, and say which one stands alone]"
@@ -434,19 +440,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9ca519a46df1952b",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ೮"
+          "Script you'll notice: ೮",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ೮ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ೮ and Guided Practice."
       },
       "blocks": [
         {
@@ -521,7 +530,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the digits you have met, and name each one aloud",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the digits you have met, and name each one aloud]"
@@ -555,6 +564,198 @@
             {
               "kind": "speech",
               "text": "Which number is ೮? (8 — eṇṭu, ಎಂಟು.) Name every digit you have met so far, in order."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C16-checkpoint",
+      "sequence": 449,
+      "title": "Chapter 16 checkpoint — the months, Ugadi, ಉ (u) and ೮ (8)",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 16 checkpoint — the months and Ugadi out loud, uttara, then ಉ and ೮ on the page",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9a248dc1c1bdd8c3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — ಉ and ೮",
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — ಉ and ೮ and Writing — from sound."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new here. The months and the new year out loud first, then one word, one letter and one digit on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the months",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the twelve months, from the first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the twelve months, from the first]"
+            },
+            {
+              "kind": "speech",
+              "text": "(Caitra, Vaiśākha, Jyēṣṭha, Āṣāḍha, Śrāvaṇa, Bhādrapada, Āśvayuja, Kārtīka, Mārgaśira, Puṣya, Māgha, Phālguṇa.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Is this calendar Kannada's own, the way Tamil's and Malayalam's are theirs? (No: it is the pan-Indian lunisolar calendar Hindi uses too.)"
+            },
+            {
+              "kind": "speech",
+              "text": "When does Ugadi fall? (On Chaitra Śukla Pratipada, the first day of the bright fortnight of Chaitra.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one more word from this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is \"an answer\", and also \"north\"? (Uttara.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — ಉ and ೮",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತರ is uttara. Which character opens it, and why does it stand on its own there? (ಉ, u: the word starts on a vowel, so the vowel takes its standing shape.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Where would the same u take its riding shape, ು? (After a consonant, as at the end of ಹೌದು.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which number is ೮, and which word does it stand for? (8, eṇṭu.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಉತ್ತರ (uttara) aloud, and point to the ಉ (u) in it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಉತ್ತರ** aloud, and point to the ಉ in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "೮ (8) aloud as eṇṭu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **೮** aloud as *eṇṭu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the Script block above, so no model stays in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the Script block above, so no model stays in view]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "u as it stands at the start of a word, then the digit for eṇṭu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *u* as it stands at the start of a word, then the digit for *eṇṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — ಉ (u), ೮ (8)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **ಉ**, **೮**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired shape, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired shape, then stop]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which month opens the year, and which festival opens it? (Caitra; Ugadi.) That is the chapter: a calendar shared with Hindi, a word that means both answer and north, and the vowel and the digit that sit inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: noon and midnight."
             }
           ]
         }

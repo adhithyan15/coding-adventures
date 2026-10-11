@@ -37,7 +37,7 @@ reviews_of: [PT-C130-sessenta]
 
 [PAUSE 2s] Before the new one: say the Portuguese for to look, then the Portuguese for sixty.
 
-[PAUSE 2s] Write *first* for a woman the way a sign writes it: *1.ª*.
+[PAUSE 2s] [YOU WRITE: *first* for a woman the way a sign writes it — *1.ª*]
 
 ## You'll want to know: setenta
 <!-- hl-knowledge: introduces=[PT-LEX-C130-NUMEROS130-02]; assesses=[] -->

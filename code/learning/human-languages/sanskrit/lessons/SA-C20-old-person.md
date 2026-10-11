@@ -67,7 +67,8 @@ lie by omission.
 - [YOU SAY: *vṛddhaḥ* — "an elder"]
 - [YOU SAY: which of *purātana* and *vṛddha* you would use for a temple]
 - [YOU SAY: what √वृध् means (to grow)]
-- [YOU RECALL: read **कुतः**, then say *navan*]
+- [YOU READ: **कुतः**]
+- [YOU RECALL: say *navan*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-03, SA-LEX-C20-PERSON-04] -->

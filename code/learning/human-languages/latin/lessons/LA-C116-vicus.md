@@ -37,7 +37,8 @@ reviews_of: [LA-C116-angulus]
 
 [PAUSE 2s] Before the new one: say the Latin for the main hall of a house, then the Latin for a corner.
 
-[PAUSE 3s] Read the two lines you would say at a door: *Salvē! Ubi est porta?*
+[PAUSE 3s]
+[YOU READ: the two lines you would say at a door — *Salvē! Ubi est porta?*]
 
 ## You'll want to know: vīcus, vīcī
 <!-- hl-knowledge: introduces=[LA-LEX-C116-LOC116-05]; assesses=[] -->

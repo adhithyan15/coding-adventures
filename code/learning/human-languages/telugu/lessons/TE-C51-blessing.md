@@ -58,7 +58,8 @@ Four courtesy words, and two of them are utterances by name.
 - [YOU SAY: *āśīrvādaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvādaṁ*, then *dhanyavādamulu*, and name the piece they share]
-- [YOU RECALL: read **ఏమో**, then say *bayaludēru*]
+- [YOU READ: **ఏమో**]
+- [YOU RECALL: say *bayaludēru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04] -->

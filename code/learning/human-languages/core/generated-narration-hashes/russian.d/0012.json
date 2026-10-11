@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 12,
-  "sourceHash": "fnv1a64:1279187cfd0029f5",
+  "sourceHash": "fnv1a64:060700872c846772",
   "lessonIds": [
     "RU-C12-mama",
     "RU-C12-papa",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "russian/narration/ch12.txt",
   "json": "russian/narration/ch12.json",
-  "textHash": "fnv1a64:a2f2020759a9e003",
-  "jsonHash": "fnv1a64:4630ff0d6fc971bc",
+  "textHash": "fnv1a64:0ba08cc47f93511a",
+  "jsonHash": "fnv1a64:59a6666ca14d6f95",
   "findings": []
 }

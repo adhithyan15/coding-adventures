@@ -37,9 +37,9 @@ reviews_of: [JA-C18-tsu-counter, JA-C13-kodomo, JA-W11-small-tsu, JA-W15-small-y
 [PAUSE 25s] Three recalls, then the counter the last rule cannot reach.
 
 - [YOU RECALL: say what to use when you do not know the counter — **R1**, one lesson back]
-- [YOU RECALL: write **の** — **R2**, five lessons back]
-- [YOU RECALL: write the small **ゅ** — **R3**, twenty lessons back]
-- [YOU RECALL: write the small **っ** — **R4**, eighty lessons back]
+- [YOU WRITE: **の** from memory — **R2**, five lessons back]
+- [YOU WRITE: the small **ゅ** from memory — **R3**, twenty lessons back]
+- [YOU WRITE: the small **っ** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-NIN]; assesses=[JA-SCRIPT-NI-01, JA-SCRIPT-N-01, JA-LEX-SAN, JA-LEX-YON, JA-LEX-GO, JA-LEX-JUU, JA-GRAMMAR-JUU-COMPOUND] -->
@@ -78,7 +78,9 @@ lesson.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIN, JA-LEX-KODOMO, JA-LEX-SAN, JA-LEX-JUU] -->
 
-Write **にん**. Say *sannin, yonin, gonin, juunin*. Then say **こども さんにん**.
+[YOU WRITE: **にん**]
+
+Say *sannin, yonin, gonin, juunin*. Then say **こども さんにん**.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIN, JA-GRAMMAR-COUNTER-01] -->

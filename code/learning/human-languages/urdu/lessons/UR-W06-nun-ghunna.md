@@ -91,7 +91,7 @@ dotless one closing it, doing two entirely different jobs in a single short word
 - [YOU WRITE: ں — the deep bowl, and then nothing]
 - [YOU WRITE: میں, then ہیں, then نہیں]
 - [YOU SAY: **maiṅ**, letting the vowel hum and keeping your tongue down]
-- [YOU POINT: at the two nūns in نہیں and say what each one does]
+- [YOU POINT: the two nūns in نہیں and say what each one does]
 - [YOU READ: ہیں — and say why it ends on a hum rather than an n]
 
 ## Wrap-up Recall

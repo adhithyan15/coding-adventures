@@ -7,12 +7,18 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "HI-C14-ritu",
-    "kind": "production",
-    "summary": "Say all six ऋतु in order and point to वर्षा, the monsoon season no Western four-season label maps onto.",
+    "lesson": "HI-C14-checkpoint",
+    "kind": "task",
+    "summary": "Complete HI-C14-checkpoint, the chapter's closing checkpoint: say all six ऋतु in order and point to वर्षा, recall ghī, say what ◌ँ does and what घ carries, tell ऋ from र, then write ऋ, घ and ◌ँ from memory.",
     "assesses": [
+      "HI-LEX-ANCHOR-GHEE",
       "HI-CONCEPT-C14-RITU-01",
-      "HI-CONCEPT-C14-RITU-02"
-    ]
+      "HI-CONCEPT-C14-RITU-02",
+      "HI-SCRIPT-RECOG-118",
+      "HI-SCRIPT-RECOG-136",
+      "HI-SCRIPT-RECOG-125",
+      "HI-SCRIPT-WRITE-125"
+    ],
+    "note": "HI-C14-checkpoint (sequence 614, HI-PATH-017 order 1, after HI-S125-letter-vocalic-r and before chapter 15's first lesson) assesses all seven atoms the chapter introduces (7/7). The chapter's sequence and its path disagreed: HI-C14-ritu (610) is before the candrabindu, घ and ऋ lessons by sequence (611-613) but after all of them on the path, since HI-S118 and HI-S136 sit in HI-PATH-100 and HI-S125 in HI-PATH-016. So ऋतु could not assess them, and HI-S125 could not take ऋतु's season atoms. The checkpoint comes after all of them on both orders; HI-C14-ritu stays as the chapter's spoken lesson (3/7 on its own)."
   }
 }

@@ -59,7 +59,8 @@ A word for peace, and the way Sanskrit texts stop.
 - [YOU SAY: *śāntiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *samyak*, then *śāntiḥ*]
-- [YOU RECALL: say *dugdham*, then read **अपि**]
+- [YOU RECALL: say *dugdham*]
+- [YOU READ: **अपि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01] -->

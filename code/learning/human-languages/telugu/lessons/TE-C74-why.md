@@ -57,7 +57,8 @@ The question the next word answers.
 - [YOU SAY: *enduku*, once more]
 - [YOU SAY: ask *enduku* about something somebody just told you]
 - [YOU RECALL: say *aḍugu*, then say *enduku*]
-- [YOU RECALL: read **తూకం**, then say *kāraṁ*]
+- [YOU READ: **తూకం**]
+- [YOU RECALL: say *kāraṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-LEX-C74-LINK-04, TE-ETYMON-C34-ADUGU-02, TE-ETYMON-C34-ADUGU-03, TE-LEX-C34-ADUGU-01] -->

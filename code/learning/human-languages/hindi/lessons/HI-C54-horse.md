@@ -59,7 +59,8 @@ The second of five, and an inherited word that was pushed out.
 - [YOU SAY: *ghoṛā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ghoṛā*, then *gāy* — the one that was replaced, the one that was not]
-- [YOU RECALL: read **दाल**, then say *ghuṭnā*]
+- [YOU READ: **दाल**]
+- [YOU RECALL: say *ghuṭnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02] -->

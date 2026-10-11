@@ -56,7 +56,8 @@ Four, and the fourth one steps back from the other three.
 - [YOU SAY: *oruvēḷai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *niccayamāka*, then *oruvēḷai*, and hear the certainty drain out]
-- [YOU RECALL: read **பல்**, then say *vivasāyi*]
+- [YOU READ: **பல்**]
+- [YOU RECALL: say *vivasāyi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04] -->

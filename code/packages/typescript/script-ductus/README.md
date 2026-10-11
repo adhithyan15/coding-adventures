@@ -36,7 +36,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 | `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
-| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies (and ā stems), then one headline across the word, fitted to the printed word (uses `ink.ts`); a phrase, word by word |
+| `headline-word.ts` | a Devanagari or Gurmukhi **word** — its cited letters' bodies (and Devanagari ā stems), then one headline across the word, fitted to the printed word (uses `ink.ts`); a phrase, word by word |
 
 ## The design idea worth knowing
 
@@ -56,6 +56,14 @@ Perso-Arabic, and Urdu-Nastaliq, watches every contributing shard, and never
 places one eager browser key per glyph in the bundle. Script Ductus and Language
 Ladder install the same plugin, so their tests, development servers, and
 production builds all read the same canonical data.
+
+The registry pin follows it too. `tests/stroke-ownership.test.ts` pins every
+key, their order, every byte of non-Tamil data and every count, but each
+script's numbers live in their own `tests/stroke-ownership/<script>.json`, so a
+Kannada PR and a Malayalam PR never edit the same pin. After a deliberate
+stroke change, run `npm run generate:stroke-ownership`, check that the diff
+touches only the scripts you meant to change, and say why in your release
+note.
 
 Release notes follow the same ownership rule. Add one strict
 `CHANGELOG.d/NNNNN-HEADING-SLUG-<digest>.md` fragment with a level-3 heading;
@@ -88,10 +96,19 @@ a square. So the counts go into the citation's `variation`, no coordinate is
 copied, and the path itself is fitted to the bundled Noto Sans Bengali outline
 and checked against it at the default tolerances.
 
-A letter is authored only where one order clearly wins. Bengali's headline is
-the hard case: in isolated letters writers draw it first, last, partly or not
-at all, depending on the letter, so ন, ক, ম and others whose traces split are
-left out with the reason recorded in `data/scripts/bengali.json`.
+A letter is authored only where its body's order clearly wins. Bengali's
+headline is the hard case: in isolated letters writers draw it first, last,
+partly or not at all, depending on the letter. Where one placement wins a
+majority and covers the printed bar, the path follows it (ব and র draw it
+first). Where none does, the body is drawn in its majority order and the
+headline is drawn **last**, as its own stroke, left to right, by a documented
+convention: the way the Bengali track's own lessons teach the bar (body first,
+bar last), since in running text it runs across the whole word, as in
+Devanagari. Fourteen letters use it (ই চ ছ জ ড ত দ ন ফ ভ ম য ল হ); each
+record says so with its counts, and `tests/strokes/bengali.test.ts` pins the
+list. ক (its majority bar stops at the stem), আ গ ট ধ প স শ (no clear body
+order) and ঝ (Noto splits its headline around the rising right stem) stay
+out, with the reason recorded in `data/scripts/bengali.json`.
 
 ### A tracing lesson as a source (Gurmukhi)
 
@@ -104,6 +121,13 @@ The path is fitted to the bundled outline. The source draws the headline first,
 and every record says this is a teaching order: fluent writers are often
 described as adding the headline last. ਛ, ਨ and ਬ lift once less than the app,
 down to Omniglot's copyist mode, which is an upper bound on native lifts.
+
+A Gurmukhi WORD of bare cited letters (ਪਰ, ਅਮਨ, ਮਨਨ) is composed like a
+Devanagari one: each letter's body without its own (first) headline stroke,
+then ONE headline last, left to right. That word-level order is this book's
+documented convention, not something the source records, and the strip's
+footer says so. ਅ ਖ ਘ ਪ ਮ, whose printed bar is split, join whole, and the
+shared headline never crosses their gap (see `headline-word.ts`).
 
 ### A teaching tool's formation arrows as a source (Malayalam consonants)
 
@@ -147,10 +171,47 @@ digit row with a cited ductus resolves its font like a letter
 (`verifiedLetterFont`). The same source corrected ಃ, whose first path drew
 the lower dot first.
 
+### A recording as a source, with a licence that asks for credit (Malayalam ് ഠ ൊ ോ ൧-൯)
+
+The candrakkala ്, the consonant ഠ, the digits ൧-൯ and the two-part vowel
+signs ൊ and ോ (`strokes/malayalam.ts`, after ൈ) cite Jayasree
+(`sachn1/jayasree`, Sachin Nandakumar), a Malayalam handwriting animator built
+on about 300 centre lines that one recorder traced over the Manjari typeface,
+one gesture per pen-down stroke. Because it is a recording, it shows lifts
+directly, not only order and direction; every glyph here is one recorded
+stroke except ൊ and ോ, which are two: the left sign, a lift, then ാ. Its stroke data is CC BY 4.0, which allows
+adaptation with credit, so each record names the work, its author, the commit
+and the licence, and the citation printed under each strip carries that
+credit. Even so, only the facts are taken (stroke count, start, order,
+direction, end): Manjari is rounder and wider than Noto, so every path is
+fitted to the bundled Noto Sans Malayalam outline at the default tolerances,
+and the captions are this package's own. One recorder, so confidence is
+medium. Jayasree breaks the earlier tie on ഠ's direction (anticlockwise, with
+Thooval and grahyam, against Moag's clockwise arrow) and supplies the movements
+Moag never gave ്.
+
+**The one coverage exception: a consonant placeholder.** Printed alone, ൊ and
+ോ still leave room for the consonant they are written around, and Noto marks
+it with a small dot between the two parts. The dot shows where a consonant
+would sit; nobody writes it, and a path that skips it leaves about 5% of the
+glyph untraced, over the 2% limit. So the coverage check skips exactly that
+contour for exactly these two glyphs (`NOTO_PLACEHOLDER_CONTOURS` in
+`tests/support/stroke-honesty.ts`, keyed by ductus key, each naming the
+contour's index and pinned bounds). The limit itself is unchanged, the on-ink
+and join checks still see the whole glyph, and the tests prove the skipped
+contour is the dot and nothing else: the rest of each glyph is exactly the
+cited left sign's outline and ാ's outline shifted. ൦ is recorded but no lesson
+draws it.
+
+The same batch adds two one-offs from sources already cited here: Kannada ಞ
+from Chimple's consonant lesson `LIDO_kn2_0304` (two paths, so one lift; the
+recorded trace agrees), and Chinese 尔 from Hanzi Writer Data, the five strokes
+that already close 你.
+
 ### A school model and native writers as sources (Latin print letters)
 
-Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 31 print glyphs: a b
-c d e g h i l n o p q r s t u w y ß, G and H cite the Grundschrift-App, made in
+Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 42 print glyphs: a b
+c d e g h i l m n o p q r s t u v w y ß, G, H and R cite the Grundschrift-App, made in
 a research project of the Laborschule at Bielefeld University with the
 Grundschulverband, whose ordered paths (one per pen-down stroke) a child traces
 in order. Its repository has no licence, so only the order, start, direction
@@ -163,8 +224,30 @@ as about six in ten writers draw it), ü's dots (left first), and ¿ and ¡ (dot
 last). Each precomposed letter is its own entry whose first stroke is its base
 letter's. The outlines are `LatinPrint-Subset.ttf`, a renamed subset of SIL's
 literacy typeface Andika, chosen because its a is the one-storey a every
-source teaches (Noto Sans prints a two-storey a). The grave, circumflex,
-cedilla, macron, æ and œ have no source; ä ö ë ï ÿ would be analogy only.
+source teaches (Noto Sans prints a two-storey a). No reachable source records
+the grave, circumflex, macron or cedilla, or the diaeresis on any letter but
+ü, so è ê ë ï ä ö ē and ç are drawn BY ANALOGY, not separately sourced, and
+each record says so: the cited base letter, then the mark last, as the cited
+ü (left dot first), acute and tilde are drawn; a mark no cited record gives a
+direction runs left to right and top to bottom. v, m and R cite no
+native-writer count (UJIpenchars2 was out of reach when they were added). æ,
+œ and ÿ are not drawn.
+
+### Many native writers' recorded handwriting, counted (Persian ۰-۹, Urdu ۰-۳)
+
+The Persian digits (`strokes/arabic-family.ts`, keys `perso-arabic:۰` to
+`perso-arabic:۹`, after the Urdu ض) cite POH-Db, the Persian Online
+Handwriting Database (SLT Lab, Amirkabir University of Technology), whose
+NumberGroup writepads record native writers' numbers as InkML, one trace per
+pen-down stroke. Its licence is AGPL-3.0, so the records cite counts and
+shares only (how many of 447-676 samples per digit are one stroke, where they
+start, which way they move, where they end), counted from 30 writers; no
+trace is copied, and every path is fitted to the bundled Noto Naskh Arabic
+outline. Every digit is one stroke in 99-100% of its samples, so none lifts.
+Urdu writes ۰ ۱ ۲ ۳ in the same shapes, so `urdu-nastaliq:۰` to `۳` draw the
+same paths and cite the same counts, each record saying the writers were
+Persian; Urdu ۴, ۶ and ۷ are different shapes and have no ductus. Their rows
+live in the inventories' optional `digits/` section (HL25).
 
 ## Usage
 
@@ -237,6 +320,16 @@ India's LipiTk Devanagari data: 82% of 2,706 consonant prototypes; about 5%
 first). A word whose composed path does not fit the printed word at the
 default tolerances is refused, not drawn.
 
+A Gurmukhi word (`gurmukhi:ਮਨਨ`) is composed the same way, mirrored: its cited
+letters draw their headline FIRST ("draw the headline from left to right"), so
+`splitHeadline` takes it off the front (`LETTER_HEADLINE`), and the word's one
+headline still comes last, by a convention the footer names as such
+(`GURMUKHI_HEADLINE_LAST_SOURCE`). The split-bar letters in
+`SPLIT_HEADLINE_LETTERS` join whole; the headline runs from the first to the
+last letter whose own headline was taken off, so ਨਪਨ (ਪ's gap under the line)
+is refused by the ink check. A word that opens with a body drops its "lift,
+then ".
+
 One sign may join a word: ā (ा), straight after a consonant. Its stem is drawn
 after the consonant's body and its piece of headline becomes part of the
 word's one headline; its place is cited on its mark record (the cited आ draws
@@ -288,21 +381,51 @@ is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`). The pulli ்
 (`U-BCD`) is the last Tamil owner: one short dab inside the font's disc, its
 order (body first, then the dot, one lift) cited to Abhinaya Rajarajan's
 *Varai* recordings of the 18 consonants with pulli (one writer, facts only,
-confidence medium).
+confidence medium). The Grantha ஸ (`U-BB8`) follows it: one continuous stroke
+cited straight to LipiTk's Tamil recognizer (150 of 153 prototypes), going
+back up its stem once before the second arch. அ, ஆ, எ, ங and ஷ keep their
+manual or chart citation, but each is one stroke on the same recognizer's
+counts (85% to 97% of their prototypes), and its variation note says where the
+native writers' order or count overrides the earlier source; ஊ is the one Tamil
+letter that still lifts, once, as 93% of its prototypes do.
 Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
 owner, keyed `gujarati:<sign>` like its letters, and take their source from the
 sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
 from KanoAI's hand-made barakhadi templates, paths fitted to Noto Sans
 Gujarati. `tests/strokes/gujarati-marks.test.ts` and
 `tests/ductusview/gujarati-marks.test.ts` hold their evidence.
-Eight Devanagari signs (ु ू े ं ़ ् ृ ँ) sit at the end of the Devanagari
-owner the same way, sourced through `devanagariMarkSource` to native writers'
-pen traces in HP Labs India's LipiTk Devanagari recognizer (counts and shares
-only). Those writers wrote each sign alone, so the entries draw the sign by
-itself and say nothing about its order against a consonant or the headline;
-ा ि ी ो ौ ै and ः are left out because Noto prints a headline piece the traces
-never draw, or the traces split. `tests/strokes/devanagari-marks.test.ts` and
+Twelve Devanagari signs (ा ु ू े ं ़ ् ृ ँ ी ो ः) sit at the end of the
+Devanagari owner the same way, sourced through `devanagariMarkSource` to
+native writers' pen traces in HP Labs India's LipiTk Devanagari recognizer
+(counts and shares only). Those writers wrote each sign alone, so the entries
+draw the sign by itself and say nothing about its order against a consonant
+or the headline (ā's place in a word is cited separately). Noto prints ी, ो
+and ः with a short piece of headline that the writers do not draw: in a word
+it is the one headline drawn last across the whole word. Their paths leave
+it undrawn, and the coverage check excuses exactly that rectangle on exactly
+those three glyphs (`ExcusedInk` in `tests/support/stroke-honesty.ts`,
+`HEADLINE_STUBS` in `tests/strokes/devanagari.test.ts`): narrower than
+raising a glyph's untraced ceiling, because every other part of the sign must
+still be traced. ि ै and ौ are left out because the traces split.
+`tests/strokes/devanagari-marks.test.ts` and
 `tests/ductusview/devanagari-marks.test.ts` hold their evidence.
+Eleven Telugu signs (ం ా ి ీ ు ూ ె ే ొ ో ్) sit at the end of the Telugu owner,
+keyed `telugu:<sign>` and sourced through `teluguMarkSource` to native
+writers' pen traces in HP Labs India's LipiTk Telugu recognizer (counts and
+shares only). They too are drawn by themselves, with no consonant; Telugu has
+no written-order row. The loops of ా and ూ are the least settled claims (62%
+and 57% of writers turn them clockwise, as the font's tucked-in tip implies),
+and each record says so. ై is left out: its recognizer class stores only the
+length mark below, never the e hook above, so the order of its two parts is
+unattested. `tests/strokes/telugu-marks.test.ts` and
+`tests/ductusview/telugu-marks.test.ts` hold their evidence. The Telugu vowels
+ఆ, ఇ and ఏ keep their demonstration or tracing-guide citation, but are drawn on
+the same recognizer's counts (one stroke for 99% of ఆ's and 98% of ఇ's
+prototypes, two for 89% of ఏ's), and each variation note says where the
+writers' order, direction or count overrides the earlier source. Bengali ং joins
+ঃ and ঁ at the end of the Bengali owner, from the same Bangla recognizer:
+ring first (the commonest order, 103 of 183) and counterclockwise, then the
+tail down to the right.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

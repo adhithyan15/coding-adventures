@@ -36,8 +36,8 @@ reviews_of: [MW-R26-shopping-counter, MW-C17-transport-five, MW-C16-transport-th
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01, MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01, MW-LEX-DAAL-01, MW-LEX-TOTAL-QUESTION-01, MW-SCRIPT-TOTAL-QUESTION-01] -->
 
-[PAUSE 24s] Recall both transport payoffs, say lentils, then write the total
-question.
+[PAUSE 24s] Recall both transport payoffs and say lentils.
+[YOU WRITE: the total question]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01, MW-LEX-RIKSHA-01, MW-SCRIPT-RIKSHA-01, MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01, MW-SCRIPT-SHA-01, MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-PRICE-QUESTION-01, MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-BARGAIN-REQUEST-01] -->
@@ -47,8 +47,7 @@ with the question from Chapter 27 and answer with the counter-offer from
 Chapter 28. A fare is bargained exactly like a price, which is why no new line
 is needed here.
 
-Then write all five from dictation, and write the price question with the word
-you would actually use standing at a roadside.
+[YOU WRITE: all five from dictation, then the price question with the word you would actually use standing at a roadside]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RIKSHA-01, MW-LEX-GHODO-01, MW-LEX-THELA-01] -->

@@ -60,7 +60,8 @@ Five things underfoot and in the hearth: fire, ash, stone, sand, soil.
 - [YOU SAY: *mṛttikā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *agniḥ* and *mṛttikā* together]
-- [YOU RECALL: say *samyak*, then read **आशीर्वादः**]
+- [YOU RECALL: say *samyak*]
+- [YOU READ: **आशीर्वादः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05] -->

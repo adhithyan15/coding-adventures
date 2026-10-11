@@ -64,7 +64,7 @@ between them is two small marks rather than a new character to learn.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING] -->
 
-[PAUSE 15s] Write ?, then write the different sign that closes ????? and explain its particle reading.
+[PAUSE 15s] Write **わ**, then write the different sign that closes **こんにちは** and explain its particle reading.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01] -->

@@ -58,7 +58,7 @@ Four, and this is the run's borrowed one.
 - [YOU SAY: *bhuja*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhuja*, then *kuttige*, and say which of the two the ಹೂಮಾಲೆ passes]
-- [YOU RECALL: read **ಹಳ್ಳಿ**]
+- [YOU READ: **ಹಳ್ಳಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C57-BODY-04] -->

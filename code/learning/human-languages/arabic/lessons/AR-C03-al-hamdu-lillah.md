@@ -85,7 +85,7 @@ meanings drops out.
 ## You'll want to know — Using it
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- — **كيف حالك؟** *kayfa ḥāluka?*
+- — *kayfa ḥāluka?*
 - — **الحمد لله.** *al-ḥamdu lillāh.*
 
 It works as "fine, thanks" — said whether things are going well or badly, which

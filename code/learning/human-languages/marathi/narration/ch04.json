@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 4,
   "title": "Courtesy, Responses, and Leave-Taking",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bd91f46b75d1ce27",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:351733f654f060fe",
   "lessons": [
     {
       "id": "MR-C01-ho",
@@ -14,21 +14,23 @@
       "romanization": "ho",
       "gloss": "yes (ho)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dc2f656183fbadd6",
+      "sourceHash": "fnv1a64:5586c1e9bb910246",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Writing — the first return, from spoken names"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Writing — the first return, from spoken names."
       },
       "blocks": [
         {
@@ -98,14 +100,22 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the fuller polite form — \"ho, baraṃ āhe\"]"
-            },
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — the first return, from spoken names",
+          "segments": [
             {
               "kind": "speech",
-              "text": "Now cover the recent script models. Write dental da, breathy dha, and quiet ba once from their spoken names. Uncover and repair only a missed sign."
+              "text": "Cover the recent script models. Write dhanyavād once, then dental da, breathy dha and quiet ba from their spoken names. Uncover and repair only a missed sign."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-ho-script-r2-c",
               "prompt": "Write dhanyavad once, then write da, dha, and ba from their spoken names.",
               "assesses": [
@@ -126,7 +136,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -166,7 +176,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -280,7 +290,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -394,7 +404,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -510,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b76e09a46926c12e",
+      "sourceHash": "fnv1a64:ba1e9cba76a82ca2",
       "notice": null,
       "blocks": [
         {
@@ -606,6 +616,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-practice-writing-ho",
               "prompt": "Without a visible model, write the Marathi word you hear: ho (yes).",
               "assesses": [
@@ -625,6 +636,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-practice-read-namaskar",
               "prompt": "Read नमस्कार and give its conversational meaning.",
               "assesses": [
@@ -646,6 +658,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-practice-script-r2-d",
               "prompt": "From their spoken names, write ya, curled-back lla, and va once.",
               "assesses": [
@@ -676,8 +689,26 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नमस्कार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नमस्कार**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हो (ho) once, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हो** once, without a model]"
+            },
+            {
               "kind": "speech",
-              "text": "Read नमस्कार, write हो once without a model, then name two ways Marathi differs from Hindi despite sharing Devanagari. (Prefers namaskār; three genders; gender on the verb; the extra letter ळ.)"
+              "text": "Then name two ways Marathi differs from Hindi despite sharing Devanagari. (Prefers namaskār; three genders; gender on the verb; the extra letter ळ.)"
             },
             {
               "kind": "speech",

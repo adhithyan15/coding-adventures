@@ -56,7 +56,8 @@ Water, high ground, a wet field, a way across it, and the place at the end of th
 - [YOU SAY: *kirāmam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *nadi*, *malai*, *vayal*, *pātai*, *kirāmam*]
-- [YOU RECALL: say *mēkam*, then read **விதை**]
+- [YOU RECALL: say *mēkam*]
+- [YOU READ: **விதை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05] -->

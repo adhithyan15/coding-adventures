@@ -33,7 +33,7 @@ reviews_of: []
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: വലിയ
 <!-- hl-knowledge: introduces=[ML-LEX-C42-ADJ-01]; assesses=[] -->
@@ -50,7 +50,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01, ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "വലിയ" three times, pointing at something different each time]
+- [YOU SAY: "വലിയ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *pāl*]
 

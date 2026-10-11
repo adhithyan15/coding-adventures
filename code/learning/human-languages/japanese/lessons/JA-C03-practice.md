@@ -34,7 +34,7 @@ reviews_of: [JA-W03-arigatou-read, JA-W03-sa, JA-W03-ma, JA-W03-su, JA-C01-gozai
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ARIGATOU-READ-01] -->
 
-[PAUSE 2s] Write ありがとう. Five signs, no help.
+[PAUSE 2s] [YOU WRITE: ありがとう — five signs, no help]
 
 ## Script — the second half
 <!-- hl-knowledge: introduces=[JA-SCRIPT-GOZAIMASU-READ-01]; assesses=[JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-SA-01, JA-SCRIPT-MA-01, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-I-01] -->
@@ -101,7 +101,7 @@ ever learn arrives with a voiced twin already attached.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-ETYMON-ARIGATASHI, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO] -->
 
-[PAUSE 15s] Give plain thanks, then polite thanks. Name the dakuten and the ?hard to exist? memory hook.
+[PAUSE 15s] Give plain thanks, then polite thanks. Name the dakuten and the “hard to exist” memory hook.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-GOZAIMASU-READ-01] -->

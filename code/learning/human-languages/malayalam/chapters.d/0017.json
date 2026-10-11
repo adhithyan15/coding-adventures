@@ -9,9 +9,12 @@
   "payoff": {
     "lesson": "ML-C17-paathira",
     "kind": "production",
-    "summary": "Say pāthira, pull pāthi out of it, and show it is a native half-word rather than Sanskrit ardha.",
+    "summary": "Say ucca as \"the peak\" and say why it is likely a different Sanskrit root rather than a native one, then say pāthira, pull pāthi out of it, and show it is a native half-word rather than Sanskrit ardha.",
     "assesses": [
+      "ML-CONCEPT-C17-UCHA-PAATHIRA-01",
+      "ML-CONCEPT-C17-UCHA-PAATHIRA-02",
       "ML-CONCEPT-C17-PAATHIRA-01"
-    ]
+    ],
+    "note": "ML-C17-paathira is the chapter's last lesson and assesses all three atoms it introduces: noon as ucca (ML-C17-ucha-paathira) and midnight as pātirā."
   }
 }

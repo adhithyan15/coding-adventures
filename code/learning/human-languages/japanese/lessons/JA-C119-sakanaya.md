@@ -38,7 +38,8 @@ reviews_of: [JA-C119-hanaya]
 
 [PAUSE 2s] Before the new one: say the Japanese for a bookshop, then the Japanese for a florist.
 
-[PAUSE 1s] Read this without stopping: **すこし わかりました**. (I understood a little.)
+[PAUSE 1s]
+[YOU READ: the sentence without stopping — **すこし わかりました** (I understood a little.)]
 
 ## You'll want to know: さかなや
 <!-- hl-knowledge: introduces=[JA-LEX-C119-THINGS119-02]; assesses=[] -->

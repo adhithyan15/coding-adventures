@@ -4,7 +4,7 @@
   "chapter": 190,
   "title": "Synthesis --- Sentences Worth Saying",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c9ee7a37389a0f71",
+  "sourceHash": "fnv1a64:fdf47d6b84ec4160",
   "lessons": [
     {
       "id": "ES-C53-sintesis-frases-largas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a44c360f8e1eef97",
+      "sourceHash": "fnv1a64:6a9b76bd52e8f8d1",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the second line again. It has three verbs in it, and you can build every piece of it:"
+              "text": "Say the second line again. It has three verbs in it, and you can build every piece of it:"
             },
             {
               "kind": "speech",
@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-ask",
               "prompt": "Ask whether somebody has the book you bought.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-hole",
               "prompt": "Say the thing I do not have.",
               "assesses": [
@@ -165,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-full",
               "prompt": "Say what I do not have is the meal you make.",
               "assesses": [
@@ -186,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-why",
               "prompt": "Why is a long sentence not harder than the short ones it is made of?",
               "assesses": [

@@ -56,7 +56,8 @@ Four, and this one you can only see because of what it comes off.
 - [YOU SAY: *pukai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sēṟu*, then *pukai*, and let the *-ai* open at the end]
-- [YOU RECALL: read **நகம்**, then say *tēvaiyillai*]
+- [YOU READ: **நகம்**]
+- [YOU RECALL: say *tēvaiyillai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04] -->

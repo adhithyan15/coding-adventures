@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-TOND, MR-GRAMMAR-TOND-MUKH-DOUBLET, MR-LEX-NAAK]
+  knowledge: [MR-LEX-TOND, MR-GRAMMAR-TOND-MUKH-DOUBLET, MR-LEX-NAAK, MR-ETYMON-HRUDAYA-KERD]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -47,6 +47,8 @@ reviews_of: [MR-C12-tond, MR-C12-naak]
 [PAUSE 1s] Answer once, then repair only the missing piece.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-TOND, MR-LEX-NAAK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-TOND, MR-LEX-NAAK, MR-ETYMON-HRUDAYA-KERD] -->
 
 [PAUSE 2s] **तोंड, नाक.**
+
+[PAUSE 2s] One more body word: **हृदय**, heart. Which English words share its root? (***Heart***, and *cardiac* by way of Greek.)

@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- The sandbox-plan assertions are exact. Only the file write is
+  kernel-exact, and only on the OS family whose path syntax the output path
+  uses. On a Unix host, that gives 4 direct, 14 brokered and 4 native across
+  the six plans. DNS and connect are brokered on every platform now, per
+  `capability-os-sandbox` and D18S S-P2 (#13980 P2.1).
+
 ### Added
 
 - Reuse the canonical Tier-2 `vault.request_lease` catalog definition for the

@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+- **Rollback is now detected per file.** That protection comes from
+  `vault-sealed-store`'s freshness index (VLT01 F1-F10, P1.20). A new test
+  shows the attack failing: rotate a secret, put the old record file back,
+  and `register_all` refuses with `Tamper` and registers nothing. The module
+  docs and README now describe only the remaining whole-snapshot gap
+  (P1.20b).
+- **D18U envelope version 2** (P1.21). It adds the canonical, bounded list of
+  `host:port` destinations a secret may be sent to (U-E8: a DNS name and a
+  port, never an IP literal, strictly ascending, at most 32). The encoder
+  always writes version 2. Version 1 records still decode, with no
+  destinations (U-E9), so a secret provisioned before this change is not usable
+  with `net.fetch` until it is re-`put`. Absent never means anywhere.
+- New `validate_destination`, shared by the encoder, the decoder and the CLI.
+
 ## 0.1.0 — Unreleased
 
 - **New crate**: the D18U sealed secret record. It is the format that lets a

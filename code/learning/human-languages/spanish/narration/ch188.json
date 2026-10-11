@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "Lo Que --- What, Out of Two Old Words",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0daede2edcfa46e1",
+  "sourceHash": "fnv1a64:2adab37fcddebd70",
   "lessons": [
     {
       "id": "ES-C53-lo-que",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f87f6cd8c4f9428f",
+      "sourceHash": "fnv1a64:93db52f77dc4d247",
       "notice": null,
       "blocks": [
         {
@@ -88,11 +88,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap",
+              "instruction": "\"lo digo\" then \"lo que digo\" — a known thing, then a gap",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap]"
+              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — a known thing, then a gap]"
             },
             {
               "kind": "prompt",
@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-lo-que-say",
               "prompt": "Say what I say, meaning the thing that I say.",
               "assesses": [
@@ -126,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-lo-que-contrast",
               "prompt": "What is the difference between lo digo and lo que digo?",
               "assesses": [
@@ -145,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-lo-que-new",
               "prompt": "How many new words did this chapter introduce?",
               "assesses": [
@@ -176,7 +179,21 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"what I buy.\" (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.) Next: all of it in one place."
+              "text": "Say \"what I buy.\" (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the joining que itself: which Latin family is it? (Qui, quem, quid — the same qu- as your question words.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: all of it in one place."
             }
           ]
         }

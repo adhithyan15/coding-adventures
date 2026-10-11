@@ -37,8 +37,10 @@ reviews_of: [MW-C14-hear-sasta, MW-C13-bhaav, MW-C13-vastu, MW-C11-barsaat, MW-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-SASTA-01]; assesses=[MW-LEX-SASTA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-TA-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-BARSAAT-01, MW-SCRIPT-PATI-01, MW-LEX-BAHAN-01] -->
 
-[PAUSE 25s] Say cheap and price. Write **भाव**, **वस्तु**, **बरसात**, and
-**पति**, say sister, then recall **्** and **त**.
+[PAUSE 25s] Say cheap and price.
+[YOU WRITE: **भाव**, **वस्तु**, **बरसात**, and **पति**]
+
+Say sister, then recall **्** and **त**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01] -->
@@ -49,8 +51,9 @@ reviews_of: [MW-C14-hear-sasta, MW-C13-bhaav, MW-C13-vastu, MW-C11-barsaat, MW-C
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SASTA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **सस्ता**. Check the middle
-consonant join and final long **ा**.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **सस्ता** — check the middle consonant join and final long **ा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01] -->

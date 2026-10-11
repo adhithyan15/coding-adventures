@@ -58,7 +58,8 @@ One. And the reason Telugu needs fewer family words than you expect.
 - [YOU SAY: *māma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māma*, then *ārōgyaṁ*, as one question]
-- [YOU RECALL: say *goḍḍali*, then read **ఎలుక** and say what it means]
+- [YOU RECALL: say *goḍḍali*]
+- [YOU READ: **ఎలుక**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01] -->

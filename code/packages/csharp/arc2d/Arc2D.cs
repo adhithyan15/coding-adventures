@@ -13,52 +13,77 @@ public readonly record struct CenterArc(
 {
     public Point Evaluate(double t)
     {
+        Validate();
+        RequireFinite(t);
         var angle = StartAngle + t * SweepAngle;
         var xp = Rx * CodingAdventures.Trig.Trig.Cos(angle);
         var yp = Ry * CodingAdventures.Trig.Trig.Sin(angle);
         var cosineRotation = CodingAdventures.Trig.Trig.Cos(XRotation);
         var sineRotation = CodingAdventures.Trig.Trig.Sin(XRotation);
 
-        return new Point(
+        return RequireFinite(new Point(
             cosineRotation * xp - sineRotation * yp + Center.X,
-            sineRotation * xp + cosineRotation * yp + Center.Y);
+            sineRotation * xp + cosineRotation * yp + Center.Y));
     }
 
     public Point Tangent(double t)
     {
+        Validate();
+        RequireFinite(t);
         var angle = StartAngle + t * SweepAngle;
         var dxp = -Rx * CodingAdventures.Trig.Trig.Sin(angle) * SweepAngle;
         var dyp = Ry * CodingAdventures.Trig.Trig.Cos(angle) * SweepAngle;
         var cosineRotation = CodingAdventures.Trig.Trig.Cos(XRotation);
         var sineRotation = CodingAdventures.Trig.Trig.Sin(XRotation);
 
-        return new Point(
+        return RequireFinite(new Point(
             cosineRotation * dxp - sineRotation * dyp,
-            sineRotation * dxp + cosineRotation * dyp);
+            sineRotation * dxp + cosineRotation * dyp));
     }
 
     public Rect BoundingBox()
     {
-        const int samples = 100;
-        var minX = double.PositiveInfinity;
-        var minY = double.PositiveInfinity;
-        var maxX = double.NegativeInfinity;
-        var maxY = double.NegativeInfinity;
+        Validate();
+        var cosineRotation = CodingAdventures.Trig.Trig.Cos(XRotation);
+        var sineRotation = CodingAdventures.Trig.Trig.Sin(XRotation);
+        var xExtremum = CodingAdventures.Trig.Trig.Atan2(-Ry * sineRotation, Rx * cosineRotation);
+        var yExtremum = CodingAdventures.Trig.Trig.Atan2(Ry * cosineRotation, Rx * sineRotation);
 
-        for (var index = 0; index <= samples; index++)
+        // Endpoints are always present. Each stationary angle has an opposite
+        // partner, but only candidates inside the directed sweep can bound it.
+        var first = AtAngle(StartAngle, cosineRotation, sineRotation);
+        var last = AtAngle(StartAngle + SweepAngle, cosineRotation, sineRotation);
+        var minX = Math.Min(first.X, last.X);
+        var minY = Math.Min(first.Y, last.Y);
+        var maxX = Math.Max(first.X, last.X);
+        var maxY = Math.Max(first.Y, last.Y);
+        foreach (var angle in new[]
+            { xExtremum, xExtremum + CodingAdventures.Trig.Trig.PI,
+              yExtremum, yExtremum + CodingAdventures.Trig.Trig.PI })
         {
-            var point = Evaluate(index / (double)samples);
+            if (!ContainsAngle(angle))
+            {
+                continue;
+            }
+
+            var point = AtAngle(angle, cosineRotation, sineRotation);
             minX = Math.Min(minX, point.X);
             maxX = Math.Max(maxX, point.X);
             minY = Math.Min(minY, point.Y);
             maxY = Math.Max(maxY, point.Y);
         }
 
-        return new Rect(minX, minY, maxX - minX, maxY - minY);
+        var width = maxX - minX;
+        var height = maxY - minY;
+        RequireFinite(width);
+        RequireFinite(height);
+        return new Rect(minX, minY, width, height);
+
     }
 
     public IReadOnlyList<CubicBezier> ToCubicBeziers()
     {
+        Validate();
         var maxSegment = CodingAdventures.Trig.Trig.PI / 2.0;
         var segmentCount = Math.Max(1, (int)Math.Ceiling(Math.Abs(SweepAngle) / maxSegment));
         var segmentSweep = SweepAngle / segmentCount;
@@ -93,9 +118,66 @@ public readonly record struct CenterArc(
         return beziers;
 
         Point RotateTranslate(double localX, double localY) =>
-            new(
+            RequireFinite(new Point(
                 cosineRotation * localX - sineRotation * localY + centerX,
-                sineRotation * localX + cosineRotation * localY + centerY);
+                sineRotation * localX + cosineRotation * localY + centerY));
+    }
+
+    private void Validate()
+    {
+        if (!double.IsFinite(Center.X) || !double.IsFinite(Center.Y)
+            || !double.IsFinite(Rx) || !double.IsFinite(Ry)
+            || !double.IsFinite(StartAngle) || !double.IsFinite(SweepAngle)
+            || !double.IsFinite(XRotation) || Rx <= 0 || Ry <= 0)
+        {
+            throw new ArgumentException("Center arc requires finite coordinates, angles and positive radii.");
+        }
+
+        if (Math.Abs(SweepAngle) > 2.0 * CodingAdventures.Trig.Trig.PI)
+        {
+            throw new ArgumentOutOfRangeException(nameof(SweepAngle), "Center arc sweep exceeds one turn.");
+        }
+    }
+
+    private Point AtAngle(double angle, double cosineRotation, double sineRotation)
+    {
+        var localX = Rx * CodingAdventures.Trig.Trig.Cos(angle);
+        var localY = Ry * CodingAdventures.Trig.Trig.Sin(angle);
+        return RequireFinite(new Point(
+            cosineRotation * localX - sineRotation * localY + Center.X,
+            sineRotation * localX + cosineRotation * localY + Center.Y));
+    }
+
+    private bool ContainsAngle(double angle)
+    {
+        var turn = 2.0 * CodingAdventures.Trig.Trig.PI;
+        if (SweepAngle > 0)
+        {
+            return PositiveMod(angle - StartAngle, turn) <= SweepAngle;
+        }
+
+        return SweepAngle < 0 && PositiveMod(StartAngle - angle, turn) <= -SweepAngle;
+    }
+
+    private static double PositiveMod(double value, double modulus)
+    {
+        var remainder = value % modulus;
+        return remainder < 0 ? remainder + modulus : remainder;
+    }
+
+    private static void RequireFinite(double value)
+    {
+        if (!double.IsFinite(value))
+        {
+            throw new ArgumentException("Center arc produced a non-finite value.");
+        }
+    }
+
+    private static Point RequireFinite(Point point)
+    {
+        RequireFinite(point.X);
+        RequireFinite(point.Y);
+        return point;
     }
 }
 

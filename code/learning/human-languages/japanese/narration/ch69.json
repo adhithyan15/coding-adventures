@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C69-niji-type",
-              "prompt": "Type the Japanese for 'a rainbow'.",
+              "prompt": "Say the Japanese for 'a rainbow'.",
               "assesses": [
                 "JA-LEX-C69-THINGS69-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C69-kaminari-type",
-              "prompt": "Type the Japanese for 'thunder'.",
+              "prompt": "Say the Japanese for 'thunder'.",
               "assesses": [
                 "JA-LEX-C69-THINGS69-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C69-shimo-type",
-              "prompt": "Type the Japanese for 'frost'.",
+              "prompt": "Say the Japanese for 'frost'.",
               "assesses": [
                 "JA-LEX-C69-THINGS69-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C69-koori-type",
-              "prompt": "Type the Japanese for 'ice'.",
+              "prompt": "Say the Japanese for 'ice'.",
               "assesses": [
                 "JA-LEX-C69-THINGS69-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C69-natsuyasumi-type",
-              "prompt": "Type the Japanese for 'the summer holidays'.",
+              "prompt": "Say the Japanese for 'the summer holidays'.",
               "assesses": [
                 "JA-LEX-C69-THINGS69-05"
               ],

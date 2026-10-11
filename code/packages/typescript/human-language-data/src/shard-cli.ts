@@ -206,6 +206,13 @@ export interface ShardSection {
    * See `ShardPlan.ordinalOf` — same contract, per section.
    */
   readonly ordinalOf?: (element: unknown, index: number) => number;
+  /**
+   * The section may be absent. A document with no such key shards to no files
+   * for it, and a shard set with no files for it rebuilds with no such key
+   * (`MergeSection.optional`), so adding the section moves no existing byte.
+   * A script inventory's `digits` is the one optional section.
+   */
+  readonly optional?: boolean;
 }
 
 /**
@@ -531,6 +538,15 @@ function scriptInventoryPlan(name: string, language: string): ShardPlan {
         key: "marks",
         dir: "marks",
         idOf: (element) => scriptEntryId((element as { mark?: unknown }).mark),
+      },
+      // A script's own numerals (Persian ۰-۹), when its digit rows have been
+      // authored. Optional: Japanese and Tamil have none, and keep no key.
+      {
+        key: "digits",
+        dir: "digits",
+        idOf: (element) =>
+          scriptEntryId((element as { glyph?: unknown }).glyph),
+        optional: true,
       },
     ],
     completeness: {
@@ -940,6 +956,8 @@ export function shardContents(
     // `{id: element, …}` and takes its id from the KEY rather than from `idOf`,
     // because that is where an object keeps it.
     const raw = document[section.key];
+    // An absent optional section has no shards to write.
+    if (section.optional === true && raw === undefined) continue;
     const entries: {
       element: unknown;
       id: string | undefined;
@@ -1743,7 +1761,14 @@ function assertGenericOwnerBindings(
         name !== META_SHARD &&
         (section.dir === undefined ? !name.includes("/") : name.startsWith(prefix)),
     );
-    const raw = document[section.key];
+    // An absent optional section reconstructs no entries, so it must own no
+    // filenames either (checked below).
+    const raw =
+      section.optional === true && document[section.key] === undefined
+        ? (section.kind ?? "array") === "object"
+          ? {}
+          : []
+        : document[section.key];
     const entries =
       (section.kind ?? "array") === "object"
         ? Object.entries(ownerRecord(raw, `${plan.path}: ${section.key}`)).map(
@@ -1829,6 +1854,9 @@ function actualSectionIdentities(
   section: ShardSection,
 ): string[] {
   const raw = document[section.key];
+  // An absent optional section has no identities, which an independent
+  // completeness source must then agree with.
+  if (section.optional === true && raw === undefined) return [];
   if ((section.kind ?? "array") === "object") {
     return Object.keys(ownerRecord(raw, `${plan.path}: ${section.key}`));
   }
@@ -1952,6 +1980,7 @@ function assertIndependentOwnerCompleteness(
     });
     expected.set("letters", declarations.letters);
     expected.set("marks", declarations.marks);
+    expected.set("digits", declarations.digits);
   }
 
   for (const [sectionKey, sectionExpected] of expected) {

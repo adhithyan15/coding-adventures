@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Not Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4cf1a01a8093c5b8",
+  "sourceHash": "fnv1a64:306cb3498f01bc73",
   "lessons": [
     {
       "id": "SA-C66-fever",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18ca4e7586ffeed1",
+      "sourceHash": "fnv1a64:609c951d724cc387",
       "notice": null,
       "blocks": [
         {
@@ -45,7 +45,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new word: read a short line aloud word by word, then again as one breath, the way you read your first passage."
+              "text": "Before the new word:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a short line aloud word by word, then again as one breath, the way you read your first passage",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a short line aloud word by word, then again as one breath, the way you read your first passage]"
             }
           ]
         },
@@ -152,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8e0b7cf9d91fc2e",
+      "sourceHash": "fnv1a64:fb988e726189780a",
       "notice": null,
       "blocks": [
         {
@@ -177,8 +186,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read a three-word line aloud, then say it with the words in another order — Sanskrit lets them move."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a three-word line aloud, then say it with the words in another order — Sanskrit lets them move",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a three-word line aloud, then say it with the words in another order — Sanskrit lets them move]"
             }
           ]
         },
@@ -285,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c6246adb8aed4e5",
+      "sourceHash": "fnv1a64:42126b7c07d75a57",
       "notice": null,
       "blocks": [
         {
@@ -310,8 +324,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Before you hear today's word, read it aloud from the page, one letter-group at a time."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "today's word aloud from the page, one letter-group at a time, before you hear it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: today's word aloud from the page, one letter-group at a time, before you hear it]"
             }
           ]
         },

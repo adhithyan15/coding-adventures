@@ -12,7 +12,7 @@ headword: "आना / आता / आती / आते"
 gloss: "to come / come — infinitive / masculine / feminine / respectful or plural"
 romanization: "ānā / ātā / ātī / āte"
 concept_tag: HI-VERB-COME
-prerequisites: []
+prerequisites: [HI-C05-bolta-hun]
 sounds: []
 roots: []
 duration:

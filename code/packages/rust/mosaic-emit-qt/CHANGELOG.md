@@ -1,5 +1,42 @@
 # Changelog
 
+## 2026-10-10 (HostDraggable preserves inherited text presentation)
+
+- Supported `color` and `font-size` declarations on `HostDraggable` now reach
+  descendant `Text` nodes while more-specific text parts still win.
+- The exact `overflow: hidden` / `text-overflow: ellipsis` /
+  `white-space: nowrap` combination now clips the drag surface and emits Qt's
+  single-line right elision. Partial and unsupported values remain explicit
+  degradations (#17146).
+
+## 2026-10-08 (HostDraggable owns its native styled surface)
+
+- Styled `HostDraggable` nodes now use a native `Rectangle` surface and lower
+  authored fill, padding, gap, uniform and per-edge borders, radius, and
+  supported pointer cursors without changing drag, keyboard, accessibility,
+  payload, or `MultiEffect` source wiring (#17128).
+- Explicit `border-*-style: none` suppresses that edge override, while
+  unsupported styles and raw CSS shadows remain visible as degradations.
+
+## 2026-10-08 (elevation reporting matches native effects)
+
+- Supported `elevation: raised` and `elevation: overlay` declarations now
+  leave the style-drop report when Qt emits their `MultiEffect` shadows.
+  Unsupported tokens remain explicit degradations (#17126).
+
+## 2026-10-08 (solid per-edge border reporting)
+
+- `border-{top,right,bottom,left}-style: solid` is now recorded as consumed
+  when Qt emits the same positive-width edge strip. Unsupported, zero-width,
+  and style-only declarations remain explicit degradations (#17098).
+
+## 2026-10-08 (layout containers inherit font weight)
+
+- `Row`, `Column`, and `Stack` parts now pass supported authored
+  `font-weight` values to descendant `Text` nodes. The inherited typography
+  context does not add the fill anchors reserved for styled table cells, and
+  unsupported values remain visible in degradation reports.
+
 ## 2026-10-01 (layout variants share one app)
 
 - **ENV2 on Qt (UI48 §7.10): a layout variant is a root QML type of its own.** `from_pipeline_variant` emits `EngramApp.touch.mll` as `EngramApp.touch.qml`, whose type -- `EngramAppTouch`, named by the new `variant_type_name` with the same `<Component><Variant>` rule as Compose, Flutter and SwiftUI -- the generated `CMakeLists.txt` declares with `QT_QML_SOURCE_TYPENAME` and adds with `qt_target_qml_sources` (without it, Qt names a file after the text before its first dot: a second `EngramApp`). The variant's root is exactly the default's root for that tree plus one comment line naming it, so its interface is the default's by construction; QML has no declaration another file could import, and a file's declarations are members of its own type, so nothing collides. `from_pipeline_variant_with_options` emits it under a native-complete shell's strict policy. A variant whose type would be the component's own name or a name the shell owns (`SHELL_RESERVED_NAMES`) is refused with the new `PipelineEmitError::InvalidLayoutVariant`.

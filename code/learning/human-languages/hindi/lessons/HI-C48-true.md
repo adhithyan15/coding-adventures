@@ -59,7 +59,8 @@ The first of five short replies.
 - [YOU SAY: *sac*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sac*, then *paṛosī*, so the reply and the person sit together]
-- [YOU RECALL: say *bāl*, then read **शिक्षक**]
+- [YOU RECALL: say *bāl*]
+- [YOU READ: **शिक्षक**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01] -->

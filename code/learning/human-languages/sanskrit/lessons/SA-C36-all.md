@@ -59,7 +59,8 @@ A reply that says nothing has been left out.
 - [YOU SAY: *sarvam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *api*, then *sarvam*]
-- [YOU RECALL: read **ग्रीवा**, then say *madhu*]
+- [YOU READ: **ग्रीवा**]
+- [YOU RECALL: say *madhu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02] -->

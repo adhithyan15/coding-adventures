@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Answering, Meeting, and Three Ways to Play",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7ae0074831a82ef7",
+  "sourceHash": "fnv1a64:4d0e2ae2a2f2ce71",
   "lessons": [
     {
       "id": "PT-C22-responder",
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37d798031e120e73",
+      "sourceHash": "fnv1a64:c34ee51205a0580b",
       "notice": null,
       "blocks": [
         {
@@ -549,11 +549,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "with both hands — \"a mão, as duas mãos\"",
+              "instruction": "one hand, then both — \"a mão, as duas mãos\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: with both hands — \"a mão, as duas mãos\"]"
+              "source": "[YOU SAY: one hand, then both — \"a mão, as duas mãos\"]"
             },
             {
               "kind": "prompt",

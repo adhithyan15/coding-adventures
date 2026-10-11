@@ -39,8 +39,8 @@ reviews_of: [ZH-C06-zaijian, ZH-C05-practice, ZH-C01-nihao]
 ## The exchange
 <!-- hl-knowledge: introduces=[ZH-DIALOGUE-PART]; assesses=[ZH-LEX-ZAIJIAN, ZH-LEX-BUSHI, ZH-LEX-SHI, ZH-TONE-SANDHI-BU] -->
 
-Everything below is a character you have written yourself. Read it straight
-through:
+Everything below is a character you have written yourself.
+[YOU READ: the exchange straight through]
 
 > **A:** 你好
 >
@@ -74,8 +74,7 @@ every line from characters and rules.
 ## What you've built — and what stays invisible
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-SANDHI-BU] -->
 
-Read the exchange out loud once more, and count the places where your mouth does
-something the page does not record:
+[YOU READ: the exchange out loud once more, and count the places where your mouth does something the page does not record]
 
 - **你好** is written with two low dipping tones and spoken *ní hǎo* — the first
   one rises.

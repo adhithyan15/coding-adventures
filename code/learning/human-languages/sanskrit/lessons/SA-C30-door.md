@@ -59,7 +59,8 @@ A door, and a word that reached every branch of the family.
 - [YOU SAY: *dvāram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dvāram*, and name two of its cousins outside India]
-- [YOU RECALL: say *idānīm*, then read **कृपया**]
+- [YOU RECALL: say *idānīm*]
+- [YOU READ: **कृपया**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01] -->

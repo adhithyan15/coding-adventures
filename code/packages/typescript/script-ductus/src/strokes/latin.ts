@@ -51,8 +51,28 @@
 // (about six in ten of those writers; three in ten go down to the left, which
 // each record's variation says); ü's dots go left, then right.
 //
-// LEFT OUT. The grave, the circumflex, the cedilla, the macron, æ and œ have
-// no source; ä, ö, ë, ï and ÿ would follow ü only by analogy.
+// BY ANALOGY. No reachable source records the grave, the circumflex, the
+// macron or the cedilla, or the diaeresis on any letter but ü: the school
+// model has no marked letter, and UJIpenchars2 holds Spanish characters only.
+// So è ê ë ï ä ö ē and ç are drawn BY ANALOGY, not separately sourced, and
+// each of their records says so: the cited base letter's own path, a lift,
+// then the mark last, as the cited ü (the left dot, then the right dot) and
+// the cited acute and tilde are drawn. A mark no cited record gives a
+// direction runs left to right and top to bottom: the grave down to the
+// right, the circumflex up to its peak and down, the macron to the right, the
+// cedilla down from the c's foot and round along the printed hook.
+//
+//     cited                       by analogy
+//     -----                       ----------
+//     é  e, lift, acute     ->    è ê ē   e, lift, grave / circumflex / macron
+//     ü  u, lift, dot, dot  ->    ë ï ä ö base, lift, left dot, lift, right dot
+//     ñ  n, lift, tilde     ->    ç       c, lift, cedilla
+//
+// v, m and R follow the Grundschrift-App like every other letter; the
+// native-writer counts were out of reach when they were added, and their
+// records say so.
+//
+// LEFT OUT. æ, œ and ÿ, and the capitals with marks.
 // ---------------------------------------------------------------------------
 
 import type { StrokeSource } from "../strokes.ts";
@@ -1968,6 +1988,798 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: latinLetterSource("ü"),
+    },
+  ],
+  // v. 1 stroke from the top left: down to the point, then up to the top right.
+  [
+    "latin:v",
+    {
+      script: "latin",
+      glyph: "v",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "down to the point, then up",
+              path: [
+                { x: 58, y: 468 },
+                { x: 86, y: 434 },
+                { x: 104, y: 394 },
+                { x: 120, y: 353 },
+                { x: 136, y: 312 },
+                { x: 151, y: 270 },
+                { x: 168, y: 229 },
+                { x: 183, y: 188 },
+                { x: 199, y: 147 },
+                { x: 216, y: 106 },
+                { x: 239, y: 69 },
+                { x: 276, y: 74 },
+                { x: 305, y: 108 },
+                { x: 323, y: 148 },
+                { x: 339, y: 189 },
+                { x: 354, y: 231 },
+                { x: 370, y: 272 },
+                { x: 386, y: 313 },
+                { x: 402, y: 354 },
+                { x: 418, y: 395 },
+                { x: 437, y: 435 },
+                { x: 466, y: 468 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("v"),
+    },
+  ],
+  // m. 1 stroke: the stem, back up it, the first arch and down, back up, the second arch and down.
+  [
+    "latin:m",
+    {
+      script: "latin",
+      glyph: "m",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem down",
+              path: [
+                { x: 117, y: 448 },
+                { x: 124, y: 404 },
+                { x: 129, y: 359 },
+                { x: 129, y: 314 },
+                { x: 129, y: 269 },
+                { x: 129, y: 224 },
+                { x: 129, y: 179 },
+                { x: 129, y: 134 },
+                { x: 129, y: 89 },
+                { x: 129, y: 44 },
+              ],
+            },
+            {
+              label: "back up, over and down",
+              path: [
+                { x: 129, y: 44 },
+                { x: 129, y: 90 },
+                { x: 129, y: 136 },
+                { x: 129, y: 181 },
+                { x: 129, y: 227 },
+                { x: 129, y: 273 },
+                { x: 129, y: 319 },
+                { x: 137, y: 364 },
+                { x: 174, y: 389 },
+                { x: 209, y: 419 },
+                { x: 246, y: 446 },
+                { x: 289, y: 460 },
+                { x: 335, y: 459 },
+                { x: 373, y: 436 },
+                { x: 405, y: 403 },
+                { x: 419, y: 361 },
+                { x: 417, y: 315 },
+                { x: 417, y: 269 },
+                { x: 417, y: 223 },
+                { x: 417, y: 177 },
+                { x: 417, y: 131 },
+                { x: 416, y: 86 },
+                { x: 413, y: 40 },
+              ],
+            },
+            {
+              label: "back up, over and down",
+              path: [
+                { x: 413, y: 40 },
+                { x: 413, y: 86 },
+                { x: 413, y: 132 },
+                { x: 413, y: 177 },
+                { x: 413, y: 223 },
+                { x: 413, y: 269 },
+                { x: 414, y: 315 },
+                { x: 419, y: 360 },
+                { x: 451, y: 389 },
+                { x: 488, y: 416 },
+                { x: 525, y: 443 },
+                { x: 568, y: 459 },
+                { x: 613, y: 463 },
+                { x: 652, y: 441 },
+                { x: 683, y: 407 },
+                { x: 698, y: 365 },
+                { x: 701, y: 319 },
+                { x: 701, y: 273 },
+                { x: 701, y: 227 },
+                { x: 701, y: 181 },
+                { x: 701, y: 136 },
+                { x: 701, y: 90 },
+                { x: 701, y: 44 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("m"),
+    },
+  ],
+  // R. 2 strokes: the stem; then over the top, round the bowl clockwise, back along its foot and down the leg.
+  [
+    "latin:R",
+    {
+      script: "latin",
+      glyph: "R",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem down",
+              path: [
+                { x: 130, y: 668 },
+                { x: 130, y: 623 },
+                { x: 130, y: 579 },
+                { x: 130, y: 534 },
+                { x: 130, y: 490 },
+                { x: 130, y: 445 },
+                { x: 130, y: 401 },
+                { x: 130, y: 356 },
+                { x: 130, y: 311 },
+                { x: 130, y: 267 },
+                { x: 130, y: 222 },
+                { x: 130, y: 178 },
+                { x: 130, y: 133 },
+                { x: 130, y: 89 },
+                { x: 130, y: 44 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then over the top and round the bowl",
+              path: [
+                { x: 134, y: 664 },
+                { x: 176, y: 676 },
+                { x: 221, y: 676 },
+                { x: 265, y: 676 },
+                { x: 309, y: 677 },
+                { x: 353, y: 671 },
+                { x: 395, y: 658 },
+                { x: 430, y: 632 },
+                { x: 461, y: 599 },
+                { x: 470, y: 557 },
+                { x: 473, y: 513 },
+                { x: 474, y: 469 },
+                { x: 461, y: 428 },
+                { x: 430, y: 396 },
+                { x: 396, y: 368 },
+                { x: 355, y: 350 },
+                { x: 314, y: 336 },
+                { x: 271, y: 344 },
+                { x: 227, y: 344 },
+                { x: 182, y: 344 },
+                { x: 138, y: 344 },
+              ],
+            },
+            {
+              label: "back along the foot of the bowl and down the leg",
+              path: [
+                { x: 138, y: 344 },
+                { x: 182, y: 344 },
+                { x: 227, y: 344 },
+                { x: 271, y: 344 },
+                { x: 314, y: 335 },
+                { x: 336, y: 297 },
+                { x: 360, y: 260 },
+                { x: 385, y: 223 },
+                { x: 410, y: 187 },
+                { x: 436, y: 151 },
+                { x: 462, y: 114 },
+                { x: 490, y: 80 },
+                { x: 522, y: 49 },
+                { x: 558, y: 24 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("R"),
+    },
+  ],
+  // è. 2 strokes BY ANALOGY (not separately sourced): the e as above, then the grave, down to the right.
+  [
+    "latin:è",
+    {
+      script: "latin",
+      glyph: "è",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the bar to the right",
+              path: [
+                { x: 102, y: 276 },
+                { x: 150, y: 272 },
+                { x: 198, y: 272 },
+                { x: 246, y: 272 },
+                { x: 294, y: 272 },
+                { x: 342, y: 272 },
+                { x: 390, y: 272 },
+                { x: 434, y: 288 },
+              ],
+            },
+            {
+              label: "curve up, round and down",
+              path: [
+                { x: 434, y: 288 },
+                { x: 434, y: 333 },
+                { x: 425, y: 377 },
+                { x: 403, y: 417 },
+                { x: 369, y: 447 },
+                { x: 327, y: 464 },
+                { x: 282, y: 468 },
+                { x: 237, y: 467 },
+                { x: 194, y: 454 },
+                { x: 158, y: 427 },
+                { x: 129, y: 393 },
+                { x: 108, y: 352 },
+                { x: 102, y: 308 },
+                { x: 98, y: 263 },
+                { x: 94, y: 218 },
+                { x: 99, y: 173 },
+                { x: 116, y: 131 },
+                { x: 145, y: 97 },
+                { x: 178, y: 65 },
+                { x: 216, y: 41 },
+                { x: 260, y: 32 },
+                { x: 305, y: 32 },
+                { x: 351, y: 33 },
+                { x: 395, y: 42 },
+                { x: 438, y: 56 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the grave, down to the right",
+              path: [
+                { x: 170, y: 748 },
+                { x: 206, y: 712 },
+                { x: 240, y: 676 },
+                { x: 273, y: 638 },
+                { x: 306, y: 600 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("è"),
+    },
+  ],
+  // ê. 2 strokes BY ANALOGY (not separately sourced): the e as above, then the circumflex, up and down.
+  [
+    "latin:ê",
+    {
+      script: "latin",
+      glyph: "ê",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the bar to the right",
+              path: [
+                { x: 102, y: 276 },
+                { x: 150, y: 272 },
+                { x: 198, y: 272 },
+                { x: 246, y: 272 },
+                { x: 294, y: 272 },
+                { x: 342, y: 272 },
+                { x: 390, y: 272 },
+                { x: 434, y: 288 },
+              ],
+            },
+            {
+              label: "curve up, round and down",
+              path: [
+                { x: 434, y: 288 },
+                { x: 434, y: 333 },
+                { x: 425, y: 377 },
+                { x: 403, y: 417 },
+                { x: 369, y: 447 },
+                { x: 327, y: 464 },
+                { x: 282, y: 468 },
+                { x: 237, y: 467 },
+                { x: 194, y: 454 },
+                { x: 158, y: 427 },
+                { x: 129, y: 393 },
+                { x: 108, y: 352 },
+                { x: 102, y: 308 },
+                { x: 98, y: 263 },
+                { x: 94, y: 218 },
+                { x: 99, y: 173 },
+                { x: 116, y: 131 },
+                { x: 145, y: 97 },
+                { x: 178, y: 65 },
+                { x: 216, y: 41 },
+                { x: 260, y: 32 },
+                { x: 305, y: 32 },
+                { x: 351, y: 33 },
+                { x: 395, y: 42 },
+                { x: 438, y: 56 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the circumflex, up and down to the right",
+              path: [
+                { x: 114, y: 592 },
+                { x: 147, y: 621 },
+                { x: 178, y: 652 },
+                { x: 207, y: 685 },
+                { x: 236, y: 718 },
+                { x: 273, y: 739 },
+                { x: 312, y: 722 },
+                { x: 343, y: 691 },
+                { x: 372, y: 659 },
+                { x: 403, y: 627 },
+                { x: 434, y: 596 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("ê"),
+    },
+  ],
+  // ë. 3 strokes BY ANALOGY with ü (not separately sourced): the e as above, then the left dot, then the right dot.
+  [
+    "latin:ë",
+    {
+      script: "latin",
+      glyph: "ë",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the bar to the right",
+              path: [
+                { x: 102, y: 276 },
+                { x: 150, y: 272 },
+                { x: 198, y: 272 },
+                { x: 246, y: 272 },
+                { x: 294, y: 272 },
+                { x: 342, y: 272 },
+                { x: 390, y: 272 },
+                { x: 434, y: 288 },
+              ],
+            },
+            {
+              label: "curve up, round and down",
+              path: [
+                { x: 434, y: 288 },
+                { x: 434, y: 333 },
+                { x: 425, y: 377 },
+                { x: 403, y: 417 },
+                { x: 369, y: 447 },
+                { x: 327, y: 464 },
+                { x: 282, y: 468 },
+                { x: 237, y: 467 },
+                { x: 194, y: 454 },
+                { x: 158, y: 427 },
+                { x: 129, y: 393 },
+                { x: 108, y: 352 },
+                { x: 102, y: 308 },
+                { x: 98, y: 263 },
+                { x: 94, y: 218 },
+                { x: 99, y: 173 },
+                { x: 116, y: 131 },
+                { x: 145, y: 97 },
+                { x: 178, y: 65 },
+                { x: 216, y: 41 },
+                { x: 260, y: 32 },
+                { x: 305, y: 32 },
+                { x: 351, y: 33 },
+                { x: 395, y: 42 },
+                { x: 438, y: 56 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the left dot",
+              path: [
+                { x: 175, y: 689 },
+                { x: 175, y: 657 },
+                { x: 175, y: 625 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the right dot",
+              path: [
+                { x: 380, y: 689 },
+                { x: 380, y: 657 },
+                { x: 380, y: 625 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("ë"),
+    },
+  ],
+  // ï. 3 strokes BY ANALOGY with ü (not separately sourced): the stem of i, then the left dot, then the right dot.
+  [
+    "latin:ï",
+    {
+      script: "latin",
+      glyph: "ï",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem down",
+              path: [
+                { x: 136, y: 452 },
+                { x: 136, y: 407 },
+                { x: 136, y: 361 },
+                { x: 136, y: 316 },
+                { x: 136, y: 271 },
+                { x: 140, y: 225 },
+                { x: 140, y: 180 },
+                { x: 140, y: 135 },
+                { x: 140, y: 89 },
+                { x: 140, y: 44 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the left dot",
+              path: [
+                { x: 36, y: 689 },
+                { x: 36, y: 657 },
+                { x: 36, y: 625 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the right dot",
+              path: [
+                { x: 241, y: 689 },
+                { x: 241, y: 657 },
+                { x: 241, y: 625 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("ï"),
+    },
+  ],
+  // ä. 3 strokes BY ANALOGY with ü (not separately sourced): the a as above, then the left dot, then the right dot.
+  [
+    "latin:ä",
+    {
+      script: "latin",
+      glyph: "ä",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "round the bowl from the top right",
+              path: [
+                { x: 431, y: 448 },
+                { x: 388, y: 462 },
+                { x: 344, y: 468 },
+                { x: 299, y: 468 },
+                { x: 254, y: 463 },
+                { x: 212, y: 447 },
+                { x: 178, y: 418 },
+                { x: 147, y: 385 },
+                { x: 125, y: 346 },
+                { x: 111, y: 304 },
+                { x: 101, y: 260 },
+                { x: 99, y: 215 },
+                { x: 99, y: 170 },
+                { x: 106, y: 126 },
+                { x: 123, y: 84 },
+                { x: 152, y: 50 },
+                { x: 193, y: 33 },
+                { x: 237, y: 36 },
+                { x: 276, y: 58 },
+                { x: 308, y: 90 },
+                { x: 335, y: 126 },
+                { x: 357, y: 165 },
+                { x: 380, y: 204 },
+                { x: 411, y: 236 },
+                { x: 427, y: 276 },
+              ],
+            },
+            {
+              label: "back up, then down to the foot",
+              path: [
+                { x: 427, y: 276 },
+                { x: 434, y: 322 },
+                { x: 435, y: 368 },
+                { x: 435, y: 414 },
+                { x: 435, y: 418 },
+                { x: 435, y: 371 },
+                { x: 435, y: 325 },
+                { x: 429, y: 279 },
+                { x: 436, y: 234 },
+                { x: 447, y: 190 },
+                { x: 447, y: 144 },
+                { x: 451, y: 98 },
+                { x: 459, y: 52 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the left dot",
+              path: [
+                { x: 188, y: 689 },
+                { x: 188, y: 657 },
+                { x: 188, y: 625 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the right dot",
+              path: [
+                { x: 393, y: 689 },
+                { x: 393, y: 657 },
+                { x: 393, y: 625 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("ä"),
+    },
+  ],
+  // ö. 3 strokes BY ANALOGY with ü (not separately sourced): the o as above, then the left dot, then the right dot.
+  [
+    "latin:ö",
+    {
+      script: "latin",
+      glyph: "ö",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "round to the left, back to the top",
+              path: [
+                { x: 278, y: 468 },
+                { x: 234, y: 463 },
+                { x: 193, y: 445 },
+                { x: 161, y: 415 },
+                { x: 130, y: 383 },
+                { x: 108, y: 344 },
+                { x: 96, y: 301 },
+                { x: 94, y: 257 },
+                { x: 94, y: 212 },
+                { x: 101, y: 168 },
+                { x: 116, y: 126 },
+                { x: 141, y: 90 },
+                { x: 173, y: 59 },
+                { x: 212, y: 38 },
+                { x: 256, y: 29 },
+                { x: 300, y: 29 },
+                { x: 343, y: 40 },
+                { x: 379, y: 65 },
+                { x: 411, y: 97 },
+                { x: 440, y: 131 },
+                { x: 456, y: 172 },
+                { x: 462, y: 216 },
+                { x: 462, y: 261 },
+                { x: 460, y: 305 },
+                { x: 449, y: 348 },
+                { x: 429, y: 388 },
+                { x: 398, y: 420 },
+                { x: 364, y: 449 },
+                { x: 322, y: 463 },
+                { x: 278, y: 468 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the left dot",
+              path: [
+                { x: 175, y: 689 },
+                { x: 175, y: 657 },
+                { x: 175, y: 625 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the right dot",
+              path: [
+                { x: 380, y: 689 },
+                { x: 380, y: 657 },
+                { x: 380, y: 625 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("ö"),
+    },
+  ],
+  // ē. 2 strokes BY ANALOGY (not separately sourced): the e as above, then the macron, left to right.
+  [
+    "latin:ē",
+    {
+      script: "latin",
+      glyph: "ē",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the bar to the right",
+              path: [
+                { x: 102, y: 276 },
+                { x: 150, y: 272 },
+                { x: 198, y: 272 },
+                { x: 246, y: 272 },
+                { x: 294, y: 272 },
+                { x: 342, y: 272 },
+                { x: 390, y: 272 },
+                { x: 434, y: 288 },
+              ],
+            },
+            {
+              label: "curve up, round and down",
+              path: [
+                { x: 434, y: 288 },
+                { x: 434, y: 333 },
+                { x: 425, y: 377 },
+                { x: 403, y: 417 },
+                { x: 369, y: 447 },
+                { x: 327, y: 464 },
+                { x: 282, y: 468 },
+                { x: 237, y: 467 },
+                { x: 194, y: 454 },
+                { x: 158, y: 427 },
+                { x: 129, y: 393 },
+                { x: 108, y: 352 },
+                { x: 102, y: 308 },
+                { x: 98, y: 263 },
+                { x: 94, y: 218 },
+                { x: 99, y: 173 },
+                { x: 116, y: 131 },
+                { x: 145, y: 97 },
+                { x: 178, y: 65 },
+                { x: 216, y: 41 },
+                { x: 260, y: 32 },
+                { x: 305, y: 32 },
+                { x: 351, y: 33 },
+                { x: 395, y: 42 },
+                { x: 438, y: 56 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the macron, left to right",
+              path: [
+                { x: 130, y: 640 },
+                { x: 172, y: 640 },
+                { x: 215, y: 640 },
+                { x: 257, y: 640 },
+                { x: 299, y: 640 },
+                { x: 341, y: 640 },
+                { x: 384, y: 640 },
+                { x: 426, y: 640 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("ē"),
+    },
+  ],
+  // ç. 2 strokes BY ANALOGY (not separately sourced): the c as above, then the cedilla, down and round to the left.
+  [
+    "latin:ç",
+    {
+      script: "latin",
+      glyph: "ç",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve round to the left and down",
+              path: [
+                { x: 394, y: 448 },
+                { x: 350, y: 461 },
+                { x: 304, y: 464 },
+                { x: 259, y: 463 },
+                { x: 215, y: 451 },
+                { x: 175, y: 427 },
+                { x: 143, y: 395 },
+                { x: 118, y: 356 },
+                { x: 102, y: 313 },
+                { x: 98, y: 268 },
+                { x: 98, y: 222 },
+                { x: 100, y: 176 },
+                { x: 116, y: 133 },
+                { x: 145, y: 97 },
+                { x: 177, y: 65 },
+                { x: 216, y: 41 },
+                { x: 261, y: 32 },
+                { x: 306, y: 29 },
+                { x: 352, y: 34 },
+                { x: 394, y: 52 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then the cedilla, down and round to the left",
+              path: [
+                { x: 282, y: 22 },
+                { x: 278, y: -22 },
+                { x: 291, y: -61 },
+                { x: 332, y: -75 },
+                { x: 363, y: -106 },
+                { x: 367, y: -149 },
+                { x: 340, y: -183 },
+                { x: 302, y: -204 },
+                { x: 258, y: -206 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: latinLetterSource("ç"),
     },
   ],
 ];

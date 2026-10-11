@@ -6,6 +6,95 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 static SEQ: AtomicUsize = AtomicUsize::new(0);
 
+#[test]
+fn rooted_identifier_suffix_paste_in_header_reaches_lowering_and_reports_call_site() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_suffix_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("part.h"),
+        b"#define NAME tail\n#define NAMEpost 7\n#define SUFFIX(x) x ## post\n",
+    );
+    write_fresh(
+        &root.join("main.c"),
+        b"#include \"part.h\"\nint value(void) { return SUFFIX(NAME); }\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "suffix_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    write_fresh(
+        &root.join("bad.c"),
+        b"#include \"part.h\"\nint value(void) { return SUFFIX(4); }\n",
+    );
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "bad_suffix",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!(error.line, 2);
+}
+
+#[test]
+fn rooted_identifier_prefix_paste_uses_raw_argument_and_rescans() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_paste_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("main.c"),
+        b"#define NAME tail\n#define preNAME 7\n#define PREFIX(x) pre ## x\nint value(void) { return PREFIX(NAME); }\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "paste_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    std::fs::remove_dir_all(&root).unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+}
+
+#[test]
+fn rooted_stringize_preserves_raw_macro_spelling() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_stringize_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("main.c"),
+        b"#define WORD expanded\n#define S(x) #x\nint main(void) { printf(S(WORD)); return 0; }\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "stringize_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    std::fs::remove_dir_all(&root).unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("WORD"), "{text}");
+    assert!(!text.contains("expanded"), "{text}");
+}
+
 fn write_fresh(path: &std::path::Path, contents: &[u8]) {
     std::fs::OpenOptions::new()
         .write(true)
@@ -14,6 +103,122 @@ fn write_fresh(path: &std::path::Path, contents: &[u8]) {
         .unwrap()
         .write_all(contents)
         .unwrap();
+}
+
+#[test]
+fn rooted_hexadecimal_stringize_header_raw_and_forwarded_spelling_reach_lowering() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_hex_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("part.h"),
+        b"#define H 0X00aF\n#define S(x) #x\n#define OUTER(x) S(x)\n",
+    );
+    write_fresh(&root.join("main.c"), b"#include \"part.h\"\nint main(void) { printf(S(0x00Ab)); printf(S(H)); printf(OUTER(H)); return 0; }\n");
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "hex_stringize_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("0x00Ab"), "{text}");
+    assert!(text.contains("0X00aF"), "{text}");
+    // Keep the original program as the native oracle. Only that leg needs
+    // stdio.h; the bounded frontend reads the real local macro header above.
+    let expected = b"0x00AbH0X00aF";
+    if std::process::Command::new("ruby")
+        .arg("--version")
+        .output()
+        .is_ok_and(|output| output.status.success())
+    {
+        let script = root.join("output.rb");
+        write_fresh(
+            &script,
+            semantic_ir_to_ruby::compile(&module)
+                .unwrap()
+                .source
+                .as_bytes(),
+        );
+        let output = std::process::Command::new("ruby")
+            .arg(&script)
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(output.stdout, expected);
+    }
+    let cc = std::env::var("SIR_CC")
+        .ok()
+        .filter(|cc| !cc.trim().is_empty())
+        .or_else(|| {
+            ["clang", "gcc"]
+                .into_iter()
+                .find(|cc| {
+                    std::process::Command::new(cc)
+                        .arg("--version")
+                        .output()
+                        .is_ok_and(|output| output.status.success())
+                })
+                .map(str::to_string)
+        });
+    if let Some(cc) = cc {
+        write_fresh(
+            &root.join("native.c"),
+            b"#include <stdio.h>\n#include \"main.c\"\n",
+        );
+        write_fresh(
+            &root.join("emitted.c"),
+            semantic_ir_to_c::compile(&module)
+                .unwrap()
+                .source
+                .as_bytes(),
+        );
+        for stem in ["native", "emitted"] {
+            let source = root.join(format!("{stem}.c"));
+            let exe = root.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
+            let mut build = std::process::Command::new(&cc);
+            build.arg("-std=c99").arg(&source).arg("-o").arg(&exe);
+            // The emitted runtime includes math helpers; Linux links libm
+            // separately, while Windows supplies them through its C runtime.
+            if !cfg!(windows) {
+                build.arg("-lm");
+            }
+            let build = build.output().unwrap();
+            assert!(
+                build.status.success(),
+                "{}",
+                String::from_utf8_lossy(&build.stderr)
+            );
+            let output = std::process::Command::new(&exe).output().unwrap();
+            assert!(
+                output.status.success(),
+                "{}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            assert_eq!(output.stdout, expected);
+        }
+    }
+    write_fresh(
+        &root.join("bad.c"),
+        b"#include \"part.h\"\nint main(void) { printf(S(0x1u)); return 0; }\n",
+    );
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "bad_hex_stringize",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    assert_eq!(error.line, 2);
+    std::fs::remove_dir_all(&root).unwrap();
 }
 
 #[test]
@@ -82,6 +287,77 @@ fn malformed_condition_reports_its_directive_location() {
         "main.c",
         [root.clone()],
         "bad_condition",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (1, 1), "{error}");
+}
+
+#[test]
+fn rooted_elif_selects_macro_branch_and_reports_active_condition_error() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_elif_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#define FLAG 7\n#if 0\nint value(void) { return 0; }\n#elif defined(FLAG) && FLAG == 7\nint value(void) { return FLAG; }\n#elif 1 / 0\nint value(void) { return 9; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 0\nint value(void) { return 0; }\n#elif 1 / 0\nint value(void) { return 1; }\n#endif\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "elif_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "elif_bad",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (3, 1), "{error}");
+}
+
+#[test]
+fn rooted_logical_conditions_skip_unneeded_values_but_keep_syntax_errors() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_short_circuit_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#if 0 && 1 / 0\nint value(void) { return 0; }\n#elif 1 || 1 / 0\nint value(void) { return 7; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 1 || (1 + 2)\nint value(void) { return 7; }\n#endif\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "short_circuit_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    assert!(semantic_ir::print_module(&module).contains("(block (int 7))"));
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "short_circuit_bad",
         Bounds::default(),
     )
     .unwrap_err();

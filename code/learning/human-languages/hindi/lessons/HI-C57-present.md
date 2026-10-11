@@ -58,7 +58,7 @@ The first of five things that travel with thanks.
 [PAUSE 1s]
 - [YOU SAY: *tohfā*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: *tohfā*, offered with both hands]
+- [YOU SAY: *tohfā*, as if offering it]
 - [YOU RECALL: say *sūraj*, then say *saṛak*]
 
 ## Wrap-up Recall

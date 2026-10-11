@@ -56,7 +56,8 @@ Five, and the run is closed: hunger, thirst, sleep, a fever, and pain.
 - [YOU SAY: *vali*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pasi*, *tākam*, *tūkkam*, *kāyccal*, *vali*]
-- [YOU RECALL: say *sarkkarai*, then read **சீப்பு**]
+- [YOU RECALL: say *sarkkarai*]
+- [YOU READ: **சீப்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05] -->

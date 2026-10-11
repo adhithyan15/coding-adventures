@@ -58,7 +58,8 @@ Three, and this is what the animals get.
 - [YOU SAY: *gaḍḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gaḍḍi*, then *gēde*, and say which one is carried to the other]
-- [YOU RECALL: say *ayitē*, then read **మనవి** and say what it means]
+- [YOU RECALL: say *ayitē*]
+- [YOU READ: **మనవి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03] -->

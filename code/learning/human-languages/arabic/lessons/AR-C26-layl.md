@@ -6,6 +6,7 @@ sequence: 700
 chapter: 26
 type: word
 headword: ليل
+romanization: "layl"
 gloss: "night" — the word already hiding inside muntaṣaf al-layl ('midnight'), and yawm's pan-Semitic partner, cognate with Hebrew layla
 concept_tag: TIME-NIGHT
 prerequisites: [AR-C15-ad-duhr-muntasaf-al-layl, AR-C25-yawm]

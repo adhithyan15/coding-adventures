@@ -56,7 +56,8 @@ Three.
 - [YOU SAY: *kuṭai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuṭai*, then *maḻai*, and say which one you take out for the other]
-- [YOU RECALL: say *kōḻi*, then read **எண்ணெய்**]
+- [YOU RECALL: say *kōḻi*]
+- [YOU READ: **எண்ணெய்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03] -->

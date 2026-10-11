@@ -29,7 +29,7 @@ variety: standard-colloquial
 ---
 
 
-# நன்றி (naṉṟi) — "thank you"
+# Naṉṟi — "thank you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -37,10 +37,10 @@ variety: standard-colloquial
 [PAUSE 2s] One word again. This is the one you will reach for second-most, and
 Tamil says it with a noun rather than a verb.
 
-## You'll want to know: நன்றி
+## You'll want to know: naṉṟi
 <!-- hl-knowledge: introduces=[TA-LEX-C01-NANDRI-01]; assesses=[] -->
 
-**நன்றி** — *naṉṟi* — **"thank you."**
+*naṉṟi* — **"thank you."**
 
 Two beats: *naṉ-ṟi*. The *ṉ* and the *ṟ* are both made further back than English
 *n* and *r*; copy the sound rather than the spelling.
@@ -56,14 +56,16 @@ say *naṉṟi*, and that is a whole sentence.
 
 Say it *naṉ-ṟi*. Tamil hears **three** different *n*
 sounds and this word uses two of them: a **dental** *n* (tongue on the
-teeth) to open, then an **alveolar** *ṉ* (on the ridge just behind them).
-The *ṟ* is its own sound again, not the English *r*. English ears
-flatten all of this to “nandri,” which is close enough to be understood.
+teeth) to open, written **ந**, then an **alveolar** *ṉ* (on the ridge just
+behind them), written **ன**. The *ṟ* is its own sound again, not the English
+*r*, and it has its own letter too: **ற**. English ears flatten all of this to
+“nandri,” which is close enough to be understood. The whole written word joins
+these three letters in the next lesson.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**நன்றி** (*naṉṟi*) grows from the root *nal*, “good” —
+*Naṉṟi* grows from the root *nal*, “good” —
 so it literally means **“goodness.”** To thank, in Tamil, is to name the
 good someone did you.
 
@@ -92,5 +94,5 @@ as a chart.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-NANDRI-01] -->
 
-[PAUSE 3s] Say **நன்றி**. Does it need a verb to be a complete reply? (**No** —
+[PAUSE 3s] Say *naṉṟi*. Does it need a verb to be a complete reply? (**No** —
 it stands alone.) Next: how thanks travels across the family.

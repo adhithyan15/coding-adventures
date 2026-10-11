@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 123,
-  "sourceHash": "fnv1a64:0cedb9c160678413",
+  "sourceHash": "fnv1a64:80f52c634de34994",
   "lessonIds": [
     "GU-C123-kacbo",
     "GU-C123-magar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch123.txt",
   "json": "gujarati/narration/ch123.json",
-  "textHash": "fnv1a64:f5b70691170c2ce2",
-  "jsonHash": "fnv1a64:a69ed1dff441d8d6",
+  "textHash": "fnv1a64:79e44bfc6eba1c77",
+  "jsonHash": "fnv1a64:9475388ff9b4aa33",
   "findings": []
 }

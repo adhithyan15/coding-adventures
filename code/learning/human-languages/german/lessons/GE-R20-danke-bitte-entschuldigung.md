@@ -8,7 +8,7 @@ type: practice
 headword: danke · bitte · Entschuldigung
 gloss: three sizes of thank you, the one word that answers all of them, and the apology that is really an un-blaming
 concept_tag: GE-REVIEW-COURTESY-SET
-prerequisites: [GE-C03-danke, GE-C03-schoen, GE-C03-vielen-dank, GE-C03-bitte, GE-C18-ja, GE-C18-nein, GE-C20-entschuldigung]
+prerequisites: [GE-C03-danke, GE-C03-schoen, GE-C03-vielen-dank, GE-C03-bitte, GE-C18-ja, GE-C18-nein, GE-C20-entschuldigung, GE-C18-nein-more]
 sounds: []
 roots: []
 duration:
@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-SOUND-DANKE-01, GE-LEX-DANKE-SCHOEN-02, GE-LEX-DANK-NOUN-01, GE-LEX-VIELEN-DANK-02, GE-SOUND-BITTE-01, GE-LEX-ENTSCHULDIGUNG-02, GE-PRAGMATICS-SORRY-04, GE-SOUND-JA-03, GE-SOUND-NEIN-03]
+  knowledge: [GE-SOUND-DANKE-01, GE-LEX-DANKE-SCHOEN-02, GE-LEX-DANK-NOUN-01, GE-LEX-VIELEN-DANK-02, GE-SOUND-BITTE-01, GE-LEX-ENTSCHULDIGUNG-02, GE-PRAGMATICS-SORRY-04, GE-SOUND-JA-03, GE-SOUND-NEIN-03, GE-ETYMON-ENTSCHULDIGUNG-03, GE-ETYMON-NEGATION-05, GE-ETYMON-BITTE-04]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, language-focus]
@@ -59,12 +59,12 @@ something different each time:
 
 - [YOU SAY: *please*, asking for something]
 - [YOU SAY: *you're welcome*, answering a thank-you]
-- [YOU SAY: *here you go*, handing something over]
+- [YOU SAY: *here you go*, offering something]
 - [YOU SAY: *pardon?*, when you did not catch it]
 - [YOU SAY: and the two shortest answers there are — *ja*, *nein*]
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ENTSCHULDIGUNG-02, GE-PRAGMATICS-SORRY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ENTSCHULDIGUNG-02, GE-PRAGMATICS-SORRY-04, GE-ETYMON-ENTSCHULDIGUNG-03] -->
 
 **Entschuldigung** is built out of **Schuld**, *guilt* or *fault*, with a prefix
 that undoes it: an *un-guilting*. The word is a request that the blame be
@@ -76,8 +76,10 @@ job in two. German runs one word across both, and the size of the apology is
 carried by your voice rather than by a different word.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VIELEN-DANK-02, GE-LEX-ENTSCHULDIGUNG-02, GE-SOUND-BITTE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VIELEN-DANK-02, GE-LEX-ENTSCHULDIGUNG-02, GE-SOUND-BITTE-01, GE-ETYMON-ENTSCHULDIGUNG-03, GE-ETYMON-NEGATION-05, GE-ETYMON-BITTE-04] -->
 
 [PAUSE 3s] Why is it *vielen Dank* and not *viel Dank*? (**Dank is a noun, so
 viel takes an ending.**) What is inside *Entschuldigung*? (**Schuld**, guilt —
 the word asks for it to be undone.) Name two things *bitte* can mean.
+
+[PAUSE 2s] Which old sound says *no* in *nein*, English *no* and Latin *nōn* alike? (The ***n‑*** — one negative behind all three.) And what is *bitte* doing, at root? (**Asking** — *bitten*, cousin of English *bid*.)

@@ -58,7 +58,8 @@ Three. The first one here you push rather than swing.
 - [YOU SAY: *pāra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāra*, then *rampaṁ*, and say which one you push]
-- [YOU RECALL: say *gaḍapa*, then read **పాట** and say what it means]
+- [YOU RECALL: say *gaḍapa*]
+- [YOU READ: **పాట**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03] -->

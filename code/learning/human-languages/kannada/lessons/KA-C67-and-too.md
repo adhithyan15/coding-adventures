@@ -74,7 +74,8 @@ ending **-ೂ**.
 - [YOU SAY: all four joins in a row — *mattu*, *athavā*, *ādare*, and *-ū* on a noun]
 - [YOU RECALL: say *kūḍa*, then say *nānū*, and say what the two have in common]
 - [YOU RECALL: from much earlier — say *vandane*, *vaidya*, *vidyārthi*, *śikṣaka*, and say what each one means]
-- [YOU RECALL: read **ಸೌಜನ್ಯ**, then say *hola*]
+- [YOU READ: **ಸೌಜನ್ಯ**]
+- [YOU RECALL: say *hola*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C67-LINK-06, KA-LEX-C39-HAALU-01, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C51-COURTESY-05, KA-LEX-C64-JOIN-02, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C67-LINK-05, KA-SCRIPT-RECOG-134] -->

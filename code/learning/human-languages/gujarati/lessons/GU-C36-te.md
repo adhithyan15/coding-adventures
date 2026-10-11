@@ -65,7 +65,7 @@ last chapter came from as well.
 [PAUSE 1s]
 - [YOU SAY: *hũ*, then *te*. Yourself, then someone absent.]
 - [YOU BUILD: a sentence about someone who is not in the room.]
-- [YOU SAY: *te* as *that*, pointing at something across the room.]
+- [YOU SAY: *te* as *that*, picturing something across the room.]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-PRON-TE-01] -->

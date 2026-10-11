@@ -4,18 +4,18 @@
     "language": "russian",
     "chapter": 27,
     "sequence": 1350,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:f448ffd52146c230"
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fbb19dfd5ce08dd0"
   },
   "findings": []
 }

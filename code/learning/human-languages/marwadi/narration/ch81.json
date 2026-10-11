@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C81-dur-type",
-              "prompt": "Type the Marwadi for 'far'.",
+              "prompt": "Say the Marwadi for 'far'.",
               "assesses": [
                 "MW-LEX-C81-PLACE81-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C81-najik-type",
-              "prompt": "Type the Marwadi for 'near'.",
+              "prompt": "Say the Marwadi for 'near'.",
               "assesses": [
                 "MW-LEX-C81-PLACE81-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C81-may-type",
-              "prompt": "Type the Marwadi for 'inside'.",
+              "prompt": "Say the Marwadi for 'inside'.",
               "assesses": [
                 "MW-LEX-C81-PLACE81-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C81-barai-type",
-              "prompt": "Type the Marwadi for 'outside'.",
+              "prompt": "Say the Marwadi for 'outside'.",
               "assesses": [
                 "MW-LEX-C81-PLACE81-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C81-niche-type",
-              "prompt": "Type the Marwadi for 'below, down'.",
+              "prompt": "Say the Marwadi for 'below, down'.",
               "assesses": [
                 "MW-LEX-C81-PLACE81-05"
               ],

@@ -695,6 +695,12 @@ fn lease_error(error: VaultRuntimeError) -> ToolCallError {
             ToolErrorKind::ToolPermissionDenied,
             errors::AGENT_NOT_PERMITTED,
         ),
+        // Unreachable on the request paths: only `consume_for` returns it,
+        // and no vault tool redeems. Mapped as a refusal for exhaustiveness.
+        VaultRuntimeError::DestinationNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::AGENT_NOT_PERMITTED,
+        ),
         VaultRuntimeError::InvalidConsumerAgentId => {
             // Unreachable on this path: request_lease takes no consumer. Mapped
             // rather than panicked because a handler that aborts the process on
@@ -732,6 +738,12 @@ fn direct_error(error: VaultRuntimeError) -> ToolCallError {
             errors::MODE_NOT_PERMITTED,
         ),
         VaultRuntimeError::AgentNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::AGENT_NOT_PERMITTED,
+        ),
+        // Unreachable on the request paths: only `consume_for` returns it,
+        // and no vault tool redeems. Mapped as a refusal for exhaustiveness.
+        VaultRuntimeError::DestinationNotPermitted => ToolCallError::new(
             ToolErrorKind::ToolPermissionDenied,
             errors::AGENT_NOT_PERMITTED,
         ),

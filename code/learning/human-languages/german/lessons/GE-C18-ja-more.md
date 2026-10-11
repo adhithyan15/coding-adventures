@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-PRAGMATICS-DOCH-05, GE-LEX-JA-02]
+  knowledge: [GE-PRAGMATICS-DOCH-05, GE-LEX-JA-02, GE-ETYMON-JA-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -32,9 +32,11 @@ reviews_of: [GE-C18-ja]
 # (ja, continued) — A German habit to file away
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JA-02, GE-ETYMON-JA-04] -->
 
 [PAUSE 2s] Before going on: say **ja** again, and what it means.
+
+[PAUSE 2s] Which old English word is *ja*'s direct cousin? (***Yea*** — as in *the yeas and the nays*.)
 
 ## Grammar Lens: A German habit to file away
 <!-- hl-knowledge: introduces=[GE-PRAGMATICS-DOCH-05]; assesses=[] -->

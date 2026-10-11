@@ -44,14 +44,14 @@ can hear it.
 ## Grammar Lens: Ten AND six
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-NUMEROS-16-20-02]; assesses=[] -->
 
-| | Portuguese | build | literally |
-|---|---|---|---|
-| 15 | **quinze** | (fused, inherited) | "five-ten" |
-| **16** | **dezesseis** | **dez + e + seis** | **"ten and six"** |
-| 17 | **dezessete** | dez + e + sete | "ten and seven" |
-| 18 | **dezoito** | dez + oito | "ten eight" |
-| 19 | **dezenove** | dez + e + nove | "ten and nine" |
-| 20 | **vinte** | ← *vīgintī* | — |
+| Portuguese | build | literally |
+|---|---|---|
+| **quinze** (15) | (fused, inherited) | "five-ten" |
+| **dezesseis** (**16**) | **dez + e + seis** | **"ten and six"** |
+| **dezessete** (17) | dez + e + sete | "ten and seven" |
+| **dezoito** (18) | dez + oito | "ten eight" |
+| **dezenove** (19) | dez + e + nove | "ten and nine" |
+| **vinte** (20) | ← *vīgintī* | — |
 
 Every one begins with **dez** ("ten," Chapter 6) and most keep **e** ("and") — so
 *dezesseis* is transparently a little sentence: *ten-and-six*. (*Dezoito* swallows

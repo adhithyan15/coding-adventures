@@ -57,7 +57,8 @@ The largest unit of time you can name.
 - [YOU SAY: *saṁvatsaraṁ*, once more]
 - [YOU SAY: say *ganṭa*, then *rōju*, then *saṁvatsaraṁ*, smallest to largest]
 - [YOU RECALL: say *kānī*, then *sāyantram*, then say *saṁvatsaraṁ*]
-- [YOU RECALL: say *vagaru*, then read **ఎందుకంటే** and say what it means]
+- [YOU RECALL: say *vagaru*]
+- [YOU READ: **ఎందుకంటే**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C75-WHEN-05, TE-LEX-C74-LINK-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02] -->

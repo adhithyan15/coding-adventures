@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 11,
   "title": "Colours",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5acc5d2cbc7f4025",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b646f6c1caf5c712",
   "lessons": [
     {
       "id": "TA-C11-nirangal",
@@ -14,20 +14,13 @@
       "romanization": "karuppu veḷḷai sivappu nīlam",
       "gloss": "black, white, red, blue — three native Tamil colors, and one Sanskrit loan",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77f39c2dad4db880",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ff615e43867d061c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -72,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நீலம் (nīlam) = \"blue\" — from Sanskrit நீல (nīla), \"dark blue,\" the very same root behind Hindi's नीला (nīlā). This nīla is also the name of the indigo plant and its dye — part of why blue dye is so historically linked to India — but be careful: the English word indigo itself is a separate, Greek-derived word (describing where the dye was imported from, not descended from nīla by sound change; see the Hindi color lesson for that careful distinction)."
+              "text": "நீலம் (nīlam) = \"blue\" — from Sanskrit நீல (nīla), \"dark blue,\" the very same root behind Hindi's नीला (nīlā). This nīla is also the name of the indigo plant and its dye — part of why blue dye is so historically linked to India — but be careful: the English word indigo itself is a separate, Greek-derived word (describing where the dye was imported from, not descended from nīla by sound change; the Hindi color lesson draws that careful distinction)."
             }
           ]
         },
@@ -176,7 +169,7 @@
           "Script you'll notice: ழ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ழ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ழ and Guided Practice."
       },
       "blocks": [
         {
@@ -271,7 +264,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ழ (llla) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ழ in the ones that have it]"
@@ -293,7 +286,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ழ (llla) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ழ once more]"

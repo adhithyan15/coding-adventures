@@ -5,7 +5,7 @@ Punjabi, chapter 6: Numbers One to Five.
 Lesson 1 of 6.
 ਅ, ਆ — two pieces met inside a word you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਅ, ਆ until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਅ, ਆ and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
@@ -14,6 +14,7 @@ First, say the last things you learned once more, out loud and from memory:
 [your turn — say: rahiṇā, kamm karnā]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ਅ, ਆ.
 ਅ.
 aiṛā — a. The bare vowel carrier. On its own it is a; with a mātrā hung on it, it is whatever that mātrā says.
@@ -27,14 +28,13 @@ Writing: copy what you can see.
 Keep ਅ, ਆ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
 This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[your turn — look: at ਆਸ and point to each of today's pieces in turn]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: at ਆਸ and point to each of today's pieces in turn]
 [your turn — say: a, ā, then the whole word — ās]
 [pause 8 seconds for the answer]
-[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -107,7 +107,7 @@ Warm-up.
 [pause 2 seconds]
 Say “five” in Punjabi. (Panj.) Where did Chapter 5 first show that shape? (Inside Persian panj + āb, “five waters.”)
 [pause 2 seconds]
-In ਪੰਜ, which mark sits on top, and what does it do? (The tippi, ੰ: a nasal.) And the addak, ੱ? (It doubles the next consonant.)
+In ਪੰਜ, which mark sits on top, and what does it do? (The tippi, ੰ: a nasal.) And the addak, the small crescent? (It doubles the next consonant.)
 
 What you've built: the surprising family comparison.
 [a table of 6 rows, read aloud]

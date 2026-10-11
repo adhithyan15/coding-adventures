@@ -35,8 +35,8 @@ reviews_of: [MW-W35-digits-three-four-five, MW-C23-hear-price-answer, MW-C34-cou
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-ANSWER-01, MW-SCRIPT-COUNTER-OFFER-01, MW-LEX-COUNTER-OFFER-01] -->
 
-[PAUSE 18s] Say the too-expensive answer, say an offer of five aloud, then write
-an offer of ten.
+[PAUSE 18s] Say the too-expensive answer, and say an offer of five aloud.
+[YOU WRITE: an offer of ten]
 
 - [YOU RECALL: *so*, and the two other words that rhyme with it]
 
@@ -47,12 +47,11 @@ an offer of ten.
 Run each digit in both directions. Reading only one way is how a lookalike
 survives practice.
 
-1. Read **३**, **५**, **४**, **१**, **१०** aloud, in that order.
-2. Write the word under each figure: **तीन**, **पांच**, **चार**, **एक**,
-   **दस**.
-3. Now go the other way: hear *chār* and *pāṅch* and write the FIGURE, not the
-   word.
-4. Write **४** and **५** from dictation, five times, given out of order.
+1. [YOU READ: **३**, **५**, **४**, **१**, **१०** aloud, in that order]
+2. [YOU WRITE: the word under each figure — **तीन**, **पांच**, **चार**, **एक**, **दस**]
+3. Now go the other way: hear *chār* and *pāṅch*.
+   [YOU WRITE: the FIGURE, not the word]
+4. [YOU WRITE: **४** and **५** from dictation, five times, given out of order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIGIT-FOUR-01, MW-SCRIPT-CHAAR-01] -->

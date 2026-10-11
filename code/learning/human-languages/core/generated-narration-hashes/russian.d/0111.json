@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 111,
-  "sourceHash": "fnv1a64:dbd4d11c060a3628",
+  "sourceHash": "fnv1a64:d40c2d8e88a230db",
   "lessonIds": [
     "RU-C111-exam",
     "RU-C111-board",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch111.txt",
   "json": "russian/narration/ch111.json",
-  "textHash": "fnv1a64:fd75397254cc258e",
-  "jsonHash": "fnv1a64:9c4519a058c57f0d",
+  "textHash": "fnv1a64:d7d340f7b94303ee",
+  "jsonHash": "fnv1a64:d86a05fc667244dd",
   "findings": []
 }

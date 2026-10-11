@@ -4,7 +4,7 @@
   "chapter": 225,
   "title": "Review --- Three Places, One Question",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3d2a27db058a1ee2",
+  "sourceHash": "fnv1a64:02571d2de4e9771a",
   "lessons": [
     {
       "id": "ES-C59-repaso-demostrativos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:689798517b4fb580",
+      "sourceHash": "fnv1a64:db39ddb8001a5db6",
       "notice": null,
       "blocks": [
         {
@@ -134,11 +134,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "¿Qué es esto?, then answer it and point again with a noun",
+              "instruction": "¿Qué es esto?, then answer it, putting a noun after the pointing word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *¿Qué es esto?*, then answer it and point again with a noun]"
+              "source": "[YOU SAY: *¿Qué es esto?*, then answer it, putting a noun after the pointing word]"
             },
             {
               "kind": "repeat",
@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-repaso-demostrativos-side",
               "prompt": "A book is an arm's length away, right next to the person you are speaking to. Este or ese?",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-repaso-demostrativos-noun",
               "prompt": "Which question do you ask first, before choosing a form?",
               "assesses": [
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-repaso-demostrativos-article",
               "prompt": "What does the pointing word push out of the sentence?",
               "assesses": [

@@ -38,7 +38,7 @@ and one raises a glass.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C428-01, ES-ORTH-C428-02, ES-ORTH-C424-01] -->
 
-Read this invitation aloud, saying every symbol by name:
+[YOU READ: this invitation aloud, saying every symbol by name]
 
 > **Cumpleaños de Ana**
 > Sábado, a las ocho.

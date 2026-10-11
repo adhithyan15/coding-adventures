@@ -37,8 +37,8 @@ reviews_of: [MW-R22-price-two, MW-C10-paisa, MW-C14-samaan, MW-C14-shopping-five
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01, MW-LEX-PAISA-01, MW-SCRIPT-PAISA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
-[PAUSE 22s] Recall the five-word shopping payoff, then say money and goods and
-write both.
+[PAUSE 22s] Recall the five-word shopping payoff, then say money and goods.
+[YOU WRITE: both words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-TOTAL-QUESTION-01]; assesses=[MW-LEX-PRICE-QUESTION-01, MW-LEX-KITNO-01] -->

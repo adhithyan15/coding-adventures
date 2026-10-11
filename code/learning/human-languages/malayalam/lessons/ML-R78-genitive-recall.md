@@ -33,8 +33,8 @@ reviews_of: [ML-C78-nre, ML-C78-ude]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENRE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *my*, and then say what its
-last piece does when you put it on somebody else.
+[PAUSE 3s] From memory alone, say *my*, and then say what its last piece does
+when you put it on somebody else.
 
 ## Grammar Lens: two endings, one job, and the noun decides
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-C48-ROLE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-NII-NINGAL-01] -->

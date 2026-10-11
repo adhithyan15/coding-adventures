@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "Boat, Train, Pillow, Blanket, Bucket",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca39cdd29b36a524",
+  "sourceHash": "fnv1a64:2e4612fcc244ef0d",
   "lessons": [
     {
       "id": "ML-C158-toni",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15e9c27dc8c5969f",
+      "sourceHash": "fnv1a64:f1a04fc716e40e3b",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read a few short lines aloud as one passage, the way you read your first one."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a few short lines aloud as one passage, the way you read your first one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a few short lines aloud as one passage, the way you read your first one]"
             }
           ]
         },
@@ -521,7 +526,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b5421ad8330b828",
+      "sourceHash": "fnv1a64:0c531e930ce6ead8",
       "notice": null,
       "blocks": [
         {
@@ -546,8 +551,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read two lines aloud as a passage, then say in English what it was about."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two lines aloud as a passage, then say in English what it was about",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two lines aloud as a passage, then say in English what it was about]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "One to Five, By the Road Urdu Did Not Borrow",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8ce5c462ed800ab0",
+  "sourceHash": "fnv1a64:47621466d33aa92b",
   "lessons": [
     {
       "id": "UR-C28-ek",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e28e195b50ffd3b",
+      "sourceHash": "fnv1a64:19e0a7cfb170f2ca",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ایک continues Sanskrit eka through Prakrit, from Indo-European oywos, \"one\" — the root behind English one, Latin ūnus and Greek oîos."
+              "text": "ایک (ek) continues Sanskrit eka through Prakrit, from Indo-European oywos, \"one\" — the root behind English one, Latin ūnus and Greek oîos."
             },
             {
               "kind": "speech",
@@ -119,6 +119,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-ek-road",
               "prompt": "Did Urdu borrow its word for one from Persian?",
               "assesses": [
@@ -184,7 +185,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two letters, and both of them have been on the page since the friend lesson — they open dost, \"friend\". A search of this whole book for دو finds it twice and both times inside dost, which is exactly why a machine could report the word as present when the number had never been taught."
+              "text": "Two letters, and both of them have been on the page since the friend lesson — they open dost, \"friend\". A search of this whole book for دو (do) finds it twice and both times inside dost, which is exactly why a machine could report the word as present when the number had never been taught."
             }
           ]
         },
@@ -249,6 +250,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-do-inside",
               "prompt": "Which word you already knew begins with the two letters of do?",
               "assesses": [
@@ -379,6 +381,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-teen-kept",
               "prompt": "Urdu tin and Persian se are the same word. Which sound does Urdu still have?",
               "assesses": [
@@ -509,6 +512,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-char-kw",
               "prompt": "Which language kept the original kw of four whole?",
               "assesses": [
@@ -638,6 +642,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-panch-punjab",
               "prompt": "What does the panj in Punjab mean?",
               "assesses": [
@@ -671,7 +676,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:458ea67eda3861a8",
+      "sourceHash": "fnv1a64:12b8b3348b0d3ea4",
       "notice": null,
       "blocks": [
         {
@@ -709,12 +714,22 @@
               "text": "Count backwards from pānch to ek."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed shuffled — پانچ (pānch)، ایک (ek)، چار (chār)، تین (tīn)، دو (do) — and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed shuffled — پانچ (pānch)، ایک (ek)، چار (chār)، تین (tīn)، دو (do) — then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed shuffled — **پانچ، ایک، چار، تین، دو** — then say each]"
             },
             {
-              "kind": "speech",
-              "text": "Write all five from dictation. Every letter in all five has been on the page for chapters; the tranche adds no new sign at all."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from dictation — every letter in all five has been on the page for chapters; the tranche adds no new sign at all",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from dictation — every letter in all five has been on the page for chapters; the tranche adds no new sign at all]"
             },
             {
               "kind": "speech",
@@ -734,6 +749,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-practice-back",
               "prompt": "Count backwards from five to one in Urdu.",
               "assesses": [

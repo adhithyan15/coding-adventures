@@ -37,8 +37,8 @@ reviews_of: [MW-C10-hear-bajar, MW-W10-ja, MW-C09-bachcha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAJAR-01]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BA-01, MW-SCRIPT-JA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01, MW-LEX-BACHCHA-01, MW-RESPONSE-HAAN-SAA-POLITE-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01] -->
 
-[PAUSE 20s] Say market and child. Give polite yes, recall the seven-label
-payoff, then write **ब**, **ज**, **ा**, and **र**.
+[PAUSE 20s] Say market and child. Give polite yes and recall the seven-label
+payoff. [YOU WRITE: **ब**, **ज**, **ा**, and **र**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01] -->
@@ -49,7 +49,9 @@ payoff, then write **ब**, **ज**, **ा**, and **र**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAJAR-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write the word. Check both long-vowel marks.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: the word — check both long-vowel marks]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01] -->

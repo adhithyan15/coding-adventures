@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:423f5852d996e55f",
+  "sourceHash": "fnv1a64:56cb74965bc922e1",
   "lessons": [
     {
       "id": "ML-C51-gratitude",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:473fcb17e8c4415c",
+      "sourceHash": "fnv1a64:2f5599fce65f76f4",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read മതി",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "മതി",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **മതി**]"
+              "source": "[YOU READ: **മതി**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a291b40aec554af4",
+      "sourceHash": "fnv1a64:23e9dbeea9c456f4",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഒരുപക്ഷേ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഒരുപക്ഷേ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഒരുപക്ഷേ**]"
+              "source": "[YOU READ: **ഒരുപക്ഷേ**]"
             }
           ]
         },

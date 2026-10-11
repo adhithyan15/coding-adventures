@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "Town square, Garden, Pencil, Class, Teacher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:954af16cd5a4599d",
+  "sourceHash": "fnv1a64:4796b162830146dc",
   "lessons": [
     {
       "id": "PA-C138-caunk",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3970f66c2dc65732",
+      "sourceHash": "fnv1a64:c407ff4365c7cf62",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read each label whole, at a glance: ਨਾਂ, ਉਮਰ, ਕੰਮ."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each label whole, at a glance — ਨਾਂ, ਉਮਰ, ਕੰਮ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each label whole, at a glance — **ਨਾਂ**, **ਉਮਰ**, **ਕੰਮ**]"
             }
           ]
         },

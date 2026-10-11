@@ -36,9 +36,9 @@ reviews_of: [JA-W17-ya, JA-C15-hachi, JA-W10-yu]
 
 [PAUSE 25s] Three recalls, then eight.
 
-- [YOU RECALL: write **や**, sweep first — **R1**, one lesson back]
+- [YOU WRITE: **や** from memory, sweep first — **R1**, one lesson back]
 - [YOU RECALL: say *four* — **R3**, twenty lessons back]
-- [YOU RECALL: write **ゆ** — **R4**, eighty lessons back]
+- [YOU WRITE: **ゆ** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-YATTSU]; assesses=[JA-SCRIPT-YA-01, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-TSU-01, JA-LEX-HACHI, JA-LEX-NANATSU] -->
@@ -58,7 +58,9 @@ yattsu.* Eight of ten, and two signs left to buy.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YATTSU, JA-LEX-HACHI, JA-LEX-NANATSU] -->
 
-Write **やっつ**. Say *hachi*, then *yattsu*. Then run the eight in order without
+[YOU WRITE: **やっつ**]
+
+Say *hachi*, then *yattsu*. Then run the eight in order without
 stopping.
 
 ## Wrap-up Recall

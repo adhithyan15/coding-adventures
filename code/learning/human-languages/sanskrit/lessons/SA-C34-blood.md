@@ -59,7 +59,8 @@ Blood, named for its colour rather than for what it is.
 - [YOU SAY: *raktam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *asthi*, then *raktam*]
-- [YOU RECALL: read **लता**, then say *puram*]
+- [YOU READ: **लता**]
+- [YOU RECALL: say *puram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04] -->

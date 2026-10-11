@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "Saying No, and Asking",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2dceb1c360179ca0",
+  "sourceHash": "fnv1a64:1013e33352bc0172",
   "lessons": [
     {
       "id": "ES-C267-no-verbo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ec5fae69b7d5921",
+      "sourceHash": "fnv1a64:f96e6ea97b0f53e9",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d607464e0506bac5",
+      "sourceHash": "fnv1a64:441e2f14d14f807c",
       "notice": null,
       "blocks": [
         {
@@ -251,7 +251,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a6bdce1d9305702",
+      "sourceHash": "fnv1a64:f35495b958714172",
       "notice": null,
       "blocks": [
         {
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd46fde5ee8afe6a",
+      "sourceHash": "fnv1a64:f4496edf47950aa9",
       "notice": null,
       "blocks": [
         {
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5dd3ba98729544f",
+      "sourceHash": "fnv1a64:94fa5a346bd40488",
       "notice": null,
       "blocks": [
         {

@@ -60,7 +60,8 @@ Five, and the shop is closed.
 - [YOU SAY: *pai*]
 - [YOU SAY: all five in the order they happen — *kaḍai*, *vilai*, *paṇam*, *vāṅgu*, *pai*]
 - [YOU RECALL: say *paṇam*, then say *vāṅgu*, then say *pai*]
-- [YOU RECALL: say *iḍadu*, then read **தொப்பி**]
+- [YOU RECALL: say *iḍadu*]
+- [YOU READ: **தொப்பி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02, TA-LEX-C68-SHOP-05] -->

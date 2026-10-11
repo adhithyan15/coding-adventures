@@ -3,15 +3,15 @@
   "language": "arabic",
   "chapter": 17,
   "title": "Asking Someone's Age",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c6d1098a9c43cacc",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:389d7868c5b492b4",
   "lessons": [
     {
       "id": "AR-C17-kam-umruka",
       "sequence": 610,
-      "title": "كم عمرك؟ — asking age with a noun, not a verb",
+      "title": "كم عمرك؟ (kam ʿumruka) — asking age with a noun, not a verb",
       "headword": "كم عمرك؟",
-      "romanization": "",
+      "romanization": "kam ʿumruka",
       "gloss": "how old are you? — literally \"how much [is] your lifetime?\"; age as a NOUN you possess, not a verb you conjugate",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8d12b6c0accf21a",
+      "sourceHash": "fnv1a64:a4c819860126422c",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does عمر literally mean, and what root is it from? (\"Age, lifetime\" — root ع-م-ر, tied to living/flourishing.) Does Arabic use a verb to state age, the way Romance (\"have\"), Germanic (\"be\"), or Latin (\"born\" + duration) do? (No — it juxtaposes \"my age\" and the number, with no verb needed at all.) What does كم عمرك؟ literally ask? (\"How much [is] your ʿumr?\")"
+              "text": "What does عمر literally mean, and what root is it from? (\"Age, lifetime\" — root ع-م-ر, tied to living/flourishing.) Does Arabic use a verb to state age, the way Romance (\"have\"), Germanic (\"be\"), or Latin (\"born\" + duration) do? (No — it juxtaposes \"my age\" and the number, with no verb needed at all.) What does كم عمرك؟ (kam ʿumruka) literally ask? (\"How much [is] your ʿumr?\")"
             }
           ]
         }
@@ -141,19 +141,20 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:91d165ff4ece4610",
+      "sourceHash": "fnv1a64:5b82cc530b39dfdc",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: one bowl, four letters",
           "Script: the letter with three jobs",
           "Script: the marks everyday text leaves off",
           "Script: خير, taken apart"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: one bowl, four letters, Script: the letter with three jobs, Script: the marks everyday text leaves off and Script: خير, taken apart until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: one bowl, four letters, Script: the letter with three jobs, Script: the marks everyday text leaves off and Script: خير, taken apart."
       },
       "blocks": [
         {
@@ -168,8 +169,17 @@
               "source": "[PAUSE 4s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "اسمي and خير by hand, right to left, without looking below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **اسمي** and **خير** by hand, right to left, without looking below]"
+            },
+            {
               "kind": "speech",
-              "text": "Write اسمي and خير by hand, right to left, without looking below. Both were drawn stroke by stroke in the writing set and neither has been asked for since."
+              "text": "Both were drawn stroke by stroke in the writing set and neither has been asked for since."
             }
           ]
         },
@@ -190,7 +200,7 @@
               "utterances": [
                 "letter: ب bāʾ. dots: one below. where it sits: inside بخير.",
                 "letter: ن nūn. dots: one above. where it sits: inside أنت.",
-                "letter: ت tāʾ. dots: two above. where it sits: inside أنت, تشرفنا.",
+                "letter: ت tāʾ. dots: two above. where it sits: inside أنت, tasharrafnā.",
                 "letter: ث thāʾ. dots: three above. where it sits: —."
               ]
             },

@@ -4,18 +4,18 @@
     "language": "marwadi",
     "chapter": 40,
     "sequence": 3430,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:2acd4634488cbfdd"
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ef3a6b79b85683c9"
   },
   "findings": []
 }

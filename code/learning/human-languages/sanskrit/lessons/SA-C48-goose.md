@@ -60,7 +60,8 @@ Five animals: a lion, a wolf, a goat, a monkey, a goose.
 - [YOU SAY: *haṁsaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *siṁhaḥ* and *haṁsaḥ* together]
-- [YOU RECALL: say *tāpaḥ*, then read **तलम्**]
+- [YOU RECALL: say *tāpaḥ*]
+- [YOU READ: **तलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05] -->

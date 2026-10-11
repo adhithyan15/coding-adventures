@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जरूरत (jarūrat) mean? ("A need".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a need'.
+Say the Marwadi for 'a need'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लालच (lālach) mean? ("Greed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'greed'.
+Say the Marwadi for 'greed'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सपनो (sapno) mean? ("A dream".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a dream'.
+Say the Marwadi for 'a dream'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उम्मीद (ummīd) mean? ("An expectation".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an expectation'.
+Say the Marwadi for 'an expectation'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मरजी (marjī) mean? ("One's will, a choice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'one's will, a choice'.
+Say the Marwadi for 'one's will, a choice'.

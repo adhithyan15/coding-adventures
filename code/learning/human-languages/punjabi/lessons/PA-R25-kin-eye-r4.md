@@ -46,7 +46,10 @@ reviews_of: [PA-C11-bhara, PA-C11-bhain, PA-C12-akkh, PA-S07-naana-jajja-vavva]
 
 **Family trees.**
 
-Read **ਭਰਾ · ਭੈਣ · ਅੱਖ** once. This lesson deliberately stops at reading and speech; it does not award independent Gurmukhi writing evidence.
+[YOU READ: **ਭਰਾ · ਭੈਣ · ਅੱਖ** once]
+
+This lesson deliberately stops at reading and speech; it does not award
+independent Gurmukhi writing evidence.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-BHARA, PA-LEX-BHAIN, PA-LEX-AKKH, PA-SCRIPT-RECOG-NAANA-01] -->

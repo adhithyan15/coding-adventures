@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "At the Doorway",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0746d820864bd86",
+  "sourceHash": "fnv1a64:fe82019c52ef8d85",
   "lessons": [
     {
       "id": "TA-C50-threshold",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61375a4e7b242969",
+      "sourceHash": "fnv1a64:79aa746817036d49",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ippōdu, then read அன்பு",
+              "instruction": "say ippōdu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ippōdu*, then read **அன்பு**]"
+              "source": "[YOU RECALL: say *ippōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "அன்பு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **அன்பு**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9b564b84d121c9f",
+      "sourceHash": "fnv1a64:216efd90cfb0cdb1",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "நேரம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நேரம்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read நேரம், then say mariyādai",
+              "instruction": "say mariyādai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **நேரம்**, then say *mariyādai*]"
+              "source": "[YOU RECALL: say *mariyādai*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3e27b19dd30526b",
+      "sourceHash": "fnv1a64:63ea4cbc4af0e133",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say payaṇam, then read சந்தோஷம்",
+              "instruction": "say payaṇam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *payaṇam*, then read **சந்தோஷம்**]"
+              "source": "[YOU RECALL: say *payaṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சந்தோஷம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சந்தோஷம்**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00af6d28a2367869",
+      "sourceHash": "fnv1a64:dfad18ae9659c513",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "பிறகு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பிறகு**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read பிறகு, then say vāḻttu",
+              "instruction": "say vāḻttu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பிறகு**, then say *vāḻttu*]"
+              "source": "[YOU RECALL: say *vāḻttu*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65bbd58d55ca2d5f",
+      "sourceHash": "fnv1a64:1ed149d5492129a1",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say puṟappaḍu, then read மிக்க நன்றி",
+              "instruction": "say puṟappaḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *puṟappaḍu*, then read **மிக்க நன்றி**]"
+              "source": "[YOU RECALL: say *puṟappaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மிக்க நன்றி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மிக்க நன்றி**]"
             }
           ]
         },

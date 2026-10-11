@@ -33,8 +33,7 @@ reviews_of: [ML-C101-kuriya, ML-C101-melinja, ML-C101-thadicha, ML-C101-uyaram]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-SHORT-01, ML-LEX-C101-THIN-01, ML-LEX-C101-STOUT-01, ML-LEX-C101-HEIGHT-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *short*, *thin*, *stout*, and
-*height*.
+[PAUSE 3s] From memory alone, say *short*, *thin*, *stout*, and *height*.
 
 ## Grammar Lens: three of them go in front, and one cannot
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-SHORT-01, ML-LEX-C101-THIN-01, ML-LEX-C101-STOUT-01, ML-GRAMMAR-C42-ADJ-SYSTEM, ML-CONCEPT-C36-KUTTI-01] -->

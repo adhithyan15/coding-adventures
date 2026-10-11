@@ -56,7 +56,8 @@ That closes the run: now, time, a journey, afterwards, and getting up to go.
 - [YOU SAY: *puṟappaḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ippōdu*, *nēram*, *payaṇam*, *piṟaku*, *puṟappaḍu*]
-- [YOU RECALL: say *viruntāḷi*, then read **அப்படியே**]
+- [YOU RECALL: say *viruntāḷi*]
+- [YOU READ: **அப்படியே**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05] -->

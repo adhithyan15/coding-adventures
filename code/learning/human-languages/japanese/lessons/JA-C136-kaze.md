@@ -40,8 +40,8 @@ reviews_of: [JA-C136-suzushii, JA-W03-ka, JA-W136-zo, JA-W134-bu, JA-C127-sawaya
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *cool*, of a summer evening — **R1**, one lesson back]
-- [YOU RECALL: write **ぞ** — **R2**, five lessons back]
-- [YOU RECALL: write **ぶ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぞ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ぶ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *refreshing* — **R4**, eighty lessons back]
 
 ## You'll want to know: かぜ
@@ -59,8 +59,8 @@ the voicing mark, so *se* becomes *ze*. The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *kaze*]
-- [YOU SAY: *kaze*, clapping two beats]
-- [YOU RECALL: point to the sign in **かぜ** that carries the two-stroke mark, and name the sign under it]
+- [YOU SAY: *kaze*, then count its beats aloud — two]
+- [YOU RECALL: say which sign in **かぜ** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZE] -->

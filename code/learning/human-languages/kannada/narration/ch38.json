@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 38,
   "title": "The Heart",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:865808952bac9b07",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:3c0dd54ca8f4c4a0",
   "lessons": [
     {
       "id": "KA-C38-hrudaya",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -170,20 +170,13 @@
       "romanization": "namaḥ",
       "gloss": "a salutation, bowing",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c01b6a34e6360c0",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b7d2da65641388ec",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -213,7 +206,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: namaḥ. Look at its shape as you say it: the next lesson takes one piece of it, ಃ (visarga), and writes it on its own."
+              "text": "Say it: namaḥ."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ಃ (visarga), and writes it on its own."
             }
           ]
         },
@@ -293,7 +299,7 @@
           "Script you'll notice: ◌ಃ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ಃ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ಃ and Guided Practice."
       },
       "blocks": [
         {
@@ -388,7 +394,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two marks and say which one turns the syllable nasal",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two marks and say which one turns the syllable nasal]"
@@ -410,7 +416,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಸಂತೋಷ and find the other mark inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಸಂತೋಷ and find the other mark inside it]"

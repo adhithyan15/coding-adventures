@@ -3,8 +3,8 @@
   "language": "telugu",
   "chapter": 4,
   "title": "Farewells",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:88ea724917e63083",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d04dcef66ef053cb",
   "lessons": [
     {
       "id": "TE-C04-dappu",
@@ -14,20 +14,13 @@
       "romanization": "ḍappu",
       "gloss": "a drum",
       "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b95d5f25f2cbf73",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:59197f1b6e22b419",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ḍappu. Look at its shape as you say it: the next lesson takes one piece of it, డ, and writes it on its own."
+              "text": "Say it: ḍappu."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, డ (ḍa), and writes it on its own."
             }
           ]
         },
@@ -126,7 +132,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d607dc82b2b3555",
+      "sourceHash": "fnv1a64:ba629e0e139c2e35",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -137,7 +143,7 @@
           "Script you'll notice: డ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: డ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: డ and Guided Practice."
       },
       "blocks": [
         {
@@ -197,11 +203,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts and sweeps right and upward around the lower-right bowl. Movement 4 curves left around the upper-right shoulder. Movement 5 finishes with the separate top flourish."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left curve. Movement 2 turns right around the lower-left bowl. Without lifting, movement 3 sweeps right and upward around the lower-right bowl, and movement 4 curves left around the upper-right shoulder. Lift once; movement 5 finishes with the separate top flourish."
             },
             {
               "kind": "speech",
-              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the five movements distinct and let the round shape grow from them."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the five movements distinct, with the round body as one unbroken run, and let the round shape grow from them."
             }
           ]
         },
@@ -220,7 +226,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find డ (ḍa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find డ in the ones that have it]"
@@ -242,7 +248,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find డ (ḍa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find డ once more]"
@@ -294,7 +300,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -423,7 +429,7 @@
           "Script you'll notice: ౬",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౬ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౬ and Guided Practice."
       },
       "blocks": [
         {
@@ -498,7 +504,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -520,7 +526,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౬ (6) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౬ on any page of a Telugu book, calendar or doorplate you can find]"
@@ -572,7 +578,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -730,7 +736,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -857,7 +863,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1faf6b9a5c40a91e",
+      "sourceHash": "fnv1a64:76aea0fc31af3e74",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -868,7 +874,7 @@
           "Script you'll notice: ప",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ప and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ప and Guided Practice."
       },
       "blocks": [
         {
@@ -936,11 +942,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left across the upper part of the small bowl. Lift, then movement 2 turns around its lower half. Movement 3 makes the broad bowl on the right. Lift once more for movement 4, the small rising flourish above."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left across the upper part of the small bowl. Without lifting, movement 2 turns around its lower half, and movement 3 carries on round the broad bowl on the right. Lift once, for movement 4, the small rising flourish above."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the four clear movements instead of closing the small gaps."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the four clear movements, with the body as one unbroken run and the single lift before the flourish."
             }
           ]
         },
@@ -959,7 +965,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ప (pa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ప in the ones that have it]"
@@ -980,8 +986,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ప once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find ప (pa) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ప once more]"
@@ -1033,7 +1039,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1153,7 +1159,7 @@
           "Script you'll notice: ౭",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ౭ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౭ and Guided Practice."
       },
       "blocks": [
         {
@@ -1228,7 +1234,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -1250,7 +1256,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౭ (7) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౭ on any page of a Telugu book, calendar or doorplate you can find]"

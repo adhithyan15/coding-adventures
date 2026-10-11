@@ -37,7 +37,7 @@ reviews_of: [RU-C13-sok, RU-C02-kak-cross-language, RU-C02-ya]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SOK] -->
 
-[PAUSE 2s] The last word on this chapter's table — and, like *кофе* before
+[PAUSE 2s] The last word on this chapter's table — and, like *kófe* before
 it, a loanword rather than an inheritance, which makes it the perfect word
 to close on.
 
@@ -54,7 +54,7 @@ Every letter is one you have owned for a long time now.
 
 **суп** is a straight loan from **French *soupe***, part of the flood of
 French vocabulary that entered Russian aristocratic life in the 1700s — the
-same century, and nearly the same social world, that gave *кофе* its own sea
+same century, and nearly the same social world, that gave *kófe* its own sea
 route into the language. Chase *soupe* back further and it comes from Late
 Latin **suppa**, "bread soaked in broth."
 
@@ -62,13 +62,13 @@ Here is what makes *суп* different from everything else on this shelf:
 **English *soup* took the identical French word**, by a separate crossing,
 centuries apart from Russian's own borrowing. So *суп* and *soup* **are**
 related — but by two languages independently reaching for the same French
-word, not by shared Russian-English ancestry. It mirrors *кофе* and
+word, not by shared Russian-English ancestry. It mirrors *kófe* and
 *coffee*, which took one Arabic word by two different European doors; here,
 two languages took the *same* French door, just at different times.
 
 Ask for the whole shelf the way you already know:
 
-> **Молоко, сыр, сок и суп, пожалуйста.** — **Milk, cheese, juice and soup,
+> *Malakó, syr, sok i sup, pazhálusta.* — **Milk, cheese, juice and soup,
 > please.**
 
 ## Guided Practice
@@ -76,11 +76,10 @@ Ask for the whole shelf the way you already know:
 
 [PAUSE 1s]
 - [YOU SAY: "суп" — masculine, one syllable]
-- [YOU SAY: the loan — "French soupe, 1700s, same century as кофе"]
+- [YOU SAY: the loan — "French soupe, 1700s, same century as kófe"]
 - [YOU SAY: the mirror — "суп/soup: one French word, two borrowings;
-  кофе/coffee: one Arabic word, two doors"]
-- [YOU SAY: the whole shelf — "молоко, сыр, сок, суп, пожалуйста" (*malakó, syr,
-  sok, sup, pazhálusta*)]
+  *kófe*/coffee: one Arabic word, two doors"]
+- [YOU SAY: the whole shelf — *malakó, syr, sok, sup, pazhálusta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SUP, RU-ETYMON-SUP-FRENCH-LOAN, RU-COMPARISON-NAMING-QUESTION-FRAMES, RU-SCRIPT-YA-NOT-R] -->

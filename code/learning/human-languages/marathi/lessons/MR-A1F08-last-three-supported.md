@@ -10,6 +10,7 @@ delivery: script
 chapter: 25
 type: writing
 headword: "आवडते पेय: ___ · आवडती कृती: ___ · मित्राचे नाव: ___"
+romanization: "āvaḍte pey: ___ · āvaḍtī kṛtī: ___ · mitrāce nāv: ___"
 gloss: complete the last three visible rows from a support-language profile card
 prerequisites: [MR-A1F07-first-three-spelling]
 sounds: []

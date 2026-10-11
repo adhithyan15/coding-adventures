@@ -6,6 +6,7 @@ description = "Level 4 subprocess host over Chief channels and JSON lines"
 license = "MIT"
 
 [dependencies]
+chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
 chief-of-staff-agent-stdio-protocol = { path = "../chief-of-staff-agent-stdio-protocol" }
 chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
 chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }

@@ -4,18 +4,18 @@
     "language": "portuguese",
     "chapter": 29,
     "sequence": 1100,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:a375ff825d0c89d9"
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:197626aa746fc80f"
   },
   "findings": []
 }

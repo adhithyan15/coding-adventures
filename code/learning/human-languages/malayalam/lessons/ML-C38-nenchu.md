@@ -72,7 +72,7 @@ carrying one word of each kind, side by side.
 - [YOU SAY: the idiom — "neñciṭippŭ" — chest-beat, a pounding heart]
 - [YOU SAY: tala, kai, hṛdayaṁ, neñcŭ — the body words so far]
 - [YOU SAY: mouth, once more — "vāy"]
-- [YOU RECALL: read **കുട്ടി**]
+- [YOU READ: **കുട്ടി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02] -->

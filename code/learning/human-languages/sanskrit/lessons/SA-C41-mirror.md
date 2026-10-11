@@ -60,7 +60,8 @@ A mirror, named for vanity rather than for glass.
 - [YOU SAY: *darpaṇaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *plavaḥ*, then *darpaṇaḥ*]
-- [YOU RECALL: read **शुनकः**, then say *śākam*]
+- [YOU READ: **शुनकः**]
+- [YOU RECALL: say *śākam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04] -->

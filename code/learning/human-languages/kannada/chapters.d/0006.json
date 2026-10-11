@@ -9,12 +9,16 @@
   "payoff": {
     "lesson": "KA-C06-dative-subject",
     "kind": "production",
-    "summary": "Say ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು — \"to-me Kannada known\" — set against ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ, then line up the four Dravidian datives -ge · -ukku · -ku · -ikku.",
+    "summary": "Say ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು — \"to-me Kannada known\" — set against ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ, line up the four Dravidian datives -ge · -ukku · -ku · -ikku, rebuild -ige and -kke and say why Kannada's dative has g, then point to ದ in words you already say.",
     "assesses": [
+      "KA-LEX-C06-DATIVE-GE-01",
+      "KA-ETYMON-C06-DATIVE-GE-02",
+      "KA-SCRIPT-RECOG-06",
       "KA-GRAMMAR-C06-DATIVE-STACKING-01",
       "KA-LEX-C06-DATIVE-SUBJECT-01",
       "KA-GRAMMAR-C06-DATIVE-SUBJECT-02",
       "KA-GRAMMAR-C06-DATIVE-SUBJECT-03"
-    ]
+    ],
+    "note": "KA-C06-dative-subject assesses seven of the chapter's nine atoms: the dative -ge and its voiced-k history (KA-C06-dative-ge), stacking, the dative-subject sentence, and ದ (KA-S06-letter-da, now a prerequisite). The two left out, KA-SCRIPT-RECOG-114 (ೊ) and KA-SCRIPT-RECOG-115 (ಇ), are taught by script lessons sequenced after the payoff (332, 333)."
   }
 }

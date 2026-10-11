@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4b5e08854254ec99",
+  "sourceHash": "fnv1a64:3bfb5e75825d2bd7",
   "lessons": [
     {
       "id": "SA-C21-dance",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7496ce7e7ca82ec3",
+      "sourceHash": "fnv1a64:17e581751404b863",
       "notice": null,
       "blocks": [
         {
@@ -97,11 +97,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ṣaṭ, then read सप्त",
+              "instruction": "say ṣaṭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ṣaṭ*, then read **सप्त**]"
+              "source": "[YOU RECALL: say *ṣaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "सप्त",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सप्त**]"
             }
           ]
         },
@@ -137,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:499db13d43fd6765",
+      "sourceHash": "fnv1a64:5af91c2e4b46f2e5",
       "notice": null,
       "blocks": [
         {
@@ -223,12 +232,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read अष्ट",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "अष्ट",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **अष्ट**]"
+              "source": "[YOU READ: **अष्ट**]"
             }
           ]
         },
@@ -391,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bec9eb0df45d369",
+      "sourceHash": "fnv1a64:d35dc977b15986d9",
       "notice": null,
       "blocks": [
         {
@@ -477,12 +486,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read दश",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "दश",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **दश**]"
+              "source": "[YOU READ: **दश**]"
             }
           ]
         },

@@ -37,8 +37,10 @@ reviews_of: [UR-W05-he, UR-C03-kya, UR-C04-kaise-kaisi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-HE-01, UR-LEX-YIH] -->
 
-[PAUSE 2s] Write یہ and say it. Which face is gol he wearing there — the
-opening one, the middle one, or the closing one? (**Closing**.)
+[PAUSE 2s] [YOU WRITE: یہ — and say it]
+
+Which face is gol he wearing there — the opening one, the middle one, or the
+closing one? (**Closing**.)
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-KAHAN]; assesses=[UR-SCRIPT-HE-01] -->
@@ -55,8 +57,8 @@ wrote it back in chapter six: it is nūn with the dot taken off.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-K-QUESTION-FAMILY]; assesses=[UR-LEX-KAHAN, UR-LEX-KYA, UR-LEX-KAISE-KAISI] -->
 
-Put the question words you have met beside the new one and read down the right
-edge:
+Put the question words you have met beside the new one.
+[YOU READ: down the right edge]
 
 - **کیا** — *kyā* — what
 - **کہاں** — *kahāṅ* — where

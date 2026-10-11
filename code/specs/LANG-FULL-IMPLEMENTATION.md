@@ -1338,13 +1338,70 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Built-in `sign` may likewise remain inside `sqrt` when its operand is already
   nonnegative and bounded; signed and overridden forms remain conservative.
+  Built-in `cos` over a direct built-in `sign` result may also remain inside
+  `sqrt`: its input is restricted to `-1`, `0`, or `1`, so the cosine is
+  nonnegative. Non-sign-rooted, exponential, and overridden forms remain
+  conservative.
+  Unary `+` and `-` may wrap that direct `sign` result without changing the
+  `[-1, 1]` bound; nonzero additive, non-unit multiplicative, and other
+  computed wrappers remain conservative.
+  Variable-free exact additive zero terms may also surround that sign result;
+  nonzero terms, repeated sign operands, and overrides remain conservative.
+  Variable-free exact multiplicative unit factors may likewise surround it,
+  with unit division allowed only when the sign result is the numerator;
+  non-unit, dynamic, repeated-sign, denominator-sign, and overridden forms
+  remain conservative.
+  An exact variable-free exponent chain evaluating to one may preserve that
+  sign result as the power base; other exponents, a sign-rooted exponent, and
+  overrides remain conservative.
+  A runtime conditional may likewise preserve the unit-bounded sign range when
+  every branch retains a proven runtime-real sign root; unrestricted,
+  non-runtime-real, and overridden branches remain conservative.
+  Built-in `abs` may normalize that sign-rooted result while retaining the same
+  bound; non-sign-rooted operands and `abs` or `sign` overrides remain
+  conservative.
+  Built-in `sqrt` may likewise normalize a nonnegative unit-bounded sign-rooted
+  result before cosine; unrestricted operands and `sqrt` or inner-function
+  overrides remain conservative.
+  Built-in `entier` may also normalize that nonnegative unit range before
+  cosine; unrestricted operands and `entier` or inner-function overrides remain
+  conservative.
+  Built-in `sin` and `arctan` preserve the direct sign-rooted unit range before
+  cosine, including nested combinations; unrestricted operands and overrides
+  remain conservative.
+  Built-in `ln` may map one built-in exponential over a signed unit-bounded
+  sign-rooted range before cosine; unrestricted operands, nested
+  exponentials, and overrides remain conservative.
+  Built-in `exp` may map a unary-negated nonnegative unit-bounded sign-rooted
+  range into `(0, 1]` before cosine; unrestricted, positive, and overridden
+  forms remain conservative.
+  Variable-free exact additive zero terms may surround that nonpositive unit
+  range before `exp`; positive, repeated, dynamic, and overridden forms remain
+  conservative.
+  Multiplication by one variable-free exact `-1`, or division by one such
+  exact negative unit, may likewise map a nonnegative unit sign-rooted range
+  before `exp`; extra factors, positive or dynamic units, denominator roots,
+  repeated roots, and overrides remain conservative.
+  An exact variable-free exponent chain evaluating to one may preserve that
+  nonpositive range before `exp`; other or dynamic exponents, sign-rooted
+  exponents, and overrides remain conservative.
+  Built-in `sign`, `entier`, `sin`, and `arctan` may preserve that nonpositive
+  unit range before `exp`, including nested combinations; non-monotone,
+  unrestricted, and overridden wrappers remain conservative.
+  A runtime conditional may select that range when every branch retains a
+  proven nonpositive unit runtime-real sign root; positive, unrestricted,
+  non-runtime-real, and overridden branches remain conservative.
+  A unary-negated runtime conditional may likewise form that range when every
+  branch retains a proven nonnegative unit runtime-real sign root; negative,
+  unrestricted, non-runtime-real, and overridden branches remain conservative.
   Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain
   conservative.
-  A single built-in `exp` may also map such a bounded chain before `entier`;
-  nested exponential calls remain conservative to keep the finite bound
-  explicit.
+  A single built-in `exp` may also map such a bounded chain before `entier`,
+  including a runtime conditional when every branch retains a proven
+  runtime-real sign root; nested exponential calls and unproven branches remain
+  conservative to keep the finite bound explicit.
   Built-in `ln` may map that one exponential when its operand remains rooted
   in the bounded sign chain; standalone `ln` and user-declared overrides stay
   conservative.

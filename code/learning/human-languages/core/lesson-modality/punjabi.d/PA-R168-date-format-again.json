@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-R168-date-format-again",
+    "language": "punjabi",
+    "chapter": 168,
+    "sequence": 9100,
+    "modality": "pen",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "sight-cue",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3356f5efd5f480ca",
+    "authored": "pen",
+    "authoredReason": "The learner must inspect the printed date frame and copy its boxes.",
+    "overridden": true
+  },
+  "findings": []
+}

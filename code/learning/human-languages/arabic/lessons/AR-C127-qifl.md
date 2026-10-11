@@ -38,7 +38,9 @@ reviews_of: [AR-C127-sitara]
 
 [PAUSE 2s] Before the new one: say the Arabic for a fridge, then the Arabic for a curtain.
 
-[PAUSE 1s] Read **قال**. Which letter is the deep *q*? (**ق**, *qāf*, two dots above.)
+[PAUSE 1s] [YOU READ: **قال**]
+
+Which letter is the deep *q*? (**ق**, *qāf*, two dots above.)
 
 ## You'll want to know: قفل
 <!-- hl-knowledge: introduces=[AR-LEX-C127-THINGS127-02]; assesses=[] -->

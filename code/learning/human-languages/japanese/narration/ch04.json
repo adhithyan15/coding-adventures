@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Polite Thanks, Three More Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:45a7cc1212666955",
+  "sourceHash": "fnv1a64:25e7bb32253dc063",
   "lessons": [
     {
       "id": "JA-W03-sa",
@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:d5c3dbda5586cddf",
+      "sourceHash": "fnv1a64:ee46c6902d8488b9",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -145,7 +148,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say?????, add the dakuten to?, and recall how?hard to exist? became thanks."
+              "text": "Say ありがとう, add the dakuten to か, and recall how “hard to exist” became thanks."
             }
           ]
         },
@@ -165,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W03-sa-za",
               "prompt": "What does the sign read 'sa' become when the dakuten is added?",
               "assesses": [
@@ -197,20 +201,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:de01d0ac381949a8",
+      "sourceHash": "fnv1a64:5cafd8be38f93cc4",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Guided Practice — review pulse"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Guided Practice — review pulse."
       },
       "blocks": [
         {
@@ -303,7 +311,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? from memory before tracing?."
+              "text": "Write と from memory before tracing ま (ma)."
             }
           ]
         },
@@ -323,6 +331,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W03-ma-strokes",
               "prompt": "How many strokes does the hiragana sign read 'ma' have?",
               "assesses": [
@@ -356,20 +365,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:384ca3ef601b4442",
+      "sourceHash": "fnv1a64:9945f806e47e2888",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Guided Practice — review pulse"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Guided Practice — review pulse."
       },
       "blocks": [
         {
@@ -477,7 +490,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? from memory before tracing?."
+              "text": "Write う from memory before tracing す (su)."
             }
           ]
         },
@@ -497,6 +510,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W03-su-devoice",
               "prompt": "At the end of gozaimasu, what happens to the final u?",
               "assesses": [
@@ -523,7 +537,7 @@
     {
       "id": "JA-C01-gozaimasu",
       "sequence": 250,
-      "title": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — politeness you cannot leave out",
+      "title": "ありがとうございます (arigatō gozaimasu) — politeness you cannot leave out",
       "headword": "ありがとうございます",
       "romanization": "arigatō gozaimasu",
       "gloss": "thank you (polite)",
@@ -542,7 +556,7 @@
         "waitUntilStopped": [
           "Script — five more signs, two of them dakuten"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five more signs, two of them dakuten until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — five more signs, two of them dakuten."
       },
       "blocks": [
         {
@@ -592,7 +606,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the difference this chapter has to name. In many languages politeness is a choice between two words for \"you.\" Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately."
+              "text": "That is the difference this chapter has to name. In many languages politeness is a choice between two words for \"you.\" Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately."
             },
             {
               "kind": "speech",
@@ -608,7 +622,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — ten beats, final su light",
+              "instruction": "ありがとうございます (arigatō gozaimasu) — ten beats, final su light",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -622,7 +636,7 @@
             {
               "kind": "prompt",
               "action": "CHOOSE",
-              "instruction": "a close friend becomes ありがとう; a shop assistant becomes ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu)",
+              "instruction": "a close friend becomes ありがとう; a shop assistant becomes ありがとうございます (arigatō gozaimasu)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -655,6 +669,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C01-gozaimasu-level",
               "prompt": "You are thanking a shop assistant you have never met. Which form do you use?",
               "assesses": [
@@ -690,17 +705,18 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a9923606008ef393",
+      "sourceHash": "fnv1a64:e1b8832c26fb30d7",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the second half",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the second half and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the second half and Guided Practice."
       },
       "blocks": [
         {
@@ -715,8 +731,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write ありがとう. Five signs, no help."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ありがとう — five signs, no help",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ありがとう — five signs, no help]"
             }
           ]
         },
@@ -766,7 +787,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you."
+              "text": "ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you."
             },
             {
               "kind": "speech",
@@ -789,7 +810,7 @@
             },
             {
               "kind": "speech",
-              "text": "A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) B: はい."
+              "text": "A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) B: はい."
             }
           ]
         },
@@ -812,7 +833,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ten signs in ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached."
+              "text": "Ten signs in ありがとうございます (arigatou gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached."
             }
           ]
         },
@@ -824,8 +845,8 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — name each of the ten signs, then say it",
-              "spoken": true,
+              "instruction": "ありがとうございます (arigatou gozaimasu) — name each of the ten signs, then say it",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ありがとうございます — name each of the ten signs, then say it]"
@@ -863,7 +884,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give plain thanks, then polite thanks. Name the dakuten and the?hard to exist? memory hook."
+              "text": "Give plain thanks, then polite thanks. Name the dakuten and the “hard to exist” memory hook."
             }
           ]
         },
@@ -883,8 +904,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C03-practice-ticks",
-              "prompt": "In ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu), how many signs are an earlier sign plus the dakuten?",
+              "prompt": "In ありがとうございます (arigatou gozaimasu), how many signs are an earlier sign plus the dakuten?",
               "assesses": [
                 "JA-SCRIPT-GOZAIMASU-READ-01"
               ],

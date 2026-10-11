@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cb2e8780aecf82e1",
+  "sourceHash": "fnv1a64:2d2afb0cc54ef1f1",
   "lessons": [
     {
       "id": "KA-C49-true",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5db6e3543afc210",
+      "sourceHash": "fnv1a64:9c84e9765fbd61d4",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಹಲ್ಲು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಹಲ್ಲು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಹಲ್ಲು**]"
+              "source": "[YOU READ: **ಹಲ್ಲು**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbcc99ef80be8242",
+      "sourceHash": "fnv1a64:06c960356d875cb2",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬೆರಳು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬೆರಳು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬೆರಳು**]"
+              "source": "[YOU READ: **ಬೆರಳು**]"
             }
           ]
         },

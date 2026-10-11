@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C33-ringo-type",
-              "prompt": "Type the Japanese for 'an apple'.",
+              "prompt": "Say the Japanese for 'an apple'.",
               "assesses": [
                 "JA-LEX-C33-FOOD33-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C33-mikan-type",
-              "prompt": "Type the Japanese for 'a mandarin orange'.",
+              "prompt": "Say the Japanese for 'a mandarin orange'.",
               "assesses": [
                 "JA-LEX-C33-FOOD33-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C33-ichigo-type",
-              "prompt": "Type the Japanese for 'a strawberry'.",
+              "prompt": "Say the Japanese for 'a strawberry'.",
               "assesses": [
                 "JA-LEX-C33-FOOD33-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C33-momo-type",
-              "prompt": "Type the Japanese for 'a peach'.",
+              "prompt": "Say the Japanese for 'a peach'.",
               "assesses": [
                 "JA-LEX-C33-FOOD33-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C33-nashi-type",
-              "prompt": "Type the Japanese for 'a pear'.",
+              "prompt": "Say the Japanese for 'a pear'.",
               "assesses": [
                 "JA-LEX-C33-FOOD33-05"
               ],

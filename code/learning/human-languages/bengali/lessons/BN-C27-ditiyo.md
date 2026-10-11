@@ -37,7 +37,7 @@ reviews_of: [BN-W05-tha, BN-C23-she, BN-C13-sbagotom, BN-C06-numbers-1-5]
 [PAUSE 2s] A second kind of number word starts here, so the recalls come first,
 at the three growing distances this book can measure.
 
-- [YOU RECALL: write **থ** — **R2**, five lessons back]
+- [YOU WRITE: **থ** from memory — **R2**, five lessons back]
 - [YOU RECALL: say *he, she* — **R3**, twenty lessons back]
 - [YOU RECALL: say *welcome* — **R4**, eighty lessons back]
 
@@ -52,8 +52,10 @@ at the three growing distances this book can measure.
 stands in front of its noun and never changes, the way **লাল** does. No
 agreement to learn.
 
-Read the spelling and the romanization again, because they disagree: written
-**দ্ব**-, said *di*-. The cluster is on the page and gone from the mouth.
+[YOU READ: the spelling and the romanization again]
+
+They disagree: written **দ্ব**-, said *di*-. The cluster is on the page and gone
+from the mouth.
 
 ## The word, taken apart — a promise chapter twelve made
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C27-ORDINAL-TATSAMA-01]; assesses=[BN-LEX-C27-DITIYO-01, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-ETYMON-DUI-COMPARISON, BN-LEX-NUMBERS-ONE-TO-FIVE] -->

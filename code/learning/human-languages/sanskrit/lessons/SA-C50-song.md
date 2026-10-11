@@ -60,7 +60,8 @@ What the voice does when it is not talking.
 - [YOU SAY: *gītam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vāṇī*, then *gītam*]
-- [YOU RECALL: read **वानरः**, then say *muhuḥ*]
+- [YOU READ: **वानरः**]
+- [YOU RECALL: say *muhuḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04] -->

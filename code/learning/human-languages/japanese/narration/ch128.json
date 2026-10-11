@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C128-kashikoi-type",
-              "prompt": "Type the Japanese for 'clever'.",
+              "prompt": "Say the Japanese for 'clever'.",
               "assesses": [
                 "JA-LEX-C128-QUAL128-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C128-oroka-type",
-              "prompt": "Type the Japanese for 'foolish'.",
+              "prompt": "Say the Japanese for 'foolish'.",
               "assesses": [
                 "JA-LEX-C128-QUAL128-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C128-isamashii-type",
-              "prompt": "Type the Japanese for 'brave'.",
+              "prompt": "Say the Japanese for 'brave'.",
               "assesses": [
                 "JA-LEX-C128-QUAL128-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C128-komakai-type",
-              "prompt": "Type the Japanese for 'fine, small and detailed'.",
+              "prompt": "Say the Japanese for 'fine, small and detailed'.",
               "assesses": [
                 "JA-LEX-C128-QUAL128-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C128-minikui-type",
-              "prompt": "Type the Japanese for 'ugly'.",
+              "prompt": "Say the Japanese for 'ugly'.",
               "assesses": [
                 "JA-LEX-C128-QUAL128-05"
               ],

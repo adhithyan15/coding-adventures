@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-HALLO-01, GE-LEX-GUT-02, GE-LEX-DER-DIE-DAS-02, GE-ETYMON-GUT-SHIFT-03, GE-LEX-GUTEN-TAG-01, GE-LEX-GUTEN-MORGEN-01, GE-LEX-GUTEN-ABEND-01, GE-LEX-GUTE-NACHT-01, GE-GRAMMAR-ADJ-ACC-FEM-02, GE-GRAMMAR-ADJ-ACC-MASC-02, GE-ETYMON-TAG-03, GE-ETYMON-ARTIKEL-03, GE-LEX-TAG-02, GE-LEX-MORGEN-02, GE-LEX-ABEND-02, GE-LEX-NACHT-02]
+  knowledge: [GE-LEX-HALLO-01, GE-LEX-GUT-02, GE-LEX-DER-DIE-DAS-02, GE-ETYMON-GUT-SHIFT-03, GE-LEX-GUTEN-TAG-01, GE-LEX-GUTEN-MORGEN-01, GE-LEX-GUTEN-ABEND-01, GE-LEX-GUTE-NACHT-01, GE-GRAMMAR-ADJ-ACC-FEM-02, GE-GRAMMAR-ADJ-ACC-MASC-02, GE-ETYMON-TAG-03, GE-ETYMON-ARTIKEL-03, GE-LEX-TAG-02, GE-LEX-MORGEN-02, GE-LEX-ABEND-02, GE-LEX-NACHT-02, GE-ETYMON-ABEND-03, GE-ETYMON-NACHT-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, fluency]
@@ -66,8 +66,10 @@ German Consonant Shift (*good→gut*, *day→Tag*, *that→das*).
 hesitating on *guten*/*gute*.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUTE-NACHT-01, GE-GRAMMAR-ADJ-ACC-FEM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUTE-NACHT-01, GE-GRAMMAR-ADJ-ACC-FEM-02, GE-ETYMON-ABEND-03, GE-ETYMON-NACHT-03] -->
 
 [PAUSE 3s] Which German greeting uses *gute*, not *guten*, and why? (*Gute
-Nacht* — *Nacht* is feminine.) Next chapter, you will learn to introduce
+Nacht* — *Nacht* is feminine.) Which English words are cousins of *Abend*
+and *Nacht*? (*Eve* and *evening*; *night* — whose older root also gave Spanish
+*noche* and French *nuit*.) Next chapter, you will learn to introduce
 yourself and then build the friendly and respectful ways to address someone.

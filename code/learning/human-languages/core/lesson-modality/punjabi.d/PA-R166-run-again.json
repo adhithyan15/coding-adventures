@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R166-run-again",
+    "language": "punjabi",
+    "chapter": 166,
+    "sequence": 9030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6e5d70476abd4ed"
+  },
+  "findings": []
+}

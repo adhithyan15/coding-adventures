@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Three Useful Places: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b8d5523ff11f9d36",
+  "sourceHash": "fnv1a64:950bf79516fad99e",
   "lessons": [
     {
       "id": "MW-C10-hear-bajar",
@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-bajar-meaning",
               "prompt": "What place does bājār name?",
               "assesses": [
@@ -97,19 +98,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bb8aadad1df38025",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one sign"
+          "Warm-up",
+          "Script — one sign",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -163,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W10-ja-write",
               "prompt": "Write the new Devanagari sign for ja.",
               "assesses": [
@@ -195,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63bb340e1c48014e",
+      "sourceHash": "fnv1a64:7b830854788424d0",
       "notice": null,
       "blocks": [
         {
@@ -211,7 +218,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say market and child. Give polite yes, recall the seven-label payoff, then write ब, ज (ja), ा, and र."
+              "text": "Say market and child. Give polite yes and recall the seven-label payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ब, ज (ja), ा, and र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ब**, **ज**, **ा**, and **र**]"
             }
           ]
         },
@@ -232,8 +248,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write the word. Check both long-vowel marks."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — check both long-vowel marks",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — check both long-vowel marks]"
             }
           ]
         },
@@ -249,6 +279,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-bajar-dictation",
               "prompt": "From bājār, write the place word.",
               "assesses": [
@@ -282,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9aed861e2fbce076",
+      "sourceHash": "fnv1a64:b2332d051c384696",
       "notice": null,
       "blocks": [
         {
@@ -298,7 +329,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write market, then recall the polite-yes and twelve-label four-skill payoffs."
+              "text": "Say market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for market",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for market]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall the polite-yes and twelve-label four-skill payoffs."
             }
           ]
         },
@@ -329,6 +373,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-ghar-meaning",
               "prompt": "Which heard word means home: ghar or bājār?",
               "assesses": [
@@ -361,19 +406,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:10d1ad650b58f295",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one sign"
+          "Warm-up",
+          "Script — one sign",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -427,6 +477,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W10-gha-write",
               "prompt": "Write the new Devanagari sign for gha.",
               "assesses": [
@@ -459,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abe8afb57b0fa0d5",
+      "sourceHash": "fnv1a64:4bd4038b7ba9257b",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +526,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say home and market. Write घ (gha), र, बाजार (bājār), and नाना."
+              "text": "Say home and market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "घ (gha), र, बाजार (bājār), and नाना",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **घ**, **र**, **बाजार**, and **नाना**]"
             }
           ]
         },
@@ -486,7 +546,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "घ + र becomes घर — ghar — home; house."
+              "text": "घ (gha) + र becomes घर — ghar — home; house."
             }
           ]
         },
@@ -496,8 +556,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write the one-beat word."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the one-beat word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the one-beat word]"
             }
           ]
         },
@@ -513,6 +587,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-ghar-dictation",
               "prompt": "From ghar, write the place word.",
               "assesses": [
@@ -547,7 +622,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5775f01c8ce1746",
+      "sourceHash": "fnv1a64:3b1e4213e9473640",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +638,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say home, market, and maternal grandmother, then write ज (ja) and retroflex ण."
+              "text": "Say home, market, and maternal grandmother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ज (ja) and retroflex ण",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ज** and retroflex **ण**]"
             }
           ]
         },
@@ -594,6 +678,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-mandir-meaning",
               "prompt": "Which word names a temple: mandir, ghar, or bājār?",
               "assesses": [
@@ -628,7 +713,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ee50608827d7c0a",
+      "sourceHash": "fnv1a64:ae92552dca280358",
       "notice": null,
       "blocks": [
         {
@@ -644,7 +729,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say temple, write म, ं, द, ि, र, ी, then write घर (ghar) and नानी."
+              "text": "Say temple."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "म, ं, द, ि, र, ी, then घर (ghar) and नानी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **म**, **ं**, **द**, **ि**, **र**, **ी**, then **घर** and **नानी**]"
             }
           ]
         },
@@ -665,8 +759,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write the word. Check the nasal mark and the short-i position separately."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — check the nasal mark and the short-i position separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — check the nasal mark and the short-i position separately]"
             }
           ]
         },
@@ -682,6 +790,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-mandir-dictation",
               "prompt": "From mandir, write the place word.",
               "assesses": [
@@ -715,7 +824,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:750a4c55ef301648",
+      "sourceHash": "fnv1a64:dc2f367cc9e263c2",
       "notice": null,
       "blocks": [
         {
@@ -731,7 +840,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say wife, child, and husband, then write पाणी before changing domains."
+              "text": "Say wife, child, and husband."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी, before changing domains",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी**, before changing domains]"
             }
           ]
         },
@@ -742,7 +860,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear and identify all three places, say each from a cue, read the three cards, then cover them and write all three. Score each skill separately."
+              "text": "Hear and identify all three places, and say each from a cue."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three cards, then cover them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three cards, then cover them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three]"
+            },
+            {
+              "kind": "speech",
+              "text": "Score each skill separately."
             }
           ]
         },
@@ -758,6 +898,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R10-places-three-payoff",
               "prompt": "After four separate skill checks, write market, home, and temple in order.",
               "assesses": [

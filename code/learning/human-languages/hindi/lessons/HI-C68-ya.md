@@ -73,7 +73,8 @@ host asks and how an examiner's role-play begins.
 - [YOU SAY: *chāy yā dūdh?*]
 - [YOU SAY: the same pair with *aur*, and hear the offer become a list]
 - [YOU SAY: which of the two you can also WRITE today — **या**]
-- [YOU RECALL: read **अनाज**, then say *ghās*]
+- [YOU READ: **अनाज**]
+- [YOU RECALL: say *ghās*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-YA-01, HI-JOIN-AUR-01] -->

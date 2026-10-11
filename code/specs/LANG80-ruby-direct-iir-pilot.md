@@ -63,3 +63,98 @@ The item count is enforced before adding children to the traversal queue.
 
 This is an interpreter pilot. Bindings, objects, blocks, exceptions, the full
 integer tower, float literals, and JIT execution remain later work.
+
+## Follow-on bounded call form: `puts expression`
+
+Ruby also permits a one-argument `puts` call without parentheses. The native
+frontend may accept `puts 1 + 2` and `puts -7 / 2` through the existing
+`method_call_no_paren` parser rule, using the same expression lowering and
+integer bounds as the parenthesized form. Each accepted statement must have
+exactly one positional expression and a literal `puts` callee. Multiple
+arguments, keyword arguments, splats, blocks, other methods, and unsupported
+expression forms still fail before VM execution. The resulting IIR must call
+the existing `rb_puts_int` builtin; Ruby is only a conformance oracle.
+Directly supplied ASTs must also carry a name-like callee token with a matching
+effective grammar type; a string or number token spelling `puts` is not a call.
+
+## Follow-on bounded empty call: `puts()`
+
+An exact parenthesized zero-argument `puts()` call lowers through the Ruby
+parser's three-child `method_call` AST to a zero-argument Ruby-specific IIR
+builtin. It emits one newline on Rust `vm-core`, in source order with the
+existing one-argument calls. The host Ruby runtime is only a conformance
+oracle. The bare zero-argument spelling `puts` and all other new call forms
+remain outside this stage. Directly supplied ASTs must have a literal
+name-like `puts` callee and actual left/right parenthesis token kinds with
+matching effective grammar types; matching delimiter text alone is
+insufficient. The existing source, AST, VM instruction, and output bounds
+still apply, including a checked output-length increment before appending the
+newline.
+
+## Follow-on bounded two-argument call: `puts(a, b)`
+
+An exact parenthesized `puts` call with two positional integer expressions
+lowers through the Ruby grammar AST directly to IIR. The Rust VM evaluates
+both expressions in source order, then a Ruby-specific builtin appends their
+decimal forms with a newline after each value. Host Ruby is a conformance
+oracle only. Zero- and one-argument behavior remains as specified above;
+bare multi-argument calls, three or more arguments, splats, keyword arguments,
+blocks, and unsupported expressions remain outside this stage.
+
+The compiler validates the callee, both parentheses, the comma token, and
+both `call_arg` wrappers by token kind, effective grammar type, and rule shape
+before lowering. Each expression must satisfy the existing `i64` proof and
+resource bounds. The output builtin checks the combined size before appending
+either value, so an output-limit failure does not partially append this call.
+Expression errors reject the program before execution or stop VM execution
+before this call's output builtin runs. The runner returns an error without
+exposing buffered output on any failure.
+
+## Follow-on bounded three-argument call: `puts(a, b, c)`
+
+An exact parenthesized `puts` call with three positional integer expressions
+lowers from the existing Ruby grammar AST directly to IIR and executes on Rust
+`vm-core`. All three expressions execute in source order before the output
+builtin appends their decimal forms, each followed by a newline. Host Ruby is
+only a conformance oracle. Zero-, one-, two-argument, and bare one-argument
+calls retain their existing behavior. Four or more arguments, bare multi-argument
+calls, splats, keyword arguments, chained calls, and unsupported expressions
+remain rejected before execution.
+
+The compiler validates the literal callee, parentheses, both comma tokens,
+and all three `call_arg` wrappers by token kind, effective grammar type, and
+rule shape. Every argument retains the existing `i64` proof and AST bounds;
+the third argument receives the same item, depth, and text checks as the first.
+The output builtin validates all three integer values and checks the combined
+size before appending any part of this call. Output-limit or argument-type
+failure leaves its sink unchanged. The runner continues to return an error
+without exposing buffered output on any failure; source and VM execution
+bounds are unchanged.
+
+Acceptance includes arithmetic and negative floor division in distinct argument
+positions, `i64` boundary values, source-ordered IIR operands, mixed call arities,
+forged direct AST rejection, third-argument resource limits, and exact/over-limit
+output probes. Native `rubyvm` output must agree byte-for-byte with a separate
+Ruby oracle on representative accepted sources.
+
+## Follow-on arithmetic token validation for direct AST input
+
+Caller-supplied ASTs bypass the lexer. Unary minus, binary `+`, `-`, `*`, `/`,
+and expression grouping must therefore validate the actual syntax token,
+its canonical enum kind, absence of a named effective-type override, and
+exact spelling before lowering. A string/name token spelling an operator,
+a different punctuation kind, a named override (even the expected terminal
+name), or a wrong spelling must fail. Node values in syntax token positions
+also fail. The `sum` and `term` rules retain their allowed operators; grouping
+is the actual `factor` shape `LPAREN expression RPAREN` with exactly three
+children and an `expression` wrapper.
+
+Exercise forged tokens in bare one-argument calls and every position of
+parenthesized one-, two-, and three-argument `puts`. Reject malformed grouping
+wrappers and extra children, and preserve source arithmetic, precedence,
+negative floor division, emitted IIR arithmetic, and mixed call arities.
+Source syntax, integer-range proofs, parser/AST/instruction/output bounds and
+buffered-output error behavior stay unchanged. The path remains Ruby source
+or AST directly to InterpreterIR and Rust `vm-core`, with host Ruby an oracle
+only. This validates these syntax positions; it does not claim general
+validation of every field in an arbitrary forged AST.

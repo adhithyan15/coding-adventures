@@ -34,8 +34,11 @@ reviews_of: [JA-W01-ha, JA-C03-practice, JA-W05-nichi-kanji, JA-C10-yukkuri]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01, JA-SCRIPT-GOZAIMASU-READ-01, JA-SCRIPT-KANJI-NICHI-01, JA-LEX-YUKKURI, JA-LEX-HANA-NOSE] -->
 
-[PAUSE 48s] Write **は** and **日**. Read **ございます**, say *yukkuri*, then
-retrieve **はな**.
+[PAUSE 48s] [YOU WRITE: **は** and **日**]
+
+[YOU READ: **ございます**]
+
+Say *yukkuri*, then retrieve **はな**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-ATAMA]; assesses=[] -->
@@ -47,7 +50,9 @@ Every sign is earned. Keep three even morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA] -->
 
-Hear, point, say, read, then hide and write **あたま**.
+Hear, picture the part, and say **あたま**. [YOU READ: **あたま**]
+
+[YOU WRITE: **あたま**, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA] -->

@@ -33,7 +33,7 @@ reviews_of: [TA-W29-read-paalum]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C74-JOIN-02, TA-SCRIPT-READ-PAALUM-01] -->
 
-[PAUSE 2s] Say *nāṉum*. Then read **பாலும்** aloud.
+[PAUSE 2s] Say *nāṉum*. [YOU READ: **பாலும்** aloud]
 
 ## Grammar lens: the list stays, the end changes
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C74-JOIN-03]; assesses=[] -->
@@ -68,7 +68,9 @@ the lot.
 - [YOU SAY: *pālum tēnīrum illai*]
 - [YOU SAY: *mēsaiyum kaṭṭilum illai*]
 - [YOU TURN: say the list, then say it again with இல்லை on the end]
-- [YOU RECALL: say *nāṉum*, then read **பாலும்**, then say *pālum tēnīrum illai*]
+- [YOU RECALL: say *nāṉum*]
+- [YOU READ: **பாலும்**]
+- [YOU RECALL: say *pālum tēnīrum illai*]
 - [YOU RETURN TO: say *mādam*, *pasi* and *tūṅgu* — three distances back — then join two of them with -உம்]
 
 ## Wrap-up Recall

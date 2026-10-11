@@ -36,8 +36,8 @@ reviews_of: [KA-C74-third, KA-S151-letter-tta, KA-S138-vowel-sign-ee, KA-C58-les
 
 [PAUSE 2s]
 - [YOU RECALL: say *mūraneya* — **R1**]
-- [YOU RECALL: read **ಟ**, and say its sound — **R2**]
-- [YOU RECALL: read the sign **ೇ**, and say what it does to a letter — **R3**]
+- [YOU READ: **ಟ**, then say its sound — **R2**]
+- [YOU READ: the sign **ೇ**, then say what it does to a letter — **R3**]
 - [YOU RECALL: say *kaḍime* — **R4**]
 
 ## You'll want to know: ಮೊದಲನೆಯ

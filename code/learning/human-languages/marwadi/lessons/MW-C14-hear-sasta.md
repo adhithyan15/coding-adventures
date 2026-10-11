@@ -37,8 +37,10 @@ reviews_of: [MW-C13-shopping-three, MW-C13-bhaav, MW-W13-u-matra, MW-C13-dukan, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-LEX-BHAAV-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-BHAI-01, MW-LEX-GARMI-01] -->
 
-[PAUSE 24s] Recall the three-word shopping payoff, say price, write **ु**,
-**दुकान**, **वस्तु**, **भाव**, and **भाई**, then say heat.
+[PAUSE 24s] Recall the three-word shopping payoff and say price.
+[YOU WRITE: **ु**, **दुकान**, **वस्तु**, **भाव**, and **भाई**]
+
+Then say heat.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-SASTA-01]; assesses=[] -->

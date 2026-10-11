@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C23-NAAL-01]
 practises:
-  knowledge: [ML-CONCEPT-C23-NAAL-01]
+  knowledge: [ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02, ML-CONCEPT-C23-NAAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,6 +63,14 @@ erasing it.
 - [YOU SAY: *nāḷe* — tomorrow, with *nāḷ* inside]
 - [YOU SAY: *oru nāḷ* — one day, narrative register]
 - [YOU SAY: *piṟannāḷ* — birthday, day of birth]
+
+## Guided Practice — the two Sanskrit day-words
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02] -->
+
+- Say "three days". (***mūnnu divasaṁ*** — *divasaṁ*, a Sanskrit tatsama,
+  back to PIE *\*dyew-*, "to shine".)
+- And the formal day-word? (***dinam*** — Kannada's everyday *dina*; it and
+  *divasa* are two Sanskrit formations off one root.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-NAAL-01] -->

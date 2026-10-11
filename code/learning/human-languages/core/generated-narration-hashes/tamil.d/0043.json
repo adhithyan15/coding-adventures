@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 43,
-  "sourceHash": "fnv1a64:32c1d2e6238a78c2",
+  "sourceHash": "fnv1a64:1b9e0ce5630c2648",
   "lessonIds": [
     "TA-C43-child",
     "TA-C43-son",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "tamil/narration/ch43.txt",
   "json": "tamil/narration/ch43.json",
-  "textHash": "fnv1a64:5b7e92580a4ff231",
-  "jsonHash": "fnv1a64:63f09fda619ab626",
+  "textHash": "fnv1a64:6a27f2e0da85a560",
+  "jsonHash": "fnv1a64:9a372d368d75bfa6",
   "findings": []
 }

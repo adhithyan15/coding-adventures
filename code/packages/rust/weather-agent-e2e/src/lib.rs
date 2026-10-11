@@ -970,6 +970,7 @@ impl UmbrellaPipeline {
                 allowed_agents: AllowedAgents::only([AGENT_ID]),
                 allowed_mode: VaultDeliveryMode::Leased,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
         );
         // The canonical binding, not a local re-implementation. The handler
@@ -2610,6 +2611,7 @@ mod tests {
                 allowed_agents: AllowedAgents::only([AGENT_ID]),
                 allowed_mode: VaultDeliveryMode::Leased,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
         );
         let bridge = VaultToolBridge::new(vault, Arc::new(UnavailableDirectDelivery));

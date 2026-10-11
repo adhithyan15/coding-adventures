@@ -42,7 +42,7 @@ reviews_of: [GU-C38-panchmu, GU-C37-kyaan, GU-C34-kem-kemke, GU-C25-atyaare]
 - [YOU RECALL: say *fifth*, and the two pieces in it — **R1**, one lesson back]
 - [YOU RECALL: ask *where* — **R2**, five lessons back]
 - [YOU RECALL: ask *why*, then answer *because* — **R3**, twenty lessons back]
-- [YOU RECALL: write **અત્યારે** — **R4**, eighty lessons back]
+- [YOU WRITE: **અત્યારે** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: ત્રીજું
 <!-- hl-knowledge: introduces=[GU-LEX-TRIJU]; assesses=[GU-GRAMMAR-ORDINAL-MU, GU-FORM-TRAN-R, GU-ETYMON-TRAN-R-RESTORATION, GU-LEX-NUMBERS-ONE-TO-FIVE] -->

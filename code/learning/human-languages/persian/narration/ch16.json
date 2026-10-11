@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "One to Five, and the Words English Already Says",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8fa370d70f3fc0a6",
+  "sourceHash": "fnv1a64:963408854331ed5b",
   "lessons": [
     {
       "id": "FA-C16-yek",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bc06aca6b965d1a",
+      "sourceHash": "fnv1a64:2823d2a7216684c4",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "سلام and نان off the page, without the romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **سلام** and **نان** off the page, without the romanization]"
+            },
+            {
               "kind": "speech",
-              "text": "Read سلام and نان off the page, without the romanization. Nine letters, and the words they finish."
+              "text": "Nine letters, and the words they finish."
             }
           ]
         },
@@ -116,8 +125,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-yek-meaning",
-              "prompt": "Type the Persian word for 'one'.",
+              "prompt": "Say the Persian word for 'one'.",
               "assesses": [
                 "FA-LEX-YEK"
               ],
@@ -139,7 +149,7 @@
     {
       "id": "FA-C16-do",
       "sequence": 710,
-      "title": "دو — two, and a letter doing its third job",
+      "title": "دو (do) — two, and a letter doing its third job",
       "headword": "دو",
       "romanization": "do",
       "gloss": "two — two letters, and the same word as English two",
@@ -191,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دو continues Middle Persian dō, from Proto-Iranian duwā, from Indo-European dwoh, \"two.\" English two, Latin duo, Greek dýo and Sanskrit dvá are the same word."
+              "text": "دو (do) continues Middle Persian dō, from Proto-Iranian duwā, from Indo-European dwoh, \"two.\" English two, Latin duo, Greek dýo and Sanskrit dvá are the same word."
             },
             {
               "kind": "speech",
@@ -246,7 +256,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of و's three jobs is it doing in دو? (o.)"
+              "text": "Which of و's three jobs is it doing in دو (do)? (o.)"
             },
             {
               "kind": "speech",
@@ -255,8 +265,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-do-meaning",
-              "prompt": "Type the Persian word for 'two'.",
+              "prompt": "Say the Persian word for 'two'.",
               "assesses": [
                 "FA-LEX-DO"
               ],
@@ -403,6 +414,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "FA-C16-se-write",
               "prompt": "Write the Persian word for 'three', using the two letters the script chapter taught.",
               "assesses": [
@@ -542,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-chahar-meaning",
-              "prompt": "Type the Persian word for 'four'.",
+              "prompt": "Say the Persian word for 'four'.",
               "assesses": [
                 "FA-LEX-CHAHAR"
               ],
@@ -681,6 +694,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-panj-count",
               "prompt": "Count aloud from one to five in Persian.",
               "assesses": [
@@ -715,7 +729,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cbc8a35aaca88b7",
+      "sourceHash": "fnv1a64:73b28dfea7e377bd",
       "notice": null,
       "blocks": [
         {
@@ -753,12 +767,22 @@
               "text": "Count backwards from panj to yek."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed shuffled — پنج (panj)، یک (yek)، چهار (chahâr)، سه (se)، دو (do) — and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed shuffled — پنج (panj)، یک (yek)، چهار (chahâr)، سه (se)، دو (do) — then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed shuffled — **پنج، یک، چهار، سه، دو** — then say each]"
             },
             {
-              "kind": "speech",
-              "text": "Write سه, the one of the five whose letters are already yours."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سه (se), the one of the five whose letters are already yours",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **سه**, the one of the five whose letters are already yours]"
             },
             {
               "kind": "speech",
@@ -778,6 +802,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-practice-shuffle",
               "prompt": "Count backwards from five to one in Persian.",
               "assesses": [
@@ -810,16 +835,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:f8d8f52046e4d16e",
+      "sourceHash": "fnv1a64:769dce3970694ee5",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "You'll want to know: numbers go in front, and nothing else changes"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: numbers go in front, and nothing else changes."
       },
       "blocks": [
         {
@@ -859,12 +888,12 @@
               "utterances": [
                 "یک دوست yek dust, one friend.",
                 "دو دوست do dust, two friends.",
-                "سه زن se zan, three women."
+                "se zan, three women."
               ]
             },
             {
               "kind": "speech",
-              "text": "Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does زن. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it."
+              "text": "Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does zan. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it."
             },
             {
               "kind": "speech",
@@ -935,6 +964,16 @@
             {
               "kind": "speech",
               "text": "How do you say two friends? (دو دوست do dust — the noun is unchanged.) Why is there no plural ending? (The number already said how many.) What does دوست mean literally? (The one chosen.) And which English word shares its root? (Choose.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And zan: which English word kept its root, narrowed to one woman? (Queen — and Greek kept the plain sense in gynecology.)"
             }
           ]
         }

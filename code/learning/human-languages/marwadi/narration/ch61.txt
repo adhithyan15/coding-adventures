@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अंगूर (aṅgūr) mean? ("Grapes".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'grapes'.
+Say the Marwadi for 'grapes'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नींबू (nīmbū) mean? ("A lemon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a lemon'.
+Say the Marwadi for 'a lemon'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आटो (āṭo) mean? ("Flour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'flour'.
+Say the Marwadi for 'flour'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कांदो (kā̃do) mean? ("An onion".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an onion'.
+Say the Marwadi for 'an onion'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मिठाई (miṭhāī) mean? ("Sweets".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sweets'.
+Say the Marwadi for 'sweets'.

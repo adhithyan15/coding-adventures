@@ -59,7 +59,8 @@ The answer that matches a question you have had since early on.
 - [YOU SAY: *tathā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *katham*, then *tathā*, as question and answer]
-- [YOU RECALL: say *asthi*, then read **लवणम्**]
+- [YOU RECALL: say *asthi*]
+- [YOU READ: **लवणम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03] -->

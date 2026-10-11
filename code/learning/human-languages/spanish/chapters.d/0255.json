@@ -11,7 +11,8 @@
     "kind": "task",
     "summary": "I can use the preterite of ver and dar.",
     "assesses": [
-      "ES-GRAMMAR-VER-PRETERITE"
+      "ES-GRAMMAR-VER-PRETERITE",
+      "ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT"
     ]
   }
 }

@@ -38,7 +38,8 @@ reviews_of: [KA-C118-lekhani]
 
 [PAUSE 2s] Before the new one: say the Kannada for a bag, then the Kannada for a pen.
 
-[PAUSE 3s] Read the lines aloud as one run: **ಇದು ಬಾಗಿಲು. ಕುರ್ಚಿ ಇಲ್ಲಿ ಇದೆ.**
+[PAUSE 3s]
+[YOU READ: the lines aloud as one run — **ಇದು ಬಾಗಿಲು. ಕುರ್ಚಿ ಇಲ್ಲಿ ಇದೆ.**]
 
 ## You'll want to know: ಕಾಗದ
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-05]; assesses=[] -->

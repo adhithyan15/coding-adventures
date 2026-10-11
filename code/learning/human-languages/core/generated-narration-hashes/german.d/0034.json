@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 34,
-  "sourceHash": "fnv1a64:62f920aa14af5f01",
+  "sourceHash": "fnv1a64:bebd54cb43c84b02",
   "lessonIds": [
     "GE-C21-das-wetter",
     "GE-C21-das-wetter-more"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "german/narration/ch34.txt",
   "json": "german/narration/ch34.json",
-  "textHash": "fnv1a64:486ad829ad7fdd55",
-  "jsonHash": "fnv1a64:0d0285b4d83cb0d4",
+  "textHash": "fnv1a64:4b13d52844ef22b3",
+  "jsonHash": "fnv1a64:47bf85efe0d8de83",
   "findings": []
 }

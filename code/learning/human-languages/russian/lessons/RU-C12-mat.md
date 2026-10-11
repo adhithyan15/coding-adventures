@@ -48,7 +48,7 @@ straight to the English word you already own.
 > "my mother is a doctor")
 
 One syllable, softened by the **ь** at the end — the same soft sign you
-already read in *очень* and *семья*. Feminine, matching *мама*, but reach
+already read in *óchen* and *семья*. Feminine, matching *мама*, but reach
 for *мать* where English would reach for *mother* rather than *mom*: on a
 form, in an introduction, talking *about* her rather than *to* her.
 
@@ -67,7 +67,7 @@ sentence's worth of unbroken history.
 Linguists suspect \**méh₂tēr* itself grew out of the same infant babble as
 *мама* — the *m*-sound a baby makes first — but so long ago, and so
 thoroughly grammaticalized into "mother" across every daughter language,
-that it counts as real inheritance now, not live coincidence. *Мама* is that
+that it counts as real inheritance now, not live coincidence. *Máma* is that
 babble happening again, fresh, in front of you; *мать* is the fossil the
 same babble left five thousand years ago.
 
@@ -84,7 +84,7 @@ same babble left five thousand years ago.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-MAT, RU-ETYMON-MAT-MOTHER, RU-LEX-MAMA, RU-LEX-PAPA, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE] -->
 
-[PAUSE 3s] Say "mother," formally. (**Мать**.) Name three language cousins
+[PAUSE 3s] Say "mother," formally. (*Mat'*.) Name three language cousins
 beyond English *mother*. (**Latin *māter*, Greek *mḗtēr*, Sanskrit
 *mātar*.**) Is *мать*'s connection to *mother* the same kind of thing as
 *мама*'s? (**No** — *мать* is true inheritance; *мама* is fresh babble that

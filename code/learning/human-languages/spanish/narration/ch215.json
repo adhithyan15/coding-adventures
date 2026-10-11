@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 215,
   "title": "Preguntó Dónde --- What the Accent Was Always For",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:acb2cb2965d406c9",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:30d35eb7e51d80df",
   "lessons": [
     {
       "id": "ES-C57-pregunto-donde",
@@ -14,20 +14,13 @@
       "romanization": "preguntó dónde",
       "gloss": "he asked where — and the accent stays, which finally explains what that accent was always marking",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b1818a953f20d93",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e850793700898257",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -87,8 +80,17 @@
           "title": "Why it's said this way",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at dónde in that reported sentence.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at *dónde* in that reported sentence.]"
+            },
+            {
               "kind": "speech",
-              "text": "Now look at dónde in that reported sentence. The accent is still there — in a sentence with no question marks at all."
+              "text": "The accent is still there — in a sentence with no question marks at all."
             },
             {
               "kind": "pause",
@@ -166,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-donde-report",
               "prompt": "Report it: Donde trabaja? (he asked)",
               "assesses": [
@@ -184,6 +187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-donde-accent",
               "prompt": "Does donde keep its accent in the reported version?",
               "assesses": [
@@ -202,6 +206,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-donde-join",
               "prompt": "Do you need que or si in front of donde here?",
               "assesses": [

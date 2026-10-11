@@ -15,12 +15,13 @@ use chief_of_staff_service_registry::{
 };
 use chief_of_staff_vault_runtime::{AllowedAgents, SecretPolicy, VaultDeliveryMode};
 use chief_of_staff_vault_secret_store::{
-    validate_policy, NameError, SecretName, MAX_PRIVILEGE_TIER,
+    validate_destination, validate_policy, NameError, SecretName, MAX_PRIVILEGE_TIER,
 };
 use cli_builder::{load_spec_from_str, CliBuilderError, ParseResult, Parser, ParserOutput};
 use coding_adventures_json_serializer::{serialize_pretty, JsonSerializerError, SerializerConfig};
 use coding_adventures_json_value::JsonValue;
 use core::fmt::{self, Display, Formatter};
+use std::collections::BTreeSet;
 
 const CLI_SPEC: &str = r#"{
   "cli_builder_spec_version": "1.0",
@@ -133,6 +134,7 @@ const CLI_SPEC: &str = r#"{
             {"id": "tier", "long": "tier", "description": "Minimum approval tier, 0-3 (recorded, not yet enforced).", "type": "integer", "required": true, "value_name": "TIER"},
             {"id": "allow_agent", "long": "allow-agent", "description": "Repeatable registered host name allowed to request the secret.", "type": "string", "repeatable": true, "value_name": "HOST"},
             {"id": "any_agent", "long": "any-agent", "description": "Allow every agent; must be stated explicitly.", "type": "boolean"},
+            {"id": "destination", "long": "destination", "description": "Repeatable HOST:PORT net.fetch may send the secret to; required for leased and both.", "type": "string", "repeatable": true, "value_name": "HOST:PORT"},
             {"id": "raw", "long": "raw", "description": "Keep the stdin bytes exactly instead of stripping one trailing newline.", "type": "boolean"}
           ],
           "mutually_exclusive_groups": [
@@ -203,6 +205,8 @@ pub struct VaultPut {
     pub allowed_agents: AllowedAgents,
     /// Which delivery modes are admissible.
     pub allowed_mode: VaultDeliveryMode,
+    /// Where `net.fetch` may send the secret (D18U U-C4a, VLT06 P9).
+    pub allowed_destinations: BTreeSet<String>,
     /// Keep stdin bytes exactly (`--raw`) instead of stripping one newline.
     pub raw: bool,
 }
@@ -218,6 +222,7 @@ impl VaultPut {
             allowed_agents: self.allowed_agents.clone(),
             allowed_mode: self.allowed_mode,
             rotated_at_ms,
+            allowed_destinations: self.allowed_destinations.clone(),
         }
     }
 
@@ -539,11 +544,39 @@ fn parse_vault_put(result: &ParseResult) -> Result<VaultPut, CliError> {
             ))
         }
     };
+    // D18U U-C4a: a leasable secret must say where it may be sent, and a
+    // direct-only secret never reaches net.fetch, so naming a destination for
+    // one is a mistake rather than a harmless extra.
+    let allowed_destinations = repeatable_flag(result, "destination")?
+        .into_iter()
+        .map(|destination| {
+            let destination = destination.to_ascii_lowercase();
+            validate_destination(&destination)
+                .map(|()| destination)
+                .map_err(|why| invalid_value("destination", why))
+        })
+        .collect::<Result<BTreeSet<_>, _>>()?;
+    match (allowed_mode, allowed_destinations.is_empty()) {
+        (VaultDeliveryMode::Direct, false) => {
+            return Err(invalid_value(
+                "destination",
+                "a direct-only secret is never sent by net.fetch; drop --destination",
+            ))
+        }
+        (VaultDeliveryMode::Leased | VaultDeliveryMode::Both, true) => {
+            return Err(invalid_value(
+                "destination",
+                "a leasable secret must name where it may be sent: --destination HOST:PORT",
+            ))
+        }
+        _ => {}
+    }
     let put = VaultPut {
         name,
         privilege_tier,
         allowed_agents,
         allowed_mode,
+        allowed_destinations,
         raw: bool_flag(result, "raw")?,
     };
     // The record format's own bounds (agent count, id length) are checked
@@ -1242,6 +1275,8 @@ mod tests {
             "weather-key",
             "--mode",
             "leased",
+            "--destination",
+            "api.weather.gov:443",
             "--tier",
             "2",
             "--allow-agent",
@@ -1278,7 +1313,17 @@ mod tests {
         assert_eq!(parsed.allowed_agents, AllowedAgents::Any);
         assert_eq!(parsed.allowed_mode, VaultDeliveryMode::Direct);
         assert!(parsed.raw);
-        let both = put(&["x", "--mode", "both", "--tier", "3", "--any-agent"]).unwrap();
+        let both = put(&[
+            "x",
+            "--mode",
+            "both",
+            "--destination",
+            "api.weather.gov:443",
+            "--tier",
+            "3",
+            "--any-agent",
+        ])
+        .unwrap();
         assert_eq!(both.allowed_mode, VaultDeliveryMode::Both);
         assert_eq!(both.privilege_tier, 3);
     }
@@ -1288,8 +1333,23 @@ mod tests {
         // U-C4: no flag has a default; each omission is refused.
         for missing in [
             &["k", "--tier", "1", "--any-agent"][..],
-            &["k", "--mode", "leased", "--any-agent"][..],
-            &["k", "--mode", "leased", "--tier", "1"][..],
+            &[
+                "k",
+                "--mode",
+                "leased",
+                "--destination",
+                "api.weather.gov:443",
+                "--any-agent",
+            ][..],
+            &[
+                "k",
+                "--mode",
+                "leased",
+                "--destination",
+                "api.weather.gov:443",
+                "--tier",
+                "1",
+            ][..],
         ] {
             assert!(put(missing).is_err(), "{missing:?} must be refused");
         }
@@ -1301,6 +1361,8 @@ mod tests {
             "k",
             "--mode",
             "leased",
+            "--destination",
+            "api.weather.gov:443",
             "--tier",
             "1",
             "--any-agent",
@@ -1313,7 +1375,17 @@ mod tests {
     #[test]
     fn vault_put_refuses_out_of_range_tiers_and_bad_modes() {
         for tier in ["4", "-1", "300"] {
-            let error = put(&["k", "--mode", "leased", "--tier", tier, "--any-agent"]).unwrap_err();
+            let error = put(&[
+                "k",
+                "--mode",
+                "leased",
+                "--destination",
+                "api.weather.gov:443",
+                "--tier",
+                tier,
+                "--any-agent",
+            ])
+            .unwrap_err();
             assert_eq!(invalid_field(error), "tier", "tier {tier}");
         }
         assert!(matches!(
@@ -1328,7 +1400,17 @@ mod tests {
         for bad in ["Upper", "a", "has space", "under_score", "1digit"] {
             assert!(
                 matches!(
-                    put(&["k", "--mode", "leased", "--tier", "1", "--allow-agent", bad]),
+                    put(&[
+                        "k",
+                        "--mode",
+                        "leased",
+                        "--destination",
+                        "api.weather.gov:443",
+                        "--tier",
+                        "1",
+                        "--allow-agent",
+                        bad
+                    ]),
                     Err(CliError::Registry(_))
                 ),
                 "{bad:?} must be refused"
@@ -1338,7 +1420,15 @@ mod tests {
 
     #[test]
     fn vault_put_bounds_the_allow_list_before_reading_any_secret() {
-        let mut values = vec!["k", "--mode", "leased", "--tier", "1"];
+        let mut values = vec![
+            "k",
+            "--mode",
+            "leased",
+            "--destination",
+            "api.weather.gov:443",
+            "--tier",
+            "1",
+        ];
         let hosts: Vec<String> = (0..65).map(|i| format!("host-{i}")).collect();
         for host in &hosts {
             values.push("--allow-agent");
@@ -1349,8 +1439,17 @@ mod tests {
 
     #[test]
     fn vault_secret_names_follow_d18u() {
-        let error =
-            put(&["Bad/Name", "--mode", "leased", "--tier", "1", "--any-agent"]).unwrap_err();
+        let error = put(&[
+            "Bad/Name",
+            "--mode",
+            "leased",
+            "--destination",
+            "api.weather.gov:443",
+            "--tier",
+            "1",
+            "--any-agent",
+        ])
+        .unwrap_err();
         assert!(matches!(error, CliError::SecretName(NameError::BadStart)));
         assert!(error.to_string().contains("invalid secret name"));
         assert!(std::error::Error::source(&error).is_some());
@@ -1389,6 +1488,8 @@ mod tests {
                 "s3cret",
                 "--mode",
                 "leased",
+                "--destination",
+                "api.weather.gov:443",
                 "--tier",
                 "1",
                 "--any-agent",
@@ -1405,11 +1506,23 @@ mod tests {
 
     #[test]
     fn secret_bytes_strips_exactly_one_newline_unless_raw() {
-        let cooked = put(&["k", "--mode", "leased", "--tier", "1", "--any-agent"]).unwrap();
+        let cooked = put(&[
+            "k",
+            "--mode",
+            "leased",
+            "--destination",
+            "api.weather.gov:443",
+            "--tier",
+            "1",
+            "--any-agent",
+        ])
+        .unwrap();
         let raw = put(&[
             "k",
             "--mode",
             "leased",
+            "--destination",
+            "api.weather.gov:443",
             "--tier",
             "1",
             "--any-agent",
@@ -1428,5 +1541,68 @@ mod tests {
             assert_eq!(cooked.secret_bytes(input), default, "{input:?}");
             assert_eq!(raw.secret_bytes(input), kept, "{input:?} raw");
         }
+    }
+
+    #[test]
+    fn leasable_secrets_require_destinations_and_direct_ones_refuse_them() {
+        // D18U U-C4a.
+        let missing = put(&["k", "--mode", "leased", "--tier", "1", "--any-agent"]).unwrap_err();
+        assert_eq!(invalid_field(missing), "destination");
+        let direct = put(&[
+            "k",
+            "--mode",
+            "direct",
+            "--tier",
+            "1",
+            "--any-agent",
+            "--destination",
+            "a.example:443",
+        ])
+        .unwrap_err();
+        assert_eq!(invalid_field(direct), "destination");
+        for bad in [
+            "127.0.0.1:443",
+            "a.example",
+            "a.example:0",
+            "a_b.example:443",
+        ] {
+            let error = put(&[
+                "k",
+                "--mode",
+                "both",
+                "--tier",
+                "1",
+                "--any-agent",
+                "--destination",
+                bad,
+            ])
+            .unwrap_err();
+            assert_eq!(invalid_field(error), "destination", "{bad}");
+        }
+        let ok = put(&[
+            "k",
+            "--mode",
+            "leased",
+            "--tier",
+            "1",
+            "--any-agent",
+            "--destination",
+            "API.Weather.gov:443",
+            "--destination",
+            "b.example:8443",
+        ])
+        .unwrap();
+        assert_eq!(
+            ok.allowed_destinations,
+            BTreeSet::from([
+                "api.weather.gov:443".to_string(),
+                "b.example:8443".to_string()
+            ]),
+            "lowercased and canonical"
+        );
+        assert_eq!(
+            ok.policy_at(5).allowed_destinations,
+            ok.allowed_destinations
+        );
     }
 }

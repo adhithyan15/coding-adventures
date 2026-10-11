@@ -43,7 +43,7 @@ final *ā*.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DUKAAN-01] -->
 
-Point to the shop when you hear *dukān*, then say *dukān* from the meaning.
+Picture a shop when you hear *dukān*, then say *dukān* from the meaning.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DUKAAN-01] -->

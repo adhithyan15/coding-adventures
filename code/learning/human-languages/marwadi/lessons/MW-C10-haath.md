@@ -37,7 +37,8 @@ reviews_of: [MW-C10-hear-haath, MW-W03-ha, MW-W05-tha, MW-C10-ghar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-HAATH-01]; assesses=[MW-LEX-HAATH-01, MW-SCRIPT-HA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-THA-01, MW-SCRIPT-GHAR-01, MW-LEX-MHARO-01, MW-SCRIPT-PATI-01] -->
 
-[PAUSE 18s] Say hand and my, write **ह**, **ा**, **थ**, **घर**, and **पति**.
+[PAUSE 18s] Say hand and my.
+[YOU WRITE: **ह**, **ा**, **थ**, **घर**, and **पति**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAATH-01, MW-SCRIPT-HAATH-01] -->
@@ -48,7 +49,9 @@ reviews_of: [MW-C10-hear-haath, MW-W03-ha, MW-W05-tha, MW-C10-ghar]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAATH-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write the word.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: the word]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAATH-01, MW-SCRIPT-HAATH-01] -->

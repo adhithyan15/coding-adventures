@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Other Five, and Where the Count Stops",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dd12a50cef3fdd73",
+  "sourceHash": "fnv1a64:884f24ac5a0503ef",
   "lessons": [
     {
       "id": "JA-W17-mu",
@@ -18,19 +18,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:78a10daf53f0d1d7",
+      "sourceHash": "fnv1a64:90b956f209ddf531",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -107,7 +112,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace む (mu) once, counting three lifts."
+              "text": "Trace む (mu) once, counting three strokes: two lifts, one before each stroke after the first."
             },
             {
               "kind": "speech",
@@ -135,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W17-mu-write",
               "prompt": "Write the hiragana sign for the mora mu, and say which stroke is easiest to forget.",
               "assesses": [
@@ -148,7 +154,7 @@
               ],
               "feedback": {
                 "correct": "Three strokes, and the third stands alone.",
-                "incorrect": "Count the lifts: three, and the last is a small mark."
+                "incorrect": "Count the strokes: three, and the last is a small mark."
               }
             }
           ]
@@ -168,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43a80088df691f5b",
+      "sourceHash": "fnv1a64:7fb616fb944d068b",
       "notice": null,
       "blocks": [
         {
@@ -188,12 +194,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write む (mu), all three strokes — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "む (mu) from memory, all three strokes — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **む**, all three strokes — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **む** from memory, all three strokes — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -237,11 +243,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "むっつ (muttsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **むっつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write むっつ. Say roku and muttsu: same number, two words, no shared sound. Then run the count so far: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu."
+              "text": "Say roku and muttsu: same number, two words, no shared sound. Then run the count so far: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu."
             }
           ]
         },
@@ -261,6 +276,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C17-muttsu-recall",
               "prompt": "Give both words for six, and say which one you would use pointing at six apples.",
               "assesses": [
@@ -295,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e860332b3cd5ac80",
+      "sourceHash": "fnv1a64:70b602edb96e7e36",
       "notice": null,
       "blocks": [
         {
@@ -333,12 +349,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write し — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "し from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **し** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **し** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -364,7 +380,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "なな is the native word, and the borrowed count uses it — the same move you saw at four with よん. Write the two rows out and the pattern is exact:"
+              "text": "なな is the native word, and the borrowed count uses it — the same move you saw at four with よん. Set the two rows side by side and the pattern is exact:"
             },
             {
               "kind": "table",
@@ -390,11 +406,20 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ななつ (nanatsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ななつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ななつ. Say nana, then nanatsu: the same word, once as a number and once as a count of things."
+              "text": "Say nana, then nanatsu: the same word, once as a number and once as a count of things."
             }
           ]
         },
@@ -414,6 +439,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C17-nanatsu-recall",
               "prompt": "Name the two numbers where a native word is used inside the borrowed count.",
               "assesses": [
@@ -448,7 +474,8 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:0a463d0c6880c841",
       "notice": {
@@ -456,12 +483,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -566,6 +596,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W17-ya-write",
               "prompt": "Write the hiragana sign for the mora ya, and name the stroke that comes first.",
               "assesses": [
@@ -599,7 +630,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbeb5069bf28618d",
+      "sourceHash": "fnv1a64:4005a0374796b1c5",
       "notice": null,
       "blocks": [
         {
@@ -619,12 +650,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write や (ya), sweep first — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "や (ya) from memory, sweep first — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **や**, sweep first — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **や** from memory, sweep first — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -637,12 +668,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ゆ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ゆ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ゆ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **ゆ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -672,11 +703,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "やっつ (yattsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **やっつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write やっつ. Say hachi, then yattsu. Then run the eight in order without stopping."
+              "text": "Say hachi, then yattsu. Then run the eight in order without stopping."
             }
           ]
         },
@@ -696,6 +736,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C17-yattsu-recall",
               "prompt": "Give both words for eight and say whether either one is used inside the other count.",
               "assesses": [
@@ -729,19 +770,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:74c3c00b2cb8ae53",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -846,6 +891,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W17-no-write",
               "prompt": "Write the hiragana sign for the mora no, and say how many strokes it takes.",
               "assesses": [
@@ -879,7 +925,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6516d001926c0715",
+      "sourceHash": "fnv1a64:54a33c5fcdc5b0fb",
       "notice": null,
       "blocks": [
         {
@@ -899,12 +945,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write の (no) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "の (no) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **の** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **の** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -941,7 +987,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read the first two signs on their own: ここ, the word for here you have had since chapter ten. They are the same two signs, and it means nothing. kokono- is simply the native word for nine; it is not built on here and there is no story joining them. Say so and move on — an accident that gets explained is worse than one that gets named."
+              "text": "The first two signs of ここのつ (kokonotsu) spell ここ, the word for here you have had since chapter ten."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first two signs on their own",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first two signs on their own]"
+            },
+            {
+              "kind": "speech",
+              "text": "They are the same two signs, and it means nothing. kokono- is simply the native word for nine; it is not built on here and there is no story joining them. Say so and move on — an accident that gets explained is worse than one that gets named."
             },
             {
               "kind": "speech",
@@ -952,11 +1011,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ここのつ (kokonotsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ここのつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ここのつ. Say hachi, ku, then yattsu, kokonotsu — both counts, two numbers each. Then say ku and kokonotsu again. Then say koko and kokonotsu and remind yourself that the second is not made of the first."
+              "text": "Say hachi, ku, then yattsu, kokonotsu — both counts, two numbers each. Then say ku and kokonotsu again. Then say koko and kokonotsu and remind yourself that the second is not made of the first."
             }
           ]
         },
@@ -976,6 +1044,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C17-kokonotsu-recall",
               "prompt": "kokonotsu begins with the same two signs as koko, here. What is the relationship between the two words?",
               "assesses": [
@@ -1010,7 +1079,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e0d4b1488052950",
+      "sourceHash": "fnv1a64:049387b80e695156",
       "notice": null,
       "blocks": [
         {
@@ -1083,11 +1152,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "とお (tō)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **とお**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write とお. Say juu, then tō: same number, and only one of them can be built on. Then say kokonotsu, tō and stop."
+              "text": "Say juu, then tō: same number, and only one of them can be built on. Then say kokonotsu, tō and stop."
             }
           ]
         },
@@ -1107,6 +1185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C17-too-recall",
               "prompt": "Which word in the native count has no tsu on it, and what does that tell you?",
               "assesses": [
@@ -1236,6 +1315,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R17-the-other-ten-run",
               "prompt": "Count things from one to ten in the native series, without stopping.",
               "assesses": [
@@ -1263,6 +1343,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R17-the-other-ten-both",
               "prompt": "Name the two numbers where the same native word is used in BOTH counts, and give both of its forms.",
               "assesses": [
@@ -1291,7 +1372,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Ten words, and five signs: ひ, ふ, む (mu), や (ya), の. Five of the ten words cost nothing at all — みっつ, よっつ, いつつ, ななつ (nanatsu) and とお (tō) were spelled entirely out of signs you already had."
+              "text": "Ten words, and five signs: ひ, ふ, む (mu), や (ya), の (no). Five of the ten words cost nothing at all — みっつ, よっつ, いつつ, ななつ (nanatsu) and とお (tō) were spelled entirely out of signs you already had."
             },
             {
               "kind": "speech",

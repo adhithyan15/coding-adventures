@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-167-ACTION-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve two familiar verbs for believing and changing after a long interval, one at a time.",
+  "prerequisites": [
+    "PA-EXT-152-ACT152",
+    "PA-EXT-166-ACTION-RETURN"
+  ]
+}

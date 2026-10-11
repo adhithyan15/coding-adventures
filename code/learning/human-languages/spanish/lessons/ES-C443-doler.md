@@ -47,7 +47,7 @@ it is worth having ready before you need it.
 ## Grammar Lens: it is built like gustar
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C443-ANIMO-01, ES-GRAMMAR-GUSTAR-INVERSION-09, ES-LEX-CABEZA-01] -->
 
-Look at *me duele la cabeza* and find the subject. It is not *me*. **La cabeza**
+Take *me duele la cabeza* and find the subject. It is not *me*. **La cabeza**
 is the subject; the head is what does the hurting, and *me* is the person it
 happens to.
 

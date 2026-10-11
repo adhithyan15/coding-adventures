@@ -68,7 +68,7 @@ in a way that one minute of practice fixes.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-CHI-01] -->
 
-[PAUSE 15s] Write ? from memory before tracing ?.
+[PAUSE 15s] Write **ち** from memory before tracing **り**.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-RI-01] -->

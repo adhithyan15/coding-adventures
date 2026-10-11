@@ -39,6 +39,38 @@ const BOOK_MODALITY_SIGNS: Readonly<Record<"voice" | "sight" | "pen", string>> =
 };
 
 /**
+ * The words after "Hands-free start:" in a chapter's modality line.
+ *
+ * A phrase built for many lessons ("first 1 of 2 lessons", "all 1 lesson",
+ * "none of the 1 lesson") reads like a form letter at one and two, so the small
+ * counts get their own words:
+ *
+ *   drivable / lessons   prints
+ *   ------------------   -------------------------
+ *   1 / 1                its only lesson
+ *   0 / 1                none (1 lesson)
+ *   2 / 2                both lessons
+ *   0 / 2                neither of the 2 lessons
+ *   n / n   (n > 2)      all n lessons
+ *   0 / n   (n > 2)      none of the n lessons
+ *   1 / n   (n > 1)      the first of n lessons
+ *   k / n   (1 < k < n)  the first k of n lessons
+ *
+ * Exported for the test that walks every row of that table.
+ */
+export function handsFreeStart(drivablePrefix: number, lessonCount: number): string {
+  if (lessonCount === 1) return drivablePrefix === 1 ? "its only lesson" : "none (1 lesson)";
+  if (drivablePrefix === lessonCount) {
+    return lessonCount === 2 ? "both lessons" : `all ${lessonCount} lessons`;
+  }
+  if (drivablePrefix === 0) {
+    return lessonCount === 2 ? "neither of the 2 lessons" : `none of the ${lessonCount} lessons`;
+  }
+  if (drivablePrefix === 1) return `the first of ${lessonCount} lessons`;
+  return `the first ${drivablePrefix} of ${lessonCount} lessons`;
+}
+
+/**
  * Render one track's chapter-modality projection.
  *
  * The file is loaded once, immediately after `\\mainmatter`, and every numbered
@@ -78,13 +110,7 @@ export function renderBookChapterModalities(
         return `${BOOK_MODALITY_SIGNS[mode]}~\\textbf{${label}} (${chapter[mode]})`;
       })
       .join(" \\quad ");
-    const lessonNoun = chapter.lessonCount === 1 ? "lesson" : "lessons";
-    const prefix =
-      chapter.drivablePrefix === 0
-        ? `none of the ${chapter.lessonCount} ${lessonNoun}`
-        : chapter.drivablePrefix === chapter.lessonCount
-          ? `all ${chapter.lessonCount} ${lessonNoun}`
-          : `first ${chapter.drivablePrefix} of ${chapter.lessonCount} ${lessonNoun}`;
+    const prefix = handsFreeStart(chapter.drivablePrefix, chapter.lessonCount);
     definitions.push(
       `\\expandafter\\def\\csname hlchaptermodality${chapter.chapter}\\endcsname{%`,
       "  {\\small\\noindent",

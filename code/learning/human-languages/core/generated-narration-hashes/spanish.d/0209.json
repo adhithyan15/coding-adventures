@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 209,
-  "sourceHash": "fnv1a64:83a894dd1e94f378",
+  "sourceHash": "fnv1a64:e08ee5fae4fc3917",
   "lessonIds": [
     "ES-C56-repaso-condiciones"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch209.txt",
   "json": "spanish/narration/ch209.json",
-  "textHash": "fnv1a64:e00e8d277d1ba89e",
-  "jsonHash": "fnv1a64:e70a711a23ef25e0",
+  "textHash": "fnv1a64:101396c36fb5fe67",
+  "jsonHash": "fnv1a64:fc989c7d111d5140",
   "findings": []
 }

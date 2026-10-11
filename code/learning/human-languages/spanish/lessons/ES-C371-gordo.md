@@ -61,11 +61,11 @@ about words that had come into Latin from elsewhere, mentions *gurdi*, which
 ordinary people say for stupid, and adds: **I have heard it took its origin
 from Spain.**
 
-Read the verb carefully. He heard it. He is passing on a report, not making a
+Weigh the verb carefully. He heard it. He is passing on a report, not making a
 finding, and nobody since has been able to prove or disprove him. But if he is
 right, then *gordo* is a word that left the Iberian peninsula, worked in Rome
-for several centuries, drifted from a blunt mind to a blunt shape, and came
-back home in Spanish with a new job. A word that emigrated and returned.
+for several centuries, drifted from a blunt mind to a blunt shape, and came back
+home in Spanish with a new job. A word that emigrated and returned.
 
 French kept a piece of it: **gourd**, meaning numb or stiff — still the idea
 of something that does not move quickly.

@@ -59,7 +59,8 @@ A word whose cousins you can now predict rather than be told.
 - [YOU SAY: *pādaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pādaḥ*, then *pitā*, and name the sound law both share with their English cousins]
-- [YOU RECALL: read **माता**, then say *odanaḥ*]
+- [YOU READ: **माता**]
+- [YOU RECALL: say *odanaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02] -->

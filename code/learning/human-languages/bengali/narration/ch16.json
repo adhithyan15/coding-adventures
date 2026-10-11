@@ -3,8 +3,8 @@
   "language": "bengali",
   "chapter": 16,
   "title": "Tea, Water, Milk, and Rice",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1cfd3ab5a503bf59",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:0898aebd090e06f6",
   "lessons": [
     {
       "id": "BN-C10-cha",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:66335a8a826a516c",
+      "sourceHash": "fnv1a64:c3a9fcc99a8545f4",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -159,11 +160,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say jāwā, then read আসা",
+              "instruction": "say jāwā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *jāwā*, then read **আসা**]"
+              "source": "[YOU RECALL: say *jāwā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আসা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **আসা**]"
             }
           ]
         },
@@ -199,16 +209,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05de40dac78891c9",
+      "sourceHash": "fnv1a64:f49dee3e9e9a2351",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -318,12 +329,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "খাওয়া",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **খাওয়া**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read খাওয়া, then say dækhā",
+              "instruction": "say dækhā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **খাওয়া**, then say *dækhā*]"
+              "source": "[YOU RECALL: say *dækhā*]"
             }
           ]
         },
@@ -345,8 +365,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C10-jol-water",
-              "prompt": "Type the Bengali word jôl, meaning 'water'.",
+              "prompt": "Say the Bengali word jôl, meaning 'water'.",
               "assesses": [
                 "BN-LEX-C10-JOL-01"
               ],
@@ -387,7 +408,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -440,7 +461,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "সাহায্য had to surface its inherent vowel — sāhājjo, not sāhājj — because its final letter is a doubled consonant, য্য, and a bare cluster like that cannot be said at all without a vowel to carry it. দুধ ends in one plain consonant, ধ, which needs no such help. So Bengali leaves it silent: দুধ, not dudho. The spelling looks the same kind of \"bare ending\" in both words; whether the vowel survives depends on what it would take to pronounce the letter beneath it."
+              "text": "সাহায্য had to surface its inherent vowel — sāhājjo, not sāhājj — because its final letter is a doubled consonant, য্য, and a bare cluster like that cannot be said at all without a vowel to carry it. দুধ (dudh) ends in one plain consonant, ধ, which needs no such help. So Bengali leaves it silent: দুধ (dudh), not dudho. The spelling looks the same kind of \"bare ending\" in both words; whether the vowel survives depends on what it would take to pronounce the letter beneath it."
             }
           ]
         },
@@ -554,7 +575,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {

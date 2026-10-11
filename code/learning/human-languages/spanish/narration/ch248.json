@@ -154,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-que-grande-say",
               "prompt": "Somebody shows you something enormous. React, in two words.",
               "assesses": [
@@ -172,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-que-grande-good",
               "prompt": "Say the Spanish for great! or nice!",
               "assesses": [
@@ -190,6 +192,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-que-grande-accent",
               "prompt": "What has that accent always marked -- questions, or something else?",
               "assesses": [

@@ -34,17 +34,22 @@ reviews_of: [JA-C13-chichi, JA-W01-ha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-CHICHI] -->
 
-Say and write **ちち** once before meeting the paired family word.
+Before meeting the paired family word, say **ちち** once.
+[YOU WRITE: **ちち** once]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-HAHA]; assesses=[JA-LEX-CHICHI, JA-SCRIPT-SU-01] -->
 
-Write distant **す**. Hear *ha-ha*, say it once, then contrast *chichi*.
+[YOU WRITE: distant **す**]
+
+Hear *ha-ha*, say it once, then contrast *chichi*.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAHA, JA-SCRIPT-HA-01] -->
 
-Read **は | は**. Copy **はは**, hide it, and write it once from the meaning.
+[YOU READ: **は | は**]
+
+[YOU WRITE: one copy of **はは**; then hide it and write it once from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAHA] -->

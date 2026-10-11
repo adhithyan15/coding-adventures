@@ -16,13 +16,13 @@ sounds: [chandrabindu, vowel-nasalization]
 roots: [sanskrit-panca]
 etymology_hook: "pañca → pāṁch keeps the nasal by moving it from a consonant into the vowel; the chandrabindu makes that migration visible"
 duration:
-  max_seconds: 180
+  max_seconds: 200
 requires:
-  knowledge: [HI-CONCEPT-C06-TIN-CHAR-HISTORY-01, HI-CONCEPT-C06-TIN-CHAR-HISTORY-02]
+  knowledge: [HI-CONCEPT-C06-NUMBERS-1-5-01, HI-CONCEPT-C06-TIN-CHAR-HISTORY-01, HI-CONCEPT-C06-TIN-CHAR-HISTORY-02]
 introduces:
   knowledge: [HI-CONCEPT-C06-PAANCH-NASAL-01]
 practises:
-  knowledge: [HI-CONCEPT-C06-PAANCH-NASAL-01]
+  knowledge: [HI-CONCEPT-C06-NUMBERS-1-5-01, HI-CONCEPT-C06-TIN-CHAR-HISTORY-01, HI-CONCEPT-C06-TIN-CHAR-HISTORY-02, HI-CONCEPT-C06-PAANCH-NASAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,9 +57,21 @@ backward from its own consonant into the vowel.
 - [YOU HUM: hold the nasal through the vowel in *pāṁch*]
 - [YOU POINT: **ँ**, the moon-dot that records it]
 
+## Guided Practice — the five, and how they wore down
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C06-NUMBERS-1-5-01, HI-CONCEPT-C06-TIN-CHAR-HISTORY-01, HI-CONCEPT-C06-TIN-CHAR-HISTORY-02] -->
+
+This is the chapter's checkpoint, so gather the earlier two lessons too.
+
+- Count from one to five. (*Ek, do, tīn, chār, pāṁch*.)
+- Which Sanskrit forms gave *tīn* and *chār*, and what stood in between?
+  (The **neuter** *trī́ṇi* and *catvā́ri*; the **Prakrits**.)
+- In *trī́ṇi* → *tiṇṇi* → *tīn*, what pays for the lost *r*, and then for the
+  lost double? (A **doubled ṇ**; then a **long vowel**.)
+- Which number wore down the same way on another continent? (Latin *quattuor*
+  → Spanish *cuatro*, beside *catvā́ri* → *chār*.)
+
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C06-PAANCH-NASAL-01] -->
 
 [PAUSE 3s] Did the nasal in *pañca* disappear? (**No** — it moved into the
-vowel.) What records it in **पाँच**? (The **chandrabindu**.) Count one to five
-once more. (*Ek, do, tīn, chār, pāṁch*.)
+vowel.) What records it in **पाँच**? (The **chandrabindu**.)

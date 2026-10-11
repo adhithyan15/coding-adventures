@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 90,
   "title": "Four Adjectives That Always Agree",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b7846bacfeee9501",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:491d0b6c36c6bff7",
   "lessons": [
     {
       "id": "HI-C82-lambaa",
@@ -14,20 +14,13 @@
       "romanization": "lambā",
       "gloss": "tall, long — one word for both, because Hindi measures the same distance whether it stands up or lies down",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1d25c62cb414834",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:21b372226941f516",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last chapter gave you four adjectives and not one of them changed its ending. Say आसान and remember why it stayed put. This chapter gives you three that do the opposite, and you can see it coming from the spelling."
+              "text": "The last chapter gave you four adjectives and not one of them changed its ending. Say आसान and remember why it stayed put. This chapter gives you three that do the opposite, and you can hear it coming from the ending."
             }
           ]
         },
@@ -122,7 +115,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the whole reason the easy-and-difficult lesson and this one belong next to each other. That one gave you four adjectives that never move, and every one of them ended in a consonant. These three all end in -आ, and every one of them moves. Nothing has to be memorised — look at the last letter."
+              "text": "This is the whole reason the easy-and-difficult lesson and this one belong next to each other. That one gave you four adjectives that never move, and every one of them ended in a consonant. These three all end in -आ, and every one of them moves. Nothing has to be memorised — listen for the last sound."
             }
           ]
         },
@@ -557,7 +550,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fe29c2d724e162f",
+      "sourceHash": "fnv1a64:a6c7280ffedae163",
       "notice": null,
       "blocks": [
         {
@@ -573,7 +566,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have लंबा (lambā) for tall. Reach for its opposite using a word you already know, and then read on to find out why that reach does not work."
+              "text": "You have लंबा (lambā) for tall. Reach for its opposite using a word you already know, and then go on to find out why that reach does not work."
             }
           ]
         },
@@ -875,7 +868,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cec503a4820e126e",
+      "sourceHash": "fnv1a64:211d8c0b4db1f134",
       "notice": null,
       "blocks": [
         {
@@ -930,8 +923,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

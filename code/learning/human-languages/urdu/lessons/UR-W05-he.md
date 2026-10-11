@@ -94,7 +94,7 @@ every other shape in all three is one you have already drawn.
 - [YOU WRITE: ہ standing alone — the loop, then the falling tail]
 - [YOU WRITE: ہم — and say **ham**]
 - [YOU READ: کہانی — name its five letters, and say which face its he wears]
-- [YOU POINT: at the gol he that closes **شکریہ**]
+- [YOU POINT: the gol he that closes **شکریہ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-HE-01] -->

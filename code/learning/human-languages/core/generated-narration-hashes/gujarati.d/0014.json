@@ -9,10 +9,10 @@
     "GU-C08-lakhvun"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "gujarati/narration/ch14.txt",
   "json": "gujarati/narration/ch14.json",
-  "textHash": "fnv1a64:b5a540ecef074e6c",
-  "jsonHash": "fnv1a64:cc8e786d83c42ccf",
+  "textHash": "fnv1a64:85e5995b561aab2a",
+  "jsonHash": "fnv1a64:5c70eab84e3e416d",
   "findings": []
 }

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すごい (sugoi) mean? ("Amazing".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'amazing'.
+Say the Japanese for 'amazing'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひどい (hidoi) mean? ("Terrible".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'terrible'.
+Say the Japanese for 'terrible'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does わかい (wakai) mean? ("Young".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'young'.
+Say the Japanese for 'young'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おさない (osanai) mean? ("Very young".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'very young'.
+Say the Japanese for 'very young'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆたか (yutaka) mean? ("Plentiful, rich".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'plentiful, rich'.
+Say the Japanese for 'plentiful, rich'.

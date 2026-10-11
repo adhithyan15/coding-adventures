@@ -33,8 +33,7 @@ reviews_of: [ML-C97-sundaram, ML-C97-bhangi, ML-C97-alla-sundaram]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C97-NOT-BEAUTIFUL-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *this is beautiful*, then deny
-it.
+[PAUSE 3s] From memory alone, say *this is beautiful*, then deny it.
 
 ## Grammar Lens: two different events
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-C96-EASY-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-AANU-01, ML-CONCEPT-C70-UM-01] -->

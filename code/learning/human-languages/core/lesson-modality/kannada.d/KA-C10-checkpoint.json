@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "KA-C10-checkpoint",
+    "language": "kannada",
+    "chapter": 10,
+    "sequence": 389,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:765ada1fe3cbec7f",
+    "detachableSegments": [
+      "Script — ◌ೋ and ೨",
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

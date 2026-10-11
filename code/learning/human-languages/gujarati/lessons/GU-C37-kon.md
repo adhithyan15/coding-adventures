@@ -47,7 +47,7 @@ the question word you have had longest.
 
 > **કોણ** — *koṇ* — **who**
 
-Look at the front of it. **કેમ**, **કે**, **કોણ** — the same **ક-** every time.
+Notice the front of it. **કેમ**, **કે**, **કોણ** — the same **ક-** every time.
 Gujarati builds its question words on one stem, and once you have heard three of
 them the rest of the family announces itself.
 

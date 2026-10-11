@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 14,
   "title": "Seasons",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f1b47aa8cd512fed",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:da42370189844230",
   "lessons": [
     {
       "id": "HI-C14-ghee",
@@ -14,20 +14,13 @@
       "romanization": "ghī",
       "gloss": "ghee, clarified butter",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cd39f4867b67077",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:38781cb350f908a1",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ghī. Look at its shape as you say it: the next lesson takes one piece of it, घ (gha), and writes it on its own."
+              "text": "Say it: ghī."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, घ (gha), and writes it on its own."
             }
           ]
         },
@@ -124,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1363db38bc985c4a",
+      "sourceHash": "fnv1a64:7e7367513e457d64",
       "notice": null,
       "blocks": [
         {
@@ -225,6 +231,17 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — one more word from this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is \"ghee, clarified butter\"? (Ghī.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -268,7 +285,7 @@
           "Script you'll notice: ◌ँ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ँ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ँ and Guided Practice."
       },
       "blocks": [
         {
@@ -363,7 +380,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ँ (candrabindu) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ँ in the ones that have it]"
@@ -385,7 +402,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ँ (candrabindu) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ँ once more]"
@@ -438,7 +455,7 @@
           "Script: ahead of its words, on purpose",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: घ, Script: ahead of its words, on purpose and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: घ, Script: ahead of its words, on purpose and Guided Practice."
       },
       "blocks": [
         {
@@ -621,20 +638,24 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:4f2a9e500aa891e7",
+      "sourceHash": "fnv1a64:e36881d4f6a67c93",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: ऋ and its Hindi value",
-          "Writing: ऋ — supported formation"
+          "Writing: ऋ — supported formation",
+          "Guided Practice — delayed recall",
+          "Wrap-up Recall — no-model checkpoint"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ऋ and its Hindi value, Writing: ऋ — supported formation, Guided Practice — delayed recall and Wrap-up Recall — no-model checkpoint."
       },
       "blocks": [
         {
@@ -731,7 +752,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ऋ (ṛ (Hindi ri)) once beside the visible model",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: ऋ once beside the visible model]"
@@ -739,11 +760,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to the letter, then say “independent vowel — not र”",
+              "instruction": "the letter, then say “independent vowel — not र”",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to the letter, then say “independent vowel — not र”]"
+              "source": "[YOU POINT: the letter, then say “independent vowel — not र”]"
             }
           ]
         },
@@ -790,6 +811,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-S125-letter-vocalic-r-no-model",
               "prompt": "With no model or character bank, write the independent vowel at the start of ritu.",
               "assesses": [
@@ -804,6 +826,198 @@
                 "correct": "The independent vowel is written, and ऋतु now reads from its first letter.",
                 "incorrect": "Finish the attempt, reopen ऋ, repair only the first differing stroke, then close the model again."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C14-checkpoint",
+      "sequence": 614,
+      "title": "Chapter 14 checkpoint — six seasons, and ऋ (ṛ (Hindi ri)) from memory",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 14 checkpoint — the six seasons and ghī out loud, then ◌ँ, घ and ऋ on the page",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f9faaa10f20e18a7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — ◌ँ, घ and ऋ",
+          "Writing — from memory"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — ◌ँ, घ and ऋ and Writing — from memory."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new here. The seasons out loud first, then a mark and two letters on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the six seasons",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six seasons, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six seasons, in order]"
+            },
+            {
+              "kind": "speech",
+              "text": "(Vasant, grīṣma, varṣā, śarad, hemant, śiśir.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which one has no Western match? (Varṣā, the monsoon.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Is this a four-season frame with two extras? (No: six seasons is a different way of dividing the year, with the cold split into hemant and śiśir.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one more word from this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is \"ghee, clarified butter\"? (Ghī.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — ◌ँ, घ and ऋ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does ◌ँ (candrabindu) do in पाँच? (The vowel under it is said through the nose.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter opens घी (ghī), and what sound does it carry? (घ, gha, with a puff of breath.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ऋ (ṛ (Hindi ri)) opens ऋतु. Is it the consonant र? (No: it is an independent vowel, written ṛ and said ri in Hindi.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "घी (ghī) and ऋतु aloud, and point to the घ (gha) and the ऋ (ṛ (Hindi ri))",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **घी** and **ऋतु** aloud, and point to the घ and the ऋ]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — from memory",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the Script block above, so no model stays in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the Script block above, so no model stays in view]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the first letter of ritu, then the letter for gha",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the first letter of *ritu*, then the letter for *gha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the mark that sends a vowel through the nose",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the mark that sends a vowel through the nose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — ऋ (ṛ (Hindi ri)), घ (gha), ◌ँ (candrabindu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **ऋ**, **घ**, **◌ँ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired stroke, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired stroke, then stop]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which season follows the monsoon, and which two split the cold? (Śarad; hemant and śiśir.) That is the chapter: six seasons, and the vowel letter that opens their name."
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: water and bread."
             }
           ]
         }

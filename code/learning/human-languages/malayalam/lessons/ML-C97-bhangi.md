@@ -43,9 +43,9 @@ long time.
 
 > **ഇത് ഭംഗിയാണ്.** — *itŭ bhaṁgiyāṇŭ* — "**This is beautiful.**"
 
-Read the gloss again. The word means *beauty*, but the sentence does **not** say
-*this is beauty* — it says **this is beautiful**, and it is the way you are most
-likely to hear it said.
+Think about the gloss again. The word means *beauty*, but the sentence does
+**not** say *this is beauty* — it says **this is beautiful**, and it is the way
+you are most likely to hear it said.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-AANU-01, ML-CONCEPT-C70-UM-01] -->

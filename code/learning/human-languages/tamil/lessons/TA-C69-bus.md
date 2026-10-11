@@ -59,7 +59,8 @@ Two, and one of them you can take apart.
 - [YOU SAY: *pērundu*]
 - [YOU SAY: the two pieces, then the whole word]
 - [YOU RECALL: say *pai*, then say *vaṇḍi*, then say *pērundu*]
-- [YOU RECALL: read **வேட்டி**, then say *vilai*]
+- [YOU READ: **வேட்டி**]
+- [YOU RECALL: say *vilai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02] -->

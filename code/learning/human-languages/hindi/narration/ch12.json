@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:22fc3b74f50c6416",
+  "sourceHash": "fnv1a64:53ccb6bc97c18b4c",
   "lessons": [
     {
       "id": "HI-C12-pitaa-maataa",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c445cb8db0ff467e",
+      "sourceHash": "fnv1a64:799a361f9a929a8b",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "So Hindi's brother/sister pair is lopsided in its ancestry: bhāī genuinely continues the ancient PIE word; bahin comes from an entirely different Sanskrit formation that replaced the PIE-cognate word before Hindi ever inherited it. (Sanskrit-to-Hindi sound history has plenty of non-obvious turns.)"
+              "text": "So Hindi's brother/sister pair is lopsided in its ancestry: bhāī genuinely continues the ancient PIE word; bahin comes from an entirely different Sanskrit formation that replaced the PIE-cognate word before Hindi ever inherited it."
             }
           ]
         },
@@ -229,6 +229,21 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — father and mother, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which Latin and English words are पिता and माता cousins of? (Pater, father; māter, mother — one PIE root each.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What do people say at home instead? (बाप bāp and माँ māṁ — also Sanskrit-descended.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -272,7 +287,7 @@
           "Script you'll notice: त",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: त and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: त and Guided Practice."
       },
       "blocks": [
         {
@@ -360,7 +375,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write त yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write त (ta) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -383,7 +398,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find त (ta) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find त in the ones that have it]"
@@ -405,7 +420,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find त (ta) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find त once more]"
@@ -446,7 +461,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:42b7e7379e8bf87a",
+      "sourceHash": "fnv1a64:6808dcf4a6084a1a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -457,7 +472,7 @@
           "Script you'll notice: ◌ी",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ी and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ी and Guided Practice."
       },
       "blocks": [
         {
@@ -506,7 +521,7 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: द + ◌ी = दी — dī."
+              "text": "Worked through: द + ◌ी (ī) = दी — dī."
             },
             {
               "kind": "speech",
@@ -533,15 +548,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ी — copy what you see",
+          "title": "Writing: ◌ी — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ी (ī) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ी (ī) yourself — slowly, and larger than it is printed. The short bar on top stays grey in the strip: in a word it is part of the headline, which you draw last, once, across the whole word."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -560,7 +575,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ी (ī) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ी in the ones that have it]"
@@ -582,7 +597,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ी (ī) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ी once more]"

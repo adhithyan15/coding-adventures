@@ -711,42 +711,77 @@ impl<'a> DurableReceiver<'a> {
         let mut delivered = Vec::with_capacity(page.messages.len());
         let store = ChannelStore::new(self.backend, self.definition.channel_id);
         for encrypted in page.messages {
-            let fields = encrypted.header().fields();
-            if fields.channel_id() != self.definition.channel_id
-                || fields.originator_id() != self.definition.originator.agent_id.as_bytes()
-                || fields.key_epoch() > self.definition.key_epoch
-            {
-                return Err(ChannelEndpointError::UnauthorizedMessage);
-            }
-            if self.epoch_keys.epoch_key(fields.key_epoch()).is_none() {
-                let grant = store
-                    .key_grant(fields.key_epoch(), self.receiver_id.as_bytes())?
-                    .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch()))?;
-                self.epoch_keys.install_grant(grant)?;
-            }
-            let key = self
-                .epoch_keys
-                .epoch_key(fields.key_epoch())
-                .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch()))?;
-            let payload = decrypt_message(&encrypted, key, &self.definition.originator.public_key)?;
-            let message_id = MessageId::from_uuid_v7(fields.message_id())?;
+            let message = open_delivered_message(
+                &self.definition,
+                &mut self.epoch_keys,
+                &encrypted,
+                |epoch| Ok(store.key_grant(epoch, self.receiver_id.as_bytes())?),
+            )?;
             if self
                 .delivered
-                .insert(message_id, fields.sequence())
-                .is_some_and(|previous| previous != fields.sequence())
+                .insert(message.message_id, message.sequence)
+                .is_some_and(|previous| previous != message.sequence)
             {
                 return Err(ChannelEndpointError::UnauthorizedMessage);
             }
-            delivered.push(ReceivedMessage {
-                message_id,
-                sequence: fields.sequence(),
-                timestamp_ns: fields.timestamp_ns(),
-                content_type: fields.content_type().to_owned(),
-                payload,
-            });
+            delivered.push(message);
         }
         Ok(delivered)
     }
+}
+
+/// Check and decrypt one stored message for a receiver, with no storage
+/// access of its own (D18S P2.6d).
+///
+/// These are the checks a receiver makes on each message by itself:
+///
+/// | check | refusal |
+/// |---|---|
+/// | the message is on this channel, from its originator, at an epoch no later than the definition's | `UnauthorizedMessage` |
+/// | a key grant exists for that epoch (fetched once, through `grant_for`) | `MissingKeyGrant` |
+/// | the grant opens with the receiver's key | the grant's crypto error |
+/// | the signature verifies and the ciphertext decrypts | the message's crypto error |
+/// | the message id is a UUID v7 | `InvalidMessageId` |
+///
+/// One check spans messages and is not here: a message id must not come
+/// back at a different sequence. That needs the receiver's record of what it
+/// delivered, which [`DurableReceiver`] keeps. A caller without one must make
+/// that check itself; when the daemon mints message ids, it is the
+/// receiver's only defence against a duplicate.
+///
+/// [`DurableReceiver`] calls it with grants read from its store. A broker
+/// holding the receiver's key calls it with grants the daemon fetched for
+/// it, so the per-message checks exist once.
+pub fn open_delivered_message(
+    definition: &ChannelDefinition,
+    epoch_keys: &mut ReceiverEpochKeys,
+    encrypted: &chief_of_staff_channel_crypto::EncryptedMessage,
+    mut grant_for: impl FnMut(KeyEpoch) -> Result<Option<SealedChannelKeyGrant>, ChannelEndpointError>,
+) -> Result<ReceivedMessage, ChannelEndpointError> {
+    let fields = encrypted.header().fields();
+    if fields.channel_id() != definition.channel_id
+        || fields.originator_id() != definition.originator.agent_id.as_bytes()
+        || fields.key_epoch() > definition.key_epoch
+    {
+        return Err(ChannelEndpointError::UnauthorizedMessage);
+    }
+    if epoch_keys.epoch_key(fields.key_epoch()).is_none() {
+        let grant = grant_for(fields.key_epoch())?
+            .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch()))?;
+        epoch_keys.install_grant(grant)?;
+    }
+    let key = epoch_keys
+        .epoch_key(fields.key_epoch())
+        .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch()))?;
+    let payload = decrypt_message(encrypted, key, &definition.originator.public_key)?;
+    let message_id = MessageId::from_uuid_v7(fields.message_id())?;
+    Ok(ReceivedMessage {
+        message_id,
+        sequence: fields.sequence(),
+        timestamp_ns: fields.timestamp_ns(),
+        content_type: fields.content_type().to_owned(),
+        payload,
+    })
 }
 
 impl Receiver for DurableReceiver<'_> {
@@ -1222,6 +1257,104 @@ mod tests {
             receiver.acknowledge(metadata.message_id).unwrap(),
             Sequence(1)
         );
+    }
+
+    #[test]
+    fn delivered_messages_open_without_storage_given_their_grants() {
+        // D18S P2.6d: the broker opens messages the daemon read for it, and
+        // asks for a grant only for an epoch it does not hold yet.
+        let backend = InMemoryStorageBackend::new();
+        let (signing_key, receiver_key) = identities();
+        let definition = definition(&signing_key, &receiver_key);
+        ChannelDefinitionStore::new(&backend)
+            .create(&definition)
+            .unwrap();
+        let source = FixedMetadataSource::new(vec![
+            MessageMetadata {
+                message_id: message_id(1),
+                timestamp_ns: 11,
+            },
+            MessageMetadata {
+                message_id: message_id(2),
+                timestamp_ns: 22,
+            },
+        ]);
+        let cmk = ChannelMasterKey::from_bytes([0xa5; 32]);
+        let originator = DurableOriginator::open(
+            &backend,
+            channel_id(),
+            &originator_id(),
+            &signing_key,
+            &cmk,
+            &source,
+        )
+        .unwrap();
+        originator.grant_receiver(&receiver_id()).unwrap();
+        originator.publish(b"one", "text/plain").unwrap();
+        originator.publish(b"two", "text/plain").unwrap();
+
+        // What the daemon would send: the page and the grant, as data.
+        let store = ChannelStore::new(&backend, channel_id());
+        let page = store
+            .read_for_receiver(receiver_id().as_bytes(), 10)
+            .unwrap();
+        let grant = store
+            .key_grant(KeyEpoch(0), receiver_id().as_bytes())
+            .unwrap();
+        let new_keys = || {
+            ReceiverEpochKeys::new(
+                originator_id().0,
+                receiver_id().0,
+                channel_id(),
+                ReceiverKeyPair::from_private_key([0x42; 32]).unwrap(),
+                signing_key.public_key(),
+            )
+        };
+
+        let mut keys = new_keys();
+        let mut asked = 0;
+        let opened: Vec<_> = page
+            .messages
+            .iter()
+            .map(|message| {
+                open_delivered_message(&definition, &mut keys, message, |_| {
+                    asked += 1;
+                    Ok(grant.clone())
+                })
+                .unwrap()
+            })
+            .collect();
+        assert_eq!(opened[0].payload, b"one");
+        assert_eq!(opened[1].payload, b"two");
+        assert_eq!(opened[1].timestamp_ns, 22);
+        assert_eq!(asked, 1, "one grant per epoch, not per message");
+
+        // No grant: refused, not guessed.
+        let mut keys = new_keys();
+        assert!(matches!(
+            open_delivered_message(&definition, &mut keys, &page.messages[0], |_| Ok(None)),
+            Err(ChannelEndpointError::MissingKeyGrant(KeyEpoch(0)))
+        ));
+
+        // A message checked against another channel's definition is refused
+        // before any grant is asked for.
+        let mut other_channel = channel_id().0;
+        other_channel[0] = 0x62;
+        let other = ChannelDefinition::new(
+            ChannelId(other_channel),
+            definition.originator.clone(),
+            definition.receivers().to_vec(),
+            1_725_000_000_000_000_000,
+            KeyEpoch(0),
+        )
+        .unwrap();
+        let mut keys = new_keys();
+        assert!(matches!(
+            open_delivered_message(&other, &mut keys, &page.messages[0], |_| {
+                panic!("asked for a grant for a message it should refuse")
+            }),
+            Err(ChannelEndpointError::UnauthorizedMessage)
+        ));
     }
 
     #[test]

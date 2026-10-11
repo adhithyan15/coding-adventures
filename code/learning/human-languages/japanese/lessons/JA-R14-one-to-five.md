@@ -38,7 +38,7 @@ reviews_of: [JA-C14-ichi, JA-C14-go, JA-C14-ni, JA-C14-san, JA-C14-yon, JA-W08-s
 
 - [YOU RECALL: say *four*, both ways — **R1**, one lesson back]
 - [YOU RECALL: say *my father* — **R3**, twenty lessons back]
-- [YOU RECALL: read **さようなら** off the page — **R4**, eighty lessons back]
+- [YOU READ: **さようなら** off the page — **R4**, eighty lessons back]
 
 Nothing new arrives here. This is the first time the five stand in numerical
 order, and that has been deliberate.

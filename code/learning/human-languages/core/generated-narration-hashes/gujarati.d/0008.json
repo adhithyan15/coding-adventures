@@ -15,10 +15,10 @@
     "GU-C02-practice"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 8,
   "text": "gujarati/narration/ch08.txt",
   "json": "gujarati/narration/ch08.json",
-  "textHash": "fnv1a64:78bac3fdd600ecc9",
-  "jsonHash": "fnv1a64:bc26ea57b08c7fd9",
+  "textHash": "fnv1a64:d03c01cc17f619dc",
+  "jsonHash": "fnv1a64:4f3e614803c45454",
   "findings": []
 }

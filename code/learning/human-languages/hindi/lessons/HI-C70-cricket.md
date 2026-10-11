@@ -67,7 +67,8 @@ Three: खेल, खेलना, क्रिकेट. A game, playing it, an
 - [YOU READ: क्रिकेट, and find the ि sitting to the left of the stack]
 - [YOU SAY: *krikeṭ*]
 - [YOU SAY: *maiṁ krikeṭ kheltā hūṁ*]
-- [YOU RECALL: say *shahar*, then read **स्टेशन**]
+- [YOU RECALL: say *shahar*]
+- [YOU READ: **स्टेशन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-03] -->

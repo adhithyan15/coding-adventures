@@ -4,7 +4,7 @@
   "chapter": 115,
   "title": "Homework, Answer, Problem, Sentence, Page",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f71af89075a6ecb4",
+  "sourceHash": "fnv1a64:5d1b9252b0469a69",
   "lessons": [
     {
       "id": "IT-C115-compiti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21d063b1e882cccf",
+      "sourceHash": "fnv1a64:686c2fffcc66403b",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the two lines aloud, as one run: Il cinema è dietro. Il teatro è davanti."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two lines aloud, as one run — Il cinema è dietro. Il teatro è davanti.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two lines aloud, as one run — *Il cinema è dietro. Il teatro è davanti.*]"
             }
           ]
         },

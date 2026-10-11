@@ -59,7 +59,8 @@ Five: भूख, प्यास, नींद, बुख़ार, दर्द
 - [YOU SAY: *dard*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *ṭhīk*, if you are]
-- [YOU RECALL: say *chūlhā*, then read **लकड़ी**]
+- [YOU RECALL: say *chūlhā*]
+- [YOU READ: **लकड़ी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05] -->

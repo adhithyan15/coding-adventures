@@ -37,7 +37,7 @@ reviews_of: [GU-W22-ttha, GU-C38-pahelu, GU-C35-condition-checkpoint]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-TTHA-01, GU-LEX-PAHELU, GU-ETYMON-PAHELU-PRATHAMA, GU-PERFORMANCE-CONDITION-01, GU-JOIN-JO-TO-01] -->
 
-- [YOU RECALL: write **ઠ** from memory — **R1**, one lesson back]
+- [YOU WRITE: **ઠ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *first*, and what Prakrit put where Sanskrit had an *m* — **R2**, five lessons back]
 - [YOU RECALL: build a **જો … તો …** condition and score yourself on it — **R3**, twenty lessons back]
 

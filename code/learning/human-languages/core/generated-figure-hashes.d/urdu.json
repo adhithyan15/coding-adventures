@@ -94,6 +94,20 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "UR-W31-digits-two-three",
+      "sourceHash": "fnv1a64:3722d132011e7b94",
+      "svgHash": "fnv1a64:93923c7791494ada",
+      "svg": "urdu/book/figures/UR-W31-digits-two-three-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "UR-W31-digits-zero-one",
+      "sourceHash": "fnv1a64:362aba8420bc534c",
+      "svgHash": "fnv1a64:d9965ccb84aaa0b3",
+      "svg": "urdu/book/figures/UR-W31-digits-zero-one-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "UR-W34-be",
       "sourceHash": "fnv1a64:bf9d728fc45e0092",
       "svgHash": "fnv1a64:73dd97223ac29e8b",

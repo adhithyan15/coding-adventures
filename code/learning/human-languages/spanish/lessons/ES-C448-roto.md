@@ -75,7 +75,7 @@ something **abrupt** that breaks off. Spanish let it wear down into a
 two-syllable everyday word, and kept *ruptura* alongside for the borrowed,
 formal sense.
 
-Keep the pair from the lesson before this one in view. *Roto* is *ruptus*,
+Keep the pair from the lesson before this one in mind. *Roto* is *ruptus*,
 bursting. *Estropeado* is *turpis*, shameful. Spanish named the two kinds of
 failure after two different pictures, and the pictures still sort them.
 

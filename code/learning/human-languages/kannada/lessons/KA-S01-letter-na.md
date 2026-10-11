@@ -50,6 +50,10 @@ You already say these, and every one of them has ನ somewhere inside it:
 - **ನಮಸ್ಕಾರ** *namaskāra* — hello / greetings (namaskāra — "a making of a bow")
 - **ಧನ್ಯವಾದ** *dhanyavāda* — thank you (dhanyavāda — "an utterance of 'worthy'")
 
+This is the first time both whole words are on the page. Three of their shapes
+are new to you — **ಕ** *ka*, **ಯ** *ya*, and the long-*ā* sign **ಾ** — and you
+need not read them yet. Today's work is finding ನ.
+
 ## Writing: ನ
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-01] -->
 

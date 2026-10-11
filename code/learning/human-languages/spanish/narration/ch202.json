@@ -133,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-tuvieron-say",
               "prompt": "Say: they had.",
               "assesses": [
@@ -151,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-tuvieron-build",
               "prompt": "Build the same form from hacer.",
               "assesses": [
@@ -169,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-tuvieron-stress",
               "prompt": "Which strong forms hold the stress on the stem?",
               "assesses": [

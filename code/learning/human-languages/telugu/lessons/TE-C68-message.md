@@ -58,7 +58,8 @@ Five: శబ్దం, గొంతు, పాట, అరుపు, కబుర
 - [YOU SAY: *kaburu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then your own name, as the opening line of a కబురు]
-- [YOU RECALL: say *paṇṭa*, then read **కిటికీ** and say what it means]
+- [YOU RECALL: say *paṇṭa*]
+- [YOU READ: **కిటికీ**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05] -->

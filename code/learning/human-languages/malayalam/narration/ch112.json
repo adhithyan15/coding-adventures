@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Where to Go",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4f20c9a2898ce883",
+  "sourceHash": "fnv1a64:a4ecfa59fb483e58",
   "lessons": [
     {
       "id": "ML-C112-bank",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:210e0162e96d362c",
+      "sourceHash": "fnv1a64:3e7e35a7182ef97c",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read it aloud and you can hear that nothing was done to it. English bank came into Malayalam whole, and the letters spell out the English sounds one for one."
+              "text": "Say it aloud and you can hear that nothing was done to it. English bank came into Malayalam whole, and the letters spell out the English sounds one for one."
             },
             {
               "kind": "speech",
@@ -401,7 +401,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d32526ef7ce3dc88",
+      "sourceHash": "fnv1a64:d1fe5d8221eeb71c",
       "notice": null,
       "blocks": [
         {
@@ -417,7 +417,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say a bank, the police and a hospital."
+              "text": "From memory alone, say a bank, the police and a hospital."
             }
           ]
         },

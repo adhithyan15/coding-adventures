@@ -36,8 +36,7 @@ reviews_of: [HI-C73-bill]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-03] -->
 
-[PAUSE 2s] Write **बिल** from memory, remembering that the ि goes down before
-the ल it is heard after.
+[PAUSE 2s] [YOU WRITE: **बिल** from memory, remembering that the ि goes down before the ल it is heard after]
 
 ## You'll want to know: वेटर
 <!-- hl-knowledge: introduces=[HI-LEX-C73-EATING-04]; assesses=[] -->
@@ -68,7 +67,8 @@ Four, and the person you ask for the fourth thing.
 - [YOU SAY: *veṭar*]
 - [YOU SAY: *hoṭal*, then *veṭar*, then *bil*]
 - [YOU WRITE: वेटर, with व for the English w and ट for the English t]
-- [YOU RECALL: read **बहुत**, then say *mahãgā*]
+- [YOU READ: **बहुत**]
+- [YOU RECALL: say *mahãgā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-04] -->

@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Hunger, Sleep and Health",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cf316e8de5da6286",
+  "sourceHash": "fnv1a64:245b8c4963cfe738",
   "lessons": [
     {
       "id": "TE-C63-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3149fd77e2bb2c14",
+      "sourceHash": "fnv1a64:7ebcb1418684f4be",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say perugu, then read దారం and say what it means",
+              "instruction": "say perugu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *perugu*, then read **దారం** and say what it means]"
+              "source": "[YOU RECALL: say *perugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "దారం, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **దారం**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb8fe2f778dc9a7f",
+      "sourceHash": "fnv1a64:bd78d79d1b734c93",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "నెయ్యి",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **నెయ్యి**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read నెయ్యి, then say sūdi",
+              "instruction": "say sūdi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **నెయ్యి**, then say *sūdi*]"
+              "source": "[YOU RECALL: say *sūdi*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:476e3e030fbd62a3",
+      "sourceHash": "fnv1a64:3d82b3d97098f4e3",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nūne, then read చీపురు and say what it means",
+              "instruction": "say nūne",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nūne*, then read **చీపురు** and say what it means]"
+              "source": "[YOU RECALL: say *nūne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "చీపురు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **చీపురు**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b682ef7e73cf17a",
+      "sourceHash": "fnv1a64:1fa9a76a3f7887ee",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "చక్కెర",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **చక్కెర**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read చక్కెర, then say goḍugu",
+              "instruction": "say goḍugu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **చక్కెర**, then say *goḍugu*]"
+              "source": "[YOU RECALL: say *goḍugu*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03862f67920243f6",
+      "sourceHash": "fnv1a64:a83499b0a1ad84e0",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mirapa, then read అద్దం and say what it means",
+              "instruction": "say mirapa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mirapa*, then read **అద్దం** and say what it means]"
+              "source": "[YOU RECALL: say *mirapa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "అద్దం, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **అద్దం**, then say what it means]"
             }
           ]
         },

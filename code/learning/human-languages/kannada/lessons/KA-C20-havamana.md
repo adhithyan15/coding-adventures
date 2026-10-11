@@ -9,7 +9,7 @@ headword: ಹವಾಮಾನ
 gloss: weather — a Persian+Sanskrit HYBRID compound: hava ("air," from Persian/Arabic) + maana ("measure," Sanskrit)
 romanization: "havāmāna"
 concept_tag: KA-WEATHER
-prerequisites: [KA-C18-gante]
+prerequisites: [KA-C18-gante, KA-C20-hannondu-ippattu]
 sounds: [kannada-vowel-sign-aa, kannada-compound-word]
 roots: [persian-hava-air, sanskrit-maana-measure]
 etymology_hook: "ಹವಾಮಾನ (havāmāna, 'weather') is a genuine hybrid compound: ಹವಾ (hava, 'air') is itself a Persian/Arabic loan (havā ← Arabic hawāʾ, the SAME root behind Hindi's hawa), fused with ಮಾನ (māna, 'measure,' native Sanskrit) — literally 'air-measure'"
@@ -17,11 +17,11 @@ reviews_of: [KA-C18-gante]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03]
+  knowledge: [KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02]
 introduces:
   knowledge: [KA-ETYMON-C20-HAVAMANA-01, KA-LEX-C20-HAVAMANA-02]
 practises:
-  knowledge: [KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03, KA-ETYMON-C20-HAVAMANA-01, KA-LEX-C20-HAVAMANA-02]
+  knowledge: [KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C20-HAVAMANA-01, KA-LEX-C20-HAVAMANA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,6 +67,14 @@ piece Sanskrit, fused into one Kannada word.
 - [YOU SAY: "havāmāna" — weather, literally "air-measure"]
 - [YOU SAY: "hava" — air, a Persian/Arabic loan]
 - [YOU SAY: "maḷe baruttide" — it's raining, "rain is coming"]
+
+## Guided Practice — eleven to twenty
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02] -->
+
+- Say 11, then 12. (***hannondu***, ***hanneraḍu*** — **ಹತ್ತು**, ten, plus a
+  digit.)
+- Say twenty. What is buried in it? (***ippattu*** — Proto-Dravidian *\*ir-*
+  "two" + *\*paHtu* "ten"; modern *eraḍu* and *hattu* no longer show inside.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03, KA-ETYMON-C20-HAVAMANA-01, KA-LEX-C20-HAVAMANA-02] -->

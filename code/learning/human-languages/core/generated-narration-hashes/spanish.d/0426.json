@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 426,
-  "sourceHash": "fnv1a64:c9403687e7bb6e38",
+  "sourceHash": "fnv1a64:78e1b872e1a52642",
   "lessonIds": [
     "ES-C426-mayusculas",
     "ES-C426-minuscula-inicial",
@@ -16,7 +16,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch426.txt",
   "json": "spanish/narration/ch426.json",
-  "textHash": "fnv1a64:cc8adb935a82820d",
-  "jsonHash": "fnv1a64:afe7ff367f28c784",
+  "textHash": "fnv1a64:9d0690ddee71236f",
+  "jsonHash": "fnv1a64:cb8bebadab8dab9f",
   "findings": []
 }

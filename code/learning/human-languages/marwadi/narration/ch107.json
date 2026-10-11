@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C107-bunno-type",
-              "prompt": "Type the Marwadi for 'to weave'.",
+              "prompt": "Say the Marwadi for 'to weave'.",
               "assesses": [
                 "MW-LEX-C107-ACT107-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C107-rangno-type",
-              "prompt": "Type the Marwadi for 'to dye'.",
+              "prompt": "Say the Marwadi for 'to dye'.",
               "assesses": [
                 "MW-LEX-C107-ACT107-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C107-lagavno-type",
-              "prompt": "Type the Marwadi for 'to apply, to fix on'.",
+              "prompt": "Say the Marwadi for 'to apply, to fix on'.",
               "assesses": [
                 "MW-LEX-C107-ACT107-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C107-hatavno-type",
-              "prompt": "Type the Marwadi for 'to remove'.",
+              "prompt": "Say the Marwadi for 'to remove'.",
               "assesses": [
                 "MW-LEX-C107-ACT107-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C107-bichhavno-type",
-              "prompt": "Type the Marwadi for 'to spread out'.",
+              "prompt": "Say the Marwadi for 'to spread out'.",
               "assesses": [
                 "MW-LEX-C107-ACT107-05"
               ],

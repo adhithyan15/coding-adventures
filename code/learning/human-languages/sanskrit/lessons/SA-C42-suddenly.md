@@ -60,7 +60,8 @@ One thing happening at a rush, and a mild opinion about it.
 - [YOU SAY: *sahasā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kadācit*, then *sahasā*]
-- [YOU RECALL: read **शर्करा**, then say *kalaśaḥ*]
+- [YOU READ: **शर्करा**]
+- [YOU RECALL: say *kalaśaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02] -->

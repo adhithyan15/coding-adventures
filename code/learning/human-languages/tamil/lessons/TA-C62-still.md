@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *iṉṉum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *iṉṉum*, then *siṟitu*, and say the two together]
-- [YOU RECALL: read **கயிறு**, then say *tākam*]
+- [YOU READ: **கயிறு**]
+- [YOU RECALL: say *tākam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02] -->

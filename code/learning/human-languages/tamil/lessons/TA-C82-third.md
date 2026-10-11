@@ -36,7 +36,7 @@ reviews_of: [TA-C82-first-full, TA-C81-two-tamils, TA-W32-read-sol, TA-C66-outsi
 [PAUSE 2s]
 - [YOU RECALL: say *mutalāvadu*, and say which part of it is irregular — **R1**]
 - [YOU RECALL: say *āṉāl*, then its spoken *āṉā* — **R2**]
-- [YOU RECALL: read **சொல்** — **R3**]
+- [YOU READ: **சொல்** — **R3**]
 - [YOU RECALL: say *veḷiyē* — **R4**]
 
 ## You'll want to know: மூன்றாவது

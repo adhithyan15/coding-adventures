@@ -33,7 +33,7 @@ reviews_of: [ML-C42-new]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03, ML-LEX-C42-ADJ-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: പഴയ
 <!-- hl-knowledge: introduces=[ML-LEX-C42-ADJ-05]; assesses=[] -->
@@ -52,9 +52,10 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-05, ML-LEX-C41-DEIXIS-02, ML-LEX-C41-DEIXIS-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "പഴയ" three times, pointing at something different each time]
+- [YOU SAY: "പഴയ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *atŭ*, then read **ഇവിടെ**]
+- [YOU RECALL: say *atŭ*]
+- [YOU READ: **ഇവിടെ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-05] -->

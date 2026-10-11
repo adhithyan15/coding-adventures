@@ -177,7 +177,7 @@
     {
       "id": "ML-S03-vowel-sign-i",
       "sequence": 365,
-      "title": "◌ി — one character, met inside words you already say",
+      "title": "◌ി (i) — one character, met inside words you already say",
       "headword": "ി",
       "romanization": "i",
       "gloss": "the single character ി — recognised inside words you already say",
@@ -200,7 +200,7 @@
           "Script you'll notice: ◌ി",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ി and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ി and Guided Practice."
       },
       "blocks": [
         {
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ി somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ി (i) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -272,7 +272,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ി yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ി (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -294,8 +294,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ി in the ones that have it",
-              "spoken": true,
+              "instruction": "at these words, and find ◌ി (i) in the ones that have it",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ി in the ones that have it]"
@@ -316,8 +316,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ി once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find ◌ി (i) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ി once more]"

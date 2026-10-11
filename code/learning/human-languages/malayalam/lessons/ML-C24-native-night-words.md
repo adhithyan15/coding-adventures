@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01]
 practises:
-  knowledge: [ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01]
+  knowledge: [ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02, ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,6 +60,14 @@ poetic, the other common but narrower.
 - [YOU SAY: *iravŭ* — literary night]
 - [YOU SAY: *iruḷ* — current darkness]
 - [YOU SAY: related ideas, different modern jobs]
+
+## Guided Practice — the Sanskrit night-word
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C24-RATHRI-02] -->
+
+- Say night. (***rātri*** — most plausibly shortened to *rā* inside
+  *pātirā*, midnight.)
+- Is *rātri* a cousin of Latin *nox*? (**No** — PIE *\*h₁reh₁-*, "to rest",
+  like Hindi's *raat*; *nox* is another root.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01] -->

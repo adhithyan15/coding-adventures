@@ -59,7 +59,8 @@ A wish you can attach to a journey or to a night.
 - [YOU SAY: *śubham*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śubhā yātrā*, then *śubhā rātriḥ*]
-- [YOU RECALL: read **अतिथिः**, then say *satyam*]
+- [YOU READ: **अतिथिः**]
+- [YOU RECALL: say *satyam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04] -->

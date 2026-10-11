@@ -6,6 +6,7 @@ sequence: 560
 chapter: 12
 type: word
 headword: ربيع صيف خريف شتاء
+romanization: "rabīʿ ṣayf kharīf shitāʾ"
 gloss: the four seasons — Modern Standard Arabic's set, though the classical calendar didn't always carve up the year this way
 concept_tag: AR-SEASONS
 prerequisites: [AR-C11-yad]

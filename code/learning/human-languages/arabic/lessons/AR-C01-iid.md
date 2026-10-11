@@ -42,7 +42,7 @@ variety: modern-standard-arabic
 
 **عيد** — *ʿīd* — "a feast day".
 
-Say it: *ʿīd*. Look at its shape as you say it: the next lesson takes one
+Say it: *ʿīd*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ع ي**, and writes it on its own.
 
 ## Guided Practice

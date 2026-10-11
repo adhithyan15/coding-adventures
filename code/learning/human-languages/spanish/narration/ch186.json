@@ -4,7 +4,7 @@
   "chapter": 186,
   "title": "El Libro Que Compro --- One Sentence Out of Two",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:07aae184cd25cae5",
+  "sourceHash": "fnv1a64:3c2083daf6a82550",
   "lessons": [
     {
       "id": "ES-C53-que-relativo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c56b822d2084679",
+      "sourceHash": "fnv1a64:81d23e9ccb259efc",
       "notice": null,
       "blocks": [
         {
@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-que-relativo-join",
               "prompt": "Join Tengo el libro and Compro el libro into one sentence.",
               "assesses": [
@@ -141,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-que-relativo-what",
               "prompt": "What happens to the repeated noun when que joins two sentences?",
               "assesses": [
@@ -160,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-que-relativo-family",
               "prompt": "Which question words share que's root?",
               "assesses": [

@@ -1063,8 +1063,9 @@ const AGENT_IDENTITY_PROPERTY_NAMES: &[&str] = &[
 
 /// Normalize a property name before matching.
 ///
-/// Lowercases and strips `_` and `-`, so `agentId`, `AGENT_ID` and `agent-id`
-/// are all the same name. Nothing in the catalog is non-snake_case today --
+/// Lowercases and strips every character that is not an ASCII letter or
+/// digit, so `agentId`, `AGENT_ID`, `agent-id` and `agent id` are all the same
+/// name. Nothing in the catalog is non-snake_case today --
 /// `validate_schema_key` permits it though, and `to_json_schema_value` exists
 /// to project these into provider formats where camelCase is idiomatic, so the
 /// convention is not enforced anywhere and should not be relied on.
@@ -1177,9 +1178,11 @@ fn normalize_property_name(property: &str) -> String {
 
 /// A key in an undescribed position that cannot be compared safely.
 ///
-/// Homoglyph folding is a losing game, so a non-ASCII key where no schema says
-/// what belongs is refused rather than normalized. Described properties are
-/// unaffected -- their names come from the schema, not the caller.
+/// Homoglyph folding is a losing game, so a non-ASCII key is refused rather
+/// than normalized. In an undescribed position the caller supplied the key.
+/// Since P1.16 the same predicate also refuses non-ASCII *declared* names, in
+/// `validate_schema_key` and in the agent-surface walk, because a declared
+/// name is matched against the same vocabulary.
 fn key_is_confusable(key: &str) -> bool {
     !key.is_ascii()
 }
@@ -1366,7 +1369,11 @@ fn agent_identity_properties(
                 } else {
                     format!("{path}.{}", property.name)
                 };
-                if names_an_agent(&property.name) {
+                // A non-ASCII name is reported as naming an agent, whether or
+                // not validation has already refused it (D18S S-I7, P1.16).
+                // This walk is the agent-surface gate, and a gate must not
+                // depend on a different check having run first.
+                if names_an_agent(&property.name) || key_is_confusable(&property.name) {
                     found.push(child.clone());
                 }
                 agent_identity_properties(&property.schema, &child, found, holes);
@@ -1375,7 +1382,32 @@ fn agent_identity_properties(
         JsonSchema::Array { items } => {
             agent_identity_properties(items, &format!("{path}[]"), found, holes);
         }
+        // An enum's values are constants the tool author wrote, and they are
+        // projected into the schema document the model reads. An object
+        // constant can therefore carry a key naming a peer straight into the
+        // agent's view. So the keys inside enum values get the same name check
+        // as declared properties.
+        JsonSchema::Enum { values } => {
+            for value in values {
+                if enum_value_names_an_agent(value) {
+                    found.push(format!("{here} (enum value)"));
+                    break;
+                }
+            }
+        }
         _ => {}
+    }
+}
+
+/// Whether any object key inside an enum constant names an agent, or is not
+/// ASCII.
+fn enum_value_names_an_agent(value: &JsonValue) -> bool {
+    match value {
+        JsonValue::Object(fields) => fields.iter().any(|(key, value)| {
+            names_an_agent(key) || key_is_confusable(key) || enum_value_names_an_agent(value)
+        }),
+        JsonValue::Array(items) => items.iter().any(enum_value_names_an_agent),
+        _ => false,
     }
 }
 
@@ -6009,6 +6041,14 @@ fn validate_schema_key(path: &str, value: &str, errors: &mut Vec<ToolValidationI
     if value.contains('.') {
         errors.push(issue(path, "schema key cannot contain dots"));
     }
+    // D18S S-I7, P1.16: the identity checks match property NAMES, so a name
+    // must be one they can read. `аgent_id` with a Cyrillic `а` normalizes to
+    // a string no vocabulary lists, and would otherwise register on an agent
+    // surface as a peer-naming field nobody checked. ASCII only: no shipped
+    // definition needs more, and a schema key is an identifier, not prose.
+    if key_is_confusable(value) {
+        errors.push(issue(path, "schema key must be ASCII"));
+    }
 }
 
 fn push_id_issue(
@@ -6545,6 +6585,103 @@ mod tests {
             "a tool naming another agent was added or removed; \
              update S-I7's exception list deliberately, not incidentally"
         );
+    }
+
+    /// A copy of `vault.request_lease` whose input declares `name` as well,
+    /// optionally one level down.
+    fn lease_with_property(name: &str, nested: bool) -> ToolDefinition {
+        let mut definition = builtin_tool_definition("vault.request_lease").unwrap();
+        let property = SchemaProperty::new(name, JsonSchema::String);
+        let added = if nested {
+            SchemaProperty::new(
+                "options",
+                JsonSchema::Object {
+                    properties: vec![property],
+                    required: vec![],
+                    allow_unknown_fields: false,
+                },
+            )
+        } else {
+            property
+        };
+        if let JsonSchema::Object { properties, .. } = &mut definition.input_schema {
+            properties.push(added);
+        }
+        definition
+    }
+
+    #[test]
+    fn a_homoglyph_property_name_is_refused_by_both_gates() {
+        // P1.16: `аgent_id` with a CYRILLIC `а` (U+0430). It normalizes to a
+        // string the peer vocabulary has never seen, so before this both S-I7
+        // gates passed it.
+        let homoglyph = "\u{0430}gent_id";
+        assert!(!names_an_agent(homoglyph), "the vocabulary alone misses it");
+        for nested in [false, true] {
+            let definition = lease_with_property(homoglyph, nested);
+
+            // Gate 1: validation, which every registration path runs.
+            let report = definition.validate();
+            assert!(
+                report
+                    .errors
+                    .iter()
+                    .any(|issue| issue.message == "schema key must be ASCII"),
+                "{report:?}"
+            );
+
+            // Gate 2: the agent-surface walk, independently of gate 1.
+            let named = tools_naming_another_agent(std::slice::from_ref(&definition));
+            assert_eq!(named.len(), 1, "nested={nested}: {named:?}");
+            let expected = if nested {
+                format!("options.{homoglyph}")
+            } else {
+                homoglyph.to_string()
+            };
+            assert_eq!(named[0].1, vec![expected]);
+        }
+        // An ASCII name that names nothing is still fine on both.
+        let plain = lease_with_property("label", false);
+        assert!(plain.validate().ok);
+        assert!(tools_naming_another_agent(std::slice::from_ref(&plain)).is_empty());
+    }
+
+    #[test]
+    fn an_enum_constant_cannot_carry_a_peer_key() {
+        let mut definition = builtin_tool_definition("vault.request_lease").unwrap();
+        if let JsonSchema::Object { properties, .. } = &mut definition.input_schema {
+            properties.push(SchemaProperty::new(
+                "mode",
+                JsonSchema::Enum {
+                    values: vec![
+                        JsonValue::String("plain".into()),
+                        JsonValue::Object(vec![(
+                            "agent_id".to_string(),
+                            JsonValue::String("peer-7".into()),
+                        )]),
+                    ],
+                },
+            ));
+        }
+        let named = tools_naming_another_agent(std::slice::from_ref(&definition));
+        assert_eq!(named[0].1, vec!["mode (enum value)".to_string()]);
+        // Scalar enums, which is every shipped one, are untouched: the
+        // catalog pin above still holds.
+    }
+
+    #[test]
+    fn a_non_ascii_required_name_is_refused() {
+        let mut definition = lease_with_property("\u{00e9}tat", false);
+        if let JsonSchema::Object { required, .. } = &mut definition.input_schema {
+            required.push("\u{00e9}tat".to_string());
+        }
+        let report = definition.validate();
+        let ascii_errors = report
+            .errors
+            .iter()
+            .filter(|issue| issue.message == "schema key must be ASCII")
+            .count();
+        assert_eq!(ascii_errors, 2, "{report:?}");
     }
 
     #[test]

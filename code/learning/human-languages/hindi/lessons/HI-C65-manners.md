@@ -59,7 +59,8 @@ Five: मेहरबानी, विनती, अनुमति, भरो�
 - [YOU SAY: *adab*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dhanyavād*]
-- [YOU RECALL: say *dard*, then read **ज़्यादा**]
+- [YOU RECALL: say *dard*]
+- [YOU READ: **ज़्यादा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05] -->

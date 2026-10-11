@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b31a3e0dbbbc6842",
+  "sourceHash": "fnv1a64:8b0393449284e957",
   "lessons": [
     {
       "id": "TA-C17-nanpakal-nalliravu",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8d5bf3f917f1352",
+      "sourceHash": "fnv1a64:ff74a499cf70d449",
       "notice": null,
       "blocks": [
         {
@@ -229,7 +229,7 @@
     {
       "id": "TA-S121-vowel-sign-u",
       "sequence": 631,
-      "title": "◌ு — one character, met inside words you already say",
+      "title": "◌ு (u) — one character, met inside words you already say",
       "headword": "ு",
       "romanization": "u",
       "gloss": "the single character ு — recognised inside words you already say",
@@ -252,7 +252,7 @@
           "Script you'll notice: ◌ு",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ு and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ு and Guided Practice."
       },
       "blocks": [
         {
@@ -297,7 +297,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ு somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ு (u) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -324,7 +324,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ு and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ு (u) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -347,7 +347,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ு (u) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ு in the ones that have it]"
@@ -369,7 +369,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ு (u) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ு once more]"

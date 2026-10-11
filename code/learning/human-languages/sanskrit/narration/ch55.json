@@ -139,7 +139,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "गत्वा (gatvā), and name the ending that makes it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **गत्वा**, and name the ending that makes it]"
@@ -296,7 +296,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "गन्तुम् (gantum), and name the Latin ending it matches",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **गन्तुम्**, and name the Latin ending it matches]"

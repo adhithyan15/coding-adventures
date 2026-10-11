@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d0f6475183d1af6a",
+  "sourceHash": "fnv1a64:59b2afc24fc4d3b6",
   "lessons": [
     {
       "id": "ML-C24-rathri",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bcf38f3085ecbf3",
+      "sourceHash": "fnv1a64:22ea48b9d846d7ee",
       "notice": null,
       "blocks": [
         {
@@ -214,6 +214,21 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the Sanskrit night-word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say night. (rātri — most plausibly shortened to rā inside pātirā, midnight.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Is rātri a cousin of Latin nox? (No — PIE h₁reh₁-, \"to rest\", like Hindi's raat; nox is another root.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

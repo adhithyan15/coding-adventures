@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "The Future, And The Two Letters It Needed",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:485390e229d481e0",
+  "sourceHash": "fnv1a64:e87855841977db89",
   "lessons": [
     {
       "id": "HI-C88-karunga",
@@ -196,7 +196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a834f2ec766af452",
+      "sourceHash": "fnv1a64:f747a20570e4b5bc",
       "notice": null,
       "blocks": [
         {
@@ -265,8 +265,13 @@
           "title": "Grammar Lens: the letter arrives where it was promised",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Find ऊ inside the word:"
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ऊ inside the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: **ऊ** inside the word]"
             },
             {
               "kind": "speech",
@@ -332,7 +337,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at आऊँगा (āūṅgā) and put your finger on the letter ऊ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at आऊँगा and put your finger on the letter **ऊ**]"
@@ -380,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f89233dd13423b7d",
+      "sourceHash": "fnv1a64:018876b063d2290d",
       "notice": null,
       "blocks": [
         {
@@ -396,7 +401,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can say I will come. Point at somebody else and try to say it about them — and notice which part of the word has to move."
+              "text": "You can say I will come. Think of somebody else and try to say it about them — and notice which part of the word has to move."
             }
           ]
         },
@@ -854,7 +859,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at आओगे (āoge) and put your finger on the letter ओ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at आओगे and put your finger on the letter **ओ**]"
@@ -1261,7 +1266,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72308eddf11039ab",
+      "sourceHash": "fnv1a64:b22ca381644150d5",
       "notice": null,
       "blocks": [
         {
@@ -1276,8 +1281,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read this out loud before reading on."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sentence out loud before going on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sentence out loud before going on]"
             },
             {
               "kind": "speech",

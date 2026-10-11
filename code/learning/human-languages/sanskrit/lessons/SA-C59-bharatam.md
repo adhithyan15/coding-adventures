@@ -69,7 +69,7 @@ A country, and the name of one.
 [PAUSE 1s]
 - [YOU SAY: *Bhāratam*]
 - [YOU SAY: *Bhārataṁ deśaḥ asti*]
-- [YOU RECALL: read **देशः** and say what it means]
+- [YOU READ: **देशः**, then say what it means]
 - [YOU READ: **महाभारतम्**, and find the **महा-** you already know inside it]
 
 ## Wrap-up Recall

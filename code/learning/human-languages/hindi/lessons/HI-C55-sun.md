@@ -59,7 +59,8 @@ The first of five things overhead.
 - [YOU SAY: *sūraj*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūraj*, and hear *sol* inside it]
-- [YOU RECALL: say *kandhā*, then read **गाय**]
+- [YOU RECALL: say *kandhā*]
+- [YOU READ: **गाय**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01] -->

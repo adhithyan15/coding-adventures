@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "The River and the Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c335a2d878d33740",
+  "sourceHash": "fnv1a64:b8b7cef16a647c9e",
   "lessons": [
     {
       "id": "SA-C33-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa0ae9c676a78d00",
+      "sourceHash": "fnv1a64:9a6a1a837e3a566e",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ākāśaḥ, then read तरुः",
+              "instruction": "say ākāśaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ākāśaḥ*, then read **तरुः**]"
+              "source": "[YOU RECALL: say *ākāśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "तरुः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **तरुः**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3eedc6d75e36d3f",
+      "sourceHash": "fnv1a64:323023704108c391",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "चन्द्रः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **चन्द्रः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read चन्द्रः, then say patram",
+              "instruction": "say patram",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **चन्द्रः**, then say *patram*]"
+              "source": "[YOU RECALL: say *patram*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48671e5def42eb78",
+      "sourceHash": "fnv1a64:1f19070913cda112",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tārā, then read तृणम्",
+              "instruction": "say tārā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tārā*, then read **तृणम्**]"
+              "source": "[YOU RECALL: say *tārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "तृणम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **तृणम्**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b771d579070b4d4",
+      "sourceHash": "fnv1a64:e9107449f2cb3860",
       "notice": null,
       "blocks": [
         {
@@ -512,12 +539,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "वायुः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **वायुः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read वायुः, then say latā",
+              "instruction": "say latā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **वायुः**, then say *latā*]"
+              "source": "[YOU RECALL: say *latā*]"
             }
           ]
         },
@@ -553,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:619557cdfb7fac62",
+      "sourceHash": "fnv1a64:babacacd1627bf0a",
       "notice": null,
       "blocks": [
         {
@@ -644,11 +680,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say himam, then read दारु",
+              "instruction": "say himam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *himam*, then read **दारु**]"
+              "source": "[YOU RECALL: say *himam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दारु",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दारु**]"
             }
           ]
         },

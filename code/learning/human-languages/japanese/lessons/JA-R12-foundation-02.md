@@ -34,8 +34,10 @@ reviews_of: [JA-W01-e, JA-W05-five-component, JA-W05-mouth-component, JA-C10-itt
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-SCRIPT-KANJI-FIVE-COMPONENT-01, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01, JA-LEX-ITTE-KUDASAI, JA-LEX-KAMI-HAIR, JA-LEX-ME-EYE] -->
 
-[PAUSE 70s] Write **え** and **かみ**. Build the five and mouth components of
-**語**. Then ask someone to say it with *itte kudasai* and write **め**.
+[PAUSE 70s] [YOU WRITE: **え** and **かみ**, then build the five and mouth components of **語**]
+
+Then ask someone to say it with *itte kudasai*.
+[YOU WRITE: **め**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-SCRIPT-KANJI-FIVE-COMPONENT-01, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01, JA-LEX-ITTE-KUDASAI, JA-LEX-KAMI-HAIR, JA-LEX-ME-EYE] -->

@@ -100,7 +100,7 @@ One letter, three sounds, in three words you already say.
 - [YOU WRITE: و — the closed head, then the tail sweeping down and left]
 - [YOU WRITE: وکیل, then ہوں, then کون]
 - [YOU WRITE: میں ... ہوں۔ — and say it with something true about yourself]
-- [YOU POINT: at the break after vāʾo in ہوں and say why it is there]
+- [YOU POINT: the break after vāʾo in ہوں and say why it is there]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-VAO-01, UR-SCRIPT-ALIF-01] -->

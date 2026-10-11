@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C67-uchiwa-type",
-              "prompt": "Type the Japanese for 'a hand fan'.",
+              "prompt": "Say the Japanese for 'a hand fan'.",
               "assesses": [
                 "JA-LEX-C67-THINGS67-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C67-sensu-type",
-              "prompt": "Type the Japanese for 'a folding fan'.",
+              "prompt": "Say the Japanese for 'a folding fan'.",
               "assesses": [
                 "JA-LEX-C67-THINGS67-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C67-sumi-type",
-              "prompt": "Type the Japanese for 'charcoal'.",
+              "prompt": "Say the Japanese for 'charcoal'.",
               "assesses": [
                 "JA-LEX-C67-THINGS67-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C67-ido-type",
-              "prompt": "Type the Japanese for 'a well'.",
+              "prompt": "Say the Japanese for 'a well'.",
               "assesses": [
                 "JA-LEX-C67-THINGS67-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C67-hama-type",
-              "prompt": "Type the Japanese for 'a beach'.",
+              "prompt": "Say the Japanese for 'a beach'.",
               "assesses": [
                 "JA-LEX-C67-THINGS67-05"
               ],

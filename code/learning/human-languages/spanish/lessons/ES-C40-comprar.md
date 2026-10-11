@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-COMPRAR-07, ES-ETYMON-COMPRAR-08, ES-ETYMON-COMPARE-FALSE-09]
 practises:
-  knowledge: [ES-LEX-ESPERAR-01, ES-ETYMON-ESPERAR-02, ES-GRAMMAR-ESPERAR-THREE-03, ES-LEX-CONTESTAR-04, ES-ETYMON-CONTESTAR-05, ES-LEX-RESPONDER-06, ES-LEX-COMPRAR-07, ES-ETYMON-COMPRAR-08, ES-ETYMON-COMPARE-FALSE-09, ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03, ES-LEX-VINO-04, ES-ETYMON-VINO-05, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE, ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR, ES-ETYMON-ENTENDER-04, ES-LEX-CONSEGUIR-04]
+  knowledge: [ES-LEX-ESPERAR-01, ES-ETYMON-ESPERAR-02, ES-GRAMMAR-ESPERAR-THREE-03, ES-LEX-CONTESTAR-04, ES-ETYMON-CONTESTAR-05, ES-LEX-RESPONDER-06, ES-LEX-COMPRAR-07, ES-ETYMON-COMPRAR-08, ES-ETYMON-COMPARE-FALSE-09, ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03, ES-LEX-VINO-04, ES-ETYMON-VINO-05, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE, ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR, ES-ETYMON-ENTENDER-04, ES-LEX-CONSEGUIR-04, ES-ETYMON-IMPERARE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -43,7 +43,7 @@ obvious English relative turns out to be a stranger.
 - `vowel-o` — a short pure *o*, with no glide toward *ow*.
 
 ## The word, taken apart: comprar
-<!-- hl-knowledge: introduces=[ES-LEX-COMPRAR-07, ES-ETYMON-COMPRAR-08]; assesses=[ES-ETYMON-COMPANION-03] -->
+<!-- hl-knowledge: introduces=[ES-LEX-COMPRAR-07, ES-ETYMON-COMPRAR-08]; assesses=[ES-ETYMON-COMPANION-03, ES-ETYMON-IMPERARE] -->
 
 **comprar** ("**to buy**") ← Latin **comparāre**: *com-* + **parāre**, "**to make
 ready, to furnish, to procure**". Latin already used it for buying — you procured

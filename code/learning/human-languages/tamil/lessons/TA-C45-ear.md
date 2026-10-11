@@ -56,7 +56,8 @@ Two: an eye and an ear.
 - [YOU SAY: *kādu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaṇ*, then *kādu*, and hear the long *ā* arrive in the second]
-- [YOU RECALL: read **மகன்**, then say *tuṇi*]
+- [YOU READ: **மகன்**]
+- [YOU RECALL: say *tuṇi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02] -->

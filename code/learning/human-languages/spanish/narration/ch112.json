@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Cuando --- Both Pasts in One Sentence",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ce287f378d5f01a3",
+  "sourceHash": "fnv1a64:0858b607d8a991ad",
   "lessons": [
     {
       "id": "ES-C48-cuando",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6453a366cb222686",
+      "sourceHash": "fnv1a64:527b1137ad186ce1",
       "notice": null,
       "blocks": [
         {
@@ -84,7 +84,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read what each tense is doing:"
+              "text": "Here is what each tense is doing:"
             },
             {
               "kind": "speech",
@@ -144,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-cuando-say",
               "prompt": "Say I was studying when Ana spoke.",
               "assesses": [
@@ -164,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-cuando-which",
               "prompt": "Which tense sets the room, and which one walks into it?",
               "assesses": [
@@ -183,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-cuando-family",
               "prompt": "Which other Spanish question words share the front of cuando?",
               "assesses": [

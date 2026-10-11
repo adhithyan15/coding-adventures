@@ -58,7 +58,8 @@ Two: what moves, and what settles.
 - [YOU SAY: *mañcu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mañcu*, then *gāli*, and say which of the two you can see]
-- [YOU RECALL: read **వీపు**, then say *ekkuva*]
+- [YOU READ: **వీపు**]
+- [YOU RECALL: say *ekkuva*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02] -->

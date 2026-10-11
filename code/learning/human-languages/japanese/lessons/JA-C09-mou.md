@@ -34,7 +34,8 @@ reviews_of: [JA-C09-wakarimasen, JA-C09-sumimasen, JA-W09-me]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-WAKARIMASEN, JA-LEX-SUMIMASEN, JA-SCRIPT-ME-01, JA-SCRIPT-DO-01] -->
 
-[PAUSE 18s] Say *sumimasen, yoku wakarimasen*. Write **め** and **ど** once.
+[PAUSE 18s] Say *sumimasen, yoku wakarimasen*.
+[YOU WRITE: **め** and **ど**, once each]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-MOU]; assesses=[] -->
@@ -49,7 +50,7 @@ spelling shows it with final **う**. In other settings this adverb can mean
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU] -->
 
 - [YOU HEAR: *mō* in a repair → choose **again**]
-- [YOU SAY: *mo | o* and tap twice]
+- [YOU SAY: *mo | o*, then count its beats aloud — two]
 - [YOU POINT: **も | う**; **う** owns the held second beat]
 
 ## Wrap-up Recall

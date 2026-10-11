@@ -36,7 +36,7 @@ reviews_of: [JA-W17-no, JA-C15-ku, JA-C10-koko]
 
 [PAUSE 25s] Three recalls, then the longest word in the chapter.
 
-- [YOU RECALL: write **の** — **R1**, one lesson back]
+- [YOU WRITE: **の** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *nine* — **R3**, twenty lessons back]
 - [YOU RECALL: say *here* — **R4**, eighty lessons back]
 
@@ -47,11 +47,13 @@ reviews_of: [JA-W17-no, JA-C15-ku, JA-C10-koko]
 
 Four beats, four signs, and only **の** is new — you bought it last lesson.
 
-Read the first two signs on their own: **ここ**, the word for *here* you have had
-since chapter ten. **They are the same two signs, and it means nothing.**
-*kokono-* is simply the native word for nine; it is not built on *here* and there
-is no story joining them. Say so and move on — an accident that gets explained is
-worse than one that gets named.
+The first two signs of **ここのつ** spell **ここ**, the word for *here* you have had
+since chapter ten. [YOU READ: the first two signs on their own]
+
+**They are the same two signs, and it means nothing.** *kokono-* is simply the
+native word for nine; it is not built on *here* and there is no story joining
+them. Say so and move on — an accident that gets explained is worse than one
+that gets named.
 
 What it does mean is that you can write this four-beat word straight away, which
 no other word in the chapter has managed.
@@ -59,7 +61,9 @@ no other word in the chapter has managed.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOKONOTSU, JA-LEX-KOKO, JA-LEX-KU, JA-LEX-YATTSU, JA-LEX-HACHI] -->
 
-Write **ここのつ**. Say *hachi*, *ku*, then *yattsu*, *kokonotsu* — both counts, two numbers each.
+[YOU WRITE: **ここのつ**]
+
+Say *hachi*, *ku*, then *yattsu*, *kokonotsu* — both counts, two numbers each.
 Then say *ku* and *kokonotsu* again. Then say *koko* and *kokonotsu*
 and remind yourself that the second is not made of the first.
 

@@ -37,8 +37,10 @@ reviews_of: [MW-C06-question, MW-C06-hear-question]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-WELLBEING-QUESTION-01, MW-QUESTION-WELLBEING-HEARD-01, MW-SCRIPT-II-INDEPENDENT-01, MW-LEX-MHARO-01] -->
 
-[PAUSE 12s] Write independent **ई**, say that *mhāro* means **my**, then ask
-*āp kaiso ho?* once from memory. Keep the page closed.
+[PAUSE 12s] [YOU WRITE: independent **ई**]
+
+Say that *mhāro* means **my**, then ask *āp kaiso ho?* once from memory. Keep
+the page closed.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-HOON-01, MW-LEX-THIK-01, MW-ANSWER-WELLBEING-HEARD-01]; assesses=[] -->

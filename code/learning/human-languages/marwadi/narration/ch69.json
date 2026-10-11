@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C69-taro-type",
-              "prompt": "Type the Marwadi for 'a star'.",
+              "prompt": "Say the Marwadi for 'a star'.",
               "assesses": [
                 "MW-LEX-C69-NATURE69-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C69-suraj-type",
-              "prompt": "Type the Marwadi for 'the sun'.",
+              "prompt": "Say the Marwadi for 'the sun'.",
               "assesses": [
                 "MW-LEX-C69-NATURE69-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C69-chad-type",
-              "prompt": "Type the Marwadi for 'the moon'.",
+              "prompt": "Say the Marwadi for 'the moon'.",
               "assesses": [
                 "MW-LEX-C69-NATURE69-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C69-samandar-type",
-              "prompt": "Type the Marwadi for 'the sea'.",
+              "prompt": "Say the Marwadi for 'the sea'.",
               "assesses": [
                 "MW-LEX-C69-NATURE69-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C69-ag-type",
-              "prompt": "Type the Marwadi for 'fire'.",
+              "prompt": "Say the Marwadi for 'fire'.",
               "assesses": [
                 "MW-LEX-C69-NATURE69-05"
               ],

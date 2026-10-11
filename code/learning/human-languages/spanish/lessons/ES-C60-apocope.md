@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-APOCOPE-PATTERN]
 practises:
-  knowledge: [ES-GRAMMAR-APOCOPE-PATTERN, ES-LEX-MAL, ES-LEX-MALO, ES-LEX-MUY, ES-ETYMON-MUY-MULTUM]
+  knowledge: [ES-GRAMMAR-APOCOPE-PATTERN, ES-LEX-MAL, ES-LEX-MALO, ES-LEX-MUY, ES-ETYMON-MUY-MULTUM, ES-ETYMON-MAL-MALUS]
 skills: [listening, speaking, reading]
 modes: [interpretive]
 strands: [meaning-input, language-focus]
@@ -70,9 +70,11 @@ the next one.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-APOCOPE-PATTERN, ES-ETYMON-MUY-MULTUM] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-APOCOPE-PATTERN, ES-ETYMON-MUY-MULTUM, ES-ETYMON-MAL-MALUS] -->
 
 [PAUSE 2s] When does Spanish bite the ending off? (When the word is **leaning
 on** another word.)
 
 [PAUSE 2s] And what was *muy* before it was in a hurry? (Latin ***multum***.)
+
+[PAUSE 2s] And *malo* itself: which Latin word, still heard in English *malady*? (***Malus***.)

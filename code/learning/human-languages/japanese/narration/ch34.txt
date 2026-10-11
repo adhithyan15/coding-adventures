@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すいか (suika) mean? ("A watermelon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a watermelon'.
+Say the Japanese for 'a watermelon'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だいこん (daikon) mean? ("A white radish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a white radish'.
+Say the Japanese for 'a white radish'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にんじん (ninjin) mean? ("A carrot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a carrot'.
+Say the Japanese for 'a carrot'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とうふ (toufu) mean? ("Tofu".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'tofu'.
+Say the Japanese for 'tofu'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しお (shio) mean? ("Salt".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'salt'.
+Say the Japanese for 'salt'.

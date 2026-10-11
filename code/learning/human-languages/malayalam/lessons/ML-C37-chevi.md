@@ -63,7 +63,7 @@ it is Kannada, holding onto the sound the other three let go of.
 - [YOU SAY: three softened, one not — "cevi, cevi, cevi … kivi"]
 - [YOU SAY: two face words now — "kaṇṇŭ, cevi"]
 - [YOU SAY: the closest family match — "makaḷ, makaḷ" — Malayalam, Tamil]
-- [YOU RECALL: read **ചോദിക്കുക**]
+- [YOU READ: **ചോദിക്കുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02] -->

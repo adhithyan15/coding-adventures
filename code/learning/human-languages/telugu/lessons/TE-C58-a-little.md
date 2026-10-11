@@ -58,7 +58,8 @@ A word that makes the next one polite.
 - [YOU SAY: *koñcem*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *koñcem*, then *koñcem pālu*, and hear how much softer it is than *pālu* alone]
-- [YOU RECALL: say *cāpa*, then read **మెడ** and say what it means]
+- [YOU RECALL: say *cāpa*]
+- [YOU READ: **మెడ**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01] -->

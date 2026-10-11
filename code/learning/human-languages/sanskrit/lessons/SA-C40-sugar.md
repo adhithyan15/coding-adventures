@@ -60,7 +60,8 @@ The Sanskrit word inside every European sugar.
 - [YOU SAY: *śarkarā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dadhi*, then *śarkarā*]
-- [YOU RECALL: read **भस्म**, then say *vihagaḥ*]
+- [YOU READ: **भस्म**]
+- [YOU RECALL: say *vihagaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02] -->

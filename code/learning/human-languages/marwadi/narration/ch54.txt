@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खोलणो (kholṇo) mean? ("To open".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to open'.
+Say the Marwadi for 'to open'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हंसणो (hãsṇo) mean? ("To laugh".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to laugh'.
+Say the Marwadi for 'to laugh'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रोवणो (rovṇo) mean? ("To cry".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to cry'.
+Say the Marwadi for 'to cry'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गावणो (gāvṇo) mean? ("To sing".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to sing'.
+Say the Marwadi for 'to sing'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नाचणो (nāchṇo) mean? ("To dance".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to dance'.
+Say the Marwadi for 'to dance'.

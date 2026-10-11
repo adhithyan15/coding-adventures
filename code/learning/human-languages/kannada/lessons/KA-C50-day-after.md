@@ -56,7 +56,7 @@ Two: now, and the day after tomorrow.
 - [YOU SAY: *nāḍiddu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *īga*, *nāḷe*, *nāḍiddu* — today's moment, then one day out, then two]
-- [YOU RECALL: read **ವಿದ್ಯಾರ್ಥಿ**]
+- [YOU READ: **ವಿದ್ಯಾರ್ಥಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02] -->

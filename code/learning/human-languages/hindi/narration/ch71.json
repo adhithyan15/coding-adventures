@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Why, and Because",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4f8969086d54a40b",
+  "sourceHash": "fnv1a64:786f737281dcd6a4",
   "lessons": [
     {
       "id": "HI-C71-kyon",
@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C71-kyon-r1",
               "prompt": "Ask why the listener cannot come.",
               "assesses": [
@@ -160,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:910f11936d7955d5",
+      "sourceHash": "fnv1a64:ec656d89be76a10f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the word: क्योंकि (kyoṁki) is क्यों + कि, why-that. Nothing is hidden in it. Hindi answers why by saying why-that and then a whole ordinary sentence, verb last, exactly as after plain कि."
+              "text": "Take the word apart: क्योंकि (kyoṁki) is क्यों (kyoṁ) + कि, why-that. Nothing is hidden in it. Hindi answers why by saying why-that and then a whole ordinary sentence, verb last, exactly as after plain कि."
             },
             {
               "kind": "speech",
@@ -248,6 +249,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C71-kyonki-r1",
               "prompt": "Ask why the listener cannot come, then answer it: you cannot come tomorrow because you work.",
               "assesses": [
@@ -279,7 +281,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two words is क्योंकि (kyoṁki) made of? (क्यों + कि.) Which half of a क्योंकि (kyoṁki) sentence comes first? (The claim; the reason follows.)"
+              "text": "What two words is क्योंकि (kyoṁki) made of? (क्यों (kyoṁ) + कि.) Which half of a क्योंकि (kyoṁki) sentence comes first? (The claim; the reason follows.)"
             },
             {
               "kind": "speech",
@@ -367,6 +369,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R71-reasons-run",
               "prompt": "Take both turns: ask why the listener cannot come, then answer with a reason.",
               "assesses": [
@@ -399,7 +402,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word asks for a reason, and which gives one? (क्यों asks, क्योंकि (kyoṁki) gives.) What is the second one made of? (The first one, plus कि.) Then stop."
+              "text": "Which word asks for a reason, and which gives one? (क्यों (kyoṁ) asks, क्योंकि (kyoṁki) gives.) What is the second one made of? (The first one, plus कि.) Then stop."
             }
           ]
         }

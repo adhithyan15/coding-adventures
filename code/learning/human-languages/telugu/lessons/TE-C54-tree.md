@@ -58,7 +58,8 @@ The thing the rest of this chapter is made of.
 - [YOU SAY: *ceṭṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ceṭṭu*, then *puvvu*, and say which one grows on the other]
-- [YOU RECALL: say *talupu*, then read **ఆకాశం** and say what it means]
+- [YOU RECALL: say *talupu*]
+- [YOU READ: **ఆకాశం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01] -->

@@ -46,14 +46,16 @@ kinds it is.
 
 **m**, the *m* of English *met* — a **true friend** in both cases.
 
-And here is a fact about this alphabet worth having early: **most Cyrillic capitals
-are simply the lowercase letter drawn large.** Latin makes you learn two shapes for
-*a*, *b*, *d*, *e*, *g*; Cyrillic mostly does not.
+You have met a capital beside most letters so far, and here is the rule behind
+them: **most Cyrillic capitals are simply the lowercase letter drawn large.**
+Latin makes you learn two shapes for *a*, *b*, *d*, *e*, *g*; Cyrillic mostly
+does not.
 
 This letter is one of them, and so are the ones romanised *k*, *o*, *s* and *t*:
-same shape, two sizes.
+same shape, two sizes. The capital of **т** is **Т**.
 
-**Not all of them** — the letters for *b*, *d* and *a* do have distinct capitals —
+**Not all of them** — the letters for *b*, *e* and *a* do have distinct capitals
+(the capital of **е** is **Е**, the Latin *E*) —
 but the default is that a capital costs you nothing new, which is a genuine saving
 over the Latin alphabet and the opposite of what a beginner expects.
 

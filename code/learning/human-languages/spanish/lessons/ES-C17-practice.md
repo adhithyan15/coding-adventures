@@ -54,11 +54,11 @@ All three regular infinitives remain whole. Future endings are **-é, -ás,
 ## Grammar Lens: three learned stems
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR] -->
 
-| verb | learned stem | future yo | conditional yo |
-|---|---|---|---|
-| hacer | har- | haré | haría |
-| tener | tendr- | tendré | tendría |
-| poder | podr- | podré | podría |
+| verb: learned stem | future yo | conditional yo |
+|---|---|---|
+| hacer: har- | haré | haría |
+| tener: tendr- | tendré | tendría |
+| poder: podr- | podré | podría |
 
 The stems change; the ending sets do not. Other irregular stems remain outside
 this chapter.

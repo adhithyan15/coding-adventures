@@ -52,7 +52,7 @@ reviews_of: [ZH-C28-xihuan, ZH-C27-he, ZH-C24-ge, ZH-C18-hear-shu, ZH-C08-wo]
 
 Four words, and all of them were already in the book except 喜欢.
 
-**Now look at where 什么 is.** It is at the END, in exactly the slot the answer
+**Now notice where 什么 is.** It is at the END, in exactly the slot the answer
 would occupy:
 
 > — **你喜欢什么** — what do you like?

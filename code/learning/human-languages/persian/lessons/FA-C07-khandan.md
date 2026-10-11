@@ -49,7 +49,7 @@ From the right: **خ** *kh*, **و**, **ا** long *â*, **ن** *n*, **د** *d*,
 **ن** *n*. Six letters — but only five sounds. The **و** in second position is
 written and **not pronounced**. The word is *khândan*, never *khwândan*.
 
-That **خ** opens **خوب** *khub*, “good,” where the **و** works as a vowel. Here
+That **خ** opens *khub*, “good,” where the **و** works as a vowel. Here
 it does nothing.
 
 The silent **و** belongs to a small, closed set of words — always after **خ**,
@@ -84,8 +84,8 @@ the same *xw-* family, continuing Middle Persian *xwadây* — gone from both
 mouths, surviving in one spelling.
 
 One contrast to fix: the long **â** here is plain **ا** because it sits inside
-the word. When a word *opens* on long **â**, Persian writes **آ** with its hat,
-as **آمدن** *âmadan* does.
+the word. When a word *opens* on long **â**, Persian puts a hat on the alef,
+as *âmadan* does.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHANDAN, FA-SCRIPT-SILENT-VAV, FA-STEM-KHAN, FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-SCRIPT-ALEF-MADDE] -->
@@ -95,7 +95,7 @@ as **آمدن** *âmadan* does.
 - [YOU READ: **خواندن**, sounding the **خ** and skipping the **و**]
 - [YOU LIST: the four jobs of one verb — read, recite, sing, study]
 - [YOU CONNECT: **khândan** ← \**swenh₂-* → English **sound**, **swan**]
-- [YOU CONTRAST: **ا** inside a word, **آ** when a word opens on long **â**]
+- [YOU CONTRAST: **ا** inside a word, the hatted alef when a word opens on long **â**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHANDAN, FA-SCRIPT-SILENT-VAV, FA-STEM-KHAN] -->

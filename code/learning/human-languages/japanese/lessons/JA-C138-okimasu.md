@@ -38,8 +38,8 @@ reviews_of: [JA-R137-pencil-and-ticket, JA-W137-pu, JA-W136-zo, JA-C130-makka]
 
 [PAUSE 15s] Three recalls before the new word.
 
-- [YOU RECALL: write **ぷ** — **R2**, five lessons back]
-- [YOU RECALL: write **ぞ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぷ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ぞ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *bright red* — **R4**, eighty lessons back]
 
 ## You'll want to know: おきます

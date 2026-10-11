@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8ef1d55554ed021b",
+  "sourceHash": "fnv1a64:8ce3305b2d914d55",
   "lessons": [
     {
       "id": "PA-S03-nanna-bihari-dulava",
@@ -29,9 +29,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਨ, ੀ, ੈ"
+          "Script you'll notice: ਨ, ੀ, ੈ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਨ, ੀ, ੈ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਨ, ੀ, ੈ and Guided Practice."
       },
       "blocks": [
         {
@@ -137,7 +138,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਨਹੀਂ and point to each of today's pieces in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਨਹੀਂ** and point to each of today's pieces in turn]"
@@ -155,7 +156,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
@@ -207,7 +208,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -298,8 +299,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-kivein-meaning",
-              "prompt": "You hear kivēṁ. Type its meaning and the question-family sound it shares with kī.",
+              "prompt": "You hear kivēṁ. Say its meaning and the question-family sound it shares with kī.",
               "assesses": [
                 "PA-LEX-KIVEIN-03",
                 "PA-ETYMON-QUESTION-K-03"
@@ -432,8 +434,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-tusi-kivein-ho-speaking",
-              "prompt": "Ask how someone is respectfully aloud, then type the romanized words you said.",
+              "prompt": "Ask how someone is respectfully aloud, then say the words you said.",
               "assesses": [
                 "PA-PHRASE-HOW-ARE-YOU-03",
                 "PA-GRAMMAR-TUSI-HO-03"
@@ -516,8 +519,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R03-wellbeing-r1-ho",
-              "prompt": "Say the copula that pairs with respectful tusī̃ in the wellbeing question, then type only the romanized sound you said.",
+              "prompt": "Say the copula that pairs with respectful tusī̃ in the wellbeing question, then say only the sound you said.",
               "assesses": [
                 "PA-GRAMMAR-TUSI-HO-03"
               ],
@@ -533,8 +537,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R03-wellbeing-r1-question-k",
-              "prompt": "Say the opening sound shared by Punjabi kī and kivēṁ, then type that sound.",
+              "prompt": "Say the opening sound shared by Punjabi kī and kivēṁ, then say that sound.",
               "assesses": [
                 "PA-ETYMON-QUESTION-K-03"
               ],
@@ -591,7 +596,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -702,6 +707,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-main-pair",
               "prompt": "Say Punjabi I, then complete the spoken frame I am: maiṁ...",
               "assesses": [
@@ -747,9 +753,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਟ, ਠ, ਡ"
+          "Script you'll notice: ਟ, ਠ, ਡ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਟ, ਠ, ਡ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਟ, ਠ, ਡ and Guided Practice."
       },
       "blocks": [
         {
@@ -855,7 +862,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਠੀਕ (ṭhīk) and point to each of today's pieces in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਠੀਕ** and point to each of today's pieces in turn]"
@@ -873,7 +880,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
@@ -925,7 +932,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1040,8 +1047,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-thik-reply",
-              "prompt": "Reply I am fine aloud in Punjabi, then type the romanized words you said.",
+              "prompt": "Reply I am fine aloud in Punjabi, then say the words you said.",
               "assesses": [
                 "PA-LEX-THIK-03",
                 "PA-PHRASE-I-AM-FINE-03"
@@ -1064,7 +1072,7 @@
     {
       "id": "PA-C03-koi-gall-nahin",
       "sequence": 200,
-      "title": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — \"it's nothing\"",
+      "title": "Koī gall nahīṁ — \"it's nothing\"",
       "headword": "ਕੋਈ ਗੱਲ ਨਹੀਂ",
       "romanization": "koī gall nahīṁ",
       "gloss": "it is nothing; no problem; you are welcome",
@@ -1074,7 +1082,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d6f0651565365685",
+      "sourceHash": "fnv1a64:df7c0c7261bf2653",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1083,7 +1091,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1110,7 +1118,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੋਈ (koī, \"any\") + ਗੱਲ (gall, \"matter, talk\" — note the addak, the doubling mark, on ੱਲ) + ਨਹੀਂ (nahīṁ, \"not,\" from Chapter 1) becomes koī gall nahīṁ."
+              "text": "koī (\"any\") + ਗੱਲ (gall, \"matter, talk\" — note the addak, the doubling mark, on ੱਲ) + ਨਹੀਂ (nahīṁ, \"not,\" from Chapter 1) becomes koī gall nahīṁ. The first word's spelling, which ends on a standalone long-ī letter, comes later."
             }
           ]
         },
@@ -1121,7 +1129,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
+              "text": "Koī gall nahīṁ literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
             }
           ]
         },
@@ -1183,8 +1191,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-koi-gall-nahin-response",
-              "prompt": "Someone says dhannavād. Give the gracious Punjabi reply aloud, then type its romanization.",
+              "prompt": "Someone says dhannavād. Give the gracious Punjabi reply aloud, then say it.",
               "assesses": [
                 "PA-PHRASE-NO-PROBLEM-03",
                 "PA-ETYMON-NEGATIVE-NE-03"
@@ -1287,8 +1296,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-practice-listening",
-              "prompt": "You hear tusī̃ kivēṁ ho? Type what the respectful speaker wants to know.",
+              "prompt": "You hear tusī̃ kivēṁ ho? Say what the respectful speaker wants to know.",
               "assesses": [
                 "PA-PHRASE-HOW-ARE-YOU-03",
                 "PA-GRAMMAR-TUSI-HO-03"
@@ -1308,8 +1318,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-practice-speaking",
-              "prompt": "Say a polite reply, return the question, and answer thanks aloud; then type the romanized turns.",
+              "prompt": "Say a polite reply, return the question, and answer thanks aloud; then say the turns.",
               "assesses": [
                 "PA-PHRASE-HOW-ARE-YOU-03",
                 "PA-PHRASE-I-AM-FINE-03",

@@ -37,8 +37,9 @@ reviews_of: [MW-C10-haath, MW-C10-bajar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAATH-01, MW-LEX-BAJAR-01, MW-SCRIPT-VIRAMA-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01] -->
 
-[PAUSE 16s] Say hand and market, write virama **्**, then recall the ten-label
-four-skill checkpoint.
+[PAUSE 16s] Say hand and market. [YOU WRITE: virama **्**]
+
+Then recall the ten-label four-skill checkpoint.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PAISA-01]; assesses=[] -->

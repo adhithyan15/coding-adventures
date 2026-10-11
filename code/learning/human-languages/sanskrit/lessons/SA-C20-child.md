@@ -63,7 +63,8 @@ rule.
 - [YOU SAY: *bālaḥ* — "child"]
 - [YOU SAY: the feminine — *bālā*]
 - [YOU SAY: the two different feminine endings you have now seen]
-- [YOU RECALL: say *kati*, then read **अष्ट**]
+- [YOU RECALL: say *kati*]
+- [YOU READ: **अष्ट**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03] -->

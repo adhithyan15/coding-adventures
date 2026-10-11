@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Rubber, Homework, Answer, Idea, Problem",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:833e4bdc640d109f",
+  "sourceHash": "fnv1a64:77f135ac8aa7e465",
   "lessons": [
     {
       "id": "FR-C127-gomme",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ab894c99b1e6eef",
+      "sourceHash": "fnv1a64:ed67f11f78bf1139",
       "notice": null,
       "blocks": [
         {
@@ -290,8 +290,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "La leçon est à neuf heures, dans la classe douze aloud as one line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: *La leçon est à neuf heures, dans la classe douze* aloud as one line]"
+            },
+            {
               "kind": "speech",
-              "text": "Read La leçon est à neuf heures, dans la classe douze aloud as one line. Then answer from it: at what time is the lesson? (À neuf heures.)"
+              "text": "Then answer from it: at what time is the lesson? (À neuf heures.)"
             }
           ]
         },

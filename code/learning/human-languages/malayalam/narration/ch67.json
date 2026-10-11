@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 67,
   "title": "Which One in the Line",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f5822dc51c6edf09",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8ca56d5e2ab6eb16",
   "lessons": [
     {
       "id": "ML-C67-first",
@@ -14,20 +14,13 @@
       "romanization": "onnāṁ",
       "gloss": "first — and the ending that makes every ordinal in the language",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9caa528921512eff",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:c67b0c6172376343",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -108,7 +101,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at the word against the number it comes from:"
+              "text": "Put the word beside the number it comes from:"
             },
             {
               "kind": "table",
@@ -656,7 +649,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at നാല് and നാലാം (nālāṁ), and find where the virama was",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at നാല് and നാലാം, and find where the virama was]"

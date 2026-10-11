@@ -1,19 +1,19 @@
 {
   "language": "telugu",
   "chapter": 6,
-  "sourceHash": "fnv1a64:98b1af67e64cc8c4",
+  "sourceHash": "fnv1a64:80800a2f7a1969c4",
   "lessonIds": [
-    "TE-S149-digit-0",
     "TE-C06-dative-ku",
+    "TE-S149-digit-0",
     "TE-S110-letter-ya",
     "TE-C06-dative-subject",
     "TE-C06-second-pass-greetings"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
   "text": "telugu/narration/ch06.txt",
   "json": "telugu/narration/ch06.json",
-  "textHash": "fnv1a64:78b14809546b6856",
-  "jsonHash": "fnv1a64:88a2c0ef49054624",
+  "textHash": "fnv1a64:2bd6274fdbffa9e1",
+  "jsonHash": "fnv1a64:0264a38fb82c9e6f",
   "findings": []
 }

@@ -33,7 +33,9 @@ reviews_of: [TA-W32-read-sol]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C77-SAY-02, TA-SCRIPT-READ-SOL-01] -->
 
-[PAUSE 2s] Read **சொல்**. Then say: 'Say "okay".'
+[PAUSE 2s] [YOU READ: **சொல்**]
+
+Then say: 'Say "okay".'
 
 ## You'll want to know: what என்று hands to நினை
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C77-OPINION-03]; assesses=[] -->
@@ -70,8 +72,11 @@ An opinion, which is the first thing here that is yours rather than a fact.
 - [YOU SAY: *niṉaikkiṟēṉ*]
 - [YOU SAY: *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*]
 - [YOU SWAP: put *idu siṟiya kaḍai* in the front half and say the whole thing]
-- [YOU RECALL: say *"sari" eṉṟu solluṅgaḷ*, then read **சொல்**, then give your opinion]
-- [YOU RETURN TO: read **ஆனால்**, say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]
+- [YOU RECALL: say *"sari" eṉṟu solluṅgaḷ*]
+- [YOU READ: **சொல்**]
+- [YOU RECALL: give your opinion]
+- [YOU READ: **ஆனால்**]
+- [YOU RETURN TO: say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C77-SAY-01, TA-GRAMMAR-C77-SAY-02, TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03, TA-SCRIPT-READ-AANAAL-01, TA-LEX-C63-MANNERS-03, TA-LEX-C73-WHEN-02] -->

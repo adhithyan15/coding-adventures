@@ -46,7 +46,7 @@ mark of respect.
 [PAUSE 1s]
 - [YOU SAY: the obliques — *is ko*, *un ko*]
 - [YOU SAY: *kahāṅ?* … *yahāṅ* … *vahāṅ*]
-- [YOU SAY: gesturing, then naming — *vahāṅ*, then *us kamre meṅ*]
+- [YOU SAY: the bare *there*, then the named place — *vahāṅ*, then *us kamre meṅ*]
 - [YOU RECALL: two chapters back, the word that asks *why* — *kyūṅ*]
 
 ## Guided Practice: the distant band — everything the book owns, pointed at and placed

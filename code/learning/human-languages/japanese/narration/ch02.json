@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b02f934e4ac7c1bf",
+  "sourceHash": "fnv1a64:67b86b87a54eed0b",
   "lessons": [
     {
       "id": "JA-W01-ko",
@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b3833ba98c8971d6",
+      "sourceHash": "fnv1a64:5b5703b48a463838",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -120,7 +123,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say??? and tap all three morae before writing the new sign."
+              "text": "Say いいえ and tap all three morae before writing the new sign."
             }
           ]
         },
@@ -140,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-ko-strokes",
               "prompt": "How many strokes does the hiragana sign read 'ko' have?",
               "assesses": [
@@ -164,7 +168,7 @@
     {
       "id": "JA-W01-n",
       "sequence": 80,
-      "title": "ん — one stroke, one beat, no vowel",
+      "title": "ん (n) — one stroke, one beat, no vowel",
       "headword": "ん",
       "romanization": "n",
       "gloss": "the one hiragana sign that is not a full syllable — one stroke, one beat, no vowel",
@@ -173,20 +177,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:80bfb24aa32fdb27",
+      "sourceHash": "fnv1a64:e424d287ae068351",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape, and the exception",
-          "Guided Practice"
+          "Guided Practice",
+          "Guided Practice — review pulse"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, and the exception and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, and the exception, Guided Practice and Guided Practice — review pulse."
       },
       "blocks": [
         {
@@ -237,7 +245,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ん — one continuous stroke, no lifts",
+              "instruction": "ん (n) — one continuous stroke, no lifts",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -267,7 +275,7 @@
             },
             {
               "kind": "speech",
-              "text": "Cover the model and write?? from its two known signs."
+              "text": "Cover the model and write はい from its two known signs."
             }
           ]
         },
@@ -287,6 +295,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-n-vowel",
               "prompt": "Which vowel does this sign carry?",
               "assesses": [
@@ -321,20 +330,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:a1ec4b6feead9c49",
+      "sourceHash": "fnv1a64:12d233bcf1737fa5",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -427,7 +439,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new sign, write? once and then? once from memory."
+              "text": "Before the new sign, write ん (n) once and then え once from memory."
             }
           ]
         },
@@ -447,6 +459,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-ni-shared",
               "prompt": "Two signs so far share a similar left-hand vertical. Does that shared shape tell you anything about their sound or meaning?",
               "assesses": [
@@ -481,20 +494,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:1265adf4ce24c54e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -590,6 +606,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-chi-beats",
               "prompt": "This sign is romanised with four letters. How many beats does it take?",
               "assesses": [
@@ -619,20 +636,13 @@
       "romanization": "wani",
       "gloss": "a crocodile",
       "script": "japanese",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0db9463e8f0b06f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:335c19f496d1528f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -662,7 +672,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ, and write each one on its own."
+              "text": "Say it: wani."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, わ (wa), and write each one on its own."
             }
           ]
         },
@@ -715,8 +738,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C02-wani-type",
-              "prompt": "Type the Japanese for 'a crocodile', in rōmaji.",
+              "prompt": "Say the Japanese for 'a crocodile'.",
               "assesses": [
                 "JA-LEX-ANCHOR-WANI"
               ],
@@ -745,20 +769,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5f74ffd6ed1fecba",
+      "sourceHash": "fnv1a64:33016b2c6aaba4d8",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -878,7 +905,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say??? again, keeping the two opening morae distinct."
+              "text": "Say いいえ again, keeping the two opening morae distinct."
             }
           ]
         },
@@ -898,6 +925,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-wa-particle",
               "prompt": "The daytime greeting ends in a sound like 'wa'. Is it written with the sign for wa, or the sign for ha?",
               "assesses": [
@@ -931,20 +959,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:074c85b4b9bf61a1",
+      "sourceHash": "fnv1a64:46c679c2f304fae1",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script — the assembly",
-          "Guided Practice"
+          "Guided Practice",
+          "Guided Practice — review pulse"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the assembly, Guided Practice and Guided Practice — review pulse."
       },
       "blocks": [
         {
@@ -979,7 +1010,7 @@
             },
             {
               "kind": "speech",
-              "text": "こ + ん + に + ち + は becomes こんにちは (konnichiwa)."
+              "text": "こ (ko) + ん (n) + に (ni) + ち (chi) + は becomes こんにちは (konnichiwa)."
             },
             {
               "kind": "speech",
@@ -1015,7 +1046,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "こんにちは (konnichiwa) — sound each sign in turn; do not recall it whole",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **こんにちは** — sound each sign in turn; do not recall it whole]"
@@ -1044,7 +1075,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once, then set it beside? and name which one closes the greeting."
+              "text": "Write わ (wa) once, then set it beside は and name which one closes the greeting."
             }
           ]
         },
@@ -1064,6 +1095,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-konnichiwa-read-beats",
               "prompt": "How many beats (morae) does the written daytime greeting take?",
               "assesses": [
@@ -1098,16 +1130,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e055b19edfbe2dd0",
+      "sourceHash": "fnv1a64:4d4b57e03d1b2cb4",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — five familiar signs"
+          "Script — five familiar signs",
+          "Guided Practice — review pulse"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five familiar signs until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — five familiar signs and Guided Practice — review pulse."
       },
       "blocks": [
         {
@@ -1145,7 +1178,7 @@
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens — the sign は, read wa",
+          "title": "Grammar Lens",
           "segments": [
             {
               "kind": "speech",
@@ -1153,7 +1186,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here は is the topic particle, roughly \"as for ___.\" It keeps an older spelling. Carry one small rule forward: read は as ha inside a word and as wa when it is the particle."
+              "text": "Here は is the topic particle, roughly \"as for ___.\" It keeps an older spelling. Carry one small rule forward: は is ha inside a word and wa when it is the particle."
             }
           ]
         },
@@ -1223,8 +1256,13 @@
               "source": "[PAUSE 15s]"
             },
             {
-              "kind": "speech",
-              "text": "Write? from memory and give it one full mora."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ん (n) from memory, then give it one full mora",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ん** from memory, then give it one full mora]"
             }
           ]
         },
@@ -1235,7 +1273,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which sign takes a beat without a vowel? (ん.) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)"
+              "text": "Which sign takes a beat without a vowel? (ん (n).) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)"
             },
             {
               "kind": "speech",
@@ -1244,6 +1282,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C01-konnichiwa-particle",
               "prompt": "The greeting ends in the sign は. How is it pronounced there?",
               "assesses": [

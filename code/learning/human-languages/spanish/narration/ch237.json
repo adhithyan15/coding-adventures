@@ -149,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-comiendo-er",
               "prompt": "Make the gerund of comer.",
               "assesses": [
@@ -167,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-comiendo-ir",
               "prompt": "And of vivir?",
               "assesses": [
@@ -185,6 +187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-comiendo-count",
               "prompt": "How many gerund endings are there for three verb families?",
               "assesses": [

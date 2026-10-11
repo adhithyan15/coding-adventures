@@ -52,7 +52,7 @@ own refusal, which is why it can start a phrase on its own: ***Ni*** *café.* �
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-DOUBLE-NEGATIVE]; assesses=[ES-GRAMMAR-NO-02] -->
 
-Look again at that sentence and count the negatives.
+Say that sentence again and count the negatives.
 
 > ***No*** *quiero café* ***ni*** *agua.*
 

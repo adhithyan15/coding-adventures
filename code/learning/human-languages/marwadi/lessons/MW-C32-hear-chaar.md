@@ -43,8 +43,8 @@ reviews_of: [MW-C32-teen, MW-C19-hear-baati, MW-C09-bachcha]
 
 > *chār* — **four**
 
-Put a hand in front of your mouth and say it. There is no puff of air on the
-opening consonant. That plain *ch* is the one **बच्चा** doubles.
+Say it and listen for the breath. There is no puff of air on the opening
+consonant. That plain *ch* is the one **बच्चा** doubles.
 
 Hold on to that, because the next chapter opens six with the same consonant
 carrying a puff. In Marwari, four and six begin a breath apart.

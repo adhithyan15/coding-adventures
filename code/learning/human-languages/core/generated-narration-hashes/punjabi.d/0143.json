@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 143,
-  "sourceHash": "fnv1a64:f670556e1b3bc7f4",
+  "sourceHash": "fnv1a64:f246d0879ea80532",
   "lessonIds": [
     "PA-C143-sukka",
     "PA-C143-ganda",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "punjabi/narration/ch143.txt",
   "json": "punjabi/narration/ch143.json",
-  "textHash": "fnv1a64:a39ddc220fda0751",
-  "jsonHash": "fnv1a64:eac991fcce1691ac",
+  "textHash": "fnv1a64:f1f554dddd718d9c",
+  "jsonHash": "fnv1a64:f42ad9d0c7c84f88",
   "findings": []
 }

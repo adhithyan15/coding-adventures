@@ -42,7 +42,7 @@ reviews_of: [TE-C63-health]
 
 **నాకు జ్వరం వచ్చింది** — "I have a fever", literally "to me a fever has come".
 
-Look at the shape. The person sits in the dative నాకు and the fever *arrives*, on the same
+Notice the shape. The person sits in the dative నాకు and the fever *arrives*, on the same
 come-verb as **నాకు తెలుగు వచ్చు**. In Telugu an illness is something that comes to you.
 
 ## What you've built

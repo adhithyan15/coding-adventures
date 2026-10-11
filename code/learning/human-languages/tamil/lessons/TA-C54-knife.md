@@ -56,7 +56,8 @@ Three, and this one is shared right across the family.
 - [YOU SAY: *katti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kūṭai*, then *katti*, and hold the doubled த]
-- [YOU RECALL: say *taḷir*, then read **வயல்**]
+- [YOU RECALL: say *taḷir*]
+- [YOU READ: **வயல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03] -->

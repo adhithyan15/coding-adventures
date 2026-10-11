@@ -18,16 +18,17 @@ describe("the real corpus", () => {
   );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
-    // 38 one-glyph lessons, 36 glyphs. வ has both TA-S01-va and the guided
+    // 39 one-glyph lessons, 37 glyphs. வ has both TA-S01-va and the guided
     // copy TA-W00, and the puḷḷi ் both TA-S08-pulli and TA-W03-pulli-vanakkam,
     // while a letter lesson without cited ductus remains an undrawn
-    // candidate. Seven of the 36 are signs taught by themselves (ா ி ீ ெ ே ை
+    // candidate. Seven of the 37 are signs taught by themselves (ா ி ீ ெ ே ை
     // and the puḷḷi ்); the signs ு and ூ have no cited ductus and stay
-    // undrawn.
+    // undrawn. The Grantha ஸ (TA-S129) is cited to LipiTk's Tamil recognizer.
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
     const single = tamil.filter((target) => target.letters === undefined);
-    expect(single).toHaveLength(38);
-    expect(new Set(single.map((target) => target.glyph)).size).toBe(36);
+    expect(single).toHaveLength(39);
+    expect(new Set(single.map((target) => target.glyph)).size).toBe(37);
+    expect(single.find((target) => target.lessonId === "TA-S129-letter-sa")?.glyph).toBe("ஸ");
     expect(
       Object.fromEntries(
         single
@@ -163,9 +164,9 @@ describe("the real corpus", () => {
   });
 
   it("draws a Devanagari sign only where a lesson teaches it alone", () => {
-    // 35 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of nine
-    // signs by itself (ा ु ू े ं ़ ् ृ ँ), each cited to native writers who
-    // wrote it alone. Each is one glyph, never a sequence: Devanagari has no
+    // 46 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of twelve
+    // signs by itself (ा ु ू े ं ़ ् ृ ँ ी ो ः), each cited to native writers
+    // who wrote it alone. Each is one glyph, never a sequence: Devanagari has no
     // written-order table, so no sign is placed against a consonant here
     // (ā joins its consonant only inside a composed word, next cases).
     const devanagari = targets.filter((target) => target.script === "devanagari");
@@ -175,24 +176,32 @@ describe("the real corpus", () => {
       "HI-S05-sign-virama": "्",
       "HI-S06-vowel-sign-aa": "ा",
       "HI-S112-vowel-sign-e": "े",
+      "HI-S116-vowel-sign-ii": "ी",
       "HI-S118-sign-candrabindu": "ँ",
       "HI-S120-vowel-sign-u": "ु",
       "HI-S140-nuqta": "़",
       "HI-S144-vowel-sign-vocalic-r": "ृ",
       "HI-S148-sign-anusvara": "ं",
       "HI-S149-vowel-sign-uu": "ू",
+      "HI-S150-vowel-sign-o": "ो",
       "HI-W12-chandrabindu": "ँ",
+      "HI-W12-ii-matra": "ी",
       "HI-W12-u-matra": "ु",
       "MR-W01-aa-matra": "ा",
+      "MR-W01-ii-matra": "ी",
+      "MR-W01-o-matra": "ो",
       "MR-W01-virama": "्",
       "MR-W02-anusvara": "ं",
       "MR-W02-e-matra": "े",
+      "MR-W02-visarga": "ः",
       "MR-W05-candrabindu": "ँ",
       "MR-W05-ru-matra": "ृ",
       "MR-W05-u-matra": "ु",
       "MR-W05-uu-matra": "ू",
       "MW-W01-aa-matra": "ा",
       "MW-W03-anusvara": "ं",
+      "MW-W04-ii-matra": "ी",
+      "MW-W05-o-matra": "ो",
       "MW-W05-virama": "्",
       "MW-W06-uu-matra": "ू",
       "MW-W07-e-matra": "े",
@@ -201,31 +210,109 @@ describe("the real corpus", () => {
       "SA-S05-sign-virama": "्",
       "SA-S06-vowel-sign-aa": "ा",
       "SA-S112-vowel-sign-e": "े",
+      "SA-S201-sign-visarga": "ः",
       "SA-S203-vowel-sign-u": "ु",
       "SA-S205-vowel-sign-vocalic-r": "ृ",
       "SA-S209-sign-anusvara": "ं",
+      "SA-S210-vowel-sign-ii": "ी",
+      "SA-S214-vowel-sign-o": "ो",
       "SA-S222-vowel-sign-uu": "ू",
       "SA-W05-vocalic-r-delayed-copy": "ृ",
       "SA-W05-vocalic-r-guided-copy": "ृ",
     });
-    // Left undrawn: the signs Noto prints with a piece of headline the traces
-    // never draw (ि ी ो ः), the signs whose traces split (ै ौ), a sign
+    // ी, ो and ः are drawn without the piece of headline Noto prints on
+    // them: it is the word's headline, which native writers draw last across
+    // the whole word (script-ductus excuses exactly that stub in its coverage
+    // check). Left undrawn: the signs whose traces split (ि ै ौ), a sign
     // lesson with no Writing or Script block and no modelled practice stage
     // (HI-W03-preposed-i), and every word or list that puts a sign on a
     // consonant.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
       "HI-W128-vowel-sign-i",
-      "HI-S116-vowel-sign-ii",
-      "HI-S150-vowel-sign-o",
+      "MR-W05-i-matra",
+      "SA-S109-vowel-sign-i",
       "HI-S134-vowel-sign-au",
       "HI-W12-ai-matra",
-      "MR-W02-visarga",
-      "SA-S201-sign-visarga",
+      "MR-W56-au-matra",
+      "SA-S223-vowel-sign-ai",
       "HI-W03-preposed-i",
       "HI-W03-matras-naam",
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
+    }
+  });
+
+  it("draws a Telugu sign only where a lesson teaches it alone", () => {
+    // Eleven Telugu sign lessons teach one of eleven signs by itself, each
+    // cited to native writers in LipiTk's Telugu recognizer who wrote it
+    // alone. Each is one glyph, never a sequence: Telugu has no written-order
+    // table, so no sign is placed against a consonant.
+    const signs = targets.filter(
+      (target) => target.script === "telugu" && /^\p{M}+$/u.test(target.glyph),
+    );
+    expect(Object.fromEntries(signs.map((target) => [target.lessonId, target.glyph]))).toEqual({
+      "TE-S02-vowel-sign-u": "ు",
+      "TE-S04-sign-anusvara": "ం",
+      "TE-S05-sign-virama": "్",
+      "TE-S07-vowel-sign-aa": "ా",
+      "TE-S08-vowel-sign-i": "ి",
+      "TE-S115-vowel-sign-e": "ె",
+      "TE-S119-vowel-sign-ii": "ీ",
+      "TE-S120-vowel-sign-ee": "ే",
+      "TE-S134-vowel-sign-uu": "ూ",
+      "TE-S153-vowel-sign-oo": "ో",
+      "TE-S154-vowel-sign-o": "ొ",
+    });
+    expect(signs.every((target) => target.letters === undefined)).toBe(true);
+    // Left undrawn: ై, whose recognizer class holds only the length mark
+    // below, and ృ and ౌ, which the recognizer lacks.
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of ["TE-S136-vowel-sign-ai", "TE-S131-vowel-sign-vocalic-r", "TE-S133-vowel-sign-au"]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
+  });
+
+  it("draws Bengali ং where its lesson teaches it", () => {
+    const anusvar = targets.find((target) => target.lessonId === "BN-W41-anusvar");
+    expect(anusvar?.script).toBe("bengali");
+    expect(anusvar?.glyph).toBe("ং");
+    expect(anusvar?.letters).toBeUndefined();
+  });
+
+  it("draws the Bengali letters whose headline is drawn last by convention", () => {
+    // Fourteen letters cited to LipiTk's Bangla recognizer, each drawn with
+    // its body in the traces' majority order and the headline last (no
+    // headline placement wins a majority). ন has four writing lessons.
+    const bengali = Object.fromEntries(
+      targets
+        .filter((target) => target.script === "bengali" && target.letters === undefined)
+        .map((target) => [target.lessonId, target.glyph]),
+    );
+    expect(bengali).toMatchObject({
+      "BN-W01-ha": "হ",
+      "BN-W01-ma": "ম",
+      "BN-W01-na": "ন",
+      "BN-W01-na-trace": "ন",
+      "BN-W01-na-guided-copy": "ন",
+      "BN-W01-na-delayed-copy": "ন",
+      "BN-W02-la": "ল",
+      "BN-W02-ta": "ত",
+      "BN-W02-ya": "য",
+      "BN-W03-bha": "ভ",
+      "BN-W03-da": "দ",
+      "BN-W04-cha": "চ",
+      "BN-W04-chha": "ছ",
+      "BN-W04-dda": "ড",
+      "BN-W04-i-indep": "ই",
+      "BN-W04-ja": "জ",
+      "BN-W41-pha": "ফ",
+    });
+    // Left undrawn, with the reason in data/scripts/bengali.json: ক (its
+    // majority headline stops at the stem), আ গ ট ধ প স শ (no majority body),
+    // ঝ (Noto splits its headline around the right stem).
+    for (const id of ["BN-W01-ka", "BN-W01-aa", "BN-W03-ga", "BN-W05-tta", "BN-W03-dha", "BN-W04-pa", "BN-W01-sa", "BN-W41-sha", "BN-W41-jha"]) {
+      expect(bengali[id], id).toBeUndefined();
     }
   });
 
@@ -240,7 +327,8 @@ describe("the real corpus", () => {
     // strips may land in a modelled practice block), and the Malayalam
     // word നമ twice, once ന and മ gained their Thooval-cited ductus
     // (its fourth lesson, ML-W01-na-ma-trace, lists "ന മ" and is not a
-    // word). A Tamil word
+    // word), and നമസ്കാരം, once ാ and ് gained rows and the font was shown
+    // to print its സ്ക apart (its typed order is its written order). A Tamil word
     // with a sign written before its consonant is drawn in written order,
     // which does not spell it back (see above). The Arabic family (سلام)
     // and Cyrillic (привет) have fully cited words that are deliberately
@@ -257,6 +345,7 @@ describe("the real corpus", () => {
       // headwords weil, quia and ayer, print none: a dictation or composition
       // block shows no model. Großschreibung is cited letter for letter too,
       // but at 14 pieces it is past MAX_SEQUENCE_PIECES and prints none.
+      // salvē waited for v and for ē (drawn by analogy with the cited acute).
       "ES-W00-hola-delayed-copy",
       "ES-W00-hola-guided-copy",
       "ES-W00-hola-observe",
@@ -285,8 +374,10 @@ describe("the real corpus", () => {
       "JA-W01-konnichiwa-read",
       "JA-W03-arigatou-read",
       "JA-W08-sayounara-read",
+      "LA-W01-salve-delayed-copy",
       "ML-W01-na-ma-delayed-copy",
       "ML-W01-na-ma-guided-copy",
+      "ML-W01-namaskaram-read",
       "PT-W01-ola-delayed-copy",
       "PT-W01-ola-guided-copy",
       "TA-W03-write-vanakkam",
@@ -308,7 +399,7 @@ describe("the real corpus", () => {
     }
   });
 
-  it("draws a Devanagari word as its letters' bodies and one shared headline", () => {
+  it("draws a Devanagari or Gurmukhi word as its letters' bodies and one shared headline", () => {
     // The Devanagari writing headwords that are one word of bare letters, or
     // of letters and the ā sign straight after a consonant: Sanskrit मम (two
     // copy lessons; its dictation prints none), Hindi नाम (two) and Marwadi सा. ā is the one sign whose place
@@ -318,14 +409,23 @@ describe("the real corpus", () => {
     // धन्यवाद, हो, ...).
     const shared = targets.filter((target) => target.composition === "shared-headline");
     const words = shared.filter((target) => target.letters === undefined);
+    //
+    // Gurmukhi words take the same strip, the headline last by this book's
+    // convention for words (GNPS's cited letters draw it first): the three
+    // Punjabi headwords made only of cited bare letters, ਪਰ, ਅਮਨ and ਮਨਨ. ਉਹ
+    // and ਉਮਰ are candidates too, and wait only for a cited ਉ; every other
+    // Punjabi word carries a sign with no source yet (ਨਹੀਂ, ਅਤੇ, ਕੰਮ, ...).
     expect(Object.fromEntries(words.map((target) => [target.lessonId, target.glyph]))).toEqual({
       "HI-A1F01-name-label": "नाम",
       "HI-W12-schwa-drop": "नाम",
       "MW-W01-saa": "सा",
+      "PA-C39-par-write": "ਪਰ",
+      "PA-W02-aman": "ਅਮਨ",
+      "PA-W02-manan": "ਮਨਨ",
       "SA-W03-mama-delayed-copy": "मम",
       "SA-W03-mama-guided-copy": "मम",
     });
-    expect(shared.every((target) => target.script === "devanagari")).toBe(true);
+    expect(new Set(shared.map((target) => target.script))).toEqual(new Set(["devanagari", "gurmukhi"]));
     // A phrase of such words, separated by single spaces, is drawn word by
     // word, each word with its own headline: Sanskrit मम नाम, its two copy
     // lessons.
@@ -345,16 +445,22 @@ describe("the real corpus", () => {
       "HI-W04-write-mera-naam", // े in मेरा
       "MR-A1M01-reader-greeting", // a sentence: "नमस्कार मीरा."
       "MW-C07-read-later", // े and ू: "पाछे मिलसू"
+      "PA-C42-oh-write", // ਉ has no cited ductus yet
+      "PA-W07-age-label", // ਉ in ਉਮਰ
+      "PA-C37-nahin-write", // ੀ and ਂ
+      "PA-C38-ate-write", // ੇ
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }
   });
 
   it("draws the Latin lessons whose every letter is cited, one-storey a included", () => {
-    // 16 lessons over five Latin-script tracks (Latin's one, a composition,
-    // prints none now that a composition block takes no strip). The a waited for an outline
+    // 21 lessons over all six Latin-script tracks. The a waited for an outline
     // that prints the one-storey a every source teaches (LatinPrint-Subset.ttf,
-    // from SIL's Andika); the acute vowels follow UJIpenchars2's writers.
+    // from SIL's Andika); the acute vowels follow UJIpenchars2's writers; v
+    // follows the Grundschrift-App; è ê ç ï ë ä ö and ē are drawn BY ANALOGY
+    // with the cited ü, acute and tilde (base letter, then the mark last), and
+    // their records say they are not separately sourced.
     const latin = targets.filter((target) => target.script === "latin");
     expect(
       Object.fromEntries(latin.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")])),
@@ -368,25 +474,26 @@ describe("the real corpus", () => {
       "FR-W01-salut-delayed-copy": "s a l u t",
       "FR-W01-salut-guided-copy": "s a l u t",
       "FR-W01-salut-observe": "s a l u t",
+      "FR-W01-accents": "é è ê",
+      "FR-W02-cedille": "ç",
+      "FR-W03-trema": "ï ë ü",
       "GE-W01-eszett": "ß",
       "GE-W01-hallo-delayed-copy": "H a l l o",
       "GE-W01-hallo-guided-copy": "H a l l o",
+      "GE-W02-umlauts": "ä ö ü",
       "IT-W01-ciao-delayed-copy": "c i a o",
       "IT-W01-ciao-guided-copy": "c i a o",
+      "LA-W01-salve-delayed-copy": "s a l v ē",
       "PT-W01-ola-delayed-copy": "o l á",
       "PT-W01-ola-guided-copy": "o l á",
     });
-    // Still undrawn: an uncited mark (è ê ç ï ë ä ö ē œ), punctuation inside
-    // a word, a slash between two words, or more than MAX_SEQUENCE_PIECES.
+    // Still undrawn: œ (a ligature, not a marked letter, so not covered by the
+    // analogy), punctuation inside a word, a slash between two words, or more
+    // than MAX_SEQUENCE_PIECES.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "FR-W01-accents",
-      "FR-W02-cedille",
-      "FR-W03-trema",
       "FR-C10-oe",
-      "GE-W02-umlauts",
       "GE-W03-capitalization",
-      "LA-W01-salve-delayed-copy",
       "LA-W01-salve-guided-copy",
       "ES-C03-como-acento",
       "ES-W01-tilde-diacritica",

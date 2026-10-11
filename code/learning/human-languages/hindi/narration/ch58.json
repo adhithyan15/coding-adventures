@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Inside the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:db8572ad9fa81d15",
+  "sourceHash": "fnv1a64:9666cfa39ee02888",
   "lessons": [
     {
       "id": "HI-C58-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b193acf077380976",
+      "sourceHash": "fnv1a64:e2fd072efd0822dc",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say saṛak, then read तोहफ़ा",
+              "instruction": "say saṛak",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *saṛak*, then read **तोहफ़ा**]"
+              "source": "[YOU RECALL: say *saṛak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "तोहफ़ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **तोहफ़ा**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aab00dd80e351e8d",
+      "sourceHash": "fnv1a64:caa8ff27875ff83d",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "गाँव",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गाँव**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read गाँव, then say dāvat",
+              "instruction": "say dāvat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **गाँव**, then say *dāvat*]"
+              "source": "[YOU RECALL: say *dāvat*]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f0ced849984ba11",
+      "sourceHash": "fnv1a64:206226d523b60adb",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "दुकान",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दुकान**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read दुकान, then say khushbū",
+              "instruction": "say khushbū",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **दुकान**, then say *khushbū*]"
+              "source": "[YOU RECALL: say *khushbū*]"
             }
           ]
         },
@@ -543,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d672b38415e57ef",
+      "sourceHash": "fnv1a64:30e849c4700835b1",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +661,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say khet, then read मिठास",
+              "instruction": "say khet",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *khet*, then read **मिठास**]"
+              "source": "[YOU RECALL: say *khet*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मिठास",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मिठास**]"
             }
           ]
         },

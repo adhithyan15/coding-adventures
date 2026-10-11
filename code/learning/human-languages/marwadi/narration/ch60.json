@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C60-khad-type",
-              "prompt": "Type the Marwadi for 'sugar'.",
+              "prompt": "Say the Marwadi for 'sugar'.",
               "assesses": [
                 "MW-LEX-C60-VERBS60-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C60-lun-type",
-              "prompt": "Type the Marwadi for 'salt'.",
+              "prompt": "Say the Marwadi for 'salt'.",
               "assesses": [
                 "MW-LEX-C60-VERBS60-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C60-mirach-type",
-              "prompt": "Type the Marwadi for 'a chilli'.",
+              "prompt": "Say the Marwadi for 'a chilli'.",
               "assesses": [
                 "MW-LEX-C60-VERBS60-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C60-dahi-type",
-              "prompt": "Type the Marwadi for 'yoghurt'.",
+              "prompt": "Say the Marwadi for 'yoghurt'.",
               "assesses": [
                 "MW-LEX-C60-VERBS60-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C60-tel-type",
-              "prompt": "Type the Marwadi for 'oil'.",
+              "prompt": "Say the Marwadi for 'oil'.",
               "assesses": [
                 "MW-LEX-C60-VERBS60-05"
               ],

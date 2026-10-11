@@ -7,15 +7,23 @@
     "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "GE-C17-hand",
+    "lesson": "GE-R17-wie-geht-es-wirklich",
     "kind": "production",
-    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
+    "summary": "Run the wellbeing ladder cold and complain of Kopfschmerzen, say where Kopf and Haupt came from and what French tête shares with Kopf, say die Hand with its final d spoken as t and bring the d back in die Hände, and name the gap: main, mano, mão — but Hand.",
     "assesses": [
+      "GE-LEX-KOPF-02",
+      "GE-SOUND-KOPF-03",
+      "GE-COMPOUND-KOPFSCHMERZEN-04",
+      "GE-ETYMON-KOPF-05",
+      "GE-LEX-HAUPT-02",
+      "GE-ETYMON-HAUPT-03",
+      "GE-SOUND-GRIMMS-LAW-04",
+      "GE-CULTURE-HEAD-CONTAINERS-05",
       "GE-LEX-HAND-02",
       "GE-SOUND-HAND-03",
       "GE-ETYMON-HAND-04",
       "GE-ETYMON-HAND-MANUS-05"
     ],
-    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
+    "note": "GE-R17-wie-geht-es-wirklich is the chapter's last lesson (sequence 685, after GE-C17-hand-more) and now carries the payoff, assessing all twelve atoms the chapter introduces. The payoff used to be GE-C17-hand (680), which reached only its own third of the chapter and named the manus atom that GE-C17-hand-more teaches after it."
   }
 }

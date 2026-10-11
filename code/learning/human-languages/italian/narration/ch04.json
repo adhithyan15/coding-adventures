@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:534f394f345fb8a4",
+  "sourceHash": "fnv1a64:03e0a3298595cc8d",
   "lessons": [
     {
       "id": "IT-C04-arrivederci",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d62cd0da69d000bb",
+      "sourceHash": "fnv1a64:181b40deadafa10e",
       "notice": null,
       "blocks": [
         {

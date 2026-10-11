@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 22,
   "title": "Fourth Return: Wellbeing and Farewells",
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "sourceHash": "fnv1a64:90f6f2ff05409b06",
   "lessons": [
     {
@@ -23,8 +23,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -65,6 +67,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R18-how-are-you-r4-listening",
               "prompt": "Hear: tũ kem chhe? / tame kem chho? Which question respectfully asks how a new acquaintance is?",
               "assesses": [
@@ -95,6 +98,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R18-how-are-you-r4-writing",
               "prompt": "Cover every Gujarati model. Write the respectful question: How are you?",
               "assesses": [
@@ -149,8 +153,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -191,6 +197,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R18-majaa-r4-listening",
               "prompt": "Hear: tame kem chho? / hũ majāmā chhũ. Which line is the wellbeing answer?",
               "assesses": [
@@ -221,6 +228,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R18-majaa-r4-writing",
               "prompt": "Cover every Gujarati model. Write: I am well.",
               "assesses": [
@@ -274,8 +282,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -316,6 +326,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R18-no-problem-r4-listening",
               "prompt": "Hear: ābhār / vāndho nahĩ. Which line answers thanks with no problem?",
               "assesses": [
@@ -346,6 +357,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R18-no-problem-r4-writing",
               "prompt": "Cover every Gujarati model. Write: No problem.",
               "assesses": [
@@ -398,8 +410,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -440,6 +454,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R18-wellbeing-r4-listening",
               "prompt": "Hear the shuffled lines: vāndho nahĩ / hũ majāmā chhũ / tame kem chho. Put them in question, answer, courtesy order.",
               "assesses": [
@@ -472,6 +487,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R18-wellbeing-r4-writing",
               "prompt": "Cover every Gujarati model. Write: How are you? / I am well. / No problem.",
               "assesses": [
@@ -528,8 +544,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -570,6 +588,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R18-farewell-r4-listening",
               "prompt": "Hear: kāle maḷīshũ / pāchhā maḷīshũ. Which line means we will meet again, and which means see you tomorrow?",
               "assesses": [
@@ -602,6 +621,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R18-farewell-r4-writing",
               "prompt": "Cover every Gujarati model. Write: We will meet again. / See you tomorrow.",
               "assesses": [

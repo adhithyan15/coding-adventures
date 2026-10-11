@@ -41,7 +41,14 @@ reviews_of: [UR-C146-taim-tebal]
 ## You'll want to know: نوٹس
 <!-- hl-knowledge: introduces=[UR-LEX-C146-PARH146-02]; assesses=[] -->
 
-**نوٹس** — *noṭis* — "a notice". Read the notice: **دکان ہر اتوار کو بند رہتی ہے۔** — *dukān har itvār ko band rahtī hai* — The shop is closed on Sundays, so come on another day.
+**نوٹس** — *noṭis* — "a notice".
+
+[YOU READ: the notice]
+
+The notice says **دکان ہر اتوار کو بند رہتی ہے۔** — *dukān har itvār ko band
+rahtī hai*.
+
+— The shop is closed on Sundays, so come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

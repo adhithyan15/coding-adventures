@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does प्यालो (pyālo) mean? ("A cup".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cup'.
+Say the Marwadi for 'a cup'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does थाळी (thāḷī) mean? ("A plate".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a plate'.
+Say the Marwadi for 'a plate'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चमचो (chamcho) mean? ("A spoon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a spoon'.
+Say the Marwadi for 'a spoon'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छुरी (chhurī) mean? ("A knife".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a knife'.
+Say the Marwadi for 'a knife'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बोतल (botal) mean? ("A bottle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a bottle'.
+Say the Marwadi for 'a bottle'.

@@ -39,8 +39,11 @@ Say **おとうと** once without looking back.
 ## Guided Practice — two directions
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTOUTO, JA-LEX-KODOMO, JA-SCRIPT-KANJI-GO-01] -->
 
-[PAUSE 35s] Build distant **語** once. Hear *otooto* and point to “younger
-brother.” Read **こども**, then write both family words from memory.
+[PAUSE 35s] [YOU WRITE: distant **語** once, built from its parts]
+
+Hear *otooto* and say “younger brother.” [YOU READ: **こども**]
+
+[YOU WRITE: both family words from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTOUTO, JA-LEX-KODOMO] -->

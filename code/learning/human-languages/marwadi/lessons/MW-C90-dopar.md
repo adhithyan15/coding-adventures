@@ -38,7 +38,7 @@ reviews_of: [MW-C89-bhasa]
 
 [PAUSE 2s] Before the new one: say the Marwadi for a matter; talk, then the Marwadi for a language.
 
-[PAUSE 1s] Read without stopping: **ये कपड़ा दिखावो। ये कितणे कू है?**
+[PAUSE 1s] [YOU READ: **ये कपड़ा दिखावो। ये कितणे कू है?** without stopping]
 
 ## You'll want to know: दोपार
 <!-- hl-knowledge: introduces=[MW-LEX-C90-TIME90-01]; assesses=[] -->

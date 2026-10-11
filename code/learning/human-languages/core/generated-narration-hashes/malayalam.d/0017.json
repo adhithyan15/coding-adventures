@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 17,
-  "sourceHash": "fnv1a64:bf7f70180a9c5dff",
+  "sourceHash": "fnv1a64:043ed1888e8ce6c6",
   "lessonIds": [
     "ML-C17-ucha-paathira",
     "ML-C17-paathira"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch17.txt",
   "json": "malayalam/narration/ch17.json",
-  "textHash": "fnv1a64:fd3f8a4c58ef47c9",
-  "jsonHash": "fnv1a64:783932388f344106",
+  "textHash": "fnv1a64:c78879da9429c00e",
+  "jsonHash": "fnv1a64:5b4f7afb424e22b7",
   "findings": []
 }

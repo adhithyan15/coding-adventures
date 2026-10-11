@@ -36,7 +36,7 @@ reviews_of: [FA-C19-practice, FA-C16-yek, FA-W15-vav, FA-W15-lam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-PERFORMANCE-DIGITS-READ, FA-LEX-YEK] -->
 
-[PAUSE 2s] Read **۱**, **۵** and **۱۰**, then say **yek**.
+[PAUSE 2s] [YOU READ: **۱**, **۵** and **۱۰**, then say **yek**]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-AVVAL]; assesses=[FA-SCRIPT-ALEF-01, FA-SCRIPT-VAV-01, FA-SCRIPT-LAM-01] -->

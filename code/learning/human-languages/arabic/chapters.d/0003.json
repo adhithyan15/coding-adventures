@@ -9,10 +9,28 @@
   "payoff": {
     "lesson": "AR-C03-practice",
     "kind": "dialogue",
-    "summary": "The whole how-are-you exchange, run once to a man and once to a woman, with bi-khayr written out by hand.",
+    "summary": "The whole how-are-you exchange, run once to a man and once to a woman, with bi-khayr written out by hand and the chapter's letters, roots and literal meanings recalled from memory.",
     "assesses": [
+      "AR-LEX-ANCHOR-HAAJJ",
+      "AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01",
+      "AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02",
+      "AR-CONCEPT-W08-KAF-AND-RA-01",
+      "AR-CONCEPT-W08-KAF-AND-RA-02",
+      "AR-CONCEPT-W09-KHAYR-BIKHAYR-01",
+      "AR-CONCEPT-W09-KHAYR-BIKHAYR-02",
+      "AR-CONCEPT-C03-KAYFA-01",
+      "AR-CONCEPT-C03-KAYFA-02",
+      "AR-CONCEPT-C03-HAL-01",
+      "AR-CONCEPT-C03-HAL-02",
+      "AR-CONCEPT-C03-KAYFA-HALUKA-01",
+      "AR-CONCEPT-C03-KAYFA-HALUKA-02",
+      "AR-CONCEPT-C03-BI-KHAYR-01",
+      "AR-CONCEPT-C03-BI-KHAYR-02",
+      "AR-CONCEPT-C03-AL-HAMDU-LILLAH-01",
+      "AR-CONCEPT-C03-AL-HAMDU-LILLAH-02",
       "AR-CONCEPT-C03-PRACTICE-01",
       "AR-CONCEPT-C03-PRACTICE-02"
-    ]
+    ],
+    "note": "AR-C03-practice assesses all nineteen atoms the chapter introduces: the exchange and its pieces, the hook-and-tail family, ك and the non-joining ر, spelling خير and writing بخير, which letters of the chapter's phrases are new, and a spoken recall of the -ka/-ki question, both literal answers, ḥāl as how things have turned, kayfiyya, ḥājj and the ḥ-m-d root."
   }
 }

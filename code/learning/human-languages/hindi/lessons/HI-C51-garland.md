@@ -59,7 +59,8 @@ Two: a flower and a garland made of them.
 - [YOU SAY: *mālā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mālā*, then *phūl*, the string and the thing it is made of]
-- [YOU RECALL: read **परसों**, then say *ehsān*]
+- [YOU READ: **परसों**]
+- [YOU RECALL: say *ehsān*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-05, HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02] -->

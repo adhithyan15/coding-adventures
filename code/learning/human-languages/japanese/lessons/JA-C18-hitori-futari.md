@@ -39,7 +39,7 @@ reviews_of: [JA-C18-nin, JA-C16-hitotsu, JA-C16-futatsu, JA-W11-te]
 - [YOU RECALL: say *three people* — **R1**, one lesson back]
 - [YOU RECALL: say *nine things* — **R2**, five lessons back]
 - [YOU RECALL: say *ten*, then *twelve* — **R3**, twenty lessons back]
-- [YOU RECALL: write **て** — **R4**, eighty lessons back]
+- [YOU WRITE: **て** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-HITORI-FUTARI]; assesses=[JA-SCRIPT-HI-01, JA-SCRIPT-FU-01, JA-SCRIPT-RI-01, JA-LEX-NIN] -->
@@ -57,7 +57,7 @@ Every sign is yours: **ひ** and **ふ** came two chapters ago, **と**, **た**
 ## Grammar Lens — the seam, one more time
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HITORI-FUTARI, JA-LEX-HITOTSU, JA-LEX-FUTATSU, JA-GRAMMAR-KUN-IN-THE-COUNT] -->
 
-Read the four words together and the exception stops looking like one:
+Take the four words together and the exception stops looking like one:
 
 | number | native count | with the people counter |
 |---|---|---|
@@ -79,7 +79,9 @@ numbers.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HITORI-FUTARI, JA-LEX-NIN, JA-LEX-ANE, JA-LEX-ANI] -->
 
-Write **ひとり** and **ふたり**. Say *hitori, futari, sannin, yonin* — and hear
+[YOU WRITE: **ひとり** and **ふたり**]
+
+Say *hitori, futari, sannin, yonin* — and hear
 the switch happen between the second and the third.
 
 ## Wrap-up Recall

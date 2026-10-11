@@ -102,6 +102,6 @@ first letter that hangs a mark above the line.
 
 [PAUSE 3s] Ask for something politely, the Persian way. (*Miharbānī karke*.)
 What are the three pieces of the noun? (*Mihr*, *-bān*, *-ī*.) Which Sanskrit
-word is *mihr*'s twin? (*Mitra*.) Write **ਚੰਗਾ** once from memory.
+word is *mihr*'s twin? (*Mitra*.) [YOU WRITE: **ਚੰਗਾ** once from memory]
 
 Sources: [Wiktionary: miharbani](https://en.wiktionary.org/wiki/%E0%A8%AE%E0%A8%BF%E0%A8%B9%E0%A8%B0%E0%A8%AC%E0%A8%BE%E0%A8%A8%E0%A9%80); [Wiktionary: mihr](https://en.wiktionary.org/wiki/%D9%85%D9%87%D8%B1).

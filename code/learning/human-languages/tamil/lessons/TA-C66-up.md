@@ -67,7 +67,8 @@ word.
 - [YOU SAY: *mēlē*]
 - [YOU SAY: *mēlē pār* — "look up"]
 - [YOU SAY: *iṅgē*, *aṅgē*, *mēlē* — three words, one ending]
-- [YOU RECALL: say *nel*, then read **குடி**]
+- [YOU RECALL: say *nel*]
+- [YOU READ: **குடி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-01] -->

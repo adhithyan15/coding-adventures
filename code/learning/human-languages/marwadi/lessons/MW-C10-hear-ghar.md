@@ -37,8 +37,9 @@ reviews_of: [MW-C10-bajar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01] -->
 
-[PAUSE 18s] Say and write market, then recall the polite-yes and twelve-label
-four-skill payoffs.
+[PAUSE 18s] Say market. [YOU WRITE: the word for market]
+
+Then recall the polite-yes and twelve-label four-skill payoffs.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-GHAR-01]; assesses=[] -->

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ます (masu) mean? ("A trout".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a trout'.
+Say the Japanese for 'a trout'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふな (funa) mean? ("A crucian carp".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a crucian carp'.
+Say the Japanese for 'a crucian carp'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はまち (hamachi) mean? ("A young yellowtail".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a young yellowtail'.
+Say the Japanese for 'a young yellowtail'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さんま (sanma) mean? ("A Pacific saury".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a Pacific saury'.
+Say the Japanese for 'a Pacific saury'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あさり (asari) mean? ("A short-neck clam".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a short-neck clam'.
+Say the Japanese for 'a short-neck clam'.

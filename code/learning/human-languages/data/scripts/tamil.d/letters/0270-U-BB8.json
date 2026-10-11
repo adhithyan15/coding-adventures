@@ -1,0 +1,29 @@
+{
+  "glyph": "ஸ",
+  "sound": "sa",
+  "role": "consonant",
+  "components": [
+    "a small loop at the left, its tip inside it",
+    "a big arch over the loop",
+    "a stem down the middle",
+    "a second arch and a round bowl",
+    "a tail rising at the right"
+  ],
+  "strokeOrder": [
+    "start at the tip inside the left loop and curve up over it",
+    "without lifting, come down its right side, round the bottom and up the left side",
+    "without lifting, climb over the big arch and down to the top of the stem",
+    "without lifting, draw the stem straight down to its foot",
+    "without lifting, go back up the stem and over the second arch",
+    "without lifting, come down its right side and round the bottom",
+    "without lifting, climb the right side and curl in to the tip — and only now lift"
+  ],
+  "strokeOrderNote": "one continuous stroke — seven joined movements, no pen lift; it goes back up the stem once, to reach the second arch; cited to native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 30",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 30 (ஸ, sa): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+    "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+    "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 150 of the 153 stored prototypes of ஸ (98%) are one pen-down stroke. 147 of the 150 start in the left third, at the small loop, and 147 turn that loop clockwise; 142 end in the top third at the right, at the tip of the rising tail. 87 of the 150 (58%) come down to the foot of the letter three times, at the loop, the stem and the right-hand bowl, so the path draws the stem down to its foot and goes back up it before the second arch. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Tamil handwriting varies by school."
+  },
+  "notes": "Grantha-derived sa appears in borrowed words such as நமஸ்காரம் (namaskāram, the borrowed bow-word). Native writers draw it in one stroke: the small loop, the big arch, down the stem and back up it, then the second arch, the bowl and the rising tail."
+}

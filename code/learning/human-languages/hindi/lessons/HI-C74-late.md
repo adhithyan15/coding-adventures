@@ -70,7 +70,8 @@ it, and understand why the train has not come.
 - [YOU SAY: *gāṛī der se hai*]
 - [YOU CONTRAST: *jaldī* and *der*]
 - [YOU WRITE: निकास, then देर, and say all five in order]
-- [YOU RECALL: say *kharīdnā*, then read **पीना**]
+- [YOU RECALL: say *kharīdnā*]
+- [YOU READ: **पीना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-05] -->

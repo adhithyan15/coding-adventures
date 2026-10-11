@@ -58,7 +58,8 @@ Two, and they pull opposite ways.
 - [YOU SAY: *mātramē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *perugu kūḍā*, then *perugu mātramē*, and say which one takes more]
-- [YOU RECALL: read **సూది**, then say *nidra*]
+- [YOU READ: **సూది**]
+- [YOU RECALL: say *nidra*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02] -->

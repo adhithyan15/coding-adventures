@@ -33,7 +33,7 @@ reviews_of: [TA-C41-new]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: பழைய
 <!-- hl-knowledge: introduces=[TA-LEX-C41-ADJ-05]; assesses=[] -->
@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05, TA-LEX-C40-DEIXIS-06] -->
 
 [PAUSE 1s]
-- [YOU SAY: "பழைய" three times, pointing at something different each time]
+- [YOU SAY: "பழைய" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *eṅgē*]
 

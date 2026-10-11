@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *kāyccal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāyccal*, then *maruttuvar*, and say which one you take to the other]
-- [YOU RECALL: read **வெல்லம்**, then say *tuṭaippam*]
+- [YOU READ: **வெல்லம்**]
+- [YOU RECALL: say *tuṭaippam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03, TA-LEX-C61-FEEL-04] -->

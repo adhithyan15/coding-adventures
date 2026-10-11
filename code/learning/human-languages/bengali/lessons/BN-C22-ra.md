@@ -75,7 +75,7 @@ Bengali has not needed it yet.
 - [YOU SAY: *bhāi*, then *bhāirā*]
 - [YOU SAY: *bôndhu*, then *bôndhurā*]
 - [YOU SAY: the one that needs the extra vowel — *bôn*, then *bônerā*]
-- [YOU SAY: pointing at them — *ei bhāirā*]
+- [YOU SAY: these brothers here — *ei bhāirā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C22-PLURAL-RA-01, BN-GRAMMAR-C22-ANIMACY-01] -->

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "A Counter for the Shape of the Thing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3a63181038fb22af",
+  "sourceHash": "fnv1a64:23aba08dbab1d3c6",
   "lessons": [
     {
       "id": "JA-C18-tsu-counter",
@@ -132,7 +132,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "speech",
@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-tsu-counter-recall",
               "prompt": "Name the two counters you already owned before this lesson, and say what each one counts.",
               "assesses": [
@@ -190,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57a7f07a0214398d",
+      "sourceHash": "fnv1a64:3a6a0009554f6c91",
       "notice": null,
       "blocks": [
         {
@@ -219,30 +220,30 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write の — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "の from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **の** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **の** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the small ゅ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the small ゅ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the small **ゅ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: the small **ゅ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the small っ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the small っ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the small **っ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: the small **っ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -306,11 +307,20 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "にん (-nin)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **にん**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write にん (-nin). Say sannin, yonin, gonin, juunin. Then say こども さんにん."
+              "text": "Say sannin, yonin, gonin, juunin. Then say こども さんにん."
             }
           ]
         },
@@ -330,6 +340,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-nin-recall",
               "prompt": "Can you count people with the tsu series? Say why or why not, and give three people in Japanese.",
               "assesses": [
@@ -364,7 +375,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e0a8d5fc508e7fd",
+      "sourceHash": "fnv1a64:bec01b17d65d6edd",
       "notice": null,
       "blocks": [
         {
@@ -411,12 +422,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write て — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "て from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **て** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **て** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -450,7 +461,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the four words together and the exception stops looking like one:"
+              "text": "Take the four words together and the exception stops looking like one:"
             },
             {
               "kind": "table",
@@ -484,11 +495,20 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ひとり and ふたり",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ひとり** and **ふたり**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ひとり and ふたり. Say hitori, futari, sannin, yonin — and hear the switch happen between the second and the third."
+              "text": "Say hitori, futari, sannin, yonin — and hear the switch happen between the second and the third."
             }
           ]
         },
@@ -508,6 +528,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-hitori-futari-recall",
               "prompt": "Count people from one to four.",
               "assesses": [
@@ -541,7 +562,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26e30a42eb533fd5",
+      "sourceHash": "fnv1a64:f28d7e018c17cf8b",
       "notice": null,
       "blocks": [
         {
@@ -579,12 +600,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write た — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "た from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **た** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **た** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -617,6 +638,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-count-the-face-run",
               "prompt": "Count the four parts of a face in Japanese: eyes, ears, nose, mouth.",
               "assesses": [
@@ -640,6 +662,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-count-the-face-people",
               "prompt": "Now count two people, and say why the word is not futatsu.",
               "assesses": [
@@ -690,19 +713,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:57919e9cbd37e740",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -764,7 +792,7 @@
             },
             {
               "kind": "speech",
-              "text": "ほ is that figure with one more horizontal, and Sirgazil's animation puts it above the one は already has. Four strokes, in this order:"
+              "text": "ほ (ho) is that figure with one more horizontal, and Sirgazil's animation puts it above the one は already has. Four strokes, in this order:"
             },
             {
               "kind": "speech",
@@ -831,6 +859,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W18-ho-write",
               "prompt": "Write ho, and say what makes it different from ha.",
               "assesses": [
@@ -865,7 +894,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92ea729803ff6caf",
+      "sourceHash": "fnv1a64:95716613a5e08cfd",
       "notice": null,
       "blocks": [
         {
@@ -885,12 +914,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ほ (ho) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ほ (ho) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ほ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ほ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -969,18 +998,27 @@
             },
             {
               "kind": "speech",
-              "text": "At three the ほ takes the dakuten you have had since chapter three, and at one, six, eight and ten it goes further still — further than the dakuten can take it. Both of those need a mark on the sign, and the second mark is one this book has never taught. The next two lessons buy it and then spend it; until then, say the four plain ones."
+              "text": "At three the ほ (ho) takes the dakuten you have had since chapter three, and at one, six, eight and ten it goes further still — further than the dakuten can take it. Both of those need a mark on the sign, and the second mark is one this book has never taught. The next two lessons buy it and then spend it; until then, say the four plain ones."
             }
           ]
         },
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ほん (-hon)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ほん**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ほん (-hon). Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん."
+              "text": "Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん."
             }
           ]
         },
@@ -1000,6 +1038,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-hon-recall",
               "prompt": "Say two long thin things and four long thin things in Japanese.",
               "assesses": [
@@ -1033,7 +1072,8 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b974ac0d79c941d6",
       "notice": {
@@ -1041,12 +1081,16 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1173,6 +1217,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W18-handakuten-write",
               "prompt": "Write ho, then the same sign with each of the two marks, and say all three.",
               "assesses": [
@@ -1205,16 +1250,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:33294dd25cd1702b",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "You'll Want to Know — hear and say",
+          "Guided Practice — read, copy, recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll Want to Know — hear and say and Guided Practice — read, copy, recall."
       },
       "blocks": [
         {
@@ -1272,7 +1323,7 @@
             },
             {
               "kind": "speech",
-              "text": "Not ichihon. The いち shortens to いっ, and the ほ takes the handakuten you learned last lesson."
+              "text": "Not ichihon. The いち shortens to いっ, and the ほ (ho) takes the handakuten you learned last lesson."
             },
             {
               "kind": "speech",
@@ -1340,6 +1391,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-ippon-recall",
               "prompt": "Which numbers push the counter to p, and what do they all have in common?",
               "assesses": [
@@ -1468,6 +1520,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R18-counting-things-three",
               "prompt": "Say ONE of each: one thing, one person, one long thin thing.",
               "assesses": [
@@ -1489,6 +1542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R18-counting-things-choose",
               "prompt": "Count these four: two eyes, two legs, two people, two hairs.",
               "assesses": [

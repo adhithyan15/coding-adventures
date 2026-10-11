@@ -59,7 +59,8 @@ Four.
 - [YOU SAY: *miṭṭī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *miṭṭī*, then *dīyā*, and say which one the other is made of]
-- [YOU RECALL: read **भैंस**, then say *tavā*]
+- [YOU READ: **भैंस**]
+- [YOU RECALL: say *tavā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04] -->

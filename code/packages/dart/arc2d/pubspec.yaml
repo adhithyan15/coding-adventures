@@ -1,0 +1,20 @@
+name: coding_adventures_arc2d
+description: Educational elliptical arcs in endpoint and center form.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_point2d:
+    path: ../point2d
+  coding_adventures_bezier2d:
+    path: ../bezier2d
+  coding_adventures_trig:
+    path: ../trig
+
+dev_dependencies:
+  coverage: ^1.15.0
+  test: ^1.25.0

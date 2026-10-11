@@ -56,7 +56,8 @@ Two: the trunk, and what comes off it.
 - [YOU SAY: *kiḷai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maram*, then *kiḷai*, the tree and then what comes off it]
-- [YOU RECALL: read **கோலம்**, then say *sūriyaṉ*]
+- [YOU READ: **கோலம்**]
+- [YOU RECALL: say *sūriyaṉ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02] -->

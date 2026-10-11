@@ -38,7 +38,7 @@ reviews_of: [JA-C17-muttsu, JA-C15-nana, JA-W10-shi]
 
 - [YOU RECALL: say *six things* — **R1**, one lesson back]
 - [YOU RECALL: say *three* — **R3**, twenty lessons back]
-- [YOU RECALL: write **し** — **R4**, eighty lessons back]
+- [YOU WRITE: **し** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-NANATSU]; assesses=[JA-SCRIPT-NA-01, JA-SCRIPT-TSU-01, JA-LEX-NANA] -->
@@ -52,7 +52,7 @@ chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NANATSU, JA-LEX-NANA, JA-GRAMMAR-KUN-IN-THE-COUNT] -->
 
 **なな** is the native word, and the borrowed count uses it — the same move you
-saw at four with **よん**. Write the two rows out and the pattern is exact:
+saw at four with **よん**. Set the two rows side by side and the pattern is exact:
 
 | the reading | four | seven |
 |---|---|---|
@@ -67,7 +67,9 @@ another word. This is the seam, and you have now seen both ends of it.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NANATSU, JA-LEX-NANA, JA-GRAMMAR-KUN-IN-THE-COUNT] -->
 
-Write **ななつ**. Say *nana*, then *nanatsu*: the same word, once as a number and
+[YOU WRITE: **ななつ**]
+
+Say *nana*, then *nanatsu*: the same word, once as a number and
 once as a count of things.
 
 ## Wrap-up Recall

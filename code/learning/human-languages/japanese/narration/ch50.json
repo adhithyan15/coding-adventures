@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C50-amai-type",
-              "prompt": "Type the Japanese for 'sweet'.",
+              "prompt": "Say the Japanese for 'sweet'.",
               "assesses": [
                 "JA-LEX-C50-ADJ50-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C50-nigai-type",
-              "prompt": "Type the Japanese for 'bitter'.",
+              "prompt": "Say the Japanese for 'bitter'.",
               "assesses": [
                 "JA-LEX-C50-ADJ50-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C50-hiroi-type",
-              "prompt": "Type the Japanese for 'wide'.",
+              "prompt": "Say the Japanese for 'wide'.",
               "assesses": [
                 "JA-LEX-C50-ADJ50-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C50-semai-type",
-              "prompt": "Type the Japanese for 'narrow'.",
+              "prompt": "Say the Japanese for 'narrow'.",
               "assesses": [
                 "JA-LEX-C50-ADJ50-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C50-omoi-type",
-              "prompt": "Type the Japanese for 'heavy'.",
+              "prompt": "Say the Japanese for 'heavy'.",
               "assesses": [
                 "JA-LEX-C50-ADJ50-05"
               ],

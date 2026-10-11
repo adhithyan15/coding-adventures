@@ -65,11 +65,13 @@ The first of five words you read rather than say.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-04, HI-LEX-C73-EATING-05, HI-LEX-C72-COST-01, HI-LEX-C73-EATING-01] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *veṭar*, then read **पीना** and say what it means]
+- [YOU RECALL: say *veṭar*]
+- [YOU READ: **पीना**, then say what it means]
 - [YOU READ: **खुला** (*khulā*), as though it were painted on a shutter]
 - [YOU SAY: *khulā*]
 - [YOU SAY: *khulā paisā*]
-- [YOU RECALL: say *paisā*, then read **होटल**]
+- [YOU RECALL: say *paisā*]
+- [YOU READ: **होटल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01] -->

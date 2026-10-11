@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "From study to university student",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bb34b2852c9ae5aa",
+  "sourceHash": "fnv1a64:de9e8d46857990e4",
   "lessons": [
     {
       "id": "ZH-C13-hear-da",
@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C13-hear-da-meaning",
               "prompt": "What does dà mean?",
               "assesses": [
@@ -98,19 +99,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:daf6f23f0abcb000",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -168,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W13-da-order",
               "prompt": "Which stroke comes first in 大 (dà)?",
               "assesses": [
@@ -202,7 +207,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c41cebf0ae1709ee",
+      "sourceHash": "fnv1a64:7d4137e0196451b0",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +223,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say big, then point to the first stroke of 大 (dà)."
+              "text": "Say big."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the first stroke of 大 (dà)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the first stroke of 大]"
             }
           ]
         },
@@ -232,8 +246,17 @@
               "text": "大 — dà — big; large."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the character without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the character without pinyin]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the character without pinyin. Then say it once with a clear fourth-tone fall."
+              "text": "Then say it once with a clear fourth-tone fall."
             }
           ]
         },
@@ -243,8 +266,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 大 (dà) once from the model. Keep the crossing near the centre."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 大 (dà), from the model — keep the crossing near the centre",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **大**, from the model — keep the crossing near the centre]"
             }
           ]
         },
@@ -260,6 +288,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C13-da-write",
               "prompt": "Write dà, big, in Chinese.",
               "assesses": [
@@ -339,6 +368,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C13-hear-dajia-meaning",
               "prompt": "What does dàjiā mean?",
               "assesses": [
@@ -369,16 +399,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5cea47fa960fe801",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -436,6 +472,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C13-dajia-write",
               "prompt": "Write everyone in Chinese characters.",
               "assesses": [
@@ -515,6 +552,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C13-hear-xue-meaning",
               "prompt": "What does xué mean?",
               "assesses": [
@@ -549,19 +587,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:79792913a39edafe",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -619,6 +662,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W13-xue-build",
               "prompt": "Which familiar character closes 学 (xué) at the bottom?",
               "assesses": [
@@ -652,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dacc2c7501ade1e",
+      "sourceHash": "fnv1a64:b81788c6a54a0ed4",
       "notice": null,
       "blocks": [
         {
@@ -668,7 +712,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say study, then point to 子 inside 学 (xué)."
+              "text": "Say study."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "子 inside 学 (xué)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: 子 inside 学]"
             }
           ]
         },
@@ -682,8 +735,13 @@
               "text": "学 — xué — study; learn."
             },
             {
-              "kind": "speech",
-              "text": "Read it without pinyin, then give the syllable a clear rise."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "学 (xué) without pinyin, then give the syllable a clear rise",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **学** without pinyin, then give the syllable a clear rise]"
             }
           ]
         },
@@ -693,8 +751,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 学 (xué) once. Pause mentally after the top, after the cover, and after 子."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 学 (xué) — pause mentally after the top, after the cover, and after 子",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **学** — pause mentally after the top, after the cover, and after 子]"
             }
           ]
         },
@@ -710,6 +773,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C13-xue-write",
               "prompt": "Write xué, study or learn, in Chinese.",
               "assesses": [
@@ -789,6 +853,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C13-hear-xuesheng-meaning",
               "prompt": "What does xuésheng mean?",
               "assesses": [
@@ -820,19 +885,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9e31bbf5375bcd40",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -886,6 +954,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W13-sheng-order",
               "prompt": "Which stroke closes 生 (sheng)?",
               "assesses": [
@@ -920,7 +989,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba024f08cbd9354f",
+      "sourceHash": "fnv1a64:bd60256e647ae2d1",
       "notice": null,
       "blocks": [
         {
@@ -935,8 +1004,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "学 (xué), then 生 (sheng)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: 学, then 生]"
+            },
+            {
               "kind": "speech",
-              "text": "Point to 学 (xué), then 生 (sheng). Say study, then student."
+              "text": "Say study, then student."
             }
           ]
         },
@@ -950,8 +1028,17 @@
               "text": "学生 — xuésheng — student."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two-character word without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two-character word without pinyin]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the two-character word without pinyin. Keep the second syllable light."
+              "text": "Keep the second syllable light."
             }
           ]
         },
@@ -961,8 +1048,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 学生 (xuésheng) once. Finish all of 学 before beginning 生."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 学生 (xuésheng) — finish all of 学 (xué) before beginning 生 (sheng)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **学生** — finish all of 学 before beginning 生]"
             }
           ]
         },
@@ -978,6 +1070,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C13-xuesheng-write",
               "prompt": "Write student in Chinese characters.",
               "assesses": [
@@ -1057,6 +1150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C13-hear-daxue-meaning",
               "prompt": "What does dàxué mean?",
               "assesses": [
@@ -1088,16 +1182,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5f961651fe2a2f65",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1155,6 +1255,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C13-daxue-write",
               "prompt": "Write university in Chinese characters.",
               "assesses": [
@@ -1234,6 +1335,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C13-hear-daxuesheng-meaning",
               "prompt": "What does dàxuésheng mean?",
               "assesses": [
@@ -1266,16 +1368,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:4093985f75f50fb8",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1333,6 +1441,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C13-daxuesheng-write",
               "prompt": "Write university student in Chinese characters.",
               "assesses": [
@@ -1365,7 +1474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66bcd3842aae9462",
+      "sourceHash": "fnv1a64:72b1738390cc870a",
       "notice": null,
       "blocks": [
         {
@@ -1380,8 +1489,13 @@
               "source": "[PAUSE 18s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 大 (dà), 学 (xué), and 生 (sheng) once each from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "大 (dà), 学 (xué), and 生 (sheng) once each from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 大, 学, and 生 once each from memory]"
             }
           ]
         },
@@ -1392,7 +1506,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the six words in shuffled order and point to meanings. Then say each word from a meaning card, read each character card, and write only the missed items. Repair one word at a time."
+              "text": "Hear the six words in shuffled order and say each meaning. Then say each word from its English meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each character card",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each character card]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only the missed items",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only the missed items]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repair one word at a time."
             }
           ]
         },
@@ -1408,6 +1544,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R13-school-six-recall",
               "prompt": "Write student, university, and university student in that order.",
               "assesses": [
@@ -1443,7 +1580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a386465eb5af235b",
+      "sourceHash": "fnv1a64:06a4a4a97e7848bf",
       "notice": null,
       "blocks": [
         {
@@ -1458,8 +1595,13 @@
               "source": "[PAUSE 18s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 大 (dà), 学 (xué), and 生 (sheng) without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "大 (dà), 学 (xué), and 生 (sheng) without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 大, 学, and 生 without a model]"
             }
           ]
         },
@@ -1474,15 +1616,29 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all six from meaning cards, with tones audible."
+              "text": "Speaking: produce all six from their English meanings, with tones audible."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all six character cards without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all six character cards without pinyin]"
             },
             {
               "kind": "speech",
-              "text": "Reading: read all six character cards without pinyin."
+              "text": "Writing: hear all six."
             },
             {
-              "kind": "speech",
-              "text": "Writing: hear all six and write them without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all six without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all six without a model]"
             },
             {
               "kind": "speech",
@@ -1502,6 +1658,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C13-practice-school-payoff",
               "prompt": "After all four checks pass, write everyone, university, and university student.",
               "assesses": [

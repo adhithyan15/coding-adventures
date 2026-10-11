@@ -6,6 +6,7 @@ sequence: 60
 chapter: 1
 type: word
 headword: مساء الخير
+romanization: "masāʾ al-khayr"
 gloss: good evening (masāʾ al-khayr — "evening of goodness")
 concept_tag: GREETING-EVENING
 prerequisites: [AR-C01-sabah-al-khayr]
@@ -57,7 +58,7 @@ yours.
 evening" — the *exact mirror* of *aṣbaḥa* ("to reach morning"). Arabic names the
 two ends of the day as matched events, each with its own "to become" verb, where
 French *soir* and Spanish *tarde* both merely meant "late." **مساء الخير** =
-"evening of goodness"; reply **مساء النور** (*masāʾ an-nūr*), "evening of
+"evening of goodness"; reply *masāʾ an-nūr*, "evening of
 light."
 
 ## Why it's said this way
@@ -78,7 +79,7 @@ of light"). Learn one pair, you have both.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-HAMZA-17, AR-CONCEPT-MASA-18, AR-CULTURE-MASA-19] -->
 
-[PAUSE 3s] Read **مساء الخير**. What does the mark **ء** (hamza) do? (A glottal
+[PAUSE 3s] [YOU READ: **مساء الخير**] What does the mark **ء** (hamza) do? (A glottal
 stop — the catch in "uh-oh.") How does Arabic treat morning and evening
 differently from French/Spanish? (As matched "to become" events, not just
 "late.")

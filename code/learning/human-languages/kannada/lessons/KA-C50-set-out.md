@@ -56,7 +56,7 @@ Four. Now, the day after tomorrow, a journey, and setting out on it.
 - [YOU SAY: *horaḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *horaḍu*, then *hōgu*, and say which of the two has a destination in it]
-- [YOU RECALL: read **ರೈತ**]
+- [YOU READ: **ರೈತ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04] -->

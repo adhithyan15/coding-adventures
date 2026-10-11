@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can use the whole imperfect, including all three irregulars.",
     "assesses": [
-      "ES-GRAMMAR-IMPERFECT-COMPLETE"
+      "ES-GRAMMAR-IMPERFECT-COMPLETE",
+      "ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL",
+      "ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL"
     ]
   }
 }

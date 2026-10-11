@@ -4,12 +4,12 @@
   "chapter": 37,
   "title": "Eleven to Fifteen",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5b8ac0c93f7c056f",
+  "sourceHash": "fnv1a64:8b6736d440e77def",
   "lessons": [
     {
       "id": "MW-W37-i",
       "sequence": 3130,
-      "title": "इ — the fourth standing vowel",
+      "title": "इ (i) — the fourth standing vowel",
       "headword": "इ",
       "romanization": "i",
       "gloss": "the standing letter for i — the fourth vowel this book has had to isolate",
@@ -19,7 +19,8 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:08962f99e669298a",
       "notice": {
@@ -27,12 +28,16 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the mark, standing on its own"
+          "Warm-up",
+          "Script — the mark, standing on its own",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the mark, standing on its own until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the mark, standing on its own, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -67,7 +72,7 @@
             },
             {
               "kind": "speech",
-              "text": "आ was isolated in chapter 2, ई in chapter 6, ए in chapter 32 for the first number. इ is the fourth, and eleven is what needs it."
+              "text": "आ was isolated in chapter 2, ई in chapter 6, ए in chapter 32 for the first number. इ (i) is the fourth, and eleven is what needs it."
             }
           ]
         },
@@ -78,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace इ three times. Write ि beside it and say which of the two can begin a word on its own. Then look at ई and mark the one stroke that separates the two standing letters."
+              "text": "Trace इ (i) three times. Write ि beside it and say which of the two can begin a word on its own. Then look at ई and mark the one stroke that separates the two standing letters."
             }
           ]
         },
@@ -98,6 +103,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W37-i-recall",
               "prompt": "Write the standing letter for short i, not its mark.",
               "assesses": [
@@ -130,7 +136,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:231d8d8f2e286d04",
+      "sourceHash": "fnv1a64:577dc72a3580e898",
       "notice": null,
       "blocks": [
         {
@@ -146,12 +152,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इ, the letter the last lesson stood up — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इ (i) from memory, the letter the last lesson stood up — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इ**, the letter the last lesson stood up — **R1**]"
+              "source": "[YOU WRITE: **इ** from memory, the letter the last lesson stood up — **R1**]"
             },
             {
               "kind": "prompt",
@@ -164,12 +170,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write पैसा ले लो — R4",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "पैसा ले लो from memory — R4",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **पैसा ले लो** — **R4**]"
+              "source": "[YOU WRITE: **पैसा ले लो** from memory — **R4**]"
             }
           ]
         },
@@ -204,6 +210,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C37-hear-igyaara-count",
               "prompt": "Say ten, then eleven.",
               "assesses": [
@@ -236,16 +243,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:46a635d95ba1ea3c",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -277,7 +289,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "इ + ग्या + रा becomes इग्यारा — igyārā — eleven."
+              "text": "इ (i) + ग्या + रा becomes इग्यारा — igyārā — eleven."
             },
             {
               "kind": "speech",
@@ -296,7 +308,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy इग्यारा (igyārā) once while looking. Then write the three pieces apart — इ, ग्या, रा — and point at the stem that ग gave up."
+              "text": "Copy इग्यारा (igyārā) once while looking. Then write the three pieces apart — इ (i), ग्या, रा — and point at the stem that ग gave up."
             }
           ]
         },
@@ -312,6 +324,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C37-igyaara-build",
               "prompt": "From igyārā, write eleven.",
               "assesses": [
@@ -345,7 +358,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37547c038ba7ab93",
+      "sourceHash": "fnv1a64:1c8d9a46d52e5973",
       "notice": null,
       "blocks": [
         {
@@ -361,21 +374,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इग्यारा (igyārā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इग्यारा (igyārā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इग्यारा** — **R1**]"
+              "source": "[YOU WRITE: **इग्यारा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figures ०, १ and २ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figures ०, १ and २ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figures **०**, **१** and **२** — **R3**]"
+              "source": "[YOU WRITE: the figures **०**, **१** and **२** from memory — **R3**]"
             },
             {
               "kind": "prompt",
@@ -419,6 +432,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C37-hear-baara-count",
               "prompt": "Say eleven, then twelve.",
               "assesses": [
@@ -452,16 +466,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:791ab6c7333eec49",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -537,6 +557,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C37-baara-dictation",
               "prompt": "From bārā, write twelve.",
               "assesses": [
@@ -570,7 +591,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a4ce52d90baa6a6",
+      "sourceHash": "fnv1a64:3afeb2f957bc9946",
       "notice": null,
       "blocks": [
         {
@@ -586,21 +607,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write बारा (bārā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "बारा (bārā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **बारा** — **R1**]"
+              "source": "[YOU WRITE: **बारा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इ, five lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इ (i) from memory, five lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इ**, five lessons back — **R2**]"
+              "source": "[YOU WRITE: **इ** from memory, five lessons back — **R2**]"
             },
             {
               "kind": "prompt",
@@ -613,12 +634,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figures ३, ४ and ५ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figures ३, ४ and ५ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figures **३**, **४** and **५** — **R3**]"
+              "source": "[YOU WRITE: the figures **३**, **४** and **५** from memory — **R3**]"
             },
             {
               "kind": "prompt",
@@ -662,6 +683,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C37-hear-tera-count",
               "prompt": "Say twelve, then thirteen.",
               "assesses": [
@@ -695,16 +717,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:284c21af73f7d78c",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -785,6 +813,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C37-tera-dictation",
               "prompt": "From terā, write thirteen.",
               "assesses": [
@@ -818,7 +847,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b04542f34ff7ba9b",
+      "sourceHash": "fnv1a64:ff79007d342ae0ef",
       "notice": null,
       "blocks": [
         {
@@ -834,30 +863,30 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write तेरा (terā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "तेरा (terā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **तेरा** — **R1**]"
+              "source": "[YOU WRITE: **तेरा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इग्यारा (igyārā), five lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इग्यारा (igyārā) from memory, five lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इग्यारा**, five lessons back — **R2**]"
+              "source": "[YOU WRITE: **इग्यारा** from memory, five lessons back — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figures ६, ७ and ८ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figures ६, ७ and ८ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figures **६**, **७** and **८** — **R3**]"
+              "source": "[YOU WRITE: the figures **६**, **७** and **८** from memory — **R3**]"
             },
             {
               "kind": "prompt",
@@ -905,6 +934,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C37-hear-chauda-count",
               "prompt": "Say thirteen, then fourteen, and say which sound changes at the end.",
               "assesses": [
@@ -939,16 +969,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:882aaba1f26dd6f0",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1029,6 +1065,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C37-chauda-dictation",
               "prompt": "From caudā, write fourteen.",
               "assesses": [
@@ -1062,7 +1099,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34e7bb8338e45baa",
+      "sourceHash": "fnv1a64:60f43802c1a3124a",
       "notice": null,
       "blocks": [
         {
@@ -1078,39 +1115,39 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write चौदा (caudā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "चौदा (caudā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **चौदा** — **R1**]"
+              "source": "[YOU WRITE: **चौदा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write तेरा (terā), five lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "तेरा (terā) from memory, five lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **तेरा**, five lessons back — **R2**]"
+              "source": "[YOU WRITE: **तेरा** from memory, five lessons back — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figure ९ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figure ९ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figure **९** — **R3**]"
+              "source": "[YOU WRITE: the figure **९** from memory — **R3**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write बारा (bārā) — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "बारा (bārā) from memory — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **बारा** — **R2**]"
+              "source": "[YOU WRITE: **बारा** from memory — **R2**]"
             }
           ]
         },
@@ -1145,6 +1182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C37-hear-pandara-count",
               "prompt": "Say fourteen, then fifteen.",
               "assesses": [
@@ -1178,16 +1216,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b365592e65c29ce1",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1277,6 +1321,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C37-pandara-dictation",
               "prompt": "From pandarā, write fifteen.",
               "assesses": [
@@ -1310,7 +1355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3c54ef7a6a2764a",
+      "sourceHash": "fnv1a64:bcafcf95e2427694",
       "notice": null,
       "blocks": [
         {
@@ -1326,30 +1371,30 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write पंदरा (pandarā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "पंदरा (pandarā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **पंदरा** — **R1**]"
+              "source": "[YOU WRITE: **पंदरा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इ, the letter five lessons back stood up — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इ (i) from memory, the letter five lessons back stood up — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इ**, the letter five lessons back stood up — **R2**]"
+              "source": "[YOU WRITE: **इ** from memory, the letter five lessons back stood up — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read a printed ticket and say the figure on it aloud — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "a printed ticket, then say the figure on it aloud — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read a printed ticket and say the figure on it aloud — **R3**]"
+              "source": "[YOU READ: a printed ticket, then say the figure on it aloud — **R3**]"
             }
           ]
         },
@@ -1367,12 +1412,22 @@
               "text": "Hear the five named singly and out of order; say each back."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed and say each aloud."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed, then say each aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed, then say each aloud]"
             },
             {
-              "kind": "speech",
-              "text": "Write three of them from dictation, the choice named only as you write."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "three of them from dictation, the choice named only as you write",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: three of them from dictation, the choice named only as you write]"
             },
             {
               "kind": "speech",
@@ -1392,6 +1447,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R37-count-fifteen-odd",
               "prompt": "Which of eleven to fifteen does not end in -rā? Write it.",
               "assesses": [

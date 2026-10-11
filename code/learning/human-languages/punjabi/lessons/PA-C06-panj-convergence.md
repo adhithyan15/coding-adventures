@@ -39,7 +39,7 @@ reviews_of: [PA-C06-numbers-1-5, PA-C05-main-punjabi-bolda-han]
 [PAUSE 2s] Say “five” in Punjabi. (*Panj*.) Where did Chapter 5 first show that
 shape? (Inside Persian *panj + āb*, “five waters.”)
 
-[PAUSE 2s] In **ਪੰਜ**, which mark sits on top, and what does it do? (The tippi, **ੰ**: a nasal.) And the addak, **ੱ**? (It doubles the next consonant.)
+[PAUSE 2s] In **ਪੰਜ**, which mark sits on top, and what does it do? (The tippi, **ੰ**: a nasal.) And the addak, the small crescent? (It doubles the next consonant.)
 
 ## What you've built: the surprising family comparison
 <!-- hl-knowledge: introduces=[PA-COMPARISON-PANJ-MATCH]; assesses=[] -->

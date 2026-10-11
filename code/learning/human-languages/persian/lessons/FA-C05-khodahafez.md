@@ -46,8 +46,9 @@ let them become one everyday social move.
 > **خداحافظ** — *khodâ hâfez* — **goodbye**
 
 Persian normally writes the two spoken pieces together. Start with **خدا**, add
-**حافظ**, and read the joined spelling **خداحافظ** from the right edge. Keep the
-two meaning layers available underneath the complete form.
+**حافظ**. [YOU READ: the joined spelling **خداحافظ** from the right edge]
+
+Keep the two meaning layers available underneath the complete form.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED] -->

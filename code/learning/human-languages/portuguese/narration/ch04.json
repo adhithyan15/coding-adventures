@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3a993b74986ed9b9",
+  "sourceHash": "fnv1a64:bb7b439b451a6e49",
   "lessons": [
     {
       "id": "PT-C04-adeus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eb30aa1a8e50f2d",
+      "sourceHash": "fnv1a64:58f14ad2d7858727",
       "notice": null,
       "blocks": [
         {

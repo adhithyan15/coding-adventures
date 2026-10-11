@@ -41,7 +41,12 @@ reviews_of: [MR-C161-bhade]
 ## You'll want to know: जाहिरात
 <!-- hl-knowledge: introduces=[MR-LEX-C161-VACH161-04]; assesses=[] -->
 
-**जाहिरात** — *jāhirāt* — "an advert". Read the advert: **खोली भाड्याने देणे आहे.** — "Room to let." A room is free to rent.
+**जाहिरात** — *jāhirāt* — "an advert".
+
+[YOU READ: the advert]
+
+The advert says **खोली भाड्याने देणे आहे.** — "Room to let." A room is free to
+rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

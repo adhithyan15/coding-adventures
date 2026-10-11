@@ -73,7 +73,7 @@ road through "to learn by heart" — **record**. Greek **kardía** gave
 row and the family resemblance needs no proof.
 
 It is fitting that the book's most secure cousin is also the organ
-Chapter 5 gave a verb to: **любить**, with its inserted **л**, is what the
+Chapter 5 gave a verb to: *lyubít'*, with its inserted *l*, is what the
 *сердце* does.
 
 ## Guided Practice
@@ -83,8 +83,8 @@ Chapter 5 gave a verb to: **любить**, with its inserted **л**, is what th
 - [YOU SAY: "сердце" — silent д, *SYÉRT-se*]
 - [YOU SAY: the new letter — "ц says ts, as in cats"]
 - [YOU SAY: "heart, cor, kardía" — one root, three more languages]
-- [YOU SAY: all five body words — "ухо, нос, рот, глаз, сердце"]
-- [YOU SAY: "Я люблю" — the verb the heart does]
+- [YOU SAY: all five body words — "úkho, нос, рот, glaz, сердце"]
+- [YOU SAY: "Ya lyublyú" — the verb the heart does]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SERDTSE, RU-SCRIPT-TSE, RU-ETYMON-SERDTSE-HEART, RU-LEX-GLAZ, RU-ETYMON-GLAZ-BALL, RU-LEX-LYUBIT, RU-ETYMON-LYUBIT-LOVE] -->
@@ -94,4 +94,4 @@ Chapter 5 gave a verb to: **любить**, with its inserted **л**, is what th
 **ц** make? (**Ts**, as in *cats*.) Name three English words that share its
 root, beyond *heart* itself. (**Cordial, courage, record** — from Latin
 *cor/cordis*; or **cardiac**, from Greek *kardía*.) Which Chapter 5 verb is
-what the heart does? (**Любить**, "to love.")
+what the heart does? (*Lyubít'*, "to love.")

@@ -1,0 +1,14 @@
+# Perl 5.004_05 (1999-04-29) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_05 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05.tar.gz
+# Archive SHA-256: 26ca43d9f1067f601c05ebeb3488bc3d473eee1cc772d57085dc43a4a9d5f225
+# perly.y matches 5.004_04-m4; only arithmetic precedence, grouping,
+# and print are represented here. This file does not claim full Perl syntax.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

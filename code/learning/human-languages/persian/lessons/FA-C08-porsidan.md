@@ -46,25 +46,25 @@ you have had since Chapter 3. You have been asking without owning the verb.
 > **پرسیدن** — *porsidan* — **to ask**
 
 From the right: **پ** *p*, **ر** *r*, **س** *s*, **ی** long *i*, **د** *d*,
-**ن** *n*. The opening **پ** *pe* is another letter Persian added — a **ب** *b* shape with
+**ن** *n*. The opening **پ** *pe* is another letter Persian added — a *b* shape with
 three dots beneath instead of one.
 
 Now the ending: **-یدن** *-idan*. Strip it, and the present stem remains:
 **پرس** *pors*. *Mi-porsam*, “I ask.” The pair is **porsidan, pors-** — the same
-free ride **فهمیدن** *fahmidan* gave you.
+free ride *fahmidan* gave you.
 
 ## Grammar Lens: asking a question and asking a person
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHIST, FA-LEX-NAME-QUESTION, FA-GRAMMAR-NAME-QUESTION-ORDER, FA-LEX-WELLBEING-QUESTION] -->
 
-Two chapters ago you learned to *put* a question — **اسم شما چیست؟** *esm-e
-shomâ chist?*, **حال شما چطور است؟** *hâl-e shomâ chetor ast?* Both work by word
+Two chapters ago you learned to *put* a question — *esm-e
+shomâ chist?*, *hâl-e shomâ chetor ast?* Both work by word
 order and a question word, with no verb meaning “ask” in them.
 
 That is the ordinary case, as in English: you do not say “I ask you what your
 name is,” you just ask it. **پرسیدن** is for *talking about* the asking.
 
-The noun from the same stem is **پرسش** *porsesh*, “a question”: stem plus
-**-ش** *-esh*, the machine that turned **دان** *dân-* into **دانش** *dânesh*,
+The noun from the same stem is *porsesh*, “a question”: stem plus
+*-esh*, the machine that turned **دان** *dân-* into *dânesh*,
 “knowledge.”
 
 ## The word, taken apart — a root English lost and borrowed back

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-164-ACTION-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve the three familiar verbs for waking, driving, and saying after a long interval, one at a time.",
+  "prerequisites": [
+    "PA-EXT-151-ACT151",
+    "PA-EXT-163-ACTION-RETURN"
+  ]
+}

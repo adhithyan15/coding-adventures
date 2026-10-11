@@ -58,7 +58,7 @@ Four, and this one holds a story as well as a stew.
 - [YOU SAY: *pātraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pātraṁ*, and then say which of its two senses a cook means]
-- [YOU RECALL: read **വേര്**]
+- [YOU READ: **വേര്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04] -->

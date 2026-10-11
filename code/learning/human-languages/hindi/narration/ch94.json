@@ -4,12 +4,12 @@
   "chapter": 94,
   "title": "The Pronouns, And The Article Hindi Does Not Have",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:53ac3297e8d9e85d",
+  "sourceHash": "fnv1a64:7ab4eb383031b7b3",
   "lessons": [
     {
       "id": "HI-C86-ham",
       "sequence": 3660,
-      "title": "हम — the word that was already inside hamārā",
+      "title": "हम (ham) — the word that was already inside hamārā",
       "headword": "हम",
       "romanization": "ham",
       "gloss": "we — the pronoun a mock reading item needs, and the one Hindi also reaches for when an English speaker would say I",
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "The possessive chapter said hamārā was built on हम, and there the matter rested. Here is the word itself."
+              "text": "The possessive chapter said hamārā was built on हम (ham), and there the matter rested. Here is the word itself."
             }
           ]
         },
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:835b51685a5d0c22",
+      "sourceHash": "fnv1a64:12570f4b1283b4a2",
       "notice": null,
       "blocks": [
         {
@@ -221,7 +221,7 @@
               "rowCount": 2,
               "utterances": [
                 "form: वह. about: one person, familiar or neutral.",
-                "form: वे. about: several people — or one person spoken of with respect."
+                "form: वे (ve). about: several people — or one person spoken of with respect."
               ]
             },
             {
@@ -230,7 +230,7 @@
             },
             {
               "kind": "speech",
-              "text": "In everyday speech many speakers say वो for both vah and ve. Recognise it; write the forms above."
+              "text": "In everyday speech many speakers say वो for both vah and ve. Recognise it; in writing, use the forms above."
             }
           ]
         },
@@ -257,7 +257,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "वह and वे together, and hear that only the vowel moves",
+              "instruction": "वह and वे (ve) together, and hear that only the vowel moves",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -296,7 +296,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is वे the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)"
+              "text": "What is वे (ve) the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)"
             }
           ]
         }
@@ -627,7 +627,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64d666e4d44ac1a5",
+      "sourceHash": "fnv1a64:040bf3bd3b5b4c11",
       "notice": null,
       "blocks": [
         {
@@ -643,7 +643,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say वह, \"that.\" Now try to say \"the book\" in Hindi, and read on when you find you have no word for the."
+              "text": "Say वह, \"that.\" Now try to say \"the book\" in Hindi, and go on when you find you have no word for the."
             }
           ]
         },
@@ -961,7 +961,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fb78668d7a068c1",
+      "sourceHash": "fnv1a64:ac9ee74b937258b1",
       "notice": null,
       "blocks": [
         {
@@ -987,8 +987,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",
@@ -1105,7 +1114,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b62a88375e513f6",
+      "sourceHash": "fnv1a64:35899b98ec626b6a",
       "notice": null,
       "blocks": [
         {
@@ -1225,8 +1234,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Cover everything above."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "everything above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: everything above]"
             },
             {
               "kind": "prompt",

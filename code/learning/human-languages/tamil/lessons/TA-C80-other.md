@@ -33,7 +33,9 @@ reviews_of: [TA-C79-when-clause]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03] -->
 
-[PAUSE 2s] Read **எப்போது**. Then say: when you come, tell me.
+[PAUSE 2s] [YOU READ: **எப்போது**]
+
+Then say: when you come, tell me.
 
 ## You'll want to know: மற்றது
 <!-- hl-knowledge: introduces=[TA-LEX-C80-OTHER-01]; assesses=[] -->
@@ -63,9 +65,14 @@ A third way to point at a thing, once two of them are on the table.
 - [YOU SAY: *maṟṟadu*]
 - [YOU SAY: *idu vēṇḍum. maṟṟadu vēṇḍām.*]
 - [YOU NOTICE: the அது at the end of மற்றது and at the start of அதனால்]
-- [YOU RECALL: read **எப்போது**, then say *varum pōdu*, then say *maṟṟadu*]
-- [YOU RETURN TO: say *ām / illai*, read **குடி** and say *-kkāga* — three distances back — then set two of them against each other, one and the other]
-- [YOU RECALL: say *ēṉ*, then read **ஏனென்றால்**, then say *adaṉāl*]
+- [YOU READ: **எப்போது**]
+- [YOU RECALL: say *varum pōdu*, then say *maṟṟadu*]
+- [YOU RETURN TO: say *ām / illai*]
+- [YOU READ: **குடி**]
+- [YOU RETURN TO: say *-kkāga* — three distances back — then set two of them against each other, one and the other]
+- [YOU RECALL: say *ēṉ*]
+- [YOU READ: **ஏனென்றால்**]
+- [YOU RECALL: say *adaṉāl*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03, TA-LEX-C80-OTHER-01, TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-KUDI-01, TA-GRAMMAR-C78-WHY-04] -->

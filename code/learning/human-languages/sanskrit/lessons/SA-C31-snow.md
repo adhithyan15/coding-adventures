@@ -59,7 +59,8 @@ Five things overhead, and a mountain range whose name you can now take apart.
 - [YOU SAY: *himam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say what *Himālaya* means]
-- [YOU RECALL: say *dhanyaḥ*, then read **अञ्जलिः**]
+- [YOU RECALL: say *dhanyaḥ*]
+- [YOU READ: **अञ्जलिः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05] -->

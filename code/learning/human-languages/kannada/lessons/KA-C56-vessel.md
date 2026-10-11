@@ -58,7 +58,7 @@ Four, and this one keeps three meanings in one shape.
 - [YOU SAY: *pātre*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pātre*, then *nīru*, and say which one holds the other]
-- [YOU RECALL: read **ಬೇರು**]
+- [YOU READ: **ಬೇರು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04] -->

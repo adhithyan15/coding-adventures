@@ -4,14 +4,14 @@
   "chapter": 13,
   "title": "Water and Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f47c724e8c248007",
+  "sourceHash": "fnv1a64:4994634714f6d25c",
   "lessons": [
     {
       "id": "AR-C13-maa-khubz",
       "sequence": 570,
       "title": "ماء, خبز (māʾ, khubz) — water and bread",
       "headword": "ماء خبز",
-      "romanization": "",
+      "romanization": "māʾ khubz",
       "gloss": "water and bread — one of Arabic's most irregular common words, and one built on a clean, ordinary Semitic root",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7d6db2b37cdc4fe",
+      "sourceHash": "fnv1a64:ff6c6fc7f3d0a1e9",
       "notice": null,
       "blocks": [
         {

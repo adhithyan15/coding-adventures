@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Popular, To pay, To learn, To jump, To fall",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7667ff58eba966e2",
+  "sourceHash": "fnv1a64:3c4026437f4d0986",
   "lessons": [
     {
       "id": "FA-C131-mahbub",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8ece5b525827d0c",
+      "sourceHash": "fnv1a64:1cd86aaa39d81902",
       "notice": null,
       "blocks": [
         {
@@ -290,8 +290,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write آ as it opens آمدن, to come: alef with the wave above it."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آ as it opens آمدن, to come — alef with the wave above it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **آ** as it opens **آمدن**, to come — alef with the wave above it]"
             }
           ]
         },

@@ -57,7 +57,8 @@ A choice you can put to somebody.
 - [YOU SAY: *lēdā*, once more]
 - [YOU SAY: offer a choice between two drinks you know, using *lēdā*]
 - [YOU RECALL: say *anukō*, then say *lēdā*]
-- [YOU RECALL: say *dhara*, then read **చేదు** and say what it means]
+- [YOU RECALL: say *dhara*]
+- [YOU READ: **చేదు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-LEX-C74-LINK-03, TE-ETYMON-C33-ANUKO-03, TE-GRAMMAR-C33-ANUKO-02, TE-LEX-C33-ANUKO-01] -->

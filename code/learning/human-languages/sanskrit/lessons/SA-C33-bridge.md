@@ -59,7 +59,8 @@ A bridge, and a word that means the tying rather than the crossing.
 - [YOU SAY: *setuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadī*, then *setuḥ*]
-- [YOU RECALL: read **चन्द्रः**, then say *patram*]
+- [YOU READ: **चन्द्रः**]
+- [YOU RECALL: say *patram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02] -->

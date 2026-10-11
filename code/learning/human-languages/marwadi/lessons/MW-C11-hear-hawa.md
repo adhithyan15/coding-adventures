@@ -37,8 +37,8 @@ reviews_of: [MW-C10-travel-five, MW-C10-ghar, MW-C09-patni, MW-C10-bajar, MW-C05
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01, MW-LEX-GHAR-01, MW-SCRIPT-PATNI-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-NAAM-01] -->
 
-[PAUSE 22s] Recall the five-word travel payoff, say home, then write **नाम**,
-**पत्नी**, and **बाजार**.
+[PAUSE 22s] Recall the five-word travel payoff and say home.
+[YOU WRITE: **नाम**, **पत्नी**, and **बाजार**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-HAWA-01]; assesses=[] -->

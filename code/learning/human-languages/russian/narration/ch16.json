@@ -85,7 +85,7 @@
             },
             {
               "kind": "speech",
-              "text": "That sentence was on the page long before anyone told you that the little и between the two verbs was a word at all. It is. It joins two things of the same kind: two nouns, two verbs, two whole thoughts."
+              "text": "That sentence was on the page long before anyone told you that the little и (i) between the two verbs was a word at all. It is. It joins two things of the same kind: two nouns, two verbs, two whole thoughts."
             },
             {
               "kind": "speech",
@@ -122,7 +122,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "я читаю и понимаю — and hear и as a word this time",
+              "instruction": "я читаю и (i) понимаю — and hear и (i) as a word this time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -131,7 +131,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "any two verbs you own, with и between them",
+              "instruction": "any two verbs you own, with и (i) between them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -140,7 +140,7 @@
             {
               "kind": "prompt",
               "action": "BUILD",
-              "instruction": "two foods, joined — молоко и сок",
+              "instruction": "two foods, joined — молоко и (i) сок",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -161,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"and.\" (и.) Which letter is it, and had you written that letter before today? (и — yes, from the writing lessons.) What kind of old word is it built on? (A pointing word.) And one look back: say \"I know,\" and then say you do not. (я знаю / я не знаю.)"
+              "text": "Say \"and.\" (и (i).) Which letter is it, and had you written that letter before today? (и (i) — yes, from the writing lessons.) What kind of old word is it built on? (A pointing word.) And one look back: say \"I know,\" and then say you do not. (я знаю / я не знаю.)"
             }
           ]
         }
@@ -170,7 +170,7 @@
     {
       "id": "RU-C16-i-predlozheniya",
       "sequence": 810,
-      "title": "и between two sentences — the book's first long sentence",
+      "title": "и (i) between two sentences — the book's first long sentence",
       "headword": "… и …",
       "romanization": "… i …",
       "gloss": "and, between two whole sentences — the first two-clause sentence this book can make",
@@ -225,7 +225,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have joined two verbs with и. Now join two whole sentences with it. The word does not change:"
+              "text": "You have joined two verbs with и (i). Now join two whole sentences with it. The word does not change:"
             },
             {
               "kind": "speech",
@@ -233,11 +233,11 @@
             },
             {
               "kind": "speech",
-              "text": "Each half stands on its own. Take the и away and you have two sentences that are still Russian. Put it back and you have one sentence with two halves, which is a thing this book has not been able to make until now."
+              "text": "Each half stands on its own. Take the и (i) away and you have two sentences that are still Russian. Put it back and you have one sentence with two halves, which is a thing this book has not been able to make until now."
             },
             {
               "kind": "speech",
-              "text": "Russian does not need a comma here, and does not want one: when и joins two halves that share a subject, nothing goes in front of it."
+              "text": "Russian does not need a comma here, and does not want one: when и (i) joins two halves that share a subject, nothing goes in front of it."
             },
             {
               "kind": "speech",
@@ -272,7 +272,7 @@
             {
               "kind": "prompt",
               "action": "BUILD",
-              "instruction": "any two things you do, joined with и, dropping the second я",
+              "instruction": "any two things you do, joined with и (i), dropping the second я",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -302,7 +302,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does и change when the pieces it joins get bigger? (No — one letter, always, and it is still the same old pointing word underneath.) Does a comma go in front of it when both halves share a subject? (No.) And one look back: which verb of motion means going one way, this once? (The verb is идти.)"
+              "text": "Does и (i) change when the pieces it joins get bigger? (No — one letter, always, and it is still the same old pointing word underneath.) Does a comma go in front of it when both halves share a subject? (No.) And one look back: which verb of motion means going one way, this once? (The verb is идти.)"
             }
           ]
         }
@@ -337,7 +337,7 @@
             },
             {
               "kind": "speech",
-              "text": "The two verbs that first stood on either side of и."
+              "text": "The two verbs that first stood on either side of и (i)."
             },
             {
               "kind": "prompt",
@@ -379,7 +379,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stress the first syllable: Í-li. It sits between the two things exactly where и sat, and it does the opposite job — not both, but one of the two."
+              "text": "Stress the first syllable: Í-li. It sits between the two things exactly where и (i) sat, and it does the opposite job — not both, but one of the two."
             },
             {
               "kind": "speech",
@@ -402,11 +402,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "или (íli) is и with a small word welded on the end: ли, an old particle that carries doubt — the thing Russian puts in a sentence when the answer is not yet known."
+              "text": "или (íli) is и (i) with a small word welded on the end: ли, an old particle that carries doubt — the thing Russian puts in a sentence when the answer is not yet known."
             },
             {
               "kind": "speech",
-              "text": "So and plus maybe gives or. Once you see и at the front of или (íli), the pair is impossible to confuse: the short one joins, the long one doubts."
+              "text": "So and plus maybe gives or. Once you see и (i) at the front of или (íli), the pair is impossible to confuse: the short one joins, the long one doubts."
             }
           ]
         },
@@ -433,7 +433,7 @@
             {
               "kind": "prompt",
               "action": "BUILD",
-              "instruction": "the same two drinks joined with и instead — and hear the meaning turn over",
+              "instruction": "the same two drinks joined with и (i) instead — and hear the meaning turn over",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -463,7 +463,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"or.\" (It is или (íli).) Which two pieces is it built from? (и plus ли.) Which of the two, и or или (íli), offers a choice? (The long one, или (íli).) And one look back: what does понимать literally do to a thing? (Takes hold of it.)"
+              "text": "Say \"or.\" (It is или (íli).) Which two pieces is it built from? (и (i) plus ли.) Which of the two, и (i) or или (íli), offers a choice? (The long one, или (íli).) And one look back: what does понимать literally do to a thing? (Takes hold of it.)"
             }
           ]
         }
@@ -521,7 +521,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "или (íli), and the two pieces и and ли it is welded from",
+              "instruction": "или (íli), and the two pieces и (i) and ли it is welded from",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -536,7 +536,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "и and или (íli) both stand between the two things. This one stands in front of each of them, and there are two of it:"
+              "text": "и (i) and или (íli) both stand between the two things. This one stands in front of each of them, and there are two of it:"
             },
             {
               "kind": "speech",

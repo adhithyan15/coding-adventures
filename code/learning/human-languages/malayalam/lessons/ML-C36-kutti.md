@@ -67,7 +67,8 @@ carrying the same double duty in two unrelated language families.
 - [YOU SAY: the family and the friend, once more — "kuṭumbaṁ … suhṛttŭ"]
 - [YOU SAY: the six family people-words, and the group word — "acchan,
   amma … kuṭumbaṁ"]
-- [YOU RECALL: say *cintikkuka*, then read **മനസ്സിലാക്കുക**]
+- [YOU RECALL: say *cintikkuka*]
+- [YOU READ: **മനസ്സിലാക്കുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->

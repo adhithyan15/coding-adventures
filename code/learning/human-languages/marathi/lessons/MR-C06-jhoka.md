@@ -42,7 +42,7 @@ variety: standard
 
 **झोका** — *jhokā* — "a swing".
 
-Say it: *jhokā*. Look at its shape as you say it: the lessons that follow take pieces of it, **झ**, and write each one on its own.
+Say it: *jhokā*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **झ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-JHOKA] -->

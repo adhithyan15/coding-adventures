@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 429,
-  "sourceHash": "fnv1a64:ce4c52bdcfd59288",
+  "sourceHash": "fnv1a64:d2f638b86df7293b",
   "lessonIds": [
     "ES-C429-instituto",
     "ES-C429-nota",
@@ -15,7 +15,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch429.txt",
   "json": "spanish/narration/ch429.json",
-  "textHash": "fnv1a64:e58c9fefd0ebda52",
-  "jsonHash": "fnv1a64:339a051b12968f6c",
+  "textHash": "fnv1a64:b7f8940822ece7cc",
+  "jsonHash": "fnv1a64:79376d21201cbb26",
   "findings": []
 }

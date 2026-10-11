@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かのう (kanou) mean? ("Possible".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'possible'.
+Say the Japanese for 'possible'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とくい (tokui) mean? ("Good at".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'good at'.
+Say the Japanese for 'good at'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にがて (nigate) mean? ("Poor at".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'poor at'.
+Say the Japanese for 'poor at'.
 
 
 Lesson 4 of 5.
@@ -102,7 +102,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Japanese for good at, then the Japanese for poor at.
 [pause 1 second]
-Read on sight:
+[once you have stopped driving — read: the three greetings on sight]
 こんにちは.
 ありがとう.
 さようなら.
@@ -128,7 +128,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もちもの (mochimono) mean? ("Belongings".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'belongings'.
+Say the Japanese for 'belongings'.
 
 
 Lesson 5 of 5.
@@ -159,4 +159,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おかねもち (okanemochi) mean? ("A rich person".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a rich person'.
+Say the Japanese for 'a rich person'.

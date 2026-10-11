@@ -1,0 +1,17 @@
+{
+  "chapter": 170,
+  "title": "Return to the Fictional Date Selector",
+  "label": "ch:pa-date-selector-r4",
+  "canDo": "I can retrieve the already-taught two-card date selector after a long gap, with the fictional bank visible and without claiming scored A1 writing.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R170-date-selector-again",
+    "kind": "recognition",
+    "summary": "Recall that ਕ selects fictional date A and ਖ selects fictional date B without adding new Punjabi.",
+    "assesses": [
+      "PA-FORM-DATE-CUE-MAP-01"
+    ]
+  }
+}

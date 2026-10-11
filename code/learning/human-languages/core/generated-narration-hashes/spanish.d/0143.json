@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 143,
-  "sourceHash": "fnv1a64:26799cbceb5dfc21",
+  "sourceHash": "fnv1a64:ba75d68c2c88902d",
   "lessonIds": [
     "ES-C26-agua",
     "ES-C26-vino",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch143.txt",
   "json": "spanish/narration/ch143.json",
-  "textHash": "fnv1a64:9925c84642a0fe4f",
-  "jsonHash": "fnv1a64:7f7647e643fd9336",
+  "textHash": "fnv1a64:e1f57f17400fca41",
+  "jsonHash": "fnv1a64:94191d8012910575",
   "findings": []
 }

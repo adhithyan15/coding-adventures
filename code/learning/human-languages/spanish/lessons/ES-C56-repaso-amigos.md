@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-GRAMMAR-NOUN-GENDER]
+  knowledge: [ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-GRAMMAR-NOUN-GENDER, ES-ETYMON-TATEM]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -35,16 +35,16 @@ reviews_of: [ES-C56-cion, ES-C56-dad, ES-C56-mente]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION] -->
 
 [PAUSE 2s] Nothing new here. Say the three endings and their English partners
-before you look.
+before the summary.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-GRAMMAR-NOUN-GENDER] -->
 
-| Spanish | English | gender | roughly how many |
-|---|---|---|---|
-| **-ción** | -tion | feminine | ~2,000 |
-| **-dad** / **-tad** | -ty | feminine | ~1,200 |
-| **-mente** | -ly | (adverb) | no limit |
+| Spanish | English | what it makes, and roughly how many |
+|---|---|---|
+| **-ción** | -tion | feminine nouns, ~2,000 |
+| **-dad** / **-tad** | -ty | feminine nouns, ~1,200 |
+| **-mente** | -ly | adverbs, no limit |
 
 Three chapters. Between them they reach further than every vocabulary lesson in
 this book put together, and they will keep reaching for as long as you keep
@@ -85,8 +85,12 @@ to say yourself.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-MENTE-LY] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-MENTE-LY, ES-ETYMON-TATEM] -->
 
 [PAUSE 3s] Three endings — name them. (***-ción, -dad, -mente***.) Which two
 are always feminine? (***-ción*** and ***-dad***.) Which one has no upper
-limit? (***-mente***.) Next: reading a sentence nobody taught you.
+limit? (***-mente***.)
+
+[PAUSE 2s] Why is English *-ty* so much shorter than *-dad*? (Both are Latin ***-tātem***; English took it through French and wore it further.)
+
+Next: reading a sentence nobody taught you.

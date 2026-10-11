@@ -124,6 +124,45 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_qt_pixels() {
+        let props = vec![
+            StyleProp {
+                name: "font-size".into(),
+                value: "10.5px".into(),
+            },
+            StyleProp {
+                name: "letter-spacing".into(),
+                value: "0.06em".into(),
+            },
+        ];
+
+        assert!(
+            qml_text_part_style_lines(&props)
+                .iter()
+                .any(|line| line == "font.letterSpacing: 0.66")
+        );
+    }
+
+    #[test]
+    fn uppercase_text_transform_lowers_to_qt_capitalization() {
+        let props = vec![StyleProp {
+            name: "text-transform".into(),
+            value: "uppercase".into(),
+        }];
+
+        assert!(
+            qml_text_part_style_lines(&props)
+                .iter()
+                .any(|line| line == "font.capitalization: Font.AllUppercase")
+        );
+    }
+}
+
 /// Errors the Qt pipeline emitter can return.
 ///
 /// Variants are intentionally string-bearing rather than rich values: the
@@ -1641,6 +1680,10 @@ impl<'a> EmitCtx<'a> {
 /// styled cell so the value aligns and colours correctly.
 #[derive(Clone, Default)]
 struct CellTextStyle {
+    /// Whether descendant text should fill its immediate parent. Styled table
+    /// cells need this geometry; ordinary container typography inheritance
+    /// must leave a Row/Column child's layout untouched.
+    fill_parent: bool,
     /// QML expression for the text `color:` — a literal `"#RRGGBB"` or a
     /// conditional `(<selected-pred>) ? "#fff" : "#ccc"`.
     color: Option<String>,
@@ -1652,6 +1695,10 @@ struct CellTextStyle {
     font_pixel_size: Option<String>,
     /// Whether the descendant text uses a bold Qt font weight.
     font_bold: Option<bool>,
+    /// Whether descendant text should stay on one line and elide at its
+    /// available width. This travels with inherited typography because QML
+    /// containers do not expose text-overflow or white-space properties.
+    single_line_elide: bool,
     font_binding: Option<LayoutPropValue>,
     /// Inner content inset, from `padding: Npx`.
     padding: Option<String>,
@@ -1664,6 +1711,7 @@ impl CellTextStyle {
             && !self.font_family_mono
             && self.font_pixel_size.is_none()
             && self.font_bold.is_none()
+            && !self.single_line_elide
             && self.font_binding.is_none()
             && self.padding.is_none()
     }
@@ -1983,9 +2031,13 @@ pub fn dropped_style_properties(
 /// concept at all.
 fn qt_drop_reason(name: &str) -> &'static str {
     match name {
-        "box-shadow" | "elevation" => {
+        "box-shadow" => {
             "QML has no shadow property on Item; this needs a DropShadow effect \
              from Qt5Compat.GraphicalEffects or a hand-drawn Rectangle beneath"
+        }
+        "elevation" => {
+            "only the supported Mosaic elevation tokens `raised` and `overlay` \
+             lower to QtQuick.Effects.MultiEffect"
         }
         "flex-grow" | "flex-shrink" | "flex" => {
             "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
@@ -2043,6 +2095,29 @@ fn lowered_style_prop(
     let lowered = convert(raw)?;
     record_style_read(props, name);
     Some(lowered)
+}
+
+/// Recognise the one CSS overflow combination Qt can preserve on a draggable
+/// text container. The three declarations are one semantic unit: consuming
+/// only `overflow: hidden`, for example, would hide the fact that wrapping or
+/// ellipsis was still lost. Record all three only after the complete trio is
+/// known to be supported.
+fn lowers_single_line_ellipsis(props: &[StyleProp]) -> bool {
+    let value = |name: &str| {
+        props
+            .iter()
+            .find(|prop| prop.name == name)
+            .map(|prop| prop.value.trim().trim_matches('"'))
+    };
+    let supported = value("overflow") == Some("hidden")
+        && value("text-overflow") == Some("ellipsis")
+        && value("white-space") == Some("nowrap");
+    if supported {
+        for name in ["overflow", "text-overflow", "white-space"] {
+            record_style_read(props, name);
+        }
+    }
+    supported
 }
 
 /// One active style layer and the QML predicate that selects it.
@@ -2345,6 +2420,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
     // --- Inner text styling -------------------------------------------
     // Font cascades from the table's `sheet` part when the cell omits it.
     let mut ts = CellTextStyle {
+        fill_parent: true,
         horizontal_alignment: style_prop(base, "text-align").and_then(qml_text_align),
         font_family_mono: style_prop(base, "font-family")
             .map(|v| v.trim() == "monospace")
@@ -2353,6 +2429,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
             .and_then(qml_font_pixel_size)
             .or_else(|| ctx.inherited.font_pixel_size.clone()),
         font_bold: style_prop(base, "font-weight").and_then(qml_font_weight_is_bold),
+        single_line_elide: false,
         font_binding: if style_prop(base, "font-size").is_some() { None } else { ctx.inherited.font_binding.clone() },
         padding: style_prop(base, "padding").and_then(qml_px_or_none),
         color: None,
@@ -2500,11 +2577,19 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         .find(|p| p.name == "elevation")?
         .value
         .as_str();
-    match value {
+    let tier = match value {
         "raised" => Some(ElevationTier::Raised),
         "overlay" => Some(ElevationTier::Overlay),
         _ => None,
+    };
+    if tier.is_some() {
+        // #17126 -- this helper participates in real lowering without going
+        // through `style_prop`, so it must make the successful read explicit.
+        // Recording only recognised tiers keeps a manually constructed or
+        // future unsupported value visible to the drop reporter.
+        record_style_read(base_props, "elevation");
     }
+    tier
 }
 
 /// Allocate the next `mosaicElevation<N>` id — the unique `id:` a
@@ -2969,6 +3054,28 @@ fn has_per_edge_border(props: &[StyleProp]) -> bool {
     })
 }
 
+fn lowered_solid_per_edge_style(props: &[StyleProp], edge: &str, width: &str) -> bool {
+    width.parse::<f64>().is_ok_and(|width| width > 0.0)
+        && props
+            .iter()
+            .rev()
+            .find(|p| p.name == format!("border-{edge}-style"))
+            .is_some_and(|p| p.value.trim() == "solid")
+}
+
+/// An explicit `none` is a real native result too: the edge must not be
+/// painted. Keep this value-sensitive so unsupported styles such as `dashed`
+/// remain visible to the degradation reporter instead of being mistaken for
+/// coverage.
+fn lowered_hidden_per_edge_style(props: &[StyleProp], edge: &str, width: &str) -> bool {
+    width.parse::<f64>().is_ok_and(|width| width > 0.0)
+        && props
+            .iter()
+            .rev()
+            .find(|p| p.name == format!("border-{edge}-style"))
+            .is_some_and(|p| p.value.trim() == "none")
+}
+
 /// UI79 -- the child `Rectangle`s that draw a part's authored edges.
 ///
 /// QML's `Rectangle.border` is all-four-edges, exactly like Compose's
@@ -2986,6 +3093,7 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
     let fallback_c = style_prop(props, "border-color").and_then(qml_hex_color_or_none);
     let mut out = Vec::new();
     for (idx, edge) in ["top", "right", "bottom", "left"].iter().enumerate() {
+        let width_name = format!("border-{edge}-width");
         let Some(w) = props
             .iter()
             .find(|p| per_edge_border(&p.name) == Some((idx, "width")))
@@ -2998,10 +3106,34 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
         if w.starts_with('-') {
             continue;
         }
+        record_style_read(props, &width_name);
+        if lowered_solid_per_edge_style(props, edge, &w) {
+            let style_name = format!("border-{edge}-style");
+            record_style_read(props, &style_name);
+        }
+        if lowered_hidden_per_edge_style(props, edge, &w) {
+            let style_name = format!("border-{edge}-style");
+            record_style_read(props, &style_name);
+            let color_name = format!("border-{edge}-color");
+            if props
+                .iter()
+                .find(|p| p.name == color_name)
+                .and_then(|p| qml_hex_color_or_none(&p.value))
+                .is_some()
+            {
+                record_style_read(props, &color_name);
+            }
+            continue;
+        }
+        let color_name = format!("border-{edge}-color");
         let c = props
             .iter()
             .find(|p| per_edge_border(&p.name) == Some((idx, "color")))
-            .and_then(|p| qml_hex_color_or_none(&p.value))
+            .and_then(|p| {
+                let color = qml_hex_color_or_none(&p.value)?;
+                record_style_read(props, &color_name);
+                Some(color)
+            })
             .or_else(|| fallback_c.clone())
             .unwrap_or_else(|| "#808080".to_string());
         let (span, extent) = match *edge {
@@ -3024,6 +3156,28 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
         out.push(format!("{pad}}}"));
     }
     out
+}
+
+/// Map the pointer cursor values that Qt can represent directly on a
+/// `HoverHandler`. Read recording happens only after a value maps, so a CSS
+/// cursor Qt does not understand remains an explicit degradation.
+fn qml_cursor_shape(props: &[StyleProp]) -> Option<&'static str> {
+    let value = props
+        .iter()
+        .find(|prop| prop.name == "cursor")?
+        .value
+        .trim()
+        .trim_matches('"');
+    let shape = match value {
+        "default" => "Qt.ArrowCursor",
+        "pointer" => "Qt.PointingHandCursor",
+        "text" => "Qt.IBeamCursor",
+        "grab" => "Qt.OpenHandCursor",
+        "grabbing" => "Qt.ClosedHandCursor",
+        _ => return None,
+    };
+    record_style_read(props, "cursor");
+    Some(shape)
 }
 
 fn needs_container_wrapper(props: &[StyleProp]) -> bool {
@@ -3075,6 +3229,55 @@ fn qml_font_weight_is_bold(v: &str) -> Option<bool> {
     }
 }
 
+fn qml_letter_spacing(props: &[StyleProp]) -> Option<String> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == "letter-spacing")?
+        .value
+        .trim()
+        .trim_matches('"')
+        .trim();
+    let em = if raw == "0" {
+        0.0
+    } else {
+        raw.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    let pixels = if em == 0.0 {
+        0.0
+    } else {
+        let font_size = props
+            .iter()
+            .rev()
+            .find(|prop| prop.name == "font-size")
+            .and_then(|prop| qml_font_pixel_size(&prop.value))?
+            .parse::<f64>()
+            .ok()?;
+        em * font_size
+    };
+    if !pixels.is_finite() {
+        return None;
+    }
+    record_style_read(props, "letter-spacing");
+    Some(((pixels * 1_000_000.0).round() / 1_000_000.0).to_string())
+}
+
+fn qml_text_capitalization(props: &[StyleProp]) -> Option<&'static str> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == "text-transform")?
+        .value
+        .trim()
+        .trim_matches('"')
+        .trim();
+    let capitalization = match raw {
+        "uppercase" => "Font.AllUppercase",
+        "none" => "Font.MixedCase",
+        _ => return None,
+    };
+    record_style_read(props, "text-transform");
+    Some(capitalization)
+}
+
 fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
     if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
@@ -3088,6 +3291,12 @@ fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     }
     if let Some(is_bold) = style_prop(props, "font-weight").and_then(qml_font_weight_is_bold) {
         lines.push(format!("font.bold: {is_bold}"));
+    }
+    if let Some(spacing) = qml_letter_spacing(props) {
+        lines.push(format!("font.letterSpacing: {spacing}"));
+    }
+    if let Some(capitalization) = qml_text_capitalization(props) {
+        lines.push(format!("font.capitalization: {capitalization}"));
     }
     if let Some(align) = style_prop(props, "text-align").and_then(qml_text_align) {
         lines.push(format!("horizontalAlignment: {align}"));
@@ -3202,6 +3411,25 @@ fn emit_styled_layout_container_qml(
         return Ok(None);
     }
 
+    // QML layout primitives do not expose font properties, so authored
+    // container weight has to travel through the emitter context to the
+    // descendant Text. Keep the geometry flag from a surrounding styled
+    // table cell, but do not introduce fill anchors for an ordinary Row or
+    // Column such as TaskApp's status pills.
+    let inherited_font_bold = props
+        .iter()
+        .find(|prop| prop.name == "font-weight")
+        .and_then(|prop| qml_font_weight_is_bold(&prop.value));
+    if inherited_font_bold.is_some() {
+        record_style_read(props, "font-weight");
+    }
+    let inherited_ctx = inherited_font_bold.map(|font_bold| {
+        let mut text_style = ctx.text_style.clone().unwrap_or_default();
+        text_style.font_bold = Some(font_bold);
+        ctx.with_text_style(Some(text_style))
+    });
+    let child_ctx = inherited_ctx.as_ref().unwrap_or(ctx);
+
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let layout_lines = qml_layout_container_lines_with_states(props, &state_layers);
@@ -3211,7 +3439,10 @@ fn emit_styled_layout_container_qml(
             .iter()
             .any(|layer| needs_container_wrapper(layer.props));
     if !needs_wrapper {
-        if layout_lines.is_empty() && child_alignment.is_none() {
+        if layout_lines.is_empty()
+            && child_alignment.is_none()
+            && inherited_font_bold.is_none()
+        {
             return Ok(None);
         }
 
@@ -3226,7 +3457,7 @@ fn emit_styled_layout_container_qml(
             depth + 1,
             is_stack,
             child_alignment.as_deref(),
-            ctx,
+            child_ctx,
         )?);
         writeln!(out, "{pad}}}").unwrap();
         return Ok(Some(out));
@@ -3304,7 +3535,7 @@ fn emit_styled_layout_container_qml(
         depth + 2,
         node.tag == "Stack",
         child_alignment.as_deref(),
-        ctx,
+        child_ctx,
     )?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -4374,15 +4605,17 @@ fn emit_qml_tree(
 /// font, and padding come from the part's `.msl` props.
 fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
     let mut lines = Vec::new();
-    lines.push("anchors.fill: parent".to_string());
-    if let Some(p) = &ts.padding {
-        // Inset the content on all sides (padding), then let the
-        // horizontal alignment push the text to the requested edge.
-        lines.push(format!("anchors.margins: {p}"));
-    }
-    lines.push("verticalAlignment: Text.AlignVCenter".to_string());
-    if let Some(a) = ts.horizontal_alignment {
-        lines.push(format!("horizontalAlignment: {a}"));
+    if ts.fill_parent {
+        lines.push("anchors.fill: parent".to_string());
+        if let Some(p) = &ts.padding {
+            // Inset the content on all sides (padding), then let the
+            // horizontal alignment push the text to the requested edge.
+            lines.push(format!("anchors.margins: {p}"));
+        }
+        lines.push("verticalAlignment: Text.AlignVCenter".to_string());
+        if let Some(a) = ts.horizontal_alignment {
+            lines.push(format!("horizontalAlignment: {a}"));
+        }
     }
     if let Some(c) = &ts.color {
         lines.push(format!("color: {c}"));
@@ -4395,6 +4628,11 @@ fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
     }
     if let Some(is_bold) = ts.font_bold {
         lines.push(format!("font.bold: {is_bold}"));
+    }
+    if ts.single_line_elide {
+        lines.push("Layout.fillWidth: true".to_string());
+        lines.push("wrapMode: Text.NoWrap".to_string());
+        lines.push("elide: Text.ElideRight".to_string());
     }
     lines
 }
@@ -4802,6 +5040,40 @@ fn emit_host_draggable_qml(
     let content_id = format!("{source_id}Content");
     let proxy_id = format!("{source_id}Proxy");
     let handler_id = format!("{source_id}Handler");
+    let props = part_style_props(node, ctx).unwrap_or(&[]);
+    let styled_surface = needs_container_wrapper(props)
+        || style_prop(props, "gap").and_then(qml_px_or_none).is_some();
+    let (pad_left, pad_top, pad_right, pad_bottom) = qml_padding_edges(props);
+    let paint_lines = qml_rectangle_paint_lines(props);
+    let has_fixed_width = style_prop(props, "width")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let has_fixed_height = style_prop(props, "height")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let cursor_shape = qml_cursor_shape(props);
+    let elevation = part_elevation_tier(props);
+    let inherited_color = lowered_style_prop(props, "color", qml_hex_color_or_none)
+        .map(|color| format!("\"{color}\""));
+    let inherited_font_size = lowered_style_prop(props, "font-size", qml_font_pixel_size);
+    let single_line_elide = lowers_single_line_ellipsis(props);
+    let inherited_text_ctx = if inherited_color.is_some()
+        || inherited_font_size.is_some()
+        || single_line_elide
+    {
+        let mut text_style = ctx.text_style.clone().unwrap_or_default();
+        if inherited_color.is_some() {
+            text_style.color = inherited_color;
+        }
+        if inherited_font_size.is_some() {
+            text_style.font_pixel_size = inherited_font_size;
+        }
+        text_style.single_line_elide = single_line_elide;
+        Some(ctx.with_text_style(Some(text_style)))
+    } else {
+        None
+    };
+    let child_ctx = inherited_text_ctx.as_ref().unwrap_or(ctx);
     let key = qml_drag_text_expr(node, "drag-key", "\"\"")?;
     let kind = qml_drag_text_expr(node, "drag-kind", "\"\"")?;
     let label = qml_drag_text_expr(node, "drag-label", &key)?;
@@ -4826,10 +5098,40 @@ fn emit_host_draggable_qml(
     .unwrap_or_default();
 
     let mut out = String::new();
-    writeln!(out, "{pad}Item {{").unwrap();
+    let surface_type = if styled_surface { "Rectangle" } else { "Item" };
+    writeln!(out, "{pad}{surface_type} {{").unwrap();
     writeln!(out, "{inner}id: {source_id}").unwrap();
-    writeln!(out, "{inner}implicitWidth: {content_id}.implicitWidth").unwrap();
-    writeln!(out, "{inner}implicitHeight: {content_id}.implicitHeight").unwrap();
+    for line in qml_layout_size_lines(props) {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
+    if !has_fixed_width {
+        writeln!(
+            out,
+            "{inner}implicitWidth: {content_id}.implicitWidth + {pad_left} + {pad_right}"
+        )
+        .unwrap();
+    }
+    if !has_fixed_height {
+        writeln!(
+            out,
+            "{inner}implicitHeight: {content_id}.implicitHeight + {pad_top} + {pad_bottom}"
+        )
+        .unwrap();
+    }
+    if styled_surface {
+        if paint_lines.iter().all(|line| !line.starts_with("color:")) {
+            writeln!(out, "{inner}color: \"transparent\"").unwrap();
+        }
+        for line in &paint_lines {
+            writeln!(out, "{inner}{line}").unwrap();
+        }
+        for line in qml_per_edge_border_lines(props, &inner) {
+            writeln!(out, "{line}").unwrap();
+        }
+    }
+    if single_line_elide {
+        writeln!(out, "{inner}clip: true").unwrap();
+    }
     writeln!(out, "{inner}property var mosaicDragOwner: mosaicDragScope").unwrap();
     writeln!(out, "{inner}property string mosaicDragKey: String({key})").unwrap();
     writeln!(out, "{inner}property string mosaicDragKind: String({kind})").unwrap();
@@ -4884,8 +5186,21 @@ fn emit_host_draggable_qml(
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{inner}ColumnLayout {{").unwrap();
     writeln!(out, "{nested}id: {content_id}").unwrap();
-    writeln!(out, "{nested}anchors.fill: parent").unwrap();
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false, ctx)?);
+    if styled_surface {
+        writeln!(out, "{nested}x: {pad_left}").unwrap();
+        writeln!(out, "{nested}y: {pad_top}").unwrap();
+        if let Some(gap) = style_prop(props, "gap").and_then(qml_px_or_none) {
+            writeln!(out, "{nested}spacing: {gap}").unwrap();
+        }
+    } else {
+        writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    }
+    out.push_str(&emit_qml_children(
+        &node.children,
+        depth + 2,
+        false,
+        child_ctx,
+    )?);
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{inner}Item {{").unwrap();
     writeln!(out, "{nested}id: {proxy_id}").unwrap();
@@ -4910,21 +5225,21 @@ fn emit_host_draggable_qml(
     writeln!(out, "{nested}target: {proxy_id}").unwrap();
     writeln!(out, "{nested}enabled: !{source_id}.mosaicDragDisabled").unwrap();
     writeln!(out, "{inner}}}").unwrap();
+    if let Some(shape) = cursor_shape {
+        writeln!(out, "{inner}HoverHandler {{").unwrap();
+        writeln!(out, "{nested}cursorShape: {shape}").unwrap();
+        writeln!(out, "{inner}}}").unwrap();
+    }
     writeln!(out, "{pad}}}").unwrap();
     // UI41, #12028 item 1 — `HostDraggable`'s own part (e.g. TaskApp's
-    // `board-card`/`board-card-crit`) styles this wrapper `Item` directly,
+    // `board-card`/`board-card-crit`) styles this drag surface directly,
     // and it already carries a real `id:` (`source_id`, allocated above for
     // the drag machinery), so no separate id-allocation is needed here —
     // unlike XAML, which hit a real XamlCompiler bug on this exact
     // primitive and needed a `DependencyProperty` workaround, Qt's
     // `MultiEffect` has no such restriction: any `id`'d item, including
-    // this custom drag wrapper, works as a shadow source. Base props only
+    // this custom drag surface, works as a shadow source. Base props only
     // (see `part_elevation_tier`'s doc comment).
-    let elevation = node
-        .part_name
-        .as_deref()
-        .and_then(|part| ctx.part_styles.get(part))
-        .and_then(|base| part_elevation_tier(base));
     out = qml_elevation_wrap(out, elevation, &source_id, &pad);
     Ok(out)
 }
@@ -5991,6 +6306,9 @@ fn host_control_style_qml_lines(
         }
         if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
             lines.push(format!("font.bold: {is_bold}"));
+        }
+        if let Some(spacing) = qml_letter_spacing(base) {
+            lines.push(format!("font.letterSpacing: {spacing}"));
         }
     }
     // `opacity` on the CONTROL, not on its background Rectangle: it is an Item
@@ -16173,6 +16491,35 @@ mod tests {
         assert!(!has_per_edge_border(&[sp("border-width", "1px")]));
     }
 
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = vec![
+            sp("border-bottom-width", "1px"),
+            sp("border-bottom-style", "solid"),
+        ];
+        assert!(lowered_solid_per_edge_style(&props, "bottom", "1"));
+        assert!(!lowered_solid_per_edge_style(&props, "bottom", "0"));
+        assert!(!lowered_solid_per_edge_style(&props, "top", "1"));
+        let dashed = vec![
+            sp("border-bottom-width", "1px"),
+            sp("border-bottom-style", "dashed"),
+        ];
+        assert!(!lowered_solid_per_edge_style(&dashed, "bottom", "1"));
+    }
+
+    #[test]
+    fn none_edge_style_suppresses_only_the_matching_override() {
+        let props = vec![
+            sp("border-left-width", "3px"),
+            sp("border-left-color", "#cf4b34"),
+            sp("border-left-style", "none"),
+        ];
+        assert!(lowered_hidden_per_edge_style(&props, "left", "3"));
+        assert!(qml_per_edge_border_lines(&props, "").is_empty());
+        assert!(!lowered_hidden_per_edge_style(&props, "left", "0"));
+        assert!(!lowered_hidden_per_edge_style(&props, "right", "3"));
+    }
+
     fn sp(name: &str, value: &str) -> StyleProp {
         StyleProp {
             name: name.to_string(),
@@ -17417,6 +17764,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the shadow block —
         // `elevation` is the only signal Qt reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "only raw CSS shadow remains: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     #[test]
@@ -17443,6 +17794,35 @@ mod tests {
             out.contains("shadowColor: \"#60000000\""),
             "missing overlay shadow color:\n{out}"
         );
+        assert!(
+            dropped_style_properties(&component("X", vec![], vec![]), &l, &style).is_empty(),
+            "supported elevation must not be reported dropped"
+        );
+    }
+
+    #[test]
+    fn unsupported_elevation_value_remains_a_drop() {
+        // mosstyle validation rejects this before a production emit. Keeping
+        // the reporter honest for a directly constructed StyleDef ensures a
+        // future token cannot silently gain false coverage.
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![sp("elevation", "floating"), sp("background", "#ffffff")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = box_layout_with_part("card");
+        let model = component("X", vec![], vec![]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("MultiEffect {"), "unsupported tier lowered:\n{out}");
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "elevation");
+        assert!(dropped[0].reason.contains("raised"), "got: {dropped:?}");
     }
 
     #[test]
@@ -17542,6 +17922,90 @@ mod tests {
         assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
     }
 
+    #[test]
+    fn layout_container_font_weight_reaches_descendant_text_without_cell_anchors() {
+        for (weight, expected) in [("bold", "true"), ("normal", "false")] {
+            let style = StyleDef {
+                component_name: "StatusPill".to_string(),
+                parts: vec![PartStyle {
+                    name: "pill".to_string(),
+                    base: vec![sp("font-weight", weight)],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let layout = LayoutDef {
+                component_name: "StatusPill".to_string(),
+                root: LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: Some("pill".to_string()),
+                    props: vec![],
+                    children: vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![lp(
+                            "content",
+                            LayoutPropValue::String("Status".to_string()),
+                        )],
+                        children: vec![],
+                    }],
+                },
+            };
+            let model = component("StatusPill", vec![], vec![]);
+
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(
+                out.contains(&format!("font.bold: {expected}")),
+                "container font weight must reach descendant Text:\n{out}"
+            );
+            assert!(
+                !out.contains("anchors.fill: parent"),
+                "ordinary container inheritance must not apply cell geometry:\n{out}"
+            );
+            assert!(
+                dropped_style_properties(&model, &layout, &style).is_empty(),
+                "implemented container font weight was reported dropped"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_layout_container_font_weight_remains_dropped() {
+        let style = StyleDef {
+            component_name: "StatusPill".to_string(),
+            parts: vec![PartStyle {
+                name: "pill".to_string(),
+                base: vec![sp("font-weight", "semibold")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "StatusPill".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("pill".to_string()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Status".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let model = component("StatusPill", vec![], vec![]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(
+            !out.contains("font.bold:"),
+            "got unsupported weight:\n{out}"
+        );
+        let drops = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "font-weight");
+    }
+
     /// `HostButton`'s styled background is a nested `background: Rectangle
     /// { ... }` property VALUE, not a sibling in the object tree -- a
     /// naive port of the Box wiring would try (and fail) to attach a
@@ -17633,6 +18097,202 @@ mod tests {
         assert!(
             !out.contains("mosaicElevation0"),
             "must not allocate a redundant elevation id when a drag id already exists:\n{out}"
+        );
+    }
+
+    /// `HostDraggable` owns its visual box just as a styled `Column` does.
+    /// TaskApp's board cards rely on that box for their fill, inset, spacing,
+    /// border, overdue edge, radius, pointer cursor, and elevation.
+    #[test]
+    fn host_draggable_lowers_native_container_styles_without_hiding_raw_shadow() {
+        let style = StyleDef {
+            component_name: "Board".to_string(),
+            parts: vec![PartStyle {
+                name: "board-card".to_string(),
+                base: vec![
+                    sp("background", "#fffdfa"),
+                    sp("padding", "11px"),
+                    sp("gap", "6px"),
+                    sp("border-width", "1px"),
+                    sp("border-color", "#e6ded3"),
+                    sp("border-left-width", "3px"),
+                    sp("border-left-color", "#cf4b34"),
+                    sp("border-left-style", "solid"),
+                    sp("border-radius", "9px"),
+                    sp("box-shadow", "0 1px 2px rgba(60,45,25,.05)"),
+                    sp("elevation", "raised"),
+                    sp("cursor", "grab"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "Board".to_string(),
+            root: LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("board-card".to_string()),
+                props: vec![LayoutProp {
+                    name: "drag-key".to_string(),
+                    value: LayoutPropValue::String("card-1".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let m = component("Board", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        for expected in [
+            "Rectangle {\n        id: mosaicDragSource0",
+            "implicitWidth: mosaicDragSource0Content.implicitWidth + 11 + 11",
+            "implicitHeight: mosaicDragSource0Content.implicitHeight + 11 + 11",
+            "color: \"#fffdfa\"",
+            "radius: 9",
+            "border.color: \"#e6ded3\"",
+            "border.width: 1",
+            "x: 11",
+            "y: 11",
+            "spacing: 6",
+            "color: \"#cf4b34\"",
+            "width: 3",
+            "anchors.left: parent.left",
+            "cursorShape: Qt.OpenHandCursor",
+            "source: mosaicDragSource0",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?} in:\n{out}");
+        }
+
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
+    }
+
+    /// A draggable is a container, so its inheritable typography belongs on
+    /// descendant Text nodes. The common clipping trio is lowered as one unit:
+    /// the surface clips while each descendant remains single-line and elides.
+    #[test]
+    fn host_draggable_inherits_text_style_and_lowers_ellipsis_trio() {
+        let style = StyleDef {
+            component_name: "Calendar".to_string(),
+            parts: vec![PartStyle {
+                name: "calendar-event".to_string(),
+                base: vec![
+                    sp("color", "#b6741a"),
+                    sp("font-size", "11"),
+                    sp("overflow", "hidden"),
+                    sp("white-space", "nowrap"),
+                    sp("text-overflow", "ellipsis"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "Calendar".to_string(),
+            root: LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("calendar-event".to_string()),
+                props: vec![LayoutProp {
+                    name: "drag-key".to_string(),
+                    value: LayoutPropValue::String("event-1".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp(
+                        "content",
+                        LayoutPropValue::String("A long calendar event".to_string()),
+                    )],
+                    children: vec![],
+                }],
+            },
+        };
+        let component = component("Calendar", vec![], vec![]);
+        let out = from_pipeline(&component, &layout, &style).unwrap().output;
+
+        for expected in [
+            "clip: true",
+            "color: \"#b6741a\"",
+            "font.pixelSize: 11",
+            "Layout.fillWidth: true",
+            "wrapMode: Text.NoWrap",
+            "elide: Text.ElideRight",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?} in:\n{out}");
+        }
+        assert!(
+            dropped_style_properties(&component, &layout, &style).is_empty(),
+            "the supported draggable text contract must retire all five drops"
+        );
+    }
+
+    #[test]
+    fn host_draggable_keeps_unsupported_text_style_values_reported() {
+        let style = StyleDef {
+            component_name: "Calendar".to_string(),
+            parts: vec![PartStyle {
+                name: "calendar-event".to_string(),
+                base: vec![
+                    sp("color", "rgba(1, 2, 3, .5)"),
+                    sp("font-size", "0"),
+                    sp("overflow", "scroll"),
+                    sp("white-space", "normal"),
+                    sp("text-overflow", "clip"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "Calendar".to_string(),
+            root: LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("calendar-event".to_string()),
+                props: vec![LayoutProp {
+                    name: "drag-key".to_string(),
+                    value: LayoutPropValue::String("event-1".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Event".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let component = component("Calendar", vec![], vec![]);
+        let out = from_pipeline(&component, &layout, &style).unwrap().output;
+
+        for unexpected in [
+            "rgba(1, 2, 3, .5)",
+            "font.pixelSize: 0",
+            "clip: true",
+            "wrapMode: Text.NoWrap",
+            "elide: Text.ElideRight",
+        ] {
+            assert!(
+                !out.contains(unexpected),
+                "unsupported value leaked as {unexpected:?} in:\n{out}"
+            );
+        }
+        let names = dropped_style_properties(&component, &layout, &style)
+            .into_iter()
+            .map(|drop| drop.name)
+            .collect::<Vec<_>>();
+        assert_eq!(
+            names,
+            vec![
+                "color",
+                "font-size",
+                "overflow",
+                "text-overflow",
+                "white-space",
+            ]
         );
     }
 

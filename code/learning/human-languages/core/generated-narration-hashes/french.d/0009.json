@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 9,
-  "sourceHash": "fnv1a64:53f3fcca6e16693f",
+  "sourceHash": "fnv1a64:327dd8c313760df1",
   "lessonIds": [
     "FR-C09-janvier",
     "FR-C09-fevrier",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch09.txt",
   "json": "french/narration/ch09.json",
-  "textHash": "fnv1a64:d14bc7688be5973a",
-  "jsonHash": "fnv1a64:34b6f235347b3c1e",
+  "textHash": "fnv1a64:5afaf594024fb394",
+  "jsonHash": "fnv1a64:7b0dc8a940652322",
   "findings": []
 }

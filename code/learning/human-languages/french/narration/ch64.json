@@ -3,31 +3,24 @@
   "language": "french",
   "chapter": 64,
   "title": "Look at, Listen to, Wait for, Buy, Know",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:611b1a92324eacbc",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:40ffb69f4cdaef97",
   "lessons": [
     {
       "id": "FR-C64-regarder",
       "sequence": 2560,
-      "title": "regarder — to look at, to watch",
+      "title": "regarder — \"to look at, to watch\"",
       "headword": "regarder",
       "romanization": "regarder",
       "gloss": "to look at, to watch",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2ffec0da0eae5c9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:59820ad5636f1821",
+      "notice": null,
       "blocks": [
         {
           "index": 0,

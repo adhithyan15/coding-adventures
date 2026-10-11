@@ -37,10 +37,11 @@ reviews_of: [JA-C133-kesa, JA-W01-i, JA-W09-me, JA-W133-ki, JA-W131-small-yo, JA
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-KESA, JA-SCRIPT-KI-01, JA-LEX-C120-QUAL120-04, JA-SCRIPT-SMALL-YO-01] -->
 
-[PAUSE 15s] Say *this morning* — **R1**, one lesson back. Then write **き** — **R2**, five lessons back.
+[PAUSE 15s] Say *this morning* — **R1**, one lesson back.
+[YOU WRITE: **き** — **R2**, five lessons back]
 
 - [YOU RECALL: say *kind* — **R4**, eighty lessons back]
-- [YOU RECALL: write **ょ**, small, in **ちょっと** — **R3**, twenty lessons back]
+- [YOU WRITE: **ょ** from memory, small, in **ちょっと** — **R3**, twenty lessons back]
 
 ## You'll want to know: いぬ
 <!-- hl-knowledge: introduces=[JA-LEX-ANCHOR-INU]; assesses=[JA-SCRIPT-I-01, JA-SCRIPT-ME-01] -->
@@ -56,8 +57,8 @@ lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *inu*]
-- [YOU SAY: *inu*, clapping two beats]
-- [YOU RECALL: point to the sign in **いぬ** you cannot write yet, and say which sign it looks like]
+- [YOU SAY: *inu*, then count its beats aloud — two]
+- [YOU RECALL: name the sign in **いぬ** you cannot write yet, and say which sign it looks like]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-INU] -->

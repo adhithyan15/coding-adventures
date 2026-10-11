@@ -44,8 +44,8 @@ reviews_of: [GU-C02-naam]
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-NAAM-01] -->
 <!-- hl-activity: {"id":"GU-R16-naam-r4-listening","kind":"text","assesses":["GU-CONCEPT-C02-NAAM-01"],"prompt":"Without looking at Gujarati, hear this row: chhe — nām — mārũ. Which item means name?","answer":"nām","accepted":[],"feedback":{"correct":"Nām returned by sound and meaning.","incorrect":"Hear nām once with its meaning, cover the help, and answer again."},"response_seconds":20} -->
 
-[YOU SAY: *chhe — nām — mārũ*] Point to the item meaning *name*, then uncover
-**નામ** and read it once. Position 97 is 61 lessons after its introduction at
+[YOU SAY: *chhe — nām — mārũ*] Say the item that means *name*.
+[YOU READ: uncover **નામ** and read it once.] Position 97 is 61 lessons after its introduction at
 position 36, so this response closes the word's R4 window.
 
 ## Writing — from sound

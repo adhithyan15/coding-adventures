@@ -75,7 +75,7 @@ order.svg,” panels 1–4, Wikimedia Commons, 5 August 2023.
 
 - [YOU TRACE: ऋ twice while saying *ri*]
 - [YOU COPY: ऋ once beside the visible model]
-- [YOU POINT: to the letter, then say “independent vowel — not र”]
+- [YOU POINT: the letter, then say “independent vowel — not र”]
 
 ## Guided Practice — delayed recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-125, HI-SCRIPT-WRITE-125] -->

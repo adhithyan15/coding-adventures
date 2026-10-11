@@ -9,7 +9,7 @@ headword: "no + verb"
 gloss: "putting *no* in front of the verb — the whole of Spanish negation"
 romanization: ""
 concept_tag: VERB-NEGATE
-prerequisites: []
+prerequisites: [ES-C06-hablo-espanol]
 sounds: []
 roots: []
 duration:

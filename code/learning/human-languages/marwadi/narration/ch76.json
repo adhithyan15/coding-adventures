@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C76-patlo-type",
-              "prompt": "Type the Marwadi for 'thin'.",
+              "prompt": "Say the Marwadi for 'thin'.",
               "assesses": [
                 "MW-LEX-C76-ADJ76-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C76-bhari-type",
-              "prompt": "Type the Marwadi for 'heavy'.",
+              "prompt": "Say the Marwadi for 'heavy'.",
               "assesses": [
                 "MW-LEX-C76-ADJ76-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C76-sacho-type",
-              "prompt": "Type the Marwadi for 'true'.",
+              "prompt": "Say the Marwadi for 'true'.",
               "assesses": [
                 "MW-LEX-C76-ADJ76-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C76-haro-type",
-              "prompt": "Type the Marwadi for 'green'.",
+              "prompt": "Say the Marwadi for 'green'.",
               "assesses": [
                 "MW-LEX-C76-ADJ76-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C76-pilo-type",
-              "prompt": "Type the Marwadi for 'yellow'.",
+              "prompt": "Say the Marwadi for 'yellow'.",
               "assesses": [
                 "MW-LEX-C76-ADJ76-05"
               ],

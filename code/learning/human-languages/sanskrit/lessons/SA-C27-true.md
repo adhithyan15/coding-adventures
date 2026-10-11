@@ -59,7 +59,8 @@ A third word from the be-verb, and truth defined as what is.
 - [YOU SAY: *satyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *asti*, *astu*, *satyam* — three from one root, in that order]
-- [YOU RECALL: read **दन्तः**, then say *atithiḥ*]
+- [YOU READ: **दन्तः**]
+- [YOU RECALL: say *atithiḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04] -->

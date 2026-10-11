@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C61-ito-type",
-              "prompt": "Type the Japanese for 'a thread'.",
+              "prompt": "Say the Japanese for 'a thread'.",
               "assesses": [
                 "JA-LEX-C61-WORLD61-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C61-hari-type",
-              "prompt": "Type the Japanese for 'a needle'.",
+              "prompt": "Say the Japanese for 'a needle'.",
               "assesses": [
                 "JA-LEX-C61-WORLD61-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C61-kushi-type",
-              "prompt": "Type the Japanese for 'a comb'.",
+              "prompt": "Say the Japanese for 'a comb'.",
               "assesses": [
                 "JA-LEX-C61-WORLD61-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C61-himo-type",
-              "prompt": "Type the Japanese for 'a string'.",
+              "prompt": "Say the Japanese for 'a string'.",
               "assesses": [
                 "JA-LEX-C61-WORLD61-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C61-tsuna-type",
-              "prompt": "Type the Japanese for 'a rope'.",
+              "prompt": "Say the Japanese for 'a rope'.",
               "assesses": [
                 "JA-LEX-C61-WORLD61-05"
               ],

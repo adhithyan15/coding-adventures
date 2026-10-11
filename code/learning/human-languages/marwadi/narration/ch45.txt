@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पेट (peṭ) mean? ("The stomach".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the stomach'.
+Say the Marwadi for 'the stomach'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आंगळी (āṅgḷī) mean? ("A finger".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a finger'.
+Say the Marwadi for 'a finger'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does होठ (hoṭh) mean? ("A lip".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a lip'.
+Say the Marwadi for 'a lip'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मूंडो (mū̃ḍo) mean? ("The face, the mouth".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the face, the mouth'.
+Say the Marwadi for 'the face, the mouth'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गोडो (goḍo) mean? ("A knee".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a knee'.
+Say the Marwadi for 'a knee'.

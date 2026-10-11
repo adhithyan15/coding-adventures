@@ -9,13 +9,26 @@
     "SPINE-TAKE-LEAVE"
   ],
   "payoff": {
-    "lesson": "HI-W02-ka-ta-mouth-order",
+    "lesson": "HI-C01-practice",
     "kind": "task",
-    "summary": "Write क and त in stroke order — loop or curl, spine, bar last — then say the stop series back to front along the mouth.",
+    "summary": "Greet, thank formally and casually, and take a weighty leave in Hindi from memory; name each word's heritage; then write न, म, क and त by hand, body first and bar last, and say what orders the stop families along the mouth.",
     "assesses": [
+      "HI-CONCEPT-C01-NAMASTE-01",
+      "HI-CONCEPT-C01-NAMASKAR-01",
+      "HI-CONCEPT-C01-DHANYAVAD-01",
+      "HI-CONCEPT-C01-SHUKRIYA-01",
+      "HI-CONCEPT-C01-ALVIDA-01",
+      "HI-CONCEPT-C01-PRACTICE-01",
+      "HI-CONCEPT-W01-SHIROREKHA-NA-MA-01",
+      "HI-CONCEPT-W01-NA-MA-01",
+      "HI-CONCEPT-W01-NA-MA-02",
+      "HI-CONCEPT-W01-NA-MA-03",
+      "HI-CONCEPT-W02-ABUGIDA-KA-TA-01",
+      "HI-CONCEPT-W02-ABUGIDA-KA-TA-02",
       "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
       "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02",
       "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03"
-    ]
+    ],
+    "note": "HI-C01-practice is the chapter's last lesson (sequence 100, after the writing ramp), so it now carries the payoff and assesses all fifteen atoms the chapter introduces: the five greeting words and their two heritages, plus a hand-written न म क त and spoken recall of the head-line, the shared spine frame, the inherent vowel and the mouth-ordered stop families."
   }
 }

@@ -56,7 +56,10 @@ describe("taking a letter's headline off", () => {
     const signs = devanagari.filter((letter) => /^\p{M}$/u.test(letter.glyph) && letter.glyph !== "\u093E");
     expect(letters).toHaveLength(44);
     expect(aa).toHaveLength(1);
-    expect(signs).toHaveLength(8);
+    // ु ू े ं ़ ् ृ ँ, and ी ो ः: the last three leave the piece of headline
+    // Noto prints on them undrawn (it is the word's headline), so none of the
+    // eleven ends in a headline stroke to take off.
+    expect(signs).toHaveLength(11);
     // ā's last stroke is the piece of headline Noto prints on the sign.
     const split = splitHeadline(aa[0])!;
     expect(split.body).toEqual(aa[0].strokes.slice(0, 1));
@@ -175,12 +178,18 @@ describe("the source of a word", () => {
 });
 
 describe("words that compose", () => {
-  it("composes words of letters whose printed headlines join", () => {
-    for (const word of ["नमक", "कमल", "थम", "अब", "घर", "जल", "बस", "इस", "एक"]) {
+  // One case per word, not one loop over all nine. Each composition traces
+  // every stroke against the printed word's ink, about a quarter of a second
+  // on an idle machine; nine in one case took over two seconds, and on a loaded
+  // runner that crossed the 5s per-test budget while every word still composed.
+  // Split, each case costs one word, and a failure names its word in the title.
+  it.each(["नमक", "कमल", "थम", "अब", "घर", "जल", "बस", "इस", "एक"])(
+    "composes %s, whose letters' printed headlines join",
+    (word) => {
       const result = compose(word);
       expect(result.ok ? "ok" : result.reason, word).toBe("ok");
-    }
-  });
+    },
+  );
 });
 
 describe("every refusal", () => {

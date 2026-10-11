@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Counting Past Twenty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4934b907c7a41858",
+  "sourceHash": "fnv1a64:484fd0ad1553fd80",
   "lessons": [
     {
       "id": "HI-C96-tees-chaalees",
@@ -296,7 +296,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7e8423605b70db0",
+      "sourceHash": "fnv1a64:e76dd334714bdaac",
       "notice": null,
       "blocks": [
         {
@@ -356,7 +356,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that table down the left and you are counting seven, eight, nine — which you have done since early on. Read it down the right and you are counting seventy, eighty, ninety."
+              "text": "Go down the left of that table and you are counting seven, eight, nine — which you have done since early on. Go down the right and you are counting seventy, eighty, ninety."
             },
             {
               "kind": "speech",

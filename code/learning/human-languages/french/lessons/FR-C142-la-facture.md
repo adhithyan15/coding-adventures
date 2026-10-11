@@ -40,7 +40,12 @@ reviews_of: [FR-C142-lannonce]
 ## You'll want to know: la facture
 <!-- hl-knowledge: introduces=[FR-LEX-C142-LIRE142-05]; assesses=[] -->
 
-**la facture** — "a bill, an invoice". Read the bill: **Facture : loyer, 400 euros. À payer avant lundi.** Pay it before Monday.
+**la facture** — "a bill, an invoice".
+
+[YOU READ: the bill]
+
+The bill says **Facture : loyer, 400 euros. À payer avant lundi.** Pay it before
+Monday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

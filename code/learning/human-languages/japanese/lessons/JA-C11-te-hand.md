@@ -34,8 +34,9 @@ reviews_of: [JA-W11-te]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TE-01, JA-SCRIPT-DA-01, JA-LEX-KOKO, JA-LEX-SLOWER-PLEASE] -->
 
-[PAUSE 25s] Write **て** and **だ**. Point here and say *koko*, then ask for the
-line a little more slowly.
+[PAUSE 25s] [YOU WRITE: **て** and **だ**]
+
+Picture the spot where you are and say *koko*, then ask for the line a little more slowly.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-TE-HAND]; assesses=[] -->
@@ -48,9 +49,9 @@ without adding another shape.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TE-HAND, JA-SCRIPT-TE-01] -->
 
-1. Hear *te*; touch one hand.
-2. See **て**; say “hand.”
-3. Hide the word and write its one sign.
+1. Hear *te*; say what it names — a hand.
+2. [YOU READ: **て**, then say “hand.”]
+3. [YOU WRITE: its one sign, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TE-HAND] -->

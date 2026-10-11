@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Hair, Ear, and Throat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4b01ba9822f9dfae",
+  "sourceHash": "fnv1a64:97488885ae2f4eee",
   "lessons": [
     {
       "id": "HI-C46-hair",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fa2dd229a375642",
+      "sourceHash": "fnv1a64:4f91cf5982d22fe8",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say beṭā, then read फल",
+              "instruction": "say beṭā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *beṭā*, then read **फल**]"
+              "source": "[YOU RECALL: say *beṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "फल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **फल**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6733da57a063a122",
+      "sourceHash": "fnv1a64:1b4222fed73e790a",
       "notice": null,
       "blocks": [
         {
@@ -232,20 +241,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "uṅglī, then bāl, and touch each as you name it",
+              "instruction": "uṅglī, then bāl, picturing each as you name it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *uṅglī*, then *bāl*, and touch each as you name it]"
+              "source": "[YOU SAY: *uṅglī*, then *bāl*, picturing each as you name it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बेटी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बेटी**]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read बेटी, then say kapṛā",
+              "instruction": "say kapṛā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बेटी**, then say *kapṛā*]"
+              "source": "[YOU RECALL: say *kapṛā*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12b93c91628445c0",
+      "sourceHash": "fnv1a64:073b266e7ef86256",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say parivār, then read दीया",
+              "instruction": "say parivār",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *parivār*, then read **दीया**]"
+              "source": "[YOU RECALL: say *parivār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दीया",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दीया**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfcb22faca4ef632",
+      "sourceHash": "fnv1a64:fd7b598db558385e",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "लोग",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **लोग**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read लोग, then say namak",
+              "instruction": "say namak",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **लोग**, then say *namak*]"
+              "source": "[YOU RECALL: say *namak*]"
             }
           ]
         },

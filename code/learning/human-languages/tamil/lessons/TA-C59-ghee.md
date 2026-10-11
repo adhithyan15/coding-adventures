@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *ney*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tayir*, then *ney*, and say which one ends a meal and which one opens it]
-- [YOU RECALL: read **மணல்**, then say *āṭu*]
+- [YOU READ: **மணல்**]
+- [YOU RECALL: say *āṭu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02] -->

@@ -15,13 +15,13 @@ prerequisites: [HI-C19-umr]
 sounds: [hindi-genitive-ke-ka]
 roots: [hindi-genitive-possession, hindi-hona]
 duration:
-  max_seconds: 196
+  max_seconds: 240
 requires:
   knowledge: [HI-CONCEPT-C19-UMR-01]
 introduces:
   knowledge: [HI-CONCEPT-C19-AGE-GRAMMAR-01]
 practises:
-  knowledge: [HI-CONCEPT-C19-AGE-GRAMMAR-01]
+  knowledge: [HI-CONCEPT-C19-UMR-01, HI-CONCEPT-C19-AGE-GRAMMAR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,6 +62,12 @@ plus **होना** (*honā*, "to be").
 - [YOU SAY: "tum kitne sāl ke ho?" — how old are you?]
 - [YOU SAY: "maiṅ bīs sāl kā hūṅ" — I belong to twenty years]
 - [YOU POINT: **ke/kā** — the genitive, "of/belonging to"]
+
+## Guided Practice — the word for age
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C19-UMR-01] -->
+
+- Which word for "age" is everyday talk, and where is it from? (***Umr*** —
+  **Arabic** *ʿumr*, via Persian.) And the formal, native one? (**आयु** *āyu*.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C19-AGE-GRAMMAR-01] -->

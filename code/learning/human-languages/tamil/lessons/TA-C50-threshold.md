@@ -56,7 +56,8 @@ The first of five things a guest meets at a Tamil door.
 - [YOU SAY: *vāsal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kadavu*, then *vāsal*, so the door and its opening sit together]
-- [YOU RECALL: say *ippōdu*, then read **அன்பு**]
+- [YOU RECALL: say *ippōdu*]
+- [YOU READ: **அன்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01] -->

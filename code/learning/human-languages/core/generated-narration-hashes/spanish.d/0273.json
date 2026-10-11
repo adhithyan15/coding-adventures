@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 273,
-  "sourceHash": "fnv1a64:3da742b28a088e33",
+  "sourceHash": "fnv1a64:f32644187fb29698",
   "lessonIds": [
     "ES-C273-en-primer-lugar",
     "ES-C273-ademas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch273.txt",
   "json": "spanish/narration/ch273.json",
-  "textHash": "fnv1a64:868802a69d6c322c",
-  "jsonHash": "fnv1a64:dd84b83fbf57fd14",
+  "textHash": "fnv1a64:f3d0f145ee6ae760",
+  "jsonHash": "fnv1a64:5bdad9a90ee3f565",
   "findings": []
 }

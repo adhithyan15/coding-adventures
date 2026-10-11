@@ -34,20 +34,20 @@ reviews_of: [ZH-C15-hear-zhong, ZH-W15-zhong]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->
 
-[PAUSE 9s] Say **middle**, then point to 中's last stroke.
+[PAUSE 9s] Say **middle**. [YOU POINT: 中's last stroke]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->
 
 > **中** — *zhōng* — **middle; centre**
 
-Read the character without pinyin, then hold its first tone level.
+[YOU READ: the character without pinyin, then hold its first tone level]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **中** once. Check that the box closes before the centre line.
+[YOU WRITE: one copy of **中** — check that the box closes before the centre line]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01] -->

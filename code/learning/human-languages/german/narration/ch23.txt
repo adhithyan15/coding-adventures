@@ -251,7 +251,9 @@ infinitive: sagen. participle: gesagt.
 infinitive: machen. participle: gemacht.
 infinitive: lernen. participle: gelernt.
 infinitive: wohnen. participle: gewohnt.
-Cover the right-hand side and rebuild it from the left. Then cover the left and work backwards: given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having.
+[once you have stopped driving — cover: the right-hand side, and rebuild it from the left]
+[once you have stopped driving — cover: the left, and work backwards]
+Given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having.
 
 Guided Practice.
 [pause 1 second]

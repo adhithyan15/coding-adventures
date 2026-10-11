@@ -38,7 +38,8 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Arabic for a fridge, then the Arabic for a curtain.
 [pause 1 second]
-Read قال. Which letter is the deep q? (ق, qāf, two dots above.)
+[once you have stopped driving — read: قال]
+Which letter is the deep q? (ق, qāf, two dots above.)
 
 You'll want to know: قفل.
 قفل — qifl — "a lock".

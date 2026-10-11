@@ -37,7 +37,7 @@ reviews_of: [MW-W38-a, MW-C37-hear-pandara, MW-C25-request-five]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-A-INDEPENDENT-01, MW-LEX-PANDARA-01, MW-PERFORMANCE-REQUEST-FOUR-SKILL-01] -->
 
 [PAUSE 20s]
-- [YOU RECALL: write **अ** — **R1**]
+- [YOU WRITE: **अ** from memory — **R1**]
 - [YOU RECALL: say *pandarā*, five lessons back — **R2**]
 - [YOU RECALL: run the five requests in a row — **R4**]
 

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 263,
-  "sourceHash": "fnv1a64:df23922ff10b58d7",
+  "sourceHash": "fnv1a64:a04f1a1997acf03e",
   "lessonIds": [
     "ES-C67-uno-otro",
     "ES-C67-repaso-uno-otro-ninguno"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch263.txt",
   "json": "spanish/narration/ch263.json",
-  "textHash": "fnv1a64:27e2daa6e1b09654",
-  "jsonHash": "fnv1a64:a5cbd6552595e022",
+  "textHash": "fnv1a64:ef8965ee867e8b12",
+  "jsonHash": "fnv1a64:6140c9e1981c8f9d",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 114,
-  "sourceHash": "fnv1a64:b3bee8d04cefef16",
+  "sourceHash": "fnv1a64:1733a6718a7d1630",
   "lessonIds": [
     "IT-C114-lezione",
     "IT-C114-esame",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch114.txt",
   "json": "italian/narration/ch114.json",
-  "textHash": "fnv1a64:a3b22e4347b04987",
-  "jsonHash": "fnv1a64:4324866976856088",
+  "textHash": "fnv1a64:05276317f04f3581",
+  "jsonHash": "fnv1a64:5b87d90a89abefa3",
   "findings": []
 }

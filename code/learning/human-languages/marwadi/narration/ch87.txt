@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अस्सी (assī) mean? ("Eighty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'eighty'.
+Say the Marwadi for 'eighty'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नब्बै (nabbai) mean? ("Ninety".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'ninety'.
+Say the Marwadi for 'ninety'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हजार (hajār) mean? ("A thousand".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a thousand'.
+Say the Marwadi for 'a thousand'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लाख (lākh) mean? ("A hundred thousand".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a hundred thousand'.
+Say the Marwadi for 'a hundred thousand'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दुनिया (duniyā) mean? ("The world".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the world'.
+Say the Marwadi for 'the world'.

@@ -58,7 +58,7 @@ about as wide as the sign before it.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-FIVE-COMPONENT-01] -->
 
-[PAUSE 15s] Write ? once from memory, then return to the one-stroke length mark.
+[PAUSE 15s] Write **五** once from memory, then return to the one-stroke length mark.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KATAKANA-LONG-MARK-01, JA-SCRIPT-CHOUON] -->

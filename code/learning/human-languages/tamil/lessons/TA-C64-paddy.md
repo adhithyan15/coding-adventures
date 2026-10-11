@@ -56,7 +56,8 @@ The first of five field words.
 - [YOU SAY: *nel*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nel*, then *arisi*, and say which one the husk is still on]
-- [YOU RECALL: say *maṭṭum*, then read **வேண்டுகோள்**]
+- [YOU RECALL: say *maṭṭum*]
+- [YOU READ: **வேண்டுகோள்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01] -->

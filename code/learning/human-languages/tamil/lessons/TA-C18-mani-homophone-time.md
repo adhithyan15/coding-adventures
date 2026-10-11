@@ -8,23 +8,23 @@ type: etymology
 headword: மணி / மணி
 gloss: the hour-word and Sanskrit gem-word are likely homophones, then maṇi tells clock time
 romanization: "maṇi / maṇi"
-prerequisites: [TA-C18-mani]
+prerequisites: [TA-C18-mani, TA-S08-pulli, TA-W06-write-illai]
 sounds: [tamil-retroflex-nna, tamil-vowel-sign-i]
 roots: [tamil-mani-bell, sanskrit-mani-gem]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [TA-ETYMON-MANI-01]
+  knowledge: [TA-ETYMON-MANI-01, TA-SCRIPT-DRIZZLE-08, TA-SCRIPT-INDEPENDENT-VOWEL-I-01, TA-SCRIPT-LA-AI-SIGN-02, TA-SCRIPT-WRITE-ILLAI-03]
 introduces:
   knowledge: [TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-GRAMMAR-MANI-HOMOPHONE-TIME-02]
 practises:
-  knowledge: [TA-ETYMON-MANI-01, TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-GRAMMAR-MANI-HOMOPHONE-TIME-02]
-skills: [listening, speaking, reading]
+  knowledge: [TA-ETYMON-MANI-01, TA-SCRIPT-DRIZZLE-08, TA-SCRIPT-INDEPENDENT-VOWEL-I-01, TA-SCRIPT-LA-AI-SIGN-02, TA-SCRIPT-WRITE-ILLAI-03, TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-GRAMMAR-MANI-HOMOPHONE-TIME-02]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TA-C18-mani, TA-C07-numbers-1-5]
+reviews_of: [TA-C18-mani, TA-C07-numbers-1-5, TA-S08-pulli, TA-W06-write-illai]
 ---
 
 # மணி — hour or jewel? Context decides
@@ -63,6 +63,16 @@ The number comes first; *maṇi* supplies the clock unit.
 - [YOU SAY: "oru maṇi" — one o'clock]
 - [YOU SAY: "iraṇṭu maṇi" — two o'clock]
 - [YOU CHOOSE BY CONTEXT: clock → hour · jewelry/name → gem]
+
+## Script — the puḷḷi and இல்லை
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-08, TA-SCRIPT-INDEPENDENT-VOWEL-I-01, TA-SCRIPT-LA-AI-SIGN-02, TA-SCRIPT-WRITE-ILLAI-03] -->
+
+- [YOU WRITE: **இல்லை** — **இ**, then **ல்**, then **லை**]
+- [YOU POINT: the puḷḷi, then the ai hook]
+
+What does the puḷḷi do to **ல**? (**Removes its built-in *a*** — bare *l*.) Why
+open on **இ**? (**The word starts on a vowel**.) Which side does **ை** sit on?
+(**The left** — written first, spoken second.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-01, TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-GRAMMAR-MANI-HOMOPHONE-TIME-02] -->

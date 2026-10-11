@@ -33,7 +33,9 @@ reviews_of: [TA-C75-permission]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03] -->
 
-[PAUSE 2s] Read **சரியா**. Then ask to be let inside.
+[PAUSE 2s] [YOU READ: **சரியா**]
+
+Then ask to be let inside.
 
 ## You'll want to know: ஆனால்
 <!-- hl-knowledge: introduces=[TA-LEX-C76-JOIN-01]; assesses=[] -->
@@ -68,9 +70,12 @@ Two sentences held together, with the second one pushing back.
 - [YOU SAY: *āṉāl*]
 - [YOU SAY: *tēnīr vēṇḍum, āṉāl pāl vēṇḍām*]
 - [YOU BUILD: *idu nalla vīḍu, āṉāl siṟiya vīḍu*]
-- [YOU RECALL: read **சரியா**, then ask *varalāmā?*, then say *āṉāl*]
+- [YOU READ: **சரியா**]
+- [YOU RECALL: ask *varalāmā?*, then say *āṉāl*]
 - [YOU RETURN TO: say *-um … -um illai*, *maṭṭum* and *kōpam* — three distances back — then set two of them against each other with ஆனால்]
-- [YOU RECALL: say *iṉṟu*, then read **நேற்று**, then say *muṉbu*]
+- [YOU RECALL: say *iṉṟu*]
+- [YOU READ: **நேற்று**]
+- [YOU RECALL: say *muṉbu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03, TA-LEX-C76-JOIN-01, TA-GRAMMAR-C74-JOIN-03, TA-LEX-C62-JOIN-01, TA-LEX-C72-FEEL-01] -->

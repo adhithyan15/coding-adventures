@@ -60,7 +60,8 @@ A new word made of two old ones.
 - [YOU SAY: *pitāmahaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *patnī*, then *pitāmahaḥ*]
-- [YOU RECALL: say *kevalam*, then read **वाणी**]
+- [YOU RECALL: say *kevalam*]
+- [YOU READ: **वाणी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03] -->

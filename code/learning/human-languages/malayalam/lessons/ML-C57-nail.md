@@ -58,7 +58,7 @@ Four, and this one has cousins across half the world.
 - [YOU SAY: *nakhaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nakhaṁ*, then the English word for it, and hear how far apart they have drifted]
-- [YOU RECALL: read **വഴി**]
+- [YOU READ: **വഴി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04] -->

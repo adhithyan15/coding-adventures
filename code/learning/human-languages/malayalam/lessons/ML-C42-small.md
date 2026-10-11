@@ -33,7 +33,7 @@ reviews_of: [ML-C42-big]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: ചെറിയ
 <!-- hl-knowledge: introduces=[ML-LEX-C42-ADJ-02]; assesses=[] -->
@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ചെറിയ" three times, pointing at something different each time]
+- [YOU SAY: "ചെറിയ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

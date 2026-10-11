@@ -54,7 +54,7 @@ One more everyday action. Three more follow, and each reuses the ones before it.
 - [YOU SAY: *uṟaṅṅū*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *ōṭū*, so the two sit together]
-- [YOU RECALL: read **ആര്**]
+- [YOU READ: **ആര്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-RUN, ML-LEX-SLEEP] -->

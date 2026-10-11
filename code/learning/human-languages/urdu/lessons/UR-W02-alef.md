@@ -75,7 +75,7 @@ lessons will make it pay.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-ALIF-01, UR-SCRIPT-RTL-01] -->
 
 - [YOU WRITE: ا — one stroke, top to bottom]
-- [YOU POINT: at the right edge of an Urdu word, where your pen would begin]
+- [YOU POINT: the right edge of an Urdu word, where your pen would begin]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-RTL-01] -->

@@ -59,7 +59,8 @@ A neck, and a throat full of English words.
 - [YOU SAY: *grīvā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāhuḥ*, then *grīvā*]
-- [YOU RECALL: read **पत्रम्**, then say *setuḥ*]
+- [YOU READ: **पत्रम्**]
+- [YOU RECALL: say *setuḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02] -->

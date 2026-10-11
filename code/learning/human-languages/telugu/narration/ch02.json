@@ -3,8 +3,8 @@
   "language": "telugu",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:575e936bd5d8eb86",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b48c9ae40bd2ce7c",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc0c48edaec26109",
+      "sourceHash": "fnv1a64:8ff41376dc3287c2",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Sounds you'll need."
       },
       "blocks": [
         {
@@ -103,7 +104,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru."
+              "text": "ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పే, రు becomes pēru",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: పే·రు → *pēru*]"
             }
           ]
         },
@@ -172,7 +182,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:48046d5687c7d65a",
+      "sourceHash": "fnv1a64:a6dc1244a1f40c94",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -183,7 +193,7 @@
           "Script you'll notice: న",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: న and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: న and Guided Practice."
       },
       "blocks": [
         {
@@ -251,11 +261,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps up around the left bowl and into the middle. Lift, then movement 2 travels right around the broad lower bowl and rises along its outer edge. Lift once more for movement 3, the small rising flourish above."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps up around the left bowl and into the middle. Without lifting, movement 2 travels right around the broad lower bowl and rises along its outer edge. Keep the pen down: movement 3 climbs a short way up the flourish's left arm, and movement 4 curls up through the small flourish above. The strip gives that short climb a panel of its own, so the three sweeps are numbered as four."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the three clear movements instead of closing the small gaps."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but nearly all native writers draw న (na) as one unbroken stroke, so let the three sweeps run into each other without lifting."
             }
           ]
         },
@@ -274,7 +284,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find న (na) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find న in the ones that have it]"
@@ -296,7 +306,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find న (na) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find న once more]"
@@ -344,7 +354,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -450,7 +460,7 @@
     {
       "id": "TE-S02-vowel-sign-u",
       "sequence": 85,
-      "title": "◌ు — one character, met inside words you already say",
+      "title": "◌ు (u) — one character, met inside words you already say",
       "headword": "ు",
       "romanization": "u",
       "gloss": "the single character ు — recognised inside words you already say",
@@ -462,7 +472,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ce31a2278c604a11",
+      "sourceHash": "fnv1a64:d19e597015b12725",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -473,7 +483,7 @@
           "Script you'll notice: ◌ు",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ు and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ు and Guided Practice."
       },
       "blocks": [
         {
@@ -518,7 +528,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ు somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ు (u) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -541,15 +551,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ు — copy what you see",
+          "title": "Writing: ◌ు — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ు and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ు (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -568,7 +578,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ు (u) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ు in the ones that have it]"
@@ -590,7 +600,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ు (u) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ు once more]"
@@ -755,7 +765,7 @@
           "Script you'll notice: ౧",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౧ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౧ and Guided Practice."
       },
       "blocks": [
         {
@@ -771,7 +781,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ు — what does it do? And one from further back: ◌ా?"
+              "text": "Before the new one: ◌ు (u) — what does it do? And one from further back: ◌ా?"
             },
             {
               "kind": "pause",
@@ -834,7 +844,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -856,7 +866,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౧ (1) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౧ on any page of a Telugu book, calendar or doorplate you can find]"
@@ -904,7 +914,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1028,7 +1038,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aa5f945c42268c3c",
+      "sourceHash": "fnv1a64:5d889e5ca71a9e70",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1039,7 +1049,7 @@
           "Script you'll notice: ◌్",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌్ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌్ and Guided Practice."
       },
       "blocks": [
         {
@@ -1103,15 +1113,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌్ — copy what you see",
+          "title": "Writing: ◌్ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌్ (virama) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌్ (virama) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1130,7 +1140,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌్ (virama) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌్ in the ones that have it]"
@@ -1152,7 +1162,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌్ (virama) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌్ once more]"
@@ -1200,7 +1210,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1329,7 +1339,7 @@
           "Script you'll notice: ట",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ట and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ట and Guided Practice."
       },
       "blocks": [
         {
@@ -1402,7 +1412,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the word below and find ట (ṭa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the word below and find ట in it]"
@@ -1424,7 +1434,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ట twice without tracing, saying ṭa as you finish each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: ట twice without tracing, saying *ṭa* as you finish each one]"
@@ -1442,7 +1452,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the greeting chapter and find మ and ధ once each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the greeting chapter and find మ and ధ once each]"
@@ -1494,7 +1504,7 @@
           "Script you'll notice: ఏ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఏ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఏ and Guided Practice."
       },
       "blocks": [
         {
@@ -1585,7 +1595,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the word below and find ఏ (ē) at its front",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the word below and find ఏ at its front]"
@@ -1659,7 +1669,7 @@
           "Script you'll notice: ౨",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౨ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౨ and Guided Practice."
       },
       "blocks": [
         {
@@ -1734,7 +1744,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -1756,7 +1766,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౨ (2) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౨ on any page of a Telugu book, calendar or doorplate you can find]"
@@ -1898,7 +1908,7 @@
     {
       "id": "TE-S08-vowel-sign-i",
       "sequence": 125,
-      "title": "◌ి — one character, met inside words you already say",
+      "title": "◌ి (i) — one character, met inside words you already say",
       "headword": "ి",
       "romanization": "i",
       "gloss": "the single character ి — recognised inside words you already say",
@@ -1910,7 +1920,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6227d2a2f0e0335e",
+      "sourceHash": "fnv1a64:8a8d70bfcd98b3ea",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1921,7 +1931,7 @@
           "Script you'll notice: ◌ి",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ి and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ి and Guided Practice."
       },
       "blocks": [
         {
@@ -1937,7 +1947,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ౨ (2) — what amount does it stand for? And one from further back: ◌ు?"
+              "text": "Before the new one: ౨ (2) — what amount does it stand for? And one from further back: ◌ు (u)?"
             },
             {
               "kind": "pause",
@@ -1966,7 +1976,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ి somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ి (i) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1981,15 +1991,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ి — copy what you see",
+          "title": "Writing: ◌ి — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ి and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ి (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -2007,8 +2017,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ి in the ones that have it",
-              "spoken": true,
+              "instruction": "at these words, and find ◌ి (i) in the ones that have it",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ి in the ones that have it]"
@@ -2029,8 +2039,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ి once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find ◌ి (i) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ి once more]"
@@ -2177,7 +2187,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c0a5481fb2027cb5",
+      "sourceHash": "fnv1a64:e1caffaaa3eabb1b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2189,7 +2199,7 @@
           "Script you'll notice: ో",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ో and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ో and Guided Practice."
       },
       "blocks": [
         {
@@ -2205,7 +2215,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ి — what does it do to the consonant it sits on?"
+              "text": "Before the new one: ◌ి (i) — what does it do to the consonant it sits on?"
             },
             {
               "kind": "pause",
@@ -2245,15 +2255,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ో — copy what you see",
+          "title": "Writing: ో — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ో (ō) and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write it again attached to a consonant, the way it actually appears."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ో (ō) yourself — slowly, and larger than it is printed. Then write it again attached to a consonant, the way it actually appears."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -2272,7 +2282,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the word below and find the consonant carrying ో (ō)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the word below and find the consonant carrying ో]"
@@ -2303,7 +2313,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ఏమిటి (ēmiṭi) again and name the curled letter in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ఏమిటి again and name the curled letter in it]"
@@ -2344,7 +2354,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:383c7b62fb47eded",
+      "sourceHash": "fnv1a64:75876587f8a9eb7f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2355,7 +2365,7 @@
           "Script you'll notice: ◌ం",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ం and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ం and Guided Practice."
       },
       "blocks": [
         {
@@ -2371,7 +2381,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ి — what does it do? And one from further back: ౧ (1)?"
+              "text": "Before the new one: ◌ి (i) — what does it do? And one from further back: ౧ (1)?"
             },
             {
               "kind": "pause",
@@ -2415,15 +2425,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ం — copy what you see",
+          "title": "Writing: ◌ం — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ం (anusvara) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ం (anusvara) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -2442,7 +2452,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ం (anusvara) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ం in the ones that have it]"
@@ -2464,7 +2474,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ం (anusvara) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ం once more]"

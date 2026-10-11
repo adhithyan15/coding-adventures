@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e4cb08d4d3217576",
+  "sourceHash": "fnv1a64:6ac82577cd834306",
   "lessons": [
     {
       "id": "ML-C27-vaikunneram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cb8172ef0e042fb",
+      "sourceHash": "fnv1a64:9ae9ffbf82107295",
       "notice": null,
       "blocks": [
         {
@@ -102,11 +102,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nāya, pūcca, then read പച്ച, മഞ്ഞ",
+              "instruction": "say nāya, pūcca",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nāya, pūcca*, then read **പച്ച, മഞ്ഞ**]"
+              "source": "[YOU RECALL: say *nāya, pūcca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "പച്ച, മഞ്ഞ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **പച്ച, മഞ്ഞ**]"
             }
           ]
         },

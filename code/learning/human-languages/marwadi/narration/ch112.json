@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C112-jarurat-type",
-              "prompt": "Type the Marwadi for 'a need'.",
+              "prompt": "Say the Marwadi for 'a need'.",
               "assesses": [
                 "MW-LEX-C112-WANT112-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C112-lalach-type",
-              "prompt": "Type the Marwadi for 'greed'.",
+              "prompt": "Say the Marwadi for 'greed'.",
               "assesses": [
                 "MW-LEX-C112-WANT112-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C112-sapno-type",
-              "prompt": "Type the Marwadi for 'a dream'.",
+              "prompt": "Say the Marwadi for 'a dream'.",
               "assesses": [
                 "MW-LEX-C112-WANT112-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C112-ummid-type",
-              "prompt": "Type the Marwadi for 'an expectation'.",
+              "prompt": "Say the Marwadi for 'an expectation'.",
               "assesses": [
                 "MW-LEX-C112-WANT112-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C112-marji-type",
-              "prompt": "Type the Marwadi for 'one's will, a choice'.",
+              "prompt": "Say the Marwadi for 'one's will, a choice'.",
               "assesses": [
                 "MW-LEX-C112-WANT112-05"
               ],

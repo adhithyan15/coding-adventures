@@ -58,7 +58,9 @@ must end in **-ई**.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C83-CHAR-02, HI-LEX-C83-CHAR-03, HI-LEX-C83-CHAR-04, HI-LEX-C83-CHAR-05, HI-LEX-C83-CHAR-06] -->
 
-Read aloud. Every word has been taught:
+[YOU READ: the lines below aloud]
+
+Every word has been taught:
 
 > — आपकी बहन कैसी है?
 > — वह होशियार है। वह मेहनती भी है। वह शर्मीली है।

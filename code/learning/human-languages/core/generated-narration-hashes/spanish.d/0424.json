@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 424,
-  "sourceHash": "fnv1a64:e8dcfa92a298e8f3",
+  "sourceHash": "fnv1a64:635ea188176b7059",
   "lessonIds": [
     "ES-C424-punto",
     "ES-C424-coma",
@@ -14,11 +14,11 @@
     "ES-C424-repaso-signos",
     "ES-C424-sintesis-nota"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 0,
+  "voiceLessons": 9,
+  "drivablePrefix": 8,
   "text": "spanish/narration/ch424.txt",
   "json": "spanish/narration/ch424.json",
-  "textHash": "fnv1a64:eaac8fa133355869",
-  "jsonHash": "fnv1a64:d77d72deab8f47bf",
+  "textHash": "fnv1a64:f1c8fa26482f3e92",
+  "jsonHash": "fnv1a64:3ddc08639e2756c8",
   "findings": []
 }

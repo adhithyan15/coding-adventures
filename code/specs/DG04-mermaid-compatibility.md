@@ -993,16 +993,56 @@ silently degrading.
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
 five directions, top-level `subgraph` lanes, common process-node shapes
 (including storage, subprocess, hexagon, double-circle, input/output, and
-asymmetric nodes),
-directed/undirected/dotted/thick chained links, multiline edge continuations,
+asymmetric, parallelogram, and trapezoid nodes), expanded `cloud`, `bang`,
+hourglass/collate, triangle/extract, flipped-triangle/manual-file, text-block,
+notched-rectangle/card, lined/shaded-process, compact start/stop control, and
+fork/join shape attributes, and aliases for the classic shapes represented
+by the shared IR. Lightning-bolt communication links recognize the `bolt`,
+`com-link`, and `lightning-bolt` aliases and lower as compact label-free paths.
+Comment nodes recognize left (`brace`, `comment`, and `brace-l`), right
+(`brace-r`), and paired (`braces`) curly-brace forms with preserved labels.
+Wave-edged document nodes recognize both `doc` and `document` aliases.
+Delay nodes recognize `delay` and `half-rounded-rectangle` aliases.
+Horizontal-cylinder direct-access storage recognizes `h-cyl`, `das`, and
+`horizontal-cylinder` aliases.
+Lined-cylinder disk storage recognizes `lin-cyl`, `disk`, and
+`lined-cylinder` aliases.
+Display nodes recognize `curv-trap`, `curved-trapezoid`, and `display` aliases.
+Divided processes recognize `div-rect`, `div-proc`, `divided-rectangle`, and
+`divided-process` aliases.
+Internal storage recognizes `win-pane`, `internal-storage`, and `window-pane`
+aliases.
+Junctions recognize `f-circ`, `junction`, and `filled-circle` aliases and lower
+as compact filled circles.
+Loop limits recognize `notch-pent`, `loop-limit`, and `notched-pentagon`
+aliases.
+Manual inputs recognize `sl-rect`, `manual-input`, and `sloped-rectangle`
+aliases.
+Multi-documents recognize `docs`, `documents`, `st-doc`, and
+`stacked-document` aliases.
+Multi-processes recognize `st-rect`, `procs`, `processes`, and
+`stacked-rectangle` aliases.
+Stored data recognizes `bow-rect`, `stored-data`, and `bow-tie-rectangle`
+aliases.
+Summaries recognize `cross-circ`, `summary`, and `crossed-circle` aliases.
+Normalized quoted Unicode lane
+and node labels, named and numeric label entities,
+directed/undirected/dotted/thick chained links, point/circle/cross endpoint
+markers and bidirectional arrows, multiline edge continuations,
 parallel branch and join
-endpoints, pipe-delimited and Flowchart-style link labels, titles, and
-accessibility metadata. It lowers through
+endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
+accessibility metadata with named and numeric entity decoding. Direct node
+styles, named/default classes with optional terminal semicolons, and node class
+decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
+clicks, tooltips, standard browser link targets, explicit `call` callback
+actions, and legacy callback aliases survive as scene metadata. The family lowers through
 dedicated ownership IR and stable lane geometry before producing
-backend-neutral paint instructions. A pinned visual subset, including parallel
+backend-neutral paint instructions. Horizontal nodes expand deterministically
+for long labels while remaining bounded by their ownership lane. A pinned
+visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog, classes and inline styles, clicks, configuration-driven lane
+and link catalog beyond the documented marker forms, configuration-driven lane
 ordering and line hops, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

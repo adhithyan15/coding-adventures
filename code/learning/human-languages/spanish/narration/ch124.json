@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "One Stem, Two Tenses",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d500369106687dde",
+  "sourceHash": "fnv1a64:fcc28008b997e531",
   "lessons": [
     {
       "id": "ES-C17-irregulares",
@@ -162,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-irregulares-hacer-pair",
               "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
               "assesses": [
@@ -183,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-irregulares-tener-pair",
               "prompt": "Give the future and conditional yo forms of tener, in that order.",
               "assesses": [
@@ -203,6 +205,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-irregulares-poder-pair",
               "prompt": "Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.",
               "assesses": [
@@ -256,17 +259,16 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:10dade747b30c925",
+      "sourceHash": "fnv1a64:46ea93bebaa35f5f",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes for 2 tables that cannot be read aloud"
+          "your eyes for one table that cannot be read aloud"
         ],
         "waitUntilStopped": [
-          "Grammar Lens: the regular frame",
-          "Grammar Lens: three learned stems"
+          "Grammar Lens: the regular frame"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens: the regular frame."
       },
       "blocks": [
         {
@@ -316,17 +318,19 @@
           "title": "Grammar Lens: three learned stems",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
-                "verb",
-                "learned stem",
+                "verb: learned stem",
                 "future yo",
                 "conditional yo"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "verb: learned stem: hacer: har-. future yo: haré. conditional yo: haría.",
+                "verb: learned stem: tener: tendr-. future yo: tendré. conditional yo: tendría.",
+                "verb: learned stem: poder: podr-. future yo: podré. conditional yo: podría."
+              ]
             },
             {
               "kind": "speech",
@@ -386,6 +390,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-practice-regular-future-yo",
               "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [
@@ -407,6 +412,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-practice-regular-conditional-yo",
               "prompt": "Give the conditional yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [
@@ -428,6 +434,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-practice-hablare-espanol",
               "prompt": "Say 'I will speak Spanish' in Spanish.",
               "assesses": [
@@ -449,6 +456,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-practice-viviria-madrid",
               "prompt": "Say 'I would live in Madrid' in Spanish.",
               "assesses": [
@@ -470,6 +478,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-practice-hacer-pair",
               "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
               "assesses": [
@@ -491,6 +500,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-practice-three-stems",
               "prompt": "Give the learned stems for hacer, tener, and poder, in that order.",
               "assesses": [
@@ -512,6 +522,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-practice-history",
               "prompt": "Which Latin 'have' verb contributed material to both Romance constructions?",
               "assesses": [

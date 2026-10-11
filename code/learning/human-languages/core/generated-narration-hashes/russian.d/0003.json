@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 3,
-  "sourceHash": "fnv1a64:b512c8ae5ffa4bef",
+  "sourceHash": "fnv1a64:956435f8e2cae733",
   "lessonIds": [
     "RU-C03-byt",
     "RU-C03-zhit",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch03.txt",
   "json": "russian/narration/ch03.json",
-  "textHash": "fnv1a64:7144b5ea2767a438",
-  "jsonHash": "fnv1a64:a9b80aac8094fbf7",
+  "textHash": "fnv1a64:757f073677f870ce",
+  "jsonHash": "fnv1a64:0e3c64d79519ecd4",
   "findings": []
 }

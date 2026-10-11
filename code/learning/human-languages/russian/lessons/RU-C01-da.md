@@ -43,8 +43,9 @@ are the shortest in the chapter and the most used in the language.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[RU-LEX-DA]; assesses=[RU-LEX-ZDRAVSTVUYTE] -->
 
-*(Skim if you read Cyrillic.)* Just two, both already familiar from
-*здравствуйте*: **д** (d, from Greek delta Δ) + **а** (a, as in *father*).
+*(Skim if you read Cyrillic.)* Just two, both new and both heard in
+*zdrávstvuyte*: **д** (d, from Greek delta Δ) + **а** (a, as in *father*) — the
+one vowel that looks *and* sounds like Latin a.
 
 > **да** = **da** — short, clear, stressed. The easiest word in the language to
 > read.
@@ -56,7 +57,7 @@ are the shortest in the chapter and the most used in the language.
 Russians sprinkle *да* through speech as a soft **"and / so / well…"** or a
 tag —
 
-- *«Ну да»* (*nu da*) = "well, yeah."
+- *nu da* = "well, yeah."
 - *«да?»* on the end of a sentence = "…right?" (like French *n'est-ce pas?*).
 
 So the first word you can *say* is also one of the most common little glue-words
@@ -83,11 +84,11 @@ Notice how many languages say "yes" with a word that means **"so / thus"**
 
 [PAUSE 1s]
 - [YOU SAY: "da"]
-- [YOU SAY: "ну да" (nu da) — "well, yeah"]
+- [YOU SAY: *nu da* — "well, yeah"]
 - [YOU SAY: which letter is д (d) and which is а (a)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DA] -->
 
-[PAUSE 3s] Read **да**. Two letters — name their sounds (d, a). Besides "yes,"
+[PAUSE 3s] [YOU READ: **да**] Two letters — name their sounds (d, a). Besides "yes,"
 what else does *да* do in a sentence? (Works as a soft "and / well… / right?")

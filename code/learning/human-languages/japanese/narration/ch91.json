@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C91-yamu-type",
-              "prompt": "Type the Japanese for 'to stop (rain)'.",
+              "prompt": "Say the Japanese for 'to stop (rain)'.",
               "assesses": [
                 "JA-LEX-C91-ACT91-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C91-shimau-type",
-              "prompt": "Type the Japanese for 'to put away'.",
+              "prompt": "Say the Japanese for 'to put away'.",
               "assesses": [
                 "JA-LEX-C91-ACT91-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C91-hirou-type",
-              "prompt": "Type the Japanese for 'to pick up'.",
+              "prompt": "Say the Japanese for 'to pick up'.",
               "assesses": [
                 "JA-LEX-C91-ACT91-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C91-tetsudau-type",
-              "prompt": "Type the Japanese for 'to help'.",
+              "prompt": "Say the Japanese for 'to help'.",
               "assesses": [
                 "JA-LEX-C91-ACT91-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C91-mayou-type",
-              "prompt": "Type the Japanese for 'to get lost'.",
+              "prompt": "Say the Japanese for 'to get lost'.",
               "assesses": [
                 "JA-LEX-C91-ACT91-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R91-first-pass-this-and-that-and-everyday-actions-type",
-              "prompt": "Type the Japanese for 'to help'.",
+              "prompt": "Say the Japanese for 'to help'.",
               "assesses": [
                 "JA-LEX-C91-ACT91-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R91-second-pass-more-everyday-actions-type",
-              "prompt": "Type the Japanese for 'to pile up'.",
+              "prompt": "Say the Japanese for 'to pile up'.",
               "assesses": [
                 "JA-LEX-C87-ACT87-01"
               ],

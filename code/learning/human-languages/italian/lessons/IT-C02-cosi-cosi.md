@@ -79,7 +79,7 @@ French **comme ci comme ça** ("like this, like that"), Spanish **más o menos**
 <!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-COME-STAI-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04] -->
 
 [PAUSE 1s]
-- [YOU SAY: "così così" — *koh-ZEE koh-ZEE*, with a hand-wobble]
+- [YOU SAY: "così così" — *koh-ZEE koh-ZEE*, with a shrug in the voice]
 - [YOU SAY: answer "Come stai?" two ways — "Bene" / "Così così"]
 - [YOU SAY: "sic" in English — "thus" — the same *sīc*]
 

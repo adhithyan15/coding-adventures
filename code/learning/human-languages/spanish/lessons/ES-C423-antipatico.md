@@ -35,7 +35,7 @@ reviews_of: [ES-C380-simpatico]
 [PAUSE 2s] Say *simpático*. Now say what you would expect its opposite to look
 like, before reading on. This is one of the times the obvious guess is right.
 
-[PAUSE 3s] Write one line with *porque* before the new words: *Hablé con mi amiga porque tuve tiempo.* Then write one of your own.
+[PAUSE 3s] [YOU WRITE: one line with *porque* before the new words — *Hablé con mi amiga porque tuve tiempo.* — then one of your own]
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

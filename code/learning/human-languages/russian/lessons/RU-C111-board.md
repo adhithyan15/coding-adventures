@@ -38,7 +38,8 @@ reviews_of: [RU-C111-exam]
 
 [PAUSE 2s] Before the new one: say the Russian for a class, then the Russian for an exam.
 
-[PAUSE 3s] Read the two signs aloud, as one run: *лифт направо, метро налево*
+[PAUSE 3s]
+[YOU READ: the two signs aloud, as one run — *лифт направо, метро налево*]
 
 ## You'll want to know: доска
 <!-- hl-knowledge: introduces=[RU-LEX-C111-THINGS111-02]; assesses=[] -->

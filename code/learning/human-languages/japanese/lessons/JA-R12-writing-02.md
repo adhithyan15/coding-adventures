@@ -34,8 +34,9 @@ reviews_of: [JA-W03-to, JA-C10-sukoshi, JA-C11-kao]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TO-01, JA-LEX-SUKOSHI, JA-LEX-KAO] -->
 
-[PAUSE 45s] Write **と**, then **すこし**. Finish with **かお**, keeping *ka-o*
-on two morae.
+[PAUSE 45s] [YOU WRITE: **と**, then **すこし**, and finish with **かお**]
+
+Say *ka-o* on two morae.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TO-01, JA-LEX-SUKOSHI, JA-LEX-KAO] -->

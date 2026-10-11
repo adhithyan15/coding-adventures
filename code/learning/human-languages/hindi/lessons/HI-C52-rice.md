@@ -59,7 +59,8 @@ The first of five things a kitchen is stocked with.
 - [YOU SAY: *chāval*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chāval*, the grain the rest of the meal is served over]
-- [YOU RECALL: say *ābhār*, then read **फूल**]
+- [YOU RECALL: say *ābhār*]
+- [YOU READ: **फूल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01] -->

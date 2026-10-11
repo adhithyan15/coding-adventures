@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "Recall Familiar Quality Words at a Distance",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:71764a27d7699fee",
+  "sourceHash": "fnv1a64:959458600f7c5a64",
   "lessons": [
     {
       "id": "PA-R158-food-quality-recall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0734540fa432dafa",
+      "sourceHash": "fnv1a64:0328359b3f646490",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the old word for stale. (ਬੇਹਾ, behā.) Cover the answer before the next cue."
+              "text": "Say the old word for stale. (ਬੇਹਾ, behā.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer before the next cue",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer before the next cue]"
             }
           ]
         },
@@ -113,8 +122,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the three answers."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the three answers",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the three answers]"
             },
             {
               "kind": "pause",
@@ -124,7 +138,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the Punjabi for unripe, stale, then ripe. Check only after all three: ਕੱਚਾ, ਬੇਹਾ, ਪੱਕਾ. If one slipped, revisit that earlier quality word."
+              "text": "Say the Punjabi for unripe, stale, then ripe. Only after all three, hear the answers: ਕੱਚਾ, ਬੇਹਾ, ਪੱਕਾ. If one slipped, revisit that earlier quality word."
             }
           ]
         }
@@ -143,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68207270605280fe",
+      "sourceHash": "fnv1a64:2afd085faa43d21e",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +184,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for true, then false or lying. Check: ਸੱਚਾ (saccā), then ਝੂਠਾ (jhūṭhā)."
+              "text": "Say the word for true, then false or lying. Hear the answers: ਸੱਚਾ (saccā), then ਝੂਠਾ (jhūṭhā)."
             }
           ]
         },
@@ -211,8 +225,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the earlier answers."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier answers",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier answers]"
             },
             {
               "kind": "pause",
@@ -226,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "Check in that same order: ਝੂਠਾ, ਪੱਕਾ, ਬੇਹਾ, ਸੱਚਾ, ਕੱਚਾ. Reopen only a missed earlier quality word. These five distant retrievals do not turn the earlier short writing drills into an A1 mock."
+              "text": "Hear the answers in that same order: ਝੂਠਾ, ਪੱਕਾ, ਬੇਹਾ, ਸੱਚਾ, ਕੱਚਾ. Revisit only a missed earlier quality word. These five distant retrievals do not turn the earlier short writing drills into an A1 mock."
             }
           ]
         }

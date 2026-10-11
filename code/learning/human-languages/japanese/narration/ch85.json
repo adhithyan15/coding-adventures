@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C85-utsu-type",
-              "prompt": "Type the Japanese for 'to hit'.",
+              "prompt": "Say the Japanese for 'to hit'.",
               "assesses": [
                 "JA-LEX-C85-ACT85-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C85-suu-type",
-              "prompt": "Type the Japanese for 'to breathe in'.",
+              "prompt": "Say the Japanese for 'to breathe in'.",
               "assesses": [
                 "JA-LEX-C85-ACT85-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C85-maku-type",
-              "prompt": "Type the Japanese for 'to sow'.",
+              "prompt": "Say the Japanese for 'to sow'.",
               "assesses": [
                 "JA-LEX-C85-ACT85-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C85-taku-type",
-              "prompt": "Type the Japanese for 'to cook (rice)'.",
+              "prompt": "Say the Japanese for 'to cook (rice)'.",
               "assesses": [
                 "JA-LEX-C85-ACT85-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C85-haku-type",
-              "prompt": "Type the Japanese for 'to put on (shoes, trousers)'.",
+              "prompt": "Say the Japanese for 'to put on (shoes, trousers)'.",
               "assesses": [
                 "JA-LEX-C85-ACT85-05"
               ],

@@ -35,18 +35,16 @@ reviews_of: [MW-C35-ticket-four, MW-C23-karo, MW-C34-counter-offer]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-DIGIT-TICKET-FOUR-SKILL-01, MW-SCRIPT-KARO-01, MW-SCRIPT-COUNTER-OFFER-01] -->
 
-[PAUSE 22s] Recall the ticket payoff, then write the make-it word and an offer
-of twenty.
+[PAUSE 22s] Recall the ticket payoff.
+[YOU WRITE: the make-it word and an offer of twenty]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIGIT-FOUR-01, MW-SCRIPT-DIGIT-FIVE-01, MW-SCRIPT-DIGIT-SEVEN-01, MW-SCRIPT-DIGIT-EIGHT-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-SAAT-01, MW-SCRIPT-AATH-01, MW-SCRIPT-DIGIT-ZERO-01, MW-SCRIPT-DIGIT-ONE-01, MW-SCRIPT-DIGIT-TWO-01, MW-SCRIPT-DIGIT-THREE-01, MW-SCRIPT-DIGIT-SIX-01, MW-SCRIPT-DIGIT-NINE-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Write four single figures from spoken cues: **४**, **५**, **७**, **८**, given
-out of order, twice through.
+[YOU WRITE: four single figures from spoken cues, given out of order, twice through — **४**, **५**, **७**, **८**]
 
-Then write the word beside each: **चार**, **पांच**, **सात**, **आठ**. Repair
-only the missed figure and write its pair once more.
+[YOU WRITE: the word beside each — **चार**, **पांच**, **सात**, **आठ**; repair only the missed figure and write its pair once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIGIT-FIVE-01, MW-SCRIPT-DIGIT-EIGHT-01] -->

@@ -46,16 +46,16 @@ descendants of something Latin still says in **full**: **diēs Lūnae**, "the
 Each weekday is simply **diēs** ("day") plus a **planet-god's name in the
 genitive** ("of ___"):
 
-| Latin | literally | planet-god | worn down to (Spanish / French) |
-|---|---|---|---|
-| **diēs Lūnae** | day of the **Moon** | Luna | lunes / lundi |
-| **diēs Mārtis** | day of **Mars** | Mars | martes / mardi |
-| **diēs Mercuriī** | day of **Mercury** | Mercury | miércoles / mercredi |
-| **diēs Iovis** | day of **Jupiter** | Jupiter (*Iuppiter*) | jueves / jeudi |
-| **diēs Veneris** | day of **Venus** | Venus | viernes / vendredi |
+| Latin | literally (planet-god) | worn down to (Spanish / French) |
+|---|---|---|
+| **diēs Lūnae** | day of the **Moon** (Luna) | lunes / lundi |
+| **diēs Mārtis** | day of **Mars** | martes / mardi |
+| **diēs Mercuriī** | day of **Mercury** | miércoles / mercredi |
+| **diēs Iovis** | day of **Jupiter** (*Iuppiter*) | jueves / jeudi |
+| **diēs Veneris** | day of **Venus** | viernes / vendredi |
 
 Later languages kept only fragments of this phrase — a bare **‑s**, a bare
-**‑di** — but you're now looking at the whole thing, still standing.
+**‑di** — but you now have the whole thing, still standing.
 
 ## Why it's said this way: Be honest about where this system came from
 <!-- hl-knowledge: introduces=[LA-PRAGMATICS-DIES-LUNAE-VENERIS-02]; assesses=[] -->

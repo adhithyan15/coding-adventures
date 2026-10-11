@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C48-raji-type",
-              "prompt": "Type the Marwadi for 'happy, content'.",
+              "prompt": "Say the Marwadi for 'happy, content'.",
               "assesses": [
                 "MW-LEX-C48-HEALTH48-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C48-udas-type",
-              "prompt": "Type the Marwadi for 'sad'.",
+              "prompt": "Say the Marwadi for 'sad'.",
               "assesses": [
                 "MW-LEX-C48-HEALTH48-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C48-daktar-type",
-              "prompt": "Type the Marwadi for 'a doctor'.",
+              "prompt": "Say the Marwadi for 'a doctor'.",
               "assesses": [
                 "MW-LEX-C48-HEALTH48-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C48-beto-type",
-              "prompt": "Type the Marwadi for 'a son'.",
+              "prompt": "Say the Marwadi for 'a son'.",
               "assesses": [
                 "MW-LEX-C48-HEALTH48-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C48-beti-type",
-              "prompt": "Type the Marwadi for 'a daughter'.",
+              "prompt": "Say the Marwadi for 'a daughter'.",
               "assesses": [
                 "MW-LEX-C48-HEALTH48-05"
               ],

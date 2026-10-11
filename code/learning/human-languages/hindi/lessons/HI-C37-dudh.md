@@ -82,7 +82,8 @@ like cousins and are strangers.
 - [YOU SAY: what each one literally is — *dugdha*, "the milked"; *pānīya*, "the
   drinkable"]
 - [YOU SAY: *dūdh* and *dough* — and that they are not related]
-- [YOU RECALL: say *lenā*, then say *pūchnā*, then read **मदद करना**]
+- [YOU RECALL: say *lenā*, then say *pūchnā*]
+- [YOU READ: **मदद करना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01] -->

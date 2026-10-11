@@ -60,7 +60,8 @@ A word you had already met twice, now yours to say.
 - [YOU SAY: *siṁhaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *talam*, then *siṁhaḥ*]
-- [YOU RECALL: say *raviḥ*, then read **भित्तिः**]
+- [YOU RECALL: say *raviḥ*]
+- [YOU READ: **भित्तिः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01] -->

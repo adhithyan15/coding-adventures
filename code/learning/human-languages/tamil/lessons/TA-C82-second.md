@@ -35,9 +35,9 @@ reviews_of: [TA-C82-first, TA-W35-read-marradu, TA-C77-say, TA-W22-read-mele]
 
 [PAUSE 2s]
 - [YOU RECALL: say *mutal*, and say what word it came out of — **R1**]
-- [YOU RECALL: read **மற்றது** — **R2**]
+- [YOU READ: **மற்றது** — **R2**]
 - [YOU RECALL: say *sol* — **R3**]
-- [YOU RECALL: read **மேலே** — **R4**]
+- [YOU READ: **மேலே** — **R4**]
 
 ## You'll want to know: இரண்டாவது
 <!-- hl-knowledge: introduces=[TA-LEX-C82-ORDINAL-03]; assesses=[TA-LEX-NUMBERS-1-5-01] -->

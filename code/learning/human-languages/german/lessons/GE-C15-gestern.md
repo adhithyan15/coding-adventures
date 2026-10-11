@@ -54,7 +54,7 @@ Now put it to work with a participle you own:
 > *(word for word: I have yesterday German learned.)*
 
 Three things stacked between *habe* and *gelernt*, and the participle still
-waiting at the back. Read the English gloss aloud and hear how badly it fails as
+waiting at the back. Say the English gloss aloud and hear how badly it fails as
 an English sentence; that failure is the shape of German.
 
 ## Sounds you'll need

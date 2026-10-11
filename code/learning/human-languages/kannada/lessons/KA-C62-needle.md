@@ -56,7 +56,7 @@ Two.
 - [YOU SAY: *sūji*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nūlu*, then *sūji*, and say which one goes through the other]
-- [YOU RECALL: read **ಮೇಕೆ**]
+- [YOU READ: **ಮೇಕೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02] -->

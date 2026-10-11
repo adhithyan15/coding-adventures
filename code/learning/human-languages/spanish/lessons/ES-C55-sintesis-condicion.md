@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-SI-REAL-CONDITION, ES-GRAMMAR-SI-FUTURE-RESULT, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-SI-01, ES-GRAMMAR-DIACRITIC-ACCENT]
+  knowledge: [ES-GRAMMAR-SI-REAL-CONDITION, ES-GRAMMAR-SI-FUTURE-RESULT, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-SI-01, ES-GRAMMAR-DIACRITIC-ACCENT, ES-ETYMON-SI-LATIN]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, interpersonal]
 strands: [meaning-input, language-focus]
@@ -79,8 +79,10 @@ supposing is most of what anyone says all day.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SI-REAL-CONDITION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SI-REAL-CONDITION, ES-ETYMON-SI-LATIN] -->
 
 [PAUSE 3s] How many clauses does a condition need? (**Two**.) What new verb form
 did it cost you? (**None**.) And what is still missing? (A way to suppose
 something **untrue** — that comes next.)
+
+[PAUSE 2s] And *sí*, yes: how is it kin to this *si*? (Latin ***sīc*** — *sī* plus *-ce*, "if so," then *thus*, then **yes**.)

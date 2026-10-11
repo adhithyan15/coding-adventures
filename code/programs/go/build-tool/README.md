@@ -10,6 +10,51 @@ Changes to the exact shared language-registry discovery fixture schedule all
 eleven native build-tool consumers, including Haskell, on every platform; a
 source-reference check guards the selector map against new direct adopters.
 
+Changes to the flat shared `graph-*.json` and `diff-selection-*.json`
+conformance cases also schedule their eleven direct native readers on each
+platform. This fixture-only CI selection is bounded by the active language
+filter, fails if an applicable reader root is missing, and does not force a
+full build. Java, Kotlin, Dart, and OCaml readers are process-free domain
+cores; the selection does not imply full build-tool adapter parity.
+
+Changes to a flat shared `resolution-*.json` case schedule only its checked
+direct native readers. The twenty-six cases have different reader subsets
+across Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript;
+new cases must be classified before CI can plan them. This selection remains
+unforced, honors the language filter, and fails if an applicable native root
+is missing. The [CI-gate registry](../../../specs/ci-gate-registry.md)
+contains the exact case-to-reader relation.
+
+Changes to one of the eleven flat shared `hashing-cache-*.json` cases
+schedule its direct native test readers without forcing all build tools.
+C#, F#, and Lua read every case; Python reads missing, hit, and corrupt;
+Go, Perl, Ruby, and Swift read missing; TypeScript reads corrupt. Newly added
+flat cases require explicit classification before planning. The selector
+keeps ordinary changed packages, works on all three platform plans and
+single-language runs, and fails if an applicable reader root is missing.
+Some native tests assert only digest slices; this scheduling rule does not
+claim they replay the full neutral cache-decision oracle.
+
+Changes to a flat shared `validation-*.json` case schedule only its direct
+native validator readers alongside the neutral fixture gate. Nine checked
+orphan-crate/tracked-artifact cases have eleven non-Go readers, five
+package-root/Lua-Windows-sibling cases have a Go reader, and eight cases are
+neutral-only. All twenty-two case names are classified explicitly: a newly
+added flat case fails before planning until its reader relation is reviewed.
+Raw-path matching excludes nested, backslash, case-varied, and backup
+lookalikes; renamed/deleted source paths, ordinary package edits, three
+platforms, and single-language plans retain exact selection. The
+[CI-gate registry](../../../specs/ci-gate-registry.md) pins the relation.
+
+Changes to a flat shared `plan-*.json` case similarly schedule only its
+direct native reader. Python reads `replace-existing`, TypeScript reads
+`portable-package-path`, and the other three checked cases are neutral-only.
+An unclassified flat case fails before planning; exact raw-path matching,
+language filters, and missing-root checks keep the affected plan bounded.
+The change detector uses NUL-delimited Git paths, preserving non-ASCII names
+without quote-path escaping before fixture classification.
+The [CI-gate registry](../../../specs/ci-gate-registry.md) pins this relation.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.
@@ -258,6 +303,19 @@ dependency closure, while explicit single-language plans seed only their
 applicable reader. A missing reader fails before a partial plan is written;
 unforced plans expose all selected roots and their eleven canonical toolchain
 flags (C# and F# share `dotnet`). A source-reference test guards map drift.
+
+The flat `source-collection-*.json` cases have three separate native reader
+sets. The seven package-local cases seed C#, F#, Elixir, Go, Haskell, Lua,
+Perl, Python, Ruby, Rust, Swift, and TypeScript. The nine `repository-` cases
+seed only C#, F#, and Swift; the four `shared-input-` cases seed only C# and
+F#. C# and F# enumerate every checked case, while other fronts execute only
+their declared subfamilies or subsets. This exact relation schedules native
+BUILD tests for fixture-only additions, edits, deletions, and renamed old
+paths on detect and all three platform plans. It rejects nested and filename
+lookalikes, keeps ordinary changed roots, honors explicit language filters,
+and fails if an applicable native reader is absent before writing a plan.
+Focused tests verify unforced affected roots and toolchain flags as well as
+the direct test-source references; the neutral corpus gate remains separate.
 
 ## Metadata safety
 

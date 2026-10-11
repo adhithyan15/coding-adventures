@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C144-sundar-type",
-              "prompt": "Type the Marwadi for 'beautiful'.",
+              "prompt": "Say the Marwadi for 'beautiful'.",
               "assesses": [
                 "MW-LEX-C144-QUAL144-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C144-rupalo-type",
-              "prompt": "Type the Marwadi for 'good-looking'.",
+              "prompt": "Say the Marwadi for 'good-looking'.",
               "assesses": [
                 "MW-LEX-C144-QUAL144-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C144-javan-type",
-              "prompt": "Type the Marwadi for 'young'.",
+              "prompt": "Say the Marwadi for 'young'.",
               "assesses": [
                 "MW-LEX-C144-QUAL144-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C144-dubalo-type",
-              "prompt": "Type the Marwadi for 'thin, weak'.",
+              "prompt": "Say the Marwadi for 'thin, weak'.",
               "assesses": [
                 "MW-LEX-C144-QUAL144-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C144-thigno-type",
-              "prompt": "Type the Marwadi for 'short (of a person)'.",
+              "prompt": "Say the Marwadi for 'short (of a person)'.",
               "assesses": [
                 "MW-LEX-C144-QUAL144-05"
               ],

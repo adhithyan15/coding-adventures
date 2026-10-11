@@ -60,7 +60,8 @@ Three animals, and two different fates for a name.
 - [YOU SAY: *chāgaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vṛkaḥ*, then *chāgaḥ*]
-- [YOU RECALL: say *prakāśaḥ*, then read **सोपानम्**]
+- [YOU RECALL: say *prakāśaḥ*]
+- [YOU READ: **सोपानम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03] -->

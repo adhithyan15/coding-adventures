@@ -11,10 +11,10 @@
     "PA-S10-addak-dhadda"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "punjabi/narration/ch10.txt",
   "json": "punjabi/narration/ch10.json",
-  "textHash": "fnv1a64:c884cec34b2c8312",
-  "jsonHash": "fnv1a64:54b33a9bbf42f760",
+  "textHash": "fnv1a64:04ffe7d06f51c121",
+  "jsonHash": "fnv1a64:d21a2e1c8db1d68b",
   "findings": []
 }

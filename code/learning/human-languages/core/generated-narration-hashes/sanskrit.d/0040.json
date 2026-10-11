@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 40,
-  "sourceHash": "fnv1a64:9f8a465c2ef5c1ea",
+  "sourceHash": "fnv1a64:0512d19deff3d3e0",
   "lessonIds": [
     "SA-C40-curd",
     "SA-C40-sugar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch40.txt",
   "json": "sanskrit/narration/ch40.json",
-  "textHash": "fnv1a64:cae1946e95687682",
-  "jsonHash": "fnv1a64:592acaf386ca96f9",
+  "textHash": "fnv1a64:edda1f150e1a693f",
+  "jsonHash": "fnv1a64:937a34b6f91546a1",
   "findings": []
 }

@@ -34,7 +34,8 @@ reviews_of: [JA-C10-yukkuri, JA-C09-onegaishimasu, JA-W01-i, JA-W09-ku, JA-W03-s
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YUKKURI, JA-LEX-ONEGAI-SHIMASU, JA-SCRIPT-I-01, JA-SCRIPT-KU-01, JA-SCRIPT-SA-01] -->
 
-[PAUSE 15s] Say *yukkuri*. Retrieve *onegaishimasu*, then write **い, く, さ**.
+[PAUSE 15s] Say *yukkuri*. Retrieve *onegaishimasu*.
+[YOU WRITE: **い, く, さ**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-ITTE-KUDASAI]; assesses=[] -->

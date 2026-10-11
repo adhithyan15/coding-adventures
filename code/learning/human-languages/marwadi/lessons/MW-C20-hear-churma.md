@@ -37,8 +37,8 @@ reviews_of: [MW-R19-script-close, MW-C11-hawa, MW-C19-hear-baati]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-FIVE-FOUR-SKILL-01, MW-SCRIPT-HAWA-01, MW-LEX-BAATI-01] -->
 
-[PAUSE 20s] Recall the five-word food payoff, say hard wheat rolls, then write
-wind.
+[PAUSE 20s] Recall the five-word food payoff and say hard wheat rolls.
+[YOU WRITE: the word for wind]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-CHURMA-01]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 30,
-  "sourceHash": "fnv1a64:08eee813eb2066a2",
+  "sourceHash": "fnv1a64:e5aef750c1fdd7d6",
   "lessonIds": [
     "ES-C57-es-inicial"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch30.txt",
   "json": "spanish/narration/ch30.json",
-  "textHash": "fnv1a64:35da494ea912dee7",
-  "jsonHash": "fnv1a64:8839e56be074a92a",
+  "textHash": "fnv1a64:d9d6cf66994863a2",
+  "jsonHash": "fnv1a64:ed8672a2430d38dc",
   "findings": []
 }

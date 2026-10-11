@@ -47,7 +47,7 @@ Two signs and the shortest number in the whole count. The first is the **چ** of
 **چار**; the second is the two-eyed **ھ** that puts a puff of air on the
 consonant in front of it.
 
-Hand at the mouth: *chār* moves nothing, *chhe* pushes air out. The tongue does
+Listen for the breath: *chār* moves nothing, *chhe* pushes air out. The tongue does
 the same thing in both; the lungs do not.
 
 ## The word, taken apart — six, sex, ṣaṣ

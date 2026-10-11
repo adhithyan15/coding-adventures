@@ -46,8 +46,8 @@ Gujarati verb. The fourth verb takes a new letter with it.
 > **ખાવું** — *khāvũ* — **to eat**
 
 The new letter is **ખ**, *kha*: a *k* with a puff of breath straight after it.
-English makes that puff without noticing — hold a hand in front of your mouth and
-say *kite*. Gujarati notices, and gives the puffed and unpuffed sounds separate
+English makes that puff without noticing — say *kite* and listen for the breath
+after the *k*. Gujarati notices, and gives the puffed and unpuffed sounds separate
 letters, **ખ** and **ક**.
 
 Then the long-*ā* sign **ા**, and the ending you know: **ખા-** *khā-* plus

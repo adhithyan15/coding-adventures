@@ -57,10 +57,10 @@ reviews_of: [BN-C40-words, BN-C40-lines, BN-C17-ar, BN-C18-kintu]
 > হ্যাঁ, ভালো।
 > ধন্যবাদ।
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-sentences arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] Now read it again and find the three joining words.
+[PAUSE 3s] [YOU READ: the passage again and find the three joining words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C17-AR-01, BN-LEX-C17-BA-01, BN-LEX-C18-KINTU-01, BN-LEX-C14-LAL-01, BN-LEX-C14-NIL-01] -->

@@ -43,8 +43,8 @@ reviews_of: [ES-C16-ver, ES-C61-quien]
 
 | | |
 |---|---|
-| *Veo la casa.* | I see the house |
-| *Veo* ***a*** *María.* | I see María |
+| *Veo la casa.* | "I see the house" |
+| *Veo* ***a*** *María.* | "I see María" |
 
 [PAUSE 2s] Nothing in the English moved. In the Spanish, a preposition appeared
 out of nowhere — and it is not optional. *Veo María* is wrong.

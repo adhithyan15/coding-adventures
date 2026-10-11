@@ -60,7 +60,7 @@ Two garments, and the same doubled consonant in both.
 - [YOU SAY: *vēṭṭi*]
 - [YOU SAY: *saṭṭai*, then *vēṭṭi* — and say which one was never cut]
 - [YOU RECALL: say *iḍadu*, then say *saṭṭai*, then say *vēṭṭi*]
-- [YOU RECALL: read **உள்ளே**]
+- [YOU READ: **உள்ளே**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01, TA-LEX-C67-WEAR-02] -->

@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO, ES-LEX-OTRO, ES-GRAMMAR-DOUBLE-NEGATIVE, ES-LEX-NI]
+  knowledge: [ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO, ES-LEX-OTRO, ES-GRAMMAR-DOUBLE-NEGATIVE, ES-LEX-NI, ES-ETYMON-NI-NEC, ES-ETYMON-OTRO-ALTER]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [language-focus, fluency]
@@ -38,7 +38,7 @@ reviews_of: [ES-C65-ahi-alli, ES-C67-uno-otro, ES-C61-ni]
 (*Allí*.)
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO, ES-LEX-OTRO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO, ES-LEX-OTRO, ES-ETYMON-OTRO-ALTER] -->
 
 Here is a whole conversation, and it uses everything in this review.
 
@@ -56,7 +56,7 @@ Latin *alter*, the other of **two**. It always implies a partner, which is why
 the pattern splits a pair across the two halves of a sentence.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-NEGATIVE, ES-LEX-NI, ES-LEX-OTRO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-NEGATIVE, ES-LEX-NI, ES-LEX-OTRO, ES-ETYMON-NI-NEC] -->
 
 **By refusing both.** *Ni uno ni otro.*
 

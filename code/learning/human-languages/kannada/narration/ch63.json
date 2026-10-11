@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Hunger, Sleep and Health",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a9b525cb5c0e5796",
+  "sourceHash": "fnv1a64:c73de9c09ae19b1a",
   "lessons": [
     {
       "id": "KA-C63-hunger",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1cb3ce2e74ee43a",
+      "sourceHash": "fnv1a64:999a4e18ea8a977a",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +244,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ತುಪ್ಪ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ತುಪ್ಪ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ತುಪ್ಪ**]"
+              "source": "[YOU READ: **ತುಪ್ಪ**]"
             }
           ]
         },
@@ -416,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b918fb9565c07bd4",
+      "sourceHash": "fnv1a64:e5658ee35edf85ee",
       "notice": null,
       "blocks": [
         {
@@ -506,12 +506,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬೆಲ್ಲ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬೆಲ್ಲ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬೆಲ್ಲ**]"
+              "source": "[YOU READ: **ಬೆಲ್ಲ**]"
             }
           ]
         },

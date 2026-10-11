@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 172,
+  "title": "Return to the Three Familiar Form Lines",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:5996901c1e2b8d79",
+  "lessons": [
+    {
+      "id": "PA-R172-form-labels-oral-bridge",
+      "sequence": 9145,
+      "title": "Hear three old labels",
+      "headword": "ਉਮਰ · ਫ਼ੋਨ · ਤਾਰੀਖ਼",
+      "romanization": "umar · fon · taarikh",
+      "gloss": "hear the three familiar form labels before their stopped-only return",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36a1df0d4ebd0a12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a short listening bridge, not a form task or a scored mock. The next lesson waits until you have stopped."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਉਮਰ (umar), age. Say it once after the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਫ਼ੋਨ (fon), phone, then ਤਾਰੀਖ਼ (taarikh), date. Say each familiar word once after its model. No personal details are needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the same three old words together: ਉਮਰ, ਫ਼ੋਨ, ਤਾਰੀਖ਼. Say them once with the model. The next lesson returns to their form lines only after you have stopped."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R172-form-order-again",
+      "sequence": 9150,
+      "title": "Three old form labels in their old order",
+      "headword": "ਉਮਰ: · ਫ਼ੋਨ: · ਤਾਰੀਖ਼:",
+      "romanization": "three familiar form labels",
+      "gloss": "return to the already-taught age, phone, date line order",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:d64f093218305987",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop before marking the page. This is a short return to an old fictional form, not a request for personal information or a scored A1 mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The familiar model stays visible. The first line is ਉਮਰ: (age), the second ਫ਼ੋਨ: (phone), and the third ਤਾਰੀਖ਼: (date). Point to the three lines once. There is no new label or value here."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਮਰ: ______ ਫ਼ੋਨ: ______ ਤਾਰੀਖ਼: ______."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model visible. Copy only those three labels onto three empty lines, in the same order. Leave every value blank. Check the first label before copying the second, then check the second before copying the third. If one line is misplaced, move that label only; do not invent a value."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model for five seconds. Point to where age, phone, and date belong on three empty lines; then uncover and compare. The visible model remains available for another gentle try. This is not independent timed writing."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

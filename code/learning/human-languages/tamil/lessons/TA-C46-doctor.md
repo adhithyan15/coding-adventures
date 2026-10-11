@@ -56,7 +56,8 @@ Three, and the third one you hope to need rarely.
 - [YOU SAY: *maruttuvar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māṇavaṉ*, then *maruttuvar*, and hear the ending change]
-- [YOU RECALL: say *viḷakku*, then read **மூக்கு**]
+- [YOU RECALL: say *viḷakku*]
+- [YOU READ: **மூக்கு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03] -->

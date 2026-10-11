@@ -59,7 +59,8 @@ The fourth of five, and the first this chapter has had to hedge on.
 - [YOU SAY: *bādal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bādal*, and let the doubt sit there]
-- [YOU RECALL: read **पीठ**, then say *chiṛiyā*]
+- [YOU READ: **पीठ**]
+- [YOU RECALL: say *chiṛiyā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04] -->

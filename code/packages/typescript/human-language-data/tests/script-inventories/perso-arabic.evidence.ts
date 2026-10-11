@@ -205,5 +205,30 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ط") ?? 0).toBe(0);
     expect(persianMissing.has("گ")).toBe(false);
     expect(affected.get("گ") ?? 0).toBe(0);
+    // The Persian digits ۰-۹ have rows of their own (perso-arabic.d/digits/),
+    // each one stroke, cited to POH-Db's native writers (AGPL-3.0, so counts
+    // and shares only). A digit row covers its glyph in a headword.
+    const poh =
+      "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup";
+    const persianDigitMovements: Record<string, number> = {
+      "۰": 1, "۱": 1, "۲": 3, "۳": 3, "۴": 4, "۵": 3, "۶": 3, "۷": 2, "۸": 2, "۹": 2,
+    };
+    const persianDigits = scripts["perso-arabic"]!.digits ?? [];
+    expect(persianDigits.map((digit) => digit.glyph)).toEqual(Object.keys(persianDigitMovements));
+    for (const digit of persianDigits) {
+      const glyph = digit.glyph;
+      expect(digit.role, glyph).toBe("digit");
+      expect(digit.penLifts, glyph).toBe(0);
+      expect(digit.strokeOrder, glyph).toHaveLength(persianDigitMovements[glyph]!);
+      expect(digit.strokeOrder.slice(1).every((s) => s.startsWith("without lifting, ")), glyph).toBe(true);
+      expect(digit.strokeOrderSource?.url, glyph).toBe(poh);
+      expect(digit.strokeOrderSource?.citation, glyph).toMatch(
+        new RegExp(`^POH-Db, Persian Online Handwriting Database .*AGPL-3\\.0, facts only\\): \\d+ aligned samples of ${glyph} from \\d+ native writers; one stroke in \\d+ \\((99|100)%\\)`),
+      );
+      expect(digit.strokeOrderSource?.variation, glyph).toMatch(
+        /mouse writepads were left out.*only these counts and shares are taken; no coordinate or trace is copied.*Noto Naskh Arabic/,
+      );
+      expect(persianMissing.has(glyph), glyph).toBe(false);
+    }
   },
 };

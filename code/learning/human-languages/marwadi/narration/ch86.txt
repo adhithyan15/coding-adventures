@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तीस (tīs) mean? ("Thirty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'thirty'.
+Say the Marwadi for 'thirty'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चाळीस (chāḷīs) mean? ("Forty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'forty'.
+Say the Marwadi for 'forty'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पचास (pachās) mean? ("Fifty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'fifty'.
+Say the Marwadi for 'fifty'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does साठ (sāṭh) mean? ("Sixty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sixty'.
+Say the Marwadi for 'sixty'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सित्तर (sittar) mean? ("Seventy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'seventy'.
+Say the Marwadi for 'seventy'.

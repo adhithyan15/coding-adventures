@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say I want neither of two things.",
     "assesses": [
-      "ES-LEX-NI"
+      "ES-LEX-NI",
+      "ES-GRAMMAR-DOUBLE-NEGATIVE",
+      "ES-ETYMON-NI-NEC"
     ]
   }
 }

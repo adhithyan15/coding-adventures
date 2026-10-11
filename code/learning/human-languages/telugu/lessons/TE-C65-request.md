@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *manavi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *manavi*, then *dayacēsi*, and say which one is the whole request]
-- [YOU RECALL: say *daggu*, then read **అయితే** and say what it means]
+- [YOU RECALL: say *daggu*]
+- [YOU READ: **అయితే**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03] -->

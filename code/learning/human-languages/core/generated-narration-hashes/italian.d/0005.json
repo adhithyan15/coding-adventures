@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 5,
-  "sourceHash": "fnv1a64:76e363fc8a0b2975",
+  "sourceHash": "fnv1a64:70ef847043ae30e9",
   "lessonIds": [
     "IT-C05-parlare",
     "IT-C05-abitare",
@@ -10,11 +10,11 @@
     "IT-C05-practice",
     "IT-C05-second-pass-first-conversation"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 2,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "italian/narration/ch05.txt",
   "json": "italian/narration/ch05.json",
-  "textHash": "fnv1a64:4435074ec9565c2c",
-  "jsonHash": "fnv1a64:242c4842d1dbba5f",
+  "textHash": "fnv1a64:7ddf670077c62746",
+  "jsonHash": "fnv1a64:c5e023f89ad40f68",
   "findings": []
 }

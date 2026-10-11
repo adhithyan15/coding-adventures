@@ -58,7 +58,8 @@ The first thing in the kitchen.
 - [YOU SAY: *perugu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *perugu*, then *pālu*, and say which one comes first]
-- [YOU RECALL: say *gāli*, then read **గేదె** and say what it means]
+- [YOU RECALL: say *gāli*]
+- [YOU READ: **గేదె**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01] -->

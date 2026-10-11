@@ -37,17 +37,18 @@ reviews_of: [TE-C150-vangmayam, TE-S06-letter-ra, TE-S08-vowel-sign-i]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C150-LITERATURE-01, TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-08] -->
 
-[PAUSE 2s] What did **వాఙ్మయం** name? ("Literature.") Now find the familiar
-**రి** at the end of today's word: **ర** carries the short **ి** sign. Picture
-a narrow stream moving down a hillside. This lesson gives that stream a name
-before it asks you to study the uncommon first letter.
+[PAUSE 2s] What did **వాఙ్మయం** name? ("Literature.")
+[YOU FIND: the familiar **రి** at the end of today's word — **ర** carries the short **ి** sign]
+
+Picture a narrow stream moving down a hillside. This lesson gives that stream a
+name before it asks you to study the uncommon first letter.
 
 ## You'll want to know: ఝరి
 <!-- hl-knowledge: introduces=[TE-LEX-C152-STREAM-01]; assesses=[] -->
 
 **ఝరి** — *jhari* — "a stream" or "mountain stream".
 
-Say it in two gentle pieces: *jha · ri*. Read the word as **ఝ-రి**. The first
+Say it in two gentle pieces: *jha · ri*. Say the word as **ఝ-రి**. The first
 sound is a breathy **jh**; the second piece is the familiar **రి**.
 
 **ఝరి** is an authentic learned or literary word shared with Sanskrit. It is

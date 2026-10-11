@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にわ (niwa) mean? ("A garden".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a garden'.
+Say the Japanese for 'a garden'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おふろ (ofuro) mean? ("A bath".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bath'.
+Say the Japanese for 'a bath'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たたみ mean? ("A tatami mat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a tatami mat'.
+Say the Japanese for 'a tatami mat'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たな (tana) mean? ("A shelf".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a shelf'.
+Say the Japanese for 'a shelf'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はこ (hako) mean? ("A box".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a box'.
+Say the Japanese for 'a box'.

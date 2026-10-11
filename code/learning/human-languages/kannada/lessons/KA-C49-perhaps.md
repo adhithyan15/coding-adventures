@@ -56,7 +56,7 @@ Four, and the fourth one takes back what the third one promised.
 - [YOU SAY: *bahuśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khaṇḍita*, then *bahuśaḥ*, and hear the certainty drain out]
-- [YOU RECALL: read **ಬೆರಳು**]
+- [YOU READ: **ಬೆರಳು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04] -->

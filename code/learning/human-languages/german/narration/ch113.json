@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Shower, Bathtub, Shelf, Curtain, Cushion",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9c0f94fc3f1c92fd",
+  "sourceHash": "fnv1a64:b6dc37dbbd3b9ad3",
   "lessons": [
     {
       "id": "GE-C113-dusche",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2401ef689d343365",
+      "sourceHash": "fnv1a64:bd79407eefc8ad0d",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the two sentences aloud, as one run: Das Hotel ist gegenüber. Das Kino ist hinten."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two sentences aloud, as one run — Das Hotel ist gegenüber. Das Kino ist hinten.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two sentences aloud, as one run — *Das Hotel ist gegenüber. Das Kino ist hinten.*]"
             }
           ]
         },

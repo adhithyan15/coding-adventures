@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "More Good Manners",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:25d1eec4c2f6e972",
+  "sourceHash": "fnv1a64:54f4e89402224f52",
   "lessons": [
     {
       "id": "KA-C65-request",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf7cda4972ce758a",
+      "sourceHash": "fnv1a64:00947e328025a53a",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ನಿದ್ದೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ನಿದ್ದೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ನಿದ್ದೆ**]"
+              "source": "[YOU READ: **ನಿದ್ದೆ**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:548ef200ef93b14f",
+      "sourceHash": "fnv1a64:b4125884e74fda2f",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ನೋವು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ನೋವು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ನೋವು**]"
+              "source": "[YOU READ: **ನೋವು**]"
             }
           ]
         },

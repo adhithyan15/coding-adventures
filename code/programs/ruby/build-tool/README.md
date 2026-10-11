@@ -16,8 +16,19 @@ This is a standalone program (not a publishable gem) that orchestrates building 
 | `cache` | JSON cache file for incremental builds |
 | `executor` | Parallel execution via threads + Open3 |
 | `reporter` | Human-readable build report formatting |
+| `graph_diff` | Pure canonical graph levels and bounded diff-selection decisions |
 | `toolchain_detection` | Pure bounded extra-CI toolchain snapshot decisions |
 | `validator` | Pure orphan-crate and tracked-artifact snapshot policy validation |
+
+The `BuildTool::GraphDiff` value API accepts already-materialized package,
+edge, changed-path, and optional repository-boundary evidence. It performs no
+Git, filesystem, or process operation. The eight graph and twelve
+diff-selection fixtures in `specs/fixtures/build-tool-v1` exercise the native
+core, including shared-input consumers and the operation-wide 50-million
+Unicode-scalar glob-work ceiling. Validation errors raise a stable
+`ContractError`; cycle and selection failures return empty results with stable
+error codes. The legacy `build.rb` CLI still owns checkout discovery and Git
+execution; this pure core does not claim to replace that adapter yet.
 
 ## Usage
 

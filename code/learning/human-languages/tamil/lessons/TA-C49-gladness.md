@@ -56,7 +56,8 @@ Three, and the third one is an answer as much as a feeling.
 - [YOU SAY: *santōṣam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mariyādai*, then *santōṣam*, and let the second one lift]
-- [YOU RECALL: say *niccayamāka*, then read **பயணம்**]
+- [YOU RECALL: say *niccayamāka*]
+- [YOU READ: **பயணம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03] -->

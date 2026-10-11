@@ -58,7 +58,7 @@ Four. Now, the day after tomorrow, a journey, setting out.
 - [YOU SAY: *puṟappeṭuka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puṟappeṭuka*, then *jōli ceyyuka*, two verbs built the same way]
-- [YOU RECALL: read **കർഷകൻ**]
+- [YOU READ: **കർഷകൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04] -->

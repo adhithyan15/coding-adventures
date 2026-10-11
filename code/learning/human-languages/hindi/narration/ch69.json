@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Where a Clause Ends, and What Goes Inside One",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8ecb36039601d5e6",
+  "sourceHash": "fnv1a64:784797af319ac925",
   "lessons": [
     {
       "id": "HI-C69-verb-last",
@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C69-verb-last-r1",
               "prompt": "Name the last word of each of the three sentences, and say what all three have in common.",
               "assesses": [
@@ -252,6 +253,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C69-ki-r1",
               "prompt": "Say the tea is fine, then say that you think the tea is fine.",
               "assesses": [
@@ -305,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:818f9d70ac5d7d89",
+      "sourceHash": "fnv1a64:749a60018335aa8d",
       "notice": null,
       "blocks": [
         {
@@ -321,7 +323,7 @@
             },
             {
               "kind": "speech",
-              "text": "A joined Hindi sentence has two verbs in it, and each one is the last word of its own half. Say the lekin sentence and point at both."
+              "text": "A joined Hindi sentence has two verbs in it, and each one is the last word of its own half. Say the lekin sentence and name both."
             }
           ]
         },
@@ -366,6 +368,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R69-reported-run",
               "prompt": "Say that you think the tea is fine, then name the last word of each of its two halves.",
               "assesses": [

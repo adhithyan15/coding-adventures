@@ -33,7 +33,9 @@ reviews_of: [TA-W35-read-marradu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C80-OTHER-02, TA-SCRIPT-READ-MARRADU-01] -->
 
-[PAUSE 2s] Read **மற்றது**. Then say: one here, the other there.
+[PAUSE 2s] [YOU READ: **மற்றது**]
+
+Then say: one here, the other there.
 
 ## You'll want to know: the question the shop is for
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C80-PRICE-03]; assesses=[] -->
@@ -69,8 +71,12 @@ A whole shop exchange: choose one of two, ask the price, question the answer.
 - [YOU ASK: *vilai evvaḷavu?*]
 - [YOU ASK: *idu evvaḷavu?*]
 - [YOU PUSH BACK: *vilai kuṟaivā?*]
-- [YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*, then read **மற்றது**, then ask the price]
-- [YOU RETURN TO: say *mūḍu*, say *āṉāl* and read **எப்போது** — three distances back — then set two of them against each other, one and the other]
+- [YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*]
+- [YOU READ: **மற்றது**]
+- [YOU RECALL: ask the price]
+- [YOU RETURN TO: say *mūḍu* and say *āṉāl* — three distances back]
+- [YOU READ: **எப்போது**]
+- [YOU RETURN TO: set two of them against each other, one and the other]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C80-OTHER-01, TA-GRAMMAR-C80-OTHER-02, TA-SCRIPT-READ-MARRADU-01, TA-PRAGMATICS-C80-PRICE-03, TA-LEX-C65-DOING-05, TA-LEX-C76-JOIN-01, TA-SCRIPT-READ-EPPOTHU-01] -->

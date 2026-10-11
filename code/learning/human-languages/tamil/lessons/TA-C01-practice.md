@@ -13,7 +13,7 @@ sounds: []
 roots: []
 reviews_of: [TA-C01-answering, TA-C01-vanakkam-family-register, TA-C01-nandri-family-register, TA-C01-vanakkam, TA-C01-nandri, TA-C01-aam, TA-C01-illai, TA-C01-sari, TA-W00-va-guided-copy]
 duration:
-  max_seconds: 240
+  max_seconds: 270
 requires:
   knowledge: [TA-PHONO-VANAKKAM-01, TA-ETYMON-VANAKKAM-02, TA-PRAGMATIC-VANAKKAM-03, TA-SCRIPT-FIRST-VISIBLE-SHAPE-00, TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01, TA-LEX-C01-AAM-01, TA-LEX-C01-ILLAI-01, TA-LEX-C01-NANDRI-01, TA-ROOT-C01-NANDRI-FAMILY-REGISTER-01, TA-LEX-C01-SARI-01, TA-LEX-C01-ANSWERING-01]
 introduces:
@@ -49,28 +49,32 @@ Say each one before you check the meaning:
 | *illai* | no / there isn't |
 | *sari* | okay / correct |
 
-These are five spoken words, so the recap gives you the sound and nothing to
-decode. One shape is the exception, because it is the one your hand has already
-met: **வணக்கம்**, whose opening **வ** you copied. Keep that model visible when
-you copy it again below.
+These are sounds to say, not text to decode. The one shape your hand has met
+is **வ**, the opening of **வணக்கம்**; the copy below keeps that model in view.
+The letters arrive later, one at a time, each spelling a word you already say.
 
-The other four are printed in Tamil in their own lessons, where you were shown
-them and asked to read nothing. Formal letter construction still begins later,
-one letter at a time, always spelling a word you already say.
+## Guided Practice — what the words carry
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-VANAKKAM-02, TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01, TA-LEX-C01-NANDRI-01, TA-ROOT-C01-NANDRI-FAMILY-REGISTER-01, TA-LEX-C01-AAM-01, TA-LEX-C01-ANSWERING-01] -->
+
+Each word brought a story or a habit with it. Answer aloud first.
+
+- *Vaṇakkam* comes from which verb? (*Vaṇaṅku*, **"to bow"** — native Tamil,
+  where the neighbours borrowed Sanskrit ***namas-***.)
+- How do you thank someone strongly? (***Romba naṉṟi.***) Which sister shares
+  *naṉṟi*? (**Malayalam**, *nandi*.) Among close family it can sound **formal**:
+  gratitude there may be assumed.
+- An emphatic yes? (***Āmām.***) Besides *ām*, a natural yes **echoes the
+  verb**: asked "did you come", *vandēṉ*, "I came."
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Tamil does not like a blunt goodbye. A bare "I am leaving" sounds final in
-Tamil, even ill-omened, so the everyday farewell is built instead on going
-**and coming back** — a promise of return rather than an exit. That whole
-exchange is a chapter of its own: it needs two verbs you have not met, and you
-will learn them one at a time.
+Tamil avoids a blunt goodbye: a bare "I am leaving" sounds final, even
+ill-omened, so the everyday farewell promises **a return** instead. That exchange
+needs two verbs you have not met, so it gets a chapter of its own.
 
-Which is why **வணக்கம்** is the farewell you already own. It parts as well as
-it meets, it carries the same respect in both directions, and it commits you to
-nothing you cannot yet say. Use it when you leave, and the departure exchange
-will be waiting when its verbs are.
+Until then, **வணக்கம்** is your farewell. It parts as well as it meets, with the
+same respect both ways.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-PRACTICE-01, TA-ETYMON-VANAKKAM-02, TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01, TA-LEX-C01-NANDRI-01, TA-LEX-C01-ANSWERING-01] -->
@@ -83,8 +87,8 @@ will be waiting when its verbs are.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-PRACTICE-01, TA-PRAGMATIC-VANAKKAM-03, TA-LEX-C01-AAM-01, TA-ROOT-C01-NANDRI-FAMILY-REGISTER-01] -->
 
-[PAUSE 3s] Say all five words aloud. Which one works both to meet someone and
-to part from them? (**வணக்கம்**.) Compare
-your one copied **வ** with the model. Repair one curve if you want, then stop.
+[PAUSE 3s] Say all five words aloud. Which one works both to meet someone and to
+part from them? (**வணக்கம்**.)
+[YOU CHECK: your one copied **வ** against the model — repair one curve if you want, then stop]
 
 Next chapter starts introducing yourself, one short possession form at a time.

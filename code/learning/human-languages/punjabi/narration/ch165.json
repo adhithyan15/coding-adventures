@@ -1,0 +1,449 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 165,
+  "title": "Return to Living, Spending, Saving, and Sowing",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:83b68fc3499fb01d",
+  "lessons": [
+    {
+      "id": "PA-R165-live-again",
+      "sequence": 8990,
+      "title": "An old word for living",
+      "headword": "ਜੀਉਣਾ",
+      "romanization": "jīuṇā",
+      "gloss": "to live, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76ff23b24213470a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear one familiar meaning, pause, and retrieve its Punjabi word before the model. This is a gentle return, not a new word or a scored mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to live."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਜੀਉਣਾ (jīuṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਜੀਉਣਾ (jīuṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to live. Then hear to live again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਜੀਉਣਾ (jīuṇā) before the model. Only this old word is needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to live."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਜੀਉਣਾ (jīuṇā). Listen and retry once if it does not come back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R165-spend-again",
+      "sequence": 9000,
+      "title": "An old word for spending",
+      "headword": "ਖ਼ਰਚਣਾ",
+      "romanization": "kharcṇā",
+      "gloss": "to spend, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae278b7849c0a494",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Retrieve one familiar action by itself. No new meaning, sentence, or scored writing is required."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to spend."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਖ਼ਰਚਣਾ (kharcṇā) before the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਖ਼ਰਚਣਾ (kharcṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to spend. Now hear to spend."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਖ਼ਰਚਣਾ (kharcṇā). One old word is enough."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to spend once more."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਖ਼ਰਚਣਾ (kharcṇā). If needed, listen to the model and try again once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R165-save-again",
+      "sequence": 9010,
+      "title": "An old word for saving",
+      "headword": "ਬਚਾਉਣਾ",
+      "romanization": "bacāuṇā",
+      "gloss": "to save, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd86ac926d95a1fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after a familiar meaning and retrieve the taught Punjabi word. There is no new sense or scored assessment here."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to save."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਬਚਾਉਣਾ (bacāuṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਬਚਾਉਣਾ (bacāuṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to save. Then hear to save again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਬਚਾਉਣਾ (bacāuṇā) before the model. Keep to this one old meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to save."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਬਚਾਉਣਾ (bacāuṇā). Listen and retry once if needed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R165-sow-again",
+      "sequence": 9020,
+      "title": "An old word for sowing",
+      "headword": "ਬੀਜਣਾ",
+      "romanization": "bījṇā",
+      "gloss": "to sow, then a gentle mix of four familiar actions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ca0f0b2c2114813",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve to sow alone. Then hear four familiar actions in a small shuffled mix. Pause before each model. This is not a scored mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to sow."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਬੀਜਣਾ (bījṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after each familiar meaning, then hear its model:"
+            },
+            {
+              "kind": "speech",
+              "text": "to save —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਬਚਾਉਣਾ (bacāuṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to live —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੀਉਣਾ (jīuṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to sow —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੀਜਣਾ (bījṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to spend —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਖ਼ਰਚਣਾ (kharcṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the order of these old words has changed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to sow, to spend, to live, then to save. Pause after each cue and recall its Punjabi word before the model: ਬੀਜਣਾ (bījṇā), ਖ਼ਰਚਣਾ (kharcṇā), ਜੀਉਣਾ (jīuṇā), ਬਚਾਉਣਾ (bacāuṇā). Revisit only the old word you missed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

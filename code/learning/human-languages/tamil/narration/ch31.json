@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:20a75ec52e7beed9",
+  "sourceHash": "fnv1a64:ef5e0d7fb75b0bb9",
   "lessons": [
     {
       "id": "TA-C31-matiya-vanakkam",
@@ -117,7 +117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3bfbc73f95cbb9",
+      "sourceHash": "fnv1a64:9a3daa44f72ea4b0",
       "notice": null,
       "blocks": [
         {
@@ -239,20 +239,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:23241669861ea8d8",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: the ு sign",
-          "Script you'll notice: build the word"
+          "Script you'll notice: build the word",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ு sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: the ு sign, Script you'll notice: build the word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -357,7 +361,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ரு — then இருக்கிறீர்கள் (irukkiṟīrgaḷ)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ரு** — then **இருக்கிறீர்கள்**]"
@@ -366,7 +370,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the whole question — நீங்கள் எப்படி இருக்கிறீர்கள் (irukkiṟīrgaḷ)?",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the whole question — **நீங்கள் எப்படி இருக்கிறீர்கள்?**]"

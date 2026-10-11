@@ -37,10 +37,10 @@ reviews_of: [MW-C37-baara, MW-W37-i, MW-W35-digits-three-four-five, MW-C24-hear-
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAARA-01, MW-SCRIPT-I-INDEPENDENT-01, MW-SCRIPT-DIGIT-THREE-01, MW-SCRIPT-DIGIT-FOUR-01, MW-SCRIPT-DIGIT-FIVE-01, MW-LEX-AAKHRI-01, MW-PERFORMANCE-NUMBERED-EXCHANGE-FOUR-SKILL-01] -->
 
 [PAUSE 22s]
-- [YOU RECALL: write **बारा** — **R1**]
-- [YOU RECALL: write **इ**, five lessons back — **R2**]
+- [YOU WRITE: **बारा** from memory — **R1**]
+- [YOU WRITE: **इ** from memory, five lessons back — **R2**]
 - [YOU RECALL: run the six-turn numbered exchange once — **R2**]
-- [YOU RECALL: write the figures **३**, **४** and **५** — **R3**]
+- [YOU WRITE: the figures **३**, **४** and **५** from memory — **R3**]
 - [YOU RECALL: say *ākhrī* — **R4**]
 
 ## You'll want to know

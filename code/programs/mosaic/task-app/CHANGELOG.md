@@ -4,8 +4,118 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.1` accumulate here until the next version is
+Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
+
+## [0.5.2] - 2026-10-11
+
+### Fixed — Flutter leaves preserve bounded fill widths (#17251)
+
+Flutter now lowers `width: 100%` on text, input, and button leaves when the
+parent supplies a finite horizontal constraint. Bounded columns use an
+infinite-width `SizedBox` that resolves against the parent, while direct row
+children and matching conditional branches use exactly one parent-owned
+`Expanded`. Fresh strict generation retires all 16 TaskApp fill-width
+omissions and reduces Flutter's measured style inventory from 107 to 91. The
+seven calendar weekday `14.2857%` widths remain explicit debt.
+
+### Fixed — Flutter text and button alignment (#17237)
+
+Flutter now lowers supported `text-align` declarations on `Text` and
+`HostButton` leaves through native text and button alignment APIs. Calendar
+headings and today's day number retain their authored centering, while project,
+notes, and task buttons retain their authored left alignment. Fresh strict
+generation retires all 14 alignment omissions and reduces Flutter's measured
+style inventory from 121 to 107. Unsupported values remain reported debt.
+
+### Fixed — Flutter surfaces preserve authored corner radii (#17224)
+
+Flutter now lowers supported fixed `border-radius` declarations through native
+decorations, clips, and input borders across TaskApp's draggable cards,
+calendar events, text chips, inputs, and timeline grid. The rounded text
+surface also paints its authored background in the same decoration. Fresh
+strict generation retires all 15 radius omissions and eight coupled background
+omissions, reducing Flutter's measured style inventory from 144 to 121.
+Relative, negative, and otherwise unsafe radius values remain explicit debt.
+
+### Fixed — Qt calendar events preserve text styling and elision (#17146)
+
+Qt `HostDraggable` now passes supported authored color and font size to its
+descendant labels and lowers the calendar event's complete
+hidden/ellipsis/nowrap trio to native surface clipping and single-line right
+elision. Fresh strict generation retires all five remaining calendar-event
+omissions and reduces the honest Qt style inventory from 113 to 108; partial
+or unsupported values remain reported debt.
+
+### Fixed — Qt draggable cards preserve their authored surfaces (#17128)
+
+Qt `HostDraggable` now lowers TaskApp's card fill, padding, internal gap,
+uniform border, overdue left accent, radius, and grab cursor on the same native
+surface that owns drag and elevation behavior. Fresh strict generation retires
+20 of the 22 board-card omissions surfaced by #17126; the two raw CSS
+`box-shadow` values remain explicit debt because native shadowing comes from
+the separate `elevation` token. The generic draggable-surface and per-edge
+reporting fixes retire 36 previously omitted declarations while exposing five
+existing calendar-event text omissions tracked by #17146, reducing the honest
+Qt inventory from 144 to 113.
+
+### Fixed — Qt elevation effects leave the style-debt inventory (#17126)
+
+Qt's existing `MultiEffect` lowering now records supported Mosaic elevation
+tokens as consumed. Fresh strict generation retires eight false-positive
+`elevation` allowances without hiding raw CSS shadows or unsupported tokens.
+That read also surfaces 22 genuine, pre-existing `HostDraggable` board-card
+style omissions, so the honest Qt inventory is 144; #17128 tracks their
+native lowering.
+
+### Fixed — solid native edge borders leave degradation reports (#17098)
+
+All five native emitters now treat `border-{top,right,bottom,left}-style:
+solid` as consumed only when the matching positive-width edge is actually
+drawn. Fresh strict generation retires 70 false-positive allowances, reducing
+the measured style debt to 38 XAML, 83 SwiftUI, 50 Compose, 130 Qt, and 144
+Flutter drops. Dashed, suppressing, invalid-width, and style-only declarations
+remain explicit degradations.
+
+### Fixed — Qt and Flutter preserve authored font weights (#17073)
+
+Qt layout containers now pass supported `font-weight` values to descendant
+text without imposing table-cell anchors, and Flutter carries them through
+container `DefaultTextStyle` and button-label `TextStyle`. Fresh strict
+generation retires all 18 font-weight allowances, reducing the measured style
+debt from 140 to 138 on Qt and from 174 to 158 on Flutter. Explicit `normal`
+weights remain normal, and unsupported values stay visible as degradations.
+
+### Fixed — native text preserves authored uppercase transforms (#17052)
+
+XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's supported
+`text-transform: uppercase` labels through their native text APIs. Fresh strict
+generation retires all 55 `text-transform` allowances and reduces the
+style-drop inventories to 54 XAML, 99 SwiftUI, 66 Compose, 140 Qt, and 174
+Flutter. `none` remains an identity and unsupported values stay visible.
+
+### Fixed — SwiftUI stacks preserve cross-axis alignment (#17031)
+
+TaskApp's `Row` parts now carry authored `align: center-vertical` through to
+SwiftUI's `HStack(alignment:)` constructor. The shared native contract retires
+all 22 SwiftUI `align` allowances, reducing the fresh SwiftUI style-drop
+inventory from 132 to 110 without hiding unsupported or wrong-axis values.
+
+### Fixed — native text preserves authored letter spacing (#17010)
+
+XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's `em`-based letter
+spacing to their native text-tracking APIs. Fresh strict generation retires all
+60 `letter-spacing` allowances and reduces the style-drop inventories to 65
+XAML, 132 SwiftUI, 77 Compose, 151 Qt, and 185 Flutter without claiming broader
+visual or artifact coverage.
+
+### Fixed — native style regressions cannot reclaim retired debt (#16995)
+
+The shared TaskApp native contract now pins the fresh Qt inventory at 163 style
+drops and Flutter at 197. It removes stale `align` allowances on both backends,
+the stale Qt `height` allowance, and lowers the maximum `width` counts to 18 on
+Qt and 23 on Flutter, so the 63 occurrences already fixed by recent layout work
+cannot silently return.
 
 ### Fixed — Flutter compact controls remain reachable at 800 x 600 (#16949)
 

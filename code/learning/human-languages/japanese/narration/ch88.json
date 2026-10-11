@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C88-utsusu-type",
-              "prompt": "Type the Japanese for 'to copy'.",
+              "prompt": "Say the Japanese for 'to copy'.",
               "assesses": [
                 "JA-LEX-C88-ACT88-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C88-tamesu-type",
-              "prompt": "Type the Japanese for 'to try out'.",
+              "prompt": "Say the Japanese for 'to try out'.",
               "assesses": [
                 "JA-LEX-C88-ACT88-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C88-modosu-type",
-              "prompt": "Type the Japanese for 'to put back'.",
+              "prompt": "Say the Japanese for 'to put back'.",
               "assesses": [
                 "JA-LEX-C88-ACT88-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C88-nokosu-type",
-              "prompt": "Type the Japanese for 'to leave behind'.",
+              "prompt": "Say the Japanese for 'to leave behind'.",
               "assesses": [
                 "JA-LEX-C88-ACT88-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C88-taosu-type",
-              "prompt": "Type the Japanese for 'to knock down'.",
+              "prompt": "Say the Japanese for 'to knock down'.",
               "assesses": [
                 "JA-LEX-C88-ACT88-05"
               ],

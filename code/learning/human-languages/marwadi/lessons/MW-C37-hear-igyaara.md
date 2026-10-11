@@ -37,9 +37,9 @@ reviews_of: [MW-W37-i, MW-C33-das, MW-C34-numbered-price]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-I-INDEPENDENT-01, MW-PERFORMANCE-NUMBERED-PRICE-FOUR-SKILL-01, MW-SCRIPT-PAY-01] -->
 
 [PAUSE 16s]
-- [YOU RECALL: write **इ**, the letter the last lesson stood up — **R1**]
+- [YOU WRITE: **इ** from memory, the letter the last lesson stood up — **R1**]
 - [YOU RECALL: run the numbered price exchange once, seller's figure and all — **R3**]
-- [YOU RECALL: write **पैसा ले लो** — **R4**]
+- [YOU WRITE: **पैसा ले लो** from memory — **R4**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-IGYAARA-01]; assesses=[] -->

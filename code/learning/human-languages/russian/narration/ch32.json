@@ -169,7 +169,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "болезнь (bolézn) — \"an illness\". Built on боль."
+              "text": "болезнь (bolézn) — \"an illness\". Built on боль (bol)."
             }
           ]
         },
@@ -538,7 +538,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "больница (bolnítsa) — \"a hospital\". Built on боль as well."
+              "text": "больница (bolnítsa) — \"a hospital\". Built on боль (bol) as well."
             }
           ]
         },

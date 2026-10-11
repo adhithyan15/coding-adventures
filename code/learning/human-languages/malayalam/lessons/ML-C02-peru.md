@@ -9,7 +9,7 @@ headword: പേര്
 gloss: name
 romanization: "pēr"
 concept_tag: WORD-NAME
-prerequisites: []
+prerequisites: [ML-C01-namaskaram]
 sounds: [ee-sign, chandrakkala]
 roots: [peer-dravidian]
 duration:

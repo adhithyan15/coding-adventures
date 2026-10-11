@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おす (osu) mean? ("To push".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to push'.
+Say the Japanese for 'to push'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひく (hiku) mean? ("To pull".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to pull'.
+Say the Japanese for 'to pull'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さがす (sagasu) mean? ("To look for".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to look for'.
+Say the Japanese for 'to look for'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かす (kasu) mean? ("To lend".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to lend'.
+Say the Japanese for 'to lend'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かえす (kaesu) mean? ("To give back".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to give back'.
+Say the Japanese for 'to give back'.

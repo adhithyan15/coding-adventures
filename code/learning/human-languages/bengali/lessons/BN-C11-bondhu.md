@@ -74,7 +74,9 @@ someone you are bound to.
 - [YOU SAY: "bôndhu" — friend]
 - [YOU SAY: "āmār bôndhu" — my friend, no gender marked either way]
 - [YOU SAY: the root, and its English family — "bandh … bind, bond, band"]
-- [YOU RECALL: say *pôṛā*, then read **লেখা**, then say *neowā*]
+- [YOU RECALL: say *pôṛā*]
+- [YOU READ: **লেখা**]
+- [YOU RECALL: say *neowā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BONDHU-01, BN-GRAMMAR-C07-ASHA-02] -->

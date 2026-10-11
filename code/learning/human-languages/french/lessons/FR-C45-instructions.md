@@ -50,10 +50,12 @@ reviews_of: [FR-C37-imperatif, FR-R37-on-y-va, FR-C40-beaucoup]
 > Beaucoup
 > Merci
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again, and notice that three of them end in an exclamation mark and
-three do not. French puts a space before it, which English does not.
+[PAUSE 3s]
+[YOU READ: the list again, and notice that three of them end in an exclamation mark and three do not]
+
+French puts a space before it, which English does not.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BEAUCOUP-01, FR-LEX-UNPEU-02] -->

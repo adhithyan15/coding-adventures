@@ -59,7 +59,8 @@ Two.
 - [YOU SAY: *vintī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vintī*, then *kṛpayā*, and say which one is the asking itself]
-- [YOU RECALL: read **प्यास**, then say *jaldī*]
+- [YOU READ: **प्यास**]
+- [YOU RECALL: say *jaldī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02] -->

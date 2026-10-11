@@ -50,9 +50,10 @@ reviews_of: [KA-C52-door, KA-C52-chair, KA-C54-tree, KA-C59-wind]
 > ಗಾಳಿ
 > ಹೂವು
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again — and notice how few straight lines there are.
+[PAUSE 3s]
+[YOU READ: the list again, and notice how few straight lines there are]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C59-GROUND-01, KA-LEX-C52-WELCOME-04] -->

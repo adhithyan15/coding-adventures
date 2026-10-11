@@ -72,7 +72,7 @@ but *buenas tardes* — the describing word copies its noun.
   *te llamas*]
 - [YOU SAY: for a police officer, then your best friend — which "you" for
   each, and why?]
-- [YOU SAY: point to either speaker and ask **¿Quién?** — answer with the name]
+- [YOU SAY: think of either speaker and ask **¿Quién?** — answer with the name]
 
 [REPEAT x2] Run the formal version start to finish without stopping.
 

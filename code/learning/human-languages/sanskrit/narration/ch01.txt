@@ -1,9 +1,11 @@
 Sanskrit, chapter 1: Greetings.
-13 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+13 lessons. You can do the first one in the car; after that you will want to have stopped. That lesson has a part that needs your eyes or your hands; that part waits until you have stopped.
 
 
 Lesson 1 of 13.
-नमस्ते (namaste) — "I bow to you".
+Namaste — "I bow to you".
+
+Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — let your finger meet one shape.
 
 Warm-up.
 [pause 2 seconds]
@@ -18,9 +20,14 @@ namaste = namas ("a bow, obeisance") + te ("to you") — literally "a bow to you
 Why it's said this way.
 Palms pressed together (the gesture is añjali), a slight bow: hands and word say the same thing. Namaste greets the person before you as worthy of a bow — hello, and on parting, goodbye. It is the greeting Sanskrit gave to half of South Asia.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing — let your finger meet one shape.
+Here is the first printed shape of the greeting's written form: न (na). Follow that shape once with your finger while you say namaste.
+Do not write it yet, and do not try to read it. The whole written word waits until its other shapes have been met one at a time. A script lesson later in this chapter gives this shape its own strokes; tracing a typeface here does not claim a handwriting stroke order.
+
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — na, ma, s, te]
+[your turn — say: its beats — na, ma, s, te]
 [pause 8 seconds for the answer]
 [your turn — say: the two parts (namas "a bow" + te "to you")]
 [pause 8 seconds for the answer]
@@ -33,7 +40,7 @@ What does namaste literally mean, and what English pronoun is te cousin to? ("A 
 
 
 Lesson 2 of 13.
-नमस्कारः (namaskāraḥ) — the fuller form.
+Namaskāraḥ — the fuller form.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
@@ -48,11 +55,11 @@ The word, taken apart.
 namaskāraḥ = namas ("a bow") + kāra ("the making, the doing," from the root √kṛ "to do/make"). So namaskāra is "the making of a bow" — an act, where namaste is an address. That root √kṛ "to do" is among Sanskrit's most productive (it gives karma, "a thing done"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending.
 
 Grammar Lens.
-Namaste and namaskāra share the same first half, namas, but end differently because they do different grammatical jobs — one takes a pronoun (te "to you"), the other builds a noun (-kāra "the making of"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening.
+Namaste and namaskāra share the same first half, namas; on the page that half is the same piece in both, नमस्. They end differently because they do different grammatical jobs — one takes a pronoun (te "to you"), the other builds a noun (-kāra "the making of"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — na, mas, kā, raḥ]
+[your turn — say: its beats — na, mas, kā, raḥ]
 [pause 8 seconds for the answer]
 [your turn — say: how it differs in sense from namaste ("the making of a bow" vs. "a bow to you")]
 [pause 8 seconds for the answer]
@@ -67,7 +74,7 @@ Namaskāra is built from which two parts, and what does its visarga ending tell 
 Lesson 3 of 13.
 न (na) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: न and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: न and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -75,6 +82,7 @@ A horizontal head-line (shirorekhā) runs across the top; letters hang beneath i
 [pause 2 seconds]
 One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: न.
 न — na.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not n, it is na.
@@ -92,16 +100,15 @@ Writing: न.
 3. lift and draw the top shirorekhā left-to-right.
 Pen lifts: 2. The pen comes up 2 times and no more.
 verified three-stroke teaching form; everyday handwriting may join or simplify the loop differently.
-This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-न-order.gif’, strokes 1–3, Wikimedia Commons, 11 May 2009.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-न (na)-order.gif’, strokes 1–3, Wikimedia Commons, 11 May 2009.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[your turn — look: at this, and find न (na) in it]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: at this, and find न (na) in it]
 न (na).
 [once you have stopped driving — trace: न three times, saying na as you finish each one]
-[your turn — look: back at any page of this chapter and find न (na) once more]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: back at any page of this chapter and find न (na) once more]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -129,8 +136,9 @@ One caution the source itself carries: this is one attested teaching order, not 
 Lesson 5 of 13.
 न (na) — write it with the model covered.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Warm-up.
 Look at न once and say na. Then cover it, and the stroke order with it.
 
@@ -147,7 +155,7 @@ A hand writing from memory usually remembers to put the bar there and draws it o
 Lesson 6 of 13.
 न (na) — the letter from the sound.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall.
 
 Warm-up.
 Cover every न (na) on the page. Nothing to copy, nothing to uncover, and no stroke order in front of you.
@@ -156,13 +164,14 @@ Writing — dictation.
 Say na aloud, or play it, and write the letter that carries it. Once.
 A delayed copy asks your hand to remember a shape. Dictation asks it to turn a sound into a shape, which is what writing is actually for, and the two do not always arrive together.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 Uncover the model, compare — and notice what you were asked to write.
 Not n. na. One shape came out of your hand for two sounds, and nobody wrote the vowel. That is what an abugida is, and it is the reason the letters of this script cannot be counted the way an alphabet's can: न is not a letter plus a silent vowel, it is a syllable with a consonant you can change.
 
 
 Lesson 7 of 13.
-धन्यवादः (dhanyavādaḥ) — "thank you".
+Dhanyavādaḥ — "thank you".
 
 Warm-up.
 [pause 2 seconds]
@@ -172,14 +181,14 @@ Sounds you'll need.
 dha, nya, vā, daḥ. The opening dh is one sound, not two — a d released with a puff of breath behind it. nya is likewise a single run. It closes on the same soft breathed -ḥ as namaskāraḥ.
 
 The word, taken apart.
-dhanyavādaḥ = dhanya ("worthy, deserving," from dhana "wealth") + vāda ("a speaking, a statement," from the root √vad "to speak"). Literally "a saying of 'you are worthy.'" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all.
+dhanyavādaḥ = dhanya ("worthy, deserving," from dhana "wealth") + vāda ("a speaking, a statement," from the root √vad "to speak"). Literally "a saying of 'you are worthy.'" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all. The whole spelling waits; for now, notice only its second half, vāda, written वाद.
 
 Why it's said this way.
 Classical Sanskrit thanks are more often shown in deed and honorific than said with a set formula; dhanyavāda is the plain, dignified "thank you," and its survival across every modern northern language shows how durable a good word can be. Note you already knew all its pieces — only the ending (-aḥ) is new.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — dha, nya, vā, daḥ]
+[your turn — say: its beats — dha, nya, vā, daḥ]
 [pause 8 seconds for the answer]
 [your turn — say: its two roots (dhanya "worthy" + vāda "a saying")]
 [pause 8 seconds for the answer]
@@ -229,7 +238,7 @@ Svāgatam literally means what, and name two of its far-flung cousins. ("Well co
 Lesson 9 of 13.
 द (da) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: द and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: द and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -237,6 +246,7 @@ Before the new one, one you have already met: न (na). Say what it does.
 [pause 2 seconds]
 One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: द.
 द — da.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not d, it is da.
@@ -253,16 +263,15 @@ Writing: द.
 3. lift and draw the top shirorekhā left-to-right.
 Pen lifts: 1. The pen comes up once.
 The source shows three movements; most native writers draw द (da) in two strokes (95% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
-This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-द-order.gif’, strokes 1–3, Wikimedia Commons, 8 May 2009.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-द (da)-order.gif’, strokes 1–3, Wikimedia Commons, 8 May 2009.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[your turn — look: at this, and find द (da) in it]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: at this, and find द (da) in it]
 द (da).
 [once you have stopped driving — trace: द three times, saying da as you finish each one]
-[your turn — look: back at any page of this chapter and find द (da) once more]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: back at any page of this chapter and find द (da) once more]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -336,7 +345,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: hello, "the making of a bow" — namaskāraḥ]
 [pause 8 seconds for the answer]
-[your turn — say: thank you — dhanyavādaḥ]
+[your turn — say: thank you, "a saying of 'you are worthy'" — dhanyavādaḥ]
 [pause 8 seconds for the answer]
 [your turn — say: welcome, "well come" — svāgatam]
 [pause 8 seconds for the answer]
@@ -371,7 +380,7 @@ In 1786 Sir William Jones said Sanskrit, Latin, and Greek shared "a stronger aff
 Lesson 13 of 13.
 ◌् (virāma) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌् and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌् and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -379,6 +388,7 @@ Before the new one, the ones you have already met: न (na), द (da). Say what 
 [pause 2 seconds]
 One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ◌्.
 ◌् (virāma) — no sound of its own — it takes one away.
 It is a vowel-killer. Every consonant in this script arrives with an a already inside it — that is what an abugida is. This mark takes the a back, leaving the bare consonant. It is how the script writes two consonants in a row.
@@ -394,14 +404,13 @@ Writing: ◌् — follow the numbered strip.
 Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌् (virāma) yourself — slowly, and larger than it is printed.
 The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[your turn — look: at this, and find ◌् (virāma) in it]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: at this, and find ◌् (virāma) in it]
 ◌् (virāma).
 [once you have stopped driving — trace: ◌् (virāma) three times, and each time say what it does: it kills the built-in a]
-[your turn — look: back at any page of this chapter and find ◌् (virāma) once more]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: back at any page of this chapter and find ◌् (virāma) once more]
 
 Wrap-up Recall.
 [pause 3 seconds]

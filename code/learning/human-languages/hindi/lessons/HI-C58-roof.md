@@ -59,7 +59,8 @@ The second of five, and a parasol that turned into a roof.
 - [YOU SAY: *chat*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chat*, over the *dīvār*]
-- [YOU RECALL: read **गाँव**, then say *dāvat*]
+- [YOU READ: **गाँव**]
+- [YOU RECALL: say *dāvat*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02] -->

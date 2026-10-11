@@ -60,7 +60,8 @@ Dark, with a rain cloud in it rather than ash.
 - [YOU SAY: *śyāmaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śvetaḥ*, then *śyāmaḥ*]
-- [YOU RECALL: read **सहसा**, then say *vinayaḥ*]
+- [YOU READ: **सहसा**]
+- [YOU RECALL: say *vinayaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02] -->

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-169-TWO-DATES-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can retrieve the two already-taught fictional date examples in day/month/year order after a long interval, one example at a time.",
+  "prerequisites": [
+    "PA-EXT-153-A1-DATE-FIELD",
+    "PA-EXT-168-DATE-FORM-RETURN"
+  ]
+}

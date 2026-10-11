@@ -1,0 +1,11 @@
+{
+  "id": "PA-R164-wake-again",
+  "pathSegment": "PA-PATH-164-ACTION-RETURN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-164-ACTION-RETURN",
+      "order": 0
+    }
+  ]
+}

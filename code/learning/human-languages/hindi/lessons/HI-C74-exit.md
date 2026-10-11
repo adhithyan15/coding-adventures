@@ -36,7 +36,7 @@ reviews_of: [HI-C74-entrance, HI-C49-set-out]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-03] -->
 
-[PAUSE 2s] Write **प्रवेश** from memory, starting with the stacked प्र.
+[PAUSE 2s] [YOU WRITE: **प्रवेश** from memory, starting with the stacked प्र]
 
 ## You'll want to know: निकास
 <!-- hl-knowledge: introduces=[HI-LEX-C74-SIGNS-04]; assesses=[HI-LEX-C49-LEAVE-04] -->
@@ -66,7 +66,8 @@ Four, and the second pair of this chapter: प्रवेश and निका�
 - [YOU SAY: *nikalnā*, then *nikās*]
 - [YOU SAY: *pravesh*, then *nikās*]
 - [YOU WRITE: निकास, lengthening the vowel that निकलना keeps short]
-- [YOU RECALL: read **महँगा**, then say *veṭar*]
+- [YOU READ: **महँगा**]
+- [YOU RECALL: say *veṭar*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04] -->

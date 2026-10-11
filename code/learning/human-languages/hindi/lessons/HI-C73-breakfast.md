@@ -36,7 +36,7 @@ reviews_of: [HI-C73-eating-house, HI-C72-buy]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01] -->
 
-[PAUSE 2s] Say *hoṭal*, then write **होटल**: ह with ो above it, then ट, then ल.
+[PAUSE 2s] Say *hoṭal*. [YOU WRITE: **होटल** — ह with ो above it, then ट, then ल]
 
 ## You'll want to know: नाश्ता
 <!-- hl-knowledge: introduces=[HI-LEX-C73-EATING-02]; assesses=[] -->
@@ -65,11 +65,12 @@ A place to eat, and the first meal of the day to eat there.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02, HI-LEX-C72-COST-05, HI-LEX-C71-TODAY-02, HI-LEX-C72-COST-02] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **ख़रीदना**, then say it without looking]
+- [YOU READ: **ख़रीदना**, then say it without looking]
 - [YOU SAY: *nāshtā*]
 - [YOU SAY: *nāshtā karnā*]
 - [YOU WRITE: होटल once more, then नाश्ता beside the printed model]
-- [YOU RECALL: read **भी**, then say *rupayā*]
+- [YOU READ: **भी**]
+- [YOU RECALL: say *rupayā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02] -->

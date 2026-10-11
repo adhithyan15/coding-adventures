@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ओस** — *os* — "dew".
 
-Say it: *os*. Look at its shape as you say it: the next lesson takes one
+Say it: *os*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ओ**, and writes it on its own.
 
 ## Guided Practice

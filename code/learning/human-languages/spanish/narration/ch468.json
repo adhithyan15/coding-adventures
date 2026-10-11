@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 468,
   "title": "Dos grados",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f354dc86376c202b",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8d95a963b23de30a",
   "lessons": [
     {
       "id": "ES-C468-chaqueta",
@@ -14,20 +14,13 @@
       "romanization": "la chaqueta",
       "gloss": "the jacket — a word you have already been shown twice without being given it, and probably named after a peasant rather than a place",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93a8edcb503f49bc",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b565e8f7b4d945b6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -82,7 +75,7 @@
             },
             {
               "kind": "speech",
-              "text": "Take the regional column seriously here. In Mexico and much of Central America chaqueta carries a vulgar second sense, and the neutral word is saco or chamarra."
+              "text": "Take the regional split seriously here. In Mexico and much of Central America chaqueta carries a vulgar second sense, and the neutral word is saco or chamarra."
             }
           ]
         },
@@ -101,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already know Spanish will name a garment after its wearer — los vaqueros are the cowherd's trousers. If the Jacques account is right, la chaqueta is the same habit, which is why it sat in the wrong column of the jersey chapter's table:"
+              "text": "You already know Spanish will name a garment after its wearer — los vaqueros are the cowherd's trousers. If the Jacques account is right, la chaqueta is the same habit, which is why it sat as the odd one out in the jersey chapter's table:"
             },
             {
               "kind": "table",
@@ -817,7 +810,7 @@
     {
       "id": "ES-C468-sintesis-abrigo",
       "sequence": 12860,
-      "title": "(el aviso de la parada) — read it, then decide",
+      "title": "(el aviso de la parada)",
       "headword": "(el aviso de la parada)",
       "romanization": "(el aviso de la parada)",
       "gloss": "the payoff — read a bus-stop screen and a message from home, then decide what to put on",

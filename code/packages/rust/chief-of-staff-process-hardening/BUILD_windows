@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-process-hardening && cargo clippy -p chief-of-staff-process-hardening --all-targets -- -D warnings

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जमीन (jamīn) mean? ("Land".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'land'.
+Say the Marwadi for 'land'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जायदाद (jāydād) mean? ("Property".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'property'.
+Say the Marwadi for 'property'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पूंजी (pū̃jī) mean? ("Capital, savings".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'capital, savings'.
+Say the Marwadi for 'capital, savings'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कमाई (kamāī) mean? ("Earnings".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'earnings'.
+Say the Marwadi for 'earnings'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नौकरी (naukrī) mean? ("A job".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a job'.
+Say the Marwadi for 'a job'.

@@ -58,7 +58,8 @@ Two: a little, and a lot.
 - [YOU SAY: *ekkuva*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ekkuva*, then *koñcem*, and say them as a pair]
-- [YOU RECALL: read **బుట్ట**, then say *vīpu*]
+- [YOU READ: **బుట్ట**]
+- [YOU RECALL: say *vīpu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-05, TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02] -->

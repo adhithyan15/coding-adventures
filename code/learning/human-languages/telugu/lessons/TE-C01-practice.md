@@ -40,13 +40,13 @@ easy.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-AVUNU-01, TE-LEX-C01-DHANYAVADAMULU-01, TE-LEX-C01-LEDU-01, TE-LEX-C01-NAMASKARAM-01, TE-LEX-C01-SARE-01] -->
 Sound each out, left to right, before checking:
 
-| Read | | Meaning | Origin |
-|---|---|---|---|
-| **నమస్కారం** | *namaskāram* | hello / greetings | Sanskrit |
-| **ధన్యవాదములు** | *dhanyavādamulu* | thank you | Sanskrit stem + Telugu plural |
-| **అవును** | *avunu* | yes | native |
-| **లేదు** | *lēdu* | no / there isn't | native (root *lē-*, not *il-*) |
-| **సరే** | *sarē* | okay | native (= *sari*) |
+| Read | Meaning | Origin |
+|---|---|---|
+| **నమస్కారం** *namaskāram* | hello / greetings | Sanskrit |
+| **ధన్యవాదములు** *dhanyavādamulu* | thank you | Sanskrit stem + Telugu plural |
+| **అవును** *avunu* | yes | native |
+| **లేదు** *lēdu* | no / there isn't | native (root *lē-*, not *il-*) |
+| **సరే** *sarē* | okay | native (= *sari*) |
 
 The letters that did it: consonants carry a built-in **"a"** (many under the
 little *talakaṭṭu* hat); a **vowel sign** swaps that vowel (ా ā, ు u, ే ē); a

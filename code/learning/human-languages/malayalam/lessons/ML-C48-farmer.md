@@ -58,7 +58,7 @@ Four. A teacher, a student, a doctor, a farmer.
 - [YOU SAY: *karṣakan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *karṣakan*, then *adhyāpakan*, and count the chillus in each]
-- [YOU RECALL: read **ഉപ്പ്**]
+- [YOU READ: **ഉപ്പ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04] -->

@@ -101,6 +101,18 @@ pub struct XamlEmitResult {
     pub if_helpers: Vec<EmittedFile>,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_winui_thousandths() {
+        assert_eq!(xaml_character_spacing("-0.02em").as_deref(), Some("-20"));
+        assert_eq!(xaml_character_spacing("0.07em").as_deref(), Some("70"));
+        assert_eq!(xaml_character_spacing("1px"), None);
+    }
+}
+
 /// A generated source file with a filename and its UTF-8 source text.
 /// Used for the `for_view_models` / `if_helpers` / `project` fields where
 /// one logical artifact corresponds to multiple physical files.
@@ -604,6 +616,12 @@ fn emit_component(
             source: emit_string_equals_converter_source(&options.namespace),
         });
     }
+    if ctx.needs_uppercase_converter {
+        if_helpers.push(EmittedFile {
+            filename: "UppercaseConverter.cs".to_string(),
+            source: emit_uppercase_converter_source(&options.namespace),
+        });
+    }
 
     // Fix B1: when --emit-project is on, populate the full project
     // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
@@ -738,6 +756,7 @@ pub const SHELL_RESERVED_NAMES: &[&str] = &[
     "BoolToVisibilityConverter",
     "FocusStateToBoolConverter",
     "StringEqualsConverter",
+    "UppercaseConverter",
 ];
 
 /// Why `type_name` -- a variant of `component` -- cannot be declared, or
@@ -1111,6 +1130,8 @@ struct EmitContext<'a> {
     /// Tracks whether a UI49 state is owned by a `one-of` slot. Such states
     /// compare the slot's string value with the state's closed-set name.
     needs_string_equals_converter: bool,
+    /// Tracks whether bound Text content needs CSS uppercase conversion.
+    needs_uppercase_converter: bool,
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
@@ -1224,6 +1245,7 @@ impl<'a> EmitContext<'a> {
             needs_bool_to_vis: false,
             needs_focus_state_converter: false,
             needs_string_equals_converter: false,
+            needs_uppercase_converter: false,
             row_vms: Vec::new(),
             row_projections: Vec::new(),
             host_handlers: Vec::new(),
@@ -1412,6 +1434,8 @@ struct PartStyleEntry {
     /// — like `flex`, has no 1:1 XAML setter and is read straight off
     /// the raw mosstyle props rather than surviving into `base_fragment`.
     elevation: Option<ElevationTier>,
+    /// Supported base `text-transform` value for Text content.
+    text_transform_uppercase: Option<bool>,
 }
 
 /// Layout hints a `Row`/`Column`'s `<Grid>` lowering needs but that have no
@@ -1678,6 +1702,15 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         let base_fragment = build_style_fragment(&part.base);
         let flex = extract_flex_hints(&part.base);
         let elevation = part_elevation_tier(&part.base);
+        let text_transform_uppercase = part
+            .base
+            .iter()
+            .find(|prop| prop.name == "text-transform")
+            .and_then(|prop| match prop.value.trim().trim_matches('"') {
+                "uppercase" => Some(true),
+                "none" => Some(false),
+                _ => None,
+            });
         let states = part
             .states
             .iter()
@@ -1703,6 +1736,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
             || !part.states.is_empty()
             || has_flex_hints
             || elevation.is_some()
+            || text_transform_uppercase.is_some()
         {
             out.insert(
                 part.name.clone(),
@@ -1712,6 +1746,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                     states,
                     flex,
                     elevation,
+                    text_transform_uppercase,
                 },
             );
         }
@@ -2163,9 +2198,9 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
             .unwrap();
             writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
             // A `translate_xaml_value` result. Style-derived, so it goes
-            // through the style allow-list: only `{ThemeResource …}` /
-            // `{StaticResource …}` stay markup, and anything else omits the
-            // `<Setter>` entirely (#15487 follow-up). `translate_xaml_value`
+            // through the style allow-list, which is empty (X-4): any
+            // brace-led value omits the `<Setter>` entirely (#15487
+            // follow-up). `translate_xaml_value`
             // already refused such values, so this arm is defence in depth.
             if let Some(value) = escape_style_attr(&state.value) {
                 writeln!(out, "{pad4}<VisualState.Setters>").unwrap();
@@ -2312,6 +2347,41 @@ fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
         "color" => Some((idx, "color")),
         _ => None,
     }
+}
+
+/// A solid per-edge style is carried by the same native border that carries
+/// that edge's positive pixel width. Keep non-solid values and style-only
+/// declarations visible to the degradation reporter.
+fn lowered_solid_per_edge_style(
+    props: &[mosstyle_compiler::StyleProp],
+    name: &str,
+    value: &str,
+) -> bool {
+    let Some(edge) = name
+        .strip_prefix("border-")
+        .and_then(|rest| rest.strip_suffix("-style"))
+        .filter(|edge| matches!(*edge, "top" | "right" | "bottom" | "left"))
+    else {
+        return false;
+    };
+    if value.trim() != "solid" {
+        return false;
+    }
+    let width_name = format!("border-{edge}-width");
+    props
+        .iter()
+        .rev()
+        .find(|prop| prop.name == width_name)
+        .and_then(|prop| {
+            prop.value
+                .trim()
+                .strip_suffix("px")
+                .unwrap_or(prop.value.trim())
+                .trim()
+                .parse::<f64>()
+                .ok()
+        })
+        .is_some_and(|width| width.is_finite() && width > 0.0)
 }
 
 /// UI79 -- the XAML attributes a part's per-edge borders lower to, plus
@@ -2499,9 +2569,9 @@ fn build_style_fragment_with_drops(
         // when the whole property must be dropped (e.g. a percentage
         // `Width="100%"` — WinUI's `Width` is a `Double`, not a
         // percentage). A brace-led value is never px-stripped or
-        // case-mangled: it is an allow-listed `{ThemeResource …}` /
-        // `{StaticResource …}` lookup, or the property is dropped and
-        // reported with `REFUSED_STYLE_MARKUP_REASON` (#15487 follow-up).
+        // case-mangled: the property is dropped and reported with
+        // `REFUSED_STYLE_MARKUP_REASON` (#15487 follow-up; X-4 emptied the
+        // allow-list).
         let value = match translate_xaml_value(&key, &p.value) {
             Some(v) => v,
             None if is_refused_style_markup(&p.value) => {
@@ -2557,9 +2627,9 @@ fn build_style_fragment_with_drops(
     let fragment = parts
         .into_iter()
         .filter_map(|(key, value)| {
-            // #15487 follow-up: the style allow-list, not plain
-            // `escape_xaml_attr` -- an allow-listed `{ThemeResource …}`
-            // must stay markup -- and not bare `escape_xml_attr` either,
+            // #15487 follow-up: the style allow-list (empty since X-4), not
+            // plain `escape_xaml_attr` -- a style value is not text -- and
+            // not bare `escape_xml_attr` either,
             // which would let a third-party stylesheet emit `{Binding …}`
             // or `{x:Bind …}` into the consumer's page. Every non-brace
             // value is escaped exactly as before. Every producer above has
@@ -2616,6 +2686,9 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             continue;
         }
         for drop in raw_drops {
+            if lowered_solid_per_edge_style(&part.base, &drop.name, &drop.value) {
+                continue;
+            }
             let consumed_via_flex_hints = match drop.name.as_str() {
                 "flex-grow" => true,
                 "align-items" => drop.value.trim() == "center",
@@ -2629,6 +2702,11 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
                 // (`part_elevation_tier`), same shape as the flex hints
                 // above — it has no 1:1 XAML setter of its own.
                 "elevation" => matches!(drop.value.as_str(), "raised" | "overlay"),
+                // TextBlock has no casing property. Text nodes consume these
+                // through literal rewriting or the generated binding converter.
+                "text-transform" => {
+                    matches!(drop.value.trim().trim_matches('"'), "uppercase" | "none")
+                }
                 // `box-shadow` no longer drives ThemeShadow directly —
                 // `elevation` does. A non-inset box-shadow is only
                 // "consumed" (not a genuine drop) when the same part
@@ -2781,11 +2859,11 @@ fn has_unsupported_length_unit(value: &str) -> bool {
 /// | `background: red`     | `Background`    | `Red`         |
 ///
 /// A value that starts with `{` is the one place a *stylesheet* could
-/// speak XAML markup, so it is not translated at all: only the two
-/// resource lookups on the allow-list (`{ThemeResource Name}`,
-/// `{StaticResource Name}`) pass through, and everything else --
-/// `{Binding …}`, `{x:Bind …}`, `{x:Null}`, malformed braces -- returns
-/// `None`, dropping the property. The threat model is the block comment
+/// speak XAML markup, so it is not translated at all: every brace-led
+/// value -- `{Binding …}`, `{x:Bind …}`, `{x:Null}`, resource lookups,
+/// malformed braces -- returns `None`, dropping the property. (The
+/// allow-list that once let `{ThemeResource Name}` / `{StaticResource Name}`
+/// through is empty since X-4.) The threat model is the block comment
 /// above [`STYLE_MARKUP_EXTENSIONS`].
 fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     let trimmed = raw.trim();
@@ -2806,6 +2884,14 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     // unconvertible color builds cleanly and crashes on launch.
     if is_color_setter(key) {
         return normalize_xaml_color_value(raw);
+    }
+
+    // WinUI measures CharacterSpacing in thousandths of the current font
+    // size, which is exactly the relative unit CSS `em` letter spacing uses.
+    // Keep the conversion here beside the other value-shape translations so
+    // unsupported units remain reported by the shared drop path.
+    if key == "CharacterSpacing" {
+        return xaml_character_spacing(trimmed);
     }
 
     // Length setters: strip CSS `px` units (and reject percentages,
@@ -2851,9 +2937,34 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     Some(raw.to_string())
 }
 
+fn xaml_character_spacing(raw: &str) -> Option<String> {
+    let value = raw.trim().trim_matches('"').trim();
+    let em = if value == "0" {
+        0.0
+    } else {
+        value.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    if !em.is_finite() {
+        return None;
+    }
+    let units = (em * 1000.0).round();
+    if units < i32::MIN as f64 || units > i32::MAX as f64 {
+        return None;
+    }
+    Some((units as i32).to_string())
+}
+
 // ---------------------------------------------------------------------
 // Style values and XAML markup extensions -- the allow-list
 // ---------------------------------------------------------------------
+//
+// SUPERSEDED IN PART (X-4, 2026-10-08). mosstyle is platform-neutral (UI15
+// §8 rule 8), so `STYLE_MARKUP_EXTENSIONS` is now EMPTY: the resource lookups
+// this comment describes as allowed are refused like every other brace-led
+// value, and `mosstyle-compiler` rejects them at compile time
+// (`PlatformValue`). A need such as "follow the system theme" is a system
+// token (UI90 §3.3), not a lookup. The threat model, the matcher and the
+// composite and choke-point checks below all still apply.
 //
 // THE THREAT. XAML reads any attribute value whose first character is `{`
 // as a *markup extension*: a tiny program the XAML loader runs while it
@@ -2932,15 +3043,23 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
 // caught too: the attacker does not get to bet on whether a given XAML
 // parser skips whitespace before looking for the `{`.
 
-/// The markup extensions a style value may use, by name. Kept as a table
-/// so widening it is a deliberate, reviewed one-line change.
-const STYLE_MARKUP_EXTENSIONS: &[&str] = &["ThemeResource", "StaticResource"];
+/// The markup extensions a style value may use, by name: none (X-4).
+///
+/// mosstyle is platform-neutral (UI15 §8 rule 8, decided 2026-10-08): no
+/// value in a `.msl` may be written for one backend, and a XAML resource
+/// lookup is one. `mosstyle-compiler` refuses any brace-led value
+/// (`ErrorKind::PlatformValue`), so the table is empty and every brace-led
+/// value is dropped and reported here too. A need such as "follow the
+/// system accent colour" gets a neutral mosstyle construct, not a lookup.
+/// The matcher and the composite and choke-point checks around it stay,
+/// so the rule is enforced at every emission point.
+const STYLE_MARKUP_EXTENSIONS: &[&str] = &[];
 
-/// The drop-report reason for a style value refused by the allow-list.
+/// The drop-report reason for a brace-led style value.
 const REFUSED_STYLE_MARKUP_REASON: &str =
-    "a style value that starts with `{` is a XAML markup extension; only an exact \
-     `{ThemeResource Key}` or `{StaticResource Key}` lookup may pass, so a stylesheet \
-     cannot bind data or run code in the consuming app (#15487 follow-up)";
+    "a style value that starts with `{` is XAML markup, and mosstyle values are \
+     platform-neutral (UI15 §8 rule 8), so the property is dropped rather than emitted \
+     as a binding, a method call or a resource lookup (X-4, #15487 follow-up)";
 
 /// Is `value` -- with no surrounding whitespace -- exactly one allow-listed
 /// resource lookup, `{ThemeResource Key}` or `{StaticResource Key}`?
@@ -3163,10 +3282,11 @@ fn normalize_xaml_color_value(s: &str) -> Option<String> {
     ) {
         return None;
     }
-    // `{x:Bind …}` / `{Binding …}` markup extensions or any string with
-    // braces — keep verbatim.  These aren't color literals.
+    // A leading `{` is XAML markup, never a colour, and no style value may
+    // be markup (X-4, UI15 §8 rule 8): refused, as in `translate_xaml_value`
+    // (unreachable through it today; kept so this function is safe alone).
     if trimmed.starts_with('{') {
-        return Some(s.to_string());
+        return None;
     }
     // Already PascalCased (or starts with an uppercase letter)?  Treat
     // as XAML-native and pass through.
@@ -3262,6 +3382,7 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         "font-family" => Some("FontFamily".to_string()),
         "font-size" => Some("FontSize".to_string()),
         "font-weight" => Some("FontWeight".to_string()),
+        "letter-spacing" => Some("CharacterSpacing".to_string()),
         "gap" => Some("Spacing".to_string()),
         "padding" => Some("Padding".to_string()),
         "margin" => Some("Margin".to_string()),
@@ -3425,7 +3546,12 @@ fn is_stack_panel_style_attr(setter: &str) -> bool {
 fn is_text_style_attr(setter: &str) -> bool {
     matches!(
         setter,
-        "Foreground" | "FontFamily" | "FontSize" | "FontWeight" | "TextAlignment"
+        "Foreground"
+            | "FontFamily"
+            | "FontSize"
+            | "FontWeight"
+            | "CharacterSpacing"
+            | "TextAlignment"
     )
 }
 
@@ -3659,7 +3785,10 @@ fn emit_xaml(
 
     // After walking, declare any generated converter resources exactly once.
     // We splice them in after the open root tag.
-    if ctx.needs_bool_to_vis || ctx.needs_focus_state_converter || ctx.needs_string_equals_converter
+    if ctx.needs_bool_to_vis
+        || ctx.needs_focus_state_converter
+        || ctx.needs_string_equals_converter
+        || ctx.needs_uppercase_converter
     {
         let resources_tag = match shape {
             RootShape::UserControl => "UserControl.Resources",
@@ -3671,6 +3800,7 @@ fn emit_xaml(
             ctx.needs_bool_to_vis,
             ctx.needs_focus_state_converter,
             ctx.needs_string_equals_converter,
+            ctx.needs_uppercase_converter,
         );
         let split_at = find_root_open_close(&out)
             .map(|p| p + 2)
@@ -4696,18 +4826,27 @@ fn container_tap_attrs(
     } else {
         ("", String::new())
     };
+    let native_cell = ctx.native_table.as_ref().is_some_and(|table|
+        table.role == NativeTableRole::Body && table.for_depth == 2);
+    // Selection can replace the row's visual tree. Capture logical coordinates
+    // before dispatch and restore focus on the new realization afterwards.
+    let (capture_focus, restore_focus) = if native_cell {
+        (format!("        var restoreFocus = {}MosaicTableCell.CapturePointerFocus(sender as Microsoft.UI.Xaml.DependencyObject);\n", ctx.component_name),
+         "        restoreFocus?.Invoke();\n")
+    } else {
+        (String::new(), "")
+    };
     ctx.add_host_handler(HostHandler {
         name: handler.clone(),
         source: format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)\n    {{\n{guard}        Dispatch?.Invoke(this, new {union}.{case}({}));\n        e.Handled = true;\n    }}",
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)\n    {{\n{guard}{capture_focus}        Dispatch?.Invoke(this, new {union}.{case}({}));\n{restore_focus}        e.Handled = true;\n    }}",
             args.join(", ")
         ),
     });
     // The native cell owns keyboard focus, while this authored container owns
     // the event contract. Give its wrapper the same safely lowered payload.
     // Read Tag when invoked: virtualized templates may acquire a new row VM.
-    if ctx.native_table.as_ref().is_some_and(|table|
-        table.role == NativeTableRole::Body && table.for_depth == 2)
+    if native_cell
     {
         let navigation = format!("{handler}_Navigate");
         ctx.add_host_handler(HostHandler {
@@ -4849,6 +4988,23 @@ fn emit_text_style_resources(
 /// `Text [name] (content: "literal")` → `<TextBlock Text="literal"/>`.
 /// `Text [name] (content: row.value)` → `<TextBlock Text="{x:Bind Row.Value}"/>`
 /// when `row` is a `For`-bound name (PR-2).
+fn xaml_text_transform_uppercase(node: &LayoutNode, part_styles: &PartStyleMap) -> Option<bool> {
+    part_styles
+        .get(node.part_name.as_deref()?)?
+        .text_transform_uppercase
+}
+
+fn xaml_text_binding(path: &str, uppercase: bool, ctx: &mut EmitContext<'_>) -> String {
+    if uppercase {
+        ctx.needs_uppercase_converter = true;
+        format!(
+            " Text=\"{{x:Bind {path}, Converter={{StaticResource UppercaseConverter}}, Mode=OneWay}}\""
+        )
+    } else {
+        format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\"")
+    }
+}
+
 fn emit_text(
     node: &LayoutNode,
     indent: usize,
@@ -4865,6 +5021,7 @@ fn emit_text(
         .collect::<String>();
     let font_size = inherited_font_size_attr(node, &text_style, ctx)?;
     text_style.push_str(&font_size);
+    let uppercase = xaml_text_transform_uppercase(node, part_styles).unwrap_or(false);
 
     let mut accessibility_attrs = String::new();
     match find_prop_value(node, "a11y-label") {
@@ -4945,13 +5102,11 @@ fn emit_text(
             // must be OneWay. `x:Bind`'s default is OneTime, which
             // renders the value once and never again — the defect that
             // froze every label in the generated TaskApp.
-            format!(
-                " Text=\"{{x:Bind {}, Mode=OneWay}}\"",
-                ctx.slot_xbind_path(slot)
-            )
+            xaml_text_binding(&ctx.slot_xbind_path(slot), uppercase, ctx)
         }
         Some(LayoutPropValue::String(s)) => {
-            let escaped = escape_xaml_attr(s);
+            let value = if uppercase { s.to_uppercase() } else { s.clone() };
+            let escaped = escape_xaml_attr(&value);
             format!(" Text=\"{escaped}\"")
         }
         Some(LayoutPropValue::Keyword(k)) => {
@@ -4961,9 +5116,10 @@ fn emit_text(
             // the React backend's behaviour pre-PR-2).
             if ctx.lookup_for_binding(k).is_some() || ctx.lookup_for_index(k).is_some() {
                 let pascal = kebab_to_pascal_case(k);
-                format!(" Text=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
+                xaml_text_binding(&pascal, uppercase, ctx)
             } else {
-                let escaped = escape_xaml_attr(k);
+                let value = if uppercase { k.to_uppercase() } else { k.clone() };
+                let escaped = escape_xaml_attr(&value);
                 format!(" Text=\"{escaped}\"")
             }
         }
@@ -4977,10 +5133,10 @@ fn emit_text(
             // OneWay is never wrong here — only occasionally redundant.
             match lower_expr_for_xbind(src, ctx) {
                 ExprLowering::Bindable(path) => {
-                    format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\"")
+                    xaml_text_binding(&path, uppercase, ctx)
                 }
                 ExprLowering::Helper(call) => {
-                    format!(" Text=\"{{x:Bind {call}, Mode=OneWay}}\"")
+                    xaml_text_binding(&call, uppercase, ctx)
                 }
                 ExprLowering::Unsupported(reason) => {
                     return Err(PipelineEmitError::UnsupportedExpression(reason));
@@ -5466,7 +5622,7 @@ fn emit_code_behind(
     let property_change_interface = if ctx.row_projections.is_empty() {
         ""
     } else {
-        ", INotifyPropertyChanged"
+        ", INotifyPropertyChanged, ISupportInitialize"
     };
     writeln!(
         out,
@@ -5491,18 +5647,34 @@ fn emit_code_behind(
         )
         .unwrap();
         writeln!(out).unwrap();
-        writeln!(
-            out,
-            "    private void NotifyRowProjectionChanged(string propertyName)"
-        )
-        .unwrap();
-        writeln!(out, "    {{").unwrap();
-        writeln!(
-            out,
-            "        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));"
-        )
-        .unwrap();
-        writeln!(out, "    }}").unwrap();
+        out.push_str(r#"    private int projectionBatchDepth;
+    private readonly List<string> pendingProjections = new();
+
+    // Runtime props describe one state. Avoid rebuilding rows for each
+    // intermediate dependency value while that state is being applied.
+    public void BeginInit() => projectionBatchDepth++;
+    public void EndInit()
+    {
+        if (projectionBatchDepth == 0)
+            throw new InvalidOperationException("EndInit requires BeginInit");
+        if (--projectionBatchDepth != 0) return;
+        var pending = pendingProjections.ToArray();
+        pendingProjections.Clear();
+        foreach (var propertyName in pending)
+            NotifyRowProjectionChanged(propertyName);
+    }
+
+    private void NotifyRowProjectionChanged(string propertyName)
+    {
+        if (projectionBatchDepth != 0)
+        {
+            if (!pendingProjections.Contains(propertyName))
+                pendingProjections.Add(propertyName);
+            return;
+        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+"#);
         writeln!(out).unwrap();
     }
 
@@ -5873,6 +6045,22 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
     // Keyboard navigation reuses the authored pointer activation contract.
     // Empty/noninteractive cells keep ordinary native focus-only navigation.
     public event EventHandler? MosaicNavigate;
+
+    // Authored containers handle Tapped before it bubbles to this wrapper.
+    // Return a callback rather than focus immediately: adapter dispatch may
+    // discard this cell. Retain only the table and its logical coordinates.
+    internal static Action? CapturePointerFocus(DependencyObject? source)
+    {
+        while (source is not null && source is not __COMPONENT__MosaicTableCell)
+            source = VisualTreeHelper.GetParent(source);
+        if (source is not __COMPONENT__MosaicTableCell cell) return null;
+        var table = cell.FindTable();
+        if (table is null) return null;
+        var row = cell.Row;
+        var column = cell.Column;
+        return () => table.DispatcherQueue.TryEnqueue(() =>
+            table.FindCell(row, column)?.Focus(FocusState.Pointer));
+    }
 
     public int Row
     {
@@ -7103,9 +7291,8 @@ fn find_prop_value<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a Layo
 /// Use this for every value that came from an author as text. A value the
 /// emitter *built* as markup (a `{x:Bind …}` state trigger, an `xmlns` URI)
 /// must use [`escape_xml_attr`] instead, or the `{}` would turn it into
-/// text. A style-derived value uses [`escape_style_attr`], which keeps an
-/// allow-listed `{ThemeResource …}` as markup and drops the property for
-/// any other brace-led value (a style value is not text, so escaping it
+/// text. A style-derived value uses [`escape_style_attr`], which drops the
+/// property for any brace-led value (the allow-list is empty since X-4) (a style value is not text, so escaping it
 /// into text would only make the XAML fail to load).
 fn escape_xaml_attr(s: &str) -> String {
     let escaped = escape_xml_attr(s);
@@ -7785,6 +7972,7 @@ fn emit_converter_resource_block(
     needs_bool_to_vis: bool,
     needs_focus_state: bool,
     needs_string_equals: bool,
+    needs_uppercase: bool,
 ) -> String {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
@@ -7808,6 +7996,13 @@ fn emit_converter_resource_block(
         writeln!(
             out,
             "{pad2}<local:StringEqualsConverter x:Key=\"StringEqualsConverter\"/>"
+        )
+        .unwrap();
+    }
+    if needs_uppercase {
+        writeln!(
+            out,
+            "{pad2}<local:UppercaseConverter x:Key=\"UppercaseConverter\"/>"
         )
         .unwrap();
     }
@@ -7909,6 +8104,31 @@ fn emit_string_equals_converter_source(namespace: &str) -> String {
              public object Convert(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
                  return string.Equals(value as string, parameter as string, StringComparison.Ordinal);\n    \
+             }}\n\n    \
+             public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 throw new NotImplementedException();\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+/// C# source for CSS `text-transform: uppercase` on bound TextBlock content.
+/// WinUI has no TextBlock casing property, so literals are transformed during
+/// emission and live values pass through this one-way converter.
+fn emit_uppercase_converter_source(namespace: &str) -> String {
+    format!(
+        "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
+         using System;\n\
+         using Microsoft.UI.Xaml.Data;\n\
+         \n\
+         namespace {namespace};\n\
+         \n\
+         public sealed class UppercaseConverter : IValueConverter\n\
+         {{\n    \
+             public object Convert(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 return value?.ToString()?.ToUpperInvariant() ?? string.Empty;\n    \
              }}\n\n    \
              public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
@@ -9268,6 +9488,18 @@ public sealed partial class MainWindow : Window
 
     private async void OnComponentDispatch(object? sender, {name}Event mosaicEvent)
     {{
+        using var handlerProfile = MosaicRuntimeHost.BeginProfile("interaction-handler");
+        var frameProfile = MosaicRuntimeHost.BeginProfile("interaction-next-render");
+        if (frameProfile is not null)
+        {{
+            System.EventHandler<object>? rendered = null;
+            rendered = (_, _) =>
+            {{
+                Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= rendered;
+                frameProfile.Dispose();
+            }};
+            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += rendered;
+        }}
         var result = await MosaicRuntimeHost.HandleRequiredEvent(
             this.Component, mosaicEvent, RequiredProps);
         this.StatusText.Text = result.Status;
@@ -15326,6 +15558,37 @@ mod tests {
     }
 
     #[test]
+    fn uppercase_text_transform_uses_a_live_binding_converter() {
+        let c = component("Foo", vec![slot("greeting", SlotType::Text, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some("label".to_string()),
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("greeting".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("label", vec![("text-transform", "uppercase")]);
+        let r = compile(&c, &l, &s);
+
+        assert!(r.xaml.contains("Text=\"{x:Bind Greeting, Converter={StaticResource UppercaseConverter}, Mode=OneWay}\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<local:UppercaseConverter x:Key=\"UppercaseConverter\"/>"));
+        assert!(r.if_helpers.iter().any(|file| {
+            file.filename == "UppercaseConverter.cs" && file.source.contains("ToUpperInvariant")
+        }));
+        assert!(dropped_style_properties(&s).is_empty());
+
+        let unsupported = style_for_box("label", vec![("text-transform", "capitalize")]);
+        let drops = dropped_style_properties(&unsupported);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "text-transform");
+    }
+
+    #[test]
     fn text_with_kebab_slot_pascal_cases_in_xbind() {
         let c = component(
             "Foo",
@@ -16932,6 +17195,10 @@ mod tests {
         assert!(r.code_behind.contains("target.MosaicNavigate?.Invoke(target, EventArgs.Empty)"));
         assert!(r.code_behind.contains("ReferenceEquals(FocusManager.GetFocusedElement(XamlRoot), this)"));
         assert!(r.code_behind.contains("table.FindCell(nextRow, nextColumn)?.Focus"));
+        let capture = r.code_behind.find("var restoreFocus = SheetMosaicTableCell.CapturePointerFocus").unwrap();
+        let tap_body = &r.code_behind[capture..];
+        assert!(tap_body.find("Dispatch?.Invoke").unwrap() < tap_body.find("restoreFocus?.Invoke()").unwrap());
+        assert!(r.code_behind.contains("table.FindCell(row, column)?.Focus(FocusState.Pointer)"));
         table.children[1].children[0].children[0].children[0].children[0].children.push(cell);
         let result = from_pipeline(&c, &layout_with_root("Sheet", table), &empty_style("Sheet"), None, &EmitOptions::default());
         assert!(result.is_err(), "multiple authored actions must not pick an arbitrary callback");
@@ -20933,6 +21200,7 @@ mod tests {
             emit_bool_to_vis_converter_source("Mosaic.Generated"),
             emit_focus_state_to_bool_converter_source("Mosaic.Generated"),
             emit_string_equals_converter_source("Mosaic.Generated"),
+            emit_uppercase_converter_source("Mosaic.Generated"),
         ] {
             names.extend(declared(&source));
         }
@@ -20940,7 +21208,7 @@ mod tests {
         names.dedup();
         assert_eq!(
             names,
-            ["App", "BoolToVisibilityConverter", "FocusStateToBoolConverter", "MainWindow", "StringEqualsConverter"]
+            ["App", "BoolToVisibilityConverter", "FocusStateToBoolConverter", "MainWindow", "StringEqualsConverter", "UppercaseConverter"]
         );
         for name in &names {
             assert!(SHELL_RESERVED_NAMES.contains(&name.as_str()), "{name} is not reserved");
@@ -23764,6 +24032,37 @@ mod tests {
         assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
     }
 
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = |width: &str| {
+            vec![
+                StyleProp {
+                    name: "border-bottom-width".to_string(),
+                    value: width.to_string(),
+                },
+                StyleProp {
+                    name: "border-bottom-style".to_string(),
+                    value: "solid".to_string(),
+                },
+            ]
+        };
+        assert!(lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("0px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "dashed"
+        ));
+    }
+
     /// X4: `background: "transparent"` in `.msl` must emit
     /// `Background="Transparent"` (PascalCase) — WinUI 3's markup
     /// compiler rejects the lowercase form.  Caught by the toolkit
@@ -24162,22 +24461,13 @@ mod tests {
         }
     }
 
-    /// X5: a brace-led value is never px-stripped or case-mangled. An
-    /// allow-listed resource lookup reaches XAML byte-for-byte; a
-    /// `{x:Bind …}` is not allow-listed for styles (#15487 follow-up), so
-    /// the property is dropped.
+    /// X5 / X-4: a brace-led value is never px-stripped or case-mangled
+    /// into something else, and never emitted: every brace-led style value,
+    /// resource lookups included, drops its property.
     #[test]
     fn x5_brace_value_is_never_px_stripped_or_case_mangled() {
-        // FontSize is a length setter; the lookup must not be px-touched.
-        assert_eq!(
-            translate_xaml_value("FontSize", "{StaticResource BodyFontSize}"),
-            Some("{StaticResource BodyFontSize}".to_string())
-        );
-        // TextAlignment is PascalCased; the lookup must not be.
-        assert_eq!(
-            translate_xaml_value("TextAlignment", "{ThemeResource align.key}"),
-            Some("{ThemeResource align.key}".to_string())
-        );
+        assert_eq!(translate_xaml_value("FontSize", "{StaticResource BodyFontSize}"), None);
+        assert_eq!(translate_xaml_value("TextAlignment", "{ThemeResource align.key}"), None);
         assert_eq!(
             translate_xaml_value("FontSize", "{x:Bind CellFontSize}"),
             None
@@ -26800,19 +27090,14 @@ mod tests {
 
     #[test]
     fn style_markup_extension_is_not_turned_into_text() {
-        // An allow-listed `{ThemeResource …}` style value must stay a live
-        // resource lookup: the style path must not add the `{}` prefix
-        // that authored literal text gets.
+        // A brace-led style value is neither a live lookup nor escaped
+        // text (which a Brush parser would throw on at load): X-4 drops it.
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root("Foo", leaf("Box", Some("card"), vec![]));
         let s = style_for_box("card", vec![("background", "{ThemeResource CardBrush}")]);
         let r = compile(&c, &l, &s);
-        assert!(
-            r.xaml.contains("Background=\"{ThemeResource CardBrush}\""),
-            "got:\n{}",
-            r.xaml
-        );
-        assert!(!r.xaml.contains("{}{ThemeResource"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("Background="), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("ThemeResource"), "got:\n{}", r.xaml);
     }
 
     #[test]
@@ -26829,7 +27114,7 @@ mod tests {
             states: vec![XamlVisualState {
                 name: "MosaicState1State0".into(),
                 trigger_value: "{x:Bind Row.Selected && Row.Live, Mode=OneWay}".into(),
-                value: "{ThemeResource AccentBrush}".into(),
+                value: "Red".into(),
                 transition: None,
             }],
         }];
@@ -26838,7 +27123,7 @@ mod tests {
             out.contains("<StateTrigger IsActive=\"{x:Bind Row.Selected &amp;&amp; Row.Live, Mode=OneWay}\"/>"),
             "got:\n{out}"
         );
-        assert!(out.contains("Value=\"{ThemeResource AccentBrush}\""), "got:\n{out}");
+        assert!(out.contains("Value=\"Red\""), "got:\n{out}");
         assert!(!out.contains("\"{}{"), "got:\n{out}");
         groups[0].states[0].trigger_value = "True".into();
         assert!(emit_visual_state_groups(&groups, 0).contains("IsActive=\"True\""));
@@ -26903,29 +27188,22 @@ mod style_markup_allow_list_tests {
         "{ThemeResource Brand.Accent_2}",
     ];
 
+    /// X-4: mosstyle is platform-neutral, so even a well-formed resource
+    /// lookup, which the #16948 allow-list once let through, is a platform
+    /// value and is refused like every other brace-led value.
     #[test]
-    fn allowed_resource_lookups_pass_through() {
+    fn resource_lookups_are_refused_too() {
+        assert!(STYLE_MARKUP_EXTENSIONS.is_empty());
         for value in ALLOWED {
-            assert!(is_allowed_style_markup_extension(value), "{value:?}");
-            assert!(!is_refused_style_markup(value), "{value:?}");
+            assert!(!is_allowed_style_markup_extension(value), "{value:?}");
+            assert!(is_refused_style_markup(value), "{value:?}");
             for key in ["Background", "FontSize", "TextAlignment", "Opacity"] {
-                assert_eq!(
-                    translate_xaml_value(key, value).as_deref(),
-                    Some(*value),
-                    "{key}: {value:?}"
-                );
+                assert_eq!(translate_xaml_value(key, value), None, "{key}: {value:?}");
             }
-            assert_eq!(escape_style_attr(value).as_deref(), Some(*value));
+            assert_eq!(escape_style_attr(value), None, "{value:?}");
         }
-        // Surrounding whitespace is trimmed to the canonical lookup.
-        assert_eq!(
-            translate_xaml_value("Background", "  {ThemeResource CardBrush} ").as_deref(),
-            Some("{ThemeResource CardBrush}")
-        );
-        assert_eq!(
-            escape_style_attr(" {StaticResource CardBrush}").as_deref(),
-            Some("{StaticResource CardBrush}")
-        );
+        assert_eq!(translate_xaml_value("Background", "  {ThemeResource CardBrush} "), None);
+        assert_eq!(escape_style_attr(" {StaticResource CardBrush}"), None);
     }
 
     #[test]
@@ -27042,7 +27320,7 @@ mod style_markup_allow_list_tests {
     }
 
     #[test]
-    fn base_attribute_drops_a_binding_and_keeps_a_theme_resource() {
+    fn base_attribute_drops_a_binding_and_a_theme_resource() {
         let c = component("Card");
         let l = layout("Card", part_node("Box", "card", Vec::new()));
         for value in REFUSED {
@@ -27062,14 +27340,18 @@ mod style_markup_allow_list_tests {
                 "{value:?}"
             );
         }
+        // X-4: a resource lookup is a platform value too, dropped and reported.
         let s = style(
             "Card",
             "card",
             &[("opacity", "{ThemeResource CardOpacity}")],
             Vec::new(),
         );
-        assert!(xaml(&c, &l, &s).contains("Opacity=\"{ThemeResource CardOpacity}\""));
-        assert!(markup_drops(&s).is_empty());
+        assert!(!xaml(&c, &l, &s).contains("Opacity="));
+        assert_eq!(
+            markup_drops(&s),
+            vec![("opacity".to_string(), "{ThemeResource CardOpacity}".to_string())]
+        );
     }
 
     #[test]
@@ -27159,6 +27441,7 @@ mod style_markup_allow_list_tests {
             markup_drops(&s),
             vec![("border-top-color".to_string(), "{x:Null}".to_string())]
         );
+        // X-4: a lookup for the brush is a platform value: dropped too.
         let s = style(
             "Edge",
             "edge",
@@ -27168,12 +27451,15 @@ mod style_markup_allow_list_tests {
             ],
             Vec::new(),
         );
-        assert!(xaml(&c, &l, &s).contains("BorderBrush=\"{ThemeResource EdgeBrush}\""));
-        assert!(markup_drops(&s).is_empty());
+        assert!(!xaml(&c, &l, &s).contains("BorderBrush="));
+        assert_eq!(
+            markup_drops(&s),
+            vec![("border-color".to_string(), "{ThemeResource EdgeBrush}".to_string())]
+        );
     }
 
     #[test]
-    fn visual_state_setter_omits_a_binding_and_keeps_a_theme_resource() {
+    fn visual_state_setter_omits_a_binding_and_a_theme_resource() {
         let c = component("Pick");
         let button = part_node(
             "HostButton",
@@ -27203,6 +27489,7 @@ mod style_markup_allow_list_tests {
             assert!(!out.contains("x:Bind M()"), "{value:?}:\n{out}");
         }
 
+        // X-4: a resource lookup is a platform value too: no setter.
         let s = style(
             "Pick",
             "button",
@@ -27210,10 +27497,8 @@ mod style_markup_allow_list_tests {
             vec![state("{ThemeResource AccentBrush}")],
         );
         let out = xaml(&c, &l, &s);
-        assert!(
-            out.contains("Value=\"{ThemeResource AccentBrush}\""),
-            "got:\n{out}"
-        );
+        assert!(!out.contains("<Setter "), "got:\n{out}");
+        assert!(!out.contains("ThemeResource"), "got:\n{out}");
     }
 
     fn one_state_group(value: &str) -> Vec<XamlVisualStateGroup> {

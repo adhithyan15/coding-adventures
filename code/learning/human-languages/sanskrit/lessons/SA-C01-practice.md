@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-HISTORY-JONES-1786]
 practises:
-  knowledge: [SA-LEX-NAMASTE, SA-LEX-NAMASKARA, SA-LEX-DHANYAVADA, SA-LEX-SVAGATAM, SA-LEX-AM-YES, SA-LEX-NA-NO, SA-ETYMON-NAMAS-TE, SA-ETYMON-SU-AGATA, SA-ETYMON-NA-NEGATIVE, SA-HISTORY-JONES-1786]
+  knowledge: [SA-LEX-NAMASTE, SA-LEX-NAMASKARA, SA-LEX-DHANYAVADA, SA-LEX-SVAGATAM, SA-LEX-AM-YES, SA-LEX-NA-NO, SA-ETYMON-NAMAS-TE, SA-ETYMON-SU-AGATA, SA-ETYMON-NA-NEGATIVE, SA-HISTORY-JONES-1786, SA-ETYMON-NAMAS-KARA, SA-ETYMON-DHANYA-VADA]
 skills: [listening, speaking]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
@@ -41,12 +41,12 @@ west.
 
 ## Guided Practice
 
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASTE, SA-LEX-NAMASKARA, SA-LEX-DHANYAVADA, SA-LEX-SVAGATAM, SA-LEX-AM-YES, SA-LEX-NA-NO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASTE, SA-LEX-NAMASKARA, SA-LEX-DHANYAVADA, SA-LEX-SVAGATAM, SA-LEX-AM-YES, SA-LEX-NA-NO, SA-ETYMON-NAMAS-KARA, SA-ETYMON-DHANYA-VADA] -->
 
 [PAUSE 1s each]
 - [YOU SAY: hello, "a bow to you" — *namaste*]
 - [YOU SAY: hello, "the making of a bow" — *namaskāraḥ*]
-- [YOU SAY: thank you — *dhanyavādaḥ*]
+- [YOU SAY: thank you, "a saying of 'you are worthy'" — *dhanyavādaḥ*]
 - [YOU SAY: welcome, "well come" — *svāgatam*]
 - [YOU SAY: yes and no — *ām* / *na*]
 

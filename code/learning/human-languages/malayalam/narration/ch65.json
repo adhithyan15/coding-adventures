@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Asking Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a4bc6f4ee00dd456",
+  "sourceHash": "fnv1a64:a8ef36d55660dc0d",
   "lessons": [
     {
       "id": "ML-C65-request",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:514b5cb674528459",
+      "sourceHash": "fnv1a64:00ff5ec1c7c3c59f",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ക്ഷീണം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ക്ഷീണം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ക്ഷീണം**]"
+              "source": "[YOU READ: **ക്ഷീണം**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf19e3e998f62e6d",
+      "sourceHash": "fnv1a64:19a46475933ba1f3",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ചുമ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ചുമ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ചുമ**]"
+              "source": "[YOU READ: **ചുമ**]"
             }
           ]
         },

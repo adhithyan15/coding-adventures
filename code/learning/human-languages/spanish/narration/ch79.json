@@ -135,6 +135,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-los-books",
               "prompt": "Say the books.",
               "assesses": [
@@ -154,6 +155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-los-why",
               "prompt": "Why is it los and not els?",
               "assesses": [
@@ -174,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-los-four",
               "prompt": "Give all four forms of the Spanish word for the.",
               "assesses": [

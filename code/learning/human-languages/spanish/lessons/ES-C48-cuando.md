@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-CUANDO, ES-GRAMMAR-BACKDROP-AND-EVENT, ES-ETYMON-QUANDO]
 practises:
-  knowledge: [ES-GRAMMAR-ASPECT-NOT-TIME, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-LEX-ESTUDIAR, ES-LEX-HABLAR, ES-LEX-QUE, ES-LEX-CUANDO, ES-GRAMMAR-BACKDROP-AND-EVENT, ES-ETYMON-QUANDO]
+  knowledge: [ES-GRAMMAR-ASPECT-NOT-TIME, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-LEX-ESTUDIAR, ES-LEX-HABLAR, ES-LEX-QUE, ES-LEX-CUANDO, ES-GRAMMAR-BACKDROP-AND-EVENT, ES-ETYMON-QUANDO, ES-ETYMON-QUESTION-QU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -43,7 +43,7 @@ been able to use one at a time. This chapter's word lets them share a sentence.
 - `diphthong-ua` — *cua* is one syllable, not two: *KWAN-doh*.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[ES-LEX-CUANDO, ES-ETYMON-QUANDO]; assesses=[ES-LEX-QUE] -->
+<!-- hl-knowledge: introduces=[ES-LEX-CUANDO, ES-ETYMON-QUANDO]; assesses=[ES-LEX-QUE, ES-ETYMON-QUESTION-QU] -->
 
 > **cuando** — *when*.
 
@@ -64,7 +64,7 @@ Now the two tenses can do their jobs side by side:
 > ***Estudiaba** **cuando** **habló** Ana.*
 > — I **was studying** when Ana **spoke**.
 
-Read what each tense is doing:
+Here is what each tense is doing:
 
 - *Estudiaba* — imperfect. The **scene**. Already going, no edges, and it does
   not stop being true when something else happens.

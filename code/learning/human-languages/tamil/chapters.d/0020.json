@@ -10,11 +10,15 @@
   "payoff": {
     "lesson": "TA-C20-vaanilai",
     "kind": "production",
-    "summary": "Take vāṉilai apart into vāṉam plus nilai, then report the weather with mazhai peykiRathu.",
+    "summary": "Count 11 and 12 as ten-plus-a-digit and take irupathu apart as \"two-tens\", then take vāṉilai apart into vāṉam plus nilai and report the weather with mazhai peykiRathu.",
     "assesses": [
       "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
+      "TA-LEX-PATHINONDRU-IRUPATHU-01",
+      "TA-LEX-PATHINONDRU-IRUPATHU-02",
+      "TA-PRAGMATICS-PATHINONDRU-IRUPATHU-03",
       "TA-LEX-VAANILAI-01",
       "TA-LEX-VAANILAI-02"
-    ]
+    ],
+    "note": "TA-C20-vaanilai assesses five of the chapter's six atoms: all three number atoms (TA-C20-pathinondru-irupathu, now a prerequisite) and both weather atoms. The letter ய (TA-SCRIPT-RECOG-124, TA-S124-letter-ya, 711) is taught after the payoff and is not assessed."
   }
 }

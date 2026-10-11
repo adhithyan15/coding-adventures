@@ -42,7 +42,9 @@ to *-tion* at the back.)
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-NCIA-NCE, ES-FRIEND-OSO-OUS, ES-FRIEND-ARIO-ARY, ES-FRIEND-MENTE-LY, ES-SOUND-ES-PROTHESIS] -->
 
-Read it slowly. **Not one of these words appears anywhere else in this book.**
+[YOU READ: the passage below slowly]
+
+**Not one of these words appears anywhere else in this book.**
 
 > *La comunidad literaria tiene una tradición extraordinaria. Su estructura es*
 > *voluntaria, evidentemente, pero la actividad es enorme.*

@@ -59,7 +59,8 @@ A one-word answer, and a second word with no travel history.
 - [YOU SAY: *alam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *alam*, then *keśaḥ*, and name what those two have in common]
-- [YOU RECALL: say *śiraḥ*, then read **राजा**]
+- [YOU RECALL: say *śiraḥ*]
+- [YOU READ: **राजा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03] -->

@@ -38,7 +38,7 @@ both, and the second one is the part that matters.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C441-TRATO-01, ES-LEX-C441-TRATO-02, ES-LEX-C441-TRATO-03] -->
 
-Read both, then answer.
+[YOU READ: both, then answer]
 
 **1 — oferta de empleo**
 
@@ -79,9 +79,11 @@ and a bank notice are written by the same hand.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C441-TRATO-01, ES-LEX-C441-TRATO-02, ES-LEX-C441-TRATO-03, ES-LEX-C441-TRATO-04, ES-LEX-C441-TRATO-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Five sentences: say you
-applied, say what contract you were offered, say you signed it, say you have a
-loan to pay, and say when the bill arrives.
+[PAUSE 3s] Now your turn, out loud. Five sentences: say you applied, say what
+contract you were offered, say you signed it, say you have a loan to pay, and
+say when the bill arrives.
+
+[YOU WRITE: the same five sentences]
 
 Then check yourself: did **fijo** agree with *contrato*, and did you use
 **pedir** with *préstamo* rather than *preguntar*?

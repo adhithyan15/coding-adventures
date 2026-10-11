@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "To jump, To swim, To climb, To open, To call",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:217214e858ff9113",
+  "sourceHash": "fnv1a64:872661bcb2e7e2b1",
   "lessons": [
     {
       "id": "GU-C138-kudvu",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:838f68c2729fd146",
+      "sourceHash": "fnv1a64:dd7d37635577ac6c",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the line once, at speaking pace: મારું નામ મીરા છે।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, at speaking pace — મારું નામ મીરા છે।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, at speaking pace — **મારું નામ મીરા છે।**]"
             }
           ]
         },

@@ -52,7 +52,8 @@ memorise the list.
 | *ser* | **sé** | be |
 | *venir* | **ven** | come |
 
-Read the middle column down. **Every single one is one syllable**, and most are
+Say the eight commands in a row: *di, haz, ve, pon, ten, sal, sé, ven*. **Every
+single one is one syllable**, and most are
 two or three letters. No other set of forms in Spanish is this short.
 
 That is the fact worth carrying, and it has a cause. A command is the sentence

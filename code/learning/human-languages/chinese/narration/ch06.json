@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "See You Again",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:44c430fde1254afd",
+  "sourceHash": "fnv1a64:6760201714550272",
   "lessons": [
     {
       "id": "ZH-W06-zai",
@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:94eddd4412aa6108",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -152,6 +155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W06-zai-frame",
               "prompt": "The frame's top, right side and hook are drawn how -- as three strokes, or as one?",
               "assesses": [
@@ -187,20 +191,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:aaff03a235e7f3ce",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -329,6 +336,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W06-jian-legs",
               "prompt": "What sits underneath the frame in this character, and where have you seen it before?",
               "assesses": [
@@ -478,7 +486,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "再见 (zàijiàn) — give its literal reading before its translation",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 再见 — give its literal reading before its translation]"
@@ -501,6 +509,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C06-zaijian-literal",
               "prompt": "Read the goodbye word literally, character by character. What do the two characters say?",
               "assesses": [
@@ -536,7 +545,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16da26941dafaebc",
+      "sourceHash": "fnv1a64:f89a0ad7bd638004",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +572,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Everything below is a character you have written yourself. Read it straight through:"
+              "text": "Everything below is a character you have written yourself."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange straight through",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange straight through]"
             },
             {
               "kind": "speech",
@@ -581,8 +599,13 @@
           "title": "What you've built — and what stays invisible",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the exchange out loud once more, and count the places where your mouth does something the page does not record:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange out loud once more, and count the places where your mouth does something the page does not record",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange out loud once more, and count the places where your mouth does something the page does not record]"
             },
             {
               "kind": "speech",
@@ -652,8 +675,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C06-practice-close",
-              "prompt": "You have opened an exchange, answered inside it, and closed it. Which line closes it, in pinyin?",
+              "prompt": "You have opened an exchange, answered inside it, and closed it. Which line closes it?",
               "assesses": [
                 "ZH-DIALOGUE-PART"
               ],

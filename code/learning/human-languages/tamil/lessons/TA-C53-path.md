@@ -56,7 +56,8 @@ Four: three places, and now something joining them.
 - [YOU SAY: *pātai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vayal*, then *pātai*, the field and the way to it]
-- [YOU RECALL: read **விண்மீன்**, then say *vēr*]
+- [YOU READ: **விண்மீன்**]
+- [YOU RECALL: say *vēr*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C53-LAND-04] -->

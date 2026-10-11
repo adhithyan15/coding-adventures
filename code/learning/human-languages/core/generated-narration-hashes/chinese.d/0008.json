@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 8,
-  "sourceHash": "fnv1a64:74196f429addec86",
+  "sourceHash": "fnv1a64:d2160b88e9c2bada",
   "lessonIds": [
     "ZH-W08-wo",
     "ZH-C08-wo",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch08.txt",
   "json": "chinese/narration/ch08.json",
-  "textHash": "fnv1a64:4a18175e16509cd1",
-  "jsonHash": "fnv1a64:6bbf81ce2f3baef5",
+  "textHash": "fnv1a64:efbea0a8a3c7b179",
+  "jsonHash": "fnv1a64:d4d59497cdb1b363",
   "findings": []
 }

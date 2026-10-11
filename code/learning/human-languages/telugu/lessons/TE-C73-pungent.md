@@ -58,7 +58,8 @@ Four. And the one you may want తక్కువ of.
 - [YOU SAY: *kāraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāraṁ*, then *takkuva* and *kāraṁ* together]
-- [YOU RECALL: read **మరదలు**, then say *tūkaṁ*]
+- [YOU READ: **మరదలు**]
+- [YOU RECALL: say *tūkaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04] -->

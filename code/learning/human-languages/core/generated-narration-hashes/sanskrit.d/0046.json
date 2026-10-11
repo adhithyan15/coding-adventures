@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 46,
-  "sourceHash": "fnv1a64:75e7fd2d0e43bbbc",
+  "sourceHash": "fnv1a64:0bfadb195b1f2216",
   "lessonIds": [
     "SA-C46-sun",
     "SA-C46-ray",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch46.txt",
   "json": "sanskrit/narration/ch46.json",
-  "textHash": "fnv1a64:7ef9315d5df480f5",
-  "jsonHash": "fnv1a64:3813aae5a8e7f50b",
+  "textHash": "fnv1a64:d655b162dc6095ba",
+  "jsonHash": "fnv1a64:285203a934d7f0c8",
   "findings": []
 }

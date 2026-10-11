@@ -3,8 +3,8 @@
   "language": "gujarati",
   "chapter": 41,
   "title": "Who, Where, When, How Many",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eac0633344c6dc11",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1d23ca512480bbff",
   "lessons": [
     {
       "id": "GU-C37-kon",
@@ -14,20 +14,13 @@
       "romanization": "koṇ",
       "gloss": "who — the question this book could not ask",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4cc0237fa722f3c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e292a44b69e1b486",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -66,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the front of it. કેમ, કે, કોણ (koṇ) — the same ક- every time. Gujarati builds its question words on one stem, and once you have heard three of them the rest of the family announces itself."
+              "text": "Notice the front of it. કેમ, કે, કોણ (koṇ) — the same ક- every time. Gujarati builds its question words on one stem, and once you have heard three of them the rest of the family announces itself."
             },
             {
               "kind": "speech",
@@ -146,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bfcf85062a7f33f",
+      "sourceHash": "fnv1a64:412eff4952c2e8d3",
       "notice": null,
       "blocks": [
         {
@@ -162,13 +155,13 @@
             },
             {
               "kind": "speech",
-              "text": "One lesson back, who. Then read the word for city, from the places chapter far behind you."
+              "text": "One lesson back, who. Then the word for city, from the places chapter far behind you."
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "શહેર",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **શહેર**]"
@@ -193,8 +186,17 @@
               "text": "This is the question the track has most plainly been missing. It teaches શહેર, ગામ, ઘર, શાળા and રસ્તો — city, village, home, school and road — and until this lesson there was no way to ask where any of them was."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "that row of five aloud before you go on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: that row of five aloud before you go on]"
+            },
+            {
               "kind": "speech",
-              "text": "Read that row aloud before you go on. Those five words were written more than a hundred lessons ago and most of them have not been asked for since; reading them cold, here, is the point of putting them in this lesson rather than a shorter example."
+              "text": "Those five words were written more than a hundred lessons ago and most of them have not been asked for since; reading them cold, here, is the point of putting them in this lesson rather than a shorter example."
             }
           ]
         },
@@ -270,19 +272,24 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:eca896c657f85656",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — four parts, none of them new"
+          "Warm-up",
+          "Script — four parts, none of them new",
+          "Writing — first controlled question",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — four parts, none of them new until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — four parts, none of them new, Writing — first controlled question and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -348,6 +355,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C37-kyaan-write-controlled-question",
               "prompt": "With no word bank, romanization, or copyable answer, write the Gujarati question meaning: Where is the home?",
               "assesses": [

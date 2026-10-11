@@ -41,13 +41,15 @@ reviews_of: [ZH-C18-hear-shu, ZH-W18-shu-delayed]
 
 > **书** — *shū* — **book**
 
-Hide the pinyin. Read 书, hold the level first tone, then give its meaning.
+[YOU COVER: the pinyin]
+
+[YOU READ: 书, hold the level first tone, then give its meaning]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-SHU-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear *shū*. Wait three seconds, then write **书** once without a model.
+Hear *shū*. Wait three seconds. [YOU WRITE: **书** once, without a model]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHU-01, ZH-SCRIPT-SHU-01] -->

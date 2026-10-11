@@ -37,8 +37,8 @@ reviews_of: [MW-R21-script-close, MW-C13-bhaav, MW-C12-mausam, MW-W12-au-matra]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOW-FOUR-SKILL-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-AU-MATRA-01] -->
 
-[PAUSE 24s] Recall the three-counter request payoff. Say price and weather,
-then write both and point to the **ौ** inside one of them.
+[PAUSE 24s] Recall the three-counter request payoff. Say price and weather.
+[YOU WRITE: both words, and point to the **ौ** inside one of them]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-KITNO-01]; assesses=[] -->

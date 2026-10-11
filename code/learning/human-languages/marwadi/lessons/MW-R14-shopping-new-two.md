@@ -36,14 +36,17 @@ reviews_of: [MW-C14-sasta, MW-C14-samaan, MW-C13-shopping-three, MW-W13-u-matra,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-GA-01, MW-SCRIPT-DDA-01, MW-LEX-DADA-01, MW-LEX-THANDI-01] -->
 
-[PAUSE 24s] Recall the three-word shopping payoff, then write **ु**, **ौ**,
-**ग**, and **ड**, then say paternal grandfather and cold.
+[PAUSE 24s] Recall the three-word shopping payoff.
+[YOU WRITE: **ु**, **ौ**, **ग**, and **ड**]
+
+Then say paternal grandfather and cold.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
-Hear the two words in both orders, give each meaning, read two cards, then
-write both from sound.
+Hear the two words in both orders and give each meaning. [YOU READ: two cards]
+
+[YOU WRITE: both from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-LEX-SAMAAN-01] -->

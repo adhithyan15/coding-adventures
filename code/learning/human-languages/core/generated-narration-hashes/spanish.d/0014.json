@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 14,
-  "sourceHash": "fnv1a64:225648cdfd0645c8",
+  "sourceHash": "fnv1a64:815ece2dd20c6812",
   "lessonIds": [
     "ES-C06-cafe",
     "ES-C06-por-favor",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch14.txt",
   "json": "spanish/narration/ch14.json",
-  "textHash": "fnv1a64:eea30294c1ede3c5",
-  "jsonHash": "fnv1a64:e228c871dbffa96f",
+  "textHash": "fnv1a64:1ca66818a4319cf1",
+  "jsonHash": "fnv1a64:5d91971992afa3a8",
   "findings": []
 }

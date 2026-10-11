@@ -58,7 +58,8 @@ Two. And one of them you had already used once.
 - [YOU SAY: *ḍabbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ḍabbu*, then *lēdu*, as the phrase you already knew]
-- [YOU RECALL: read **కప్ప**, then say *atta*]
+- [YOU READ: **కప్ప**]
+- [YOU RECALL: say *atta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02] -->

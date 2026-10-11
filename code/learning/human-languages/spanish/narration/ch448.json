@@ -4,7 +4,7 @@
   "chapter": 448,
   "title": "La mudanza",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:71c973dcc546457d",
+  "sourceHash": "fnv1a64:4567ddc048c80983",
   "lessons": [
     {
       "id": "ES-C448-mudarse",
@@ -673,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c69a9b6e21231171",
+      "sourceHash": "fnv1a64:666002500302b35f",
       "notice": null,
       "blocks": [
         {
@@ -761,7 +761,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep the pair from the lesson before this one in view. Roto is ruptus, bursting. Estropeado is turpis, shameful. Spanish named the two kinds of failure after two different pictures, and the pictures still sort them."
+              "text": "Keep the pair from the lesson before this one in mind. Roto is ruptus, bursting. Estropeado is turpis, shameful. Spanish named the two kinds of failure after two different pictures, and the pictures still sort them."
             }
           ]
         },
@@ -837,7 +837,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdc383103531f76b",
+      "sourceHash": "fnv1a64:cd7143aa98e4d0c1",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +853,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: to move house, the move, hard, out of order, in pieces."
+              "text": "From memory alone, say all five: to move house, the move, hard, out of order, in pieces."
             }
           ]
         },
@@ -987,16 +987,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:82a49ca2cb2fedd4",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {

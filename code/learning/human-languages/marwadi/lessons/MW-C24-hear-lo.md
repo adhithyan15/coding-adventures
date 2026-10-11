@@ -37,8 +37,8 @@ reviews_of: [MW-R23-script-close, MW-C23-karo, MW-C21-dikhavo, MW-C13-bhaav, MW-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01, MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-KARO-01] -->
 
-[PAUSE 24s] Recall the bargaining payoff and the three-word shopping payoff,
-then write price and *make it*.
+[PAUSE 24s] Recall the bargaining payoff and the three-word shopping payoff.
+[YOU WRITE: the words for price and *make it*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-LO-01]; assesses=[MW-LEX-KARO-01, MW-LEX-DIKHAVO-01] -->

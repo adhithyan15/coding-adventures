@@ -141,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-preterito-completo-story",
               "prompt": "Say: they spoke Spanish and they had time.",
               "assesses": [
@@ -159,6 +160,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-preterito-completo-we",
               "prompt": "Say: we ate at home.",
               "assesses": [
@@ -177,6 +179,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-preterito-completo-raw",
               "prompt": "Swap the -ron on tuvieron for -ra. What do you get?",
               "assesses": [

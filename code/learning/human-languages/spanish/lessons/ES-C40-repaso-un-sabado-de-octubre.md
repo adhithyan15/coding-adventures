@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-WEEKEND-01, ES-LEX-SEASONS-01, ES-LEX-MONTHS-01, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-NOON-MIDNIGHT-01, ES-GRAMMAR-TELLING-TIME-03, ES-GRAMMAR-WEATHER-05, ES-LEX-VEINTE-06, ES-LEX-AMARILLO-03]
+  knowledge: [ES-LEX-WEEKEND-01, ES-LEX-SEASONS-01, ES-LEX-MONTHS-01, ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-NOON-MIDNIGHT-01, ES-GRAMMAR-TELLING-TIME-03, ES-GRAMMAR-WEATHER-05, ES-LEX-VEINTE-06, ES-LEX-AMARILLO-03, ES-ETYMON-MONTHS-02, ES-ETYMON-NOON-MIDNIGHT-02, ES-ETYMON-LLOVER-06]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -47,12 +47,14 @@ Every piece below has been a separate chapter. Here they are as one day.
 > *Al **mediodía** el cielo está **amarillo**.*
 > *A **medianoche**, todavía **llueve**.*
 
-[PAUSE 3s] Read it again and count what it took: a day name, a month, a season,
-an hour, the minutes, a weather verb with nothing in front of it, two halves of
-the day, and a colour. Nine chapters, four lines.
+[PAUSE 3s] [YOU READ: the passage again and count what it took]
+
+It took a day name, a month, a season, an hour, the minutes, a weather verb with
+nothing in front of it, two halves of the day, and a colour. Nine chapters, four
+lines.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[]; assesses=[ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-MONTHS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-MONTHS-01, ES-ETYMON-MONTHS-02] -->
 
 One thing in that story is quietly wrong, and it has been wrong for two
 thousand years.
@@ -82,8 +84,10 @@ happening — which is why you can read them without being told what they mean.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKEND-01, ES-LEX-AMARILLO-03, ES-CULTURE-ROMAN-MONTH-NAMES] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKEND-01, ES-LEX-AMARILLO-03, ES-CULTURE-ROMAN-MONTH-NAMES, ES-ETYMON-NOON-MIDNIGHT-02, ES-ETYMON-LLOVER-06] -->
 
 [PAUSE 3s] What day was it? (***Sábado***.) What colour was the sky at noon?
 (***Amarillo***.) And what number is hiding in *diciembre*? (***Diez*** — ten,
 in the tenth month's old position.)
+
+[PAUSE 2s] Which two everyday words make *medianoche*? (***Media*** and ***noche*** — mid-night.) And what did Latin *pluere* lose on the way to *llueve*? (Its ***pl-***, turned to ***ll-***.)

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 1,
-  "sourceHash": "fnv1a64:fd4772569c89d1eb",
+  "sourceHash": "fnv1a64:46d636693b35520c",
   "lessonIds": [
     "ES-C01-hola",
     "ES-W00-hola-observe",
@@ -15,11 +15,11 @@
     "ES-C01-buenos-dias",
     "ES-C01-practice"
   ],
-  "voiceLessons": 7,
+  "voiceLessons": 6,
   "drivablePrefix": 1,
   "text": "spanish/narration/ch01.txt",
   "json": "spanish/narration/ch01.json",
-  "textHash": "fnv1a64:b069af4282c7c8c3",
-  "jsonHash": "fnv1a64:a6c5a9e7593a9a8e",
+  "textHash": "fnv1a64:06df5c4f3e0e5a64",
+  "jsonHash": "fnv1a64:0776682881a36a14",
   "findings": []
 }

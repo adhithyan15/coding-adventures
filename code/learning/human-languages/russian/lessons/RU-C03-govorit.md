@@ -56,14 +56,14 @@ mouth says *a*.
 ## Grammar Lens: verbs come in two families
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-TWO-VERB-FAMILIES]; assesses=[] -->
 
-> **Я говорю.** — *ya gavaryú* — **I speak.**
+> *ya gavaryú* — **I speak.**
 
-The **I** ending is the same **-ю** you put on *знаю*. Every Russian verb in the
+The **I** ending is the same **-ю** you put on *znáyu*. Every Russian verb in the
 present ends the same way for *I*. Then switch to *you*, and the two families
 separate:
 
-- **ты знаешь** — *ty znáyesh* — you know
-- **ты говоришь** — *ty gavarísh* — you speak
+- *ty znáyesh* — you know
+- *ty gavarísh* — you speak
 
 An **-е-** against an **-и-**. That one vowel is the whole difference, and it is
 why you learn the *you* form alongside the dictionary form: it names the family,
@@ -75,13 +75,13 @@ and the remaining endings follow from it.
 [PAUSE 1s]
 - [YOU SAY: the new letter — "**г** is gamma, and says *g* as in *go*"]
 - [YOU SAY: "говорить" — *ga-va-RIT'*, both *o*s leaning towards *a*]
-- [YOU SAY: "Я говорю" — same **-ю** as *знаю*]
-- [YOU SAY: the two families — "знаешь … говоришь"]
+- [YOU SAY: "Ya gavaryú" — same **-ю** as *znáyu*]
+- [YOU SAY: the two families — "znáyesh … gavarísh"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES] -->
 
 [PAUSE 3s] What sound is **г**? (A hard **g**, from Greek gamma.) Say
-"I speak." (**Я говорю**.) Which vowel separates the two verb families in the
-*you* form? (**-е-** in *знаешь* against **-и-** in *говоришь*.) Next: why
+"I speak." (*Ya gavaryú*.) Which vowel separates the two verb families in the
+*you* form? (**-е-** in *znáyesh* against **-и-** in *gavarísh*.) Next: why
 *говорить* is not English *govern*.

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C75-nicho-type",
-              "prompt": "Type the Marwadi for 'low'.",
+              "prompt": "Say the Marwadi for 'low'.",
               "assesses": [
                 "MW-LEX-C75-ADJ75-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C75-khali-type",
-              "prompt": "Type the Marwadi for 'empty'.",
+              "prompt": "Say the Marwadi for 'empty'.",
               "assesses": [
                 "MW-LEX-C75-ADJ75-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C75-garib-type",
-              "prompt": "Type the Marwadi for 'poor'.",
+              "prompt": "Say the Marwadi for 'poor'.",
               "assesses": [
                 "MW-LEX-C75-ADJ75-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C75-mailo-type",
-              "prompt": "Type the Marwadi for 'dirty'.",
+              "prompt": "Say the Marwadi for 'dirty'.",
               "assesses": [
                 "MW-LEX-C75-ADJ75-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C75-moto-type",
-              "prompt": "Type the Marwadi for 'fat, thick'.",
+              "prompt": "Say the Marwadi for 'fat, thick'.",
               "assesses": [
                 "MW-LEX-C75-ADJ75-05"
               ],

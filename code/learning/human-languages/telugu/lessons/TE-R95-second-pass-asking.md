@@ -32,7 +32,7 @@ reviews_of: [TE-C94-pardon, TE-C94-apology, TE-C94-offer, TE-C94-need, TE-C94-in
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C95-ASK-01, TE-LEX-C95-ASK-02] -->
 
-[PAUSE 3s] Point at something and ask how to say it in Telugu.
+[PAUSE 3s] Think of something near you and ask how to say it in Telugu.
 
 ## Grammar Lens: two kinds of polite
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C94-POLITE-01, TE-LEX-C94-POLITE-02, TE-LEX-C94-POLITE-03, TE-LEX-C94-POLITE-04] -->

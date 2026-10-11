@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:0fed520fc7ddf564",
+  "sourceHash": "fnv1a64:ea9b1c2deecb5f54",
   "lessonIds": [
     "MR-C08-ulat",
     "MR-C08-shesh",
@@ -15,11 +15,11 @@
     "MR-W08-e-independent",
     "MR-R08-runway-recall"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
   "text": "marathi/narration/ch08.txt",
   "json": "marathi/narration/ch08.json",
-  "textHash": "fnv1a64:47dcef7ad737eabf",
-  "jsonHash": "fnv1a64:912b894995e783e4",
+  "textHash": "fnv1a64:8d41c3b18ba71b8e",
+  "jsonHash": "fnv1a64:dff89484b6622c10",
   "findings": []
 }

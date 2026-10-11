@@ -37,8 +37,9 @@ reviews_of: [MW-C14-sasta, MW-C13-dukan, MW-C13-vastu, MW-C13-bhaav, MW-C10-ghar
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-GHAR-01, MW-SCRIPT-BAHAN-01, MW-SCRIPT-GARMI-01] -->
 
-[PAUSE 24s] Say and write cheap and shop, recall item and price, then write
-home, sister, and **गर्मी**.
+[PAUSE 24s] Say cheap and shop. [YOU WRITE: both words]
+
+Recall item and price. [YOU WRITE: the words for home and sister, then **गर्मी**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-SAMAAN-01]; assesses=[] -->

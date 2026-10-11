@@ -38,7 +38,7 @@ reviews_of: [JA-C107-hokori]
 
 [PAUSE 2s] Before the new one: say the Japanese for mud, then the Japanese for dust.
 
-[PAUSE 1s] Read each word whole: **みみ**, **くち**, **かお**.
+[PAUSE 1s] [YOU READ: each word whole — **みみ**, **くち**, **かお**]
 
 ## You'll want to know: あわ
 <!-- hl-knowledge: introduces=[JA-LEX-C107-THINGS107-03]; assesses=[] -->

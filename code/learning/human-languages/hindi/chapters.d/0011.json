@@ -11,9 +11,11 @@
     "kind": "production",
     "summary": "Say लाल and नीला beside काला and सफ़ेद, keeping nīla and 'indigo' honestly linked by trade rather than by sound.",
     "assesses": [
+      "HI-CONCEPT-C11-KAALAA-SAFED-01",
+      "HI-CONCEPT-C11-KAALAA-SAFED-02",
       "HI-CONCEPT-C11-LAAL-NIILA-01",
       "HI-CONCEPT-C11-LAAL-NIILA-02"
     ],
-    "note": "HL12 added a one-character recognition segment at the end of this chapter, and its atom is not in this payoff -- so the ratio moved from 2/4 (0.50, exactly on the floor) to 2/5 (0.40, below it). Recorded rather than papered over. The payoff is not widened, and deliberately: this chapter promises something the reader can DO with the language, and recognising a character is the other ramp. HL12 section 2.1 keeps those apart on purpose, so folding a letter into a speaking payoff would make the chapter's promise less true, not more. The right repair is a payoff for the script strand itself, which arrives with the strand's own chapter capability."
+    "note": "HI-C11-laal-niila now recalls काला's tie to kāla, 'time', and सफ़ेद's Persian origin and nuqtā as well as its own pair: 4 of the chapter's 6 atoms. The two one-character recognition segments (HI-S06-vowel-sign-aa, HI-S115-letter-ya, sequence 565-566) come after the payoff in reading order, so they stay out of it; they belong to the script strand's own ramp."
   }
 }

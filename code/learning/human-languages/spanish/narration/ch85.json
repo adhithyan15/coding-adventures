@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Me and Te --- The Two People Talking",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:58f30ebc9d570e69",
+  "sourceHash": "fnv1a64:1a76f6ea87ef27d5",
   "lessons": [
     {
       "id": "ES-C42-me-objeto",
@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-me-objeto-say",
               "prompt": "Say you love me.",
               "assesses": [
@@ -141,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-me-objeto-difference",
               "prompt": "In me llamo the me points back at the speaker. What is it doing in me quieres?",
               "assesses": [
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-me-objeto-new",
               "prompt": "How many new word forms did this lesson ask you to learn?",
               "assesses": [
@@ -211,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:709c94a18968937d",
+      "sourceHash": "fnv1a64:d6b1307bbcf4d3af",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +257,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words each, and a complete exchange. Read them aloud one after the other: the pair is a conversation."
+              "text": "Two words each, and a complete exchange. Say them aloud one after the other: the pair is a conversation."
             },
             {
               "kind": "speech",
@@ -298,6 +301,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-te-say",
               "prompt": "Say I love you.",
               "assesses": [
@@ -318,6 +322,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-te-meaning",
               "prompt": "Quiero un libro means I want a book. Why does te quiero not mean I want you?",
               "assesses": [
@@ -339,6 +344,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-te-doer",
               "prompt": "Which of tu and te is the one doing, and which is the one it lands on?",
               "assesses": [
@@ -474,6 +480,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-te-thee-pair",
               "prompt": "Which old English pair is the same inherited pair as tu and te?",
               "assesses": [
@@ -494,6 +501,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-te-thee-which",
               "prompt": "Thee lines up with which Spanish word — tu or te?",
               "assesses": [

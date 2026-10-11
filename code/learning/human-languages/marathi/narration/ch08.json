@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 8,
   "title": "Two Sibilants, One Liquid, and Three Standalone Vowels",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0fed520fc7ddf564",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:ea9b1c2deecb5f54",
   "lessons": [
     {
       "id": "MR-C08-ulat",
@@ -14,20 +14,13 @@
       "romanization": "ulaṭ",
       "gloss": "the other way round",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff5b216fa222c9ad",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:530a6d01d145bed9",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ulaṭ. Look at its shape as you say it: the lessons that follow take pieces of it, ल and उ, and write each one on its own."
+              "text": "Say it: ulaṭ."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ल (la) and उ (u), and write each one on its own."
             }
           ]
         },
@@ -119,20 +125,13 @@
       "romanization": "śeṣ",
       "gloss": "what is left over",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:971eb1be55425f79",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:a81467ead0b8b367",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -162,7 +161,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: śeṣ. Look at its shape as you say it: the lessons that follow take pieces of it, श (śa) and ष (ṣa), and write each one on its own."
+              "text": "Say it: śeṣ."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, श (śa) and ष (ṣa), and write each one on its own."
             }
           ]
         },
@@ -224,20 +236,13 @@
       "romanization": "ūb",
       "gloss": "warmth",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adce583771851d10",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:02f7960fb5a4c194",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -267,7 +272,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ūb. Look at its shape as you say it: the lessons that follow take pieces of it, ऊ, and write each one on its own."
+              "text": "Say it: ūb."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ऊ (ū), and write each one on its own."
             }
           ]
         },
@@ -329,20 +347,13 @@
       "romanization": "ekdā",
       "gloss": "once",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f4fc33b5ee8a7ff",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:a44d4474598fa607",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -372,7 +383,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ekdā. Look at its shape as you say it: the lessons that follow take pieces of it, ए, and write each one on its own."
+              "text": "Say it: ekdā."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ए (e), and write each one on its own."
             }
           ]
         },
@@ -429,7 +453,7 @@
     {
       "id": "MR-W08-la",
       "sequence": 120,
-      "title": "ल — the plain l, beside the curled one you know",
+      "title": "ल (la) — the plain l, beside the curled one you know",
       "headword": "ल",
       "romanization": "la",
       "gloss": "dental la — the plain l, partner to the retroflex lla you already write",
@@ -449,9 +473,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -517,6 +542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W08-la-r1",
               "prompt": "Trace plain la, then name the Marathi letter for the curled l.",
               "assesses": [
@@ -560,9 +586,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -619,7 +646,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which one opens śahar? (श.)"
+              "text": "Which one opens śahar? (श (śa).)"
             },
             {
               "kind": "speech",
@@ -628,6 +655,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W08-sha-r1",
               "prompt": "Copy palatal sha, then write plain sa from memory.",
               "assesses": [
@@ -673,9 +701,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -741,6 +770,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W08-ssa-r1",
               "prompt": "Write retroflex sha after a delay, then say how most Marathi speakers pronounce it.",
               "assesses": [
@@ -784,9 +814,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -815,7 +846,7 @@
             },
             {
               "kind": "speech",
-              "text": "Devanagari does this for every vowel: a mark when something carries it, a letter when nothing does. You have already seen the pair once, with अ and its mark. उ opens udyā, \"tomorrow\", in the farewell this book taught you chapters ago."
+              "text": "Devanagari does this for every vowel: a mark when something carries it, a letter when nothing does. You have already seen the pair once, with अ and its mark. उ (u) opens udyā, \"tomorrow\", in the farewell this book taught you chapters ago."
             }
           ]
         },
@@ -852,6 +883,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W08-u-independent-r1",
               "prompt": "Copy independent short u, then say which form needs a consonant to lean on.",
               "assesses": [
@@ -897,9 +929,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -928,7 +961,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four forms, one vowel: उ and ऊ (ū) when it stands alone, the short and long marks when a consonant carries it. That symmetry is the whole vowel system of this script, and you now write all of it."
+              "text": "Four forms, one vowel: उ (u) and ऊ (ū) when it stands alone, the short and long marks when a consonant carries it. That symmetry is the whole vowel system of this script, and you now write all of it."
             }
           ]
         },
@@ -965,6 +998,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W08-uu-independent-r1",
               "prompt": "Write independent long uu after a delay, then name the four forms of this vowel.",
               "assesses": [
@@ -988,7 +1022,7 @@
     {
       "id": "MR-W08-e-independent",
       "sequence": 125,
-      "title": "ए — the vowel that opens ek",
+      "title": "ए (e) — the vowel that opens ek",
       "headword": "ए",
       "romanization": "e",
       "gloss": "independent long e — the vowel that opens ek, one",
@@ -1008,9 +1042,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1067,7 +1102,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which number word starts with ए? (ek — one.)"
+              "text": "Which number word starts with ए (e)? (ek — one.)"
             },
             {
               "kind": "speech",
@@ -1076,6 +1111,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W08-e-independent-r1",
               "prompt": "Copy ek, then say which form of this vowel needs a consonant to lean on.",
               "assesses": [
@@ -1109,7 +1145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:765d71e3391afd02",
+      "sourceHash": "fnv1a64:3c3113627887228c",
       "notice": null,
       "blocks": [
         {
@@ -1119,7 +1155,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four chapters ago the page was still full of shapes nobody had taught you. Close every model and find out what stayed."
+              "text": "Four chapters ago the page was still full of shapes nobody had taught you."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every model]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now find out what stayed."
             }
           ]
         },
@@ -1211,6 +1260,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R08-runway-recall-check",
               "prompt": "Name the plain l beside the curled one, the two sibilants Marathi writes apart and says alike, the three standalone vowels of this chapter, one letter from each of the three consonant rows in this runway, and ba with the voice switched off.",
               "assesses": [

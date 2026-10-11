@@ -59,7 +59,8 @@ Two.
 - [YOU SAY: *pyās*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pyās*, then *pānī*, and say which one ends the other]
-- [YOU RECALL: read **चम्मच**, then say *sūī*]
+- [YOU READ: **चम्मच**]
+- [YOU RECALL: say *sūī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02] -->

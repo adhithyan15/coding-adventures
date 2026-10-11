@@ -54,7 +54,7 @@ changing one word and moving nothing.
 - [YOU SAY: *tumhī kase āhāt?* — and answer it]
 - [YOU SAY: *tumhī kuṭhe rāhtā?* — and answer it]
 - [YOU RECALL: say the line of your message that means *I read Marathi*]
-- [YOU RECALL: write **इथे**, then **तिथे**, and check which one needed a whole vowel letter]
+- [YOU WRITE: **इथे** from memory, then **तिथे**, and check which one needed a whole vowel letter]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ITHE, MR-LEX-TITHE, MR-SCRIPT-I-INDEPENDENT-01, MR-SCRIPT-THA-01, MR-SCRIPT-COMMA] -->

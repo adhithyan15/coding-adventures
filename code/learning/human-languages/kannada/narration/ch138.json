@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "Rupee, Bottle, Pocket, Socks, Coat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:74cdb33ba437043c",
+  "sourceHash": "fnv1a64:2d205c4222807a49",
   "lessons": [
     {
       "id": "KA-C138-rupayi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8d50b335bf6d5d6",
+      "sourceHash": "fnv1a64:50f58b167f469d7a",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the digits aloud: ೨, ೪, ೫, ೬, ೭, ೮, ೯, ೦."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the digits aloud — ೨, ೪, ೫, ೬, ೭, ೮, ೯, ೦",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the digits aloud — **೨**, **೪**, **೫**, **೬**, **೭**, **೮**, **೯**, **೦**]"
             }
           ]
         },

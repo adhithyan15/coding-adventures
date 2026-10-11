@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Other Way to Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:22a436e5626947c9",
+  "sourceHash": "fnv1a64:95165d0021875865",
   "lessons": [
     {
       "id": "JA-W16-hi",
@@ -18,19 +18,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f41cf511d9150085",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -96,7 +101,7 @@
             },
             {
               "kind": "speech",
-              "text": "Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ never closes at all."
+              "text": "Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ (hi) never closes at all."
             }
           ]
         },
@@ -135,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W16-hi-write",
               "prompt": "Write the hiragana sign for the mora hi.",
               "assesses": [
@@ -167,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31a2b55b8759618e",
+      "sourceHash": "fnv1a64:6bc699d08c4cbee2",
       "notice": null,
       "blocks": [
         {
@@ -187,12 +193,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ひ (hi) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ひ (hi) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ひ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ひ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -205,12 +211,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write も — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "も from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **も** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **も** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -253,11 +259,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ひとつ (hitotsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ひとつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ひとつ. Say ichi, then hitotsu, and hear that they share nothing — not a beat, not a sound."
+              "text": "Say ichi, then hitotsu, and hear that they share nothing — not a beat, not a sound."
             }
           ]
         },
@@ -277,6 +292,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C16-hitotsu-recall",
               "prompt": "You are pointing at one apple. Do you say ichi or hitotsu?",
               "assesses": [
@@ -310,19 +326,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:2d3e3a567420ccea",
+      "sourceHash": "fnv1a64:c207318a89fc0ea0",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -399,7 +420,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace ふ (fu) once, counting the four lifts aloud."
+              "text": "Trace ふ (fu) once, counting the four strokes aloud. That is three lifts, one before each stroke after the first."
             },
             {
               "kind": "speech",
@@ -427,6 +448,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W16-fu-write",
               "prompt": "Write the hiragana sign for the mora fu, and say how many strokes it takes.",
               "assesses": [
@@ -440,7 +462,7 @@
               ],
               "feedback": {
                 "correct": "Four: tick, body, left mark, right mark.",
-                "incorrect": "Count the lifts: there are four."
+                "incorrect": "Count the strokes: there are four, with a lift before each one after the first."
               }
             }
           ]
@@ -460,7 +482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f962aa24d3449f13",
+      "sourceHash": "fnv1a64:126758e8664f19b9",
       "notice": null,
       "blocks": [
         {
@@ -480,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ふ (fu), all four strokes — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ふ (fu) from memory, all four strokes — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ふ**, all four strokes — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ふ** from memory, all four strokes — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -533,11 +555,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ふたつ (futatsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ふたつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ふたつ. Say the pair: hitotsu, futatsu. Then say ichi, ni straight after, and hear two different counts running side by side."
+              "text": "Say the pair: hitotsu, futatsu. Then say ichi, ni straight after, and hear two different counts running side by side."
             }
           ]
         },
@@ -557,6 +588,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C16-futatsu-recall",
               "prompt": "Say one thing and two things, and name the piece both words share.",
               "assesses": [
@@ -591,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba37621cef8ff757",
+      "sourceHash": "fnv1a64:5fc1f2e5758c83f5",
       "notice": null,
       "blocks": [
         {
@@ -664,11 +696,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "みっつ (mittsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **みっつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write みっつ. Say the run so far, slowly: hitotsu, futatsu, mittsu. Stop on the silent beat in the third one."
+              "text": "Say the run so far, slowly: hitotsu, futatsu, mittsu. Stop on the silent beat in the third one."
             }
           ]
         },
@@ -688,6 +729,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C16-mittsu-recall",
               "prompt": "Write three things in hiragana, and say what the small sign in the middle does.",
               "assesses": [
@@ -720,16 +762,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:56204d02d47664fc",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice — read, copy, recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice — read, copy, recall."
       },
       "blocks": [
         {
@@ -853,6 +900,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C16-yottsu-recall",
               "prompt": "Which word in the borrowed count is really a native word, and which word in this chapter shows where it came from?",
               "assesses": [
@@ -887,7 +935,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8846367e7d4943e",
+      "sourceHash": "fnv1a64:37be744da748b8e0",
       "notice": null,
       "blocks": [
         {
@@ -925,12 +973,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write お — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "お from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **お** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **お** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -956,11 +1004,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "いつつ (itsutsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **いつつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write いつつ. Say ichi and itsutsu back to back, then go and itsutsu, and fix which pair actually means the same number."
+              "text": "Say ichi and itsutsu back to back, then go and itsutsu, and fix which pair actually means the same number."
             }
           ]
         },
@@ -980,6 +1037,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C16-itsutsu-recall",
               "prompt": "Which borrowed number means the same as itsutsu?",
               "assesses": [
@@ -1082,7 +1140,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ひ and ふ (fu) — the two signs this chapter bought",
+              "instruction": "ひ (hi) and ふ (fu) — the two signs this chapter bought",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1091,6 +1149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R16-first-five-things-run",
               "prompt": "Count things from one to five in the native series.",
               "assesses": [
@@ -1113,6 +1172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R16-first-five-things-pairs",
               "prompt": "Say the two counts side by side to five, then name the ONE place where the same word appears in both.",
               "assesses": [
@@ -1142,7 +1202,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five words for two signs. ひ and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours."
+              "text": "Five words for two signs. ひ (hi) and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours."
             },
             {
               "kind": "speech",

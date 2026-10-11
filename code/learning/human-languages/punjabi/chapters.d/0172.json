@@ -1,0 +1,17 @@
+{
+  "chapter": 172,
+  "title": "Return to the Three Familiar Form Lines",
+  "label": "ch:pa-form-order-r4",
+  "canDo": "I can retrieve the already-taught age, phone, date line order after a long gap, with the model visible and without claiming scored A1 writing.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R172-form-order-again",
+    "kind": "recognition",
+    "summary": "Place only the three familiar fictional form labels in their taught order without adding new values or Punjabi.",
+    "assesses": [
+      "PA-FORM-AGE-PHONE-DATE-ORDER-01"
+    ]
+  }
+}

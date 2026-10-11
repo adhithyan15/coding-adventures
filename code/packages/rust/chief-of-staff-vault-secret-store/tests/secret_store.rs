@@ -13,9 +13,10 @@ use chief_of_staff_vault_runtime::{
     VaultRuntimeError,
 };
 use chief_of_staff_vault_secret_store::{
-    decode_record, encode_record, validate_policy, ChiefSecretStore, NameError, RecordError,
-    SecretName, StoreError, MAGIC, MAX_AGENT_ID_BYTES, MAX_ALLOWED_AGENTS, MAX_PAYLOAD_BYTES,
-    MAX_RECORDS, MAX_RECORD_BYTES, MAX_SECRET_NAME_BYTES, NAMESPACE, VERSION,
+    decode_record, encode_record, validate_destination, validate_policy, ChiefSecretStore,
+    NameError, RecordError, SecretName, StoreError, MAGIC, MAX_AGENT_ID_BYTES, MAX_ALLOWED_AGENTS,
+    MAX_DESTINATIONS, MAX_DESTINATION_BYTES, MAX_PAYLOAD_BYTES, MAX_RECORDS, MAX_RECORD_BYTES,
+    MAX_SECRET_NAME_BYTES, NAMESPACE, VERSION, VERSION_1,
 };
 use coding_adventures_vault_sealed_store::SealedStore;
 use storage_core::{
@@ -33,6 +34,7 @@ fn policy(agents: AllowedAgents, mode: VaultDeliveryMode) -> SecretPolicy {
         allowed_agents: agents,
         allowed_mode: mode,
         rotated_at_ms: 1_790_000_000_000,
+        allowed_destinations: BTreeSet::from(["api.weather.gov:443".to_string()]),
     }
 }
 
@@ -58,10 +60,11 @@ fn push_str(v: &mut Vec<u8>, s: &[u8]) {
     v.extend_from_slice(s);
 }
 
-/// `Any`, mode Leased, tier 0, then the payload.
+/// `Any`, mode Leased, tier 0, no destinations, then the payload.
 fn any_record(payload: &[u8]) -> Vec<u8> {
     let mut v = header(0, 1, 7);
     v.push(0);
+    v.extend_from_slice(&0u16.to_be_bytes());
     push_str(&mut v, payload);
     v
 }
@@ -72,6 +75,19 @@ fn only_record(agents: &[&[u8]], payload: &[u8]) -> Vec<u8> {
     v.extend_from_slice(&(agents.len() as u16).to_be_bytes());
     for a in agents {
         push_str(&mut v, a);
+    }
+    v.extend_from_slice(&0u16.to_be_bytes());
+    push_str(&mut v, payload);
+    v
+}
+
+/// A version-2 `Any` record with the given destination strings.
+fn destination_record(destinations: &[&[u8]], payload: &[u8]) -> Vec<u8> {
+    let mut v = header(0, 1, 7);
+    v.push(0);
+    v.extend_from_slice(&(destinations.len() as u16).to_be_bytes());
+    for d in destinations {
+        push_str(&mut v, d);
     }
     push_str(&mut v, payload);
     v
@@ -167,6 +183,8 @@ fn encoder_writes_the_exact_spec_layout() {
     want.extend_from_slice(&2u16.to_be_bytes());
     push_str(&mut want, b"alpha"); // ascending, regardless of insertion order
     push_str(&mut want, b"zeta");
+    want.extend_from_slice(&1u16.to_be_bytes());
+    push_str(&mut want, b"api.weather.gov:443");
     push_str(&mut want, b"s3cret");
     assert_eq!(&*got, &want);
 }
@@ -196,7 +214,22 @@ fn the_largest_valid_record_fits_the_declared_bound() {
     let agents: BTreeSet<String> = (0..MAX_ALLOWED_AGENTS)
         .map(|i| format!("{i:03}{}", "a".repeat(MAX_AGENT_ID_BYTES - 3)))
         .collect();
-    let p = policy(AllowedAgents::Only(agents), VaultDeliveryMode::Both);
+    let mut p = policy(AllowedAgents::Only(agents), VaultDeliveryMode::Both);
+    // 32 destinations of the maximum 259 bytes: three 63-byte labels, one
+    // 61-byte label that varies, and a five-digit port.
+    p.allowed_destinations = (0..MAX_DESTINATIONS)
+        .map(|i| {
+            format!(
+                "{a}.{a}.{a}.{i:02}{tail}:65535",
+                a = "a".repeat(63),
+                tail = "x".repeat(59)
+            )
+        })
+        .collect();
+    assert!(p
+        .allowed_destinations
+        .iter()
+        .all(|d| d.len() == MAX_DESTINATION_BYTES));
     let bytes = encode_record(&p, &vec![7u8; MAX_PAYLOAD_BYTES]).expect("encode");
     assert_eq!(bytes.len(), MAX_RECORD_BYTES);
     assert_eq!(decode_record(&bytes).expect("decode").policy, p);
@@ -262,7 +295,7 @@ fn decoder_rejects_every_header_violation() {
     assert_eq!(malformed(&wrong_magic), "wrong magic");
 
     let mut wrong_version = any_record(b"k");
-    wrong_version[8] = 2;
+    wrong_version[8] = 3;
     assert_eq!(malformed(&wrong_version), "unknown version");
 
     let mut mode = any_record(b"k");
@@ -302,6 +335,7 @@ fn decoder_rejects_out_of_range_payload_lengths() {
     assert_eq!(malformed(&any_record(b"")), "payload length out of range");
     let mut big = header(0, 1, 0);
     big.push(0);
+    big.extend_from_slice(&0u16.to_be_bytes());
     big.extend_from_slice(&((MAX_PAYLOAD_BYTES as u32) + 1).to_be_bytes());
     assert_eq!(malformed(&big), "payload length out of range");
 }
@@ -430,6 +464,47 @@ fn put_overwrites_which_is_rotation() {
 }
 
 #[test]
+fn restoring_a_rotated_secrets_old_file_stops_the_load() {
+    // The attack the AEAD alone cannot see (D18U, VLT01 F9): copy the record
+    // file aside, rotate, put the old file back. Without freshness the old
+    // value and the old policy would load on the next restart.
+    let (backend, store) = fresh();
+    store
+        .put(&name("weather"), &weather_policy(), b"leaked-key")
+        .expect("put");
+    let old = backend.get(NAMESPACE, "weather").unwrap().unwrap();
+    let mut rotated = weather_policy();
+    rotated.rotated_at_ms += 1;
+    store
+        .put(&name("weather"), &rotated, b"rotated-key")
+        .expect("rotate");
+
+    backend
+        .put(
+            StoragePutInput::new(
+                old.namespace,
+                old.key,
+                old.content_type,
+                old.metadata,
+                old.body,
+            )
+            .unwrap(),
+        )
+        .unwrap();
+
+    // What the daemon does at startup, from a fresh handle.
+    let daemon = store_over(backend);
+    let runtime = ChiefVaultRuntime::new();
+    assert!(matches!(
+        daemon.register_all(&runtime),
+        Err(StoreError::Sealed(
+            coding_adventures_vault_sealed_store::SealedStoreError::Tamper { .. }
+        ))
+    ));
+    assert!(runtime.secret_policy("weather").is_none());
+}
+
+#[test]
 fn put_refuses_an_unstorable_record_before_writing() {
     let (_, store) = fresh();
     let err = store
@@ -531,6 +606,10 @@ fn a_short_page_with_a_cursor_does_not_end_the_listing() {
             .put(&name(&format!("s{i:03}")), &weather_policy(), b"k")
             .expect("put");
     }
+    // Every put lists the namespace too (the sealed store reconciles its
+    // freshness index before writing, VLT01 F4), so forget those drops and
+    // count only the listing under test.
+    backend.dropped.lock().unwrap().clear();
     let names = store.names().expect("names");
     let dropped = backend.dropped.lock().unwrap().clone();
     assert_eq!(dropped.len(), 2, "two non-final pages");
@@ -667,4 +746,117 @@ fn registered_secrets_carry_the_provisioned_policy_into_the_runtime() {
         runtime.request_lease(lease(Some("weather-agent"), "bank")),
         Err(VaultRuntimeError::DeliveryModeNotPermitted)
     ));
+}
+
+// ── Version 2: destinations (U-E8, U-E9) ─────────────────────────────────────
+
+#[test]
+fn a_version_1_record_still_decodes_with_no_destinations() {
+    // Exactly the version-1 layout: no destination section at all.
+    let mut v1 = MAGIC.to_vec();
+    v1.push(VERSION_1);
+    v1.extend_from_slice(&[0, 1]);
+    v1.extend_from_slice(&7u64.to_be_bytes());
+    v1.push(0);
+    push_str(&mut v1, b"k");
+    let decoded = decode_record(&v1).expect("v1 decodes");
+    assert!(decoded.policy.allowed_destinations.is_empty());
+    // And the encoder never writes version 1.
+    let written = encode_record(&weather_policy(), b"k").unwrap();
+    assert_eq!(written[8], VERSION);
+}
+
+#[test]
+fn destinations_must_be_canonical_dns_host_ports() {
+    for ok in [
+        "api.weather.gov:443",
+        "a:1",
+        "x-y.example:65535",
+        "api2.example.com:8443",
+    ] {
+        assert_eq!(validate_destination(ok), Ok(()), "{ok}");
+    }
+    for bad in [
+        "api.weather.gov",
+        ":443",
+        "API.weather.gov:443",
+        "api.weather.gov.:443",
+        "api..gov:443",
+        "-a.example:443",
+        "a-.example:443",
+        "a_b.example:443",
+        "127.0.0.1:443",
+        "10.0.0:443",
+        "[::1]:443",
+        "a.example:0",
+        "a.example:080",
+        "a.example:65536",
+        "a.example:44a",
+        "a.example:",
+    ] {
+        assert!(validate_destination(bad).is_err(), "{bad}");
+    }
+    let long_label = format!("{}.example:443", "a".repeat(64));
+    assert!(validate_destination(&long_label).is_err());
+    let long_host = format!("{}:443", vec!["a".repeat(63); 5].join("."));
+    assert!(validate_destination(&long_host).is_err());
+}
+
+#[test]
+fn the_encoder_refuses_bad_or_too_many_destinations() {
+    let mut bad = weather_policy();
+    bad.allowed_destinations = BTreeSet::from(["127.0.0.1:443".to_string()]);
+    assert!(matches!(
+        encode_record(&bad, b"k").err(),
+        Some(RecordError::InvalidPolicy(_))
+    ));
+    let mut many = weather_policy();
+    many.allowed_destinations = (0..=MAX_DESTINATIONS)
+        .map(|i| format!("h{i}.example:443"))
+        .collect();
+    assert!(matches!(
+        encode_record(&many, b"k").err(),
+        Some(RecordError::InvalidPolicy(_))
+    ));
+}
+
+#[test]
+fn the_decoder_refuses_non_canonical_destination_lists() {
+    assert_eq!(
+        malformed(&destination_record(
+            &[b"b.example:443", b"a.example:443"],
+            b"k"
+        )),
+        "destinations are not strictly ascending"
+    );
+    assert_eq!(
+        malformed(&destination_record(
+            &[b"a.example:443", b"a.example:443"],
+            b"k"
+        )),
+        "destinations are not strictly ascending"
+    );
+    assert_eq!(
+        malformed(&destination_record(&[b"10.0.0.1:443"], b"k")),
+        "a destination host must be a DNS name, not an IP address"
+    );
+    assert_eq!(
+        malformed(&destination_record(&[&[0xff, b':', b'1']], b"k")),
+        "a destination is not UTF-8"
+    );
+    let long = vec![b'a'; MAX_DESTINATION_BYTES + 1];
+    assert_eq!(
+        malformed(&destination_record(&[&long], b"k")),
+        "a destination is too long"
+    );
+    let mut too_many = header(0, 1, 7);
+    too_many.push(0);
+    too_many.extend_from_slice(&((MAX_DESTINATIONS as u16) + 1).to_be_bytes());
+    assert_eq!(malformed(&too_many), "more than 32 destinations");
+    let decoded = decode_record(&destination_record(
+        &[b"a.example:443", b"b.example:8443"],
+        b"k",
+    ))
+    .expect("canonical list decodes");
+    assert_eq!(decoded.policy.allowed_destinations.len(), 2);
 }

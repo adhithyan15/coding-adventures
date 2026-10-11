@@ -61,7 +61,7 @@ anything there were. Put the whole introduction together, cold.
 - [YOU SAY: where you are from — *maiṅ Lāhaurī hūṅ*]
 - [YOU SAY: the country — *hamārā mulk*]
 - [YOU SAY: the room, all five shapes — *kamrā*, *kamre*, *kamre meṅ*, *kamroṅ meṅ*, *kamro*]
-- [YOU SAY: pointing, near and far — *is shahr meṅ*, *us mulk meṅ*, *yahāṅ*, *vahāṅ*]
+- [YOU SAY: near and far — *is shahr meṅ*, *us mulk meṅ*, *yahāṅ*, *vahāṅ*]
 - [YOU SAY: whose — *is kā*, *un kā*, *hamārā*, and *apnā* when it is your own]
 - [YOU SAY: to whom — *is ko*, *un ko*, *māṅ ko*]
 - [YOU SAY: and check it — *āp Lāhaurī haiṅ, hai nā?*]

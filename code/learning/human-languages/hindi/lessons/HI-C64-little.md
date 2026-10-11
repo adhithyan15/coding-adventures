@@ -59,7 +59,8 @@ Four.
 - [YOU SAY: *kam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kam*, then *kamrā*, and say which one is Persian]
-- [YOU RECALL: read **मिट्टी**, then say *bukhār*]
+- [YOU READ: **मिट्टी**]
+- [YOU RECALL: say *bukhār*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04] -->

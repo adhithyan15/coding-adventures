@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C49-motha-r1",
               "prompt": "Say 'a big house', then 'my house is big'.",
               "assesses": [
@@ -254,6 +255,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C49-adj-agreement-r1",
               "prompt": "Put moṭhā on a friend, a room and a house, changing only the ending.",
               "assesses": [
@@ -396,6 +398,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C49-adj-prenominal-r1",
               "prompt": "Name a big house, then claim that your house is big.",
               "assesses": [
@@ -516,6 +519,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R49-big-run",
               "prompt": "Label a big room, claim that your house is big, and say that you have a big house.",
               "assesses": [

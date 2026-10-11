@@ -1,0 +1,22 @@
+# Perl 5.004_56 (1997-12-18) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_56 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_56.tar.gz
+# Archive SHA-256: 72bc8c0944c85eb372e3d071d4e4f61eee3efe7f5c4146b7b3602ea904051b4a
+# Its scan_num section matches 5.004_55 byte for byte, retaining the 250-digit bound.
+# Word handling, sort, and debugger changes do not widen this subset.
+# CR remains outside this partial accepted subset, without platform-wide parity claim.
+# Unsupported characters and leading-zero forms remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

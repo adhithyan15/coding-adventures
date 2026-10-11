@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say that something is very something.",
     "assesses": [
-      "ES-LEX-MUY"
+      "ES-LEX-MUY",
+      "ES-GRAMMAR-DEGREE-MUY",
+      "ES-ETYMON-MUY-MULTUM"
     ]
   }
 }

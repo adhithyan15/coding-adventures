@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 13,
-  "sourceHash": "fnv1a64:fd0c2b50ddd95fbe",
+  "sourceHash": "fnv1a64:c3ec1c99ea15d15e",
   "lessonIds": [
     "FA-C13-aseman",
     "FA-C13-khorshid",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch13.txt",
   "json": "persian/narration/ch13.json",
-  "textHash": "fnv1a64:e5c155fb0714a9cf",
-  "jsonHash": "fnv1a64:7bcc4be8af8fda6d",
+  "textHash": "fnv1a64:de9e71621e4b2051",
+  "jsonHash": "fnv1a64:1645992dc7c99b10",
   "findings": []
 }

@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-venir-singular-forms",
               "prompt": "Give the learned singular present forms of venir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -168,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-venir-come-from-madrid",
               "prompt": "Say 'I come from Madrid' in Spanish.",
               "assesses": [
@@ -188,6 +190,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-venir-tener-contrast",
               "prompt": "Give the tú forms of venir and tener, in that order.",
               "assesses": [

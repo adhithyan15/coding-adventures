@@ -131,6 +131,31 @@ A source-shape test keeps the compatibility entry point bounded:
 The gate measures structure, not a fragile line-count ceiling. Formatting or
 documentation growth in a legitimate shared helper must not fail it.
 
+## 6a. Per-script registry pins (#12118)
+
+The §5 migration proof outlived the migration as a standing gate in
+`tests/stroke-ownership.test.ts`. Kept as one literal, it was itself a shared
+authoring surface: every glyph added in any script moved the total key count,
+the ordered key hash and the non-Tamil data hash, so unrelated scripts' PRs
+conflicted on it. The same values are now pinned per script:
+
+```text
+tests/stroke-ownership/_registry.json   scriptRuns, sharedIdentityGroups, sharedIdentityHash
+tests/stroke-ownership/<script>.json    count, runs, keyHash, dataHash
+```
+
+`runs` is the length of each contiguous block the script occupies in
+`Object.keys(DUCTUS)`; `scriptRuns` is the script of each block, in order.
+Together with each script's ordered keys they rebuild the whole ordered key
+list exactly, and a test checks that reconstruction against the live registry,
+so the split pins precisely what the single literal pinned (§3 items 1-3 and
+6). Tamil's shard omits `dataHash` because Tamil data is pinned per glyph
+(`tests/strokes/tamil/`), matching the old non-Tamil-only data hash. The set of
+pin files must equal the set of scripts. `npm run generate:stroke-ownership`
+regenerates the files; an ordinary glyph change rewrites only its own script's
+file, and only a new script or a change to the Arabic family's interleaving
+touches `_registry.json`.
+
 ## 7. Acceptance
 
 Completion requires all of the following:

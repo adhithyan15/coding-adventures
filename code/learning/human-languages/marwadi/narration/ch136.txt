@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मूळो (mūḷo) mean? ("A radish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a radish'.
+Say the Marwadi for 'a radish'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लसण (lasaṇ) mean? ("Garlic".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'garlic'.
+Say the Marwadi for 'garlic'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अदरक (adrak) mean? ("Ginger".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'ginger'.
+Say the Marwadi for 'ginger'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हळदी (haḷdī) mean? ("Turmeric".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'turmeric'.
+Say the Marwadi for 'turmeric'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जीरो (jīro) mean? ("Cumin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'cumin'.
+Say the Marwadi for 'cumin'.

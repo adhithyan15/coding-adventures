@@ -1,0 +1,17 @@
+{
+  "language": "punjabi",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:64c16410b94b3b4a",
+  "lessonIds": [
+    "PA-R164-wake-again",
+    "PA-R164-drive-again",
+    "PA-R164-say-again"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "punjabi/narration/ch164.txt",
+  "json": "punjabi/narration/ch164.json",
+  "textHash": "fnv1a64:6f5fae15f76b8add",
+  "jsonHash": "fnv1a64:db51ba6b396cc8a0",
+  "findings": []
+}

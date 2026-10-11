@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Four Words on the Face",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4bdd4efed50ca649",
+  "sourceHash": "fnv1a64:5668aa6f3e7d1e07",
   "lessons": [
     {
       "id": "KA-C37-kannu",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67494893978ca094",
+      "sourceHash": "fnv1a64:17cf9728a3686c44",
       "notice": null,
       "blocks": [
         {
@@ -241,12 +241,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ತೆಗೆದುಕೊ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ತೆಗೆದುಕೊ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ತೆಗೆದುಕೊ**]"
+              "source": "[YOU READ: **ತೆಗೆದುಕೊ**]"
             }
           ]
         },
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b942a275762f6478",
+      "sourceHash": "fnv1a64:7596e9c0a5a1e662",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಸಹಾಯ ಮಾಡು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಸಹಾಯ ಮಾಡು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಸಹಾಯ ಮಾಡು**]"
+              "source": "[YOU READ: **ಸಹಾಯ ಮಾಡು**]"
             }
           ]
         },

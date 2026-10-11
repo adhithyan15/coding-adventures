@@ -4,14 +4,14 @@
   "chapter": 7,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:224dec45c07eb4db",
+  "sourceHash": "fnv1a64:7b50736cc491b932",
   "lessons": [
     {
       "id": "AR-C07-asif",
       "sequence": 470,
       "title": "آسف / آسفة (āsif / āsifa) — sorry",
       "headword": "آسف / آسفة",
-      "romanization": "",
+      "romanization": "āsif / āsifa",
       "gloss": "sorry (āsif masc. / āsifa fem. — a GENDERED adjective, from asifa \"to grieve, regret\")",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fc3b5ec45f56f6c",
+      "sourceHash": "fnv1a64:94187f75f7ae4f25",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already know من فضلك, \"please.\" Arabic's word for \"sorry\" teaches a new lesson entirely: it isn't a fixed word at all — it changes with the speaker."
+              "text": "You already know min faḍlik, \"please.\" Arabic's word for \"sorry\" teaches a new lesson entirely: it isn't a fixed word at all — it changes with the speaker."
             }
           ]
         },
@@ -57,15 +57,15 @@
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way — Be honest about the other word: معذرة",
+          "title": "Why it's said this way — Be honest about the other word: maʿdhira",
           "segments": [
             {
               "kind": "speech",
-              "text": "For a quick, ungendered \"excuse me / pardon\" — squeezing past someone, interrupting, a light apology — Arabic reaches for معذرة (maʿdhira), from the root ع-ذ-ر (\"to excuse\"), the same root as عذر (ʿudhr, \"an excuse\") and the verb يعتذر (yaʿtadhiru, \"to apologize\"). Unlike āsif/āsifa, معذرة doesn't change with gender — it's a noun, not an adjective, so anyone says the same word."
+              "text": "For a quick, ungendered \"excuse me / pardon\" — squeezing past someone, interrupting, a light apology — Arabic reaches for maʿdhira, from the root ʿ-dh-r (\"to excuse\"), the same root as ʿudhr (\"an excuse\") and the verb yaʿtadhiru (\"to apologize\"). Unlike āsif/āsifa, maʿdhira doesn't change with gender — it's a noun, not an adjective, so anyone says the same word."
             },
             {
               "kind": "speech",
-              "text": "Use آسف/آسفة when you mean a real, felt \"I'm sorry\" (and remember to match your own gender); reach for معذرة for the light, everyday \"pardon me.\""
+              "text": "Use آسف/آسفة when you mean a real, felt \"I'm sorry\" (and remember to match your own gender); reach for maʿdhira for the light, everyday \"pardon me.\""
             }
           ]
         },
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "What's unusual about آسف / آسفة compared to English \"sorry\"? (It's a gendered adjective — āsif for a man, āsifa for a woman — where English never changes.) What root gives āsif, and what does it mean? (أسف asafa, \"to grieve, regret.\") What's the ungendered word for a quick \"excuse me,\" and what root is it from? (معذرة maʿdhira, from ع-ذ-ر \"to excuse.\")"
+              "text": "What's unusual about آسف / آسفة (āsif / āsifa) compared to English \"sorry\"? (It's a gendered adjective — āsif for a man, āsifa for a woman — where English never changes.) What root gives āsif, and what does it mean? (أسف asafa, \"to grieve, regret.\") What's the ungendered word for a quick \"excuse me,\" and what root is it from? (maʿdhira, from ʿ-dh-r \"to excuse.\")"
             }
           ]
         }

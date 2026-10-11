@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- A vault reset is now just wiping the storage directory (VLT01 F12). The
+  next `vault put` initializes a new vault, with a new vault id, and resets
+  the anchor next to the KEK. A new end-to-end test checks two things: the
+  daemon loads the new vault, and the old vault, put back whole, is refused
+  as `Tamper`.
+- `vault put` and `vault delete` now advance the vault's freshness anchor in
+  `<kek_path>.freshness/` (VLT01 F11). A new end-to-end test puts back a
+  snapshot of the whole vault directory after a rotation, and shows the
+  daemon's loader refusing it.
+- The `vault put` end-to-end test now loads the record through the daemon's
+  own startup loader, `load_chief_vault_runtime`, instead of re-creating it.
+  A new test shows that one corrupt record stops that load entirely (D18V
+  V-D1). `--allow-agent` names a registration host name, which is the
+  identity the daemon leases under (V-D3).
+- `vault put` writes the destinations from `--destination` into the sealed
+  record. The end-to-end test now redeems through `consume_for` and shows an
+  unprovisioned destination being refused.
 - Add `vault put`, `vault delete` and `vault list` (D18U, P1.4b on #13980).
   These are local commands that open the Chief vault through the daemon
   crate's `open_chief_vault`, and never contact the daemon:

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Mharo Naam: Give One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:abd7d84c2c435be1",
+  "sourceHash": "fnv1a64:5e875d096acf930e",
   "lessons": [
     {
       "id": "MW-C05-hear-mharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d36649cf412a62c",
+      "sourceHash": "fnv1a64:c68ae833cf3e665e",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Hear pāṇī, say water, say the Marwadi word back, then write its first sign प once. Set writing aside. The next chapter begins with the ear."
+              "text": "Hear pāṇī, say water, and say the Marwadi word back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "its first sign प, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: its first sign **प**, once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Set writing aside. The next chapter begins with the ear."
             }
           ]
         },
@@ -61,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to yourself when you hear mhāro. Point away when you hear pāṇī. Change the order and do it once more."
+              "text": "Say my when you hear mhāro. Say water when you hear pāṇī. Change the order and do it once more."
             }
           ]
         },
@@ -81,6 +94,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-mharo-meaning",
               "prompt": "You hear mhāro with no text. What small English word does it supply before a masculine noun?",
               "assesses": [
@@ -112,19 +126,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:34dd587cb77a00dc",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -182,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W05-virama-function",
               "prompt": "What does ् (virāma) do under म?",
               "assesses": [
@@ -215,19 +234,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:e29ab1884293ad8b",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -285,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-o-matra-read",
               "prompt": "Add the visible o sign to र and read the result.",
               "assesses": [
@@ -318,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9141ca73ca80acec",
+      "sourceHash": "fnv1a64:6e7f16bb31c288e6",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +359,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the Marwadi word for my and recall what respectful सा does. From the heard cue pāṇī, write पाणी. Then write the vowel-off mark and रो from memory."
+              "text": "Say the Marwadi word for my and recall what respectful सा does."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी from the heard cue pāṇī; then the vowel-off mark and रो from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी** from the heard cue *pāṇī*; then the vowel-off mark and **रो** from memory]"
             }
           ]
         },
@@ -359,8 +393,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover म्हारो (mhāro), wait five seconds, then write it. Uncover and compare म्ह, ा, and रो separately. Repair only the piece that differs."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "म्हारो (mhāro) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **म्हारो** after a five-second look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — then uncover it, compare म्ह, ा, and रो separately, and repair only the piece that differs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — then uncover it, compare **म्ह**, **ा**, and **रो** separately, and repair only the piece that differs]"
             }
           ]
         },
@@ -370,8 +418,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read your repaired word once without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "your repaired word once without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: your repaired word once without romanization]"
             },
             {
               "kind": "speech",
@@ -380,6 +433,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-mharo-delayed",
               "prompt": "After hiding the model, write mhāro and give its meaning.",
               "assesses": [
@@ -414,7 +468,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0087eec68addd8b8",
+      "sourceHash": "fnv1a64:cd9288ed8642376a",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +484,38 @@
             },
             {
               "kind": "speech",
-              "text": "Hear राम-राम सा and answer it. Retrieve पाणी once by ear, voice, eye, and writing. Then hear mhāro, say my, and read म्हारो once."
+              "text": "Hear राम-राम सा and answer it. Retrieve पाणी once by ear and voice."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पाणी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पाणी**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी** once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then hear mhāro and say my."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "म्हारो (mhāro) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **म्हारो** once]"
             }
           ]
         },
@@ -456,7 +541,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Touch your name on a card when you hear nām. Touch yourself when you hear mhāro. Change the order once."
+              "text": "Say name when you hear nām. Say my when you hear mhāro. Change the order once."
             }
           ]
         },
@@ -476,6 +561,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-naam-meaning",
               "prompt": "You hear nām. What does it mean?",
               "assesses": [
@@ -506,19 +592,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2c1604708e09f3fb",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -576,6 +667,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-na-choice",
               "prompt": "Write the sign that begins nām, name.",
               "assesses": [
@@ -607,7 +699,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54cf01a258a1c012",
+      "sourceHash": "fnv1a64:41fe1a2e6f0c778c",
       "notice": null,
       "blocks": [
         {
@@ -622,8 +714,26 @@
               "source": "[PAUSE 8s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known भ and the vowel-off mark ् (virāma), once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **भ** and the vowel-off mark **्**, once each]"
+            },
+            {
               "kind": "speech",
-              "text": "Write known भ and the vowel-off mark ् (virāma) once each. Say nām and its meaning, then write न (na) once."
+              "text": "Say nām and its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "न (na) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **न** once]"
             }
           ]
         },
@@ -634,7 +744,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "न + ा + म becomes नाम — nām — name."
+              "text": "न (na) + ा + म becomes नाम — nām — name."
             },
             {
               "kind": "speech",
@@ -648,8 +758,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover नाम (nām), wait five seconds, and write it once. Uncover, compare one piece at a time, and repair only a differing piece."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "नाम (nām) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **नाम** after a five-second look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word once — then uncover it, compare one piece at a time, and repair only a differing piece",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word once — then uncover it, compare one piece at a time, and repair only a differing piece]"
             }
           ]
         },
@@ -659,12 +783,18 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read म्हारो (mhāro) नाम (nām) and say my name."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "म्हारो (mhāro) नाम (nām), then say my name",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **म्हारो नाम**, then say **my name**]"
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-naam-delayed",
               "prompt": "After hiding the model, write nām and give its meaning.",
               "assesses": [
@@ -699,7 +829,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47ce944df5c6e88d",
+      "sourceHash": "fnv1a64:76926560078cf53f",
       "notice": null,
       "blocks": [
         {
@@ -714,8 +844,26 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आभार once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आभार** once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आभार once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आभार** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read and write आभार once. Hear mhāro and nām in either order, then give each meaning."
+              "text": "Hear mhāro and nām in either order, then give each meaning."
             }
           ]
         },
@@ -741,7 +889,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear mhāro nām rām hai. Tap four beats: my | name | Ram | is. English changes the order in translation: My name is Ram."
+              "text": "Hear mhāro nām rām hai. Count four beats aloud: my | name | Ram | is. English changes the order in translation: My name is Ram."
             }
           ]
         },
@@ -761,6 +909,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-hai-meaning",
               "prompt": "What job does heard hai do at the end of the name statement?",
               "assesses": [
@@ -793,19 +942,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:826fa97327f79d2a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -863,6 +1017,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-ai-matra-read",
               "prompt": "Add the new sign to ह and read the result.",
               "assesses": [
@@ -896,7 +1051,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a8dfcb0cef6c50e",
+      "sourceHash": "fnv1a64:39def2e141c6bd0c",
       "notice": null,
       "blocks": [
         {
@@ -938,15 +1093,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hear the line and point to the person naming themself."
+              "text": "hear the line and say the name the speaker gives."
             },
             {
               "kind": "speech",
               "text": "say the line once with rām."
             },
             {
-              "kind": "speech",
-              "text": "read the four groups without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the four groups without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the four groups without romanization]"
             }
           ]
         },
@@ -956,8 +1116,26 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every written model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every written model]"
+            },
+            {
               "kind": "speech",
-              "text": "Cover every written model. Hear the line once and write it. Then uncover and repair one group, not the whole sentence."
+              "text": "Hear the line once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the line — then uncover the model and repair one group, not the whole sentence",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the line — then uncover the model and repair one group, not the whole sentence]"
             },
             {
               "kind": "speech",
@@ -966,6 +1144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-answer-dictation",
               "prompt": "From the heard cue mhāro nām rām hai alone, write the complete Marwadi statement.",
               "assesses": [

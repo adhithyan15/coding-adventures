@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-SI-REAL-CONDITION, ES-GRAMMAR-SI-FUTURE-RESULT, ES-GRAMMAR-SI-UNREAL-CONDITION, ES-GRAMMAR-IMPERFECT-SUBJUNCTIVE-DERIVATION, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR]
+  knowledge: [ES-GRAMMAR-SI-REAL-CONDITION, ES-GRAMMAR-SI-FUTURE-RESULT, ES-GRAMMAR-SI-UNREAL-CONDITION, ES-GRAMMAR-IMPERFECT-SUBJUNCTIVE-DERIVATION, ES-GRAMMAR-AR-CONDITIONAL-SINGULAR, ES-ETYMON-RA-PLUPERFECT]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -78,8 +78,10 @@ Supposing after *si* is always the *-ra* form.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SI-UNREAL-CONDITION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SI-UNREAL-CONDITION, ES-ETYMON-RA-PLUPERFECT] -->
 
 [PAUSE 3s] How many worlds can you now describe? (**Three** — habitual, planned,
 and not the case.) What does *si* change between them? (**Nothing**.) And which
 two forms may never follow it? (The **future** and the **present subjunctive**.)
+
+[PAUSE 2s] And the *-ra* of *hablara*: what did it mean in Latin, before it slid into supposing? (A plain statement of what had happened — *amāveram*, **I had loved**.)

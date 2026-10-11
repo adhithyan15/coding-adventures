@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Signs the Rest of the Run Cost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7df2bece0b8959e4",
+  "sourceHash": "fnv1a64:568a8003dd1c90e7",
   "lessons": [
     {
       "id": "JA-C15-nana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e451060ec1126345",
+      "sourceHash": "fnv1a64:f2cb6b771bee2d09",
       "notice": null,
       "blocks": [
         {
@@ -125,11 +125,20 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "なな (nana)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **なな**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write なな. Say what you have: ichi, ni, san, yon, go … nana. Leave the hole where six is; you will hear it."
+              "text": "Say what you have: ichi, ni, san, yon, go … nana. Leave the hole where six is; you will hear it."
             }
           ]
         },
@@ -149,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-nana-recall",
               "prompt": "Which two numbers so far have a native word standing beside a borrowed reading?",
               "assesses": [
@@ -181,16 +191,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:42bedc3f16b7164c",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice — read, copy, recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice — read, copy, recall."
       },
       "blocks": [
         {
@@ -287,6 +301,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-hachi-recall",
               "prompt": "Does eight have a native word beside its borrowed reading in the everyday count?",
               "assesses": [
@@ -321,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e9be00ff7587e83",
+      "sourceHash": "fnv1a64:ae583d187e707f2b",
       "notice": null,
       "blocks": [
         {
@@ -359,12 +374,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write み — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "み from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **み** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **み** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -424,11 +439,20 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **く**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write く. Say what you hold: ichi, ni, san, yon, go … nana, hachi, ku. Two numbers are missing and you can hear both gaps."
+              "text": "Say what you hold: ichi, ni, san, yon, go … nana, hachi, ku. Two numbers are missing and you can hear both gaps."
             }
           ]
         },
@@ -448,6 +472,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-ku-recall",
               "prompt": "Nine has two everyday readings. Is either of them the native word?",
               "assesses": [
@@ -481,19 +506,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b411303a33faaead",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -551,7 +581,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ら once. ろ starts the same way and ends differently: a short stroke across the top, then down and round to the left and back up, closing the loop instead of leaving a hook."
+              "text": "Write ら once. ろ (ro) starts the same way and ends differently: a short stroke across the top, then down and round to the left and back up, closing the loop instead of leaving a hook."
             },
             {
               "kind": "speech",
@@ -598,6 +628,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W15-ro-write",
               "prompt": "Write the hiragana sign for the mora ro.",
               "assesses": [
@@ -630,7 +661,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b92c1da694bea12e",
+      "sourceHash": "fnv1a64:eca3739ec9b141fa",
       "notice": null,
       "blocks": [
         {
@@ -650,12 +681,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ろ (ro) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ろ (ro) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ろ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ろ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -718,11 +749,29 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ろ (ro) | く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ろ | く**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ろく (roku); then hide it and write it again from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ろく**; then hide it and write it again from the meaning]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ろ | く. Write ろく, hide it, write it again from the meaning. Then say roku, nana, hachi, ku four times, without stopping."
+              "text": "Then say roku, nana, hachi, ku four times, without stopping."
             }
           ]
         },
@@ -742,6 +791,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-roku-recall",
               "prompt": "The sign く (ku) does two jobs in this count. Name both.",
               "assesses": [
@@ -775,19 +825,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7aeddb63f714ad1a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -909,6 +964,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W15-small-yu-write",
               "prompt": "How many beats is じゅ, and how many is いっ?",
               "assesses": [
@@ -943,7 +999,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3b3b687108d9ac4",
+      "sourceHash": "fnv1a64:438c32bc4dead044",
       "notice": null,
       "blocks": [
         {
@@ -963,12 +1019,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ゅ (small yu), and say what it does to the sign before it — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ゅ (small yu) from memory, and say what it does to the sign before it — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ゅ**, and say what it does to the sign before it — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ゅ** from memory, and say what it does to the sign before it — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1041,11 +1097,20 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "じゅう (jū)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **じゅう**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write じゅう. Say the whole run, one to ten, without stopping. Then say jūichi, nijū, sanjū, and build one number of your own between twenty and ninety-nine."
+              "text": "Say the whole run, one to ten, without stopping. Then say jūichi, nijū, sanjū, and build one number of your own between twenty and ninety-nine."
             }
           ]
         },
@@ -1065,6 +1130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C15-juu-recall",
               "prompt": "Say what nijuu means and what juuni means, and say why they are different.",
               "assesses": [
@@ -1099,7 +1165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce92acf335b8718e",
+      "sourceHash": "fnv1a64:7d181382f83c23c4",
       "notice": null,
       "blocks": [
         {
@@ -1146,12 +1212,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ど — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ど from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ど** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **ど** from memory — **R4**, eighty lessons back]"
             },
             {
               "kind": "speech",
@@ -1200,6 +1266,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R15-six-to-ten-run",
               "prompt": "Write six to ten in hiragana, in order.",
               "assesses": [
@@ -1223,6 +1290,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R15-six-to-ten-build",
               "prompt": "Say thirteen and say thirty, and say which part of each does the work.",
               "assesses": [

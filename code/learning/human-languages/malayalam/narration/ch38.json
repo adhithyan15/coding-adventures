@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "The Two Hearts",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5f34f443ad6b8464",
+  "sourceHash": "fnv1a64:ecf6cfcbbebe7277",
   "lessons": [
     {
       "id": "ML-C38-hrudayam",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce9cf03e8e320881",
+      "sourceHash": "fnv1a64:f814bc9f919d3f63",
       "notice": null,
       "blocks": [
         {
@@ -276,12 +276,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കുട്ടി",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കുട്ടി",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കുട്ടി**]"
+              "source": "[YOU READ: **കുട്ടി**]"
             }
           ]
         },

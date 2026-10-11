@@ -54,7 +54,7 @@ and social meaning match; the lexical loyalty differs.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01]; assesses=[] -->
 
-Say *vaṇakkam* with pressed palms or a small head-bow: the gesture is the word.
+*Vaṇakkam* is said with pressed palms or a small head-bow: the gesture is the word.
 It works as **hello and goodbye**, at any time, to almost anyone. It is respectful
 without being stiff; cinema and formal speech can also use it as a ringing
 one-word salutation to a whole room.
@@ -63,7 +63,7 @@ one-word salutation to a whole room.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "vaṇakkam" with a small bow]
+- [YOU SAY: "vaṇakkam", the word that names the bow]
 - [YOU CONTRAST: Tamil *vaṇaṅku* · neighbors Sanskrit *namas-*]
 - [YOU CHOOSE: greeting or parting → **வணக்கம்** works]
 

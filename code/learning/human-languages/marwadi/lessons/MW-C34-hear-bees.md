@@ -36,7 +36,9 @@ reviews_of: [MW-R33-script-close, MW-C33-hear-das, MW-C21-show-request, MW-C33-c
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01, MW-SCRIPT-SHOW-REQUEST-01, MW-LEX-DAS-01] -->
 
-[PAUSE 20s] Recall the ten-number payoff, write the show request, then say ten.
+[PAUSE 20s] Recall the ten-number payoff. [YOU WRITE: the show request]
+
+Then say ten.
 
 - [YOU RECALL: *chār* and *pāṅch*, two chapters back, and the **च** they share]
 

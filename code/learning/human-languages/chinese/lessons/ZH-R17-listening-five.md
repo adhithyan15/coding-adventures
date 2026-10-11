@@ -40,8 +40,8 @@ reviews_of: [ZH-R17-old-three-r2, ZH-R17-country-language-r1, ZH-C12-hear-nuer]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02, ZH-LEX-HANZI-01, ZH-LEX-HANYU-01, ZH-LEX-ZHONGWEN-01, ZH-LEX-ZHONGGUO-01] -->
 
 Keep the page covered. Hear the five Mandarin words in mixed order and give the
-English meaning of each. Then reverse the cards and say all five Mandarin forms.
-Score listening and speaking separately out of five.
+English meaning of each. Then reverse the direction and say all five Mandarin
+forms. Score listening and speaking separately out of five.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGWEN-01, ZH-LEX-ZHONGGUO-01] -->

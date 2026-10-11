@@ -51,7 +51,7 @@ a word far enough back that saying it is work.
 
 **nesciō** — "**I do not know**."
 
-Look at the shape. It is **nē-** ("not") welded onto **sciō**, the verb the
+Take it apart. It is **nē-** ("not") welded onto **sciō**, the verb the
 eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: *nesciō* is one
 word, and it is the word a Roman actually said.
 

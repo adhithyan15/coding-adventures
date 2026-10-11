@@ -33,9 +33,9 @@ reviews_of: [ES-C393-internet, ES-C393-ordenador, ES-C393-correo-electronico]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-INTERNET, ES-LEX-ORDENADOR, ES-WRITING-CONNECTED-COMPOSITION] -->
 
 [PAUSE 2s] Say *internet* and *el ordenador*. You have the network and you have
-the machine. Say what is missing: the thing you actually look at.
+the machine. Say what is missing: the thing on the screen itself.
 
-[PAUSE 3s] Write two lines about yesterday where the second needs the first, joined by *y*: *Ayer fui a la tienda y comí pan.*
+[PAUSE 3s] [YOU WRITE: two lines about yesterday where the second needs the first, joined by *y*: *Ayer fui a la tienda y comí pan.*]
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -62,13 +62,13 @@ the machine. Say what is missing: the thing you actually look at.
 and only one of them was borrowed.
 
 **Página** is Latin **pagina**, from **pangere**, "to fasten, to fix in place."
-A Roman *pagina* was a column of writing, named for the way vine-growers
-fastened shoots to a trellis: a column of text is writing **fixed into a
+A Roman *pagina* was "a column of writing", named for the way vine-growers
+fastened shoots to a trellis: each one was writing **fixed into a
 frame**.
 
 | word | what got fastened |
 |---|---|
-| **página** | writing, into a column |
+| **página** | writing, into a frame |
 | **pacto** (a pact) | two parties, into an agreement |
 | **paz** (peace) | the same, after a war |
 

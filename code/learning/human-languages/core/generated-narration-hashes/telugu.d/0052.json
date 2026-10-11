@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 52,
-  "sourceHash": "fnv1a64:29cf5720100abb78",
+  "sourceHash": "fnv1a64:380144d03d6dd456",
   "lessonIds": [
     "TE-C52-door",
     "TE-C52-chair",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch52.txt",
   "json": "telugu/narration/ch52.json",
-  "textHash": "fnv1a64:7f78e2f96ae67a6e",
-  "jsonHash": "fnv1a64:4b7997cf6a19b608",
+  "textHash": "fnv1a64:341d0aba653020e1",
+  "jsonHash": "fnv1a64:0696c7ee618a5fc5",
   "findings": []
 }

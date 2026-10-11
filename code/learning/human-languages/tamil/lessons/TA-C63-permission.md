@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *aṉumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṉumati*, then *viḍai*, and say which of the two is only about leaving]
-- [YOU RECALL: read **தாகம்**, then say *iṉṉum*]
+- [YOU READ: **தாகம்**]
+- [YOU RECALL: say *iṉṉum*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02] -->

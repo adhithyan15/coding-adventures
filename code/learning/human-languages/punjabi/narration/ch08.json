@@ -3,7 +3,7 @@
   "language": "punjabi",
   "chapter": 8,
   "title": "The Mind, the Page, and the Falling Tone",
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "sourceHash": "fnv1a64:52d74082171483cb",
   "lessons": [
     {
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-sochna-soch",
               "prompt": "The Punjabi noun soch means a thought and one other thing. What?",
               "assesses": [
@@ -209,9 +210,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਖ, ਝ, ੍"
+          "Script you'll notice: ਖ, ਝ, ੍",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਖ, ਝ, ੍ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਖ, ਝ, ੍ and Guided Practice."
       },
       "blocks": [
         {
@@ -317,7 +319,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ੜ੍ਹ and point to each of today's pieces in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ੜ੍ਹ** and point to each of today's pieces in turn]"
@@ -335,7 +337,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
@@ -387,7 +389,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -551,6 +553,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-samajhna-tone",
               "prompt": "In samajhna the jh is not heard as breath. What is heard instead?",
               "assesses": [
@@ -596,7 +599,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -736,6 +739,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-parhna-subjoined",
               "prompt": "In the cluster rrha, where is the h written relative to the letter before it?",
               "assesses": [
@@ -781,7 +785,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -910,6 +914,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-likhna-four-roots",
               "prompt": "What did the Sanskrit root behind likhna mean before it meant to write?",
               "assesses": [
@@ -956,9 +961,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਪ"
+          "Script you'll notice: ਪ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਪ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਪ and Guided Practice."
       },
       "blocks": [
         {
@@ -1048,7 +1054,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਪਾਠ and point to each of today's piece in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਪਾਠ** and point to each of today's piece in turn]"
@@ -1066,7 +1072,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"

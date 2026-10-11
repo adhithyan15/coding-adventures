@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "G2D00/G2D03 neutral geometry cases v1",
+  "title": "G2D00-G2D03 neutral geometry cases v1",
   "type": "object",
   "additionalProperties": false,
   "required": ["version", "absolute_tolerance", "cases"],
@@ -13,7 +13,15 @@
       "maxItems": 64,
       "items": {"oneOf": [
         {"$ref": "#/$defs/normalize"},
-        {"$ref": "#/$defs/degenerateArc"}
+        {"$ref": "#/$defs/degenerateArc"},
+        {"$ref": "#/$defs/affineCompose"},
+        {"$ref": "#/$defs/affineInvert"},
+        {"$ref": "#/$defs/affineVector"},
+        {"$ref": "#/$defs/bezierQuadratic"},
+        {"$ref": "#/$defs/bezierCubic"},
+        {"$ref": "#/$defs/centerArcBounds"},
+        {"$ref": "#/$defs/centerArcCubicsValid"},
+        {"$ref": "#/$defs/centerArcCubicsInvalid"}
       ]}
     }
   },
@@ -25,6 +33,18 @@
     "bounds": {
       "type": "array", "minItems": 4, "maxItems": 4,
       "items": {"type": "number", "minimum": -1000000, "maximum": 1000000}
+    },
+    "matrix": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "items": {"type": "number", "minimum": -1000000, "maximum": 1000000}
+    },
+    "points3": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {"$ref": "#/$defs/point"}
+    },
+    "points4": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "items": {"$ref": "#/$defs/point"}
     },
     "normalize": {
       "type": "object", "additionalProperties": false,
@@ -50,6 +70,116 @@
         "sample_t": {"type": "number", "minimum": 0, "maximum": 1},
         "expected_point": {"$ref": "#/$defs/point"},
         "expected_bounds": {"$ref": "#/$defs/bounds"}
+      }
+    },
+    "affineCompose": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "first", "second", "point", "expected_matrix", "expected_point"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "affine-compose"},
+        "first": {"$ref": "#/$defs/matrix"},
+        "second": {"$ref": "#/$defs/matrix"},
+        "point": {"$ref": "#/$defs/point"},
+        "expected_matrix": {"$ref": "#/$defs/matrix"},
+        "expected_point": {"$ref": "#/$defs/point"}
+      }
+    },
+    "affineInvert": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "matrix", "expected_inverse"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "affine-invert"},
+        "matrix": {"$ref": "#/$defs/matrix"},
+        "expected_inverse": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/matrix"}]}
+      }
+    },
+    "affineVector": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "matrix", "vector", "expected"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "affine-vector"},
+        "matrix": {"$ref": "#/$defs/matrix"},
+        "vector": {"$ref": "#/$defs/point"},
+        "expected": {"$ref": "#/$defs/point"}
+      }
+    },
+    "bezierQuadratic": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "control_points", "t", "expected_point", "expected_derivative", "expected_split", "expected_bounds"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "bezier-quadratic"},
+        "control_points": {"$ref": "#/$defs/points3"},
+        "t": {"type": "number", "minimum": 0, "maximum": 1},
+        "expected_point": {"$ref": "#/$defs/point"},
+        "expected_derivative": {"$ref": "#/$defs/point"},
+        "expected_split": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/points3"}},
+        "expected_bounds": {"$ref": "#/$defs/bounds"}
+      }
+    },
+    "bezierCubic": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "control_points", "t", "expected_point", "expected_derivative", "expected_split", "expected_bounds"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "bezier-cubic"},
+        "control_points": {"$ref": "#/$defs/points4"},
+        "t": {"type": "number", "minimum": 0, "maximum": 1},
+        "expected_point": {"$ref": "#/$defs/point"},
+        "expected_derivative": {"$ref": "#/$defs/point"},
+        "expected_split": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/points4"}},
+        "expected_bounds": {"$ref": "#/$defs/bounds"}
+      }
+    },
+    "centerArcBounds": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "center", "rx", "ry", "start_angle", "sweep_angle", "x_rotation", "expected_bounds"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "center-arc-bounds"},
+        "center": {"$ref": "#/$defs/point"},
+        "rx": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "ry": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "start_angle": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "sweep_angle": {"type": "number", "minimum": -6.283185307179586, "maximum": 6.283185307179586},
+        "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "expected_bounds": {"$ref": "#/$defs/bounds"}
+      }
+    },
+    "centerArcCubicsValid": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "center", "rx", "ry", "start_angle", "sweep_angle", "x_rotation", "expected_count"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "center-arc-cubics"},
+        "center": {"$ref": "#/$defs/point"},
+        "rx": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "ry": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "start_angle": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "sweep_angle": {"type": "number", "minimum": -6.283185307179586, "maximum": 6.283185307179586},
+        "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "expected_count": {"type": "integer", "minimum": 1, "maximum": 4}
+      }
+    },
+    "centerArcCubicsInvalid": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "center", "rx", "ry", "start_angle", "sweep_angle", "x_rotation", "expected_error"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "center-arc-cubics"},
+        "center": {"$ref": "#/$defs/point"},
+        "rx": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "ry": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "start_angle": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "sweep_angle": {"type": "number", "anyOf": [
+          {"minimum": -1000000, "exclusiveMaximum": -6.283185307179586},
+          {"exclusiveMinimum": 6.283185307179586, "maximum": 1000000}
+        ]},
+        "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "expected_error": {"const": "invalid-sweep"}
       }
     }
   }

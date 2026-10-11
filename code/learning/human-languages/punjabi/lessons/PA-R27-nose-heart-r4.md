@@ -44,9 +44,9 @@ reviews_of: [PA-C12-nakk, PA-C13-dil]
 <!-- hl-activity: {"id":"PA-R27-nose-heart-r4-meaning","kind":"text","assesses":["PA-LEX-NAKK","PA-LEX-DIL"],"prompt":"Say nose and heart in Punjabi, in that order.","answer":"nakk / dil","accepted":["nakk dil","ਨੱਕ ਦਿਲ"],"feedback":{"correct":"Nose and heart returned in the requested order.","incorrect":"Repair only the missed link: nakk is nose; dil is heart."},"response_seconds":35} -->
 <!-- hl-activity: {"id":"PA-R27-nose-heart-r4-history","kind":"text","assesses":["PA-ETYMON-NAKK-NOSE","PA-ETYMON-DIL-HEART"],"prompt":"Which word is inherited and cognate with English nose, and which is a Persian loan with a deeper shared ancestor behind English heart?","answer":"nakk is the inherited nose cognate; dil is the Persian heart loan","accepted":["nakk inherited nose; dil Persian heart","ਨੱਕ inherited; ਦਿਲ Persian loan"],"feedback":{"correct":"The inherited nose word and borrowed heart word kept their different routes.","incorrect":"Nakk is inherited and cognate with nose. Dil came through Persian, though it shares a deeper ancestor with heart."},"response_seconds":45} -->
 
-**Read, then stop.**
+[YOU READ: **ਨੱਕ · ਦਿਲ** once, then stop]
 
-Read **ਨੱਕ · ਦਿਲ** once. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence.
+This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-DIL, PA-ETYMON-DIL-HEART] -->

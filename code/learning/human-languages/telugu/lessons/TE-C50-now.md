@@ -56,7 +56,8 @@ Now — and a shape that gives you two more words for free.
 - [YOU SAY: *ippuḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippuḍu*, then *ippuḍu veḷḷu* — "go now"]
-- [YOU RECALL: say *guruvu*, then read **నిజం** and say what it means]
+- [YOU RECALL: say *guruvu*]
+- [YOU READ: **నిజం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01] -->

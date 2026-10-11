@@ -58,7 +58,8 @@ Five: గేదె, మేక, కోడి, చీమ, పక్షి. Enough 
 - [YOU SAY: *pakṣi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *namaskāram* to whoever keeps them]
-- [YOU RECALL: say *antē*, then read **నిప్పు** and say what it means]
+- [YOU RECALL: say *antē*]
+- [YOU READ: **నిప్పు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04, TE-LEX-C60-ANIMAL-05] -->

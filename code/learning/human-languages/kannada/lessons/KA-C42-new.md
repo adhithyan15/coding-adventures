@@ -33,7 +33,7 @@ reviews_of: [KA-C42-good]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02, KA-LEX-C42-ADJ-03] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: ಹೊಸ
 <!-- hl-knowledge: introduces=[KA-LEX-C42-ADJ-04]; assesses=[] -->
@@ -52,9 +52,9 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04, KA-LEX-C41-DEIXIS-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಹೊಸ" three times, pointing at something different each time]
+- [YOU SAY: "ಹೊಸ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **ಇದು**]
+- [YOU READ: **ಇದು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04] -->

@@ -54,7 +54,7 @@ A second word for the house, and an ending you had already met elsewhere.
 - [YOU SAY: *makaṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *kuḻandai*, so the two sit together]
-- [YOU RECALL: read **நல்ல**]
+- [YOU READ: **நல்ல**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-CHILD, TA-LEX-SON] -->

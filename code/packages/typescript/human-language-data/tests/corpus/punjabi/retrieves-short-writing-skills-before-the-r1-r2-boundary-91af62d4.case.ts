@@ -39,8 +39,8 @@ it("retrieves short writing skills before the R1/R2 boundary without mock credit
     lessons.filter((lesson) => !ids.includes(lesson.realization.lessonId)),
   );
   const after = measureContinuity(lessons);
-  expect(before.summary.missedByWindow).toEqual({ R1: 57, R2: 568, R3: 513, R4: 574 });
-  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 567, R3: 513, R4: 578 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 57, R2: 568, R3: 512, R4: 574 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 567, R3: 512, R4: 578 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
   const pairs = (report: typeof before): Set<string> => new Set(
     report.reinforcement.flatMap((defect) =>
       defect.missed.map((window) => `${window}|${defect.atom}`),

@@ -53,7 +53,7 @@ reviews_of: [RU-W10-zapyataya, RU-C16-i, RU-C03-znat]
 - **я хочу** — *ya khachú* — **I want**
 - **ты хочешь** — *ty khóchesh* — **you want**
 
-Look at the *I* form. The **т** of the infinitive has turned into a **ч** — the
+Listen to the *I* form. The **т** of the infinitive has turned into a **ч** — the
 same consonant swap you met in the first verbs — and the ending is the familiar
 **-у**.
 

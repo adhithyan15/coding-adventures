@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *vittanaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vittanaṁ*, then *ceṭṭu*, and say which one comes first]
-- [YOU RECALL: read **పువ్వు**, then say *cukka*]
+- [YOU READ: **పువ్వు**]
+- [YOU RECALL: say *cukka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04] -->

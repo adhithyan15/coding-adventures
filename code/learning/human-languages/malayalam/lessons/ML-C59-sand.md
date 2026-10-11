@@ -58,7 +58,7 @@ Two: the wind, and something it moves.
 - [YOU SAY: *maṇal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāṟṟŭ*, then *maṇal*, and curl the tongue back for the middle of the second]
-- [YOU RECALL: read **മുതുക്**]
+- [YOU READ: **മുതുക്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02] -->

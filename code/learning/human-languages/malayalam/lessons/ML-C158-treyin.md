@@ -38,7 +38,8 @@ reviews_of: [ML-C158-toni]
 
 [PAUSE 2s] Before the new one: say the Malayalam for a bicycle, then the Malayalam for a boat.
 
-[PAUSE 1s] Read a few short lines aloud as one passage, the way you read your first one.
+[PAUSE 1s]
+[YOU READ: a few short lines aloud as one passage, the way you read your first one]
 
 ## You'll want to know: ട്രെയിൻ
 <!-- hl-knowledge: introduces=[ML-LEX-C158-THINGS158-02]; assesses=[] -->

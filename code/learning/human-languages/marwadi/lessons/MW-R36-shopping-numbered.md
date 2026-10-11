@@ -35,8 +35,9 @@ reviews_of: [MW-R36-count-at-distance, MW-C23-bargain-request, MW-C15-shopping-s
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BARGAIN-REQUEST-01, MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01] -->
 
-[PAUSE 22s] Write the bargaining request, then recall the seven-word shopping
-payoff.
+[PAUSE 22s] [YOU WRITE: the bargaining request]
+
+Then recall the seven-word shopping payoff.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-NUMBER-01, MW-SCRIPT-PRICE-NUMBER-01, MW-LEX-COUNTER-OFFER-01, MW-SCRIPT-COUNTER-OFFER-01, MW-SCRIPT-KAPDA-01, MW-SCRIPT-BHAAV-01, MW-LEX-BHAAV-01, MW-SCRIPT-BEES-01, MW-SCRIPT-DAS-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-CHHA-SIX-01, MW-SCRIPT-SAAT-01, MW-SCRIPT-AATH-01, MW-SCRIPT-NO-NINE-01, MW-SCRIPT-SO-01, MW-LEX-EK-01, MW-LEX-DO-TWO-01, MW-LEX-TEEN-01, MW-LEX-CHAAR-01, MW-LEX-PAANCH-01, MW-LEX-CHHA-SIX-01, MW-LEX-SAAT-01, MW-LEX-AATH-01, MW-LEX-NO-NINE-01, MW-LEX-DAS-01, MW-LEX-BEES-01, MW-LEX-SO-01, MW-SCRIPT-DIGIT-ZERO-01, MW-SCRIPT-DIGIT-ONE-01, MW-SCRIPT-DIGIT-TWO-01, MW-SCRIPT-DIGIT-THREE-01, MW-SCRIPT-DIGIT-FOUR-01, MW-SCRIPT-DIGIT-FIVE-01, MW-SCRIPT-DIGIT-SIX-01, MW-SCRIPT-DIGIT-SEVEN-01, MW-SCRIPT-DIGIT-EIGHT-01, MW-SCRIPT-DIGIT-NINE-01] -->
@@ -46,7 +47,7 @@ Take the seven shopping words one at a time. For each one:
 1. Ask its price with the question from chapter 27.
 2. Hear a figure back and say the amount aloud.
 3. Offer a lower figure with **करो।**
-4. Write the seller's amount as a Devanagari figure and your own as a word.
+4. [YOU WRITE: the seller's amount as a Devanagari figure, and your own as a word]
 
 The word **भाव** has meant price since chapter 18 and could not be answered
 until now. Say what changed.

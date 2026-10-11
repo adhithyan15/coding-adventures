@@ -36,18 +36,18 @@ reviews_of: [MW-C25-request-five, MW-W07-la, MW-W08-va, MW-W09-cha, MW-W07-chha,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-REQUEST-FOUR-SKILL-01, MW-LEX-BACHCHA-01, MW-SCRIPT-BACHCHA-01, MW-SCRIPT-HAWA-01] -->
 
-[PAUSE 22s] Recall the five-word asking payoff, then write child and wind.
+[PAUSE 22s] Recall the five-word asking payoff.
+[YOU WRITE: the words for child and wind]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-LA-01, MW-SCRIPT-VA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-CHHA-01, MW-SCRIPT-KHA-01, MW-SCRIPT-LAVO-01, MW-SCRIPT-LO-01, MW-SCRIPT-DIKHAVO-01, MW-SCRIPT-BRING-REQUEST-01, MW-SCRIPT-PACHHE-MILSOO-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Write five single signs from sound cues: **ल**, **व**, **च**, **छ**, **ख**.
-Two of those five are breathed partners of the two before them; say all five and
-mark which two carry the breath.
+[YOU WRITE: five single signs from sound cues, **ल**, **व**, **च**, **छ**, **ख**, and mark which two carry the breath]
 
-Then write **लावो**, **लो**, **दिखावो**, **चाय लावो।**, and **पाछे मिलसू**
-from dictation. Repair only the missed sign and rewrite its word once.
+Two of those five are breathed partners of the two before them. Say all five.
+
+[YOU WRITE: **लावो**, **लो**, **दिखावो**, **चाय लावो।**, and **पाछे मिलसू** from dictation — repair only the missed sign and rewrite its word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHA-01, MW-SCRIPT-CHHA-01] -->

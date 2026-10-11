@@ -34,8 +34,9 @@ reviews_of: [BN-W05-tta, BN-C15-jama, BN-C11-bhai, BN-C10-cha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-TTA-01, BN-LEX-C15-JAMA-01] -->
 
-[PAUSE 2s] Write the letter from the lesson before, then write it with the
-mātrā. Then say **জামা**.
+[PAUSE 2s] [YOU WRITE: the letter from the lesson before, then the same letter with the mātrā]
+
+Then say **জামা**.
 
 ## You'll want to know: টা
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C20-CLASSIFIER-01]; assesses=[BN-LEX-C15-JAMA-01, BN-LEX-C10-CHA-01] -->

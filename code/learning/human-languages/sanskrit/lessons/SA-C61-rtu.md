@@ -58,7 +58,7 @@ The far end of that family reaches English. From the same root, through Latin
 *rītus*, comes English **rite** — a thing done at its proper turn. And *ars*,
 "art", is a cousin: skill as things fitted together in their proper order.
 
-Look at the first letter. **ऋ** is the independent vowel *ṛ* — and it is the
+[YOU LOOK: at the first letter.] **ऋ** is the independent vowel *ṛ* — and it is the
 first word in this book that begins with it. You have written its small form,
 the **ृ** hanging under a consonant, in **गृहम्** and **हृदयम्**. This is the full-size letter it becomes when nothing carries it.
 

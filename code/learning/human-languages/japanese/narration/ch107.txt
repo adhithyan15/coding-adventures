@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does どろ (doro) mean? ("Mud".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'mud'.
+Say the Japanese for 'mud'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほこり (hokori) mean? ("Dust".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'dust'.
+Say the Japanese for 'dust'.
 
 
 Lesson 3 of 5.
@@ -71,7 +71,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Japanese for mud, then the Japanese for dust.
 [pause 1 second]
-Read each word whole: みみ, くち, かお.
+[once you have stopped driving — read: each word whole — みみ, くち, かお]
 
 You'll want to know: あわ.
 あわ — awa — "foam, bubbles".
@@ -94,7 +94,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あわ (awa) mean? ("Foam, bubbles".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'foam, bubbles'.
+Say the Japanese for 'foam, bubbles'.
 
 
 Lesson 4 of 5.
@@ -125,7 +125,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つゆ (tsuyu) mean? ("Dew; the rainy season".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'dew'.
+Say the Japanese for 'dew'.
 
 
 Lesson 5 of 5.
@@ -156,4 +156,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さか (saka) mean? ("A slope".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a slope'.
+Say the Japanese for 'a slope'.

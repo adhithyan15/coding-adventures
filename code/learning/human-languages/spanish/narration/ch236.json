@@ -143,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-hablando-make",
               "prompt": "Make the -ando form of trabajar.",
               "assesses": [
@@ -161,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-hablando-agree",
               "prompt": "How many forms of hablando are there, for all the different people?",
               "assesses": [
@@ -179,6 +181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-hablando-mean",
               "prompt": "Does hablando mean to speak, I speak, or speaking?",
               "assesses": [

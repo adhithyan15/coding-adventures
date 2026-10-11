@@ -56,7 +56,8 @@ One more everyday action. Three more follow, and each reuses the ones before it.
 [PAUSE 1s]
 - [YOU SAY: *nṛtyati*]
 - [YOU SAY: it again, to someone standing in a doorway]
-- [YOU RECALL: say *ṣaṭ*, then read **सप्त**]
+- [YOU RECALL: say *ṣaṭ*]
+- [YOU READ: **सप्त**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE] -->

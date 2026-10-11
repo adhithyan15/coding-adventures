@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सेब (seb) mean? ("An apple".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an apple'.
+Say the Marwadi for 'an apple'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does केळो (keḷo) mean? ("A banana".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a banana'.
+Say the Marwadi for 'a banana'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आलू (ālū) mean? ("A potato".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a potato'.
+Say the Marwadi for 'a potato'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does टमाटर (ṭamāṭar) mean? ("A tomato".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a tomato'.
+Say the Marwadi for 'a tomato'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गाजर (gājar) mean? ("A carrot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a carrot'.
+Say the Marwadi for 'a carrot'.

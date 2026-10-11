@@ -38,7 +38,8 @@ reviews_of: [RU-C110-class]
 
 [PAUSE 2s] Before the new one: say the Russian for a profession, then the Russian for a class.
 
-[PAUSE 3s] Read *аэропорт, лифт, метро* aloud as one line, without stopping between the words.
+[PAUSE 3s]
+[YOU READ: *аэропорт, лифт, метро* aloud as one line, without stopping between the words]
 
 ## You'll want to know: экзамен
 <!-- hl-knowledge: introduces=[RU-LEX-C111-THINGS111-01]; assesses=[] -->

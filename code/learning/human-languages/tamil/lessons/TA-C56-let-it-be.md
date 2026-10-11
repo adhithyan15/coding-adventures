@@ -56,7 +56,8 @@ Five answers to an offer: a little, a lot, not enough, no need, and yes — let 
 - [YOU SAY: *ākaṭṭum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *siṟitu*, *niṟaiya*, *kuṟaivu*, *tēvaiyillai*, *ākaṭṭum*]
-- [YOU RECALL: say *peṭṭi*, then read **எலும்பு**]
+- [YOU RECALL: say *peṭṭi*]
+- [YOU READ: **எலும்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05] -->

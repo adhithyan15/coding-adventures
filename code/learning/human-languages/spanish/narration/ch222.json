@@ -157,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-ese-say",
               "prompt": "The book is next to the person you are talking to. Say: that book.",
               "assesses": [
@@ -175,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-ese-contrast",
               "prompt": "What decides between este and ese -- distance, or something else?",
               "assesses": [
@@ -194,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-ese-origin",
               "prompt": "What did the Latin word behind ese originally mean?",
               "assesses": [

@@ -36,7 +36,9 @@ reviews_of: [HI-C71-today, HI-C70-rest]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01] -->
 
-[PAUSE 2s] Say *āj*, then write **आज**. Two letters, no matras: आ, then ज.
+[PAUSE 2s] Say *āj*. [YOU WRITE: **आज**]
+
+Two letters, no matras: आ, then ज.
 
 ## You'll want to know: भी
 <!-- hl-knowledge: introduces=[HI-LEX-C71-TODAY-02]; assesses=[] -->
@@ -65,11 +67,12 @@ sitting inside it — but they are separate words with separate jobs, the way
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C70-LEISURE-05, HI-LEX-C69-GOING-03, HI-LEX-C69-GOING-04] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **आराम**, then say it without looking]
+- [YOU READ: **आराम**, then say it without looking]
 - [YOU SAY: *maiṁ bhī*]
 - [YOU SAY: *āj bhī*]
 - [YOU WRITE: आज once more, then भी beside it]
-- [YOU RECALL: read **स्टेशन**, then say *ṭikaṭ*]
+- [YOU READ: **स्टेशन**]
+- [YOU RECALL: say *ṭikaṭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02] -->

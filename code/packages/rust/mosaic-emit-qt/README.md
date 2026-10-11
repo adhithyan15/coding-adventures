@@ -169,6 +169,11 @@ system; Space/Enter grabs and drops, arrow keys walk eligible targets in
 reading order, and Escape cancels. Pointer and keyboard releases converge on
 one accepted-drop function, disabled or kind-mismatched targets are excluded,
 and Qt 6.8's native `Accessible.announce` reports every transition.
+The draggable's native surface also passes supported authored `color` and
+`font-size` to descendant text unless a descendant part overrides them. An
+exact `overflow: hidden` + `text-overflow: ellipsis` + `white-space: nowrap`
+trio clips that surface and gives descendant text Qt's single-line right-elide
+behavior; partial or unsupported combinations remain reported degradations.
 
 ### Host primitive prop mappings (UI29 §3)
 

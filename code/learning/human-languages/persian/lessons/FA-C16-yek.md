@@ -36,7 +36,9 @@ reviews_of: [FA-C15-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-NINE-READ-01] -->
 
-[PAUSE 2s] Read **سلام** and **نان** off the page, without the romanization.
+[PAUSE 2s]
+[YOU READ: **سلام** and **نان** off the page, without the romanization]
+
 Nine letters, and the words they finish.
 
 ## You'll want to know first — one word

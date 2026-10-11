@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "What Is Going On Right Now",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:44b917d8154e5ad4",
+  "sourceHash": "fnv1a64:277c35c6ae0676ab",
   "lessons": [
     {
       "id": "HI-C89-kar-raha-hun",
@@ -366,7 +366,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93eaa274884f4bd8",
+      "sourceHash": "fnv1a64:b464997cc5042e3c",
       "notice": null,
       "blocks": [
         {
@@ -382,7 +382,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say I am doing. Now point at somebody else and change only what has to change."
+              "text": "Say I am doing. Now think of somebody else and change only what has to change."
             }
           ]
         },

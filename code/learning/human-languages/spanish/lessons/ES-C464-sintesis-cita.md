@@ -38,7 +38,7 @@ second admits the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01, ES-LEX-C464-CITA-02, ES-LEX-C464-CITA-03] -->
 
-Two messages, a day apart. Read both, then answer.
+Two messages, a day apart. [YOU READ: both, then answer]
 
 **1 — de la clínica**
 
@@ -75,10 +75,11 @@ speaker does not.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01, ES-LEX-C464-CITA-02, ES-LEX-C464-CITA-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines: as the
-clinic, remind somebody of a dental appointment and say how to cancel; then as
-the patient, apologise for missing it, say what let you down, and ask for
-another.
+[PAUSE 3s] Now your turn, out loud. Four lines: as the clinic, remind somebody
+of a dental appointment and say how to cancel; then as the patient, apologise
+for missing it, say what let you down, and ask for another.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did *fallar* go to the thing and *acordarse* to the
 person, and did *acordarse* keep its *de*?

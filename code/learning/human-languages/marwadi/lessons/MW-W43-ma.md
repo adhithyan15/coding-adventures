@@ -54,11 +54,16 @@ and **ा** lessons of their own. **म** gets its own lesson now.
 ## Writing: म
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-C43-MA-01] -->
 
-- **1.** start here: descend the left stem, circle clockwise through the loop, and sweep right
-- **2.** lift, then descend the right stem
-- **3.** lift, then draw the shirorekha left-to-right — and only now lift
+- **1.** start here: descend the left stem, curl left and clockwise around the lower loop, and continue right through the crossbar without lifting
+- **2.** without lifting, climb up the right stem to the headline
+- **3.** descend the right stem top-to-bottom
+- **4.** lift, then draw the shirorekha left-to-right — and only now lift
 
-**Pen lifts: 2.**
+**Pen lifts: 1.**
+
+> The source shows three movements; most native writers draw म in two strokes
+> (80% of HP Labs India's native-writer samples). This path keeps every movement
+> in order and direction, and lifts only before the headline.
 
 > Stroke order is one attested teaching order; hands and teachers vary.
 > Source: JackPotte, ‘Devanagari m म.gif’, strokes 1–3, Wikimedia Commons, 29 March 2009.

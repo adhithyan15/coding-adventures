@@ -37,7 +37,7 @@ reviews_of: [ES-R454-repaso-corte]
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C454-CORTE-01, ES-LEX-C454-CORTE-02, ES-LEX-C454-CORTE-03] -->
 
-Two notices on the same morning. Read both, then answer.
+Two notices on the same morning. [YOU READ: both, then answer]
 
 **1 — on a barrier**
 
@@ -76,9 +76,11 @@ apologising while an announcement is informing.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C454-CORTE-01, ES-LEX-C454-CORTE-02, ES-LEX-C454-CORTE-03, ES-LEX-C454-CORTE-04] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines: say the
-street is closed for works, say until when, say there has been an accident on
-the track, and say a bus service is replacing the train.
+[PAUSE 3s] Now your turn, out loud. Four lines: say the street is closed for
+works, say until when, say there has been an accident on the track, and say a
+bus service is replacing the train.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did you use *por* plus a noun to give the reason, and did
 *cortada* agree with what it describes?

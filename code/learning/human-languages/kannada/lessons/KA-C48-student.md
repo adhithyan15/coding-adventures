@@ -56,7 +56,7 @@ Two: a teacher and a student.
 - [YOU SAY: *vidyārthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śikṣaka*, then *vidyārthi*, and say which of the two is doing the seeking]
-- [YOU RECALL: read **ಬಟ್ಟೆ**]
+- [YOU READ: **ಬಟ್ಟೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02] -->

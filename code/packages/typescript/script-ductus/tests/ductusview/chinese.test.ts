@@ -862,3 +862,29 @@ describe("Chinese 上 — vertical before short and long horizontals", () => {
     ).toBe(penPathD(CHINESE_UP.strokes[2], 1));
   });
 });
+
+// 尔 alone: five strokes, two of them hooked, so seven movements and four lifts.
+describe("Chinese 尔 — five strokes, two hooks, four lifts", () => {
+  const er = DUCTUS[ductusKey("chinese", "尔")];
+  const steps = ductusSteps(er);
+  const strip = ductusFilmstrip(er, chineseOutline("尔"));
+
+  it("lifts before every stroke but the first, never inside a hook", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2, 2, 3, 4]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+    ]);
+  });
+
+  it("reports 7 movements across 5 strokes", () => {
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(4);
+    expect(strip.summary).toBe("5 strokes · 4 pen lifts · 7 movements");
+  });
+});

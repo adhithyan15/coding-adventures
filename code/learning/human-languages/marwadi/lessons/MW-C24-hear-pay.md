@@ -37,8 +37,8 @@ reviews_of: [MW-C24-lo, MW-C10-paisa, MW-C14-samaan, MW-C14-shopping-five, MW-C2
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01, MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-LO-01, MW-SCRIPT-PAISA-01] -->
 
-[PAUSE 24s] Recall the five-word shopping payoff, say the counter-offer, then
-write goods, money, and *take it*.
+[PAUSE 24s] Recall the five-word shopping payoff and say the counter-offer.
+[YOU WRITE: the words for goods, money, and *take it*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PAY-01]; assesses=[MW-LEX-PAISA-01, MW-LEX-LO-01] -->

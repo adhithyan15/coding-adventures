@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 paste keyword classification
+
+- Expose a cached keyword lookup derived from the compiled C token grammar so
+  macro paste can reject keyword spellings without recompiling lexer patterns
+  for every expansion.
+
 ## Unreleased — PREP01 C directive handoff
 
 - Surface `#`, `##`, and `.` tokens for the C preprocessor dialect; continue

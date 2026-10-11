@@ -11,10 +11,10 @@
     "PA-C09-pasand"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "punjabi/narration/ch09.txt",
   "json": "punjabi/narration/ch09.json",
-  "textHash": "fnv1a64:562781a66ee9c267",
-  "jsonHash": "fnv1a64:4929ce2b3bfa72e7",
+  "textHash": "fnv1a64:41a9aaf7b5b16767",
+  "jsonHash": "fnv1a64:2a9c02d63cc5e8ea",
   "findings": []
 }

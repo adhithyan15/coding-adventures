@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 48,
   "title": "Nescio, Male, Malus, Sed, Aut",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6d91fd9228f97082",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1131a250e7ea226c",
   "lessons": [
     {
       "id": "LA-C48-nescio",
@@ -14,20 +14,13 @@
       "romanization": "nesciō, nescīre",
       "gloss": "I do not know — and the rule the whole chapter turns on: nōn stands in front of the verb",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8db7ea2d768de71",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:c4cc34885ec21eb9",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -111,7 +104,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the shape. It is nē- (\"not\") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said."
+              "text": "Take it apart. It is nē- (\"not\") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said."
             },
             {
               "kind": "speech",

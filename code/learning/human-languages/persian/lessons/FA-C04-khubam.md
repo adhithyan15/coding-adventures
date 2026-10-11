@@ -61,7 +61,7 @@ copula set can arrive one form at a time later.
 
 - [YOU BUILD: **khub + -am → khubam**]
 - [YOU SAY: **khubam, mamnun**]
-- [YOU POINT: to final **م** carrying “I am”]
+- [YOU POINT: final **م** carrying “I am”]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-SCRIPT-KHUBAM] -->

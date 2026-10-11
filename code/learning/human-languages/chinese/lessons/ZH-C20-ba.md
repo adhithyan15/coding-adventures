@@ -36,7 +36,9 @@ reviews_of: [ZH-W20-ba, ZH-C20-qi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-BA, ZH-LEX-NUM-QI] -->
 
-[PAUSE 2s] Write 八, then say seven.
+[PAUSE 2s] [YOU WRITE: 八]
+
+Then say seven.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-BA]; assesses=[ZH-TONE-LEXICAL, ZH-LEX-NUM-QI] -->

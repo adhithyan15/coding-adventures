@@ -154,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-hoy-como-en-casa-three",
               "prompt": "How many places can hoy go in Como en casa?",
               "assesses": [
@@ -172,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-hoy-como-en-casa-front",
               "prompt": "What does putting hoy at the front do?",
               "assesses": [
@@ -190,6 +192,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-hoy-como-en-casa-why",
               "prompt": "Why can Spanish move these pieces safely?",
               "assesses": [
@@ -388,6 +391,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-la-terminacion-y-el-infinitivo-prodrop",
               "prompt": "Say you all go, with no pronoun. Then say what tells the listener who.",
               "assesses": [
@@ -408,6 +412,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-la-terminacion-y-el-infinitivo-dos",
               "prompt": "Give the two English readings of hablo.",
               "assesses": [
@@ -427,6 +432,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-la-terminacion-y-el-infinitivo-sujeto",
               "prompt": "Say eating is good.",
               "assesses": [
@@ -446,6 +452,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-la-terminacion-y-el-infinitivo-nombre",
               "prompt": "Turn comer into a noun with an article.",
               "assesses": [

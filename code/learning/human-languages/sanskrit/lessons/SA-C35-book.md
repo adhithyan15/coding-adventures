@@ -59,7 +59,8 @@ A book, and the one borrowed word in the chapter.
 - [YOU SAY: *pustakam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *lavaṇam*, then *pustakam*]
-- [YOU RECALL: read **पुरम्**, then say *raktam*]
+- [YOU READ: **पुरम्**]
+- [YOU RECALL: say *raktam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04] -->

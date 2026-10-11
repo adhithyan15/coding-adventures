@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Not",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:18b50a7c0d025e92",
+  "sourceHash": "fnv1a64:366a661bca91f07a",
   "lessons": [
     {
       "id": "IT-C30-non",
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9828e43122a484d8",
+      "sourceHash": "fnv1a64:753d11bf3077619e",
       "notice": null,
       "blocks": [
         {
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that first Italian sentence again and count the negatives. There are three: non, and né, and né. English allows only one and calls a second one an error. Italian requires them all, and a sentence with né and no non is does not work in Italian:"
+              "text": "Say that first Italian sentence again and count the negatives. There are three: non, and né, and né. English allows only one and calls a second one an error. Italian requires them all, and a sentence with né and no non is does not work in Italian:"
             },
             {
               "kind": "speech",

@@ -37,9 +37,9 @@ reviews_of: [FA-C09-kelid, FA-C06-budan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KELID, FA-ETYMON-BUDAN-BE] -->
 
-[PAUSE 2s] The **بودن** lesson traced it back to English **be**, and in
+[PAUSE 2s] The *budan* lesson traced it back to English **be**, and in
 passing named four plainest inherited cousins the track had not yet taught as
-their own lessons: **مادر**, **پدر**, **برادر**, **دختر**. This chapter and the
+their own lessons: **مادر**, *pedar*, *barâdar*, *dokhtar*. This chapter and the
 next finally give each one its own lesson, starting here.
 
 ## You'll want to know first — one word
@@ -66,7 +66,7 @@ because small children the world over reach for the same easy sounds.
 - [YOU CONNECT: **mâdar** ← \**méh₂tēr* → English **mother**, Latin **māter**,
   Sanskrit **mātṛ**]
 - [YOU RETRIEVE: **kelid-e man, lotfan** — my key, please]
-- [YOU NAME: which four family words the **بودن** lesson promised, and which
+- [YOU NAME: which four family words the *budan* lesson promised, and which
   one this lesson delivers]
 
 ## Wrap-up Recall
@@ -74,8 +74,7 @@ because small children the world over reach for the same easy sounds.
 <!-- hl-activity: {"id":"FA-C10-madar-meaning","kind":"text","assesses":["FA-LEX-MADAR"],"prompt":"Type the Persian word for 'mother'.","answer":"مادر","accepted":["madar","mâdar","mādar"],"feedback":{"correct":"Right: مادر mâdar.","incorrect":"Use مادر — mâdar."},"response_seconds":8} -->
 
 [PAUSE 3s] What does **مادر** mean? (**Mother.**) Which lesson first named it
-as an English cousin, without teaching it as its own word? (**The بودن
-lesson**, in passing.) Which three family words does the track still owe you?
-(**پدر**, **برادر**, **دختر**.)
+as an English cousin, without teaching it as its own word? (**The** *budan* **lesson**, in passing.) Which three family words does the track still owe you?
+(*pedar*, *barâdar*, *dokhtar*.)
 
 Source: [Wiktionary: مادر](https://en.wiktionary.org/wiki/%D9%85%D8%A7%D8%AF%D8%B1).

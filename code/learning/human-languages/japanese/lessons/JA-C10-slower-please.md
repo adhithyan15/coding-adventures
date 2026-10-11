@@ -34,9 +34,10 @@ reviews_of: [JA-C10-mou-sukoshi, JA-C10-yukkuri, JA-C10-itte-kudasai, JA-C09-sum
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-SUKOSHI, JA-LEX-YUKKURI, JA-LEX-ITTE-KUDASAI, JA-LEX-SUMIMASEN, JA-LEX-WAKARIMASHITA, JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-SCRIPT-SE-01, JA-SCRIPT-O-01, JA-SCRIPT-NE-01, JA-SCRIPT-SHI-01, JA-SCRIPT-YU-01] -->
 
-[PAUSE 30s] Write **せ, お, ね, し, ゆ**. Read *sumimasen* and
-*onegaishimasu*. Retrieve the repetition request, then the three new spoken
-pieces *mō sukoshi*, *yukkuri*, and *itte kudasai*.
+[PAUSE 30s] [YOU WRITE: **せ, お, ね, し, ゆ**]
+
+Say *sumimasen* and *onegaishimasu*. Retrieve the repetition request, then the
+three new spoken pieces *mō sukoshi*, *yukkuri*, and *itte kudasai*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SLOWER-PLEASE]; assesses=[] -->
@@ -54,8 +55,9 @@ writable. The second and third remain sound-first exposure where their small
 
 1. **Listen:** choose repetition or slower speech from the request you hear.
 2. **Speak:** *sumimasen* + the slower request.
-3. **Read/write:** independently retrieve only **もうすこし**.
-4. **Close:** after the repeated line, say *wakarimashita*.
+3. [YOU READ: only **もうすこし**, retrieving it independently]
+4. [YOU WRITE: **もうすこし**]
+5. **Close:** after the repeated line, say *wakarimashita*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SLOWER-PLEASE] -->

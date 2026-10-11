@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Light, Shade, Darkness, Cloud, Rabbit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d1886b5c55e4c16a",
+  "sourceHash": "fnv1a64:bfe937d163818320",
   "lessons": [
     {
       "id": "AR-C134-daw",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aeaa180ca8dcad8d",
+      "sourceHash": "fnv1a64:90678d318a942609",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +536,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read these turns without stopping: ما اسمك؟ اسمي سامي."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "these turns without stopping — ما اسمك؟ اسمي سامي.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: these turns without stopping — **ما اسمك؟ اسمي سامي.**]"
             }
           ]
         },

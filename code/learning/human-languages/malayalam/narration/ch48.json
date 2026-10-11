@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e267312db5573a2c",
+  "sourceHash": "fnv1a64:ac214808e1dd0045",
   "lessons": [
     {
       "id": "ML-C48-teacher",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53d307b7798f12fe",
+      "sourceHash": "fnv1a64:4a1c5438e73d2f8e",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read തുണി",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "തുണി",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **തുണി**]"
+              "source": "[YOU READ: **തുണി**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf8432992589bff8",
+      "sourceHash": "fnv1a64:ebbe526eea7f5578",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഉപ്പ്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഉപ്പ്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഉപ്പ്**]"
+              "source": "[YOU READ: **ഉപ്പ്**]"
             }
           ]
         },

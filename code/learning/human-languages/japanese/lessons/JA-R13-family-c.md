@@ -39,8 +39,11 @@ Say **おっと** once without looking back.
 ## Guided Practice — three cues
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTTO, JA-LEX-ANI, JA-LEX-ANE, JA-SCRIPT-KATAKANA-KO-01] -->
 
-[PAUSE 35s] Write distant katakana **コ**. Hear *otto* and mark its held beat.
-Read **あに・あね**, say each meaning, then write all three.
+[PAUSE 35s] [YOU WRITE: distant katakana **コ**]
+
+Hear *otto* and mark its held beat. [YOU READ: **あに・あね**, then say each meaning]
+
+[YOU WRITE: all three]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTTO, JA-LEX-ANI, JA-LEX-ANE] -->

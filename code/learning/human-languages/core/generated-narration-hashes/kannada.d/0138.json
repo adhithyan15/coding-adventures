@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 138,
-  "sourceHash": "fnv1a64:74cdb33ba437043c",
+  "sourceHash": "fnv1a64:2d205c4222807a49",
   "lessonIds": [
     "KA-C138-rupayi",
     "KA-C138-batali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch138.txt",
   "json": "kannada/narration/ch138.json",
-  "textHash": "fnv1a64:6c5c1b727b368169",
-  "jsonHash": "fnv1a64:9326eeace0f2eb54",
+  "textHash": "fnv1a64:7226fd857749ec5d",
+  "jsonHash": "fnv1a64:2ef88f20ffe701b7",
   "findings": []
 }

@@ -37,7 +37,8 @@ reviews_of: [JA-W01-ko, JA-C10-koko, JA-W131-small-yo, JA-C117-kamoshika, JA-C12
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01, JA-LEX-KOKO, JA-SCRIPT-SMALL-YO-01, JA-LEX-C117-THINGS117-04, JA-LEX-C129-QUAL129-02] -->
 
-[PAUSE 15s] Before the new word: write **こ** and say *koko*, here. Then write **ょ** — **R2**, five lessons back.
+[PAUSE 15s] Before the new word, say *koko*, here.
+[YOU WRITE: **こ**; then **ょ** — **R2**, five lessons back]
 
 - [YOU RECALL: say *a Japanese serow* — **R4**, eighty lessons back]
 - [YOU RECALL: say *persistent* — **R3**, twenty lessons back]
@@ -56,8 +57,8 @@ place moves across to the listener: *soko*, there, by them. The second sign is t
 
 [PAUSE 1s]
 - [YOU SAY: *soko*]
-- [YOU SAY: *koko*, pointing at your own feet, then *soko*, pointing at the listener's]
-- [YOU RECALL: point to the sign in **そこ** you can already write, and the one you cannot]
+- [YOU SAY: *koko*, picturing the spot at your own feet, then *soko*, picturing the spot at the listener's]
+- [YOU RECALL: name the sign in **そこ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-SOKO] -->

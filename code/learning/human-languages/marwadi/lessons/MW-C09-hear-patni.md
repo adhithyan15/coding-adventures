@@ -37,8 +37,9 @@ reviews_of: [MW-C09-pati, MW-R09-maternal-three, MW-C09-nani]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATI-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01, MW-LEX-NANI-01, MW-SCRIPT-SAA-01] -->
 
-[PAUSE 16s] Say husband and maternal grandmother, write **सा**, then recall the
-last three-word four-skill checkpoint.
+[PAUSE 16s] Say husband and maternal grandmother. [YOU WRITE: **सा**]
+
+Then recall the last three-word four-skill checkpoint.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PATNI-01]; assesses=[] -->

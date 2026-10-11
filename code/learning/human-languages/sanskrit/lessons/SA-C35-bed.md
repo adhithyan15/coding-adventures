@@ -59,7 +59,8 @@ Five things in a house, and a bed with a city inside it.
 - [YOU SAY: *śayyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which one came in from Persian]
-- [YOU RECALL: say *samudraḥ*, then read **देहः**]
+- [YOU RECALL: say *samudraḥ*]
+- [YOU READ: **देहः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05] -->

@@ -74,7 +74,7 @@ The sign is still written. The beat is still counted. Only the voice drops out.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-U-01] -->
 
-[PAUSE 15s] Write ? from memory before tracing ?.
+[PAUSE 15s] Write **う** from memory before tracing **す**.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SU-01] -->

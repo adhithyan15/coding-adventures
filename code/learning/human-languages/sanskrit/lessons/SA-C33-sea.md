@@ -59,7 +59,8 @@ Five pieces of country, and the place a river finishes.
 - [YOU SAY: *samudraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say where a *nadī* ends]
-- [YOU RECALL: say *himam*, then read **दारु**]
+- [YOU RECALL: say *himam*]
+- [YOU READ: **दारु**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05] -->

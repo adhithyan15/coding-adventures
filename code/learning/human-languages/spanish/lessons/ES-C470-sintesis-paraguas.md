@@ -64,7 +64,9 @@ for *en cualquier parte*. Spanish keeps the negative on both halves.
 ## Grammar Lens: what the message is actually asking
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C470-PARAGUAS-03, ES-LEX-C470-PARAGUAS-04] -->
 
-Read the last sentence again. It does not ask anyone to look.
+[YOU READ: the last sentence again]
+
+It does not ask anyone to look.
 
 | what it says | what it does not say |
 |---|---|

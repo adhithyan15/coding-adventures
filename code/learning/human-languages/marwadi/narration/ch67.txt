@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खेल (khel) mean? ("A game".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a game'.
+Say the Marwadi for 'a game'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चिट्ठी (chiṭṭhī) mean? ("A letter (post)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a letter (post)'.
+Say the Marwadi for 'a letter (post)'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रूंख (rū̃kh) mean? ("A tree".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a tree'.
+Say the Marwadi for 'a tree'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पत्तो (patto) mean? ("A leaf".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a leaf'.
+Say the Marwadi for 'a leaf'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does डूंगर (ḍū̃gar) mean? ("A hill, a mountain".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a hill, a mountain'.
+Say the Marwadi for 'a hill, a mountain'.

@@ -58,7 +58,8 @@ The first animal.
 - [YOU SAY: *gēde*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gēde*, then *pālu*, and say which one gives the other]
-- [YOU RECALL: say *koñcem*, then read **గాలి** and say what it means]
+- [YOU RECALL: say *koñcem*]
+- [YOU READ: **గాలి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01] -->

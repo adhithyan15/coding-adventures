@@ -1,5 +1,5 @@
 Tamil, chapter 6: Dative Case and Dative Subjects.
-9 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+9 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 9.
@@ -36,13 +36,14 @@ What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end 
 Lesson 2 of 9.
 வ (va) — one spiral, one motion.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: வ and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: வ and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 One letter this time. Just one.
 It is the first letter of the first word you learned, and it is the easiest one in this book to write: the pen never leaves the paper.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: வ.
 வ — va.
 What it is made of:
@@ -58,8 +59,9 @@ Writing: வ.
 4. without lifting, carry the bottom bar to the right.
 5. without lifting, rise up the right upright — and only now lift.
 Pen lifts: 0. The pen never leaves the paper.
-Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 9, வ (Univ. of Texas at Austin), p. 194.
+Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 9, வ (va) (Univ. of Texas at Austin), p. 194.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — trace: வ (va) once, slowly, following the steps above]
@@ -75,18 +77,20 @@ How many times does the pen lift while writing வ? (None — one unbroken motio
 Lesson 3 of 9.
 ம and ண (ṇa) — a loop, and a curled tongue.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ம, Script you'll notice: ண and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ம, Script you'll notice: ண and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Two more letters, and with them you'll have every letter of this book's first word. One is easy. The other is a sound you may not be able to hear yet.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ம.
 a straight vertical stroke on the LEFT.
 a horizontal along the bottom.
 a rounded arch closing it on the RIGHT.
 Get the sides the right way round. The upright is on the left and the curve on the right — which is the reverse of what most people guess, and the reverse of the Devanagari habit of hanging a shape off a right-hand spine.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ண.
 a straight top bar.
 a loop on the left.
@@ -100,6 +104,7 @@ Now curl the tip of your tongue up and back toward the roof of your mouth, and s
 English has no such sound and no way to write one, which is why an English speaker typically cannot hear the difference at first. That is expected. The ear learns it after the hand does, which is one good argument for writing the letters rather than only reading them.
 Retroflex sounds are a signature of the languages of India — they show up across Tamil, Telugu, Kannada, Malayalam, Hindi and Sanskrit alike, in families that are otherwise unrelated to each other. It's one of the features that makes South Asia a linguistic area: neighbouring languages that borrowed a sound from each other rather than inheriting it.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: ம — "left upright, bottom, right arch"]
@@ -185,6 +190,8 @@ What does எனக்குத் தமிழ் தெரியும் (ena
 Lesson 6 of 9.
 -ukku, -ku, -ge, -ikku — the family shows its bones.
 
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Script — வ, ம and ண.
+
 Warm-up.
 [pause 2 seconds]
 Tamil says knowing happens to you. Its three closest sisters make the same grammatical choice.
@@ -198,6 +205,7 @@ language: Malayalam. "I know [the language]": enikku malayāḷam aṟiyām. dat
 The verbs differ, but the experiencer sits in a dative whose forms visibly belong together: -ukku / -ku / -ge / -ikku. This is family evidence, just as blanc/bianco/branco exposes Romance kinship.
 The comparison also makes cross-language practice useful: once you recognize "to me," you can search for the known or apparent thing rather than forcing an English subject onto the sentence.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [your turn — say: "-ukku, -ku, -ge, -ikku"]
@@ -205,6 +213,19 @@ Guided Practice.
 [once you have stopped driving — point: the experiencer in each sentence]
 [your turn — paraphrase: "the language is known to me"]
 [pause 8 seconds for the answer]
+
+Guided Practice — the ending underneath.
+Say "for the name", then "for work". (peyarukku, vēlaikku — one case, two shapes, picked by the noun's ending.) And "to me"? (enakku — nāṉ changes its body to en- first.)
+How is -ukku unlike Latin -īs? (One meaning, seam visible — Tamil stacks; Latin fuses case, number and class.)
+Why the dative for knowing? (Knowing happens to you; speaking you do.)
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — வ, ம and ண.
+வணக்கம்.
+[once you have stopped driving — point: வ (va), then ண (ṇa), then ம]
+[your turn — say: plain n, then curl the tongue back — ṇ]
+[pause 8 seconds for the answer]
+(வ: va, one motion, no pen lift. ம: upright on the left, arch on the right. ண (ṇa): two arches; its dot-ṇ is retroflex, tongue curled back.)
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -214,7 +235,7 @@ Do the four sisters agree on dative experiencers? (Yes.) Which four suffix shape
 Lesson 7 of 9.
 ண (ṇa) — the first of three n's.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ண and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ண and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -223,6 +244,7 @@ Before the new one: say the sound of வ (va).
 One letter this time. Just one.
 Tamil has three different letters for sounds English hears as one n. This is the first, and the dot under its romanization — ṇ, not plain n — is doing real work: the tongue curls back to the roof of the mouth. Words genuinely differ by it.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ண.
 ண — ṇa.
 What it is made of:
@@ -243,6 +265,7 @@ Writing: ண.
 Pen lifts: 0. The pen never leaves the paper.
 Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 13, ண (ṇa) (Univ. of Texas at Austin), p. 195.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — trace: ண (ṇa) once, slowly, following the steps above]
@@ -258,12 +281,13 @@ Where does the tongue go for ண (ṇa)? (Curled back, to the roof of the mouth.
 Lesson 8 of 9.
 ந, ன, ண (na, ṉa, ṇa) — three stops on one tongue-map.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The backward walk and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: The backward walk and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 English writes one n. Tamil keeps three tongue positions apart.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: The backward walk.
 [a table of 3 rows, read aloud]
 letter: ந. sound: na. tongue: against the teeth (dental).
@@ -273,6 +297,7 @@ Move backward: teeth becomes ridge becomes curled roof. English spells all three
 You will draw ந and ன when nandri needs them. For now compare the last pair: ண (ṇa) is ன with one extra arch. Both open with a top bar and loop and finish with the same vertical. ன has one middle arch; ண (ṇa) has two.
 Retroflex sounds occur across unrelated South Asian language families. That shared geography makes the region a linguistic area: neighbors can borrow a sound pattern without inheriting it from one ancestor.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
 [your turn — say: dental ந at the teeth]
@@ -291,7 +316,7 @@ How many n-letters does Tamil have? (Three.) What separates them? (Tongue positi
 Lesson 9 of 9.
 ப (pa) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ப and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ப and Guided Practice.
 
 Warm-up.
 [pause 1 second]
@@ -299,6 +324,7 @@ Curvy and loopy with flat top-bars on many letters, repeated arches, and no cont
 [pause 2 seconds]
 One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ப.
 ப — pa.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not p, it is pa.
@@ -309,17 +335,16 @@ You already say these, and every one of them has ப (pa) somewhere inside it:
 பரவாயில்லை paravāyillai — it's okay / no problem / you're welcome.
 
 Writing: ப — follow the numbered strip.
-Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ப yourself — slowly, and larger than it is printed.
+Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ப (pa) yourself — slowly, and larger than it is printed.
 The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[your turn — look: at these words, and find ப (pa) in the ones that have it]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: at these words, and find ப (pa) in the ones that have it]
 பெயர், வணக்கம்.
 [once you have stopped driving — trace: ப three times, saying pa as you finish each one]
-[your turn — look: back at any page of this chapter and find ப once more]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: back at any page of this chapter and find ப (pa) once more]
 
 Wrap-up Recall.
 [pause 3 seconds]

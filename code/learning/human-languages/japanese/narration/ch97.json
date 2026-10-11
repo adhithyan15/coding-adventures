@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C97-zaisan-type",
-              "prompt": "Type the Japanese for 'property, fortune'.",
+              "prompt": "Say the Japanese for 'property, fortune'.",
               "assesses": [
                 "JA-LEX-C97-CAN97-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C97-tsukaimichi-type",
-              "prompt": "Type the Japanese for 'a use, a purpose'.",
+              "prompt": "Say the Japanese for 'a use, a purpose'.",
               "assesses": [
                 "JA-LEX-C97-CAN97-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C97-shudan-type",
-              "prompt": "Type the Japanese for 'a means'.",
+              "prompt": "Say the Japanese for 'a means'.",
               "assesses": [
                 "JA-LEX-C97-CAN97-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C97-houhou-type",
-              "prompt": "Type the Japanese for 'a method'.",
+              "prompt": "Say the Japanese for 'a method'.",
               "assesses": [
                 "JA-LEX-C97-CAN97-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C97-yarikata-type",
-              "prompt": "Type the Japanese for 'a way of doing'.",
+              "prompt": "Say the Japanese for 'a way of doing'.",
               "assesses": [
                 "JA-LEX-C97-CAN97-05"
               ],

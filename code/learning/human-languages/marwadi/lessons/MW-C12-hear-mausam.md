@@ -37,8 +37,8 @@ reviews_of: [MW-C11-weather-three, MW-C11-hawa, MW-C11-baadal, MW-C11-barsaat, M
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01, MW-LEX-HAWA-01, MW-LEX-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-KAIN-01, MW-SCRIPT-II-INDEPENDENT-01, MW-SCRIPT-GHAR-01] -->
 
-[PAUSE 26s] Recall wind, cloud, and rain in four skills, then write **ई**,
-**कांई**, and **घर**.
+[PAUSE 26s] Recall wind, cloud, and rain in four skills.
+[YOU WRITE: **ई**, **कांई**, and **घर**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-MAUSAM-01]; assesses=[] -->

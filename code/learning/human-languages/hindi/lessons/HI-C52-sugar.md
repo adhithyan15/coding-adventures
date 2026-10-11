@@ -59,7 +59,8 @@ The fourth of five, and the only one that is a nationality.
 - [YOU SAY: *chīnī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chīnī*, and then *chāy*, which you have had for a long time now]
-- [YOU RECALL: read **आशीर्वाद**, then say *mez*]
+- [YOU READ: **आशीर्वाद**]
+- [YOU RECALL: say *mez*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04] -->

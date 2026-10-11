@@ -69,7 +69,8 @@ can point at.
 - [YOU SAY: *valadu*]
 - [YOU SAY: *valadu kai* — "the right hand"]
 - [YOU SAY: *idu*, *adu*, *valadu* — three words, one ending]
-- [YOU RECALL: say *aṟuvaṭai*, then read **மூடு**]
+- [YOU RECALL: say *aṟuvaṭai*]
+- [YOU READ: **மூடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05] -->

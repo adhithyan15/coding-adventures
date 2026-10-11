@@ -92,6 +92,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-hear-bhaat-recall",
               "prompt": "Which is the flatbread and which is the rice: roṭlī or bhāt?",
               "assesses": [
@@ -199,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-hear-daal-recall",
               "prompt": "Say the two-word name for the pair, lentils first.",
               "assesses": [
@@ -307,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-hear-shaak-recall",
               "prompt": "Does shāk name the raw vegetable, the cooked dish, or both?",
               "assesses": [
@@ -413,6 +416,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-hear-tel-recall",
               "prompt": "Which of these is not something you eat on its own: tel, bhāt, or dāḷ?",
               "assesses": [
@@ -519,6 +523,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-hear-keri-recall",
               "prompt": "Two words you know end in -ī: roṭlī and kerī. Does that ending tell you the gender?",
               "assesses": [
@@ -585,6 +590,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-plate-five-listening",
               "prompt": "Hear this shuffled row and give the five English meanings: shāk — kerī — bhāt — tel — dāḷ.",
               "assesses": [
@@ -608,6 +614,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-plate-five-speaking",
               "prompt": "Say the five Gujarati words from the English cues alone: rice, lentils, vegetable, oil, mango.",
               "assesses": [
@@ -632,6 +639,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C27-plate-five-carryover",
               "prompt": "Now the older band, by ear only: at which part of the day would you eat — say savār, bapor, sānj, and rāt in day order, and give the English of divas, mahino, āj, and atyāre.",
               "assesses": [
@@ -690,14 +698,20 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f438295b953ac84d",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Writing — guided copy, model in view"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -729,6 +743,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C27-bhaat-reading",
               "prompt": "Read this word aloud and give its meaning: ભાત (bhāt).",
               "assesses": [
@@ -759,6 +774,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C27-bhaat-guided-copy",
               "prompt": "With the model in view, copy rice once.",
               "assesses": [
@@ -815,8 +831,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -848,6 +866,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R27-plate-five-r1-listening",
               "prompt": "Hear this shuffled row and give the five English meanings: tel — kerī — dāḷ — bhāt — shāk.",
               "assesses": [
@@ -871,6 +890,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R27-plate-five-r1-speaking",
               "prompt": "From English cues alone, say lentils, oil, and mango in Gujarati.",
               "assesses": [
@@ -906,6 +926,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R27-plate-five-r1-distant",
               "prompt": "By ear only: give the English of chā, dūdh, and roṭlī; say which road chā took out of China; say what dūdh was called in Sanskrit; and say what is known about where roṭlī came from.",
               "assesses": [
@@ -942,6 +963,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R27-plate-five-r1-writing",
               "prompt": "Cover every model. Write rice from the spoken word alone.",
               "assesses": [

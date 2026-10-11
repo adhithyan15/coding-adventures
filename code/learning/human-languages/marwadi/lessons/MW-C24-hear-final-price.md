@@ -37,8 +37,8 @@ reviews_of: [MW-C24-aakhri, MW-C22-kitno, MW-C13-bhaav, MW-C24-do, MW-C22-price-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-KITNO-01, MW-SCRIPT-AAKHRI-01, MW-SCRIPT-DO-01] -->
 
-[PAUSE 24s] Say the first price question, then write *how much*, price,
-*final*, and *give*.
+[PAUSE 24s] Say the first price question.
+[YOU WRITE: the words for *how much*, price, *final*, and *give*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-FINAL-PRICE-01]; assesses=[MW-LEX-KITNO-01, MW-LEX-AAKHRI-01, MW-LEX-DO-01] -->

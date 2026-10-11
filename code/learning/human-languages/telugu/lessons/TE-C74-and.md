@@ -57,7 +57,8 @@ The first way you have had to put two things in one sentence.
 - [YOU SAY: *mariyu*, once more]
 - [YOU SAY: join two words you know with *mariyu*]
 - [YOU RECALL: say *dayacēsi*, then say *mariyu*]
-- [YOU RECALL: say *aṅgaḍi*, then read **తీపి** and say what it means]
+- [YOU RECALL: say *aṅgaḍi*]
+- [YOU READ: **తీపి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C08-DAYACHESI-01, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04, TE-ETYMON-C08-DAYACHESI-02] -->

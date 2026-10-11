@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C51-pino-type",
-              "prompt": "Type the Marwadi for 'to drink'.",
+              "prompt": "Say the Marwadi for 'to drink'.",
               "assesses": [
                 "MW-LEX-C51-VERBS51-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C51-jano-type",
-              "prompt": "Type the Marwadi for 'to go'.",
+              "prompt": "Say the Marwadi for 'to go'.",
               "assesses": [
                 "MW-LEX-C51-VERBS51-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C51-avno-type",
-              "prompt": "Type the Marwadi for 'to come'.",
+              "prompt": "Say the Marwadi for 'to come'.",
               "assesses": [
                 "MW-LEX-C51-VERBS51-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C51-dekhno-type",
-              "prompt": "Type the Marwadi for 'to see'.",
+              "prompt": "Say the Marwadi for 'to see'.",
               "assesses": [
                 "MW-LEX-C51-VERBS51-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C51-sunno-type",
-              "prompt": "Type the Marwadi for 'to hear, to listen'.",
+              "prompt": "Say the Marwadi for 'to hear, to listen'.",
               "assesses": [
                 "MW-LEX-C51-VERBS51-05"
               ],

@@ -66,7 +66,7 @@ settle it. That is the same word: Italian's "they" and its "their" are one shape
 ## The word, taken apart: vostro was in the first lesson of this book
 <!-- hl-knowledge: introduces=[IT-NOTICE-NOSTRO-VOSTRO-03]; assesses=[] -->
 
-Turn back to the very first lesson. **Ciao** was traced there to the Venetian greeting
+Think back to the very first lesson. **Ciao** was traced there to the Venetian greeting
 **s-ciào vostro** — "[I am] **your** slave", a servant's formula that wore down
 into the friendliest word in the language.
 

@@ -1,0 +1,11 @@
+{
+  "id": "PA-R166-wander-again",
+  "pathSegment": "PA-PATH-166-ACTION-RETURN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-166-ACTION-RETURN",
+      "order": 1
+    }
+  ]
+}

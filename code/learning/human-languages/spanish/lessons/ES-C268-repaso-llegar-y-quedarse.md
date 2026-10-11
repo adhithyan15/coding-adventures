@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-DONDE-ESTA, ES-LEX-BILLETE, ES-LEX-HABITACION, ES-SEMANTIC-LODGING]
+  knowledge: [ES-LEX-DONDE-ESTA, ES-LEX-BILLETE, ES-LEX-HABITACION, ES-SEMANTIC-LODGING, ES-SEMANTIC-ASKING-DIRECTIONS, ES-SEMANTIC-TRAVEL-TICKET]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, language-focus, fluency]
@@ -37,7 +37,7 @@ reviews_of: [ES-C268-donde-esta, ES-C268-billete, ES-C268-habitacion]
 [PAUSE 2s] The first thing you say anywhere new. (*¿Dónde está?*)
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DONDE-ESTA, ES-LEX-BILLETE, ES-LEX-HABITACION, ES-SEMANTIC-LODGING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DONDE-ESTA, ES-LEX-BILLETE, ES-LEX-HABITACION, ES-SEMANTIC-LODGING, ES-SEMANTIC-ASKING-DIRECTIONS, ES-SEMANTIC-TRAVEL-TICKET] -->
 
 These three arrived one after another, and they are not a list. They are a
 sequence.
@@ -67,7 +67,7 @@ is to **keep on having** a place. English **inhabit** and **habitat** are the
 same root, barely disguised.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DONDE-ESTA, ES-LEX-BILLETE, ES-LEX-HABITACION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DONDE-ESTA, ES-LEX-BILLETE, ES-LEX-HABITACION, ES-SEMANTIC-ASKING-DIRECTIONS, ES-SEMANTIC-TRAVEL-TICKET] -->
 
 <!-- hl-activity: {"id":"ES-C268-repaso-llegar-y-quedarse-orden","kind":"text","assesses":["ES-LEX-DONDE-ESTA","ES-LEX-BILLETE","ES-LEX-HABITACION"],"prompt":"Say the three in the order a journey needs them: find it, buy it, sleep.","answer":"donde esta, billete, habitacion","accepted":["¿dónde está?, un billete, una habitación","dónde está, billete, habitación"],"feedback":{"correct":"Find, travel, rest.","incorrect":"¿Dónde está? · un billete · una habitación."},"response_seconds":14} -->
 <!-- hl-activity: {"id":"ES-C268-repaso-llegar-y-quedarse-cion","kind":"text","assesses":["ES-LEX-HABITACION"],"prompt":"Habitar means to live in. What does the -cion ending add?","answer":"the noun for its result","accepted":["turns it into a noun","a place lived in","the result"],"feedback":{"correct":"A habitación is a place lived in.","incorrect":"It makes the noun for the result of the verb."},"response_seconds":12} -->

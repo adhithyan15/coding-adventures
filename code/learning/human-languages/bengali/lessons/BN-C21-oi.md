@@ -34,7 +34,7 @@ reviews_of: [BN-C21-ei, BN-C14-lal, BN-C14-kalo, BN-W04-o-indep]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C21-EI-01, BN-SCRIPT-O-INDEP-01] -->
 
-[PAUSE 2s] Say **this shirt**. Then write **ও**.
+[PAUSE 2s] Say **this shirt**. [YOU WRITE: **ও**]
 
 ## You'll want to know: ওই
 <!-- hl-knowledge: introduces=[BN-LEX-C21-OI-01]; assesses=[BN-LEX-C21-EI-01, BN-LEX-C14-LAL-01] -->
@@ -69,7 +69,7 @@ person — and it is still the same gesture.
 
 [PAUSE 1s]
 - [YOU SAY: *oi jāmā* — that shirt]
-- [YOU SAY: the pair, pointing twice — *ei jāmā*, *oi jāmā*]
+- [YOU SAY: the pair, near then far — *ei jāmā*, *oi jāmā*]
 - [YOU SAY: *ei lāl, oi kālo*]
 - [YOU WRITE: এই ওই]
 

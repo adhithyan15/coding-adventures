@@ -41,7 +41,7 @@ reviews_of: [ZH-W03-yi]
 
 **一** *yī* means **one**.
 
-Read those two facts together, because their meeting is the point:
+Take those two facts together, because their meeting is the point:
 
 **One stroke. And it means one.**
 

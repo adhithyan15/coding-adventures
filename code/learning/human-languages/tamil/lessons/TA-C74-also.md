@@ -72,7 +72,8 @@ One ending, two jobs: on two words it joins, on one word it adds.
 - [YOU SAY: *nīṅgaḷum*, then *iduvum*]
 - [YOU CONTRAST: *pālum tēnīrum* against *pālum* alone — two tails join, one tail adds]
 - [YOU RECALL: say *āṇḍu*, then say *pālum tēnīrum*, then say *nāṉum*]
-- [YOU RETURN TO: read **இன்று**, say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]
+- [YOU READ: **இன்று**]
+- [YOU RETURN TO: say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-05, TA-GRAMMAR-C74-JOIN-01, TA-GRAMMAR-C74-JOIN-02, TA-SCRIPT-READ-INRU-01, TA-LEX-C60-MADE-04, TA-LEX-C70-ROOM-05] -->

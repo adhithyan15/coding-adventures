@@ -1,0 +1,24 @@
+# Perl 5.004_71 (1998-07-09) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_71 syntax is rejected by this grammar.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_71.tar.gz
+# Archive SHA-256: de9c6382cdb133b1fc2cf7fca9ad5cfbd5c382525c76fdb233be3b8869cbddcf
+# perly.y, keywords.h, and complete scan_num are byte-identical to 5.004_70.
+# Other changes affect a keyword warning, overload-stack naming, and regex hooks.
+# Standalone subset: no pragmas, BEGIN, imports, hint mutation, or overrides.
+# Retain the source-backed 250-digit bound (tokenbuf256, six reserved).
+# CR, unsupported characters, and leading-zero forms remain refused.
+# No platform-wide rejection parity is claimed.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

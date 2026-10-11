@@ -64,7 +64,7 @@ listener, the **-iye** command for a respected listener, and now *ve* for a
 respected third person.
 
 In everyday speech many speakers say **वो** for both *vah* and *ve*. Recognise
-it; write the forms above.
+it; in writing, use the forms above.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-02, HI-LEX-C86-PRON-01, HI-LEX-C40-DEIXIS-02] -->

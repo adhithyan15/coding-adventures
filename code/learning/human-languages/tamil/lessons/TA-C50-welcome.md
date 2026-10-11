@@ -56,7 +56,8 @@ That closes the run: a doorway, a design, a flower, a leaf, and the word for tak
 - [YOU SAY: *varavēṟpu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *vāsal*, *kōlam*, *malar*, *veṟṟilai*, *varavēṟpu*]
-- [YOU RECALL: say *puṟappaḍu*, then read **மிக்க நன்றி**]
+- [YOU RECALL: say *puṟappaḍu*]
+- [YOU READ: **மிக்க நன்றி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05] -->

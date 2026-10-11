@@ -37,7 +37,8 @@ reviews_of: [GE-C111-fliegen]
 
 [PAUSE 2s] Before the new one: say the German for a lift, then the German for to fly.
 
-[PAUSE 3s] Read *der Flughafen, das Hotel, das Kino* aloud as one line, without stopping between the words.
+[PAUSE 3s]
+[YOU READ: *der Flughafen, das Hotel, das Kino* aloud as one line, without stopping between the words]
 
 ## You'll want to know: der Teppich
 <!-- hl-knowledge: introduces=[GE-LEX-C112-HAUS112-01]; assesses=[] -->

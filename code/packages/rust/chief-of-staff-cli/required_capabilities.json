@@ -36,7 +36,7 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "records under the configured vault storage root",
+      "target": "records under the configured vault storage root, and the <kek_path>.freshness anchor directory next to the KEK",
       "justification": "`vault put` and `vault delete` write or remove sealed Chief secret records; the store is initialized on first use."
     },
     {

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 33,
-  "sourceHash": "fnv1a64:cb862476e67c7bb6",
+  "sourceHash": "fnv1a64:b4ba0a8fa6755d14",
   "lessonIds": [
     "ES-C06-practice"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch33.txt",
   "json": "spanish/narration/ch33.json",
-  "textHash": "fnv1a64:eae335667111ae2e",
-  "jsonHash": "fnv1a64:7210502931ccb120",
+  "textHash": "fnv1a64:902ea782467893cd",
+  "jsonHash": "fnv1a64:4632f559cf91e6d5",
   "findings": []
 }

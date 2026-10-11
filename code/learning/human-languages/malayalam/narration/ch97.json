@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d6723f4c1af5505a",
+  "sourceHash": "fnv1a64:c87925cc8259f8b3",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:202aba0364beaaa9",
+      "sourceHash": "fnv1a64:1daa5cfb4b87b929",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read what you did there. The word ends in ം, so it welds onto ആണ് the way the last chapter's two words did, and you did it without being told."
+              "text": "Notice what you did there. The word ends in ം, so it welds onto ആണ് the way the last chapter's two words did, and you did it without being told."
             },
             {
               "kind": "table",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ec3c82d019c07fb",
+      "sourceHash": "fnv1a64:f7aef53d7297f66d",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the gloss again. The word means beauty, but the sentence does not say this is beauty — it says this is beautiful, and it is the way you are most likely to hear it said."
+              "text": "Think about the gloss again. The word means beauty, but the sentence does not say this is beauty — it says this is beautiful, and it is the way you are most likely to hear it said."
             }
           ]
         },
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb980d6c29b52f56",
+      "sourceHash": "fnv1a64:2a590548f0a6df36",
       "notice": null,
       "blocks": [
         {
@@ -491,7 +491,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say this is beautiful, then deny it."
+              "text": "From memory alone, say this is beautiful, then deny it."
             }
           ]
         },

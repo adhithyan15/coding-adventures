@@ -8,13 +8,14 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:7ef15b3c65cb4cb6",
     "detachableSegments": [
       "The letters in this word"

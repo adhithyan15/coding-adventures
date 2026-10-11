@@ -480,6 +480,9 @@ Each language expresses this differently:
 | Lua        | `Rect \| nil`                   | `nil`              |
 | Perl       | `Rect \| undef`                 | `undef`            |
 | Swift      | `Rect?`                         | `nil`              |
+| Java       | `Rect`                          | `null`             |
+| Kotlin     | `Rect?`                         | `null`             |
+| Dart       | `Rect?`                         | `null`             |
 
 ### Struct vs. class vs. record
 
@@ -495,6 +498,16 @@ The `angle()` function must call `trig.atan2(y, x)` from PHY00. No other
 function in this package requires `trig`. Do not call the host language's
 `Math.atan2` / `math.atan2` directly — the package dependency structure
 requires all trigonometric computation to flow through PHY00.
+
+The Java and Kotlin packages expose immutable `Point` and `Rect` values in
+`com.codingadventures.point2d`; Dart exposes the same two value classes from
+`package:coding_adventures_point2d/point2d.dart`. Use native conventional
+method spellings (`fromPoints`, `isEmpty`, `containsPoint`, `expandBy`,
+`magnitudeSquared`, `distanceSquared`), but preserve the formulas and
+half-open rectangle containment above. Java and Kotlin must declare a local
+composite-build dependency on their same-language `trig` package; Dart must
+declare a local pub path dependency. `Point.angle()` must call that package's
+`atan2(y, x)` in each lane.
 
 ---
 
@@ -526,6 +539,14 @@ Every language implementation must include tests validating:
 
 Coverage threshold: ≥ 95% lines.
 
+Each new Java, Kotlin, and Dart lane must also read the checked
+`geometry2d-v1/cases.json` corpus, pin version 1 and the four
+`point-normalize` case ids, and run all four through its public `Point`
+API. The corpus also contains Arc2D cases; a Point2D adapter neither runs
+nor claims those. An expected origin with `comparison: "exact"` requires
+coordinate-exact equality, while `comparison: "absolute"` uses only the
+corpus's fixed `1e-12` absolute tolerance.
+
 ---
 
 ## Package Matrix
@@ -541,6 +562,9 @@ Coverage threshold: ≥ 95% lines.
 | Lua        | `code/packages/lua/point2d/`                  | `coding_adventures.point2d`               |
 | Perl       | `code/packages/perl/point2d/`                 | `CodingAdventures::Point2D`               |
 | Swift      | `code/packages/swift/point2d/`                | `Point2D`                                 |
+| Java       | `code/packages/java/point2d/`                 | `com.codingadventures.point2d`            |
+| Kotlin     | `code/packages/kotlin/point2d/`               | `com.codingadventures.point2d`            |
+| Dart       | `code/packages/dart/point2d/`                 | `coding_adventures_point2d`               |
 
 ## G2D Series Roadmap
 

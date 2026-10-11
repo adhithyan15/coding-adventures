@@ -58,7 +58,8 @@ Five: పెరుగు, నెయ్యి, నూనె, చక్కెర, 
 - [YOU SAY: *mirapa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *nā pēru* and your own name]
-- [YOU RECALL: say *nippu*, then read **పక్షి** and say what it means]
+- [YOU RECALL: say *nippu*]
+- [YOU READ: **పక్షి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05] -->

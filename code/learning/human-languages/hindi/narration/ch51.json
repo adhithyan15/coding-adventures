@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:516a77e3fc332f05",
+  "sourceHash": "fnv1a64:fcfbf1106018c3a5",
   "lessons": [
     {
       "id": "HI-C51-flower",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c55b2971afc05ada",
+      "sourceHash": "fnv1a64:d6aaa8622d476d76",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "परसों",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **परसों**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read परसों, then say ehsān",
+              "instruction": "say ehsān",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **परसों**, then say *ehsān*]"
+              "source": "[YOU RECALL: say *ehsān*]"
             }
           ]
         },
@@ -281,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:998f4030086af8ac",
+      "sourceHash": "fnv1a64:a3d6117420678e80",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +381,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say safar, then read आदर",
+              "instruction": "say safar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *safar*, then read **आदर**]"
+              "source": "[YOU RECALL: say *safar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आदर",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आदर**]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4fac695e8df9707",
+      "sourceHash": "fnv1a64:4220c6f77b28db33",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "निकलना",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **निकलना**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read निकलना, then say āśīrvād",
+              "instruction": "say āśīrvād",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **निकलना**, then say *āśīrvād*]"
+              "source": "[YOU RECALL: say *āśīrvād*]"
             }
           ]
         },
@@ -543,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9150ff123d94e336",
+      "sourceHash": "fnv1a64:7179cb9e6c962bd4",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +661,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mulāqāt, then read प्रणाम and point to its ण",
+              "instruction": "say mulāqāt, then spell प्रणाम aloud letter by letter, naming its ण as you reach it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mulāqāt*, then read **प्रणाम** and point to its **ण**]"
+              "source": "[YOU RECALL: say *mulāqāt*, then spell **प्रणाम** aloud letter by letter, naming its **ण** as you reach it]"
             }
           ]
         },

@@ -33,7 +33,8 @@ reviews_of: [TA-W23-read-sattai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SATTAI-01] -->
 
-[PAUSE 2s] Before the new one: read **சட்டை** once, then say what it means.
+[PAUSE 2s] Before the new one, say what **சட்டை** means.
+[YOU READ: **சட்டை** once]
 
 ## You'll want to know: புடவை
 <!-- hl-knowledge: introduces=[TA-LEX-C67-WEAR-03]; assesses=[] -->
@@ -59,7 +60,9 @@ Three garments, and a Tamil word English never borrowed.
 [PAUSE 1s]
 - [YOU SAY: *puḍavai*]
 - [YOU SAY: *talai*, *saṭṭai*, *puḍavai* — three words, one ending]
-- [YOU RECALL: say *vēṭṭi*, then read **சட்டை**, then say *puḍavai*]
+- [YOU RECALL: say *vēṭṭi*]
+- [YOU READ: **சட்டை**]
+- [YOU RECALL: say *puḍavai*]
 - [YOU RECALL: say *veḷiyē*]
 
 ## Wrap-up Recall

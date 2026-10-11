@@ -56,7 +56,8 @@ Three, and the third one arrives in somebody's hand.
 - [YOU SAY: *malar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōlam*, then *malar*, and hear the soft *r* close the second]
-- [YOU RECALL: say *payaṇam*, then read **சந்தோஷம்**]
+- [YOU RECALL: say *payaṇam*]
+- [YOU READ: **சந்தோஷம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03] -->

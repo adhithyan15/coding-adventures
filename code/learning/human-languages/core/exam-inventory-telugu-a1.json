@@ -564,7 +564,7 @@
       "category": "Kriya (the verb)",
       "label": "the plain command: the bare stem, to someone you address as nuvvu",
       "probe": [
-        "TE-LEX-COME",
+        "TE-LEX-C32-RAA-01",
         "TE-LEX-SIT",
         "TE-LEX-STAND",
         "TE-LEX-GIVE"
@@ -1491,7 +1491,7 @@
       "category": "Samvyavaharam (communicative functions)",
       "label": "give an order or an instruction",
       "probe": [
-        "TE-LEX-COME",
+        "TE-LEX-C32-RAA-01",
         "TE-LEX-SIT",
         "TE-LEX-GIVE",
         "TE-GRAMMAR-C32-CUUDU-02"
@@ -2255,7 +2255,6 @@
       "label": "visibility and sight",
       "probe": [
         "TE-LEX-C32-CUUDU-01",
-        "TE-LEX-LOOK",
         "TE-LEX-C37-KANNU-01"
       ],
       "derivedFrom": "ES:A1-NG5-01"
@@ -2435,7 +2434,7 @@
       "probe": [
         "TE-LEX-SIT",
         "TE-LEX-STAND",
-        "TE-LEX-COME",
+        "TE-LEX-C32-RAA-01",
         "TE-LEX-C32-VELLU-01"
       ],
       "derivedFrom": "ES:A1-NE01-03"
@@ -2642,7 +2641,7 @@
       "category": "Padasampada (core lexis)",
       "label": "classroom language: look, listen, write, sit",
       "probe": [
-        "TE-LEX-LOOK",
+        "TE-LEX-C32-CUUDU-01",
         "TE-LEX-LISTEN",
         "TE-LEX-WRITE",
         "TE-LEX-SIT"

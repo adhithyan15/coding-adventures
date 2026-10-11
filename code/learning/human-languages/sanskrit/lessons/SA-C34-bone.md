@@ -59,7 +59,8 @@ A bone, and one of the oldest words anyone has written down.
 - [YOU SAY: *asthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *grīvā*, then *asthi*]
-- [YOU RECALL: say *tṛṇam*, then read **पर्वतः**]
+- [YOU RECALL: say *tṛṇam*]
+- [YOU READ: **पर्वतः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03] -->

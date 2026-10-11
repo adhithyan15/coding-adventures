@@ -58,7 +58,8 @@ Three. The smallest of them and the loudest complaint.
 - [YOU SAY: *dōma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dōma*, then *kappa*, and say which one you hear at night]
-- [YOU RECALL: say *pāṭa*, then read **పార** and say what it means]
+- [YOU RECALL: say *pāṭa*]
+- [YOU READ: **పార**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03] -->

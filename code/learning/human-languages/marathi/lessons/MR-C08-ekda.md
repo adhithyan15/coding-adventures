@@ -42,7 +42,7 @@ variety: standard
 
 **एकदा** — *ekdā* — "once".
 
-Say it: *ekdā*. Look at its shape as you say it: the lessons that follow take pieces of it, **ए**, and write each one on its own.
+Say it: *ekdā*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ए**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-EKDA] -->

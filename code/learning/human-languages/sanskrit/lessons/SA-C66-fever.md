@@ -38,7 +38,8 @@ reviews_of: [SA-C63-first]
 
 [PAUSE 2s] Before the new one: say the Sanskrit for second, then the Sanskrit for first.
 
-[PAUSE 1s] Before the new word: read a short line aloud word by word, then again as one breath, the way you read your first passage.
+[PAUSE 1s] Before the new word:
+[YOU READ: a short line aloud word by word, then again as one breath, the way you read your first passage]
 
 ## You'll want to know: ज्वरः
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-01]; assesses=[] -->

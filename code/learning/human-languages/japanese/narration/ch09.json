@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e1ebd0bdb2253958",
+  "sourceHash": "fnv1a64:684919e7ea95e245",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f2bf3f61c416e01",
+      "sourceHash": "fnv1a64:6ec15c02506d98ed",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,29 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the farewell in your mind, say it, read さようなら, and write it once. Now imagine that the other person has spoken and you missed it. Do not guess; open a repair."
+              "text": "Hear the farewell in your mind, and say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "さようなら",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **さようなら**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "さようなら once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **さようなら** once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now imagine that the other person has spoken and you missed it. Do not guess; open a repair."
             }
           ]
         },
@@ -66,11 +88,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "sumimasen becomes point to repair, not farewell",
+              "instruction": "sumimasen becomes choose repair, not farewell",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *sumimasen* → point to **repair**, not **farewell**]"
+              "source": "[YOU HEAR: *sumimasen* → choose **repair**, not **farewell**]"
             },
             {
               "kind": "prompt",
@@ -117,6 +139,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-sumimasen-job",
               "prompt": "What polite Japanese opener tells a speaker that you need to repair the exchange?",
               "assesses": [
@@ -149,19 +172,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2c27f6ae585b5442",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -211,7 +239,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point to み inside すみません (sumimasen); do not decode the other signs yet."
+              "text": "Point to み (mi) inside すみません (sumimasen); do not decode the other signs yet."
             }
           ]
         },
@@ -231,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W09-mi-select",
               "prompt": "Which sign carries mi?",
               "assesses": [
@@ -262,19 +291,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:be960949aa91fd3a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -290,7 +323,7 @@
             },
             {
               "kind": "speech",
-              "text": "Find み in すみません (sumimasen), then say the five-mora repair opener."
+              "text": "Find み (mi) in すみません (sumimasen), then say the five-mora repair opener."
             }
           ]
         },
@@ -318,7 +351,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "め (me) once with the model visible",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **め** once with the model visible]"
@@ -327,7 +360,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "point to み, then め and say mi, me",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: point to **み**, then **め** and say *mi, me*]"
@@ -336,7 +369,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "circle め (me) inside すみません (sumimasen)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: circle **め** inside **すみません**]"
@@ -359,6 +392,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W09-me-strokes",
               "prompt": "How many strokes does め (me) have?",
               "assesses": [
@@ -393,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a93ca12a70a8949d",
+      "sourceHash": "fnv1a64:ee5950b518060763",
       "notice": null,
       "blocks": [
         {
@@ -409,7 +443,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say sumimasen. Point to み and め (me) inside it."
+              "text": "Say sumimasen."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "み (mi) and め (me) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **み** and **め** inside it]"
             }
           ]
         },
@@ -487,6 +530,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-yoku-meaning",
               "prompt": "In the repair line, what does yoku measure?",
               "assesses": [
@@ -520,7 +564,8 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bf3f973a5241e926",
       "notice": {
@@ -528,12 +573,16 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -583,7 +632,7 @@
             },
             {
               "kind": "speech",
-              "text": "Reveal, check, then join known よ + く becomes よく (yoku)."
+              "text": "Reveal, check, then join known よ + く (ku) becomes よく (yoku)."
             }
           ]
         },
@@ -603,6 +652,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W09-ku-write",
               "prompt": "Write the one-stroke hiragana sign for ku.",
               "assesses": [
@@ -635,7 +685,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17db2713d923bb2c",
+      "sourceHash": "fnv1a64:4c1fea1d36fd94d2",
       "notice": null,
       "blocks": [
         {
@@ -650,8 +700,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "よく (yoku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **よく**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read よく (yoku), then open a repair with sumimasen."
+              "text": "Then open a repair with sumimasen."
             }
           ]
         },
@@ -728,6 +787,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-wakarimasen-response",
               "prompt": "Say politely: I do not understand.",
               "assesses": [
@@ -760,19 +820,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:07b83e96053f7d1c",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — carry the voicing mark"
+          "Warm-up",
+          "Script — carry the voicing mark",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — carry the voicing mark until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — carry the voicing mark, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -842,6 +907,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W09-do-build",
               "prompt": "Voice と with the dakuten and write the resulting sign.",
               "assesses": [
@@ -874,7 +940,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34d85874d9796e60",
+      "sourceHash": "fnv1a64:59f7c4ca07aa3652",
       "notice": null,
       "blocks": [
         {
@@ -890,7 +956,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say sumimasen, yoku wakarimasen. Write め (me) and ど (do) once."
+              "text": "Say sumimasen, yoku wakarimasen."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "め (me) and ど (do), once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **め** and **ど**, once each]"
             }
           ]
         },
@@ -926,11 +1001,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mo | o and tap twice",
+              "instruction": "mo | o, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mo | o* and tap twice]"
+              "source": "[YOU SAY: *mo | o*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
@@ -959,6 +1034,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-mou-beats",
               "prompt": "In a repetition request, what does mō mean, and how many morae does it take?",
               "assesses": [
@@ -992,19 +1068,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:420f4aacad120925",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1074,6 +1155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W09-mo-order",
               "prompt": "In も (mo), what comes first: the long curve or the two short bars?",
               "assesses": [
@@ -1108,7 +1190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be3ef95ded5d9cf8",
+      "sourceHash": "fnv1a64:26b2a1597681711a",
       "notice": null,
       "blocks": [
         {
@@ -1123,8 +1205,26 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "い, ち, and と, then add the dakuten to と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **い**, **ち**, and **と**, then add the dakuten to **と**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write い, ち, and と. Add the dakuten to と and read the result do. Write め (me) once as a review pulse."
+              "text": "Say the result: do."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "め (me) once, as a review pulse",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **め** once, as a review pulse]"
             }
           ]
         },
@@ -1161,12 +1261,22 @@
               "text": "Hear i | chi | do without looking."
             },
             {
-              "kind": "speech",
-              "text": "Write いちど (ichido) from the three morae."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "いちど (ichido) from the three morae",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **いちど** from the three morae]"
             },
             {
-              "kind": "speech",
-              "text": "Read もういちど, keeping the two beats in もう (mō)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もういちど, keeping the two beats in もう (mō)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もういちど**, keeping the two beats in **もう**]"
             }
           ]
         },
@@ -1177,7 +1287,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Circle the dakuten. It changes the final mora, not the first two."
+              "text": "Say which mora carries the dakuten: the last one, do. It changes the final mora, not the first two."
             },
             {
               "kind": "speech",
@@ -1186,6 +1296,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C09-ichido-dictation",
               "prompt": "From the heard morae i | chi | do, write once in hiragana.",
               "assesses": [
@@ -1218,7 +1329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b32c46eab181e07e",
+      "sourceHash": "fnv1a64:53e2562065e01380",
       "notice": null,
       "blocks": [
         {
@@ -1233,8 +1344,26 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "いちど (ichido)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **いちど**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read いちど (ichido). Say sumimasen, yoku wakarimasen. Write く."
+              "text": "Say sumimasen, yoku wakarimasen."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **く**]"
             }
           ]
         },
@@ -1307,6 +1436,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-onegaishimasu-job",
               "prompt": "What polite expression closes the request one more time, please?",
               "assesses": [
@@ -1340,7 +1470,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f71d53d907086f9",
+      "sourceHash": "fnv1a64:14166d1a1caba301",
       "notice": null,
       "blocks": [
         {
@@ -1355,8 +1485,17 @@
               "source": "[PAUSE 25s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "み (mi), め (me), く (ku), ど (do), も (mo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **み, め, く, ど, も**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write み, め (me), く, ど, も (mo). Say sumimasen, yoku wakarimasen. Then retrieve mō, ichido, and onegaishimasu separately."
+              "text": "Say sumimasen, yoku wakarimasen. Then retrieve mō, ichido, and onegaishimasu separately."
             }
           ]
         },
@@ -1389,12 +1528,22 @@
               "text": "Speak: say the opener, then the request, with a small pause."
             },
             {
-              "kind": "speech",
-              "text": "Read: independently read もういちど; use the printed support for the rest."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もういちど independently; use the printed support for the rest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もういちど** independently; use the printed support for the rest]"
             },
             {
-              "kind": "speech",
-              "text": "Write: from dictation, write only the independently earned block もういちど."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "もういちど from dictation — only this independently earned block",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **もういちど** from dictation — only this independently earned block]"
             }
           ]
         },
@@ -1414,6 +1563,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-mou-ichido-onegaishimasu-request",
               "prompt": "You missed the line. Ask politely for one more time.",
               "assesses": [

@@ -89,4 +89,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Which case does mihi sit in, and what work does it do? (Dative; it owns the name without any verb.) Cicero would write puerō nōmen est Mārcus; who prefers Mārcō? (Livy and Sallust.) Is mihi pergrātum est tē convenīre good Latin, and is it Roman? (Good grammar; not attested — modern.)
 [question — say your answer, then pause 9 seconds]
-You have been asked quid tibi nomen est? Type the first three Latin words of your reply.
+You have been asked quid tibi nomen est? Say the first three Latin words of your reply.

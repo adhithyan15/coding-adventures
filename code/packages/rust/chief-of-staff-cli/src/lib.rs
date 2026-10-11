@@ -1159,7 +1159,7 @@ hardware_key_timeout = 60
 
     // ── vault (D18U "Provisioning commands") ─────────────────────────────────
 
-    use chief_of_staff_vault_runtime::{ChiefVaultRuntime, VaultDeliveryMode, VaultLeaseRequest};
+    use chief_of_staff_vault_runtime::{VaultDeliveryMode, VaultLeaseRequest};
     use chief_of_staff_vault_secret_store::SecretName;
 
     /// Stdin stand-in: fixed bytes, a terminal flag, and a record of whether
@@ -1249,6 +1249,8 @@ hardware_key_timeout = 60
         "1",
         "--allow-agent",
         "weather-host",
+        "--destination",
+        "api.weather.gov:443",
     ];
 
     #[test]
@@ -1263,14 +1265,15 @@ hardware_key_timeout = 60
         assert!(output.contains("after the next daemon restart"));
         assert!(!output.contains("api-key-value"));
 
-        // What the daemon will do at startup: register, then lease.
-        let runtime = ChiefVaultRuntime::new();
-        assert_eq!(
-            open_store(&directory, &config)
-                .register_all(&runtime)
-                .unwrap(),
-            1
-        );
+        // What the daemon does at startup (D18V V-D1), through the daemon's
+        // own loader rather than a re-creation of it: open, register, lease.
+        let runtime = chief_of_staff_daemon::load_chief_vault_runtime(
+            &load_config_file(&config).unwrap(),
+            &directory.0,
+        )
+        .unwrap()
+        .expect("a configured vault loads");
+        assert!(runtime.secret_policy("weather-key").is_some());
         let policy = runtime.secret_policy("weather-key").unwrap();
         assert_eq!(policy.allowed_mode, VaultDeliveryMode::Leased);
         assert_eq!(policy.privilege_tier, 1);
@@ -1282,11 +1285,155 @@ hardware_key_timeout = 60
                 ttl_ms: 60_000,
             })
             .unwrap();
+        // The provisioned destination survives the sealed round trip, so the
+        // lease can only be redeemed for that host (VLT06 P9).
+        assert!(matches!(
+            runtime.consume_for(&receipt.vault_ref, "weather-host", "evil.example:443"),
+            Err(chief_of_staff_vault_runtime::VaultRuntimeError::DestinationNotPermitted)
+        ));
         // U-C3: the one trailing newline `echo` adds is gone.
         assert_eq!(
-            runtime.consume(&receipt.vault_ref).unwrap().as_bytes(),
+            runtime
+                .consume_for(&receipt.vault_ref, "weather-host", "api.weather.gov:443")
+                .unwrap()
+                .as_bytes(),
             b"api-key-value"
         );
+    }
+
+    fn copy_tree(from: &Path, to: &Path) {
+        fs::create_dir_all(to).unwrap();
+        for entry in fs::read_dir(from).unwrap() {
+            let entry = entry.unwrap();
+            let target = to.join(entry.file_name());
+            if entry.file_type().unwrap().is_dir() {
+                copy_tree(&entry.path(), &target);
+            } else {
+                fs::copy(entry.path(), target).unwrap();
+            }
+        }
+    }
+
+    #[test]
+    fn restoring_a_snapshot_of_the_whole_vault_directory_stops_the_load() {
+        // VLT01 F10/F11: a consistent snapshot of the storage directory,
+        // records and index together, is exactly what the index alone cannot
+        // catch. The anchor next to the KEK, outside that directory, can.
+        let (directory, config) = vault_home("vault-snapshot");
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"leaked-key"),
+        )
+        .unwrap();
+        let loaded = load_config_file(&config).unwrap();
+        let vault_dir = loaded.vault().storage_path().resolve(&directory.0).unwrap();
+        let snapshot = directory.0.join("vault-snapshot");
+        copy_tree(&vault_dir, &snapshot);
+
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"rotated-key"),
+        )
+        .unwrap();
+        let anchor = directory
+            .0
+            .join(".chief-of-staff")
+            .join("vault.kek.freshness");
+        assert!(anchor.is_dir(), "the anchor sits next to the KEK");
+
+        fs::remove_dir_all(&vault_dir).unwrap();
+        copy_tree(&snapshot, &vault_dir);
+        match chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0) {
+            Err(ChiefDaemonError::ChiefVaultLoad(StoreError::Sealed(error))) => {
+                assert!(error.to_string().contains("tamper"), "{error}");
+            }
+            other => panic!("expected a tamper refusal, got {:?}", other.map(|_| ())),
+        }
+    }
+
+    #[test]
+    fn wiping_the_vault_directory_is_a_clean_reset() {
+        // VLT01 F12: a reset is wiping the storage directory. The KEK and its
+        // anchor stay. Before F12 the anchor still held the old vault's
+        // epochs, so the new vault's first index read as Tamper, and the old
+        // vault's files would open under the same KEK.
+        let (directory, config) = vault_home("vault-reset");
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"old-vault-key"),
+        )
+        .unwrap();
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"old-vault-key-2"),
+        )
+        .unwrap();
+        let loaded = load_config_file(&config).unwrap();
+        let vault_dir = loaded.vault().storage_path().resolve(&directory.0).unwrap();
+        let old_vault = directory.0.join("old-vault");
+        copy_tree(&vault_dir, &old_vault);
+
+        fs::remove_dir_all(&vault_dir).unwrap();
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"new-vault-key"),
+        )
+        .unwrap();
+        assert!(
+            chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0)
+                .unwrap()
+                .is_some()
+        );
+
+        // The old vault put back whole, manifest included, is refused.
+        fs::remove_dir_all(&vault_dir).unwrap();
+        copy_tree(&old_vault, &vault_dir);
+        match chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0) {
+            Err(ChiefDaemonError::ChiefVault(error)) => {
+                assert!(error.to_string().contains("tamper"), "{error}");
+            }
+            other => panic!("expected a tamper refusal, got {:?}", other.map(|_| ())),
+        }
+    }
+
+    #[test]
+    fn one_corrupt_record_stops_the_daemon_vault_load() {
+        let (directory, config) = vault_home("vault-corrupt");
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"api-key-value"),
+        )
+        .unwrap();
+        let loaded = load_config_file(&config).unwrap();
+        open_chief_vault(&loaded, &directory.0)
+            .unwrap()
+            .unwrap()
+            .put(
+                chief_of_staff_vault_secret_store::NAMESPACE,
+                "broken-key",
+                b"not a CHIEFSEC record",
+                None,
+            )
+            .unwrap();
+        // V-D1: all or nothing. The good record does not load on its own.
+        assert!(matches!(
+            chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0),
+            Err(ChiefDaemonError::ChiefVaultLoad(
+                StoreError::CorruptRecord { .. }
+            ))
+        ));
     }
 
     #[test]

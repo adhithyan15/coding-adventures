@@ -33,15 +33,15 @@ reviews_of: [KA-C41-who]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: ಎಲ್ಲಿ
 <!-- hl-knowledge: introduces=[KA-LEX-C41-DEIXIS-06]; assesses=[] -->
 
 **ಎಲ್ಲಿ** — *elli* — where? — asking about a place.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **ಯಾರು** *yāru*, which you will meet just now. The two of them
 differ by one sound at the front — **e-** for ask — and that is not a
@@ -51,9 +51,9 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-06, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಎಲ್ಲಿ" three times, pointing at something different each time]
+- [YOU SAY: "ಎಲ್ಲಿ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **ಚಹಾ**]
+- [YOU READ: **ಚಹಾ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-06] -->

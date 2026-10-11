@@ -33,7 +33,7 @@ reviews_of: [KA-C42-big]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: ಚಿಕ್ಕ
 <!-- hl-knowledge: introduces=[KA-LEX-C42-ADJ-02]; assesses=[] -->
@@ -52,9 +52,9 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಚಿಕ್ಕ" three times, pointing at something different each time]
+- [YOU SAY: "ಚಿಕ್ಕ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **ಹಾಲು**]
+- [YOU READ: **ಹಾಲು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02] -->

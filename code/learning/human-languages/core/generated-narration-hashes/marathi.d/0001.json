@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 1,
-  "sourceHash": "fnv1a64:7b2f6568739eb955",
+  "sourceHash": "fnv1a64:535f1ef37005464b",
   "lessonIds": [
     "MR-C01-namaskar",
     "MR-W01-ha",
@@ -19,10 +19,10 @@
     "MR-W01-namaskar-read"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "marathi/narration/ch01.txt",
   "json": "marathi/narration/ch01.json",
-  "textHash": "fnv1a64:334d0c5b127d99d6",
-  "jsonHash": "fnv1a64:eca6df208cdc1a6d",
+  "textHash": "fnv1a64:7684f10bbdc72674",
+  "jsonHash": "fnv1a64:b93fbcc477ad7458",
   "findings": []
 }

@@ -35,18 +35,16 @@ reviews_of: [MW-C33-count-ten, MW-W07-chha, MW-W06-ttha, MW-W01-sa, MW-C21-hear-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01, MW-LEX-SHOW-REQUEST-01, MW-SCRIPT-BAJAR-01] -->
 
-[PAUSE 22s] Recall the ten-number payoff, say the show request, then write
-market.
+[PAUSE 22s] Recall the ten-number payoff and say the show request.
+[YOU WRITE: the word for market]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHHA-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-SA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-CHHA-SIX-01, MW-SCRIPT-SAAT-01, MW-SCRIPT-AATH-01, MW-SCRIPT-DAS-01, MW-SCRIPT-NO-NINE-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Write three single signs from sound cues: **छ**, **ठ**, **स**. Then write
-**च** beside **छ** and mark which of the two carries the breath.
+[YOU WRITE: three single signs from sound cues — **छ**, **ठ**, **स**; then **च** beside **छ**, and mark which of the two carries the breath]
 
-Then write **छ**, **सात**, **आठ**, **नो**, **दस** from dictation. Repair only
-the missed sign and rewrite its word once.
+[YOU WRITE: **छ**, **सात**, **आठ**, **नो**, **दस** from dictation — repair only the missed sign and rewrite its word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHHA-01, MW-SCRIPT-CHA-01] -->

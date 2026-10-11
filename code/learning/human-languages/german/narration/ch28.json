@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Three Verbs Under One Roof",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:c5eb8e20110e363f",
+  "sourceHash": "fnv1a64:dc772465be575c60",
   "lessons": [
     {
       "id": "GE-C16-ich-war",
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cce7bc61f06c6487",
+      "sourceHash": "fnv1a64:e3567551a9b20a05",
       "notice": null,
       "blocks": [
         {
@@ -627,7 +627,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the middle row again. bʰuH- did not mean \"to be\" at all. It meant \"to grow\" — and the reason English says be and German says bin is that a verb about growing got promoted into a verb about existing, in both languages, before either of them existed."
+              "text": "Go over the middle row again. bʰuH- did not mean \"to be\" at all. It meant \"to grow\" — and the reason English says be and German says bin is that a verb about growing got promoted into a verb about existing, in both languages, before either of them existed."
             },
             {
               "kind": "speech",

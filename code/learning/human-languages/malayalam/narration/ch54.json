@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "A Tree, Part by Part",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0dd5e0bfca5e432",
+  "sourceHash": "fnv1a64:d0c5ec422fc1cdd7",
   "lessons": [
     {
       "id": "ML-C54-tree",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf62d4ad1bae50b9",
+      "sourceHash": "fnv1a64:777eb4ae73f7cc01",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കസേര",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കസേര",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കസേര**]"
+              "source": "[YOU READ: **കസേര**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca21544614854db4",
+      "sourceHash": "fnv1a64:6db5d2f31eb72556",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പൂവ്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പൂവ്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പൂവ്**]"
+              "source": "[YOU READ: **പൂവ്**]"
             }
           ]
         },

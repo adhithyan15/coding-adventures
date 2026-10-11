@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 82,
   "title": "Which One in the Line",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5d32427c7c2d9488",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:121e72188add6937",
   "lessons": [
     {
       "id": "TA-C82-first",
@@ -14,20 +14,13 @@
       "romanization": "mutal",
       "gloss": "first — the one word in the set you already had, hidden inside the word for first of all",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a620c5d3a9bbbca",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:7773c9f8231a45a6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -93,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already know this word. Look at முதலில் (mutalil), \"first of all\", which this book already taught as a way of putting one thing before another:"
+              "text": "You already know this word. Think of முதலில் (mutalil), \"first of all\", which this book already taught as a way of putting one thing before another:"
             },
             {
               "kind": "speech",
@@ -216,7 +209,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a33d5cef89009613",
+      "sourceHash": "fnv1a64:089007e5796cb957",
       "notice": null,
       "blocks": [
         {
@@ -241,12 +234,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read மற்றது — R2",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "மற்றது — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மற்றது** — **R2**]"
+              "source": "[YOU READ: **மற்றது** — **R2**]"
             },
             {
               "kind": "prompt",
@@ -259,12 +252,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read மேலே — R4",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "மேலே — R4",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மேலே** — **R4**]"
+              "source": "[YOU READ: **மேலே** — **R4**]"
             }
           ]
         },
@@ -461,7 +454,7 @@
             },
             {
               "kind": "speech",
-              "text": "முதல் + ஆவது becomes முதலாவது (mutalāvadu)."
+              "text": "முதல் (mutal) + ஆவது becomes முதலாவது (mutalāvadu)."
             },
             {
               "kind": "speech",
@@ -473,7 +466,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both forms are current: முதல் நாள் and முதலாவது (mutalāvadu) நாள் are both the first day, and முதல் is the shorter and commoner of the two in front of a noun."
+              "text": "Both forms are current: முதல் (mutal) நாள் and முதலாவது (mutalāvadu) நாள் are both the first day, and முதல் (mutal) is the shorter and commoner of the two in front of a noun."
             }
           ]
         },
@@ -553,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9df439d33ca594a8",
+      "sourceHash": "fnv1a64:0979a002b364d100",
       "notice": null,
       "blocks": [
         {
@@ -587,12 +580,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read சொல் — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "சொல் — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சொல்** — **R3**]"
+              "source": "[YOU READ: **சொல்** — **R3**]"
             },
             {
               "kind": "prompt",
@@ -906,7 +899,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the first five. Count the work: four of them were built from numbers you already count with, and the fifth — முதல் — was a word you had been saying since you learned mutalil, without knowing it was a number word."
+              "text": "That is the first five. Count the work: four of them were built from numbers you already count with, and the fifth — முதல் (mutal) — was a word you had been saying since you learned mutalil, without knowing it was a number word."
             },
             {
               "kind": "speech",

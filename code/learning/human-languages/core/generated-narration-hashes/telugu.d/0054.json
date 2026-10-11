@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 54,
-  "sourceHash": "fnv1a64:09d0605485974bc7",
+  "sourceHash": "fnv1a64:371c4fd67ca97ae4",
   "lessonIds": [
     "TE-C54-tree",
     "TE-C54-branch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch54.txt",
   "json": "telugu/narration/ch54.json",
-  "textHash": "fnv1a64:0619153d644aa461",
-  "jsonHash": "fnv1a64:34181fd90925ac58",
+  "textHash": "fnv1a64:69e3eb6e950523bc",
+  "jsonHash": "fnv1a64:808f2944a227c229",
   "findings": []
 }

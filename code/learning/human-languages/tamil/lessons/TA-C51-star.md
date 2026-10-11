@@ -56,7 +56,8 @@ Four, and this one is a picture rather than a name.
 - [YOU SAY: *viṇmīṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nilā*, then *viṇmīṉ*, the big light and then the small ones]
-- [YOU RECALL: read **வாழ்த்து**, then say *veṟṟilai*]
+- [YOU READ: **வாழ்த்து**]
+- [YOU RECALL: say *veṟṟilai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04] -->

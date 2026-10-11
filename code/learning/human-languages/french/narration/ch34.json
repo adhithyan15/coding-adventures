@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Cheese, Butter, Salt, Egg",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:77f41485b39e87b4",
+  "sourceHash": "fnv1a64:2fda38cda4135a7e",
   "lessons": [
     {
       "id": "FR-C30-fromage",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17090798ca97d646",
+      "sourceHash": "fnv1a64:f49c36b3e3e8c90c",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You can name la personne and l'enfant now. The café chapter asked politely for a drink; this chapter asks for what goes with it — starting with a word every other Romance language names completely differently."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did personne first name in Latin, and what does it become beside ne? (A theatre mask; ne … personne is nobody.)"
             }
           ]
         },
@@ -300,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e32a7a123248ee69",
+      "sourceHash": "fnv1a64:d9740b37ded1ecd0",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98cadc791d54261e",
+      "sourceHash": "fnv1a64:c6266c682f887857",
       "notice": null,
       "blocks": [
         {

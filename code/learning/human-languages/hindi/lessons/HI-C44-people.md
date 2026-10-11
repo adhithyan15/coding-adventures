@@ -57,7 +57,7 @@ That closes the run: son, daughter, family, and everyone else.
 - [YOU SAY: *log*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *parivār*, so the two sit together]
-- [YOU RECALL: read **देना**]
+- [YOU READ: **देना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE] -->

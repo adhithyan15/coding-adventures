@@ -58,7 +58,8 @@ Two: the ground and what is standing in it.
 - [YOU SAY: *vari*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vari*, then say which of బియ్యం and అన్నం comes next]
-- [YOU RECALL: read **మాత్రమే**, then say *maryāda*]
+- [YOU READ: **మాత్రమే**]
+- [YOU RECALL: say *maryāda*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02] -->

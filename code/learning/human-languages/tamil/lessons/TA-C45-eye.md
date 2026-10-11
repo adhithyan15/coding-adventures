@@ -58,7 +58,8 @@ The first of five more parts of the body.
 - [YOU SAY: *kaṇ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaṇ*, then *talai*, so the part and the whole sit together]
-- [YOU RECALL: say *kuḻandai*, then read **பழம்**]
+- [YOU RECALL: say *kuḻandai*]
+- [YOU READ: **பழம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-04, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01] -->

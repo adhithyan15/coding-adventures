@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うつ (utsu) mean? ("To hit".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to hit'.
+Say the Japanese for 'to hit'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すう (suu) mean? ("To breathe in".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to breathe in'.
+Say the Japanese for 'to breathe in'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まく (maku) mean? ("To sow; to wind".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to sow'.
+Say the Japanese for 'to sow'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たく (taku) mean? ("To cook (rice)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to cook (rice)'.
+Say the Japanese for 'to cook (rice)'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はく (haku) mean? ("To put on (shoes, trousers)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to put on (shoes, trousers)'.
+Say the Japanese for 'to put on (shoes, trousers)'.

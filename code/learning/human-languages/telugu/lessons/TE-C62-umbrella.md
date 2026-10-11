@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *goḍugu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *goḍugu*, then *gāli*, and say what one does to the other]
-- [YOU RECALL: read **చీమ**, then say *cakkera*]
+- [YOU READ: **చీమ**]
+- [YOU RECALL: say *cakkera*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04] -->

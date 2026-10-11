@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 64,
-  "sourceHash": "fnv1a64:21c1b53c6e447921",
+  "sourceHash": "fnv1a64:96903cd2a3d0188e",
   "lessonIds": [
     "TE-C64-also",
     "TE-C64-only",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch64.txt",
   "json": "telugu/narration/ch64.json",
-  "textHash": "fnv1a64:d2c6e82c86bbd696",
-  "jsonHash": "fnv1a64:9ad5f7f28ba3d47e",
+  "textHash": "fnv1a64:cf61cade824ab549",
+  "jsonHash": "fnv1a64:5a6c32b6494feef3",
   "findings": []
 }

@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *tākam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasi*, then *tākam*, and say what each of the two is answered with]
-- [YOU RECALL: read **நெய்**, then say *kayiṟu*]
+- [YOU READ: **நெய்**]
+- [YOU RECALL: say *kayiṟu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02] -->

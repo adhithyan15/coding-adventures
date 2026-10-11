@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 8,
   "title": "Please",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3752d4a89a631526",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:fe0379b604a5b653",
   "lessons": [
     {
       "id": "TA-C08-sontham",
@@ -14,20 +14,13 @@
       "romanization": "sontham",
       "gloss": "one's own; a relative",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be224a0120163f0d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:cd874a9959a0809e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: sontham. Look at its shape as you say it: the next lesson takes one piece of it, சொ, and writes it on its own."
+              "text": "Say it: sontham."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, சொ (so), and writes it on its own."
             }
           ]
         },
@@ -363,19 +369,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:309547f57e361e62",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ொ"
+          "Script you'll notice: ொ",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ொ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ொ and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -442,7 +451,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read சொ. (So.) What does the whole spoken request solluṅgaḷ mean? (Please tell me.) One new sign is enough for today."
+              "text": "Read சொ (so). (So.) What does the whole spoken request solluṅgaḷ mean? (Please tell me.) One new sign is enough for today."
             }
           ]
         }
@@ -460,16 +469,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:701225f6e36d5914",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -490,7 +504,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy சொல்லுங்கள் (solluṅgaḷ) once beneath its visible model. Pause after சொ and check that the short-o sign reaches around ச. Look back after every piece if needed. Say the request once when you finish."
+              "text": "Copy சொல்லுங்கள் (solluṅgaḷ) once beneath its visible model. Pause after சொ (so) and check that the short-o sign reaches around ச. Look back after every piece if needed. Say the request once when you finish."
             }
           ]
         },
@@ -507,7 +521,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point to the short-o syllable in சொல்லுங்கள் (solluṅgaḷ). (சொ.) What does the word ask? (Please tell me.)"
+              "text": "Point to the short-o syllable in சொல்லுங்கள் (solluṅgaḷ). (சொ (so).) What does the word ask? (Please tell me.)"
             }
           ]
         }
@@ -525,16 +539,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:0d641de6db0212b5",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -544,7 +562,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Study சொல்லுங்கள் for five seconds. Point to சொ, say solluṅgaḷ, then cover the model."
+              "text": "Study சொல்லுங்கள் for five seconds. Point to சொ (so), say solluṅgaḷ, then cover the model."
             }
           ]
         },
@@ -590,16 +608,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9b45aff374e63b4c",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -629,7 +652,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the request from sound alone. Then uncover சொல்லுங்கள் (solluṅgaḷ). Check சொ first: the short-o sign should reach around ச. Repair one place if needed; do not rewrite the whole word."
+              "text": "Write the request from sound alone. Then uncover சொல்லுங்கள் (solluṅgaḷ). Check சொ (so) first: the short-o sign should reach around ச. Repair one place if needed; do not rewrite the whole word."
             }
           ]
         },
@@ -646,7 +669,7 @@
             },
             {
               "kind": "speech",
-              "text": "Without looking, write only the opening syllable of solluṅgaḷ. (சொ.) You are ready to compare this ordinary respectful request with the weightier tayavu seytu."
+              "text": "Without looking, write only the opening syllable of solluṅgaḷ. (சொ (so).) You are ready to compare this ordinary respectful request with the weightier tayavu seytu."
             }
           ]
         }
@@ -672,9 +695,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: Read the join in செய்து"
+          "Script you'll notice: Read the join in செய்து",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: Read the join in செய்து until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: Read the join in செய்து and Guided Practice."
       },
       "blocks": [
         {
@@ -760,8 +784,8 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "சொல்லுங்கள் (solluṅgaḷ) — and point to சொ, the short-o syllable",
-              "spoken": true,
+              "instruction": "சொல்லுங்கள் (solluṅgaḷ) — and point to சொ (so), the short-o syllable",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சொல்லுங்கள்** — and point to **சொ**, the short-*o* syllable]"
@@ -822,7 +846,7 @@
           "Script you'll notice: ந",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ந and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ந and Guided Practice."
       },
       "blocks": [
         {
@@ -852,7 +876,7 @@
             },
             {
               "kind": "speech",
-              "text": "The third n, and the one that finally looks different: no spiral loop at all. ந is built from a top bar and two uprights, with a right stroke that curls below the baseline. If you can see that it has no loop, you can already tell it from the other two."
+              "text": "The third n, and the one that finally looks different: no spiral loop at all. ந (na) is built from a top bar and two uprights, with a right stroke that curls below the baseline. If you can see that it has no loop, you can already tell it from the other two."
             }
           ]
         },
@@ -922,7 +946,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Module 5 notes that the extended final curve may be omitted. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந (University of Texas at Austin), p. 193."
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Module 5 notes that the extended final curve may be omitted. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந (na) (University of Texas at Austin), p. 193."
             }
           ]
         },
@@ -997,20 +1021,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:fda8442069111930",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: Build the word",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: Build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: Build the word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1137,7 +1164,7 @@
     {
       "id": "TA-S112-letter-e",
       "sequence": 491,
-      "title": "எ — one character, met inside words you already say",
+      "title": "எ (e) — one character, met inside words you already say",
       "headword": "எ",
       "romanization": "e",
       "gloss": "the single character எ — recognised inside words you already say",
@@ -1160,7 +1187,7 @@
           "Script you'll notice: எ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: எ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: எ and Guided Practice."
       },
       "blocks": [
         {
@@ -1205,7 +1232,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has எ somewhere inside it:"
+              "text": "You already say these, and every one of them has எ (e) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1232,7 +1259,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write எ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write எ (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1254,8 +1281,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find எ in the ones that have it",
-              "spoken": true,
+              "instruction": "at these words, and find எ (e) in the ones that have it",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find எ in the ones that have it]"
@@ -1276,8 +1303,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find எ once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find எ (e) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find எ once more]"
@@ -1306,7 +1333,7 @@
     {
       "id": "TA-S125-letter-u",
       "sequence": 492,
-      "title": "உ — the letter behind a sign you have used for chapters",
+      "title": "உ (u) — the letter behind a sign you have used for chapters",
       "headword": "உ",
       "romanization": "u",
       "gloss": "the single character உ — the last independent vowel with no lesson of its own",
@@ -1329,7 +1356,7 @@
           "Script you'll notice: உ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: உ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: உ and Guided Practice."
       },
       "blocks": [
         {
@@ -1345,7 +1372,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: எ — what sound does it carry?"
+              "text": "Before the new one: எ (e) — what sound does it carry?"
             },
             {
               "kind": "pause",
@@ -1401,7 +1428,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write உ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write உ (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1424,7 +1451,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which is the letter and which is the sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which is the letter and which is the sign]"
@@ -1446,7 +1473,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உங்கள் — every shape in it is one you have met",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: உங்கள் — every shape in it is one you have met]"

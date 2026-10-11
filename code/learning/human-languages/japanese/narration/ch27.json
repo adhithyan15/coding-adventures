@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C27-yomu-type",
-              "prompt": "Type the Japanese for 'to read'.",
+              "prompt": "Say the Japanese for 'to read'.",
               "assesses": [
                 "JA-LEX-C27-VERBS27-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C27-kaku-type",
-              "prompt": "Type the Japanese for 'to write'.",
+              "prompt": "Say the Japanese for 'to write'.",
               "assesses": [
                 "JA-LEX-C27-VERBS27-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C27-hanasu-type",
-              "prompt": "Type the Japanese for 'to speak'.",
+              "prompt": "Say the Japanese for 'to speak'.",
               "assesses": [
                 "JA-LEX-C27-VERBS27-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C27-matsu-type",
-              "prompt": "Type the Japanese for 'to wait'.",
+              "prompt": "Say the Japanese for 'to wait'.",
               "assesses": [
                 "JA-LEX-C27-VERBS27-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C27-au-type",
-              "prompt": "Type the Japanese for 'to meet'.",
+              "prompt": "Say the Japanese for 'to meet'.",
               "assesses": [
                 "JA-LEX-C27-VERBS27-05"
               ],

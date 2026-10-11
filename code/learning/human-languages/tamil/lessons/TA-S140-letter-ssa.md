@@ -50,16 +50,21 @@ letter, kept for words Tamil took from Sanskrit.
 ## Writing: ஷ
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-140] -->
 
-- **1.** start here: curl around the inner-left loop and descend to the lower-left join, then lift
-- **2.** put the pen down again and climb around the rounded outer-left body and descend to the lower join, then lift
-- **3.** put the pen down again and draw the lower joining bar from the left body to the right, then lift
-- **4.** put the pen down again and loop around the right body and finish with its descending tail — and only now lift
+- **1.** start at the tip inside the small loop and curl clockwise round it
+- **2.** without lifting, go on round the bottom and up the outer left side
+- **3.** without lifting, arch over the top and come down to the bar
+- **4.** without lifting, carry the bar to the right
+- **5.** without lifting, go up the bar's right end and back over to the right loop
+- **6.** without lifting, go round the loop and down the tail — and only now lift
 
-**Pen lifts: 3.**
+**Pen lifts: 0.** The pen never leaves the paper.
 
 > Stroke order is one attested teaching order, not a national standard —
 > Tamil handwriting is taught with school-to-school variation. Source:
 > Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ, Sanskrit Hindi Research Institute, p. 13.
+> The chart numbers four parts; native writers draw them without lifting the
+> pen (HP Labs India's LipiTk Tamil recognizer: most of its pen traces of ஷ
+> are one stroke).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-138, TA-SCRIPT-RECOG-139, TA-SCRIPT-RECOG-140] -->

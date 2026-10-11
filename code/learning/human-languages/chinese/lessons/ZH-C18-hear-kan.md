@@ -34,12 +34,12 @@ reviews_of: [ZH-C17-practice]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-PERFORMANCE-LANGUAGE-IDENTITY-FIVE-FOUR-SKILL-01] -->
 
 [PAUSE 12s] Say **Chinese language** and **China** in Mandarin. Keep those
-answers separate, then put the cards away.
+answers separate. [YOU COVER: the cards, and put them away.]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ZH-LEX-KAN-01]; assesses=[] -->
 
-> *kàn* — **look at; watch**
+> *kàn* — **"look at"; "watch"**
 
 Start high and let the tone fall cleanly. The written form stays hidden in this
 first step so sound and meaning can settle before handwriting begins.

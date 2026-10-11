@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さいふ (saifu) mean? ("A wallet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a wallet'.
+Say the Japanese for 'a wallet'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つえ (tsue) mean? ("A walking stick".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a walking stick'.
+Say the Japanese for 'a walking stick'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふくろ (fukuro) mean? ("A bag, a sack".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bag, a sack'.
+Say the Japanese for 'a bag, a sack'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たわし (tawashi) mean? ("A scrubbing brush".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a scrubbing brush'.
+Say the Japanese for 'a scrubbing brush'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちりとり (chiritori) mean? ("A dustpan".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a dustpan'.
+Say the Japanese for 'a dustpan'.

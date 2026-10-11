@@ -59,7 +59,8 @@ The repair word for a conversation moving too fast.
 - [YOU SAY: *mandam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛpayā mandam*, said kindly]
-- [YOU RECALL: read **रक्तम्**, then say *pustakam*]
+- [YOU READ: **रक्तम्**]
+- [YOU RECALL: say *pustakam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04] -->

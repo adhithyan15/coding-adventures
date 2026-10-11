@@ -58,7 +58,8 @@ Two, and neither is much use without the other.
 - [YOU SAY: *sūdi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūdi*, then *dāraṁ*, and say which one goes through the other]
-- [YOU RECALL: read **మేక**, then say *neyyi*]
+- [YOU READ: **మేక**]
+- [YOU RECALL: say *neyyi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02] -->

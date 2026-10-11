@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 142,
-  "sourceHash": "fnv1a64:4754fab851af8992",
+  "sourceHash": "fnv1a64:dc9f558efc39a4f3",
   "lessonIds": [
     "TE-C142-kastapade",
     "TE-C142-telivaina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch142.txt",
   "json": "telugu/narration/ch142.json",
-  "textHash": "fnv1a64:2d7d3d633224e0d3",
-  "jsonHash": "fnv1a64:cde2fc6fd672821b",
+  "textHash": "fnv1a64:aaec0b46e9ae81e3",
+  "jsonHash": "fnv1a64:d01b4ec8e7f6d9ac",
   "findings": []
 }

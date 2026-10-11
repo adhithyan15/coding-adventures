@@ -76,7 +76,7 @@ descent from a shared root.
 - [YOU SAY: "nīl" — blue]
 - [YOU SAY: "nīl jôl" — blue water]
 - [YOU SAY: one form, always — "nīl," never *nīlā* or *nīlī*]
-- [YOU RECALL: read **হৃদয়**]
+- [YOU READ: **হৃদয়**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-NIL-01, BN-LEX-C13-SBAGOTOM-01] -->

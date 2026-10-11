@@ -61,7 +61,8 @@ One word, two arrivals in English, with millennia between them.
 - [YOU SAY: *rājā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *rājā*, then *pitā*, and name the family both stems share]
-- [YOU RECALL: say *phalam*, then read **शिरः**]
+- [YOU RECALL: say *phalam*]
+- [YOU READ: **शिरः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03] -->

@@ -58,7 +58,8 @@ Three. The first one standing on level ground with you.
 - [YOU SAY: *bāva*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāva*, then *māma*, and say which one is older]
-- [YOU RECALL: say *pāra*, then read **దోమ** and say what it means]
+- [YOU RECALL: say *pāra*]
+- [YOU READ: **దోమ**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03] -->

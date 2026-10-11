@@ -36,8 +36,8 @@ reviews_of: [MW-R26-letters-close, MW-C21-show-three, MW-C22-price-three, MW-C23
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOW-FOUR-SKILL-01, MW-PERFORMANCE-PRICE-FOUR-SKILL-01, MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01, MW-PERFORMANCE-FINAL-PRICE-FOUR-SKILL-01, MW-PERFORMANCE-REQUEST-FOUR-SKILL-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01] -->
 
-[PAUSE 24s] Recall the five payoffs of this slice in order, then write clarified
-butter.
+[PAUSE 24s] Recall the five payoffs of this slice in order.
+[YOU WRITE: the word for clarified butter]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01]; assesses=[MW-LEX-SHOW-REQUEST-01, MW-SCRIPT-SHOW-REQUEST-01, MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-PRICE-QUESTION-01, MW-LEX-PRICE-ANSWER-01, MW-SCRIPT-PRICE-ANSWER-01, MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-BARGAIN-REQUEST-01, MW-LEX-PAY-01, MW-SCRIPT-PAY-01, MW-LEX-FINAL-PRICE-01, MW-SCRIPT-FINAL-PRICE-01, MW-LEX-BRING-REQUEST-01, MW-SCRIPT-BRING-REQUEST-01, MW-LEX-TOTAL-QUESTION-01, MW-SCRIPT-TOTAL-QUESTION-01, MW-LEX-YE-01, MW-SCRIPT-YE-01, MW-LEX-KITNO-01, MW-SCRIPT-KITNO-01, MW-LEX-GHANO-01, MW-SCRIPT-GHANO-01, MW-LEX-THODU-01, MW-SCRIPT-THODU-01, MW-LEX-AAKHRI-01, MW-SCRIPT-AAKHRI-01, MW-LEX-DIKHAVO-01, MW-SCRIPT-DIKHAVO-01, MW-LEX-KARO-01, MW-SCRIPT-KARO-01, MW-LEX-LO-01, MW-SCRIPT-LO-01, MW-LEX-DO-01, MW-SCRIPT-DO-01, MW-LEX-LAVO-01, MW-SCRIPT-LAVO-01, MW-SCRIPT-KHA-01] -->
@@ -48,8 +48,8 @@ Five turns, and the only thing that changes between counters is the noun.
    shopping noun, once with a transport noun.
 2. Produce the whole exchange from meaning cues at a food stall, using the
    ordering line in place of the first turn.
-3. Read all five printed turns and say who speaks each.
-4. Write the whole exchange from dictation, without a model.
+3. [YOU READ: all five printed turns, then say who speaks each]
+4. [YOU WRITE: the whole exchange from dictation, without a model]
 
 Pass each skill separately. This is one function taught once and reused over
 three noun sets, not three exchanges learned three times. It still stops where

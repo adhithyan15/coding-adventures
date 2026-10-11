@@ -50,9 +50,10 @@ reviews_of: [ML-C41-this, ML-C02-aanu, ML-C32-undu, ML-C52-flower]
 > പൂവ്
 > പേര്
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again — and this time look at how every one of them ends.
+[PAUSE 3s]
+[YOU READ: the list again, and this time notice how every one of them ends]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-UNDU-01, ML-LEX-C52-WELCOME-04, ML-LEX-PERU-01] -->

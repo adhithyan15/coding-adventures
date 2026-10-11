@@ -115,7 +115,7 @@ language: German. "blue": blau.
 language: French. "blue": bleu.
 language: Italian. "blue": blu.
 language: English. "blue": blue — taken from French, not from Germanic.
-Read that last row twice. English is Germanic. It had inherited blēwaz itself — the word was already sitting in Old English — and it borrowed the French form anyway.
+Go over that last row twice. English is Germanic. It had inherited blēwaz itself — the word was already sitting in Old English — and it borrowed the French form anyway.
 So the word went Germanic becomes French becomes English, and arrived home wearing Romance clothes. English blue is a German word that took the long way round and is no longer recognisable as one — which is exactly why blau does not sound like blue.
 
 Why it's said this way.

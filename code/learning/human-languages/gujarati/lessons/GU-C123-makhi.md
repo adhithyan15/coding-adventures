@@ -38,7 +38,8 @@ reviews_of: [GU-C123-macchar]
 
 [PAUSE 2s] Before the new one: say the Gujarati for a crocodile, then the Gujarati for a mosquito.
 
-[PAUSE 1s] Read on without stopping: **તમારું નામ શું છે? મારું નામ મીરા છે।**
+[PAUSE 1s]
+[YOU READ: **તમારું નામ શું છે? મારું નામ મીરા છે।**, without stopping]
 
 ## You'll want to know: માખી
 <!-- hl-knowledge: introduces=[GU-LEX-C123-THINGS123-04]; assesses=[] -->

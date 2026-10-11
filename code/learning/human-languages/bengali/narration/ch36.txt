@@ -128,7 +128,7 @@ Source: Unicode Bengali chart.
 
 
 Lesson 4 of 5.
-কে (-ke) (ke) — who?
+কে (ke) — who?
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
@@ -137,20 +137,20 @@ Warm-up.
 Put the object ending on ভাই. Then say you, as the one it is done to.
 
 You'll want to know: কে standing alone.
-কে (-ke)? — ke? — who?
-সে কে (-ke)? — she ke? — who is he?
+কে? — ke? — who?
+সে কে? — she ke? — who is he?
 This is a different word from the ending you learned two lessons ago. They are spelled identically and they are not related, and Bengali tells them apart the way it tells ও apart from ও: by where they sit.
 [a table of 2 rows, read aloud]
-where: stuck to the back of a noun. what it is: -কে (-ke), the object ending.
-where: standing on its own. what it is: কে (-ke), who?
-You now have both of the questions a stranger opens with. এটা কী? asks about a thing; কে (-ke)? asks about a person — and the two are told apart only by their vowel, so say them carefully.
+where: stuck to the back of a noun. what it is: -কে (ke), the object ending.
+where: standing on its own. what it is: কে (ke), who?
+You now have both of the questions a stranger opens with. এটা কী? asks about a thing; কে (ke)? asks about a person — and the two are told apart only by their vowel, so say them carefully.
 
 Grammar Lens: the asking head, for the third time.
 Chapter thirty laid out three heads on one frame — the relative য-, the demonstrative ত-, and the asking ক-. Every question word in this book starts with the last of them:
 কী — what.
 কেমন — how.
 কখন — when.
-কে (-ke) — who.
+কে (ke) — who.
 Four words, one letter at the front of each. And the answers come from the ত- column: তিনি, তার, তখন. Ask with ক-, answer with ত-.
 
 Guided Practice.
@@ -168,7 +168,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you tell the question কে (-ke) from the ending -কে (-ke)? (By where it sits — alone, or stuck to a noun.) Which letter opens every question word in this book? (ক-.) And which column do the answers come from? (ত-.)
+How do you tell the question কে (ke) from the ending -কে (ke)? (By where it sits — alone, or stuck to a noun.) Which letter opens every question word in this book? (ক-.) And which column do the answers come from? (ত-.)
 Source: Unicode Bengali chart.
 
 
@@ -201,7 +201,7 @@ Four endings now compete for one slot on the back of a Bengali noun, and one que
 [pause 8 seconds for the answer]
 [your turn — say: a thing, which takes fewer — jāmāṭā, jāmāgulo]
 [pause 8 seconds for the answer]
-[your turn — say: pointing, counting, colouring — ei ekṭā lāl jāmā]
+[your turn — say: near, counted and coloured — ei ekṭā lāl jāmā]
 [pause 8 seconds for the answer]
 [your turn — say: the six persons and their objects — āmi/āmāke, tumi/tomāke, she/tāke]
 [pause 8 seconds for the answer]

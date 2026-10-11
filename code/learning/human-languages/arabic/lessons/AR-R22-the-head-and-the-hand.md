@@ -36,7 +36,7 @@ reviews_of: [AR-C10-ab-umm, AR-C10-akh-ukht, AR-C11-ras, AR-C11-yad, AR-C17-kam-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C11-RAS-01, AR-CONCEPT-C11-YAD-01] -->
 
-[PAUSE 4s] Touch your head, then your hand, and give the Arabic for each. Both
+[PAUSE 4s] Picture your head, then your hand, and give the Arabic for each. Both
 arrived a dozen lessons ago in single words and have not been asked for since.
 
 ## Across the family: five words older than Arabic
@@ -61,7 +61,7 @@ both sides, worn down hardly at all in several thousand years.
 
 None of these roots is a museum piece.
 
-- **رئيس** *raʾīs* — **president, chief** — is built straight on *head*, the same
+- *raʾīs* — **president, chief** — is built straight on *head*, the same
   way English *capital* and *captain* grow out of Latin *caput*.
 - **أم** and **أبو** still form the **kunya**, a living honorific: *mother of*
   and *father of*, plus a child's name.
@@ -94,6 +94,6 @@ altogether, exactly as the name and wellbeing questions do.
 
 [PAUSE 4s] Name which word in this set has changed least from its Hebrew cousin.
 (**يد** — both *yad*.) Give the word for president and its literal base.
-(**رئيس**, from *head*.) Say what turns **أخ** into its feminine. (**One added
+(*raʾīs*, from *head*.) Say what turns **أخ** into its feminine. (**One added
 letter** — **أخت**.) And give the literal wording of the age question. (**How
 much is your lifetime**.)

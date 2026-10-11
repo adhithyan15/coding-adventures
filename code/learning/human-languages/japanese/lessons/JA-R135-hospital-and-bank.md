@@ -37,7 +37,7 @@ reviews_of: [JA-C135-byouin, JA-W135-bi, JA-C135-doyoubi, JA-C135-iriguchi, JA-W
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぎ** — **R1**, one lesson back]
+- [YOU WRITE: **ぎ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *Monday* — **R2**, five lessons back]
 - [YOU RECALL: say *a bag*, the one you carry to work — **R3**, twenty lessons back]
 - [YOU RECALL: say *happy* — **R4**, eighty lessons back]
@@ -45,7 +45,7 @@ reviews_of: [JA-C135-byouin, JA-W135-bi, JA-C135-doyoubi, JA-C135-iriguchi, JA-W
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-BYOUIN, JA-SCRIPT-BI-01, JA-LEX-C135-DOYOUBI, JA-LEX-ANCHOR-IRIGUCHI, JA-SCRIPT-GU-01, JA-LEX-C135-DEGUCHI, JA-LEX-ANCHOR-GETSUYOUBI, JA-SCRIPT-GE-01, JA-LEX-C135-GENKI, JA-LEX-ANCHOR-GINKOU, JA-SCRIPT-GI-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **びょういん** — a hospital]
 - [YOU READ: **どようび** — Saturday]
@@ -62,9 +62,9 @@ them, the book writes every sign of the *g* row, **が ぎ ぐ げ ご**, and of
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-BI-01, JA-SCRIPT-GU-01, JA-SCRIPT-GE-01, JA-SCRIPT-GI-01, JA-LEX-C135-DOYOUBI, JA-LEX-ANCHOR-GETSUYOUBI, JA-LEX-ANCHOR-GINKOU] -->
 
-1. Write **ひ び**, **く ぐ**, **け げ** and **き ぎ** in pairs.
-2. Write **どようび** and **げつようび** from memory, and say which day comes first in the week.
-3. Write **ぎんこう**, and say *ginkō*.
+1. [YOU WRITE: **ひ び**, **く ぐ**, **け げ** and **き ぎ**, in pairs]
+2. [YOU WRITE: **どようび** and **げつようび** from memory, and say which day comes first in the week]
+3. Say *ginkō*. [YOU WRITE: **ぎんこう**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-GI-01, JA-LEX-ANCHOR-GINKOU, JA-LEX-C135-GENKI] -->

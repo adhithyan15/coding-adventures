@@ -56,7 +56,7 @@ Four. A teacher, a student, a doctor, a farmer.
 - [YOU SAY: *raita*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all four, and say which one did not come from Sanskrit]
-- [YOU RECALL: read **ಉಪ್ಪು**]
+- [YOU READ: **ಉಪ್ಪು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C48-ROLE-04] -->

@@ -8,7 +8,7 @@ type: word
 headword: ich
 gloss: I
 concept_tag: PRONOUN-I
-prerequisites: []
+prerequisites: [GE-C01-guten-tag, GE-C01-nacht]
 sounds: [ich-laut]
 roots: [ik]
 etymology_hook: ich, Latin ego and English I are three survivals of one PIE word for the speaker

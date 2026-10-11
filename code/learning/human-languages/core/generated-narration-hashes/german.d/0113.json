@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 113,
-  "sourceHash": "fnv1a64:9c0f94fc3f1c92fd",
+  "sourceHash": "fnv1a64:b6dc37dbbd3b9ad3",
   "lessonIds": [
     "GE-C113-dusche",
     "GE-C113-badewanne",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch113.txt",
   "json": "german/narration/ch113.json",
-  "textHash": "fnv1a64:b94b79e8cc238696",
-  "jsonHash": "fnv1a64:dacba2a01b76be2b",
+  "textHash": "fnv1a64:480444e6886a509e",
+  "jsonHash": "fnv1a64:8fd8392312d9f039",
   "findings": []
 }

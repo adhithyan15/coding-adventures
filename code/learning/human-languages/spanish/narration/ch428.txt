@@ -60,7 +60,7 @@ symbol: . said aloud: punto.
 symbol: -. said aloud: guion.
 symbol: _. said aloud: guion bajo.
 ana_lopez arroba ejemplo punto example.
-Read that aloud and you have completed the task the source calls dictating an e-mail address. It needed four words, three of which you already had.
+Say that aloud and you have completed the task the source calls dictating an e-mail address. It needed four words, three of which you already had.
 A real Spanish address usually ends in punto es, for the country. The addresses printed here end in example because that ending is reserved for teaching and can never belong to anybody.
 
 Guided Practice.
@@ -240,7 +240,7 @@ Warm-up.
 Say the two things you would say at a birthday. One congratulates and one raises a glass.
 
 Reading.
-Read this invitation aloud, saying every symbol by name:
+[once you have stopped driving — read: this invitation aloud, saying every symbol by name]
 Cumpleaños de Ana Sábado, a las ocho. Confirma en ana_lopez arroba ejemplo punto example.
 The address line is written in words here because that is how it is said. On a screen it would read ana_lopez@ejemplo.example, and saying it aloud requires the four names: guion bajo, arroba, punto, and the letters themselves.
 A real Spanish address would end punto es; this one ends in the reserved teaching word instead, so that nobody is written to by accident.

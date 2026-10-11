@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9e96c6bae8d758ce",
+  "sourceHash": "fnv1a64:fb5684cb758997b9",
   "lessons": [
     {
       "id": "MR-C60-dusra-ordinal",
@@ -159,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-dusra-ordinal-r1",
               "prompt": "Which question does dusrā answer, and which one does don answer?",
               "assesses": [
@@ -214,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4abb76b6bd0db5e8",
+      "sourceHash": "fnv1a64:5c5dde2a7bbb9f9e",
       "notice": null,
       "blocks": [
         {
@@ -243,12 +244,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the ai sign on क — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the ai sign on क from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the *ai* sign on **क** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: the *ai* sign on **क** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -362,6 +363,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-tisra-r1",
               "prompt": "Say: the third house.",
               "assesses": [
@@ -579,6 +581,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-pahila-r1",
               "prompt": "Say: the first room, then the second room.",
               "assesses": [
@@ -781,6 +784,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-chautha-r1",
               "prompt": "Say first, second, third, fourth in Marathi, then say how many different endings that is.",
               "assesses": [
@@ -836,16 +840,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:69bf2f128e5cfe75",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -1002,6 +1010,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-pachva-r1",
               "prompt": "How does Marathi make fifth out of five, and how many of the first four ordinals are made that way?",
               "assesses": [
@@ -1154,6 +1163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R60-first-to-fifth-run",
               "prompt": "Say first to fifth, then say which of the five you could have worked out without being told.",
               "assesses": [

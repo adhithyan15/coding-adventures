@@ -35,8 +35,8 @@ reviews_of: [MW-R36-shopping-numbered, MW-C20-food-seven, MW-C25-bring-request, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01, MW-SCRIPT-BRING-REQUEST-01, MW-SCRIPT-LAVO-01] -->
 
-[PAUSE 22s] Recall the seven-word food payoff, then write the bring request and
-the word that carries it.
+[PAUSE 22s] Recall the seven-word food payoff.
+[YOU WRITE: the bring request and the word that carries it]
 
 - [YOU RECALL: **दस करो।**, and the chapter-28 request it replaced]
 
@@ -48,7 +48,7 @@ Take the seven food words one at a time.
 1. Order it with **लावो।**
 2. Ask what it costs and hear a figure between *ek* and *das*.
 3. Say the amount, then hand over the money with the chapter-30 turn.
-4. Write the amount twice: once as a word, once as a figure.
+4. [YOU WRITE: the amount twice, once as a word and once as a figure]
 
 A stall prices tea at *pāṅch* and a plate at *das*. This is where the first
 five numbers stop being a recitation.

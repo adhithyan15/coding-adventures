@@ -50,8 +50,8 @@ directions are almost never that tidy.
 > — *mājhaṁ ghar puṇyājavaḷ āhe.* — **my house is near Pune.**
 
 This is the answer a real person gives when you ask **कुठे?** and the true answer
-is not a single named point. It takes the same oblique stem as everything else in
-this column — **पुणे → पुण्या-** — so nothing new has to be learned about the noun.
+is not a single named point. It takes the same oblique stem as every other place word
+here — **पुणे → पुण्या-** — so nothing new has to be learned about the noun.
 
 **जवळ** carries the **ळ**, the retroflex *l* that is Marathi's own letter and that
 Hindi does not have. Say it with the tongue curled back, the way you learned it in

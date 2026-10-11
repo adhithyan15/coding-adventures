@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 5,
-  "sourceHash": "fnv1a64:a99e6ab515b95526",
+  "sourceHash": "fnv1a64:bef6a274ce936d64",
   "lessonIds": [
     "ES-C03-tu-usted",
     "ES-C03-tu-usted-register",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch05.txt",
   "json": "spanish/narration/ch05.json",
-  "textHash": "fnv1a64:622bc4f52afc0bc4",
-  "jsonHash": "fnv1a64:6e4fe58f80a432da",
+  "textHash": "fnv1a64:60d562c0973f9eda",
+  "jsonHash": "fnv1a64:92b1d35349d505b4",
   "findings": []
 }

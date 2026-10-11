@@ -41,7 +41,7 @@ have never been able to do to any other word what it does.
 ## Grammar Lens: the ending was there all along
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C78-GENITIVE-NRE-01]; assesses=[ML-LEX-ENRE-01, ML-LEX-C48-ROLE-01, ML-LEX-C46-ASK-05] -->
 
-**എന്റെ** was handed to you whole, as a single word meaning *my*. Look at its
+**എന്റെ** was handed to you whole, as a single word meaning *my*. Notice its
 end:
 
 | | |

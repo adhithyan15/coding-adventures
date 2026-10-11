@@ -38,7 +38,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Kannada for an eyebrow, then the Kannada for a table.
 [pause 3 seconds]
-Read aloud as one run: ಮರ ಅಲ್ಲಿ ಇದೆ. ನದಿ ಅಲ್ಲಿ ಇದೆ.
+[once you have stopped driving — read: ಮರ ಅಲ್ಲಿ ಇದೆ. ನದಿ ಅಲ್ಲಿ ಇದೆ. aloud as one run]
 
 You'll want to know: ಕಿಟಕಿ.
 ಕಿಟಕಿ — kiṭaki — "a window".

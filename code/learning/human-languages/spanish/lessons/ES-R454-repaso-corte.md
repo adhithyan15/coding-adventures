@@ -32,8 +32,8 @@ reviews_of: [ES-C454-obra, ES-C454-via, ES-C454-accidente, ES-C454-servicio]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C454-CORTE-01, ES-LEX-C454-CORTE-02, ES-LEX-C454-CORTE-03, ES-LEX-C454-CORTE-04] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all four: *the works*,
-*the track*, *the accident*, *the service*.
+[PAUSE 3s] From memory alone, say all four: *the works*, *the track*, *the
+accident*, *the service*.
 
 ## Grammar Lens: the plural is not always more of the same
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C454-CORTE-01, ES-LEX-C454-CORTE-04] -->

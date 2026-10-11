@@ -44,11 +44,32 @@ Built-in `entier` may also remain inside `sqrt` when its operand is already
 nonnegative and bounded; signed, unrestricted, and overridden forms remain gated.
 Built-in `sign` may likewise remain inside `sqrt` when its operand is already
 nonnegative and bounded; signed and overridden forms remain gated.
+Built-in `cos` over a direct built-in `sign` result may also remain inside
+`sqrt`: its input is restricted to `-1`, `0`, or `1`, so the cosine is
+nonnegative. Non-sign-rooted, exponential, and overridden forms remain gated.
+Unary `+` and `-` may wrap that direct `sign` result without changing the
+`[-1, 1]` bound; nonzero additive, non-unit multiplicative, and other computed
+wrappers remain gated.
+Variable-free exact additive zero terms may also surround that sign result;
+nonzero terms, repeated sign operands, and overrides remain gated.
+Variable-free exact multiplicative unit factors may likewise surround it, with
+unit division allowed only when the sign result is the numerator; non-unit,
+dynamic, repeated-sign, denominator-sign, and overridden forms remain gated.
+An exact variable-free exponent chain evaluating to one may preserve that sign
+result as the power base; other exponents, a sign-rooted exponent, and
+overrides remain gated.
+A runtime conditional may likewise preserve the unit-bounded sign range when
+every branch retains a proven runtime-real sign root; unrestricted,
+non-runtime-real, and overridden branches remain gated.
+Built-in `abs` may normalize that sign-rooted result while retaining the same
+bound; non-sign-rooted operands and `abs` or `sign` overrides remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
-A single built-in `exp` may also map such a bounded chain before `entier`;
-nested exponential calls remain conservative to keep the finite bound explicit.
+A single built-in `exp` may also map such a bounded chain before `entier`,
+including a runtime conditional when every branch retains a proven runtime-real
+sign root; nested exponential calls and unproven branches remain conservative
+to keep the finite bound explicit.
 Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
@@ -57,6 +78,25 @@ Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
 already nonnegative and bounded; signed and nested-exponential forms stay conservative.
+Before cosine and outer `sqrt`, built-in `exp` may map a nonpositive
+unit-bounded sign-rooted range surrounded by variable-free exact additive zero
+terms; positive, repeated, dynamic, and overridden forms remain conservative.
+Multiplication by one variable-free exact `-1`, or division by one such exact
+negative unit, may form that nonpositive range; extra factors, positive or
+dynamic units, denominator roots, repeated roots, and overrides remain
+conservative.
+An exact variable-free exponent chain evaluating to one may preserve that
+nonpositive range; other or dynamic exponents, sign-rooted exponents, and
+overrides remain conservative.
+Built-in `sign`, `entier`, `sin`, and `arctan` may preserve that nonpositive
+unit range, including nested combinations; non-monotone, unrestricted, and
+overridden wrappers remain conservative.
+A runtime conditional may select that range when every branch retains a
+proven nonpositive unit runtime-real sign root; positive, unrestricted,
+non-runtime-real, and overridden branches remain conservative.
+A unary-negated runtime conditional may likewise form that range when every
+branch retains a proven nonnegative unit runtime-real sign root; negative,
+unrestricted, non-runtime-real, and overridden branches remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The

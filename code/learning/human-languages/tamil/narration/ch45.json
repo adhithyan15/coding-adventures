@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1fe36bfb7595b6e6",
+  "sourceHash": "fnv1a64:a5e9edbd47dabe7d",
   "lessons": [
     {
       "id": "TA-C45-eye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16ba9cfe61b22e29",
+      "sourceHash": "fnv1a64:7ba483c8d91298e1",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kuḻandai, then read பழம்",
+              "instruction": "say kuḻandai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kuḻandai*, then read **பழம்**]"
+              "source": "[YOU RECALL: say *kuḻandai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பழம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பழம்**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d915fe4078c21872",
+      "sourceHash": "fnv1a64:330232d1bbab6020",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +253,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "மகன்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மகன்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read மகன், then say tuṇi",
+              "instruction": "say tuṇi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மகன்**, then say *tuṇi*]"
+              "source": "[YOU RECALL: say *tuṇi*]"
             }
           ]
         },
@@ -285,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd9b00333af8dd4c",
+      "sourceHash": "fnv1a64:a459274aa17e719a",
       "notice": null,
       "blocks": [
         {
@@ -376,11 +394,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say makaḷ, then read விளக்கு",
+              "instruction": "say makaḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *makaḷ*, then read **விளக்கு**]"
+              "source": "[YOU RECALL: say *makaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "விளக்கு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **விளக்கு**]"
             }
           ]
         },
@@ -416,7 +443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dde12418095c9f9",
+      "sourceHash": "fnv1a64:d4a7e95c0577ad27",
       "notice": null,
       "blocks": [
         {
@@ -506,12 +533,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "குடும்பம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **குடும்பம்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read குடும்பம், then say uppu",
+              "instruction": "say uppu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **குடும்பம்**, then say *uppu*]"
+              "source": "[YOU RECALL: say *uppu*]"
             }
           ]
         },

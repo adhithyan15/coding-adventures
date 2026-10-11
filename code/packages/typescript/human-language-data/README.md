@@ -554,9 +554,43 @@ drivable course an empty promise. The derivation reads lesson type and block
 structure instead:
 
 1. `type: writing` → `pen`;
-2. otherwise a `script` block, a sight cue, or a table wider than the configured
-   linearisable width → `sight`;
+2. otherwise `type: reading`, a `script` block, a sight cue, a table wider than the
+   configured linearisable width, or an eyes-or-hands step → `sight`;
 3. otherwise → `voice`.
+
+An **eyes-or-hands step** (reason `eyes-or-hands-step`) is a sentence or a spoken cue,
+in the preamble or a section a hands-free renderer keeps, that asks the learner to read
+printed script, write, point, cover the page, handle cards or gesture — "[PAUSE 3s] Read
+**नमस्ते**.", `[YOU RECALL: say *āmi*, then read **কেমন**]` — in a form the narration
+says plainly. The detectors live in `drivable-instructions.ts`; a deferred cue
+(`[YOU READ: **नमस्ते**]`, spoken "once you have stopped driving — read: नमस्ते") is not a
+step, and is how a hands-on step stays inside a drivable lesson. The rule applies to
+the core as well as the whole lesson, so `coreDrivable` can never be announced over one.
+
+Two things the narration speaks are not part of that walk, and the renderer handles
+them itself. A **scored activity** whose prompt needs eyes or hands ("Write son in
+Chinese characters", `activityPromptNeedsEyesOrHands`) is deferred like a
+`[YOU WRITE: …]` cue — `spoken: false`, "[once you have stopped driving — question:
+…]". That check fails safe: beside the prose checks, any hand verb named as a whole
+word ("From bachchā, write the taught word.") defers the question unless it is a
+gloss, a noun or a third-person question (`handVerbsInPrompt`). A question whose
+ANSWER is written is deferred too, whatever verb it uses: one asking for a written
+form or a script ("… in two written lines", "Refuse in one word, in Devanagari"),
+one offering a choice between unromanized glyphs ("… is na: ਨ or ਸ?"), one whose
+every accepted answer is script ("Which taught character is … woman?" — 女), and one
+that grades a `-SCRIPT-` atom with a script answer (`activityNeedsEyesOrHands`). A
+separate gate scans the committed narration for those verbs, forms, choices and
+answers with no detector at all. Every other prompt is said for the ear ("Type the Japanese for 'a stick'" →
+"Say the Japanese for 'a stick'", `for-the-ear.ts`). In a lesson announced as drivable,
+a **heading** that would ask for an eye or a hand is said as its label ("Guided
+Practice — read, copy, recall" → "Guided Practice"), and the stop guard is spoken
+before a set-aside section's title.
+
+`type: reading` is the one place the word *reading* decides anything, and it is the
+lesson **type**, not the skill: a reading lesson *is* printed text and the instruction
+to read it, so it needs eyes even though every word of it could be spoken aloud
+(reason code `reading-type`). Like `type: writing` it applies to the core too — the
+text is the whole lesson, so there is nothing a hands-free view could set aside.
 
 `maxLinearisableTableColumns` defaults to **3**, and modality does not decide that on
 its own — it asks the *same* lineariser the narration export uses (`speech.ts`), so
@@ -1000,8 +1034,10 @@ Two kinds exist:
   22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ). Each group
   of fused pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`, and a
   test fails if a pair is added or dropped without its source.
-  Devanagari has no table on purpose: its nine cited signs (ा ु ू े ं ़ ् ृ ँ)
-  come from native writers who wrote each sign alone, which says nothing about
+  Devanagari has no table on purpose: its twelve cited signs (ा ु ू े ं ़ ् ृ ँ
+  ी ो ः; the last three drawn without the piece of headline the font prints
+  on them, which is the word's headline) come from native writers who wrote
+  each sign alone, which says nothing about
   its order against a consonant or the headline, so a lesson whose headword
   is the bare sign prints a one-glyph strip, and कि stays refused. A
   Devanagari WORD is one composed entry (its letters' bodies, then one shared
@@ -1010,6 +1046,12 @@ Two kinds exist:
   words separated by single spaces (`headlinePhraseOf`, at most
   `MAX_PHRASE_WORDS` words) prints as a strip of words, "Word 1 of 2", each
   word with its own headline.
+  WHERE on the page a strip goes is `filmstripBlockIndex` in
+  `strip-placement.ts`: the first Writing block, else the first Script block,
+  else the first block whose writing stage shows a model, never a dictation or
+  a composition. That module has no imports, so the language-ladder app runs
+  the same function on the same parse and shows each strip in the section the
+  book prints it in.
   Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
@@ -1017,8 +1059,12 @@ before XeLaTeX runs.
   Single-letter writing lessons on the tracks in `DERIVED_FILMSTRIP_SCRIPTS`
   (`figure-targets.ts`) need no declaration: each becomes a candidate, and it
   is drawn when its letter has a cited ledger entry. Bengali is the latest
-  track switched on; nine of its letter lessons print a strip, cited to native
-  writers' pen traces in HP Labs India's LipiTk Bangla recognizer.
+  track switched on; ten of its letter lessons print a strip, cited to native
+  writers' pen traces in HP Labs India's LipiTk Bangla recognizer. Eleven
+  Telugu sign lessons (ం ా ి ీ ు ూ ె ే ొ ో ్) and Tamil's ஸ cite the same
+  kind of evidence from LipiTk's Telugu and Tamil recognizers; Telugu, like
+  Devanagari, has no written-order row, so each sign is drawn by itself and
+  no Telugu word is composed from it.
   Malayalam's seventeen cited consonants (ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല ശ ബ)
   draw 21 strips: their letter lessons and the four chapter-1 നമ lessons,
   drawn letter by letter. Their order cites SPACE Kerala's Thooval formation
@@ -1031,7 +1077,12 @@ before XeLaTeX runs.
   ജ and the vowel sign ൈ follow (60 Malayalam strips). Kannada's digit
   lessons ೧-೯ and the anusvara ಂ print strips cited to Chimple's tracing
   lessons (57 Kannada strips); a digit row that names its strokes must carry
-  its lift count and source together, as a letter row must.
+  its lift count and source together, as a letter row must. The candrakkala
+  ്, ഠ, the two-part signs ൊ and ോ and the digits ൧-൯ cite Jayasree, a CC BY
+  4.0 handwriting recording credited by name and licence under each strip (69
+  Malayalam strips: the three signs, ഠ, the സ ് ക list and five digit lists;
+  ൊ and ോ draw both parts and not Noto's consonant-placeholder dot); Kannada
+  ಞ (57) and Chinese 尔 (73) follow from Chimple and Hanzi Writer Data.
 
   Script inventories (`data/scripts/<script>.json`) close a track's headwords:
   `validate` warns about any script character no row covers. Letters, marks,
@@ -1129,6 +1180,9 @@ until the existing corpus has been split.
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
+| `drivable-instructions.ts` | the steps a narrator would say plainly that need eyes or hands (`eyes-or-hands-step`) | ✅ |
+| `narration-cues.ts` | what one cue sounds like (spoken or deferred) and where a paragraph's cues are | ✅ |
+| `for-the-ear.ts` | a typed activity prompt and a heading, reworded for a listener ("Type …" → "Say …"; a label without its asking) | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
 | `modality-manifest.ts` | derived modality rows, rollups, and unchanged filterable public manifest | ✅ |

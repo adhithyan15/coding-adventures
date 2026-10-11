@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 10,
-  "sourceHash": "fnv1a64:bc80396fdb6c7c47",
+  "sourceHash": "fnv1a64:974c69a3e2384e10",
   "lessonIds": [
     "BN-C10-ojon",
     "BN-W04-o-indep",
@@ -9,11 +9,11 @@
     "BN-W04-nukta",
     "BN-W04-howa-read"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
   "text": "bengali/narration/ch10.txt",
   "json": "bengali/narration/ch10.json",
-  "textHash": "fnv1a64:68e8d0f88a155282",
-  "jsonHash": "fnv1a64:bc3ac7714bcdd704",
+  "textHash": "fnv1a64:94ffd168356ed539",
+  "jsonHash": "fnv1a64:0438f4199b81766c",
   "findings": []
 }

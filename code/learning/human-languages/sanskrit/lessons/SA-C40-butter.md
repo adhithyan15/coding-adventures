@@ -60,7 +60,8 @@ Butter, named as the new thing brought up out of the curd.
 - [YOU SAY: *navanītam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śarkarā*, then *navanītam*]
-- [YOU RECALL: say *śilā*, then read **मत्स्यः**]
+- [YOU RECALL: say *śilā*]
+- [YOU READ: **मत्स्यः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03] -->

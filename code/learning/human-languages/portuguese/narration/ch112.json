@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Customer, Boss, Class, Lesson, Exam",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:150527ce0798cdfa",
+  "sourceHash": "fnv1a64:e7d29bd08cb88261",
   "lessons": [
     {
       "id": "PT-C112-cliente",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58e13ef835a7a634",
+      "sourceHash": "fnv1a64:a37fde20f25e3d34",
       "notice": null,
       "blocks": [
         {
@@ -413,8 +413,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read o aeroporto, o cinema, a piscina aloud as one line, without stopping between the words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "o aeroporto, o cinema, a piscina aloud as one line, without stopping between the words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: *o aeroporto, o cinema, a piscina* aloud as one line, without stopping between the words]"
             }
           ]
         },

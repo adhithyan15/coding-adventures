@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "The Older Generation",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d39615f6fed4c9e2",
+  "sourceHash": "fnv1a64:3be6fbcfa349beb9",
   "lessons": [
     {
       "id": "KA-C45-grandfather",
@@ -382,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e917eb1bcccaf934",
+      "sourceHash": "fnv1a64:1f85e47c3015457c",
       "notice": null,
       "blocks": [
         {
@@ -468,12 +468,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕುಳಿತುಕೋ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕುಳಿತುಕೋ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕುಳಿತುಕೋ**]"
+              "source": "[YOU READ: **ಕುಳಿತುಕೋ**]"
             }
           ]
         },

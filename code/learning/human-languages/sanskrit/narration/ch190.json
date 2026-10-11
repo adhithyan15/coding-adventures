@@ -4,7 +4,7 @@
   "chapter": 190,
   "title": "Black gram, Barley, Date palm's fruit, Amla, Rose apple",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6d472c07e5bff60b",
+  "sourceHash": "fnv1a64:e7996fb6d04a654e",
   "lessons": [
     {
       "id": "SA-C190-masah",
@@ -634,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e2a71bb91c6f1f",
+      "sourceHash": "fnv1a64:26be0162a55d8a53",
       "notice": null,
       "blocks": [
         {
@@ -716,7 +716,7 @@
             },
             {
               "kind": "speech",
-              "text": "Wonder? (विस्मयः, vismayaḥ.) Grief? (शोकः, śokaḥ.) Contentment? (सन्तोषः, santoṣaḥ.) Gratitude? (कृतज्ञता, kṛtajñatā.) Memory? (स्मृतिः, smṛtiḥ.) An age? (युगम्, yugam.) An auspicious hour? (मुहूर्तः, muhūrtaḥ.) An hour? (होरा, horā.) For a long time? (चिरम्, ciram.) After a long time? (चिरात्, cirāt.) From afar? (दूरतः, dūrataḥ.) Close by? (निकटे, nikaṭe.) Between? (अन्तरा, antarā.) Loudly? (उच्चैः, uccaiḥ.) Softly? (नीचैः, nīcaiḥ.) How much?? (कियत्, kiyat.) Of what kind?? (कीदृशः, kīdṛśaḥ.) For? (हि, hi.) Surely? (नूनम्, nūnam.) Certainly? (अवश्यम्, avaśyam.)"
+              "text": "Wonder? (विस्मयः, vismayaḥ.) Grief? (शोकः, śokaḥ.) Contentment? (सन्तोषः, santoṣaḥ.) Gratitude? (कृतज्ञता, kṛtajñatā.) Memory? (स्मृतिः, smṛtiḥ.) An age? (युगम्, yugam.) An auspicious hour? (मुहूर्तः, muhūrtaḥ.) An hour? (होरा, horā.) For a long time? (चिरम्, ciram.) After a long time? (चिरात्, cirāt.) From afar? (दूरतः, dūrataḥ.) Close by? (निकटे, nikaṭe.) Between? (अन्तरा, antarā.) Loudly? (उच्चैः, uccaiḥ.) Softly? (नीचैः, nīcaiḥ.) Asking how much? (कियत्, kiyat.) Asking of what kind? (कीदृशः, kīdṛśaḥ.) For? (हि, hi.) Surely? (नूनम्, nūnam.) Certainly? (अवश्यम्, avaśyam.)"
             }
           ]
         }

@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can ask who somebody is.",
     "assesses": [
-      "ES-LEX-QUIEN"
+      "ES-LEX-QUIEN",
+      "ES-GRAMMAR-QUIEN-PEOPLE-ONLY",
+      "ES-ETYMON-QUIEN-QUEM"
     ]
   }
 }

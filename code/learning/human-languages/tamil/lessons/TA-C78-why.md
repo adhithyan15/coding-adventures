@@ -33,7 +33,9 @@ reviews_of: [TA-C77-opinion]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03] -->
 
-[PAUSE 2s] Read **சொல்**. Then say: I think this is a good house.
+[PAUSE 2s] [YOU READ: **சொல்**]
+
+Then say: I think this is a good house.
 
 ## You'll want to know: ஏன்
 <!-- hl-knowledge: introduces=[TA-LEX-C78-WHY-01]; assesses=[] -->
@@ -70,8 +72,11 @@ The sixth member of a question family whose pattern you have known since chapter
 - [YOU SAY: *ēṉ*]
 - [YOU SAY: the question words in a row — *eṉṉa, eṅgē, eppaḍi, evvaḷavu, ēṉ*]
 - [YOU ASK: *ēṉ tēnīr vēṇḍum?*]
-- [YOU RECALL: read **சொல்**, then say *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*, then ask *ēṉ?*]
-- [YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*, say *nambikkai* and read **இன்று** — three distances back — then ask ஏன் about one of them]
+- [YOU READ: **சொல்**]
+- [YOU RECALL: say *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*, then ask *ēṉ?*]
+- [YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?* and say *nambikkai* — three distances back]
+- [YOU READ: **இன்று**]
+- [YOU RETURN TO: ask ஏன் about one of them]
 - [YOU RECALL: say *āṉāl*]
 
 ## Wrap-up Recall

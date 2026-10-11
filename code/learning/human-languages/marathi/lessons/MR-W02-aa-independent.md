@@ -44,14 +44,15 @@ Set one blank line aside for a single new vowel sign.
 > आ
 
 This is independent **ā**, used when the vowel begins a syllable. Curve around
-the joined left body; lift for the middle shoulder; descend the inner stem;
-descend the trailing stem; finish with the headline from left to right.
+the joined left body; lift for the middle shoulder, and without lifting climb
+the inner stem and descend it; lift for the trailing stem; lift once more and
+finish with the headline from left to right.
 
 ## Writing — trace, then guided copy
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-AA-INDEPENDENT-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Keep **आ** visible. Finger-trace the five runs once. Copy it once, looking back
+Keep **आ** visible. Finger-trace the four runs once. Copy it once, looking back
 after every run. Say *ā* only when the pen stops.
 
 ## Wrap-up Recall

@@ -56,7 +56,8 @@ Two: the doorway, and what is drawn in front of it.
 - [YOU SAY: *kōlam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vāsal*, then *kōlam*, and let the long *ō* open the second]
-- [YOU RECALL: read **நேரம்**, then say *mariyādai*]
+- [YOU READ: **நேரம்**]
+- [YOU RECALL: say *mariyādai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02] -->

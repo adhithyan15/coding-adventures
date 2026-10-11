@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-PROFESOR, ES-LEX-ESTUDIANTE, ES-LEX-ARTISTA, ES-GRAMMAR-BARE-PROFESSION, ES-FRIEND-ANTE-ANT, ES-FRIEND-ISTA-IST, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-PRESENT-1PL, ES-PRAGMATICS-AND-YOU]
+  knowledge: [ES-LEX-PROFESOR, ES-LEX-ESTUDIANTE, ES-LEX-ARTISTA, ES-GRAMMAR-BARE-PROFESSION, ES-FRIEND-ANTE-ANT, ES-FRIEND-ISTA-IST, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-SER-PRESENT-1PL, ES-PRAGMATICS-AND-YOU, ES-ETYMON-PROFITERI]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, interpersonal]
 strands: [meaning-input, language-focus]
@@ -77,8 +77,10 @@ choose. Only the article moves.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-ANTE-ANT, ES-FRIEND-ISTA-IST, ES-GRAMMAR-BARE-PROFESSION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-ANTE-ANT, ES-FRIEND-ISTA-IST, ES-GRAMMAR-BARE-PROFESSION, ES-ETYMON-PROFITERI] -->
 
 [PAUSE 3s] Two endings that name a person. (***-ante*** and ***-ista***.) What do
 both skip after *ser*? (***un***/***una***.) And which of them changes for a
 woman? (**Neither**.)
+
+[PAUSE 2s] And *profesor*: what did Latin *profitērī* mean, and which English words kept it? (**To declare publicly** — *profess*, *profession*.)

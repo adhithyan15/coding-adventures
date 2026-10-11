@@ -35,19 +35,19 @@ reviews_of: [MW-R32-count-recall, MW-C20-hear-churma, MW-C25-hear-bring-request,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHURMA-01, MW-LEX-BRING-REQUEST-01, MW-SCRIPT-E-01] -->
 
-[PAUSE 20s] Say the crumbled wheat sweet, say the bring request, then write the
-one letter this chapter added.
+[PAUSE 20s] Say the crumbled wheat sweet, and say the bring request.
+[YOU WRITE: the one letter this chapter added]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01]; assesses=[MW-LEX-EK-01, MW-LEX-DO-TWO-01, MW-LEX-TEEN-01, MW-LEX-CHAAR-01, MW-LEX-PAANCH-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-E-01] -->
 
 Four skills, scored separately.
 
-1. **Listening.** Hear five numbers named singly and out of order; write down
-   which was said each time, in figures of your own language.
+1. **Listening.** Hear five numbers named singly and out of order.
+   [YOU WRITE: which was said each time, in figures of your own language]
 2. **Speaking.** Count one to five, then five to one, without a model.
-3. **Reading.** Read the five printed in Devanagari, shuffled, and say each.
-4. **Writing.** Write all five from dictation, shuffled, with no model in view.
+3. [YOU READ: the five printed in Devanagari, shuffled, then say each]
+4. **Writing.** [YOU WRITE: all five from dictation, shuffled, with no model in view]
 
 Pass each one separately. A learner who can recite forwards and fails the
 shuffle has learned a rhyme, not five words.

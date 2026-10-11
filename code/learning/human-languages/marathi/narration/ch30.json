@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C30-aani-r1",
               "prompt": "Join brother and sister into one Marathi phrase.",
               "assesses": [
@@ -245,6 +246,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C30-kinva-r1",
               "prompt": "Offer a guest a choice between tea and milk, then offer them both.",
               "assesses": [
@@ -384,6 +386,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C30-pan-r1",
               "prompt": "Fill the same slot three ways with chahā and dūdh: add, offer, contradict.",
               "assesses": [
@@ -500,6 +503,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R30-three-joins-run",
               "prompt": "Say chahā and pāṇī joined three ways: added, offered as a choice, and contradicted.",
               "assesses": [

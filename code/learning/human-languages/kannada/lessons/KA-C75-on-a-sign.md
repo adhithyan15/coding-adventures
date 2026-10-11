@@ -36,7 +36,7 @@ reviews_of: [KA-C75-short-form, KA-C75-eighth, KA-S150-letter-ja, KA-C60-hen, KA
 [PAUSE 2s]
 - [YOU RECALL: say *modalanē* — **R1**]
 - [YOU RECALL: say *eṇṭaneya* — **R2**]
-- [YOU RECALL: read **ಜ**, and say its sound — **R3**]
+- [YOU READ: **ಜ**, then say its sound — **R3**]
 - [YOU RECALL: say *kōḷi* — **R4**]
 
 ## Grammar Lens: the digit does the counting for you
@@ -74,5 +74,7 @@ a street sign, a floor number, a bus route and a date are all written this way.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-08] -->
 
-[PAUSE 3s] Read **೧ನೇ** aloud. (*Modalanē* — not "one-nē".) What is written on
-the sign, the whole word or its tail? (**Its tail**, after the digit.)
+[PAUSE 3s] [YOU READ: **೧ನೇ** aloud]
+
+It is *Modalanē* — not "one-nē". What is written on the sign, the whole word or
+its tail? (**Its tail**, after the digit.)

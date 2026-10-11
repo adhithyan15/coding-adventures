@@ -38,7 +38,7 @@ reviews_of: [JA-C18-hitori-futari, JA-C11-me-eye, JA-C11-kuchi, JA-W11-ta]
 
 - [YOU RECALL: say *one person* and *two people* — **R1**, one lesson back]
 - [YOU RECALL: say *face* — **R3**, twenty lessons back]
-- [YOU RECALL: write **た** — **R4**, eighty lessons back]
+- [YOU WRITE: **た** from memory — **R4**, eighty lessons back]
 
 ## Guided Practice — count what you have
 <!-- hl-knowledge: introduces=[JA-PERFORMANCE-COUNT-FACE-01]; assesses=[JA-GRAMMAR-COUNTER-01, JA-LEX-HITOTSU, JA-LEX-FUTATSU, JA-LEX-ME-EYE, JA-LEX-MIMI, JA-LEX-HANA-NOSE, JA-LEX-KUCHI, JA-LEX-HITORI-FUTARI] -->

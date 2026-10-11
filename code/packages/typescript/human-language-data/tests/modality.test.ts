@@ -76,6 +76,93 @@ describe("the derivation itself", () => {
     expect(entry.derived).toBe("pen");
   });
 
+  // Rule 2 by type. A `type: reading` lesson is printed text plus the instruction to read
+  // it, and every word of it is speakable — so none of the rule-2 detectors can see
+  // that it needs eyes. Fifty-nine of the corpus's seventy-four reading lessons were
+  // advertised as drivable until the lesson TYPE was made to decide it.
+  const READING_BODY = [
+    "## Warm-up",
+    "",
+    "Everything you are about to read, you already know.",
+    "",
+    "## Reading",
+    "",
+    "> María vive en Madrid.",
+    "> Trabaja en una escuela.",
+    "",
+    "[YOU READ: the passage once through, without stopping]",
+    "",
+    "Where does María work?",
+  ].join("\n");
+
+  it("rule 2 by type: a reading lesson needs eyes, at both scales", () => {
+    const entry = deriveLessonModality(
+      lesson({ id: "ES-C67-lectura", type: "reading", skills: "reading", body: READING_BODY }),
+    );
+    // Control: the same body under an ordinary type is voice. Nothing in it trips a
+    // structural detector, which is exactly why the type has to.
+    expect(deriveLessonModality(lesson({ id: "ES-C67-x", body: READING_BODY })).derived).toBe(
+      "voice",
+    );
+    expect(entry.derived).toBe("sight");
+    expect(entry.modality).toBe("sight");
+    expect(entry.reasons).toEqual(["reading-type"]);
+    // The passage is the lesson: nothing detachable, so the core needs eyes too.
+    expect(entry.coreDerived).toBe("sight");
+    expect(entry.coreModality).toBe("sight");
+    expect(entry.coreReasons).toEqual(["reading-type"]);
+    expect(entry.requires).toEqual(["sight"]);
+  });
+
+  it("rule 2 by type reads the TYPE, never the reading SKILL", () => {
+    // The header's whole argument: `skills: [reading]` is what a lesson develops.
+    const entry = deriveLessonModality(lesson({ id: "ES-C01-skill", skills: "reading" }));
+    expect(entry.derived).toBe("voice");
+    expect(entry.reasons).toEqual(["no-visual-dependency"]);
+  });
+
+  it("a reading lesson is sight, not pen — but a writing block in a reading lesson is still pen", () => {
+    const entry = deriveLessonModality(
+      lesson({
+        id: "ES-C67-mixed",
+        type: "reading",
+        body: `${READING_BODY}\n\n## Writing: copy one line\n\nCopy it.`,
+      }),
+    );
+    expect(entry.modality).toBe("pen");
+    expect(entry.reasons).toEqual(["writing-block", "reading-type"]);
+    // Setting the writing segment aside leaves the reading, which still needs eyes.
+    expect(entry.coreModality).toBe("sight");
+    expect(entry.coreReasons).toEqual(["reading-type"]);
+  });
+
+  it("a reading lesson's authored voice override is reported unless it gives a reason", () => {
+    const silent = deriveLessonModality(
+      lesson({ id: "ES-C67-ov", type: "reading", modality: "voice", body: READING_BODY }),
+    );
+    // Honoured, as every valid override is — but it contradicts the derivation...
+    expect(silent.modality).toBe("voice");
+    expect(silent.overridden).toBe(true);
+    // ...so without a reason it cannot slip into the driving edition unremarked.
+    expect(modalityFindings(silent).map((finding) => finding.code)).toEqual([
+      "modality-unexplained-override",
+    ]);
+    expect(modalityFindings(silent)[0]?.message).toContain("reading-type");
+
+    const explained = deriveLessonModality(
+      lesson({
+        id: "ES-C67-ov2",
+        type: "reading",
+        modality: "voice",
+        modalityReason: "the passage is designed to be heard first",
+        body: READING_BODY,
+      }),
+    );
+    expect(explained.modality).toBe("voice");
+    expect(explained.coreModality).toBe("voice");
+    expect(modalityFindings(explained)).toEqual([]);
+  });
+
   it("rule 2a: a script block needs eyes", () => {
     const entry = deriveLessonModality(
       lesson({ id: "HI-C01", body: "## Script — the letter क\n\nIt has a vertical bar." }),
@@ -709,6 +796,41 @@ describe("block-level modality", () => {
     expect(entry.coreModality).toBe("voice");
   });
 
+  it("an override that RAISES a lesson with nothing detachable raises its core too", () => {
+    // PA-R171-date-repair-again: the prose reads as voice to the cue detector, the
+    // author says `pen` ("this task is not drivable"), and there is no detachable
+    // section to set aside — so the core is the whole lesson and must follow the
+    // author. It used to keep the derivation's `voice` and count as drivable.
+    const raised = deriveLessonModality(
+      lesson({
+        id: "PA-R171-raised",
+        modality: "pen",
+        modalityReason: "the learner repairs a printed form",
+        body: "## Guided Practice\n\nRepair the date.\n\n## Wrap-up Recall\n\nSay it.",
+      }),
+    );
+    expect(raised.derived).toBe("voice");
+    expect(raised.coreDerived).toBe("voice");
+    expect(raised.modality).toBe("pen");
+    expect(raised.coreModality).toBe("pen");
+    expect(drivablePrefix([raised])).toBe(0);
+  });
+
+  it("an override that raises a lesson WITH a detachable section leaves the core alone", () => {
+    // Here the writing segment is what the override is about; set it aside and the
+    // rest is still a car lesson, which is the whole point of the core.
+    const entry = deriveLessonModality(
+      lesson({
+        id: "TE-C01-raised",
+        modality: "pen",
+        modalityReason: "the writing segment needs a pen",
+        body: INTERSPERSED_BODY,
+      }),
+    );
+    expect(entry.modality).toBe("pen");
+    expect(entry.coreModality).toBe("voice");
+  });
+
   it("lessonCoreText drops the writing segment and keeps everything else", () => {
     const parsed = lesson({ id: "TE-C01-t", body: INTERSPERSED_BODY });
     expect(lessonText(parsed)).toContain("Copy the letter three times");
@@ -1220,7 +1342,17 @@ describe("corpus regression", () => {
   it("keeps every sight lesson attributable to a known cause", () => {
     const lessons = CORPUS_LESSONS;
     const sight = lessonModalities(lessons).filter((entry) => entry.modality === "sight");
-    const known = new Set(["script-block", "sight-cue", "wide-table"]);
+    // `reading-type` joined the list when reading lessons stopped being drivable: it is
+    // a known cause, and the one a reading lesson carries even when nothing else fires.
+    // `eyes-or-hands-step` joined when a step the narration says plainly ("Read
+    // **नमस्ते**.") began to count: it names the step, so it is as attributable as a cue.
+    const known = new Set([
+      "reading-type",
+      "script-block",
+      "sight-cue",
+      "wide-table",
+      "eyes-or-hands-step",
+    ]);
 
     // A `sight` lesson with no recorded reason would be unexplainable to a learner and
     // unfixable by an author — this is what a broken detector actually looks like.

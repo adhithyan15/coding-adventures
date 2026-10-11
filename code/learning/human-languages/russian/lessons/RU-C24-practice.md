@@ -43,9 +43,8 @@ reviews_of: [RU-C24-desyat, RU-C24-devyat, RU-C24-vosem, RU-C24-sem, RU-C24-shes
 
 1. Count aloud one to ten without a model, then ten to one.
 2. Hear all ten named singly and out of order, and say each.
-3. Read the ten printed shuffled and say each.
-4. Write all ten from dictation. Not one new Cyrillic letter appears in any of
-   them — this whole slice adds no sign to the alphabet.
+3. [YOU READ: the ten printed shuffled, then say each]
+4. [YOU WRITE: all ten from dictation — not one new Cyrillic letter appears in any of them; this whole slice adds no sign to the alphabet]
 5. Drill the two pairs that shaped each other: **семь / восемь**, where eight
    took seven's ending, and **девять / десять**, where nine took ten's *d*.
 6. Answer **сколько?** ten times, once with each number.

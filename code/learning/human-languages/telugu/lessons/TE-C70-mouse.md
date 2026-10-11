@@ -58,7 +58,8 @@ One. And the first thing anybody asks about a house.
 - [YOU SAY: *eluka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *eluka*, then *avunu*, then *lēdu*]
-- [YOU RECALL: say *śabdaṁ*, then read **గొడ్డలి** and say what it means]
+- [YOU RECALL: say *śabdaṁ*]
+- [YOU READ: **గొడ్డలి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-04, TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-01] -->

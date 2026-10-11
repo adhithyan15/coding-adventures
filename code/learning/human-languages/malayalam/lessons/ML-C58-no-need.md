@@ -58,7 +58,7 @@ Four, and this one gets you through a meal.
 - [YOU SAY: *vēṇṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vēṇṭa*, gently, then *vēṇṭa* again, firmly, and hear the difference the tone makes]
-- [YOU RECALL: read **പാത്രം**]
+- [YOU READ: **പാത്രം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04] -->

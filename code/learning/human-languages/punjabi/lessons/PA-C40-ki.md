@@ -46,7 +46,7 @@ the naming lesson, the word for **what**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PA-JOIN-KI-01]; assesses=[PA-LEX-KI-02, PA-JOIN-ATE-CLAUSE-01] -->
 
-Look at these two very carefully, because they are not the same word:
+Tell these two apart very carefully, because they are not the same word:
 
 - **ਕੀ** — *kī* — **what**, with the long bihari
 - **ਕਿ** — *ki* — **that**, with the short sihari

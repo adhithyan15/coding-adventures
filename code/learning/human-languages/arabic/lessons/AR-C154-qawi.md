@@ -38,7 +38,8 @@ reviews_of: [AR-C154-ajuz]
 
 [PAUSE 2s] Before the new one: say the Arabic for young, then the Arabic for old.
 
-[PAUSE 1s] Read the turn and say it aloud: **شاي أو حليب؟** (*Shāy aw ḥalīb?*, "Tea or milk?")
+[PAUSE 1s]
+[YOU READ: the turn, then say it aloud — **شاي أو حليب؟** (*Shāy aw ḥalīb?*, "Tea or milk?")]
 
 ## You'll want to know: قوي
 <!-- hl-knowledge: introduces=[AR-LEX-C154-QUAL154-04]; assesses=[] -->

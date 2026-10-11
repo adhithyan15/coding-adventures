@@ -7,7 +7,8 @@ Lesson 1 of 7.
 
 Warm-up.
 [pause 2 seconds]
-Read سلام and نان off the page, without the romanization. Nine letters, and the words they finish.
+[once you have stopped driving — read: سلام and نان off the page, without the romanization]
+Nine letters, and the words they finish.
 
 You'll want to know first — one word.
 یک — yek — one.
@@ -28,11 +29,11 @@ Wrap-up Recall.
 What does یک (yek) mean? (One.) Which everyday English word is the same root? (One.)
 Sources: Wiktionary: یک (yek); Omniglot, Numbers in Persian.
 [question — say your answer, then pause 8 seconds]
-Type the Persian word for 'one'.
+Say the Persian word for 'one'.
 
 
 Lesson 2 of 7.
-دو — two, and a letter doing its third job.
+دو (do) — two, and a letter doing its third job.
 
 Warm-up.
 [pause 2 seconds]
@@ -43,7 +44,7 @@ You'll want to know first — one word.
 Two letters. The second is و, the hard-working letter from the script chapter that can be v, u or o; here it is o, and the word tells you so.
 
 The word, taken apart — the same word as English two.
-دو continues Middle Persian dō, from Proto-Iranian duwā, from Indo-European dwoh, "two." English two, Latin duo, Greek dýo and Sanskrit dvá are the same word.
+دو (do) continues Middle Persian dō, from Proto-Iranian duwā, from Indo-European dwoh, "two." English two, Latin duo, Greek dýo and Sanskrit dvá are the same word.
 Say do and two one after the other. Nothing has to be learned there; it has to be recognised.
 
 Guided Practice.
@@ -56,10 +57,10 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of و's three jobs is it doing in دو? (o.)
+Which of و's three jobs is it doing in دو (do)? (o.)
 Sources: Wiktionary: دو (do); Omniglot, Numbers in Persian.
 [question — say your answer, then pause 8 seconds]
-Type the Persian word for 'two'.
+Say the Persian word for 'two'.
 
 
 Lesson 3 of 7.
@@ -90,8 +91,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 Which two numbers can this book write so far? (سه (se) and, later, نه.)
 Sources: Wiktionary: سه (se); Omniglot, Numbers in Persian.
-[question — say your answer, then pause 10 seconds]
-Write the Persian word for 'three', using the two letters the script chapter taught.
+[once you have stopped driving — question: Write the Persian word for 'three', using the two letters the script chapter taught.]
 
 
 Lesson 4 of 7.
@@ -122,7 +122,7 @@ Wrap-up Recall.
 Which language kept the original kw whole? (Latin.)
 Sources: Wiktionary: چهار (chahâr); Omniglot, Numbers in Persian.
 [question — say your answer, then pause 8 seconds]
-Type the Persian word for 'four'.
+Say the Persian word for 'four'.
 
 
 Lesson 5 of 7.
@@ -167,8 +167,8 @@ Guided Practice.
 A run learned forwards is a rhyme. Break it four ways.
 Hear each of the five named singly and out of order, and say what it is.
 Count backwards from panj to yek.
-Read the five printed shuffled — پنج (panj)، یک (yek)، چهار (chahâr)، سه (se)، دو (do) — and say each.
-Write سه, the one of the five whose letters are already yours.
+[once you have stopped driving — read: the five printed shuffled — پنج (panj)، یک (yek)، چهار (chahâr)، سه (se)، دو (do) — then say each]
+[once you have stopped driving — write: سه (se), the one of the five whose letters are already yours]
 Then say each number's English cousin: one, two, three, four, five. Every one of the five has one, and that is not a coincidence — it is the same set of words, five thousand years apart.
 
 Wrap-up Recall.
@@ -180,19 +180,20 @@ Count backwards from five to one in Persian.
 Lesson 7 of 7.
 یک دوست (yek dust) — counting the people you can name.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: numbers go in front, and nothing else changes.
 
 Warm-up.
 [pause 3 seconds]
 Two person words, from memory: the one for woman, and the one for friend. Neither is a family role, which is what made them worth learning.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 You'll want to know: numbers go in front, and nothing else changes.
 Put a number you now have in front of a person word you now have:
 [a table of 3 rows, read aloud]
 یک دوست yek dust, one friend.
 دو دوست do dust, two friends.
-سه زن se zan, three women.
-Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does زن. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it.
+se zan, three women.
+Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does zan. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it.
 دوست is also the one to hold on to. It goes back to a root meaning to choose, so a friend in Persian is the one chosen — and the same root gave English choose.
 
 Guided Practice.
@@ -209,3 +210,5 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 How do you say two friends? (دو دوست do dust — the noun is unchanged.) Why is there no plural ending? (The number already said how many.) What does دوست mean literally? (The one chosen.) And which English word shares its root? (Choose.)
+[pause 2 seconds]
+And zan: which English word kept its root, narrowed to one woman? (Queen — and Greek kept the plain sense in gynecology.)

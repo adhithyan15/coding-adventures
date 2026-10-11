@@ -31,8 +31,8 @@ it("services Chapter 146 quality R4 with an honest next boundary", () => {
     lessons.filter((lesson) => !reviewIds.includes(lesson.realization.lessonId)),
   );
   const after = measureContinuity(lessons);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 581 });
-  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 567, R3: 513, R4: 578 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 512, R4: 581 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 567, R3: 512, R4: 578 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
 
   const missedPairs = (report: typeof before): Set<string> => new Set(
     report.reinforcement.flatMap((defect) =>

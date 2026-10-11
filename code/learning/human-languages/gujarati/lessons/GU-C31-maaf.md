@@ -54,9 +54,10 @@ been able to apologise to them.
 already use for asking. Gujarati does not have a verb "to apologise"; it asks
 the other person to **do** the forgiving.
 
-Read the first word slowly. **મ** and the **ા** stroke you have had for a long
-time; **ફ** you learned in the last lesson. Three signs, and only one of them
-was new.
+[YOU READ: the first word, **માફ**, slowly]
+
+**મ** and the **ા** stroke you have had for a long time; **ફ** you learned in
+the last lesson. Three signs, and only one of them was new.
 
 **માફ** is a traveller. It came from Arabic *muāf* by way of Persian, on the
 same road that carried **બજાર** into the market chapter and **કાગળ** onto the

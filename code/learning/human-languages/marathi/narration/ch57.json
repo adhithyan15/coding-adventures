@@ -104,6 +104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C57-tera-r1",
               "prompt": "Say thirteen in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -238,6 +239,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C57-chauda-r1",
               "prompt": "Say fourteen in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -377,6 +379,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C57-pandhra-r1",
               "prompt": "Say fifteen in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -516,6 +519,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C57-sola-r1",
               "prompt": "Say sixteen in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -631,6 +635,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R57-thirteen-to-sixteen-run",
               "prompt": "Count ten to sixteen, then name the unit inside each teen.",
               "assesses": [

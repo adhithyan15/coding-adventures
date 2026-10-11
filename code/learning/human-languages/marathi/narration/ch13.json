@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Numbers One to Five",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:69ebe42dff0aa9b4",
+  "sourceHash": "fnv1a64:1e58c6df42395c70",
   "lessons": [
     {
       "id": "MR-R09-script-a-r3",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7125fa7bca7cc028",
+      "sourceHash": "fnv1a64:73390f3a1c55c5f8",
       "notice": null,
       "blocks": [
         {
@@ -28,8 +28,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -39,12 +44,40 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "dhanyavād, then the two-dot breath sign, independent long ā, and breathy bha from their spoken names",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *dhanyavād*, then the two-dot breath sign, independent long *ā*, and breathy *bha* from their spoken names]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your answer against धन्यवाद; ः आ भ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your answer against **धन्यवाद; ः आ भ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Cover the answer. Write dhanyavād, then the two-dot breath sign, independent long ā, and breathy bha from their spoken names. Compare: धन्यवाद; ः आ भ. Stop after one retrieval and one repair."
+              "text": "Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-a-r3-check",
               "prompt": "Write dhanyavad, visarga, independent aa, and bha after a durable gap.",
               "assesses": [
@@ -79,7 +112,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95d9869cdae4ae61",
+      "sourceHash": "fnv1a64:b116db465df01751",
       "notice": null,
       "blocks": [
         {
@@ -88,8 +121,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -99,12 +137,31 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the e-mark, one-dot anusvāra, and dental ta from their spoken names",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the e-mark, one-dot anusvāra, and dental *ta* from their spoken names]"
+            },
+            {
               "kind": "speech",
-              "text": "Cover the answer. Write the e-mark, one-dot anusvāra, and dental ta from their spoken names. Then compare: े ं त. Stop after one retrieval and one repair."
+              "text": "Then compare: े ं त. Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-b-r3-check",
               "prompt": "Write e-mark, anusvara, and ta after a durable gap.",
               "assesses": [
@@ -138,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:608e8ccf310e720d",
+      "sourceHash": "fnv1a64:129033a94d723119",
       "notice": null,
       "blocks": [
         {
@@ -147,8 +204,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -158,12 +220,31 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "dental da, breathy dha, and quiet ba from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: dental *da*, breathy *dha*, and quiet *ba* from sound]"
+            },
+            {
               "kind": "speech",
-              "text": "Cover the answer. Write dental da, breathy dha, and quiet ba from sound. Then compare: द ध ब. Stop after one retrieval and one repair."
+              "text": "Then compare: द ध ब. Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-c-r3-check",
               "prompt": "Write da, dha, and ba after a durable gap.",
               "assesses": [
@@ -197,7 +278,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e714e2a5496fb44",
+      "sourceHash": "fnv1a64:ef21fceb4dc22690",
       "notice": null,
       "blocks": [
         {
@@ -206,8 +287,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -217,12 +303,31 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ya, Marathi curled-back ḷa, and va from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *ya*, Marathi curled-back *ḷa*, and *va* from sound]"
+            },
+            {
               "kind": "speech",
-              "text": "Cover the answer. Write ya, Marathi curled-back ḷa, and va from sound. Then compare: य ळ व. Stop after one retrieval and one repair."
+              "text": "Then compare: य ळ व. Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R09-script-d-r3-check",
               "prompt": "Write ya, lla, and va after a durable gap.",
               "assesses": [
@@ -538,6 +643,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C06-number-differences-don-ending",
               "prompt": "Did Marathi don preserve an ancient final n?",
               "assesses": [
@@ -650,6 +756,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-marks-r3-check",
               "prompt": "Say where each of the six marks (sahā khuṇā) goes, and which of the two below-the-line hooks travels further.",
               "assesses": [
@@ -748,6 +855,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-two-rows-r3-check",
               "prompt": "Say the four velar letters and the four palatal ones in order, naming the voice and breath state of each.",
               "assesses": [
@@ -837,6 +945,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-curled-r3-check",
               "prompt": "Name the four curled letters in order and the lip letter that differs from ba by one dot.",
               "assesses": [
@@ -934,6 +1043,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R13-sibilants-r3-check",
               "prompt": "Name the plain l beside the curled one, the two sibilants written apart but said alike, and the three vowels that also have marks.",
               "assesses": [

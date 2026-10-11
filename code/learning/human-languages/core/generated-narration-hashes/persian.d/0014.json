@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 14,
-  "sourceHash": "fnv1a64:2e888961abc3453f",
+  "sourceHash": "fnv1a64:4b7aae30fedd190d",
   "lessonIds": [
     "FA-C14-khahar",
     "FA-C14-pesar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch14.txt",
   "json": "persian/narration/ch14.json",
-  "textHash": "fnv1a64:97eb74a09ab3ca6d",
-  "jsonHash": "fnv1a64:ea43e730adedd344",
+  "textHash": "fnv1a64:0bfb9332aa727514",
+  "jsonHash": "fnv1a64:b1ff8bc3cad18135",
   "findings": []
 }

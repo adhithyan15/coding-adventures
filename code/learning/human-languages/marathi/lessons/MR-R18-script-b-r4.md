@@ -36,11 +36,12 @@ reviews_of: [MR-R09-script-b-r3]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Keep every model closed and one blank line ready.
+[YOU COVER: every model, and keep one blank line ready]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-E-MATRA-01, MR-SCRIPT-ANUSVARA-01, MR-SCRIPT-TA-01] -->
 <!-- hl-activity: {"id":"MR-R18-script-b-r4-check","kind":"text","assesses":["MR-SCRIPT-E-MATRA-01","MR-SCRIPT-ANUSVARA-01","MR-SCRIPT-TA-01"],"prompt":"Write e-mark, anusvara, and ta at long distance.","answer":"े ं त","accepted":[],"feedback":{"correct":"Long-distance retrieval is intact.","incorrect":"Repair only the missed sign."},"response_seconds":26} -->
 
-From spoken names only, write e-mark, anusvāra, and dental *ta*. Compare once:
-**े ं त**.
+[YOU WRITE: the e-mark, anusvāra, and dental *ta*, from spoken names only]
+
+[YOU CHECK: your answer once against **े ं त**]

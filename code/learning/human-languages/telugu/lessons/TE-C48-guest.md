@@ -56,7 +56,8 @@ Five roles: a teacher, a student, a doctor, a farmer, a guest.
 - [YOU SAY: *atithi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five, then say *nā pēru* and your own name, and ask *mīru evaru?*]
-- [YOU RECALL: say *pustakaṁ*, then read **కడుపు** and say what it means]
+- [YOU RECALL: say *pustakaṁ*]
+- [YOU READ: **కడుపు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05] -->

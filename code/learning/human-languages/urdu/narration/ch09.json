@@ -3,8 +3,8 @@
   "language": "urdu",
   "chapter": 9,
   "title": "People You'd Introduce",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e12650e085883cdf",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:ae2635f7e5bc7352",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:316edaf122aed94d",
+      "sourceHash": "fnv1a64:f8e8d5576afa1b4d",
       "notice": null,
       "blocks": [
         {
@@ -227,7 +227,7 @@
             },
             {
               "kind": "speech",
-              "text": "Not میرا بہن (bahan). Read on for why."
+              "text": "Not میرا بہن (bahan). The reason comes next."
             }
           ]
         },
@@ -335,8 +335,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C09-bahan-agreement",
-              "prompt": "Type the Urdu for 'my sister', choosing the correct form of my.",
+              "prompt": "Say the Urdu for 'my sister', choosing the correct form of my.",
               "assesses": [
                 "UR-GRAMMAR-MERA-GENDER-AGREEMENT"
               ],
@@ -638,8 +639,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C09-khandan-sort",
-              "prompt": "Type the Urdu word for 'family' — the loan that groups bhāī and bahan together.",
+              "prompt": "Say the Urdu word for 'family' — the loan that groups bhāī and bahan together.",
               "assesses": [
                 "UR-ETYMON-KHANDAN-PERSIAN"
               ],

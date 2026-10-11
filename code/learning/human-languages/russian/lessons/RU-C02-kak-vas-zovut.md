@@ -43,8 +43,8 @@ that Russian asks a different question from English.
 ## The exchange
 <!-- hl-knowledge: introduces=[RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-NAMING-HOW-FRAME]; assesses=[] -->
 
-> **Как вас зовут?** — *Kak vas zovút?* — formal, or to more than one person.
-> **Как тебя зовут?** — *Kak tebyá zovút?* — informal, to one person you know.
+> *Kak vas zovút?* — formal, or to more than one person.
+> *Kak tebyá zovút?* — informal, to one person you know.
 
 Taken apart:
 
@@ -56,28 +56,28 @@ So: **"How do they call you?"**
 ## Grammar Lens: the object forms again
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-OBJECT-PRONOUNS]; assesses=[RU-LEX-TY-VY, RU-GRAMMAR-MENYA-OBJECT-CASE] -->
 
-Last lesson's *меня* has partners, and they follow the same logic — the person
+Last lesson's *menyá* has partners, and they follow the same logic — the person
 being called is the **object**, so the word changes shape:
 
-- **я** becomes **меня** — me.
-- **ты** becomes **тебя** — you, informal.
-- **вы** becomes **вас** — you, formal or plural.
+- **я** becomes *menyá* — me.
+- *ty* becomes **тебя** — you, informal.
+- *vy* becomes **вас** — you, formal or plural.
 
-You now have a matched pair: **Как вас зовут?** — **Меня зовут…**
+You now have a matched pair: *Kak vas zovút?* — *Menyá zovút…*
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE, RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Как вас зовут?" — formal]
-- [YOU SAY: "Как тебя зовут?" — informal]
-- [YOU SAY: the whole exchange — "Как вас зовут?" · "Меня зовут…"]
+- [YOU SAY: "Kak vas zovút?" — formal]
+- [YOU SAY: "Kak tebyá zovút?" — informal]
+- [YOU SAY: the whole exchange — "Kak vas zovút?" · "Menyá zovút…"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE, RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME] -->
 
-[PAUSE 3s] Ask a stranger's name. (*Как вас зовут?*) And a friend's? (*Как тебя
+[PAUSE 3s] Ask a stranger's name. (*Kak vas zovút?*) And a friend's? (*Kak tebyá
 зовут?*) What does *как* mean, and why does it matter? (**How** — Russian asks
 *how they call you*, about an **action**, where English asks *what*, about a
-**possession**.) Give the three object forms. (*Меня, тебя, вас*.) Next: compare
+**possession**.) Give the three object forms. (*Menyá, тебя, вас*.) Next: compare
 how several languages frame the same question.

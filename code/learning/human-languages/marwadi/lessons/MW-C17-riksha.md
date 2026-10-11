@@ -37,7 +37,7 @@ reviews_of: [MW-C17-hear-riksha, MW-W17-sha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-RIKSHA-01]; assesses=[MW-LEX-RIKSHA-01, MW-SCRIPT-SHA-01, MW-SCRIPT-VIRAMA-01, MW-LEX-BACHCHA-01] -->
 
-[PAUSE 16s] Say rickshaw and child, then write **श** and **्**.
+[PAUSE 16s] Say rickshaw and child. [YOU WRITE: **श** and **्**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RIKSHA-01, MW-SCRIPT-RIKSHA-01] -->
@@ -48,8 +48,9 @@ reviews_of: [MW-C17-hear-riksha, MW-W17-sha]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RIKSHA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **रिक्शा**. Check that **ि** appears
-before **र** but is read after it, and that **्** joins **क** to **श**.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **रिक्शा** — check that **ि** appears before **र** but is read after it, and that **्** joins **क** to **श**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RIKSHA-01, MW-SCRIPT-RIKSHA-01] -->

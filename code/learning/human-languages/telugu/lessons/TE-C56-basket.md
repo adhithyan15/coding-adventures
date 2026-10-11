@@ -58,7 +58,8 @@ Two: something to sit on, something to carry with.
 - [YOU SAY: *buṭṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *buṭṭa*, then *cāpa*, and say what the two are made of]
-- [YOU RECALL: read **కొమ్మ**, then say *ceruvu*]
+- [YOU READ: **కొమ్మ**]
+- [YOU RECALL: say *ceruvu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02] -->

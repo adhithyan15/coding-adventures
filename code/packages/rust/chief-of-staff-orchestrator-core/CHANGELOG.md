@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `with_process_supervisor` takes an optional `ChannelBrokers`, so the
+  daemon can give each agent its own channel broker (D18S P2.6d-2b).
 - Require validated request context for channel create and destroy authorization.
 - Add authoritative channel/member tier resolution and Trust Checker composition.
 - Bind approvals to a SHA-256 fingerprint of the complete immutable topology mutation.

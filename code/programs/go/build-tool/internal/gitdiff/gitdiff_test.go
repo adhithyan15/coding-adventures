@@ -1,10 +1,52 @@
 package gitdiff
 
 import (
+	"os"
+	"os/exec"
+	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
+
+func TestGetChangedFilesPreservesRawGitPaths(t *testing.T) {
+	repo := t.TempDir()
+	runGit := func(args ...string) {
+		t.Helper()
+		cmd := exec.Command("git", args...)
+		cmd.Dir = repo
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git %v: %v: %s", args, err, out)
+		}
+	}
+	runGit("init", "-q")
+	if err := os.WriteFile(filepath.Join(repo, "README.md"), []byte("base"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	runGit("add", ".")
+	runGit("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "base")
+	caseDir := filepath.Join(repo, "code", "specs", "fixtures", "build-tool-v1", "cases")
+	if err := os.MkdirAll(caseDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	want := []string{
+		"code/specs/fixtures/build-tool-v1/cases/plan-affected-empty.json",
+		"code/specs/fixtures/build-tool-v1/cases/plan-caf\u00e9.json",
+	}
+	for _, name := range want {
+		if err := os.WriteFile(filepath.Join(repo, filepath.FromSlash(name)), []byte("{}"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	runGit("add", ".")
+	runGit("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "fixtures")
+	got := GetChangedFiles(repo, "HEAD~1")
+	slices.Sort(got)
+	if !slices.Equal(got, want) {
+		t.Fatalf("changed files = %q, want %q", got, want)
+	}
+}
 
 func TestMapFilesToPackages_ShellBuild(t *testing.T) {
 	// Shell BUILD packages: any file under the package triggers rebuild.

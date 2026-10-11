@@ -38,7 +38,8 @@ same line, and one of them is not about colour.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C455-CUARTO-01, ES-LEX-C455-CUARTO-02, ES-LEX-C455-CUARTO-05] -->
 
-A message between two people sharing a flat. Read it, then answer.
+A message between two people sharing a flat.
+[YOU READ: the message, then answer]
 
 > Oye, mañana viene mi hermana.
 >
@@ -76,9 +77,11 @@ endings alone.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C455-CUARTO-01, ES-LEX-C455-CUARTO-02, ES-LEX-C455-CUARTO-03, ES-LEX-C455-CUARTO-04, ES-LEX-C455-CUARTO-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines to a
-flatmate: say you have painted the bedroom a light colour, ask them to put the
-boxes in the storeroom, ask them to hang the washing out, and say why.
+[PAUSE 3s] Now your turn, out loud. Four lines to a flatmate: say you have
+painted the bedroom a light colour, ask them to put the boxes in the storeroom,
+ask them to hang the washing out, and say why.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did you use *de* before the colour, *meter* for the
 inside, and the *tú* forms throughout?

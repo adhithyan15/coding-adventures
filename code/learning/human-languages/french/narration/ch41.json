@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Three More Ways to Use a Verb",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:68b970caa648941d",
+  "sourceHash": "fnv1a64:f525fddb7cd4e1b6",
   "lessons": [
     {
       "id": "FR-C37-imperatif",
@@ -426,7 +426,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b785decbe9ebb69f",
+      "sourceHash": "fnv1a64:8eae4812f3532af7",
       "notice": null,
       "blocks": [
         {
@@ -473,7 +473,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write both. Say one."
+              "text": "Written, both. Spoken, one."
             }
           ]
         },

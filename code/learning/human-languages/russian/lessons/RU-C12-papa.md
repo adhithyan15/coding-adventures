@@ -37,8 +37,8 @@ reviews_of: [RU-C12-mama]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-MAMA] -->
 
-[PAUSE 2s] *Мама*'s twin, built the same babbling way — but this one does
-something *кофе* only hinted at: it breaks the noun-gender ending rule
+[PAUSE 2s] *Máma*'s twin, built the same babbling way — but this one does
+something *kófe* only hinted at: it breaks the noun-gender ending rule
 outright, and tells you exactly when that is allowed to happen.
 
 ## You'll want to know first — папа
@@ -46,8 +46,8 @@ outright, and tells you exactly when that is allowed to happen.
 
 > **папа** — *pápa* — **dad, papa** (the everyday, affectionate word)
 
-Stress on the first syllable, *PÁ-pa* — the same rhythm as *мама*, the
-**м** simply swapped for **п**. Same babbling story, same easy vowel, one
+Stress on the first syllable, *PÁ-pa* — the same rhythm as *máma*, the
+*m* simply swapped for **п**. Same babbling story, same easy vowel, one
 consonant apart.
 
 ## Grammar Lens: when biology beats the ending
@@ -56,12 +56,12 @@ consonant apart.
 Here is the rule you already know: **-а/-я** endings are feminine. *Папа* ends
 in **-а** — and *папа* is **masculine**.
 
-This is not another *кофе*, a fossil accident that happens to break the
+This is not another *kófe*, a fossil accident that happens to break the
 pattern. It is a real, live rule of its own, and a small closed set of words
 follows it: any noun naming a **male person** is masculine, whatever letter
 it ends in, because Russian lets biology outrank spelling for people. You
 will meet the rule's other members later — **дядя** ("uncle") and
-**дедушка** ("grandpa") both end in **-я**/**-а** and are both masculine for
+*dédushka* ("grandpa") both end in **-я**/**-а** and are both masculine for
 exactly this reason. *Папа* is your first sighting of it.
 
 ## Guided Practice
@@ -71,7 +71,7 @@ exactly this reason. *Папа* is your first sighting of it.
 - [YOU SAY: "папа" — masculine, despite the -а]
 - [YOU SAY: the rule — "a male person is always masculine, whatever the
   ending"]
-- [YOU SAY: the pair — "мама, feminine; папа, masculine — same ending,
+- [YOU SAY: the pair — "máma, feminine; папа, masculine — same ending,
   opposite gender"]
 
 ## Wrap-up Recall
@@ -79,8 +79,8 @@ exactly this reason. *Папа* is your first sighting of it.
 
 [PAUSE 3s] Say "dad." (**Папа**.) What gender is it, and does that match its
 **-а** ending? (**Masculine** — it does **not** match; a male person
-overrides the ending.) Name the shared origin of *мама* and *папа*.
+overrides the ending.) Name the shared origin of *máma* and *папа*.
 (**Universal infant babbling** — the easiest mouth sounds, reinvented
 everywhere.) Name one other Russian word that will follow the same
-male-person rule later. (**Дядя** or **дедушка**.) And one last look
-further back: how do you say "good night"? (**Спокойной ночи**.)
+male-person rule later. (**Дядя** or *dédushka*.) And one last look
+further back: how do you say "good night"? (*Spakóynay nóchi*.)

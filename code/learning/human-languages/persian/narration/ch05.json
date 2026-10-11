@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:92d845deb6aa8e83",
+  "sourceHash": "fnv1a64:bc123d1b5387e8cf",
   "lessons": [
     {
       "id": "FA-C05-khoda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0590efe1c1492957",
+      "sourceHash": "fnv1a64:f859a71f2edc925b",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read from right to left: خ kh + د d + ا long â. The short o is learned with the word rather than written as a separate letter. Keep the back-of-the-mouth kh gentle; clarity matters more than force."
+              "text": "From right to left: خ kh + د d + ا long â."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "The short o is learned with the word rather than written as a separate letter. Keep the back-of-the-mouth kh gentle; clarity matters more than force."
             }
           ]
         },
@@ -83,7 +96,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خدا (khodâ) from the right edge",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خدا** from the right edge]"
@@ -115,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-khoda-meaning",
-              "prompt": "Type the Persian word khodâ, meaning 'God'.",
+              "prompt": "Say the Persian word khodâ, meaning 'God'.",
               "assesses": [
                 "FA-LEX-KHODA"
               ],
@@ -150,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d43dee9ff4c1b0a",
+      "sourceHash": "fnv1a64:d02465ca8d295e5a",
       "notice": null,
       "blocks": [
         {
@@ -165,8 +179,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khodâ, “God,” the word from the last lesson",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **khodâ**, “God,” the word from the last lesson]"
+            },
+            {
               "kind": "speech",
-              "text": "Read خدا and say khodâ. Keep it separate: this lesson adds only the second word behind the farewell."
+              "text": "Keep it separate: this lesson adds only the second word behind the farewell."
             }
           ]
         },
@@ -180,8 +203,17 @@
               "text": "حافظ — hâfez — guardian, protector."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ح ا ف ظ from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ح ا ف ظ** from right to left]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ح ا ف ظ from right to left. ا carries long â. In contemporary Persian, final ظ is pronounced z here, so say hâ-fez, not an English th sound. The short e is part of the learned word and is normally unwritten."
+              "text": "ا carries long â. In contemporary Persian, final ظ is pronounced z here, so say hâ-fez, not an English th sound. The short e is part of the learned word and is normally unwritten."
             }
           ]
         },
@@ -214,7 +246,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ (hâfez)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ**]"
@@ -246,8 +278,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-hafez-meaning",
-              "prompt": "Type the Persian word hâfez, meaning 'guardian' or 'protector'.",
+              "prompt": "Say the Persian word hâfez, meaning 'guardian' or 'protector'.",
               "assesses": [
                 "FA-LEX-HAFEZ"
               ],
@@ -281,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0fa12a29bb3766",
+      "sourceHash": "fnv1a64:be5dc97ecab28a56",
       "notice": null,
       "blocks": [
         {
@@ -312,7 +345,20 @@
             },
             {
               "kind": "speech",
-              "text": "Persian normally writes the two spoken pieces together. Start with خدا, add حافظ, and read the joined spelling خداحافظ (khodâ hâfez) from the right edge. Keep the two meaning layers available underneath the complete form."
+              "text": "Persian normally writes the two spoken pieces together. Start with خدا (khodâ), add حافظ (hâfez)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the joined spelling خداحافظ (khodâ hâfez) from the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the joined spelling **خداحافظ** from the right edge]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the two meaning layers available underneath the complete form."
             }
           ]
         },
@@ -334,7 +380,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "joined خداحافظ (khodâ hâfez)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: joined **خداحافظ**]"
@@ -366,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-khodahafez-goodbye",
-              "prompt": "Type the standard Persian expression for 'goodbye'.",
+              "prompt": "Say the standard Persian expression for 'goodbye'.",
               "assesses": [
                 "FA-LEX-KHODAHAFEZ"
               ],
@@ -473,8 +520,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-khodahafez-more-goodbye",
-              "prompt": "Type the everyday Persian way to say goodbye.",
+              "prompt": "Say the everyday Persian way to say goodbye.",
               "assesses": [
                 "FA-PRAGMATICS-STANDARD-FAREWELL"
               ],
@@ -501,13 +549,22 @@
       "romanization": "salâm ... khodâ hâfez",
       "gloss": "open and close a short Persian interaction",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:8e2b56a5c13f0980",
-      "notice": null,
+      "sourceHash": "fnv1a64:c9904ac2e798b0f9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the halves, then the whole"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the halves, then the whole."
+      },
       "blocks": [
         {
           "index": 0,
@@ -533,7 +590,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: سلام! حال شما چطور است؟ Salâm! Hâl-e shomâ chetor ast? B: خوبم، ممنون. Khubam, mamnun. A: خداحافظ (khodâ hâfez). Khodâ hâfez. B: خداحافظ (khodâ hâfez). Khodâ hâfez."
+              "text": "A: سلام! Hâl-e shomâ chetor ast? Salâm! Hâl-e shomâ chetor ast? B: Khubam, mamnun. A: خداحافظ (khodâ hâfez). Khodâ hâfez. B: خداحافظ (khodâ hâfez). Khodâ hâfez."
             },
             {
               "kind": "speech",
@@ -543,6 +600,53 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — the two halves of goodbye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the farewell apart without the page."
+            },
+            {
+              "kind": "speech",
+              "text": "What does khodâ mean? (God.) Where is it from? (Inherited Persian: Middle Persian xwadây, \"lord.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hâfez mean? (Guardian, protector.) Where is it from? (Arabic ḥāfiẓ, from the root ḥ-f-ẓ, \"guard, preserve.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "The pieces picture \"God [be] guardian.\" Is a verb needed to say goodbye? (No: the whole formula means goodbye.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — the halves, then the whole",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خدا, حافظ, خداحافظ (khodâ hâfez)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا, then حافظ, then the joined خداحافظ (khodâ hâfez), each from the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا**, then **حافظ**, then the joined **خداحافظ**, each from the right edge]"
+            },
+            {
+              "kind": "speech",
+              "text": "(خ kh, د d, ا long â spell خدا (khodâ); the final ظ of حافظ (hâfez) is said z.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -576,7 +680,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,8 +691,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-practice-final-line",
-              "prompt": "The short Persian interaction is ending. Type the final expression.",
+              "prompt": "The short Persian interaction is ending. Say the final expression.",
               "assesses": [
                 "FA-DIALOGUE-TAKE-LEAVE"
               ],

@@ -44,7 +44,7 @@ reviews_of: [MW-R15-shopping-close]
 
 > *bas* — **bus**
 
-Hear it twice, point to a bus picture, and say it once. Keep the spelling
+Hear it twice, picture a bus, and say it once. Keep the spelling
 covered until the sound and meaning are easy.
 
 ## Wrap-up Recall

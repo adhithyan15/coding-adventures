@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सुंदर (sundar) mean? ("Beautiful".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'beautiful'.
+Say the Marwadi for 'beautiful'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रूपाळो (rūpāḷo) mean? ("Good-looking".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'good-looking'.
+Say the Marwadi for 'good-looking'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जवान (javān) mean? ("Young".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'young'.
+Say the Marwadi for 'young'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दुबळो (dubaḷo) mean? ("Thin, weak".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'thin, weak'.
+Say the Marwadi for 'thin, weak'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ठिगणो (ṭhigṇo) mean? ("Short (of a person)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'short (of a person)'.
+Say the Marwadi for 'short (of a person)'.

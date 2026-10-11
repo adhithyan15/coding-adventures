@@ -37,7 +37,9 @@ reviews_of: [PT-C129-olhar]
 
 [PAUSE 2s] Before the new one: say the Portuguese for to listen, then the Portuguese for to look.
 
-[PAUSE 2s] Write *first* the way a sign writes it: *1.º*. Then say *décimo*, the tenth.
+[PAUSE 2s] [YOU WRITE: *first* the way a sign writes it — *1.º*]
+
+Then say *décimo*, the tenth.
 
 ## You'll want to know: sessenta
 <!-- hl-knowledge: introduces=[PT-LEX-C130-NUMEROS130-01]; assesses=[] -->

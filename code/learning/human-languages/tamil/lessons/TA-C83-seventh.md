@@ -36,7 +36,7 @@ reviews_of: [TA-C83-sixth, TA-C82-first-full, TA-W33-read-een, TA-C67-shirt]
 [PAUSE 2s]
 - [YOU RECALL: say *āṟāvadu* — **R1**]
 - [YOU RECALL: say *mutalāvadu* — **R2**]
-- [YOU RECALL: read **ஏன்** — **R3**]
+- [YOU READ: **ஏன்** — **R3**]
 - [YOU RECALL: say *saṭṭai* — **R4**]
 
 ## You'll want to know: ஏழாவது

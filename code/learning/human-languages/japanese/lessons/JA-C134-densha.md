@@ -38,7 +38,7 @@ reviews_of: [JA-W134-de, JA-W01-n, JA-W10-shi, JA-W131-small-ya, JA-C133-heya, J
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **で** — **R1**, one lesson back]
+- [YOU WRITE: **で** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a room* — **R2**, five lessons back]
 - [YOU RECALL: say *this*, a thing near you — **R3**, twenty lessons back]
 - [YOU RECALL: say *shallow* — **R4**, eighty lessons back]
@@ -58,7 +58,7 @@ as it joins **ち** in **おちゃ**. You write every sign in it now.
 [PAUSE 1s]
 - [YOU SAY: *densha*]
 - [YOU SAY: *denwa*, then *densha*, and listen for the *den* in both]
-- [YOU RECALL: write **でんしゃ**, with the **ゃ** small and low]
+- [YOU WRITE: **でんしゃ** from memory, with the **ゃ** small and low]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C134-DENSHA] -->

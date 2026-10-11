@@ -65,10 +65,16 @@ export const entry: DuctusEntry = [
               { x: 950, y: 140 },
             ],
           },
-        ],
-      },
-      {
-        segments: [
+          {
+            label: "climb the right upright to its top",
+            path: [
+              { x: 950, y: 140 },
+              { x: 990, y: 165 },
+              { x: 990, y: 290 },
+              { x: 990, y: 410 },
+              { x: 990, y: 530 },
+            ],
+          },
           {
             label: "draw the right upright down",
             path: [
@@ -107,10 +113,10 @@ export const entry: DuctusEntry = [
     ],
     source: {
       citation:
-        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (Univ. of Texas at Austin), p. 192",
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (Univ. of Texas at Austin), p. 192; drawn in one stroke after HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 1 (ஆ): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
       url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
       variation:
-        "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
+        "Appendix I Frame 4 numbers ஆ's movements and gives the right upright a number of its own after the horizontal; this ductus used to read that as a pen lift, but a numbered movement is not evidence of one. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 28 of the 29 stored prototypes of ஆ (97%) are one pen-down stroke. All 28 start in the upper half, at the curl. In 26 of them (93%) the pen runs on from the horizontal up the right upright to its top and then comes back down it, and 21 (75%) end at the bottom right, in the long-vowel loop. So this ductus overrides the old lift: it follows Frame 4's movements in order without lifting, climbs the upright from the end of the horizontal, draws it down over that ink and runs on into the loop. The traces are scaled to a square, so they fix the stroke count, the start, the order and the direction, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard.",
     },
   },
 ];

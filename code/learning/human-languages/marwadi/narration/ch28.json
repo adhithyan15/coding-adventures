@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Too Dear: The Answer and the Counter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d134e917be59818e",
+  "sourceHash": "fnv1a64:bdaba9467f46b4e3",
   "lessons": [
     {
       "id": "MW-C23-hear-ghano",
@@ -70,6 +70,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-ghano-meaning",
               "prompt": "What does ghaṇo do to the word after it?",
               "assesses": [
@@ -102,16 +103,23 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bf0203421176bb03",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "You'll want to know",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -169,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-ghano-delayed",
               "prompt": "From ghaṇo, write the word that means very.",
               "assesses": [
@@ -202,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfbbd5eac96d9009",
+      "sourceHash": "fnv1a64:9d3cc1c38b67e857",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +227,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say the price question, write very and expensive, then say and write the sweet crumbled wheat dessert."
+              "text": "Say the price question."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for very and expensive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for *very* and expensive]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the sweet crumbled wheat dessert."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "that word too",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: that word too]"
             }
           ]
         },
@@ -253,6 +284,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-price-answer-meaning",
               "prompt": "What does ye ghaṇo mahaṅgo hai say?",
               "assesses": [
@@ -287,7 +319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0a3124776c8808e",
+      "sourceHash": "fnv1a64:416dafcd614e70ce",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +335,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say this is very expensive, write temple, then write ख."
+              "text": "Say this is very expensive."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for temple, then ख",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for temple, then **ख**]"
             }
           ]
         },
@@ -328,8 +369,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write all four words. Open the model, check the dot first, and repair only the word that changed."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all four words — then open the model, check the dot first, and repair only the word that changed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all four words — then open the model, check the dot first, and repair only the word that changed]"
             }
           ]
         },
@@ -345,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-price-answer-write",
               "prompt": "Write the line that says this is very expensive.",
               "assesses": [
@@ -377,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbf6b5f9e8982016",
+      "sourceHash": "fnv1a64:fd842bf985adda76",
       "notice": null,
       "blocks": [
         {
@@ -393,7 +449,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word food payoff, write य, write lentils, then write the total question from the last chapter."
+              "text": "Recall the seven-word food payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "य, the word for lentils, then the total question from the last chapter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **य**, the word for lentils, then the total question from the last chapter]"
             }
           ]
         },
@@ -404,7 +469,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the two lines in the wrong order and say which one has to come first. Give both meanings. Read two cards. Write both from sound, one under the other, and read the pair aloud as a single exchange."
+              "text": "Hear the two lines in the wrong order and say which one has to come first. Give both meanings."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound, one under the other, and read the pair aloud as a single exchange",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound, one under the other, and read the pair aloud as a single exchange]"
             }
           ]
         },
@@ -420,6 +503,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R23-answer-two-recall",
               "prompt": "Write the price question, then the reply that says it costs too much.",
               "assesses": [
@@ -454,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc8ddfa2f7e90e5d",
+      "sourceHash": "fnv1a64:5d4efab9d69a61b3",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +554,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-word transport payoff, then say cart and bus and write both."
+              "text": "Recall the three-word transport payoff, then say cart and bus."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
             }
           ]
         },
@@ -505,6 +598,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-thodu-meaning",
               "prompt": "What does thoṛu mean, and how does it differ from ghaṇo?",
               "assesses": [
@@ -537,16 +631,23 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b4def7748217272d",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "You'll want to know",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -604,6 +705,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-thodu-delayed",
               "prompt": "From thoṛu, write the word that means a little.",
               "assesses": [
@@ -637,7 +739,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85554b5c311da5d5",
+      "sourceHash": "fnv1a64:adc72e503f4382dd",
       "notice": null,
       "blocks": [
         {
@@ -653,7 +755,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word shopping payoff, then write a little and cheap."
+              "text": "Recall the seven-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for a little and cheap",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for *a little* and cheap]"
             }
           ]
         },
@@ -688,6 +799,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-karo-meaning",
               "prompt": "What does karo ask somebody to do?",
               "assesses": [
@@ -720,16 +832,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f4ce765e49ea682f",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -787,6 +905,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-karo-delayed",
               "prompt": "From karo, write the word that asks for something to be made so.",
               "assesses": [
@@ -820,7 +939,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04bc45813285dd4f",
+      "sourceHash": "fnv1a64:327aad71abfb8c1f",
       "notice": null,
       "blocks": [
         {
@@ -836,7 +955,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say this is very expensive, then say item and cheap and write both."
+              "text": "Say this is very expensive, then say item and cheap."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
             }
           ]
         },
@@ -875,6 +1003,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C23-hear-bargain-request-meaning",
               "prompt": "What does thoṛu sasto karo ask for?",
               "assesses": [
@@ -909,7 +1038,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5c24367e25b59b5",
+      "sourceHash": "fnv1a64:f48b57b8cc3af535",
       "notice": null,
       "blocks": [
         {
@@ -924,8 +1053,13 @@
               "source": "[PAUSE 22s]"
             },
             {
-              "kind": "speech",
-              "text": "Write ् on its own, then write wife and item, and point to the vowel-killer in each."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "् on its own, then the words for wife and item — point to the vowel-killer in each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **्** on its own, then the words for wife and item — point to the vowel-killer in each]"
             }
           ]
         },
@@ -950,8 +1084,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write all three words. Open the model and check two marks first: the dot under ड़ and the vowel-killer inside सस्तो. Repair only the word that changed."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three words — then open the model and check two marks first, the dot under ड़ and the vowel-killer inside सस्तो, and repair only the word that changed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three words — then open the model and check two marks first, the dot under **ड़** and the vowel-killer inside **सस्तो**, and repair only the word that changed]"
             }
           ]
         },
@@ -967,6 +1115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-bargain-request-write",
               "prompt": "Write the line that asks for a little off the price.",
               "assesses": [
@@ -999,7 +1148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e0f5d4fd9d26438",
+      "sourceHash": "fnv1a64:1cc8f75d2b01cd9a",
       "notice": null,
       "blocks": [
         {
@@ -1015,7 +1164,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word transport payoff, then write vehicle and very."
+              "text": "Recall the five-word transport payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for vehicle and very",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for vehicle and *very*]"
             }
           ]
         },
@@ -1026,7 +1184,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear each word alone, out of its line, and give its meaning. Read two cards. Write both from sound. Then rebuild the whole counter-offer from those two words plus the one you already had, and say it once at speaking pace."
+              "text": "Hear each word alone, out of its line, and give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then rebuild the whole counter-offer from those two words plus the one you already had, and say it once at speaking pace."
             }
           ]
         },
@@ -1042,6 +1222,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R23-bargain-two-recall",
               "prompt": "Write a little, then the word that asks for something to be made so.",
               "assesses": [
@@ -1076,7 +1257,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a1ff38c606038c9",
+      "sourceHash": "fnv1a64:6cb5a12322da91cd",
       "notice": null,
       "blocks": [
         {
@@ -1092,7 +1273,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the price payoff and the seven-word shopping payoff, then write clothes."
+              "text": "Recall the price payoff and the seven-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for clothes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for clothes]"
             }
           ]
         },
@@ -1114,12 +1304,22 @@
               "text": "Produce all three from meaning cues, as one continuous exchange."
             },
             {
-              "kind": "speech",
-              "text": "Read the three printed lines and say who speaks which."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three printed lines, then say who speaks which",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three printed lines, then say who speaks which]"
             },
             {
-              "kind": "speech",
-              "text": "Write all three from dictation, without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from dictation, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from dictation, without a model]"
             },
             {
               "kind": "speech",
@@ -1139,6 +1339,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C23-counter-four-payoff",
               "prompt": "Complete all four scored checks, then write the third turn of the exchange.",
               "assesses": [
@@ -1171,7 +1372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:591238814eda8c15",
+      "sourceHash": "fnv1a64:db90304120fc844d",
       "notice": null,
       "blocks": [
         {
@@ -1187,7 +1388,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-turn bargaining payoff, say expensive, then write ख."
+              "text": "Recall the three-turn bargaining payoff and say expensive."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ख",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ख**]"
             }
           ]
         },
@@ -1198,11 +1408,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three marks change a word without adding a letter, and all three are easy to lose. Write each on its own from a spoken cue: the dot under a letter, the vowel-killer, the dot above the headstroke."
+              "text": "Three marks change a word without adding a letter, and all three are easy to lose."
             },
             {
-              "kind": "speech",
-              "text": "Then write थोड़ु (thoṛu), कपड़ा, पत्नी, बच्चा, and महंगो from dictation and mark which of the three you used in each. Finish with both lines of this chapter. Repair only the missed mark and rewrite its word once."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each on its own from a spoken cue — the dot under a letter, the vowel-killer, the dot above the headstroke",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each on its own from a spoken cue — the dot under a letter, the vowel-killer, the dot above the headstroke]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "थोड़ु (thoṛu), कपड़ा, पत्नी, बच्चा, and महंगो from dictation, marking which of the three you used in each; finish with both lines of this chapter — repair only the missed mark and rewrite its word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **थोड़ु**, **कपड़ा**, **पत्नी**, **बच्चा**, and **महंगो** from dictation, marking which of the three you used in each; finish with both lines of this chapter — repair only the missed mark and rewrite its word once]"
             }
           ]
         },
@@ -1218,6 +1442,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R23-script-close-recall",
               "prompt": "Write the mark that goes under a letter, then the one that goes above the headstroke.",
               "assesses": [

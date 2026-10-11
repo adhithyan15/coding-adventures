@@ -72,7 +72,7 @@ This is the word itself, finally taught for what it actually means.
 - [YOU SAY: the false trail, named again — "vāyikkuka" is NOT built on
   "vāy"]
 - [YOU SAY: all four face words — "kaṇṇŭ, cevi, mūkkŭ, vāy"]
-- [YOU RECALL: read **കുടുംബം**]
+- [YOU READ: **കുടുംബം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02] -->

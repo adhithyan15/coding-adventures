@@ -70,14 +70,15 @@ is at fault.
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left
-across the upper part of the small bowl. Lift, then movement 2 turns around its
-lower half. Movement 3 makes the broad bowl on the right. Lift for movement 4,
-the small rising flourish above, then lift once more and draw movement 5, the
-short straight stem below.
+across the upper part of the small bowl. Without lifting, movement 2 turns
+around its lower half, and movement 3 carries on round the broad bowl on the
+right. Lift for movement 4, the small rising flourish above, then lift once
+more and draw movement 5, the short straight stem below.
 
 Trace the same route slowly. This is one attested school-style order fitted to
 the printed shape here; Telugu handwriting varies, so keep the five clear
-movements instead of closing the small gaps.
+movements, with the body as one unbroken run and a lift before the flourish
+and before the stem.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-160, TE-SCRIPT-RECOG-113] -->

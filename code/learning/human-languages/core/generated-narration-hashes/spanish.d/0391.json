@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 391,
-  "sourceHash": "fnv1a64:ba37f05254e1c500",
+  "sourceHash": "fnv1a64:1d8dc1d8643c17ea",
   "lessonIds": [
     "ES-C391-menu",
     "ES-C391-camarero",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch391.txt",
   "json": "spanish/narration/ch391.json",
-  "textHash": "fnv1a64:3065c9c6694dc661",
-  "jsonHash": "fnv1a64:68dd2a8c2f7716fe",
+  "textHash": "fnv1a64:972077ae2e9ecd2f",
+  "jsonHash": "fnv1a64:c372cd1359f7ec04",
   "findings": []
 }

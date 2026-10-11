@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 33,
   "title": "This and That",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0f2da8061d632963",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:de34d6447dedeba7",
   "lessons": [
     {
       "id": "IT-C33-questo",
@@ -14,20 +14,13 @@
       "romanization": "questo",
       "gloss": "this — the first pointing word this book has ever had",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:391bd7c527227a7e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:fb696aecd5e3878a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "A new chapter, opening a column this book has left entirely empty."
+              "text": "A new chapter, opening a category this book has left entirely empty."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f73e357f94971e02",
+  "sourceHash": "fnv1a64:47aae12db7d1aaf7",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f6b732285971df1",
+      "sourceHash": "fnv1a64:7168689677bfb307",
       "notice": null,
       "blocks": [
         {
@@ -40,7 +40,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the city picture when you hear shahar, then say shahar once from the English cue."
+              "text": "Picture a city when you hear shahar, then say shahar once from the English cue."
             }
           ]
         },
@@ -56,6 +56,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C22-hear-shahar-recall",
               "prompt": "What does shahar mean?",
               "assesses": [
@@ -86,16 +87,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:16af0b4d3c032c1e",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -132,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C22-shahar-copy",
               "prompt": "Copy the Gujarati word for city once.",
               "assesses": [
@@ -201,6 +208,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C22-hear-shaalaa-recall",
               "prompt": "What does shāḷā mean?",
               "assesses": [
@@ -231,16 +239,22 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:84931bcc3a0503ba",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -255,6 +269,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C22-shaalaa-city-r1",
               "prompt": "Cover every model. Write city in Gujarati.",
               "assesses": [
@@ -294,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C22-shaalaa-delayed",
               "prompt": "Write school after hiding the model.",
               "assesses": [
@@ -326,7 +342,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fac3f1ae6c9b3408",
+      "sourceHash": "fnv1a64:d6b92b6c56ffe59a",
       "notice": null,
       "blocks": [
         {
@@ -347,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the road when you hear rasto, then say rasto from the meaning."
+              "text": "Picture a road when you hear rasto, then say rasto from the meaning."
             }
           ]
         },
@@ -363,6 +379,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C22-hear-rasto-recall",
               "prompt": "What does rasto mean?",
               "assesses": [
@@ -393,16 +410,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5bdcdb16399b2b18",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -439,6 +461,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C22-rasto-copy",
               "prompt": "Copy the Gujarati word for road once.",
               "assesses": [
@@ -469,16 +492,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:581fb2255a9164f0",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -521,6 +549,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C22-route-three-payoff",
               "prompt": "After all four skills pass, write city, school, and road in order.",
               "assesses": [

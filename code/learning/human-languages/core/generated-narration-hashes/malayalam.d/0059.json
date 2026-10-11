@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 59,
-  "sourceHash": "fnv1a64:bf4596aa8b970b78",
+  "sourceHash": "fnv1a64:b79a9fe21c1a4f6d",
   "lessonIds": [
     "ML-C59-wind",
     "ML-C59-sand",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch59.txt",
   "json": "malayalam/narration/ch59.json",
-  "textHash": "fnv1a64:c06207eb0d77482d",
-  "jsonHash": "fnv1a64:368e5910041a3b00",
+  "textHash": "fnv1a64:05f5c9f19b61eaa9",
+  "jsonHash": "fnv1a64:b7d7e96ab4f57fdb",
   "findings": []
 }

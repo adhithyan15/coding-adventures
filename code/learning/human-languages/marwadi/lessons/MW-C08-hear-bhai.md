@@ -37,8 +37,10 @@ reviews_of: [MW-C08-maa, MW-C08-baap, MW-C02-aabhaar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-SCRIPT-BAAP-01, MW-LEX-AABHAAR-01, MW-DIALOGUE-NAME-EXCHANGE-01, MW-QUESTION-NAME-01] -->
 
-[PAUSE 20s] Say mother and write father. Ask and answer the known name exchange,
-then recall the formal gratitude word that begins with breathy *bh*.
+[PAUSE 20s] Say mother. [YOU WRITE: the word for father]
+
+Ask and answer the known name exchange, then recall the formal gratitude word
+that begins with breathy *bh*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BHAI-01]; assesses=[] -->

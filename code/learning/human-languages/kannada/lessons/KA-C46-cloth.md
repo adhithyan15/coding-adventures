@@ -58,7 +58,7 @@ Two: a fruit and a cloth.
 - [YOU SAY: *baṭṭe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṇṇu*, then *baṭṭe*, and ask for each one with *dayaviṭṭu*]
-- [YOU RECALL: read **ಕೊಡು**]
+- [YOU READ: **ಕೊಡು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02] -->

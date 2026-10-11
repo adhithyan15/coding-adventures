@@ -1,5 +1,259 @@
 # Changelog — Russian track
 
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **RU-W02-false-friends-s-n**: the Greek source joins the sound ("**v**, from Greek beta"). For **н** the old table had only a dash, so its cell is the bare sound.
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **RU-C11-do-svidaniya**: the cousins of *до свидания* say goodbye "by promising to see you again". The old "promising to look at you again" was read as an instruction to look at the page, and *see* is the root the etymology is about.
+- **RU-C20-khotet**: "Look at the *I* form" is now "Listen to the *I* form". The т → ч swap it points out is a sound change.
+- Hands-free prefixes: chapter 11 0 → 6 of 6, chapter 20 0 → 4 of 5.
+
+## Fixed — no lesson announced as drivable asks a driver to read, write or gesture
+
+A lesson whose core is `voice` is announced as "you can do this one in the car", and
+only its detachable sections (writing, the letters in a word, script) wait behind the
+stop guard. The modality rule now reads the sections a driver hears plainly for a step
+that needs eyes or hands (reason `eyes-or-hands-step`, human-language-data); before it,
+such steps in the core of a lesson with a letters or writing section were read out at
+the wheel.
+
+- **Rewritten, still drivable (7).** The six chapter 1 wrap-ups (RU-C01-da, RU-C01-net,
+  RU-C01-pozhaluysta, RU-C01-privet, RU-C01-spasibo, RU-C01-zdravstvuyte) open "[PAUSE 3s]
+  [YOU READ: **…**]" instead of "Read **…**."; RU-C15-practice defers "[YOU WRITE: а and о]"
+  and keeps "Then say what happens to the second one …" as speech.
+
+## Changed — privét and zdrávstvuyte meet three letters each
+
+The script-ramp report (`ramp.script`, at most three new glyphs per lesson)
+listed RU-C01-privet and RU-C01-zdravstvuyte (6 each); it now lists no Russian
+lesson.
+
+| lesson | before | after |
+|---|---|---|
+| RU-C01-privet | 6 п р и в е т | 3 п р в |
+| RU-C01-zdravstvuyte | 6 з д а с у й | 3 з с у |
+| RU-C01-da | 0 | 2 д а |
+| RU-C01-net | 1 н | 3 н е т |
+| RU-C01-spasibo | 2 б о | 3 и б о |
+| RU-C01-pozhaluysta | 2 ж л | 3 ж л й |
+
+- *Privét* meets the two big false friends **р** and **в**, plus **п**;
+  *zdrávstvuyte* meets **з** and the false friends **с** and **у**. Both say
+  the rest of their letters, and the whole written word, arrive with this
+  chapter's next words; both headings and the stress/*-te* notes are
+  romanized. Every other ch1 word lesson now introduces the letters of its own
+  word, so each lesson still shows only its own headword's letters and script
+  closure stays 0.
+- RU-C01-spasibo pointed to *privét* for **с**, which *privét* does not
+  contain; it now points there only for the **б**/**в** contrast.
+- The capitals the W lessons teach are unchanged. Regenerated book chapter 1,
+  narration, modality and hashes.
+
+## Fixed — chapters 1-13 stop asking for letters they have not taught
+
+Script closure (a lesson may ask the reader to decode only letters an
+earlier `type: writing` or `delivery: script` lesson taught, its own
+romanized headword aside) found 75 Russian violations. There are now none.
+
+- **Capitals are taught with their letters.** Every letter lesson of the
+  ch1, ch14 and ch15 runways now shows the capital beside the lowercase
+  letter, the way RU-W06-m and RU-W06-ya already did: В Р (W01), С (W02),
+  Б Д (W03), П И Н (W04), У З К Л Ы Ж Ч Ш (W06), А О Г Х Ф Ц Й Ю (W07).
+  RU-W06-m names Т and Е where it explains which capitals are the lowercase
+  drawn large, and now says *b*, *e* and *a* (not *d*) have distinct
+  capitals. That retired every capital-letter violation after chapter 13:
+  RU-C27-pervoe-chtenie's passage and the A2 sentences of chapters 136-139
+  (ВХОД, ВЫХОД, Никто не знает, Что случилось?) stay in Cyrillic. The capitals
+  are spread so no writing lesson shows more than three new glyphs.
+- **Chapters 1-13 romanize what the runway has not reached.** The lowercase
+  letters у з к л м ы ж ч ш ь are taught in chapter 14, so in chapters 1-13 a
+  word containing one of them is given in romanization: example sentences
+  (*ya znáyu*, *Menyá zovút Anna*), aspect partners, cross-references to
+  other lessons, etymons and cue lines. Where a line paired the Cyrillic with
+  its romanization, the romanization is kept and the Cyrillic dropped. Each
+  lesson's own headword stays in Cyrillic, as do words spelled only with
+  taught letters. Proto-Slavic ъ is written ŭ (\*azŭ, \*govorŭ, \*rŭtŭ).
+- **RU-C01-practice is the spoken recap it is described as.** It comes before
+  the writing runway, so its "Script — read them cold" section asked for
+  letters nothing had taught. The false friends are now described by shape
+  ("the letter shaped like a Latin B says v") under "Sounds you'll need", and
+  the six words are said, not decoded, under "Guided Practice — say them
+  cold". RU-C01-checkpoint, after the runway, still sorts and writes the
+  letters.
+- **RU-C04-pisat** describes the comb-shaped *sh* letter in words; its glyph
+  waits for RU-W06-sh. RU-C01-net, RU-C01-spasibo, RU-C11-poka and
+  RU-C11-do-skorogo name the letters for *v*, *r*, *s* and *ts* by sound for
+  the same reason.
+- **Side effects.** RU-C01-privet's script-ramp spike falls from 14 new glyphs
+  to 6; RU-C02-ya, RU-C01-practice and RU-C01-spasibo leave the ramp list,
+  and RU-C01-zdravstvuyte joins it with the six letters of its own headword.
+  Russian forward-language uses fall 11 -> 5. Largest duration change:
+  RU-C04-pisat 287 -> 295 s.
+
+Regenerated: book chapters, narration, modality and hash ledgers.
+
+## Fixed — л, г and ж are not described as several strokes
+
+RU-W06-l called л "two strokes meeting at a peak", RU-W07-g called г "two
+strokes meeting at a square corner", and RU-W06-zh called ж "three strokes
+radiating from a central spine". The cited school hand draws each of these
+in one unbroken stroke, as their records and filmstrips show. The shape
+descriptions now say "legs" or "lines", and each adds that the hand draws
+the letter without lifting the pen.
+
+## Fixed — chapter 3's payoff covers all six verbs
+
+Chapter 3's payoff, RU-C03-idti, assessed only идти's own three atoms and the
+two present-tense patterns: 5 of the 19 atoms the chapter introduces (0.26),
+below the 0.5 `chapter-payoff-not-representative` floor. Chapter 3 is all
+spoken lessons with no writing runway, and RU-C03-idti is its last lesson by
+sequence (190), so it keeps the payoff and no new lesson was needed. It now
+assesses all 19 (1.00):
+
+- A new "Guided Practice — the chapter, said back" section, placed before the
+  wrap-up, has five spoken recall prompts drawn only from what the earlier
+  lessons taught. **Я студент**, with быть silent and a cousin of *be*.
+  **Я живу**, and the old meaning of *quick* (alive). **Я не знаю**, where
+  **не** is all of *don't* and знать is *know*. **Я говорю**, where **г** is
+  gamma and a hard *g*, and *govern* is not related. **Я вижу**, where **д**
+  turns to **ж** in the *I* form only, and the English kin is *wit*.
+- RU-C03-govorit-false-friend (sequence 175) joins `prerequisites`, so the
+  *govern* false-friend atom is reachable. Before this change the chain ran
+  govorit → videt → idti and skipped it. `reviews_of` now lists all six earlier
+  chapter-3 lessons.
+- The 14 added atoms are listed in `requires.knowledge` and
+  `practises.knowledge`.
+- To keep the lesson under the 300 s cap, the existing prose is tightened, but
+  none of what it teaches is dropped. The warm-up is shorter. The endings line
+  is folded into one sentence. The going-now / going-often lens is condensed.
+  The *h₁ei-* cousin list drops *ambition* and *perish*, along with their
+  glosses and *initial*. The suppletion paragraphs are tightened, but they
+  still say шёл shares no root with идти, still name **suppletion**, and still
+  give go / went from *wend*. The computed duration goes from 281 s to 289 s,
+  and `duration.max_seconds` rises from 240 to 290.
+- `chapters.d/0003.json` lists all 19 atoms (plus the carried-in RU-LEX-YA),
+  and its summary and note are rewritten. The old note asked for a dedicated
+  payoff lesson.
+
+## Added — chapter 1 ends on a checkpoint that covers its writing lessons
+
+Chapter 1's payoff was the spoken recap **RU-C01-practice** (sequence 35), which
+comes before the writing runway RU-W01 to RU-W05 (sequences 40-64). Ten of the
+chapter's eighteen atoms are Cyrillic letters that runway introduces, so the
+recap could score only the eight spoken atoms: 8/18 (0.44), below the 0.5
+representativeness floor. The chapter's own payoff note said the fix was a
+terminal checkpoint after the runway; this is that checkpoint.
+
+- **RU-C01-checkpoint** (new, sequence 66, `practice-mix`, introduces nothing).
+  It runs the courtesy exchange formal then informal (voice), sorts the ten
+  written letters into false friends (в р с н, and the quiet и), new shapes
+  (б д) and honest letters (п е т) (a detachable Script block), and closes with
+  a dictation-transcription Writing block: the ten letters from their sounds,
+  then **привет** and **нет** from sound alone, checked against a key, with one
+  scored text activity (нет). Every write, read, cover and check step is a
+  `[YOU …]` cue, so the narration defers them; the core that stays when the
+  Script and Writing blocks are set aside is voice and asks nothing of the eye
+  or hand. The lesson as a whole is `pen` (not drivable). Declared 260 seconds
+  against a computed 253.
+- **Payoff:** `chapters.d/0001.json` now names RU-C01-checkpoint and all
+  eighteen atoms: **18/18 (1.00)**, up from 8/18. RU-C01-practice stays where
+  it is as the spoken recap; it is no longer the payoff.
+- **Path:** the checkpoint joins `RU-PATH-005A` and `RU-EXT-001-CONSOLIDATION`
+  at order 1, after RU-C01-practice. That extension already promised "I can
+  hand-write every letter the greeting needs" and already followed the inline
+  script extension, so the path needed no other change.
+- **session-map.md:** S5 now names the checkpoint after the spoken recap, and
+  the schedule check says the writing runway is desk work that the checkpoint
+  needs done first.
+- **Review follow-up:** the Script block names **и** on its own line as a
+  quiet false friend, so the four loud ones (в р с н) stay a clean set; the
+  dictation's cover step now hides the letter list *and* the key, so no model
+  or romanization stays in view while writing from sound; and "repair one
+  letter, then stop" is a `[YOU WRITE: …]` cue rather than bare prose.
+
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 15 drivable lessons; 15 `[YOU READ: …]` cues and 1 ear-and-voice
+  rewrite.
+- "Read them; you'll draw them later" (RU-C02), the RU-C111 warm-ups, "Read the
+  spelling and then read the sound again" (RU-C18-chto-vopros), "Say it and
+  read it at the same time: **т-р-и**" (RU-C23-tri), the RU-C23..C25 digit
+  steps and the RU-C27-notices reading become READ cues; notices RU-C139 move
+  the sign into the cue (RU-C139-vkhod / vykhod keep "you go in here" and "the
+  way out" inside it).
+- RU-C18-znayu-chto "Read those two English translations again" → "Go back over
+  those two English translations".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (RU-C139-raspisaniye, RU-C139-reklama, RU-C139-vkhod,
+    RU-C139-vykhod) keep the notice in narrated prose and defer only the look:
+    "[YOU READ: the sign over a door]" then "The sign over a door says **ВХОД**:
+    you go in here." (the gloss "You go in here." was inside the cue). The first
+    pass had put the whole notice inside the deferred cue, so a listener heard
+    the comment on a notice without the notice; that superseded form is the one
+    described above.
+  - RU-C02-ochen-priyatno "[YOU READ: them now — you'll draw them later]" →
+    "[YOU READ: both letters]" and "You'll draw them later." in prose; RU-C02-ya
+    the same with "[YOU READ: **я** here]".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (RU-C27-notices): "[YOU
+    READ: the six notices again, and notice the list turns over halfway]".
+- **Second review follow-up:** RU-C25-practice's cue reads "the twelve amounts, printed and shuffled" (the noun was missing).
+
+## Fixed — RU-C85-date's warm-up stops telling a driver to write
+
+The drivable-writing detector in human-language-data now also reads a writing
+verb chained onto an earlier step. RU-C85-date's warm-up said "A date needs an
+ordinal: say *первый, второй, третий*, and write the first as a sign writes
+it, *1-й*." in bare prose, so the audio edition told a driver to write (issue
+#12070). The saying stays prose; the writing is now a `[YOU WRITE: the first
+as a sign writes it, *1-й*]` cue, and the lesson stays `drivable: true`.
+
+- Regenerated: book chapter 85, its narration (`.json` and `.txt`), generated
+  book and narration hashes, and the `core/lesson-modality` owner (source hash
+  only).
+
+## Fixed — drivable lessons stop telling a driver to write
+
+The modality manifest marks 5 lessons in this track `drivable: true`, but
+each still asked for writing in bare prose ("Write…", "Draw…", "…, then write…").
+Narration reads bare prose unhedged, so the audio edition told a driver to
+write (issue #12070). Each writing task is now a `[YOU WRITE: …]` cue: the
+narration defers it ("[once you have stopped driving — write: …]") and the
+book prints it as "*Write it:* …". The cue does not create a writing block,
+so every lesson stays drivable.
+
+- **Lessons:** RU-C23-practice, RU-C24-practice, RU-C25-practice,
+  RU-C26-practice, RU-R26-close.
+- Dictation steps ("4. Write all five from dictation. No new Cyrillic
+  letter…") fold their remark into the cue, so the numbered item stays one
+  item.
+- RU-R26-close: step 3 ("…build three more, and write **1-й** and **2-е**")
+  also asked for writing through an "and write" clause; the writing half is a
+  cue now.
+- The lessons leave `tests/drivable-writing-debt/` in human-language-data;
+  this track has no debt left, so its ledger file is deleted.
+- Regenerated: the affected book chapters, narration (`.json` and `.txt`),
+  their generated book and narration hashes, and each lesson's
+  `core/lesson-modality` owner (source hash only; all still `drivable: true`).
+
 ## Fixed — chapter 1's payoff names the atoms its recap assesses
 
 Chapter 1 was migrated to schema v2 (#12078), but `chapters.d/0001.json` kept

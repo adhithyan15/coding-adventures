@@ -125,6 +125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-sintesis-descifrar-h",
               "prompt": "Decode hoja.",
               "assesses": [
@@ -144,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-sintesis-descifrar-ll",
               "prompt": "Decode lleno.",
               "assesses": [
@@ -163,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-sintesis-descifrar-mix",
               "prompt": "Decode la conservacion de la ciudad.",
               "assesses": [
@@ -182,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-sintesis-descifrar-limits",
               "prompt": "A word resists every rule you have. What does that suggest?",
               "assesses": [

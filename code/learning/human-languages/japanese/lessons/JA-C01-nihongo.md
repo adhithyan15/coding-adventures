@@ -34,7 +34,7 @@ reviews_of: [JA-W05-nichi-kanji, JA-W05-hon-kanji, JA-W05-go-kanji, JA-C01-konni
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA] -->
 
-[PAUSE 2s] Say **こんにちは** (*konnichiwa*). Now write 日, 本, and 語 once each.
+[PAUSE 2s] Say **こんにちは** (*konnichiwa*). [YOU WRITE: 日, 本, and 語 once each]
 This lesson joins those three already-practised kanji to name the language.
 
 ## Script — kanji, and the readings problem
@@ -83,7 +83,7 @@ that anchor a European language. English has no share in it.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-GO-01] -->
 
-[PAUSE 15s] Build ? once from ?, ?, and ? before joining the full word.
+[PAUSE 15s] Build **語** once from **言**, **五**, and **口** before joining the full word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS] -->

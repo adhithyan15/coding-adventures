@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e258167f1c365c8a",
+  "sourceHash": "fnv1a64:6f636fb4b38ef412",
   "lessons": [
     {
       "id": "TE-C60-buffalo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a2fbd5d177a41eb",
+      "sourceHash": "fnv1a64:2818f6b78b0d97a5",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say koñcem, then read గాలి and say what it means",
+              "instruction": "say koñcem",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *koñcem*, then read **గాలి** and say what it means]"
+              "source": "[YOU RECALL: say *koñcem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "గాలి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గాలి**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a42bc50173488a1",
+      "sourceHash": "fnv1a64:e4f0456e1156445d",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఎక్కువ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఎక్కువ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ఎక్కువ, then say mañcu",
+              "instruction": "say mañcu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ఎక్కువ**, then say *mañcu*]"
+              "source": "[YOU RECALL: say *mañcu*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af7b13cb4fe2d63a",
+      "sourceHash": "fnv1a64:6654ea755e1c6260",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say takkuva, then read ఇసుక and say what it means",
+              "instruction": "say takkuva",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *takkuva*, then read **ఇసుక** and say what it means]"
+              "source": "[YOU RECALL: say *takkuva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఇసుక, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఇసుక**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c00956d338b9434",
+      "sourceHash": "fnv1a64:51db8651a68dac74",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "వద్దు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **వద్దు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read వద్దు, then say burada",
+              "instruction": "say burada",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **వద్దు**, then say *burada*]"
+              "source": "[YOU RECALL: say *burada*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b95b4ff17fd0da49",
+      "sourceHash": "fnv1a64:4f5e177a086d692d",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say antē, then read నిప్పు and say what it means",
+              "instruction": "say antē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *antē*, then read **నిప్పు** and say what it means]"
+              "source": "[YOU RECALL: say *antē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "నిప్పు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **నిప్పు**, then say what it means]"
             }
           ]
         },

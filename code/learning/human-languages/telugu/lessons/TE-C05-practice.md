@@ -38,7 +38,7 @@ yourself.
 ## Guided Practice: build the sentences
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C05-MAATLAADU-01, TE-ETYMON-C05-MAATLAADU-02, TE-GRAMMAR-C05-MAATLAADU-03, TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01, TE-ETYMON-C05-NENU-TELUGU-MAATLAADATAANU-02, TE-GRAMMAR-C05-NENU-TELUGU-MAATLAADATAANU-03, TE-LEX-C05-PANI-CEYU-01, TE-ETYMON-C05-PANI-CEYU-02, TE-GRAMMAR-C05-PANI-CEYU-03, TE-LEX-C05-UNDU-01, TE-ETYMON-C05-UNDU-02, TE-GRAMMAR-C05-UNDU-03, TE-SCRIPT-RECOG-01, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-125, TE-SCRIPT-RECOG-147, TE-SCRIPT-RECOG-148] -->
 
-Three sentences about yourself, read off the page before you say them:
+Three sentences about yourself. [YOU READ: each off the page before you say it]
 
 | Telugu | | English |
 |---|---|---|

@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [KA-C01-namaskara]
 ---
 
-# ಧನ್ಯವಾದ (dhanyavāda) — "thank you," an utterance of "worthy"
+# Dhanyavāda — "thank you," an utterance of "worthy"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -41,20 +41,19 @@ see the *same* borrowed word Kannada shares with Telugu and Hindi.
 
 *(Skim if you read Kannada.)*
 
+Three of its letters today:
+
 - **ಧ** = "dha" — an **aspirated** *d* (a real puff of breath after it).
-- **ನ್ಯ** = "nya" — **ನ** (na) loses its vowel and stacks with **ಯ** (ya) as a
-  conjunct (the same stacking you saw in *namaskāra*).
-- **ವಾ** = "vā" — **ವ** (va) with the "ā" vowel sign.
-- **ದ** = "da."
+- **ವ** = "va."
+- **ದ** = "da" — a plain *d*, with no puff. Set it beside **ಧ** and compare.
 
-Left to right: **ಧ · ನ್ಯ · ವಾ · ದ** = *dha-nya-vā-da* →
-
-> **ಧನ್ಯವಾದ** = **dhanyavāda**
+The middle of the word stacks *n* onto *ya* and stretches *va* to *vā*. Those
+pieces, and the whole written word, wait for the end of this chapter.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C01-DHANYAVADA-01, KA-ETYMON-C01-DHANYAVADA-02]; assesses=[] -->
 
-**ಧನ್ಯವಾದ** (*dhanyavāda*) is **Sanskrit**: **dhanya** ("worthy, blessed," from
+*Dhanyavāda* is **Sanskrit**: **dhanya** ("worthy, blessed," from
 *dhana*, "wealth") + **vāda** ("a saying, an utterance," from the root *vad*,
 "to speak"). Literally **"an utterance of '[you are] worthy'"** — a formal,
 dignified thanks. It is the **same word** as Hindi *dhanyavād* and Telugu
@@ -65,7 +64,7 @@ dignified thanks. It is the **same word** as Hindi *dhanyavād* and Telugu
 
 | Language | "Thanks" | Note |
 |---|---|---|
-| **Kannada** | *dhanyavāda* (ಧನ್ಯವಾದ) | **Sanskrit** (*dhanya* + *vāda*) |
+| **Kannada** | *dhanyavāda* | **Sanskrit** (*dhanya* + *vāda*) |
 | Telugu | *dhanyavādamulu* (ధన్యవాదములు) | Sanskrit — same word |
 | Hindi | *dhanyavād* (धन्यवाद) | Sanskrit — same word |
 | Tamil | *naṉṟi* (நன்றி) | **native** ("goodness") |
@@ -93,6 +92,7 @@ and gesture; the full *dhanyavāda* carries weight, for when you mean to mark it
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C01-DHANYAVADA-02, KA-ETYMON-C01-DHANYAVADA-03] -->
 
-[PAUSE 3s] Read **ಧನ್ಯವಾದ**. What are its two Sanskrit pieces? (*dhanya*
+[PAUSE 3s] Which carries the puff of breath, **ಧ** or **ದ**? (**ಧ**, *dha*.) What
+are the two Sanskrit pieces of *dhanyavāda*? (*dhanya*
 "worthy" + *vāda* "a saying.") Which two Dravidian languages use a *native*
 word for thanks instead? (Tamil *naṉṟi*, Malayalam *nandi*.)

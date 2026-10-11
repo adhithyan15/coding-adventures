@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C43-suna-type",
-              "prompt": "Type the Japanese for 'sand'.",
+              "prompt": "Say the Japanese for 'sand'.",
               "assesses": [
                 "JA-LEX-C43-NATURE43-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C43-tanbo-type",
-              "prompt": "Type the Japanese for 'a rice field'.",
+              "prompt": "Say the Japanese for 'a rice field'.",
               "assesses": [
                 "JA-LEX-C43-NATURE43-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C43-hoshi-type",
-              "prompt": "Type the Japanese for 'a star'.",
+              "prompt": "Say the Japanese for 'a star'.",
               "assesses": [
                 "JA-LEX-C43-NATURE43-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C43-kumo-type",
-              "prompt": "Type the Japanese for 'a cloud'.",
+              "prompt": "Say the Japanese for 'a cloud'.",
               "assesses": [
                 "JA-LEX-C43-NATURE43-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C43-taiyou-type",
-              "prompt": "Type the Japanese for 'the sun'.",
+              "prompt": "Say the Japanese for 'the sun'.",
               "assesses": [
                 "JA-LEX-C43-NATURE43-05"
               ],

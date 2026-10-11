@@ -11,6 +11,7 @@ import {
   type FilmstripEntry,
 } from "../src/figure-filmstrip.js";
 import { renderFigure, type ScriptFilmstripTarget } from "../src/figure.js";
+import { fnv1a64 } from "../src/hash.js";
 import { assertKnownFigureTarget } from "../src/figure-cli.js";
 import type { ParsedLesson } from "../src/parse.js";
 
@@ -120,6 +121,57 @@ describe("a strip that holds a vowel sign", () => {
       /<desc>4 parts written one after another: ே, ம, ை, ச \(tamil\)\. The parts are in the order the hand writes them.*a vowel sign written to the left of its consonant comes before it\. Each vowel sign is drawn on its own, without the consonant it attaches to\. Each part has its own group of frames/,
     );
     expect(figure.svg).not.toMatch(/Letter/);
+  });
+});
+
+describe("a strip of digits", () => {
+  // Persian ۰ ۱ is a list of two DIGITS. A digit is not a letter, so the strip
+  // says "Digit 1 of 2", and a strip mixing letters and digits stays "Letter".
+  const digit = (glyph: string) =>
+    entry(glyph, { script: "persian", font: "_fonts/NotoNaskhArabic-Static.ttf" });
+  const digits = [digit("۰"), digit("۱")];
+
+  it("is a strip of digits only when every group is a decimal digit", () => {
+    expect(sequenceUnit(digits)).toBe("Digit");
+    expect(sequenceUnit([entry("൧"), entry("൨"), entry("൩")])).toBe("Digit");
+    expect(sequenceUnit([entry("7"), entry("3")])).toBe("Digit");
+    // A letter among digits: the name the strip always had.
+    expect(sequenceUnit([entry("ക"), entry("൧")])).toBe("Letter");
+    // A sign anywhere makes it a strip of parts, digits or not.
+    expect(sequenceUnit([entry("ു"), entry("൧")])).toBe("Part");
+    // Malayalam ൰ (ten) is a number sign, \p{No}, not a decimal digit.
+    expect(sequenceUnit([entry("൯"), entry("൰")])).toBe("Letter");
+    expect(sequenceUnit([])).toBe("Letter");
+  });
+
+  it("labels, heads, credits and describes its groups as digits", () => {
+    const traced = { citation: "Pen traces", url: "https://example.org/traces" };
+    const figure = renderScriptSequenceFilmstripFigure("FA-W19", "۰ ۱", [
+      digit("۰"),
+      digit("۱"),
+      { ...digit("۲"), source: traced },
+    ]);
+    expect(texts(figure.svg, 15)).toEqual(["How it is written — 3 digits, one after another"]);
+    expect(texts(figure.svg, 12)).toEqual([
+      "Digit 1 of 3 — 2 strokes",
+      "Digit 2 of 3 — 2 strokes",
+      "Digit 3 of 3 — 2 strokes",
+    ]);
+    expect(figure.svg).toContain("Digits 1 and 2: stroke order after A cited primer");
+    expect(figure.svg).toContain("Digit 3: stroke order after Pen traces");
+    expect(figure.svg).toContain('aria-label="How to write ۰ ۱: 3 digits, ۰, ۱, ۲, one after another"');
+    expect(figure.svg).toMatch(
+      /<desc>3 digits written one after another: ۰, ۱, ۲ \(persian\)\. Each digit has its own group of frames; frame N of a group shows movements 1 to N of that digit, the movement being added drawn in ink over the finished digit, .* Each digit is drawn at its own scale .* how large the digits are next to each other/,
+    );
+    expect(figure.svg).not.toMatch(/Letter|letter|Part/);
+  });
+
+  it("hashes its unit, so the source moves with the words the strip prints", () => {
+    expect(JSON.parse(scriptSequenceFilmstripFigureSource("FA-W19", "۰ ۱", digits, "Digit")).unit).toBe("Digit");
+    const figure = renderScriptSequenceFilmstripFigure("FA-W19", "۰ ۱", digits);
+    expect(figure.sourceHash).toBe(fnv1a64(scriptSequenceFilmstripFigureSource("FA-W19", "۰ ۱", digits, "Digit")));
+    // The source these entries had when the strip still printed "Letter".
+    expect(figure.sourceHash).not.toBe(fnv1a64(scriptSequenceFilmstripFigureSource("FA-W19", "۰ ۱", digits)));
   });
 });
 
@@ -255,7 +307,7 @@ describe("a Devanagari phrase: a strip of words", () => {
     expect(figure.svg).not.toMatch(/Letter|Part/);
   });
 
-  it("is told it is a phrase, never guesses it, and hashes the unit only for words", () => {
+  it("is told it is a phrase, never guesses it, and hashes the unit for words, never for letters", () => {
     // Without the caller's word the same entries are letters, as before.
     expect(texts(renderScriptSequenceFilmstripFigure("SA-W1", "मम नाम", words).svg, 12)[0]).toBe(
       "Letter 1 of 2 — 2 strokes",

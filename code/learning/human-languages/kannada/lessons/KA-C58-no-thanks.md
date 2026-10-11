@@ -58,7 +58,7 @@ Four, and this one is the polite way out.
 - [YOU SAY: *bēḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bēḍa*, then *illa*, and say which one refuses and which one denies]
-- [YOU RECALL: read **ಪಾತ್ರೆ**]
+- [YOU READ: **ಪಾತ್ರೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04] -->

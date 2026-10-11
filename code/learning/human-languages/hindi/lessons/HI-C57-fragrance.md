@@ -59,7 +59,8 @@ The fourth of five, and the first word you have been able to take apart.
 - [YOU SAY: *khushbū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khushbū*, and hear ख़ुशी in its first half]
-- [YOU RECALL: read **बादल**, then say *dukān*]
+- [YOU READ: **बादल**]
+- [YOU RECALL: say *dukān*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04] -->

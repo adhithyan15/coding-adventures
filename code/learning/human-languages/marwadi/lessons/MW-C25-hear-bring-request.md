@@ -37,8 +37,8 @@ reviews_of: [MW-C25-lavo, MW-C20-chaay, MW-C20-churma, MW-C20-food-seven, MW-C21
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01, MW-LEX-CHURMA-01, MW-SCRIPT-CHURMA-01, MW-LEX-SHOW-REQUEST-01, MW-SCRIPT-CHAAY-01, MW-SCRIPT-LAVO-01] -->
 
-[PAUSE 24s] Recall the seven-word food payoff, say the request from Chapter 26,
-then write the sweet crumbled wheat dessert, tea, and *bring it*.
+[PAUSE 24s] Recall the seven-word food payoff and say the request from
+Chapter 26. [YOU WRITE: the words for the sweet crumbled wheat dessert, tea, and *bring it*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BRING-REQUEST-01]; assesses=[MW-LEX-LAVO-01, MW-LEX-CHAAY-01] -->

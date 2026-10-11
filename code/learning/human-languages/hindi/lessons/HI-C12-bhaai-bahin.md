@@ -17,13 +17,13 @@ sounds: [devanagari-long-ii, aspirated-bha]
 roots: [pie-bhrater, sanskrit-bhaga]
 etymology_hook: "भाई bhāī IS the PIE cousin of English 'brother' — but बहन bahin is NOT the cousin of 'sister'; Sanskrit's PIE-cognate word for sister (svasṛ) faded, replaced by bhaginī, 'the one who shares,' the ancestor of bahin"
 duration:
-  max_seconds: 235
+  max_seconds: 280
 requires:
   knowledge: [HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C12-PITAA-MAATAA-02]
 introduces:
   knowledge: [HI-CONCEPT-C12-BHAAI-BAHIN-01, HI-CONCEPT-C12-BHAAI-BAHIN-02]
 practises:
-  knowledge: [HI-CONCEPT-C12-BHAAI-BAHIN-01, HI-CONCEPT-C12-BHAAI-BAHIN-02]
+  knowledge: [HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C12-PITAA-MAATAA-02, HI-CONCEPT-C12-BHAAI-BAHIN-01, HI-CONCEPT-C12-BHAAI-BAHIN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,8 +67,7 @@ finding itself is solid.)
 So Hindi's brother/sister pair is **lopsided** in its ancestry: *bhāī*
 genuinely continues the ancient PIE word; *bahin* comes from an entirely
 different Sanskrit formation that **replaced** the PIE-cognate word before
-Hindi ever inherited it. (Sanskrit-to-Hindi sound history has plenty of non-obvious
-turns.)
+Hindi ever inherited it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C12-BHAAI-BAHIN-01, HI-CONCEPT-C12-BHAAI-BAHIN-02] -->
@@ -78,6 +77,14 @@ turns.)
 - [YOU SAY: "bahin" — sister — from bhaginī, "the one who shares," NOT from
   the PIE word for sister]
 - [YOU SAY: the asymmetry — one cousin, one completely different word]
+
+## Guided Practice — father and mother, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C12-PITAA-MAATAA-02] -->
+
+- Which Latin and English words are **पिता** and **माता** cousins of? (*Pater,
+  father*; *māter, mother* — one PIE root each.)
+- What do people say at home instead? (**बाप** *bāp* and **माँ** *māṁ* — also
+  Sanskrit-descended.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C12-BHAAI-BAHIN-01, HI-CONCEPT-C12-BHAAI-BAHIN-02] -->

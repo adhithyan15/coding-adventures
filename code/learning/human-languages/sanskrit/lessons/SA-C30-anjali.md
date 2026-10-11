@@ -58,8 +58,9 @@ Five steps of a welcome — door, seat, flower, garland, and the hands themselve
 [PAUSE 1s]
 - [YOU SAY: *añjaliḥ*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: all five in order, then say *namaste* and name what your hands are doing]
-- [YOU RECALL: say *svasti*, then read **धन्यः**]
+- [YOU SAY: all five in order, then say *namaste* and name the gesture that goes with it]
+- [YOU RECALL: say *svasti*]
+- [YOU READ: **धन्यः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05] -->

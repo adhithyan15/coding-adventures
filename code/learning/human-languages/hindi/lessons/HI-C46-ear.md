@@ -59,7 +59,8 @@ Three: hair, a finger, an ear.
 - [YOU SAY: *kān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kān*, then *uṅglī*, then *bāl*, back down the run]
-- [YOU RECALL: say *parivār*, then read **दीया**]
+- [YOU RECALL: say *parivār*]
+- [YOU READ: **दीया**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03] -->

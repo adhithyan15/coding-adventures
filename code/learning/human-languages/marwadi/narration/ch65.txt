@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does किवाड़ (kivāṛ) mean? ("A door".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a door'.
+Say the Marwadi for 'a door'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रसोई (rasoī) mean? ("A kitchen".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a kitchen'.
+Say the Marwadi for 'a kitchen'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कमरो (kamro) mean? ("A room".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a room'.
+Say the Marwadi for 'a room'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does किताब (kitāb) mean? ("A book".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a book'.
+Say the Marwadi for 'a book'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कलम (kalam) mean? ("A pen".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a pen'.
+Say the Marwadi for 'a pen'.

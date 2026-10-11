@@ -37,7 +37,8 @@ reviews_of: [MW-C16-bas, MW-C15-hear-kapda, MW-W15-nukta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-KAPDA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-NANA-01] -->
 
-[PAUSE 20s] Say bus and clothes, write bus and maternal grandfather, then write **ड़**.
+[PAUSE 20s] Say bus and clothes.
+[YOU WRITE: the words for bus and maternal grandfather, then **ड़**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-GAADI-01]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Review --- A Tense You Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d61999c2de95dcb5",
+  "sourceHash": "fnv1a64:f1ed960dbc680ec4",
   "lessons": [
     {
       "id": "ES-C49-repaso-perfecto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0294f36e2a74eeca",
+      "sourceHash": "fnv1a64:5e70967ae6d1cff1",
       "notice": null,
       "blocks": [
         {
@@ -137,6 +137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-pieces",
               "prompt": "What are the two pieces of this tense, and which carries the person?",
               "assesses": [
@@ -156,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-build",
               "prompt": "Say we have lived.",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-irreg",
               "prompt": "Say you have said it, using the participle of decir.",
               "assesses": [
@@ -193,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-cost",
               "prompt": "Why did this tense cost less than the present or the preterite?",
               "assesses": [
@@ -223,7 +227,21 @@
             },
             {
               "kind": "speech",
-              "text": "Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map."
+              "text": "Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English words are hecho and dicho, older than the rule? (Fact, the thing done; dictum, the thing said.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map."
             }
           ]
         }

@@ -112,6 +112,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C51-changla-r1",
               "prompt": "Say 'good tea' and 'a good room', then claim the tea is good.",
               "assesses": [
@@ -254,6 +255,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C51-kharaab-r1",
               "prompt": "Say the water is bad, then that the water is not good.",
               "assesses": [
@@ -396,6 +398,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C51-hushaar-r1",
               "prompt": "Say that your friend is clever and good.",
               "assesses": [
@@ -529,6 +532,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R51-good-and-bad-run",
               "prompt": "Judge a thing good, judge a thing bad, judge a person clever, then deny one of them.",
               "assesses": [

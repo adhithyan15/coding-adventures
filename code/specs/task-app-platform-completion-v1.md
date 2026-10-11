@@ -150,29 +150,73 @@ rather than letting them read as silent gaps.
 
 10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
     — ratchet TaskApp's native style degradations.** All five native reporters
-    are now wired, but a fresh `native-complete` generation recorded 77 XAML,
+    are now wired. The initial `native-complete` generation recorded 77 XAML,
     142 SwiftUI, 89 Compose, 307 Qt, and 463 Flutter style drops. **Ratcheted in
-    #16183.** The first follow-up, #15285, lowers Flutter `Text` part typography
-    and reduces its measured inventory to 371. The next follow-up, #16201,
-    lowers stylesheet font sizes for Flutter buttons and text-bearing
-    containers, reducing Flutter to 329 drops and the five-backend total to 944.
+    #16183.** Successive emitter and product fixes reduced the fresh inventory
+    to 77 XAML, 144 SwiftUI, 89 Compose, 163 Qt, and 197 Flutter drops. #16995
+    tightens the Qt and Flutter maxima to those fresh reports after #16297 and
+    #16969, retiring 63 stale allowances that could otherwise regress silently.
+    #17010 then preserves TaskApp's authored letter spacing through each native
+    text API, retiring another 60 allowances and reducing the inventories to 65
+    XAML, 132 SwiftUI, 77 Compose, 151 Qt, and 185 Flutter drops.
+    #17031 lowers TaskApp's cross-axis alignment through SwiftUI stack
+    constructors, retiring all 22 SwiftUI `align` allowances and reducing that
+    backend's fresh inventory to 110.
+    #17052 lowers supported uppercase text transforms through all five native
+    text APIs, retiring another 55 allowances and reducing the inventories to
+    54 XAML, 99 SwiftUI, 66 Compose, 140 Qt, and 174 Flutter drops.
+    #17073 then preserves supported TaskApp font weights in Qt and Flutter,
+    reducing those two inventories to 138 and 158. #17098 removes solid
+    per-edge border styles only where a supported positive-width edge is
+    actually drawn, retiring another 70 false positives and reducing the
+    fresh inventories to 38 XAML, 83 SwiftUI, 50 Compose, 130 Qt, and 144
+    Flutter drops. #17126 then reconciles Qt's existing native elevation
+    effects with the reporter, retiring eight false positives while surfacing
+    22 genuine, previously unqueried `HostDraggable` board-card omissions. The
+    honest Qt inventory is therefore 144; #17128 tracks those native lowerings.
+    #17151 lowers the draggable container surfaces and leaves an honest 113
+    drops after surfacing five calendar-event text omissions. #17146 then
+    preserves that event surface's supported inherited color/font size and its
+    complete hidden/ellipsis/nowrap contract, retiring those five omissions
+    and reducing Qt's fresh inventory to 108.
+    #17224 then preserves all 15 supported fixed Flutter `border-radius`
+    declarations and paints eight coupled rounded-text backgrounds, reducing
+    Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe
+    radius values remain explicit debt.
+    #17237 then preserves all 14 supported TaskApp `text-align` declarations
+    on Flutter text and button leaves, reducing that backend's fresh inventory
+    from 121 to 107. Unknown alignment values remain reported.
+    #17251 preserves all 16 TaskApp `width: 100%` declarations on Flutter leaf
+    widgets when their parent supplies a finite horizontal constraint, reducing
+    that backend's fresh inventory from 107 to 91. The seven calendar weekday
+    `14.2857%` widths remain reported until fractional row sizing has a safe
+    native lowering.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing
     debt native completeness.
 
+### Native fidelity release checkpoint
+
+11. **P1 [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
+    — publish `task-app-v0.5.2`.** Roll the compatible native-fidelity fixes
+    accumulated after v0.5.1 into an immutable patch release. Keep the verified
+    web/native downloadable artifact matrix unchanged; Static HTML, Web
+    Components, and Paint remain CI-only, while signing and notarization remain
+    tracked by #13977.
+
 ### Tier C — reach, stated honestly
 
-11. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
+12. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
     #16041, and #16144.** The generated app carries the real runtime, launches
     on iPhone and iPad simulators, restores state from its sandbox, and
     quarantines corrupt state. Signing, device execution, and a downloadable
     iOS artifact remain outside that claim.
-12. **Android has no backend.** `compose` is Compose Desktop. An Android target
+13. **Android has no backend.** `compose` is Compose Desktop. An Android target
     is a new Mosaic backend, not a TaskApp task, and belongs to
     [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
     here. Recorded so its absence is a decision rather than an oversight.
-13. **Signing, notarization, and installers**
+14. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up

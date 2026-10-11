@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C142-halko-type",
-              "prompt": "Type the Marwadi for 'light (not heavy)'.",
+              "prompt": "Say the Marwadi for 'light (not heavy)'.",
               "assesses": [
                 "MW-LEX-C142-QUAL142-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C142-karak-type",
-              "prompt": "Type the Marwadi for 'hard, stiff'.",
+              "prompt": "Say the Marwadi for 'hard, stiff'.",
               "assesses": [
                 "MW-LEX-C142-QUAL142-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C142-naram-type",
-              "prompt": "Type the Marwadi for 'soft'.",
+              "prompt": "Say the Marwadi for 'soft'.",
               "assesses": [
                 "MW-LEX-C142-QUAL142-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C142-gilo-type",
-              "prompt": "Type the Marwadi for 'wet'.",
+              "prompt": "Say the Marwadi for 'wet'.",
               "assesses": [
                 "MW-LEX-C142-QUAL142-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C142-suko-type",
-              "prompt": "Type the Marwadi for 'dry'.",
+              "prompt": "Say the Marwadi for 'dry'.",
               "assesses": [
                 "MW-LEX-C142-QUAL142-05"
               ],

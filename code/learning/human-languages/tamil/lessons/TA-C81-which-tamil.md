@@ -71,9 +71,11 @@ You know which Tamil is in front of you, and you can get from one to the other.
 - [YOU SAY: *"sari" eṉṟu solluṅgaḷ*]
 - [YOU SAY: *"sari"-ṉṉu solluṅgaḷ*]
 - [YOU CONVERT: take *ēṉeṉṟāl* and say the clip; take *ēṉṉā* and rebuild the full word]
-- [YOU RECALL: read **மற்றது**, then ask *vilai evvaḷavu?*, then say both forms of the
-  quotation line]
-- [YOU RETURN TO: say *mēlē*, read **ஆனால்** and say *maṟṟadu* — three distances back — then say which of the two Tamils each one belongs to]
+- [YOU READ: **மற்றது**]
+- [YOU RECALL: ask *vilai evvaḷavu?*, then say both forms of the quotation line]
+- [YOU RETURN TO: say *mēlē*]
+- [YOU READ: **ஆனால்**]
+- [YOU RETURN TO: say *maṟṟadu* — three distances back — then say which of the two Tamils each one belongs to]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MARRADU-01, TA-PRAGMATICS-C80-PRICE-03, TA-PRAGMATICS-C81-REG-01, TA-PRAGMATICS-C81-REG-02, TA-LEX-C66-WHICHWAY-01, TA-SCRIPT-READ-AANAAL-01, TA-LEX-C80-OTHER-01] -->

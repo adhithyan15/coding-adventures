@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "The Noun, And The Ending That Means Two Things",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0695db8e7657c590",
+  "sourceHash": "fnv1a64:419f6e3836f496bf",
   "lessons": [
     {
       "id": "HI-C91-bacche-plural",
@@ -370,7 +370,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee067f7d331ac9a6",
+      "sourceHash": "fnv1a64:19969658911be6f6",
       "notice": null,
       "blocks": [
         {
@@ -386,7 +386,7 @@
             },
             {
               "kind": "speech",
-              "text": "भाषा ends in -आ, exactly like बच्चा. Guess its plural from that, and then read on to find out why the guess is wrong."
+              "text": "भाषा ends in -आ, exactly like बच्चा. Guess its plural from that, and then go on to find out why the guess is wrong."
             }
           ]
         },
@@ -899,7 +899,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f89c677a196f04e0",
+      "sourceHash": "fnv1a64:8812fb0a8bb0b0b0",
       "notice": null,
       "blocks": [
         {
@@ -915,7 +915,7 @@
             },
             {
               "kind": "speech",
-              "text": "You know बच्चे as children. Read बच्चे को (bacce ko) and notice it cannot mean to the children and one child at the same time — so which is it?"
+              "text": "You know बच्चे as children. Take बच्चे को (bacce ko) and notice it cannot mean to the children and one child at the same time — so which is it?"
             }
           ]
         },
@@ -1421,7 +1421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b3a626f0993f256",
+      "sourceHash": "fnv1a64:a85f1b40637abe12",
       "notice": null,
       "blocks": [
         {
@@ -1436,8 +1436,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read this and say how many languages, before reading on."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line and say how many languages, before going on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line and say how many languages, before going on]"
             },
             {
               "kind": "speech",

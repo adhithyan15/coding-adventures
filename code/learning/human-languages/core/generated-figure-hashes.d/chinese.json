@@ -3,6 +3,13 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "ZH-W01-er",
+      "sourceHash": "fnv1a64:a29d5d6eab011721",
+      "svgHash": "fnv1a64:189084000f9af8bd",
+      "svg": "chinese/book/figures/ZH-W01-er-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ZH-W01-hao-build",
       "sourceHash": "fnv1a64:01d1d6e6ec1f22f6",
       "svgHash": "fnv1a64:37f5625c27f8f5d8",

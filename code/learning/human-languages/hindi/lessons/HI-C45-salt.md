@@ -59,7 +59,8 @@ Four, and one of them is not a thing you can hold.
 - [YOU SAY: *namak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *namak*, then *dīyā*, then *kapṛā*, backwards down the run]
-- [YOU RECALL: read **लिखना**, then say *parivār*]
+- [YOU READ: **लिखना**]
+- [YOU RECALL: say *parivār*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-C45-ASK-04] -->

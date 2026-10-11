@@ -71,7 +71,7 @@ Latin **placitum** — "a thing agreed", the past participle of **placēre**, to
 please. What pleased both parties was what they had settled on.
 
 That makes *el plazo* a relative of **el placer**, which you already have.
-Pleasure and a deadline sit oddly together until you see the middle step:
+Pleasure and a deadline sit oddly together until you know the middle step:
 *placitum* meant an agreement, then the term of an agreement, then the time
 you have got.
 

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 65,
-  "sourceHash": "fnv1a64:25d1eec4c2f6e972",
+  "sourceHash": "fnv1a64:54f4e89402224f52",
   "lessonIds": [
     "KA-C65-request",
     "KA-C65-permission",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch65.txt",
   "json": "kannada/narration/ch65.json",
-  "textHash": "fnv1a64:39b1e2dbb51e30dd",
-  "jsonHash": "fnv1a64:3cc57183d9ead85e",
+  "textHash": "fnv1a64:f8e36bcb3349edfb",
+  "jsonHash": "fnv1a64:e5aaaf1917da8c41",
   "findings": []
 }

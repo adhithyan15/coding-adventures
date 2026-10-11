@@ -12,13 +12,13 @@ prerequisites: [ES-C56-sintesis-condiciones]
 sounds: [vowel-e]
 roots: [de pendere]
 duration:
-  max_seconds: 240
+  max_seconds: 270
 requires:
-  knowledge: [ES-GRAMMAR-SI-REAL-CONDITION]
+  knowledge: [ES-GRAMMAR-SI-REAL-CONDITION, ES-GRAMMAR-SI-UNREAL-CONDITION]
 introduces:
   knowledge: [ES-LEX-DEPENDE, ES-SEMANTIC-CONDITION-UNSTATED]
 practises:
-  knowledge: [ES-LEX-DEPENDE, ES-SEMANTIC-CONDITION-UNSTATED]
+  knowledge: [ES-LEX-DEPENDE, ES-SEMANTIC-CONDITION-UNSTATED, ES-GRAMMAR-SI-UNREAL-CONDITION]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -78,6 +78,16 @@ The condition stops being a mystery and becomes a thing you point at.
 - [YOU SAY: *depende* — stress the middle]
 - [YOU SAY: name the condition — *depende de ti*]
 - [YOU SAY: the same answer the long way, with a full *si* sentence]
+
+## Guided Practice — an open condition and a closed one
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DEPENDE, ES-SEMANTIC-CONDITION-UNSTATED, ES-GRAMMAR-SI-UNREAL-CONDITION] -->
+
+[PAUSE 1s]
+- [YOU SAY: an answer whose condition is still open — *depende*]
+- [YOU SAY: a sentence about a world that does not exist — *Si tuviera tiempo, comería en casa*]
+
+[PAUSE 2s] Which of the two already gives the answer? (The second: *si
+tuviera* says there is no time. *Depende* leaves it hanging.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DEPENDE, ES-SEMANTIC-CONDITION-UNSTATED] -->

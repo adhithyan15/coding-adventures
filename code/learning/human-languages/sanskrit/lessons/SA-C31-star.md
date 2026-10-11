@@ -59,7 +59,8 @@ A third light overhead, and a word that reached every branch of the family.
 - [YOU SAY: *tārā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tārā*, and one of its cousins outside India]
-- [YOU RECALL: say *praṇāmaḥ*, then read **पुष्पम्**]
+- [YOU RECALL: say *praṇāmaḥ*]
+- [YOU READ: **पुष्पम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03] -->

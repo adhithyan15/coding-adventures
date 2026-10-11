@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can form the -ando shape of an -ar verb.",
     "assesses": [
-      "ES-GRAMMAR-GERUND-AR"
+      "ES-GRAMMAR-GERUND-AR",
+      "ES-GRAMMAR-GERUND-MEANING",
+      "ES-ETYMON-GERUND-NDUM"
     ]
   }
 }

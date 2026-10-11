@@ -31,7 +31,7 @@ That is exactly what Wikipedia says of the traditional numerals — that the pro
 コーヒー ふたつ — two coffees. Nobody will blink.
 The rule has an edge, and it is the next lesson: people and animals do not take つ. They have counters of their own and there is no way round it.
 
-Guided Practice — read, copy, recall.
+Guided Practice.
 Say コーヒー ふたつ. Then say いちど and name the counter inside it.
 
 Wrap-up Recall.
@@ -49,12 +49,9 @@ Warm-up.
 Three recalls, then the counter the last rule cannot reach.
 [your turn — recall: say what to use when you do not know the counter — R1, one lesson back]
 [pause 8 seconds for the answer]
-[your turn — recall: write の — R2, five lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write the small ゅ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write the small っ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: の from memory — R2, five lessons back]
+[once you have stopped driving — write: the small ゅ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: the small っ from memory — R4, eighty lessons back]
 
 You'll Want to Know — hear and say.
 にん — -nin — the counter for people.
@@ -72,8 +69,9 @@ Last lesson's rule had an edge, and this is it. つ never counts people. There i
 So the rule now reads with both ends showing: use つ for ordinary things up to ten; use the proper counter for anything alive.
 And にん (-nin) itself has an exception, at exactly two numbers. That is the next lesson.
 
-Guided Practice — read, copy, recall.
-Write にん (-nin). Say sannin, yonin, gonin, juunin. Then say こども さんにん.
+Guided Practice.
+[once you have stopped driving — write: にん (-nin)]
+Say sannin, yonin, gonin, juunin. Then say こども さんにん.
 
 Wrap-up Recall.
 Which number is odd in this list? (Four — よにん, not yonnin.)
@@ -94,8 +92,7 @@ Three recalls, then the two people the last lesson could not count.
 [pause 8 seconds for the answer]
 [your turn — recall: say ten, then twelve — R3, twenty lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write て — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: て from memory — R4, eighty lessons back]
 
 You'll Want to Know — hear and say.
 ひとり — hitori — one person.
@@ -104,7 +101,7 @@ Not ichinin. Not ninin. Every other number takes にん (-nin) and these two do 
 Every sign is yours: ひ and ふ came two chapters ago, と, た and り long before.
 
 Grammar Lens — the seam, one more time.
-Read the four words together and the exception stops looking like one:
+Take the four words together and the exception stops looking like one:
 [a table of 3 rows, read aloud]
 number: one. native count: ひとつ. with the people counter: ひとり.
 number: two. native count: ふたつ. with the people counter: ふたり.
@@ -113,8 +110,9 @@ hito- and futa- are the same pieces you learned two chapters ago. At one and two
 That is the third time you have seen this. At よん and なな the native word stood inside the borrowed count. Here the native word stands inside a borrowed counter. It is one seam, and it runs the whole length of Japanese numbers.
 あね ひとり、あに ふたり — one elder sister, two elder brothers.
 
-Guided Practice — read, copy, recall.
-Write ひとり and ふたり. Say hitori, futari, sannin, yonin — and hear the switch happen between the second and the third.
+Guided Practice.
+[once you have stopped driving — write: ひとり and ふたり]
+Say hitori, futari, sannin, yonin — and hear the switch happen between the second and the third.
 
 Wrap-up Recall.
 Where does the switch happen? (Between two and three.)
@@ -133,8 +131,7 @@ Three recalls, then the first thing in this book you can count.
 [pause 8 seconds for the answer]
 [your turn — recall: say face — R3, twenty lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write た — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: た from memory — R4, eighty lessons back]
 
 Guided Practice — count what you have.
 Chapter twelve gave you a face. Until this chapter you could name every part of it and say how many of nothing.
@@ -155,8 +152,9 @@ Which of the four needed you to know a special counter? (None.) Which nearby wor
 Lesson 5 of 9.
 ほ (ho) — は with one more bar.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Warm-up.
 [pause 25 seconds]
 Three recalls, then the last sign of the chapter.
@@ -167,10 +165,11 @@ Three recalls, then the last sign of the chapter.
 [your turn — recall: write だ — R4, eighty lessons back]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the shape.
 ほ — ho.
 Write は first. You have had it since chapter one: a left vertical, one horizontal, then the right stroke that loops at the foot.
-ほ is that figure with one more horizontal, and Sirgazil's animation puts it above the one は already has. Four strokes, in this order:
+ほ (ho) is that figure with one more horizontal, and Sirgazil's animation puts it above the one は already has. Four strokes, in this order:
 the left vertical, hooking at the foot.
 the upper horizontal on the right.
 the lower horizontal on the right.
@@ -179,16 +178,17 @@ So the only thing you are learning is a bar, and where it goes.
 ほ also finishes a set. Japanese's h-row runs ha, hi, fu, he, ho, and you now hold four of its five: は from chapter one, ひ and ふ from two chapters ago, and ほ here. Only へ is missing.
 Write ひ once beside them and hear the row.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 Write は, then ほ (ho) beneath it, and mark the stroke that differs.
 Copy ほ (ho); hide it; write it again.
 Say both aloud: ha, ho. Then say ひとつ and hear the same ひ.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 How many strokes? (Four.)
 Source: Unicode Hiragana chart; stroke count and order per KanjiVG and Sirgazil's Commons animation.
-[question — say your answer, then pause 12 seconds]
-Write ho, and say what makes it different from ha.
+[once you have stopped driving — question: Write ho, and say what makes it different from ha.]
 
 
 Lesson 6 of 9.
@@ -197,8 +197,7 @@ Lesson 6 of 9.
 Warm-up.
 [pause 25 seconds]
 Three recalls, then a counter chosen by shape.
-[your turn — recall: write ほ (ho) — R1, one lesson back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ほ (ho) from memory — R1, one lesson back]
 [your turn — recall: say hand — R4, eighty lessons back]
 [pause 8 seconds for the answer]
 [your turn — recall: say what つ is for, and what it is not for — R2, five lessons back]
@@ -219,10 +218,11 @@ number: two. the form: にほん.
 number: four. the form: よんほん.
 number: five. the form: ごほん.
 number: seven. the form: ななほん.
-At three the ほ takes the dakuten you have had since chapter three, and at one, six, eight and ten it goes further still — further than the dakuten can take it. Both of those need a mark on the sign, and the second mark is one this book has never taught. The next two lessons buy it and then spend it; until then, say the four plain ones.
+At three the ほ (ho) takes the dakuten you have had since chapter three, and at one, six, eight and ten it goes further still — further than the dakuten can take it. Both of those need a mark on the sign, and the second mark is one this book has never taught. The next two lessons buy it and then spend it; until then, say the four plain ones.
 
-Guided Practice — read, copy, recall.
-Write ほん (-hon). Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん.
+Guided Practice.
+[once you have stopped driving — write: ほん (-hon)]
+Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん.
 
 Wrap-up Recall.
 What does ほん (-hon) count? (Anything longer than it is wide.)
@@ -234,8 +234,9 @@ Say two long thin things and four long thin things in Japanese.
 Lesson 7 of 9.
 ゜ (handakuten) — the other mark.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Warm-up.
 [pause 25 seconds]
 Three recalls, then the mark the last lesson stopped short of.
@@ -246,6 +247,7 @@ Three recalls, then the mark the last lesson stopped short of.
 [your turn — recall: say ear — R4, eighty lessons back]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the shape.
 ゜ — the handakuten.
 A small circle, written at the top right of a kana, in the same place the dakuten goes.
@@ -257,23 +259,25 @@ The handakuten works on one row only — the row は and ほ (ho) belong to. Now
 That row is the one you have just been filling in. ふ takes both marks too, giving bu and pu, and so does は. The mark is rare; the row is not.
 Write the circle small. It is a circle, not a dot, and it does not touch the sign it sits on.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 Write ほ (ho), then ぼ, then ぽ, and say all three.
 Say the same three sounds on は, without writing them.
 Check one thing: is the circle open?
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 Which row does the handakuten work on? (Only the h-row.)
 Source: Unicode Hiragana chart, U+309C.
-[question — say your answer, then pause 15 seconds]
-Write ho, then the same sign with each of the two marks, and say all three.
+[once you have stopped driving — question: Write ho, then the same sign with each of the two marks, and say all three.]
 
 
 Lesson 8 of 9.
 いっぽん (ippon) — and the four that bend.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll Want to Know — hear and say and Guided Practice — read, copy, recall.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Warm-up.
 [pause 25 seconds]
 Three recalls, then the form the counter takes at one.
@@ -284,9 +288,10 @@ Three recalls, then the form the counter takes at one.
 [your turn — recall: write the small っ — R2, six lessons back]
 [pause 8 seconds for the answer]
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 You'll Want to Know — hear and say.
 いっぽん — ippon — one long thin thing.
-Not ichihon. The いち shortens to いっ, and the ほ takes the handakuten you learned last lesson.
+Not ichihon. The いち shortens to いっ, and the ほ (ho) takes the handakuten you learned last lesson.
 Here is the whole counter, with the numbers this book can spell:
 [a table of 9 rows, read aloud]
 number: one. the form: いっぽん (ippon). what happens: p, and a held beat.
@@ -302,6 +307,7 @@ Nine is missing from that table on purpose. Its everyday form needs a sign this 
 Read the shape of the rest: one, six, eight and ten all end in a held beat and take p. Three ends in the nasal ん and takes b. Everything else is plain. The counter is not being irregular — it is being pushed by the sound in front of it.
 かみ いっぽん (ippon) — one hair.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice — read, copy, recall.
 Write いっぽん. Say the run: ippon, nihon, sanbon, yonhon, gohon, roppon. Then say かみ いっぽん.
 

@@ -12,7 +12,15 @@ import {
   type LetterDuctus,
   type Point,
 } from "../../src/strokes";
-import { registerStrokeHonestyTests } from "../support/stroke-honesty";
+import {
+  NOTO_PLACEHOLDER_CONTOURS,
+  distanceToPath,
+  inkPoints,
+  registerStrokeHonestyTests,
+  tracedContours,
+} from "../support/stroke-honesty";
+import { parsedFont } from "../support/font-fixtures";
+import { boundsOf, type Contour } from "../../src/truetype";
 
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_AA = DUCTUS[ductusKey("malayalam", "ആ")];
@@ -819,5 +827,291 @@ describe("Malayalam glyphs cited to Moag's numbered movements", () => {
     expect(anusvara.source.variation).toMatch(
       /clockwise.*medium-low confidence.*anticlockwise/,
     );
+  });
+});
+
+// The candrakkala, ഠ and the digits ൧-൯ cite Jayasree, a recording: one
+// recorder traced each character over the Manjari typeface, one gesture per
+// pen-down stroke. Each row is the glyph, how its record names its source
+// ("drawn alone" for the sign) and the captions of its one stroke. Every
+// glyph is one stroke, because the recorder never lifted inside them.
+const JAYASREE_URL =
+  "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json";
+const JAYASREE_GLYPHS: ReadonlyArray<
+  readonly [glyph: string, labels: readonly string[]]
+> = [
+  ["്", ["start at the left tip and dip down", "round the bottom and rise to the right"]],
+  ["ഠ", ["circle anticlockwise down the left", "climb the right side back to the top"]],
+  [
+    "൧",
+    [
+      "climb the left stem",
+      "arch clockwise over and down the right",
+      "run left along the baseline",
+      "curl down and back to the right",
+    ],
+  ],
+  [
+    "൨",
+    [
+      "climb the left side",
+      "arch clockwise over and down to the foot",
+      "run right along the baseline",
+    ],
+  ],
+  [
+    "൩",
+    [
+      "climb the left side",
+      "arch clockwise and run down the stem",
+      "climb back up the stem",
+      "arch clockwise over and down",
+      "run right along the baseline",
+    ],
+  ],
+  [
+    "൪",
+    [
+      "climb the left side and over the top",
+      "cross down the right and round the bottom",
+      "climb back up through the crossing",
+      "curl up to the top right",
+    ],
+  ],
+  [
+    "൫",
+    [
+      "climb the small inner curve",
+      "round it into the notch",
+      "turn back and round the right bowl",
+      "round the bottom and up the left",
+      "arch over and down the right",
+    ],
+  ],
+  [
+    "൬",
+    [
+      "climb the left side",
+      "arch over and down the first stem",
+      "climb back up the stem",
+      "arch over and down the second stem",
+      "climb back up it",
+      "arch over and curl down to the left",
+    ],
+  ],
+  [
+    "൭",
+    [
+      "curl clockwise round the small loop",
+      "climb the left side to the top",
+      "sweep down the right and curl left below",
+    ],
+  ],
+  [
+    "൮",
+    [
+      "climb the left side",
+      "arch clockwise over and down to the foot",
+      "run right along the baseline",
+      "climb the right stem",
+      "come back down and curl left below",
+    ],
+  ],
+  [
+    "൯",
+    [
+      "climb the left side",
+      "arch over and down the stem",
+      "climb back up the stem",
+      "arch over and down the right side",
+      "round the bottom up to the crossing",
+      "sweep up to the top right",
+    ],
+  ],
+];
+
+/**
+ * Twice the signed area of a pen path closed back to its start: positive
+ * means it turns anticlockwise, because font units point UP.
+ */
+const turning = (open: Point[]): number => {
+  const path = [...open, open[0]];
+  return path
+    .slice(1)
+    .reduce((sum, b, index) => sum + path[index].x * b.y - b.x * path[index].y, 0);
+};
+
+describe("Malayalam glyphs cited to Jayasree's recorded strokes", () => {
+  for (const [glyph, labels] of JAYASREE_GLYPHS) {
+    const letter = DUCTUS[ductusKey("malayalam", glyph)];
+
+    it(`${glyph} is the one recorded stroke, in the recorded order`, () => {
+      expect(letter).toBeDefined();
+      expect(penLifts(letter)).toBe(0);
+      expect(letter.strokes).toHaveLength(1);
+      expect(
+        letter.strokes[0].segments.map((segment) => segment.label),
+      ).toEqual(labels);
+      for (const gap of joinGaps(letter.strokes[0])) expect(gap).toBe(0);
+    });
+
+    it(`${glyph} credits Jayasree by name and licence, and resolves to Noto`, () => {
+      expect(letter.source.url).toBe(JAYASREE_URL);
+      expect(letter.source.citation).toMatch(
+        /^Sachin Nandakumar, Jayasree: .*commit e0c9d57.*"Jayasree" by Sachin Nandakumar, CC BY 4\.0$/,
+      );
+      expect(letter.source.citation).toContain(`stroke for ${glyph}`);
+      expect(letter.source.variation).toMatch(
+        /no recorded coordinate is copied.*CC BY 4\.0 \(https:\/\/creativecommons\.org\/licenses\/by\/4\.0\/\).*fitted to the bundled Noto Sans Malayalam outline.*confidence is medium/,
+      );
+      expect(verifiedLetterFont(glyph, letter.source.url)).toBe(
+        "_fonts/NotoSansMalayalam-Static.ttf",
+      );
+    });
+
+    it(`${glyph}'s "clockwise" and "anticlockwise" captions match how the path turns`, () => {
+      for (const segment of letter.strokes[0].segments) {
+        if (/\banticlockwise\b/.test(segment.label)) {
+          expect(turning(segment.path), segment.label).toBeGreaterThan(0);
+        } else if (/\bclockwise\b/.test(segment.label)) {
+          expect(turning(segment.path), segment.label).toBeLessThan(0);
+        }
+      }
+    });
+  }
+
+  it("draws the candrakkala from its left tip to its right tip, through the bottom of the cup", () => {
+    const path = penPath(DUCTUS[ductusKey("malayalam", "്")].strokes[0]);
+    const [start, end] = [path[0], path[path.length - 1]];
+    expect(start.x).toBeLessThan(end.x);
+    const lowest = Math.min(...path.map((point) => point.y));
+    expect(lowest).toBeLessThan(start.y - 100);
+    expect(lowest).toBeLessThan(end.y - 100);
+  });
+
+  it("runs ഠ's ring anticlockwise from the top and closes it there, naming the source that disagrees", () => {
+    const ttha = DUCTUS[ductusKey("malayalam", "ഠ")];
+    const path = penPath(ttha.strokes[0]);
+    const top = Math.max(...path.map((point) => point.y));
+    expect(path[0].y).toBeGreaterThan(top - 10);
+    expect(Math.hypot(path.at(-1)!.x - path[0].x, path.at(-1)!.y - path[0].y)).toBeLessThan(5);
+    expect(turning(path)).toBeGreaterThan(0);
+    expect(ttha.source.variation).toMatch(
+      /Thooval .* grahyam .*anticlockwise too, while Moag's Table IV arrow .*clockwise/,
+    );
+  });
+
+  it("leaves ൦ undrawn: no lesson draws it alone", () => {
+    expect(DUCTUS[ductusKey("malayalam", "൦")]).toBeUndefined();
+  });
+
+  // The two-part signs: Jayasree's two recorded strokes, the left sign and
+  // then ാ. Each run is the cited path of its part, the second shifted to where
+  // Noto prints ാ inside the standalone sign.
+  for (const [glyph, left, shift, leftLabels] of [
+    ["ൊ", "െ", 923, ["circle the small inner loop", "arch over and down to the foot"]],
+    [
+      "ോ",
+      "േ",
+      788,
+      ["circle the small top loop", "sweep left and round the bottom", "curl up round the lower loop"],
+    ],
+  ] as const) {
+    it(`draws ${glyph} as ${left}, one lift, then ാ ${shift} units to the right`, () => {
+      const sign = DUCTUS[ductusKey("malayalam", glyph)];
+      const leftSign = DUCTUS[ductusKey("malayalam", left)];
+      const aa = DUCTUS[ductusKey("malayalam", "ാ")];
+      expect(penLifts(sign)).toBe(1);
+      expect(
+        sign.strokes.map((stroke) => stroke.segments.map((segment) => segment.label)),
+      ).toEqual([[...leftLabels], ["lift, then draw ാ clockwise"]]);
+      expect(penPath(sign.strokes[0])).toEqual(penPath(leftSign.strokes[0]));
+      expect(penPath(sign.strokes[1])).toEqual(
+        penPath(aa.strokes[0]).map((point) => ({ x: point.x + shift, y: point.y })),
+      );
+      expect(sign.source.url).toBe(JAYASREE_URL);
+      expect(sign.source.citation).toMatch(
+        new RegExp(`strokes for ${glyph}, drawn alone; "Jayasree" by Sachin Nandakumar, CC BY 4\\.0$`),
+      );
+      expect(sign.source.variation).toMatch(
+        /placeholder dot where the consonant would sit.*not written.*skips exactly that contour.*claims no written order/,
+      );
+      expect(verifiedLetterFont(glyph, sign.source.url)).toBe(
+        "_fonts/NotoSansMalayalam-Static.ttf",
+      );
+    });
+  }
+});
+
+// The coverage exception, pinned. Only ൊ and ോ may skip a contour, and the
+// skipped contour must be Noto's consonant placeholder: the glyph is exactly
+// the cited left sign's outline, that dot, and ാ's outline shifted right, so
+// leaving the dot out leaves out nothing a writer draws.
+describe("Noto's consonant placeholder is the only ink the coverage check skips", () => {
+  const font = parsedFont("NotoSansMalayalam-Static.ttf");
+  const contoursOf = (glyph: string) => font.glyphFor(glyph)!.contours;
+  const shifted = (contour: Contour, dx: number): Contour =>
+    contour.map((point) => ({ ...point, x: point.x + dx }));
+
+  it("names exactly ൊ and ോ, each by one contour", () => {
+    expect(Object.keys(NOTO_PLACEHOLDER_CONTOURS).sort()).toEqual(
+      [ductusKey("malayalam", "ൊ"), ductusKey("malayalam", "ോ")].sort(),
+    );
+    for (const entry of Object.values(NOTO_PLACEHOLDER_CONTOURS)) {
+      expect(entry.contour).toBe(1);
+    }
+  });
+
+  for (const [glyph, left, shift] of [
+    ["ൊ", "െ", 923],
+    ["ോ", "േ", 788],
+  ] as const) {
+    it(`${glyph}'s skipped contour is the placeholder between ${left} and ാ, and nothing else`, () => {
+      const contours = contoursOf(glyph);
+      const placeholder = NOTO_PLACEHOLDER_CONTOURS[ductusKey("malayalam", glyph)]!;
+      expect(contours).toHaveLength(3);
+      // Everything kept is a part the writer draws: the left sign, then ാ.
+      expect(contours[0]).toEqual(contoursOf(left)[0]);
+      expect(contours[2]).toEqual(shifted(contoursOf("ാ")[0], shift));
+      // The skipped contour is the pinned dot, standing alone between them.
+      const dot = boundsOf([contours[placeholder.contour]]);
+      expect(dot).toEqual(placeholder.bounds);
+      expect(dot.x0).toBeGreaterThan(boundsOf([contours[0]]).x1);
+      expect(dot.x1).toBeLessThan(boundsOf([contours[2]]).x0);
+      expect(dot.x1 - dot.x0).toBeLessThan(130);
+      expect(dot.y1 - dot.y0).toBeLessThan(140);
+      const letter = DUCTUS[ductusKey("malayalam", glyph)];
+      expect(tracedContours(letter, contours)).toEqual([contours[0], contours[2]]);
+    });
+  }
+
+  it("is the same placeholder dot in both signs, moved with the left part's width", () => {
+    const o = contoursOf("ൊ")[1];
+    const oo = contoursOf("ോ")[1];
+    expect(o).toEqual(shifted(oo, 134));
+  });
+
+  it("CONTROL: without the exception, the dot alone breaks the 2% coverage limit", () => {
+    for (const glyph of ["ൊ", "ോ"]) {
+      const letter = DUCTUS[ductusKey("malayalam", glyph)];
+      const paths = letter.strokes.map((stroke) => penPath(stroke));
+      const untraced = (contours: Contour[]) => {
+        const points = inkPoints(contours);
+        const strayed = points.filter(([x, y]) =>
+          Math.min(...paths.map((path) => distanceToPath(x, y, path))) > 100,
+        );
+        return strayed.length / points.length;
+      };
+      expect(untraced(contoursOf(glyph)), glyph).toBeGreaterThan(0.02);
+      expect(untraced(tracedContours(letter, contoursOf(glyph))), glyph).toBe(0);
+    }
+  });
+
+  it("leaves every other glyph's contours untouched", () => {
+    for (const letter of Object.values(DUCTUS) as LetterDuctus[]) {
+      if (letter.glyph === "ൊ" || letter.glyph === "ോ") continue;
+      const contours: Contour[] = [[{ x: 0, y: 0, on: true }]];
+      expect(tracedContours(letter, contours)).toBe(contours);
+    }
   });
 });

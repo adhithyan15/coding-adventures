@@ -58,7 +58,7 @@ Two: the tree, and what comes out of it sideways.
 - [YOU SAY: *kombe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mara*, then *kombe*, and say which one holds the other up]
-- [YOU RECALL: read **ಕುರ್ಚಿ**]
+- [YOU READ: **ಕುರ್ಚಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-05, KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02] -->

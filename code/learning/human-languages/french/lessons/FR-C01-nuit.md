@@ -38,7 +38,7 @@ reviews_of: [FR-C01-soir, FR-C01-bonsoir]
 
 [PAUSE 2s] "Night." In Spanish it's *noche*; in French, *nuit*. They came from
 the *same* Latin word and drifted apart by two different rules — and once you
-see the rules, you can predict a dozen more words.
+know the rules, you can predict a dozen more words.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -66,11 +66,11 @@ ways:
 
 And it's a *rule*, not a one-off — watch it repeat:
 
-| Latin | Spanish | French | English |
-|---|---|---|---|
-| *noctem* | noche | nuit | night |
-| *lactem* | leche | lait | (lact-, "milk") |
-| *factum* | hecho | fait | fact |
+| Latin | Spanish / French | English |
+|---|---|---|
+| *noctem* | noche / nuit | night |
+| *lactem* | leche / lait | (lact-, "milk") |
+| *factum* | hecho / fait | fact |
 
 So a Spanish *-ch-* word and a French *-it-* word are often the *same* Latin
 word — and the English cousin usually kept the *-ct-*.

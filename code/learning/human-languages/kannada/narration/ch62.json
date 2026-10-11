@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d5b5e0dc79cba4ed",
+  "sourceHash": "fnv1a64:c44f060f90e025db",
   "lessons": [
     {
       "id": "KA-C62-thread",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84d7f116f356b117",
+      "sourceHash": "fnv1a64:c10715f6cc09699d",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಮೇಕೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಮೇಕೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಮೇಕೆ**]"
+              "source": "[YOU READ: **ಮೇಕೆ**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:111b6e3d721853bf",
+      "sourceHash": "fnv1a64:4dcc2d4e7883c5c5",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕಾಗೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕಾಗೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕಾಗೆ**]"
+              "source": "[YOU READ: **ಕಾಗೆ**]"
             }
           ]
         },
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edcd95bbb2cba072",
+      "sourceHash": "fnv1a64:87447080004b6438",
       "notice": null,
       "blocks": [
         {
@@ -578,7 +578,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it carefully. ಕೊಡೆ (koḍe) and the ಕೊಡು you already know start with the same two letters, and they are separate items — one is a thing, the other is what you do with it, and joining them would be inventing a story. Kannada gives you plenty of real ones; this is not one."
+              "text": "Say it carefully. ಕೊಡೆ (koḍe) and the ಕೊಡು you already know start with the same two letters, and they are separate items — one is a thing, the other is what you do with it, and joining them would be inventing a story. Kannada gives you plenty of real ones; this is not one."
             },
             {
               "kind": "speech",

@@ -35,19 +35,18 @@ reviews_of: [MW-C32-count-five, MW-W32-e, MW-W05-ka, MW-W09-cha, MW-C20-churma, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01, MW-PERFORMANCE-REQUEST-FOUR-SKILL-01, MW-SCRIPT-CHURMA-01] -->
 
-[PAUSE 22s] Recall the counting payoff and the five-word asking payoff, then
-write the crumbled wheat sweet.
+[PAUSE 22s] Recall the counting payoff and the five-word asking payoff.
+[YOU WRITE: the word for the crumbled wheat sweet]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-E-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-KA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Write three single signs from sound cues: **ए**, **क**, **च**. Then write the
-mark **े** beside **ए** and say which of the two can stand at the front of a
-word.
+[YOU WRITE: three single signs from sound cues — **ए**, **क**, **च**; then the mark **े** beside **ए**]
 
-Then write **एक**, **दो**, **तीन**, **चार**, **पांच** from dictation, shuffled.
-Repair only the missed sign and rewrite its word once.
+Say which of the two can stand at the front of a word.
+
+[YOU WRITE: **एक**, **दो**, **तीन**, **चार**, **पांच** from dictation, shuffled — repair only the missed sign and rewrite its word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-E-01, MW-SCRIPT-E-MATRA-01] -->

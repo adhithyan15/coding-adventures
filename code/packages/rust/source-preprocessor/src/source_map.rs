@@ -28,9 +28,9 @@
 //! ## Why the expansion chain is interned
 //!
 //! A `Locus` that *owned* its expansion chain would make the map
-//! `O(tokens × expansion_depth)`. With a macro-depth bound of 200, a token
-//! budget of N would admit 200 N chain entries — so an operator who sets the
-//! token cap believing it bounds memory would under-count by up to 200×.
+//! `O(tokens × expansion_depth)`. With a macro-depth bound of 128, a token
+//! budget of N would admit 128 N chain entries — so an operator who sets the
+//! token cap believing it bounds memory would under-count by up to 128×.
 //!
 //! Instead each expansion is interned once and names its parent:
 //!

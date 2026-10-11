@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 112,
-  "sourceHash": "fnv1a64:7d442a671857a120",
+  "sourceHash": "fnv1a64:89183c49b72dea14",
   "lessonIds": [
     "TE-C112-sanci",
     "TE-C112-kalam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch112.txt",
   "json": "telugu/narration/ch112.json",
-  "textHash": "fnv1a64:54811afd21dc7e2b",
-  "jsonHash": "fnv1a64:8051c319ba833a10",
+  "textHash": "fnv1a64:7a517dacf56cc51b",
+  "jsonHash": "fnv1a64:756720a3eb90c1eb",
   "findings": []
 }

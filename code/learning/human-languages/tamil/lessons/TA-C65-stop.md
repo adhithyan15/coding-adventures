@@ -33,7 +33,9 @@ reviews_of: [TA-C65-walk, TA-W21-read-kudi, TA-C20-vaanilai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-02, TA-SCRIPT-READ-KUDI-01] -->
 
-[PAUSE 2s] Read **குடி** off the page once. Then: what did *naḍa* mean?
+[PAUSE 2s] [YOU READ: **குடி** off the page once]
+
+Then: what did *naḍa* mean?
 
 ## You'll want to know: நிறுத்து
 <!-- hl-knowledge: introduces=[TA-LEX-C65-DOING-03]; assesses=[] -->
@@ -68,7 +70,8 @@ Three doings, and the first pair that undoes itself: *naḍa* against *niṟuttu
 - [YOU SAY: *naḍa*, then *niṟuttu* — moving, then halted]
 - [YOU SAY: *niṟuttu* the way you would call it across a street]
 - [YOU SAY: *vāṉilai*, and name the piece of it this verb is related to]
-- [YOU RECALL: say *tayakkam*, then read **பயிர்**]
+- [YOU RECALL: say *tayakkam*]
+- [YOU READ: **பயிர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03] -->

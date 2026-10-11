@@ -71,7 +71,7 @@ that carries a long **â**, the vowel in English *father*.
 
 - [YOU WRITE: ا — one stroke, top to bottom]
 - [YOU SAY: **â**, the vowel of *father*]
-- [YOU POINT: at the right edge of a Persian word, where your pen would begin]
+- [YOU POINT: the right edge of a Persian word, where your pen would begin]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-RTL-01] -->

@@ -56,7 +56,8 @@ Three.
 - [YOU SAY: *tūkkam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tūkkam*, then *ūsi*, and hear the same long vowel open both]
-- [YOU RECALL: say *eṇṇey*, then read **குடை**]
+- [YOU RECALL: say *eṇṇey*]
+- [YOU READ: **குடை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C61-FEEL-03] -->

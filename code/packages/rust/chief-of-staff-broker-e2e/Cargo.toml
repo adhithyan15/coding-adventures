@@ -1,0 +1,45 @@
+[package]
+name = "chief-of-staff-broker-e2e"
+version = "0.1.0"
+edition = "2021"
+description = "D18S P2.6d-2b: the supervisor, a real per-agent broker and a scripted host, end to end"
+license = "MIT"
+publish = false
+
+[dependencies]
+chief-of-staff-agent-broker = { path = "../chief-of-staff-agent-broker" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }
+chief-of-staff-broker-protocol = { path = "../chief-of-staff-broker-protocol" }
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
+chief-of-staff-secure-host-channel = { path = "../chief-of-staff-secure-host-channel" }
+chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+coding_adventures_ed25519 = { path = "../ed25519" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_x3dh = { path = "../x3dh" }
+storage-core = { path = "../storage-core" }
+
+[[bin]]
+name = "broker-e2e-host"
+path = "src/bin/host.rs"
+test = false
+
+[[bin]]
+name = "broker-e2e-broker"
+path = "src/bin/broker.rs"
+test = false
+
+[target.'cfg(unix)'.dev-dependencies]
+libc = "0.2"

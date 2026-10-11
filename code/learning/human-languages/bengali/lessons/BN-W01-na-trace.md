@@ -49,15 +49,17 @@ vowel of English *awe*, not *na*.
 Leave the **bar across the top for last**, every time. The body of the letter
 first, the horizontal line after it.
 
-> This book does not tell you where each curve of the body starts or which way it
-> travels. Bengali handwriting is taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Tracing what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your finger makes it.
 
-The bar is the exception, and it is not a stylistic claim: the **মাত্রা** joins up
-across a whole word in running text, so it cannot be the first thing drawn on a
-letter that is about to have neighbours.
+> The strip shows **where the body starts and which way it travels**, in one
+> attested order, and names its source beneath it. Bengali handwriting is taught
+> with real variation from school to school, so treat it as a sound way in, not
+> the only one.
+
+The bar coming last is not a stylistic claim: the **মাত্রা** joins up across a
+whole word in running text, so it cannot be the first thing drawn on a letter
+that is about to have neighbours.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NA-01] -->

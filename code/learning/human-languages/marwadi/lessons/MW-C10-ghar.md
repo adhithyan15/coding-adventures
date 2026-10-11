@@ -37,7 +37,8 @@ reviews_of: [MW-C10-hear-ghar, MW-W10-gha, MW-C10-bajar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-GHAR-01]; assesses=[MW-LEX-GHAR-01, MW-SCRIPT-GHA-01, MW-SCRIPT-RA-01, MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-NANA-01] -->
 
-[PAUSE 16s] Say home and market. Write **घ**, **र**, **बाजार**, and **नाना**.
+[PAUSE 16s] Say home and market.
+[YOU WRITE: **घ**, **र**, **बाजार**, and **नाना**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01] -->
@@ -48,7 +49,9 @@ reviews_of: [MW-C10-hear-ghar, MW-W10-gha, MW-C10-bajar]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHAR-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write the one-beat word.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: the one-beat word]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01] -->

@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Japanese for a nephew, then the Japanese for a niece.
 [pause 1 second]
-Read this without stopping: もういちど、おねがいします. (Once more, please.)
+[once you have stopped driving — read: もういちど、おねがいします (Once more, please.) without stopping]
 
 You'll want to know: ごご.
 ごご — gogo — "the afternoon, p.m.".
@@ -32,7 +32,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ごご (gogo) mean? ("The afternoon, p.m.".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the afternoon, p.m.'.
+Say the Japanese for 'the afternoon, p.m.'.
 
 
 Lesson 2 of 5.
@@ -63,7 +63,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does よなか (yonaka) mean? ("The middle of the night".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the middle of the night'.
+Say the Japanese for 'the middle of the night'.
 
 
 Lesson 3 of 5.
@@ -94,7 +94,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あさがた (asagata) mean? ("Early morning".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'early morning'.
+Say the Japanese for 'early morning'.
 
 
 Lesson 4 of 5.
@@ -125,7 +125,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆうはん (yuuhan) mean? ("The evening meal".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the evening meal'.
+Say the Japanese for 'the evening meal'.
 
 
 Lesson 5 of 5.
@@ -156,4 +156,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あさひ (asahi) mean? ("The morning sun".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the morning sun'.
+Say the Japanese for 'the morning sun'.

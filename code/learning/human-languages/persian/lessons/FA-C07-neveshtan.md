@@ -49,13 +49,12 @@ From the right: **ن** *n*, **و** *v*, **ش** *sh*, **ت** *t*, **ن** *n*. Her
 **و** *is* pronounced — a plain consonant *v* — the exact contrast the last
 lesson set up.
 
-The present stem is **نویس** *nevis*: *mi-nevisam*, “I write.” The pair is
+The present stem is *nevis*: *mi-nevisam*, “I write.” The pair is
 **neveshtan, nevis-**, as unpredictable as *raftan, rav-* was. Name the price
 plainly: **the stem of an inherited verb cannot be worked out, so it is learned
 in the same breath as the infinitive.**
 
-Watch the stem earn its keep: **نویس** *nevis-* plus *-ande* gives **نویسنده**
-*nevisande*, “**writer**.” The stem, not the infinitive, is what Persian builds
+Watch the stem earn its keep: *nevis-* plus *-ande* gives *nevisande*, “**writer**.” The stem, not the infinitive, is what Persian builds
 on.
 
 ## The word, taken apart — writing was painting
@@ -78,8 +77,7 @@ Trace the *p* if you like a puzzle: it softened to *b* in Middle Persian
 
 Four verbs, three ways a Persian verb can be built.
 
-**فکر کردن** *fekr kardan* is a **compound**: noun plus *kardan*. **فهمیدن**
-*fahmidan* is a **-idan verb**, stem free. **خواندن** *khândan* and **نوشتن**
+*fekr kardan* is a **compound**: noun plus *kardan*. *fahmidan* is a **-idan verb**, stem free. *khândan* and **نوشتن**
 *neveshtan* are **inherited verbs**, stems you must be told.
 
 Three shapes, one set of personal endings for all of them — the whole verb
@@ -101,7 +99,7 @@ Run the chapter's four, then the five that came before, without the page.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NEVESHTAN, FA-STEM-NEVIS, FA-ETYMON-NEVESHTAN-PAINT, FA-GRAMMAR-COMPOUND-VERB-KARDAN, FA-GRAMMAR-IDAN-REGULAR-STEM] -->
-<!-- hl-activity: {"id":"FA-C07-neveshtan-stem","kind":"text","assesses":["FA-STEM-NEVIS"],"prompt":"Give the present stem that goes with نوشتن (neveshtan).","answer":"نویس","accepted":["nevis","nevis-","nivis","navis"],"feedback":{"correct":"Right: نوشتن neveshtan pairs with the present stem نویس nevis-.","incorrect":"The present stem is نویس — nevis-."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"FA-C07-neveshtan-stem","kind":"text","assesses":["FA-STEM-NEVIS"],"prompt":"Give the present stem that goes with نوشتن (neveshtan).","answer":"nevis","accepted":["nevis-","nivis","navis"],"feedback":{"correct":"Right: نوشتن neveshtan pairs with the present stem nevis-.","incorrect":"The present stem is nevis-."},"response_seconds":10} -->
 
 [PAUSE 3s] Which of this chapter's four verbs is a compound, and which one hands
 you its stem for free? (**Fekr kardan**; **fahmidan**.) What did *neveshtan*

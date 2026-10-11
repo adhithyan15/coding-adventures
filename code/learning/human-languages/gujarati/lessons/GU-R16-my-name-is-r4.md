@@ -43,8 +43,8 @@ reviews_of: [GU-C02-maarun-naam-chhe]
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C02-MAARUNNAAMCHHE-01, GU-CONCEPT-C02-NAAM-01] -->
 <!-- hl-activity: {"id":"GU-R16-my-name-is-r4-listening","kind":"text","assesses":["GU-CONCEPT-C02-CHHE-01","GU-CONCEPT-C02-MAARUN-01","GU-CONCEPT-C02-MAARUNNAAMCHHE-01","GU-CONCEPT-C02-NAAM-01"],"prompt":"Hear mārũ nām Mīrā chhe. Give the meaning and name the final verb.","answer":"My name is Mira; chhe is the final verb","accepted":[],"feedback":{"correct":"The complete frame and Gujarati word order returned.","incorrect":"Hear the four-part frame once more, then answer without help."},"response_seconds":30} -->
 
-[YOU SAY: *mārũ nām Mīrā chhe*] Give its meaning and point to the final verb in
-**મારું નામ મીરા છે**. Position 100 is exactly 61 lessons after the frame was
+[YOU SAY: *mārũ nām Mīrā chhe*] Give its meaning and name the final verb.
+[YOU READ: **મારું નામ મીરા છે**, finding that verb at its end.] Position 100 is exactly 61 lessons after the frame was
 assembled at position 39, closing its R4 window.
 
 ## Writing — from sound

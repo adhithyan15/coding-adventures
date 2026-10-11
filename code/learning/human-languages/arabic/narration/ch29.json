@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Saying and Seeing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b801e7640e9436c0",
+  "sourceHash": "fnv1a64:31ec73b9657a1f52",
   "lessons": [
     {
       "id": "AR-C29-qala",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:396e669ee87451cc",
+      "sourceHash": "fnv1a64:fe74ae4036d7f978",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read قال (qāla) right to left: qāf, long ā, lām. Be honest about the sound: in most everyday spoken Arabic ق is not said that way at all — in Cairo and Damascus it becomes a glottal stop, and across much of the Gulf a hard g. The uvular version is the formal one."
+              "text": "قال (qāla) runs right to left: qāf, long ā, lām."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "قال (qāla) right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **قال** right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "Be honest about the sound: in most everyday spoken Arabic ق is not said that way at all — in Cairo and Damascus it becomes a glottal stop, and across much of the Gulf a hard g. The uvular version is the formal one."
             }
           ]
         },
@@ -77,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "قَائِل (qāʾil) — \"a speaker,\" the doer shape."
+              "text": "qāʾil — \"a speaker,\" the doer shape."
             },
             {
               "kind": "speech",
@@ -165,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6508ebdb058ef96",
+      "sourceHash": "fnv1a64:9e332b241f5b4f72",
       "notice": null,
       "blocks": [
         {
@@ -231,11 +244,11 @@
             },
             {
               "kind": "speech",
-              "text": "مِرْآة (mirʾāh) — \"a mirror.\" This is the instrument shape, mi- plus the root: \"the thing you see with.\" It is a sibling of the ma- place shape behind madhhab and maqāla."
+              "text": "mirʾāh — \"a mirror.\" This is the instrument shape, mi- plus the root: \"the thing you see with.\" It is a sibling of the ma- place shape behind madhhab and maqāla."
             },
             {
               "kind": "speech",
-              "text": "رُؤْيا (ruʾyā) — \"a vision, a dream.\""
+              "text": "ruʾyā — \"a vision, a dream.\""
             },
             {
               "kind": "speech",
@@ -296,7 +309,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is ى made of, and what does it sound like? (ي yāʾ without its dots — sounding like a long ā, only ever at the end of a word.) What does رَأْي mean, and what English turn of phrase makes the same move? (\"An opinion\" — literally a seeing, like \"in my view.\") What is مِرْآة, and what pattern builds it? (A mirror — the mi- instrument shape, \"the thing you see with.\")"
+              "text": "What is ى made of, and what does it sound like? (ي yāʾ without its dots — sounding like a long ā, only ever at the end of a word.) What does رَأْي mean, and what English turn of phrase makes the same move? (\"An opinion\" — literally a seeing, like \"in my view.\") What is mirʾāh, and what pattern builds it? (A mirror — the mi- instrument shape, \"the thing you see with.\")"
             }
           ]
         }

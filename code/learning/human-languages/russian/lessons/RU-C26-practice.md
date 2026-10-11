@@ -44,7 +44,7 @@ the family Russian is on.
 
 1. Say **первый, второй, третий** in order, then out of order.
 2. **Build**, do not recall: fourth, fifth, tenth, twentieth.
-3. Write **1-й**, **2-е**, **3-й** and read each aloud as a full word.
+3. [YOU WRITE: **1-й**, **2-е**, **3-й**, and read each aloud as a full word]
 4. Say which two of the series are not built from their numbers, and what
    English does in the same place.
 5. Count one to ten, say **двадцать** and **сто**, and say what a number still

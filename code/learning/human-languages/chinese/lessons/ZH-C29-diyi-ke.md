@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [ZH-SKILL-CONNECTED-READING, ZH-SKILL-READ-WORDS, ZH-LEX-NE-01, ZH-LEX-DUI-01, ZH-LEX-SUI-01, ZH-LEX-ZHONGGUOREN-01]
+  knowledge: [ZH-SKILL-CONNECTED-READING, ZH-SKILL-READ-WORDS, ZH-LEX-NE-01, ZH-LEX-DUI-01, ZH-LEX-SUI-01, ZH-LEX-ZHONGGUOREN-01, ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01]
 skills: [reading]
 modes: [interpretive]
 strands: [meaning-input]
@@ -55,10 +55,13 @@ reviews_of: [ZH-C29-characters, ZH-C29-words, ZH-C26-ne, ZH-C26-dui]
 > 谢谢
 > 再见
 
-[PAUSE 3s] Read it through once without stopping. Do not translate as you go.
+[PAUSE 3s]
+[YOU READ: the passage through once without stopping; do not translate as you go]
 
-[PAUSE 3s] Again — and this time notice that the passage turns at line six. The
-first five are about the writer. The last five are addressed to you.
+[PAUSE 3s]
+[YOU READ: the passage again, and this time notice that the passage turns at line six]
+
+The first five are about the writer. The last five are addressed to you.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NE-01, ZH-LEX-DUI-01, ZH-SKILL-CONNECTED-READING] -->
@@ -76,7 +79,7 @@ a verb waits forever.
 once, and it works because every character was paid for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ZH-SKILL-CONNECTED-READING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-SKILL-CONNECTED-READING, ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01] -->
 
 <!-- hl-activity: {"id":"ZH-C29-diyi-ke-age","kind":"text","assesses":["ZH-SKILL-CONNECTED-READING"],"prompt":"How old is the writer?","answer":"18","accepted":["十八","eighteen"],"feedback":{"correct":"十八岁.","incorrect":"十八岁 -- eighteen."},"response_seconds":13} -->
 

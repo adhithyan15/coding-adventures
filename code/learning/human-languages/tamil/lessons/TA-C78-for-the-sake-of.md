@@ -33,7 +33,9 @@ reviews_of: [TA-C78-therefore]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-EEN-01, TA-LEX-C78-WHY-03] -->
 
-[PAUSE 2s] Read **ஏன்**. Then say: I am thirsty, so I want tea.
+[PAUSE 2s] [YOU READ: **ஏன்**]
+
+Then say: I am thirsty, so I want tea.
 
 ## Grammar lens: a reason that is not a sentence
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C78-WHY-04]; assesses=[] -->

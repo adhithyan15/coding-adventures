@@ -36,7 +36,7 @@ reviews_of: [HI-C86-aapko-use, HI-C40-that]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-02] -->
 
-[PAUSE 2s] Say **वह**, "that." Now try to say "the book" in Hindi, and read on
+[PAUSE 2s] Say **वह**, "that." Now try to say "the book" in Hindi, and go on
 when you find you have no word for *the*.
 
 ## You'll want to know: there is no article

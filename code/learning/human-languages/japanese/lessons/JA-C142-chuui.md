@@ -41,7 +41,7 @@ reviews_of: [JA-C141-deshou, JA-C141-raishuu, JA-C138-hatarakimasu, JA-W132-ru]
 - [YOU RECALL: say *probably* — **R1**, one lesson back]
 - [YOU RECALL: say *next week* — **R2**, five lessons back]
 - [YOU RECALL: say *I work*, politely — **R3**, twenty lessons back]
-- [YOU RECALL: write **る** — **R4**, eighty lessons back]
+- [YOU WRITE: **る** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: ちゅうい
 <!-- hl-knowledge: introduces=[JA-LEX-C142-CHUUI]; assesses=[] -->

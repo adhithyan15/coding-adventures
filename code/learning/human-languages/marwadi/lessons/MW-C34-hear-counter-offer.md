@@ -36,7 +36,9 @@ reviews_of: [MW-C34-price-number, MW-C23-hear-karo, MW-C22-price-question]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-QUESTION-01, MW-LEX-KARO-01, MW-LEX-PAANCH-01] -->
 
-[PAUSE 18s] Write the price question, say make it, then say five.
+[PAUSE 18s] [YOU WRITE: the price question]
+
+Say make it, then say five.
 
 - [YOU RECALL: *das*, and the two bare consonants it is written with]
 

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C54-yuugata-type",
-              "prompt": "Type the Japanese for 'evening'.",
+              "prompt": "Say the Japanese for 'evening'.",
               "assesses": [
                 "JA-LEX-C54-TIME54-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C54-ashita-type",
-              "prompt": "Type the Japanese for 'tomorrow'.",
+              "prompt": "Say the Japanese for 'tomorrow'.",
               "assesses": [
                 "JA-LEX-C54-TIME54-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C54-ima-type",
-              "prompt": "Type the Japanese for 'now'.",
+              "prompt": "Say the Japanese for 'now'.",
               "assesses": [
                 "JA-LEX-C54-TIME54-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C54-mainichi-type",
-              "prompt": "Type the Japanese for 'every day'.",
+              "prompt": "Say the Japanese for 'every day'.",
               "assesses": [
                 "JA-LEX-C54-TIME54-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C54-toshi-type",
-              "prompt": "Type the Japanese for 'a year'.",
+              "prompt": "Say the Japanese for 'a year'.",
               "assesses": [
                 "JA-LEX-C54-TIME54-05"
               ],
@@ -847,8 +852,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R54-first-pass-food-and-the-home-type",
-              "prompt": "Type the Japanese for 'every day'.",
+              "prompt": "Say the Japanese for 'every day'.",
               "assesses": [
                 "JA-LEX-C54-TIME54-04"
               ],
@@ -1011,8 +1017,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R54-second-pass-school-nature-and-animals-type",
-              "prompt": "Type the Japanese for 'an insect'.",
+              "prompt": "Say the Japanese for 'an insect'.",
               "assesses": [
                 "JA-LEX-C46-ANIMALS46-01"
               ],

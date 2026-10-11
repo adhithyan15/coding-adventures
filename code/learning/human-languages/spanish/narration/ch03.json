@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-un-form",
               "prompt": "Say a day in Spanish.",
               "assesses": [
@@ -139,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-un-contrast",
               "prompt": "Which one points at a day we both already know about: el dia or un dia?",
               "assesses": [
@@ -159,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-un-number",
               "prompt": "What number is hiding inside un, and inside English a?",
               "assesses": [
@@ -318,6 +321,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-una-tarde",
               "prompt": "Say an afternoon.",
               "assesses": [
@@ -336,6 +340,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-una-which",
               "prompt": "Un or una before dia?",
               "assesses": [
@@ -356,6 +361,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-una-worn",
               "prompt": "Which of the two lost a syllable on the way from Latin?",
               "assesses": [
@@ -485,6 +491,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-repaso-articulos-the-day",
               "prompt": "The day.",
               "assesses": [
@@ -503,6 +510,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-repaso-articulos-an-afternoon",
               "prompt": "An afternoon.",
               "assesses": [
@@ -521,6 +529,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C02-repaso-articulos-where",
               "prompt": "Where does an article get its gender from?",
               "assesses": [

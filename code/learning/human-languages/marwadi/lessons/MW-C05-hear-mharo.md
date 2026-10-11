@@ -36,8 +36,9 @@ reviews_of: [MW-C04-hear-paani, MW-C04-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAANI-01, MW-SCRIPT-PA-01, MW-PERFORMANCE-PAANI-FOUR-SKILL-01] -->
 
-[PAUSE 10s] Hear *pāṇī*, say **water**, say the Marwadi word back, then
-write its first sign **प** once.
+[PAUSE 10s] Hear *pāṇī*, say **water**, and say the Marwadi word back.
+[YOU WRITE: its first sign **प**, once]
+
 Set writing aside. The next chapter begins with the ear.
 
 ## You'll want to know
@@ -52,7 +53,7 @@ it today.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MHARO-01] -->
 
-Point to yourself when you hear *mhāro*. Point away when you hear *pāṇī*.
+Say *my* when you hear *mhāro*. Say *water* when you hear *pāṇī*.
 Change the order and do it once more.
 
 ## Wrap-up Recall

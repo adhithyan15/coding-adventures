@@ -55,7 +55,9 @@ one beat. **みっつ** is three beats, and the middle one is silence.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MITTSU, JA-LEX-HITOTSU, JA-LEX-FUTATSU, JA-SCRIPT-SMALL-TSU-01] -->
 
-Write **みっつ**. Say the run so far, slowly: *hitotsu, futatsu, mittsu*. Stop on
+[YOU WRITE: **みっつ**]
+
+Say the run so far, slowly: *hitotsu, futatsu, mittsu*. Stop on
 the silent beat in the third one.
 
 ## Wrap-up Recall

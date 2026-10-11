@@ -180,16 +180,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:267027b79ef27c49",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "You'll want to know: என்னை and உன்னை"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: என்னை and உன்னை."
       },
       "blocks": [
         {
@@ -809,19 +813,23 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:678649400b90625d",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: three pieces, one of them yours to draw",
+          "Reading: five words, cold",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: three pieces, one of them yours to draw and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: three pieces, one of them yours to draw, Reading: five words, cold and Guided Practice."
       },
       "blocks": [
         {
@@ -865,7 +873,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உ, and say whether it is a letter or a sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உ**, and say whether it is a letter or a sign]"
@@ -874,7 +882,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ி, and say what it replaces",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ி**, and say what it replaces]"
@@ -883,7 +891,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒ and ோ — the same vowel standing, then hanging",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒ** and **ோ** — the same vowel standing, then hanging]"

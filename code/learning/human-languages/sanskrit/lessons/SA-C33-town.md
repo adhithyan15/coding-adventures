@@ -61,7 +61,8 @@ A town, and the reason *police* and *Nagpur* are relatives.
 - [YOU SAY: *puram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *parvataḥ*, then *puram*]
-- [YOU RECALL: read **वायुः**, then say *latā*]
+- [YOU READ: **वायुः**]
+- [YOU RECALL: say *latā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04] -->

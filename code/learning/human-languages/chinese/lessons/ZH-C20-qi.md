@@ -36,7 +36,9 @@ reviews_of: [ZH-W20-qi, ZH-C20-liu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-QI, ZH-LEX-NUM-LIU] -->
 
-[PAUSE 2s] Write 七, then say six.
+[PAUSE 2s] [YOU WRITE: 七]
+
+Then say six.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-QI]; assesses=[ZH-TONE-LEXICAL, ZH-LEX-NUM-YI] -->

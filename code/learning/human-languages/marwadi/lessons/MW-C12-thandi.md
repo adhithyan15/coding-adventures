@@ -37,8 +37,9 @@ reviews_of: [MW-C12-hear-thandi, MW-W12-dda, MW-C12-garmi, MW-C12-hear-mausam, M
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-THANDI-01]; assesses=[MW-LEX-THANDI-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-DDA-01, MW-SCRIPT-II-MATRA-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-LEX-MAUSAM-01, MW-DIALOGUE-WELLBEING-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01] -->
 
-[PAUSE 30s] Perform the known wellbeing exchange and travel payoff, say cold,
-heat, and weather, write **गर्मी**, then form **ठ**, **ं**, **ड**, and **ी**.
+[PAUSE 30s] Perform the known wellbeing exchange and travel payoff, and say
+cold, heat, and weather.
+[YOU WRITE: **गर्मी**, then form **ठ**, **ं**, **ड**, and **ी**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01] -->
@@ -49,8 +50,9 @@ heat, and weather, write **गर्मी**, then form **ठ**, **ं**, **ड*
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THANDI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **ठंडी**. Check the nasal mark and
-keep **ड** distinct from **द**.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **ठंडी** — check the nasal mark and keep **ड** distinct from **द**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01] -->

@@ -10,6 +10,7 @@ delivery: script
 chapter: 25
 type: writing
 headword: "-ते · -ती · -चे"
+romanization: "-te · -tī · -ce"
 gloss: repair form-label agreement separately from value spelling
 prerequisites: [MR-A1F08-last-three-supported]
 sounds: []

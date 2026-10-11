@@ -8,7 +8,7 @@ type: grammar
 headword: se habla español
 gloss: how Spanish says something happens without saying who does it — the sign in every shop window
 concept_tag: ES-GRAMMAR-SE-IMPERSONAL
-prerequisites: [ES-C51-sintesis-regalo-motivo]
+prerequisites: [ES-C51-sintesis-regalo-motivo, ES-C40-comprar]
 sounds: []
 roots: []
 teaches_cells: []
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-SE-IMPERSONAL]
 practises:
-  knowledge: [ES-GRAMMAR-REFLEXIVE-THIRD-PERSON, ES-LEX-SE-LLAMA, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-3SG, ES-LEX-BIEN, ES-LEX-COMER, ES-GRAMMAR-SE-IMPERSONAL]
+  knowledge: [ES-GRAMMAR-REFLEXIVE-THIRD-PERSON, ES-LEX-SE-LLAMA, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-3SG, ES-LEX-BIEN, ES-LEX-COMER, ES-GRAMMAR-SE-IMPERSONAL, ES-ETYMON-COMPRAR-08, ES-ETYMON-COMPARE-FALSE-09]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -44,7 +44,7 @@ able to parse.
 > ***Se habla** español.* — Spanish is spoken here.
 > ***Se come** bien.* — One eats well here. / The food is good.
 
-Look for the person doing it. There is not one, and there is not meant to be.
+Listen for the person doing it. There is not one, and there is not meant to be.
 *Se habla español* does not tell you **who** speaks Spanish — it tells you that
 Spanish gets spoken, and that is the entire content.
 
@@ -72,8 +72,12 @@ by anyone to anyone. It simply reports that something is the case.
 - [YOU SAY: "Se come bien"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SE-IMPERSONAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SE-IMPERSONAL, ES-ETYMON-COMPRAR-08, ES-ETYMON-COMPARE-FALSE-09] -->
 
 [PAUSE 3s] *Se habla español* — who is speaking? (**Nobody named** — that is
-the point.) What does the *se* mark? (That **no person is being named**.) Next:
+the point.) What does the *se* mark? (That **no person is being named**.)
+
+[PAUSE 2s] From the shopping words: is *comprar* a cousin of English *compare*? (**No** — *comprar* is *comparāre*, **to procure**; *compare* comes from a second Latin word that only looks the same.)
+
+Next:
 why this form grew out of the one you already knew.

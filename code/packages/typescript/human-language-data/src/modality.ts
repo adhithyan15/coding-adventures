@@ -30,9 +30,12 @@
 // derivation below looks at the lesson's type and at its parsed body blocks:
 //
 //   1. `type: writing`                        -> pen   (an orthography drill)
+//   2. `type: reading`                        -> sight (printed text to read)
 //   2. a `script` block                       -> sight (letter shapes on the page)
 //   2. an ANCHORED sight cue in the prose     -> sight ("look at the chart above")
 //   2. a table wider than we can read aloud   -> sight (a paradigm grid)
+//   2. a step the narrator says plainly that  -> sight ("[PAUSE 3s] Read **नमस्ते**.")
+//      needs eyes or hands
 //   3. otherwise                              -> voice
 //
 // "Anchored" is doing real work in rule 2. A cue phrase is a pointing expression, and
@@ -41,6 +44,16 @@
 // etymology and "put a fact on the table" is an idiom. Both used to be counted, and
 // authors were rewriting correct prose to get out from under the detector. See
 // `SIGHT_CUE_RULES` for what each phrase has to clear before it counts.
+//
+// The first rule 2 looks like it contradicts everything above — it reads the word
+// `reading` and concludes "needs eyes", which is the very move this section warns
+// against. It does not, because it reads a different field. `skills: [reading]` is a
+// lesson's AMBITION, and almost every lesson in the corpus has it. `type: reading` is
+// the lesson's STRUCTURE: the whole lesson is target-language text printed on the
+// page and the instruction "read it". Seventy-four lessons carry that type, against
+// some twenty-nine thousand that list the skill, which is exactly the gap between
+// "will one day be able to read this" and "is reading this right now". See "Rule 2,
+// by type" in `deriveLessonModality` for the full argument.
 //
 // Measured over all 1,096 lessons that yields 51 `pen`, and among the rest the
 // single biggest obstacle is the **table**, not the script — which is a tractable
@@ -97,6 +110,7 @@
 
 import type { LessonBodyBlock } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
+import { eyesOrHandsSteps } from "./drivable-instructions.js";
 import {
   DEFAULT_LINEARISABLE_TABLE_COLUMNS as SPEAKABLE_TABLE_COLUMNS,
   hasUnspeakableTable,
@@ -222,13 +236,19 @@ export interface ModalityOptions {
  * `wide-table` is named for the common case but means the general one: *a table the
  * narration lineariser refuses*, whether because it is too wide, has a blank heading,
  * or has ragged rows.
+ *
+ * `eyes-or-hands-step` is a sentence or a spoken cue that asks the learner to read
+ * printed script, point at it, write, handle cards, cover the page or make a gesture,
+ * in a form the narration reads out plainly. See {@link eyesOrHandsStepsIn}.
  */
 export type ModalityReasonCode =
   | "writing-type"
+  | "reading-type"
   | "writing-block"
   | "script-block"
   | "sight-cue"
   | "wide-table"
+  | "eyes-or-hands-step"
   | "no-visual-dependency";
 
 /**
@@ -264,6 +284,13 @@ export interface BlockModality {
   reasons: ModalityReasonCode[];
   /** True when a hands-free renderer may skip this block whole. */
   detachable: boolean;
+  /**
+   * The steps in this block that ask for eyes or hands where the narration says them
+   * plainly, quoted as authored. Empty for almost every block, and always empty for a
+   * detachable one (its type already decides it). Non-empty makes the block `sight`
+   * with reason `eyes-or-hands-step`.
+   */
+  eyesOrHandsSteps: string[];
 }
 
 /**
@@ -342,6 +369,13 @@ export interface LessonModality {
   widestTableColumns: number;
   /** Which cue phrases matched, for the author fixing the lesson. */
   sightCues: string[];
+  /**
+   * Every eyes-or-hands step in the lesson's CORE — the preamble and the sections a
+   * hands-free renderer keeps — quoted as authored. These are what stand between a
+   * lesson and the car. Detachable sections are not read for steps at all: their own
+   * type already says they need eyes or hands (see `deriveBlockModality`).
+   */
+  coreEyesOrHandsSteps: string[];
   /** Monotone closure: `pen` also requires `sight`. */
   requires: Modality[];
 }
@@ -370,6 +404,75 @@ export interface ChapterModality {
   drivablePrefix: number;
   /** The lesson that ends the prefix, or null when the whole chapter is drivable. */
   firstNonVoiceLesson: string | null;
+  /**
+   * Why a commuter cannot START this chapter, or null when they can (a prefix above 0,
+   * or an empty chapter). See {@link unstartableCause} for the two answers and why
+   * they are counted apart.
+   */
+  unstartable: UnstartableCause | null;
+}
+
+// ---------------------------------------------------------------------------
+// Why a chapter cannot be started in the car
+// ---------------------------------------------------------------------------
+//
+// "Chapters with a drivable prefix of 0" is one number made of two different things,
+// and adding them together hid which of them anyone could do anything about.
+//
+//   lesson-type      The chapter OPENS on a `type: writing` or `type: reading`
+//                    lesson. Its whole point is the hand or the eye (rules 1 and 3 of
+//                    the block-level model: nothing in it is separable), so no wording
+//                    can make it drivable, and HL08 forbids thinning the book to try.
+//                    Such a chapter is an honest zero. The only lever is ORDER — a
+//                    later lesson that depends on nothing before it could open the
+//                    chapter instead — and order is constrained by prerequisites,
+//                    script closure and the glyph budget, which is why the measured
+//                    corpus has almost no candidates (see HL08).
+//
+//   lesson-content   The chapter opens on any other kind of lesson — a word, a
+//                    grammar point, a review — whose CORE still needs eyes or hands:
+//                    a pointing cue, a table the lineariser refuses, a "read it" or
+//                    "write it" said plainly. That is the content's demand, not the
+//                    lesson's purpose, and it is often movable: a pointing phrase that
+//                    was never about the page, a step that can be deferred as an
+//                    authored `[YOU READ: …]` / `[YOU WRITE: …]` cue, a writing step
+//                    that belongs in its own detachable `## Writing` section.
+//
+// Truth table, over the chapter's FIRST lesson in authored order:
+//
+//   first lesson's core | its core reasons include             | unstartable
+//   --------------------+---------------------------------------+---------------
+//   voice               | (anything)                            | null
+//   sight / pen         | writing-type or reading-type          | "lesson-type"
+//   sight / pen         | neither                               | "lesson-content"
+//
+// The reasons are read from the CORE derivation because that is the scale the prefix
+// is counted on. A writing lesson's core is `pen` with `writing-type` among its
+// reasons, so it lands in the first row it can; an authored override that lowers a
+// writing lesson to `voice` makes the chapter startable and the question disappears.
+
+/** Why a chapter's drivable prefix is 0. See the section comment above. */
+export type UnstartableCause = "lesson-type" | "lesson-content";
+
+/** Core reasons that mean the LESSON's type, not its content, needs eyes or hands. */
+const LESSON_TYPE_REASONS: ReadonlySet<ModalityReasonCode> = new Set([
+  "writing-type",
+  "reading-type",
+]);
+
+/**
+ * Why a chapter cannot be started by ear, given its lessons in authored order.
+ *
+ * Returns null when the first lesson's core is `voice` or the chapter is empty — an
+ * empty chapter has no lesson to blame, and calling it unstartable would count a
+ * chapter no book prints.
+ */
+export function unstartableCause(ordered: readonly LessonModality[]): UnstartableCause | null {
+  const first = ordered[0];
+  if (first === undefined || first.coreModality === "voice") return null;
+  return first.coreReasons.some((reason) => LESSON_TYPE_REASONS.has(reason))
+    ? "lesson-type"
+    : "lesson-content";
 }
 
 /** One track's rollup. */
@@ -773,6 +876,97 @@ export function matchedSightCues(text: string, context?: SightCueContext): strin
 }
 
 // ---------------------------------------------------------------------------
+// Steps that need eyes or hands
+// ---------------------------------------------------------------------------
+//
+// The three rules above read the page for things that cannot be SPOKEN: a script
+// block, a pointing cue, an unspeakable table. This one reads it for things that
+// cannot be DONE by ear. A wrap-up recall is perfectly speakable —
+//
+//     [PAUSE 3s] Read **नमस्ते**. What does the conjunct do?
+//
+// — and the narration speaks it, word for word, to someone at the wheel. "Read"
+// is not a pointing expression, nothing here is a table, so the lesson stayed
+// `voice` and was announced as one "you can do in the car".
+//
+// That gap had a precise shape. The same sentence in a lesson that is `voice`
+// through and through was always caught: a corpus test (`drivable-writing-cues`)
+// ran a family of detectors over every `drivable` lesson and demanded zero. But a
+// lesson with a detachable section is `sight` or `pen` in full, so it was never
+// `drivable`, so the test never read it — while its CORE was `voice`, and the
+// narration announced the core. 166 such steps sat in the cores of 132 lessons
+// across 15 tracks: recalls that said "then read **কেমন**", Gujarati practice
+// that said "Uncover **આજ** once", Japanese warm-ups that said "Write **か**".
+//
+// So the detectors moved from the test into `drivable-instructions.ts` and became a
+// rule here. What fires, and what deliberately does not, is documented there; the
+// outline:
+//
+//   fires                                             does not fire
+//   ------------------------------------------------  --------------------------------
+//   Read **नमस्ते**.  / read these shuffled numerals    [YOU READ: **नमस्ते**]  (deferred)
+//   [YOU RECALL: say *āmi*, then read **কেমন**]          Read it literally and it says …
+//   Write **あ** once.  / Copy **学** once.               the word is *written* with œ
+//   Point to **ش · ک · ر** and say *sh · k · r*.        point at what it means
+//   Uncover **આજ** once.  / Look, cover, and wait.     English lets *sit* cover both
+//   [YOU SAY: *denwa*, clapping three beats]          [YOU SAY: "kai" — hand]
+//   Say **namaskāra** with a small bow.                *Vaṇakkam* is said with pressed palms
+//
+// The answer is `sight`, not `pen`, even for a writing step. `pen` is the sign for a
+// lesson that TEACHES the hand (a writing lesson, a writing section); a stray "Write
+// it once" in a warm-up does not make a lesson a handwriting lesson, but it does make
+// it one you cannot do while driving, which is all `sight` promises here.
+//
+// Headings are not read. A heading names its section — "Practice — hear, say, read,
+// and write water" is a list of skills — and the step it introduces is in the body.
+// (The narration still SAYS every heading, and a label spoken aloud sounds like an
+// instruction, so it says a drivable lesson's headings for the ear instead: see
+// "Headings, spoken" in drivable-instructions.ts. That is a rendering rule, not a
+// requirement: it moves no modality.)
+//
+// Scored activities are not read here either: their prompts live in HTML comments,
+// which no rule above reads. A prompt that needs eyes or hands ("Write son in Chinese
+// characters") is DEFERRED by the narration, like a `[YOU WRITE: …]` cue, so it no
+// more makes a lesson undrivable than that cue does — see "Scored activity prompts".
+
+/** Lines of Markdown that are headings (`# …` to `###### …`). */
+const HEADING_LINE = /^[ \t]{0,3}#{1,6}(?:[ \t]|$)/;
+
+/**
+ * The eyes-or-hands steps in one stretch of lesson Markdown, headings set aside.
+ *
+ *   "## Wrap-up\n[PAUSE 3s] Read **नमस्ते**."   -> ["Read **नमस्ते**."]
+ *   "# Practice — hear, say, read, and write"   -> []   (a heading, not a step)
+ *   "[YOU READ: **नमस्ते**]"                      -> []   (deferred by the narration)
+ */
+export function eyesOrHandsStepsIn(markdown: string): string[] {
+  const body = markdown
+    .split(/\r?\n/)
+    .filter((line) => !HEADING_LINE.test(line))
+    .join("\n");
+  return eyesOrHandsSteps(body);
+}
+
+// The same blocks are derived many times over: the narration derives every lesson
+// twice (once to order a chapter, once to narrate it), the manifest, the books and
+// the gap report each derive the corpus again, and a test run does all of that many
+// times. The step walk is the costliest part of a derivation, so its answer is kept
+// beside the object it was computed from — weakly, so a dropped lesson takes its entry
+// with it (the same pattern as the duration estimate in `report.ts`). The cached text
+// is compared on every read: a caller that edits `block.markdown` in place (one figure
+// test does) gets a fresh walk rather than a stale answer.
+const stepsByBlock = new WeakMap<object, { text: string; steps: string[] }>();
+
+/** {@link eyesOrHandsStepsIn}, remembered per owning object while its text is unchanged. */
+function cachedSteps(owner: object, text: string): string[] {
+  const cached = stepsByBlock.get(owner);
+  if (cached !== undefined && cached.text === text) return [...cached.steps];
+  const steps = eyesOrHandsStepsIn(text);
+  stepsByBlock.set(owner, { text, steps });
+  return [...steps];
+}
+
+// ---------------------------------------------------------------------------
 // The derivation
 // ---------------------------------------------------------------------------
 
@@ -826,10 +1020,21 @@ export function deriveBlockModality(
   if (cues.length > 0) reasons.push("sight-cue");
   const wideTable = widestTableColumns(text) > maxColumns;
   if (wideTable) reasons.push("wide-table");
+  // The body only, not `text`: the title is a heading (see `eyesOrHandsStepsIn`).
+  //
+  // Not read at all in a DETACHABLE block. A writing section is `pen` and a letters
+  // section is `sight` by type, and "Copy it once" or "Read **न**" there is the very
+  // work the section exists for: it adds nothing to the block's requirement, and a
+  // renderer that cannot use eyes or hands sets the whole section aside behind its stop
+  // guard anyway. Counting it would only stamp the reason on hundreds of lessons whose
+  // requirement it does not change. So the rule is, exactly: a step counts where the
+  // car would otherwise hear it — the preamble and the sections a renderer keeps.
+  const steps = isDetachableBlock(block) ? [] : cachedSteps(block, block.markdown);
+  if (steps.length > 0) reasons.push("eyes-or-hands-step");
 
   const modality: Modality = isWritingBlock
     ? "pen"
-    : block.type === "script" || cues.length > 0 || wideTable
+    : block.type === "script" || cues.length > 0 || wideTable || steps.length > 0
       ? "sight"
       : "voice";
   if (reasons.length === 0) reasons.push("no-visual-dependency");
@@ -841,6 +1046,7 @@ export function deriveBlockModality(
     modality,
     reasons,
     detachable: isDetachableBlock(block),
+    eyesOrHandsSteps: steps,
   };
 }
 
@@ -910,8 +1116,54 @@ export function deriveLessonModality(
   const hasWritingBlock = writingSegments.length > 0;
   if (hasWritingBlock) reasons.push("writing-block");
 
-  // Rule 2 — the three ways a lesson can need eyes. All three are evaluated even
-  // once one has fired, because the report is more useful when it names every cause.
+  // Rule 2, by type — a reading lesson teaches the EYE to read printed script, and
+  // so it needs sight exactly as a writing lesson needs a pen. It mirrors Rule 1: the
+  // lesson TYPE decides, and the body is not consulted.
+  //
+  // WHY THE TYPE, AND NOT THE `reading` SKILL. The header of this file spends a page
+  // explaining why `skills: [reading]` must never decide modality, and every word of
+  // that still holds: the skill is what a lesson DEVELOPS, and thousands of lessons
+  // that are perfectly learnable by ear develop it. `type: reading` is a different
+  // kind of fact. It is not an ambition but a description of the lesson's structure:
+  // the lesson IS printed target-language text plus the instruction to read it.
+  // Usually that is a connected passage under a `## Reading` heading; sometimes it is
+  // a run of shop signs, labels, or a seven-word body map. Either way the questions
+  // that follow are only answerable by someone who just looked. Strip away the eyes
+  // and nothing is left to teach: a narrator reading the text aloud turns a reading
+  // lesson into a listening lesson, which is a different lesson the course already
+  // has elsewhere.
+  //
+  // WHY THE STRUCTURAL RULES MISSED IT. The rest of Rule 2 only sees eyes when
+  // something on the page cannot be SPOKEN — a script block, a pointing cue, an
+  // unspeakable table. A reading passage is the opposite case: it is entirely
+  // speakable, which is precisely why it slipped through. Before this rule, fifty-nine
+  // of the seventy-four reading lessons had a `voice` core (fifty-eight of them
+  // `voice` outright), and the driving edition offered "read the passage once
+  // through, without stopping" to someone at the wheel. The demand is not in any one
+  // block the detectors can inspect; it is in what the lesson is FOR, and the only
+  // place that is written down is the type.
+  //
+  // WHY THE CORE IS SIGHT TOO. As with Rule 1, this is the lesson type, so the whole
+  // lesson is the reading. There is no aside a hands-free renderer could set down and
+  // still deliver the rest: the warm-up primes the text, the text is the lesson, and
+  // the follow-up asks about what was read. A detachable block is a promise that
+  // nothing downstream depends on it, and in a reading lesson everything does — so
+  // there is nothing separable, and `coreModality` is `sight` as well.
+  //
+  // `sight` and not `pen`: reading asks the eye to recognise, never the hand to form.
+  // A reading lesson that also carries a writing block still goes to `pen` by Rule 1b,
+  // since `pen` is the stronger requirement and implies `sight` anyway.
+  //
+  // An authored `modality:` override is still honoured, under the same rule every
+  // override follows below: a `voice` override contradicts this derivation, so it
+  // must carry a `modality_reason:` or {@link modalityFindings} reports it. Nothing
+  // re-advertises a reading lesson as drivable silently.
+  const isReading = lesson.realization.type === "reading";
+  if (isReading) reasons.push("reading-type");
+
+  // Rule 2, by structure — the three ways a lesson's BODY can need eyes. All three are
+  // evaluated even once one has fired (the type case included), because the report is
+  // more useful when it names every cause.
   const hasScriptBlock = lesson.blocks.some((block) => block.type === "script");
   if (hasScriptBlock) reasons.push("script-block");
   const cues = matchedSightCues(text, cueContext);
@@ -924,11 +1176,19 @@ export function deriveLessonModality(
   // export is able to keep.
   const wideTable = hasUnspeakableTable(text, { maxColumns });
   if (wideTable) reasons.push("wide-table");
+  // Rule 2, by step — a sentence or spoken cue that asks for eyes or hands, in the
+  // preamble or in a section a renderer keeps (each block already ran it; detachable
+  // blocks skip it, see `deriveBlockModality`). Because only kept sections are read,
+  // this fires for the whole lesson exactly when it fires for the core below.
+  const preambleSteps = cachedSteps(lesson, lesson.preamble);
+  const coreSteps = [...preambleSteps, ...blocks.flatMap((block) => block.eyesOrHandsSteps)];
+  const hasStep = coreSteps.length > 0;
+  if (hasStep) reasons.push("eyes-or-hands-step");
 
   const derived: Modality =
     isWriting || hasWritingBlock
       ? "pen"
-      : hasScriptBlock || cues.length > 0 || wideTable
+      : isReading || hasScriptBlock || cues.length > 0 || wideTable || hasStep
         ? "sight"
         : "voice";
   // Rule 3 — nothing needed eyes or a hand, so it plays in the car.
@@ -938,6 +1198,8 @@ export function deriveLessonModality(
   // over the blocks it would keep.
   const coreReasons: ModalityReasonCode[] = [];
   if (isWriting) coreReasons.push("writing-type");
+  // Rule 2 by type, for the core: the text is the lesson, so nothing is set aside.
+  if (isReading) coreReasons.push("reading-type");
   const coreText = lessonCoreText(lesson);
   const coreScriptBlock = lesson.blocks.some(
     (block) => block.type === "script" && !isDetachableBlock(block),
@@ -947,9 +1209,15 @@ export function deriveLessonModality(
   if (coreCues.length > 0) coreReasons.push("sight-cue");
   const coreWideTable = widestTableColumns(coreText) > maxColumns;
   if (coreWideTable) coreReasons.push("wide-table");
+  // THE RULE THIS AMENDMENT WAS MISSING. A detachable section is set aside with a stop
+  // guard; a step in any section the car KEEPS is read out plainly, so it decides the
+  // core exactly as it decides the whole. Before this, a core was judged only by
+  // structure, and a lesson whose wrap-up said "Read **नमस्ते**." was announced as
+  // drivable because its only OTHER demand was a detachable letters section.
+  if (hasStep) coreReasons.push("eyes-or-hands-step");
   const coreDerived: Modality = isWriting
     ? "pen"
-    : coreScriptBlock || coreCues.length > 0 || coreWideTable
+    : isReading || coreScriptBlock || coreCues.length > 0 || coreWideTable || hasStep
       ? "sight"
       : "voice";
   if (coreReasons.length === 0) coreReasons.push("no-visual-dependency");
@@ -965,7 +1233,20 @@ export function deriveLessonModality(
   // above the value they just accepted responsibility for. The invariant that
   // falls out — core is never stronger than full — is what lets a hands-free view
   // trust `coreModality` on its own.
-  const coreAccepted = weakerModality(coreDerived, accepted);
+  //
+  // The cap only lowers. When the lesson has no detachable section there is nothing
+  // to set aside, the core IS the lesson, and an override that RAISES it ("pen: the
+  // learner must repair a printed form", PA-R171-date-repair-again, whose prose the
+  // cue detector reads as voice) must raise the core with it. Otherwise the core kept
+  // the derivation's `voice`, and the drivable prefix — which the chapter narration
+  // now reads too — counted a lesson its author had called not drivable.
+  //
+  //   detachable section?  core
+  //   -------------------  ---------------------------------------------
+  //   no                   the accepted modality (override or derivation)
+  //   yes                  the weaker of coreDerived and the accepted one
+  const hasDetachable = blocks.some((block) => block.detachable);
+  const coreAccepted = hasDetachable ? weakerModality(coreDerived, accepted) : accepted;
 
   return {
     lessonId: lesson.realization.lessonId,
@@ -987,6 +1268,7 @@ export function deriveLessonModality(
     overridden: accepted !== derived,
     widestTableColumns: tableColumns,
     sightCues: cues,
+    coreEyesOrHandsSteps: coreSteps,
     requires: requiredChannels(accepted),
   };
 }
@@ -1115,6 +1397,7 @@ function chapterModality(
     modalities: unionModalities(ordered.map((entry) => entry.modality)),
     drivablePrefix: prefix,
     firstNonVoiceLesson: prefix < ordered.length ? (ordered[prefix]?.lessonId ?? null) : null,
+    unstartable: unstartableCause(ordered),
   };
 }
 

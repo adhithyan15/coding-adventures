@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *katti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *katti*, then *buṭṭa*, and say which one you would cut a పండు with]
-- [YOU RECALL: say *vēru*, then read **గుట్ట** and say what it means]
+- [YOU RECALL: say *vēru*]
+- [YOU READ: **గుట్ట**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03] -->

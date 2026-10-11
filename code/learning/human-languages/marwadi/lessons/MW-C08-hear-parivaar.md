@@ -37,8 +37,8 @@ reviews_of: [MW-C08-dada, MW-C08-dadi, MW-C08-bahan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADA-01, MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-LEX-BAHAN-01, MW-SCRIPT-E-MATRA-01] -->
 
-[PAUSE 18s] Say paternal grandfather and sister, write paternal grandmother,
-then write **े** once.
+[PAUSE 18s] Say paternal grandfather and sister.
+[YOU WRITE: the word for paternal grandmother, then **े** once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PARIVAAR-01]; assesses=[] -->

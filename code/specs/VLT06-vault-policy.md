@@ -122,6 +122,7 @@ Each registered secret carries:
 | `allowed_agents` | `Any`, or `Only(set)` of attested agent identities |
 | `allowed_mode` | `Direct`, `Leased`, or `Both` |
 | `rotated_at_ms` | when the secret was last changed |
+| `allowed_destinations` | the `host:port` pairs a host-mediated operation may send it to (P9); empty means none |
 
 How a record and its policy are persisted on disk is specified separately, in
 `D18U-chief-of-staff-sealed-secret-record.md`.
@@ -173,6 +174,25 @@ anything still live.
 Checking mode first tells a caller who is not permitted at all what the secret's
 delivery mode is, which is a fact about the policy they have no access to. Order
 the checks so the denial reveals less.
+
+**P8 — a lease is redeemable only by the agent it was issued to.** A
+`VaultRef` is a bearer reference, and a bearer reference that leaks onto a
+channel would otherwise be redeemable by whoever reads it. The runtime records
+the attested agent with each lease. `consume_for(vault_ref, agent,
+destination)` refuses, **without consuming**, unless that agent matches. A
+lease issued with no attested agent is never redeemable this way. The refusal
+leaves the lease in place, so its rightful holder still has it.
+
+**P9 — a secret goes only to its provisioned destinations.** `consume_for`
+also refuses, without consuming, unless `destination` is in the secret's
+`allowed_destinations`. A manifest can name several hosts, and without this
+rule a key minted for one API could be written into a request to another
+host the same agent may reach. The checks run under the secrets lock, held
+through consumption, so a concurrent rotation cannot come between the
+decision and the redemption.
+
+The older `consume(vault_ref)` remains for trusted host handlers that are not
+network operations. `net.fetch` uses `consume_for` only.
 
 ### Denials
 

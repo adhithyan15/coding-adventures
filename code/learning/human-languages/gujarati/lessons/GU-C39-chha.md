@@ -91,7 +91,8 @@ it, because you had no word for six. Now you do.
 
 [PAUSE 1s]
 - [YOU SAY: *ek, be, traṇ, chār, pā̃ch, chha*]
-- [YOU SAY: **છ** on its own, then read **છે** — same shape, different job]
+- [YOU SAY: **છ** on its own]
+- [YOU READ: **છે** — same shape, different job]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-CHHA-SIX, GU-GRAMMAR-ORDINAL-MU] -->

@@ -56,7 +56,8 @@ Two: agreeing, and calling a halt.
 - [YOU SAY: *pōdum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uṇmai*, then *pōdum*, and let the second land firmly]
-- [YOU RECALL: read **காது**, then say *māṇavaṉ*]
+- [YOU READ: **காது**]
+- [YOU RECALL: say *māṇavaṉ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02] -->

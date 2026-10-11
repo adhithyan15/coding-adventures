@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say that something is enough, or quite so.",
     "assesses": [
-      "ES-LEX-BASTANTE"
+      "ES-LEX-BASTANTE",
+      "ES-GRAMMAR-DEGREE-SCALE",
+      "ES-ETYMON-BASTANTE-BASTAR"
     ]
   }
 }

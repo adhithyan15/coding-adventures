@@ -57,7 +57,8 @@ Two clauses, and a way to set the second against the first.
 - [YOU SAY: *kānī*, once more]
 - [YOU SAY: say something you like, then *kānī*, then something about it you do not]
 - [YOU RECALL: say *kṣamin̄caṇḍi*, then say *kānī*]
-- [YOU RECALL: read **డబ్బు**, then say *pulupu*]
+- [YOU READ: **డబ్బు**]
+- [YOU RECALL: say *pulupu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-05, TE-LEX-C74-LINK-01, TE-LEX-C74-LINK-02, TE-ETYMON-C09-KSHAMINCHANDI-01, TE-ETYMON-C09-KSHAMINCHANDI-02, TE-PRAGMATICS-C09-KSHAMINCHANDI-03] -->

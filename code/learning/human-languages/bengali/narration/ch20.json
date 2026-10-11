@@ -3,8 +3,8 @@
   "language": "bengali",
   "chapter": 20,
   "title": "Eye, Mouth, Nose, and Heart",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:562b27f4a8cc3b32",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:40a5a4ca331c82a1",
   "lessons": [
     {
       "id": "BN-C12-chokh",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d9dd8d1b982021eb",
+      "sourceHash": "fnv1a64:83131f1bb67be625",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -135,11 +136,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dudh, then read ভাত",
+              "instruction": "say dudh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dudh*, then read **ভাত**]"
+              "source": "[YOU RECALL: say *dudh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ভাত",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ভাত**]"
             }
           ]
         },
@@ -184,7 +194,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -237,7 +247,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "মুখ is a tatsama, taken whole from Sanskrit মুখ (mukha) — a tadbhava twin, মু (mu), also exists, but only buried inside compound words, never standing alone. What makes মুখ worth pausing on is where mukha itself came from, and nobody fully agrees. One well-known account, Pokorny's, derives it from Dravidian, a language family with no Sanskrit or PIE connection at all. Another, Mayrhofer's, argues for an Indo-European source instead, pointing to the word's presence in the Rigveda and in Iranian languages as evidence it is old enough to be inherited rather than borrowed. Both scholars are serious; neither has won. The honest report is that মুখ's deepest root is still an open question."
+              "text": "মুখ (mukh) is a tatsama, taken whole from Sanskrit মুখ (mukha) — a tadbhava twin, মু (mu), also exists, but only buried inside compound words, never standing alone. What makes মুখ (mukh) worth pausing on is where mukha itself came from, and nobody fully agrees. One well-known account, Pokorny's, derives it from Dravidian, a language family with no Sanskrit or PIE connection at all. Another, Mayrhofer's, argues for an Indo-European source instead, pointing to the word's presence in the Rigveda and in Iranian languages as evidence it is old enough to be inherited rather than borrowed. Both scholars are serious; neither has won. The honest report is that মুখ (mukh)'s deepest root is still an open question."
             }
           ]
         },
@@ -322,16 +332,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20ce7559bee31f89",
+      "sourceHash": "fnv1a64:6559a610e2a6a221",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -438,11 +449,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bôndhu, then read পরিবার",
+              "instruction": "say bôndhu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bôndhu*, then read **পরিবার**]"
+              "source": "[YOU RECALL: say *bôndhu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "পরিবার",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **পরিবার**]"
             }
           ]
         },
@@ -487,7 +507,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {

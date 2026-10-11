@@ -59,7 +59,8 @@ The fifth of five. That is what goes with thanks.
 - [YOU SAY: *miṭhās*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *miṭhās*, and मिठाई beside it]
-- [YOU RECALL: say *āsmān*, then read **खेत**]
+- [YOU RECALL: say *āsmān*]
+- [YOU READ: **खेत**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05] -->

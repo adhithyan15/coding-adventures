@@ -37,7 +37,8 @@ reviews_of: [JA-C131-toshokan, JA-C131-ocha, JA-C10-itte-kudasai, JA-C117-hotate
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-TOSHOKAN, JA-LEX-ITTE-KUDASAI, JA-SCRIPT-SMALL-YA-01, JA-LEX-C117-THINGS117-01, JA-LEX-C128-QUAL128-04] -->
 
-[PAUSE 15s] Say *a library* — **R1**, one lesson back. Then say *please say it*, and write **ゃ** — **R2**, five lessons back.
+[PAUSE 15s] Say *a library* — **R1**, one lesson back. Then say *please say it*.
+[YOU WRITE: **ゃ** — **R2**, five lessons back]
 
 - [YOU RECALL: say *a scallop* — **R4**, eighty lessons back]
 - [YOU RECALL: say *fine, small and detailed* — **R3**, twenty lessons back]

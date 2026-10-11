@@ -29,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [TE-C15-neellu-biyyam]
 ---
 
-# చైత్రం to ఫాల్గుణం — completing the split
+# Caitraṁ to Phālguṇaṁ — completing the split
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C15-NEELLU-BIYYAM-01, TE-ETYMON-C15-NEELLU-BIYYAM-02] -->
@@ -43,12 +43,15 @@ building its own.
 
 The year runs in three four-month groups:
 
-- **చైత్రం, వైశాఖం, జ్యేష్ఠం, ఆషాఢం** — *Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ,
-  Āṣāḍhaṁ*.
-- **శ్రావణం, భాద్రపదం, ఆశ్వయుజం, కార్తీకం** — *Śrāvaṇaṁ, Bhādrapadaṁ,
-  Āśvayujaṁ, Kārtīkaṁ*.
-- **మార్గశిరం, పుష్యం, మాఘం, ఫాల్గుణం** — *Mārgaśiraṁ, Puṣyaṁ, Māghaṁ,
-  Phālguṇaṁ*.
+- *Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ, Āṣāḍhaṁ*.
+- *Śrāvaṇaṁ, Bhādrapadaṁ, Āśvayujaṁ, Kārtīkaṁ*.
+- *Mārgaśiraṁ, Puṣyaṁ, Māghaṁ, Phālguṇaṁ*.
+
+Seven of them you can also see written today: **చైత్రం, శ్రావణం, భాద్రపదం,
+ఆశ్వయుజం, కార్తీకం, మార్గశిరం, పుష్యం**. Three shapes in them are new:
+**ణ** *ṇa* in *Śrāvaṇaṁ*, **భ** *bha* in *Bhādrapadaṁ*, and **జ** *ja* in
+*Āśvayujaṁ*. The other five months each wait for a short lesson of their
+own, which spells the month beside its one rare shape.
 
 ## The word, taken apart - The whole Dravidian family, in one honest picture
 <!-- hl-knowledge: introduces=[TE-ETYMON-C16-NELALU-02]; assesses=[] -->

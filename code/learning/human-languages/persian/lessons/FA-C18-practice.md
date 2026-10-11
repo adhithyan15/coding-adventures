@@ -46,7 +46,7 @@ recalling them.
 
 1. From *do*, *chahâr*, *haft*, *hasht* and *noh*, build twelve, fourteen,
    seventeen, eighteen and nineteen by putting the unit in front of **dah**.
-   Then check each against a printed list and repair only what missed.
+   [YOU CHECK: each against a printed list, and repair only what missed]
 2. Say sixteen, and say which taught number it bends like.
 3. Count one to twenty straight through.
 4. Hear twelve amounts named singly, from **yek** to **sad**, and say each.

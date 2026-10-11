@@ -41,15 +41,15 @@ words for the days of the week.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C10-AZHCHA-01]; assesses=[] -->
 
-| Malayalam | planet-word | meaning | compare Tamil |
-|---|---|---|---|
-| **തിങ്കളാഴ്ച** | *tiṅkaḷ* | "**Moon**" | *thiṅgaḷ* — nearly identical |
-| **ചൊവ്വാഴ്ച** | *covva* | traditionally "**the red one**" | *cevvāy* — the same word, worn differently |
-| **ബുധനാഴ്ച** | *budhan* | **Mercury** | Sanskrit **Budha**, same as Tamil *pudhaṉ* |
-| **വ്യാഴാഴ്ച** | *vyāzham* | **Jupiter** | matches Tamil's *viyāzhaṉ* closely |
-| **വെള്ളിയാഴ്ച** | *veḷḷi* | traditionally "**silver**" | *veḷḷi* — the **same word** |
-| **ശനിയാഴ്ച** | *śani* | **Saturn** | Sanskrit **Śani**, same as Tamil *saṉi* |
-| **ഞായറാഴ്ച** | *ñāyar* | "**Sun**" | *ñāyiṟu* — the same root |
+| Malayalam | planet-word, and its meaning | compare Tamil |
+|---|---|---|
+| **തിങ്കളാഴ്ച** | *tiṅkaḷ*, "**Moon**" | *thiṅgaḷ* — nearly identical |
+| **ചൊവ്വാഴ്ച** | *covva*, traditionally "**the red one**" | *cevvāy* — the same word, worn differently |
+| **ബുധനാഴ്ച** | *budhan*, **Mercury** | Sanskrit **Budha**, same as Tamil *pudhaṉ* |
+| **വ്യാഴാഴ്ച** | *vyāzham*, **Jupiter** | matches Tamil's *viyāzhaṉ* closely |
+| **വെള്ളിയാഴ്ച** | *veḷḷi*, traditionally "**silver**" | *veḷḷi* — the **same word** |
+| **ശനിയാഴ്ച** | *śani*, **Saturn** | Sanskrit **Śani**, same as Tamil *saṉi* |
+| **ഞായറാഴ്ച** | *ñāyar*, "**Sun**" | *ñāyiṟu* — the same root |
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C10-AZHCHA-02]; assesses=[] -->

@@ -62,7 +62,8 @@ The first of five things you can wear.
 - [YOU SAY: *saṭṭai*]
 - [YOU SAY: *tuṇi*, then *saṭṭai* — and say which one is still just cloth]
 - [YOU RECALL: say *valadu*, then say *iḍadu*, then say *saṭṭai*]
-- [YOU RECALL: say *mēlē*, then read **கீழே**]
+- [YOU RECALL: say *mēlē*]
+- [YOU READ: **கீழே**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05, TA-LEX-C66-WHICHWAY-06, TA-LEX-C67-WEAR-01] -->

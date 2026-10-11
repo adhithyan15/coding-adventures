@@ -1,0 +1,17 @@
+{
+  "language": "punjabi",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:51f9e3e49af54b1c",
+  "lessonIds": [
+    "PA-R166-run-again",
+    "PA-R166-wander-again",
+    "PA-R166-stop-again"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "punjabi/narration/ch166.txt",
+  "json": "punjabi/narration/ch166.json",
+  "textHash": "fnv1a64:bcb73c85771762ae",
+  "jsonHash": "fnv1a64:2ec952312697e77e",
+  "findings": []
+}

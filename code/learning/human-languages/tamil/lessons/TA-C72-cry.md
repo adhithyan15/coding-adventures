@@ -62,7 +62,8 @@ Five: three nouns and two verbs.
 - [YOU SAY: *siri*, then *aḻu* — the pair, one after the other]
 - [YOU SAY: all five — *kōpam*, *payam*, *varuttam*, *siri*, *aḻu*]
 - [YOU RECALL: say *varuttam*, then say *siri*, then say *aḻu*]
-- [YOU RECALL: say *kūrai*, then read **விளையாடு**]
+- [YOU RECALL: say *kūrai*]
+- [YOU READ: **விளையாடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C72-FEEL-05] -->

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C46-mushi-type",
-              "prompt": "Type the Japanese for 'an insect'.",
+              "prompt": "Say the Japanese for 'an insect'.",
               "assesses": [
                 "JA-LEX-C46-ANIMALS46-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C46-ari-type",
-              "prompt": "Type the Japanese for 'an ant'.",
+              "prompt": "Say the Japanese for 'an ant'.",
               "assesses": [
                 "JA-LEX-C46-ANIMALS46-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C46-hato-type",
-              "prompt": "Type the Japanese for 'a pigeon'.",
+              "prompt": "Say the Japanese for 'a pigeon'.",
               "assesses": [
                 "JA-LEX-C46-ANIMALS46-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C46-hitsuji-type",
-              "prompt": "Type the Japanese for 'a sheep'.",
+              "prompt": "Say the Japanese for 'a sheep'.",
               "assesses": [
                 "JA-LEX-C46-ANIMALS46-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C46-shika-type",
-              "prompt": "Type the Japanese for 'a deer'.",
+              "prompt": "Say the Japanese for 'a deer'.",
               "assesses": [
                 "JA-LEX-C46-ANIMALS46-05"
               ],

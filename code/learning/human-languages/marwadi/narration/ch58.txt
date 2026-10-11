@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पूछणो (pūchhṇo) mean? ("To ask".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to ask'.
+Say the Marwadi for 'to ask'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does करणो (karṇo) mean? ("To do".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to do'.
+Say the Marwadi for 'to do'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मांस (mā̃s) mean? ("Meat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'meat'.
+Say the Marwadi for 'meat'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does माछली (māchhlī) mean? ("A fish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a fish'.
+Say the Marwadi for 'a fish'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चावळ (chāvaḷ) mean? ("Rice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'rice'.
+Say the Marwadi for 'rice'.

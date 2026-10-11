@@ -1,0 +1,18 @@
+{
+  "chapter": 167,
+  "title": "Return to Believing and Changing",
+  "label": "ch:pa-believe-change-r4",
+  "canDo": "I can retrieve two already-taught Punjabi action verbs after a long gap, one at a time, without claiming scored A1 writing or complete mock credit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R167-change-again",
+    "kind": "recognition",
+    "summary": "Recall believing and changing from short familiar cues without introducing new Punjabi.",
+    "assesses": [
+      "PA-LEX-C152-ACT152-04",
+      "PA-LEX-C152-ACT152-05"
+    ]
+  }
+}

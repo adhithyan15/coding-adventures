@@ -11,7 +11,7 @@
   "payoff": {
     "lesson": "SA-C03-practice",
     "kind": "task",
-    "summary": "Complete SA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Sanskrit, answer naturally, and return the question.",
+    "summary": "Complete SA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Sanskrit, answer naturally, and return the question; then recall where katham, aham, kuśalam and cintā come from, why aham can drop, and pick out म and ◌ा.",
     "assesses": [
       "SA-LEX-KATHAM",
       "SA-PATTERN-HOW-ARE-YOU",
@@ -19,7 +19,17 @@
       "SA-LEX-KUSHALAM",
       "SA-LEX-AHAM",
       "SA-PATTERN-NA-CINTA",
-      "SA-HISTORY-ROOTS-EAST-AND-WEST"
-    ]
+      "SA-HISTORY-ROOTS-EAST-AND-WEST",
+      "SA-ETYMON-AHAM-EGO",
+      "SA-GRAMMAR-PRONOUN-DROPPING",
+      "SA-GRAMMAR-COPULA-THREE-PERSONS",
+      "SA-ETYMON-KATHAM-INTERROGATIVE",
+      "SA-ETYMON-KUSHA-GRASS",
+      "SA-GRAMMAR-ASMI-FIRST-PERSON",
+      "SA-ETYMON-CINTA-THOUGHT",
+      "SA-SCRIPT-RECOG-01",
+      "SA-SCRIPT-RECOG-06"
+    ],
+    "note": "SA-C03-practice assesses sixteen of the chapter's seventeen atoms, including म and ◌ा (reached through SA-S01-letter-ma, sequence 181). The vowel sign ◌ु (SA-SCRIPT-RECOG-203) is introduced by SA-S203-vowel-sign-u at sequence 201, after this checkpoint, so it is not assessed here."
   }
 }

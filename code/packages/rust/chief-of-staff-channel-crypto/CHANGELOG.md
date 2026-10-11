@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `plaintext_hash` and `prepare_message_header_with_hash` (D18S P2.6d).
+  These build a message header from the plaintext's hash alone, so a store
+  holding no keys can reserve a sequence without seeing the plaintext.
+  `prepare_message_header` delegates to them.
+- Add `verify_message_signature`: the originator-signature check, needing
+  only the public key. `decrypt_message` calls it. It proves who wrote the
+  header, not that the ciphertext decrypts; a test pins that limit.
 - Add signature-only D18G grant verification for durable activation
   orchestrators that must validate provenance without receiver private keys or
   opening the wrapped CMK.

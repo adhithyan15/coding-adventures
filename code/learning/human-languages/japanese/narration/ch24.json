@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C24-itami-type",
-              "prompt": "Type the Japanese for 'pain'.",
+              "prompt": "Say the Japanese for 'pain'.",
               "assesses": [
                 "JA-LEX-C24-HEALTH24-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C24-ojiisan-type",
-              "prompt": "Type the Japanese for 'a grandfather'.",
+              "prompt": "Say the Japanese for 'a grandfather'.",
               "assesses": [
                 "JA-LEX-C24-HEALTH24-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C24-ojisan-type",
-              "prompt": "Type the Japanese for 'an uncle'.",
+              "prompt": "Say the Japanese for 'an uncle'.",
               "assesses": [
                 "JA-LEX-C24-HEALTH24-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C24-musuko-type",
-              "prompt": "Type the Japanese for 'a son'.",
+              "prompt": "Say the Japanese for 'a son'.",
               "assesses": [
                 "JA-LEX-C24-HEALTH24-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C24-musume-type",
-              "prompt": "Type the Japanese for 'a daughter'.",
+              "prompt": "Say the Japanese for 'a daughter'.",
               "assesses": [
                 "JA-LEX-C24-HEALTH24-05"
               ],

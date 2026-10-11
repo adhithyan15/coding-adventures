@@ -12,17 +12,17 @@ headword: "-अम् · -अः"
 gloss: "the two noun endings, side by side"
 romanization: "-am · -aḥ"
 concept_tag: SA-GRAMMAR-NOUN-FAMILIES
-prerequisites: [SA-C16-city]
+prerequisites: [SA-C16-city, SA-S218-letter-ga]
 sounds: []
 roots: []
 duration:
-  max_seconds: 210
+  max_seconds: 220
 requires:
-  knowledge: [SA-LEX-C16-PLACE-05]
+  knowledge: [SA-LEX-C16-PLACE-05, SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03, SA-LEX-C16-PLACE-04, SA-SCRIPT-RECOG-217, SA-SCRIPT-RECOG-218]
 introduces:
   knowledge: [SA-GRAMMAR-C16-NOUN-FAMILIES]
 practises:
-  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-05, SA-GRAMMAR-C16-NOUN-FAMILIES]
+  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-05, SA-GRAMMAR-C16-NOUN-FAMILIES, SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03, SA-LEX-C16-PLACE-04, SA-SCRIPT-RECOG-217, SA-SCRIPT-RECOG-218]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -69,6 +69,22 @@ thing to know about a Sanskrit noun.
 - [YOU SAY: the three neuters — *gṛham*, *vanam*, *nagaram*]
 - [YOU SAY: the two masculines — *grāmaḥ*, *mārgaḥ*]
 - [YOU SAY: which family a new word ending in *-am* belongs to]
+
+## Guided Practice — village, road, forest
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03, SA-LEX-C16-PLACE-04] -->
+
+[PAUSE 1s each]
+- [YOU SAY: "village", and its oldest sense (*grāmaḥ*; "a collection, a troop" — people first)]
+- [YOU SAY: "road", and the root under it (*mārgaḥ*; *mṛg*, "to track", as in *mṛgaḥ*, "deer")]
+- [YOU SAY: "forest", and what it marks in the older literature (*vanam*; where the settled world stops)]
+
+## Script — the chapter's two shapes
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-217, SA-SCRIPT-RECOG-218] -->
+
+> ग · ण
+
+- [YOU POINT: *ṇa*, then *ga* — out of their printed order]
+- [YOU SAY: the sound each carries, and a word with each (**ण**, *ṇa*, in *karṇaḥ*, "ear"; **ग**, *ga*, in *gṛham*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-05, SA-GRAMMAR-C16-NOUN-FAMILIES] -->

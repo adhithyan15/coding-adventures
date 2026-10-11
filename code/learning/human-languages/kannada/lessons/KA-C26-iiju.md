@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ಈಜು** — *īju* — "swimming; to swim".
 
-Say it: *īju*. Look at its shape as you say it: the next lesson takes one
+Say it: *īju*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಈ**, and writes it on its own.
 
 ## Guided Practice

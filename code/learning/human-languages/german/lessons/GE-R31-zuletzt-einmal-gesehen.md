@@ -8,7 +8,7 @@ type: practice
 headword: Herz · Haupt · Entschuldigung
 gloss: the last of the words this book showed once, gathered on purpose — a heart, a head, and an apology
 concept_tag: GE-REVIEW-LETZTE-EINMAL
-prerequisites: [GE-C03-schoen, GE-C03-vielen-dank, GE-C17-kopf-haupt, GE-C20-entschuldigung, GE-C31-herz, GE-C17-kopf-haupt-more]
+prerequisites: [GE-C03-schoen, GE-C03-vielen-dank, GE-C17-kopf-haupt, GE-C20-entschuldigung, GE-C31-herz, GE-C17-kopf-haupt-more, GE-C23-gruen-gelb-more]
 sounds: []
 roots: []
 duration:
@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-SOUND-HERZ-03, GE-LEX-HAUPT-02, GE-CULTURE-HEAD-CONTAINERS-05, GE-LEX-ENTSCHULDIGUNG-02, GE-PRAGMATICS-SORRY-04, GE-LEX-DANKE-SCHOEN-02, GE-LEX-VIELEN-DANK-02]
+  knowledge: [GE-SOUND-HERZ-03, GE-LEX-HAUPT-02, GE-CULTURE-HEAD-CONTAINERS-05, GE-LEX-ENTSCHULDIGUNG-02, GE-PRAGMATICS-SORRY-04, GE-LEX-DANKE-SCHOEN-02, GE-LEX-VIELEN-DANK-02, GE-ETYMON-REGNET-06, GE-ETYMON-GELB-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,8 +65,10 @@ English splits *sorry* from *excuse me*; German does not, and your voice carries
 the difference the vocabulary declines to.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-HERZ-03, GE-LEX-HAUPT-02, GE-PRAGMATICS-SORRY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-HERZ-03, GE-LEX-HAUPT-02, GE-PRAGMATICS-SORRY-04, GE-ETYMON-REGNET-06, GE-ETYMON-GELB-05] -->
 
 [PAUSE 3s] What sound does **z** make in *Herz*? (***ts***.) Which sound change
 links *Herz* to *heart*? (**k becoming h** in the Germanic line.) Does German
 use one word or two for *sorry* and *excuse me*? (**One.**)
+
+[PAUSE 2s] Two more Germanic pairs: the English cousins of *es regnet* and of *gelb*? (***Rain*** and ***yellow*** — inherited, not borrowed from Latin.)

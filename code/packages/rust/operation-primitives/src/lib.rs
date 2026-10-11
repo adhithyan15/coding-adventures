@@ -515,6 +515,17 @@ impl OperationHttpClient {
             Some(query) => format!("{}?{query}", parsed.path),
             None => parsed.path,
         };
+        // The path and query go verbatim onto the HTTP request line, and the
+        // URL parser does not police their characters. A CR, LF, or space
+        // there would let the URL's author end the request line early and
+        // write headers of their own (request smuggling), defeating any
+        // header policy the caller enforces. Only RFC 3986 path/query
+        // characters, with well-formed percent-escapes, may pass.
+        if !is_request_target_safe(&path_and_query) {
+            return Err(OperationHttpClientError::new(
+                "operation HTTP client rejects URL paths or queries with characters outside RFC 3986",
+            ));
+        }
 
         Ok(OperationHttpRequest {
             method: method.to_string(),
@@ -526,6 +537,46 @@ impl OperationHttpClient {
             declared_domains: self.declared_domains.clone(),
         })
     }
+}
+
+/// Is every byte an RFC 3986 `pchar`, `/` or `?`, with each `%` starting a
+/// two-hex-digit escape?
+///
+/// | allowed | set |
+/// |---|---|
+/// | unreserved | `A-Z a-z 0-9 - . _ ~` |
+/// | sub-delims | `! $ & ' ( ) * + , ; =` |
+/// | pchar extras | `: @` |
+/// | path / query | `/ ?` |
+/// | escapes | `%` followed by two hex digits |
+///
+/// Everything else — control characters, space, `"`, `<`, `>`, `\`, `^`,
+/// backtick, `{`, `|`, `}`, `#`, and every non-ASCII byte — is refused.
+fn is_request_target_safe(target: &str) -> bool {
+    let bytes = target.as_bytes();
+    let mut index = 0;
+    while index < bytes.len() {
+        let byte = bytes[index];
+        if byte == b'%' {
+            let escape = bytes.get(index + 1..index + 3);
+            if !escape.is_some_and(|pair| pair.iter().all(u8::is_ascii_hexdigit)) {
+                return false;
+            }
+            index += 3;
+            continue;
+        }
+        let allowed = byte.is_ascii_alphanumeric()
+            || matches!(
+                byte,
+                b'-' | b'.' | b'_' | b'~' | b'!' | b'$' | b'&' | b'\'' | b'(' | b')' | b'*'
+                    | b'+' | b',' | b';' | b'=' | b':' | b'@' | b'/' | b'?'
+            );
+        if !allowed {
+            return false;
+        }
+        index += 1;
+    }
+    true
 }
 
 fn declared_http_domains(manifest: &Manifest) -> Result<Vec<String>, OperationHttpClientError> {
@@ -807,5 +858,30 @@ mod tests {
 
         let error = OperationHttpClient::from_required_capabilities_json(json).unwrap_err();
         assert!(error.to_string().contains("exact domains"));
+    }
+
+    #[test]
+    fn preflight_refuses_request_targets_that_could_smuggle_a_request_line() {
+        let client = OperationHttpClient::from_required_capabilities_json(weather_manifest_json())
+            .expect("weather manifest");
+        for smuggling in [
+            "https://api.weather.gov/a\r\nx-evil: 1",
+            "https://api.weather.gov/a b",
+            "https://api.weather.gov/a?q=1\nx",
+            "https://api.weather.gov/a\u{0}",
+            "https://api.weather.gov/caf\u{e9}",
+            "https://api.weather.gov/a%zz",
+            "https://api.weather.gov/a%4",
+            "https://api.weather.gov/a<b>",
+            "https://api.weather.gov/a\\b",
+        ] {
+            assert!(client.preflight_get(smuggling).is_err(), "{smuggling:?}");
+        }
+        for fine in [
+            "https://api.weather.gov/points/47.6,-122.3",
+            "https://api.weather.gov/a?x=1&y=%20z;w=~!$'()*+:@/",
+        ] {
+            assert!(client.preflight_get(fine).is_ok(), "{fine:?}");
+        }
     }
 }

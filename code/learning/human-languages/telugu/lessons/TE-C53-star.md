@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *cukka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cukka*, then *muggu*, and say how the two are connected on the ground]
-- [YOU RECALL: read **ఆశీర్వాదం**, then say *puvvu*]
+- [YOU READ: **ఆశీర్వాదం**]
+- [YOU RECALL: say *puvvu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04] -->

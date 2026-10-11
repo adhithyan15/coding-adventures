@@ -56,7 +56,8 @@ The first of five answers to "how much?".
 - [YOU SAY: *siṟitu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *elumbu*, then *siṟitu*, and keep the second one short]
-- [YOU RECALL: say *pāy*, then read **கழுத்து**]
+- [YOU RECALL: say *pāy*]
+- [YOU READ: **கழுத்து**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01] -->

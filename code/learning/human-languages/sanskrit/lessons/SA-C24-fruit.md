@@ -59,7 +59,8 @@ A word that carries an orchard and a consequence at once.
 - [YOU SAY: *phalam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *phalam*, and then *jalam* and *phalam* together, naming the ending they share]
-- [YOU RECALL: say *krīḍati*, then read **सूनुः**]
+- [YOU RECALL: say *krīḍati*]
+- [YOU READ: **सूनुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03] -->

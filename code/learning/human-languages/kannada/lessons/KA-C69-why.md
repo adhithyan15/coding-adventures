@@ -68,7 +68,8 @@ half of a conversation; the other half is the answer, and that is next.
 - [YOU RECALL: the whole chapter — *ೂ*, *gottā*, *alvā*, and this one]
 - [YOU RECALL: say *gottilla* once more]
 - [YOU RECALL: from much earlier — say *cukki*, *nillu*, *kuḷitukō*, *bā*, and say what each one means]
-- [YOU RECALL: say *ādare*, then read **ನಾನೂ**]
+- [YOU RECALL: say *ādare*]
+- [YOU READ: **ನಾನೂ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C41-DEIXIS-SYSTEM, KA-GRAMMAR-C69-ASK-02, KA-LEX-C41-DEIXIS-05, KA-LEX-C41-DEIXIS-06, KA-LEX-C53-SKY-04, KA-LEX-C68-DENY-05, KA-LEX-C69-ASK-01, KA-LEX-C69-ASK-03, KA-LEX-C69-ASK-05, KA-LEX-COME, KA-LEX-SIT, KA-LEX-STAND, KA-PRAGMATICS-C69-ASK-04, KA-SCRIPT-RECOG-136] -->

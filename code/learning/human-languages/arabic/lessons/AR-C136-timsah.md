@@ -38,7 +38,8 @@ reviews_of: [AR-C135-sulahfah]
 
 [PAUSE 2s] Before the new one: say the Arabic for a duck, then the Arabic for a turtle.
 
-[PAUSE 1s] Read each word whole, right to left: **سلام**، **شكرًا**، **شاي**.
+[PAUSE 1s]
+[YOU READ: each word whole, right to left — **سلام**، **شكرًا**، **شاي**]
 
 ## You'll want to know: تمساح
 <!-- hl-knowledge: introduces=[AR-LEX-C136-THINGS136-01]; assesses=[] -->

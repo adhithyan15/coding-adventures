@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-LO-QUE]
 practises:
-  knowledge: [ES-GRAMMAR-RELATIVE-QUE, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-LEX-COMPRAR-07, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-LO-QUE]
+  knowledge: [ES-GRAMMAR-RELATIVE-QUE, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR, ES-LEX-COMPRAR-07, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-LO-QUE, ES-ETYMON-QUI-RELATIVE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -71,12 +71,16 @@ at a gap the following clause will fill.
 
 [PAUSE 1s]
 
-- [YOU SAY: "lo digo" then "lo que digo" — pointing at a thing, then at a gap]
+- [YOU SAY: "lo digo" then "lo que digo" — a known thing, then a gap]
 - [YOU SAY: "lo que compro"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-LO-QUE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-LO-QUE, ES-ETYMON-QUI-RELATIVE] -->
 
 [PAUSE 3s] Say "what I buy." (***Lo que compro***.) What is *lo* doing there?
 (**Standing in for a thing that is never named.**) How many new words was that?
-(**None**.) Next: all of it in one place.
+(**None**.)
+
+[PAUSE 2s] And the joining *que* itself: which Latin family is it? (*Qui*, *quem*, *quid* — the same *qu-* as your question words.)
+
+Next: all of it in one place.

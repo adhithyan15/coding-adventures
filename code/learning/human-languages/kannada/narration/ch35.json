@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friends",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fcce18915b711da8",
+  "sourceHash": "fnv1a64:a77466465aa48e5b",
   "lessons": [
     {
       "id": "KA-C35-kutumba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d604d32648534d2",
+      "sourceHash": "fnv1a64:b729e7b594450a12",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say iru, then read ಹೋಗು, then say bā / baru",
+              "instruction": "say iru",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *iru*, then read **ಹೋಗು**, then say *bā / baru*]"
+              "source": "[YOU RECALL: say *iru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಹೋಗು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಹೋಗು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bā / baru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bā / baru*]"
             }
           ]
         },
@@ -154,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c29cf5286b15edd5",
+      "sourceHash": "fnv1a64:fb2401c4ac5bc775",
       "notice": null,
       "blocks": [
         {
@@ -253,12 +271,30 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ತಿನ್ನು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ತಿನ್ನು**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ತಿನ್ನು, then say nōḍu, then read ಗೊತ್ತು",
+              "instruction": "say nōḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ತಿನ್ನು**, then say *nōḍu*, then read **ಗೊತ್ತು**]"
+              "source": "[YOU RECALL: say *nōḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಗೊತ್ತು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಗೊತ್ತು**]"
             }
           ]
         },

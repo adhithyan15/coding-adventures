@@ -55,7 +55,7 @@ and one question decides which of them a noun may take. Run all of it.
 - [YOU SAY: the question that chooses between them — is it **জীব** or **জিনিস**?]
 - [YOU SAY: a living noun through all of them — *bhāiṭi*, *bhāir*, *bhāike*, *bhāirā*]
 - [YOU SAY: a thing, which takes fewer — *jāmāṭā*, *jāmāgulo*]
-- [YOU SAY: pointing, counting, colouring — *ei ekṭā lāl jāmā*]
+- [YOU SAY: near, counted and coloured — *ei ekṭā lāl jāmā*]
 - [YOU SAY: the six persons and their objects — *āmi/āmāke*, *tumi/tomāke*, *she/tāke*]
 - [YOU SAY: whose, plural — *āmāder*, *tāder*]
 - [YOU SAY: the two questions a stranger opens with — *eṭā ki?* and *ke?*]

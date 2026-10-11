@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かわ (kawa) mean? ("A river".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a river'.
+Say the Japanese for 'a river'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うみ (umi) mean? ("The sea".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the sea'.
+Say the Japanese for 'the sea'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くさ (kusa) mean? ("Grass".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'grass'.
+Say the Japanese for 'grass'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もり (mori) mean? ("A forest".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a forest'.
+Say the Japanese for 'a forest'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いし (ishi) mean? ("A stone".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a stone'.
+Say the Japanese for 'a stone'.

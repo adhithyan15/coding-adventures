@@ -17,19 +17,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f76139df5fed18b6",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the words come back",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the words come back and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the words come back and Guided Practice."
       },
       "blocks": [
         {
@@ -131,7 +134,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کان and ناک — same three letters, and say which is which",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کان and ناک — same three letters, and say which is which]"
@@ -149,7 +152,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کالا نیلا لال — name the letters of each before saying it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کالا نیلا لال — name the letters of each before saying it]"
@@ -168,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C16-practice-vowels",
               "prompt": "Urdu writes its long vowels but leaves the short ones off the page. What does that mean for a word you have never heard?",
               "assesses": [

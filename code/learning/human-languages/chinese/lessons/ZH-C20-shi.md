@@ -36,7 +36,9 @@ reviews_of: [ZH-W20-shi, ZH-C20-jiu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-SHI, ZH-LEX-NUM-JIU] -->
 
-[PAUSE 2s] Write 十, then say nine.
+[PAUSE 2s] [YOU WRITE: 十]
+
+Then say nine.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-SHI]; assesses=[ZH-TONE-LEXICAL, ZH-LEX-NUM-QI, ZH-LEX-NUM-BA] -->

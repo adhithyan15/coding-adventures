@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4d0abd48aebacc80",
+  "sourceHash": "fnv1a64:adef0c8c9b04f40b",
   "lessons": [
     {
       "id": "TE-C61-curd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:807844b5df1de001",
+      "sourceHash": "fnv1a64:e7597f05648ead57",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gāli, then read గేదె and say what it means",
+              "instruction": "say gāli",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gāli*, then read **గేదె** and say what it means]"
+              "source": "[YOU RECALL: say *gāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "గేదె, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గేదె**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa8bfbabd23e9310",
+      "sourceHash": "fnv1a64:dc8233cf22d22ace",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "మంచు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మంచు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read మంచు, then say mēka",
+              "instruction": "say mēka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **మంచు**, then say *mēka*]"
+              "source": "[YOU RECALL: say *mēka*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d5df6a4e0fcdc01",
+      "sourceHash": "fnv1a64:1a6079761ee0a9f7",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say isuka, then read కోడి and say what it means",
+              "instruction": "say isuka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *isuka*, then read **కోడి** and say what it means]"
+              "source": "[YOU RECALL: say *isuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "కోడి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కోడి**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae75608c519a60cc",
+      "sourceHash": "fnv1a64:a6da953e65771290",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "బురద",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **బురద**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read బురద, then say cīma",
+              "instruction": "say cīma",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **బురద**, then say *cīma*]"
+              "source": "[YOU RECALL: say *cīma*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56450729c84aff5c",
+      "sourceHash": "fnv1a64:db05eabbf0aeabc2",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nippu, then read పక్షి and say what it means",
+              "instruction": "say nippu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nippu*, then read **పక్షి** and say what it means]"
+              "source": "[YOU RECALL: say *nippu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పక్షి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పక్షి**, then say what it means]"
             }
           ]
         },

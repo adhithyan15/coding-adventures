@@ -59,7 +59,8 @@ The third of five, and a word that still smells of one particular seed.
 - [YOU SAY: *tel*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tel*, the thing the दाल is finished with]
-- [YOU RECALL: say *ādar*, then read **आँगन**]
+- [YOU RECALL: say *ādar*]
+- [YOU READ: **आँगन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03] -->

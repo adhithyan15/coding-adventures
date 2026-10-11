@@ -38,7 +38,7 @@ for the things and one for the paperwork.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-01, ES-LEX-C460-PEDIR-02, ES-LEX-C460-PEDIR-03] -->
 
-A notice in a neighbourhood centre. Read it, then answer.
+A notice in a neighbourhood centre. [YOU READ: the notice, then answer]
 
 > **PRÉSTAMO DE HERRAMIENTAS**
 
@@ -74,8 +74,10 @@ and the noun after it stays bare.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-01, ES-LEX-C460-PEDIR-02, ES-LEX-C460-PEDIR-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines for a tool
-library: say what is lent and for how long, say how to apply, say there is a
-waiting list, and then ask a neighbour informally for the same thing.
+[PAUSE 3s] Now your turn, out loud. Four lines for a tool library: say what is
+lent and for how long, say how to apply, say there is a waiting list, and then
+ask a neighbour informally for the same thing.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did the notice use *solicitar* and the neighbour *pedir*?

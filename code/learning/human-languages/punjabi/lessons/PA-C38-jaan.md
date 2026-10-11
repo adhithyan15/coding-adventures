@@ -37,8 +37,7 @@ reviews_of: [PA-C38-ate-write, PA-C38-ate]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ATE-01, PA-JOIN-ATE-01] -->
 
-[PAUSE 2s] One lesson back you wrote the joining word. Say it, then write it in
-the air.
+[PAUSE 2s] One lesson back you wrote the joining word. Say it. [YOU WRITE: the same word in the air]
 
 - [YOU RECALL: **ਅਤੇ**]
 

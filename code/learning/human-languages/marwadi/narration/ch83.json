@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C83-pul-type",
-              "prompt": "Type the Marwadi for 'a bridge'.",
+              "prompt": "Say the Marwadi for 'a bridge'.",
               "assesses": [
                 "MW-LEX-C83-TOWN83-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C83-hotal-type",
-              "prompt": "Type the Marwadi for 'a hotel'.",
+              "prompt": "Say the Marwadi for 'a hotel'.",
               "assesses": [
                 "MW-LEX-C83-TOWN83-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C83-pulis-type",
-              "prompt": "Type the Marwadi for 'the police'.",
+              "prompt": "Say the Marwadi for 'the police'.",
               "assesses": [
                 "MW-LEX-C83-TOWN83-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C83-nav-type",
-              "prompt": "Type the Marwadi for 'a boat'.",
+              "prompt": "Say the Marwadi for 'a boat'.",
               "assesses": [
                 "MW-LEX-C83-TOWN83-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C83-saikal-type",
-              "prompt": "Type the Marwadi for 'a bicycle'.",
+              "prompt": "Say the Marwadi for 'a bicycle'.",
               "assesses": [
                 "MW-LEX-C83-TOWN83-05"
               ],

@@ -7,6 +7,93 @@
 - Preserve all C99 compile/run, output normalization and original C/Ruby/runtime
   equivalence assertions. Production lowering and compiler selection are unchanged.
 
+## Unreleased — PREP01 bounded C hexadecimal integer stringize
+
+- Admit one unsuffixed raw hexadecimal integer at `#`, preserving prefix/digit
+  case and leading hex zeroes without numeric conversion. Recognize named C
+  `INT_LIT` tokens so the previously declared plain-decimal subset also works
+  on source input instead of only generic Number tokens.
+- Retain raw/plain argument distinctions, forwarded expansion ancestry and
+  generic spelling/text precharge bounds. Suffixes, floats, octal-style text,
+  signs and multi-token arguments remain refused.
+- Add direct and rooted acceptance/refusal tests, exact and cumulative byte
+  boundaries, and a native C/emitted C/emitted Ruby conformance case.
+
+## Unreleased — PREP01 bounded C identifier-suffix paste
+
+- Accept one raw identifier parameter `##` literal identifier in a
+  function-like macro, alongside prefix paste. Reject keywords and broader
+  paste shapes; retain call/directive diagnostics and forwarded provenance.
+- Test raw versus plain substitution, literal suffix macros, self-name
+  termination, and a header-defined paste reaching rooted C lowering.
+
+## Unreleased — PREP01 bounded C identifier-prefix paste
+
+- Accept one literal identifier `##` parameter in a function-like macro when
+  the raw argument is one identifier. Rescan the resulting identifier while
+  retaining raw argument provenance and ordinary pre-expansion at other uses.
+- Reject unsupported paste shapes and arguments, including empty and
+  multi-token arguments, and reject concatenations that the C lexer classifies
+  as keywords through a cached grammar-derived lookup. Keep the output
+  spelling bound without rebuilding the lexer per paste.
+
+## Unreleased — PREP01 bounded C stringize
+
+- Accept `#parameter` in a function-like macro when the raw argument is one
+  identifier or plain-decimal token. Preserve raw spelling alongside ordinary
+  argument pre-expansion, and reject broader forms and token paste.
+
+## Unreleased — PREP01 bounded C logical short-circuiting
+
+- Validate every expanded `#if` and `#elif` clause against the existing finite
+  grammar and operand bounds, then skip value-dependent arithmetic and shift
+  evaluation after a decisive `&&` or `||`. Needed invalid operations and
+  unsupported skipped syntax still fail with a directive location.
+
+## Unreleased — PREP01 bounded C `#elif`
+
+- Recognize nonempty `#elif` expressions and use the generic conditional
+  engine to select the first true branch. Reuse the current bounded `#if`
+  expression subset; malformed branch ordering and active conditions report
+  directive locations on rooted file input.
+
+## Unreleased — PREP01 pathless C preprocessing
+
+- Route `compile_source` through the bounded C dialect preprocessor and the
+  token-input parser, so pathless `#define`, `#undef`, and supported `#if`
+  forms reach lowering. Active includes fail closed without host file access,
+  including an include that names the in-memory primary source; skipped
+  includes remain inert. The rooted file-input API retains its include policy.
+- Keep the native C headers in the three-way conformance oracle while passing
+  its directive-free program body to pathless frontend lowering; cover every
+  corpus case without depending on a native compiler or Ruby installation.
+
+## Unreleased — PREP01 bounded C #undef
+
+- Recognize `#undef` with exactly one raw identifier and remove its current
+  macro definition through the generic PREP01 engine. Reject missing, extra,
+  and non-identifier operands with a rooted directive location.
+- Rooted C tests cover a skipped `#undef`, later live removal, `defined()`
+  branch selection, function-like macro removal, and malformed spelling.
+
+## Unreleased — PREP01 bounded negated C operands
+
+- Accept exactly one `!(operand)` logical clause for an expanded decimal
+  literal or undefined identifier. Keep nested, arithmetic, and longer mixed
+  forms explicit errors with rooted directive locations.
+
+## Unreleased — PREP01 bounded negated C comparisons
+
+- Accept one `!(left comparison right)` logical clause using the existing
+  decimal and undefined-identifier rules. Keep nested, arithmetic, and longer
+  mixed forms explicit errors, including through the rooted C file input.
+
+## Unreleased — PREP01 bounded C #if parentheses
+
+- Accept one outer parenthesis pair around a single operand, negated operand,
+  or comparison clause. Reject nested and mixed expressions while retaining
+  rooted file-input error locations.
+
 ## Unreleased — PREP01 bounded C #if bitwise conditions
 
 - Accept exactly one `&`, `|`, or `^` in each decimal `#if` logical clause,

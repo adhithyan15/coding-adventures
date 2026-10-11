@@ -58,7 +58,7 @@ Two replies: true, and enough.
 - [YOU SAY: *mati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mati*, then *illa*, two words that each finish a sentence alone]
-- [YOU RECALL: read **പല്ല്**]
+- [YOU READ: **പല്ല്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02] -->

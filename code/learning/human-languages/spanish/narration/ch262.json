@@ -4,7 +4,7 @@
   "chapter": 262,
   "title": "Primero, Segundo, Tercero --- Counting in Order",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:13c8fc6c6e8f283f",
+  "sourceHash": "fnv1a64:cc0b297ca2178c67",
   "lessons": [
     {
       "id": "ES-C67-primero",
@@ -123,6 +123,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primero-count",
               "prompt": "Uno, dos, tres tells how many. Give the three words that tell which one in the line.",
               "assesses": [
@@ -142,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primero-fem",
               "prompt": "Say: the second house.",
               "assesses": [
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primero-second",
               "prompt": "What did the Latin word behind segundo actually mean?",
               "assesses": [
@@ -220,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cd6ebe73d08fa78",
+      "sourceHash": "fnv1a64:68840df49b4365a1",
       "notice": null,
       "blocks": [
         {
@@ -341,6 +344,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primer-libro-first",
               "prompt": "Say: the first book.",
               "assesses": [
@@ -360,6 +364,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primer-libro-fem",
               "prompt": "And the first house?",
               "assesses": [
@@ -379,6 +384,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primer-libro-third",
               "prompt": "Which side of the noun does an ordinal take, and which habit does primer share with muy and mal?",
               "assesses": [
@@ -422,6 +428,16 @@
             {
               "kind": "speech",
               "text": "And which two lose their o? (Primero and tercero, in front of a masculine noun.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And segundo: what did Latin secundus mean before it meant two? (Following — from sequi, to follow.)"
             }
           ]
         }

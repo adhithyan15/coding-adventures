@@ -1,11 +1,11 @@
 Urdu, chapter 9: People You'd Introduce.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. All 4 can be done by ear. Of those 4, one has a part that needs your eyes or your hands; that part waits until you have stopped.
 
 
 Lesson 1 of 4.
 بھائی (bhāī) — "brother," and the first real English cousin among these nouns.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
 Warm-up.
 [pause 2 seconds]
@@ -16,6 +16,7 @@ You'll want to know first — one word.
 میرا بھائی۔ — merā bhāī. — "[He's] my brother."
 Urdu, like English, can drop the subject when it is obvious from context — pointing at someone while you say this is enough.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
 From the right edge: ب b, then ھ aspirating it to bh, then ا long ā, then ئ, then ی ī.
 ئ is new: ye with hamza above. It is a fourth shape in the ye family, alongside consonantal y in کیا, long ī in jī, and broad final e in کیسے. Its job is narrower than any of those: it marks a glide between two vowels that would otherwise collide — here, between ā and ī. بھ is new too, extending the two-eyed he you already know from jh, ṭh, ṛh and chh to a fifth base letter, ب.
@@ -54,7 +55,7 @@ Say merā bhāī — my brother, a real cousin of the English word. Here is the 
 You'll want to know first — one word.
 بہن — bahan — sister.
 میری بہن۔ — merī bahan. — "[She's] my sister."
-Not میرا بہن (bahan). Read on for why.
+Not میرا بہن (bahan). The reason comes next.
 
 Grammar Lens: میرا bends to the noun, not to you.
 بہن (bahan) is grammatically feminine. Urdu's word for "my" carries that agreement: میرا merā before a masculine noun, میری merī before a feminine one — regardless of whether the speaker is a man or a woman. It is the noun's gender that decides, never the speaker's.
@@ -81,7 +82,7 @@ Wrap-up Recall.
 Why is it میری بہن and not میرا بہن? (بہن is feminine, and merā/merī agrees with the noun's gender.) What does bhaj- mean, and is the connection to bahan certain? ("To share"; no, it is debated.)
 Sources: Wiktionary: بہن (bahan).
 [question — say your answer, then pause 9 seconds]
-Type the Urdu for 'my sister', choosing the correct form of my.
+Say the Urdu for 'my sister', choosing the correct form of my.
 
 
 Lesson 3 of 4.
@@ -152,4 +153,4 @@ Wrap-up Recall.
 Which two of this chapter's nouns are inherited from Sanskrit, and which two are Persian loans? (bhāī, bahan inherited; dost, خاندان (khāndān) Persian.) Say all four people-words with merā or merī correctly chosen for each.
 Sources: Wiktionary: خاندان (khāndān).
 [question — say your answer, then pause 9 seconds]
-Type the Urdu word for 'family' — the loan that groups bhāī and bahan together.
+Say the Urdu word for 'family' — the loan that groups bhāī and bahan together.

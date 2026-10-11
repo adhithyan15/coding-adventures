@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C70-abho-type",
-              "prompt": "Type the Marwadi for 'the sky'.",
+              "prompt": "Say the Marwadi for 'the sky'.",
               "assesses": [
                 "MW-LEX-C70-NATURE70-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C70-kutto-type",
-              "prompt": "Type the Marwadi for 'a dog'.",
+              "prompt": "Say the Marwadi for 'a dog'.",
               "assesses": [
                 "MW-LEX-C70-NATURE70-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C70-billi-type",
-              "prompt": "Type the Marwadi for 'a cat'.",
+              "prompt": "Say the Marwadi for 'a cat'.",
               "assesses": [
                 "MW-LEX-C70-NATURE70-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C70-gay-type",
-              "prompt": "Type the Marwadi for 'a cow'.",
+              "prompt": "Say the Marwadi for 'a cow'.",
               "assesses": [
                 "MW-LEX-C70-NATURE70-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C70-bhais-type",
-              "prompt": "Type the Marwadi for 'a buffalo'.",
+              "prompt": "Say the Marwadi for 'a buffalo'.",
               "assesses": [
                 "MW-LEX-C70-NATURE70-05"
               ],

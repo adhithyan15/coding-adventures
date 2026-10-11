@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C103-nhavno-type",
-              "prompt": "Type the Marwadi for 'to bathe'.",
+              "prompt": "Say the Marwadi for 'to bathe'.",
               "assesses": [
                 "MW-LEX-C103-ACT103-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C103-pakavno-type",
-              "prompt": "Type the Marwadi for 'to cook'.",
+              "prompt": "Say the Marwadi for 'to cook'.",
               "assesses": [
                 "MW-LEX-C103-ACT103-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C103-banavno-type",
-              "prompt": "Type the Marwadi for 'to make'.",
+              "prompt": "Say the Marwadi for 'to make'.",
               "assesses": [
                 "MW-LEX-C103-ACT103-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C103-torno-type",
-              "prompt": "Type the Marwadi for 'to break'.",
+              "prompt": "Say the Marwadi for 'to break'.",
               "assesses": [
                 "MW-LEX-C103-ACT103-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C103-jorno-type",
-              "prompt": "Type the Marwadi for 'to join'.",
+              "prompt": "Say the Marwadi for 'to join'.",
               "assesses": [
                 "MW-LEX-C103-ACT103-05"
               ],

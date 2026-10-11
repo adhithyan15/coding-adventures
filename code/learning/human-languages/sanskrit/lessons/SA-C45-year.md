@@ -60,7 +60,8 @@ Five stretches of time: morning, noon, evening, a month, a year.
 - [YOU SAY: *saṁvatsaraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *prātaḥ* and *saṁvatsaraḥ* together]
-- [YOU RECALL: say *saralaḥ*, then read **नीलः**]
+- [YOU RECALL: say *saralaḥ*]
+- [YOU READ: **नीलः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05] -->

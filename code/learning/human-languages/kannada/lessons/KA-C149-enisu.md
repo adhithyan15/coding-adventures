@@ -38,7 +38,8 @@ reviews_of: [KA-C149-kare]
 
 [PAUSE 2s] Before the new one: say the Kannada for to wear, then the Kannada for to call.
 
-[PAUSE 2s] Say the ordinals past eight: **ಒಂಬತ್ತನೆಯ**, **ಹತ್ತನೆಯ**, **ಹನ್ನೊಂದನೆಯ**. Then the spoken **ಮೊದಲನೇ**, and read the sign form **೧ನೇ**.
+[PAUSE 2s] Say the ordinals past eight: **ಒಂಬತ್ತನೆಯ**, **ಹತ್ತನೆಯ**,
+**ಹನ್ನೊಂದನೆಯ**. Then the spoken **ಮೊದಲನೇ**. [YOU READ: the sign form **೧ನೇ**]
 
 ## You'll want to know: ಎಣಿಸು
 <!-- hl-knowledge: introduces=[KA-LEX-C149-ACT149-05]; assesses=[] -->

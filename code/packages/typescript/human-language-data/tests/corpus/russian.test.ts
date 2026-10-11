@@ -56,7 +56,10 @@ it("pins Russian lesson-content budgets", () =>
     // claim.
     // 1202 -> 1338: the fourth A2 vocabulary tranche, chapters 232-257: 130 word
     // lessons (thirty verbs) and six reviews. No idiom, sense or culture claim.
-    lessons: 1338,
+    // 1338 -> 1339: RU-C01-checkpoint, chapter 1's closing checkpoint after the
+    // writing runway, so the payoff can assess the ten letter atoms. It
+    // introduces nothing: no idiom, sense or culture claim.
+    lessons: 1339,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

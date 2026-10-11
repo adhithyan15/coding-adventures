@@ -113,6 +113,45 @@ describe("Japanese script inventory shards", () => {
     ).toThrow(/already owned/);
   });
 
+  it("rebuilds an optional digits section only when it has shards", () => {
+    const without = mergeScriptInventoryShards([
+      meta,
+      shard("letters/0010-U-3042.json", letter("あ")),
+    ]);
+    expect(Object.hasOwn(without, "digits")).toBe(false);
+    const withDigits = mergeScriptInventoryShards([
+      meta,
+      shard("letters/0010-U-3042.json", letter("あ")),
+      shard("digits/0010-U-6F0.json", letter("۰")),
+      shard("digits/0020-U-6F1.json", letter("۱")),
+    ]);
+    expect(Object.keys(withDigits).slice(-3)).toEqual(["letters", "marks", "digits"]);
+    expect(withDigits.digits!.map((digit) => digit.glyph)).toEqual(["۰", "۱"]);
+  });
+
+  it("holds digit shards to the same identity, ordinal and ownership rules", () => {
+    expect(() =>
+      mergeScriptInventoryShards([meta, shard("digits/0010-U-6F1.json", letter("۰"))]),
+    ).toThrow(/does not match.*U-6F0/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("digits/0010-U-6F0.json", letter("۰")),
+        shard("digits/0010-U-6F1.json", letter("۱")),
+      ]),
+    ).toThrow(/duplicate digits ordinal '0010'/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("letters/0010-U-6F0.json", letter("۰")),
+        shard("digits/0010-U-6F0.json", letter("۰")),
+      ]),
+    ).toThrow(/already owned/);
+    expect(() =>
+      mergeScriptInventoryShards([meta, shard("digits/0010-U-6F0.json", { sound: "0" })]),
+    ).toThrow(/non-empty 'glyph'/);
+  });
+
   it("requires one entry object with the section's identity field", () => {
     expect(() =>
       mergeScriptInventoryShards([meta, shard("letters/0010-U-3042.json", [])]),

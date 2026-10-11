@@ -65,8 +65,8 @@ then *onpatu*.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-GRAMMAR-NUMBERS-6-10-03] -->
 
 - [YOU SAY: *aaru, eezhu, ettu, onpatu, pattu*]
-- [YOU HEAR: *eezhu*; YOU SHOW: 7]
-- [YOU HEAR: *onpatu*; YOU SHOW: 9]
+- [YOU HEAR: *eezhu*, then say the number — seven]
+- [YOU HEAR: *onpatu*, then say the number — nine]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-GRAMMAR-NUMBERS-6-10-03] -->

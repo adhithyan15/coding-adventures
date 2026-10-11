@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Six to Ten, and One Sound Law",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6deecce58af6d0d5",
+  "sourceHash": "fnv1a64:25eac98020df9767",
   "lessons": [
     {
       "id": "FA-C17-shesh",
@@ -111,6 +111,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-shesh-vowel",
               "prompt": "How many letters are in شش (shesh), and how many sounds?",
               "assesses": [
@@ -261,6 +262,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-haft-law",
               "prompt": "Latin has septem and Persian has haft. What happened to the s?",
               "assesses": [
@@ -387,6 +389,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-hasht-h",
               "prompt": "Why does hasht begin with h, when octo and eight do not?",
               "assesses": [
@@ -430,7 +433,7 @@
         "waitUntilStopped": [
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -539,6 +542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-noh-collision",
               "prompt": "نه (noh) can be read two ways. Give both.",
               "assesses": [
@@ -666,8 +670,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-dah-meaning",
-              "prompt": "Type the Persian word for 'ten'.",
+              "prompt": "Say the Persian word for 'ten'.",
               "assesses": [
                 "FA-LEX-DAH"
               ],
@@ -698,7 +703,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e084411c0a39348",
+      "sourceHash": "fnv1a64:69363679d024a8b4",
       "notice": null,
       "blocks": [
         {
@@ -732,12 +737,22 @@
               "text": "Count backwards from dah to yek."
             },
             {
-              "kind": "speech",
-              "text": "Read the ten printed shuffled and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the ten printed shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the ten printed shuffled, then say each]"
             },
             {
-              "kind": "speech",
-              "text": "Write سه and نه (noh), the two whose letters the script chapter gave you."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سه and نه (noh), the two whose letters the script chapter gave you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **سه** and **نه**, the two whose letters the script chapter gave you]"
             },
             {
               "kind": "speech",
@@ -761,6 +776,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-practice-ten",
               "prompt": "Count aloud from one to ten in Persian.",
               "assesses": [

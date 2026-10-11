@@ -38,7 +38,7 @@ are about to read, and one of them is cancelled.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C438-CUERPO-01, ES-LEX-C438-CUERPO-02, ES-LEX-C438-CUERPO-03] -->
 
-Read the notice once straight through, then answer.
+[YOU READ: the notice once straight through, then answer]
 
 > **AVISO — POLIDEPORTIVO MUNICIPAL**
 > Los cursos de **natación** de la tarde quedan suspendidos del 3 al 10 de
@@ -71,8 +71,10 @@ the last clause decides which one the listener hears.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C438-CUERPO-03, ES-LEX-C438-CUERPO-04, ES-LEX-C438-CUERPO-05, ES-LEX-C438-CUERPO-01, ES-LEX-C438-CUERPO-02] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four sentences: where
-you went, what you were doing there, what you twisted, and what you have to do
-now. End it the way the message above ends it.
+[PAUSE 3s] Now your turn, out loud. Four sentences: where you went, what you
+were doing there, what you twisted, and what you have to do now. End it the way
+the message above ends it.
+
+[YOU WRITE: the same four sentences]
 
 Then check yourself: did you say *me torcí **el** tobillo* and not *mi tobillo*?

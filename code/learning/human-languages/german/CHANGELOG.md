@@ -1,5 +1,106 @@
 # Changelog
 
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus). Eleven were already practised and not declared. Twelve got one short spoken question each.
+
+- **Declared:** GE-C06-zahlen-1-5's table already gives the *zwei*/*vier*/*fünf* cognate stories, and GE-C06-zahlen-6-10's gives *sechs*/*sieben*/*neun* (GE-ETYMON-ZWEI…NEUN). GE-C06-grimm has "*machen* is *make*" (GE-ETYMON-MACHEN-MAKE-02). GE-C18-nein-more's table has "**nein** (*ni*-ein)" (GE-ETYMON-NEIN-04). GE-C19-bitte-requests has "bitten, bitte, bid, bead" (GE-ETYMON-BITTE-BITTEN-02). GE-R20's "*un-guilting*" covers GE-ETYMON-ENTSCHULDIGUNG-03, and GE-C21-das-wetter-more's "Just like *Wetter*/'weather'" covers GE-ETYMON-WETTER-03.
+- **Recalls:** *Abend*/*eve* and *Nacht*/*night* in GE-C01-practice. *bitte*/*bitten* and *sehr*/*sore* in GE-C03-practice. *Ihnen* as "to them" in GE-C03-formal-practice. *wieder* and *withdraw* in GE-C04-auf-wiedersehen. *tschüss* and *adieu* in GE-C04-bis. The umlaut's ghost *e* in GE-C06-zahlen-1-5. *ja*/*yea* in GE-C18-ja-more. The *n-* of no and *bitte* as asking in GE-R20 (which now names GE-C18-nein-more as a prerequisite). *regnet*/*rain* and *gelb*/*yellow* in GE-R31 (which now names GE-C23-gruen-gelb-more).
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **GE-C02-ich** → GE-C01-guten-tag and GE-C01-nacht: its `reviews_of`, and the soft *ch* it sets against "the throat-scrape of *Nacht*".
+- **GE-C03-danke** → GE-C02-practice: "You can introduce yourself in German", and its `reviews_of`.
+
+## Added — the umlaut lesson prints a stroke-order filmstrip
+
+GE-W02-umlauts (ä ö ü) now prints a strip (3 -> 4 German lessons). ü was
+already cited; ä and ö are drawn BY ANALOGY with it, not from a source of their
+own, and their records in `data/scripts/latin.json` say so: the a or o as the
+Grundschrift-App writes it, then the left dot, then the right dot. R (from the
+Grundschrift-App) is now cited too, but its lessons still print no strip.
+
+## Fixed — chapter 30's payoff moves to its closing practice and covers the chapter
+
+Chapter 30 (Head and Hand) had its payoff on GE-C17-hand, which assessed 4 of
+the 12 atoms the chapter introduces (0.33, below the 0.5
+`chapter-payoff-not-representative` floor) and named GE-ETYMON-HAND-MANUS-05,
+which GE-C17-hand-more teaches after it. Its note also said the chapter had no
+terminal practice lesson, which stopped being true when
+GE-R17-wie-geht-es-wirklich (sequence 685) joined it.
+
+- The payoff moves to GE-R17-wie-geht-es-wirklich, the chapter's last lesson,
+  and now assesses all twelve atoms (1.00).
+- GE-R17 gains "Guided Practice — head and hand, from memory": *Kopf* as the
+  old cup (*cuppa*), inherited *Haupt* beside *caput* and *head* with Grimm's
+  *k → h*, French *tête* as the same vessel metaphor, *die Hand* / *die Hände*
+  with final devoicing, and *Hand* against *manus* — each grounded in
+  GE-C17-kopf, -kopf-more, -kopf-haupt, -kopf-haupt-more, -hand and
+  -hand-more. GE-C17-hand-more joins its prerequisites.
+- The "Why it's said this way" prose on *es geht* and *dir → Ihnen* was
+  tightened to make room: `max_seconds` 240 → 290, computed 286.
+
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 18 drivable lessons; 12 `[YOU READ: …]` and 2 `[YOU COVER: …]`
+  cues, and 8 ear-and-voice rewrites.
+- Warm-ups GE-C112-teppich and GE-C113-dusche ("Read *der Flughafen, …* aloud
+  as one line") and the GE-C52 reading lessons ("Read down once", "Again — and
+  this time notice …", "Read it once without stopping", "Now read it again, and
+  find …") become READ cues; notices GE-C143-anzeige, GE-C143-oeffnungszeiten,
+  GE-C143-quittung, GE-C143-termin move the notice into the cue.
+- GE-C15-partizip-practice "Cover the right-hand side and rebuild it from the
+  left. Then cover the left and work backwards" → two COVER cues, the question
+  after them in its own paragraph.
+- Ear rewrites: "Read across each row" → "Go across each row" (GE-C09), "Read
+  that last row twice" / "Read the middle row again" → "Go over …" (GE-C13,
+  GE-C16), "Read it against the English" → "Set it against the English"
+  (GE-C14), "Read the English gloss aloud" → "Say the English gloss aloud"
+  (GE-C15-gestern), "Look closely at **gewesen**" → "Listen closely to
+  **gewesen**", "then read on" → "then go on" (GE-C33).
+- GE-C27-schliessen "Close your hand, both ways" (a gesture the gesture check's
+  vocabulary did not hold) → "Say *I close my hand* both ways".
+- Left alone: "Read the German for its meaning rather than its parts"
+  (interpretation), "Look what happens when you line the languages up" (the
+  idiom), "so do not read them off the page" (a request not to look).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (GE-C143-anzeige, GE-C143-oeffnungszeiten,
+    GE-C143-quittung, GE-C143-termin) keep the notice in narrated prose and
+    defer only the look: "[YOU READ: the advert]" then "The advert says **…** —
+    …". The first pass had put the whole notice inside the deferred cue, so a
+    listener heard the comment on a notice without the notice; that superseded
+    form is the one described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (GE-C52-erste-lesung,
+    GE-C52-saetze): "[YOU READ: the passage again, and find the one line where
+    the verb is last]", "[YOU READ: the six lines again, …]".
+  - GE-C09-zahlmonate "Go across each row and hear that nothing rhymes." → "Say
+    each row through and hear that nothing rhymes."
+
+## Fixed — a drivable lesson stops asking a driver to hand something over
+
+A spoken cue is read to a driver as an ordinary turn (issue #12070).
+GE-R20-danke-bitte-entschuldigung asked for "*here you go*, handing something
+over"; it now says "*here you go*, offering something", the same shape as its
+neighbours ("*please*, asking for something"). The drivable-lesson gesture
+check in human-language-data now knows "hand over", found by a security
+review. The lesson stays `drivable: true` (only its modality source hash
+changes).
+
 ## Fixed — the dictation and the four-line composition no longer print a strip
 
 GE-W01-hallo-dictation and GE-W04-vier-zeilen (a connected composition) no

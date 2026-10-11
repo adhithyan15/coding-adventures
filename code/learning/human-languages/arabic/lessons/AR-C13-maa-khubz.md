@@ -6,6 +6,7 @@ sequence: 570
 chapter: 13
 type: word
 headword: ماء خبز
+romanization: "māʾ khubz"
 gloss: water and bread — one of Arabic's most irregular common words, and one built on a clean, ordinary Semitic root
 concept_tag: AR-FOOD-BASIC
 prerequisites: [AR-C12-al-fusul]

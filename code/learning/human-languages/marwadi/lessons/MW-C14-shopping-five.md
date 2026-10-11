@@ -36,15 +36,16 @@ reviews_of: [MW-R14-shopping-new-two, MW-C13-shopping-three, MW-C12-weather-six,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-LEX-PAISA-01, MW-SCRIPT-DA-01, MW-SCRIPT-DDA-01] -->
 
-[PAUSE 24s] Recall the earlier shopping and weather payoffs, say money, then write **द** and **ड**.
+[PAUSE 24s] Recall the earlier shopping and weather payoffs and say money.
+[YOU WRITE: **द** and **ड**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
 1. Identify five heard words.
 2. Produce five words from meaning cues.
-3. Match five printed cards to meanings.
-4. Write all five heard words without a model.
+3. [YOU READ: five printed cards and match them to meanings]
+4. [YOU WRITE: all five heard words without a model]
 
 Pass each skill separately; a strong word cannot compensate for a missed one.
 

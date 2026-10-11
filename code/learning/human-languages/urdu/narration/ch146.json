@@ -4,7 +4,7 @@
   "chapter": 146,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4ea5d152ea4ed125",
+  "sourceHash": "fnv1a64:917821561b166b2e",
   "lessons": [
     {
       "id": "UR-C146-taim-tebal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c3da594d12d335c",
+      "sourceHash": "fnv1a64:e67f0d254018c354",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ٹائم ٹیبل — ṭāim ṭebal — \"a timetable\". Read the board: بس: آٹھ بجے — bas: āṭh baje — \"Bus: eight o'clock.\" The bus leaves at eight, so be there before eight."
+              "text": "ٹائم ٹیبل — ṭāim ṭebal — \"a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the board",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the board]"
+            },
+            {
+              "kind": "speech",
+              "text": "The board says بس: آٹھ بجے — bas: āṭh baje — \"Bus: eight o'clock.\" The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ab59a74f57804a3",
+      "sourceHash": "fnv1a64:c032277739008e61",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,24 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نوٹس — noṭis — \"a notice\". Read the notice: دکان ہر اتوار کو بند رہتی ہے۔ — dukān har itvār ko band rahtī hai — The shop is closed on Sundays, so come on another day."
+              "text": "نوٹس — noṭis — \"a notice\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice]"
+            },
+            {
+              "kind": "speech",
+              "text": "The notice says دکان ہر اتوار کو بند رہتی ہے۔ — dukān har itvār ko band rahtī hai."
+            },
+            {
+              "kind": "speech",
+              "text": "— The shop is closed on Sundays, so come on another day."
             }
           ]
         },
@@ -388,7 +418,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8abc34116043e2a1",
+      "sourceHash": "fnv1a64:19706d7a7ffaeb33",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +445,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "اشتہار — ishtihār — \"an advert\". Read the advert: کمرہ کرائے کے لیے خالی ہے۔ — kamrā kirāe ke liye khālī hai — \"Room to let.\" A room is available to rent."
+              "text": "اشتہار — ishtihār — \"an advert\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advert says کمرہ کرائے کے لیے خالی ہے۔ — kamrā kirāe ke liye khālī hai — \"Room to let.\" A room is available to rent."
             }
           ]
         },

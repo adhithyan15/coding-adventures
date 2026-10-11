@@ -44,8 +44,7 @@ reviews_of: [UR-C32-practice, UR-C31-practice, UR-C30-practice, UR-C29-practice,
 Everything this slice added, with nothing in front of you.
 
 1. Count aloud one to ten, then say **bīs** and **sau**.
-2. Write the ten figures shuffled, checking **۴**, **۵** and **۶** against the
-   models rather than against memory.
+2. [YOU WRITE: the ten figures shuffled, checking **۴**, **۵** and **۶** against the models rather than against memory]
 3. Say the first four ordinals, then build **fifth**, **tenth** and
    **twentieth**.
 4. Say the two things this slice deliberately did NOT give you, and why: the

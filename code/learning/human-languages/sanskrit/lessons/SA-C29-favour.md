@@ -61,7 +61,8 @@ A second word built from the doing-root you already had.
 - [YOU SAY: *upakāraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *karomi*, then *namaskāraḥ*, then *upakāraḥ*]
-- [YOU RECALL: read **सत्यम्**, then say *śubham*]
+- [YOU READ: **सत्यम्**]
+- [YOU RECALL: say *śubham*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04] -->

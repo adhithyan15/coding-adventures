@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *isuka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *isuka*, then *nadi*, and say where you would find one beside the other]
-- [YOU RECALL: say *pedavi*, then read **తక్కువ** and say what it means]
+- [YOU RECALL: say *pedavi*]
+- [YOU READ: **తక్కువ**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03] -->

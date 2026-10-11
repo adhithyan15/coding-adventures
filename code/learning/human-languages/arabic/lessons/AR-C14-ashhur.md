@@ -6,6 +6,7 @@ sequence: 580
 chapter: 14
 type: word
 headword: يناير فبراير مارس أبريل مايو يونيو يوليو أغسطس سبتمبر أكتوبر نوفمبر ديسمبر
+romanization: "yanāyir fabrāyir māris abrīl māyū yūniyū yūliyū aghusṭus sibtambir uktūbar nūfambir dīsambir"
 gloss: the Gregorian months — Latin names borrowed almost intact, running ALONGSIDE the Islamic calendar's own, entirely different lunar months
 concept_tag: AR-MONTHS
 prerequisites: [AR-C13-maa-khubz]
@@ -71,7 +72,7 @@ convention in Egypt, the Gulf, and much pan-Arab media — but the Levant and
 Iraq (Syria, Lebanon, Jordan, Palestine, Iraq) traditionally use a **third**,
 completely different set for these same twelve solar months, of **Syriac**
 origin: **كانون الثاني** (*Kānūn al-Thānī*, January), **شباط** (*Shubāṭ*,
-February), **آذار** (*Ādhār*, March), and so on. So depending on the
+February), *Ādhār* (March), and so on. So depending on the
 country, an Arabic speaker's civil-calendar month name might come from
 Latin *or* from Syriac — a third naming system, not just two.
 

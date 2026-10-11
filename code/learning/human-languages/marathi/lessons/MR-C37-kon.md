@@ -56,7 +56,7 @@ with **क** in a question and you can guess its job before you know its meaning
 Marathi **कवण**. English **who** and Latin **quis** grew from the same
 Indo-European stem, which is why the family feels oddly familiar.
 
-Point it at somebody you have already named: **मीरा कोण आहे?** — *Mīrā koṇ
+Aim it at somebody you have already named: **मीरा कोण आहे?** — *Mīrā koṇ
 āhe?* — **who is Mira?**
 
 ## Guided Practice

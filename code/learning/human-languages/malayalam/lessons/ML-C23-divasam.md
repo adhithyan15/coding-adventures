@@ -68,7 +68,8 @@ the everyday counting work instead.
 [PAUSE 1s]
 - [YOU SAY: "divasaṁ" — "day," the everyday counting word]
 - [YOU SAY: "dinam" — the same Sanskrit word as Kannada's dina, but formal here]
-- [YOU RECALL: say *pātirā*, then read **മണി**]
+- [YOU RECALL: say *pātirā*]
+- [YOU READ: **മണി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02] -->

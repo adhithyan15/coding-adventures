@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Sexto ao Decimo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6becfe1e36a9ee99",
+  "sourceHash": "fnv1a64:ef0ea47495e94958",
   "lessons": [
     {
       "id": "PT-C28-sexto",
@@ -1125,7 +1125,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ce3522cf908cd39",
+      "sourceHash": "fnv1a64:be77a0c69fde6da1",
       "notice": null,
       "blocks": [
         {
@@ -1305,7 +1305,16 @@
             },
             {
               "kind": "speech",
-              "text": "What is the raised letter in 1.ª? (The last letter of primeira — the tail of the word.) Why are there two shapes? (Because it agrees, like the word it stands for.) Read o 3.º andar aloud. (O terceiro andar.)"
+              "text": "What is the raised letter in 1.ª? (The last letter of primeira — the tail of the word.) Why are there two shapes? (Because it agrees, like the word it stands for.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "o 3.º andar aloud (O terceiro andar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: *o 3.º andar* aloud (***O terceiro andar***)]"
             }
           ]
         }

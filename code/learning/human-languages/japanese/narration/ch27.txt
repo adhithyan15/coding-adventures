@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does よむ (yomu) mean? ("To read".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to read'.
+Say the Japanese for 'to read'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かく (kaku) mean? ("To write".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to write'.
+Say the Japanese for 'to write'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はなす (hanasu) mean? ("To speak".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to speak'.
+Say the Japanese for 'to speak'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まつ (matsu) mean? ("To wait".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to wait'.
+Say the Japanese for 'to wait'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あう (au) mean? ("To meet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to meet'.
+Say the Japanese for 'to meet'.

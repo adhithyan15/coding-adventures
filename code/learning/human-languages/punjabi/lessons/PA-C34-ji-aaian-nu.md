@@ -97,6 +97,6 @@ second letter rather than the first.
 <!-- hl-activity: {"id": "PA-C34-ji-aaian-nu-position", "kind": "text", "assesses": ["PA-GRAM-NU-DATIVE"], "prompt": "Does nu stand before or after the word it marks?", "answer": "after", "accepted": ["after it", "behind"], "feedback": {"correct": "After. English puts 'to' in front; Punjabi puts nu behind.", "incorrect": "After the word it marks - which is why they are called postpositions."}, "response_seconds": 10} -->
 
 [PAUSE 3s] Welcome someone. (*Jī āiāṁ nū̃*.) Which verb is *āiāṁ* a form of?
-(*Āuṇā*.) Where does *nū̃* stand? (After.) Write **ਸਲਾਮ** once from memory.
+(*Āuṇā*.) Where does *nū̃* stand? (After.) [YOU WRITE: **ਸਲਾਮ** once from memory]
 
 Sources: [Wiktionary: auna](https://en.wiktionary.org/wiki/%E0%A8%86%E0%A8%89%E0%A8%A3%E0%A8%BE); [Wiktionary: nu](https://en.wiktionary.org/wiki/%E0%A8%A8%E0%A9%82%E0%A9%B0).

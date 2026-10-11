@@ -59,7 +59,8 @@ Five replies past yes and no: so be it, well done, enough, true, thus.
 - [YOU SAY: *evam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *evam astu* as one phrase]
-- [YOU RECALL: say *keśaḥ*, then read **वैद्यः**]
+- [YOU RECALL: say *keśaḥ*]
+- [YOU READ: **वैद्यः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05] -->

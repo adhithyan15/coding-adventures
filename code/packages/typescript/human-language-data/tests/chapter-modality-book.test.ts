@@ -1,7 +1,7 @@
 import { lstatSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { renderBookChapterModalities } from "../src/book.js";
+import { handsFreeStart, renderBookChapterModalities } from "../src/book.js";
 import { generatedBookOutputs } from "../src/book-cli.js";
 import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
 import type { ChapterModality } from "../src/modality.js";
@@ -36,7 +36,7 @@ describe("book chapter modality projection", () => {
     expect(tex).toContain("\\hlvoicesign{}~\\textbf{voice} (1)");
     expect(tex).toContain("\\hlsightsign{}~\\textbf{eyes} (1)");
     expect(tex).not.toContain("\\hlpensign{}~\\textbf{pen}");
-    expect(tex).toContain("\\textbf{Hands-free start:} first 1 of 2 lessons.");
+    expect(tex).toContain("\\textbf{Hands-free start:} the first of 2 lessons.");
     expect(tex).not.toContain("AddToHook");
     expect(tex).not.toMatch(/[🚗👁✍]/u);
   });
@@ -45,13 +45,35 @@ describe("book chapter modality projection", () => {
     const tex = renderBookChapterModalities("test", [
       chapter({ sight: 0, voice: 2, modalities: ["voice"], drivablePrefix: 2 }),
     ]);
-    expect(tex).toContain("\\textbf{Hands-free start:} all 2 lessons.");
+    expect(tex).toContain("\\textbf{Hands-free start:} both lessons.");
   });
 
   it("names an empty hands-free prefix without the awkward 'first zero' phrasing", () => {
     const tex = renderBookChapterModalities("test", [chapter({ drivablePrefix: 0 })]);
-    expect(tex).toContain("\\textbf{Hands-free start:} none of the 2 lessons.");
+    expect(tex).toContain("\\textbf{Hands-free start:} neither of the 2 lessons.");
     expect(tex).not.toContain("first 0");
+  });
+
+  it("words one- and two-lesson counts for what they are, not as \"first 1\" or \"all 1\"", () => {
+    const table: Array<[number, number, string]> = [
+      [1, 1, "its only lesson"],
+      [0, 1, "none (1 lesson)"],
+      [2, 2, "both lessons"],
+      [0, 2, "neither of the 2 lessons"],
+      [1, 2, "the first of 2 lessons"],
+      [5, 5, "all 5 lessons"],
+      [0, 5, "none of the 5 lessons"],
+      [1, 5, "the first of 5 lessons"],
+      [3, 5, "the first 3 of 5 lessons"],
+    ];
+    for (const [drivable, lessons, words] of table) {
+      expect(handsFreeStart(drivable, lessons), `${drivable}/${lessons}`).toBe(words);
+    }
+    const one = renderBookChapterModalities("test", [
+      chapter({ lessonCount: 1, voice: 1, sight: 0, modalities: ["voice"], drivablePrefix: 1 }),
+    ]);
+    expect(one).toContain("\\textbf{Hands-free start:} its only lesson.");
+    expect(one).not.toMatch(/\b(?:all|first) 1\b|of the 1 lesson/);
   });
 
   it("rejects cross-track, duplicate, empty, or impossible chapter data", () => {

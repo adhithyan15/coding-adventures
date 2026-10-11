@@ -37,14 +37,14 @@ variety: standard
 
 [PAUSE 2s] Before the new word: say the last thing you learned, once, out loud.
 
-[PAUSE 2s] Write **ભ** once from memory. Say yes and no (*hā*, *nā*), then *athāṇũ* and what it means.
+[PAUSE 2s] [YOU WRITE: **ભ** once from memory.] Say yes and no (*hā*, *nā*), then *athāṇũ* and what it means.
 
 ## You'll want to know: ચપ્પલ
 <!-- hl-knowledge: introduces=[GU-LEX-ANCHOR-CHAPPAL]; assesses=[] -->
 
 **ચપ્પલ** — *cappal* — "sandals".
 
-Say it: *cappal*. Look at its shape as you say it: the lessons that follow take pieces of it, **ચ** and **લ**, and write each one on its own.
+Say it: *cappal*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ચ** and **લ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-CHAPPAL] -->

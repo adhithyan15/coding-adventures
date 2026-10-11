@@ -58,7 +58,8 @@ Five: మామ, అత్త, బావ, మరదలు, అల్లుడు
 - [YOU SAY: *alluḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *ārōgyaṁ*, asking after the last of them]
-- [YOU RECALL: say *karra*, then read **సాలీడు** and say what it means]
+- [YOU RECALL: say *karra*]
+- [YOU READ: **సాలీడు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05] -->

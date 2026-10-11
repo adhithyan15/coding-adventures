@@ -62,7 +62,8 @@ vowel length, so the length is doing work here, not decoration.
 - [YOU SAY: *kīḻē* — feel the ழ]
 - [YOU SAY: *mēlē pār*, then *kīḻē pār*]
 - [YOU SAY: both bare words, *mēl* and *kīḻ*, then both with the ending]
-- [YOU RECALL: read **புல்**, then say *naḍa*]
+- [YOU READ: **புல்**]
+- [YOU RECALL: say *naḍa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02] -->

@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ಜ್ಞಾನ** — *jñāna* — "knowledge".
 
-Say it: *jñāna*. Look at its shape as you say it: the next lesson takes one
+Say it: *jñāna*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಞ**, and writes it on its own.
 
 ## Guided Practice

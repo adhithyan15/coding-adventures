@@ -36,8 +36,9 @@ reviews_of: [HI-C72-price]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-03] -->
 
-[PAUSE 2s] Write **दाम** from memory: द, then ा, then म. Then say the question
-you built with it.
+[PAUSE 2s] [YOU WRITE: **दाम** from memory — द, then ा, then म]
+
+Then say the question you built with it.
 
 ## You'll want to know: महँगा
 <!-- hl-knowledge: introduces=[HI-LEX-C72-COST-04]; assesses=[] -->
@@ -70,7 +71,8 @@ Four: a price, and a judgement to pass on it.
 - [YOU SAY: *mahãgā*, with the nose in the middle]
 - [YOU SAY: *bahut mahãgā*]
 - [YOU WRITE: महँगा, putting the ँ above the ह]
-- [YOU RECALL: read **गाना**, then say *bhī*]
+- [YOU READ: **गाना**]
+- [YOU RECALL: say *bhī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-03, HI-LEX-C72-COST-04] -->

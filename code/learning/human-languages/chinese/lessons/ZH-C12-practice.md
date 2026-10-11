@@ -33,16 +33,16 @@ reviews_of: [ZH-R12-family-six, ZH-C08-practice, ZH-C11-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-MINGZI, ZH-SCRIPT-ER-CHAR-01, ZH-SCRIPT-JIA-01] -->
 
-[PAUSE 18s] Say **name**, then write 儿 and 家 without a model.
+[PAUSE 18s] Say **name**. [YOU WRITE: 儿 and 家 without a model]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[ZH-PERFORMANCE-FAMILY-SIX-FOUR-SKILL-01]; assesses=[ZH-LEX-REN-01, ZH-LEX-NU-01, ZH-LEX-ERZI-01, ZH-LEX-NUER-01, ZH-LEX-JIA-01, ZH-LEX-JIAREN-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 1. **Listening:** hear six words in mixed order and choose each meaning.
-2. **Speaking:** produce all six from meaning cards, with tones audible.
-3. **Reading:** read the six character cards without pinyin.
-4. **Writing:** hear all six and write them without a model.
+2. **Speaking:** produce all six from their English meanings, with tones audible.
+3. [YOU READ: the six character cards without pinyin]
+4. **Writing:** hear all six. [YOU WRITE: all six without a model]
 
 Pass each skill separately. If one misses, repair that skill and retry only that
 part. This is a family vocabulary map, not yet a full family-description task.

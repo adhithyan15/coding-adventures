@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C90-odoroku-type",
-              "prompt": "Type the Japanese for 'to be surprised'.",
+              "prompt": "Say the Japanese for 'to be surprised'.",
               "assesses": [
                 "JA-LEX-C90-ACT90-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C90-todoku-type",
-              "prompt": "Type the Japanese for 'to arrive, to reach'.",
+              "prompt": "Say the Japanese for 'to arrive, to reach'.",
               "assesses": [
                 "JA-LEX-C90-ACT90-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C90-itadaku-type",
-              "prompt": "Type the Japanese for 'to receive (politely)'.",
+              "prompt": "Say the Japanese for 'to receive (politely)'.",
               "assesses": [
                 "JA-LEX-C90-ACT90-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C90-kayou-type",
-              "prompt": "Type the Japanese for 'to go regularly'.",
+              "prompt": "Say the Japanese for 'to go regularly'.",
               "assesses": [
                 "JA-LEX-C90-ACT90-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C90-tsutsumu-type",
-              "prompt": "Type the Japanese for 'to wrap'.",
+              "prompt": "Say the Japanese for 'to wrap'.",
               "assesses": [
                 "JA-LEX-C90-ACT90-05"
               ],

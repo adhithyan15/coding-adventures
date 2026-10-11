@@ -9,7 +9,7 @@ headword: കാലാവസ്ഥ
 gloss: weather — a Sanskrit compound literally meaning "state of TIME": kaala ("time") + avastha ("state, condition") — a real echo of Spanish's tiempo meaning both "time" AND "weather"
 romanization: "kālāvastha"
 concept_tag: ML-WEATHER
-prerequisites: [ML-C18-mani]
+prerequisites: [ML-C18-mani, ML-C20-pathinonnu-irupathu]
 sounds: [malayalam-vowel-sign-aa, malayalam-conjunct-stha]
 roots: [sanskrit-kaala-time, sanskrit-avastha-state]
 etymology_hook: "കാലാവസ്ഥ (kālāvastha, 'weather') is a Sanskrit compound literally meaning 'state of TIME' — കാലം (kālam, 'time') + അവസ്ഥ (avastha, 'state, condition') — echoing Spanish's tiempo (which means BOTH 'time' and 'weather' in one word) but built as a compound rather than a single polysemous word"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C20-KALAVASTHA-01, ML-CONCEPT-C20-KALAVASTHA-02]
 practises:
-  knowledge: [ML-CONCEPT-C20-KALAVASTHA-01, ML-CONCEPT-C20-KALAVASTHA-02]
+  knowledge: [ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C20-KALAVASTHA-01, ML-CONCEPT-C20-KALAVASTHA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,6 +68,14 @@ same underlying idea: weather as bound up with time. Where Spanish just
 - [YOU SAY: "kālāvastha" — weather, "the state of time"]
 - [YOU SAY: "kālam" — time, "avastha" — state]
 - [YOU SAY: "maḻa peyyunnu" — it's raining, "rain is falling"]
+
+## Guided Practice — eleven to twenty
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02] -->
+
+- Say 11, then 12. (***patinonnŭ***, ***pantraṇṭŭ*** — echoing **പത്ത്**, ten,
+  plus a digit.)
+- Say twenty. What two pieces are in it? (***irupatŭ*** — **ഇരു**, an older
+  "two", + **പത്ത്**, "ten": still visibly "two-tens", as in Tamil.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-KALAVASTHA-01, ML-CONCEPT-C20-KALAVASTHA-02] -->
