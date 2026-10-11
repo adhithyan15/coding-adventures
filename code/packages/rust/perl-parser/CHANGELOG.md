@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Require a distinct, own-archive-backed partial Perl 5.004_71 pair with
+  acceptance and 250/251-digit, leading-zero, decrement and unsupported-input
+  probes. Reject constant-hook, keyword-override, subroutine and regex contexts;
+  keep LANG81 execution unchanged.
+
 - Require a distinct, own-archive-backed partial Perl 5.004_70 pair with
   acceptance and numeric/unsupported-input boundaries. Reject constant-hook,
   imported/global keyword-override, subroutine, and regex contexts.
