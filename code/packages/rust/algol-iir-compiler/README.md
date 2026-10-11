@@ -304,6 +304,9 @@ Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
 nested exponentials and user-declared overrides remain conservative.
+Built-in `sqrt` may also map a runtime conditional when every branch retains a
+proven nonnegative bounded runtime-real sign root; unrestricted,
+non-runtime-real, nested-exponential, and overridden branches remain gated.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
