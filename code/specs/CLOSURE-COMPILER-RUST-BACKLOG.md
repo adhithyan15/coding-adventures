@@ -9,12 +9,47 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `b0cd9e15aa467712fde66804071bec1b12fc0ed8`
+**Current audit base:** `846a01d6116700be742a9d6dbef06ffc66b381d9`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
 
 ## Delivery priority and deferred Miri (2026-10-11)
+
+### Latest native CI repair checkpoint
+
+Main `846a01d6116700be742a9d6dbef06ffc66b381d9` is reconciled in the isolated
+delivery checkout through `4652efc1d13ec73afa9a2df1dca365b761ac397d`. The later
+diagram suite actually passed **722 tests/docs across 32 targets** at
+`bb12b3a44a1b71c2c12a8aabcf5c557ae7322435`; ALGOL/LANG passed **1,211/104**,
+including 28 exact native regressions and all 11 unchanged BUILD commands,
+at `e373cd13118ac85b2efaf32b77225257dfb0e0a1`. Strict lint passed both cones.
+The Punjabi-only extension preserves their entire source trees; no new execution
+is inferred from source identity. Older receipts below retain historical heads.
+
+Required CI run 38169475256 at published `a46ca7ffb2087a80f55a1bd4f4b3cbe8ebfbf27d`
+**failed**: Windows completed Closurec but failed empty-host resolution and a
+Unix-only killed-child exit expectation; Linux lost hosted-runner communication
+with an incomplete package step. Neither job is accepted. Both Windows failures
+reproduce on unchanged integration source. The [bounded repair spec](CV04a-native-CI-portability-repair.md)
+was committed before tests and source. It rejects empty resolver hosts before OS
+lookup and requires exact Windows kill code 1/Unix signal status with every
+original supervisor bound retained. Downstream fixture repairs provision the
+required owner-only Windows KEK ACL, use a native absolute escaped broker path,
+and observe the Hue failure callback before stopping. Production permission,
+containment, scheduling and test assertions are retained; no new dependencies.
+
+Actual repaired source `47558e05196642ce2b83ee5eaa28321c9c3f4fb6` passes the complete
+12-package Chief reverse cone: **229 tests/docs across 30 targets, zero failures
+or ignores**, and strict all-target Clippy. The first attempt at `1e50936ae177`
+remains FAIL (220/9); seven CLI ACL failures and the daemon path failure also
+reproduce on unchanged source, while the Hue failure is a callback-observation
+race. Original CV04a lexer/compiler payload sources are identical. Final exact-head
+independent security and new required CI remain pending before pushing/merging
+the repair in the existing PR #17288. Auto-merge remains disabled. Full local
+Miri remains **DEFERRED / PENDING**, with the frozen run/497 inputs preserved.
+This checkpoint supersedes older current-main assumptions without relabeling
+historical execution. CV04b and full parity/lineage completion remain open.
 
 The human user explicitly authorized finishing Closure implementation and delivery
 first, then returning to local Miri. This overrides the historical local-Miri-before-
