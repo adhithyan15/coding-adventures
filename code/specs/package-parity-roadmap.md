@@ -17187,6 +17187,27 @@ and unknown language buckets remain zero. The new Rust-only
 native beneath-resolution authority, so it has a separately blocked review
 item rather than a cross-language port.
 
+## Post-#17168 recovery and TypeScript center-form selection
+
+The fresh-context audit verified #17168 merged at
+`e32e3584bf5e01e1570a9277afdb84f703557155`, with all 33 final-head checks
+acceptable (eight successes, 25 expected skips), and proved reachability from
+fetched main `fdd41452baa24b2a543d38d4d9318e883be7ff95`. No parity
+implementation PR is open. The collision-gated schema-3 inventory remains
+1,501 established implementation identities, 4,783 occupied slots, 1,543
+all-reported identities, 820 Rust singletons, and zero collisions or unknown
+buckets; no new identity requires an owner. Five OCaml roots remain emerging.
+
+The next serial child is `geometry-arc2d-typescript-center-form-conformance`:
+replace sampled bounds with analytic rotated extrema, enforce finite positive
+center forms and one-turn sweeps before allocation, and consume the seven
+neutral center records in native tests. Validate TypeScript compilation,
+coverage, same-lane dependencies and the repository's actual affected graph.
+This closes another existing lane under the Arc2D umbrella; the remaining
+eight center lanes, Go endpoint convenience, and portable build-tool owners
+remain separate. The primary checkout stays untouched, and the protected
+parity checkout is reused to preserve restart continuity.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

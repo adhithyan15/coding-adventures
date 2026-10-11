@@ -11,20 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 17168,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17168",
-    "branch": "codex/parity-arc2d-csharp-fsharp-20261008",
-    "item_id": "geometry-arc2d-csharp-fsharp-center-form-conformance"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T18:22:41Z",
+    "observed_at": "2026-10-11T17:03:26.343369+00:00",
     "pr_number": 17168,
-    "status": "pr-open",
-    "notes": "Ready-for-review PR #17168 opened from locally validated head 3bd0babfc7e5a1fb73e57d675fb11c308437ae19. GitHub reports MERGEABLE with initial detect, CodeQL and book-detection checks in progress; do not enable auto-merge until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "Actual merge verified against GitHub and fetched main. Selecting one bounded TypeScript center-form child; no open parity implementation PR."
   },
   "last_inventory": {
-    "revision": "89c47895e1303bf1baaae2da7290f3ae1be1a879",
+    "revision": "fdd41452baa24b2a543d38d4d9318e883be7ff95",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1501,
@@ -12244,8 +12239,11 @@
     {
       "id": "geometry-arc2d-csharp-fsharp-center-form-conformance",
       "title": "Conform C# and F# Arc2D center forms to G2D03",
-      "status": "pr-open",
-      "depends_on": ["geometry-arc2d-center-form-bounds-and-sweep-neutral-contract", "geometry-2d-neutral-fixture-ci-scheduling"],
+      "status": "merged",
+      "depends_on": [
+        "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
+        "geometry-2d-neutral-fixture-ci-scheduling"
+      ],
       "branch": "codex/parity-arc2d-csharp-fsharp-20261008",
       "pr_number": 17168,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17168",
@@ -12257,7 +12255,11 @@
       "rebase_notes": "Rebased conflict-free over unrelated Bengali, Chief broker-root and language-ladder merges before publication. Refreshed the collision-gated schema-3 inventory: one new Rust-only native-security singleton was classified and registered, with zero collisions/unknown buckets. No C#/F# Arc2D package path overlap or second parity PR appeared.",
       "validation_notes": "Ready-for-review PR #17168: red-before-green C#/F# Arc2D fixture/fail-stop tests. Final rebased head passes 10 tests per Arc2D lane with C# 97.01% line/96.77% branch and F# 98.83% line/95.31% branch coverage. Same-lane point2d, bezier2d, trig dependency suites pass (C# 4+5+12, F# 4+5+5). Neutral geometry validator passes 23 cases/11 unit tests; collision-gated schema-3 inventory at fetched main has 15 established lanes, 1,501 identities, 4,783 slots, zero collisions/unknown buckets. Go build-tool tests/vet and real plan validation of 45 BUILD files, 5,320 packages and eight affected nodes pass; orphan checks OK with 38 tracked exemptions. C# dotnet format whitespace, diff hygiene and independent exact-head security review pass. dotnet format does not support F#; F# compiles/tests without warnings. Initial PR checks are pending.",
       "selection_notes": "Selected only after #17148 actually merged, final 38 checks were acceptable, origin/main was fetched, collision-gated schema-3 inventory regenerated, and three newly discovered owners were registered. The merged G2D03 and now-unconditional geometry fixture contracts make C#/F# a bounded shared .NET implementation slice with direct dependency leverage. Java/Kotlin/Dart arithmetic and NET00 require upstream neutral adjudication; Haskell CT01 is ready but a narrower one-lane leaf; OCaml promotion remains upstream-blocked. No active parity PR or exact Arc2D package-path overlap was found.",
-      "notes": "First bounded child of the 11-lane Arc2D existing-center-form umbrella. C# and F# currently sample 100 points for bounds and use unchecked integer quadrant segmentation; both already link geometry2d-v1 but must dynamically consume its four center-bounds and three center-cubics records. Implement analytic rotated extrema, finite/valid one-turn fail-stop before allocation, zero/full-turn segment rules, native invalid/nonfinite tests, same-lane point2d/bezier2d/trig regression and real .NET coverage/build validation. G2D03 and merged neutral validators govern; no Go endpoint or absent-lane port in this slice."
+      "notes": "First bounded child of the 11-lane Arc2D existing-center-form umbrella. C# and F# currently sample 100 points for bounds and use unchecked integer quadrant segmentation; both already link geometry2d-v1 but must dynamically consume its four center-bounds and three center-cubics records. Implement analytic rotated extrema, finite/valid one-turn fail-stop before allocation, zero/full-turn segment rules, native invalid/nonfinite tests, same-lane point2d/bezier2d/trig regression and real .NET coverage/build validation. G2D03 and merged neutral validators govern; no Go endpoint or absent-lane port in this slice.",
+      "merge_revision": "e32e3584bf5e01e1570a9277afdb84f703557155",
+      "merged_at": "2026-10-11T16:30:11Z",
+      "merged_head": "6084df05be27c44fd69e81579977508fdc578dbf",
+      "merge_notes": "Recovery audit verified actual merge, fetched-main ancestry and 8 successful/25 expected skipped final-head checks."
     },
     {
       "id": "geometry-arc2d-go-endpoint-api-reconciliation",
@@ -13958,6 +13960,21 @@
     {
       "id": "mermaid-swimlane-class-decorator-parser-neutral-conformance", "title": "Classify portable DG04 Swimlane decorator semantics", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
       "notes": "Merged #17065 already delivered :::class grammar, Rust parser/semantic behavior for standalone nodes and edge endpoints, DG04 updates, corpus tests, and a Metal visual fixture; do not repeat that implementation or imply decorators are excluded. The remaining classification task is a language-neutral expected-semantic oracle and lane review for decorated endpoints, unknown/repeated classes, and class/style precedence, adding only verified unowned behavior. The separate terminal-semicolon class/classDef parser gap remains pending independently; neither task claims full Mermaid or all platform-renderer parity."
+    },
+    {
+      "id": "geometry-arc2d-typescript-center-form-conformance",
+      "title": "Conform TypeScript Arc2D center forms to G2D03",
+      "status": "in-progress",
+      "depends_on": [
+        "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
+        "geometry-2d-neutral-fixture-ci-scheduling"
+      ],
+      "branch": "codex/parity-arc2d-typescript-20261011",
+      "pr_number": null,
+      "selected_at": "2026-10-11T17:03:26.343369+00:00",
+      "selection_revision": "fdd41452baa24b2a543d38d4d9318e883be7ff95",
+      "selection_notes": "Serial child after verified #17168 merge. TypeScript still samples bounds and accepts unbounded/non-finite direct center sweeps. Reuse seven neutral records in a bounded native lane; portable build-tool hashing has separate owners and OCaml stays emerging. No new identities or open parity PR; no selected-path overlap.",
+      "notes": "Analytic rotated extrema with signed modular membership; finite positive center forms and one-turn fail-stop before cubic allocation; dynamic seven-case fixtures and native invalid/output tests; real TypeScript build, coverage, dependency/downstream suites and exact-head security review. Remaining eight center lanes are umbrella follow-ups; SVG endpoint expansion is separately owned."
     }
   ]
 }
