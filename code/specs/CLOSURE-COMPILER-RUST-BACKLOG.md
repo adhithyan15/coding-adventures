@@ -1,10 +1,10 @@
 # Closure Compiler on Rust — parity backlog
 
 **Status:** active — resumed with provenance as a completion requirement
-**Last reprioritized:** 2026-10-07
+**Last reprioritized:** 2026-10-11
 **Current selection:** exact lexical source intervals and coordinate ownership,
 tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/16970),
-branch `codex/closurec-source-spans-20261007`. CV03 merged and is verified;
+delivery branch `codex/closurec-source-spans-delivery-20261011`. CV03 merged and is verified;
 its managed worktree is archived. The detailed [CV04 specification](CV04-exact-lexical-source-intervals.md)
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
@@ -13,6 +13,31 @@ source inventory/ingestion-leaf reuse. CV04a implementation and exact range cont
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
+
+## Delivery priority and deferred Miri (2026-10-11)
+
+The human user explicitly authorized finishing Closure implementation and delivery
+first, then returning to local Miri. This overrides the historical local-Miri-before-
+push sequencing below. Full local Miri is **DEFERRED / PENDING**, never passed.
+The [delivery validation specification](CV04a-delivery-with-deferred-miri.md)
+preserves required CI, native/compiler/downstream tests, strict lint, exact-head
+independent security review, one active implementation PR, and current clean
+terminal-check/review/conflict evidence before squash merge.
+
+The running Miri checkout remains frozen at candidate `d7c8ae25ceaf` (tested source
+`b1dfc5bc242e`) with all 497 inputs and receipts preserved. Delivery continues in
+the separate `closurec-source-spans-delivery` managed worktree and separate Cargo
+target. Current-main reconciliation and refreshed validation are in progress;
+historical counts below are not acceptance for the refreshed candidate.
+
+Each affected PR must state local Miri **DEFERRED / PENDING**. After implementation
+delivery, obtain genuine full acceptance against final delivered source, rerunning
+where intervening changes invalidate the old inputs. Do not terminate the existing
+run to implement this sequencing change. Do not weaken production-limit or safety
+assertions, bypass required CI, or ignore an applicable demonstrated UB failure.
+Keep #16970, provenance epic #15830, and the heartbeat open/active until their full
+contracts are achieved. Delivered implementation with deferred validation is not
+fully validated completion.
 
 ## CV04a source capture progress (2026-10-07)
 
@@ -85,8 +110,8 @@ changed. The canonical script now keeps runtime-core/dynval isolated and gives
 only Twig host access with stdin redirected from /dev/null; UB/aliasing/alignment/
 data-race checks remain enabled. All three runner controls and shell syntax pass;
 the test fixture's Ruff ordering was corrected. These controls are not actual
-full Miri acceptance. A complete new frozen script pass remains required before
-push, with final source/runner hashes and exact-head independent security.
+full Miri acceptance. The former local pre-push requirement is superseded by
+the explicit October 11 deferral; final-source Miri remains a completion obligation.
 
 Current main `52b53049ecb3` is merged, preserving both C changelog entries and
 every upstream change through that base. At actual tested candidate
@@ -107,7 +132,8 @@ is still running against that frozen candidate, with497 source/runner hashes
 unchanged. It passed the formerly aborting host-input test inside the actual
 full run, but its unfinished Twig library target is not accepted.
 
-New main through audited `e71e05f3b839` is deferred until this run terminates.
+Historically, main through audited `e71e05f3b839` was deferred until this run
+terminated. The October 11 priority override permits isolated reconciliation now.
 The conservative source audit detects the workspace Cargo.toml adding an
 unrelated member; do not bypass the merge guard or assume equivalent resolution.
 Fresh dependency/input evidence is required when reconciling main. Other newer
