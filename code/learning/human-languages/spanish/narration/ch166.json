@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "Opening, Closing, Sitting Down, Standing Up",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3e73f6b2b41546c8",
+  "sourceHash": "fnv1a64:c66fbb9c463b7652",
   "lessons": [
     {
       "id": "ES-C37-abrir",
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:381b0960979d7ac3",
+      "sourceHash": "fnv1a64:acfacd6ccfa16537",
       "notice": null,
       "blocks": [
         {
@@ -709,7 +709,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c03d6d7b6eff970c",
+      "sourceHash": "fnv1a64:902d52002fcbce27",
       "notice": null,
       "blocks": [
         {
@@ -888,6 +888,16 @@
             {
               "kind": "speech",
               "text": "What did Latin build sentar and levantar out of? (A participle — sedēns and levāns.) What does de pie mean literally? (On foot.) Which of the four verbs has no agreed origin? (Andar.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the head you lift with levantar: which Latin word is cabeza, and why does French say tête instead? (Caput, as in captain; French swapped in testa, a clay pot — a Roman joke.)"
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 209,
   "title": "Review --- the Two Conditions",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:83a894dd1e94f378",
+  "sourceHash": "fnv1a64:e08ee5fae4fc3917",
   "lessons": [
     {
       "id": "ES-C56-repaso-condiciones",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae6a6ce25e5d214d",
+      "sourceHash": "fnv1a64:0e704115b0bddea1",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +195,16 @@
             {
               "kind": "speech",
               "text": "How many worlds can you now describe? (Three — habitual, planned, and not the case.) What does si change between them? (Nothing.) And which two forms may never follow it? (The future and the present subjunctive.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the -ra of hablara: what did it mean in Latin, before it slid into supposing? (A plain statement of what had happened — amāveram, I had loved.)"
             }
           ]
         }

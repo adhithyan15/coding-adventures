@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-GRAMMAR-NOUN-GENDER]
+  knowledge: [ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-GRAMMAR-NOUN-GENDER, ES-ETYMON-TATEM]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -85,8 +85,12 @@ to say yourself.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-MENTE-LY] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-MENTE-LY, ES-ETYMON-TATEM] -->
 
 [PAUSE 3s] Three endings — name them. (***-ción, -dad, -mente***.) Which two
 are always feminine? (***-ción*** and ***-dad***.) Which one has no upper
-limit? (***-mente***.) Next: reading a sentence nobody taught you.
+limit? (***-mente***.)
+
+[PAUSE 2s] Why is English *-ty* so much shorter than *-dad*? (Both are Latin ***-tātem***; English took it through French and wore it further.)
+
+Next: reading a sentence nobody taught you.

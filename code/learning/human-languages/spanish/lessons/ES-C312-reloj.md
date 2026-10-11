@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-C312-ASK-11]
 practises:
-  knowledge: [ES-LEX-C311-ASK-09, ES-LEX-C311-ASK-10, ES-LEX-C312-ASK-11]
+  knowledge: [ES-LEX-C311-ASK-09, ES-LEX-C311-ASK-10, ES-LEX-C312-ASK-11, ES-ETYMON-HORA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -44,7 +44,7 @@ assessor do, going by the root? (Sits beside.)
   [pronunciation reference](../pronunciation-reference.md)
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[ES-LEX-C312-ASK-11]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-LEX-C312-ASK-11]; assesses=[ES-ETYMON-HORA-02] -->
 
 **el reloj** — "the clock," and also the watch on your wrist.
 

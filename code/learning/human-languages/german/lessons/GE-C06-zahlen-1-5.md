@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-EINS-01, GE-LEX-FUENF-01, GE-LEX-ZWEI-01, GE-LEX-DREI-01, GE-LEX-VIER-01, GE-LEX-ZAEHLEN-1-5-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-V-AS-F-01, GE-SOUND-FUENF-UE-01]
+  knowledge: [GE-LEX-EINS-01, GE-LEX-FUENF-01, GE-LEX-ZWEI-01, GE-LEX-DREI-01, GE-LEX-VIER-01, GE-LEX-ZAEHLEN-1-5-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-V-AS-F-01, GE-SOUND-FUENF-UE-01, GE-ETYMON-ZWEI-TWO-02, GE-ETYMON-VIER-FOUR-02, GE-ETYMON-FUENF-FIVE-02, GE-ETYMON-UMLAUT-GHOST-E-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-output, fluency]
@@ -41,7 +41,7 @@ of them running together without a pause to think. That is what this lesson is
 for, and nothing in it is new.
 
 ## You'll want to know: the run
-<!-- hl-knowledge: introduces=[GE-LEX-ZAEHLEN-1-5-01]; assesses=[GE-LEX-EINS-01, GE-LEX-ZWEI-01, GE-LEX-DREI-01, GE-LEX-VIER-01, GE-LEX-FUENF-01] -->
+<!-- hl-knowledge: introduces=[GE-LEX-ZAEHLEN-1-5-01]; assesses=[GE-LEX-EINS-01, GE-LEX-ZWEI-01, GE-LEX-DREI-01, GE-LEX-VIER-01, GE-LEX-FUENF-01, GE-ETYMON-ZWEI-TWO-02, GE-ETYMON-VIER-FOUR-02, GE-ETYMON-FUENF-FIVE-02] -->
 
 > **eins, zwei, drei, vier, fünf**
 
@@ -71,8 +71,10 @@ already half knows.
 [REPEAT x2] "eins, zwei, drei, vier, fünf"
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZAEHLEN-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZAEHLEN-1-5-01, GE-ETYMON-UMLAUT-GHOST-E-02] -->
 
 [PAUSE 3s] Count to five. (*Eins, zwei, drei, vier, fünf*.) Now backwards.
 (*Fünf, vier, drei, zwei, eins*.) Which of the five is borrowed from Latin?
 (None of them.)
+
+[PAUSE 2s] And the two dots on *fünf*: what letter are they a flattened ghost of? (An **e** — which is why *fünf* can be typed *fuenf*.)

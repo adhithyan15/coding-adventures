@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-FROMAGE-01, FR-ETYMON-FROMAGE-02, FR-LEX-PLEASE-02, FR-LEX-PERSONNE-08, FR-LEX-ENFANT-06]
+  knowledge: [FR-LEX-FROMAGE-01, FR-ETYMON-FROMAGE-02, FR-LEX-PLEASE-02, FR-LEX-PERSONNE-08, FR-LEX-ENFANT-06, FR-ETYMON-PERSONNE-09]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,11 +34,13 @@ reviews_of: [FR-C29-personne, FR-C19-sil-vous-plait]
 # le fromage — cheese, named for its mould
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-PERSONNE-08, FR-LEX-ENFANT-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-PERSONNE-08, FR-LEX-ENFANT-06, FR-ETYMON-PERSONNE-09] -->
 
 [PAUSE 2s] You can name *la personne* and *l'enfant* now. The café chapter asked
 politely for a drink; this chapter asks for what goes with it — starting with
 a word every other Romance language names completely differently.
+
+[PAUSE 2s] What did *personne* first name in Latin, and what does it become beside *ne*? (A theatre **mask**; *ne … personne* is **nobody**.)
 
 ## You'll want to know: the word
 <!-- hl-knowledge: introduces=[FR-LEX-FROMAGE-01]; assesses=[FR-LEX-PLEASE-02] -->

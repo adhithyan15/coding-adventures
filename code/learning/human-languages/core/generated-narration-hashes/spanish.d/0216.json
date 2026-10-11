@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 216,
-  "sourceHash": "fnv1a64:d2dc584058e0f30d",
+  "sourceHash": "fnv1a64:9529431798bdafcf",
   "lessonIds": [
     "ES-C57-repaso-reportar"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch216.txt",
   "json": "spanish/narration/ch216.json",
-  "textHash": "fnv1a64:bca0ca26fe52690a",
-  "jsonHash": "fnv1a64:74f7201f459614ca",
+  "textHash": "fnv1a64:2fb8e28f878139b3",
+  "jsonHash": "fnv1a64:c693e4c401fdbf69",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "Travelling --- Asking, Boarding, Staying, and When It Goes Wrong",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:6253208f7d5413cd",
+  "sourceHash": "fnv1a64:7341a3b5ec7be88f",
   "lessons": [
     {
       "id": "ES-C268-donde-esta",
@@ -477,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9863cdf582f9875",
+      "sourceHash": "fnv1a64:dfd1f0a71227f54e",
       "notice": null,
       "blocks": [
         {

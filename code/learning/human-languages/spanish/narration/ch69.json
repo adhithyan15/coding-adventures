@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Verbs That Break in the Middle --- the Stem Changers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca3824b2d379d6e4",
+  "sourceHash": "fnv1a64:de2b34857a3219b9",
   "lessons": [
     {
       "id": "ES-C11-querer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80df084c775eba0f",
+      "sourceHash": "fnv1a64:abf0cf35eb7ae0b9",
       "notice": null,
       "blocks": [
         {
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "A false friend from before: éxito obeys your rules and still lies. It means success, not exit."
+              "text": "A false friend from before: éxito obeys your rules and still lies. It means success, not exit — Latin exitus was a going out: English kept the door, Spanish kept the outcome."
             }
           ]
         },

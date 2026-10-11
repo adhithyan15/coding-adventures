@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Going, and the Future You Can Already Say",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:64633593a8e30a58",
+  "sourceHash": "fnv1a64:87da801766142609",
   "lessons": [
     {
       "id": "ES-C10-ir",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af755379bf248b1b",
+      "sourceHash": "fnv1a64:aaa2908bfb95401b",
       "notice": null,
       "blocks": [
         {

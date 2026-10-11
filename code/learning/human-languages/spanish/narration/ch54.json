@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Synthesis --- Saying What People Do",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1889c210364d4e75",
+  "sourceHash": "fnv1a64:8b8d501f53826864",
   "lessons": [
     {
       "id": "ES-C09-sintesis-trabajo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7640786a7ef2842",
+      "sourceHash": "fnv1a64:0be897443ce530a8",
       "notice": null,
       "blocks": [
         {
@@ -196,6 +196,16 @@
             {
               "kind": "speech",
               "text": "Two endings that name a person. (-ante and -ista.) What do both skip after ser? (un/una.) And which of them changes for a woman? (Neither.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And profesor: what did Latin profitērī mean, and which English words kept it? (To declare publicly — profess, profession.)"
             }
           ]
         }

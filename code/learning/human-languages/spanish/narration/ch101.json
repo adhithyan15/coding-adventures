@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Review --- The Pairs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:139f0b48e4d0b628",
+  "sourceHash": "fnv1a64:09ddc6d7c0ec3000",
   "lessons": [
     {
       "id": "ES-C47-repaso-dobles",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd96f875e9fda5f2",
+      "sourceHash": "fnv1a64:5948035d07b084d0",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,21 @@
             },
             {
               "kind": "speech",
-              "text": "Which row is the only one that changes? (Le and les becomes se.) How many new pronouns did you learn here? (None.) Next: all of it in a conversation, at speed."
+              "text": "Which row is the only one that changes? (Le and les becomes se.) How many new pronouns did you learn here? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the nos inside nosotros: which Latin word is it, and what was added to it? (Nōs, we, plus otros, \"others\" — \"we others\".)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: all of it in a conversation, at speed."
             }
           ]
         }

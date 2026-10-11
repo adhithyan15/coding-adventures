@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Beber, and Two Ways to Ask",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9cb96abd65af388f",
+  "sourceHash": "fnv1a64:155f5a0f86b2ee04",
   "lessons": [
     {
       "id": "ES-C07-beber",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88d66569eb1c1021",
+      "sourceHash": "fnv1a64:d6c0bd00efce0b40",
       "notice": null,
       "blocks": [
         {

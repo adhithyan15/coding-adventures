@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-OBJECT-PRONOUN, ES-LEX-LIBRO, ES-LEX-COMIDA, ES-LEX-LO-OBJECT, ES-LEX-LA-OBJECT, ES-LEX-TE-QUIERO]
+  knowledge: [ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-OBJECT-PRONOUN, ES-LEX-LIBRO, ES-LEX-COMIDA, ES-LEX-LO-OBJECT, ES-LEX-LA-OBJECT, ES-LEX-TE-QUIERO, ES-ETYMON-TE-TU]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -86,8 +86,12 @@ two test cases you run every new pronoun against.
 [REPEAT x2] Until the choice arrives before the sentence does.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN, ES-GRAMMAR-DIRECT-OBJECT-LO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-ETYMON-TE-TU] -->
 
 [PAUSE 3s] Four pronouns — say them. (***Me, te, lo, la***.) Which two are
-decided by a noun rather than by you? (***Lo*** and ***la***.) Next chapter has
+decided by a noun rather than by you? (***Lo*** and ***la***.)
+
+[PAUSE 2s] And *tú* with *te*: which old English pair is the same pair, inherited twice? (***Thou*** and ***thee***.)
+
+Next chapter has
 no new forms either — it asks what these words are actually **for**.

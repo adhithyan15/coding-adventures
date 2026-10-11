@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [TA-LEX-UDAL-URUPPUGAL-01, TA-SCRIPT-DRIZZLE-06, TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-02, TA-SOUND-I-SIGN-WRITE-NANDRI-03, TA-SCRIPT-RECOG-117]
+  knowledge: [TA-LEX-UDAL-URUPPUGAL-01, TA-SCRIPT-DRIZZLE-06, TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-02, TA-SOUND-I-SIGN-WRITE-NANDRI-03, TA-SCRIPT-RECOG-117, TA-ETYMON-NIRANGAL-02]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-output, language-focus]
@@ -33,10 +33,12 @@ reviews_of: [TA-C13-udal-uruppugal, TA-S06-ka, TA-W04-i-sign-write-nandri, TA-S1
 # Chapter 13 checkpoint — head, hand, and நன்றி from sound
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NIRANGAL-02] -->
 
 [PAUSE 2s] Nothing new here. The two body words out loud first, then two
 letters, a vowel sign and the word *thank you* on the page.
+
+[PAUSE 2s] And one from the colour chapter: which of the four colours is borrowed, and from where? (*Nīlam*, blue — Sanskrit *nīla*.) Is English *indigo* descended from *nīla*? (**No** — it is a separate word, from Greek.)
 
 ## Guided Practice — head and hand
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-UDAL-URUPPUGAL-01, TA-SOUND-I-SIGN-WRITE-NANDRI-03] -->

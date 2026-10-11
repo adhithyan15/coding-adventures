@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE, ES-ETYMON-GELO, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]
+  knowledge: [ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE, ES-ETYMON-GELO, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-ETYMON-NOS-OTROS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -86,8 +86,12 @@ does.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE, ES-ETYMON-NOS-OTROS] -->
 
 [PAUSE 3s] Which row is the only one that changes? (***Le*** and ***les*** →
-***se***.) How many new pronouns did you learn here? (**None**.) Next: all of
+***se***.) How many new pronouns did you learn here? (**None**.)
+
+[PAUSE 2s] And the *nos* inside *nosotros*: which Latin word is it, and what was added to it? (***Nōs***, **we**, plus *otros*, "others" — "we others".)
+
+Next: all of
 it in a conversation, at speed.

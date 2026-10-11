@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Review --- Three Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fea1ccf2fb34b9de",
+  "sourceHash": "fnv1a64:4ffa516208d2af22",
   "lessons": [
     {
       "id": "ES-C56-repaso-amigos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c97d71189cfe3dea",
+      "sourceHash": "fnv1a64:5bccd7e98535629f",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,21 @@
             },
             {
               "kind": "speech",
-              "text": "Three endings — name them. (-ción, -dad, -mente.) Which two are always feminine? (-ción and -dad.) Which one has no upper limit? (-mente.) Next: reading a sentence nobody taught you."
+              "text": "Three endings — name them. (-ción, -dad, -mente.) Which two are always feminine? (-ción and -dad.) Which one has no upper limit? (-mente.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is English -ty so much shorter than -dad? (Both are Latin -tātem; English took it through French and wore it further.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: reading a sentence nobody taught you."
             }
           ]
         }

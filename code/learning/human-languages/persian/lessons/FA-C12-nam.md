@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FA-LEX-ZABAN, FA-LEX-ESM-E-MAN-AST, FA-LEX-NAM, FA-ETYMON-NAM, FA-SCRIPT-ZE]
+  knowledge: [FA-LEX-ZABAN, FA-LEX-ESM-E-MAN-AST, FA-LEX-NAM, FA-ETYMON-NAM, FA-SCRIPT-ZE, FA-ETYMON-ZABAN]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,7 +61,7 @@ the way *khub* and *vaqt* already showed the track's vocabulary layers
 working.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAM, FA-ETYMON-NAM, FA-LEX-ZABAN, FA-LEX-ESM-E-MAN-AST] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAM, FA-ETYMON-NAM, FA-LEX-ZABAN, FA-LEX-ESM-E-MAN-AST, FA-ETYMON-ZABAN] -->
 
 - [YOU SAY: **nâm** — name]
 - [YOU CONNECT: **nâm** ← \**h₁nómn* → English **name**, Greek **ónoma**,
@@ -69,7 +69,7 @@ working.
 - [YOU CONTRAST: **نام**, inherited, against **اسم**, the Arabic loan the
   name-exchange lesson taught first]
 - [YOU RETRIEVE: *zabân* — tongue, and language, the word that closed the
-  last chapter]
+  last chapter — and its English cousin, **tongue**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAM, FA-ETYMON-NAM] -->

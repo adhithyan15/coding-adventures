@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Family Memory at Real Distance",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:5bc4b055e3194288",
+  "sourceHash": "fnv1a64:39d6440ea3ff59e4",
   "lessons": [
     {
       "id": "MR-R14-mitra-r2",
@@ -389,7 +389,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6e996cb4d5ce4b6",
+      "sourceHash": "fnv1a64:07acb0b61aa07312",
       "notice": null,
       "blocks": [
         {
@@ -461,6 +461,16 @@
             {
               "kind": "speech",
               "text": "तोंड, नाक."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One more body word: हृदय, heart. Which English words share its root? (Heart, and cardiac by way of Greek.)"
             }
           ]
         }

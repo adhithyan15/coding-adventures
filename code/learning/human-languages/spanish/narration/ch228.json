@@ -4,7 +4,7 @@
   "chapter": 228,
   "title": "Mal --- Bien Finally Gets Its Opposite",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d9abeba6e8a62ead",
+  "sourceHash": "fnv1a64:ab410a9b289a982f",
   "lessons": [
     {
       "id": "ES-C60-mal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d995ce48f1e732c",
+      "sourceHash": "fnv1a64:b1a6ba5cb4b99899",
       "notice": null,
       "blocks": [
         {
@@ -27,6 +27,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One from two chapters back first: pero was once two Latin words. Which, and what did they say? (Per hoc — by this.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,
@@ -226,7 +236,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de5b4f267940d893",
+      "sourceHash": "fnv1a64:9cd79abd2a495d04",
       "notice": null,
       "blocks": [
         {
@@ -414,6 +424,16 @@
             {
               "kind": "speech",
               "text": "And what was muy before it was in a hurry? (Latin multum.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And malo itself: which Latin word, still heard in English malady? (Malus.)"
             }
           ]
         }

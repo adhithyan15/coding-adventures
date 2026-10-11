@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-LEX-AHORA, ES-LEX-HOY, ES-ETYMON-AHORA-HAC-HORA, ES-GRAMMAR-INDEFINITE-PLURAL, ES-GRAMMAR-INDEFINITE-PLURAL-AGAINST-BARE, ES-GRAMMAR-POSSESSIVE-VUESTRO, ES-GRAMMAR-POSSESSIVE-COMPLETE, ES-GRAMMAR-VER-PRETERITE, ES-GRAMMAR-DAR-PRETERITE, ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT, ES-LEX-DAR]
+  knowledge: [ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-LEX-AHI, ES-LEX-ALLI, ES-LEX-AHORA, ES-LEX-HOY, ES-ETYMON-AHORA-HAC-HORA, ES-GRAMMAR-INDEFINITE-PLURAL, ES-GRAMMAR-INDEFINITE-PLURAL-AGAINST-BARE, ES-GRAMMAR-POSSESSIVE-VUESTRO, ES-GRAMMAR-POSSESSIVE-COMPLETE, ES-GRAMMAR-VER-PRETERITE, ES-GRAMMAR-DAR-PRETERITE, ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT, ES-LEX-DAR, ES-ETYMON-HOY-HODIE]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -83,8 +83,10 @@ fall. And *dar*, though an *-ar* verb, takes the *-er* endings in the past.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-POSSESSIVE-COMPLETE, ES-GRAMMAR-PLACE-THREE-DISTANCES] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-POSSESSIVE-COMPLETE, ES-GRAMMAR-PLACE-THREE-DISTANCES, ES-ETYMON-HOY-HODIE] -->
 
 [PAUSE 2s] How many possessives are in the closed set? (**Six.**)
 
 [PAUSE 2s] And which place word matches *ese*? (***Ahí*** — the listener's side.)
+
+[PAUSE 2s] And *hoy*: which two Latin words wore down into it? (***Hoc die*** — **this day**.)

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c72319d8ef77953",
+  "sourceHash": "fnv1a64:b7be13843107498a",
   "lessons": [
     {
       "id": "SA-C13-nasika",
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe8cc53ed6dcfec0",
+      "sourceHash": "fnv1a64:6321ed8b4a067c39",
       "notice": null,
       "blocks": [
         {
@@ -619,7 +619,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the five has the securest ancestry, and which has none anyone agrees on? (हृदयम् (hṛdayam); कर्णः.) Is nāsikā the parent of its modern look-alikes, or their cousin? (Cousin.)"
+              "text": "Which of the five has the securest ancestry, and which has none anyone agrees on? (हृदयम् (hṛdayam), English heart; कर्णः.) Is nāsikā the parent of its modern look-alikes, or their cousin? (Cousin.)"
             }
           ]
         }

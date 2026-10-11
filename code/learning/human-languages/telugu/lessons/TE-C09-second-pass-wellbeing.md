@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157, TE-LEX-ANCHOR-ITIKA]
+  knowledge: [TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157, TE-LEX-ANCHOR-ITIKA, TE-ETYMON-C03-PARAVAALEDU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -36,7 +36,7 @@ reviews_of: [TE-C03-elaa, TE-C03-miiru-elaa-unnaaru, TE-C03-nenu, TE-C03-baagaa,
 that tells them it does not matter. You have had it since the greetings.
 
 ## You'll want to know: పరవాలేదు does three jobs at once
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-ETYMON-C03-PARAVAALEDU-02] -->
 
 **పరవాలేదు** *paravālēdu* covers all of these in ordinary speech:
 
@@ -80,7 +80,7 @@ lets the position decide.
 - [YOU SAY: apologise, then thank someone — and give the same one-word reply to both]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157, TE-ETYMON-C03-PARAVAALEDU-02] -->
 
 [PAUSE 3s] What hides inside **పరవాలేదు**? (**లేదు** — "no bother.") Which
 three English replies does it cover? (**It's okay · no problem · you're

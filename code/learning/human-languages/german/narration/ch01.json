@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:437ad78f68b0aaea",
+  "sourceHash": "fnv1a64:18f58fab061cef49",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -1856,7 +1856,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48b37cb5e294dbc3",
+      "sourceHash": "fnv1a64:0494e54ce7974e2d",
       "notice": null,
       "blocks": [
         {
@@ -1978,7 +1978,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which German greeting uses gute, not guten, and why? (Gute Nacht — Nacht is feminine.) Next chapter, you will learn to introduce yourself and then build the friendly and respectful ways to address someone."
+              "text": "Which German greeting uses gute, not guten, and why? (Gute Nacht — Nacht is feminine.) Which English words are cousins of Abend and Nacht? (Eve and evening; night — whose older root also gave Spanish noche and French nuit.) Next chapter, you will learn to introduce yourself and then build the friendly and respectful ways to address someone."
             }
           ]
         }

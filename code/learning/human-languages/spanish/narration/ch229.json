@@ -4,7 +4,7 @@
   "chapter": 229,
   "title": "Review --- One Scale, One Habit",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:45007dd90b9ef5bc",
+  "sourceHash": "fnv1a64:13611086b25fa11f",
   "lessons": [
     {
       "id": "ES-C60-repaso-grado",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a1af5b6909eebaf",
+      "sourceHash": "fnv1a64:95ce85de07747fd8",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +228,16 @@
             {
               "kind": "speech",
               "text": "And which one refuses to stand alone as an answer? (Muy again — muy bien, never just muy.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say me neither, then take the word apart. (Yo tampoco — tan + poco, the poco at the bottom of this scale.)"
             }
           ]
         }

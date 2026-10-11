@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Synthesis --- Describing Things",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c043c6ede8bc4957",
+  "sourceHash": "fnv1a64:b885465b9af815de",
   "lessons": [
     {
       "id": "ES-C09-sintesis-describir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ea967aa0826f727",
+      "sourceHash": "fnv1a64:6fb79c5e43919e31",
       "notice": null,
       "blocks": [
         {
@@ -206,6 +206,16 @@
             {
               "kind": "speech",
               "text": "Ser or estar for tired? (Estar.) Where does the describing word go? (After the noun.) And what tells you whether it shifts? (Its ending — the last sound you hear.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin grandis mean, and which English word kept it whole? (Full-grown — grand, and a grandmother is the full-grown mother.)"
             }
           ]
         }

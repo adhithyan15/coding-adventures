@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE, ES-GRAMMAR-DEFINITE-PLURAL-FEMININE, ES-GRAMMAR-NOUN-PLURAL-ES, ES-GRAMMAR-NOUN-NUMBER, ES-LEX-LIBRO, ES-LEX-CASA]
+  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE, ES-GRAMMAR-DEFINITE-PLURAL-FEMININE, ES-GRAMMAR-NOUN-PLURAL-ES, ES-GRAMMAR-NOUN-NUMBER, ES-LEX-LIBRO, ES-LEX-CASA, ES-ETYMON-CASA, ES-ETYMON-LIBER]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -84,8 +84,12 @@ without knowing it had a name.
 [REPEAT x2] Until the grid is a reflex rather than a lookup.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-PLURAL-ES] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-PLURAL-ES, ES-ETYMON-CASA, ES-ETYMON-LIBER] -->
 
 [PAUSE 3s] Four articles — say them. (***El, la, los, las***.) Two questions
-decide which? (**Gender** and **number**.) Next: what happens to *a* when there
+decide which? (**Gender** and **number**.)
+
+[PAUSE 2s] And *casa* and *libro* themselves: what did Latin *casa* and *liber* first name? (A **hut**; the **inner bark** of a tree.)
+
+Next: what happens to *a* when there
 is more than one — and the answer is not what you would expect.

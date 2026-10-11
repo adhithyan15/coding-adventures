@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [TA-ETYMON-MAALAI-01, TA-ETYMON-MAALAI-02, TA-SCRIPT-NGA-LLA-01, TA-SCRIPT-II-SIGN-01, TA-SCRIPT-READ-NIINGAL-03, TA-SCRIPT-LA-AI-SIGN-02]
+  knowledge: [TA-ETYMON-MAALAI-01, TA-ETYMON-MAALAI-02, TA-SCRIPT-NGA-LLA-01, TA-SCRIPT-II-SIGN-01, TA-SCRIPT-READ-NIINGAL-03, TA-SCRIPT-LA-AI-SIGN-02, TA-ETYMON-KAALAI-02]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-output, language-focus]
@@ -33,10 +33,12 @@ reviews_of: [TA-C27-maalai, TA-W11-read-niingal]
 # Chapter 27 checkpoint — evening, and நீங்கள் from sound
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-02] -->
 
 [PAUSE 2s] Nothing new here. The evening word out loud first, then the
 respectful *you* and the evening word on the page.
+
+[PAUSE 2s] And one from the morning lesson: what is *atikālai* built from? (*Ati-*, "very," plus *kālai* — **early dawn**.)
 
 ## Guided Practice — the evening word
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MAALAI-01, TA-ETYMON-MAALAI-02] -->

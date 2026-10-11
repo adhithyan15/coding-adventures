@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FA-LEX-DUST, FA-LEX-ZAN]
+  knowledge: [FA-LEX-DUST, FA-LEX-ZAN, FA-ETYMON-DUST, FA-ETYMON-ZAN]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, fluency]
@@ -39,7 +39,7 @@ reviews_of: [FA-C14-zan, FA-C14-dust]
 **friend**. Neither is a family role, which is what made them worth learning.
 
 ## You'll want to know: numbers go in front, and nothing else changes
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DUST, FA-LEX-ZAN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DUST, FA-LEX-ZAN, FA-ETYMON-DUST] -->
 
 Put a number you now have in front of a person word you now have:
 
@@ -68,9 +68,11 @@ English **choose**.
 - [YOU RUN: **yek, do, se** in front of **dust**, one after the other]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DUST, FA-LEX-ZAN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DUST, FA-LEX-ZAN, FA-ETYMON-DUST, FA-ETYMON-ZAN] -->
 
 [PAUSE 3s] How do you say *two friends*? (**دو دوست** *do dust* — the noun is
 unchanged.) Why is there no plural ending? (**The number already said how
 many.**) What does **دوست** mean literally? (**The one chosen.**) And which
 English word shares its root? (**Choose.**)
+
+[PAUSE 2s] And *zan*: which English word kept its root, narrowed to one woman? (***Queen*** — and Greek kept the plain sense in *gynecology*.)

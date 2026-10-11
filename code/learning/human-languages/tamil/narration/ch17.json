@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b31a3e0dbbbc6842",
+  "sourceHash": "fnv1a64:8b0393449284e957",
   "lessons": [
     {
       "id": "TA-C17-nanpakal-nalliravu",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8d5bf3f917f1352",
+      "sourceHash": "fnv1a64:ff74a499cf70d449",
       "notice": null,
       "blocks": [
         {

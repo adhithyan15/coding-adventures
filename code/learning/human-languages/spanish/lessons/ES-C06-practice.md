@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-GRAMMAR-BARE-LANGUAGE]
+  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-GRAMMAR-BARE-LANGUAGE, ES-ETYMON-TRIPALIUM]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -57,7 +57,7 @@ Same three endings (**-o / -as / -a**) every time — that's the whole regular
 > — **Café, por favor.** — ¡Gracias! — De nada.
 
 ## What you've built this chapter
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-TRIPALIUM] -->
 
 - **por favor** — please (← "for a favour"), completing gracias / de nada / por
   favor.

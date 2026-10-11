@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 44,
-  "sourceHash": "fnv1a64:9f7078a0a39a5892",
+  "sourceHash": "fnv1a64:a53a5cc15e42547b",
   "lessonIds": [
     "GE-C31-arm",
     "GE-C31-finger",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch44.txt",
   "json": "german/narration/ch44.json",
-  "textHash": "fnv1a64:125097c5f88428a2",
-  "jsonHash": "fnv1a64:53e58586024fe269",
+  "textHash": "fnv1a64:5fcfb0fc3d8c4a20",
+  "jsonHash": "fnv1a64:7aa57fb059dd64be",
   "findings": []
 }

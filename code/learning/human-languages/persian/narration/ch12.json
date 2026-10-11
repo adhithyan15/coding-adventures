@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Name, Heart, Door, Book",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f76f167de086c7ff",
+  "sourceHash": "fnv1a64:2d9af9f9842567da",
   "lessons": [
     {
       "id": "FA-C12-nam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a882656793b06fad",
+      "sourceHash": "fnv1a64:df10c018fecc3c44",
       "notice": null,
       "blocks": [
         {
@@ -100,11 +100,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "zabân — tongue, and language, the word that closed the last chapter",
+              "instruction": "zabân — tongue, and language, the word that closed the last chapter — and its English cousin, tongue",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: *zabân* — tongue, and language, the word that closed the last chapter]"
+              "source": "[YOU RETRIEVE: *zabân* — tongue, and language, the word that closed the last chapter — and its English cousin, **tongue**]"
             }
           ]
         },
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f07bfce79c4cfd81",
+      "sourceHash": "fnv1a64:fb8d16bf654462ef",
       "notice": null,
       "blocks": [
         {
@@ -246,11 +246,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "dokhtar — daughter, from a few lessons back",
+              "instruction": "dokhtar — daughter, from a few lessons back, and its English cousin, daughter itself",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: *dokhtar* — daughter, from a few lessons back]"
+              "source": "[YOU RETRIEVE: *dokhtar* — daughter, from a few lessons back, and its English cousin, **daughter** itself]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Body Parts",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2758c575c1f2893e",
+  "sourceHash": "fnv1a64:dc8649414b2a14fe",
   "lessons": [
     {
       "id": "TA-C13-udal-uruppugal",
@@ -665,7 +665,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3bad410b81b3e336",
+      "sourceHash": "fnv1a64:8978e1d8239426f2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -692,6 +692,16 @@
             {
               "kind": "speech",
               "text": "Nothing new here. The two body words out loud first, then two letters, a vowel sign and the word thank you on the page."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one from the colour chapter: which of the four colours is borrowed, and from where? (Nīlam, blue — Sanskrit nīla.) Is English indigo descended from nīla? (No — it is a separate word, from Greek.)"
             }
           ]
         },

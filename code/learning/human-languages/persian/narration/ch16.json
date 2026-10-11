@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "One to Five, and the Words English Already Says",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:9c19fe595b237606",
+  "sourceHash": "fnv1a64:963408854331ed5b",
   "lessons": [
     {
       "id": "FA-C16-yek",
@@ -838,7 +838,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:2ec8054036e9fe52",
+      "sourceHash": "fnv1a64:769dce3970694ee5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -964,6 +964,16 @@
             {
               "kind": "speech",
               "text": "How do you say two friends? (دو دوست do dust — the noun is unchanged.) Why is there no plural ending? (The number already said how many.) What does دوست mean literally? (The one chosen.) And which English word shares its root? (Choose.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And zan: which English word kept its root, narrowed to one woman? (Queen — and Greek kept the plain sense in gynecology.)"
             }
           ]
         }

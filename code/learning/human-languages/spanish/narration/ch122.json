@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "The Future --- Saying What Will Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a10c7b270fd68068",
+  "sourceHash": "fnv1a64:5caf6c3dd64acd36",
   "lessons": [
     {
       "id": "ES-C17-futuro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f5ff529af9dff01",
+      "sourceHash": "fnv1a64:a6e74b860328d9cd",
       "notice": null,
       "blocks": [
         {
@@ -228,7 +228,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfebfae6e1a8211e",
+      "sourceHash": "fnv1a64:fffa05e75a077ef9",
       "notice": null,
       "blocks": [
         {
@@ -255,6 +255,16 @@
             {
               "kind": "speech",
               "text": "He hablado español. He carries the person and the tense; hablado carries the meaning. Say it once before the future."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the name grammar gives hablado: which Latin word, and what does it mean? (Participium — the form that takes part, in doing and in describing.)"
             }
           ]
         },

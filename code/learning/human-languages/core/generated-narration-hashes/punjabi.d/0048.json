@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 48,
-  "sourceHash": "fnv1a64:b7b86e0c149f051a",
+  "sourceHash": "fnv1a64:cdb226918033ecce",
   "lessonIds": [
     "PA-R48-forms-name-and-language",
     "PA-R48-forms-residence-and-work",
@@ -15,6 +15,6 @@
   "text": "punjabi/narration/ch48.txt",
   "json": "punjabi/narration/ch48.json",
   "textHash": "fnv1a64:054ce8eb33bcf9ab",
-  "jsonHash": "fnv1a64:5fa65a79118b12c3",
+  "jsonHash": "fnv1a64:164f36c33909e29a",
   "findings": []
 }

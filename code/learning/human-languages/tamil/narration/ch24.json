@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:333d9bb84bca2bca",
+  "sourceHash": "fnv1a64:809fcd2ec7c8e2e5",
   "lessons": [
     {
       "id": "TA-C24-iravu",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39c3cb1f85922cf4",
+      "sourceHash": "fnv1a64:1f9ff1069c582e23",
       "notice": null,
       "blocks": [
         {

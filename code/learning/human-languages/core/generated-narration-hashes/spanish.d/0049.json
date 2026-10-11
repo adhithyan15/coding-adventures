@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 49,
-  "sourceHash": "fnv1a64:64633593a8e30a58",
+  "sourceHash": "fnv1a64:87da801766142609",
   "lessonIds": [
     "ES-C10-ir",
     "ES-C10-ir-a-futuro",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch49.txt",
   "json": "spanish/narration/ch49.json",
   "textHash": "fnv1a64:59fb9a3568d8d5f2",
-  "jsonHash": "fnv1a64:4d533fd6301ba1c2",
+  "jsonHash": "fnv1a64:3736b591c393a83f",
   "findings": []
 }

@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-HAY, ES-GRAMMAR-HAY-NO-AGREEMENT, ES-ETYMON-HAY-IBI, ES-GRAMMAR-HAY-QUE, ES-LEX-CASA, ES-LEX-LIBRO, ES-LEX-COMER]
+  knowledge: [ES-LEX-HAY, ES-GRAMMAR-HAY-NO-AGREEMENT, ES-ETYMON-HAY-IBI, ES-GRAMMAR-HAY-QUE, ES-LEX-CASA, ES-LEX-LIBRO, ES-LEX-COMER, ES-GRAMMAR-REASON-CHAIN-09]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -81,8 +81,12 @@ agreement, the last word is the one that opted out.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HAY, ES-GRAMMAR-HAY-QUE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HAY, ES-GRAMMAR-HAY-QUE, ES-GRAMMAR-REASON-CHAIN-09] -->
 
 [PAUSE 3s] Three uses of *hay* — say them. (*There is*, *there are*, and
-***hay que*** for must.) What does it agree with? (**Nothing at all.**) Next:
+***hay que*** for must.) What does it agree with? (**Nothing at all.**)
+
+[PAUSE 2s] Explain in four moves why you are not going out: an opinion, a cause, a consequence, a duty. (*Creo que llueve. No salgo porque llueve, así que leo. Debo estudiar.*)
+
+Next:
 the last synthesis.
