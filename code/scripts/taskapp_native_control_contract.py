@@ -162,7 +162,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "min-width": 2,
         "overflow": 1,
         "position": 6,
-        "text-align": 14,
         "text-overflow": 1,
         "top": 6,
         "transform": 2,

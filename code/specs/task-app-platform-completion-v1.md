@@ -183,6 +183,9 @@ rather than letting them read as silent gaps.
     declarations and paints eight coupled rounded-text backgrounds, reducing
     Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe
     radius values remain explicit debt.
+    #17237 then preserves all 14 supported TaskApp `text-align` declarations
+    on Flutter text and button leaves, reducing that backend's fresh inventory
+    from 121 to 107. Unknown alignment values remain reported.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

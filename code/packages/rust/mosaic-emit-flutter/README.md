@@ -231,6 +231,12 @@ surfaces paint their authored background in the same decoration. Relative,
 negative, and otherwise unsafe values remain reported rather than entering
 generated Dart.
 
+Supported `text-align` values on `Text` and `HostButton` parts reach Flutter's
+native `Text.textAlign` and `ButtonStyle.alignment` APIs. Absolute
+left/center/right values stay absolute, while start/end preserve ambient text
+direction. Unknown spellings remain in the dropped-style report instead of
+silently falling back to left alignment.
+
 Two limits worth stating. `font: inherit` cannot be honoured -- Flutter has
 no "inherit" for a `TextField`, and the enclosing style is only reachable
 from a context below the generated `DefaultTextStyle.merge`. Properties not

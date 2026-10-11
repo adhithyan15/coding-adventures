@@ -5143,13 +5143,36 @@ fn node_has_state_when(node: &LayoutNode) -> bool {
     node.props.iter().any(|p| p.name.starts_with("state-when-"))
 }
 
-/// Map a mosstyle `text-align` value to a Flutter `Alignment` constant.
+/// Return a supported mosstyle `text-align` value without hiding unknown
+/// spellings from the dropped-style audit.
+fn supported_text_align(props: &HashMap<String, String>) -> Option<&str> {
+    let value = props.get("text-align")?.trim().trim_matches('"').trim();
+    matches!(value, "left" | "center" | "right" | "start" | "end").then(|| {
+        record_style_read("text-align");
+        value
+    })
+}
+
+/// Map a supported mosstyle `text-align` value to a Flutter container/button
+/// alignment. Directional start/end preserve the ambient text direction.
 fn text_align_to_alignment(value: &str) -> &'static str {
-    match value.trim() {
+    match value {
         "right" => "Alignment.centerRight",
         "center" => "Alignment.center",
-        "left" => "Alignment.centerLeft",
+        "start" => "AlignmentDirectional.centerStart",
+        "end" => "AlignmentDirectional.centerEnd",
         _ => "Alignment.centerLeft",
+    }
+}
+
+/// Map a supported mosstyle `text-align` value to Flutter's text layout enum.
+fn text_align_to_text_align(value: &str) -> &'static str {
+    match value {
+        "right" => "TextAlign.right",
+        "center" => "TextAlign.center",
+        "start" => "TextAlign.start",
+        "end" => "TextAlign.end",
+        _ => "TextAlign.left",
     }
 }
 
@@ -5360,7 +5383,7 @@ fn flutter_box_style(
             parse_pixel_value(min_height)
         ));
     }
-    if let Some(ta) = style_prop(base, "text-align") {
+    if let Some(ta) = supported_text_align(base) {
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
     }
     let base_padding = style_prop(base, "padding").map(|v| parse_pixel_value(v));
@@ -5803,6 +5826,15 @@ fn emit_text(
         format!(
             "{}, style: {style})",
             text.trim_start_matches("const ").strip_suffix(')').unwrap()
+        )
+    } else {
+        text
+    };
+    let text = if let Some(alignment) = supported_text_align(&text_props) {
+        format!(
+            "{}, textAlign: {})",
+            text.strip_suffix(')').unwrap(),
+            text_align_to_text_align(alignment)
         )
     } else {
         text
@@ -6811,6 +6843,10 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             "shape: WidgetStatePropertyAll(RoundedRectangleBorder({}))",
             shape_args.join(", ")
         ));
+    }
+
+    if let Some(alignment) = supported_text_align(&props) {
+        style_parts.push(format!("alignment: {}", text_align_to_alignment(alignment)));
     }
 
     if style_parts.is_empty() {
@@ -11555,6 +11591,121 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![("calendar-day", "width")],
             "only the deliberately unsupported percentage width should remain"
+        );
+    }
+
+    #[test]
+    fn text_and_button_alignment_lower_supported_values_but_report_unknown_ones() {
+        fn aligned_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "text-align".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("AlignedLeaves", vec![], vec![]);
+        let l = layout(
+            "AlignedLeaves",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    LayoutNode {
+                        tag: "Text".into(),
+                        part_name: Some("weekday".into()),
+                        props: vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Sun".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "HostButton".into(),
+                        part_name: Some("project".into()),
+                        props: vec![LayoutProp {
+                            name: "label".into(),
+                            value: LayoutPropValue::String("Inbox".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "Text".into(),
+                        part_name: Some("summary".into()),
+                        props: vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Summary".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "HostButton".into(),
+                        part_name: Some("directional".into()),
+                        props: vec![LayoutProp {
+                            name: "label".into(),
+                            value: LayoutPropValue::String("Back".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "Text".into(),
+                        part_name: Some("unknown".into()),
+                        props: vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Unknown".into()),
+                        }],
+                        children: vec![],
+                    },
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "AlignedLeaves".into(),
+            parts: vec![
+                aligned_part("weekday", "center"),
+                aligned_part("project", "left"),
+                aligned_part("summary", "end"),
+                aligned_part("directional", "start"),
+                aligned_part("unknown", "justify"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("supported leaf alignments emit")
+            .output;
+        assert!(
+            out.contains("Text(\"Sun\", textAlign: TextAlign.center)"),
+            "centered text must use Text.textAlign:\n{out}"
+        );
+        assert!(
+            out.contains("alignment: Alignment.centerLeft"),
+            "left-aligned button must use ButtonStyle.alignment:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"Summary\", textAlign: TextAlign.end)"),
+            "directional text alignment must stay directional:\n{out}"
+        );
+        assert!(
+            out.contains("alignment: AlignmentDirectional.centerStart"),
+            "directional button alignment must stay directional:\n{out}"
+        );
+        assert!(
+            !out.contains("Text(\"Unknown\", textAlign:"),
+            "unsupported text alignment must not be guessed:\n{out}"
+        );
+
+        let dropped = dropped_style_properties(&m, &l, &s);
+        assert_eq!(
+            dropped
+                .iter()
+                .map(|drop| (drop.part.as_str(), drop.name.as_str()))
+                .collect::<Vec<_>>(),
+            vec![("unknown", "text-align")],
+            "unsupported alignment must remain visible to the audit"
         );
     }
 
