@@ -27,6 +27,24 @@ exit status. Supervisor production behavior and containment remain unchanged.
 
 ## Delivery evidence
 
+### Downstream fixture controls exposed by the reverse cone
+
+The first complete 12-package run at `1e50936ae177` passes the repaired packages
+but exposes seven CLI fixture ACL failures and one daemon path fixture failure
+that reproduce on unchanged source. A daemon Hue worker failure is a scheduler
+race: the test stops after a fixed sleep before observing its failure callback.
+
+Repair only those fixtures: create the Windows synthetic KEK with the existing
+owner-only credential writer, then replace its bytes while preserving the
+protected owner-only ACL. Keep every secret-file production guard and vault
+assertion unchanged. Use an absolute native temporary path for the unused broker
+executable, escaped by the existing owned JSON string serializer into the shared
+TOML basic-string subset; preserve exact resolved key-slot assertions. Wait up
+to 5 s for the existing Hue failure callback flag before stopping the worker,
+then require the same exact clock error and callback observation. The 1 ms test
+worker tick and all production timeouts, scheduling, stop and permission policies
+remain unchanged. No added dependencies or disabled tests.
+
 Commit this specification before tests and implementation. Reproduce the
 Windows failures, run the complete repaired packages and affected reverse
 dependencies with strict lint, retain Closurec/source payload identity, and
