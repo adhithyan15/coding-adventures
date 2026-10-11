@@ -965,6 +965,31 @@ Empty/multi-token, numeric, string, punctuation, and keyword-forming operands
 remain rejected. Two parameters, two literal operands, object-like paste,
 multiple paste operators, edge operators, and stringize combinations remain
 unsupported. Placemarker, variadic, and arbitrary-token paste remain pending.
+
+## 13. Bounded C hexadecimal integer stringize stage
+
+Extend the single raw-token stringize subset with unsuffixed hexadecimal
+integer spellings matching `0[xX][0-9a-fA-F]+`. The C compiled lexer already
+recognizes these as integer tokens. Preserve their exact prefix case, digit
+case and leading hexadecimal zeroes: `S(0X00aF)` produces `"0X00aF"`, without
+parsing the numeric value or imposing an integer-width limit. Decimal and
+identifier stringization retain their existing behavior.
+
+The generic engine continues to supply raw arguments at `#` and pre-expanded
+arguments at plain parameter occurrences. Thus `S(H)` preserves `H`, while
+an indirection macro forwarding `H` after expansion can stringize its hex
+replacement. This follows the existing raw-argument rule described by
+[GCC's stringizing documentation](https://gcc.gnu.org/onlinedocs/cpp/Stringizing.html).
+
+The dialect admits ASCII hex digits only. Empty hex bodies, integer suffixes,
+floating-point spellings, octal-style decimal spellings, signs, multi-token
+arguments and quoted literals remain outside this subset. No literal escaping
+or whitespace collapse is added. Existing generic projection and precharge
+checks still bound the raw spelling plus two quote bytes, aggregate synthesized
+text, produced tokens and expansion work before construction. Direct and
+forwarded source loci and expansion ancestry must be preserved. Acceptance,
+refusal, exact/over-limit spelling and text boundaries, and rooted lowering
+with independently executed native C/emitted output must cover this extension.
 Tests cover suffix raw/plain use, rescan and self-name termination, direct and
 forwarded provenance, pre-hook budget rejection, invalid hook results, explicit
 unsupported shapes, and rooted C success/error locations.

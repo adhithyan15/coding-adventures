@@ -478,18 +478,25 @@ grouping tokens now require canonical kinds and spelling. The next selection
 rotates to a restricted division-only source entry for LANG78's numeric subset;
 general JavaScript regex-versus-division disambiguation remains open.
 
+PR #17259 delivered LANG78's restricted division-only frontend and merged as
+`233f5fcc3a567fb42782810758ec8747c1869aed` after all four exact-head workflows
+and required gates passed. Repeated division now reaches Rust vm-core;
+construction-spine bounds and pre-parse rejection of unsupported exponent
+tokens prevent two reproduced stack aborts. General JavaScript lexical-goal
+selection remains open. The next selection rotates to PREP01's bounded
+unsuffixed hexadecimal integer stringization.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG78 JavaScript (selected):** give the numeric native frontend an explicit
-   division-only token/parser entry. Preserve trivia, locations, bounds and ASI;
-   reject regex input and keep full-JavaScript lexical-goal selection open.
-   Verify repeated division and special numbers on Rust vm-core, Node oracle only.
+1. **PREP01 C (selected):** stringize one raw unsuffixed hexadecimal integer
+   token, preserving its spelling, provenance and generic engine bounds.
+   Full C `#if`, broader stringize and general paste remain open.
 2. **LANG79 Python:** arithmetic AST token validation is complete; broader
    native frontend semantics remain open. Host Python is oracle only.
-3. **PREP01 C:** bounded identifier-prefix/suffix paste are complete; full C
-   `#if`, broader stringize and general paste remain open.
+3. **LANG78 JavaScript:** restricted numeric division is complete; general
+   lexical-goal selection and broader native semantics remain open, Node oracle only.
 4. **LANG82 continued:** the explicitly partial Perl 5.004_70 pair is complete
    for its declared subset. Continue distinct own-release source-backed pairs;
    keep 5.004_01-t1 pending without its own source.
