@@ -4,8 +4,10 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.2` accumulate here until the next version is
+Entries added after `task-app-v0.5.3` accumulate here until the next version is
 cut.
+
+## [0.5.3] - 2026-10-12
 
 ### Fixed — Flutter conditional drag gaps emit complete Dart (#17313)
 
