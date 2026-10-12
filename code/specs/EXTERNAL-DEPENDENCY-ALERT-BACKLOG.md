@@ -128,6 +128,12 @@ can apply on its own.
 
 ## Replacement backlog: where the alerts actually come from
 
+The executable migration sequence, complete direct npm inventory, internal
+capability gaps and acceptance gates now live in
+[EXTERNAL-DEPENDENCY-REPLACEMENT-ROADMAP.md](EXTERNAL-DEPENDENCY-REPLACEMENT-ROADMAP.md).
+The candidates below explain the historical advisory roots; the roadmap is the
+delivery order and includes all remaining direct npm families and other ecosystems.
+
 Ordered by how many alerts each one removes. Every row in the summary table
 traces back to one of these six direct dependencies. Each item below is
 written as a candidate work package.
@@ -142,8 +148,9 @@ written as a candidate work package.
      `expect`, run on plain Node with type stripping). It would have zero
      transitive dependencies and would take vite, postcss, nanoid,
      source-map-js, picomatch and esbuild out of every library package at once.
-   - **Builds on:** the repo already has `typescript/compiler-source-map`, so
-     source-mapped stack traces need nothing new.
+   - **Builds on:** `typescript/compiler-source-map` models compiler pipeline
+     positions. Browser source-map v3/VLQ encoding and coverage attribution need
+     their own capability work; it is not already a drop-in stack-trace mapper.
    - **Keep vite** only in the handful of packages that actually serve or
      bundle a web app.
 2. **Electron + electron-builder** (EXT-010 to EXT-024, EXT-026/027;
@@ -158,9 +165,9 @@ written as a candidate work package.
      remaining packaging is producing a zip, AppImage or portable exe, and the
      repo has `typescript/zip` and `typescript/deflate`.
 3. **jest toolchain** (EXT-028 to EXT-032, 5 packages).
-   - **Proposed:** migrate the five packages to the repo-standard runner
-     (vitest today, or item 1 once it exists). This is the cheapest item on the
-     list.
+   - **Completed in the security sweep:** all five packages now use Vitest.
+     Migrate them again as the first internal-runner pilot when DEP-010/020 pass;
+     using another external runner clears this ancestry but is not independence.
 4. **jsdom** (EXT-033 `ws`, EXT-034 `form-data`; ~34 lockfiles).
    - **Usage:** jsdom pulls in a WebSocket client and a multipart encoder that
      the DOM tests never use.
