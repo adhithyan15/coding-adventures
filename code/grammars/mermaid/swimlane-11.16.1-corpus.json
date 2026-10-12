@@ -225,6 +225,10 @@
     {
       "name": "open-styled-links",
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  published[Published]\nend\ndraft -.- review === published"
+    },
+    {
+      "name": "styled-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\n  archive[Archive]\nend\ndraft o-.-o review\nreview x-.-> approve\napprove o==x publish\npublish x==> archive"
     }
   ]
 }
