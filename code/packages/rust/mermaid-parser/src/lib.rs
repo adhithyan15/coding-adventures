@@ -6600,6 +6600,8 @@ fn parse_swimlane_edge_config(
                 "basis" => SwimlaneEdgeCurve::Basis,
                 "bumpx" | "bump-x" => SwimlaneEdgeCurve::BumpX,
                 "bumpy" | "bump-y" => SwimlaneEdgeCurve::BumpY,
+                "monotonex" | "monotone-x" => SwimlaneEdgeCurve::MonotoneX,
+                "monotoney" | "monotone-y" => SwimlaneEdgeCurve::MonotoneY,
                 "step" => SwimlaneEdgeCurve::Step,
                 "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
                 "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,

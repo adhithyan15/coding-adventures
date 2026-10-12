@@ -261,6 +261,10 @@
     {
       "name": "edge-bump-curves",
       "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: bumpX }\nvertical@{ curve: bumpY }"
+    },
+    {
+      "name": "edge-monotone-curves",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: monotoneX }\nvertical@{ curve: monotoneY }"
     }
   ]
 }

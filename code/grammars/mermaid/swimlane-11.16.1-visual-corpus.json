@@ -62,6 +62,7 @@
     "edge-animation-config",
     "edge-curve-config",
     "edge-step-curves",
-    "edge-bump-curves"
+    "edge-bump-curves",
+    "edge-monotone-curves"
   ]
 }

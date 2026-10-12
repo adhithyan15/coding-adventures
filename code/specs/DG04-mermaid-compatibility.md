@@ -1056,6 +1056,8 @@ The `step`, `stepBefore`, and `stepAfter` curve modes lower to deterministic ort
 the diagram's authored direction.
 The `bumpX` and `bumpY` curve modes lower to portable cubic paths with horizontal or vertical
 midpoint tangents and preserve their authored mode in scene metadata.
+The `monotoneX` and `monotoneY` curve modes preserve their axis constraint in semantic and layout
+IR and lower their two-point routes to the equivalent monotonic cubic Hermite segment.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
