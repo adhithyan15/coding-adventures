@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `662e4ba520dd53a8c44ba4e5c317cdfcdbd94820`
+**Current audit base:** `b1f4e459138a681cac38ae599789914415a6162e`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -1116,3 +1116,18 @@ review/conflict gates and actual fetched-main merge/payload proof before cleanup
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
 inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
+
+
+### Pending edge-ID/current-main and document-contract reconciliation
+
+Published 8c82b405 has an actual required metadata CI failure: the new Mermaid
+changelog shard omitted the mandatory heading digest. Preserve the failing log,
+derive its identity using the repository shard helpers and execute the real
+document reconstruction gate. Main b1f4e459 adds edge IDs and ALGOL conditional
+quadruple-exp controls. Reconcile the existing monotone scanner with edge IDs;
+independent review found a multibyte-whitespace byte-boundary panic in ID
+discovery. The DG04 coordinate contract precedes repair tests and source.
+Actual native red/green validation, affected cones, strict lint and final-head
+independent security remain PENDING. One active PR #17288; no auto-merge or
+current-head native CI acceptance. Full final-source Miri is DEFERRED/PENDING;
+preserve the frozen checkout, inputs and receipts without polling or termination.

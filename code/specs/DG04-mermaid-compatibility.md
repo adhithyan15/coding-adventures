@@ -1140,3 +1140,16 @@ This is intentionally partial. Nested subgraphs, the complete Flowchart shape
 and link catalog beyond the documented marker forms, configuration-driven lane
 ordering and line hops, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
+
+
+### Swimlane edge identifier coordinate reconciliation
+
+Swimlane edge identifiers retain authored IDs, edge order, styles, markers,
+minimum lengths and labels when combined with the monotone styled-label scan.
+Identifier discovery must advance past the entire UTF-8 whitespace scalar,
+including multibyte separators already admitted by the line grammar. Every
+slice endpoint must be a valid UTF-8 boundary. Public parse controls must cover
+ASCII, two-byte and three-byte separators, standard and labeled operators,
+chained IDs and edges without IDs. Preserve existing operation-count bounds,
+empty-label refusal and first-terminator semantics. No grammar, dependencies,
+production limits or unrelated ALGOL ownership changes are introduced.
