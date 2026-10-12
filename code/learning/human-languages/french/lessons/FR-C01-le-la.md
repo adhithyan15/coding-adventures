@@ -77,7 +77,8 @@ convenience here: in the plural, both genders share a single article, *les*.
 
 [PAUSE 1s]
 - [YOU SAY: "le", "la", "les"]
-- [YOU SAY: "le jour" (masc.), "la nuit" (fem.) — the nouns are coming]
+- [YOU SAY: "le" (masc.), "la" (fem.), "les" (plural) — the nouns that wear
+  them are coming]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-LE-LA-GENDER-05] -->

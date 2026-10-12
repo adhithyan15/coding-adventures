@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 14,
-  "sourceHash": "fnv1a64:fd17c8353e5b5faa",
+  "sourceHash": "fnv1a64:44a16ca8a6408087",
   "lessonIds": [
     "FR-C12-onze",
     "FR-C12-douze",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "french/narration/ch14.txt",
   "json": "french/narration/ch14.json",
-  "textHash": "fnv1a64:55671982c3ceec75",
-  "jsonHash": "fnv1a64:f27eeb64a2278f64",
+  "textHash": "fnv1a64:45cf6b829ac1509f",
+  "jsonHash": "fnv1a64:9d1c55dcd860d231",
   "findings": []
 }

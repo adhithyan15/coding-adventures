@@ -35,7 +35,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does au revoir literally mean? ("Until the seeing-again.") What Latin verb is voir from, and two English cousins? (vidēre — vision, video, revise.) Which other language builds its goodbye the same "see again" way? (German auf Wiedersehen.) Next: à plus tard.
+What does au revoir literally mean? ("Until the seeing-again.") What Latin verb is voir from, and two English cousins? (vidēre — vision, video, revise.) Which other language builds its goodbye the same "see again" way? (German auf Wiedersehen.) Next: "see you later."
 
 
 Lesson 2 of 10.
@@ -63,8 +63,8 @@ Grammar Lens: the "à …" farewells.
 French's soft goodbyes are all à + a time word — mirror this against Spanish hasta:
 [a table of 3 rows, read aloud]
 French: à plus tard / à plus. Spanish: hasta luego. "until / to …": later.
-French: à bientôt. Spanish: hasta pronto. "until / to …": soon.
-French: à demain. Spanish: hasta mañana. "until / to …": tomorrow.
+French: à + "soon" (next lesson). Spanish: hasta pronto. "until / to …": soon.
+French: à + "tomorrow" (the lesson after). Spanish: hasta mañana. "until / to …": tomorrow.
 
 Guided Practice.
 [pause 1 second]
@@ -77,7 +77,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does à plus tard literally mean? ("To more late.") What Spanish word is tard identical to at the root, and what does each mean now? (tarde — French "late", Spanish "afternoon".) What preposition carries French's soft goodbyes, like Spanish hasta? (à.) Next: à bientôt.
+What does à plus tard literally mean? ("To more late.") What Spanish word is tard identical to at the root, and what does each mean now? (tarde — French "late", Spanish "afternoon".) What preposition carries French's soft goodbyes, like Spanish hasta? (à.) Next: "see you soon."
 
 
 Lesson 3 of 10.
@@ -114,7 +114,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two words hide inside bientôt? (bien "well" + tôt "early" becomes soon.) What does the circumflex on ô usually mark? (A dropped s — tost becomes tôt.) What's the Spanish equivalent of à bientôt? (hasta pronto.) Next: à demain.
+What two words hide inside bientôt? (bien "well" + tôt "early" becomes soon.) What does the circumflex on ô usually mark? (A dropped s — tost becomes tôt.) What's the Spanish equivalent of à bientôt? (hasta pronto.) Next: "until tomorrow."
 
 
 Lesson 4 of 10.
@@ -125,7 +125,7 @@ Warm-up.
 Parting for the day: à demain, "until tomorrow" — the twin of Spanish hasta mañana. And demain shares a hidden root with mañana that's worth seeing.
 
 Sounds you'll need.
-nasal-in — demain = duh-MAN: the -ain is a nasal (like pain, main); the final consonant is silent. ah duh-MAN.
+nasal-in — demain = duh-MAN: the -ain is the nasal you heard in bien; the final consonant is silent. ah duh-MAN.
 
 The phrase, taken apart.
 à demain = "to tomorrow" becomes "see you tomorrow."
@@ -150,7 +150,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "à demain" — ah duh-MAN]
 [pause 8 seconds for the answer]
-[your turn — say: "demain" from de mane "from morning"; Spanish "mañana" from maneana — same māne]
+[your turn — say: "demain" from dē māne "from morning"; Spanish "mañana" from maneana — same māne]
 [pause 8 seconds for the answer]
 [your turn — say: the three "à …" goodbyes — à plus tard / à bientôt / à demain]
 [pause 8 seconds for the answer]
@@ -176,7 +176,7 @@ you're…: leaving for the day. say: à demain.
 
 The exchange, start to finish.
 Everything from the French Chapters 1–4:
-— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Très bien. Bon… à demain, Marc. — Oui, à demain, Chloé. Au revoir!
+— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Bien. Bon… à demain, Marc. — Oui, à demain, Chloé. Au revoir!
 
 What you've built this chapter.
 au revoir — the plain goodbye ("until the seeing-again"; the voir / vidēre family; twin of German auf Wiedersehen).
@@ -193,7 +193,7 @@ Run the exchange, greeting to goodbye, without stopping.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does au revoir literally promise? (A re-seeing — "until we see again.") Which preposition carries French's soft goodbyes? (à — like Spanish hasta.) You can now hold a whole short French exchange, hello to goodbye. Next chapter: numbers, or everyday courtesies (s'il vous plaît).
+What does au revoir literally promise? (A re-seeing — "until we see again.") Which preposition carries French's soft goodbyes? (à — like Spanish hasta.) You can now hold a whole short French exchange, hello to goodbye. Next chapter: your first verbs — to speak, to live somewhere, to work.
 
 
 Lesson 6 of 10.
@@ -203,16 +203,16 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 
 Warm-up.
 [pause 2 seconds]
-French sprinkles little marks over its vowels, and they are not decoration — each does a specific job. You've read them since enchanté and très. Three of them ride on e, and one of the three hides a word you already know in English.
+French sprinkles little marks over its vowels, and they are not decoration — each does a specific job. You've read one since enchanté, and another on the à of your goodbyes. Three of them ride on e, and one of the three hides a word you already know in English.
 
 You'll want to know: the three accents, and what they do.
-é — accent aigu (rising stroke, like Spanish's). It fixes the sound: é = a crisp "ay" (no glide). café, enchanté, été ("summer").
-è — accent grave (falling stroke). è = an open "eh" as in bed. très ("very"), mère ("mother"), père. The grave also just separates look-alikes: a ("has") vs à ("to"); ou ("or") vs où ("where") — same job as Spanish tu/tú.
+é — accent aigu (rising stroke, like Spanish's). It fixes the sound: é = a crisp "ay" (no glide). enchanté, été ("summer").
+è — accent grave (falling stroke). è = an open "eh" as in bed. première ("first" — English borrowed it as premiere), Genève ("Geneva"). The grave also just separates look-alikes: a ("has") vs à ("to") — same job as Spanish tu/tú.
 ê — accent circonflexe (a little hat). This one is a fossil.
 
 Why it's said this way — the circumflex is a tombstone for a lost s.
 Centuries ago French dropped an s before certain consonants, and left a hat where it used to stand. English, having borrowed the older form, usually still has that s — so the circumflex is a decoder ring between the two languages:
-[a table of 8 rows, read aloud]
+[a table of 7 rows, read aloud]
 French (hat): forêt. the lost s: forest. English kept it: forest.
 French (hat): hôpital. the lost s: hospital. English kept it: hospital.
 French (hat): île. the lost s: isle. English kept it: isle / island.
@@ -220,7 +220,6 @@ French (hat): bête. the lost s: beste. English kept it: beast.
 French (hat): fête. the lost s: feste. English kept it: feast.
 French (hat): pâte. the lost s: paste. English kept it: paste / pasta.
 French (hat): goût. the lost s: gust. English kept it: (Latin gustus, cf. gusto).
-French (hat): être. the lost s: estre. English kept it: (Latin stāre, cf. stare/estar).
 So when you meet a circumflex, mentally slot an s back in and an English cousin often appears. Hôpital becomes hospital. It's the single most useful reading trick in French spelling.
 
 Writing: the three accents.
@@ -228,11 +227,11 @@ All three are small strokes above the vowel: é leans right (up-stroke), è lean
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "é" = ay (café), "è" = eh (très) — hear the two sounds]
+[your turn — say: "é" = ay (enchanté), "è" = eh (première) — hear the two sounds]
 [pause 8 seconds for the answer]
 [your turn — say: forêt becomes forest, hôpital becomes hospital, île becomes isle — put the s back]
 [pause 8 seconds for the answer]
-[your turn — say: "à" vs "a", "où" vs "ou" — the grave that only separates]
+[your turn — say: "à" vs "a" — the grave that only separates]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -288,12 +287,12 @@ Warm-up.
 The last French mark: two little dots over a vowel — the tréma (English calls it a diaeresis). It answers one question the reader would otherwise get wrong: do these two vowels blend, or not?
 
 You'll want to know: the problem the trema solves.
-French loves to fuse vowel pairs into one sound: ai = eh, au = oh, ou = oo, oi = wa. Usually that's what you want. But sometimes two vowels really should be sounded separately — and the tréma is how the spelling says so: "break these apart; pronounce the marked vowel on its own."
+French loves to fuse vowel pairs into one sound: a-i says eh, a-u oh, o-u oo, o-i wa. Usually that's what you want. But sometimes two vowels really should be sounded separately — and the tréma is how the spelling says so: "break these apart; pronounce the marked vowel on its own."
 naïve = na-EEV (na-i, two syllables) — not "nave." (English kept the dots: naïve.)
 Noël = no-EL ("Christmas") — o and e separately, not "nurl."
-maïs = ma-EES ("corn") — vs mais (meh, "but"). The two dots are the only difference, and they flip the meaning.
+maïs = ma-EES ("corn"). Without the dots the same letters blend to meh, a different word: the dots flip the meaning.
 Citroën, Israël, égoïste — same rule: split the vowels.
-So the tréma is the opposite of a blend instruction: where ai says "merge," aï says "don't."
+So the tréma is the opposite of a blend instruction: where a-i says "merge," aï says "don't."
 
 Writing: the trema.
 Two dots, side by side, above the vowel that starts its own sound — the second vowel of the pair (na-ï-ve). (It looks like a German umlaut, but the job is different: German ä/ö/ü change the vowel; the French tréma separates it. Same two dots, opposite purpose — that's the next lesson.)
@@ -302,7 +301,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "naïve" = na-EEV, "Noël" = no-EL — two syllables each]
 [pause 8 seconds for the answer]
-[your turn — say: "maïs" (ma-EES, corn) vs "mais" (meh, but) — the dots flip it]
+[your turn — say: "maïs" (ma-EES, corn), then the blended meh the dots forbid]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

@@ -5,7 +5,7 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 224
 chapter: 8
 type: phrase
-headword: il est … heures
+headword: il est, … heures
 gloss: "it is … o'clock" — the frame that tells the time
 concept_tag: FR-TIME-FRAME
 prerequisites: [FR-C08-heure]

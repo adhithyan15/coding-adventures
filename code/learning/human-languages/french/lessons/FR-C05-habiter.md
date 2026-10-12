@@ -14,7 +14,7 @@ roots: [habitare-latin]
 etymology_hook: "habiter ← Latin habitāre 'to dwell' (frequentative of habēre 'to have') → English habitat, inhabit"
 reviews_of: [FR-C05-parler]
 duration:
-  max_seconds: 191
+  max_seconds: 193
 requires:
   knowledge: [FR-GRAM-ER-PRESENT-02]
 introduces:
@@ -38,7 +38,7 @@ variety: standard-contemporary
 
 [PAUSE 2s] A second **-er** verb — snap it into the exact template you just
 learned. **habiter** ("to live, to dwell") lets you say *where* you live, the
-answer to a *où* ("where") question.
+answer to a "where?" question.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-HABITER-04]; assesses=[] -->
@@ -67,7 +67,7 @@ Drop **-er**, add the endings — identical to *parler*, silent trap and all:
 | nous habitons · vous habitez | (a-bee-TON · a-bee-TAY) |
 
 Note **j'habite** — *je* elides to **j'** before the vowel of *habite* (the *h*
-is silent, so it counts as a vowel). Now you can answer *où* questions:
+is silent, so it counts as a vowel). Now you can say where you live:
 
 > **J'habite à Paris.** — "I live in Paris."
 
@@ -85,4 +85,4 @@ is silent, so it counts as a vowel). Now you can answer *où* questions:
 [PAUSE 3s] What Latin verb is *habiter* from, and what does it literally involve?
 (*habitāre*, "keep having a place" — from *habēre*, "to have.") English cousins?
 (Habitat, inhabit, habitation.) Say "I live in Paris." (*J'habite à Paris.*)
-Next: **travailler**, "to work."
+Next: the verb "to work."

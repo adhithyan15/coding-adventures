@@ -13,7 +13,7 @@ sounds: [vowel-eu, liaison]
 roots: [novem-latin]
 etymology_hook: "neuf ← Latin novem, the nine that still stands at the front of novembre"
 duration:
-  max_seconds: 185
+  max_seconds: 191
 requires:
   knowledge: [FR-LEX-HUIT-10, FR-PHON-LIAISON-NUMBERS-08]
 introduces:
@@ -78,4 +78,4 @@ visible: **novembre** wears its *nov-* on the outside, and English has
 
 [PAUSE 3s] How do you say nine? (**neuf**, *nuhf*.) What happens to the **f**
 before a vowel? (It becomes a **v** — *neuf ans*.) Which month keeps the same
-Latin *novem*? (**Novembre**.) Next: the number ten, and the count is complete.
+Latin *novem*? (**November**, in French as in English.) Next: the number ten, and the count is complete.

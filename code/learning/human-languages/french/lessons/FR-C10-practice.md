@@ -76,7 +76,7 @@ about, and the French is the key rather than the lock.
 - **one sound-law** — Grimm's law, *p → f* and *t → th*. It is why *père* is
   *father*, *mère* is *mother* and *frāter* is *brother*, and it turned three
   separate memorisations into one fact.
-- **a letter** — **œ**, one character, waiting in *cœur*, *œuf* and *œil*.
+- **a letter** — **œ**, one character, waiting in *cœur*.
 - **a habit worth more than any of them**: when a French word looks like
   nothing, reach for the long formal English word rather than the short common
   one. *Père* is opaque next to *father* and obvious next to *paternal*.
@@ -88,5 +88,5 @@ about, and the French is the key rather than the lock.
 le frère, la sœur**.) Which two are feminine? (**la mère, la sœur**.) State
 Grimm's law in the form you need. (**p → f**, **t → th**.) Use it: what English
 word is *frāter*? (**brother**.) How many letters is **œ**, and name a word
-besides *sœur* that has it. (**One**; *cœur*, *œuf* or *œil*.) Which English
+besides *sœur* that has it. (**One**; *cœur*.) Which English
 word for physical stuff traces back to *mère*? (**matter**.)

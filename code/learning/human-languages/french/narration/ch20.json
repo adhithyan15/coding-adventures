@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "The Past That Takes être",
   "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:ea532af11402347e",
+  "sourceHash": "fnv1a64:69bfab0f6a6185bc",
   "lessons": [
     {
       "id": "FR-C16-suis-alle",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:004b818a441947e4",
+      "sourceHash": "fnv1a64:65d49f0afab5913a",
       "notice": null,
       "blocks": [
         {
@@ -326,15 +326,15 @@
             },
             {
               "kind": "speech",
-              "text": "marcher (walk) — j'ai marché."
+              "text": "j'ai marché — I walked."
             },
             {
               "kind": "speech",
-              "text": "courir (run) — j'ai couru."
+              "text": "j'ai couru — I ran."
             },
             {
               "kind": "speech",
-              "text": "nager (swim), danser (dance), voyager (travel)."
+              "text": "j'ai nagé, j'ai dansé, j'ai voyagé — I swam, danced, travelled."
             },
             {
               "kind": "speech",
@@ -342,7 +342,7 @@
             },
             {
               "kind": "speech",
-              "text": "Courir describes what your legs did. Partir describes that you are no longer here. The first is an activity; the second is a change in where you are, and it is the change that takes être."
+              "text": "J'ai couru describes what your legs did. Je suis parti describes that you are no longer here. The first is an activity; the second is a change in where you are, and it is the change that takes être."
             },
             {
               "kind": "speech",
@@ -412,7 +412,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which auxiliary does courir take? (avoir — j'ai couru.) But is it not a motion verb? (Yes — which is why \"motion verbs take être\" is the wrong rule.) State the right one. (Transition, not motion — arriving, leaving, changing state.) Next: the verbs that use both."
+              "text": "Which auxiliary does \"to run\" take? (avoir — j'ai couru.) But is it not a motion verb? (Yes — which is why \"motion verbs take être\" is the wrong rule.) State the right one. (Transition, not motion — arriving, leaving, changing state.) Next: the verbs that use both."
             }
           ]
         }
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd528eb9c6308359",
+      "sourceHash": "fnv1a64:597df62804bb0331",
       "notice": null,
       "blocks": [
         {
@@ -505,11 +505,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same for going out — \"Je suis sorti … J'ai sorti le chien\"",
+              "instruction": "the same for going out — \"Je suis sorti … J'ai sorti le vin\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same for going out — \"Je suis sorti … J'ai sorti le chien\"]"
+              "source": "[YOU SAY: the same for going out — \"Je suis sorti … J'ai sorti le vin\"]"
             },
             {
               "kind": "prompt",
@@ -1252,7 +1252,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b48d984ab52c125a",
+      "sourceHash": "fnv1a64:43ecbc48a76f4eca",
       "notice": null,
       "blocks": [
         {
@@ -1455,7 +1455,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"she went.\" (Elle est allée.) Which auxiliary does courir take, and why? (avoir — it is motion, not transition.) What flips monter to avoir? (A direct object.) Which agreement rule do pronominal verbs follow? (avoir's — a preceding direct object.) State the one rule under all of it. (The participle agrees with whatever it described.)"
+              "text": "Say \"she went.\" (Elle est allée.) Which auxiliary does \"to run\" take, and why? (avoir — it is motion, not transition.) What flips monter to avoir? (A direct object.) Which agreement rule do pronominal verbs follow? (avoir's — a preceding direct object.) State the one rule under all of it. (The participle agrees with whatever it described.)"
             }
           ]
         }

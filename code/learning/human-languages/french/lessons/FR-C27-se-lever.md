@@ -67,9 +67,12 @@ ending, and the *e* takes a **grave accent**; spoken ending, and it flattens:
 *Se lever* is the **movement**, *debout* the **state** — the split between
 sitting down and being seated. *Debout* is no verb: attach it to *être*.
 
-And it is transparent once opened: **de** + **bout**, "**on end**." A *bout* is
-a tip or end, so standing is being set on your end. French did once have a
-plain verb for standing, *ester*; it survives only in a courtroom phrase, which
+Opened, it is transparent:
+
+**de** + **bout** → **debout**
+
+"**On end**": a *bout* is a tip or end, so standing is being set on your end.
+French did once have a plain verb for standing, *ester*; it survives only in a courtroom phrase, which
 is why the language builds this from pieces.
 
 ## The word, taken apart: lightness
@@ -105,7 +108,7 @@ a later **borrowing** back out of French.
 
 [PAUSE 3s] Say "I get up" and "we get up." (*Je me lève. Nous nous levons* — the
 accent appears only when the ending is silent.) How does French say "I am
-standing"? (***Je suis debout*** — a state pinned to *être*, not a verb, and
-*debout* is *de* + *bout*, "**on end**.") *Penser* came from weighing; what does
+standing"? (***Je suis debout*** — a state pinned to *être*, not a verb;
+*debout* is "**on end**.") *Penser* came from weighing; what does
 *lever* come from? (***Levis***, "**light in weight**".) And the opposite
 movement? (*Je m'assieds*.)

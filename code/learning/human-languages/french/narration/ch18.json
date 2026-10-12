@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Compound Past",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:a15d536715eef86f",
+  "sourceHash": "fnv1a64:b18c430ea9c701db",
   "lessons": [
     {
       "id": "FR-C15-participe-er",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43082b6c3d07b5e2",
+      "sourceHash": "fnv1a64:4d50f19f85693670",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +346,7 @@
             },
             {
               "kind": "speech",
-              "text": "The good news is that the sentence always does. Vous parlez has a pronoun in front of it. J'ai parlé has avoir in front of it. Parler has nothing in front of it, or a verb like vouloir. In practice you never have to decide — which is why French speakers are untroubled by a distinction that looks impossible written down."
+              "text": "The good news is that the sentence always does. Vous parlez has a pronoun in front of it. J'ai parlé has avoir in front of it. Parler has nothing in front of it, or another verb, the way English speak follows want to. In practice you never have to decide — which is why French speakers are untroubled by a distinction that looks impossible written down."
             },
             {
               "kind": "speech",
@@ -426,7 +426,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9ec780305a32ab2",
+      "sourceHash": "fnv1a64:3761355a76d265ea",
       "notice": null,
       "blocks": [
         {
@@ -466,13 +466,13 @@
               "rowCount": 3,
               "utterances": [
                 "infinitive ends in: -er. participle ends in: -é. example: parler becomes parlé.",
-                "infinitive ends in: -ir. participle ends in: -i. example: finir becomes fini.",
-                "infinitive ends in: -re. participle ends in: -u. example: vendre becomes vendu."
+                "infinitive ends in: -ir. participle ends in: -i. example: fini, \"finished\".",
+                "infinitive ends in: -re. participle ends in: -u. example: vendu, \"sold\"."
               ]
             },
             {
               "kind": "speech",
-              "text": "finir (\"to finish\") and vendre (\"to sell\") are the standard examples, and they are here as examples of the pattern rather than words to add to your vocabulary — neither has appeared in this book yet. What you want from this lesson is the shape: when you meet a verb, its infinitive ending already tells you what its participle will look like."
+              "text": "fini and vendu are the standard examples, and they are here as examples of the pattern rather than words to add to your vocabulary — neither verb has had a lesson of its own in this book yet. What you want from this lesson is the shape: when you meet a verb, its infinitive ending already tells you what its participle will look like."
             },
             {
               "kind": "speech",
@@ -503,11 +503,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three pairs — \"parler parlé, finir fini, vendre vendu\"",
+              "instruction": "the three participles — \"parlé, fini, vendu\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three pairs — \"parler parlé, finir fini, vendre vendu\"]"
+              "source": "[YOU SAY: the three participles — \"parlé, fini, vendu\"]"
             },
             {
               "kind": "prompt",
@@ -960,7 +960,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3a83f885ee1932a",
+      "sourceHash": "fnv1a64:623365d176bb5a58",
       "notice": null,
       "blocks": [
         {
@@ -1052,11 +1052,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pairs — \"parler parlé, finir fini, vendre vendu\"",
+              "instruction": "the participles — \"parlé, fini, vendu\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pairs — \"parler parlé, finir fini, vendre vendu\"]"
+              "source": "[YOU SAY: the participles — \"parlé, fini, vendu\"]"
             },
             {
               "kind": "prompt",
@@ -1164,7 +1164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88b5a4d1ee5fd39a",
+      "sourceHash": "fnv1a64:c314a111310ed890",
       "notice": null,
       "blocks": [
         {
@@ -1210,7 +1210,7 @@
             },
             {
               "kind": "speech",
-              "text": "You do not need to produce these, and you should not try. Nobody says them. Using one out loud sounds roughly like announcing \"thus spake he\" in an English café."
+              "text": "You do not need to produce these, and you should not try. Nobody says them. Using one out loud sounds roughly like announcing \"thus spake he\" in an English pub."
             },
             {
               "kind": "speech",

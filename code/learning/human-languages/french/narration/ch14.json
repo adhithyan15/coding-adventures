@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "The Welded Teens",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:fd17c8353e5b5faa",
+  "sourceHash": "fnv1a64:44a16ca8a6408087",
   "lessons": [
     {
       "id": "FR-C12-onze",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99846eff2631759e",
+      "sourceHash": "fnv1a64:63fbf322e1da7b42",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-ou — ou is a single pure oo, as in English food. Never two sounds."
+              "text": "vowel-ou — the letters o-u make a single pure oo, as in English food. Never two sounds."
             },
             {
               "kind": "speech",
@@ -221,11 +221,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"douze\" — DOOZ, the ou a single pure vowel",
+              "instruction": "\"douze\" — DOOZ, the o-u a single pure vowel",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"douze\" — *DOOZ*, the *ou* a single pure vowel]"
+              "source": "[YOU SAY: \"douze\" — *DOOZ*, the *o-u* a single pure vowel]"
             },
             {
               "kind": "prompt",

@@ -60,14 +60,14 @@ Either way, English **butter** borrows the *identical* Latin word French
 **beurre** does. This isn't two languages separately naming the same thing —
 it's **one loanword, arriving twice**.
 
-## Why it's said this way: désolé, when there's none left
+## Why it's said this way: désolé, when you can't help
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-DESOLE-02, FR-PRAGMATICS-SORRY-04] -->
 
 The courtesy words you already have fit right here:
 
-> **Désolé, il n'y a plus de beurre.** — "Sorry, there's no more butter."
+> **Désolé, je n'ai pas le beurre.** — "Sorry, I don't have the butter."
 
-*Désolé* — real regret, for running out. If you'd only bumped the butter
+*Désolé* — real regret, for letting someone down. If you'd only bumped the butter
 dish, **pardon** would do instead; to get someone's attention before asking
 for it at all, **excusez-moi**.
 
@@ -78,7 +78,7 @@ for it at all, **excusez-moi**.
 - [YOU SAY: "le beurre" — masculine]
 - [YOU SAY: "du beurre, s'il vous plaît"]
 - [YOU SAY: "beurre, butter" — one word, borrowed twice]
-- [YOU SAY: "désolé, il n'y a plus de beurre"]
+- [YOU SAY: "désolé, je n'ai pas le beurre"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BEURRE-03, FR-ETYMON-BEURRE-04, FR-PRAGMATICS-SORRY-04] -->

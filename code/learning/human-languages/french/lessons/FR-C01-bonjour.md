@@ -64,8 +64,8 @@ didn't. Two neighbours, two instincts.
 
 Culturally, *bonjour* carries weight far beyond "hello": in France, opening
 almost any interaction — a shop, a bus, a desk — *without* a *bonjour* reads
-as rude. It's the formal, all-purpose daytime greeting (switch to *bonsoir*
-in the evening), and the polite default where *salut* would be too casual.
+as rude. It's the formal, all-purpose daytime greeting (the evening has its
+own, two lessons on), and the polite default where *salut* would be too casual.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BONJOUR-07, FR-LEX-SALUT-01] -->

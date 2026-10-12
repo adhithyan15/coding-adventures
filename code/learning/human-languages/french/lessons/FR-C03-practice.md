@@ -45,7 +45,7 @@ It picks up right where the introduction exchange left off.
 **Formal** (a stranger, an elder):
 
 > — Bonjour. **Comment allez-vous ?**
-> — **Très bien, merci.** Et vous ?
+> — **Bien, merci.** Et vous ?
 > — **Comme ci, comme ça.**
 > — [later, after a small favour] — Merci ! — **De rien.**
 
@@ -87,4 +87,4 @@ Spanish *¿y usted? / ¿y tú?*
 [PAUSE 3s] Which verb carries French "how are you?", and how does its metaphor
 differ from Spanish's? (*aller*, "to go" — *how does it go?* — vs *estar*, "to
 stand.") What does *de rien* literally say, and its Spanish twin? ("Of nothing";
-*de nada*.) Next chapter: **farewells** — au revoir, à bientôt, bonne journée.
+*de nada*.) Next chapter: **farewells**.

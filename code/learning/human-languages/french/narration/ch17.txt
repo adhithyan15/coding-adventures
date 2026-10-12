@@ -203,7 +203,7 @@ elles ont = el-ZO(N), identical but for the first vowel.
 
 The word, taken apart.
 ont is Latin habent, and it is the odd one out: every other form of avoir has an a in it, and this one does not.
-There is a trap here worth meeting before you fall into it. ils ont is "they have." ils sont is "they are." One consonant apart, and both extremely common. The way to keep them apart is the liaison: ils ont buzzes — eel-z-o(n) — while ils sont hisses, eel so(n). The buzz means have.
+There is a trap here worth meeting before you fall into it. ils ont is "they have." In two chapters you will meet "they are," one consonant away from it and just as common. The way to keep them apart is the liaison: ils ont buzzes — eel-z-o(n) — and the "are" form hisses. The buzz means have.
 That is the whole paradigm. Six forms, and you now have all of them:
 j'ai, tu as, il a, nous avons, vous avez, ils ont.
 
@@ -211,14 +211,14 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "ils ont" — eel-ZO(N), the buzz]
 [pause 8 seconds for the answer]
-[your turn — say: the trap — "ils ont" then "ils sont"; buzz means have]
+[your turn — say: "elles ont" — el-ZO(N), the same buzz; the buzz means have]
 [pause 8 seconds for the answer]
 [your turn — say: all six in order]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say "they have"? (ils ont, eel-ZO(N).) What does ils sont mean instead? (They are.) How do you tell them apart by ear? (ils ont buzzes; ils sont hisses.) What is unusual about ont among the six forms? (It is the only one with no a in it.) Next: where the whole verb came from.
+How do you say "they have"? (ils ont, eel-ZO(N).) What tells your ear that it means have? (The buzz — ils ont links with a z; the "they are" form you meet later hisses.) What is unusual about ont among the six forms? (It is the only one with no a in it.) Next: where the whole verb came from.
 
 
 Lesson 8 of 14.
@@ -279,7 +279,7 @@ Guided Practice: the two halves sound different.
 [pause 8 seconds for the answer]
 [your turn — say: the two that do not — "-ons, -ez"]
 [pause 8 seconds for the answer]
-[your turn — say: the trap — "ils ont, ils sont"; buzz for have, hiss for are]
+[your turn — say: "ils ont" with its liaison — eel-z-o(n); the buzz means have]
 [pause 8 seconds for the answer]
 
 Guided Practice: use it.
@@ -300,7 +300,7 @@ a root that pays twice — habēre gave French avoir and habiter, and English ha
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give all six forms without stopping. Which three sound effectively the same? (ai, as, a.) Which two endings can you always hear? (-ons and -ez.) How do you hear the difference between ils ont and ils sont? (The buzz — ont takes a liaison z, sont hisses.) What Latin verb is behind all of it? (habēre.)
+Give all six forms without stopping. Which three sound effectively the same? (ai, as, a.) Which two endings can you always hear? (-ons and -ez.) What do you hear in ils ont that marks it as have? (The buzz — ont takes a liaison z.) What Latin verb is behind all of it? (habēre.)
 
 
 Lesson 10 of 14.
@@ -346,10 +346,10 @@ Warm-up.
 Here is the first thing French lets you say that English cannot say the same way at all.
 
 Grammar Lens: age is something you have.
-English is its age: I am twenty. French has it:
+English is its age: you are twenty. French has it:
 J'ai vingt ans. — literally, "I have twenty years."
 Two things follow, and both are absolute.
-The verb is avoir, never être. Je suis vingt ans is not a stylistic choice; it is simply wrong, and it is the single most common thing an English speaker gets wrong in their first month.
+The verb is avoir, never "to be." Building it with French's "to be" is not a stylistic choice; it is simply wrong, and it is the single most common thing an English speaker gets wrong in their first month.
 And ans cannot be dropped. English says "I'm twenty" with no noun at all. French must name the years: J'ai vingt on its own means nothing.
 One sound to get right. vingt normally ends in silence — you learned it as VA(N), with the g and t both dead. Put ans after it and the t wakes up: vin-t-a(n). That is liaison, doing what it always does — reviving a buried consonant when a vowel follows it.
 
@@ -357,7 +357,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "J'ai vingt ans" — with the liaison, vin-t-a(n)]
 [pause 8 seconds for the answer]
-[your turn — say: the rule — "avoir, never être"]
+[your turn — say: the rule — "avoir, never 'to be'"]
 [pause 8 seconds for the answer]
 [your turn — say: the buried t waking — "vingt" alone, then "vingt ans"]
 [pause 8 seconds for the answer]
@@ -368,7 +368,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does French say "I am twenty"? (J'ai vingt ans — "I have twenty years".) Which verb, and which is wrong? (avoir; être is wrong.) Can you drop ans the way English drops "years"? (No.) What happens to the t of vingt before ans? (It wakes up — vin-t-a(n), a liaison.) Next: how to ask.
+How does French say "I'm twenty"? (J'ai vingt ans — "I have twenty years".) Which verb, and which is wrong? (avoir; "to be" is wrong.) Can you drop ans the way English drops "years"? (No.) What happens to the t of vingt before ans? (It wakes up — vin-t-a(n), a liaison.) Next: how to ask.
 
 
 Lesson 12 of 14.
@@ -458,7 +458,7 @@ Guided Practice: the paradigm, cold.
 [pause 8 seconds for the answer]
 [your turn — say: backwards — "ils ont, vous avez, nous avons, il a, tu as, j'ai"]
 [pause 8 seconds for the answer]
-[your turn — say: the trap — "ils ont, ils sont"]
+[your turn — say: "ils ont" — the liaison buzz that means have]
 [pause 8 seconds for the answer]
 [repeat that twice]
 "j'ai, tu as, il a, nous avons, vous avez, ils ont".
@@ -486,9 +486,9 @@ Guided Practice: use the verb on what you own.
 What you've built this chapter.
 the whole of avoir, six forms, one lesson each, and a paradigm you built rather than one you were handed.
 why French keeps its pronouns — the singular endings went silent, so je, tu and il carry what the verb stopped saying.
-age is something you have — J'ai vingt ans, never je suis, and ans is compulsory. Every Romance language on the continent agrees with French, and every Germanic one disagrees.
+age is something you have — J'ai vingt ans, never "I am," and ans is compulsory. Every Romance language on the continent agrees with French, and every Germanic one disagrees.
 one root, two verbs, four English words — habēre gave avoir and habiter, plus habit, inhabit, exhibit, prohibit.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the six forms of avoir. Ask a friend their age. (Quel âge as-tu?) Answer with your own. Which verb must you never use for age? (être.) Can ans be left out? (No.) Which other French verb shares avoir's root? (habiter.) How do you hear ils ont against ils sont? (The buzz against the hiss.)
+Give the six forms of avoir. Ask a friend their age. (Quel âge as-tu?) Answer with your own. Which verb must you never use for age? (The verb "to be".) Can ans be left out? (No.) Which other French verb shares avoir's root? (habiter.) What marks ils ont as have? (The buzz of its liaison.)

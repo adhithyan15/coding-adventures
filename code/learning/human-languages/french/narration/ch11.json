@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The Four Seasons",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ad9c68cce78e7d09",
+  "sourceHash": "fnv1a64:f503eadf2fed0371",
   "lessons": [
     {
       "id": "FR-C09-printemps",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d2c091ca04045fd",
+      "sourceHash": "fnv1a64:9e2f814ae08d66f1",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-au — the pair au is a single o sound, closer to English taught than to cow. It never sounds like ow."
+              "text": "diphthong-au — the letter pair a-u is a single o sound, closer to English taught than to cow. It never sounds like ow."
             },
             {
               "kind": "speech",
@@ -348,11 +348,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"l'automne\" — lo-TON, the au a single o",
+              "instruction": "\"l'automne\" — lo-TON, the a-u a single o",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"l'automne\" — *lo-TON*, the *au* a single *o*]"
+              "source": "[YOU SAY: \"l'automne\" — *lo-TON*, the *a-u* a single *o*]"
             },
             {
               "kind": "prompt",
@@ -387,7 +387,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say autumn? (l'automne, lo-TON.) What sound does au make? (A single o.) Which written letter is not pronounced, and does English do the same? (The n — and yes, English autumn copied the spelling from French.) Next: the cold one, and a bear."
+              "text": "How do you say autumn? (l'automne, lo-TON.) What sound does a-u make? (A single o.) Which written letter is not pronounced, and does English do the same? (The n — and yes, English autumn copied the spelling from French.) Next: the cold one, and a bear."
             }
           ]
         }

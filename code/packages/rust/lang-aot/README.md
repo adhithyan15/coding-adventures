@@ -94,9 +94,10 @@ The same bounded proof extends to exactly three built-in exponentials per
 branch. It also extends to exactly four built-in exponentials per branch when
 every root is proven nonpositive; positive-capable, missing, deeper,
 non-runtime-real, and overridden branches remain gated.
-Branch roots may be unaliased local real snapshots carrying runtime-real
-provenance across assignment; globals, captured locals, and by-name aliases
-remain gated across a selector call.
+Across every bounded conditional family above, branch roots may be unaliased
+local real snapshots carrying runtime-real provenance across assignment;
+globals, captured locals, and by-name aliases remain gated across a selector
+call.
 Assignment provenance is checked before and after RHS lowering. A selector
 that promotes a branch root through a by-name actual invalidates the cached
 local proof; a value formal leaves its caller's snapshots unaliased.

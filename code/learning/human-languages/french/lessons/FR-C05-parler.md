@@ -14,7 +14,7 @@ roots: [parabolare-latin]
 etymology_hook: "parler ← Late Latin parabolāre 'to tell parables, to talk' (← parabola) → English parable, parole, palaver"
 reviews_of: [FR-C03-comment-ca-va, FR-C02-practice]
 duration:
-  max_seconds: 248
+  max_seconds: 267
 requires:
   knowledge: []
 introduces:
@@ -103,4 +103,4 @@ they are the only thing telling you who is doing the speaking.
 (*parabolāre* ← *parabola* — parable, parole.) Which three present-tense endings
 are silent? (*-e, -es, -ent* — je/tu/ils all sound *parl*.) Why does French keep
 *je/tu* when Spanish drops *yo/tú*? (The endings are silent, so the pronoun
-carries the person.) Next: **habiter**, "to live."
+carries the person.) Next: the verb "to live."
