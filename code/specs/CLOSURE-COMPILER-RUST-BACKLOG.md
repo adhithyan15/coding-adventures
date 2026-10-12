@@ -9,14 +9,57 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `b1f4e459138a681cac38ae599789914415a6162e`
+**Current audit base:** `e32e5788f6c51fc8927bdb48e2955a5721a39195`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
 
 ## Delivery priority and deferred Miri (2026-10-11)
 
-### Current edge-ID and document-contract delivery reconciliation
+### Current edge-target resource repair delivery
+
+Main `e32e5788f6c51fc8927bdb48e2955a5721a39195` adds identified-edge styling (#17342), after predecessor
+eec87335 passed independent review/publication for its b1f4e459 frame. New-main
+review is NOT ACCEPTED until this bounded repair: class/style targets performed
+full-edge scans even for existing node-only targets over unidentified edges.
+Spec a2849e9d and corrected work definition3f96e59f preceded actual red source
+f2cc672d7d. Public class/style controls each observed1,024 actual edge predicates
+for32 edges/32 targets; two work tests failed, one exact duplicate-ID/collision/
+precedence control passed. [#17346](https://github.com/adhithyan15/coding-adventures/issues/17346)
+tracks the defect. Separate dd9b81c8 integration compile rejection has zero
+executed tests for the new classes/style fields; preserve it separately.
+
+Actual repair `a9dc9dc65eebad65c23615820484db0bbf63582e` builds one deterministic owned ID-to-ordered-edge-
+indices index, visits every authored edge once, skips absent IDs and copies
+each distinct key once. Target queries visit only actual matches; duplicate
+IDs, node/edge-ID collisions, application order, class deduplication and inline
+style precedence remain exact. Discovery and real matching/application work
+are counted separately; existing node lookup/style merge and whole pipeline
+linearity are not claimed. Native controls at32/128 edges/targets assert exactly
+E index visits/D lookups/zero unrelated matching visits; the collision control
+asserts3 index visits/4 queries/8 actual matching updates and complete styles.
+Layout preserves distinct IDs/classes/styles alongside the unchanged original
+duplicate-gap counters and metadata. UTF-8 and monotone-label controls remain.
+
+The full metadata-derived fourteen-package diagram cone passes **744 tests/docs
+across32 targets**, zero failures/ignores, ten focused controls included in744,
+strict all-target Clippy, actual document reconstruction, lessons and whitespace.
+Every other Rust package entry and whole programs/CI/scripts/TypeScript tree is
+identical to actual c7970229: retain its original1226 ALGOL/shared tests/docs,
+110 targets, eleven production commands/34 exact native controls/strict lint and
+31 Python controls at that original head, without relabeling execution. Existing
+compiler/lexical/CV validation remains attributed to its original source proofs.
+The final backlog-only head must retain seven complete source/config/lessons
+objects and receive exact-head independent review before non-force same-PR
+publication. Fresh required exact-head CI/whole Linux/macOS/Windows native logs
+remain PENDING; no prior-head/local acceptance replaces them. Auto-merge off
+until current clean/review/terminal checks, then actual main reachability/payload
+verification. Full Closure/CV04b/transformation/output contract remains OPEN.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed; preserve frozen run,
+checkout/497 inputs/receipts without polling or termination. One active PR17288.
+
+### Historical edge-ID and document-contract delivery reconciliation
 
 Published predecessor 8c82b405 is superseded by this reviewed delivery candidate
 only after final-head security and non-force publication. Actual required CI
@@ -1159,23 +1202,3 @@ review/conflict gates and actual fetched-main merge/payload proof before cleanup
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
 inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
-
-
-### Pending current-main edge styling resource reconciliation
-
-Published eec87335 retains actual c797 native1966/142 and exact-head local
-security acceptance against main b1f4e459. During publication main advanced to
-e32e5788 (#17342). Independent review rejects its new class/style edge scans:
-each node-only target scans every edge despite absent edge IDs. The isolated
-dd9b81c8 integration also actually fails compile at the preserved resource
-fixture's new classes/style fields, zero tests executed. Retain both findings.
-The DG04 target-index work/semantic contract precedes repair tests/source.
-Actual original scan at f2cc672d7d has two work failures:32 duplicate unidentified
-edges/32 node-only targets each cause1,024 edge visits, versus32 once-built
-index visits. The duplicate-ID/node-collision/precedence semantic control passes.
-Issue [#17346](https://github.com/adhithyan15/coding-adventures/issues/17346)
-tracks the bounded target index and exact discovery/application counters.
-New bounded diagram validation, current-main final review and current-head CI
-remain PENDING; auto-merge disabled. Keep one active PR17288. No ALGOL/compiler
-source receipt is relabeled or full pipeline linearity claimed. Full final-source
-Miri DEFERRED/PENDING, frozen run/497 inputs/receipts untouched without polling.
