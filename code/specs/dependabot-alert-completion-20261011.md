@@ -141,6 +141,12 @@ fixture; retain both cousin indexes, joins and every assertion inside the
 ordinary deadline. The audit must cover single expensive fixture reads as well
 as repeated reads.
 
+The per-track curriculum membership snapshot likewise measured 36.5 seconds
+while loading the real default-root curriculum graph inside its 30-second case.
+Initialize only that immutable graph once at module scope. Keep digest creation,
+pin inventory/equality assertions and the explicit pin-update branch inside the
+case, with all temporary-root ownership regressions independent and live.
+
 Seven live full-corpus CLI checks exceeded their existing integration limits:
 the three Spanish report checks measured 60.5-72.3 seconds, narration measured
 71.7 seconds, and the three all-ledger shard checks measured 31.9-32.7 seconds.
