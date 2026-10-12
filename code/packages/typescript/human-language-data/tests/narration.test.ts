@@ -930,9 +930,15 @@ describe("the whole corpus", () => {
   // The narration export exists to be read by a machine that cannot ask questions, so
   // "it did not throw" is not enough — these pin that nothing vanished on the way out.
   const { lessons } = loadEverything();
+  // Narrate the corpus ONCE, here at collection time beside the load, and share it.
+  // Each test below used to narrate all of it again: four full passes, each about
+  // as long as the load itself, so the first test to run paid a whole narration
+  // inside its 30-second budget and timed out on a slower runner as the corpus
+  // grew. One pass, read four ways, asserts exactly what four passes did.
+  const corpusChapters = narrationChapters(lessons, { maxLinearisableTableColumns: 3 });
 
   it("narrates every lesson in the corpus", () => {
-    const chapters = narrationChapters(lessons, { maxLinearisableTableColumns: 3 });
+    const chapters = corpusChapters;
     const narrated = chapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0);
     expect(narrated).toBe(lessons.length);
     // 378, not the 375 this was authored against: HL-C39 and HL-C40 each added a
@@ -947,7 +953,7 @@ describe("the whole corpus", () => {
   });
 
   it("leaves no Markdown typography in the spoken script", () => {
-    const text = narrationChapters(lessons, { maxLinearisableTableColumns: 3 })
+    const text = corpusChapters
       .map((chapter) => renderChapterNarrationText(chapter))
       .join("\n");
     // A speech engine handed any of these either pronounces them or stumbles.
@@ -957,7 +963,7 @@ describe("the whole corpus", () => {
   });
 
   it("never emits a sight lesson without telling the learner first", () => {
-    for (const chapter of narrationChapters(lessons, { maxLinearisableTableColumns: 3 })) {
+    for (const chapter of corpusChapters) {
       for (const narration of chapter.lessons) {
         if (narration.modality === "voice") continue;
         expect(narration.notice).not.toBeNull();
@@ -967,7 +973,7 @@ describe("the whole corpus", () => {
 
   it("never drops a table it refused — every refusal is spoken", () => {
     let refusals = 0;
-    for (const chapter of narrationChapters(lessons, { maxLinearisableTableColumns: 3 })) {
+    for (const chapter of corpusChapters) {
       for (const narration of chapter.lessons) {
         for (const block of narration.blocks) {
           for (const segment of block.segments) {
