@@ -217,6 +217,10 @@
     {
       "name": "click-legacy-callback-alias",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request openRequest \"Open request\"\nrequest --> done"
+    },
+    {
+      "name": "invisible-layout-link",
+      "source": "swimlane-beta LR\nsubgraph Drafting\n  draft[Draft]\nend\nsubgraph Publishing\n  published[Published]\nend\ndraft ~~~ published"
     }
   ]
 }

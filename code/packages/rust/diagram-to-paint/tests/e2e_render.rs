@@ -3734,6 +3734,16 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.commands.iter().filter(|command| matches!(command, PathCommand::LineTo { .. })).count() == 2
                 )).count() >= 2, "data stores must lower to paired open horizontal rules");
             }
+            if fixture_name == "invisible-layout-link" {
+                assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible);
+                assert_eq!(layout.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible,
+                    "invisible links must survive layout lowering");
+                assert_ne!(layout.edges[0].from, layout.edges[0].to,
+                    "invisible links must retain layout geometry");
+                assert!(!scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(_)
+                )), "invisible links must not lower to visible paint");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

@@ -1035,6 +1035,7 @@ Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint
 markers and bidirectional arrows, multiline edge continuations,
+invisible layout links,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
 accessibility metadata with named and numeric entity decoding. Direct node
