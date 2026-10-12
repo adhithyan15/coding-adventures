@@ -2359,6 +2359,10 @@ jobs:
           flutter-version: '3.44.0'
           channel: stable
           cache: true
+          # The action re-hashes **/pubspec.lock in post-job cleanup, after
+          # generated dependency trees can make that traversal exceed 120s.
+          # Keep the SDK cache; Dart pub resolves and fetches normally.
+          pub-cache: false
 
       - name: Enable Flutter native assets
         # macOS too when the SwiftUI lane runs: Flutter on iOS (UI89 §7.7 step 3)
