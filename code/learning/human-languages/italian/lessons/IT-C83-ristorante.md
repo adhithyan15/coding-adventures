@@ -14,7 +14,7 @@ concept_tag: IT-CITTA3-RISTORANTE
 prerequisites: [IT-C83-chiesa, IT-C83-museo]
 sounds: []
 roots: []
-etymology_hook: "ristorante — origin not recorded in EtymDB 2.1"
+etymology_hook: "ristorante ← French restaurant, from restaurer 'to restore' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C83-museo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ristorante** — its origin is not recorded in EtymDB 2.1.
+**ristorante** ← French *restaurant*, from *restaurer*, "to restore": a meal that restores you — borrowed. (EtymDB 2.1, French *restaurant*)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 77,
-  "sourceHash": "fnv1a64:d0ce227fce1d7551",
+  "sourceHash": "fnv1a64:84e437011ff3c061",
   "lessonIds": [
     "IT-C77-verde",
     "IT-C77-grigio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch77.txt",
   "json": "italian/narration/ch77.json",
-  "textHash": "fnv1a64:a6c1dd1e5409fef7",
-  "jsonHash": "fnv1a64:133657f1dae952cd",
+  "textHash": "fnv1a64:5255b10c7fbaf726",
+  "jsonHash": "fnv1a64:9ea6d92cb4fa337a",
   "findings": []
 }

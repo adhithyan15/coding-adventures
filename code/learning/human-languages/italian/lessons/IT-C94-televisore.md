@@ -14,7 +14,7 @@ concept_tag: IT-CASA94-TELEVISORE
 prerequisites: [IT-C93-barca, IT-C94-tappeto]
 sounds: []
 roots: []
-etymology_hook: "televisore — origin not recorded in EtymDB 2.1"
+etymology_hook: "televisore — tele- 'far' + the word for a viewer"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C94-tappeto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**televisore** — its origin is not recorded in EtymDB 2.1.
+**televisore** — built from *tele-*, "far", and the word for a viewer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

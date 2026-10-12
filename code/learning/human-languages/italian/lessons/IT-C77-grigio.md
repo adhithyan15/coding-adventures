@@ -14,7 +14,7 @@ concept_tag: IT-AGG6-GRIGIO
 prerequisites: [IT-C76-giallo, IT-C77-verde]
 sounds: []
 roots: []
-etymology_hook: "grigio — origin not recorded in EtymDB 2.1"
+etymology_hook: "grigio ← Frankish gris 'grey', a Germanic word — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C77-verde]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**grigio** — its origin is not recorded in EtymDB 2.1.
+**grigio** ← Frankish *gris*, "grey", a Germanic word — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

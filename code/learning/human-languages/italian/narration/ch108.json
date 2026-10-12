@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Chocolate, Biscuit, Sandwich, Sauce, Vinegar",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f9c1e1aa92a866d9",
+  "sourceHash": "fnv1a64:0a36240cd8aa8bbc",
   "lessons": [
     {
       "id": "IT-C108-cioccolato",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8d08a5b5b0d9ec5",
+      "sourceHash": "fnv1a64:5775665553258c1e",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "biscotto from Medieval Latin biscoctus, \"twice-cooked\" — inherited. (EtymDB 2.1)."
+              "text": "biscotto — built from bis-, \"twice\", and the word for \"cooked\" (Medieval Latin biscoctus). (EtymDB 2.1)."
             }
           ]
         },

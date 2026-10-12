@@ -14,7 +14,7 @@ concept_tag: IT-COSE2-REGALO
 prerequisites: [IT-C62-ombrello, IT-C62-soldi]
 sounds: []
 roots: []
-etymology_hook: "regalo — origin not recorded in EtymDB 2.1"
+etymology_hook: "regalo ← Spanish regalo — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C62-soldi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**regalo** — its origin is not recorded in EtymDB 2.1.
+**regalo** ← Spanish *regalo* — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

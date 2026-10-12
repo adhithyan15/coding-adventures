@@ -141,7 +141,7 @@ You'll want to know: il semaforo.
 il semaforo — "traffic lights".
 
 The word, taken apart.
-semaforo — its origin is not recorded in EtymDB 2.1.
+semaforo — built from Greek sema, "sign", and -phoros, "bearing": a sign-bearer.
 
 What you've built.
 One more word for this chapter.

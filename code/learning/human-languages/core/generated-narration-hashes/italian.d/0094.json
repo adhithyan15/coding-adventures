@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 94,
-  "sourceHash": "fnv1a64:c2f06c6a572fecfa",
+  "sourceHash": "fnv1a64:d86db51b15c5468d",
   "lessonIds": [
     "IT-C94-tappeto",
     "IT-C94-televisore",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch94.txt",
   "json": "italian/narration/ch94.json",
-  "textHash": "fnv1a64:ba5ee3c0dfb58318",
-  "jsonHash": "fnv1a64:29ea4b0f7b057c08",
+  "textHash": "fnv1a64:48952a715087a11a",
+  "jsonHash": "fnv1a64:b5e2802423fa3ac1",
   "findings": []
 }

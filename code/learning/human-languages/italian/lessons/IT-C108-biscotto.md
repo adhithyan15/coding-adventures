@@ -14,7 +14,7 @@ concept_tag: IT-CIBO108-BISCOTTO
 prerequisites: [IT-C107-farina, IT-C108-cioccolato]
 sounds: []
 roots: [biscoctus-latin]
-etymology_hook: "biscotto ← Medieval Latin biscoctus 'twice-cooked' — English biscuit is the same word"
+etymology_hook: "biscotto — bis- 'twice' + the word for 'cooked' (Medieval Latin biscoctus) — English biscuit"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C108-cioccolato]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**biscotto** ← Medieval Latin *biscoctus*, "twice-cooked" — inherited. (EtymDB 2.1)
+**biscotto** — built from *bis-*, "twice", and the word for "cooked" (Medieval Latin *biscoctus*). (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

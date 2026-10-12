@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 92,
-  "sourceHash": "fnv1a64:64ad72466cb1d458",
+  "sourceHash": "fnv1a64:aacf011003859eed",
   "lessonIds": [
     "IT-C92-di-fronte",
     "IT-C92-metropolitana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch92.txt",
   "json": "italian/narration/ch92.json",
-  "textHash": "fnv1a64:e79c10445059e5f6",
-  "jsonHash": "fnv1a64:290740dace230dde",
+  "textHash": "fnv1a64:e2f329e24b31d3c9",
+  "jsonHash": "fnv1a64:6bc019424b81c29b",
   "findings": []
 }

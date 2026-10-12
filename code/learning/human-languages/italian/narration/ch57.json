@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Wall, Roof, Garden, Lamp, Bathroom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:87ba7dc8b05e1e0d",
+  "sourceHash": "fnv1a64:21b4521d4c260433",
   "lessons": [
     {
       "id": "IT-C57-muro",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d92b4f44c4191a5",
+      "sourceHash": "fnv1a64:251c3d4d0569ebee",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "giardino — its origin is not recorded in EtymDB 2.1. EtymDB lists English garden and Portuguese jardim as its cognates."
+              "text": "giardino from Old French jardin, \"garden, enclosure\" — borrowed (EtymDB 2.1, French jardin); the French word is built on Frankish gard, \"enclosure\". English garden is a cousin."
             }
           ]
         },

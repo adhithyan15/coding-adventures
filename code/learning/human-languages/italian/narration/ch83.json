@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Bridge, Park, Church, Museum, Restaurant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5b38afe1b752cf3a",
+  "sourceHash": "fnv1a64:6850b525340dca21",
   "lessons": [
     {
       "id": "IT-C83-ponte",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2846bbdf6cbe1759",
+      "sourceHash": "fnv1a64:4da1d33fb4b1c6a6",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ristorante — its origin is not recorded in EtymDB 2.1."
+              "text": "ristorante from French restaurant, from restaurer, \"to restore\": a meal that restores you — borrowed. (EtymDB 2.1, French restaurant)."
             }
           ]
         },

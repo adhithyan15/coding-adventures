@@ -14,7 +14,7 @@ concept_tag: IT-CASA2-GIARDINO
 prerequisites: [IT-C57-muro, IT-C57-tetto]
 sounds: []
 roots: []
-etymology_hook: "giardino — origin not recorded in EtymDB 2.1; English garden and Portuguese jardim are its cousins"
+etymology_hook: "giardino ← Old French jardin, from Frankish gard 'enclosure' — English garden is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C57-tetto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**giardino** — its origin is not recorded in EtymDB 2.1. EtymDB lists English *garden* and Portuguese *jardim* as its cognates.
+**giardino** ← Old French *jardin*, "garden, enclosure" — borrowed (EtymDB 2.1, French *jardin*); the French word is built on Frankish *gard*, "enclosure". English *garden* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

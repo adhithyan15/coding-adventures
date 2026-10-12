@@ -14,7 +14,7 @@ concept_tag: IT-LUOGHI90-PARCHEGGIO
 prerequisites: [IT-C89-incrocio, IT-C89-semaforo]
 sounds: []
 roots: []
-etymology_hook: "parcheggio — origin not recorded in EtymDB 2.1"
+etymology_hook: "parcheggio — from the verb 'to park', built on parco 'park'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C89-semaforo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**parcheggio** — its origin is not recorded in EtymDB 2.1.
+**parcheggio** — from the verb "to park", which is built on *parco*, "park" (EtymDB 2.1 traces *parco* to Medieval Latin *parricus*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

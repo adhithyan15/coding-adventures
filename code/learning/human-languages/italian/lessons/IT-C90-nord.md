@@ -14,7 +14,7 @@ concept_tag: IT-LUOGHI90-NORD
 prerequisites: [IT-C90-parcheggio, IT-C90-ascensore]
 sounds: []
 roots: []
-etymology_hook: "nord — origin not recorded in EtymDB 2.1"
+etymology_hook: "nord ← French nord, from Old English north — English north is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C90-ascensore]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**nord** — its origin is not recorded in EtymDB 2.1.
+**nord** ← French *nord*, from Old English *north* — borrowed. (EtymDB 2.1, French *nord*)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

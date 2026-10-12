@@ -14,7 +14,7 @@ concept_tag: IT-LUOGHI89-SEMAFORO
 prerequisites: [IT-C89-angolo, IT-C89-incrocio]
 sounds: []
 roots: []
-etymology_hook: "semaforo — origin not recorded in EtymDB 2.1"
+etymology_hook: "semaforo — Greek sema 'sign' + -phoros 'bearing': a sign-bearer"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C89-incrocio]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**semaforo** — its origin is not recorded in EtymDB 2.1.
+**semaforo** — built from Greek *sema*, "sign", and *-phoros*, "bearing": a sign-bearer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "Factory, Office, Corner, Crossroads, Traffic lights",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e18dcdf6fb247584",
+  "sourceHash": "fnv1a64:8198bd794b4c3090",
   "lessons": [
     {
       "id": "IT-C89-fabbrica",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edeb0368a3fcaa23",
+      "sourceHash": "fnv1a64:4799a85d837c3b2d",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "semaforo — its origin is not recorded in EtymDB 2.1."
+              "text": "semaforo — built from Greek sema, \"sign\", and -phoros, \"bearing\": a sign-bearer."
             }
           ]
         },

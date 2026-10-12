@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 108,
-  "sourceHash": "fnv1a64:f9c1e1aa92a866d9",
+  "sourceHash": "fnv1a64:0a36240cd8aa8bbc",
   "lessonIds": [
     "IT-C108-cioccolato",
     "IT-C108-biscotto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch108.txt",
   "json": "italian/narration/ch108.json",
-  "textHash": "fnv1a64:b42840bf270ec54e",
-  "jsonHash": "fnv1a64:56d780f0ee0ee40f",
+  "textHash": "fnv1a64:7865802469562be4",
+  "jsonHash": "fnv1a64:46f6a1834d1a893e",
   "findings": []
 }

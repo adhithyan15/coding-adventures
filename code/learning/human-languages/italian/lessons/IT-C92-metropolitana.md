@@ -14,7 +14,7 @@ concept_tag: IT-VIAGGIO92-METROPOLITANA
 prerequisites: [IT-C91-tra, IT-C92-di-fronte]
 sounds: []
 roots: []
-etymology_hook: "metropolitana — origin not recorded in EtymDB 2.1"
+etymology_hook: "metropolitana — short for 'metropolitan railway', after French métropolitain: Greek 'mother city'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C92-di-fronte]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**metropolitana** — its origin is not recorded in EtymDB 2.1.
+**metropolitana** — short for the phrase for "metropolitan railway", after French *métropolitain*, which is built from Greek *meter*, "mother", and *polis*, "city". (EtymDB 2.1, French *métropolitain*)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

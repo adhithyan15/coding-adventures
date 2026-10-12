@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Thirst, Tiredness, Tired, Ill, Joy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ede09e0faabf9f2e",
+  "sourceHash": "fnv1a64:9735fcf2618673cc",
   "lessons": [
     {
       "id": "IT-C42-sete",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3759a2a74c8b5ab7",
+      "sourceHash": "fnv1a64:d90b2ad716aa7912",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "malato — its origin is not recorded in EtymDB 2.1."
+              "text": "malato from Latin male habitus, \"in poor condition\" — inherited. EtymDB 2.1 has no row for malato; it derives Old French malade from male habitus."
             }
           ]
         },

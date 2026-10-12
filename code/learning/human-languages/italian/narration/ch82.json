@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Station, Bus, Train, Plane, Car",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2d5ecb47c8810d6c",
+  "sourceHash": "fnv1a64:4f4a445d4d9f57d0",
   "lessons": [
     {
       "id": "IT-C82-stazione",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d54d0ba71660f3e9",
+      "sourceHash": "fnv1a64:1c329ed282033ced",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aereo — its origin is not recorded in EtymDB 2.1."
+              "text": "aereo from Latin aerius, \"of the air\", from Greek aerios — taken from Latin (EtymDB 2.1, Latin aerius); the noun is short for the word for an aeroplane."
             }
           ]
         },

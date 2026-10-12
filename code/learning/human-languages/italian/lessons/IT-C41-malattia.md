@@ -14,7 +14,7 @@ concept_tag: IT-SALUTE-MALATTIA
 prerequisites: [IT-C41-medico, IT-C41-ospedale]
 sounds: []
 roots: []
-etymology_hook: "malattia — 'ill' + -ia; the origin of the 'ill' word is not recorded in EtymDB 2.1"
+etymology_hook: "malattia — 'ill' + -ia; the 'ill' word ← Latin male habitus 'in poor condition'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C41-ospedale]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**malattia** — built from the word for "ill" with *-ia*; where that word came from is not recorded in EtymDB 2.1.
+**malattia** — built from the word for "ill" with *-ia*; that word ← Latin *male habitus*, "in poor condition". (EtymDB 2.1, Old French *malade*)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

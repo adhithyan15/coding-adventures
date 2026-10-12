@@ -14,12 +14,13 @@ their word comes from.
 - **Shape.** A `## The word, taken apart` (or `## The phrase, taken apart`)
   block, which the parser types `etymology`, after the introducing block. A
   matching `etymology_hook` of 120 characters or fewer.
-- **Honest answers.** 271 inherited, 51 borrowed and 53 built from parts.
-  26 say "Its origin is not recorded in EtymDB 2.1"; these are genuinely
-  uncertain origins, or ones that neither source confirms. 18 words with no
-  EtymDB row are traced through the sister words EtymDB derives from the same
-  Latin etymon. 27 cite Lewis & Short. 40 EtymDB rows or labels were rejected,
-  for wrong parents, loans labelled as inherited, or junk glosses.
+- **Honest answers.** 271 inherited, 60 borrowed and 58 built from parts.
+  12 say "Its origin is not recorded in EtymDB 2.1", and all 12 are genuinely
+  uncertain origins. 19 words with no EtymDB row are traced through the sister
+  words EtymDB derives from the same Latin etymon. 26 cite Lewis & Short. Four
+  well-established origins that neither source confirms carry no source tag.
+  41 EtymDB rows or labels were rejected, for wrong parents, loans labelled as
+  inherited, or junk glosses.
 - **Ledger side effects.** 236 Italian lessons gained a `roots:` slug, 87 of
   them reusing an existing slug. `check:root-slug-splits` reports no new split.
   The root ledger and cousin counts are floors and only grow. Nine lessons had

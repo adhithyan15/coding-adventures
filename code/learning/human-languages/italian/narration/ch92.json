@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Opposite, Underground, Taxi, Ferry, Journey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:64ad72466cb1d458",
+  "sourceHash": "fnv1a64:aacf011003859eed",
   "lessons": [
     {
       "id": "IT-C92-di-fronte",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1cf6bb824d31e58",
+      "sourceHash": "fnv1a64:d3fad80b306ec3ca",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "metropolitana — its origin is not recorded in EtymDB 2.1."
+              "text": "metropolitana — short for the phrase for \"metropolitan railway\", after French métropolitain, which is built from Greek meter, \"mother\", and polis, \"city\". (EtymDB 2.1, French métropolitain)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23a4f423455104fc",
+      "sourceHash": "fnv1a64:354728644ecdf043",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "taxi — its origin is not recorded in EtymDB 2.1."
+              "text": "taxi from French taxi, short for taximètre, \"taximeter\" — borrowed. (EtymDB 2.1, French taximètre)."
             }
           ]
         },

@@ -14,7 +14,7 @@ concept_tag: IT-VIAGGIO92-TAXI
 prerequisites: [IT-C92-di-fronte, IT-C92-metropolitana]
 sounds: []
 roots: []
-etymology_hook: "taxi — origin not recorded in EtymDB 2.1"
+etymology_hook: "taxi ← French taxi, short for taximètre 'taximeter' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C92-metropolitana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**taxi** — its origin is not recorded in EtymDB 2.1.
+**taxi** ← French *taxi*, short for *taximètre*, "taximeter" — borrowed. (EtymDB 2.1, French *taximètre*)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

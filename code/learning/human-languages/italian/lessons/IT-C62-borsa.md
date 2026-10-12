@@ -14,7 +14,7 @@ concept_tag: IT-COSE2-BORSA
 prerequisites: [IT-C61-quaderno, IT-C61-matita]
 sounds: []
 roots: []
-etymology_hook: "borsa — origin not recorded in EtymDB 2.1"
+etymology_hook: "borsa ← Late Latin bursa 'purse', from Greek byrsa 'hide' — English purse and bursar share it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C61-matita]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**borsa** — its origin is not recorded in EtymDB 2.1.
+**borsa** ← Late Latin *bursa*, "purse" — inherited; Latin took it from Greek *byrsa*, "hide". (EtymDB 2.1, Late Latin *bursa*)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

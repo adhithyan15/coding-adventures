@@ -141,7 +141,7 @@ You'll want to know: il ristorante.
 il ristorante — "a restaurant".
 
 The word, taken apart.
-ristorante — its origin is not recorded in EtymDB 2.1.
+ristorante from French restaurant, from restaurer, "to restore": a meal that restores you — borrowed. (EtymDB 2.1, French restaurant).
 
 What you've built.
 One more word for this chapter.
