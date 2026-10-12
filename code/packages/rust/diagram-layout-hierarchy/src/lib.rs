@@ -615,6 +615,8 @@ mod tests {
                 id: Some(format!("constraint-{index}")),
                 classes: vec![format!("class-{index}")],
                 style: diagram_ir::DiagramStyle { stroke: Some(format!("stroke-{index}")), ..Default::default() },
+                animate: index % 2 == 0,
+                animation: Some(if index % 2 == 0 { diagram_ir::SwimlaneEdgeAnimation::Slow } else { diagram_ir::SwimlaneEdgeAnimation::Fast }),
                 from: from.into(), to: to.into(), label: Some(format!("edge{index}")),
                 kind: if index % 2 == 0 { SwimlaneEdgeKind::Directed } else { SwimlaneEdgeKind::Dotted },
                 start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Cross, min_length,
@@ -656,6 +658,8 @@ mod tests {
                 assert_eq!(after.id, before.id);
                 assert_eq!(after.classes, before.classes);
                 assert_eq!(after.style, before.style);
+                assert_eq!(after.animate, before.animate);
+                assert_eq!(after.animation, before.animation);
                 assert_eq!(after.label, before.label);
                 assert_eq!(after.kind, before.kind);
                 assert_eq!(after.start_marker, before.start_marker);

@@ -14199,16 +14199,17 @@ fn algol_conditional_nonpositive_quadruple_exp_result_widening_runs_on_every_ava
 #[test]
 fn algol_conditional_local_value_selector_proof_runs_on_every_available_standard_backend() {
     // Assigning the value formal changes its private copy, preserving both
-    // branch snapshots. Execute both selected arms and verify actual output.
-    for source in [
-        "begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure pick; pick := 2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose(left) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end",
-        "begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure pick; pick := 2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose(right) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end",
+    // branch snapshots. Distinct roots execute both selected arms with exact
+    // outputs 2 and 3; a private-copy write cannot change the caller's root.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure pick; pick := 2.25; real procedure zero; zero := 0.0; real left, right, x; left := pick(); right := zero(); x := entier(sqrt(ln(if choose(left) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end", "2"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure pick; pick := 2.25; real procedure zero; zero := 0.0; real left, right, x; left := pick(); right := zero(); x := entier(sqrt(ln(if choose(right) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end", "3"),
     ] {
         let program = Prog {
             lang: Language::Algol60,
             ext: "alg",
             src: source,
-            expect: Expect::Stdout("3"),
+            expect: Expect::Stdout(expected),
             backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         };
         for &backend in program.backends {

@@ -6322,10 +6322,6 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             pending_styles.push(parse_swimlane_style(value, line_number)?);
             continue;
         }
-        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
-            pending_edge_configs.push(config);
-            continue;
-        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
@@ -6334,6 +6330,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 last_edge_targets.as_deref(),
                 &mut diagram,
             )?);
+            continue;
+        }
+        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
+            pending_edge_configs.push(config);
             continue;
         }
         let node = parse_swimlane_node(
@@ -6365,15 +6365,15 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             return Err(swimlane_error(1, format!("Swimlane callback references unknown node {:?}", callback.node_id)));
         }
     }
+    // One authored ID index serves configurations, classes and inline styles;
+    // repeated directives visit only the edges they actually update.
+    let edge_targets = swimlane_edge_target_index(&diagram.edges);
     for config in pending_edge_configs {
         let mut matched = false;
-        for edge in diagram.edges.iter_mut().filter(|edge| {
-            #[cfg(test)]
-            SWIMLANE_TARGET_EDGE_VISITS.with(|count| count.set(count.get() + 1));
-            edge.id.as_deref() == Some(config.id.as_str())
-        }) {
+        for &edge_index in swimlane_edge_target_indices(&edge_targets, &config.id) {
             #[cfg(test)]
             SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
+            let edge = &mut diagram.edges[edge_index];
             matched = true;
             edge.animate = config.animate;
             edge.animation = config.animation;
@@ -6392,7 +6392,6 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     // so later class/style mutation cannot invalidate borrowed string keys.
     // Duplicate IDs retain every authored index; real matching updates still
     // cost work and are accounted separately from target discovery.
-    let edge_targets = swimlane_edge_target_index(&diagram.edges);
     for (node_ids, classes, line) in pending_classes {
         for class in &classes {
             if !class_styles.contains_key(class) {
@@ -6598,6 +6597,14 @@ fn parse_swimlane_edge_config(
     let Some((id, attributes)) = value.split_once("@{") else {
         return Ok(None);
     };
+    let id = id.trim();
+    // Only a standalone identifier can introduce an edge configuration.
+    // Metadata-looking text inside a node label belongs to its node parser.
+    if id.is_empty() || !id.chars().all(|character|
+        character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+    ) {
+        return Ok(None);
+    }
     let Some(body) = attributes.strip_suffix('}') else {
         return Err(swimlane_error(line, "unterminated Swimlane edge configuration"));
     };
@@ -6608,12 +6615,6 @@ fn parse_swimlane_edge_config(
     }).collect::<Result<Vec<_>, ParseError>>()?;
     if !fields.iter().any(|(key, _)| matches!(key.as_str(), "animate" | "animation")) {
         return Ok(None);
-    }
-    let id = id.trim();
-    if id.is_empty() || !id.chars().all(|character|
-        character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
-    ) {
-        return Err(swimlane_error(line, "invalid Swimlane edge configuration id"));
     }
     let mut animate = None;
     let mut animation = None;

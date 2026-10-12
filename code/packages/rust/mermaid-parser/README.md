@@ -306,3 +306,10 @@ separators; identifier slicing advances over the complete UTF-8 scalar.
 Class/style edge targets use one ordered ID index, retaining all duplicate-ID
 matches and node/edge-ID collisions. Node-only targets avoid repeated full-edge
 scans; actual matching updates and existing node/class/style costs remain separate.
+
+
+Swimlane animation configurations, classes and inline styles share one authored
+edge-ID index. Repeated directives visit their actual matching edges, retaining
+duplicate-ID order and exact unknown-target refusals. Node-shape metadata on
+edge endpoints and literal @{...} node labels retain their original contexts.
+This bounds local edge discovery without claiming whole-pipeline linearity.
