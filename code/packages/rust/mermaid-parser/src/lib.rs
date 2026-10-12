@@ -6865,9 +6865,7 @@ fn labeled_swimlane_operator(
                 }
             }
             // No later prefix can gain an ending beyond this exhausted cursor.
-            if ending.is_none() {
-                return None;
-            }
+            ending?;
         }
     }
     None

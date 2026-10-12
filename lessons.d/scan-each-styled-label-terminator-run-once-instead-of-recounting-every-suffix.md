@@ -24,3 +24,8 @@ SwimlaneEdge.from/to and failed to compile. The receipt guard rejected that
 exit101 with zero executed tests; preserve it as a compile failure, fix only
 the test names, then require a named executed assertion failure and exact
 operation evidence before accepting the red phase.
+
+Strict all-target Clippy rejected an explicit Option-none return after the
+cursor scan even though all531 affected tests passed. Use the equivalent
+question-mark return rather than a lint allowance; retain the partial native
+receipt at its real head and rerun validation after the final source edit.
