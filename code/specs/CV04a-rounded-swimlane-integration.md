@@ -38,3 +38,10 @@ are explicit controls: a nonzero endpoint tangent must retain visible markers;
 only an actually zero-length route keeps degenerate markers. If these expose a
 regression, record the red receipt before the smallest bounded marker-reference
 repair and preserve every existing control and production limit.
+
+Observed red source4b736eb8: cargo test rounded_ completed with3 PASS/1 FAIL,
+exact perpendicular endpoint triangle collapsed to the tip; compilation and
+long/short/aligned/zero controls passed. Repair only the two Rounded endpoint
+references via existing bounded swimlane_marker_reference, selecting the opposite
+endpoint when the candidate equals the tip. Genuine zero routes remain zero;
+route commands, corner cuts and all prior guards/assertions stay unchanged.

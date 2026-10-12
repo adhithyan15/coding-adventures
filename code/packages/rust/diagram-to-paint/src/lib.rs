@@ -936,7 +936,10 @@ where
                 &[edge.from.clone(), first, second, edge.to.clone()], 12.0,
             );
             path.commands = commands;
-            (start_previous, end_previous)
+            (
+                swimlane_marker_reference(&edge.from, [&start_previous], &edge.to),
+                swimlane_marker_reference(&edge.to, [&end_previous], &edge.from),
+            )
         } else if matches!(edge.curve,
             Some(SwimlaneEdgeCurve::Step | SwimlaneEdgeCurve::StepBefore | SwimlaneEdgeCurve::StepAfter)
         ) {

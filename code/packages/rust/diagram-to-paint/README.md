@@ -81,3 +81,8 @@ Two-point Swimlane Cardinal, CatmullRom and Natural controls are checked through
 authored LR/TB parsing, layout and paint: exact collinear cubic controls, mode
 metadata and visible marker triangles. CatmullRom aliases share the same semantic
 variant. This bounded route support does not claim a general multi-point solver.
+
+Rounded Swimlane controls verify complete line/quadratic routes and both exact
+endpoint triangles for long and short LR/RL/TB/BT layout fixtures. Authored
+aligned LR/TB layouts and collapsed perpendicular/zero routes preserve the
+bounded marker-reference contract; genuine zero routes retain degenerate markers.
