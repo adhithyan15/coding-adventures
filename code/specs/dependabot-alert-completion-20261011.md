@@ -166,3 +166,28 @@ cached reports, narrow the production loaders, alter ordinary 30-second defaults
 change workers/heap/coverage or skip path-security cases. Revalidate these files
 with the normal two-worker configuration and 2 GiB heap cap; separately report
 the host's unavailable file-symlink privileges.
+
+## Recover the macOS result receipt, 2026-10-12
+
+At source head 977b3bfa79f332c2a0a9dadc5d99bccf5628450b, macOS job
+114812563161 reached `5325/5325 done` after 5512.4 seconds at 15:45:34 UTC.
+The Go 1.26.1 darwin/arm64 build tool then reported `SIGBUS` and `panic during
+panic` before the package result table and failure exit decision. The runner
+remained open until cancellation and reported `Illegal byte sequence` while
+handling its step summary and diagnostic log. The exact cause is not established.
+The progress count includes every package state and is not a passing receipt.
+
+Preserve the cancelled log and record the failure lesson. Run a fresh hosted
+attempt with the same reviewed package source, assertions, two workers, 2 GiB
+heap, coverage thresholds and case deadlines. Do not change production code or
+resource limits solely from this incomplete native traceback. Require an actual
+zero-failure macOS result table and terminal success for the protected CI and
+Books gates before landing. If the native crash recurs, use its exact phase and
+retained diagnostics to guide a focused investigation instead of repeatedly
+restarting without evidence.
+
+Windows and Linux each produced a complete 535-built / 4790-skipped / 5325-total
+zero-failure table on that source head. Both CodeQL analyses, all three Forme
+host gates, the Forme verdict and the Books gate also passed. Preserve those
+source receipts while distinguishing the fresh final-head checks from the
+cancelled macOS attempt. This recovery note changes documentation only.
