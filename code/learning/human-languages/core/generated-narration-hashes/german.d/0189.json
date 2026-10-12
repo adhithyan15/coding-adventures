@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 189,
-  "sourceHash": "fnv1a64:6d1858006a978e6c",
+  "sourceHash": "fnv1a64:b00fca363b11a2c9",
   "lessonIds": [
     "GE-C189-uebersetzen",
     "GE-C189-umarmen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch189.txt",
   "json": "german/narration/ch189.json",
-  "textHash": "fnv1a64:1a84134e65f6d388",
-  "jsonHash": "fnv1a64:d7a3670877367b5f",
+  "textHash": "fnv1a64:963a9bd5ca968261",
+  "jsonHash": "fnv1a64:9da705551600a7ca",
   "findings": []
 }

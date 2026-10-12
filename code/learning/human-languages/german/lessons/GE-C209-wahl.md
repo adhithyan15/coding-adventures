@@ -13,7 +13,8 @@ gloss: "an election, a choice"
 concept_tag: GE-THING209-WAHL
 prerequisites: [GE-C208-bevoelkerung, GE-C209-buerger]
 sounds: []
-roots: []
+roots: [germanic-waljana]
+etymology_hook: "Wahl ← Old High German wala ← Proto-Germanic *walō 'choice' — the noun of wählen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C209-buerger]
 <!-- hl-knowledge: introduces=[GE-LEX-C209-THING209-02]; assesses=[] -->
 
 **die Wahl** — "an election, a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wahl** ← Old High German *wala*, "choice" ← Proto-Germanic *\*walō* — inherited, the noun beside *wählen*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

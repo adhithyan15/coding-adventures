@@ -13,7 +13,8 @@ gloss: "to smell"
 concept_tag: GE-VERB-RIECHEN
 prerequisites: [GE-C148-mitnehmen, GE-C149-nennen]
 sounds: []
-roots: []
+roots: [germanic-reukana]
+etymology_hook: "riechen ← Old High German riohhan 'to smoke' — the same verb as English reek"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C149-nennen]
 <!-- hl-knowledge: introduces=[GE-LEX-C149-VERB149-02]; assesses=[] -->
 
 **riechen** — "to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riechen** goes back to Old High German *riohhan*, "to give off smoke" ← Proto-Germanic *\*reukaną* — inherited, the same verb as English *reek*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

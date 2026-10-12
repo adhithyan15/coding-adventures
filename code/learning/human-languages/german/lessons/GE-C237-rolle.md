@@ -13,7 +13,8 @@ gloss: "a role"
 concept_tag: GE-THING237-ROLLE
 prerequisites: [GE-C236-reihe, GE-C236-religion]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "Rolle ← Old French rolle ← Latin rotulus 'little wheel, scroll' — an actor's part was written on a roll"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C236-religion]
 <!-- hl-knowledge: introduces=[GE-LEX-C237-THING237-01]; assesses=[] -->
 
 **die Rolle** — "a role".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rolle** ← Middle High German *rolle* ← Old French *rolle* ← Latin *rotulus*, "little wheel, scroll" (EtymDB 2.1) — borrowed: an actor's part was written on a roll.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

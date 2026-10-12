@@ -13,7 +13,8 @@ gloss: "to meet"
 concept_tag: GE-VERB-TREFFEN
 prerequisites: [GE-C150-stoeren, GE-C150-streiten]
 sounds: []
-roots: []
+roots: [germanic-drepana]
+etymology_hook: "treffen ← Old High German treffan 'to hit' ← Proto-Germanic *drepaną — to meet is to hit upon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C150-streiten]
 <!-- hl-knowledge: introduces=[GE-LEX-C151-VERB151-01]; assesses=[] -->
 
 **treffen** — "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**treffen** ← Old High German *treffan*, "to hit" ← Proto-Germanic *\*drepaną* — inherited. (EtymDB 2.1) To meet is to hit upon someone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

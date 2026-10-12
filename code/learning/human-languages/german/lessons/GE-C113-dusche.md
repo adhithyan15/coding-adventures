@@ -14,6 +14,7 @@ concept_tag: GE-HAUS113-DUSCHE
 prerequisites: [GE-C112-kuehlschrank, GE-C112-herd, GE-C52-saetze, GE-C52-erste-lesung]
 sounds: []
 roots: []
+etymology_hook: "Dusche ← French douche ← Italian doccia 'water pipe' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GE-C112-herd]
 <!-- hl-knowledge: introduces=[GE-LEX-C113-HAUS113-01]; assesses=[] -->
 
 **die Dusche** — "a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Dusche** ← French *douche* ← Italian *doccia*, "water pipe", from Latin *ductus*, "a leading, a conduit" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

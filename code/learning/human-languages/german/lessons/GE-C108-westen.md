@@ -13,7 +13,8 @@ gloss: "the west"
 concept_tag: GE-RICHTUNG108-WESTEN
 prerequisites: [GE-C108-sueden, GE-C108-osten]
 sounds: []
-roots: []
+roots: [westaz-germanic]
+etymology_hook: "Westen ← Old High German west ← Proto-Germanic *westrą — the same word as English west"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C108-osten]
 <!-- hl-knowledge: introduces=[GE-LEX-C108-RICHTUNG108-04]; assesses=[] -->
 
 **der Westen** — "the west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Westen** is built on *West* ← Old High German *west* ← Proto-Germanic *\*westrą* — inherited, the same word as English *west*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 152,
-  "sourceHash": "fnv1a64:b81cb0c7990b8b09",
+  "sourceHash": "fnv1a64:2065e8b82bfe1f54",
   "lessonIds": [
     "GE-C152-unterschreiben",
     "GE-C152-verdienen",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch152.txt",
   "json": "german/narration/ch152.json",
-  "textHash": "fnv1a64:bd877133f247c429",
-  "jsonHash": "fnv1a64:ba423adc1fbce1f7",
+  "textHash": "fnv1a64:a42290e79bc464d1",
+  "jsonHash": "fnv1a64:f124c18abd7a24bf",
   "findings": []
 }

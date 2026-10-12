@@ -13,7 +13,8 @@ gloss: "to give (as a present)"
 concept_tag: GE-VERB-SCHENKEN
 prerequisites: [GE-C149-riechen, GE-C149-sammeln]
 sounds: []
-roots: []
+roots: [germanic-skankijana]
+etymology_hook: "schenken ← Old High German scenken 'to pour, to give drink' — a gift began as a drink poured"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C149-sammeln]
 <!-- hl-knowledge: introduces=[GE-LEX-C149-VERB149-04]; assesses=[] -->
 
 **schenken** — "to give (as a present)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schenken** ← Old High German *scenken*, "to pour, to give someone drink" ← Proto-Germanic *\*skankijaną* — inherited. (EtymDB 2.1) Giving began as pouring for a guest.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

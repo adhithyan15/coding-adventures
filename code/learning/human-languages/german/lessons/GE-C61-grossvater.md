@@ -13,7 +13,8 @@ gloss: "a grandfather"
 concept_tag: GE-GEFUEHLE2-GROSSVATER
 prerequisites: [GE-C61-sohn, GE-C61-tochter]
 sounds: []
-roots: []
+roots: [germanic-fader]
+etymology_hook: "Großvater — 'great' + Vater, modelled on French grand-père"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C61-tochter]
 <!-- hl-knowledge: introduces=[GE-LEX-C61-GEFUEHLE2-05]; assesses=[] -->
 
 **der Großvater** — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Großvater** is the word for "great, big" + *Vater*: a "great father", modelled on French *grand-père*. The "great" word ← Old High German *grōz* ← Proto-Germanic *\*grautaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

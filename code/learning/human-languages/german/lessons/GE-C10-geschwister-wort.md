@@ -13,7 +13,7 @@ sounds: [schw-cluster, r-final]
 roots: [germanic-swestr]
 etymology_hook: "Geschwister is Schwester with a gathering prefix on the front, and it covers brothers as well — the sister supplied the stem for the whole set"
 duration:
-  max_seconds: 175
+  max_seconds: 186
 requires:
   knowledge: [GE-LEX-SCHWESTER-01, GE-LEX-BRUDER-01, GE-SOUND-SCHW-01, GE-GRAMMAR-PLURAL-DIE-01]
 introduces:
@@ -48,6 +48,11 @@ Consider what is inside it. Take off the *Ge-* at the front and *-schwister* is
 *Schwester*, which you own — the same *shv*, the same ending. A plural, so *die*,
 and like *Eltern* it has no singular.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Geschwister** ← Middle High German *geswister* ← Old High German *giswestar* (EtymDB 2.1): the gathering prefix *ge-* on *Schwester*.
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GESCHWISTER-01, GE-LEX-BRUDER-01] -->
 
@@ -56,8 +61,8 @@ Two boys and no girls in a house are still *die Geschwister*.
 
 German built the collective on the word that happened to be there, and the
 collective then outranked the piece it was made from. English never built one at
-all: it says *brothers and sisters* and reaches for the Latin-derived *siblings*
-when it needs a single term.
+all: it says *brothers and sisters*, and for a single term it revived *siblings*,
+an Old English word for "relatives".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GESCHWISTER-01, GE-LEX-SCHWESTER-01, GE-LEX-BRUDER-01] -->

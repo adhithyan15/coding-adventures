@@ -13,7 +13,8 @@ gloss: "a square; a seat"
 concept_tag: GE-ORT104-PLATZ
 prerequisites: [GE-C103-urlaub, GE-C104-flughafen]
 sounds: []
-roots: []
+roots: [platea-latin]
+etymology_hook: "Platz ← Middle High German plaz ← Old French place ← Latin platea 'broad street' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C104-flughafen]
 <!-- hl-knowledge: introduces=[GE-LEX-C104-ORT104-02]; assesses=[] -->
 
 **der Platz** — "a square; a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Platz** ← Middle High German *plaz* ← Old French *place* ← Latin *platēa*, "courtyard, broad street" ← Greek *plateîa* (EtymDB 2.1) — borrowed, like English *place*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

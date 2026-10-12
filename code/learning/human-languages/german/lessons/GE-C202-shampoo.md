@@ -14,6 +14,7 @@ concept_tag: GE-THING202-SHAMPOO
 prerequisites: [GE-C202-staubsauger, GE-C202-buegeleisen]
 sounds: []
 roots: []
+etymology_hook: "Shampoo ← English shampoo ← Hindi chāmpo 'press!, knead!' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C202-buegeleisen]
 <!-- hl-knowledge: introduces=[GE-LEX-C202-THING202-03]; assesses=[] -->
 
 **das Shampoo** — "shampoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Shampoo** ← English *shampoo* ← Hindi *chāmpo*, "press!, knead!" (EtymDB 2.1) — borrowed: it first meant a massage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

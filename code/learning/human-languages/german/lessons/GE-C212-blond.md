@@ -14,6 +14,7 @@ concept_tag: GE-QUAL212-BLOND
 prerequisites: [GE-C211-berufstaetig, GE-C212-bewoelkt]
 sounds: []
 roots: []
+etymology_hook: "blond ← French blond — borrowed, like English blond"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C212-bewoelkt]
 <!-- hl-knowledge: introduces=[GE-LEX-C212-QUAL212-02]; assesses=[] -->
 
 **blond** — "blond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**blond** ← French *blond*, probably from a Germanic word — borrowed, like English *blond*. EtymDB 2.1 has the German word but not its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

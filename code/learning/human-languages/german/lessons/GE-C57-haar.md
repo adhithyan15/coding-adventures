@@ -13,7 +13,8 @@ gloss: "a hair; hair"
 concept_tag: GE-KOERPER2-HAAR
 prerequisites: [GE-C57-blut, GE-C57-haut]
 sounds: []
-roots: []
+roots: [germanic-hera]
+etymology_hook: "Haar ← Old High German hār ← Proto-Germanic *hērą — the same word as English hair"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C57-haut]
 <!-- hl-knowledge: introduces=[GE-LEX-C57-KOERPER2-04]; assesses=[] -->
 
 **das Haar** — "a hair; hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Haar** ← Old High German *hār* ← Proto-Germanic *\*hērą* — inherited, the same word as English *hair*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

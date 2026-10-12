@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 125,
-  "sourceHash": "fnv1a64:c10f1a7b4ff52d5a",
+  "sourceHash": "fnv1a64:e2b5d74c35fb36ab",
   "lessonIds": [
     "GE-C125-bauer",
     "GE-C125-baecker",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch125.txt",
   "json": "german/narration/ch125.json",
-  "textHash": "fnv1a64:f6557468ec5f7dbe",
-  "jsonHash": "fnv1a64:a454c116a4e22889",
+  "textHash": "fnv1a64:a8d77e70eb0ccb3d",
+  "jsonHash": "fnv1a64:644dd7e74791e88e",
   "findings": []
 }

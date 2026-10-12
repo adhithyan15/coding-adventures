@@ -14,6 +14,7 @@ concept_tag: GE-ADV173-ALLEIN
 prerequisites: [GE-C173-ungefaehr, GE-C173-zusammen]
 sounds: []
 roots: []
+etymology_hook: "allein ← Middle High German al-ein 'all one' — the same build as English alone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C173-zusammen]
 <!-- hl-knowledge: introduces=[GE-LEX-C173-ADV173-05]; assesses=[] -->
 
 **allein** — "alone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**allein** ← Middle High German *al-ein*, "all one" — the same build as English *alone*, "all one". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

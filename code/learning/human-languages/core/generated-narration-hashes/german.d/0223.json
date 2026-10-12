@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 223,
-  "sourceHash": "fnv1a64:82d842edefc42b6c",
+  "sourceHash": "fnv1a64:a9e7de3271a05f19",
   "lessonIds": [
     "GE-C223-treu",
     "GE-C223-typisch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch223.txt",
   "json": "german/narration/ch223.json",
-  "textHash": "fnv1a64:e059e7bfa37168c3",
-  "jsonHash": "fnv1a64:f0258e217d19dbae",
+  "textHash": "fnv1a64:902ba6818b3e7083",
+  "jsonHash": "fnv1a64:cc7007ee13b90966",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a size"
 concept_tag: GE-THING203-GROESSE
 prerequisites: [GE-C202-anzug, GE-C203-portemonnaie]
 sounds: []
-roots: []
+roots: [germanic-grautaz]
+etymology_hook: "Größe ← Old High German grōzī ← Proto-Germanic *grautį̄ 'greatness' — the noun of 'great'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C203-portemonnaie]
 <!-- hl-knowledge: introduces=[GE-LEX-C203-THING203-02]; assesses=[] -->
 
 **die Größe** — "a size".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Größe** ← Old High German *grōzī* ← Proto-Germanic *\*grautį̄*, "greatness, size" — inherited, the noun of the word for "big, great", a cousin of English *great*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-THING198-SCHMETTERLING
 prerequisites: [GE-C198-hase, GE-C198-fliege]
 sounds: []
 roots: []
+etymology_hook: "Schmetterling — from a dialect word for 'cream', borrowed from Czech smetana, + -ling"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C198-fliege]
 <!-- hl-knowledge: introduces=[GE-LEX-C198-THING198-04]; assesses=[] -->
 
 **der Schmetterling** — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schmetterling** is built on an East Central German word for "cream", taken from Czech *smetana* (EtymDB 2.1), + *-ling*: butterflies were said to be drawn to milk and cream.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

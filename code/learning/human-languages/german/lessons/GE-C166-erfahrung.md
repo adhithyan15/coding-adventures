@@ -13,7 +13,8 @@ gloss: "experience"
 concept_tag: GE-THING166-ERFAHRUNG
 prerequisites: [GE-C166-grund, GE-C166-loesung]
 sounds: []
-roots: []
+roots: [farana-germanic]
+etymology_hook: "Erfahrung — the verb 'to experience' + -ung: er- + fahren, 'to travel through'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C166-loesung]
 <!-- hl-knowledge: introduces=[GE-LEX-C166-THING166-03]; assesses=[] -->
 
 **die Erfahrung** — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Erfahrung** is the noun of the verb "to experience", Old High German *irfaran*, "to travel through, to explore" (EtymDB 2.1): *er-* + *fahren*. Experience is what you learn on the road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

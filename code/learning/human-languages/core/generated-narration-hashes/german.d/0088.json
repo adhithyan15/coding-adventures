@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 88,
-  "sourceHash": "fnv1a64:ba76734abcceee12",
+  "sourceHash": "fnv1a64:57491b891947ff2a",
   "lessonIds": [
     "GE-C88-biene",
     "GE-C88-ameise",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch88.txt",
   "json": "german/narration/ch88.json",
-  "textHash": "fnv1a64:d3e721d1ea1792ce",
-  "jsonHash": "fnv1a64:d52f5061cc4ce386",
+  "textHash": "fnv1a64:c11612b6b69fd548",
+  "jsonHash": "fnv1a64:c36193ee6fce5203",
   "findings": []
 }

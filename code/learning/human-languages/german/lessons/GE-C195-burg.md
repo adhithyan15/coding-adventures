@@ -13,7 +13,8 @@ gloss: "a castle"
 concept_tag: GE-THING195-BURG
 prerequisites: [GE-C195-denkmal, GE-C195-turm]
 sounds: []
-roots: []
+roots: [germanic-burgz]
+etymology_hook: "Burg ← Old High German burg ← Proto-Germanic *burgz 'fort' — English borough and -bury are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C195-turm]
 <!-- hl-knowledge: introduces=[GE-LEX-C195-THING195-05]; assesses=[] -->
 
 **die Burg** — "a castle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Burg** ← Old High German *burg* ← Proto-Germanic *\*burgz*, "stronghold" — inherited. (EtymDB 2.1) English *borough* and the *-bury* of place names are the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

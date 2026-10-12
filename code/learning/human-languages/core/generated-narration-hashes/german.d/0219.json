@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 219,
-  "sourceHash": "fnv1a64:1ed76394264a0edb",
+  "sourceHash": "fnv1a64:de69c40ef93588da",
   "lessonIds": [
     "GE-C219-neugierig",
     "GE-C219-nuetzlich",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch219.txt",
   "json": "german/narration/ch219.json",
-  "textHash": "fnv1a64:3fc16f6e29ef7225",
-  "jsonHash": "fnv1a64:53764c8eb7a0203e",
+  "textHash": "fnv1a64:b175c83446700bf1",
+  "jsonHash": "fnv1a64:400bb5470b1826ed",
   "findings": []
 }

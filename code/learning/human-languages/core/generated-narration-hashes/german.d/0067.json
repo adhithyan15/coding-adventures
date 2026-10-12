@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 67,
-  "sourceHash": "fnv1a64:a1402c031e8efc05",
+  "sourceHash": "fnv1a64:954aeec9da91d406",
   "lessonIds": [
     "GE-C67-verlieren",
     "GE-C67-glauben",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch67.txt",
   "json": "german/narration/ch67.json",
-  "textHash": "fnv1a64:9529ecbc0a0f4044",
-  "jsonHash": "fnv1a64:3eecbf749d64844b",
+  "textHash": "fnv1a64:46b352034974b7cf",
+  "jsonHash": "fnv1a64:bb0b41f2aa8b8665",
   "findings": []
 }

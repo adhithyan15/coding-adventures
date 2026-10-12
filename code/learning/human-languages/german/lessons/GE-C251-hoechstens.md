@@ -13,7 +13,8 @@ gloss: "at most"
 concept_tag: GE-LINK251-HOECHSTENS
 prerequisites: [GE-C251-uebrigens, GE-C251-sowieso]
 sounds: []
-roots: []
+roots: [germanic-hauhaz]
+etymology_hook: "höchstens — the superlative of hoch 'high' + -ens: at the highest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C251-sowieso]
 <!-- hl-knowledge: introduces=[GE-LEX-C251-LINK251-03]; assesses=[] -->
 
 **höchstens** — "at most".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**höchstens** is the superlative of *hoch*, "high", + *-ens*: at the highest, at most. *hoch* is the same word as English *high*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

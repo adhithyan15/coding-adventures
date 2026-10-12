@@ -13,7 +13,7 @@ sounds: [w-as-v, vowel-a-long, r-final]
 roots: [pie-wes]
 etymology_hook: "war is English was: both from *wes- 'to dwell, remain', a verb that never meant to be at all"
 duration:
-  max_seconds: 155
+  max_seconds: 197
 requires:
   knowledge: [GE-GRAMMAR-SEIN-ICH-BIN-01, GE-LEX-SEIN-01]
 introduces:
@@ -51,6 +51,11 @@ is the past-tense form Germans actually use, in every region, out loud.
 And hear the shape of it. *Bin* has a *b*. *Ist* has an *s* and a *t*.
 *War* has a *w* and an *r*, and no sound in common with either. That is now
 three completely unalike stems inside one verb.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**war** — inherited, from Old High German *wesan*, "to be" ← Proto-Germanic *\*wesaną*; EtymDB 2.1 traces English *was* to the same verb.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SEIN-ICH-WAR-01] -->

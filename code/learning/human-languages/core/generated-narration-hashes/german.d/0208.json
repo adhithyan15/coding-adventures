@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 208,
-  "sourceHash": "fnv1a64:ff9d6bbe093b267c",
+  "sourceHash": "fnv1a64:44ff180b50c523a7",
   "lessonIds": [
     "GE-C208-gesetz",
     "GE-C208-strafe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch208.txt",
   "json": "german/narration/ch208.json",
-  "textHash": "fnv1a64:e5f0c88b8b1f9776",
-  "jsonHash": "fnv1a64:c790ac6f6486146d",
+  "textHash": "fnv1a64:2cacf7e0a331812a",
+  "jsonHash": "fnv1a64:be6e09055e29bc94",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: GE-LINK250-JEDENFALLS
 prerequisites: [GE-C250-deshalb, GE-C250-trotzdem]
 sounds: []
 roots: []
+etymology_hook: "jedenfalls — jeden 'every' + Fall 'case' + -s: in every case"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C250-trotzdem]
 <!-- hl-knowledge: introduces=[GE-LEX-C250-LINK250-04]; assesses=[] -->
 
 **jedenfalls** — "in any case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jedenfalls** is the word for "every" + the word for "case", from *fallen*, + *-s*: in every case.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

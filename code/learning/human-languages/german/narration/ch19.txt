@@ -51,6 +51,9 @@ dreizehn — "thirteen." drei + zehn.
 Nothing added, nothing changed. If you predicted it, that is the point of the chapter working.
 English wore its digit down — three became thir- — and German did not touch its own.
 
+The word, taken apart.
+dreizehn from Old High German drīzehan from Proto-Germanic þritehun, "three-ten" — the same compound as English thirteen. (EtymDB 2.1).
+
 Sounds you'll need.
 diphthong-ei — ei is the vowel of English eye, unchanged from drei.
 z-ts — and the second half is -TSAYN.
@@ -81,6 +84,9 @@ Same rule, next digit — and its first letter is one you have been warned about
 
 You'll want to know: vierzehn.
 vierzehn — "fourteen." vier + zehn.
+
+The word, taken apart.
+vierzehn from Old High German fiorzehan from Proto-Germanic fedurtehun, "four-ten" — the same compound as English fourteen. (EtymDB 2.1).
 
 Sounds you'll need.
 v-as-f — the V is an f, exactly as in vier and Vater.
@@ -113,6 +119,9 @@ Third run of the rule, and the first place English is the messier of the two lan
 You'll want to know: fünfzehn.
 fünfzehn — "fifteen." fünf + zehn.
 The digit is whole. English is not: five became fif-, so fifteen no longer shows its own number. German keeps fünf visible and audible.
+
+The word, taken apart.
+fünfzehn is fünf + zehn, both inherited; EtymDB 2.1 lists it beside English fifteen, Old English fīftīene.
 
 Sounds you'll need.
 umlaut-ue — the ü from fünf, unchanged: say ee, then round the lips.
@@ -183,6 +192,9 @@ You'll want to know: sechzehn.
 sechzehn — "sixteen." sech- + zehn, with the s of sechs gone.
 Try it with the s left in and you will hear the problem: sechs-zehn puts an s immediately before a ts, and the two will not sit next to each other.
 
+The word, taken apart.
+sechzehn from Old High German sehszehan from Proto-Germanic sehstehun, "six-ten" — the same compound as English sixteen. (EtymDB 2.1).
+
 Sounds you'll need.
 ch-ach — the ch is the raspy one from acht and Nacht, made at the back.
 z-ts — and then straight into -TSAYN.
@@ -216,6 +228,9 @@ Second and last of the clipped ones. After this the rule runs clean to twenty.
 You'll want to know: siebzehn.
 siebzehn — "seventeen." sieb- + zehn, with the -en of sieben gone.
 Sieben-zehn would be four syllables for one number, three of them unstressed. German trimmed the middle and kept the meaning.
+
+The word, taken apart.
+siebzehn from Old High German sibunzehan from Proto-Germanic sebuntehun, "seven-ten" — the same compound as English seventeen. (EtymDB 2.1).
 
 Sounds you'll need.
 ie-long-ee — ie is a long ee, as in sieben.
@@ -251,6 +266,9 @@ The clipping is over. From here the digits go in whole.
 You'll want to know: achtzehn.
 achtzehn — "eighteen." acht + zehn, both whole.
 
+The word, taken apart.
+achtzehn from Old High German ahtozehan from Proto-Germanic ahtōutehun, "eight" + "ten" — the same compound as English eighteen. (EtymDB 2.1).
+
 Sounds you'll need.
 ch-ach — the raspy ch of acht, unchanged.
 z-ts — and -TSAYN.
@@ -285,6 +303,9 @@ You'll want to know: neunzehn.
 neunzehn — "nineteen." neun + zehn, both whole.
 Seven numbers built from one rule and not one of them broke it. Two shortened a digit at the join and kept the rule intact.
 
+The word, taken apart.
+neunzehn from Old High German niunzehan from Proto-Germanic newuntehun, "nine-ten" — the same compound as English nineteen. (EtymDB 2.1).
+
 Sounds you'll need.
 diphthong-eu — eu is the oy of English boy, unchanged from neun.
 z-ts — and -TSAYN for the last time.
@@ -316,6 +337,9 @@ Eight numbers ended in zehn. This one does not, and the ending it takes instead 
 You'll want to know: zwanzig.
 zwanzig — "twenty."
 It opens like zwei and zwölf — tsv- — and then closes on -zig where every number before it closed on -zehn.
+
+The word, taken apart.
+zwanzig is inherited: "two" plus an old Germanic word for "tens", the same build as English twenty. EtymDB 2.1 lists zwanzig beside twenty and Dutch twintig.
 
 Sounds you'll need.
 z-ts — twice: tsv- at the front, -ts- in the middle.

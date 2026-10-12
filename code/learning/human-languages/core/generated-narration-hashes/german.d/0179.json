@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 179,
-  "sourceHash": "fnv1a64:e8ddeb50945ba850",
+  "sourceHash": "fnv1a64:0edbaf4eff6e7885",
   "lessonIds": [
     "GE-C179-empfangen",
     "GE-C179-erinnern",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch179.txt",
   "json": "german/narration/ch179.json",
-  "textHash": "fnv1a64:82692a7ec54988cf",
-  "jsonHash": "fnv1a64:f8fd5d6897d4f178",
+  "textHash": "fnv1a64:8ecabc7d3790ccb6",
+  "jsonHash": "fnv1a64:242653deed2308c0",
   "findings": []
 }

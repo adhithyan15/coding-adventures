@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 166,
-  "sourceHash": "fnv1a64:f15266ad1ca7e31d",
+  "sourceHash": "fnv1a64:13a449092047c473",
   "lessonIds": [
     "GE-C166-grund",
     "GE-C166-loesung",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch166.txt",
   "json": "german/narration/ch166.json",
-  "textHash": "fnv1a64:064b040d09611b92",
-  "jsonHash": "fnv1a64:d96f89d0cad658ca",
+  "textHash": "fnv1a64:aeaac5d1aa3334f0",
+  "jsonHash": "fnv1a64:2fc74990593ea41a",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "rain"
 concept_tag: GE-NATUR3-REGEN
 prerequisites: [GE-C84-stern, GE-C84-wolke]
 sounds: []
-roots: []
+roots: [germanic-regen-rain]
+etymology_hook: "Regen ← Old High German regan ← Proto-Germanic *regnaz — the same word as English rain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C84-wolke]
 <!-- hl-knowledge: introduces=[GE-LEX-C84-NATUR3-03]; assesses=[] -->
 
 **der Regen** — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Regen** ← Old High German *regan* ← Proto-Germanic *\*regnaz* — inherited, the same word as English *rain*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

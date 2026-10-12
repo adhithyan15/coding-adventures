@@ -13,7 +13,8 @@ gloss: "on the right"
 concept_tag: GE-WO-RECHTS
 prerequisites: [GE-C95-dort, GE-C95-weit]
 sounds: []
-roots: []
+roots: [germanic-rehtaz]
+etymology_hook: "rechts — the word for 'right' + the adverb ending -s; 'right' ← Proto-Germanic *rehtaz"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C95-weit]
 <!-- hl-knowledge: introduces=[GE-LEX-C95-WO-05]; assesses=[] -->
 
 **rechts** — "on the right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rechts** is the word for "right" + the adverb ending *-s*. That word ← Old High German *reht* ← Proto-Germanic *\*rehtaz*, the same word as English *right*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "soap"
 concept_tag: GE-HAUS114-SEIFE
 prerequisites: [GE-C114-decke, GE-C114-handtuch]
 sounds: []
-roots: []
+roots: [germanic-saipo]
+etymology_hook: "Seife ← Old High German seifa ← Proto-Germanic *saipōn — the same word as English soap"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C114-handtuch]
 <!-- hl-knowledge: introduces=[GE-LEX-C114-HAUS114-03]; assesses=[] -->
 
 **die Seife** — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Seife** ← Old High German *seifa* ← Proto-Germanic *\*saipōn*, "soap, salve" — inherited, the same word as English *soap*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "weight"
 concept_tag: GE-THING230-GEWICHT
 prerequisites: [GE-C230-geschichte, GE-C230-gespraech]
 sounds: []
-roots: []
+roots: [germanic-wegana]
+etymology_hook: "Gewicht — ge- + the root of wiegen 'to weigh': the same word as English weight"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C230-gespraech]
 <!-- hl-knowledge: introduces=[GE-LEX-C230-THING230-04]; assesses=[] -->
 
 **das Gewicht** — "weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gewicht** is *ge-* + the root of *wiegen*, "to weigh" — EtymDB 2.1 lists it beside English *weight* and Dutch *gewicht*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a lion"
 concept_tag: GE-TIERE2-LOEWE
 prerequisites: [GE-C87-schaf, GE-C87-ziege]
 sounds: []
-roots: []
+roots: [leo-latin]
+etymology_hook: "Löwe ← Old High German leo ← Latin leō ← Greek léōn — borrowed, like English lion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C87-ziege]
 <!-- hl-knowledge: introduces=[GE-LEX-C87-TIERE2-04]; assesses=[] -->
 
 **der Löwe** — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Löwe** ← Old High German *leo*, from Latin *leō* ← Greek *léōn* (EtymDB 2.1) — borrowed, like English *lion*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,7 @@ gloss: fourteen — the rule's second run, with the V that is an f
 concept_tag: GE-NUMBER-14
 prerequisites: [GE-C12-dreizehn]
 sounds: [v-as-f, z-ts]
-roots: []
+roots: [fedwor-germanic, tehun-germanic]
 etymology_hook: "vierzehn is vier plus zehn, and its V is the f you were given on vier itself and spent again on Vater"
 duration:
   max_seconds: 150
@@ -43,6 +43,11 @@ warned about twice.
 <!-- hl-knowledge: introduces=[GE-LEX-VIERZEHN-01]; assesses=[GE-LEX-VIER-01, GE-GRAMMAR-ZIFFER-PLUS-ZEHN-01] -->
 
 > **vierzehn** — "fourteen." *vier* + *zehn*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vierzehn** ← Old High German *fiorzehan* ← Proto-Germanic *\*fedurtehun*, "four-ten" — the same compound as English *fourteen*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-V-AS-F-01, GE-LEX-VIERZEHN-01] -->

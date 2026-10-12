@@ -13,7 +13,8 @@ gloss: "round"
 concept_tag: GE-FARBE130-RUND
 prerequisites: [GE-C130-orange, GE-C130-huebsch]
 sounds: []
-roots: []
+roots: [rotundus-latin]
+etymology_hook: "rund ← Middle High German runt ← Old French ront ← Latin rotundus — borrowed, like English round"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C130-huebsch]
 <!-- hl-knowledge: introduces=[GE-LEX-C130-FARBE130-04]; assesses=[] -->
 
 **rund** — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rund** ← Middle High German *runt* ← Old French *ront*, "circular" (EtymDB 2.1), from Latin *rotundus* — borrowed, like English *round*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

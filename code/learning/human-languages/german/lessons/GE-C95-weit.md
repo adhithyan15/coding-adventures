@@ -13,7 +13,8 @@ gloss: "far"
 concept_tag: GE-WO-WEIT
 prerequisites: [GE-C95-manchmal, GE-C95-dort]
 sounds: []
-roots: []
+roots: [germanic-widaz]
+etymology_hook: "weit ← Old High German wīt ← Proto-Germanic *wīdaz — the same word as English wide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C95-dort]
 <!-- hl-knowledge: introduces=[GE-LEX-C95-WO-04]; assesses=[] -->
 
 **weit** — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**weit** ← Old High German *wīt* ← Proto-Germanic *\*wīdaz*, "wide, far" — inherited, the same word as English *wide*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

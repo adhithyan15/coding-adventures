@@ -13,7 +13,8 @@ gloss: "an impression"
 concept_tag: GE-THING227-EINDRUCK
 prerequisites: [GE-C227-bewerbung, GE-C227-beziehung]
 sounds: []
-roots: []
+roots: [germanic-thrukjana]
+etymology_hook: "Eindruck ← Middle High German īndruc: ein- 'in' + Druck 'press': what is pressed in"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C227-beziehung]
 <!-- hl-knowledge: introduces=[GE-LEX-C227-THING227-03]; assesses=[] -->
 
 **der Eindruck** — "an impression".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Eindruck** ← Middle High German *īndruc* (EtymDB 2.1): *ein-*, "in", + the word for "a press, a pressing": what is pressed into the mind, after Latin *impressiō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

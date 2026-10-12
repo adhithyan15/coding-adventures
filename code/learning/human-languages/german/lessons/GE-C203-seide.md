@@ -13,7 +13,8 @@ gloss: "silk"
 concept_tag: GE-THING203-SEIDE
 prerequisites: [GE-C203-stoff, GE-C203-wolle]
 sounds: []
-roots: []
+roots: [saeta-latin]
+etymology_hook: "Seide ← Old High German sīda, from Medieval Latin sēta 'bristle, silk' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C203-wolle]
 <!-- hl-knowledge: introduces=[GE-LEX-C203-THING203-05]; assesses=[] -->
 
 **die Seide** — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Seide** ← Middle High German *sīde* ← Old High German *sīda*, "silk" (EtymDB 2.1), from Medieval Latin *sēta*, "bristle, silk" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

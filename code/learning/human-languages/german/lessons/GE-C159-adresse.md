@@ -14,6 +14,7 @@ concept_tag: GE-THING159-ADRESSE
 prerequisites: [GE-C158-paket, GE-C158-briefmarke]
 sounds: []
 roots: []
+etymology_hook: "Adresse ← French adresse — borrowed, like English address"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C158-briefmarke]
 <!-- hl-knowledge: introduces=[GE-LEX-C159-THING159-01]; assesses=[] -->
 
 **die Adresse** — "an address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Adresse** ← French *adresse* (EtymDB 2.1), from *adresser*, "to direct" — borrowed, like English *address*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

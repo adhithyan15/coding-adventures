@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 249,
-  "sourceHash": "fnv1a64:ca57bd41614d97cb",
+  "sourceHash": "fnv1a64:57b2626353b38bad",
   "lessonIds": [
     "GE-C249-ergaenzen",
     "GE-C249-erledigen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch249.txt",
   "json": "german/narration/ch249.json",
-  "textHash": "fnv1a64:eefe958a9a1f6fe2",
-  "jsonHash": "fnv1a64:e2f219e78c6ba78a",
+  "textHash": "fnv1a64:f002032ecace019e",
+  "jsonHash": "fnv1a64:aff16bfaf2ea264b",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a tram"
 concept_tag: GE-RICHTUNG110-STRASSENBAHN
 prerequisites: [GE-C110-hinter, GE-C110-u-bahn]
 sounds: []
-roots: []
+roots: [strata-latin]
+etymology_hook: "Straßenbahn — the word for 'street' + Bahn 'way, railway'; street ← Latin strāta, an early loan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C110-u-bahn]
 <!-- hl-knowledge: introduces=[GE-LEX-C110-RICHTUNG110-05]; assesses=[] -->
 
 **die Straßenbahn** — "a tram".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Straßenbahn** is the word for "street" + *Bahn*, "way, railway": a street railway. The "street" word ← Middle High German *strāze* (EtymDB 2.1), from Latin *strāta*, "paved road" — an early loan, like English *street*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

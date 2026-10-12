@@ -13,7 +13,8 @@ gloss: "between"
 concept_tag: GE-RICHTUNG110-ZWISCHEN
 prerequisites: [GE-C109-gegenueber, GE-C110-neben]
 sounds: []
-roots: []
+roots: [twai-germanic]
+etymology_hook: "zwischen ← Old High German in zwiskēn 'in the twofold' — built on the word for 'two'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C110-neben]
 <!-- hl-knowledge: introduces=[GE-LEX-C110-RICHTUNG110-02]; assesses=[] -->
 
 **zwischen** — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zwischen** ← Old High German *in zwiskēn*, "among the two", from *zwiski*, "twofold", built on *\*twai*, "two" (EtymDB 2.1). Between is in the middle of two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

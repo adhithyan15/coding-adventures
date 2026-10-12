@@ -1144,6 +1144,8 @@ The `monotoneX` and `monotoneY` curve modes preserve their axis constraint in se
 IR and lower their two-point routes to the equivalent monotonic cubic Hermite segment.
 The `cardinal`, `catmullRom`, and `natural` spline modes also survive semantic and layout IR; their
 two-point routes lower to pixel-equivalent collinear cubic segments while preserving mode metadata.
+The `rounded` curve mode lowers direction-aware orthogonal routing to line and quadratic Bézier
+commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically

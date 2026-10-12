@@ -11,8 +11,9 @@ concept_tag: GE-VERB-PRESENT-ENDINGS
 prerequisites: [GE-C02-ich, GE-C02-du-sie, GE-C02-heissen]
 sounds: []
 roots: [haitana]
+etymology_hook: "heißen ← Old High German heizzan 'to call, to command' ← Proto-Germanic *haitaną"
 duration:
-  max_seconds: 150
+  max_seconds: 156
 requires:
   knowledge: [GE-LEX-ICH-02, GE-LEX-DU-SIE-02, GE-LEX-HEISSEN-02]
 introduces:
@@ -38,6 +39,11 @@ reviews_of: [GE-C02-ich, GE-C02-du-sie, GE-C02-heissen]
 [PAUSE 2s] You have the verb and you have the people. *heißen* is the form a
 dictionary prints; it is not the form you say. Put a person in front of it and
 the tail of the word moves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**heißen** ← Old High German *heizzan*, "to call, to command" ← Proto-Germanic *\*haitaną* — inherited. (EtymDB 2.1) The old English word *hight*, "called", comes from the same verb.
 
 ## Grammar Lens: one verb, changing its ending
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-VERB-ENDINGS-01]; assesses=[GE-LEX-ICH-02, GE-LEX-DU-SIE-02] -->

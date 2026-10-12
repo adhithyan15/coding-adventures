@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 214,
-  "sourceHash": "fnv1a64:c75525918e7137e9",
+  "sourceHash": "fnv1a64:37c1d4e880283db0",
   "lessonIds": [
     "GE-C214-froehlich",
     "GE-C214-furchtbar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch214.txt",
   "json": "german/narration/ch214.json",
-  "textHash": "fnv1a64:b990fb0aa64baf3a",
-  "jsonHash": "fnv1a64:d5babc6dd3c54ecb",
+  "textHash": "fnv1a64:bd9a9a33ad72156d",
+  "jsonHash": "fnv1a64:9841bccd77e028c6",
   "findings": []
 }

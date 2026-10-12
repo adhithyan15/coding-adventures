@@ -13,7 +13,8 @@ gloss: "to lock, to complete"
 concept_tag: GE-VERB-ABSCHLIESSEN
 prerequisites: [GE-C244-annehmen, GE-C244-ablehnen]
 sounds: []
-roots: []
+roots: [germanic-sleutana]
+etymology_hook: "abschließen — ab- + schließen 'to close, to lock': to lock up, to close off"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C244-ablehnen]
 <!-- hl-knowledge: introduces=[GE-LEX-C244-VERB244-04]; assesses=[] -->
 
 **abschließen** — "to lock, to complete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abschließen** is *ab-* + *schließen*, "to close, to lock" ← Old High German *sliozan* (EtymDB 2.1): to lock up, or to close a matter off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

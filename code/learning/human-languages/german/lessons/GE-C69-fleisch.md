@@ -13,7 +13,8 @@ gloss: "meat"
 concept_tag: GE-ESSEN1-FLEISCH
 prerequisites: [GE-C68-putzen, GE-C69-fisch]
 sounds: []
-roots: []
+roots: [germanic-flaiska]
+etymology_hook: "Fleisch ← Old High German fleisk ← Proto-Germanic *flaiską — the same word as English flesh"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C69-fisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C69-ESSEN1-02]; assesses=[] -->
 
 **das Fleisch** — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fleisch** ← Old High German *fleisk* ← Proto-Germanic *\*flaiską* — inherited, the same word as English *flesh*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

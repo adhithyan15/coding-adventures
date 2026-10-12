@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 36,
-  "sourceHash": "fnv1a64:97db795e05abe522",
+  "sourceHash": "fnv1a64:0e14320c31ab1038",
   "lessonIds": [
     "GE-C23-gruen-gelb",
     "GE-C23-gruen-gelb-more"
@@ -11,6 +11,6 @@
   "text": "german/narration/ch36.txt",
   "json": "german/narration/ch36.json",
   "textHash": "fnv1a64:c5db1f76ca3ade83",
-  "jsonHash": "fnv1a64:43da60e0caea798e",
+  "jsonHash": "fnv1a64:bacb0a3abb17b093",
   "findings": []
 }

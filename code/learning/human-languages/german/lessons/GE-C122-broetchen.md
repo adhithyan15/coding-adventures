@@ -13,7 +13,8 @@ gloss: "a bread roll"
 concept_tag: GE-ESSEN122-BROETCHEN
 prerequisites: [GE-C122-schokolade, GE-C122-keks]
 sounds: []
-roots: []
+roots: [germanic-braudam]
+etymology_hook: "Brötchen — Brot 'bread' + -chen 'little': a little bread"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C122-keks]
 <!-- hl-knowledge: introduces=[GE-LEX-C122-ESSEN122-05]; assesses=[] -->
 
 **das Brötchen** — "a bread roll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Brötchen** is *Brot* + *-chen*, "little": a little bread. *Brot* ← Proto-Germanic *\*braudą*, English *bread*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

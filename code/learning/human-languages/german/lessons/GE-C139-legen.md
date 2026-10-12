@@ -13,7 +13,8 @@ gloss: "to lay, to put (flat)"
 concept_tag: GE-VERB-LEGEN
 prerequisites: [GE-C139-besuchen, GE-C139-antworten]
 sounds: []
-roots: []
+roots: [germanic-lagjana]
+etymology_hook: "legen ← Old High German leggen ← Proto-Germanic *lagjaną — the same verb as English lay"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C139-antworten]
 <!-- hl-knowledge: introduces=[GE-LEX-C139-VERB139-04]; assesses=[] -->
 
 **legen** — "to lay, to put (flat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**legen** ← Old High German *leggen* ← Proto-Germanic *\*lagjaną*, "to lay" — inherited, the same verb as English *lay*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

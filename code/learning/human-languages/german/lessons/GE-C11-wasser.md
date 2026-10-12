@@ -48,6 +48,11 @@ Another ***das***-word, so it takes the same article as *Brot*. Two neuters in a
 row is a useful accident: it lets you say *das Brot und das Wasser* without
 having to decide anything.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wasser** ← Old High German *wazzar* ← Proto-Germanic *\*watōr* — inherited, the same word as English *water*, with German *ss* where English kept *t*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-W-AS-V-01, GE-LEX-WASSER-01] -->
 

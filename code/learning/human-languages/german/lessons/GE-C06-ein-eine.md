@@ -10,10 +10,10 @@ gloss: "a" is the number one with its counting -s taken off
 concept_tag: GE-GRAMMAR-INDEFINITE-ARTICLE
 prerequisites: [GE-C06-zahlen-1-5, GE-C01-der-die-das, GE-C01-tag, GE-C01-nacht]
 sounds: [diphthong-ei]
-roots: [oinos-germanic]
+roots: [oinos-germanic, germanic-ainaz]
 etymology_hook: "ein is eins minus its counting -s, and English does the identical thing when one wears down to a and an"
 duration:
-  max_seconds: 210
+  max_seconds: 248
 requires:
   knowledge: [GE-LEX-EINS-01, GE-ETYMON-EINS-ONE-02, GE-LEX-DER-DIE-DAS-02, GE-LEX-ZAEHLEN-1-5-01, GE-LEX-TAG-02, GE-LEX-NACHT-02]
 introduces:
@@ -60,6 +60,11 @@ remember: **die** words take the extra **-e**. On the two nouns inside *guten
 Tag* and *gute Nacht*:
 
 > *der Tag* → **ein Tag**, "a day" · *die Nacht* → **eine Nacht**, "a night"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ein** ← Old High German *ein* ← Proto-Germanic *\*ainaz*, "one" — inherited, the same word as English *one*, and English *a*, *an* wore down from it too. (EtymDB 2.1)
 
 ## Grammar Lens: the counting -s drops
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-COUNTING-S-DROPS-02]; assesses=[GE-LEX-EIN-EINE-01, GE-LEX-EINS-01, GE-ETYMON-EINS-ONE-02] -->

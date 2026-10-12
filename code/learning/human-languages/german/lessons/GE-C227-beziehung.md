@@ -13,7 +13,8 @@ gloss: "a relationship"
 concept_tag: GE-THING227-BEZIEHUNG
 prerequisites: [GE-C226-besuch, GE-C227-bewerbung]
 sounds: []
-roots: []
+roots: [germanic-teuhana]
+etymology_hook: "Beziehung — be- + ziehen 'to pull' + -ung: what draws two things together"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C227-bewerbung]
 <!-- hl-knowledge: introduces=[GE-LEX-C227-THING227-02]; assesses=[] -->
 
 **die Beziehung** — "a relationship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Beziehung** is *be-* + *ziehen*, "to pull, to draw", + *-ung* (EtymDB 2.1): what draws two people or things together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

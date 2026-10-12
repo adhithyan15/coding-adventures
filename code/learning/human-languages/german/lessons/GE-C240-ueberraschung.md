@@ -14,6 +14,7 @@ concept_tag: GE-THING240-UEBERRASCHUNG
 prerequisites: [GE-C240-tradition, GE-C240-traum]
 sounds: []
 roots: []
+etymology_hook: "Überraschung — 'over' + the word for 'quick' + -ung: to come over someone quickly"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C240-traum]
 <!-- hl-knowledge: introduces=[GE-LEX-C240-THING240-04]; assesses=[] -->
 
 **die Überraschung** — "a surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Überraschung** is the noun of a verb built from the word for "over" + the word for "quick, swift" (EtymDB 2.1 links the verb to it): to come over someone quickly.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

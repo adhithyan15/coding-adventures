@@ -13,7 +13,8 @@ gloss: "honest"
 concept_tag: GE-QUAL212-EHRLICH
 prerequisites: [GE-C212-bewoelkt, GE-C212-blond]
 sounds: []
-roots: []
+roots: [germanic-aizo]
+etymology_hook: "ehrlich — the word for 'honour' + -lich: honourable, honest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C212-blond]
 <!-- hl-knowledge: introduces=[GE-LEX-C212-QUAL212-03]; assesses=[] -->
 
 **ehrlich** — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ehrlich** is the word for "honour", Old High German *ēra* ← Proto-Germanic *\*aizō*, "respect" (EtymDB 2.1), + *-lich*: honourable, then honest.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

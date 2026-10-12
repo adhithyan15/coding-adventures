@@ -13,7 +13,8 @@ gloss: "to weigh"
 concept_tag: GE-VERB-WIEGEN
 prerequisites: [GE-C191-waehlen, GE-C191-wecken]
 sounds: []
-roots: []
+roots: [germanic-wegana]
+etymology_hook: "wiegen ← Old High German wegan 'to move, to weigh' — the same verb as English weigh"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C191-wecken]
 <!-- hl-knowledge: introduces=[GE-LEX-C191-VERB191-04]; assesses=[] -->
 
 **wiegen** — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wiegen** ← Middle High German *wegen* ← Old High German *wegan*, "to move, to weigh" — inherited, the same verb as English *weigh*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

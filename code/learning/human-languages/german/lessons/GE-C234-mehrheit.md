@@ -14,6 +14,7 @@ concept_tag: GE-THING234-MEHRHEIT
 prerequisites: [GE-C234-lohn, GE-C234-mannschaft]
 sounds: []
 roots: []
+etymology_hook: "Mehrheit — mehr 'more' + -heit: the greater number; mehr is the same word as English more"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C234-mannschaft]
 <!-- hl-knowledge: introduces=[GE-LEX-C234-THING234-03]; assesses=[] -->
 
 **die Mehrheit** — "a majority".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mehrheit** is the word for "more" + *-heit*: the greater part. EtymDB 2.1 lists the "more" word beside English *more*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

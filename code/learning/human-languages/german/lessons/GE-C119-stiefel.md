@@ -14,6 +14,7 @@ concept_tag: GE-KLEIDUNG119-STIEFEL
 prerequisites: [GE-C118-handschuhe, GE-C119-schal]
 sounds: []
 roots: []
+etymology_hook: "Stiefel ← Old High German stival, from Old French estivel — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C119-schal]
 <!-- hl-knowledge: introduces=[GE-LEX-C119-KLEIDUNG119-02]; assesses=[] -->
 
 **die Stiefel** — "boots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stiefel** ← Old High German *stival*, from Old French *estivel* (EtymDB 2.1) — borrowed, probably from Latin *aestīvāle*, a light summer shoe.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

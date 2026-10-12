@@ -13,7 +13,8 @@ gloss: "narrow; tight"
 concept_tag: GE-EIGEN131-ENG
 prerequisites: [GE-C131-geschlossen, GE-C131-ruhig]
 sounds: []
-roots: []
+roots: [germanic-anguz]
+etymology_hook: "eng ← Old High German engi ← Proto-Germanic *anguz 'narrow' — the same root as Angst"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C131-ruhig]
 <!-- hl-knowledge: introduces=[GE-LEX-C131-EIGEN131-05]; assesses=[] -->
 
 **eng** — "narrow; tight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**eng** ← Old High German *engi* ← Proto-Germanic *\*anguz*, "narrow" — inherited, from the same root as *Angst*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

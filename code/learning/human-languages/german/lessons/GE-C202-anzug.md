@@ -13,7 +13,8 @@ gloss: "a suit"
 concept_tag: GE-THING202-ANZUG
 prerequisites: [GE-C202-shampoo, GE-C202-buerste]
 sounds: []
-roots: []
+roots: [germanic-teuhana]
+etymology_hook: "Anzug — an- 'on' + Zug 'a pull': what you pull on"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C202-buerste]
 <!-- hl-knowledge: introduces=[GE-LEX-C202-THING202-05]; assesses=[] -->
 
 **der Anzug** — "a suit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Anzug** is *an-*, "on", + *Zug*, "a pull", from the verb "to pull" (EtymDB 2.1): what you pull on, a suit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "thin"
 concept_tag: GE-ADJ4-DUENN
 prerequisites: [GE-C92-schmutzig, GE-C92-dick]
 sounds: []
-roots: []
+roots: [germanic-thunnuz]
+etymology_hook: "dünn ← Old High German dunni ← Proto-Germanic *þunnuz — the same word as English thin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C92-dick]
 <!-- hl-knowledge: introduces=[GE-LEX-C92-ADJ4-04]; assesses=[] -->
 
 **dünn** — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dünn** ← Old High German *dunni*, "slender, thin" ← Proto-Germanic *\*þunnuz* — inherited, the same word as English *thin*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

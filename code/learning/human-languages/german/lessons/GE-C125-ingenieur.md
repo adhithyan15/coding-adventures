@@ -13,7 +13,8 @@ gloss: "an engineer"
 concept_tag: GE-BERUF125-INGENIEUR
 prerequisites: [GE-C125-fahrer, GE-C125-anwalt]
 sounds: []
-roots: []
+roots: [ingenium-latin]
+etymology_hook: "Ingenieur ← French ingénieur, from Latin ingenium 'talent, invention'; engine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C125-anwalt]
 <!-- hl-knowledge: introduces=[GE-LEX-C125-BERUF125-05]; assesses=[] -->
 
 **der Ingenieur** — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ingenieur** ← French *ingénieur* (EtymDB 2.1), from Latin *ingenium*, "inborn talent, invention" — borrowed. English *engineer* and *engine* share the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

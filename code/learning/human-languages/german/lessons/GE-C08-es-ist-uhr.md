@@ -10,10 +10,10 @@ gloss: telling the time — es ist, a number you own, and Uhr
 concept_tag: GE-TIME-TELLING
 prerequisites: [GE-C08-stunde, GE-C06-zwei]
 sounds: []
-roots: []
+roots: [hora-latin]
 etymology_hook: "German tells the time with the same frame English does — it is, then the number — and the frame needs nothing this book has not already given you"
 duration:
-  max_seconds: 165
+  max_seconds: 166
 requires:
   knowledge: [GE-LEX-UHR-01, GE-LEX-ES-01, GE-LEX-EINS-01, GE-LEX-ZWEI-01, GE-LEX-ZEHN-01]
 introduces:
@@ -38,6 +38,11 @@ reviews_of: [GE-C08-uhr, GE-C06-zwei, GE-C06-zehn]
 
 [PAUSE 2s] You have the numbers and you have the word. The frame that joins
 them needs nothing new.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Es ist zwei Uhr** — *es*, *ist* and *zwei* are inherited; *Uhr* is borrowed from Latin *hōra*, "hour". (EtymDB 2.1)
 
 ## Grammar Lens: es ist, a number, Uhr
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-ES-IST-UHR-01]; assesses=[GE-LEX-ES-01, GE-LEX-UHR-01] -->

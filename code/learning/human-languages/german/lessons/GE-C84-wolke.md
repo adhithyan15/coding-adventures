@@ -13,7 +13,8 @@ gloss: "a cloud"
 concept_tag: GE-NATUR3-WOLKE
 prerequisites: [GE-C83-himmel, GE-C84-stern]
 sounds: []
-roots: []
+roots: [germanic-wulkana]
+etymology_hook: "Wolke ← Old High German wolkan ← Proto-Germanic *wulkaną 'cloud' — English welkin, 'sky', is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C84-stern]
 <!-- hl-knowledge: introduces=[GE-LEX-C84-NATUR3-02]; assesses=[] -->
 
 **die Wolke** — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wolke** ← Old High German *wolkan* ← Proto-Germanic *\*wulkaną*, "cloud" — inherited. (EtymDB 2.1) The old English word *welkin*, "the sky", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN2-BANANE
 prerequisites: [GE-C69-obst, GE-C69-apfel]
 sounds: []
 roots: []
+etymology_hook: "Banane ← Portuguese or Spanish banana, from a West African language — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C69-apfel]
 <!-- hl-knowledge: introduces=[GE-LEX-C70-ESSEN2-01]; assesses=[] -->
 
 **die Banane** — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Banane** ← Portuguese or Spanish *banana*, from a West African language — borrowed. EtymDB 2.1 traces English *banana* to Wolof *banaana*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

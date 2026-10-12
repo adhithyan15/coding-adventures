@@ -13,7 +13,8 @@ gloss: "a citizen"
 concept_tag: GE-THING209-BUERGER
 prerequisites: [GE-C208-staat, GE-C208-bevoelkerung]
 sounds: []
-roots: []
+roots: [germanic-burgz]
+etymology_hook: "Bürger ← Middle High German burgære — the one who lives in the Burg, the fortified town"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C208-bevoelkerung]
 <!-- hl-knowledge: introduces=[GE-LEX-C209-THING209-01]; assesses=[] -->
 
 **der Bürger** — "a citizen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bürger** ← Middle High German *burgære*: *Burg* + *-er* — the one who lives in the walled town. English *burgher* and *borough* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

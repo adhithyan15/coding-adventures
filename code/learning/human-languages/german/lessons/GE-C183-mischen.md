@@ -13,7 +13,8 @@ gloss: "to mix"
 concept_tag: GE-VERB-MISCHEN
 prerequisites: [GE-C183-leiden, GE-C183-messen]
 sounds: []
-roots: []
+roots: [miscere-latin]
+etymology_hook: "mischen ← Old High German miskan, from Latin miscēre 'to mix' — an early loan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C183-messen]
 <!-- hl-knowledge: introduces=[GE-LEX-C183-VERB183-03]; assesses=[] -->
 
 **mischen** — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mischen** ← Old High German *miskan*, from Latin *miscēre*, "to mix" — an early loan. EtymDB 2.1 has the Latin verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

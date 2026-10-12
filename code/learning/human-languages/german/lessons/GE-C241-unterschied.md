@@ -13,7 +13,8 @@ gloss: "a difference"
 concept_tag: GE-THING241-UNTERSCHIED
 prerequisites: [GE-C241-umwelt, GE-C241-unterricht]
 sounds: []
-roots: []
+roots: [germanic-skaithana]
+etymology_hook: "Unterschied — 'under, between' + the verb 'to separate': what sets things apart"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C241-unterricht]
 <!-- hl-knowledge: introduces=[GE-LEX-C241-THING241-03]; assesses=[] -->
 
 **der Unterschied** — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Unterschied** is the word for "under, between" + the verb "to separate", Old High German *sceidan* (EtymDB 2.1): what sets two things apart.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

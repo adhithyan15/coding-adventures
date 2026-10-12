@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 180,
-  "sourceHash": "fnv1a64:5bae42158a233813",
+  "sourceHash": "fnv1a64:7f702d181c0f180a",
   "lessonIds": [
     "GE-C180-erwarten",
     "GE-C180-fangen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch180.txt",
   "json": "german/narration/ch180.json",
-  "textHash": "fnv1a64:4b9fdc436d44a37e",
-  "jsonHash": "fnv1a64:953e5f56464e9904",
+  "textHash": "fnv1a64:8e0d86e29e90b75b",
+  "jsonHash": "fnv1a64:31a5d5bfc0adc6fe",
   "findings": []
 }

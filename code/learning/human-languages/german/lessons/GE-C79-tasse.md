@@ -13,7 +13,8 @@ gloss: "a cup"
 concept_tag: GE-GESCHIRR-TASSE
 prerequisites: [GE-C78-spiegel, GE-C78-wohnung]
 sounds: []
-roots: []
+roots: [tas-arabic]
+etymology_hook: "Tasse ← French tasse ← Arabic ṭās 'bowl, cup' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C78-wohnung]
 <!-- hl-knowledge: introduces=[GE-LEX-C79-GESCHIRR-01]; assesses=[] -->
 
 **die Tasse** — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tasse** ← French *tasse* ← Arabic *ṭās*, "bowl, cup" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

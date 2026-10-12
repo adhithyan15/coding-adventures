@@ -13,7 +13,8 @@ gloss: "a goat"
 concept_tag: GE-TIERE2-ZIEGE
 prerequisites: [GE-C87-ente, GE-C87-schaf]
 sounds: []
-roots: []
+roots: [germanic-tigo]
+etymology_hook: "Ziege ← Old High German ziga ← Proto-Germanic *tigōn 'goat' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C87-schaf]
 <!-- hl-knowledge: introduces=[GE-LEX-C87-TIERE2-03]; assesses=[] -->
 
 **die Ziege** — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ziege** ← Old High German *ziga* ← Proto-Germanic *\*tigōn*, "goat" — inherited, with German *z* for an older *t*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

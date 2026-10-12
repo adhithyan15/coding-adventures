@@ -13,7 +13,8 @@ gloss: "having a cold"
 concept_tag: GE-QUAL213-ERKAELTET
 prerequisites: [GE-C213-eifersuechtig, GE-C213-erfolgreich]
 sounds: []
-roots: []
+roots: [germanic-kaldaz]
+etymology_hook: "erkältet — 'chilled', the participle beside Erkältung 'a cold'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C213-erfolgreich]
 <!-- hl-knowledge: introduces=[GE-LEX-C213-QUAL213-03]; assesses=[] -->
 
 **erkältet** — "having a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erkältet** is the past participle beside *Erkältung*: *er-* + the word for "cold", English *cold*: chilled. (EtymDB 2.1 has Middle High German *erkelten*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the day after tomorrow"
 concept_tag: GE-FUT142-UEBERMORGEN
 prerequisites: [GE-C142-zukunft, GE-C142-naechste-woche]
 sounds: []
-roots: []
+roots: [murganaz]
+etymology_hook: "übermorgen — 'over' + morgen 'tomorrow': the day beyond tomorrow"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C142-naechste-woche]
 <!-- hl-knowledge: introduces=[GE-LEX-C142-FUT142-03]; assesses=[] -->
 
 **übermorgen** — "the day after tomorrow". When a time word already points ahead, spoken German keeps the present tense: **Übermorgen fahre ich.** — "I am going the day after tomorrow."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**übermorgen** is the word for "over, beyond" + *morgen*, "tomorrow": the day beyond tomorrow. EtymDB 2.1 lists it beside Dutch *overmorgen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

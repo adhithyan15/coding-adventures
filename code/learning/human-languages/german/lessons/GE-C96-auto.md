@@ -14,6 +14,7 @@ concept_tag: GE-STADT1-AUTO
 prerequisites: [GE-C96-bahnhof, GE-C96-flugzeug]
 sounds: []
 roots: []
+etymology_hook: "Auto — short for the word for 'automobile', from Greek autos 'self' + Latin mobilis 'movable'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C96-flugzeug]
 <!-- hl-knowledge: introduces=[GE-LEX-C96-STADT1-05]; assesses=[] -->
 
 **das Auto** — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Auto** is short for the longer word for "automobile", taken from French and built from Greek *autós*, "self", and Latin *mōbilis*, "movable": a carriage that moves itself. EtymDB 2.1 has the French *auto* as its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

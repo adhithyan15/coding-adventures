@@ -13,7 +13,8 @@ gloss: "to apply (sich bewerben)"
 concept_tag: GE-VERB-BEWERBEN
 prerequisites: [GE-C176-beschreiben, GE-C176-betreten]
 sounds: []
-roots: []
+roots: [germanic-hwerbana]
+etymology_hook: "bewerben — be- + werben 'to recruit, to woo', from a Germanic verb 'to turn'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C176-betreten]
 <!-- hl-knowledge: introduces=[GE-LEX-C177-VERB177-01]; assesses=[] -->
 
 **bewerben** — "to apply (sich bewerben)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bewerben** is *be-* + the verb "to recruit, to woo", Old High German *werban* ← Proto-Germanic *\*hwerbaną*, "to turn" (EtymDB 2.1). To apply is to court a post.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

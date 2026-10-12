@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 59,
-  "sourceHash": "fnv1a64:5acebd4879ed5691",
+  "sourceHash": "fnv1a64:fc044d0b599bf017",
   "lessonIds": [
     "GE-C59-fieber",
     "GE-C59-arzt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch59.txt",
   "json": "german/narration/ch59.json",
-  "textHash": "fnv1a64:1e0e9a43d714410f",
-  "jsonHash": "fnv1a64:bad3c4bd318f7af6",
+  "textHash": "fnv1a64:446792a1dafc947d",
+  "jsonHash": "fnv1a64:695adc72c855d4d3",
   "findings": []
 }

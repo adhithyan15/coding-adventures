@@ -14,6 +14,7 @@ concept_tag: GE-QUAL217-KAPUTT
 prerequisites: [GE-C216-hilfsbereit, GE-C216-intelligent]
 sounds: []
 roots: []
+etymology_hook: "kaputt ← French capot 'without a trick' at cards — the loser was kaputt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C216-intelligent]
 <!-- hl-knowledge: introduces=[GE-LEX-C217-QUAL217-01]; assesses=[] -->
 
 **kaputt** — "broken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kaputt** ← French *capot*, said of a card player who has won no trick (EtymDB 2.1) — borrowed: the loser was done for. English *kaput* came from German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

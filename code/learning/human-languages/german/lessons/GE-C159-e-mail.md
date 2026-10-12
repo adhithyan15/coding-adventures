@@ -14,6 +14,7 @@ concept_tag: GE-THING159-E-MAIL
 prerequisites: [GE-C159-telefonnummer, GE-C159-internet]
 sounds: []
 roots: []
+etymology_hook: "E-Mail ← English e-mail, 'electronic mail' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C159-internet]
 <!-- hl-knowledge: introduces=[GE-LEX-C159-THING159-04]; assesses=[] -->
 
 **die E-Mail** — "an email".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**E-Mail** ← English *e-mail*, short for "electronic mail" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

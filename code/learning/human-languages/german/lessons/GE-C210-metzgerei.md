@@ -14,6 +14,7 @@ concept_tag: GE-THING210-METZGEREI
 prerequisites: [GE-C210-werkstatt, GE-C210-geschaeft]
 sounds: []
 roots: []
+etymology_hook: "Metzgerei — Metzger 'butcher' + -ei, the ending for a trade's shop"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C210-geschaeft]
 <!-- hl-knowledge: introduces=[GE-LEX-C210-THING210-04]; assesses=[] -->
 
 **die Metzgerei** — "a butcher's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Metzgerei** is the southern word for "butcher", Middle High German *metziger* (EtymDB 2.1), + *-ei*, the ending for a trade's workplace. Where *metziger* came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

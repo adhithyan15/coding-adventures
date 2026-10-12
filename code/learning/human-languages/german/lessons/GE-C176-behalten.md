@@ -13,7 +13,8 @@ gloss: "to keep"
 concept_tag: GE-VERB-BEHALTEN
 prerequisites: [GE-C176-bedeuten, GE-C176-beeilen]
 sounds: []
-roots: []
+roots: [germanic-haldana]
+etymology_hook: "behalten ← Old High German bihaltan — be- + halten 'to hold': the same build as English behold"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C176-beeilen]
 <!-- hl-knowledge: introduces=[GE-LEX-C176-VERB176-03]; assesses=[] -->
 
 **behalten** — "to keep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**behalten** ← Old High German *bihaltan*: *be-* + the verb "to hold" — the same build as English *behold*, which EtymDB 2.1 lists beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

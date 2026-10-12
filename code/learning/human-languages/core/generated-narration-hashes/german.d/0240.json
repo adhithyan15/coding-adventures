@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 240,
-  "sourceHash": "fnv1a64:882697f651a1e1b5",
+  "sourceHash": "fnv1a64:a0088c2802edb5e8",
   "lessonIds": [
     "GE-C240-thema",
     "GE-C240-tradition",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch240.txt",
   "json": "german/narration/ch240.json",
-  "textHash": "fnv1a64:75f55f2f230b2eaf",
-  "jsonHash": "fnv1a64:c9244ed85978fffa",
+  "textHash": "fnv1a64:b7cc14ae388cbcfe",
+  "jsonHash": "fnv1a64:10338a9f6209415f",
   "findings": []
 }

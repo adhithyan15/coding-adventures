@@ -13,7 +13,8 @@ gloss: "to pass (an exam), to insist"
 concept_tag: GE-VERB-BESTEHEN
 prerequisites: [GE-C246-berichten, GE-C246-besichtigen]
 sounds: []
-roots: []
+roots: [germanic-stana]
+etymology_hook: "bestehen ← Middle High German bestān: be- + stehen 'to stand': to stand your ground"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C246-besichtigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C247-VERB247-01]; assesses=[] -->
 
 **bestehen** — "to pass (an exam), to insist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bestehen** ← Middle High German *bestān* (EtymDB 2.1): *be-* + *stehen*, "to stand". To pass is to stand the test; to insist is to stand firm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

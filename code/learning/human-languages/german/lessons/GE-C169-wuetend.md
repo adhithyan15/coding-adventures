@@ -13,7 +13,8 @@ gloss: "angry"
 concept_tag: GE-QUAL169-WUETEND
 prerequisites: [GE-C169-nervoes, GE-C169-stolz]
 sounds: []
-roots: []
+roots: [germanic-wodaz]
+etymology_hook: "wütend — 'raging', from the word for 'fury' ← Proto-Germanic *wōdaz; the god Wodan shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C169-stolz]
 <!-- hl-knowledge: introduces=[GE-LEX-C169-QUAL169-05]; assesses=[] -->
 
 **wütend** — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wütend** is the present participle of the verb "to rage", built on the word for "fury", Old High German *wuot* ← Proto-Germanic *\*wōdaz*, "mad" (EtymDB 2.1). The god's name *Wodan* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

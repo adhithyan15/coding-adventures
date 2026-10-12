@@ -13,7 +13,8 @@ gloss: "the wind"
 concept_tag: GE-THING162-WIND
 prerequisites: [GE-C162-radio, GE-C162-wetter]
 sounds: []
-roots: []
+roots: [germanic-windaz]
+etymology_hook: "Wind ← Old High German wint ← Proto-Germanic *windaz — the same word as English wind"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C162-wetter]
 <!-- hl-knowledge: introduces=[GE-LEX-C162-THING162-04]; assesses=[] -->
 
 **der Wind** — "the wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wind** ← Old High German *wint* ← Proto-Germanic *\*windaz* — inherited, the same word as English *wind*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

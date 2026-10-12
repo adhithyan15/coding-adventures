@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 25,
-  "sourceHash": "fnv1a64:8853b5d99fbd784a",
+  "sourceHash": "fnv1a64:c031a4030848e499",
   "lessonIds": [
     "GE-C15-praeteritum",
     "GE-C15-sagte",
@@ -18,7 +18,7 @@
   "drivablePrefix": 10,
   "text": "german/narration/ch25.txt",
   "json": "german/narration/ch25.json",
-  "textHash": "fnv1a64:ff22c0f447b8806f",
-  "jsonHash": "fnv1a64:0ad0481f9272f031",
+  "textHash": "fnv1a64:df32e8e3f80d7e1d",
+  "jsonHash": "fnv1a64:6b070ea9c547975b",
   "findings": []
 }

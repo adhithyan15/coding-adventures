@@ -13,7 +13,8 @@ gloss: "rainy"
 concept_tag: GE-QUAL220-REGNERISCH
 prerequisites: [GE-C219-persoenlich, GE-C220-puenktlich]
 sounds: []
-roots: []
+roots: [germanic-regen-rain]
+etymology_hook: "regnerisch — built on Regen 'rain' + -isch: rainy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C220-puenktlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C220-QUAL220-02]; assesses=[] -->
 
 **regnerisch** — "rainy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regnerisch** is built on *Regen*, "rain", + *-isch*. *Regen* ← Proto-Germanic *\*regnaz*, English *rain*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

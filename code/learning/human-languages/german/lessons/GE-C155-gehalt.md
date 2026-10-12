@@ -13,7 +13,8 @@ gloss: "a salary"
 concept_tag: GE-THING155-GEHALT
 prerequisites: [GE-C154-kollege, GE-C154-stelle]
 sounds: []
-roots: []
+roots: [germanic-haldana]
+etymology_hook: "Gehalt — ge- + the stem of the verb 'to hold': what one holds, then pay"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C154-stelle]
 <!-- hl-knowledge: introduces=[GE-LEX-C155-THING155-01]; assesses=[] -->
 
 **das Gehalt** — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gehalt** is *ge-* + the stem of the verb "to hold", Old High German *haltan*, English *hold* (EtymDB 2.1): first "what is held, the content", then a salary.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

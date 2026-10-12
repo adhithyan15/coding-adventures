@@ -12,6 +12,9 @@ Before the new one: say the German for a dictionary, then the German for a mista
 You'll want to know: das Haus.
 das Haus — "a house".
 
+The word, taken apart.
+Haus from Old High German hūs from Proto-Germanic hūsą, "dwelling" — inherited, the same word as English house. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a mistake, then the German for a house.
 
 You'll want to know: das Schlafzimmer.
 das Schlafzimmer — "a bedroom".
+
+The word, taken apart.
+Schlafzimmer is the stem of schlafen, "to sleep", + Zimmer, "room", which first meant "timber" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a house, then the German for a bedroom.
 You'll want to know: das Wohnzimmer.
 das Wohnzimmer — "a living room".
 
+The word, taken apart.
+Wohnzimmer is wohnen, "to live", + Zimmer, "room" (EtymDB 2.1): the room you live in.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a bedroom, then the German for a living r
 You'll want to know: der Balkon.
 der Balkon — "a balcony".
 
+The word, taken apart.
+Balkon from French balcon from Italian balcone, from a Lombardic word for "beam" (EtymDB 2.1) — borrowed, like English balcony.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a living room, then the German for a balc
 
 You'll want to know: der Keller.
 der Keller — "a cellar".
+
+The word, taken apart.
+Keller from Old High German kellari from Late Latin cellārium, "storeroom", from cella, "room" (EtymDB 2.1) — borrowed, like English cellar.
 
 What you've built.
 One more word for this chapter.

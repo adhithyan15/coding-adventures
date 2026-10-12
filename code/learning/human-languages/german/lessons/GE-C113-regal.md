@@ -14,6 +14,7 @@ concept_tag: GE-HAUS113-REGAL
 prerequisites: [GE-C113-dusche, GE-C113-badewanne]
 sounds: []
 roots: []
+etymology_hook: "Regal 'shelf' — a word of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C113-badewanne]
 <!-- hl-knowledge: introduces=[GE-LEX-C113-HAUS113-03]; assesses=[] -->
 
 **das Regal** — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Regal**, "shelf", is a word of uncertain origin. EtymDB 2.1's only row for *Regal* ties it to Latin *rēgālia*, "royal things", which belongs to a different word, so no source is given here.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

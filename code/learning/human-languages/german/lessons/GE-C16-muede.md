@@ -13,7 +13,7 @@ sounds: [umlaut-ue]
 roots: [muodi-germanic]
 etymology_hook: "müde carries the umlaut dots you already know how to read: the two dots are a ghost of a lost e, and here they mark a vowel, not a plural"
 duration:
-  max_seconds: 165
+  max_seconds: 175
 requires:
   knowledge: [GE-GRAMMAR-UMLAUT-FRONTING-01, GE-GRAMMAR-SEIN-ICH-BIN-01, GE-GRAMMAR-SEIN-SIE-SIND-01, GE-GRAMMAR-SEIN-ER-IST-01]
 introduces:
@@ -52,6 +52,11 @@ every subject. *Ich bin müde*, *du bist müde*, *wir sind müde*.
 
 That is worth noticing, because German adjectives are famous for their endings.
 They only take them in front of a noun. Standing after *sein*, they stand still.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**müde** ← Old High German *muodi*, "tired" ← Proto-Germanic *\*mōþijaz* — inherited. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-UMLAUT-FRONTING-01, GE-LEX-MUEDE-01] -->

@@ -13,7 +13,8 @@ gloss: "to shout, to scream"
 concept_tag: GE-VERB-SCHREIEN
 prerequisites: [GE-C149-sammeln, GE-C149-schenken]
 sounds: []
-roots: []
+roots: [germanic-skrihana]
+etymology_hook: "schreien ← Old High German scrīan ← Proto-Germanic *skrīhaną 'to cry out' — kin to English scream"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C149-schenken]
 <!-- hl-knowledge: introduces=[GE-LEX-C149-VERB149-05]; assesses=[] -->
 
 **schreien** — "to shout, to scream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schreien** ← Old High German *scrīan* ← Proto-Germanic *\*skrīhaną*, "to cry out" — inherited; EtymDB 2.1 lists English *scream* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

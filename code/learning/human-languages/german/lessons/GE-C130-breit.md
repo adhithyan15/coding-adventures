@@ -13,7 +13,8 @@ gloss: "wide"
 concept_tag: GE-FARBE130-BREIT
 prerequisites: [GE-C130-huebsch, GE-C130-rund]
 sounds: []
-roots: []
+roots: [germanic-braidaz]
+etymology_hook: "breit ← Old High German breit ← Proto-Germanic *braidaz — the same word as English broad"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C130-rund]
 <!-- hl-knowledge: introduces=[GE-LEX-C130-FARBE130-05]; assesses=[] -->
 
 **breit** — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**breit** ← Old High German *breit* ← Proto-Germanic *\*braidaz* — inherited, the same word as English *broad*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

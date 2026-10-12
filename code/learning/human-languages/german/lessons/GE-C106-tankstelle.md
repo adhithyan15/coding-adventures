@@ -14,6 +14,7 @@ concept_tag: GE-ORT106-TANKSTELLE
 prerequisites: [GE-C105-rathaus, GE-C106-supermarkt]
 sounds: []
 roots: []
+etymology_hook: "Tankstelle — Tank, from English tank, + the word for 'place': where you fill the tank"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C106-supermarkt]
 <!-- hl-knowledge: introduces=[GE-LEX-C106-ORT106-02]; assesses=[] -->
 
 **die Tankstelle** — "a petrol station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tankstelle** is *Tank*, taken from English *tank* (EtymDB 2.1), + the word for "place": the place where you fill the tank.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

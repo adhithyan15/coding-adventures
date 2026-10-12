@@ -14,6 +14,7 @@ concept_tag: GE-EIGEN135-GEFAEHRLICH
 prerequisites: [GE-C134-bereit, GE-C134-sicher, GE-C38-partizip-en, GE-C21-das-wetter-more]
 sounds: []
 roots: []
+etymology_hook: "gefährlich — the word for 'danger' + -lich; danger ← Middle High German gevāre 'ambush'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C134-sicher]
 <!-- hl-knowledge: introduces=[GE-LEX-C135-EIGEN135-01]; assesses=[] -->
 
 **gefährlich** — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gefährlich** is the word for "danger" + *-lich*. That word ← Middle High German *gevāre*, "ambush, deceit", a cousin of English *fear*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

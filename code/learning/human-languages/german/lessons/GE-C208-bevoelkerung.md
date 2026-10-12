@@ -13,7 +13,8 @@ gloss: "the population"
 concept_tag: GE-THING208-BEVOELKERUNG
 prerequisites: [GE-C208-regierung, GE-C208-staat]
 sounds: []
-roots: []
+roots: [germanic-fulka]
+etymology_hook: "Bevölkerung — be- + the word for 'people' + -ung: filling a land with people"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C208-staat]
 <!-- hl-knowledge: introduces=[GE-LEX-C208-THING208-05]; assesses=[] -->
 
 **die Bevölkerung** — "the population".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bevölkerung** is *be-* + the word for "a people", Old High German *folc* ← Proto-Germanic *\*fulką*, English *folk* (EtymDB 2.1), + *-ung*: the people who fill a land.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

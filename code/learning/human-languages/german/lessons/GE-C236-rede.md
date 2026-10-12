@@ -14,6 +14,7 @@ concept_tag: GE-THING236-REDE
 prerequisites: [GE-C236-pflicht, GE-C236-qualitaet]
 sounds: []
 roots: []
+etymology_hook: "Rede ← Old High German redia 'speech, account' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C236-qualitaet]
 <!-- hl-knowledge: introduces=[GE-LEX-C236-THING236-03]; assesses=[] -->
 
 **die Rede** — "a speech".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rede** ← Middle High German *rede* ← Old High German *redia*, "speech, account" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

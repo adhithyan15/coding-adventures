@@ -13,7 +13,8 @@ gloss: "a mistake"
 concept_tag: GE-THING160-FEHLER
 prerequisites: [GE-C160-aufgabe, GE-C160-woerterbuch]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "Fehler — fehlen 'to be missing' + -er: a mistake is where something fails"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C160-woerterbuch]
 <!-- hl-knowledge: introduces=[GE-LEX-C160-THING160-05]; assesses=[] -->
 
 **der Fehler** — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fehler** is *fehlen* + *-er*: where something fails. *fehlen* came from Old French *faillir*, "to fail" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

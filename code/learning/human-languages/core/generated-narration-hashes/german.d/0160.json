@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 160,
-  "sourceHash": "fnv1a64:cd9620d18310bbc7",
+  "sourceHash": "fnv1a64:e4b8487366854d36",
   "lessonIds": [
     "GE-C160-universitaet",
     "GE-C160-kurs",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch160.txt",
   "json": "german/narration/ch160.json",
-  "textHash": "fnv1a64:21d31248dfd2f2a7",
-  "jsonHash": "fnv1a64:d5f358eb423ae0ca",
+  "textHash": "fnv1a64:808bbc3de440df02",
+  "jsonHash": "fnv1a64:bfa2b64c27c0c9e5",
   "findings": []
 }

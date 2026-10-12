@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 190,
-  "sourceHash": "fnv1a64:492bfcb9fa8960e7",
+  "sourceHash": "fnv1a64:4f16ec6a6a5bbb45",
   "lessonIds": [
     "GE-C190-vergleichen",
     "GE-C190-verletzen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch190.txt",
   "json": "german/narration/ch190.json",
-  "textHash": "fnv1a64:8fa2153044dca0f6",
-  "jsonHash": "fnv1a64:174598479cbdc79c",
+  "textHash": "fnv1a64:9f1907a9bded6e8a",
+  "jsonHash": "fnv1a64:a855dab218ab993d",
   "findings": []
 }

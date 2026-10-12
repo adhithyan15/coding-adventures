@@ -10,10 +10,10 @@ gloss: he did that — the third slot, and the first Perfekt sentence with somet
 concept_tag: GE-PERFEKT-ER
 prerequisites: [GE-C15-du-hast-gesagt, GE-C01-der-die-das]
 sounds: [ge-prefix, ch-ach, final-t]
-roots: []
+roots: [germanic-habjana, germanic-makon]
 etymology_hook: "er hat drops the b of haben just as du hast does, and English kept the identical pair: he has beside thou hast"
 duration:
-  max_seconds: 155
+  max_seconds: 188
 requires:
   knowledge: [GE-GRAMMAR-PERFEKT-DU-01, GE-LEX-GEMACHT-01, GE-LEX-DER-DIE-DAS-02]
 introduces:
@@ -52,6 +52,11 @@ Notice where it went. *Das* did not follow *gemacht*; it slipped in **before**
 it. The participle stayed at the far end of the sentence and let the rest of the
 words file in ahead of it. That is not a quirk of this one sentence, and the
 next lesson but one is about it.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**er hat das gemacht** — *hat* ← Old High German *habēn*, English *have*; *gemacht* is built on *machen*, the same verb as English *make*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-ER-01, GE-LEX-GEMACHT-01] -->

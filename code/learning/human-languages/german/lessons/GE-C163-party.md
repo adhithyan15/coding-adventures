@@ -14,6 +14,7 @@ concept_tag: GE-THING163-PARTY
 prerequisites: [GE-C163-geburtstag, GE-C163-hochzeit]
 sounds: []
 roots: []
+etymology_hook: "Party ← English party, from Old French partie 'a part, a side' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C163-hochzeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C163-THING163-04]; assesses=[] -->
 
 **die Party** — "a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Party** ← English *party*, from Old French *partie*, "a part, a side" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

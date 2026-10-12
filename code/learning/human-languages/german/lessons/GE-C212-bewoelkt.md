@@ -13,7 +13,8 @@ gloss: "cloudy"
 concept_tag: GE-QUAL212-BEWOELKT
 prerequisites: [GE-C211-ausgezeichnet, GE-C211-berufstaetig]
 sounds: []
-roots: []
+roots: [germanic-wulkana]
+etymology_hook: "bewölkt — be- + Wolke 'cloud': covered with cloud"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C211-berufstaetig]
 <!-- hl-knowledge: introduces=[GE-LEX-C212-QUAL212-01]; assesses=[] -->
 
 **bewölkt** — "cloudy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bewölkt** is *be-* + *Wolke*, "cloud", as a participle: covered with cloud. *Wolke* ← Proto-Germanic *\*wulkaną*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

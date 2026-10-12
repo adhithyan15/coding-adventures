@@ -14,6 +14,7 @@ concept_tag: GE-THING238-SINN
 prerequisites: [GE-C238-schwierigkeit, GE-C238-sicherheit]
 sounds: []
 roots: []
+etymology_hook: "Sinn ← Old High German sin 'sense, mind' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C238-sicherheit]
 <!-- hl-knowledge: introduces=[GE-LEX-C238-THING238-03]; assesses=[] -->
 
 **der Sinn** — "sense, meaning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sinn** ← Middle High German *sin* ← Old High German *sin*, "sense, mind" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

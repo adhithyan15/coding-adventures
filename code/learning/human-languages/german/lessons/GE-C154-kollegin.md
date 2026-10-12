@@ -13,7 +13,8 @@ gloss: "a colleague (woman)"
 concept_tag: GE-THING154-KOLLEGIN
 prerequisites: [GE-C154-arbeitsplatz, GE-C154-firma]
 sounds: []
-roots: []
+roots: [collega-latin]
+etymology_hook: "Kollegin — the word for 'colleague' + -in; colleague ← Latin collēga 'partner in office'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C154-firma]
 <!-- hl-knowledge: introduces=[GE-LEX-C154-THING154-03]; assesses=[] -->
 
 **die Kollegin** — "a colleague (woman)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kollegin** is the word for "colleague" + *-in*, the ending that names a woman. That word ← Latin *collēga*, "partner in office" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

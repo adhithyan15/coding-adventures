@@ -13,7 +13,8 @@ gloss: "a wound"
 concept_tag: GE-THING206-WUNDE
 prerequisites: [GE-C205-untersuchung, GE-C205-verletzung]
 sounds: []
-roots: []
+roots: [germanic-wundo]
+etymology_hook: "Wunde ← Old High German wunta — the same word as English wound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C205-verletzung]
 <!-- hl-knowledge: introduces=[GE-LEX-C206-THING206-01]; assesses=[] -->
 
 **die Wunde** — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wunde** ← Middle High German *wunde* ← Old High German *wunta* — inherited, the same word as English *wound*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

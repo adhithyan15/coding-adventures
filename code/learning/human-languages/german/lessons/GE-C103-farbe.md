@@ -13,7 +13,8 @@ gloss: "a colour"
 concept_tag: GE-FREIZEIT-FARBE
 prerequisites: [GE-C103-lied, GE-C103-spiel]
 sounds: []
-roots: []
+roots: [germanic-farwo]
+etymology_hook: "Farbe ← Old High German farawa ← Proto-Germanic *farwō 'colour' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C103-spiel]
 <!-- hl-knowledge: introduces=[GE-LEX-C103-FREIZEIT-03]; assesses=[] -->
 
 **die Farbe** — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Farbe** ← Old High German *farawa* ← Proto-Germanic *\*farwō*, "colour" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

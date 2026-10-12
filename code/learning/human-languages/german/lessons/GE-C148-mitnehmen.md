@@ -13,7 +13,8 @@ gloss: "to take along"
 concept_tag: GE-VERB-MITNEHMEN
 prerequisites: [GE-C148-lieben, GE-C148-mitbringen]
 sounds: []
-roots: []
+roots: [germanic-nemana]
+etymology_hook: "mitnehmen — mit 'with' + nehmen 'to take': to take along"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C148-mitbringen]
 <!-- hl-knowledge: introduces=[GE-LEX-C148-VERB148-05]; assesses=[] -->
 
 **mitnehmen** — "to take along".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mitnehmen** is *mit*, "with", + *nehmen*, "to take" ← Old High German *neman* ← Proto-Germanic *\*nemaną* (EtymDB 2.1): to take along.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

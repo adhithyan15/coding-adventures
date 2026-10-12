@@ -14,6 +14,7 @@ concept_tag: GE-THING232-KINDHEIT
 prerequisites: [GE-C231-interesse, GE-C231-jugend]
 sounds: []
 roots: []
+etymology_hook: "Kindheit ← Old High German kindheit: Kind 'child' + -heit, like English -hood"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C231-jugend]
 <!-- hl-knowledge: introduces=[GE-LEX-C232-THING232-01]; assesses=[] -->
 
 **die Kindheit** — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kindheit** ← Middle High German *kintheit* ← Old High German *kindheit* (EtymDB 2.1): the word for "child" + *-heit*, the same ending as English *-hood*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-VERB-DUSCHEN
 prerequisites: [GE-C177-buchstabieren, GE-C177-drucken]
 sounds: []
 roots: []
+etymology_hook: "duschen — the verb made from Dusche 'shower' ← French douche"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C177-drucken]
 <!-- hl-knowledge: introduces=[GE-LEX-C178-VERB178-01]; assesses=[] -->
 
 **duschen** — "to shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**duschen** is the verb made from *Dusche* ← French *douche* ← Italian *doccia*, "water pipe" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Telling the Time",
   "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:cd58d0a0afc1f10b",
+  "sourceHash": "fnv1a64:76f29dce6041e1a3",
   "lessons": [
     {
       "id": "GE-C08-uhr",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a8af0da74daaa97",
+      "sourceHash": "fnv1a64:b9185cdc7631bdbf",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uhr from Latin hōra, \"hour\" (EtymDB 2.1) — borrowed, not inherited; it reached German through Old French and Middle Dutch with the clocks themselves."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -304,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc2e61d5e7251e67",
+      "sourceHash": "fnv1a64:8a8c50c333c8783f",
       "notice": null,
       "blocks": [
         {
@@ -341,6 +352,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stunde from Old High German stunta from Proto-Germanic stundō, \"point in time\" — inherited; old English stound, \"a while\", is the same word. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -355,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -387,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -436,7 +458,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -467,7 +489,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57bc10846fddad01",
+      "sourceHash": "fnv1a64:1d43cee3cd1da7b6",
       "notice": null,
       "blocks": [
         {
@@ -489,6 +511,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Es ist zwei Uhr — es, ist and zwei are inherited; Uhr is borrowed from Latin hōra, \"hour\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: es ist, a number, Uhr",
           "segments": [
@@ -511,7 +544,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -569,7 +602,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -872,7 +905,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:060bf8d840844546",
+      "sourceHash": "fnv1a64:fffb4273573d5f4e",
       "notice": null,
       "blocks": [
         {
@@ -917,6 +950,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mittag is Mitte + Tag, \"mid-day\"; EtymDB 2.1 lists it as the same word as English midday, Old English middæġ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -974,7 +1018,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1158,7 +1202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccd3ef62bafdca16",
+      "sourceHash": "fnv1a64:3e1d3dde4279f97a",
       "notice": null,
       "blocks": [
         {
@@ -1199,6 +1243,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mitternacht is \"mid\" + Nacht, from Old High German mittinaht; EtymDB 2.1 lists it beside English midnight."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1231,7 +1286,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1289,7 +1344,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

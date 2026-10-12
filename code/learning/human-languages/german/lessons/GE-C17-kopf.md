@@ -49,6 +49,11 @@ final sound.
 It is masculine and capitalised because every German noun begins with a capital
 letter.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kopf** ← Old High German *kopf*, "drinking vessel" (EtymDB 2.1) — usually traced to Late Latin *cuppa*, "cup", so a borrowing whose sense moved from bowl to head.
+
 ## Sounds you'll need: Make the -pf sequence
 <!-- hl-knowledge: introduces=[GE-SOUND-KOPF-03]; assesses=[] -->
 

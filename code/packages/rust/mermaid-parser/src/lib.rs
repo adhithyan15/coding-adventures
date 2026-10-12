@@ -6652,6 +6652,7 @@ fn parse_swimlane_edge_config(
                 "monotonex" | "monotone-x" => SwimlaneEdgeCurve::MonotoneX,
                 "monotoney" | "monotone-y" => SwimlaneEdgeCurve::MonotoneY,
                 "natural" => SwimlaneEdgeCurve::Natural,
+                "rounded" => SwimlaneEdgeCurve::Rounded,
                 "step" => SwimlaneEdgeCurve::Step,
                 "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
                 "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,

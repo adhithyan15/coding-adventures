@@ -13,7 +13,8 @@ gloss: "grass"
 concept_tag: GE-THING199-GRAS
 prerequisites: [GE-C198-schmetterling, GE-C198-pflanze]
 sounds: []
-roots: []
+roots: [germanic-grasa]
+etymology_hook: "Gras ← Old High German gras — the same word as English grass"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C198-pflanze]
 <!-- hl-knowledge: introduces=[GE-LEX-C199-THING199-01]; assesses=[] -->
 
 **das Gras** — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gras** ← Middle High German *gras* ← Old High German *gras* — inherited, the same word as English *grass*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

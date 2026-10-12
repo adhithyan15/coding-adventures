@@ -13,7 +13,8 @@ gloss: "intelligent"
 concept_tag: GE-QUAL216-INTELLIGENT
 prerequisites: [GE-C216-herrlich, GE-C216-hilfsbereit]
 sounds: []
-roots: []
+roots: [intellegere-latin]
+etymology_hook: "intelligent ← Latin intelligēns 'understanding', from intellegere — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C216-hilfsbereit]
 <!-- hl-knowledge: introduces=[GE-LEX-C216-QUAL216-05]; assesses=[] -->
 
 **intelligent** — "intelligent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intelligent** ← Latin *intelligēns*, "discerning, understanding" (EtymDB 2.1), from *intellegere*, "to choose between, to understand" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

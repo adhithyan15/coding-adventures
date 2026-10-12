@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 96,
-  "sourceHash": "fnv1a64:3a32aa0069f679e8",
+  "sourceHash": "fnv1a64:9b2f55460f29f844",
   "lessonIds": [
     "GE-C96-laden",
     "GE-C96-markt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch96.txt",
   "json": "german/narration/ch96.json",
-  "textHash": "fnv1a64:87c982c2252686ef",
-  "jsonHash": "fnv1a64:aa4aa22df2a24e8b",
+  "textHash": "fnv1a64:40ab2aef1ee25189",
+  "jsonHash": "fnv1a64:688ca7ebc6b563f3",
   "findings": []
 }

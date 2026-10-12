@@ -1954,7 +1954,7 @@ pub enum SwimlaneEdgeAnimation { Slow, Fast }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SwimlaneEdgeCurve {
     Linear, Basis, BumpX, BumpY, Cardinal, CatmullRom, MonotoneX, MonotoneY, Natural,
-    Step, StepBefore, StepAfter,
+    Rounded, Step, StepBefore, StepAfter,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneEdge {

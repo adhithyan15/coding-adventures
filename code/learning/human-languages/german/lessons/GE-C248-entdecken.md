@@ -13,7 +13,8 @@ gloss: "to discover"
 concept_tag: GE-VERB-ENTDECKEN
 prerequisites: [GE-C248-einrichten, GE-C248-enden]
 sounds: []
-roots: []
+roots: [germanic-thaka]
+etymology_hook: "entdecken — ent- 'off' + the verb 'to cover': to uncover, like English discover"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C248-enden]
 <!-- hl-knowledge: introduces=[GE-LEX-C248-VERB248-03]; assesses=[] -->
 
 **entdecken** — "to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entdecken** is *ent-*, "off, away", + the verb "to cover", Old High German *decchen*, built on the word for "roof", *Dach* (EtymDB 2.1): to uncover, built like English *discover*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

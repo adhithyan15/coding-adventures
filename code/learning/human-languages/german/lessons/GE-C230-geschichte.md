@@ -14,6 +14,7 @@ concept_tag: GE-THING230-GESCHICHTE
 prerequisites: [GE-C229-gegend, GE-C230-gegenteil]
 sounds: []
 roots: []
+etymology_hook: "Geschichte ← Old High German gisciht 'event' — what happened, then the telling of it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C230-gegenteil]
 <!-- hl-knowledge: introduces=[GE-LEX-C230-THING230-02]; assesses=[] -->
 
 **die Geschichte** — "a story, history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Geschichte** ← Middle High German *geschicht* ← Old High German *gisciht*, "event" (EtymDB 2.1) — inherited, from the verb "to happen". A story is what happened, told.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

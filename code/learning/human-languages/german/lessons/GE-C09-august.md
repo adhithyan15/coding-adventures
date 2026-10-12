@@ -50,6 +50,11 @@ for himself. Two men in a row, side by side in the year, and then it stops:
 The weight falls on the second syllable in German — *au-GUST* — where English
 puts it on the first.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**August** ← Latin *Augustus*, the emperor's title, from *augustus*, "venerable" — borrowed. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUGUST-01] -->
 

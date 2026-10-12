@@ -14,6 +14,7 @@ concept_tag: GE-VERB-WIEDERHOLEN
 prerequisites: [GE-C153-wechseln, GE-C153-werfen]
 sounds: []
 roots: []
+etymology_hook: "wiederholen — wieder 'again' + holen 'to fetch': to fetch back"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C153-werfen]
 <!-- hl-knowledge: introduces=[GE-LEX-C153-VERB153-04]; assesses=[] -->
 
 **wiederholen** — "to repeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wiederholen** is *wieder* + *holen*, "to fetch": to fetch something back. *holen* ← Middle High German *holen*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

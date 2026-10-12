@@ -13,7 +13,8 @@ gloss: "an elephant"
 concept_tag: GE-TIERE3-ELEFANT
 prerequisites: [GE-C88-biene, GE-C88-ameise]
 sounds: []
-roots: []
+roots: [elephas-latin]
+etymology_hook: "Elefant ← Latin elephantus ← Greek eléphas — borrowed, like English elephant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C88-ameise]
 <!-- hl-knowledge: introduces=[GE-LEX-C88-TIERE3-03]; assesses=[] -->
 
 **der Elefant** — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Elefant** ← Latin *elephantus* ← Greek *eléphas* (EtymDB 2.1) — borrowed, like English *elephant*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

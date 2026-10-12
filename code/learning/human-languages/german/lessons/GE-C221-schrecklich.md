@@ -14,6 +14,7 @@ concept_tag: GE-QUAL221-SCHRECKLICH
 prerequisites: [GE-C220-sauer, GE-C221-schlank]
 sounds: []
 roots: []
+etymology_hook: "schrecklich — the word for 'fright' + -lich; from Old High German skreckōn 'to jump up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C221-schlank]
 <!-- hl-knowledge: introduces=[GE-LEX-C221-QUAL221-02]; assesses=[] -->
 
 **schrecklich** — "dreadful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schrecklich** is the word for "fright" + *-lich*. It comes from the verb Old High German *skreckōn*, "to jump up in fright" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

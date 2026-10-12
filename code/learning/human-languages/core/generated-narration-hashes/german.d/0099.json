@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 99,
-  "sourceHash": "fnv1a64:1c55b70bb8463998",
+  "sourceHash": "fnv1a64:ea4be61adb8165b2",
   "lessonIds": [
     "GE-C99-kleid",
     "GE-C99-hose",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch99.txt",
   "json": "german/narration/ch99.json",
-  "textHash": "fnv1a64:105eaa7117e0e90b",
-  "jsonHash": "fnv1a64:d816eeda539abdb6",
+  "textHash": "fnv1a64:babbd728a2bbff94",
+  "jsonHash": "fnv1a64:f533d948dfa24bd9",
   "findings": []
 }

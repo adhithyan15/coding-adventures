@@ -14,6 +14,7 @@ concept_tag: GE-VERB-AUFPASSEN
 prerequisites: [GE-C244-abschliessen, GE-C244-anmelden]
 sounds: []
 roots: []
+etymology_hook: "aufpassen — auf + passen 'to fit, to watch', from Dutch passen ← French passer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C244-anmelden]
 <!-- hl-knowledge: introduces=[GE-LEX-C245-VERB245-01]; assesses=[] -->
 
 **aufpassen** — "to pay attention, to look after".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aufpassen** is *auf* + the verb "to fit, to look out", from Dutch *passen* ← French *passer* (EtymDB 2.1): to keep watch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

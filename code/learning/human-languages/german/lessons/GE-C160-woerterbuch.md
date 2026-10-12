@@ -13,7 +13,8 @@ gloss: "a dictionary"
 concept_tag: GE-THING160-WOERTERBUCH
 prerequisites: [GE-C160-kurs, GE-C160-aufgabe]
 sounds: []
-roots: []
+roots: [germanic-wurda]
+etymology_hook: "Wörterbuch — Wörter 'words' + Buch 'book': a word-book"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C160-aufgabe]
 <!-- hl-knowledge: introduces=[GE-LEX-C160-THING160-04]; assesses=[] -->
 
 **das Wörterbuch** — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wörterbuch** is *Wörter*, the plural of *Wort*, + the word for "book", Old High German *buoh* (EtymDB 2.1): a book of words, like Dutch *woordenboek*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

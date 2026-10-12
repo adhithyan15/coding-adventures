@@ -14,6 +14,7 @@ concept_tag: GE-THING203-STOFF
 prerequisites: [GE-C203-portemonnaie, GE-C203-groesse]
 sounds: []
 roots: []
+etymology_hook: "Stoff ← Old French estoffe — borrowed; English stuff is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C203-groesse]
 <!-- hl-knowledge: introduces=[GE-LEX-C203-THING203-03]; assesses=[] -->
 
 **der Stoff** — "material, fabric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stoff** came in from Old French *estoffe*, "material"; EtymDB 2.1 lists it beside English *stuff*, the same French word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

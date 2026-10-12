@@ -13,7 +13,8 @@ gloss: "gloves"
 concept_tag: GE-DINGE118-HANDSCHUHE
 prerequisites: [GE-C118-pullover, GE-C118-krawatte]
 sounds: []
-roots: []
+roots: [germanic-handuz, germanic-skohaz]
+etymology_hook: "Handschuhe — Hand + Schuh 'shoe': shoes for the hands"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C118-krawatte]
 <!-- hl-knowledge: introduces=[GE-LEX-C118-DINGE118-05]; assesses=[] -->
 
 **die Handschuhe** — "gloves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Handschuhe** is the plural of *Handschuh* ← Middle High German *hantschuoch*: *Hand* + *Schuh* (EtymDB 2.1). A glove is a shoe for the hand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

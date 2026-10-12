@@ -12,6 +12,9 @@ Before the new one: say the German for far, then the German for on the right.
 You'll want to know: der Laden.
 der Laden — "a shop".
 
+The word, taken apart.
+Laden from Middle High German lade, "board, plank, shutter" from Old High German lado from Proto-Germanic laþô (EtymDB 2.1) — inherited: a shop was first the shutter-board goods were laid out on.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for on the right, then the German for a shop.
 
 You'll want to know: der Markt.
 der Markt — "a market".
+
+The word, taken apart.
+Markt from Old High German marcāt from Latin mercātus, "trade, market" (EtymDB 2.1) — borrowed, like English market.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a shop, then the German for a market.
 You'll want to know: der Bahnhof.
 der Bahnhof — "a railway station".
 
+The word, taken apart.
+Bahnhof is built from the word for "way, track" (Old High German bana, "path") and the word for "yard, court" (Old High German hof) — both inherited (EtymDB 2.1): the railway's yard.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a market, then the German for a railway s
 You'll want to know: das Flugzeug.
 das Flugzeug — "an aeroplane".
 
+The word, taken apart.
+Flugzeug is built from the word for "flight", Old High German flug from Proto-Germanic flugiz, and the word for "gear, stuff", Old High German giziug (EtymDB 2.1): a flying device.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a railway station, then the German for an
 
 You'll want to know: das Auto.
 das Auto — "a car".
+
+The word, taken apart.
+Auto is short for the longer word for "automobile", taken from French and built from Greek autós, "self", and Latin mōbilis, "movable": a carriage that moves itself. EtymDB 2.1 has the French auto as its source.
 
 What you've built.
 One more word for this chapter.

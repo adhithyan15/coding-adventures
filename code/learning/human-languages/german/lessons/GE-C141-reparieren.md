@@ -13,7 +13,8 @@ gloss: "to repair"
 concept_tag: GE-VERB-REPARIEREN
 prerequisites: [GE-C141-mieten, GE-C141-packen]
 sounds: []
-roots: []
+roots: [reparare-latin]
+etymology_hook: "reparieren ← Latin reparāre 'to restore' — borrowed with the -ieren ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C141-packen]
 <!-- hl-knowledge: introduces=[GE-LEX-C141-VERB141-04]; assesses=[] -->
 
 **reparieren** — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reparieren** ← Latin *reparāre*, "to renew, to repair" (EtymDB 2.1 has the Latin verb) — borrowed, with the German ending *-ieren*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

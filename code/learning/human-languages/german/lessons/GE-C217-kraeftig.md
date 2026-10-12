@@ -13,7 +13,8 @@ gloss: "strong, hearty"
 concept_tag: GE-QUAL217-KRAEFTIG
 prerequisites: [GE-C217-klug, GE-C217-kostenlos]
 sounds: []
-roots: []
+roots: [germanic-kraftaz]
+etymology_hook: "kräftig — the word for 'strength' + -ig; that word is the same as English craft"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C217-kostenlos]
 <!-- hl-knowledge: introduces=[GE-LEX-C217-QUAL217-04]; assesses=[] -->
 
 **kräftig** — "strong, hearty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kräftig** is the word for "strength", Old High German *kraft* ← Proto-Germanic *\*kraftaz* (EtymDB 2.1), + *-ig*. English *craft*, first "strength, skill", is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

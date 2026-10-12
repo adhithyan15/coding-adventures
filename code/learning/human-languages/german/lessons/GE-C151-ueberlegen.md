@@ -13,7 +13,8 @@ gloss: "to think over"
 concept_tag: GE-VERB-UEBERLEGEN
 prerequisites: [GE-C151-traeumen, GE-C151-ueben]
 sounds: []
-roots: []
+roots: [germanic-lagjana]
+etymology_hook: "überlegen — 'over' + legen 'to lay': to turn something over in the mind"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C151-ueben]
 <!-- hl-knowledge: introduces=[GE-LEX-C151-VERB151-04]; assesses=[] -->
 
 **überlegen** — "to think over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**überlegen** is the word for "over" + *legen*, "to lay" ← Proto-Germanic *\*lagjaną* (EtymDB 2.1): to lay a thing over and look at it from the other side.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

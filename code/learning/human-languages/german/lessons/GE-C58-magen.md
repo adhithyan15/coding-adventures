@@ -13,7 +13,8 @@ gloss: "the stomach"
 concept_tag: GE-KOERPER3-MAGEN
 prerequisites: [GE-C58-lippe, GE-C58-zehe]
 sounds: []
-roots: []
+roots: [germanic-mago]
+etymology_hook: "Magen ← Old High German mago ← Proto-Germanic *magô 'stomach' — the same word as English maw"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C58-zehe]
 <!-- hl-knowledge: introduces=[GE-LEX-C58-KOERPER3-05]; assesses=[] -->
 
 **der Magen** — "the stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Magen** ← Old High German *mago* ← Proto-Germanic *\*magô*, "stomach" — inherited, the same word as English *maw*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

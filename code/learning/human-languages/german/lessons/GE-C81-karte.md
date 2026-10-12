@@ -13,7 +13,8 @@ gloss: "a card; a map; a ticket"
 concept_tag: GE-SCHULE-KARTE
 prerequisites: [GE-C80-papier, GE-C81-schule]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "Karte ← Latin charta ← Greek chártēs 'sheet of papyrus' — borrowed; English card and chart share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C81-schule]
 <!-- hl-knowledge: introduces=[GE-LEX-C81-SCHULE-02]; assesses=[] -->
 
 **die Karte** — "a card; a map; a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Karte** ← Latin *charta* ← Greek *chártēs*, "sheet of papyrus" (EtymDB 2.1) — borrowed, by way of French. English *card* and *chart* come from the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

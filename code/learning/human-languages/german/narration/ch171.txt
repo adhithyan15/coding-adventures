@@ -12,6 +12,9 @@ Before the new one: say the German for finally, then the German for still.
 You'll want to know: erst.
 erst — "only (so far), not until".
 
+The word, taken apart.
+erst from Old High German ērist, "first" from Proto-Germanic airistaz, "earliest" — inherited, the same word as old English erst, "formerly". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for still, then the German for only.
 
 You'll want to know: zuerst.
 zuerst — "first".
+
+The word, taken apart.
+zuerst is zu-, "at", + erst, "first" from Proto-Germanic airistaz (EtymDB 2.1): at first.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for only, then the German for first.
 You'll want to know: danach.
 danach — "afterwards".
 
+The word, taken apart.
+danach is the word for "there, that" + the word for "after": after that. EtymDB 2.1 has the compound but not its parts; both are inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for first, then the German for afterwards.
 You'll want to know: vorher.
 vorher — "before, beforehand".
 
+The word, taken apart.
+vorher is the word for "before" + her, "hither", Old High German hera (EtymDB 2.1): before the time you are looking from.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for afterwards, then the German for before.
 
 You'll want to know: nachher.
 nachher — "later, afterwards".
+
+The word, taken apart.
+nachher is the word for "after" + her, "hither", Old High German hera (EtymDB 2.1): after the time you are looking from.
 
 What you've built.
 One more word for this chapter.

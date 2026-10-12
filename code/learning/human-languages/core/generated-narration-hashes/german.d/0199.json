@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 199,
-  "sourceHash": "fnv1a64:764101ca135c5abd",
+  "sourceHash": "fnv1a64:e53b7499e3ccd3d0",
   "lessonIds": [
     "GE-C199-gras",
     "GE-C199-frucht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch199.txt",
   "json": "german/narration/ch199.json",
-  "textHash": "fnv1a64:71663253191561b6",
-  "jsonHash": "fnv1a64:5623aae9befb34ec",
+  "textHash": "fnv1a64:b7d4fa9c8e5ba4bf",
+  "jsonHash": "fnv1a64:2378399580ea34a9",
   "findings": []
 }

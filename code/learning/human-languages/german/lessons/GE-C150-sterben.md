@@ -13,7 +13,8 @@ gloss: "to die"
 concept_tag: GE-VERB-STERBEN
 prerequisites: [GE-C150-sparen, GE-C150-springen]
 sounds: []
-roots: []
+roots: [germanic-sterbana]
+etymology_hook: "sterben ← Old High German sterban ← Proto-Germanic *sterbaną 'to stiffen, to die' — English starve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C150-springen]
 <!-- hl-knowledge: introduces=[GE-LEX-C150-VERB150-03]; assesses=[] -->
 
 **sterben** — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sterben** ← Old High German *sterban* ← Proto-Germanic *\*sterbaną*, "to become stiff, to die" — inherited. (EtymDB 2.1) English *starve* is the same verb, narrowed to dying of hunger.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

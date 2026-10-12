@@ -14,6 +14,7 @@ concept_tag: GE-VERB-STOEREN
 prerequisites: [GE-C150-springen, GE-C150-sterben]
 sounds: []
 roots: []
+etymology_hook: "stören ← Middle High German stœren, Old High German stōren 'to scatter' — EtymDB lists it beside English stir"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C150-sterben]
 <!-- hl-knowledge: introduces=[GE-LEX-C150-VERB150-04]; assesses=[] -->
 
 **stören** — "to disturb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stören** ← Middle High German *stœren* ← Old High German *stōren*, "to scatter, to destroy" — inherited. EtymDB 2.1 lists it beside English *stir* and Dutch *storen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

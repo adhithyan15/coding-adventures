@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "To Have",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:a3489715fe85b430",
+  "sourceHash": "fnv1a64:41c10485879c3c04",
   "lessons": [
     {
       "id": "GE-C14-haben",
@@ -300,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dce73c8535772cd",
+      "sourceHash": "fnv1a64:21ac45e7dfe0425a",
       "notice": null,
       "blocks": [
         {
@@ -341,6 +341,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hast is a form of haben from Old High German habēn from Proto-Germanic habjaną — inherited, the same verb as English have. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -355,7 +366,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -404,7 +415,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -435,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f5508cfc9db6323",
+      "sourceHash": "fnv1a64:c422d86fde82bb9c",
       "notice": null,
       "blocks": [
         {
@@ -476,6 +487,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hat is a form of haben from Old High German habēn from Proto-Germanic habjaną — inherited, the same verb as English have. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -524,7 +546,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -694,7 +716,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44b77490f3fcfd22",
+      "sourceHash": "fnv1a64:2435412d7ee31609",
       "notice": null,
       "blocks": [
         {
@@ -747,6 +769,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "einen is a form of ein from Old High German ein from Proto-Germanic ainaz, \"one\" — inherited, the same word as English one. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -795,7 +828,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

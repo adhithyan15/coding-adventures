@@ -13,7 +13,8 @@ gloss: "probably"
 concept_tag: GE-ADV172-WAHRSCHEINLICH
 prerequisites: [GE-C172-leider, GE-C172-vielleicht]
 sounds: []
-roots: []
+roots: [germanic-weraz]
+etymology_hook: "wahrscheinlich — 'true' + 'appearance' + -lich: likely to be true, after Latin vērisimilis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C172-vielleicht]
 <!-- hl-knowledge: introduces=[GE-LEX-C172-ADV172-03]; assesses=[] -->
 
 **wahrscheinlich** — "probably".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wahrscheinlich** is the word for "true", Old High German *wār*, + the word for "appearance, shine", English *shine* (EtymDB 2.1), + *-lich*: "true-seeming", a copy of Latin *vērisimilis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

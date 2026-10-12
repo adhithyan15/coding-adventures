@@ -13,7 +13,8 @@ gloss: "to dream"
 concept_tag: GE-VERB-TRAEUMEN
 prerequisites: [GE-C150-streiten, GE-C151-treffen]
 sounds: []
-roots: []
+roots: [germanic-draumaz]
+etymology_hook: "träumen ← Old High German troumen, built on the word for 'dream' — the same as English dream"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C151-treffen]
 <!-- hl-knowledge: introduces=[GE-LEX-C151-VERB151-02]; assesses=[] -->
 
 **träumen** — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**träumen** ← Old High German *troumen*, the verb of the word for "a dream", Proto-Germanic *\*draumaz* (EtymDB 2.1) — inherited, the same word as English *dream*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

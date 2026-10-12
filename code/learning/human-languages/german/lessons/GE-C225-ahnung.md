@@ -14,6 +14,7 @@ concept_tag: GE-THING225-AHNUNG
 prerequisites: [GE-C224-witzig, GE-C225-abenteuer]
 sounds: []
 roots: []
+etymology_hook: "Ahnung — the verb 'to sense, to suspect' + -ung; from Middle High German anen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C225-abenteuer]
 <!-- hl-knowledge: introduces=[GE-LEX-C225-THING225-02]; assesses=[] -->
 
 **die Ahnung** — "an idea, a notion (keine Ahnung: no idea)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ahnung** is the verb "to sense, to suspect", Middle High German *anen* (EtymDB 2.1), + *-ung*: a hunch. Its earlier origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

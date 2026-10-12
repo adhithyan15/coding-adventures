@@ -14,6 +14,7 @@ concept_tag: GE-FARBE130-HUEBSCH
 prerequisites: [GE-C130-rosa, GE-C130-orange]
 sounds: []
 roots: []
+etymology_hook: "hübsch ← Middle High German hübesch 'courtly' — pretty was what suited the court"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C130-orange]
 <!-- hl-knowledge: introduces=[GE-LEX-C130-FARBE130-03]; assesses=[] -->
 
 **hübsch** — "pretty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hübsch** ← Middle High German *hübesch*, "courtly" (EtymDB 2.1), built on the word for "court", itself copying French *courtois*. Pretty was what suited the court.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "breakfast"
 concept_tag: GE-ESSEN4-FRUEHSTUECK
 prerequisites: [GE-C71-mittagessen, GE-C72-abendessen]
 sounds: []
-roots: []
+roots: [germanic-fruo]
+etymology_hook: "Frühstück — früh 'early' + the word for 'a piece': the early bite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C72-abendessen]
 <!-- hl-knowledge: introduces=[GE-LEX-C72-ESSEN4-02]; assesses=[] -->
 
 **das Frühstück** — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Frühstück** is *früh*, "early", + the word for "a piece", Old High German *stucki* (EtymDB 2.1): the early bite of bread.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

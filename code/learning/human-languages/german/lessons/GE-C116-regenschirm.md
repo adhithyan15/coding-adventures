@@ -13,7 +13,8 @@ gloss: "an umbrella"
 concept_tag: GE-DINGE116-REGENSCHIRM
 prerequisites: [GE-C116-kamera, GE-C116-brille]
 sounds: []
-roots: []
+roots: [germanic-regen-rain]
+etymology_hook: "Regenschirm — Regen 'rain' + Schirm 'screen, shield': a rain shield"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C116-brille]
 <!-- hl-knowledge: introduces=[GE-LEX-C116-DINGE116-05]; assesses=[] -->
 
 **der Regenschirm** — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Regenschirm** is *Regen*, "rain", + *Schirm*, "screen, shield" (EtymDB 2.1): a shield against rain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

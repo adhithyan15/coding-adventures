@@ -13,7 +13,8 @@ gloss: "a state"
 concept_tag: GE-THING208-STAAT
 prerequisites: [GE-C208-strafe, GE-C208-regierung]
 sounds: []
-roots: []
+roots: [status-latin]
+etymology_hook: "Staat ← Low German and Dutch staet ← Latin status 'condition, standing' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C208-regierung]
 <!-- hl-knowledge: introduces=[GE-LEX-C208-THING208-04]; assesses=[] -->
 
 **der Staat** — "a state".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Staat** ← Middle Low German *stāt* ← Middle Dutch *staet*, "state, country" (EtymDB 2.1), from Latin *status*, "condition, standing" — borrowed, like English *state*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

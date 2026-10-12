@@ -13,7 +13,8 @@ gloss: "to take off (clothes), to move out"
 concept_tag: GE-VERB-AUSZIEHEN
 prerequisites: [GE-C174-abfahren, GE-C174-ankommen]
 sounds: []
-roots: []
+roots: [germanic-teuhana]
+etymology_hook: "ausziehen — aus- 'out' + ziehen 'to pull': to pull off clothes, or pull out of a home"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C174-ankommen]
 <!-- hl-knowledge: introduces=[GE-LEX-C174-VERB174-04]; assesses=[] -->
 
 **ausziehen** — "to take off (clothes), to move out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ausziehen** is *aus-*, "out", + *ziehen*, "to pull" ← Proto-Germanic *\*teuhaną* (EtymDB 2.1): to pull off, or to pull out of a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

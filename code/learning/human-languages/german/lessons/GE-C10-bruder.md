@@ -47,6 +47,11 @@ read already.
 A *der*-word. Set it beside English **brother** and one vowel is the whole
 distance: *oo* where English has *uh*.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bruder** ← Old High German *bruoder* ← Proto-Germanic *\*brōþēr* — inherited, the same word as English *brother*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BRUDER-01] -->
 
