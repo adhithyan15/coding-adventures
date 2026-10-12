@@ -6381,7 +6381,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                     }
                 }
             }
-            for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+            for edge in diagram.edges.iter_mut().filter(|edge| swimlane_edge_matches_target(edge, &target_id)) {
                 matched = true;
                 for class in &classes {
                     if !edge.classes.contains(class) {
@@ -6416,7 +6416,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             matched = true;
             merge_state_style(&mut node.style, &style);
         }
-        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+        for edge in diagram.edges.iter_mut().filter(|edge| swimlane_edge_matches_target(edge, &target_id)) {
             matched = true;
             merge_state_style(&mut edge.style, &style);
         }
@@ -6428,6 +6428,17 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
 }
 
 enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
+
+#[cfg(test)]
+std::thread_local! {
+    static SWIMLANE_TARGET_EDGE_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+fn swimlane_edge_matches_target(edge: &SwimlaneEdge, target: &str) -> bool {
+    #[cfg(test)]
+    SWIMLANE_TARGET_EDGE_VISITS.with(|count| count.set(count.get() + 1));
+    edge.id.as_deref() == Some(target)
+}
 
 fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction, ParseError> {
     let Some((node_id, rest)) = value.trim().split_once(char::is_whitespace) else {
@@ -17741,6 +17752,9 @@ mod tests {
     }
 }
 
+
+#[cfg(test)]
+mod edge_target_work_tests;
 
 #[cfg(test)]
 mod styled_label_work_tests {
