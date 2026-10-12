@@ -6365,6 +6365,12 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut node.style, style);
         }
     }
+    // All authored edges now exist. One ordered lookup keeps node-only targets
+    // from repeatedly scanning unrelated edges. Keys own each distinct ID once,
+    // so later class/style mutation cannot invalidate borrowed string keys.
+    // Duplicate IDs retain every authored index; real matching updates still
+    // cost work and are accounted separately from target discovery.
+    let edge_targets = swimlane_edge_target_index(&diagram.edges);
     for (node_ids, classes, line) in pending_classes {
         for class in &classes {
             if !class_styles.contains_key(class) {
@@ -6381,7 +6387,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                     }
                 }
             }
-            for edge in diagram.edges.iter_mut().filter(|edge| swimlane_edge_matches_target(edge, &target_id)) {
+            for &edge_index in swimlane_edge_target_indices(&edge_targets, &target_id) {
+                #[cfg(test)]
+                SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
+                let edge = &mut diagram.edges[edge_index];
                 matched = true;
                 for class in &classes {
                     if !edge.classes.contains(class) {
@@ -6416,7 +6425,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             matched = true;
             merge_state_style(&mut node.style, &style);
         }
-        for edge in diagram.edges.iter_mut().filter(|edge| swimlane_edge_matches_target(edge, &target_id)) {
+        for &edge_index in swimlane_edge_target_indices(&edge_targets, &target_id) {
+            #[cfg(test)]
+            SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
+            let edge = &mut diagram.edges[edge_index];
             matched = true;
             merge_state_style(&mut edge.style, &style);
         }
@@ -6432,12 +6444,29 @@ enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
 #[cfg(test)]
 std::thread_local! {
     static SWIMLANE_TARGET_EDGE_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static SWIMLANE_TARGET_LOOKUPS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static SWIMLANE_TARGET_MATCH_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
 }
 
-fn swimlane_edge_matches_target(edge: &SwimlaneEdge, target: &str) -> bool {
+fn swimlane_edge_target_index(edges: &[SwimlaneEdge]) -> std::collections::BTreeMap<String, Vec<usize>> {
+    let mut targets = std::collections::BTreeMap::<String, Vec<usize>>::new();
+    for (index, edge) in edges.iter().enumerate() {
+        #[cfg(test)]
+        SWIMLANE_TARGET_EDGE_VISITS.with(|count| count.set(count.get() + 1));
+        let Some(id) = edge.id.as_deref() else { continue; };
+        if let Some(indices) = targets.get_mut(id) {
+            indices.push(index);
+        } else {
+            targets.insert(id.to_string(), vec![index]);
+        }
+    }
+    targets
+}
+
+fn swimlane_edge_target_indices<'a>(targets: &'a std::collections::BTreeMap<String, Vec<usize>>, target: &str) -> &'a [usize] {
     #[cfg(test)]
-    SWIMLANE_TARGET_EDGE_VISITS.with(|count| count.set(count.get() + 1));
-    edge.id.as_deref() == Some(target)
+    SWIMLANE_TARGET_LOOKUPS.with(|count| count.set(count.get() + 1));
+    targets.get(target).map_or(&[], Vec::as_slice)
 }
 
 fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction, ParseError> {

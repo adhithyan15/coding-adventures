@@ -302,3 +302,7 @@ index remains unchanged. See DG04's styled-label discovery contract and #17335.
 
 Swimlane authored edge IDs also preserve metadata after multibyte whitespace
 separators; identifier slicing advances over the complete UTF-8 scalar.
+
+Class/style edge targets use one ordered ID index, retaining all duplicate-ID
+matches and node/edge-ID collisions. Node-only targets avoid repeated full-edge
+scans; actual matching updates and existing node/class/style costs remain separate.

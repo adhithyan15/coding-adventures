@@ -3,6 +3,8 @@ use super::*;
 
 fn reset_visits() {
     SWIMLANE_TARGET_EDGE_VISITS.with(|count| count.set(0));
+    SWIMLANE_TARGET_LOOKUPS.with(|count| count.set(0));
+    SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(0));
 }
 
 fn visits() -> usize {
@@ -27,6 +29,8 @@ fn node_only_class_targets_do_not_rescan_unidentified_edges() {
         assert_eq!(diagram.nodes[0].classes, ["marked"]);
         assert_eq!(diagram.nodes[0].style.stroke.as_deref(), Some("#123456"));
         assert_eq!(visits(), count, "count={count}; actual full-edge discovery visits={}", visits());
+        assert_eq!(SWIMLANE_TARGET_LOOKUPS.with(std::cell::Cell::get), count);
+        assert_eq!(SWIMLANE_TARGET_MATCH_VISITS.with(std::cell::Cell::get), 0);
     }
 }
 
@@ -41,13 +45,19 @@ fn node_only_style_targets_do_not_rescan_unidentified_edges() {
         assert!(diagram.edges.iter().all(|edge| edge.id.is_none() && edge.classes.is_empty() && edge.style == DiagramStyle::default()));
         assert_eq!(diagram.nodes[0].style.stroke.as_deref(), Some("#123456"));
         assert_eq!(visits(), count, "count={count}; actual full-edge discovery visits={}", visits());
+        assert_eq!(SWIMLANE_TARGET_LOOKUPS.with(std::cell::Cell::get), count);
+        assert_eq!(SWIMLANE_TARGET_MATCH_VISITS.with(std::cell::Cell::get), 0);
     }
 }
 
 #[test]
 fn duplicate_ids_node_collisions_and_precedence_preserve_exact_metadata() {
     let source = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na a@--> b\na a@==> b\na --> b\nclassDef first stroke:#123456,stroke-width:2\nclassDef second stroke:#654321,stroke-width:3\nclass a,a first,second\nstyle a stroke:#abcdef\nstyle a stroke-width:7";
+    reset_visits();
     let diagram = parse_swimlane(source).expect("duplicate edge IDs and existing node ID");
+    assert_eq!(visits(), 3);
+    assert_eq!(SWIMLANE_TARGET_LOOKUPS.with(std::cell::Cell::get), 4);
+    assert_eq!(SWIMLANE_TARGET_MATCH_VISITS.with(std::cell::Cell::get), 8);
     assert_eq!(diagram.edges.len(), 3);
     let expected = DiagramStyle { stroke: Some("#abcdef".into()), stroke_width: Some(7.0), ..DiagramStyle::default() };
     assert_eq!(diagram.nodes[0].classes, ["first", "second"]);

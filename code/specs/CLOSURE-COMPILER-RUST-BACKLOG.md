@@ -1170,6 +1170,11 @@ each node-only target scans every edge despite absent edge IDs. The isolated
 dd9b81c8 integration also actually fails compile at the preserved resource
 fixture's new classes/style fields, zero tests executed. Retain both findings.
 The DG04 target-index work/semantic contract precedes repair tests/source.
+Actual original scan at f2cc672d7d has two work failures:32 duplicate unidentified
+edges/32 node-only targets each cause1,024 edge visits, versus32 once-built
+index visits. The duplicate-ID/node-collision/precedence semantic control passes.
+Issue [#17346](https://github.com/adhithyan15/coding-adventures/issues/17346)
+tracks the bounded target index and exact discovery/application counters.
 New bounded diagram validation, current-main final review and current-head CI
 remain PENDING; auto-merge disabled. Keep one active PR17288. No ALGOL/compiler
 source receipt is relabeled or full pipeline linearity claimed. Full final-source
