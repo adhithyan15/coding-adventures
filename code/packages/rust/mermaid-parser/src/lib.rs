@@ -17712,6 +17712,37 @@ mod tests {
 mod styled_label_work_tests {
     use super::*;
 
+    #[test]
+    fn edge_ids_after_unicode_whitespace_preserve_public_parse_semantics() {
+        for separator in ['\u{00a0}', '\u{2003}', '\u{3000}'] {
+            for operator in ["-->", "-- café --->", "== café ===>", "-. café ...->"] {
+                let source = format!("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na{separator}handoff@{operator} b");
+                let plain = source.replace("handoff@", "");
+                let expected = parse_swimlane(&plain).expect("admitted separator without ID");
+                let actual = parse_swimlane(&source).expect("same separator with ID");
+                assert_eq!(actual.edges.len(), 1);
+                let mut edge = actual.edges[0].clone();
+                assert_eq!(edge.id.take().as_deref(), Some("handoff"));
+                assert_eq!(edge, expected.edges[0], "separator={separator:?}, operator={operator}");
+                assert_eq!(actual.nodes, expected.nodes);
+                assert_eq!(actual.lanes, expected.lanes);
+            }
+        }
+    }
+
+    #[test]
+    fn ascii_ids_chains_and_absent_ids_preserve_authored_order() {
+        let source = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na first@--> b second@==> c --> d";
+        let actual = parse_swimlane(source).expect("ASCII identifiers and no identifier");
+        let plain = source.replace("first@", "").replace("second@", "");
+        let expected = parse_swimlane(&plain).expect("same authored edges without IDs");
+        assert_eq!(actual.edges.len(), 3);
+        for (mut edge, (expected, id)) in actual.edges.into_iter().zip(expected.edges.into_iter().zip([Some("first"), Some("second"), None])) {
+            assert_eq!(edge.id.take().as_deref(), id);
+            assert_eq!(edge, expected);
+        }
+    }
+
     fn reset_predicates() {
         SWIMLANE_LABEL_RUN_PREDICATES.with(|count| count.set(0));
     }
