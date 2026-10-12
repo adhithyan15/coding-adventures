@@ -2,6 +2,52 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 rounded integration -->
+CV04a rounded Swimlane reconciliation integrates main `19be4bad9817a4c5d17b61787fbb7e798aee145f`
+(#17385 and Sanskrit/Urdu/German source imports). Spec3d96cd6f10 precedes merge/
+tests. Actual source `3f8d0a914f0c8545bd997067425f1e5bf1b34289` retains upstream orthogonal routing and
+radius12/half-segment quadratic cuts. Exact public-layout long/short LR/RL/TB/BT
+fixtures assert complete route commands and both marker triangles/style/area50;
+two real authored aligned layouts keep42-unit routes. Perpendicular LR-vertical/
+TB-horizontal routes retain visible markers; actual zero routes keep degeneracy.
+Four new tests preserve all earlier curve/control-order/parser-work/Arc assertions.
+
+Red source4b736eb8: actual cargo101,3PASS/1FAIL, exact perpendicular triangle
+collapsed to its tip. Compilation, long/short/aligned/zero controls passed.
+Two Rounded endpoint references now call existing bounded marker_reference;
+no routing/corner/limit/dependency/unsafe change. Merge conflict at cubic/rounded
+dispatch resolved by retaining both original bounded cubic-reference repair and
+the imported Rounded branch. Original negative receipts remain preserved.
+
+Actual complete metadata-derived17packages **829 tests/docs/37targets/0fail/
+1existingGDIignore**, strict17alltarget warnings/unknown-lints denied, neutral
+oracle27/Python18/Ruff/docs/1101lessons/whitespace PASS. Twenty-four
+focused executions excluded from unique counts (authored rounded runs twice).
+COMPLETE14rows and actual validator EXIT0 required. First import preflight50515
+refused beforeCargo tests/receipt/CPwrite: expected11paths omittedDG04 spec from
+actual12-path inventory. Corrected count retries identical3f source without
+testduplication; original helper and negative retained.
+
+Complete additive compiler/shared/LANG/program/script/CI objects retain actual
+766/8e1258/122/1existingarchiveignore/strict4/all11BUILD/46native without replay
+or reattribution. SwiftUI525 six-package/scripts retain637/30/strict6/Python46/
+freshprofile1; TaskApp runtime/config exact except two release docs. Full closed
+Sanskrit/Urdu/German/content/TS-test import inventory retained, execution/accuracy
+unclaimed. Complete old/new relative owned-repair diffs retained for review.
+
+Final backlog-only fullobject/payload proof and independent exact-final security,
+freshmain/openPR complete files/review/conflicts precede same sole PR17288 push.
+Current7dc CI stays active until new reviewed workflow exists. Exacthead terminal
+acceptable required checks/whole3OSnativeSUCCESS/packageSUCCESS/timestamped
+ClosurecBUILT gate auto-merge. Actual fetched-main reachability/full mode/type/
+blob payload proof precede cleanup/CV04b. Full final-source Miri **DEFERRED/PENDING**,
+never passed; frozenrun/497inputs/checkout/receipts/target untouched without
+progresspolling/termination/duplicate. Implementationdelivery FIRST, genuine
+final-source Miri afterward with invalidated-input reruns. BaseESTree/ownedtypes/
+no new crates.io deps. Full Closure parity/output joins/all transformation
+lineage/CV04b/fullgoal OPEN; heartbeat ACTIVE.
+<!-- /CV04 rounded integration -->
+
 <!-- CV04 additive selector integration -->
 CV04a additive-selector reconciliation (October12) integrates main
 `8e7e8e9334a9feec1006d76784cf1fb268edf025` (#17381). Spec da0634cea0 precedes merge/tests; actual
