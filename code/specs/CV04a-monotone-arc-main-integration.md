@@ -26,6 +26,11 @@ geometry script leaves from the unchanged compiler validation script inventory.
 Italian/parity state/roadmap additions are authored main imports. Do not claim
 new curriculum, assessment, cross-language package parity, every geometry
 backend or production deployment acceptance from their source inspection.
+Add an actual Rust Arc2D control for every newly imported neutral tangent case:
+raw signed parameter derivatives for positive/negative rotated sweeps and zero
+sweep, all four exact fixture IDs and unchanged pinned absolute tolerance1e-12.
+Keep the existing SVG degenerate roster/assertions intact. This adds evidence
+for the Rust lane only; the independent Python oracle remains separate.
 Record exact integrated main and actual source heads explicitly, with no
 audited-ref/native-ancestry ambiguity. Require actual subprocess completion,
 final backlog-only complete object/payload proof and independent exact-head
