@@ -24,7 +24,7 @@
     "notes": "PR #17325 merged by GitHub auto-merge at 2026-10-12T19:31:00Z as 92f7d0f5e68687bda9c97e989bf9278578b36361 from reviewed head 9fb306901ee17b94caedbb5e9f9da65633908258. All 32 checks terminal acceptable; both required gates passed. Auto-only enable accepted at 2026-10-12T19:30:55Z; no manual merge. Merge verified on fetched origin/main. Saved audits and two added pending owners preserved for post-merge inventory and selection."
   },
   "last_inventory": {
-    "revision": "92f7d0f5e68687bda9c97e989bf9278578b36361",
+    "revision": "a54dae143851bc58a37afeddb777ba1f4938ebdb",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1506,
@@ -41,7 +41,8 @@
     "rust_singletons": 825,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
-    "unknown_language_buckets": 0
+    "unknown_language_buckets": 0,
+    "audit_notes": "Final collision-checked 15-lane inventory at a54dae1438 is byte-identical to post-#17325 inventory; 1,336 owners / 2,386 edges; no missing dependency, identity collision, new package root or unowned gap. All 15 live open PRs clear the seven product paths; #17185 journal overlap remains separately owned. PR #17374 file-list cap resolved by immutable mode/type/blob comparisons. External haskell-registry-final-inventory-overlap.md preserves the receipt."
   },
   "items": [
     {
@@ -869,7 +870,7 @@
       ],
       "branch": "codex/parity-haskell-registry-20261012",
       "pr_number": null,
-      "notes": "Fresh post-#17283 read-only audit: #16891 already fixed exact _build. Six generated components remain missing (.cargo, .dart_tool, .gradle, blib, dist-newstyle, gradle-build), language inference uses any absolute path component, and the specification tree can enter discovery. Consume the complete 29-record/25-package shared registry fixture with exact relative bucket identity; retain the existing four-record Dune regression and add exact/near-case generated component and ancestor-name tests. Existing Haskell native fixture CI mapping applies. Canonical BUILD membership/platform variants and duplicate identities have separate owners. External validation plan saved: haskell-registry-validation-plan.md. Existing cabal.project enables the build-tool/graph/directed-graph/sha256 closure tests; optimized full suite and separate focused HPC coverage avoid SHA allocation-test instrumentation interference. Coverage remains unmeasured until actual execution. Full fixture materializer must allow specs decoys while bounding and validating all paths and counts.",
+      "notes": "Fresh post-#17283 read-only audit: #16891 already fixed exact _build. Six generated components remain missing (.cargo, .dart_tool, .gradle, blib, dist-newstyle, gradle-build), language inference uses any absolute path component, and the specification tree can enter discovery. Consume the complete 29-record/25-package shared registry fixture with exact relative bucket identity; retain the existing four-record Dune regression and add exact/near-case generated component and ancestor-name tests. Existing Haskell native fixture CI mapping applies. Canonical BUILD membership/platform variants and duplicate identities have separate owners. External validation plan saved: haskell-registry-validation-plan.md. Existing cabal.project enables the build-tool/graph/directed-graph/sha256 closure tests; optimized full suite and separate focused HPC coverage avoid SHA allocation-test instrumentation interference. Actual native validation and measured coverage are recorded below; whole-production qualification remains a separate pending owner. Full fixture materializer must allow specs decoys while bounding and validating all paths and counts.",
       "selected_at": "2026-10-12T19:38:37.348335+00:00",
       "selection_notes": "Post-#17325 actual auto-merge, collision-checked inventory and all-15-open-PR immutable overlap clearance. Haskell registry has two immediate concrete follow-ups; Ruby/Python one each; TS tangent and Go empty-plan zero. Select one bounded full 29-file/25-root fixture adoption with exact code-relative buckets, specification-tree exclusion and shared 27 generated components. Retain narrow Dune and all resolver/hash regressions; canonical BUILD/platform and duplicate identities stay separately owned. Native optimized tests, separate HPC, build fronts, real plans, parity and exact-head security required.",
       "worktree": "C:\\Users\\adhit\\.codex\\worktrees\\parity-haskell-registry-20261012\\coding-adventures",

@@ -17420,3 +17420,11 @@ HPC expression counts do not establish line coverage or whole-package threshold
 compliance. Keep per-module evidence, qualify existing contract/official-vector
 and CLI coverage, and leave any exception for external review. The graph now
 has 1,336 owners and 2,386 edges with one serial implementation in progress.
+
+The final rebase onto `a54dae1438` changes no selected Haskell or shared fixture
+source. Regenerated inventory is byte-identical to the post-#17325 report, with
+zero new roots, identities, collisions or unowned gaps. All 15 current open PRs
+clear the seven product paths; #17185 has the previously known journal overlap.
+The 3,493-file PR was checked with immutable Git tree comparisons beyond the
+3,000-file API cap. The final journal retains 297 merged, 1,038 pending and one
+in-progress owner, including the distinct coverage-qualification successor.
