@@ -8790,6 +8790,105 @@ mod tests {
         }
     }
 
+    // These are authored diagrams, so a valid parser/layout path must reach
+    // the marker check even when a curve's adjacent control equals its tip.
+    fn assert_aligned_swimlane_markers(direction: &str, curve: &str) {
+        let source = format!(
+            "swimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\nend\na edge@<--> b\nedge@{{curve:{curve}}}"
+        );
+        let diagram = mermaid_parser::parse_swimlane(&source).expect("authored curve parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!(layout.edges.len(), 1);
+        let edge = &layout.edges[0];
+        assert_eq!((edge.start_marker, edge.end_marker), (EdgeMarker::Point, EdgeMarker::Point));
+        let (sx, sy, ex, ey) = match direction {
+            "LR" => (202.0, 91.0, 244.0, 91.0),
+            "TB" => (87.0, 128.0, 87.0, 170.0),
+            _ => panic!("fixture direction"),
+        };
+        assert_eq!((edge.from.x, edge.from.y, edge.to.x, edge.to.y), (sx, sy, ex, ey));
+        let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let metadata = scene.metadata.as_ref().expect("edge metadata");
+        assert_eq!(metadata.get("swimlane.edge.0.id").map(String::as_str), Some("edge"));
+        assert_eq!(metadata.get("swimlane.edge.0.curve").map(String::as_str), Some(curve));
+        let paths: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+        }).collect();
+        assert_eq!(paths.len(), 3, "one route and two actual point markers");
+        let mut route = vec![PathCommand::MoveTo { x: sx, y: sy }];
+        match (direction, curve) {
+            ("LR", "bumpY") | ("TB", "bumpX") => route.push(PathCommand::CubicTo {
+                cx1: sx, cy1: sy, cx2: ex, cy2: ey, x: ex, y: ey,
+            }),
+            ("LR", "bumpX") => route.push(PathCommand::CubicTo {
+                cx1: 223.0, cy1: 91.0, cx2: 223.0, cy2: 91.0, x: ex, y: ey,
+            }),
+            ("TB", "bumpY") => route.push(PathCommand::CubicTo {
+                cx1: 87.0, cy1: 149.0, cx2: 87.0, cy2: 149.0, x: ex, y: ey,
+            }),
+            ("LR", "basis") => route.push(PathCommand::CubicTo {
+                cx1: sx + 42.0 * 0.4, cy1: sy, cx2: ex - 42.0 * 0.4, cy2: ey, x: ex, y: ey,
+            }),
+            ("TB", "basis") => route.push(PathCommand::CubicTo {
+                cx1: sx, cy1: sy + 42.0 * 0.4, cx2: ex, cy2: ey - 42.0 * 0.4, x: ex, y: ey,
+            }),
+            (_, "linear") => {},
+            ("LR", "step") => route.extend([
+                PathCommand::LineTo { x: 223.0, y: 91.0 }, PathCommand::LineTo { x: 223.0, y: 91.0 },
+            ]),
+            ("TB", "step") => route.extend([
+                PathCommand::LineTo { x: 87.0, y: 149.0 }, PathCommand::LineTo { x: 87.0, y: 149.0 },
+            ]),
+            ("LR", "stepBefore") | ("TB", "stepAfter") => route.push(PathCommand::LineTo { x: sx, y: sy }),
+            ("LR", "stepAfter") | ("TB", "stepBefore") => route.push(PathCommand::LineTo { x: ex, y: ey }),
+            _ => panic!("fixture curve"),
+        }
+        if !matches!(curve, "basis" | "bumpX" | "bumpY") {
+            route.push(PathCommand::LineTo { x: ex, y: ey });
+        }
+        assert_eq!(paths[0].commands, route, "authored curve coordinates stay exact");
+        let triangles = if direction == "LR" {
+            [[(sx, sy), (sx + 10.0, sy - 5.0), (sx + 10.0, sy + 5.0)],
+             [(ex, ey), (ex - 10.0, ey + 5.0), (ex - 10.0, ey - 5.0)]]
+        } else {
+            [[(sx, sy), (sx + 5.0, sy + 10.0), (sx - 5.0, sy + 10.0)],
+             [(ex, ey), (ex - 5.0, ey - 10.0), (ex + 5.0, ey - 10.0)]]
+        };
+        for (path, [tip, left, right]) in paths[1..].iter().zip(triangles) {
+            assert_eq!(path.commands, vec![
+                PathCommand::MoveTo { x: tip.0, y: tip.1 },
+                PathCommand::LineTo { x: left.0, y: left.1 },
+                PathCommand::LineTo { x: right.0, y: right.1 }, PathCommand::Close,
+            ], "{direction}/{curve}: endpoint direction must produce the exact visible triangle");
+            assert_eq!(((left.0-tip.0)*(right.1-tip.1)-(right.0-tip.0)*(left.1-tip.1)).abs()/2.0, 50.0);
+            assert_eq!(path.fill.as_deref(), Some("#455a64"));
+            assert_eq!(path.stroke, None);
+        }
+    }
+
+    #[test]
+    fn authored_bump_y_lr_marker_geometry() { assert_aligned_swimlane_markers("LR", "bumpY"); }
+
+    #[test]
+    fn authored_bump_x_tb_marker_geometry() { assert_aligned_swimlane_markers("TB", "bumpX"); }
+
+    #[test]
+    fn authored_aligned_step_marker_geometry() {
+        for direction in ["LR", "TB"] {
+            for curve in ["stepBefore", "stepAfter", "step"] {
+                assert_aligned_swimlane_markers(direction, curve);
+            }
+        }
+    }
+
+    #[test]
+    fn authored_nondegenerate_curve_marker_geometry() {
+        for (direction, curve) in [("LR", "bumpX"), ("TB", "bumpY"), ("LR", "basis"),
+            ("TB", "basis"), ("LR", "linear"), ("TB", "linear")] {
+            assert_aligned_swimlane_markers(direction, curve);
+        }
+    }
+
     fn default_style() -> ResolvedDiagramStyle {
         ResolvedDiagramStyle::default()
     }

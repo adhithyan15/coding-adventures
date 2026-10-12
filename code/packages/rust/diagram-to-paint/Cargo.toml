@@ -12,9 +12,13 @@ layout-effects = { path = "../layout-effects" }
 layout-to-paint = { path = "../layout-to-paint" }
 text-interfaces = { path = "../text-interfaces" }
 
+[dev-dependencies]
+# Authored parser -> layout -> paint geometry controls run on every platform.
+mermaid-parser = { path = "../mermaid-parser" }
+diagram-layout-hierarchy = { path = "../diagram-layout-hierarchy" }
+
 [target.'cfg(target_vendor = "apple")'.dev-dependencies]
 dot-parser = { path = "../dot-parser" }
-mermaid-parser = { path = "../mermaid-parser" }
 diagram-layout-graph = { path = "../diagram-layout-graph" }
 diagram-layout-board = { path = "../diagram-layout-board" }
 diagram-layout-grid = { path = "../diagram-layout-grid" }
@@ -28,5 +32,4 @@ diagram-layout-structural = { path = "../diagram-layout-structural" }
 diagram-layout-sequence = { path = "../diagram-layout-sequence" }
 diagram-layout-temporal = { path = "../diagram-layout-temporal" }
 diagram-layout-geometric = { path = "../diagram-layout-geometric" }
-diagram-layout-hierarchy = { path = "../diagram-layout-hierarchy" }
 serde_json = "1"
