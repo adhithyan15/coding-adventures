@@ -106,3 +106,11 @@ bodies, with an explicit 120-second full-corpus integration budget. Do not cache
 production loader results or raise ordinary deadlines, worker counts or heap
 limits. Validate these four suites together under the normal configuration and
 a 2 GiB heap cap, and record the measured CLI costs.
+
+Main subsequently merged two Dependabot PRs that raise four Electron app ranges
+from 43.4.0 to 43.5.0, conflicting with this branch's patched 43.7.9 resolutions.
+Merge those main changes without restoring older resolved packages. Raise the
+four declared Electron minimums to 43.7.9, matching their already-reviewed locks,
+and preserve global-agent 4.1.3. Regenerate only the root manifest entries; no
+package version, registry URL or integrity hash should change. Recheck every
+current alert and audit these reconciled locks before reviewing the new head.
