@@ -23,3 +23,9 @@ configuration and a 2 GiB heap: `--check` took 80.497 seconds and `--report` too
 89.562 seconds, both exceeding 30 seconds. Its corpus fixture imported in 80.17
 seconds; total runtime was 250.42 seconds. This directly measures why these two
 filesystem integration cases need a larger explicit budget.
+
+After merging main at acfa62d004, the four repaired files passed together under
+the unchanged two-worker configuration and 2 GiB heap cap: 64 passed, one existing
+Windows symlink-privilege skip, 286.80 seconds total. The live CLI calls took
+60.187 and 88.250 seconds; level, ledger and verb assertions retained their normal
+30-second budgets. TypeScript compilation and lesson validation also passed.
