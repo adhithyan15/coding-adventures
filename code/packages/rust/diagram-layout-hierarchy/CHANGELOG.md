@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Preserve alternating Linear/Basis curves in the duplicate-gap resource fixture
+  and assert their exact layout propagation when integrating edge curve IR.
+
 - Index Swimlane minimum-link constraints once by borrowed unordered endpoint
   pair, preserving duplicate/reversed edge rendering and maximum/default gaps
   while removing per-gap full-edge scans (#17334).

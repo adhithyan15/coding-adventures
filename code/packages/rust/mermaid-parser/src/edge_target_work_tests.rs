@@ -139,3 +139,50 @@ fn animation_context_preserves_literal_metadata_text_in_node_labels() {
         .expect("a literal node label is not an edge configuration");
     assert_eq!(actual, expected);
 }
+
+#[test]
+fn curve_configurations_do_not_rescan_unrelated_edges() {
+    for count in [32, 128] {
+        let mut source = source_with_edges(count);
+        source.push_str("a chosen@--> b\nchosen@{animation: slow}\n");
+        source.push_str(&"chosen@{curve: basis}\n".repeat(count));
+        let mut expected = parse_swimlane(&source_with_edges(count)).expect("unnamed-edge control");
+        let mut chosen = expected.edges[0].clone();
+        chosen.id = Some("chosen".into());
+        chosen.animate = true;
+        chosen.animation = Some(SwimlaneEdgeAnimation::Slow);
+        chosen.curve = Some(SwimlaneEdgeCurve::Basis);
+        expected.edges.push(chosen);
+        reset_visits();
+        let actual = parse_swimlane(&source).expect("repeated curve-only directives");
+        assert_eq!(actual, expected, "all authored IR and earlier animation settings survive");
+        assert_eq!(visits(), count + 1);
+        assert_eq!(SWIMLANE_TARGET_LOOKUPS.with(std::cell::Cell::get), count + 1);
+        assert_eq!(SWIMLANE_TARGET_MATCH_VISITS.with(std::cell::Cell::get), count + 1);
+    }
+}
+
+#[test]
+fn curve_duplicate_ids_preserve_partial_update_order_and_style() {
+    let base = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na a@--> b\na a@==> b\na --> b\n";
+    let source = format!("{base}a@{{animation: slow}}\na@{{curve: basis}}\na@{{animate: false}}\na@{{animation: fast}}\na@{{animate: false, curve: linear}}\nclassDef marked stroke:#123456\nclass a marked\nstyle a stroke-width:7");
+    let mut expected = parse_swimlane(base).expect("same authored order without directives");
+    let style = DiagramStyle { stroke: Some("#123456".into()), stroke_width: Some(7.0), ..DiagramStyle::default() };
+    expected.nodes[0].classes = vec!["marked".into()];
+    expected.nodes[0].style = style.clone();
+    for edge in &mut expected.edges[..2] {
+        edge.animate = false;
+        edge.animation = Some(SwimlaneEdgeAnimation::Fast);
+        edge.curve = Some(SwimlaneEdgeCurve::Linear);
+        edge.classes = vec!["marked".into()];
+        edge.style = style.clone();
+    }
+    reset_visits();
+    let actual = parse_swimlane(&source).expect("duplicate edge curves and partial updates");
+    assert_eq!(actual, expected, "complete authored diagram, including unnamed edge and node collision");
+    assert_eq!(visits(), 3);
+    assert_eq!(SWIMLANE_TARGET_LOOKUPS.with(std::cell::Cell::get), 7);
+    assert_eq!(SWIMLANE_TARGET_MATCH_VISITS.with(std::cell::Cell::get), 14);
+    let unknown = source_with_edges(1) + "a@{curve: basis}\n";
+    assert!(parse_swimlane(&unknown).expect_err("a node alone is not a curve edge").message.contains("unknown edge"));
+}

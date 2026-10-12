@@ -2,6 +2,11 @@
 
 Versioned Mermaid compatibility dispatcher and grammar-driven Rust parsers.
 
+Swimlane curve-only configurations share the bounded authored edge-ID index
+with animation, class and style directives. Per-field updates preserve earlier
+settings and exact authored order; operation-count controls distinguish edge
+discovery, indexed lookups and real matching updates.
+
 Compatibility is pinned to Mermaid 11.16.1 in
 `code/grammars/mermaid/compatibility.json`. The manifest distinguishes family
 detection from syntax and native-render compatibility so progress can be

@@ -1,6 +1,17 @@
 # Closure Compiler on Rust — parity backlog
 
 **Status:** active — resumed with provenance as a completion requirement
+
+CV04a current-main integration checkpoint (October12): main #17353 adds Swimlane
+edge curves. Actual isolated merge `a6aa4ad14bd85823b4fcb4c9b2d3e2c85b19b9bd`
+passed seven existing indexed-target controls, then the fourteen-package suite
+failed E0063 before any target executed: the duplicate-gap fixture omitted the
+new required curve field. Spec-first [curve integration](CV04a-swimlane-curve-integration.md)
+preserves all safety/resource assertions, adds alternating curve propagation and
+complete authored IR/update-order controls. Repair validation and exact-final
+independent security are pending; sole active PR #17288, auto-merge off.
+Full Miri **DEFERRED/PENDING**, frozen run/497 inputs/receipts untouched.
+CV04b/full parity/source-output/full transformation lineage remain OPEN.
 **Last reprioritized:** 2026-10-12
 **Current selection:** exact lexical source intervals and coordinate ownership,
 tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/16970),
