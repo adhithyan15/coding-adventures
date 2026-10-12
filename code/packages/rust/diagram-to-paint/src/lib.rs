@@ -41,7 +41,7 @@ use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
+    GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
 use layout_ir::{
@@ -882,6 +882,8 @@ where
             path.stroke_dash = Some(stroke_dash.clone());
         } else if edge.kind == SwimlaneEdgeKind::Dotted {
             path.stroke_dash = Some(vec![5.0, 5.0]);
+        } else if edge.animate {
+            path.stroke_dash = Some(vec![9.0, 5.0]);
         }
         instructions.push(PaintInstruction::Path(path));
         instructions.extend(swimlane_endpoint_marker(
@@ -1364,6 +1366,15 @@ where
         }
         if !edge.classes.is_empty() {
             metadata.insert(format!("swimlane.edge.{index}.classes"), edge.classes.join(" "));
+        }
+        if edge.animate {
+            metadata.insert(format!("swimlane.edge.{index}.animate"), "true".into());
+        }
+        if let Some(animation) = edge.animation {
+            metadata.insert(format!("swimlane.edge.{index}.animation"), match animation {
+                SwimlaneEdgeAnimation::Slow => "slow",
+                SwimlaneEdgeAnimation::Fast => "fast",
+            }.into());
         }
     }
     for link in &diagram.links {
