@@ -51,6 +51,7 @@
     "inline-node-styles",
     "named-node-classes",
     "semicolon-class-statements",
-    "node-class-decorators"
+    "node-class-decorators",
+    "invisible-layout-link"
   ]
 }
