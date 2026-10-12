@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "What the Ear Cannot Hear",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3b316e219a50c813",
+  "sourceHash": "fnv1a64:3c56f59f1d5c9090",
   "lessons": [
     {
       "id": "FR-C38-consonne-finale",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bd0007b9473e535",
+      "sourceHash": "fnv1a64:a19c1d34f46bef29",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +346,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing is added to the sound at the end. What changes is that the t stops being final, so the rule from two lessons ago no longer silences them."
+              "text": "Nothing is added to the sound at the end. What changes is that the t stops being final, so the rule from two lessons ago no longer silences it."
             },
             {
               "kind": "speech",

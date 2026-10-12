@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Asking a Question — Three Ways, and Which One to Use",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:8cde9716205dd5e2",
+  "sourceHash": "fnv1a64:0ba150210b1c1d38",
   "lessons": [
     {
       "id": "FR-C32-intonation",
@@ -683,7 +683,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8341a056cb8b58ab",
+      "sourceHash": "fnv1a64:7bcaa32debce87db",
       "notice": null,
       "blocks": [
         {
@@ -730,7 +730,7 @@
             },
             {
               "kind": "speech",
-              "text": "The answer, \"because,\" is built to match — by that which against for what — and it gets a lesson of its own a few chapters on, where it joins two clauses into one sentence."
+              "text": "The answer, \"because,\" is built to match — by this that against for what — and it gets a lesson of its own a few chapters on, where it joins two clauses into one sentence."
             },
             {
               "kind": "speech",

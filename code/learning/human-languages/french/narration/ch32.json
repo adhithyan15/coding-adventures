@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Coffee, Tea, Milk, Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d21c8e805b84c3e5",
+  "sourceHash": "fnv1a64:9c9b6c27230caf58",
   "lessons": [
     {
       "id": "FR-C28-cafe",
@@ -440,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa585a5bca84ea8b",
+      "sourceHash": "fnv1a64:c624ba7e66e4d95d",
       "notice": null,
       "blocks": [
         {
@@ -512,11 +512,11 @@
             },
             {
               "kind": "speech",
-              "text": "Vous ne voulez pas le sucre? — Si! (\"You don't want the sugar? — Yes, I do!\")"
+              "text": "Vous n'avez pas le sucre? — Si! (\"You don't have the sugar? — Yes, I do!\")"
             },
             {
               "kind": "speech",
-              "text": "Plain oui here would agree you don't want it; si is what pushes back. That same oui once mattered enough to split a country — langue d'oïl in the north, langue d'oc in the south."
+              "text": "Plain oui here would agree you don't have it; si is what pushes back. That same oui once mattered enough to split a country — langue d'oïl in the north, langue d'oc in the south."
             }
           ]
         },
@@ -561,11 +561,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contradiction — \"Vous ne voulez pas le sucre? — Si!\"",
+              "instruction": "the contradiction — \"Vous n'avez pas le sucre? — Si!\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contradiction — \"Vous ne voulez pas le sucre ? — Si !\"]"
+              "source": "[YOU SAY: the contradiction — \"Vous n'avez pas le sucre ? — Si !\"]"
             }
           ]
         },

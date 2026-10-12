@@ -292,7 +292,7 @@ naïve = na-EEV (na-i, two syllables) — not "nave." (English kept the dots: na
 Noël = no-EL ("Christmas") — o and e separately, not "nurl."
 maïs = ma-EES ("corn"). Without the dots the same letters blend to meh, a different word: the dots flip the meaning.
 Citroën, Israël, égoïste — same rule: split the vowels.
-So the tréma is the opposite of a blend instruction: where ai says "merge," aï says "don't."
+So the tréma is the opposite of a blend instruction: where a-i says "merge," aï says "don't."
 
 Writing: the trema.
 Two dots, side by side, above the vowel that starts its own sound — the second vowel of the pair (na-ï-ve). (It looks like a German umlaut, but the job is different: German ä/ö/ü change the vowel; the French tréma separates it. Same two dots, opposite purpose — that's the next lesson.)

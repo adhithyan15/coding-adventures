@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:09053c64f71a7d92",
+  "sourceHash": "fnv1a64:59eb9d5a5dfb4f97",
   "lessons": [
     {
       "id": "FR-C04-au-revoir",
@@ -1132,7 +1132,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:698fd50938084400",
+      "sourceHash": "fnv1a64:75790fa07aee30c8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1186,7 +1186,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the tréma is the opposite of a blend instruction: where ai says \"merge,\" aï says \"don't.\""
+              "text": "So the tréma is the opposite of a blend instruction: where a-i says \"merge,\" aï says \"don't.\""
             }
           ]
         },
