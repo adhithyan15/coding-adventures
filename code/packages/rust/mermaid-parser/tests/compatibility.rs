@@ -2226,6 +2226,19 @@ fn swimlane_bump_curve_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_monotone_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: monotoneX }\nvertical@{ curve: monotoneY }",
+    ).expect("Flowchart monotone curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::MonotoneX), Some(SwimlaneEdgeCurve::MonotoneY),
+    ]);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

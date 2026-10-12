@@ -1952,7 +1952,9 @@ pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SwimlaneEdgeAnimation { Slow, Fast }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum SwimlaneEdgeCurve { Linear, Basis, BumpX, BumpY, Step, StepBefore, StepAfter }
+pub enum SwimlaneEdgeCurve {
+    Linear, Basis, BumpX, BumpY, MonotoneX, MonotoneY, Step, StepBefore, StepAfter,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneEdge {
     pub id: Option<String>, pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
