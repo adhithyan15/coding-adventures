@@ -89,7 +89,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "swiftui": 83,
         "compose": 50,
         "qt": 108,
-        "flutter": 79,
+        "flutter": 69,
     }
 
 
@@ -157,6 +157,18 @@ def test_flutter_drag_body_gap_is_no_longer_baselined() -> None:
     errors = validate_style_degradations("flutter", report, "report.json")
 
     assert any("unbaselined style drop 'gap'" in error for error in errors)
+
+
+def test_flutter_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "box-shadow"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))

@@ -5323,11 +5323,24 @@ impl ElevationTier {
 /// — matches every other backend's `part_elevation_tier`; no real part
 /// conditions elevation on a state today.
 fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
-    match style_prop(props, "elevation").map(String::as_str) {
+    let tier = match style_prop(props, "elevation").map(String::as_str) {
         Some("raised") => Some(ElevationTier::Raised),
         Some("overlay") => Some(ElevationTier::Overlay),
         _ => None,
+    };
+    // The web-facing CSS shadow and the portable elevation token are authored
+    // together. A supported elevation tier already emits equivalent native
+    // depth, so its non-inset CSS companion is not a genuine style drop. Inset
+    // shadows are drawing effects rather than elevation and remain explicit
+    // degradation debt.
+    if tier.is_some()
+        && props
+            .get("box-shadow")
+            .is_some_and(|value| !value.to_ascii_lowercase().contains("inset"))
+    {
+        record_style_read("box-shadow");
     }
+    tier
 }
 
 /// A node's own part's `flex-grow` value, or `None` when unset or
@@ -11044,6 +11057,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the shadow —
         // `elevation` is the only signal Flutter reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+        assert!(
+            dropped_style_properties(&m, &l, &style).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -11101,6 +11118,9 @@ mod tests {
         let out = from_pipeline(&m, &l, &style).unwrap().output;
 
         assert!(!out.contains("boxShadow"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     #[test]
@@ -11135,6 +11155,9 @@ mod tests {
             out.contains("blurRadius: 8, offset: const Offset(0, 4)"),
             "got:\n{out}"
         );
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
