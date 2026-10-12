@@ -6810,27 +6810,67 @@ fn labeled_swimlane_operator(
     suffix: &str,
     kind: SwimlaneEdgeKind,
 ) -> Option<SwimlaneOperator> {
-    value.match_indices(start).find_map(|(at, _)| {
-        let tail = &value[at + start.len()..];
-        let (end_at, run) = tail.char_indices().find_map(|(end_at, character)| {
-            if character != repeated {
+    // A maximal run is counted once, even if its following text is not the
+    // required suffix. The prefix iterator and this independent cursor both
+    // move forward; retaining the current valid run avoids restarting suffix
+    // discovery for later prefixes. Only fixed ASCII delimiters use byte
+    // positions. Labels still borrow UTF-8 slices at delimiter boundaries.
+    debug_assert!(repeated.is_ascii() && minimum_run > 0);
+    let bytes = value.as_bytes();
+    let mut cursor = 0usize;
+    let mut ending: Option<(usize, usize)> = None;
+    for (at, _) in value.match_indices(start) {
+        let label_start = at + start.len();
+        loop {
+            if let Some((run_start, run_end)) = ending {
+                // A prefix can end inside a valid run. The old scanner starts
+                // there, so only that remaining suffix may terminate a label.
+                let label_end = run_start.max(label_start);
+                if label_end <= run_end && run_end - label_end >= minimum_run {
+                    let label = value[label_start..label_end].trim();
+                    if label.is_empty() {
+                        // Preserve the original first-run empty-label refusal;
+                        // try the next prefix, not a later run for this prefix.
+                        break;
+                    }
+                    return Some(SwimlaneOperator {
+                        at,
+                        len: run_end + suffix.len() - at,
+                        kind,
+                        start_marker: EdgeMarker::None,
+                        end_marker: EdgeMarker::Point,
+                        label: Some(label.to_string()),
+                        min_length: run_end - label_end - minimum_run + 1,
+                    });
+                }
+            }
+            ending = None;
+            while cursor < bytes.len() {
+                if !swimlane_label_run_matches(char::from(bytes[cursor]), repeated) {
+                    cursor += 1;
+                    continue;
+                }
+                let run_start = cursor;
+                cursor += 1; // the first successful predicate was already counted
+                while cursor < bytes.len()
+                    && swimlane_label_run_matches(char::from(bytes[cursor]), repeated)
+                {
+                    cursor += 1;
+                }
+                // A maximal ASCII run ends on a UTF-8 boundary. The suffix
+                // check also proves the final operator length is in the input.
+                if cursor - run_start >= minimum_run && value[cursor..].starts_with(suffix) {
+                    ending = Some((run_start, cursor));
+                    break;
+                }
+            }
+            // No later prefix can gain an ending beyond this exhausted cursor.
+            if ending.is_none() {
                 return None;
             }
-            let run = tail[end_at..].chars().take_while(|candidate| swimlane_label_run_matches(*candidate, repeated)).count();
-            let suffix_at = end_at + run;
-            (run >= minimum_run && tail[suffix_at..].starts_with(suffix)).then_some((end_at, run))
-        })?;
-        let label = tail[..end_at].trim();
-        (!label.is_empty()).then(|| SwimlaneOperator {
-            at,
-            len: start.len() + end_at + run + suffix.len(),
-            kind,
-            start_marker: EdgeMarker::None,
-            end_marker: EdgeMarker::Point,
-            label: Some(label.to_string()),
-            min_length: run - minimum_run + 1,
-        })
-    })
+        }
+    }
+    None
 }
 
 fn parse_swimlane_node(
@@ -17676,6 +17716,30 @@ mod styled_label_work_tests {
             assert_eq!(edge.min_length, 1);
             let actual = predicates();
             assert!(actual <= 12 * source.len(), "dots={dots}, actual run predicates={actual}, admitted linear bound={}", 12 * source.len());
+        }
+    }
+
+    #[test]
+    fn every_styled_form_skips_nonterminating_runs_with_linear_work() {
+        for (prefix, repeated, suffix, kind, minimum) in [
+            ("--", '-', ">", SwimlaneEdgeKind::Directed, 2),
+            ("==", '=', ">", SwimlaneEdgeKind::Thick, 2),
+            ("-.", '.', "->", SwimlaneEdgeKind::Dotted, 1),
+        ] {
+            for count in [32, 128, 512] {
+                let label = format!("{}x🛰", repeated.to_string().repeat(count));
+                let ending = repeated.to_string().repeat(minimum + 2);
+                let value = format!("a {prefix} {label} {ending}{suffix} b");
+                reset_predicates();
+                let operator = labeled_swimlane_operator(&value, prefix, repeated, minimum, suffix, kind).expect("later valid ending");
+                assert_eq!(operator.at, 2);
+                assert_eq!(operator.len, value.len() - 4);
+                assert_eq!(operator.label.as_deref(), Some(label.as_str()));
+                assert_eq!(operator.kind, kind);
+                assert_eq!(operator.min_length, 3);
+                assert_eq!((operator.start_marker, operator.end_marker), (EdgeMarker::None, EdgeMarker::Point));
+                assert!(predicates() <= 2 * value.len(), "form={prefix}, count={count}, actual predicates={}", predicates());
+            }
         }
     }
 

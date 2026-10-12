@@ -287,3 +287,15 @@ including boundary, control, entity, database, collections, and queue symbols.
 All other Mermaid 11.16.1 family headers are recognized and return an explicit
 `recognized but not implemented` error until their grammar, lowering, layout,
 and native render fixtures are complete.
+
+## Styled Swimlane label discovery work
+
+The partial Swimlane syntax keeps solid, thick and dotted inline labels with
+original operator precedence, point markers and minimum lengths. Each fixed
+label delimiter form discovers maximal ASCII runs with one monotone byte cursor
+and O(1) state, including nonterminating runs and absent suffixes. Labels remain
+UTF-8 slices until the selected label is copied. The bound is local to this
+operator discovery; it does not certify all lexer regex costs, node lookup,
+layout or drawing allocation. Exact parser predicate tests cover the admitted
+work bound and semantic corner cases; the independent layout duplicate-edge
+index remains unchanged. See DG04's styled-label discovery contract and #17335.
