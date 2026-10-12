@@ -9,17 +9,43 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `b163f87617be59e490f39a812e436ec5769671b0`
+**Current audit base:** `e7fb84044ea8846fe0acd2a8525f9c5f8eb41753`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
 
 ## Delivery priority and deferred Miri (2026-10-11)
 
+### Current-main resource review repair (2026-10-12)
+
+Published candidate `1180fe26ba82a68ba7a606a27dae552214b38319` is still the
+single active PR #17288. Its exact-head native CI run 38214542915 remains
+pending and not accepted; auto-merge is disabled. Actual frozen integration
+`c809ddccc820775067ee07c08f82d7107a465de2` passed **1,859 Rust tests/docs across
+135 targets plus 43 Python controls**, strict lint and independent review:
+eleven unchanged LANG production BUILD commands, 32 exact ALGOL controls and
+the rebuilt original #17313 CLI counterexample. #17313 is closed by #17317.
+The later Malayalam increment has independently reviewed seven-tree source
+equivalence, with no new execution or curriculum acceptance claimed.
+
+Swimlane minimum lengths on main e7fb8404 pass **728 tests/docs/32 targets** and
+strict lint at isolated `88e05ce57f47b4e0691f2a08344b5fe39d670821`, but independent
+security review is **NOT ACCEPTED**: valid duplicate edges cause new per-gap
+full-edge scans. Resource issue [#17334](https://github.com/adhithyan15/coding-adventures/issues/17334)
+requires a once-built canonical pair maximum index and actual operation-count
+controls. The DG04 work contract is committed before repair tests/source. Use
+the existing separate delivery-repair worktree and a separate Cargo target;
+retain frozen 88e/c809 receipts, published candidate and original Miri inputs.
+Repair implementation/native/security/new-head CI are **PENDING**. No safety
+or production-limit tests, dependencies, owner decisions or full parity/lineage
+completion criteria are weakened. Full final-source Miri is **DEFERRED/PENDING**,
+never passed; its existing frozen run is neither polled nor terminated.
+
 ### Shared-crate main reconciliation (2026-10-12)
 
-Published head `d69e6113f6775ab10df5fd4145a80cd0699d74e1` remains unmerged;
-its required native CI run 38198479132 is incomplete and **not accepted**.
+Historical head `d69e6113f6775ab10df5fd4145a80cd0699d74e1` was superseded by
+reviewed published 1180fe26; old CI run 38198479132 completed/cancelled and is
+**not accepted** for the new head. Current exact-head native CI remains pending.
 Upstream PREP01 octal stringizing made the C frontend changelog conflict.
 Isolated reconciliation `0e5438948841061d0d03577b7a549d2ef9dbebb6` has exact
 parents `[d69e6113, b163f876]` and retains both upstream octal and existing
@@ -34,8 +60,10 @@ all-target lint and independent bounded security review at actual source
 `0e5438948841061d0d03577b7a549d2ef9dbebb6`. Raw octal spelling, exact expansion
 ancestry and default/exact/cumulative/refusal bounds are retained. There are no
 new crates.io dependencies or weakened production limits. Final checkpoint
-documents follow this execution; exact final-head review/publication and fresh
-required native CI remain **PENDING**. No receipt is relabeled to a later head.
+documents follow this execution. Final 1180fe26 preserves all five complete
+runtime/config trees from that actual execution and passed independent final-head
+review before publication. Required native CI and the newer resource repair
+remain **PENDING**. No receipt is relabeled to a later head.
 
 Retained actual integrations: Mermaid **524/8** at
 `3306b2ba14a8f1471010605923fb4ca79298eb1e`; ALGOL **1,219/107**, all eleven

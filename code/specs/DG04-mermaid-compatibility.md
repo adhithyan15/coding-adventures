@@ -988,6 +988,43 @@ Full compatibility is achieved when every manifest family is Level 5 for the
 pinned Mermaid release and unsupported syntax fails explicitly rather than
 silently degrading.
 
+## Swimlane minimum-link work contract
+
+Resource repair [#17334](https://github.com/adhithyan15/coding-adventures/issues/17334)
+addresses the repeated edge scans introduced by #17326. Duplicate and reversed
+edges are valid authored input and must remain in rendered output, in their
+original order with all labels, kinds, markers and minimum lengths intact.
+For spacing, the maximum minimum length over either orientation of one endpoint
+pair wins; a missing pair or a zero caller-owned length reserves one gap unit.
+
+Construct one deterministic index of canonical unordered endpoint pairs before
+lane sizing. Borrow endpoint strings from the diagram, retain one maximum per
+distinct pair, and use that same index for lane sizing and node placement in all
+four directions. For E authored edges, Q distinct pairs and P adjacent lane
+pairs, constraint discovery visits E edges once and performs at most 2P indexed
+queries. A BTreeMap provides O((E + P) log(Q + 1)) comparisons, with identifier
+comparison costs explicit, and O(Q) extra storage without cloned endpoint IDs.
+Never rescan all E edges for each node gap. Existing node lookup costs and
+ordinary O(E) output-edge lowering remain separate; this is not a claim that
+the complete parser/layout/render pipeline has become linear or newly bounded.
+
+Accumulate geometric gap units as f64 rather than overflowing a usize sum.
+Keep parsed minimum lengths 1–3 and the grammar, nesting/safety controls,
+ordinary API and dependencies unchanged. Caller-owned usize lengths retain
+their maximum/default semantics without introducing integer wrap or debug
+overflow in lane sizing; this does not certify arbitrary downstream image
+allocations for caller-owned extreme geometry.
+
+Acceptance requires deterministic operation-count controls on the actual layout
+path with repeated edges, duplicate/reversed maximum constraints, absent/default
+constraints and every direction. Pin exact expected node spacing and preserved
+edge order/metadata, plus finite geometry for small caller-owned usize::MAX
+controls; do not substitute timing thresholds. Run the complete metadata-derived
+downstream cone and strict all-target lint. Independent exact-head security must
+accept the repair before delivery; passing the prior tests alone does not close
+the resource finding. Full final-source Miri remains DEFERRED/PENDING during
+Closure implementation delivery and must genuinely finish afterward.
+
 ## Swimlane Partial Compatibility
 
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
