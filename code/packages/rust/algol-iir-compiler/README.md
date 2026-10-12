@@ -553,3 +553,9 @@ snapshot acceptance at both direct and assigned output consumers. Sixteen
 cells cover both actuals, selector results and sign arrangements; native
 controls assert exact 2.25/3.5/-2.25/-3.5 output on every available standard
 backend. Existing alias-proof guards and production bounds remain required.
+
+Additive calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and operand arrangements; native
+controls assert exact -1.25/1.5/3.25/5.5 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
