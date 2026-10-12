@@ -4,8 +4,18 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.3` accumulate here until the next version is
+Entries added after `task-app-v0.5.4` accumulate here until the next version is
 cut.
+
+## [0.5.4] - 2026-10-12
+
+### Fixed — SwiftUI elevation tokens emit native shadows (#17365)
+
+SwiftUI now lowers supported `raised` and `overlay` elevation tokens to fixed
+native `.shadow` modifiers. Fresh strict generation retires ten elevation drops
+and ten paired non-inset shadow omissions, reducing the measured SwiftUI style
+inventory from 83 to 63. Standalone raw shadows, inset shadows, and unsupported
+elevation values remain explicit debt.
 
 ### Fixed — Compose elevation shadows leave the degradation report (#17356)
 
