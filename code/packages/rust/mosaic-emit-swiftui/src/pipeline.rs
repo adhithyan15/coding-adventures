@@ -3221,6 +3221,12 @@ fn dropped_style_properties_with_elevation_probes(
         // reporter exists to catch. Emitter and report must read ONE value.
         let mut base = part.base.clone();
         expand_border_shorthand(&mut base);
+        // Repeated shadow declarations are valid authored input. Scan this
+        // expanded part once, rather than multiplying its length by its drops.
+        let has_native_elevation = base.iter().any(|prop| {
+            on_elevation_probe();
+            prop.name == "elevation" && swiftui_elevation_shadow(&prop.value).is_some()
+        });
         let (_, drops) = swiftui_modifier_chain_with_drops(&base, &[], &[], 0, None);
         for drop in drops {
             if lowered_solid_per_edge_style(&base, &drop.name, &drop.value) {
@@ -3237,10 +3243,7 @@ fn dropped_style_properties_with_elevation_probes(
             // consumed. Standalone and inset shadows stay honest debt.
             if drop.name == "box-shadow"
                 && !drop.value.to_ascii_lowercase().contains("inset")
-                && base.iter().any(|prop| {
-                    on_elevation_probe();
-                    prop.name == "elevation" && swiftui_elevation_shadow(&prop.value).is_some()
-                })
+                && has_native_elevation
             {
                 continue;
             }
@@ -16548,6 +16551,13 @@ mod tests {
         let drops = dropped_style_properties(&unsupported, &no_gap_layout());
         assert_eq!(drops.iter().map(|d| (&*d.name, &*d.value)).collect::<Vec<_>>(),
             vec![("box-shadow", "none"), ("elevation", "floaty")]);
+        let mut visits = 0;
+        assert_eq!(dropped_style_properties_with_elevation_probes(&unsupported, &no_gap_layout(), || visits += 1), drops);
+        assert_eq!(visits, 2, "unsupported public IR scans one whole base, preserving its ordered drops");
+        let mut visits = 0;
+        let expected = dropped_style_properties(&style, &no_gap_layout());
+        assert_eq!(dropped_style_properties_with_elevation_probes(&style, &no_gap_layout(), || visits += 1), expected);
+        assert_eq!(visits, 5, "three properties until root's elevation plus other's two properties");
     }
 
     #[test]

@@ -6,6 +6,12 @@ and emits a `.swift` source file containing a SwiftUI `View` struct.
 
 This is **WB4** of the UI28 backend matrix.
 
+The degradation reporter checks supported elevation once per expanded part.
+Repeated shadow declarations retain their output order and honest inset,
+standalone and unsupported-elevation drops without repeated whole-part scans.
+Authored resource controls count actual predicate visits alongside exact report
+semantics; they do not use elapsed time as a work bound.
+
 ## Overview
 
 ```
