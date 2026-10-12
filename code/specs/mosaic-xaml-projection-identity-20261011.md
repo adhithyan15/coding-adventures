@@ -124,3 +124,13 @@ bytes. The final E5 sample included 198.5781 ms in persist-snapshot; it is retai
 as an outlier, not discarded. Raw phases are in mosaic-xaml-retained-focus-profile-20261011.jsonl.
 This small matched-sequence diagnostic supports reduced late-cell focus work but
 does not establish p95 acceptance. Persistence stalls remain open in #16865.
+
+## Persistence phase diagnostics
+
+Keep synchronous snapshot persistence, exception handling, warning recovery and
+atomic replacement behavior unchanged. Under the existing opt-in profiler, add
+nested persist-snapshot-ffi, persist-encode, persist-write and persist-replace
+scopes. Record only phase duration and managed allocation, never workbook bytes
+or file paths. This separates adapter serialization from disk stalls before
+choosing a durability-preserving performance change. Existing aggregate
+persist-snapshot remains comparable with older native traces.
