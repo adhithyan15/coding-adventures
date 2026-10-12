@@ -13,7 +13,7 @@ gloss: "free of charge"
 concept_tag: IT-QUAL219-GRATUITO
 prerequisites: [IT-C219-simile, IT-C219-falso]
 sounds: []
-roots: [gratia-latin]
+roots: [gratia]
 etymology_hook: "gratuito ← Latin gratuitus 'free', from gratia 'favour' — English gratuitous"
 duration:
   max_seconds: 200

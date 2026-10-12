@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 141,
-  "sourceHash": "fnv1a64:48532eabc7b30407",
+  "sourceHash": "fnv1a64:2289084ae2f70976",
   "lessonIds": [
     "IT-C141-dipingere",
     "IT-C141-disegnare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch141.txt",
   "json": "italian/narration/ch141.json",
-  "textHash": "fnv1a64:aa77c56268e2fc43",
-  "jsonHash": "fnv1a64:9d62538aff7b0948",
+  "textHash": "fnv1a64:fcf4a99e4885c167",
+  "jsonHash": "fnv1a64:faaad9ab96ba92fb",
   "findings": []
 }

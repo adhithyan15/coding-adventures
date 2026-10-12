@@ -14,7 +14,7 @@ concept_tag: IT-PERCHE155-DUNQUE
 prerequisites: [IT-C154-laggiu, IT-C155-quindi]
 sounds: []
 roots: []
-etymology_hook: "dunque — origin debated, not recorded in EtymDB; French donc is its cousin"
+etymology_hook: "dunque ← Late Latin dunc, from dum, influenced by tunc 'then' — French donc is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C155-quindi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dunque** — its origin is debated, and EtymDB 2.1 records none. It lists French *donc* as its cognate.
+**dunque** goes back to Late Latin *dunc*, from *dum*, "while", influenced by *tunc*, "then". EtymDB 2.1 has no row for its origin; it lists French *donc* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

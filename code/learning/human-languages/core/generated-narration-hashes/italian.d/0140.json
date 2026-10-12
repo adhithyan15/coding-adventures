@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 140,
-  "sourceHash": "fnv1a64:6538eb273cce906c",
+  "sourceHash": "fnv1a64:4e559e0727a3d11d",
   "lessonIds": [
     "IT-C140-accendere",
     "IT-C140-spegnere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch140.txt",
   "json": "italian/narration/ch140.json",
-  "textHash": "fnv1a64:2053cd8bfcd4bcbd",
-  "jsonHash": "fnv1a64:94114b1ab37dcf44",
+  "textHash": "fnv1a64:be53297ede7ca8ec",
+  "jsonHash": "fnv1a64:8ce6df5631edeefd",
   "findings": []
 }

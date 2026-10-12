@@ -13,8 +13,8 @@ gloss: "an ankle"
 concept_tag: IT-CORPO122-CAVIGLIA
 prerequisites: [IT-C121-delfino, IT-C122-gomito]
 sounds: []
-roots: []
-etymology_hook: "caviglia ← Old Provençal cavilla 'a peg', from Vulgar Latin cavicla — borrowed"
+roots: [clavicula-latin]
+etymology_hook: "caviglia ← Old Provençal cavilla 'a peg', from Latin clavicula 'a little key, a bolt' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C122-gomito]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**caviglia** ← Old Provençal *cavilla*, "a peg" — borrowed; behind it is Vulgar Latin *cavicla*, from Latin *cavicula*. (EtymDB 2.1)
+**caviglia** ← Old Provençal *cavilla*, "a peg" — borrowed; behind it is Vulgar Latin *cavicula*, *cavicla* (EtymDB 2.1), for Latin *clavicula*, "a little key, a bolt" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

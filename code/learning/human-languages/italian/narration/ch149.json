@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "To celebrate, To fix, To brake, To function, To float",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5e99cccd1c8c2077",
+  "sourceHash": "fnv1a64:52d02a7139175f28",
   "lessons": [
     {
       "id": "IT-C149-festeggiare",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cd342677fd3a5e8",
+      "sourceHash": "fnv1a64:8e1da27343df01ba",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "galleggiare — built from galla, \"an oak gall\", a light growth that floats: a galla means \"afloat\". galla from Latin galla, \"oak-apple\". (EtymDB 2.1)."
+              "text": "galleggiare — built from galla, \"an oak gall\" from Latin galla, \"oak-apple\" (EtymDB 2.1). A gall is light and floats, and a galla means \"afloat\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 160,
   "title": "Bill, Tip, Pizzeria, Hamlet, Pavement",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2eb66c9ded5f2910",
+  "sourceHash": "fnv1a64:7be60022a7836247",
   "lessons": [
     {
       "id": "IT-C160-conto",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa9504fd4dcdef3a",
+      "sourceHash": "fnv1a64:51bab1c011f5ade6",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "marciapiede is marcia, \"walking, a march\", plus piede, \"foot\": a way for walking on foot. EtymDB 2.1 has no row for it; the parts are plain to see."
+              "text": "marciapiede is adapted from French marchepied, \"a step, a footboard\" — borrowed, and reshaped to look like marcia, \"walking\", plus piede, \"foot\". EtymDB 2.1 has no row for it."
             }
           ]
         },

@@ -14,7 +14,7 @@ concept_tag: IT-COSE222-BANDIERA
 prerequisites: [IT-C221-valle, IT-C222-soldato]
 sounds: []
 roots: []
-etymology_hook: "bandiera — from banda 'a troop': the flag it gathers under — English banner is a cousin"
+etymology_hook: "bandiera — probably via Old Provençal bandiera, from banda 'an ensign', Gothic bandwa — English banner"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C222-soldato]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**bandiera** — built from *banda*, "a band, a troop", with *-iera*: the flag a troop gathers under. (EtymDB 2.1)
+**bandiera** probably came through Old Provençal *bandiera* — borrowed; it is built on *banda*, "an ensign", from Gothic *bandwa*, "a sign". EtymDB 2.1 builds it on *banda* and lists Spanish *bandera* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

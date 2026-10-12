@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 228,
-  "sourceHash": "fnv1a64:a30b1a7c17cc51f1",
+  "sourceHash": "fnv1a64:6adf0fcaff980f5b",
   "lessonIds": [
     "IT-C228-grattacielo",
     "IT-C228-castello",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch228.txt",
   "json": "italian/narration/ch228.json",
-  "textHash": "fnv1a64:d5aa924bc61eeb35",
-  "jsonHash": "fnv1a64:429b55fed10b61f1",
+  "textHash": "fnv1a64:52ba3731795fe1a2",
+  "jsonHash": "fnv1a64:99fac806c08dc6d2",
   "findings": []
 }

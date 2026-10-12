@@ -4,7 +4,7 @@
   "chapter": 238,
   "title": "To point out, To inform, To dispatch, To complain, To be missing",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3d76fd5c67c7679e",
+  "sourceHash": "fnv1a64:9bd9c0ac09d619a1",
   "lessons": [
     {
       "id": "IT-C238-indicare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee5b203b8b26c5f7",
+      "sourceHash": "fnv1a64:9f8146a3ff2dbefa",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "indicare from Latin indicare, \"to point out\" — inherited. (EtymDB 2.1)."
+              "text": "indicare from Latin indicare, \"to point out\" — a learned borrowing. (EtymDB 2.1 records the Latin word.)"
             }
           ]
         },

@@ -14,7 +14,7 @@ concept_tag: IT-COSE192-FRONTIERA
 prerequisites: [IT-C192-binario, IT-C192-passaporto]
 sounds: []
 roots: []
-etymology_hook: "frontiera ← Old Provençal frontiera, built on front 'forehead, front' — English frontier"
+etymology_hook: "frontiera ← French frontière, built on front 'forehead, front' — English frontier"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C192-passaporto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**frontiera** ← Old Provençal *frontiera*, "a frontier" — borrowed, built on *front*, "forehead, front". (EtymDB 2.1)
+**frontiera** ← French *frontière*, built on *front*, "forehead, front" — borrowed. EtymDB 2.1 derives it instead from Old Provençal *frontiera*; the French source is the usual account.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 204,
-  "sourceHash": "fnv1a64:41cbdf32dd2189c8",
+  "sourceHash": "fnv1a64:758611dabe1c5079",
   "lessonIds": [
     "IT-C204-parcheggiare",
     "IT-C204-prenotare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch204.txt",
   "json": "italian/narration/ch204.json",
-  "textHash": "fnv1a64:f536e73e0640d20d",
-  "jsonHash": "fnv1a64:c8cd4a35bae494e9",
+  "textHash": "fnv1a64:597a215ff9d1ef1c",
+  "jsonHash": "fnv1a64:ebc02f1f8a8426f8",
   "findings": []
 }

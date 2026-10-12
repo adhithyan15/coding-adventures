@@ -14,7 +14,7 @@ concept_tag: IT-QUALITA127-SBAGLIATO
 prerequisites: [IT-C127-serio, IT-C127-giusto]
 sounds: []
 roots: []
-etymology_hook: "sbagliato — 'mistaken'; s- + an old verb bagliare, of uncertain origin"
+etymology_hook: "sbagliato — 'mistaken'; from abbagliare 'to dazzle', s- replacing a-"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C127-giusto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**sbagliato** is the past participle of the verb for "to make a mistake", which EtymDB 2.1 takes apart as *s-* plus an old verb *bagliare*; where *bagliare* came from is uncertain.
+**sbagliato** is the past participle of the verb for "to make a mistake", which comes from *abbagliare*, "to dazzle", with *s-* in place of *a-*. EtymDB 2.1 takes that verb apart as *s-* plus an old verb *bagliare*; only where *bagliare* came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

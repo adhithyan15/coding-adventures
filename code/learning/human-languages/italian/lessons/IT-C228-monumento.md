@@ -14,7 +14,7 @@ concept_tag: IT-COSE228-MONUMENTO
 prerequisites: [IT-C228-castello, IT-C228-torre]
 sounds: []
 roots: [monere-latin]
-etymology_hook: "monumento ← Latin monumentum, from monere 'to remind' — English monument"
+etymology_hook: "monumento ← Latin monumentum, from monere 'to remind', a learned word — English monument"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C228-torre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**monumento** ← Latin *monumentum*, "a memorial", from *monere*, "to remind" — inherited. (EtymDB 2.1)
+**monumento** ← Latin *monumentum*, "a memorial", from *monere*, "to remind" — a learned borrowing. (EtymDB 2.1 records the Latin word.) The spoken Old Italian form was *monimento*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

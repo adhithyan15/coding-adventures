@@ -46,7 +46,7 @@ reviews_of: [IT-C183-legare]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**scivolare** — its origin is uncertain, perhaps imitative. EtymDB 2.1 links it to Latin *exsibilare*, "to hiss out", but that could not be confirmed, so it is not given here.
+**scivolare** — its origin is uncertain, perhaps imitative. EtymDB 2.1 links it to Latin *exsibilare*, "to hiss out"; that link is doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

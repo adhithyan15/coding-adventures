@@ -4,7 +4,7 @@
   "chapter": 209,
   "title": "To pretend, To throw, To turn, To enjoy, To imagine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f5bc6e7233bc7857",
+  "sourceHash": "fnv1a64:7c762335260c7f08",
   "lessons": [
     {
       "id": "IT-C209-fingere",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05973a6cf18acf21",
+      "sourceHash": "fnv1a64:9c40ea2dd3cfacd1",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "immaginare from Latin imaginari, \"to picture to oneself\" — inherited. (EtymDB 2.1)."
+              "text": "immaginare from Latin imaginari, \"to picture to oneself\" — a learned borrowing. (EtymDB 2.1 records the Latin word.)"
             }
           ]
         },

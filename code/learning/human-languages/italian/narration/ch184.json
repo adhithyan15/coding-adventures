@@ -4,7 +4,7 @@
   "chapter": 184,
   "title": "To slip, To lift, To surprise, To suspect, To squeeze",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:637a0f3de67bb32e",
+  "sourceHash": "fnv1a64:5f552484c6e691d4",
   "lessons": [
     {
       "id": "IT-C184-scivolare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:542da920d9508074",
+      "sourceHash": "fnv1a64:d47037edca0f3ed6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "scivolare — its origin is uncertain, perhaps imitative. EtymDB 2.1 links it to Latin exsibilare, \"to hiss out\", but that could not be confirmed, so it is not given here."
+              "text": "scivolare — its origin is uncertain, perhaps imitative. EtymDB 2.1 links it to Latin exsibilare, \"to hiss out\"; that link is doubtful."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 170,
   "title": "Guitar, Piano, Violin, Drum, Ball",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4a364b1e6a96f49c",
+  "sourceHash": "fnv1a64:bef609147a8e8cf3",
   "lessons": [
     {
       "id": "IT-C170-chitarra",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abe1512b5535bcd4",
+      "sourceHash": "fnv1a64:9ffa5090c68621e0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pianoforte is piano, \"soft\", plus forte, \"loud\": the first keyboard that could play both. forte from Latin fortis, \"strong\". (EtymDB 2.1)."
+              "text": "pianoforte is piano, \"soft\", plus forte, \"loud\" from Latin fortis, \"strong\" (EtymDB 2.1): the first keyboard that could play both."
             }
           ]
         },

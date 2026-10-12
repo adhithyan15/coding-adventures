@@ -4,7 +4,7 @@
   "chapter": 228,
   "title": "Skyscraper, Castle, Tower, Monument, Statue",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a30b1a7c17cc51f1",
+  "sourceHash": "fnv1a64:6adf0fcaff980f5b",
   "lessons": [
     {
       "id": "IT-C228-grattacielo",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03a6e6a94f94c4fd",
+      "sourceHash": "fnv1a64:5c44374ac37e5a8b",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "monumento from Latin monumentum, \"a memorial\", from monere, \"to remind\" — inherited. (EtymDB 2.1)."
+              "text": "monumento from Latin monumentum, \"a memorial\", from monere, \"to remind\" — a learned borrowing. (EtymDB 2.1 records the Latin word.) The spoken Old Italian form was monimento."
             }
           ]
         },

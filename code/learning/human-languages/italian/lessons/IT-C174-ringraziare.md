@@ -13,7 +13,7 @@ gloss: "to thank"
 concept_tag: IT-VERB-RINGRAZIARE
 prerequisites: [IT-C174-abbracciare, IT-C174-salutare]
 sounds: []
-roots: [gratia-latin]
+roots: [gratia]
 etymology_hook: "ringraziare — rin- + grazia 'thanks' ← Latin gratia: to give thanks back"
 duration:
   max_seconds: 200

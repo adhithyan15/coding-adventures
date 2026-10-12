@@ -46,7 +46,7 @@ reviews_of: [IT-C149-funzionare]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**galleggiare** — built from *galla*, "an oak gall", a light growth that floats: *a galla* means "afloat". *galla* ← Latin *galla*, "oak-apple". (EtymDB 2.1)
+**galleggiare** — built from *galla*, "an oak gall" ← Latin *galla*, "oak-apple" (EtymDB 2.1). A gall is light and floats, and *a galla* means "afloat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

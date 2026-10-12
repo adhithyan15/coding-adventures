@@ -4,7 +4,7 @@
   "chapter": 155,
   "title": "So, Well then, However, Instead, Anyway",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3564af967f88367c",
+  "sourceHash": "fnv1a64:70d71423b7fb7f49",
   "lessons": [
     {
       "id": "IT-C155-quindi",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c40bf3dd88e4686e",
+      "sourceHash": "fnv1a64:d327232f92b40892",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dunque — its origin is debated, and EtymDB 2.1 records none. It lists French donc as its cognate."
+              "text": "dunque goes back to Late Latin dunc, from dum, \"while\", influenced by tunc, \"then\". EtymDB 2.1 has no row for its origin; it lists French donc as its cognate."
             }
           ]
         },

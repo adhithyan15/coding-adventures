@@ -13,8 +13,8 @@ gloss: "to hurry"
 concept_tag: IT-VERB-AFFRETTARSI
 prerequisites: [IT-C211-sognare, IT-C211-somigliare]
 sounds: []
-roots: []
-etymology_hook: "affrettarsi — a- + fretta 'haste' + -si; fretta is of uncertain origin"
+roots: [fricare-latin]
+etymology_hook: "affrettarsi — a- + fretta 'haste' + -si; fretta from old frettare 'to rub', Latin fricare"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C211-somigliare]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**affrettarsi** — built from *fretta*, "haste", with *a-* and *-si*, "oneself": to make haste. Where *fretta* came from is uncertain; EtymDB 2.1 records no origin for it.
+**affrettarsi** — built from *fretta*, "haste", with *a-* and *-si*, "oneself": to make haste. *fretta* comes from the old verb *frettare*, "to rub, to hurry", which ← Vulgar Latin *frictare* (EtymDB 2.1), from Latin *fricare*, "to rub" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

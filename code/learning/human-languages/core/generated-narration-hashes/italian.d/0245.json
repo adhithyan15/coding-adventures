@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 245,
-  "sourceHash": "fnv1a64:51aedc84b8a3988e",
+  "sourceHash": "fnv1a64:7d319c745fbae786",
   "lessonIds": [
     "IT-C245-liscio",
     "IT-C245-ruvido",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch245.txt",
   "json": "italian/narration/ch245.json",
-  "textHash": "fnv1a64:0b46baa71a842777",
-  "jsonHash": "fnv1a64:c95c6f2471fff8ad",
+  "textHash": "fnv1a64:1161eb9d937e977b",
+  "jsonHash": "fnv1a64:0af8d6fa923bd880",
   "findings": []
 }

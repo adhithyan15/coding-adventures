@@ -13,7 +13,7 @@ gloss: "the day before yesterday"
 concept_tag: IT-PAST137-LALTRO-IERI
 prerequisites: [IT-C137-scorso, IT-C137-gia]
 sounds: []
-roots: [heri-latin]
+roots: [heri]
 etymology_hook: "l'altro ieri — 'the other yesterday': altro ← Latin alter, ieri ← Latin heri"
 duration:
   max_seconds: 200

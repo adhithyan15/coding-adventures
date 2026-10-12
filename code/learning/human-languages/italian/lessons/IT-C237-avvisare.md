@@ -14,7 +14,7 @@ concept_tag: IT-VERB-AVVISARE
 prerequisites: [IT-C236-annoiarsi, IT-C236-divertirsi]
 sounds: []
 roots: []
-etymology_hook: "avvisare — from avviso 'a notice' ← Old French avis — English advise"
+etymology_hook: "avvisare ← Old French aviser 'to perceive, to inform' — borrowed; English advise"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C236-divertirsi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**avvisare** is the verb of *avviso*, "a notice", which ← Old French *avis*. (EtymDB 2.1)
+**avvisare** ← Old French *aviser*, "to perceive, to inform" — borrowed. (EtymDB 2.1 records the French verb.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

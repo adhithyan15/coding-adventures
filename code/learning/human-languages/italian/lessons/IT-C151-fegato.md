@@ -46,7 +46,7 @@ reviews_of: [IT-C151-polmone]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fegato** ← Late Latin *ficatum*, "liver" — inherited. It is short for *iecur ficatum*, "liver fattened with figs", a Roman delicacy. (EtymDB 2.1)
+**fegato** ← Late Latin *ficatum*, "liver", short for *iecur ficatum*, "liver fattened with figs" (EtymDB 2.1) — inherited. Fig-fattened liver was a Roman delicacy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 137,
-  "sourceHash": "fnv1a64:d3c90396c63f24d8",
+  "sourceHash": "fnv1a64:1f7f6885c680df3b",
   "lessonIds": [
     "IT-C137-scorso",
     "IT-C137-gia",
@@ -14,6 +14,6 @@
   "text": "italian/narration/ch137.txt",
   "json": "italian/narration/ch137.json",
   "textHash": "fnv1a64:c27ea4dd259c46f7",
-  "jsonHash": "fnv1a64:3498ea33254a8c7b",
+  "jsonHash": "fnv1a64:fdef430ce4a76002",
   "findings": []
 }

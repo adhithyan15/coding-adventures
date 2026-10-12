@@ -14,7 +14,7 @@ concept_tag: IT-QUAL245-RUVIDO
 prerequisites: [IT-C244-insieme, IT-C245-liscio]
 sounds: []
 roots: [ruga-latin]
-etymology_hook: "ruvido ← Latin rugidus 'wrinkled', from ruga 'a wrinkle'"
+etymology_hook: "ruvido ← Vulgar Latin rugidus 'wrinkled', from ruga 'a wrinkle'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C245-liscio]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ruvido** ← Latin *rugidus*, "wrinkled" — inherited. (EtymDB 2.1)
+**ruvido** ← Vulgar Latin *rugidus*, "wrinkled", built on Latin *ruga*, "a wrinkle" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

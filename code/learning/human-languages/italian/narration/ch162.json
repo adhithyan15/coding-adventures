@@ -4,7 +4,7 @@
   "chapter": 162,
   "title": "Website, Screen, Keyboard, Battery, Charger",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be1438f5a562cd2d",
+  "sourceHash": "fnv1a64:2ec678b288e19e87",
   "lessons": [
     {
       "id": "IT-C162-sito",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90f3190314ef74ad",
+      "sourceHash": "fnv1a64:2d122ff79fd6fc38",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "schermo is the noun of schermire, \"to shield, to fence\" (EtymDB 2.1), a verb from a Germanic word for \"to protect\": a screen shields."
+              "text": "schermo from Lombardic skirm, \"a shield\" — borrowed from the Germanic language of the Lombards: a screen shields. EtymDB 2.1 derives it from schermire, \"to fence\", but the verb comes from the noun, not the other way round."
             }
           ]
         },

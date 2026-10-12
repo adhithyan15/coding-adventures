@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "Soldier, Flag, Religion, Culture, Tradition",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:27050c352186a4b5",
+  "sourceHash": "fnv1a64:c8ae48141d9060dd",
   "lessons": [
     {
       "id": "IT-C222-soldato",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b976df8ad6390df1",
+      "sourceHash": "fnv1a64:6fefb84e274a727b",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bandiera — built from banda, \"a band, a troop\", with -iera: the flag a troop gathers under. (EtymDB 2.1)."
+              "text": "bandiera probably came through Old Provençal bandiera — borrowed; it is built on banda, \"an ensign\", from Gothic bandwa, \"a sign\". EtymDB 2.1 builds it on banda and lists Spanish bandera as its cognate."
             }
           ]
         },

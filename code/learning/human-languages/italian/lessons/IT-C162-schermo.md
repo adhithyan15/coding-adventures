@@ -14,7 +14,7 @@ concept_tag: IT-COSE162-SCHERMO
 prerequisites: [IT-C161-elezioni, IT-C162-sito]
 sounds: []
 roots: []
-etymology_hook: "schermo — from schermire 'to shield', from a Germanic word — English skirmish is a cousin"
+etymology_hook: "schermo ← Lombardic skirm 'a shield' — borrowed; English skirmish is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C162-sito]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**schermo** is the noun of *schermire*, "to shield, to fence" (EtymDB 2.1), a verb from a Germanic word for "to protect": a screen shields.
+**schermo** ← Lombardic *skirm*, "a shield" — borrowed from the Germanic language of the Lombards: a screen shields. EtymDB 2.1 derives it from *schermire*, "to fence", but the verb comes from the noun, not the other way round.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

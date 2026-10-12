@@ -45,7 +45,7 @@ You'll want to know: il soggiorno.
 il soggiorno — "a living room".
 
 The word, taken apart.
-soggiorno is the noun of soggiornare, "to stay", a verb built on giorno, "day": the room where the day is spent. Old French sojorner is its sister. EtymDB 2.1 has no row for it.
+soggiorno is the noun of soggiornare, "to stay", from Old French sojorner — borrowed; behind it is Vulgar Latin subdiurnare, "to spend the day". A living room is where the day is spent. EtymDB 2.1 has no row for it.
 
 What you've built.
 One more word for this chapter.

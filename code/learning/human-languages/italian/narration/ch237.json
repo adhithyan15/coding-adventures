@@ -4,7 +4,7 @@
   "chapter": 237,
   "title": "To warn, To burn, To throw away, To calculate, To hit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c819ce4baef0703",
+  "sourceHash": "fnv1a64:19328d7f3da8c66c",
   "lessons": [
     {
       "id": "IT-C237-avvisare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b72e571d8046ce34",
+      "sourceHash": "fnv1a64:589e7a76d45588f1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "avvisare is the verb of avviso, \"a notice\", which from Old French avis. (EtymDB 2.1)."
+              "text": "avvisare from Old French aviser, \"to perceive, to inform\" — borrowed. (EtymDB 2.1 records the French verb.)"
             }
           ]
         },

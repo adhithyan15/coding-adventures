@@ -46,7 +46,7 @@ reviews_of: [IT-C170-chitarra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**pianoforte** is *piano*, "soft", plus *forte*, "loud": the first keyboard that could play both. *forte* ← Latin *fortis*, "strong". (EtymDB 2.1)
+**pianoforte** is *piano*, "soft", plus *forte*, "loud" ← Latin *fortis*, "strong" (EtymDB 2.1): the first keyboard that could play both.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

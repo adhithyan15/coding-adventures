@@ -222,7 +222,7 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // a well-established origin stated without a source tag (4), or an explicit "not recorded in
   // EtymDB 2.1" (12 lessons, all genuinely uncertain). The remaining 745 (IT-C111-infermiera
   // through IT-C259-storia) followed the same way: from the same two sources, with sister-word
-  // tracing where EtymDB has no row; 19 say the origin is uncertain and why.
+  // tracing where EtymDB has no row; 14 say the origin is uncertain and why.
   italian: { withoutHook: 0, withoutVisible: 0 },
   japanese: { withoutHook: 601, withoutVisible: 688 },
   kannada: { withoutHook: 1330, withoutVisible: 1281 },

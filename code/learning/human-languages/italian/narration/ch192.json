@@ -4,7 +4,7 @@
   "chapter": 192,
   "title": "Platform, Passport, Border, Customs, Booking",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:195e7202b3bbe3fa",
+  "sourceHash": "fnv1a64:7136d094e5dfb141",
   "lessons": [
     {
       "id": "IT-C192-binario",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c886b18f0d80e3f",
+      "sourceHash": "fnv1a64:c75d6a9d7f902bb3",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "frontiera from Old Provençal frontiera, \"a frontier\" — borrowed, built on front, \"forehead, front\". (EtymDB 2.1)."
+              "text": "frontiera from French frontière, built on front, \"forehead, front\" — borrowed. EtymDB 2.1 derives it instead from Old Provençal frontiera; the French source is the usual account."
             }
           ]
         },

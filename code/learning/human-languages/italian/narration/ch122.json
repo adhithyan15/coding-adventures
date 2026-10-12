@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "Elbow, Ankle, Wrist, Cheek, Lips",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6a85a619b410301a",
+  "sourceHash": "fnv1a64:2c3db5a663706a3d",
   "lessons": [
     {
       "id": "IT-C122-gomito",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04295fa7eabb2c3e",
+      "sourceHash": "fnv1a64:bb2adcf0aab20e1d",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "caviglia from Old Provençal cavilla, \"a peg\" — borrowed; behind it is Vulgar Latin cavicla, from Latin cavicula. (EtymDB 2.1)."
+              "text": "caviglia from Old Provençal cavilla, \"a peg\" — borrowed; behind it is Vulgar Latin cavicula, cavicla (EtymDB 2.1), for Latin clavicula, \"a little key, a bolt\" (Lewis & Short)."
             }
           ]
         },

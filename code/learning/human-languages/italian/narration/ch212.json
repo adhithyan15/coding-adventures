@@ -4,7 +4,7 @@
   "chapter": 212,
   "title": "To hurry, To move away, To come near, To chat, To connect",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:db96b819356d6625",
+  "sourceHash": "fnv1a64:d71e7f044d5579e9",
   "lessons": [
     {
       "id": "IT-C212-affrettarsi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1d6b1a3cd18650e",
+      "sourceHash": "fnv1a64:ec6bc351d65e487b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "affrettarsi — built from fretta, \"haste\", with a- and -si, \"oneself\": to make haste. Where fretta came from is uncertain; EtymDB 2.1 records no origin for it."
+              "text": "affrettarsi — built from fretta, \"haste\", with a- and -si, \"oneself\": to make haste. fretta comes from the old verb frettare, \"to rub, to hurry\", which from Vulgar Latin frictare (EtymDB 2.1), from Latin fricare, \"to rub\" (Lewis & Short)."
             }
           ]
         },

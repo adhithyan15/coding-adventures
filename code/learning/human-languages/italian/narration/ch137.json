@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Last, Already, the Day before Yesterday, Recently, To Happen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3c90396c63f24d8",
+  "sourceHash": "fnv1a64:1f7f6885c680df3b",
   "lessons": [
     {
       "id": "IT-C137-scorso",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afd553440638645f",
+      "sourceHash": "fnv1a64:724bd4cdc5c11150",
       "notice": null,
       "blocks": [
         {

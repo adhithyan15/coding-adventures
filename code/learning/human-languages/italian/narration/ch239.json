@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "To reach, To achieve, To give, To give back, To recognise",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:85004730bc756e7f",
+  "sourceHash": "fnv1a64:e2c1e740d1346b31",
   "lessons": [
     {
       "id": "IT-C239-raggiungere",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fda9a738537de6f",
+      "sourceHash": "fnv1a64:c3ab842bd62ae0c6",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "regalare is the verb of regalo, \"a present\": to give as a present. EtymDB 2.1 has no row for it; the parts are plain to see."
+              "text": "regalare from Spanish regalar, \"to give as a gift\" — borrowed, like regalo, \"a present\". EtymDB 2.1 has no row for its origin."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:219dfe9bcb00c8e5",
+      "sourceHash": "fnv1a64:366cd4d6401308b5",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "restituire from Latin restituere, \"to set up again, to give back\" — inherited. (EtymDB 2.1)."
+              "text": "restituire from Latin restituere, \"to set up again, to give back\" — a learned borrowing. (EtymDB 2.1 records the Latin word.)"
             }
           ]
         },

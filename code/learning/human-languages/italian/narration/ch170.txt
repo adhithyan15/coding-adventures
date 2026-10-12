@@ -45,7 +45,7 @@ You'll want to know: il pianoforte.
 il pianoforte — "a piano".
 
 The word, taken apart.
-pianoforte is piano, "soft", plus forte, "loud": the first keyboard that could play both. forte from Latin fortis, "strong". (EtymDB 2.1).
+pianoforte is piano, "soft", plus forte, "loud" from Latin fortis, "strong" (EtymDB 2.1): the first keyboard that could play both.
 
 What you've built.
 One more word for this chapter.

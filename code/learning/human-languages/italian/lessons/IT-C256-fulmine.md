@@ -14,7 +14,7 @@ concept_tag: IT-COSE256-FULMINE
 prerequisites: [IT-C255-cantina, IT-C256-fiamma]
 sounds: []
 roots: [fulmen-latin]
-etymology_hook: "fulmine ← Latin fulmen, fulminem 'a thunderbolt' — English fulminate"
+etymology_hook: "fulmine ← Latin fulmen, fulminis 'a thunderbolt', stem fulmin- — English fulminate"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C256-fiamma]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fulmine** ← Latin *fulmen*, "a thunderbolt" (*fulminem*) — inherited. (EtymDB 2.1)
+**fulmine** ← Latin *fulmen*, *fulminis*, "a thunderbolt" (Lewis & Short) — inherited, from the stem *fulmin-*. (EtymDB 2.1 records the word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

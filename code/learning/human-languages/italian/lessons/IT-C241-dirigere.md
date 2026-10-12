@@ -14,7 +14,7 @@ concept_tag: IT-VERB-DIRIGERE
 prerequisites: [IT-C241-consegnare, IT-C241-correggere]
 sounds: []
 roots: [regere-latin]
-etymology_hook: "dirigere ← Latin dirigere 'to set straight' — English direct"
+etymology_hook: "dirigere ← Latin dirigere 'to set straight', a learned word — English direct"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C241-correggere]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dirigere** ← Latin *dirigere*, "to set straight" — inherited. (EtymDB 2.1)
+**dirigere** ← Latin *dirigere*, "to set straight" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

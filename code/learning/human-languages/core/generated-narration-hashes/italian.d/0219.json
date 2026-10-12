@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 219,
-  "sourceHash": "fnv1a64:f82640162fb83443",
+  "sourceHash": "fnv1a64:e86ada1826bf556e",
   "lessonIds": [
     "IT-C219-uguale",
     "IT-C219-simile",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch219.txt",
   "json": "italian/narration/ch219.json",
-  "textHash": "fnv1a64:de2418184a9557fa",
-  "jsonHash": "fnv1a64:519858d171574127",
+  "textHash": "fnv1a64:9509dd4185be5756",
+  "jsonHash": "fnv1a64:d1378f370e588632",
   "findings": []
 }

@@ -14,7 +14,7 @@ concept_tag: IT-TEMPO187-ANCORA
 prerequisites: [IT-C186-amicizia, IT-C186-speranza]
 sounds: []
 roots: [hora-latin]
-etymology_hook: "ancora ← Latin hanc horam '(at) this hour' — French encore is its sister"
+etymology_hook: "ancora — usually traced to Latin hanc horam '(at) this hour' — French encore is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C186-speranza]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ancora** goes back to Latin *hanc horam*, "(at) this hour". EtymDB 2.1 has no row for its origin; it lists French *encore* as its cognate.
+**ancora** is usually traced to Latin *hanc horam*, "(at) this hour"; some prefer *hinc ad horam*, "from here to the hour". EtymDB 2.1 has no row for its origin; it lists French *encore* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

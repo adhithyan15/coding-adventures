@@ -4,7 +4,7 @@
   "chapter": 221,
   "title": "Bakery, Butcher's, Forest, Coast, Valley",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:fcb7aeac1c90e9bc",
+  "sourceHash": "fnv1a64:f18e2364d8a3a391",
   "lessons": [
     {
       "id": "IT-C221-panetteria",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9137390e56a5b694",
+      "sourceHash": "fnv1a64:96d96093b1ad084f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "panetteria — built from pane, \"bread\", with -eria, \"a shop for\". EtymDB 2.1 has no row for it; the parts are plain to see."
+              "text": "panetteria — built from panettiere, \"a baker\", with -ia: the baker's shop. panettiere is built on pane, \"bread\". EtymDB 2.1 has no row for it."
             }
           ]
         },

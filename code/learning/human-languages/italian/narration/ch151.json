@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "Brain, Lung, Liver, Kidney, Bone",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:81aaee508afa5a79",
+  "sourceHash": "fnv1a64:4a901df759884d48",
   "lessons": [
     {
       "id": "IT-C151-cervello",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e529370ad7e95c4b",
+      "sourceHash": "fnv1a64:6513374f84bf92c7",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fegato from Late Latin ficatum, \"liver\" — inherited. It is short for iecur ficatum, \"liver fattened with figs\", a Roman delicacy. (EtymDB 2.1)."
+              "text": "fegato from Late Latin ficatum, \"liver\", short for iecur ficatum, \"liver fattened with figs\" (EtymDB 2.1) — inherited. Fig-fattened liver was a Roman delicacy."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 184,
-  "sourceHash": "fnv1a64:637a0f3de67bb32e",
+  "sourceHash": "fnv1a64:5f552484c6e691d4",
   "lessonIds": [
     "IT-C184-scivolare",
     "IT-C184-sollevare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch184.txt",
   "json": "italian/narration/ch184.json",
-  "textHash": "fnv1a64:4a1770bdd99fb201",
-  "jsonHash": "fnv1a64:62820b7c5f092f45",
+  "textHash": "fnv1a64:0a2ad347ca8707ef",
+  "jsonHash": "fnv1a64:805d2d9e8890bad8",
   "findings": []
 }

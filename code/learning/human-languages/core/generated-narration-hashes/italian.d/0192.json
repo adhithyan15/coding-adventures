@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 192,
-  "sourceHash": "fnv1a64:195e7202b3bbe3fa",
+  "sourceHash": "fnv1a64:7136d094e5dfb141",
   "lessonIds": [
     "IT-C192-binario",
     "IT-C192-passaporto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch192.txt",
   "json": "italian/narration/ch192.json",
-  "textHash": "fnv1a64:4e9739f6cec2ea7d",
-  "jsonHash": "fnv1a64:b04f9b792c4abb3e",
+  "textHash": "fnv1a64:6acd53965ab89974",
+  "jsonHash": "fnv1a64:9b0510993fae3939",
   "findings": []
 }

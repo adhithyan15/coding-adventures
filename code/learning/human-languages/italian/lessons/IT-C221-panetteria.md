@@ -14,7 +14,7 @@ concept_tag: IT-COSE221-PANETTERIA
 prerequisites: [IT-C220-pigiama, IT-C220-tasca]
 sounds: []
 roots: [panis-latin]
-etymology_hook: "panetteria — pane 'bread' + -eria 'a shop for'"
+etymology_hook: "panetteria — from panettiere 'a baker', built on pane 'bread'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C220-tasca]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**panetteria** — built from *pane*, "bread", with *-eria*, "a shop for". EtymDB 2.1 has no row for it; the parts are plain to see.
+**panetteria** — built from *panettiere*, "a baker", with *-ia*: the baker's shop. *panettiere* is built on *pane*, "bread". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

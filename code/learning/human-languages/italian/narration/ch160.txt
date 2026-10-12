@@ -141,7 +141,7 @@ You'll want to know: il marciapiede.
 il marciapiede — "a pavement".
 
 The word, taken apart.
-marciapiede is marcia, "walking, a march", plus piede, "foot": a way for walking on foot. EtymDB 2.1 has no row for it; the parts are plain to see.
+marciapiede is adapted from French marchepied, "a step, a footboard" — borrowed, and reshaped to look like marcia, "walking", plus piede, "foot". EtymDB 2.1 has no row for it.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,7 @@ concept_tag: IT-COSE160-MARCIAPIEDE
 prerequisites: [IT-C160-pizzeria, IT-C160-villaggio]
 sounds: []
 roots: []
-etymology_hook: "marciapiede — marcia 'walking' + piede 'foot': a way for those on foot"
+etymology_hook: "marciapiede ← French marchepied 'a footboard', reshaped to look like marcia + piede"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C160-villaggio]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**marciapiede** is *marcia*, "walking, a march", plus *piede*, "foot": a way for walking on foot. EtymDB 2.1 has no row for it; the parts are plain to see.
+**marciapiede** is adapted from French *marchepied*, "a step, a footboard" — borrowed, and reshaped to look like *marcia*, "walking", plus *piede*, "foot". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

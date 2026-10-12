@@ -14,7 +14,7 @@ concept_tag: IT-VERB-INDICARE
 prerequisites: [IT-C237-calcolare, IT-C237-colpire]
 sounds: []
 roots: [indicare-latin]
-etymology_hook: "indicare ← Latin indicare 'to point out' — English indicate is the same word"
+etymology_hook: "indicare ← Latin indicare 'to point out', a learned word — English indicate"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C237-colpire]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**indicare** ← Latin *indicare*, "to point out" — inherited. (EtymDB 2.1)
+**indicare** ← Latin *indicare*, "to point out" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

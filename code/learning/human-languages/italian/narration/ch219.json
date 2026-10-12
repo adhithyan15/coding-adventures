@@ -4,7 +4,7 @@
   "chapter": 219,
   "title": "Equal, Similar, False, Free of charge, Modern",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f82640162fb83443",
+  "sourceHash": "fnv1a64:e86ada1826bf556e",
   "lessons": [
     {
       "id": "IT-C219-uguale",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fc6d7c38946c50d",
+      "sourceHash": "fnv1a64:28f0d63f5ef62493",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "simile from Latin similis, \"like\" — inherited. (EtymDB 2.1)."
+              "text": "simile from Latin similis, \"like\" — a learned borrowing. (EtymDB 2.1 records the Latin word.)"
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87977133270af86f",
+      "sourceHash": "fnv1a64:f0e6fea80220cc1c",
       "notice": null,
       "blocks": [
         {

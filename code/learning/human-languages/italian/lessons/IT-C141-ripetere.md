@@ -14,7 +14,7 @@ concept_tag: IT-VERB-RIPETERE
 prerequisites: [IT-C141-disegnare, IT-C141-fotografare]
 sounds: []
 roots: [repetere-latin]
-etymology_hook: "ripetere ← Latin repetere 'to repeat' — English repeat is the same word"
+etymology_hook: "ripetere ← Latin repetere 'to repeat', a learned word — English repeat"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C141-fotografare]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ripetere** ← Latin *repetere*, "to go back to, to repeat" — inherited. (EtymDB 2.1)
+**ripetere** ← Latin *repetere*, "to go back to, to repeat" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Flame, Lightning, Thunder, Rainbow, Climate",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5f236eafb4450897",
+  "sourceHash": "fnv1a64:dc7ade9ad04571ea",
   "lessons": [
     {
       "id": "IT-C256-fiamma",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8706b0f622fc88e9",
+      "sourceHash": "fnv1a64:97a8b81847360364",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fulmine from Latin fulmen, \"a thunderbolt\" (fulminem) — inherited. (EtymDB 2.1)."
+              "text": "fulmine from Latin fulmen, fulminis, \"a thunderbolt\" (Lewis & Short) — inherited, from the stem fulmin-. (EtymDB 2.1 records the word.)"
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b70ddc4d5693546c",
+      "sourceHash": "fnv1a64:a710c46a534831f6",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tuono from Latin tonus, \"a sound, a tone\", which Latin took from Greek tonos — inherited. (EtymDB 2.1)."
+              "text": "tuono goes back to Latin tonus, \"thunder\", a noun from tonare, \"to thunder\" (Lewis & Short) — inherited; Latin o became uo. EtymDB 2.1 ties it to Greek tonos, \"a tone\", a different word, so that row is not used."
             }
           ]
         },

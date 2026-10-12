@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Serious, Right, Wrong, Ready, Safe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ff1a8c3ffa93ad9",
+  "sourceHash": "fnv1a64:0b925a90b2a2feda",
   "lessons": [
     {
       "id": "IT-C127-serio",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b238335f6d1581c0",
+      "sourceHash": "fnv1a64:63d49dc2433bc9bf",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sbagliato is the past participle of the verb for \"to make a mistake\", which EtymDB 2.1 takes apart as s- plus an old verb bagliare; where bagliare came from is uncertain."
+              "text": "sbagliato is the past participle of the verb for \"to make a mistake\", which comes from abbagliare, \"to dazzle\", with s- in place of a-. EtymDB 2.1 takes that verb apart as s- plus an old verb bagliare; only where bagliare came from is uncertain."
             }
           ]
         },

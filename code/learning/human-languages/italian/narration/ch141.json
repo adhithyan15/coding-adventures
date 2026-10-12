@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "To paint, To draw, To photograph, To repeat, To explain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:48532eabc7b30407",
+  "sourceHash": "fnv1a64:2289084ae2f70976",
   "lessons": [
     {
       "id": "IT-C141-dipingere",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6caaeb825e7bce02",
+      "sourceHash": "fnv1a64:064838d39e5f3189",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ripetere from Latin repetere, \"to go back to, to repeat\" — inherited. (EtymDB 2.1)."
+              "text": "ripetere from Latin repetere, \"to go back to, to repeat\" — a learned borrowing. (EtymDB 2.1 records the Latin word.)"
             }
           ]
         },

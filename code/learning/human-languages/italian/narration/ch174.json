@@ -4,7 +4,7 @@
   "chapter": 174,
   "title": "To kiss, To hug, To greet, To thank, To invite",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a0397c59c0b65edd",
+  "sourceHash": "fnv1a64:1c838c05cfd57efa",
   "lessons": [
     {
       "id": "IT-C174-baciare",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47b04e51216d371b",
+      "sourceHash": "fnv1a64:2e30f1e5a22ec13c",
       "notice": null,
       "blocks": [
         {

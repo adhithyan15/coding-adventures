@@ -4,7 +4,7 @@
   "chapter": 241,
   "title": "To deliver, To correct, To direct, To destroy, To exaggerate",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2d892329fc4b5a69",
+  "sourceHash": "fnv1a64:5205cd0a441f3a0a",
   "lessons": [
     {
       "id": "IT-C241-consegnare",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41a50efad20e9212",
+      "sourceHash": "fnv1a64:44232869c3a3ba86",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dirigere from Latin dirigere, \"to set straight\" — inherited. (EtymDB 2.1)."
+              "text": "dirigere from Latin dirigere, \"to set straight\" — a learned borrowing. (EtymDB 2.1 records the Latin word.)"
             }
           ]
         },

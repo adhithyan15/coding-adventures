@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "Still, Then, During, While, Decade",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca96d0c7bb416c3a",
+  "sourceHash": "fnv1a64:568df0de7c8e7ab6",
   "lessons": [
     {
       "id": "IT-C187-ancora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27717eaac6e25f02",
+      "sourceHash": "fnv1a64:9404d68746819079",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ancora goes back to Latin hanc horam, \"(at) this hour\". EtymDB 2.1 has no row for its origin; it lists French encore as its cognate."
+              "text": "ancora is usually traced to Latin hanc horam, \"(at) this hour\"; some prefer hinc ad horam, \"from here to the hour\". EtymDB 2.1 has no row for its origin; it lists French encore as its cognate."
             }
           ]
         },

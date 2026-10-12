@@ -14,7 +14,7 @@ concept_tag: IT-QUAL219-SIMILE
 prerequisites: [IT-C218-silenzioso, IT-C219-uguale]
 sounds: []
 roots: [similis-latin]
-etymology_hook: "simile ← Latin similis 'like' — English similar and simile share it"
+etymology_hook: "simile ← Latin similis 'like', a learned word — English similar and simile"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C219-uguale]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**simile** ← Latin *similis*, "like" — inherited. (EtymDB 2.1)
+**simile** ← Latin *similis*, "like" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

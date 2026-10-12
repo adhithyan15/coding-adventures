@@ -45,7 +45,7 @@ You'll want to know: il fulmine.
 il fulmine — "lightning".
 
 The word, taken apart.
-fulmine from Latin fulmen, "a thunderbolt" (fulminem) — inherited. (EtymDB 2.1).
+fulmine from Latin fulmen, fulminis, "a thunderbolt" (Lewis & Short) — inherited, from the stem fulmin-. (EtymDB 2.1 records the word.)
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: il tuono.
 il tuono — "thunder".
 
 The word, taken apart.
-tuono from Latin tonus, "a sound, a tone", which Latin took from Greek tonos — inherited. (EtymDB 2.1).
+tuono goes back to Latin tonus, "thunder", a noun from tonare, "to thunder" (Lewis & Short) — inherited; Latin o became uo. EtymDB 2.1 ties it to Greek tonos, "a tone", a different word, so that row is not used.
 
 What you've built.
 One more word for this chapter.

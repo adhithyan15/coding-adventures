@@ -13,7 +13,7 @@ You'll want to know: affrettarsi.
 affrettarsi — "to hurry".
 
 The word, taken apart.
-affrettarsi — built from fretta, "haste", with a- and -si, "oneself": to make haste. Where fretta came from is uncertain; EtymDB 2.1 records no origin for it.
+affrettarsi — built from fretta, "haste", with a- and -si, "oneself": to make haste. fretta comes from the old verb frettare, "to rub, to hurry", which from Vulgar Latin frictare (EtymDB 2.1), from Latin fricare, "to rub" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
