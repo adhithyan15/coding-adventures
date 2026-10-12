@@ -33,7 +33,7 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
-    "forwardReferences": 1004,
+    "forwardReferences": 960,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
@@ -335148,14 +335148,6 @@
         "lessonsEarly": 1152
       },
       {
-        "lessonId": "LA-C58-phrases",
-        "language": "latin",
-        "position": 163,
-        "word": "nōmen",
-        "taughtBy": "LA-C278-nomen",
-        "lessonsEarly": 1131
-      },
-      {
         "lessonId": "LA-C58-prima-lectio",
         "language": "latin",
         "position": 164,
@@ -335178,14 +335170,6 @@
         "word": "nōmen",
         "taughtBy": "LA-C278-nomen",
         "lessonsEarly": 1125
-      },
-      {
-        "lessonId": "LA-C01-salve",
-        "language": "latin",
-        "position": 0,
-        "word": "versus",
-        "taughtBy": "LA-C246-versus",
-        "lessonsEarly": 1123
       },
       {
         "lessonId": "ES-C51-la-flecha",
@@ -335234,22 +335218,6 @@
         "word": "espera",
         "taughtBy": "ES-C460-espera",
         "lessonsEarly": 1100
-      },
-      {
-        "lessonId": "LA-C42-accipio",
-        "language": "latin",
-        "position": 86,
-        "word": "tenēre",
-        "taughtBy": "LA-C255-teneo",
-        "lessonsEarly": 1085
-      },
-      {
-        "lessonId": "LA-C22-tu-vos",
-        "language": "latin",
-        "position": 42,
-        "word": "versus",
-        "taughtBy": "LA-C246-versus",
-        "lessonsEarly": 1081
       },
       {
         "lessonId": "ES-C04-como-estas-register",
@@ -335500,14 +335468,6 @@
         "lessonsEarly": 948
       },
       {
-        "lessonId": "LA-C09-anni-tempora",
-        "language": "latin",
-        "position": 21,
-        "word": "vēra",
-        "taughtBy": "LA-C215-verus",
-        "lessonsEarly": 943
-      },
-      {
         "lessonId": "HI-C68-lekin",
         "language": "hindi",
         "position": 320,
@@ -335668,14 +335628,6 @@
         "lessonsEarly": 917
       },
       {
-        "lessonId": "LA-C55-secundus",
-        "language": "latin",
-        "position": 150,
-        "word": "sequī",
-        "taughtBy": "LA-C235-sequor",
-        "lessonsEarly": 917
-      },
-      {
         "lessonId": "ES-C290-arroz",
         "language": "spanish",
         "position": 548,
@@ -335753,14 +335705,6 @@
         "position": 8,
         "word": "agō",
         "taughtBy": "LA-C202-ago",
-        "lessonsEarly": 887
-      },
-      {
-        "lessonId": "LA-C03-quaeso",
-        "language": "latin",
-        "position": 11,
-        "word": "quaerere",
-        "taughtBy": "LA-C203-quaero",
         "lessonsEarly": 887
       },
       {
@@ -335932,28 +335876,12 @@
         "lessonsEarly": 820
       },
       {
-        "lessonId": "LA-C37-do",
-        "language": "latin",
-        "position": 68,
-        "word": "trādere",
-        "taughtBy": "LA-C201-trado",
-        "lessonsEarly": 820
-      },
-      {
         "lessonId": "ES-C57-sintesis-descifrar",
         "language": "spanish",
         "position": 91,
         "word": "lleno",
         "taughtBy": "ES-C365-lleno",
         "lessonsEarly": 818
-      },
-      {
-        "lessonId": "LA-C32-bonum-mane",
-        "language": "latin",
-        "position": 52,
-        "word": "salūtāre",
-        "taughtBy": "LA-C197-saluto",
-        "lessonsEarly": 816
       },
       {
         "lessonId": "FR-C04-a-demain",
@@ -336058,14 +335986,6 @@
         "word": "forma",
         "taughtBy": "ES-C358-forma",
         "lessonsEarly": 784
-      },
-      {
-        "lessonId": "LA-C01-practice",
-        "language": "latin",
-        "position": 8,
-        "word": "grave",
-        "taughtBy": "LA-C182-gravis",
-        "lessonsEarly": 782
       },
       {
         "lessonId": "HI-C93-repaso-sambandh",
@@ -336418,14 +336338,6 @@
         "word": "medius",
         "taughtBy": "LA-C183-medius",
         "lessonsEarly": 675
-      },
-      {
-        "lessonId": "LA-C15-weather-verbs",
-        "language": "latin",
-        "position": 29,
-        "word": "clāmāre",
-        "taughtBy": "LA-C165-clamo",
-        "lessonsEarly": 674
       },
       {
         "lessonId": "ES-C04-regular",
@@ -339428,22 +339340,6 @@
         "lessonsEarly": 135
       },
       {
-        "lessonId": "LA-C164-merx",
-        "language": "latin",
-        "position": 696,
-        "word": "mercēs",
-        "taughtBy": "LA-C190-merces",
-        "lessonsEarly": 134
-      },
-      {
-        "lessonId": "LA-C164-merx",
-        "language": "latin",
-        "position": 696,
-        "word": "mercēdis",
-        "taughtBy": "LA-C190-merces",
-        "lessonsEarly": 134
-      },
-      {
         "lessonId": "HI-C71-kyonki",
         "language": "hindi",
         "position": 330,
@@ -339468,27 +339364,11 @@
         "lessonsEarly": 132
       },
       {
-        "lessonId": "LA-C12-medius-dies-nox",
-        "language": "latin",
-        "position": 25,
-        "word": "nōna",
-        "taughtBy": "LA-C56-nonus",
-        "lessonsEarly": 132
-      },
-      {
         "lessonId": "ES-C294-cuchillo",
         "language": "spanish",
         "position": 567,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
-        "lessonsEarly": 131
-      },
-      {
-        "lessonId": "LA-C13-hora",
-        "language": "latin",
-        "position": 26,
-        "word": "nōna",
-        "taughtBy": "LA-C56-nonus",
         "lessonsEarly": 131
       },
       {
@@ -339545,22 +339425,6 @@
         "position": 127,
         "word": "ou",
         "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 128
-      },
-      {
-        "lessonId": "LA-C09-anni-tempora",
-        "language": "latin",
-        "position": 21,
-        "word": "prīma",
-        "taughtBy": "LA-C55-primus",
-        "lessonsEarly": 128
-      },
-      {
-        "lessonId": "LA-C09-anni-tempora",
-        "language": "latin",
-        "position": 21,
-        "word": "prīmum",
-        "taughtBy": "LA-C55-primus",
         "lessonsEarly": 128
       },
       {
@@ -339812,14 +339676,6 @@
         "lessonsEarly": 95
       },
       {
-        "lessonId": "LA-C14-annos-natus",
-        "language": "latin",
-        "position": 27,
-        "word": "et",
-        "taughtBy": "LA-C49-et",
-        "lessonsEarly": 95
-      },
-      {
         "lessonId": "ES-C301-hilo",
         "language": "spanish",
         "position": 604,
@@ -339900,14 +339756,6 @@
         "lessonsEarly": 89
       },
       {
-        "lessonId": "LA-C23-nihil-est",
-        "language": "latin",
-        "position": 43,
-        "word": "mīles",
-        "taughtBy": "LA-C51-miles",
-        "lessonsEarly": 89
-      },
-      {
         "lessonId": "PT-R155-first-pass-words-from-chapters-147-150",
         "language": "portuguese",
         "position": 768,
@@ -339929,22 +339777,6 @@
         "position": 73,
         "word": "il est",
         "taughtBy": "FR-C16-est",
-        "lessonsEarly": 87
-      },
-      {
-        "lessonId": "LA-C19-valeo-family",
-        "language": "latin",
-        "position": 35,
-        "word": "et",
-        "taughtBy": "LA-C49-et",
-        "lessonsEarly": 87
-      },
-      {
-        "lessonId": "LA-C26-quomodo",
-        "language": "latin",
-        "position": 46,
-        "word": "epistulae",
-        "taughtBy": "LA-C51-epistula",
         "lessonsEarly": 87
       },
       {
@@ -340156,14 +339988,6 @@
         "lessonsEarly": 73
       },
       {
-        "lessonId": "LA-C24-propediem-te-videbo",
-        "language": "latin",
-        "position": 44,
-        "word": "sed",
-        "taughtBy": "LA-C48-sed",
-        "lessonsEarly": 73
-      },
-      {
         "lessonId": "PT-C07-dias-1",
         "language": "portuguese",
         "position": 37,
@@ -340201,22 +340025,6 @@
         "position": 265,
         "word": "petit",
         "taughtBy": "FR-C58-petit-fils",
-        "lessonsEarly": 72
-      },
-      {
-        "lessonId": "LA-C08-manus",
-        "language": "latin",
-        "position": 20,
-        "word": "domus",
-        "taughtBy": "LA-C44-domus",
-        "lessonsEarly": 72
-      },
-      {
-        "lessonId": "LA-C33-practice",
-        "language": "latin",
-        "position": 55,
-        "word": "id",
-        "taughtBy": "LA-C50-is",
         "lessonsEarly": 72
       },
       {
@@ -340540,14 +340348,6 @@
         "lessonsEarly": 54
       },
       {
-        "lessonId": "LA-C39-amo",
-        "language": "latin",
-        "position": 76,
-        "word": "amīcus",
-        "taughtBy": "LA-C51-amicus",
-        "lessonsEarly": 53
-      },
-      {
         "lessonId": "PT-C02-como",
         "language": "portuguese",
         "position": 13,
@@ -340634,14 +340434,6 @@
         "word": "favor",
         "taughtBy": "ES-C320-favor",
         "lessonsEarly": 48
-      },
-      {
-        "lessonId": "LA-C37-scio",
-        "language": "latin",
-        "position": 67,
-        "word": "nesciō",
-        "taughtBy": "LA-C48-nescio",
-        "lessonsEarly": 46
       },
       {
         "lessonId": "PT-C02-como-vai-esta",
@@ -340812,14 +340604,6 @@
         "lessonsEarly": 37
       },
       {
-        "lessonId": "LA-C47-piscis",
-        "language": "latin",
-        "position": 111,
-        "word": "pēs",
-        "taughtBy": "LA-C54-pes",
-        "lessonsEarly": 37
-      },
-      {
         "lessonId": "ES-C313-boleto",
         "language": "spanish",
         "position": 662,
@@ -340857,14 +340641,6 @@
         "position": 237,
         "word": "que",
         "taughtBy": "FR-C39-que",
-        "lessonsEarly": 35
-      },
-      {
-        "lessonId": "LA-C14-annos-natus",
-        "language": "latin",
-        "position": 27,
-        "word": "habēre",
-        "taughtBy": "LA-C37-habeo",
         "lessonsEarly": 35
       },
       {
@@ -341060,14 +340836,6 @@
         "lessonsEarly": 28
       },
       {
-        "lessonId": "LA-C40-dormio",
-        "language": "latin",
-        "position": 78,
-        "word": "somnus",
-        "taughtBy": "LA-C46-somnus",
-        "lessonsEarly": 28
-      },
-      {
         "lessonId": "MR-R201-first-pass-words-from-chapters-193-196",
         "language": "marathi",
         "position": 1075,
@@ -341105,14 +340873,6 @@
         "position": 142,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 26
-      },
-      {
-        "lessonId": "LA-C19-valeo-family",
-        "language": "latin",
-        "position": 35,
-        "word": "sum",
-        "taughtBy": "LA-C37-sum",
         "lessonsEarly": 26
       },
       {
@@ -341193,14 +340953,6 @@
         "position": 1395,
         "word": "plazo",
         "taughtBy": "ES-C458-plazo",
-        "lessonsEarly": 22
-      },
-      {
-        "lessonId": "LA-C24-propediem-te-videbo",
-        "language": "latin",
-        "position": 44,
-        "word": "vidēre",
-        "taughtBy": "LA-C37-video",
         "lessonsEarly": 22
       },
       {
@@ -341332,43 +341084,11 @@
         "lessonsEarly": 15
       },
       {
-        "lessonId": "LA-C50-ibi",
-        "language": "latin",
-        "position": 128,
-        "word": "liber",
-        "taughtBy": "LA-C53-liber",
-        "lessonsEarly": 15
-      },
-      {
         "lessonId": "ES-C473-aconsejar",
         "language": "spanish",
         "position": 1503,
         "word": "material",
         "taughtBy": "ES-C475-material",
-        "lessonsEarly": 14
-      },
-      {
-        "lessonId": "LA-C02-numbers-6-10",
-        "language": "latin",
-        "position": 10,
-        "word": "september",
-        "taughtBy": "LA-C11-menses",
-        "lessonsEarly": 14
-      },
-      {
-        "lessonId": "LA-C02-numbers-6-10",
-        "language": "latin",
-        "position": 10,
-        "word": "november",
-        "taughtBy": "LA-C11-menses",
-        "lessonsEarly": 14
-      },
-      {
-        "lessonId": "LA-C02-numbers-6-10",
-        "language": "latin",
-        "position": 10,
-        "word": "december",
-        "taughtBy": "LA-C11-menses",
         "lessonsEarly": 14
       },
       {
@@ -341436,14 +341156,6 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "LA-C19-ut-vales",
-        "language": "latin",
-        "position": 34,
-        "word": "quōmodo",
-        "taughtBy": "LA-C26-quomodo",
-        "lessonsEarly": 12
-      },
-      {
         "lessonId": "PT-C14-ter",
         "language": "portuguese",
         "position": 51,
@@ -341460,14 +341172,6 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "LA-C37-habeo",
-        "language": "latin",
-        "position": 62,
-        "word": "capere",
-        "taughtBy": "LA-C39-capio",
-        "lessonsEarly": 11
-      },
-      {
         "lessonId": "PT-C20-gostar",
         "language": "portuguese",
         "position": 78,
@@ -341481,14 +341185,6 @@
         "position": 124,
         "word": "दोपहर",
         "taughtBy": "HI-C30-dopahar-widened",
-        "lessonsEarly": 10
-      },
-      {
-        "lessonId": "LA-C19-practice",
-        "language": "latin",
-        "position": 36,
-        "word": "quōmodo",
-        "taughtBy": "LA-C26-quomodo",
         "lessonsEarly": 10
       },
       {
@@ -341641,22 +341337,6 @@
         "position": 162,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "LA-C25-cras-te-videbo",
-        "language": "latin",
-        "position": 45,
-        "word": "māne",
-        "taughtBy": "LA-C31-mane",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "LA-C48-nescio",
-        "language": "latin",
-        "position": 113,
-        "word": "possum",
-        "taughtBy": "LA-C49-possum",
         "lessonsEarly": 6
       },
       {
@@ -341884,14 +341564,6 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "LA-C23-nihil-est",
-        "language": "latin",
-        "position": 43,
-        "word": "quōmodo",
-        "taughtBy": "LA-C26-quomodo",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
         "position": 4,
@@ -342041,14 +341713,6 @@
         "position": 166,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "LA-C48-aut",
-        "language": "latin",
-        "position": 118,
-        "word": "volō",
-        "taughtBy": "LA-C49-volo",
         "lessonsEarly": 2
       },
       {
@@ -342460,22 +342124,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "LA-C12-medius-dies-nox",
-        "language": "latin",
-        "position": 25,
-        "word": "hōra",
-        "taughtBy": "LA-C13-hora",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "LA-C50-ibi",
-        "language": "latin",
-        "position": 128,
-        "word": "amīcus",
-        "taughtBy": "LA-C51-amicus",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "PT-C01-bom-dia",
         "language": "portuguese",
         "position": 7,
@@ -342785,7 +342433,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1360,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 73
+        "forwardReferences": 29
       },
       {
         "language": "malayalam",
@@ -342922,7 +342570,7 @@
         "R3": 15983,
         "R4": 24355
       },
-      "forwardReferences": 1004
+      "forwardReferences": 960
     }
   },
   "scriptClosure": {
@@ -364274,7 +363922,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 73,
+        "forwardReferences": 29,
         "atomsTaught": 1360,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2834,
@@ -364292,7 +363940,7 @@
           {
             "language": "latin",
             "kind": "forward-language",
-            "count": 73,
+            "count": 29,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -364321,7 +363969,7 @@
         "next": {
           "language": "latin",
           "kind": "forward-language",
-          "count": 73,
+          "count": 29,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -365108,16 +364756,16 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "latin",
+        "language": "hindi",
         "kind": "forward-language",
-        "count": 73,
+        "count": 33,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "hindi",
+        "language": "latin",
         "kind": "forward-language",
-        "count": 33,
+        "count": 29,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -455605,13 +455253,13 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28638,
-    "usesBeforeIntroduction": 46981,
+    "usesBeforeIntroduction": 46988,
     "technicalUsesBeforeIntroduction": 6606,
     "technicalLessons": 3806,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2119
+        "lessons": 2121
       },
       {
         "term": "noun",
@@ -455623,7 +455271,7 @@
       },
       {
         "term": "voice",
-        "lessons": 278
+        "lessons": 277
       },
       {
         "term": "case",
