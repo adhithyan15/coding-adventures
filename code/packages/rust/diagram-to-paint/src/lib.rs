@@ -41,7 +41,8 @@ use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
+    GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind,
+    TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
 use layout_ir::{
@@ -878,6 +879,31 @@ where
             stroke,
             stroke_width,
         );
+        let (start_previous, end_previous) = if edge.curve == Some(SwimlaneEdgeCurve::Basis) {
+            let dx = edge.to.x - edge.from.x;
+            let dy = edge.to.y - edge.from.y;
+            let (first, second) = if dx.abs() >= dy.abs() {
+                (
+                    Point { x: edge.from.x + dx * 0.4, y: edge.from.y },
+                    Point { x: edge.to.x - dx * 0.4, y: edge.to.y },
+                )
+            } else {
+                (
+                    Point { x: edge.from.x, y: edge.from.y + dy * 0.4 },
+                    Point { x: edge.to.x, y: edge.to.y - dy * 0.4 },
+                )
+            };
+            path.commands = vec![
+                PathCommand::MoveTo { x: edge.from.x, y: edge.from.y },
+                PathCommand::CubicTo {
+                    cx1: first.x, cy1: first.y, cx2: second.x, cy2: second.y,
+                    x: edge.to.x, y: edge.to.y,
+                },
+            ];
+            (first, second)
+        } else {
+            (edge.to.clone(), edge.from.clone())
+        };
         if let Some(stroke_dash) = &edge.style.stroke_dash {
             path.stroke_dash = Some(stroke_dash.clone());
         } else if edge.kind == SwimlaneEdgeKind::Dotted {
@@ -887,10 +913,10 @@ where
         }
         instructions.push(PaintInstruction::Path(path));
         instructions.extend(swimlane_endpoint_marker(
-            edge.start_marker, &edge.to, &edge.from, stroke, stroke_width,
+            edge.start_marker, &start_previous, &edge.from, stroke, stroke_width,
         ));
         instructions.extend(swimlane_endpoint_marker(
-            edge.end_marker, &edge.from, &edge.to, stroke, stroke_width,
+            edge.end_marker, &end_previous, &edge.to, stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
             text_children.push(text_node(
@@ -1374,6 +1400,12 @@ where
             metadata.insert(format!("swimlane.edge.{index}.animation"), match animation {
                 SwimlaneEdgeAnimation::Slow => "slow",
                 SwimlaneEdgeAnimation::Fast => "fast",
+            }.into());
+        }
+        if let Some(curve) = edge.curve {
+            metadata.insert(format!("swimlane.edge.{index}.curve"), match curve {
+                SwimlaneEdgeCurve::Linear => "linear",
+                SwimlaneEdgeCurve::Basis => "basis",
             }.into());
         }
     }

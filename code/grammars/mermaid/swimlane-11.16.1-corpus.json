@@ -249,6 +249,10 @@
     {
       "name": "edge-animation-config",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nsubmit@{ animate: true, animation: fast }\nrelease@{ animation: slow }"
+    },
+    {
+      "name": "edge-curve-config",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest curved@--> done\nreview linear@--> done\ncurved@{ curve: basis }\nlinear@{ curve: linear }"
     }
   ]
 }

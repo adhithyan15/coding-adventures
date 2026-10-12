@@ -45,6 +45,10 @@
 > are the selected `task-app-v0.5.3` checkpoint in
 > [#17328](https://github.com/adhithyan15/coding-adventures/issues/17328), with
 > that same artifact boundary.
+> Qt control fill-width preservation is the next incremental fidelity slice in
+> [#17338](https://github.com/adhithyan15/coding-adventures/issues/17338): 15
+> exact input/button `width: 100%` drops leave the report while the three
+> remaining `Text` widths and unsupported mixed geometry stay explicit.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,

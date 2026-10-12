@@ -17,7 +17,7 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeAnimation, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
+    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -6375,8 +6375,18 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
             let edge = &mut diagram.edges[edge_index];
             matched = true;
-            edge.animate = config.animate;
-            edge.animation = config.animation;
+            if let Some(animate) = config.animate {
+                edge.animate = animate;
+            }
+            if let Some(animation) = config.animation {
+                edge.animation = Some(animation);
+                if config.animate.is_none() {
+                    edge.animate = true;
+                }
+            }
+            if let Some(curve) = config.curve {
+                edge.curve = Some(curve);
+            }
         }
         if !matched {
             return Err(swimlane_error(config.line, format!("Swimlane edge configuration references unknown edge {:?}", config.id)));
@@ -6492,8 +6502,9 @@ fn swimlane_edge_target_indices<'a>(targets: &'a std::collections::BTreeMap<Stri
 
 struct SwimlaneEdgeConfig {
     id: String,
-    animate: bool,
+    animate: Option<bool>,
     animation: Option<SwimlaneEdgeAnimation>,
+    curve: Option<SwimlaneEdgeCurve>,
     line: usize,
 }
 
@@ -6613,11 +6624,12 @@ fn parse_swimlane_edge_config(
             .ok_or_else(|| swimlane_error(line, "Swimlane edge configuration requires key: value"))?;
         Ok((parse_mermaid_metadata_scalar(key.trim()), parse_mermaid_metadata_scalar(value.trim())))
     }).collect::<Result<Vec<_>, ParseError>>()?;
-    if !fields.iter().any(|(key, _)| matches!(key.as_str(), "animate" | "animation")) {
+    if !fields.iter().any(|(key, _)| matches!(key.as_str(), "animate" | "animation" | "curve")) {
         return Ok(None);
     }
     let mut animate = None;
     let mut animation = None;
+    let mut curve = None;
     for (key, value) in fields {
         match key.as_str() {
             "animate" => animate = Some(match value.to_ascii_lowercase().as_str() {
@@ -6630,13 +6642,19 @@ fn parse_swimlane_edge_config(
                 "fast" => SwimlaneEdgeAnimation::Fast,
                 _ => return Err(swimlane_error(line, "Swimlane edge animation must be slow or fast")),
             }),
+            "curve" => curve = Some(match value.to_ascii_lowercase().as_str() {
+                "linear" => SwimlaneEdgeCurve::Linear,
+                "basis" => SwimlaneEdgeCurve::Basis,
+                _ => return Err(swimlane_error(line, "Swimlane edge curve must be linear or basis")),
+            }),
             other => return Err(swimlane_error(line, format!("unsupported Swimlane edge configuration {other:?}"))),
         }
     }
     Ok(Some(SwimlaneEdgeConfig {
         id: id.to_string(),
-        animate: animate.unwrap_or(animation.is_some()),
+        animate,
         animation,
+        curve,
         line,
     }))
 }
@@ -6807,6 +6825,7 @@ fn parse_swimlane_edge_chain(
                     style: DiagramStyle::default(),
                     animate: false,
                     animation: None,
+                    curve: None,
                 });
             }
         }
