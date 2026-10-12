@@ -14,6 +14,7 @@ concept_tag: IT-VIAGGIO92-METROPOLITANA
 prerequisites: [IT-C91-tra, IT-C92-di-fronte]
 sounds: []
 roots: []
+etymology_hook: "metropolitana — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C92-di-fronte]
 <!-- hl-knowledge: introduces=[IT-LEX-C92-VIAGGIO92-02]; assesses=[] -->
 
 **la metropolitana** — "the underground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**metropolitana** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

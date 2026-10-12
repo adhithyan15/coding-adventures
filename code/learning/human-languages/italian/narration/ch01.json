@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9e64903762b3f619",
+  "sourceHash": "fnv1a64:c021d28350be4145",
   "lessons": [
     {
       "id": "IT-C01-ciao",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:39674ab3b9b351b1",
+      "sourceHash": "fnv1a64:ca3a9da7caad3059",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -377,7 +377,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d9edd18ed412398",
+      "sourceHash": "fnv1a64:cb9481c8791b2974",
       "notice": null,
       "blocks": [
         {
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:692b8741167331f0",
+      "sourceHash": "fnv1a64:4b0e261601469fd8",
       "notice": null,
       "blocks": [
         {
@@ -598,7 +598,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2adecce0f33e0690",
+      "sourceHash": "fnv1a64:d2452b1afd195d5d",
       "notice": null,
       "blocks": [
         {
@@ -726,7 +726,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b1dbe891a75bcf0",
+      "sourceHash": "fnv1a64:5762cc4de541363c",
       "notice": null,
       "blocks": [
         {
@@ -835,7 +835,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb60f2f8aa4caa2b",
+      "sourceHash": "fnv1a64:d4e83de9cfa7ba4f",
       "notice": null,
       "blocks": [
         {
@@ -940,7 +940,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd942a94f281177d",
+      "sourceHash": "fnv1a64:76e23aad727b7340",
       "notice": null,
       "blocks": [
         {
@@ -1038,7 +1038,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6489878f4e2484a3",
+      "sourceHash": "fnv1a64:0c3bfbc8c79e08fa",
       "notice": null,
       "blocks": [
         {

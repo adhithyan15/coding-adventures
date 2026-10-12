@@ -14,6 +14,7 @@ concept_tag: IT-CASA2-LAMPADA
 prerequisites: [IT-C57-tetto, IT-C57-giardino]
 sounds: []
 roots: []
+etymology_hook: "lampada — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C57-giardino]
 <!-- hl-knowledge: introduces=[IT-LEX-C57-CASA2-04]; assesses=[] -->
 
 **la lampada** — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lampada** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

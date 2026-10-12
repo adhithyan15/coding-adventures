@@ -13,7 +13,8 @@ gloss: "to dance"
 concept_tag: IT-VERB-BALLARE
 prerequisites: [IT-C46-ragazza, IT-C47-cantare]
 sounds: []
-roots: []
+roots: [ballare-latin]
+etymology_hook: "ballare ← Late Latin ballare 'to dance' — English ball and ballet share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C47-cantare]
 <!-- hl-knowledge: introduces=[IT-LEX-C47-VERBI1-02]; assesses=[] -->
 
 **ballare** — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ballare** ← Late Latin *ballare*, "to dance" — inherited; Latin took it from Greek *ballo*, "I throw". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

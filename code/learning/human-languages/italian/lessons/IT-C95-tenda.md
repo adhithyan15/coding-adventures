@@ -14,6 +14,7 @@ concept_tag: IT-CASA95-TENDA
 prerequisites: [IT-C95-vasca, IT-C95-scaffale]
 sounds: []
 roots: []
+etymology_hook: "tenda — origin not recorded in EtymDB 2.1; French tente and Spanish tienda are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C95-scaffale]
 <!-- hl-knowledge: introduces=[IT-LEX-C95-CASA95-04]; assesses=[] -->
 
 **la tenda** — "a curtain; a tent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tenda** — its origin is not recorded in EtymDB 2.1. EtymDB lists French *tente* and Spanish *tienda* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

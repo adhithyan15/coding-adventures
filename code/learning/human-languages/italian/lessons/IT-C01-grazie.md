@@ -11,6 +11,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [IT-C01-ciao]
 sounds: [z-is-ts]
 roots: [gratia]
+etymology_hook: "grazie ← Latin gratiae, plural of gratia 'favour, thanks' — English grace and gratitude"
 reviews_of: [IT-C01-buongiorno]
 duration:
   max_seconds: 120

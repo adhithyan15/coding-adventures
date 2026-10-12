@@ -13,7 +13,8 @@ gloss: "a roof"
 concept_tag: IT-CASA2-TETTO
 prerequisites: [IT-C56-chiave, IT-C57-muro]
 sounds: []
-roots: []
+roots: [tectum-latin]
+etymology_hook: "tetto ← Latin tectum 'roof', from tegere 'to cover' — English protect shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C57-muro]
 <!-- hl-knowledge: introduces=[IT-LEX-C57-CASA2-02]; assesses=[] -->
 
 **il tetto** — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tetto** ← Latin *tectum*, "roof", from *tegere*, "to cover" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

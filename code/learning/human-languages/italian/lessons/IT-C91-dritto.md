@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI91-DRITTO
 prerequisites: [IT-C90-sud, IT-C90-ovest]
 sounds: []
 roots: []
+etymology_hook: "dritto — origin not recorded in EtymDB 2.1; French droit and Catalan dret are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C90-ovest]
 <!-- hl-knowledge: introduces=[IT-LEX-C91-LUOGHI91-01]; assesses=[] -->
 
 **dritto** — "straight on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dritto** — its origin is not recorded in EtymDB 2.1. EtymDB lists French *droit* and Catalan *dret* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

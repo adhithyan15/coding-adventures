@@ -14,6 +14,7 @@ concept_tag: IT-CITTA3-CHIESA
 prerequisites: [IT-C83-ponte, IT-C83-parco]
 sounds: []
 roots: []
+etymology_hook: "chiesa — origin not recorded in EtymDB 2.1; Spanish iglesia are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C83-parco]
 <!-- hl-knowledge: introduces=[IT-LEX-C83-CITTA3-03]; assesses=[] -->
 
 **la chiesa** — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiesa** — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish *iglesia* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

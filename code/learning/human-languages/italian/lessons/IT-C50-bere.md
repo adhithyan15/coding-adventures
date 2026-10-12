@@ -14,6 +14,7 @@ concept_tag: IT-VERB-BERE
 prerequisites: [IT-C49-aprire, IT-C50-chiudere]
 sounds: []
 roots: []
+etymology_hook: "bere — origin not recorded in EtymDB 2.1; Spanish and Portuguese beber are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-chiudere]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-02]; assesses=[] -->
 
 **bere** — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bere** — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish and Portuguese *beber* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-CASA1-TAVOLO
 prerequisites: [IT-C56-cucina, IT-C56-finestra]
 sounds: []
 roots: []
+etymology_hook: "tavolo — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C56-finestra]
 <!-- hl-knowledge: introduces=[IT-LEX-C56-CASA1-03]; assesses=[] -->
 
 **il tavolo** — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tavolo** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

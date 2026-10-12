@@ -14,6 +14,7 @@ concept_tag: IT-AGG5-RICCO
 prerequisites: [IT-C76-forte, IT-C76-debole]
 sounds: []
 roots: []
+etymology_hook: "ricco ← Lombardic rihhi 'powerful' — English rich is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C76-debole]
 <!-- hl-knowledge: introduces=[IT-LEX-C76-AGG5-03]; assesses=[] -->
 
 **ricco** — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ricco** ← Lombardic *rihhi*, "powerful, rich" — borrowed from the Germanic language of the Lombards. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

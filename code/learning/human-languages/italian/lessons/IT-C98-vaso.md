@@ -13,7 +13,8 @@ gloss: "a vase; a jar"
 concept_tag: IT-CASA98-VASO
 prerequisites: [IT-C98-pentola, IT-C98-padella]
 sounds: []
-roots: []
+roots: [vasum-latin]
+etymology_hook: "vaso ← Latin vasum 'vessel' — English vase shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C98-padella]
 <!-- hl-knowledge: introduces=[IT-LEX-C98-CASA98-05]; assesses=[] -->
 
 **il vaso** — "a vase; a jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vaso** ← Latin *vasum*, "vessel" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

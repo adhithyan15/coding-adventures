@@ -13,7 +13,8 @@ gloss: "to sleep"
 concept_tag: IT-VERB-DORMIRE
 prerequisites: [IT-C48-nuotare, IT-C48-chiamare]
 sounds: []
-roots: []
+roots: [dormire-latin]
+etymology_hook: "dormire ← Latin dormire 'to sleep' — English dormitory shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C48-chiamare]
 <!-- hl-knowledge: introduces=[IT-LEX-C48-VERBI2-05]; assesses=[] -->
 
 **dormire** — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dormire** ← Latin *dormire*, "to sleep" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

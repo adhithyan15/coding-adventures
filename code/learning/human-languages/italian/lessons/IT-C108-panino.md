@@ -14,6 +14,7 @@ concept_tag: IT-CIBO108-PANINO
 prerequisites: [IT-C108-cioccolato, IT-C108-biscotto]
 sounds: []
 roots: []
+etymology_hook: "panino — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C108-biscotto]
 <!-- hl-knowledge: introduces=[IT-LEX-C108-CIBO108-03]; assesses=[] -->
 
 **il panino** — "a sandwich, a roll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**panino** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

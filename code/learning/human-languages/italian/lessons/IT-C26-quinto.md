@@ -52,6 +52,11 @@ reviews_of: [IT-C26-quarto, IT-C23-amico-amica, IT-C25-gola, IT-C08-mezzogiorno-
 > **quinto** (masculine) · **quinta** (feminine) — **fifth**.
 > **il quinto piano** — the fifth floor. **la quinta volta** — the fifth time.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quinto** ← Latin *quintus*, "fifth", from *quinque*, "five" — inherited. (EtymDB 2.1)
+
 ## Sounds you'll need: why cinque and quinto do not match
 <!-- hl-knowledge: introduces=[IT-SOUND-QUINTO-03]; assesses=[] -->
 

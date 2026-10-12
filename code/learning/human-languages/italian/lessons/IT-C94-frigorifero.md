@@ -14,6 +14,7 @@ concept_tag: IT-CASA94-FRIGORIFERO
 prerequisites: [IT-C94-televisore, IT-C94-computer]
 sounds: []
 roots: []
+etymology_hook: "frigorifero — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C94-computer]
 <!-- hl-knowledge: introduces=[IT-LEX-C94-CASA94-04]; assesses=[] -->
 
 **il frigorifero** — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frigorifero** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

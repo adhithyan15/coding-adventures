@@ -13,7 +13,8 @@ gloss: "a son"
 concept_tag: IT-FAMIGLIA1-FIGLIO
 prerequisites: [IT-C43-felice, IT-C43-triste]
 sounds: []
-roots: []
+roots: [filius]
+etymology_hook: "figlio ← Latin filius 'son' — English filial shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C43-triste]
 <!-- hl-knowledge: introduces=[IT-LEX-C44-FAMIGLIA1-01]; assesses=[] -->
 
 **il figlio** — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**figlio** ← Latin *filius*, "son" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

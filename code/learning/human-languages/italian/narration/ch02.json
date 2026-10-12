@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:598b4c2d4a200df2",
+  "sourceHash": "fnv1a64:da8b820ab1e18c51",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:212926a3742fab75",
+      "sourceHash": "fnv1a64:1c90412920f206ca",
       "notice": null,
       "blocks": [
         {
@@ -189,6 +189,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare, \"to pray\". Where pregare came from is not recorded in EtymDB 2.1."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -213,7 +224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -244,7 +255,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fff7af07176f487",
+      "sourceHash": "fnv1a64:aa31f8e737a0311c",
       "notice": null,
       "blocks": [
         {
@@ -285,6 +296,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare, \"to pray\". Where pregare came from is not recorded in EtymDB 2.1."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -309,7 +331,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -340,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b95956e0aacaae19",
+      "sourceHash": "fnv1a64:7865d8e56714cea6",
       "notice": null,
       "blocks": [
         {
@@ -381,6 +403,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare, \"to pray\". Where pregare came from is not recorded in EtymDB 2.1."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -405,7 +438,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -857,7 +890,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bbec1c70fdf6237",
+      "sourceHash": "fnv1a64:37db996c62637ac0",
       "notice": null,
       "blocks": [
         {
@@ -919,6 +952,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Come sta? is built from come, \"how\" from Latin quomodo, and sta, \"stands\", a form of stare from Latin stare, \"to stand\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -967,7 +1011,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -998,7 +1042,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7a21b65ee1a0e07",
+      "sourceHash": "fnv1a64:08290d05f626bfd3",
       "notice": null,
       "blocks": [
         {
@@ -1051,6 +1095,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Come va? is built from come, \"how\" from Latin quomodo, and va, \"goes\" from Latin vadit, \"goes\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1099,7 +1154,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1284,7 +1339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d64ec33c1db54b5",
+      "sourceHash": "fnv1a64:1390b525d15bf60e",
       "notice": null,
       "blocks": [
         {
@@ -1321,6 +1376,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "male from Latin male, \"badly\", from malus, \"bad\" — inherited. The rest of the phrase comes apart in later lessons. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1345,7 +1411,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1376,7 +1442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:449da86d421d0662",
+      "sourceHash": "fnv1a64:57e410b03428c0fa",
       "notice": null,
       "blocks": [
         {

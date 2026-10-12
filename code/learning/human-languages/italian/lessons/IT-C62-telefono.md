@@ -14,6 +14,7 @@ concept_tag: IT-COSE2-TELEFONO
 prerequisites: [IT-C61-matita, IT-C62-borsa]
 sounds: []
 roots: []
+etymology_hook: "telefono — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C62-borsa]
 <!-- hl-knowledge: introduces=[IT-LEX-C62-COSE2-02]; assesses=[] -->
 
 **il telefono** — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefono** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

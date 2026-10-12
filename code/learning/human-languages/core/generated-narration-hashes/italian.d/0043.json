@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 43,
-  "sourceHash": "fnv1a64:8a126271eea28f25",
+  "sourceHash": "fnv1a64:7262e40a22616c22",
   "lessonIds": [
     "IT-C43-paura",
     "IT-C43-rabbia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch43.txt",
   "json": "italian/narration/ch43.json",
-  "textHash": "fnv1a64:9e1fbada7ffdcf51",
-  "jsonHash": "fnv1a64:e0dac51c344c5e8e",
+  "textHash": "fnv1a64:d69d39be94b026a6",
+  "jsonHash": "fnv1a64:98077503f50ece92",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a sauce"
 concept_tag: IT-CIBO108-SALSA
 prerequisites: [IT-C108-biscotto, IT-C108-panino]
 sounds: []
-roots: []
+roots: [salsus-latin]
+etymology_hook: "salsa ← Latin salsus 'salted' — English sauce is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C108-panino]
 <!-- hl-knowledge: introduces=[IT-LEX-C108-CIBO108-04]; assesses=[] -->
 
 **la salsa** — "a sauce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salsa** ← Vulgar Latin *salsa*, from Latin *salsus*, "salted" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

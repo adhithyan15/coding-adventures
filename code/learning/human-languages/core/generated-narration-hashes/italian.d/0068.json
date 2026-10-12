@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 68,
-  "sourceHash": "fnv1a64:0c446213ddc90559",
+  "sourceHash": "fnv1a64:c596ef74263eae28",
   "lessonIds": [
     "IT-C68-cane",
     "IT-C68-gatto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch68.txt",
   "json": "italian/narration/ch68.json",
-  "textHash": "fnv1a64:018a13c51bc36aec",
-  "jsonHash": "fnv1a64:7ea054ce2a991c8a",
+  "textHash": "fnv1a64:f808d71f4b38c9ac",
+  "jsonHash": "fnv1a64:80d5aba0e1bd1fb1",
   "findings": []
 }

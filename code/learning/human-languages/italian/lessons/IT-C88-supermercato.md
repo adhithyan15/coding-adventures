@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI88-SUPERMERCATO
 prerequisites: [IT-C87-teatro, IT-C88-municipio]
 sounds: []
 roots: []
+etymology_hook: "supermercato — built from super- 'above' and mercato 'market'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C88-municipio]
 <!-- hl-knowledge: introduces=[IT-LEX-C88-LUOGHI88-02]; assesses=[] -->
 
 **il supermercato** — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**supermercato** — built from *super-*, "above", and *mercato*, "market". EtymDB 2.1 has no entry; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

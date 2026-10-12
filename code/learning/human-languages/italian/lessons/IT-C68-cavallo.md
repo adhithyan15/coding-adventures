@@ -13,7 +13,8 @@ gloss: "a horse"
 concept_tag: IT-ANIMALI1-CAVALLO
 prerequisites: [IT-C68-cane, IT-C68-gatto]
 sounds: []
-roots: []
+roots: [caballus-latin]
+etymology_hook: "cavallo ← Late Latin caballus 'horse' — English cavalry shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C68-gatto]
 <!-- hl-knowledge: introduces=[IT-LEX-C68-ANIMALI1-03]; assesses=[] -->
 
 **il cavallo** — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cavallo** ← Late Latin *caballus*, "a horse, a nag" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

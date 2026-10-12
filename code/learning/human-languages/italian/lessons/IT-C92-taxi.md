@@ -14,6 +14,7 @@ concept_tag: IT-VIAGGIO92-TAXI
 prerequisites: [IT-C92-di-fronte, IT-C92-metropolitana]
 sounds: []
 roots: []
+etymology_hook: "taxi — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C92-metropolitana]
 <!-- hl-knowledge: introduces=[IT-LEX-C92-VIAGGIO92-03]; assesses=[] -->
 
 **il taxi** — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taxi** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

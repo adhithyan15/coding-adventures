@@ -13,7 +13,8 @@ gloss: "big"
 concept_tag: IT-AGG1-GRANDE
 prerequisites: [IT-C71-formica, IT-C71-elefante]
 sounds: []
-roots: []
+roots: [grandis-latin]
+etymology_hook: "grande ← Latin grandis 'large' — English grand shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C71-elefante]
 <!-- hl-knowledge: introduces=[IT-LEX-C72-AGG1-01]; assesses=[] -->
 
 **grande** — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grande** ← Latin *grandis*, "large" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

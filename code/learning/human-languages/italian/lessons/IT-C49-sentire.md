@@ -13,7 +13,8 @@ gloss: "to hear; to feel"
 concept_tag: IT-VERB-SENTIRE
 prerequisites: [IT-C48-dormire, IT-C49-correre]
 sounds: []
-roots: []
+roots: [sentire-latin]
+etymology_hook: "sentire ← Latin sentire 'to feel' — English sentiment shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C49-correre]
 <!-- hl-knowledge: introduces=[IT-LEX-C49-VERBI3-02]; assesses=[] -->
 
 **sentire** — "to hear; to feel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sentire** ← Latin *sentire*, "to feel, to perceive" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

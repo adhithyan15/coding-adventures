@@ -14,6 +14,7 @@ concept_tag: IT-CIBO107-CILIEGIA
 prerequisites: [IT-C106-cetriolo, IT-C107-fragola]
 sounds: []
 roots: []
+etymology_hook: "ciliegia — origin not recorded in EtymDB 2.1; Spanish cereza and Portuguese cereja are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C107-fragola]
 <!-- hl-knowledge: introduces=[IT-LEX-C107-CIBO107-02]; assesses=[] -->
 
 **la ciliegia** — "a cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ciliegia** — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish *cereza* and Portuguese *cereja* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

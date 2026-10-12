@@ -14,6 +14,7 @@ concept_tag: IT-ATTREZZI99-COLLA
 prerequisites: [IT-C99-chiodo, IT-C99-martello]
 sounds: []
 roots: []
+etymology_hook: "colla ← Vulgar Latin colla, from Greek kolla 'glue' — English collagen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C99-martello]
 <!-- hl-knowledge: introduces=[IT-LEX-C99-ATTREZZI99-05]; assesses=[] -->
 
 **la colla** — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colla** ← Vulgar Latin *colla* — inherited; Latin took it from Greek *kolla*, "glue". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

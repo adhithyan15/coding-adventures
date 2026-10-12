@@ -13,7 +13,8 @@ gloss: "breakfast"
 concept_tag: IT-DISPENSA-COLAZIONE
 prerequisites: [IT-C54-olio, IT-C54-pranzo]
 sounds: []
-roots: []
+roots: [collatio-latin]
+etymology_hook: "colazione ← Latin collatio 'a bringing together' — English collation, a light meal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C54-pranzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C55-DISPENSA-01]; assesses=[] -->
 
 **la colazione** — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colazione** ← Latin *collatio*, "a bringing together" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

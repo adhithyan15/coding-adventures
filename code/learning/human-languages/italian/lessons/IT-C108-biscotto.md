@@ -13,7 +13,8 @@ gloss: "a biscuit"
 concept_tag: IT-CIBO108-BISCOTTO
 prerequisites: [IT-C107-farina, IT-C108-cioccolato]
 sounds: []
-roots: []
+roots: [biscoctus-latin]
+etymology_hook: "biscotto ← Latin biscoctus 'twice-cooked' — English biscuit is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C108-cioccolato]
 <!-- hl-knowledge: introduces=[IT-LEX-C108-CIBO108-02]; assesses=[] -->
 
 **il biscotto** — "a biscuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**biscotto** ← Latin *biscoctus*, "twice-cooked" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

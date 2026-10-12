@@ -14,6 +14,7 @@ concept_tag: IT-COSE1-PENNA
 prerequisites: [IT-C60-usare, IT-C61-bottiglia]
 sounds: []
 roots: []
+etymology_hook: "penna — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C61-bottiglia]
 <!-- hl-knowledge: introduces=[IT-LEX-C61-COSE1-02]; assesses=[] -->
 
 **la penna** — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**penna** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

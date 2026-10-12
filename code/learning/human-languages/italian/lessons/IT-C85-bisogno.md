@@ -14,6 +14,7 @@ concept_tag: IT-POTERE85-BISOGNO
 prerequisites: [IT-C85-dovere, IT-C85-riuscire]
 sounds: []
 roots: []
+etymology_hook: "bisogno ← Vulgar Latin bisonium 'need', a word from Frankish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C85-riuscire]
 <!-- hl-knowledge: introduces=[IT-LEX-C85-POTERE85-04]; assesses=[] -->
 
 **il bisogno** — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bisogno** ← Vulgar Latin *bisonium*, "need" — inherited; Latin took it from Frankish. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

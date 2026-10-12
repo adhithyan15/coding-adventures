@@ -14,6 +14,7 @@ concept_tag: IT-VOLERE86-VORREI
 prerequisites: [IT-C85-mestiere, IT-C86-volere]
 sounds: []
 roots: []
+etymology_hook: "vorrei, a form of volere ← Latin velle 'to want'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C86-volere]
 <!-- hl-knowledge: introduces=[IT-LEX-C86-VOLERE86-02]; assesses=[] -->
 
 **vorrei** — "I would like".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vorrei** is a form of *volere*, which ← Vulgar Latin *volere*, from Latin *velle*, "to want". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

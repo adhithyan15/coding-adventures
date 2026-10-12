@@ -14,6 +14,7 @@ concept_tag: IT-COSE2-OMBRELLO
 prerequisites: [IT-C62-borsa, IT-C62-telefono]
 sounds: []
 roots: []
+etymology_hook: "ombrello — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C62-telefono]
 <!-- hl-knowledge: introduces=[IT-LEX-C62-COSE2-03]; assesses=[] -->
 
 **l'ombrello** — "an umbrella". Literally "a little shade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ombrello** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -71,6 +71,11 @@ And note what Italian does not do. English says *this is my friend Marco* and ca
 also say *meet Marco*. Italian has no imperative in this book yet, so *questo è*
 is the introduction, and it is the ordinary one — an Italian would say it too.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**è**, "is", is a form of *essere* ← Latin *esse*, "to be". Where *questo* came from is not recorded in EtymDB 2.1.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-QUESTO-E-02] -->
 

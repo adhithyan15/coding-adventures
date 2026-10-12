@@ -13,7 +13,8 @@ gloss: "juice"
 concept_tag: IT-CIBO110-SUCCO
 prerequisites: [IT-C109-bistecca, IT-C109-prosciutto]
 sounds: []
-roots: []
+roots: [succus-latin]
+etymology_hook: "succo ← Latin succus 'juice, sap' — English succulent shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C109-prosciutto]
 <!-- hl-knowledge: introduces=[IT-LEX-C110-CIBO110-01]; assesses=[] -->
 
 **il succo** — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**succo** ← Late Latin *succus*, "juice, sap" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

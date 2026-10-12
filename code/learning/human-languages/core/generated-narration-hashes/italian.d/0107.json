@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 107,
-  "sourceHash": "fnv1a64:b01598c522353035",
+  "sourceHash": "fnv1a64:741f3d15fc1d2542",
   "lessonIds": [
     "IT-C107-fragola",
     "IT-C107-ciliegia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch107.txt",
   "json": "italian/narration/ch107.json",
-  "textHash": "fnv1a64:4c93aae7a347e450",
-  "jsonHash": "fnv1a64:ee0bebc3143183c5",
+  "textHash": "fnv1a64:eab7d21f448a2cef",
+  "jsonHash": "fnv1a64:4f68479ddfa956cc",
   "findings": []
 }

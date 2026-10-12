@@ -14,6 +14,7 @@ concept_tag: IT-AGG2-FREDDO
 prerequisites: [IT-C73-corto, IT-C73-caldo]
 sounds: []
 roots: []
+etymology_hook: "freddo — origin not recorded in EtymDB 2.1; Catalan fred and Portuguese frio are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C73-caldo]
 <!-- hl-knowledge: introduces=[IT-LEX-C73-AGG2-05]; assesses=[] -->
 
 **freddo** — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**freddo** — its origin is not recorded in EtymDB 2.1. EtymDB lists Catalan *fred* and Portuguese *frio* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

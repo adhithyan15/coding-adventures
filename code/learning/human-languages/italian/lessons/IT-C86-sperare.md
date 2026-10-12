@@ -13,7 +13,8 @@ gloss: "to hope"
 concept_tag: IT-VERB-SPERARE
 prerequisites: [IT-C86-vorrei, IT-C86-preferire]
 sounds: []
-roots: []
+roots: [sperare-latin]
+etymology_hook: "sperare ← Latin sperare 'to hope' — English despair shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C86-preferire]
 <!-- hl-knowledge: introduces=[IT-LEX-C86-VOLERE86-04]; assesses=[] -->
 
 **sperare** — "to hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sperare** ← Latin *sperare*, "to hope" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

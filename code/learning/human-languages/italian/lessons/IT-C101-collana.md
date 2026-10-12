@@ -14,6 +14,7 @@ concept_tag: IT-OGGETTI101-COLLANA
 prerequisites: [IT-C100-macchina-fotografica, IT-C100-anello]
 sounds: []
 roots: []
+etymology_hook: "collana — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C100-anello]
 <!-- hl-knowledge: introduces=[IT-LEX-C101-OGGETTI101-01]; assesses=[] -->
 
 **la collana** — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collana** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-CASA96-COPERTA
 prerequisites: [IT-C95-tenda, IT-C95-cuscino]
 sounds: []
 roots: []
+etymology_hook: "coperta — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C95-cuscino]
 <!-- hl-knowledge: introduces=[IT-LEX-C96-CASA96-01]; assesses=[] -->
 
 **la coperta** — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coperta** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

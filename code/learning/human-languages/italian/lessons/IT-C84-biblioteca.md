@@ -13,7 +13,8 @@ gloss: "a library"
 concept_tag: IT-CITTA4-BIBLIOTECA
 prerequisites: [IT-C84-posta, IT-C84-polizia]
 sounds: []
-roots: []
+roots: [bibliotheca-latin]
+etymology_hook: "biblioteca ← Latin bibliotheca, from Greek bibliotheke 'book-store'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C84-polizia]
 <!-- hl-knowledge: introduces=[IT-LEX-C84-CITTA4-05]; assesses=[] -->
 
 **la biblioteca** — "a library". A false friend: a bookshop is **la libreria**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**biblioteca** ← Latin *bibliotheca* — borrowed; Latin took it from Greek *bibliotheke*, "a place for books". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

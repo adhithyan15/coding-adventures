@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 62,
-  "sourceHash": "fnv1a64:28de81d86bbaa7b0",
+  "sourceHash": "fnv1a64:a03f1085504b4e18",
   "lessonIds": [
     "IT-C62-borsa",
     "IT-C62-telefono",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch62.txt",
   "json": "italian/narration/ch62.json",
-  "textHash": "fnv1a64:5c5487855b11bf83",
-  "jsonHash": "fnv1a64:6ad100176d9f88e5",
+  "textHash": "fnv1a64:289ecb559304028b",
+  "jsonHash": "fnv1a64:4c4f6a424e16dfb4",
   "findings": []
 }

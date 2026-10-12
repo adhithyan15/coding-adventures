@@ -14,6 +14,7 @@ concept_tag: IT-ANIMALI4-SCIMMIA
 prerequisites: [IT-C70-capra, IT-C71-leone]
 sounds: []
 roots: []
+etymology_hook: "scimmia — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C71-leone]
 <!-- hl-knowledge: introduces=[IT-LEX-C71-ANIMALI4-02]; assesses=[] -->
 
 **la scimmia** — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scimmia** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

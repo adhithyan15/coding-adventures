@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI90-ASCENSORE
 prerequisites: [IT-C89-semaforo, IT-C90-parcheggio]
 sounds: []
 roots: []
+etymology_hook: "ascensore — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C90-parcheggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C90-LUOGHI90-02]; assesses=[] -->
 
 **l'ascensore** — "a lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ascensore** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

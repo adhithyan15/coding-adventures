@@ -14,6 +14,7 @@ concept_tag: IT-AGG5-GIALLO
 prerequisites: [IT-C76-ricco, IT-C76-povero]
 sounds: []
 roots: []
+etymology_hook: "giallo ← Old French jalne, from Latin galbinus 'yellowish'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C76-povero]
 <!-- hl-knowledge: introduces=[IT-LEX-C76-AGG5-05]; assesses=[] -->
 
 **giallo** — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giallo** ← Old French *jalne*, "yellow" — borrowed; the French word goes back to Latin *galbinus*, "yellowish". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-COSE1-QUADERNO
 prerequisites: [IT-C61-penna, IT-C61-carta]
 sounds: []
 roots: []
+etymology_hook: "quaderno — origin not recorded in EtymDB 2.1; Portuguese caderno are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C61-carta]
 <!-- hl-knowledge: introduces=[IT-LEX-C61-COSE1-04]; assesses=[] -->
 
 **il quaderno** — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quaderno** — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese *caderno* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "butter"
 concept_tag: IT-CIBO1-BURRO
 prerequisites: [IT-C51-carne, IT-C51-pesce]
 sounds: []
-roots: []
+roots: [butyrum-latin]
+etymology_hook: "burro ← Latin butyrum, from Greek boutyron — English butter is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C51-pesce]
 <!-- hl-knowledge: introduces=[IT-LEX-C51-CIBO1-03]; assesses=[] -->
 
 **il burro** — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**burro** ← Latin *butyrum*, "butter" — inherited; Latin took it from Greek *boutyron*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

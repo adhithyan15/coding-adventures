@@ -14,6 +14,7 @@ concept_tag: IT-VIAGGIO93-MOTO
 prerequisites: [IT-C93-vacanze, IT-C93-bicicletta]
 sounds: []
 roots: []
+etymology_hook: "moto — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C93-bicicletta]
 <!-- hl-knowledge: introduces=[IT-LEX-C93-VIAGGIO93-03]; assesses=[] -->
 
 **la moto** — "a motorbike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moto** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

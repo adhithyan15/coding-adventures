@@ -14,6 +14,7 @@ concept_tag: IT-VERB-NUOTARE
 prerequisites: [IT-C48-cucinare, IT-C48-vendere]
 sounds: []
 roots: []
+etymology_hook: "nuotare — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C48-vendere]
 <!-- hl-knowledge: introduces=[IT-LEX-C48-VERBI2-03]; assesses=[] -->
 
 **nuotare** — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nuotare** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

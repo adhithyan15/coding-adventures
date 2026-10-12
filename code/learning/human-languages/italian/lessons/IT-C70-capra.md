@@ -13,7 +13,8 @@ gloss: "a goat"
 concept_tag: IT-ANIMALI3-CAPRA
 prerequisites: [IT-C70-anatra, IT-C70-pecora]
 sounds: []
-roots: []
+roots: [capra-latin]
+etymology_hook: "capra ← Latin capra 'she-goat', from caper 'he-goat' — the goat of Capricorn"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C70-pecora]
 <!-- hl-knowledge: introduces=[IT-LEX-C70-ANIMALI3-05]; assesses=[] -->
 
 **la capra** — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**capra** ← Latin *capra*, "she-goat", from *caper*, "he-goat" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

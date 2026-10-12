@@ -14,6 +14,7 @@ concept_tag: IT-VERB-ENTRARE
 prerequisites: [IT-C50-bere, IT-C50-vivere]
 sounds: []
 roots: []
+etymology_hook: "entrare — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-vivere]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-04]; assesses=[] -->
 
 **entrare** — "to go in, to enter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entrare** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

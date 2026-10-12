@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 54,
-  "sourceHash": "fnv1a64:07f61c001d02fc21",
+  "sourceHash": "fnv1a64:783d11c1e5929b1e",
   "lessonIds": [
     "IT-C54-torta",
     "IT-C54-zuppa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch54.txt",
   "json": "italian/narration/ch54.json",
-  "textHash": "fnv1a64:7d94a75e53abb040",
-  "jsonHash": "fnv1a64:a2e25518603d6d88",
+  "textHash": "fnv1a64:88278a6229c14c7a",
+  "jsonHash": "fnv1a64:9b9374244f5229d8",
   "findings": []
 }

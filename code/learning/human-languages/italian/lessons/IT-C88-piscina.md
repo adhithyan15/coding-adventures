@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI88-PISCINA
 prerequisites: [IT-C88-supermercato, IT-C88-distributore]
 sounds: []
 roots: []
+etymology_hook: "piscina — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C88-distributore]
 <!-- hl-knowledge: introduces=[IT-LEX-C88-LUOGHI88-04]; assesses=[] -->
 
 **la piscina** — "a swimming pool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piscina** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

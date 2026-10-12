@@ -14,6 +14,7 @@ concept_tag: IT-PASTI-ZUPPA
 prerequisites: [IT-C53-limone, IT-C54-torta]
 sounds: []
 roots: []
+etymology_hook: "zuppa ← Germanic suppa 'soaked bread' — English soup is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C54-torta]
 <!-- hl-knowledge: introduces=[IT-LEX-C54-PASTI-02]; assesses=[] -->
 
 **la zuppa** — "a soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zuppa** ← a Germanic word, Proto-Germanic *suppa*, "bread soaked in liquid" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

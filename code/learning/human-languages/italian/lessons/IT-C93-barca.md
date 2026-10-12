@@ -13,7 +13,8 @@ gloss: "a boat"
 concept_tag: IT-VIAGGIO93-BARCA
 prerequisites: [IT-C93-moto, IT-C93-nave]
 sounds: []
-roots: []
+roots: [barca-latin]
+etymology_hook: "barca ← Late Latin barca 'boat' — English barque is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C93-nave]
 <!-- hl-knowledge: introduces=[IT-LEX-C93-VIAGGIO93-05]; assesses=[] -->
 
 **la barca** — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barca** ← Late Latin *barca*, "boat" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

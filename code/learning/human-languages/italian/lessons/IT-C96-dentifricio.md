@@ -14,6 +14,7 @@ concept_tag: IT-CASA96-DENTIFRICIO
 prerequisites: [IT-C96-sapone, IT-C96-spazzolino]
 sounds: []
 roots: []
+etymology_hook: "dentifricio — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C96-spazzolino]
 <!-- hl-knowledge: introduces=[IT-LEX-C96-CASA96-05]; assesses=[] -->
 
 **il dentifricio** — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dentifricio** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

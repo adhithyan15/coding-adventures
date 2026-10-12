@@ -13,7 +13,8 @@ gloss: "a ship"
 concept_tag: IT-VIAGGIO93-NAVE
 prerequisites: [IT-C93-bicicletta, IT-C93-moto]
 sounds: []
-roots: []
+roots: [navis-latin]
+etymology_hook: "nave ← Latin navis 'ship' — English naval and navy share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C93-moto]
 <!-- hl-knowledge: introduces=[IT-LEX-C93-VIAGGIO93-04]; assesses=[] -->
 
 **la nave** — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nave** ← Latin *navis*, "ship" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

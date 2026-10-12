@@ -14,6 +14,7 @@ concept_tag: IT-CITTA3-RISTORANTE
 prerequisites: [IT-C83-chiesa, IT-C83-museo]
 sounds: []
 roots: []
+etymology_hook: "ristorante — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C83-museo]
 <!-- hl-knowledge: introduces=[IT-LEX-C83-CITTA3-05]; assesses=[] -->
 
 **il ristorante** — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ristorante** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

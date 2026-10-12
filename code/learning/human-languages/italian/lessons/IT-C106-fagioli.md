@@ -13,7 +13,8 @@ gloss: "beans"
 concept_tag: IT-CIBO106-FAGIOLI
 prerequisites: [IT-C106-verdure, IT-C106-fungo]
 sounds: []
-roots: []
+roots: [phaseolus-latin]
+etymology_hook: "fagioli ← Latin phaseolus 'bean', from Greek phaselos"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C106-fungo]
 <!-- hl-knowledge: introduces=[IT-LEX-C106-CIBO106-04]; assesses=[] -->
 
 **i fagioli** — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fagioli** is the plural of *fagiolo* ← Latin *phaseolus*, "bean" — inherited; Latin took it from Greek *phaselos*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-CIBO106-VERDURE
 prerequisites: [IT-C105-vestito, IT-C106-manzo]
 sounds: []
 roots: []
+etymology_hook: "verdure — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C106-manzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C106-CIBO106-02]; assesses=[] -->
 
 **le verdure** — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verdure** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

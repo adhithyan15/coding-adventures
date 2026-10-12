@@ -13,7 +13,8 @@ gloss: "rice"
 concept_tag: IT-DISPENSA-RISO
 prerequisites: [IT-C55-colazione, IT-C55-pera]
 sounds: []
-roots: []
+roots: [oryza-latin]
+etymology_hook: "riso ← Latin oryza, from Greek oryza — English rice is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C55-pera]
 <!-- hl-knowledge: introduces=[IT-LEX-C55-DISPENSA-03]; assesses=[] -->
 
 **il riso** — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riso** ← Latin *oryza*, "rice" — inherited; Latin took it from Greek *oryza*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

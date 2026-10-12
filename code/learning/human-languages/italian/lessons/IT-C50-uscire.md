@@ -14,6 +14,7 @@ concept_tag: IT-VERB-USCIRE
 prerequisites: [IT-C50-vivere, IT-C50-entrare]
 sounds: []
 roots: []
+etymology_hook: "uscire — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-entrare]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-05]; assesses=[] -->
 
 **uscire** — "to go out". The opposite of **entrare**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uscire** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

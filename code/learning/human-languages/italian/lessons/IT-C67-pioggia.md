@@ -14,6 +14,7 @@ concept_tag: IT-CIELO-PIOGGIA
 prerequisites: [IT-C67-stella, IT-C67-nuvola]
 sounds: []
 roots: []
+etymology_hook: "pioggia — origin not recorded in EtymDB 2.1; French pluie and Portuguese chuva are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C67-nuvola]
 <!-- hl-knowledge: introduces=[IT-LEX-C67-CIELO-03]; assesses=[] -->
 
 **la pioggia** — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pioggia** — its origin is not recorded in EtymDB 2.1. EtymDB lists French *pluie* and Portuguese *chuva* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

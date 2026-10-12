@@ -13,7 +13,8 @@ gloss: "medicine"
 concept_tag: IT-SALUTE-MEDICINA
 prerequisites: [IT-C40-febbre, IT-C40-tosse]
 sounds: []
-roots: []
+roots: [medicina-latin]
+etymology_hook: "medicina ← Latin medicina 'the art of healing' — English medicine is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C40-tosse]
 <!-- hl-knowledge: introduces=[IT-LEX-C41-SALUTE-01]; assesses=[] -->
 
 **la medicina** — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medicina** ← Latin *medicina*, "the art of healing" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

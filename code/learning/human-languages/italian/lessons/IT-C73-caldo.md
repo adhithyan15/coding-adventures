@@ -14,6 +14,7 @@ concept_tag: IT-AGG2-CALDO
 prerequisites: [IT-C73-lungo, IT-C73-corto]
 sounds: []
 roots: []
+etymology_hook: "caldo — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C73-corto]
 <!-- hl-knowledge: introduces=[IT-LEX-C73-AGG2-04]; assesses=[] -->
 
 **caldo** — "hot". Not "cold": the *c* is for warmth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caldo** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

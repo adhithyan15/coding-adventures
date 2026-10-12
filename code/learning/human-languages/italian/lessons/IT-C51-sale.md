@@ -13,7 +13,8 @@ gloss: "salt"
 concept_tag: IT-CIBO1-SALE
 prerequisites: [IT-C51-pesce, IT-C51-burro]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "sale ← Latin sal 'salt' — English salary and salad share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C51-burro]
 <!-- hl-knowledge: introduces=[IT-LEX-C51-CIBO1-04]; assesses=[] -->
 
 **il sale** — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sale** ← Latin *sal*, "salt" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "between"
 concept_tag: IT-LUOGHI91-TRA
 prerequisites: [IT-C91-dietro, IT-C91-accanto]
 sounds: []
-roots: []
+roots: [intra-latin]
+etymology_hook: "tra ← Latin intra 'within'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C91-accanto]
 <!-- hl-knowledge: introduces=[IT-LEX-C91-LUOGHI91-05]; assesses=[] -->
 
 **tra** — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tra** ← Latin *intra*, "within" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

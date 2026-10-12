@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 66,
-  "sourceHash": "fnv1a64:8795a7773acbe722",
+  "sourceHash": "fnv1a64:bcaea81c4212a933",
   "lessonIds": [
     "IT-C66-spiaggia",
     "IT-C66-isola",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch66.txt",
   "json": "italian/narration/ch66.json",
-  "textHash": "fnv1a64:c9bda439b7a7a438",
-  "jsonHash": "fnv1a64:29783f2980f59ec8",
+  "textHash": "fnv1a64:7773c90667f2147e",
+  "jsonHash": "fnv1a64:77600044d7588c59",
   "findings": []
 }

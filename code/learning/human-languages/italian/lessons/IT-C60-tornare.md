@@ -13,7 +13,8 @@ gloss: "to come back, to return"
 concept_tag: IT-VERB-TORNARE
 prerequisites: [IT-C59-coltello, IT-C59-forchetta]
 sounds: []
-roots: []
+roots: [tornare-latin]
+etymology_hook: "tornare ← Latin tornare 'to turn on a lathe' — English turn is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C59-forchetta]
 <!-- hl-knowledge: introduces=[IT-LEX-C60-VERBI5-01]; assesses=[] -->
 
 **tornare** — "to come back, to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tornare** ← Latin *tornare*, "to turn on a lathe" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

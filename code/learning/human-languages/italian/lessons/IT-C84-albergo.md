@@ -14,6 +14,7 @@ concept_tag: IT-CITTA4-ALBERGO
 prerequisites: [IT-C83-museo, IT-C83-ristorante]
 sounds: []
 roots: []
+etymology_hook: "albergo ← Medieval Latin albergum 'lodging'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C83-ristorante]
 <!-- hl-knowledge: introduces=[IT-LEX-C84-CITTA4-01]; assesses=[] -->
 
 **l'albergo** — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**albergo** ← Medieval Latin *albergum*, "lodging" — inherited. EtymDB 2.1 records nothing further back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -55,6 +55,11 @@ reviews_of: [IT-C27-sesto, IT-C26-secondo, IT-C23-nome, IT-C12-numeri-11-16, IT-
 The double **tt** stays and you must hold it — *SET-ti-mo*, with the stress right
 at the front. A single *t* would make a different word's shape.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**settimo** — its origin is not recorded in EtymDB 2.1.
+
 ## You'll want to know: al settimo cielo
 <!-- hl-knowledge: introduces=[IT-ETYMON-SETTIMO-03]; assesses=[] -->
 

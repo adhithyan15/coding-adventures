@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI90-PARCHEGGIO
 prerequisites: [IT-C89-incrocio, IT-C89-semaforo]
 sounds: []
 roots: []
+etymology_hook: "parcheggio — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C89-semaforo]
 <!-- hl-knowledge: introduces=[IT-LEX-C90-LUOGHI90-01]; assesses=[] -->
 
 **il parcheggio** — "a car park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parcheggio** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

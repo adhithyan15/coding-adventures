@@ -11,6 +11,7 @@ concept_tag: CH4-PRACTICE
 prerequisites: [IT-C04-arrivederci, IT-C04-a-domani, IT-C04-a-presto, IT-C04-a-piu-tardi]
 sounds: []
 roots: []
+etymology_hook: "review: domani ← Latin de mane 'from the morning'; presto ← Latin praesto 'at hand'"
 duration:
   max_seconds: 203
 requires:

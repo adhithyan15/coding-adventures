@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 51,
-  "sourceHash": "fnv1a64:452917f221b4ac16",
+  "sourceHash": "fnv1a64:87d3ca4b0c29078a",
   "lessonIds": [
     "IT-C51-carne",
     "IT-C51-pesce",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch51.txt",
   "json": "italian/narration/ch51.json",
-  "textHash": "fnv1a64:d6116e962c38d8e3",
-  "jsonHash": "fnv1a64:9fbe2305d529bac4",
+  "textHash": "fnv1a64:c7e67f390f3a68e7",
+  "jsonHash": "fnv1a64:4f513e3758b0cebf",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-VIAGGIARE
 prerequisites: [IT-C60-tornare, IT-C60-studiare]
 sounds: []
 roots: []
+etymology_hook: "viaggiare — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C60-studiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C60-VERBI5-03]; assesses=[] -->
 
 **viaggiare** — "to travel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viaggiare** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

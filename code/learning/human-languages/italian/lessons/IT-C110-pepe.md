@@ -13,7 +13,8 @@ gloss: "pepper"
 concept_tag: IT-CIBO110-PEPE
 prerequisites: [IT-C110-marmellata, IT-C110-noce]
 sounds: []
-roots: []
+roots: [piper-latin]
+etymology_hook: "pepe ← Latin piper, from Greek peperi — English pepper is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C110-noce]
 <!-- hl-knowledge: introduces=[IT-LEX-C110-CIBO110-05]; assesses=[] -->
 
 **il pepe** — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pepe** ← Latin *piper*, "pepper" — inherited; Latin took it from Greek *peperi*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

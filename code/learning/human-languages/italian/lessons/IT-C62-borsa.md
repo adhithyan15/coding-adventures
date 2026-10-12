@@ -14,6 +14,7 @@ concept_tag: IT-COSE2-BORSA
 prerequisites: [IT-C61-quaderno, IT-C61-matita]
 sounds: []
 roots: []
+etymology_hook: "borsa — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C61-matita]
 <!-- hl-knowledge: introduces=[IT-LEX-C62-COSE2-01]; assesses=[] -->
 
 **la borsa** — "a bag, a handbag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**borsa** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

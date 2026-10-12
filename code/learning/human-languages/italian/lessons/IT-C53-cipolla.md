@@ -13,7 +13,8 @@ gloss: "an onion"
 concept_tag: IT-VERDURA-CIPOLLA
 prerequisites: [IT-C53-patata, IT-C53-pomodoro]
 sounds: []
-roots: []
+roots: [cepa-latin]
+etymology_hook: "cipolla ← Late Latin cepulla 'little onion', from cepa 'onion'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C53-pomodoro]
 <!-- hl-knowledge: introduces=[IT-LEX-C53-VERDURA-03]; assesses=[] -->
 
 **la cipolla** — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cipolla** ← Late Latin *cepulla*, "little onion", from Latin *cepa*, "onion" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 2,
-  "sourceHash": "fnv1a64:598b4c2d4a200df2",
+  "sourceHash": "fnv1a64:da8b820ab1e18c51",
   "lessonIds": [
     "IT-C02-prego",
     "IT-C02-prego-go-ahead",
@@ -20,7 +20,7 @@
   "drivablePrefix": 12,
   "text": "italian/narration/ch02.txt",
   "json": "italian/narration/ch02.json",
-  "textHash": "fnv1a64:b98f16a1632cc976",
-  "jsonHash": "fnv1a64:2954a9621aaacff0",
+  "textHash": "fnv1a64:8bff4fb4ed5a18c6",
+  "jsonHash": "fnv1a64:b3f37a9ceaaa74f1",
   "findings": []
 }

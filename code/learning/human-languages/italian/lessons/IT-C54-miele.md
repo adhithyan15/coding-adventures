@@ -13,7 +13,8 @@ gloss: "honey"
 concept_tag: IT-PASTI-MIELE
 prerequisites: [IT-C54-torta, IT-C54-zuppa]
 sounds: []
-roots: []
+roots: [mel-latin]
+etymology_hook: "miele ← Latin mel, mellis 'honey'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C54-zuppa]
 <!-- hl-knowledge: introduces=[IT-LEX-C54-PASTI-03]; assesses=[] -->
 
 **il miele** — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**miele** ← Latin *mel, mellis*, "honey" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

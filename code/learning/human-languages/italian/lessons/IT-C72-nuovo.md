@@ -14,6 +14,7 @@ concept_tag: IT-AGG1-NUOVO
 prerequisites: [IT-C72-grande, IT-C72-piccolo]
 sounds: []
 roots: []
+etymology_hook: "nuovo — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C72-piccolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C72-AGG1-03]; assesses=[] -->
 
 **nuovo** — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nuovo** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

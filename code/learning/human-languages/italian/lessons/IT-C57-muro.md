@@ -13,7 +13,8 @@ gloss: "a wall"
 concept_tag: IT-CASA2-MURO
 prerequisites: [IT-C56-sedia, IT-C56-chiave]
 sounds: []
-roots: []
+roots: [murus-latin]
+etymology_hook: "muro ← Latin murus 'wall' — English mural shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C56-chiave]
 <!-- hl-knowledge: introduces=[IT-LEX-C57-CASA2-01]; assesses=[] -->
 
 **il muro** — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**muro** ← Latin *murus*, "wall" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

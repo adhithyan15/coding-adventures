@@ -14,6 +14,7 @@ concept_tag: IT-CITTA3-MUSEO
 prerequisites: [IT-C83-parco, IT-C83-chiesa]
 sounds: []
 roots: []
+etymology_hook: "museo — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C83-chiesa]
 <!-- hl-knowledge: introduces=[IT-LEX-C83-CITTA3-04]; assesses=[] -->
 
 **il museo** — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**museo** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

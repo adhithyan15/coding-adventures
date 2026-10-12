@@ -14,6 +14,7 @@ concept_tag: IT-EMOZIONI-PAURA
 prerequisites: [IT-C42-malato, IT-C42-gioia]
 sounds: []
 roots: []
+etymology_hook: "paura — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C42-gioia]
 <!-- hl-knowledge: introduces=[IT-LEX-C43-EMOZIONI-01]; assesses=[] -->
 
 **la paura** — "fear". **ho paura**: I am afraid.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paura** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

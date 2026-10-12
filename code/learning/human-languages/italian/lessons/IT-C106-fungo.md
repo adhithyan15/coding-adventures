@@ -13,7 +13,8 @@ gloss: "a mushroom"
 concept_tag: IT-CIBO106-FUNGO
 prerequisites: [IT-C106-manzo, IT-C106-verdure]
 sounds: []
-roots: []
+roots: [fungus-latin]
+etymology_hook: "fungo ← Latin fungus 'mushroom' — English fungus is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C106-verdure]
 <!-- hl-knowledge: introduces=[IT-LEX-C106-CIBO106-03]; assesses=[] -->
 
 **il fungo** — "a mushroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fungo** ← Latin *fungus*, "mushroom" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

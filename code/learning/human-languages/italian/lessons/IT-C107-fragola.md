@@ -13,7 +13,8 @@ gloss: "a strawberry"
 concept_tag: IT-CIBO107-FRAGOLA
 prerequisites: [IT-C106-fagioli, IT-C106-cetriolo]
 sounds: []
-roots: []
+roots: [fragula-latin]
+etymology_hook: "fragola ← Latin fragula 'strawberry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C106-cetriolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C107-CIBO107-01]; assesses=[] -->
 
 **la fragola** — "a strawberry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fragola** ← Latin *fragula*, "strawberry" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

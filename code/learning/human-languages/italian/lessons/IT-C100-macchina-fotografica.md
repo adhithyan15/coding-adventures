@@ -14,6 +14,7 @@ concept_tag: IT-OGGETTI100-MACCHINA-FOTOGRAFICA
 prerequisites: [IT-C100-sveglia, IT-C100-telefonino]
 sounds: []
 roots: []
+etymology_hook: "macchina fotografica — macchina 'machine' ← Latin machina + 'photographic'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C100-telefonino]
 <!-- hl-knowledge: introduces=[IT-LEX-C100-OGGETTI100-04]; assesses=[] -->
 
 **la macchina fotografica** — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**macchina fotografica** is built from *macchina*, "machine" ← Latin *machina*, and an adjective meaning "photographic". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

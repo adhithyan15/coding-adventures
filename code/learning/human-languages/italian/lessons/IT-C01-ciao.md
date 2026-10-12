@@ -11,6 +11,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [soft-c, ao-glide]
 roots: [sclavus]
+etymology_hook: "ciao ← Venetian s-ciao 'your servant', from Medieval Latin sclavus 'slave'"
 duration:
   max_seconds: 240
 requires:

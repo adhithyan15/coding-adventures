@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI90-OVEST
 prerequisites: [IT-C90-nord, IT-C90-sud]
 sounds: []
 roots: []
+etymology_hook: "ovest — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C90-sud]
 <!-- hl-knowledge: introduces=[IT-LEX-C90-LUOGHI90-05]; assesses=[] -->
 
 **l'ovest** — "the west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ovest** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

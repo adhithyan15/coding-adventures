@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 101,
-  "sourceHash": "fnv1a64:5a885e18b242fae9",
+  "sourceHash": "fnv1a64:0628179963407a53",
   "lessonIds": [
     "IT-C101-collana",
     "IT-C101-candela",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch101.txt",
   "json": "italian/narration/ch101.json",
-  "textHash": "fnv1a64:aa4b5e5a5befabd8",
-  "jsonHash": "fnv1a64:b3389ae004a92c96",
+  "textHash": "fnv1a64:1f693bc1e3681532",
+  "jsonHash": "fnv1a64:5c8a6cb776f35f18",
   "findings": []
 }

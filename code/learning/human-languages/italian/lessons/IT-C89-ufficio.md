@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI89-UFFICIO
 prerequisites: [IT-C88-stadio, IT-C89-fabbrica]
 sounds: []
 roots: []
+etymology_hook: "ufficio — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C89-fabbrica]
 <!-- hl-knowledge: introduces=[IT-LEX-C89-LUOGHI89-02]; assesses=[] -->
 
 **l'ufficio** — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ufficio** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

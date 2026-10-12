@@ -14,6 +14,7 @@ concept_tag: IT-TEMPO-MATTINA
 prerequisites: [IT-C78-mese, IT-C78-anno]
 sounds: []
 roots: []
+etymology_hook: "mattina — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C78-anno]
 <!-- hl-knowledge: introduces=[IT-LEX-C78-TEMPO-04]; assesses=[] -->
 
 **la mattina** — "the morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mattina** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

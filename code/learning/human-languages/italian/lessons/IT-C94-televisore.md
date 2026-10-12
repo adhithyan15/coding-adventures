@@ -14,6 +14,7 @@ concept_tag: IT-CASA94-TELEVISORE
 prerequisites: [IT-C93-barca, IT-C94-tappeto]
 sounds: []
 roots: []
+etymology_hook: "televisore — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C94-tappeto]
 <!-- hl-knowledge: introduces=[IT-LEX-C94-CASA94-02]; assesses=[] -->
 
 **il televisore** — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**televisore** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

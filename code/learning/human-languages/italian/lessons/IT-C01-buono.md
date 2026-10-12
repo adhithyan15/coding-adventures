@@ -11,6 +11,7 @@ concept_tag: WORD-GOOD
 prerequisites: [IT-C01-ciao]
 sounds: [uo-glide]
 roots: [bonus]
+etymology_hook: "buono ← Latin bonus 'good' — English bonus and bonanza come from the same word"
 reviews_of: [IT-C01-ciao]
 duration:
   max_seconds: 120

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 79,
-  "sourceHash": "fnv1a64:703b89abf8d0fb2e",
+  "sourceHash": "fnv1a64:0893417e6c0df10a",
   "lessonIds": [
     "IT-C79-sempre",
     "IT-C79-mai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch79.txt",
   "json": "italian/narration/ch79.json",
-  "textHash": "fnv1a64:90b85e1ceaeffdaa",
-  "jsonHash": "fnv1a64:2cdcb8ca838bb7e4",
+  "textHash": "fnv1a64:8dd3e3ffb17d8f4f",
+  "jsonHash": "fnv1a64:5c74d7d6d8813d95",
   "findings": []
 }

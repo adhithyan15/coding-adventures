@@ -13,7 +13,8 @@ gloss: "to pay"
 concept_tag: IT-VERB-PAGARE
 prerequisites: [IT-C60-studiare, IT-C60-viaggiare]
 sounds: []
-roots: []
+roots: [pax-latin]
+etymology_hook: "pagare goes back to Latin pax 'peace': to pay was to pacify — English pay is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C60-viaggiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C60-VERBI5-04]; assesses=[] -->
 
 **pagare** — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pagare** ← Latin, built on *pax*, "peace", through a verb meaning "to pacify" — inherited. EtymDB 2.1 names *pax*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-POTERE
 prerequisites: [IT-C84-polizia, IT-C84-biblioteca]
 sounds: []
 roots: []
+etymology_hook: "potere ← Vulgar Latin potere, Latin posse 'to be able' — English potent shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C84-biblioteca]
 <!-- hl-knowledge: introduces=[IT-LEX-C85-POTERE85-01]; assesses=[] -->
 
 **potere** — "to be able to, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**potere** ← Vulgar Latin *potere*, which replaced Latin *posse*, "to be able" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

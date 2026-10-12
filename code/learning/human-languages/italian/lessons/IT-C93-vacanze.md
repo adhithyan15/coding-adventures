@@ -14,6 +14,7 @@ concept_tag: IT-VIAGGIO93-VACANZE
 prerequisites: [IT-C92-traghetto, IT-C92-viaggio]
 sounds: []
 roots: []
+etymology_hook: "vacanze — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C92-viaggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C93-VIAGGIO93-01]; assesses=[] -->
 
 **le vacanze** — "holidays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vacanze** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

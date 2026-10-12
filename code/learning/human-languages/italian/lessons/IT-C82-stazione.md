@@ -13,7 +13,8 @@ gloss: "a station"
 concept_tag: IT-CITTA2-STAZIONE
 prerequisites: [IT-C81-scuola, IT-C81-banca]
 sounds: []
-roots: []
+roots: [statio-latin]
+etymology_hook: "stazione ← Latin statio 'a standing, a post' — English station is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C81-banca]
 <!-- hl-knowledge: introduces=[IT-LEX-C82-CITTA2-01]; assesses=[] -->
 
 **la stazione** — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stazione** ← Latin *statio*, "a standing, a post" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

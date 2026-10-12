@@ -14,6 +14,7 @@ concept_tag: IT-VERB-RIUSCIRE
 prerequisites: [IT-C85-potere, IT-C85-dovere]
 sounds: []
 roots: []
+etymology_hook: "riuscire — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C85-dovere]
 <!-- hl-knowledge: introduces=[IT-LEX-C85-POTERE85-03]; assesses=[] -->
 
 **riuscire** — "to manage, to succeed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riuscire** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

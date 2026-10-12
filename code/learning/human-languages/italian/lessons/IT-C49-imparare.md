@@ -14,6 +14,7 @@ concept_tag: IT-VERB-IMPARARE
 prerequisites: [IT-C49-sentire, IT-C49-insegnare]
 sounds: []
 roots: []
+etymology_hook: "imparare ← Vulgar Latin imparare, built on Latin parare 'to prepare'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C49-insegnare]
 <!-- hl-knowledge: introduces=[IT-LEX-C49-VERBI3-04]; assesses=[] -->
 
 **imparare** — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**imparare** ← Vulgar Latin *imparare* — inherited; inside it is Latin *parare*, "to prepare, to get". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

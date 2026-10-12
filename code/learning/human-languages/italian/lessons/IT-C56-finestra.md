@@ -13,7 +13,8 @@ gloss: "a window"
 concept_tag: IT-CASA1-FINESTRA
 prerequisites: [IT-C55-uovo, IT-C56-cucina]
 sounds: []
-roots: []
+roots: [fenestra-latin]
+etymology_hook: "finestra ← Latin fenestra 'window'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C56-cucina]
 <!-- hl-knowledge: introduces=[IT-LEX-C56-CASA1-02]; assesses=[] -->
 
 **la finestra** — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**finestra** ← Latin *fenestra*, "window" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
