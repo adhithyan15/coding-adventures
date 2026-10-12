@@ -64,10 +64,15 @@ Account for items 13–17:
 
 ## Writing — 20 minutes
 
+Use one continuous 20-minute clock: spend 7 minutes on the practical form and
+13 minutes on the named-reader message. Move on when the first 7 minutes end;
+stop when the full 20 minutes end. Review the attempt later, outside this paper.
+
 1. Complete in Malayalam script: **പേര്**, **നഗരം**, **ജോലി അല്ലെങ്കിൽ പഠനം**,
    **യാത്രാസാധനം**, **ഇഷ്ടപ്പെട്ട ഭക്ഷണം**, **കാണുന്ന സമയം**.
 2. Write 30–40 Malayalam words to a friend named **മോഹൻ**. Say why you cannot
-   meet today, propose a new day, time, and place, and close politely.
+   meet today, propose a new day, time, and place, and close politely. The reader
+   and purpose must be clear.
 
 ## Speaking — 10 minutes
 
