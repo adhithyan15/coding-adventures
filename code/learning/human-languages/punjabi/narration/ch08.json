@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind, the Page, and the Falling Tone",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:52d74082171483cb",
+  "sourceHash": "fnv1a64:46edd92801093fce",
   "lessons": [
     {
       "id": "PA-C08-sochna",
@@ -590,7 +590,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a86b6750ddede21c",
+      "sourceHash": "fnv1a64:63796ef68c3e413a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -641,7 +641,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਪ (pa) p, then ੜ ṛ — a flapped r made with the tongue tip curled back and struck forward. Then the new thing, then ਨਾ."
+              "text": "ਪ (pa) p, then ੜ ṛ — a flapped r made with the tongue tip curled back and struck forward. Then the new thing, then ਨ n with the long-ā stroke."
             },
             {
               "kind": "speech",

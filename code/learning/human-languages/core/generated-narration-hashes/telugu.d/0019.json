@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 19,
-  "sourceHash": "fnv1a64:478a6db9e61a6c71",
+  "sourceHash": "fnv1a64:4d86bacefdbf2ebc",
   "lessonIds": [
     "TE-C19-vayasu"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch19.txt",
   "json": "telugu/narration/ch19.json",
-  "textHash": "fnv1a64:f7545772933ffe77",
-  "jsonHash": "fnv1a64:49d9fa64184a734e",
+  "textHash": "fnv1a64:839aef943c890697",
+  "jsonHash": "fnv1a64:0695bf5abf9af41d",
   "findings": []
 }

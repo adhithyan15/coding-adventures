@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 33,
-  "sourceHash": "fnv1a64:9703ff2c87da9762",
+  "sourceHash": "fnv1a64:5f14d5be204aef77",
   "lessonIds": [
     "KA-C33-yocisu",
     "KA-C33-artha-maadiko",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch33.txt",
   "json": "kannada/narration/ch33.json",
-  "textHash": "fnv1a64:41bdfc6bacaa1735",
-  "jsonHash": "fnv1a64:a57902d5149196f6",
+  "textHash": "fnv1a64:0cecbfcad48491eb",
+  "jsonHash": "fnv1a64:16e2399435c54cf6",
   "findings": []
 }

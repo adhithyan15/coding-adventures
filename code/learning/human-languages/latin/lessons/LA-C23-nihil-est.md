@@ -61,15 +61,15 @@ Spanish's *nada* (from *nāta*, "a thing born").
 ## Why it's said this way: Be honest: the words are real, the specific reply is a modern habit
 <!-- hl-knowledge: introduces=[LA-PRAGMATICS-NIHIL-EST-03]; assesses=[] -->
 
-Here's the careful part: **nihil** and **est** are both thoroughly
-classical, and *nihil est* itself appears in real Latin texts — but always
-meaning things like "there's nothing to it" (*"nihil est, nūgae"*, "nothing,
-trifles," Plautus's *Bacchidēs*) or "that's nothing" (*"istuc quidem
-[edepol] nihil est"*, Plautus's *Mīles Glōriōsus*), **never** specifically
-attested as a reply **to thanks**. No surviving Roman text shows someone
-answering *grātiās agō* with *nihil est*. Treat it the way you already
-treated *quōmodo tē habēs?*: real Latin words, put to a genuinely useful
-modern job, but not a citation from a Roman play.
+Here's the careful part: **nihil** and **est** are both thoroughly classical,
+and *nihil est* itself appears in real Latin texts — but always meaning things
+like "there's nothing to it" (*"nihil est, nūgae"*, "nothing, trifles,"
+Plautus's *Bacchidēs*) or "that's nothing" (*"istuc quidem [edepol] nihil est"*,
+Plautus's *The Braggart Soldier*), **never** specifically attested as a reply
+**to thanks**. No surviving Roman text shows someone answering *grātiās agō*
+with *nihil est*. Treat it the way you already treated the modern "how are you?"
+of spoken-Latin courses: real Latin words, put to a genuinely useful modern job,
+but not a citation from a Roman play.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-LEX-NIHIL-EST-01, LA-ETYMON-NIHIL-EST-02, LA-PRAGMATICS-NIHIL-EST-03] -->

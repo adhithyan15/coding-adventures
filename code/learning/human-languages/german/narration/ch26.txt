@@ -301,9 +301,9 @@ The exchange.
 Hallo! Wie geht es dir? means Hello! How are you?
 Danke, ich bin müde. means Thanks — I am tired.
 Du bist müde? Ich auch. means You are tired? Me too.
-Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.
+Dann sind wir müde. Das ist gut. means Then we are tired. That is good.
 Bis morgen! means See you tomorrow!
-Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch ("too"), dann ("then") and aber ("but").
+Two small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch ("too") and dann ("then").
 
 Guided Practice.
 [pause 1 second]

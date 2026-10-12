@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:80cb3cad744c994f",
+  "sourceHash": "fnv1a64:b4f5dd00c3def889",
   "lessons": [
     {
       "id": "TA-C20-pathinondru-irupathu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2149cc6d201d472",
+      "sourceHash": "fnv1a64:08437c2da88c6b54",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "இருபது (irupathu, \"twenty\") = இரு (iru, an older word for \"two,\" alongside the everyday இரண்டு iraṇḍu) + பத்து (pathu, \"ten\") — fully transparent as \"two-tens,\" matching Malayalam's own irupathu almost letter-for-letter."
+              "text": "இரு + பத்து becomes இருபது (irupathu, \"twenty\"): an older word for \"two,\" alongside the everyday இரண்டு iraṇḍu, plus pathu, \"ten\" — fully transparent as \"two-tens,\" matching Malayalam's own irupathu almost letter-for-letter."
             }
           ]
         },
@@ -125,7 +125,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two pieces build இருபது (twenty)? (இரு \"two\" + பத்து \"ten\" — \"two-tens.\") Do all four major Dravidian languages build \"twenty\" the same compositional way? (Yes — Tamil and Malayalam keep it fully transparent today; Kannada shares the same compositional origin but its modern \"two\"/\"ten\" words no longer visibly match; Telugu's is worn down further but most likely the same root.) Do Sanskrit, Latin, or Arabic build their word for twenty this way? (No — each has its own special, non-compositional standalone word instead.)"
+              "text": "What two pieces build இருபது (twenty)? (இரு + பத்து becomes இருபது: \"two\" and \"ten\" — \"two-tens.\") Do all four major Dravidian languages build \"twenty\" the same compositional way? (Yes — Tamil and Malayalam keep it fully transparent today; Kannada shares the same compositional origin but its modern \"two\"/\"ten\" words no longer visibly match; Telugu's is worn down further but most likely the same root.) Do Sanskrit, Latin, or Arabic build their word for twenty this way? (No — each has its own special, non-compositional standalone word instead.)"
             }
           ]
         }

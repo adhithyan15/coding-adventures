@@ -56,9 +56,8 @@ Now put it with a word you have had since the second chapter. **क्या** i
 is a whole question, built from one new word and two you already own. This is
 the sentence a market runs on, and you can now say it.
 
-You have also seen दाम before, standing in a row of look-alikes beside **नाम**
-and **काम** when you were learning to pick a name out of a line. Now it means
-something.
+Set it beside **नाम** and **शाम**, two words you own: only the first letter
+changes, and the word changes with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

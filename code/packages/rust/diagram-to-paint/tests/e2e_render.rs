@@ -3681,6 +3681,99 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
                 )).count() >= 3, "stored data must lower to closed double-curved paths");
             }
+            if fixture_name == "summary-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 60.0 && node.height == 60.0),
+                    "summaries must use upstream minimum circle dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2
+                        && matches!(group.children[0], PaintInstruction::Ellipse(_))
+                        && matches!(&group.children[1], PaintInstruction::Path(path)
+                            if path.commands.len() == 4
+                                && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 2)
+                )).count() >= 3, "summaries must lower to crossed-circle groups");
+            }
+            if fixture_name == "tagged-document-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2
+                        && group.children.iter().all(|child| matches!(child,
+                            PaintInstruction::Path(path) if path.commands.len() == 5
+                                && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                                && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                        ))
+                )).count() >= 2, "tagged documents must lower to wave-edged body and tag paths");
+            }
+            if fixture_name == "tagged-process-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2
+                        && matches!(group.children[0], PaintInstruction::Rect(_))
+                        && matches!(&group.children[1], PaintInstruction::Path(path)
+                            if path.commands.len() == 4
+                                && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close)))
+                )).count() >= 4, "tagged processes must lower to rectangle and tag-path groups");
+            }
+            if fixture_name == "paper-tape-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 4
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 2, "paper tape must lower to closed double-wave paths");
+            }
+            if fixture_name == "lined-document-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                        && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::LineTo { .. }))
+                )).count() >= 2, "lined documents must lower to wave-edged paths with vertical rules");
+            }
+            if fixture_name == "data-store-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 4
+                        && path.fill.is_none()
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::LineTo { .. })).count() == 2
+                )).count() >= 2, "data stores must lower to paired open horizontal rules");
+            }
+            if fixture_name == "invisible-layout-link" {
+                assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible);
+                assert_eq!(layout.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible,
+                    "invisible links must survive layout lowering");
+                assert_ne!(layout.edges[0].from, layout.edges[0].to,
+                    "invisible links must retain layout geometry");
+                assert!(!scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(_)
+                )), "invisible links must not lower to visible paint");
+            }
+            if fixture_name == "open-styled-links" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
+                )), "open dotted links must lower to dashed paths");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_width == Some(3.5)
+                )), "open thick links must lower to wide paths");
+                assert!(layout.edges.iter().all(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::None
+                        && edge.end_marker == diagram_ir::EdgeMarker::None
+                ), "open styled links must remain marker-free through layout");
+            }
+            if fixture_name == "styled-endpoint-markers" {
+                assert!(layout.edges.iter().any(|edge|
+                    edge.kind == diagram_ir::SwimlaneEdgeKind::Dotted
+                        && edge.start_marker == diagram_ir::EdgeMarker::Circle
+                        && edge.end_marker == diagram_ir::EdgeMarker::Circle
+                ), "dotted endpoint markers must survive layout lowering");
+                assert!(layout.edges.iter().any(|edge|
+                    edge.kind == diagram_ir::SwimlaneEdgeKind::Thick
+                        && edge.start_marker == diagram_ir::EdgeMarker::Circle
+                        && edge.end_marker == diagram_ir::EdgeMarker::Cross
+                ), "thick endpoint markers must survive layout lowering");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 3, "styled circle markers must lower to ellipse instructions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )).count() >= 6, "styled cross markers must lower to paired path instructions");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

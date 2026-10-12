@@ -65,11 +65,13 @@ the giving case — and also **date**. A Roman letter closed with *data
 Rōmae*, "given at Rome," followed by the day; the word for "given" became
 the word for the day itself.
 
-*Trāns* plus *dare* makes *trādere*, "to hand over," and that single
-compound splits into **tradition** (handed down), **traitor** and
-**treason** (handed over to the enemy), **betray**, and **extradite**.
-*Dōs*, *dōtis* ("dowry") gives **dowry** and **endow**. Greek *dídōmi*
-supplies **dose** and **anecdote** ("things not given out").
+*trāns* ("across") + *dare* ("to give") → *trādere*
+
+The *-ns* drops out, and the compound means "to give across": "to hand over."
+That single compound splits into **tradition** (handed down), **traitor** and
+**treason** (handed over to the enemy), **betray**, and **extradite**. *Dōs*,
+*dōtis* ("dowry") gives **dowry** and **endow**. Greek *dídōmi* supplies
+**dose** and **anecdote** ("things not given out").
 
 Two flags. English **give** is not from this root, despite the matching
 sense — it is Germanic and separate. And Latin compounds ending in *-dere*
@@ -92,6 +94,6 @@ root, ***\*dʰeh₁-*** ("to put"), the one behind Greek *títhēmi* and English
 [PAUSE 3s] Give the eight "I" forms of this chapter. (**Sum, habeō, eō,
 veniō, dīcō, videō, sciō, dō**.) Now the eight "he or she" forms. (**Est,
 habet, it, venit, dīcit, videt, scit, dat**.) Which English words come from
-*datum*, "a thing given"? (**Data**, **dative**, and **date**.) What does
-*trādere* literally mean? (**To hand over** — hence *tradition* and
+*datum*, "a thing given"? (**Data**, **dative**, and **date**.) What do
+*trāns* and *dare* make together? (**To hand over** — hence *tradition* and
 *traitor*.) Is English *give* a relative? (**No.**)

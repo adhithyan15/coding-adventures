@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "See You Tomorrow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8dd7c2f2f02808d3",
+  "sourceHash": "fnv1a64:8e760eb74e99c4dc",
   "lessons": [
     {
       "id": "LA-C25-cras-te-videbo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c4db08d8d84b636",
+      "sourceHash": "fnv1a64:7ef179f1dec05ac2",
       "notice": null,
       "blocks": [
         {
@@ -68,7 +68,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the real teaching point: crās didn't survive as the everyday word for \"tomorrow\" in most of its major daughter languages. French's demain, Italian's domani, and Catalan's demà all rebuilt \"tomorrow\" from dē māne (\"in the morning\") instead — the same morning-based logic reappearing three separate times. Sardinian and Sicilian are the main holdouts that kept crās itself as an everyday word. Spanish, too, moved away from it, building its own mañana on māne (\"morning\") rather than keeping crās. A genuinely ordinary Latin word, abandoned by most of the family — echoing, if less completely, the same shape of story as flāvus from the colors lesson (which survives nowhere as an everyday word, only in names like Flāvius)."
+              "text": "Here's the real teaching point: crās didn't survive as the everyday word for \"tomorrow\" in most of its major daughter languages. French's demain, Italian's domani, and Catalan's demà all rebuilt \"tomorrow\" from a Latin phrase meaning \"in the morning\" instead:"
+            },
+            {
+              "kind": "speech",
+              "text": "dē (\"from\") + māne (\"morning\") becomes dē māne becomes French demain."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same morning-based logic reappearing three separate times. Sardinian and Sicilian are the main holdouts that kept crās itself as an everyday word. Spanish, too, moved away from it, building its own mañana on that same word for \"morning\" rather than keeping crās. A genuinely ordinary Latin word, abandoned by most of the family — echoing, if less completely, the same shape of story as flāvus from the colors lesson (which survives nowhere as an everyday word, only in names like Flāvius)."
             }
           ]
         },
@@ -125,7 +133,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is crās tē vidēbō itself quoted in a surviving Cicero letter, the way propediem tē vidēbō was? (No — same grammatical pattern, built from two genuinely classical pieces, but not itself a direct citation.) Which Romance language kept crās as its everyday word for \"tomorrow\"? (Sardinian and Sicilian — most of the rest rebuilt it from dē māne, \"in the morning,\" instead.)"
+              "text": "Is crās tē vidēbō itself quoted in a surviving Cicero letter, the way propediem tē vidēbō was? (No — same grammatical pattern, built from two genuinely classical pieces, but not itself a direct citation.) Which Romance language kept crās as its everyday word for \"tomorrow\"? (Sardinian and Sicilian — most of the rest rebuilt it from a phrase meaning \"in the morning,\" instead.)"
             }
           ]
         }

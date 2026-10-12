@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Months and Seasons",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b026c0becb78304d",
+  "sourceHash": "fnv1a64:d6cb13fd8cfd97e7",
   "lessons": [
     {
       "id": "IT-C09-mesi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08fce3c01086b671",
+      "sourceHash": "fnv1a64:21dc4d868c95d7c5",
       "notice": null,
       "blocks": [
         {
@@ -135,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which god links marzo and martedì? (Mars.) Why is dicembre Latin for \"ten\"? (The Roman year began in March.) Which two months honour real people? (Luglio — Julius; agosto — Augustus.) Next: the stagioni, the seasons."
+              "text": "Which god links marzo and martedì? (Mars.) Why is dicembre Latin for \"ten\"? (The Roman year began in March.) Which two months honour real people? (Luglio — Julius; agosto — Augustus.) Next: the seasons."
             }
           ]
         }
@@ -147,14 +147,14 @@
       "title": "le stagioni — the four seasons",
       "headword": "le stagioni",
       "romanization": "le stagioni",
-      "gloss": "the seasons — and \"primavera,\" the first green",
+      "gloss": "the seasons — and \"primavera,\" the first spring",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e34b3c689a6f13d1",
+      "sourceHash": "fnv1a64:40505332d26c826a",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word for \"season,\" stagione, is itself a small lesson: it's Latin statiō, a \"standing\" — a fixed station of the year (cousin of English station, stage). And the loveliest of the four, primavera, means the \"first green.\""
+              "text": "The word for \"season,\" stagione, is itself a small lesson: it's Latin statiō, a \"standing\" — a fixed station of the year (cousin of English station, stage). And the loveliest of the four, primavera, means the \"first spring.\""
             }
           ]
         },
@@ -189,7 +189,7 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Italian: la primavera (spring). from Latin: prīma vēra. literally: \"first spring / first green\" (prima \"first\" + vera from ver \"spring\").",
+                "Italian: la primavera (spring). from Latin: prīma vēra. literally: \"first spring\" (prīma \"first\" + vēra from vēr \"spring\").",
                 "Italian: l'estate (summer). from Latin: aestas / aestātem. literally: \"the heat, the hot season\".",
                 "Italian: l'autunno (autumn). from Latin: autumnus. literally: \"autumn\" (twin of English autumn).",
                 "Italian: l'inverno (winter). from Latin: hibernum. literally: \"the wintry season\" (cousin of hibernate)."
@@ -197,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "primavera = prima + vera: the \"first spring.\" Latin vēr was the word for spring; Italian (and Spanish, and Portuguese) built \"prima-vera,\" the year's first season — the same idea French once had in primevère."
+              "text": "primavera from prīma vēra: the \"first spring.\" Latin vēr was the word for spring (Italian vera, \"true\", is another word); Italian, Spanish and Portuguese kept \"prima-vera,\" the year's first season — the same idea French once had in primevère."
             },
             {
               "kind": "speech",
@@ -228,11 +228,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"primavera = prima + vera (first green)\"; \"inverno hibernate\"",
+              "instruction": "\"prīma + vēra becomes primavera (first spring)\"; \"inverno hibernate\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera = prima + vera (first green)\"; \"inverno ~ hibernate\"]"
+              "source": "[YOU SAY: \"prīma + vēra → primavera (first spring)\"; \"inverno ~ hibernate\"]"
             },
             {
               "kind": "prompt",
@@ -258,7 +258,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the four Italian seasons. (Primavera, estate, autunno, inverno.) What does primavera literally mean? (\"First spring / first green.\") What Latin word is stagione from, and its English cousin? (Statiō \"a standing\"; station.) Next chapter builds on this toward family and food."
+              "text": "Name the four Italian seasons. (Primavera, estate, autunno, inverno.) What does primavera literally mean? (\"First spring\" — Latin prīma vēra, vēr being \"spring\".) What Latin word is stagione from, and its English cousin? (Statiō \"a standing\"; station.) Next chapter builds on this toward family and food."
             }
           ]
         }

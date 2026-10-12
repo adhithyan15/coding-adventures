@@ -144,16 +144,17 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
         "border-width": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when Flutter emits their native depth. The
+        # inset theme-toggle moon remains an unsupported drawing effect.
+        "box-shadow": 1,
         "box-sizing": 1,
         "color": 3,
         "cursor": 2,
         "display": 1,
         "flex-direction": 1,
         "flex-shrink": 9,
-        "flex-wrap": 1,
         "font-family": 1,
-        "gap": 4,
         "height": 3,
         "left": 6,
         "margin-bottom": 1,
@@ -166,7 +167,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "top": 6,
         "transform": 2,
         "white-space": 1,
-        "width": 7,
     },
 }
 

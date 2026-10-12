@@ -17,7 +17,7 @@ The word, taken apart.
 হওয়া (hôwā) is Sanskrit √bhū ("to become") with the bh- worn down to a plain h-: bhavati becomes Prakrit hoï becomes Bengali hô-. The root is PIE bʰuH-, "to grow, to become," and English owns two of its children outright — be and been. Latin built fuī ("I was") and futūrus on it, which is English future; Greek built phúsis, "growth, nature," which is physics.
 
 Sounds you'll need: হ, and the ওয়া that ends a Bengali verb.
-হ is a soft, breathed h carrying Bengali's inherent vowel — hô, not ha. ওয়া (-wā) is the tail every dictionary-form verb wears; you will meet it again on খাওয়া (khāwā) and যাওয়া (jāwā).
+হ is a soft, breathed h carrying Bengali's inherent vowel — hô, not ha. ওয়া (-wā) is the tail every dictionary-form verb wears; you will meet it again on the next verbs of this chapter.
 
 Grammar Lens: two be-verbs, and one of them is unfinished.
 [a table of 3 rows, read aloud]
@@ -63,7 +63,7 @@ Grammar Lens: the respect is not in the pronoun, it is in the ending.
 who you are speaking to: তুই (tui, intimate). "you go": যাস (jāsh).
 who you are speaking to: তুমি (tumi, familiar). "you go": যাও (jāo).
 who you are speaking to: আপনি (āpni, respectful). "you go": যান (jān).
-Three endings, one verb. And the same grading runs on into the third person: সে যায় (se jāy) is "he goes," তিনি যান (tini jān) is "he goes" said of someone you respect — the very ending আপনি takes. Chapter 11 showed that the ending already means "I," so the pronoun can be dropped. The register cannot. Choose jāsh or jān and you have placed yourself socially, pronoun or no pronoun.
+Three endings, one verb. And the same grading runs on into the third person: "he goes" said of someone you respect takes the very ending আপনি takes. Chapter 11 showed that the ending already means "I," so the pronoun can be dropped. The register cannot. Choose jāsh or jān and you have placed yourself socially, pronoun or no pronoun.
 
 Guided Practice.
 [pause 1 second]
@@ -71,7 +71,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the ladder — "jāsh … jāo … jān"]
 [pause 8 seconds for the answer]
-[your turn — say: the two third persons — "se jāy … tini jān"]
+[your turn — say: the respectful one again — "āpni jān"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -137,23 +137,23 @@ Sounds you'll need: খ against ক.
 
 Grammar Lens: Bengali eats its drinks.
 [a table of 3 rows, read aloud]
-জল খাওয়া (jôl khāwā) means to drink water — "water-eat".
-চা খাওয়া (chā khāwā) means to drink tea.
-oshudh khāwā means to take medicine.
+what goes in: food. the Bengali verb: khāwā — "eat".
+what goes in: water, tea. the Bengali verb: khāwā — still "eat".
+what goes in: medicine. the Bengali verb: khāwā — "eat" again.
 Hindi keeps a second verb, pīnā, for drinking. Bengali's everyday speech does not bother: whatever goes in the mouth is khāwā. There is a drink-verb — পান করা (pān kôrā), noun-plus-kôrā in exactly Chapter 11's kāj kôrā shape, built on Sanskrit √pā ("to drink"), whose Latin cousin pōtāre gives English potion and potable. But it belongs to writing and ceremony. Ask for tea in a Kolkata kitchen and you eat it.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "khāwā" — eat — then "āmi khāi"]
 [pause 8 seconds for the answer]
-[your turn — say: the drinking Bengali eats — "jôl khāwā … chā khāwā"]
+[your turn — say: "khāwā" once more — the verb Bengali uses for a drink too]
 [pause 8 seconds for the answer]
 [your turn — say: the formal drink-verb and its English cousins — "pān kôrā … potion, potable"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say "drink water" in everyday Bengali? (জল খাওয়া — literally "water-eat.") Which Sanskrit root is khāwā, and does English share it? (√khād, "to chew" — and no, the root goes no further than Indo-Aryan.) Which verb would a formal text use for drinking, and what English words does its root reach? (পান করা, from √pā — English potion, potable.) Next: one spelling, two vowels.
+Which verb does everyday Bengali use for drinking? (খাওয়া — it "eats" its drinks.) Which Sanskrit root is khāwā, and does English share it? (√khād, "to chew" — and no, the root goes no further than Indo-Aryan.) Which verb would a formal text use for drinking, and what English words does its root reach? (পান করা, from √pā — English potion, potable.) Next: one spelling, two vowels.
 
 
 Lesson 5 of 6.

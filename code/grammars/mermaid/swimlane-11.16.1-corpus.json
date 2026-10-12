@@ -131,6 +131,30 @@
       "source": "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: bow-rect, label: \"First\" }\n  second@{ shape: stored-data, label: \"Second\" }\n  third@{ shape: bow-tie-rectangle, label: \"Third\" }\nend\nfirst --> second --> third"
     },
     {
+      "name": "summary-shapes",
+      "source": "swimlane-beta LR\nsubgraph Summary\n  first@{ shape: cross-circ }\n  second@{ shape: summary }\n  third@{ shape: crossed-circle }\nend\nfirst --> second --> third"
+    },
+    {
+      "name": "tagged-document-shapes",
+      "source": "swimlane-beta LR\nsubgraph Records\n  first@{ shape: tag-doc, label: \"First\" }\n  second@{ shape: tagged-document, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "tagged-process-shapes",
+      "source": "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: tag-rect, label: \"First\" }\n  second@{ shape: tagged-rectangle, label: \"Second\" }\n  third@{ shape: tag-proc, label: \"Third\" }\n  fourth@{ shape: tagged-process, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth"
+    },
+    {
+      "name": "paper-tape-shapes",
+      "source": "swimlane-beta LR\nsubgraph Output\n  first@{ shape: flag, label: \"First\" }\n  second@{ shape: paper-tape, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "lined-document-shapes",
+      "source": "swimlane-beta LR\nsubgraph Records\n  first@{ shape: lin-doc, label: \"First\" }\n  second@{ shape: lined-document, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "data-store-shapes",
+      "source": "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: datastore, label: \"First\" }\n  second@{ shape: data-store, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
@@ -193,6 +217,18 @@
     {
       "name": "click-legacy-callback-alias",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request openRequest \"Open request\"\nrequest --> done"
+    },
+    {
+      "name": "invisible-layout-link",
+      "source": "swimlane-beta LR\nsubgraph Drafting\n  draft[Draft]\nend\nsubgraph Publishing\n  published[Published]\nend\ndraft ~~~ published"
+    },
+    {
+      "name": "open-styled-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  published[Published]\nend\ndraft -.- review === published"
+    },
+    {
+      "name": "styled-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\n  archive[Archive]\nend\ndraft o-.-o review\nreview x-.-> approve\napprove o==x publish\npublish x==> archive"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 39,
-  "sourceHash": "fnv1a64:6e9f78ca314782d5",
+  "sourceHash": "fnv1a64:e75ab3e4bf315082",
   "lessonIds": [
     "LA-C39-capio",
     "LA-C39-rogo",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "latin/narration/ch39.txt",
   "json": "latin/narration/ch39.json",
-  "textHash": "fnv1a64:38a30115dc150212",
-  "jsonHash": "fnv1a64:31f7b27278b66674",
+  "textHash": "fnv1a64:357436cae76f9550",
+  "jsonHash": "fnv1a64:eaac25308a0ae369",
   "findings": []
 }

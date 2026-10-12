@@ -7,6 +7,40 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter elevation shadows leave the degradation report (#17308)
+
+Flutter now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Flutter style inventory from 79 to 69. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
+### Fixed — Flutter preserves drag-and-drop child spacing (#17301)
+
+Flutter now applies authored `gap` values to the evaluated vertical child lists
+inside `HostDraggable` and `HostDropTarget`. Board-card single-child gaps remain
+safe no-ops, while the board-column and calendar drop targets preserve spacing
+between loop-produced cards and events. Fresh strict generation retires all
+four Flutter `gap` omissions and reduces the measured style inventory from 83
+to 79 without changing native drag, keyboard, or drop semantics.
+
+### Fixed — Flutter preserves the seven-column calendar layout (#17289)
+
+Flutter now lowers valid percentage widths on bounded direct row children to
+proportional flex shares and lowers wrapping rows to native `Wrap` widgets with
+fractionally sized children. TaskApp's seven weekday headers and 42 day cells
+therefore preserve their authored seven-column geometry. Fresh strict generation
+retires seven `width` omissions and the calendar grid's `flex-wrap` omission,
+reducing Flutter's measured style inventory from 91 to 83. Invalid percentages
+and percentages without a finite parent remain explicit debt.
+
+### Fixed — Flutter style-ratchet tests match the retired width debt (#17273)
+
+The focused native-control-contract suite now expects Flutter's measured 91
+style degradations and rejects an eighth dropped `width`, matching the
+post-#17254 baseline of seven. This is a test-only correction; it does not
+change TaskApp runtime or release coverage.
+
 ## [0.5.2] - 2026-10-11
 
 ### Fixed — Flutter leaves preserve bounded fill widths (#17251)

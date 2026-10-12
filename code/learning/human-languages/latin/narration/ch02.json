@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Numbers One to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:42a9a242c1f76d04",
+  "sourceHash": "fnv1a64:10220d3b7c1e9325",
   "lessons": [
     {
       "id": "LA-C02-numbers-1-5",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf7a3d2aadd7b90f",
+      "sourceHash": "fnv1a64:a3dbf1492fbbba77",
       "notice": null,
       "blocks": [
         {
@@ -241,27 +241,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say the last four out loud and read the months beside them:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin",
-                "month",
-                "but it's month #"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "Latin: septem (7). month: September. but it's month #: 9.",
-                "Latin: octō (8). month: October. but it's month #: 10.",
-                "Latin: novem (9). month: November. but it's month #: 11.",
-                "Latin: decem (10). month: December. but it's month #: 12."
-              ]
+              "text": "Say the last four out loud, then add the month-name ending -ber to each (where the ending itself comes from is uncertain):"
             },
             {
               "kind": "speech",
-              "text": "September literally means \"the seventh.\" It sits in ninth place because the old Roman year began in March — so month one was March, and the seventh month was our September. When January and February were later pushed to the front, the names never moved. Every year you write four Latin numbers, each two places off, because Rome renumbered the calendar and forgot to rename the months."
+              "text": "septem + -ber becomes September."
+            },
+            {
+              "kind": "speech",
+              "text": "octō + -ber becomes Octōber."
+            },
+            {
+              "kind": "speech",
+              "text": "novem + -ber becomes November."
+            },
+            {
+              "kind": "speech",
+              "text": "decem + -ber becomes December."
+            },
+            {
+              "kind": "speech",
+              "text": "The first literally means \"the seventh,\" yet it sits in ninth place, and the other three are each two places off as well. The old Roman year began in March — so month one was March, and the seventh month was the one your calendar now counts ninth. When January and February were later pushed to the front, the names never moved. Every year you write four Latin numbers, each two places off, because Rome renumbered the calendar and forgot to rename the months."
             }
           ]
         },
@@ -307,11 +307,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the calendar — \"septem becomes September, the seventh month… now ninth\"",
+              "instruction": "the calendar — the month named for septem, \"seven\", and the place it sits in now (ninth)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the calendar — \"septem → September, the seventh month… now ninth\"]"
+              "source": "[YOU SAY: the calendar — the month named for *septem*, \"seven\", and the place it sits in now (ninth)]"
             },
             {
               "kind": "prompt",
@@ -337,7 +337,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count six to ten in Latin. (Sex, septem, octō, novem, decem.) Why does September (\"the seventh\") fall in the ninth month? (Rome's year began in March; two months were later added at the front and the names never changed.) How is novem said, and why? (NO-wem — Latin v is a w.) What everyday base-ten word comes straight from decem? (decimal.) You can now count to ten in the language every Romance number came from."
+              "text": "Count six to ten in Latin. (Sex, septem, octō, novem, decem.) Why does the month named for septem, \"seven\", fall ninth? (Rome's year began in March; two months were later added at the front and the names never changed.) How is novem said, and why? (NO-wem — Latin v is a w.) What everyday base-ten word comes straight from decem? (decimal.) You can now count to ten in the language every Romance number came from."
             }
           ]
         }

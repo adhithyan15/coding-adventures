@@ -2071,21 +2071,38 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .any(|child| layout_contains_tag(child, tag))
 }
 
-/// Whether this tree contains a non-empty Flutter flex container with an
-/// authored `gap`.
+/// Whether this tree contains a non-empty Flutter child list with an authored
+/// `gap` that lowers through `_mosaicWithGap`.
 ///
-/// `Row` and `Column` are the only Flutter widgets whose child lists receive
-/// UI85 spacing. A `Stack` is an overlay, and a multi-child `Box` happens to
-/// use an internal Column only as a lowering detail; giving either one flex
-/// gap semantics would turn an unsupported declaration into the wrong layout.
+/// Non-wrapping `Row` and `Column` receive UI85 spacing through the helper. A
+/// wrapping `Row` lowers to `Wrap` and uses its native `spacing` /
+/// `runSpacing` arguments instead. `HostDraggable` and `HostDropTarget` have
+/// vertical content bodies, so their evaluated multi-child lists use the same
+/// helper. A `Stack` is an overlay, and a multi-child `Box` happens to use an
+/// internal Column only as a lowering detail; giving either one flex gap
+/// semantics would turn an unsupported declaration into the wrong layout.
 fn layout_contains_flex_gap(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
-    let own_gap = !node.children.is_empty()
+    let own_props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|props| parse_style_props(props));
+    let is_wrapping_row = node.tag == "Row"
+        && own_props.as_ref().is_some_and(|props| {
+            props
+                .get("flex-wrap")
+                .is_some_and(|value| value.trim().trim_matches('"') == "wrap")
+        });
+    let has_flex_children = !node.children.is_empty()
         && matches!(node.tag.as_str(), "Row" | "Column")
-        && node
-            .part_name
-            .as_deref()
-            .and_then(|part| part_styles.get(part))
-            .is_some_and(|props| parse_style_props(props).contains_key("gap"));
+        && !is_wrapping_row;
+    let has_drag_body_children = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+        && ((node.children.len() > 1 && node.children[0].tag != "If")
+            || (node.children.len() == 1 && node.children[0].tag == "For"));
+    let own_gap = (has_flex_children || has_drag_body_children)
+        && own_props
+            .as_ref()
+            .is_some_and(|props| props.contains_key("gap"));
     own_gap
         || node
             .children
@@ -2791,9 +2808,12 @@ struct TableCtx<'a> {
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
     /// The sibling-aware parent has committed to the one `Expanded` wrapper
-    /// that represents this leaf's `width: 100%`. HostInput uses this to avoid
-    /// adding its own fallback `Expanded` around the TextField.
+    /// that represents this leaf's percentage width. HostInput uses this to
+    /// avoid adding its own fallback `Expanded` around the TextField.
     fill_width_owned_by_parent: bool,
+    /// True only while emitting a direct child of a bounded `Wrap`. Percentage
+    /// widths in that position become `FractionallySizedBox` constraints.
+    direct_wrap_child: bool,
     /// True only while emitting a direct child of a height-bounded `Column`.
     /// Such children may safely honor `flex-grow` through `Expanded`.
     direct_column_child: bool,
@@ -3272,6 +3292,22 @@ fn emit_widget_tree(
         }
     }
 
+    // A wrapping Row supplies every direct child with its own finite share of
+    // the row. `FractionallySizedBox` is legal here (unlike `Expanded`, which
+    // only works in Flex parents) and works through a `For` body because the
+    // direct-wrap marker is threaded through the meta-primitive unchanged.
+    if ctx.direct_wrap_child && ctx.width_bounded {
+        if let Some(fraction) = part_percent_width_fraction(node, part_styles) {
+            record_style_read("width");
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}FractionallySizedBox(\n{pad}  widthFactor: {},\n{pad}  child: {},\n{pad})\n",
+                dart_fraction(fraction),
+                body.trim_start()
+            );
+        }
+    }
+
     // A scroll view only scrolls when its viewport is bounded. Container
     // primitives consume `height` in their own lowering, but HostScroll has
     // no native height argument; wrap it in a SizedBox so authored fixed
@@ -3382,16 +3418,34 @@ fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) ->
 /// that their Flutter layout context supplies a finite horizontal constraint,
 /// and must record the style read only after choosing a concrete lowering.
 fn part_has_fill_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
-    let Some(part) = node.part_name.as_deref() else {
-        return false;
-    };
-    let Some(props) = part_styles.get(part) else {
-        return false;
-    };
+    part_percent_width_fraction(node, part_styles) == Some(1.0)
+}
+
+/// A part's authored percentage width as a parent-relative fraction.
+///
+/// Values must be finite and in `(0, 100]`. Parsing before formatting keeps
+/// authored text out of generated Dart, and the lower bound is the smallest
+/// value that still rounds to a non-zero integer flex weight.
+fn part_percent_width_fraction(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> Option<f64> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
     let parsed = parse_style_props(props);
-    parsed
-        .get("width")
-        .is_some_and(|value| value.trim() == "100%")
+    let raw = parsed.get("width")?.trim().trim_matches('"').trim();
+    let percent = raw.strip_suffix('%')?.trim().parse::<f64>().ok()?;
+    (percent.is_finite() && (0.0001..=100.0).contains(&percent)).then_some(percent / 100.0)
+}
+
+/// Print a parsed fraction for Dart to six decimal places without trailing
+/// zeroes. This matches the precision already used by the Compose backend.
+fn dart_fraction(fraction: f64) -> String {
+    ((fraction * 1_000_000.0).round() / 1_000_000.0).to_string()
+}
+
+fn fraction_flex(fraction: f64) -> u32 {
+    (fraction * 1_000_000.0).round().max(1.0) as u32
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3706,6 +3760,13 @@ fn emit_container(
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .unwrap_or("");
     let props = parse_style_props(style_props);
+    let wraps = widget == "Row"
+        && style_prop(&props, "flex-wrap")
+            .is_some_and(|value| value.trim().trim_matches('"') == "wrap");
+    if wraps {
+        record_style_read("flex-wrap");
+    }
+    let emitted_widget = if wraps { "Wrap" } else { widget };
     let state_layers = node
         .part_name
         .as_deref()
@@ -3739,7 +3800,7 @@ fn emit_container(
         || part_max_width(node, part_styles).is_some()
         || part_flex_grow(node, part_styles).is_some()
         || (!ctx.direct_row_child && ctx.width_bounded);
-    let row_accepts_flex = widget == "Row" && width_bounded;
+    let row_accepts_flex = widget == "Row" && !wraps && width_bounded;
     let height_bounded = height.is_some()
         || (ctx.direct_column_child
             && ctx.direct_column_accepts_flex
@@ -3747,8 +3808,9 @@ fn emit_container(
         || (!ctx.direct_column_child && ctx.height_bounded);
     let column_accepts_flex = widget == "Column" && height_bounded;
     let child_ctx = TableCtx {
-        direct_row_child: widget == "Row",
+        direct_row_child: widget == "Row" && !wraps,
         direct_row_accepts_flex: row_accepts_flex,
+        direct_wrap_child: wraps && width_bounded,
         direct_column_child: widget == "Column",
         direct_column_accepts_flex: column_accepts_flex,
         direct_stack_child: widget == "Stack",
@@ -3759,6 +3821,16 @@ fn emit_container(
 
     // Special case for Box → Container.
     if widget == "Container" {
+        // Drag/drop bodies are vertical lists. Reading `gap` even for a
+        // literal single child correctly treats it as a supported no-op. A
+        // single authored `For`, however, evaluates to many children and must
+        // flow through the list path below so spacing is inserted after the
+        // loop is evaluated.
+        let drag_gap = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+            .then(|| style_prop(&props, "gap"))
+            .flatten()
+            .map(|value| parse_pixel_value(value));
+        let expands_to_child_list = node.children.len() == 1 && node.children[0].tag == "For";
         // Styled-cell path (Bug B). A Box that carries a `part_name`
         // with real styling — a border, background, height, text-align,
         // and/or `state-when-*` highlights — must lower to a `Container`
@@ -3790,7 +3862,10 @@ fn emit_container(
         // multiple children need a child Column wrapper since Container
         // only accepts one direct child.
         let style_args = style_to_container_args(style_props);
-        if node.children.len() == 1 && style_args.is_empty() {
+        if node.children.len() == 1
+            && style_args.is_empty()
+            && !(drag_gap.is_some() && expands_to_child_list)
+        {
             // If the resolved Mosaic style has no Flutter-visible container
             // properties, this wrapper changes neither layout nor visuals.
             return emit_widget_tree(
@@ -3808,7 +3883,7 @@ fn emit_container(
                 style_to_container_args(style_props)
             ));
         }
-        if node.children.len() == 1 {
+        if node.children.len() == 1 && !(drag_gap.is_some() && expands_to_child_list) {
             let child_src = emit_widget_tree(
                 &node.children[0],
                 indent + 2,
@@ -3840,8 +3915,19 @@ fn emit_container(
         } else {
             format!("{inner_pad}{style_args},\n")
         };
+        let child = if matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") {
+            if let Some(gap) = drag_gap {
+                format!(
+                    "Column(children: _mosaicWithGap(<Widget>[\n{children}{pad}  ], {gap}, Axis.vertical))"
+                )
+            } else {
+                format!("Column(children: [\n{children}{pad}  ])")
+            }
+        } else {
+            format!("Column(children: [\n{children}{pad}  ])")
+        };
         return Ok(format!(
-            "{pad}Container(\n{style_prefix}{pad}  child: Column(children: [\n{children}{pad}  ])\n{pad})\n"
+            "{pad}Container(\n{style_prefix}{pad}  child: {child}\n{pad})\n"
         ));
     }
 
@@ -3864,27 +3950,42 @@ fn emit_container(
     } else {
         None
     };
-    let cross_axis_alignment = flutter_cross_axis_alignment(&props, widget);
+    let cross_axis_alignment = (!wraps)
+        .then(|| flutter_cross_axis_alignment(&props, widget))
+        .flatten();
     let cross_axis_arg = cross_axis_alignment
         .map(|alignment| format!("{inner_pad}crossAxisAlignment: {alignment},\n"))
         .unwrap_or_default();
     let body = if children.is_empty() {
-        if let Some(alignment) = cross_axis_alignment {
-            format!("{pad}const {widget}(crossAxisAlignment: {alignment}, children: [])\n")
+        if wraps && gap.is_some() {
+            let gap = gap.as_deref().expect("checked above");
+            format!(
+                "{pad}const {emitted_widget}(spacing: {gap}, runSpacing: {gap}, children: [])\n"
+            )
+        } else if let Some(alignment) = cross_axis_alignment {
+            format!("{pad}const {emitted_widget}(crossAxisAlignment: {alignment}, children: [])\n")
         } else {
-            format!("{pad}const {widget}(children: [])\n")
+            format!("{pad}const {emitted_widget}(children: [])\n")
         }
-    } else if let Some(gap) = gap {
+    } else if wraps {
+        let gap_args = gap
+            .as_deref()
+            .map(|gap| format!("{inner_pad}spacing: {gap},\n{inner_pad}runSpacing: {gap},\n"))
+            .unwrap_or_default();
+        format!(
+            "{pad}{emitted_widget}(\n{gap_args}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n"
+        )
+    } else if let Some(gap) = gap.as_deref() {
         let axis = if widget == "Row" {
             "Axis.horizontal"
         } else {
             "Axis.vertical"
         };
         format!(
-            "{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
+            "{pad}{emitted_widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
         )
     } else {
-        format!("{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
+        format!("{pad}{emitted_widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
 
     // `Row`/`Column`/`Stack` have no decoration mechanism of their own
@@ -4126,14 +4227,10 @@ fn emit_paired_children(
             || (ctx.direct_column_child && ctx.direct_column_accepts_flex))
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
-        let fill_width = ctx.direct_row_child
+        let percent_width = ctx.direct_row_child
             && ctx.direct_row_accepts_flex
-            && matches!(
-                child.tag.as_str(),
-                "Text" | "HostInput" | "Input" | "HostButton"
-            )
-            && part_has_fill_width(child, part_styles);
-        if fill_width {
+            && part_percent_width_fraction(child, part_styles).is_some();
+        if percent_width {
             record_child_style_read(child, "width");
         }
         // This children list owns the explicit flex wrapper. Do not also let
@@ -4143,8 +4240,9 @@ fn emit_paired_children(
             // leaf wrapper does not also add SizedBox(double.infinity).
             // HostInput recognizes that same declaration and suppresses its
             // own fallback Expanded below.
-            direct_row_child: ctx.direct_row_child && (flex.is_none() || fill_width),
-            fill_width_owned_by_parent: fill_width,
+            direct_row_child: ctx.direct_row_child && (flex.is_none() || percent_width),
+            fill_width_owned_by_parent: percent_width,
+            direct_wrap_child: false,
             direct_column_child: ctx.direct_column_child && flex.is_none(),
             ..ctx
         };
@@ -4180,8 +4278,14 @@ fn emit_paired_children(
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
                 &expanded
             }
-            None if fill_width => {
-                expanded = format!("Expanded(child: {sub})");
+            None if percent_width => {
+                let fraction = part_percent_width_fraction(child, part_styles)
+                    .expect("percentage width was checked above");
+                expanded = if fraction == 1.0 {
+                    format!("Expanded(child: {sub})")
+                } else {
+                    format!("Expanded(flex: {}, child: {sub})", fraction_flex(fraction))
+                };
                 &expanded
             }
             None if ctx.direct_row_child && ctx.direct_row_accepts_flex && child.tag == "Text" => {
@@ -5219,11 +5323,24 @@ impl ElevationTier {
 /// — matches every other backend's `part_elevation_tier`; no real part
 /// conditions elevation on a state today.
 fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
-    match style_prop(props, "elevation").map(String::as_str) {
+    let tier = match style_prop(props, "elevation").map(String::as_str) {
         Some("raised") => Some(ElevationTier::Raised),
         Some("overlay") => Some(ElevationTier::Overlay),
         _ => None,
+    };
+    // The web-facing CSS shadow and the portable elevation token are authored
+    // together. A supported elevation tier already emits equivalent native
+    // depth, so its non-inset CSS companion is not a genuine style drop. Inset
+    // shadows are drawing effects rather than elevation and remain explicit
+    // degradation debt.
+    if tier.is_some()
+        && props
+            .get("box-shadow")
+            .is_some_and(|value| !value.to_ascii_lowercase().contains("inset"))
+    {
+        record_style_read("box-shadow");
     }
+    tier
 }
 
 /// A node's own part's `flex-grow` value, or `None` when unset or
@@ -5672,6 +5789,11 @@ fn emit_styled_box(
         inherited_text_style: Some(inherited_text_style.as_str()),
         ..ctx
     };
+    let drag_gap = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+        .then(|| style_prop(&base, "gap"))
+        .flatten()
+        .map(|value| parse_pixel_value(value));
+    let expands_to_child_list = node.children.len() == 1 && node.children[0].tag == "For";
 
     // The Box [cell] body is an `If (is-editing) { HostInput } Else
     // { Text }` pair — exactly one rendered widget after fusing. Detect
@@ -5694,7 +5816,7 @@ fn emit_styled_box(
         )?
         .trim_end_matches('\n')
         .to_string()
-    } else if node.children.len() == 1 {
+    } else if node.children.len() == 1 && !(drag_gap.is_some() && expands_to_child_list) {
         emit_widget_tree(
             &node.children[0],
             indent + 4,
@@ -5714,7 +5836,17 @@ fn emit_styled_box(
             emits,
             ctx,
         )?;
-        format!("{ip}Column(children: [\n{kids}{ip}])")
+        if matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") {
+            if let Some(gap) = drag_gap {
+                format!(
+                    "{ip}Column(children: _mosaicWithGap(<Widget>[\n{kids}{ip}], {gap}, Axis.vertical))"
+                )
+            } else {
+                format!("{ip}Column(children: [\n{kids}{ip}])")
+            }
+        } else {
+            format!("{ip}Column(children: [\n{kids}{ip}])")
+        }
     };
     let inner_child = inner_child.trim_start();
 
@@ -8526,6 +8658,7 @@ fn emit_host_table(
         direct_row_child: false,
         direct_row_accepts_flex: false,
         fill_width_owned_by_parent: false,
+        direct_wrap_child: false,
         direct_column_child: false,
         direct_column_accepts_flex: false,
         // The root gets the window's width.
@@ -10924,6 +11057,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the shadow —
         // `elevation` is the only signal Flutter reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+        assert!(
+            dropped_style_properties(&m, &l, &style).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -10981,6 +11118,9 @@ mod tests {
         let out = from_pipeline(&m, &l, &style).unwrap().output;
 
         assert!(!out.contains("boxShadow"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     #[test]
@@ -11015,6 +11155,9 @@ mod tests {
             out.contains("blurRadius: 8, offset: const Offset(0, 4)"),
             "got:\n{out}"
         );
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
@@ -11627,7 +11770,7 @@ mod tests {
     }
 
     #[test]
-    fn fixed_leaf_widths_wrap_text_input_and_button_but_leave_percentages_reported() {
+    fn fixed_leaf_widths_wrap_leaves_and_row_percentages_become_flex_shares() {
         fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
             LayoutNode {
                 tag: tag.into(),
@@ -11691,24 +11834,148 @@ mod tests {
             out.contains("width: 34,") && out.contains("child: ElevatedButton("),
             "fixed HostButton width must wrap the emitted widget:\n{out}"
         );
+        assert_eq!(out.matches("Expanded(").count(), 1, "got:\n{out}");
         assert!(
-            !out.contains("Expanded("),
-            "a fixed-width input must not also be expanded by its Row:\n{out}"
+            out.contains("Expanded(flex: 142857, child:") && out.contains("Text(\"Mon\")"),
+            "the parsed seventh-width must become the Row child's flex share:\n{out}"
         );
         assert!(
             !out.contains("width: 0"),
             "percentage width collapsed:\n{out}"
         );
 
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "the Row owns every valid width declaration"
+        );
+    }
+
+    #[test]
+    fn invalid_or_unbounded_row_percentages_remain_reported() {
+        fn percentage_text(part: &str) -> LayoutNode {
+            LayoutNode {
+                tag: "Text".into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String("day".into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn width_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("PercentSafety", vec![], vec![]);
+        let l = layout(
+            "PercentSafety",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    percentage_text("invalid"),
+                    node_with("Row", vec![], vec![percentage_text("unbounded")]),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "PercentSafety".into(),
+            parts: vec![
+                width_part("invalid", "150%"),
+                width_part("unbounded", "14.2857%"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("percentages decline safely")
+            .output;
+        assert!(!out.contains("150%") && !out.contains("142857"), "{out}");
         let dropped = dropped_style_properties(&m, &l, &s);
         assert_eq!(
             dropped
                 .iter()
                 .map(|drop| (drop.part.as_str(), drop.name.as_str()))
                 .collect::<Vec<_>>(),
-            vec![("calendar-day", "width")],
-            "only the deliberately unsupported percentage width should remain"
+            vec![("invalid", "width"), ("unbounded", "width")]
         );
+    }
+
+    #[test]
+    fn wrapping_row_spreads_fractionally_sized_for_children() {
+        let m = component(
+            "Calendar",
+            vec![slot(
+                "cells",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut cell = node_with("Column", vec![], vec![text_node("day")]);
+        cell.part_name = Some("calendar-cell".into());
+        let cells = for_node(
+            LayoutPropValue::SlotRef("cells".into()),
+            "cell",
+            Some("ci"),
+            vec![cell],
+        );
+        let mut grid = node_with("Row", vec![], vec![cells]);
+        grid.part_name = Some("calendar-grid".into());
+        let l = layout("Calendar", grid);
+        let s = StyleDef {
+            component_name: "Calendar".into(),
+            parts: vec![
+                PartStyle {
+                    name: "calendar-grid".into(),
+                    base: vec![
+                        StyleProp {
+                            name: "flex-wrap".into(),
+                            value: "\"wrap\"".into(),
+                        },
+                        StyleProp {
+                            name: "gap".into(),
+                            value: "\"8\"".into(),
+                        },
+                    ],
+                    transitions: vec![],
+                    states: vec![],
+                },
+                PartStyle {
+                    name: "calendar-cell".into(),
+                    base: vec![StyleProp {
+                        name: "width".into(),
+                        value: "\"14.2857%\"".into(),
+                    }],
+                    transitions: vec![],
+                    states: vec![],
+                },
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("wrapping calendar emits")
+            .output;
+        assert!(out.contains("Wrap("), "{out}");
+        assert!(out.contains("spacing: 8"), "{out}");
+        assert!(out.contains("runSpacing: 8"), "{out}");
+        assert!(!out.contains("_mosaicWithGap"), "{out}");
+        assert!(out.contains("...cells.map((_)"), "{out}");
+        assert!(
+            out.contains("FractionallySizedBox(") && out.contains("widthFactor: 0.142857"),
+            "{out}"
+        );
+        assert_eq!(out.matches("FractionallySizedBox(").count(), 1, "{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]
@@ -12731,6 +12998,100 @@ mod tests {
         ] {
             assert!(out.contains(expected), "missing `{expected}`:\n{out}");
         }
+    }
+
+    #[test]
+    fn styled_draggable_gap_wraps_the_evaluated_vertical_child_list() {
+        let m = component("Card", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let mut draggable = node_with(
+            "HostDraggable",
+            vec![],
+            vec![
+                text_node("always"),
+                if_node(
+                    LayoutPropValue::SlotRef("visible".into()),
+                    vec![text_node("sometimes")],
+                ),
+            ],
+        );
+        draggable.part_name = Some("card".into());
+        let l = layout("Card", draggable);
+        let s = style_with_part(
+            "Card",
+            "card",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#ffffff".into(),
+                },
+                StyleProp {
+                    name: "gap".into(),
+                    value: "6px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit draggable gap")
+            .output;
+        let list_start = out
+            .find("Column(children: _mosaicWithGap(<Widget>[")
+            .expect("draggable body must use the gap helper");
+        let conditional = out
+            .find("_mosaicTruthy(visible)")
+            .expect("conditional child must stay in the evaluated list");
+        let call_end = out
+            .find("], 6, Axis.vertical))")
+            .expect("vertical gap helper call must close after the list");
+        assert!(
+            list_start < conditional && conditional < call_end,
+            "got:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn drop_target_gap_spaces_a_single_for_body_after_evaluation() {
+        let m = component(
+            "Lane",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut target = node_with(
+            "HostDropTarget",
+            vec![],
+            vec![for_node(
+                LayoutPropValue::SlotRef("items".into()),
+                "item",
+                Some("index"),
+                vec![text_node("item")],
+            )],
+        );
+        target.part_name = Some("lane".into());
+        let l = layout("Lane", target);
+        let s = style_with_part(
+            "Lane",
+            "lane",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "9".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit drop-target gap")
+            .output;
+        assert!(
+            out.contains("child: Column(children: _mosaicWithGap(<Widget>[\n")
+                && out.contains("...items.map((item)")
+                && out.contains("], 9, Axis.vertical))"),
+            "got:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]

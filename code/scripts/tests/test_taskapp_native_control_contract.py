@@ -89,7 +89,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "swiftui": 83,
         "compose": 50,
         "qt": 108,
-        "flutter": 107,
+        "flutter": 69,
     }
 
 
@@ -150,6 +150,27 @@ def test_flutter_text_align_is_no_longer_baselined() -> None:
     assert any("unbaselined style drop 'text-align'" in error for error in errors)
 
 
+def test_flutter_drag_body_gap_is_no_longer_baselined() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "gap"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any("unbaselined style drop 'gap'" in error for error in errors)
+
+
+def test_flutter_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "box-shadow"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
 def test_style_drop_ratchet_accepts_baseline_and_reductions(backend: str) -> None:
     report = _report(backend)
@@ -183,8 +204,8 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
         (
             "flutter",
             "width",
-            24,
-            "style drop 'width' increased from at most 23 to 24",
+            1,
+            "unbaselined style drop 'width'",
         ),
     ],
 )

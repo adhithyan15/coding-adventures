@@ -2,6 +2,15 @@
 
 **Status:** Draft — design spec, committed before implementation (sign-off = merge).
 
+**Consumer priority (user clarification, 2026-10-11):** MacroNib and MacroOct
+are the first consumers and the near-term proving ground for this generic
+engine. Prioritize their source-to-preprocessor-to-parser-to-IIR composition,
+expansion provenance, resource bounds and identity against hand-expanded Nib
+and Oct. Choose further generic-engine work from a demonstrated need in those
+consumers. Existing bounded C stages remain recorded evidence; completing C
+preprocessing is a long-term horizon and does not drive the next PREP01 slice.
+This ordering does not authorize adding C-shaped semantics to the engine.
+
 ## 1. Why this exists
 
 Several languages in this repo need a text- or token-level rewriting pass that
@@ -997,3 +1006,29 @@ with independently executed native C/emitted output must cover this extension.
 Tests cover suffix raw/plain use, rescan and self-name termination, direct and
 forwarded provenance, pre-hook budget rejection, invalid hook results, explicit
 unsupported shapes, and rooted C success/error locations.
+
+## 14. Bounded C octal integer stringize stage
+
+Extend the single raw-token stringize subset with unsuffixed octal integer
+spellings matching `0[0-7]+`. Preserve every leading zero and digit exactly:
+`S(00047)` produces `"00047"`. This supersedes the octal stringize refusal
+in the earlier stages; decimal, hex and identifier behavior is retained.
+Recognize source named `INT_LIT` tokens and generic Number tokens, validate
+ASCII spelling, and perform no numeric conversion or machine-width check.
+Octal `#if` evaluation remains outside the decimal condition handoff.
+
+Keep raw arguments at `#`, separately pre-expanded plain occurrences and
+forwarded expansion ancestry, as described by
+[GCC's stringizing documentation](https://gcc.gnu.org/onlinedocs/cpp/Stringizing.html).
+With `#define O 00721`, `S(O)` yields `"O"` while an outer forwarding macro
+can produce `"00721"`. The generic engine remains unchanged and precharges
+the raw spelling plus two quotes before constructing the result.
+
+Reject spellings containing 8 or 9 after a leading zero, suffixes, floats,
+binary forms, signs, multiple tokens and quoted literals. Broader literal
+escaping, whitespace collapse, token paste and full C `#if` remain pending.
+Cover source acceptance/refusal, raw/plain/forwarded provenance, exact and
+over-limit spelling/text bounds, cumulative charges and the default 64 KiB
+result boundary without argument pre-expansion. A rooted local-header fixture
+must reach lowering and compare independently executed native C, emitted C
+and emitted Ruby output bytes when those oracle tools are available.

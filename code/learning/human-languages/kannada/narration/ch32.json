@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ddb722eb544a6384",
+  "sourceHash": "fnv1a64:664eef881dd96fe3",
   "lessons": [
     {
       "id": "KA-C32-iru",
@@ -526,7 +526,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c0e9d9b8cce853a",
+      "sourceHash": "fnv1a64:5cde186ae702216e",
       "notice": null,
       "blocks": [
         {
@@ -565,7 +565,7 @@
             },
             {
               "kind": "speech",
-              "text": "For a full meal, Kannada reaches instead for ಊಟ ಮಾಡು (ūṭa māḍu), \"to do a meal\" — the same noun-plus-māḍu trick that built kelasa māḍu, \"to work,\" in Chapter 5."
+              "text": "For a full meal, Kannada reaches instead for a meal-noun plus māḍu, \"to do a meal\" — the same noun-plus-māḍu trick that built kelasa māḍu, \"to work,\" in Chapter 5."
             }
           ]
         },

@@ -1794,6 +1794,60 @@ fn swimlane_stored_data_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_summary_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Summary\n  first@{ shape: cross-circ }\n  second@{ shape: summary }\n  third@{ shape: crossed-circle }\nend\nfirst --> second --> third",
+    ).expect("Swimlane summary aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Summary));
+}
+
+#[test]
+fn swimlane_tagged_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: tag-doc, label: \"First\" }\n  second@{ shape: tagged-document, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane tagged-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::TaggedDocument));
+}
+
+#[test]
+fn swimlane_tagged_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: tag-rect, label: \"First\" }\n  second@{ shape: tagged-rectangle, label: \"Second\" }\n  third@{ shape: tag-proc, label: \"Third\" }\n  fourth@{ shape: tagged-process, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane tagged-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::TaggedProcess));
+}
+
+#[test]
+fn swimlane_paper_tape_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Output\n  first@{ shape: flag, label: \"First\" }\n  second@{ shape: paper-tape, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane paper-tape aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::PaperTape));
+}
+
+#[test]
+fn swimlane_lined_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: lin-doc, label: \"First\" }\n  second@{ shape: lined-document, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane lined-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LinedDocument));
+}
+
+#[test]
+fn swimlane_data_store_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: datastore, label: \"First\" }\n  second@{ shape: data-store, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane data-store aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::DataStore));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
@@ -1995,6 +2049,62 @@ fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     assert_eq!((diagram.edges[1].start_marker, diagram.edges[1].end_marker), (EdgeMarker::Circle, EdgeMarker::Cross));
     assert_eq!((diagram.edges[2].start_marker, diagram.edges[2].end_marker), (EdgeMarker::Cross, EdgeMarker::Point));
     assert_eq!((diagram.edges[3].start_marker, diagram.edges[3].end_marker), (EdgeMarker::None, EdgeMarker::Cross));
+}
+
+#[test]
+fn swimlane_invisible_links_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  published[Published]\nend\ndraft ~~~ published",
+    ).expect("Flowchart invisible links should parse");
+
+    assert_eq!(diagram.edges.len(), 1);
+    assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible);
+    assert_eq!(diagram.edges[0].start_marker, diagram_ir::EdgeMarker::None);
+    assert_eq!(diagram.edges[0].end_marker, diagram_ir::EdgeMarker::None);
+}
+
+#[test]
+fn swimlane_open_styled_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  published[Published]\nend\ndraft -.- review === published",
+    ).expect("open dotted and thick Flowchart links should parse");
+
+    assert_eq!(diagram.edges.len(), 2);
+    assert_eq!((diagram.edges[0].kind, diagram.edges[0].end_marker),
+        (SwimlaneEdgeKind::Dotted, EdgeMarker::None));
+    assert_eq!((diagram.edges[1].kind, diagram.edges[1].end_marker),
+        (SwimlaneEdgeKind::Thick, EdgeMarker::None));
+}
+
+#[test]
+fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\n  h[H]\n  i[I]\nend\na o-.-o b x-.-x c o-.-x d x-.-o e o-.-> f x-.-> g -.-o h -.-x i\na o==o b x==x c o==x d x==o e o==> f x==> g ==o h ==x i",
+    ).expect("dotted and thick endpoint markers should parse");
+
+    let expected_markers = [
+        (EdgeMarker::Circle, EdgeMarker::Circle),
+        (EdgeMarker::Cross, EdgeMarker::Cross),
+        (EdgeMarker::Circle, EdgeMarker::Cross),
+        (EdgeMarker::Cross, EdgeMarker::Circle),
+        (EdgeMarker::Circle, EdgeMarker::Point),
+        (EdgeMarker::Cross, EdgeMarker::Point),
+        (EdgeMarker::None, EdgeMarker::Circle),
+        (EdgeMarker::None, EdgeMarker::Cross),
+    ];
+    assert_eq!(diagram.edges.len(), 16);
+    for (edge, markers) in diagram.edges[..8].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Dotted);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
+    for (edge, markers) in diagram.edges[8..].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Thick);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
 }
 
 #[test]

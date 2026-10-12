@@ -1,0 +1,10 @@
+## Fixed — lessons stop leaning on words a later lesson teaches
+
+A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 10 → 0.
+
+- **Teasers said in English.** TE-C41-this, -here and -who no longer print the partner word the next lesson teaches; TE-C26-udayam says "the good-morning greeting" instead of printing శుభోదయం.
+- **Examples rebuilt from owned words.** TE-C19-vayasu answers with ten (పది) instead of twenty; TE-C35-kutumbam says నా కుటుంబం without ఇది; TE-C34-ishtam's liking sentence is నాకు తెలుగు నచ్చింది.
+- **Later words no longer asked for.** TE-C32-tinu's practice and wrap-up stop asking for భోజనం (chapter 40); TE-C32-cuudu lists the sister languages' eye-words and says Telugu's comes later.
+- **A decomposition written as one equation.** TE-C49-certainly shows తప్పు + -కుండా → తప్పకుండా.
+- **The shared asking sound restored, accurately.** TE-C41-who says its partner, the next lesson's place question, opens with the same *e-*, against the *i-* of ఇది/ఇక్కడ and the *a-* of అది/అక్కడ; TE-C41-where says ఎవరు and it both open with *e-* instead of claiming they differ at the front. The who and where lessons no longer say the word "means whatever the speaker is pointing at", and the that and there lessons say their partner was "just met", not "will meet just now".
+- **A wrap-up matches the rebuilt example.** TE-C35-kutumbam asks the learner to say "my family" (*nā kuṭumbaṁ*), not "this is my family" with ఇది.

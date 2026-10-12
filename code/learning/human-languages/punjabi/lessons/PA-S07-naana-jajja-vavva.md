@@ -59,9 +59,9 @@ memory:
 
 Now put them where you have already heard them:
 
-> **ਜ** + **ਾ** + **ਣ** + **ਾ** → **ਜਾਣਾ** (*jāṇā*)
+> **ਹ** + **ੋ** + **ਣ** + **ਾ** → **ਹੋਣਾ** (*hoṇā*)
 >
-> **ਜਾਣਾ** — *jāṇā* — **to go**
+> **ਹੋਣਾ** — *hoṇā* — **to be**
 
 You are not being asked to write any of this. You are being asked to
 **recognise** it the next time it goes past.
@@ -81,8 +81,8 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-DULAVA-01, PA-SCRIPT-RECOG-TAINKA-01, PA-SCRIPT-RECOG-TTHA-01, PA-SCRIPT-RECOG-DDA-01, PA-SCRIPT-RECOG-PHA-01, PA-SCRIPT-RECOG-GA-01, PA-SCRIPT-RECOG-SIHARI-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-LA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-AIRA-01, PA-SCRIPT-RECOG-AARA-01, PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS, PA-COMPARISON-PANJ-MATCH, PA-ETYMON-PANJ-PANCA-INHERITANCE, PA-SOUND-NASAL-STOP-VOICING, PA-EVIDENCE-PANJAH-PACAS, PA-ETYMON-PERSIAN-PANJ-INDEPENDENT, PA-HISTORY-PANJ-CONVERGENCE, PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-VA-01] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at **ਜਾਣਾ** and point to each of today's pieces in turn]
-- [YOU SAY: *ṇa*, *ja*, *va*, then the whole word — *jāṇā*]
+- [YOU LOOK: at **ਹੋਣਾ** and point to the one of today's pieces it holds]
+- [YOU SAY: *ṇa*, *ja*, *va*, then the whole word — *hoṇā*]
 - [YOU LOOK: back at the headword at the top of any earlier lesson in this
   chapter and find one shape you now know]
 
@@ -90,6 +90,6 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-VA-01] -->
 
 [PAUSE 3s] Name today's pieces: *ṇāṇā*, *jajjā*, *vāvvā*. Which of them is a **mātrā** or a mark
-rather than a letter, and what does **ਜਾਣਾ** say? (*jāṇā*, “to go”.)
+rather than a letter, and what does **ਹੋਣਾ** say? (*hoṇā*, “to be”.)
 
 Source: [Unicode Gurmukhi chart](https://www.unicode.org/charts/PDF/U0A00.pdf).

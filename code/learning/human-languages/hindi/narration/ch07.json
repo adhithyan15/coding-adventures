@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6c60c0799a681209",
+  "sourceHash": "fnv1a64:1336e030dec5b35a",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbf6a0d868425c6c",
+      "sourceHash": "fnv1a64:193457cc918d0f4c",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: नहीं (nahīṃ), no."
+              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: the word for no."
             }
           ]
         }

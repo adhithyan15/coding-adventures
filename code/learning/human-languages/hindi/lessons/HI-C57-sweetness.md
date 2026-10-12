@@ -43,7 +43,9 @@ reviews_of: [HI-C57-fragrance]
 
 **मिठास** (*miṭhās*) — "sweetness".
 
-Built on मीठा (*mīṭhā*), 'sweet', from Sanskrit मिष्ट (*miṣṭa*), with *-ās* making an abstract noun out of the adjective: not the sweet thing, but the quality itself.
+**मीठा** (*mīṭhā*, 'sweet', from Sanskrit मिष्ट *miṣṭa*) + **-आस** (*-ās*) → **मिठास**
+
+The long *ī* shortens to *i*, and the ending makes an abstract noun out of the adjective, not the sweet thing but the quality itself.
 
 मिठाई, which you met at the end of the welcome chapter, is the same stem with a different ending — the sweet you can hand someone. मिठास is what is in it. One root, one for the tray and one for the taste.
 

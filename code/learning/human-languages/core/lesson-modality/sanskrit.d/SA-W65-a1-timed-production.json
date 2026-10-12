@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-W65-a1-timed-production",
+    "language": "sanskrit",
+    "chapter": 65,
+    "sequence": 3019,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:132390f359dffeaf",
+    "detachableSegments": [
+      "Writing — timed assessment production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -4,7 +4,8 @@
   "label": "ch:sa-last-letter-read",
   "canDo": "I can write the letter nga, and find it in the word for number.",
   "spineNodes": [
-    "SPINE-MEET-GREET"
+    "SPINE-MEET-GREET",
+    "SPINE-READ-SIGNS-AND-NOTICES"
   ],
   "payoff": {
     "lesson": "SA-R65-letters-second-pass",

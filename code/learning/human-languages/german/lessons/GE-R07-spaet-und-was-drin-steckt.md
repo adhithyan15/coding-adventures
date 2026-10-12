@@ -62,7 +62,7 @@ kinds of work:
 | mark | what it is | what it tells you |
 |---|---|---|
 | **ä** in *spät* | two dots that were once an **e** | **grammar** — a changed vowel, marking a form |
-| **ß** in *Fuß* | two s's written as one letter | **sound** — the vowel in front of it is **long** |
+| **ß** in *heiße* | two s's written as one letter | **sound** — the vowel in front of it is **long** |
 
 The umlaut is a *grammatical* signal: it marks that something has happened to
 the word. The eszett is a *phonetic* one: it tells you how long to hold the

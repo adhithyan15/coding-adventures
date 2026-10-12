@@ -59,7 +59,7 @@ habent — they have.
 The h was already weak in everyday Roman speech, and every Romance descendant dropped it: the letter is written, barely breathed.
 
 The word, taken apart: a false cognate and a wide family.
-Here is the trap. English have is not descended from habēre. It comes from the Proto-Indo-European root keh₂p- ("to seize"), whose Latin outcome is capere — the verb behind capture, captive, and capable. Two languages, two unrelated verbs, one accidental match of sound and sense. Etymologists cite this pair as the standard warning against trusting a resemblance.
+Here is the trap. English have is not descended from habēre. It comes from the Proto-Indo-European root keh₂p- ("to seize"), whose Latin outcome is the verb "to take, to seize" (a later lesson teaches it) — the verb behind capture, captive, and capable. Two languages, two unrelated verbs, one accidental match of sound and sense. Etymologists cite this pair as the standard warning against trusting a resemblance.
 The genuine English family of habēre is large. From habitus ("condition, bearing") come habit and habitual; from habitāre ("to keep having, to dwell") come inhabit and habitat. Prefixed, the verb yields exhibit ("hold out"), prohibit ("hold away"), and inhibit. The adjective habilis ("easily held, handy") passes through French into able and ability. And dē + habēre — "to have from someone" — contracts to dēbēre, which supplies debt, debit, due, and duty.
 
 Guided Practice.
@@ -75,7 +75,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Latin say "I have"? (Habeō.) "They have"? (Habent.) Is English have descended from habēre? (No — it comes from the root behind Latin capere, "to seize".) Which English word hides dē + habēre? (Debt, and with it debit and due.) Which everyday word comes from habilis, "handy"? (Able.)
+How does Latin say "I have"? (Habeō.) "They have"? (Habent.) Is English have descended from habēre? (No — it comes from the root behind Latin's verb "to seize", the one in capture.) Which English word hides dē + habēre? (Debt, and with it debit and due.) Which everyday word comes from habilis, "handy"? (Able.)
 
 
 Lesson 3 of 8.
@@ -246,7 +246,7 @@ scit — he knows, she knows.
 scīmus — we know.
 scītis — you know, to several people.
 sciunt — they know.
-Its negative is a single word: nesciō, "I do not know" — ne plus sciō, fused. That is a genuinely useful thing to be able to say.
+Its negative is a single word, with the "not" fused onto the front. That is a genuinely useful thing to be able to say, and a later chapter builds it.
 Latin's other knowing verb is nōscō, "to get to know, to recognise." A Roman used sciō for knowing a fact and nōscō for becoming acquainted.
 
 The word, taken apart: knowing as separating.
@@ -261,14 +261,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "scīs, scit" — you know, he or she knows]
 [pause 8 seconds for the answer]
-[your turn — say: "nesciō" — I do not know]
+[your turn — say: "scīmus, sciunt" — we know, they know]
 [pause 8 seconds for the answer]
 [your turn — say: the English relatives — science, conscience, nice]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Latin say "I know"? (Sciō.) "I do not know"? (Nesciō.) What older sense probably sits under the root? (To cut or separate — telling one thing from another.) Which mild English compliment began as nescius, "not knowing"? (Nice.) Is English know from this verb? (No — from the root behind nōscō, which gives notice and cognition.)
+How does Latin say "I know"? (Sciō.) "They know"? (Sciunt.) What older sense probably sits under the root? (To cut or separate — telling one thing from another.) Which mild English compliment began as nescius, "not knowing"? (Nice.) Is English know from this verb? (No — from the root behind nōscō, which gives notice and cognition.)
 
 
 Lesson 8 of 8.
@@ -290,7 +290,8 @@ dant — they give.
 The word, taken apart: what was given.
 The root is Proto-Indo-European deh₃-, "to give." From the noun dōnum ("a gift") English takes donate, donor, condone, and pardon (per-dōnāre, "to give thoroughly, to forgive").
 From the participle datum, "a thing given," come data and dative, the giving case — and also date. A Roman letter closed with data Rōmae, "given at Rome," followed by the day; the word for "given" became the word for the day itself.
-Trāns plus dare makes trādere, "to hand over," and that single compound splits into tradition (handed down), traitor and treason (handed over to the enemy), betray, and extradite. Dōs, dōtis ("dowry") gives dowry and endow. Greek dídōmi supplies dose and anecdote ("things not given out").
+trāns ("across") + dare ("to give") becomes trādere.
+The -ns drops out, and the compound means "to give across": "to hand over." That single compound splits into tradition (handed down), traitor and treason (handed over to the enemy), betray, and extradite. Dōs, dōtis ("dowry") gives dowry and endow. Greek dídōmi supplies dose and anecdote ("things not given out").
 Two flags. English give is not from this root, despite the matching sense — it is Germanic and separate. And Latin compounds ending in -dere — addere ("to add"), condere ("to found") — belong to a different root, dʰeh₁- ("to put"), the one behind Greek títhēmi and English theme and thesis. So add is not a relative of dare.
 
 Guided Practice.
@@ -306,4 +307,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the eight "I" forms of this chapter. (Sum, habeō, eō, veniō, dīcō, videō, sciō, dō.) Now the eight "he or she" forms. (Est, habet, it, venit, dīcit, videt, scit, dat.) Which English words come from datum, "a thing given"? (Data, dative, and date.) What does trādere literally mean? (To hand over — hence tradition and traitor.) Is English give a relative? (No.)
+Give the eight "I" forms of this chapter. (Sum, habeō, eō, veniō, dīcō, videō, sciō, dō.) Now the eight "he or she" forms. (Est, habet, it, venit, dīcit, videt, scit, dat.) Which English words come from datum, "a thing given"? (Data, dative, and date.) What do trāns and dare make together? (To hand over — hence tradition and traitor.) Is English give a relative? (No.)

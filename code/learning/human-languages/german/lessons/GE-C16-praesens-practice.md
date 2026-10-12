@@ -60,12 +60,12 @@ forms of the same word, and the next chapter explains why they aren't.
 | *Hallo! Wie geht es dir?* | Hello! How are you? |
 | *Danke, ich bin müde.* | Thanks — I am tired. |
 | *Du bist müde? Ich auch.* | You are tired? Me too. |
-| *Dann sind wir müde. Aber das ist gut.* | Then we are tired. But that is good. |
+| *Dann sind wir müde. Das ist gut.* | Then we are tired. That is good. |
 | *Bis morgen!* | See you tomorrow! |
 
-Three small joining words slip in there without needing lessons of their own,
-because each can be read straight off the translation: **auch** ("too"),
-**dann** ("then") and **aber** ("but").
+Two small joining words slip in there without needing lessons of their own,
+because each can be read straight off the translation: **auch** ("too") and
+**dann** ("then").
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SEIN-ICH-BIN-01, GE-GRAMMAR-SEIN-DU-BIST-01, GE-GRAMMAR-SEIN-ER-IST-01, GE-GRAMMAR-SEIN-WIR-SIND-01, GE-GRAMMAR-SEIN-IHR-SEID-01, GE-GRAMMAR-SEIN-SIE-SIND-01, GE-LEX-MUEDE-01] -->

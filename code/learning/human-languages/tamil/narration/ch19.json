@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d6351724f8d96c06",
+  "sourceHash": "fnv1a64:f3038efaa4e8430d",
   "lessons": [
     {
       "id": "TA-C19-vayathu",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f7d3e620ca27133",
+      "sourceHash": "fnv1a64:29a2c77844b6f25b",
       "notice": null,
       "blocks": [
         {
@@ -155,11 +155,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "உனக்கு எத்தனை வயது ஆகிறது? (unakku ettanai vayathu aakirathu?) — \"to you how many years is becoming?\" எனக்கு இருபது வயது ஆகிறது. — \"to me twenty years is becoming.\""
+              "text": "உனக்கு எத்தனை வயது ஆகிறது? (unakku ettanai vayathu aakirathu?) — \"to you how many years is becoming?\" எனக்குப் பத்து வயது ஆகிறது. — \"to me ten years is becoming.\""
             },
             {
               "kind": "speech",
-              "text": "Formal/written Tamil uses the dative experiencer plus ஆகிறது (aakirathu, \"is becoming,\" from aaku). Malayalam uses a similar dative shape but chooses \"exists\" instead."
+              "text": "Formal/written Tamil uses the dative experiencer plus ஆகிறது (aakirathu, \"is becoming,\" from aaku). Written Tamil also doubles the ப of pattu back onto enakku as ப்: enakkup pattu. Malayalam uses a similar dative shape but chooses \"exists\" instead."
             },
             {
               "kind": "speech",
@@ -199,11 +199,11 @@
             {
               "kind": "prompt",
               "action": "ANSWER",
-              "instruction": "\"enakku irupathu vayathu aakirathu\"",
+              "instruction": "\"enakkup pattu vayathu aakirathu\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU ANSWER: \"enakku irupathu vayathu aakirathu\"]"
+              "source": "[YOU ANSWER: \"enakkup pattu vayathu aakirathu\"]"
             }
           ]
         },

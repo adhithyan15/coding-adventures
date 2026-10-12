@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 5,
-  "sourceHash": "fnv1a64:4c56cb67d28901bc",
+  "sourceHash": "fnv1a64:c91cd82d0e83f892",
   "lessonIds": [
     "GE-C05-wohnen",
     "GE-C05-verbstamm",
@@ -23,7 +23,7 @@
   "drivablePrefix": 15,
   "text": "german/narration/ch05.txt",
   "json": "german/narration/ch05.json",
-  "textHash": "fnv1a64:3af6176b693db8f1",
-  "jsonHash": "fnv1a64:c5d167d2d3776c57",
+  "textHash": "fnv1a64:78724062f591bde6",
+  "jsonHash": "fnv1a64:49581bc05921a5c9",
   "findings": []
 }

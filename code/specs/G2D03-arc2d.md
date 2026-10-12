@@ -444,6 +444,17 @@ This is a recoverable fail-stop, not a silent clamp or a conversion to an
 unbounded integer allocation. The seven neutral center-form records are read
 at test runtime in both lanes, with additional native NaN/infinity cases.
 
+In TypeScript, `CenterArc.evaluate`, `tangent`, `boundingBox`, and
+`toCubicBeziers` validate the same finite positive-radius and one-turn
+preconditions at call time, preserving direct construction and existing return
+shapes. They throw `RangeError("arc2d: invalid center arc")` for invalid inputs
+or non-finite derived output, and `RangeError("arc2d: sweep exceeds one turn")`
+for a finite over-turn sweep. Evaluation and tangent also reject non-finite
+`t`. The native suite reads all seven neutral center-form records dynamically;
+rotated extrema use signed modular sweep membership, with both endpoints
+included. SVG endpoint conversion and its degenerate line fallback retain
+their existing contract.
+
 For each 90°-or-less segment, the four cubic bezier control points are:
 
 ```

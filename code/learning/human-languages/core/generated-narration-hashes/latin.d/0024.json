@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 24,
-  "sourceHash": "fnv1a64:693351155bbf9e45",
+  "sourceHash": "fnv1a64:e89c159571502851",
   "lessonIds": [
     "LA-C24-propediem-te-videbo"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch24.txt",
   "json": "latin/narration/ch24.json",
-  "textHash": "fnv1a64:537e7c9d519929f3",
-  "jsonHash": "fnv1a64:ea7b50e458aa01c5",
+  "textHash": "fnv1a64:09d72d9fb54d6903",
+  "jsonHash": "fnv1a64:2f6f459fe41b6a5b",
   "findings": []
 }

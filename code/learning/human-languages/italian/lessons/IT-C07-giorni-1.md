@@ -82,4 +82,4 @@ English honours as Thor in *Thursday*.
 [PAUSE 3s] What is the accented *-dì*, and from what Latin word? ("Day," ← *diēs*.)
 Which planet is *giovedì*? (Jupiter — *Giove*.) How do Italian/French treat the
 day-word versus Spanish? (IT/FR keep it at the end, *-dì/-di*; Spanish dropped it,
-*lunes*.) Next: the **weekend** — *sabato* and *domenica*.
+*lunes*.) Next: the **weekend** — Saturday and Sunday.

@@ -46,7 +46,7 @@ respectful one and the third-person one, and notice you cannot yet.
 *use* — "to him, to her."
 
 These two are built differently from the last pair. Instead of the nasal ending
-they take **को** (*ko*), the postposition meaning *to*:
+they take a postposition, *ko*, meaning *to*:
 
 > **आप** + **को** → **आपको**
 
@@ -85,5 +85,5 @@ decision, for the fourth time.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-04, HI-LEX-C86-PRON-03] -->
 
-[PAUSE 3s] What postposition is inside *āpko*? (**को**, *to*.) Which two of the
+[PAUSE 3s] What postposition is inside *āpko*? (*ko*, *to*.) Which two of the
 five wore down until their parts stopped showing? (*Mujhe* and *use*.)

@@ -61,8 +61,8 @@ Sanskrit root, **ఉదయ** (*udaya*) — but only inside its **greeting**,
 **ಶುಭೋದಯ** (*śubhōdaya*, "good morning"). Kannada's actual everyday
 **noun** for "morning" is a completely unrelated **native** word,
 **ಬೆಳಗ್ಗೆ** (*beḷagge*, "the shining"). Telugu doesn't split the job
-that way: **ఉదయం** covers both the everyday noun AND, in
-**శుభోదయం**, the greeting root — one word, doing what Kannada spreads
+that way: **ఉదయం** covers both the everyday noun AND, inside the
+good-morning greeting, the greeting root — one word, doing what Kannada spreads
 across two unrelated ones. And unlike **రోజు** (last lesson's genuine
 Persian surprise for "day"), Telugu's morning word holds no such twist —
 straightforwardly Sanskrit, start to finish.

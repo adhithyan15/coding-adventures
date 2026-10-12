@@ -58,7 +58,7 @@ different verbs. The past of *sein* is the part of the paradigm that behaved.
 | *Wo warst du?* | Where were you? |
 | *Ich war in Berlin.* | I was in Berlin. |
 | *Wie war es?* | How was it? |
-| *Es war gut. Aber ich bin müde.* | It was good. But I am tired. |
+| *Es war gut, und ich bin müde.* | It was good, and I am tired. |
 
 *Wo* ("where") and *in* are read straight off the English here; neither is asked
 of you yet.

@@ -1024,10 +1024,19 @@ Multi-processes recognize `st-rect`, `procs`, `processes`, and
 `stacked-rectangle` aliases.
 Stored data recognizes `bow-rect`, `stored-data`, and `bow-tie-rectangle`
 aliases.
+Summaries recognize `cross-circ`, `summary`, and `crossed-circle` aliases.
+Tagged documents recognize `tag-doc` and `tagged-document` aliases.
+Tagged processes recognize `tag-rect`, `tagged-rectangle`, `tag-proc`, and
+`tagged-process` aliases.
+Paper tape recognizes `flag` and `paper-tape` aliases.
+Lined documents recognize `lin-doc` and `lined-document` aliases.
+Data stores recognize `datastore` and `data-store` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
-directed/undirected/dotted/thick chained links, point/circle/cross endpoint
-markers and bidirectional arrows, multiline edge continuations,
+directed/undirected/dotted/thick chained links, including open dotted and thick
+forms, point/circle/cross endpoint
+markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
+invisible layout links,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
 accessibility metadata with named and numeric entity decoding. Direct node

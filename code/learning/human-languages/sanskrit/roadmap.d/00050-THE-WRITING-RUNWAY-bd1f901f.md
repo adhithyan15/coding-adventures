@@ -30,6 +30,9 @@ shapes to widen that evidence without a jump:
 
 That last meaning-only attempt closes the deliberately cumulative pre-A1
 runway: one traced sign became words, a phrase, Sanskrit-specific marks and a
-conjunct before it became connected text. Controlled composition, connected
-composition, and timed assessment production remain later-level work; this
-pre-A1 bridge does not claim them early.
+conjunct before it became connected text. Chapter 65 then takes exactly two A1
+steps. First, the learner selects and orders three known pieces to ask where a
+book is, with no visible Sanskrit answer. Then a genuine 20-minute paper asks
+for a six-field form and a 30--40-word message to a named reader. This records
+controlled composition and timed assessment production at A1 without claiming
+the connected-composition stage that first belongs at A2.
