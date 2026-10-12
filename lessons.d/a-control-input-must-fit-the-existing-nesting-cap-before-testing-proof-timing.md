@@ -12,3 +12,9 @@ native2/3 cases. Re-execute the corrected refusal/value pair before repairing
 the consumer so a parser-limit rejection cannot masquerade as alias-proof
 acceptance. Operation and output evidence must come from the actual tested
 source, with setup/input failures kept distinct from implementation failures.
+
+A later tracked-variable refusal fixture initially placed a Boolean declaration
+after an assignment. Actual7a validation passed the unchanged compatibility
+control, then rejected the malformed fixture at1:89. Keep that1-pass/1-fail
+partial receipt and move declarations before statements; do not mistake the
+parser error for the intended formatter-proof refusal or alter the grammar.
