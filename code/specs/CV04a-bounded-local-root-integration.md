@@ -12,6 +12,17 @@ behavior/tests/docs and the existing #17350 assignment guard: initial proof
 AND a fresh proof after RHS lowering, since selector by-name actuals can promote
 a root to shared storage. Do not discard either side's controls.
 
+Independent source inspection also found a second proof consumer: direct
+standard output caches `is_runtime_real_assignment_value(actual)` before
+`emit_expr(actual)` and passes it unchanged to the formatter. Probe the native
+compiler with direct real output (1.0 times a bounded entier result), a by-name
+selector that mutates a local root, and both root positions. If native evidence
+confirms admission, preserve the red and require initial output proof AND
+post-lowering proof before selecting the real formatter. The ownership contract
+requires conservative refusal; formatter admission alone is not numeric-error
+or UB evidence. Value-selector direct output must remain supported and execute
+distinct-root exact results across available standard backends.
+
 ## Compatibility and validation
 
 Preserve the existing refusal diagnostic for shared/captured/by-name roots and
