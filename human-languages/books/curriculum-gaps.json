@@ -33,7 +33,7 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
-    "forwardReferences": 960,
+    "forwardReferences": 892,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
@@ -335404,14 +335404,6 @@
         "lessonsEarly": 959
       },
       {
-        "lessonId": "PT-C03-me-chamo",
-        "language": "portuguese",
-        "position": 21,
-        "word": "chama",
-        "taughtBy": "PT-C195-chama",
-        "lessonsEarly": 957
-      },
-      {
         "lessonId": "ES-C56-dad",
         "language": "spanish",
         "position": 84,
@@ -335572,14 +335564,6 @@
         "lessonsEarly": 923
       },
       {
-        "lessonId": "PT-C34-dor",
-        "language": "portuguese",
-        "position": 140,
-        "word": "dor de cabeça",
-        "taughtBy": "PT-C211-dor-de-cabeca",
-        "lessonsEarly": 923
-      },
-      {
         "lessonId": "ES-C50-hable-usted",
         "language": "spanish",
         "position": 259,
@@ -335706,14 +335690,6 @@
         "word": "agō",
         "taughtBy": "LA-C202-ago",
         "lessonsEarly": 887
-      },
-      {
-        "lessonId": "PT-C04-adeus",
-        "language": "portuguese",
-        "position": 25,
-        "word": "até",
-        "taughtBy": "PT-C182-ate",
-        "lessonsEarly": 882
       },
       {
         "lessonId": "PT-C04-practice",
@@ -339988,14 +339964,6 @@
         "lessonsEarly": 73
       },
       {
-        "lessonId": "PT-C07-dias-1",
-        "language": "portuguese",
-        "position": 37,
-        "word": "sexta",
-        "taughtBy": "PT-C28-sexto",
-        "lessonsEarly": 73
-      },
-      {
         "lessonId": "ES-C35-sintesis-gustar",
         "language": "spanish",
         "position": 308,
@@ -340025,14 +339993,6 @@
         "position": 265,
         "word": "petit",
         "taughtBy": "FR-C58-petit-fils",
-        "lessonsEarly": 72
-      },
-      {
-        "lessonId": "PT-C07-dias-2",
-        "language": "portuguese",
-        "position": 38,
-        "word": "sexta",
-        "taughtBy": "PT-C28-sexto",
         "lessonsEarly": 72
       },
       {
@@ -340153,14 +340113,6 @@
         "position": 1265,
         "word": "jubilarse",
         "taughtBy": "ES-C445-jubilarse",
-        "lessonsEarly": 66
-      },
-      {
-        "lessonId": "PT-C03-me-chamo",
-        "language": "portuguese",
-        "position": 21,
-        "word": "se",
-        "taughtBy": "PT-C22-encontrar-meet",
         "lessonsEarly": 66
       },
       {
@@ -340324,36 +340276,12 @@
         "lessonsEarly": 55
       },
       {
-        "lessonId": "PT-C06-numeros-6-10",
-        "language": "portuguese",
-        "position": 36,
-        "word": "leite",
-        "taughtBy": "PT-C23-leite",
-        "lessonsEarly": 55
-      },
-      {
         "lessonId": "ES-C306-hija",
         "language": "spanish",
         "position": 628,
         "word": "algo",
         "taughtBy": "ES-C317-algo",
         "lessonsEarly": 54
-      },
-      {
-        "lessonId": "PT-C06-numeros-1-5",
-        "language": "portuguese",
-        "position": 35,
-        "word": "café",
-        "taughtBy": "PT-C23-cafe",
-        "lessonsEarly": 54
-      },
-      {
-        "lessonId": "PT-C02-como",
-        "language": "portuguese",
-        "position": 13,
-        "word": "ir",
-        "taughtBy": "PT-C18-ir",
-        "lessonsEarly": 53
       },
       {
         "lessonId": "ES-C309-bebe",
@@ -340404,27 +340332,11 @@
         "lessonsEarly": 50
       },
       {
-        "lessonId": "PT-C02-como-vai-esta",
-        "language": "portuguese",
-        "position": 16,
-        "word": "ir",
-        "taughtBy": "PT-C18-ir",
-        "lessonsEarly": 50
-      },
-      {
         "lessonId": "ES-C310-mesa",
         "language": "spanish",
         "position": 649,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
-        "lessonsEarly": 49
-      },
-      {
-        "lessonId": "PT-C02-como",
-        "language": "portuguese",
-        "position": 13,
-        "word": "estar",
-        "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 49
       },
       {
@@ -340434,14 +340346,6 @@
         "word": "favor",
         "taughtBy": "ES-C320-favor",
         "lessonsEarly": 48
-      },
-      {
-        "lessonId": "PT-C02-como-vai-esta",
-        "language": "portuguese",
-        "position": 16,
-        "word": "estar",
-        "taughtBy": "PT-C18-ser-estar",
-        "lessonsEarly": 46
       },
       {
         "lessonId": "ES-C311-cuenta",
@@ -340737,22 +340641,6 @@
         "position": 1292,
         "word": "vote",
         "taughtBy": "FR-C248-vote",
-        "lessonsEarly": 32
-      },
-      {
-        "lessonId": "PT-C16-ser-vs-estar",
-        "language": "portuguese",
-        "position": 57,
-        "word": "o café",
-        "taughtBy": "PT-C23-cafe",
-        "lessonsEarly": 32
-      },
-      {
-        "lessonId": "PT-C16-ser-vs-estar",
-        "language": "portuguese",
-        "position": 57,
-        "word": "café",
-        "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 32
       },
       {
@@ -341092,14 +340980,6 @@
         "lessonsEarly": 14
       },
       {
-        "lessonId": "PT-C20-tomar-pegar",
-        "language": "portuguese",
-        "position": 75,
-        "word": "café",
-        "taughtBy": "PT-C23-cafe",
-        "lessonsEarly": 14
-      },
-      {
         "lessonId": "ES-C03-como-acento",
         "language": "spanish",
         "position": 31,
@@ -341113,14 +340993,6 @@
         "position": 145,
         "word": "je suis",
         "taughtBy": "FR-C16-suis",
-        "lessonsEarly": 13
-      },
-      {
-        "lessonId": "PT-C20-perguntar",
-        "language": "portuguese",
-        "position": 76,
-        "word": "café",
-        "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 13
       },
       {
@@ -341156,43 +341028,11 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "PT-C14-ter",
-        "language": "portuguese",
-        "position": 51,
-        "word": "haver",
-        "taughtBy": "PT-C18-ter-haver",
-        "lessonsEarly": 12
-      },
-      {
-        "lessonId": "PT-C15-tenho-falado",
-        "language": "portuguese",
-        "position": 54,
-        "word": "ir",
-        "taughtBy": "PT-C18-ir",
-        "lessonsEarly": 12
-      },
-      {
-        "lessonId": "PT-C20-gostar",
-        "language": "portuguese",
-        "position": 78,
-        "word": "café",
-        "taughtBy": "PT-C23-cafe",
-        "lessonsEarly": 11
-      },
-      {
         "lessonId": "HI-C25-din",
         "language": "hindi",
         "position": 124,
         "word": "दोपहर",
         "taughtBy": "HI-C30-dopahar-widened",
-        "lessonsEarly": 10
-      },
-      {
-        "lessonId": "PT-C16-ser-roots",
-        "language": "portuguese",
-        "position": 56,
-        "word": "ir",
-        "taughtBy": "PT-C18-ir",
         "lessonsEarly": 10
       },
       {
@@ -341236,22 +341076,6 @@
         "lessonsEarly": 8
       },
       {
-        "lessonId": "PT-C01-ola",
-        "language": "portuguese",
-        "position": 0,
-        "word": "tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "PT-C01-ola",
-        "language": "portuguese",
-        "position": 0,
-        "word": "boa tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 8
-      },
-      {
         "lessonId": "ES-C56-sintesis-leer",
         "language": "spanish",
         "position": 87,
@@ -341284,30 +341108,6 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "PT-C01-ola",
-        "language": "portuguese",
-        "position": 0,
-        "word": "bom dia",
-        "taughtBy": "PT-C01-bom-dia",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "PT-C16-ser",
-        "language": "portuguese",
-        "position": 55,
-        "word": "estar",
-        "taughtBy": "PT-C18-ser-estar",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "PT-C19-escrever",
-        "language": "portuguese",
-        "position": 74,
-        "word": "esperar",
-        "taughtBy": "PT-C21-esperar",
-        "lessonsEarly": 7
-      },
-      {
         "lessonId": "ES-C04-practice",
         "language": "spanish",
         "position": 58,
@@ -341337,22 +341137,6 @@
         "position": 162,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "PT-C01-ola",
-        "language": "portuguese",
-        "position": 0,
-        "word": "dia",
-        "taughtBy": "PT-C01-dia",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "PT-C16-ser-roots",
-        "language": "portuguese",
-        "position": 56,
-        "word": "estar",
-        "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 6
       },
       {
@@ -341428,22 +341212,6 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 4,
-        "word": "noite",
-        "taughtBy": "PT-C01-noite",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 4,
-        "word": "boa noite",
-        "taughtBy": "PT-C01-noite",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "FR-C01-practice",
         "language": "french",
         "position": 14,
@@ -341473,38 +341241,6 @@
         "position": 44,
         "word": "diēs",
         "taughtBy": "LA-C28-dies",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 4,
-        "word": "tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 4,
-        "word": "boa tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "PT-C01-ola",
-        "language": "portuguese",
-        "position": 0,
-        "word": "bom",
-        "taughtBy": "PT-C01-bom",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "PT-C01-ola",
-        "language": "portuguese",
-        "position": 0,
-        "word": "boa",
-        "taughtBy": "PT-C01-bom",
         "lessonsEarly": 4
       },
       {
@@ -341561,38 +341297,6 @@
         "position": 165,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 4,
-        "word": "bom dia",
-        "taughtBy": "PT-C01-bom-dia",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "PT-C14-idade",
-        "language": "portuguese",
-        "position": 52,
-        "word": "ser",
-        "taughtBy": "PT-C16-ser",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "PT-C22-encontrar",
-        "language": "portuguese",
-        "position": 86,
-        "word": "o café",
-        "taughtBy": "PT-C23-cafe",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "PT-C22-encontrar",
-        "language": "portuguese",
-        "position": 86,
-        "word": "café",
-        "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 3
       },
       {
@@ -341713,54 +341417,6 @@
         "position": 166,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 4,
-        "word": "dia",
-        "taughtBy": "PT-C01-dia",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "PT-C01-bom-dia",
-        "language": "portuguese",
-        "position": 7,
-        "word": "noite",
-        "taughtBy": "PT-C01-noite",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "PT-C01-bom-dia",
-        "language": "portuguese",
-        "position": 7,
-        "word": "boa noite",
-        "taughtBy": "PT-C01-noite",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "PT-C03-practice",
-        "language": "portuguese",
-        "position": 24,
-        "word": "até logo",
-        "taughtBy": "PT-C04-ate-logo",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "PT-C22-encontrar-meet",
-        "language": "portuguese",
-        "position": 87,
-        "word": "o café",
-        "taughtBy": "PT-C23-cafe",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "PT-C22-encontrar-meet",
-        "language": "portuguese",
-        "position": 87,
-        "word": "café",
-        "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 2
       },
       {
@@ -342122,206 +341778,6 @@
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
         "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C01-bom-dia",
-        "language": "portuguese",
-        "position": 7,
-        "word": "tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C01-bom-dia",
-        "language": "portuguese",
-        "position": 7,
-        "word": "boa tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C01-o-a",
-        "language": "portuguese",
-        "position": 5,
-        "word": "dia",
-        "taughtBy": "PT-C01-dia",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C02-como",
-        "language": "portuguese",
-        "position": 13,
-        "word": "tudo",
-        "taughtBy": "PT-C02-tudo",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C02-de-nada",
-        "language": "portuguese",
-        "position": 12,
-        "word": "como",
-        "taughtBy": "PT-C02-como",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C03-como-se-chama",
-        "language": "portuguese",
-        "position": 22,
-        "word": "prazer",
-        "taughtBy": "PT-C03-prazer",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C03-eu",
-        "language": "portuguese",
-        "position": 20,
-        "word": "me chamo",
-        "taughtBy": "PT-C03-me-chamo",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C03-eu",
-        "language": "portuguese",
-        "position": 20,
-        "word": "chamo",
-        "taughtBy": "PT-C03-me-chamo",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C04-adeus",
-        "language": "portuguese",
-        "position": 25,
-        "word": "até logo",
-        "taughtBy": "PT-C04-ate-logo",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C04-ate-amanha",
-        "language": "portuguese",
-        "position": 27,
-        "word": "até breve",
-        "taughtBy": "PT-C04-ate-breve",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C05-falar",
-        "language": "portuguese",
-        "position": 30,
-        "word": "morar",
-        "taughtBy": "PT-C05-morar",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C05-morar",
-        "language": "portuguese",
-        "position": 31,
-        "word": "trabalhar",
-        "taughtBy": "PT-C05-trabalhar",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C05-trabalhar",
-        "language": "portuguese",
-        "position": 32,
-        "word": "falo português",
-        "taughtBy": "PT-C05-falo-portugues",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C07-dias-1",
-        "language": "portuguese",
-        "position": 37,
-        "word": "sábado",
-        "taughtBy": "PT-C07-dias-2",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C07-dias-1",
-        "language": "portuguese",
-        "position": 37,
-        "word": "domingo",
-        "taughtBy": "PT-C07-dias-2",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C09-meses",
-        "language": "portuguese",
-        "position": 41,
-        "word": "estações",
-        "taughtBy": "PT-C09-estacoes",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C10-pais",
-        "language": "portuguese",
-        "position": 43,
-        "word": "o irmão",
-        "taughtBy": "PT-C10-irmaos",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C10-pais",
-        "language": "portuguese",
-        "position": 43,
-        "word": "a irmã",
-        "taughtBy": "PT-C10-irmaos",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C10-pais",
-        "language": "portuguese",
-        "position": 43,
-        "word": "irmão",
-        "taughtBy": "PT-C10-irmaos",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C10-pais",
-        "language": "portuguese",
-        "position": 43,
-        "word": "irmã",
-        "taughtBy": "PT-C10-irmaos",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C11-pao",
-        "language": "portuguese",
-        "position": 45,
-        "word": "a água",
-        "taughtBy": "PT-C11-agua-vinho",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C11-pao",
-        "language": "portuguese",
-        "position": 45,
-        "word": "o vinho",
-        "taughtBy": "PT-C11-agua-vinho",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C11-pao",
-        "language": "portuguese",
-        "position": 45,
-        "word": "água",
-        "taughtBy": "PT-C11-agua-vinho",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C11-pao",
-        "language": "portuguese",
-        "position": 45,
-        "word": "vinho",
-        "taughtBy": "PT-C11-agua-vinho",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PT-C13-preto-branco",
-        "language": "portuguese",
-        "position": 49,
-        "word": "vermelho",
-        "taughtBy": "PT-C13-vermelho-azul",
-        "lessonsEarly": 1
       }
     ],
     "tracks": [
@@ -342483,7 +341939,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1365,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 102
+        "forwardReferences": 34
       },
       {
         "language": "punjabi",
@@ -342570,7 +342026,7 @@
         "R3": 15983,
         "R4": 24355
       },
-      "forwardReferences": 960
+      "forwardReferences": 892
     }
   },
   "scriptClosure": {
@@ -364246,7 +363702,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 102,
+        "forwardReferences": 34,
         "atomsTaught": 1365,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2914,
@@ -364264,7 +363720,7 @@
           {
             "language": "portuguese",
             "kind": "forward-language",
-            "count": 102,
+            "count": 34,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -364286,7 +363742,7 @@
         "next": {
           "language": "portuguese",
           "kind": "forward-language",
-          "count": 102,
+          "count": 34,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -364751,7 +364207,7 @@
       {
         "language": "portuguese",
         "kind": "forward-language",
-        "count": 102,
+        "count": 34,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -455212,10 +454668,10 @@
   "rootLedger": {
     "roots": 4248,
     "underspent": 3780,
-    "neverSpent": 2470,
+    "neverSpent": 2469,
     "payoffDistribution": {
-      "0": 2470,
-      "1": 798,
+      "0": 2469,
+      "1": 799,
       "2": 512,
       "3": 249,
       "4": 119,
@@ -455254,7 +454710,7 @@
     "termsUsed": 54,
     "lessonsUsingTerms": 28638,
     "usesBeforeIntroduction": 46981,
-    "technicalUsesBeforeIntroduction": 6604,
+    "technicalUsesBeforeIntroduction": 6605,
     "technicalLessons": 3804,
     "worstTerms": [
       {
