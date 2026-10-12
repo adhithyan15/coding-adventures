@@ -13,7 +13,8 @@ gloss: "garlic"
 concept_tag: PT-COMIDA106-ALHO
 prerequisites: [PT-C106-cereja, PT-C106-melao]
 sounds: []
-roots: []
+roots: [allium-latin]
+etymology_hook: "alho ← Latin allium 'garlic': -li- became the lh sound — English allium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C106-melao]
 <!-- hl-knowledge: introduces=[PT-LEX-C106-COMIDA106-03]; assesses=[] -->
 
 **o alho** — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alho** ← Latin *allium*, "garlic" — inherited. EtymDB 2.1 traces it only to Old Portuguese *allo*; it derives Spanish *ajo* from *allium*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

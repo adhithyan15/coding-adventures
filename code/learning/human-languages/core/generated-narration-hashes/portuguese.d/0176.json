@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 176,
-  "sourceHash": "fnv1a64:51de9ea728079af9",
+  "sourceHash": "fnv1a64:e08e5b3fe4b42c4d",
   "lessonIds": [
     "PT-C176-reduzir",
     "PT-C176-recusar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch176.txt",
   "json": "portuguese/narration/ch176.json",
-  "textHash": "fnv1a64:40c4683d44ee999e",
-  "jsonHash": "fnv1a64:993e98d7e2229606",
+  "textHash": "fnv1a64:7c4b2677bea2ebe0",
+  "jsonHash": "fnv1a64:20700f518381a1a6",
   "findings": []
 }

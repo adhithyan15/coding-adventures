@@ -13,7 +13,8 @@ gloss: "a hill"
 concept_tag: PT-TEMPO-COLINA
 prerequisites: [PT-C59-chuva, PT-C59-vento]
 sounds: []
-roots: []
+roots: [collis-latin]
+etymology_hook: "colina ← French colline, from Italian collina, from Latin collis 'hill'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C59-vento]
 <!-- hl-knowledge: introduces=[PT-LEX-C59-TEMPO-03]; assesses=[] -->
 
 **a colina** — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colina** ← French *colline*, "hill" (EtymDB 2.1) — borrowed. French took it from Italian *collina*, from Latin *collis*, "hill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

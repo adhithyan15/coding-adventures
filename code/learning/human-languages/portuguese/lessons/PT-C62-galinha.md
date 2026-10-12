@@ -13,7 +13,8 @@ gloss: "a hen"
 concept_tag: PT-ANIMAIS3-GALINHA
 prerequisites: [PT-C61-raposa, PT-C62-cobra]
 sounds: []
-roots: []
+roots: [gallina-latin]
+etymology_hook: "galinha ← Latin gallina 'hen', from gallus 'rooster'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C62-cobra]
 <!-- hl-knowledge: introduces=[PT-LEX-C62-ANIMAIS3-02]; assesses=[] -->
 
 **a galinha** — "a hen". It lays **o ovo**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**galinha** ← Latin *gallina*, "hen", from *gallus*, "rooster" — inherited. EtymDB 2.1 traces it only to Old Portuguese *galinna*; it derives Italian *gallina* from *gallina*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

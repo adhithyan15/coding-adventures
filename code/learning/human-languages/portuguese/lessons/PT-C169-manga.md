@@ -13,7 +13,8 @@ gloss: "a sleeve"
 concept_tag: PT-COISAS169-MANGA
 prerequisites: [PT-C169-bolso, PT-C169-fecho]
 sounds: []
-roots: []
+roots: [latin-manus]
+etymology_hook: "manga ← Latin manica 'sleeve', from manus 'hand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C169-fecho]
 <!-- hl-knowledge: introduces=[PT-LEX-C169-COISAS169-04]; assesses=[] -->
 
 **a manga** — "a sleeve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manga** ← Latin *manica*, "sleeve" (EtymDB 2.1), from *manus*, "hand" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

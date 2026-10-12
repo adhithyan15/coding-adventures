@@ -13,7 +13,8 @@ gloss: "to introduce, to present"
 concept_tag: PT-VERB-APRESENTAR
 prerequisites: [PT-C235-possuir, PT-C235-preparar]
 sounds: []
-roots: []
+roots: [praesens-latin]
+etymology_hook: "apresentar — a- + an old verb from Late Latin praesentare 'to place before' — English present"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C235-preparar]
 <!-- hl-knowledge: introduces=[PT-LEX-C235-VERBOS235-04]; assesses=[] -->
 
 **apresentar** — "to introduce, to present".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apresentar** is built from *a-* and an old verb from Late Latin *praesentare*, "to place before" (EtymDB 2.1 has the Old Portuguese form).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

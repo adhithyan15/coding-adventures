@@ -13,7 +13,8 @@ gloss: "a glass (to drink from)"
 concept_tag: PT-MESA-COPO
 prerequisites: [PT-C50-escada, PT-C50-espelho]
 sounds: []
-roots: []
+roots: [latin-cuppa]
+etymology_hook: "copo ← Late Latin cuppa 'cup', from Latin cupa 'tub' — English cup is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C50-espelho]
 <!-- hl-knowledge: introduces=[PT-LEX-C51-MESA-01]; assesses=[] -->
 
 **o copo** — "a glass (to drink from)". **um copo de água**: a glass of water.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**copo** ← Late Latin *cuppa*, "cup", from Latin *cupa*, "tub" — inherited. EtymDB 2.1 has no ancestor row for *copo*; it derives the older feminine word for a cup from *cuppa*. The Portuguese word took a masculine ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 240,
-  "sourceHash": "fnv1a64:729449fab462a8d8",
+  "sourceHash": "fnv1a64:4240a9b970ea603d",
   "lessonIds": [
     "PT-C240-urgencias",
     "PT-C240-emergencia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch240.txt",
   "json": "portuguese/narration/ch240.json",
-  "textHash": "fnv1a64:b5a0ab1dfe451dd6",
-  "jsonHash": "fnv1a64:3e10f792f352acb7",
+  "textHash": "fnv1a64:90a6da1885f0c54e",
+  "jsonHash": "fnv1a64:788493acd2b45ad9",
   "findings": []
 }

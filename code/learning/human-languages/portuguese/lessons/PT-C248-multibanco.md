@@ -13,7 +13,8 @@ gloss: "a cash machine"
 concept_tag: PT-COISAS248-MULTIBANCO
 prerequisites: [PT-C248-nota, PT-C248-cartao-bancario]
 sounds: []
-roots: []
+roots: [multus]
+etymology_hook: "multibanco — multi- 'many' + banco 'bank'; first the name of the cash-machine network"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C248-cartao-bancario]
 <!-- hl-knowledge: introduces=[PT-LEX-C248-COISAS248-03]; assesses=[] -->
 
 **o multibanco** — "a cash machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**multibanco** is built from *multi-*, "many" (← Latin *multus*), and *banco*, "bank"; it began as the name of the Portuguese cash-machine network.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

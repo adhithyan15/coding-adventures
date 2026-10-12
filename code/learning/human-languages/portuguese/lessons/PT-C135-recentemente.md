@@ -13,7 +13,8 @@ gloss: "recently"
 concept_tag: PT-PAS135-RECENTEMENTE
 prerequisites: [PT-C134-qual, PT-C134-nem]
 sounds: []
-roots: []
+roots: [recens-latin]
+etymology_hook: "recentemente — recente (← Latin recens 'fresh') + -mente '-ly', from Latin mente 'with a mind'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C134-nem]
 <!-- hl-knowledge: introduces=[PT-LEX-C135-PAS135-01]; assesses=[] -->
 
 **recentemente** — "recently". **Recentemente, viajei.** — "Recently I travelled." The ending **-mente** makes an adverb, the way English uses -ly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recentemente** is built from *recente*, "recent" (← Latin *recens*, "fresh", Lewis & Short), and *-mente*, "-ly", from Latin *mente*, "with a mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

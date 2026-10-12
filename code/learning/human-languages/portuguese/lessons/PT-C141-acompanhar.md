@@ -13,7 +13,8 @@ gloss: "to go with"
 concept_tag: PT-VERB-ACOMPANHAR
 prerequisites: [PT-C140-proibir, PT-C140-proteger]
 sounds: []
-roots: []
+roots: [panis-latin]
+etymology_hook: "acompanhar — built on the company word, from Late Latin companio 'one who shares bread'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C140-proteger]
 <!-- hl-knowledge: introduces=[PT-LEX-C141-VERBOS141-01]; assesses=[] -->
 
 **acompanhar** — "to go with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acompanhar** is built on the old word for company, which goes back to Late Latin *companio*, "one who shares bread", from *panis*, "bread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

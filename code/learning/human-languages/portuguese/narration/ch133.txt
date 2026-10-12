@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for to fall, then the Portuguese for to g
 You'll want to know: descer.
 descer — "to go down".
 
+The word, taken apart.
+descer — Old Portuguese said decer (EtymDB 2.1). The usual account traces it to Latin decidere, "to fall down", later reshaped after descendere, "to climb down"; the details are uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for to go up, then the Portuguese for to 
 
 You'll want to know: alugar.
 alugar — "to rent".
+
+The word, taken apart.
+alugar from Latin allocare, "to place, to let out" (EtymDB 2.1), from locus, "place" — inherited.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to go down, then the Portuguese for t
 You'll want to know: reparar.
 reparar — "to repair; to notice".
 
+The word, taken apart.
+reparar from Latin reparare, "to restore, to get back" (Lewis & Short) — a learned borrowing from Latin. The sense "to notice" grew later. EtymDB 2.1 traces it only to Old Portuguese reparar.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to rent, then the Portuguese for to r
 You'll want to know: contar.
 contar — "to tell; to count".
 
+The word, taken apart.
+contar from Latin computare, "to reckon" (EtymDB 2.1) — inherited. Counting and telling share one verb, as in English recount.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to repair; to notice, then the Portug
 
 You'll want to know: caminhar.
 caminhar — "to walk".
+
+The word, taken apart.
+caminhar is built from the word for a road or path (EtymDB 2.1), which from Late Latin camminus, "way", a word Latin took from Celtic (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

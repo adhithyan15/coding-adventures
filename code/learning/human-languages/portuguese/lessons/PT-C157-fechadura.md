@@ -14,6 +14,7 @@ concept_tag: PT-COISAS157-FECHADURA
 prerequisites: [PT-C157-sala-de-jantar, PT-C157-varanda]
 sounds: []
 roots: []
+etymology_hook: "fechadura — built from fechar 'to close' + -dura"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C157-varanda]
 <!-- hl-knowledge: introduces=[PT-LEX-C157-COISAS157-04]; assesses=[] -->
 
 **a fechadura** — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fechadura** is built from *fechar*, "to close", and *-dura*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

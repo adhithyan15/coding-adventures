@@ -13,7 +13,8 @@ gloss: "to get dressed"
 concept_tag: PT-VERB-VESTIR-SE
 prerequisites: [PT-C131-acreditar, PT-C131-conduzir]
 sounds: []
-roots: []
+roots: [vestire-latin]
+etymology_hook: "vestir-se — vestir ← Latin vestire 'to clothe', with -se 'oneself' — English vest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C131-conduzir]
 <!-- hl-knowledge: introduces=[PT-LEX-C131-VERBOS131-05]; assesses=[] -->
 
 **vestir-se** — "to get dressed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vestir** ← Latin *vestire*, "to clothe" (EtymDB 2.1) — inherited. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

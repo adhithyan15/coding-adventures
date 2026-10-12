@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 199,
-  "sourceHash": "fnv1a64:8f44bddd978a7740",
+  "sourceHash": "fnv1a64:d7f56c3ab711036e",
   "lessonIds": [
     "PT-C199-milho",
     "PT-C199-canela",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch199.txt",
   "json": "portuguese/narration/ch199.json",
-  "textHash": "fnv1a64:40b16e3a751b8a57",
-  "jsonHash": "fnv1a64:48e4322c45b89fc1",
+  "textHash": "fnv1a64:4d4871d590dafeb3",
+  "jsonHash": "fnv1a64:b7a38ecf740bc953",
   "findings": []
 }

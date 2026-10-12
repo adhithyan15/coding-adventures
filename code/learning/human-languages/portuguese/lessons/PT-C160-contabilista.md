@@ -13,7 +13,8 @@ gloss: "an accountant"
 concept_tag: PT-COISAS160-CONTABILISTA
 prerequisites: [PT-C159-espetaculo, PT-C159-ator]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "contabilista — built on the accounts word, from contar 'to count' (← Latin computare)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C159-ator]
 <!-- hl-knowledge: introduces=[PT-LEX-C160-COISAS160-01]; assesses=[] -->
 
 **o contabilista** — "an accountant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contabilista** is built on the word for accounts, from *contar*, "to count" (← Latin *computare*), and *-ista*, "one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "ham"
 concept_tag: PT-COMIDA108-FIAMBRE
 prerequisites: [PT-C108-gelado, PT-C108-bife]
 sounds: []
-roots: []
+roots: [frigidus-latin]
+etymology_hook: "fiambre ← Spanish fiambre 'cold meat', from the Spanish word for cold"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C108-bife]
 <!-- hl-knowledge: introduces=[PT-LEX-C108-COMIDA108-04]; assesses=[] -->
 
 **o fiambre** — "ham". In Brazil, **o presunto**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiambre** ← Spanish *fiambre*, "cold meat" (EtymDB 2.1) — borrowed. The Spanish word is built on the Spanish word for "cold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

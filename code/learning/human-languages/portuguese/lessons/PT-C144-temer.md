@@ -13,7 +13,8 @@ gloss: "to fear"
 concept_tag: PT-VERB-TEMER
 prerequisites: [PT-C143-reconhecer, PT-C144-calar-se]
 sounds: []
-roots: []
+roots: [timere-latin]
+etymology_hook: "temer ← Latin timere 'to fear' — English timid shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C144-calar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C144-VERBOS144-02]; assesses=[] -->
 
 **temer** — "to fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**temer** ← Latin *timere*, "to fear" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

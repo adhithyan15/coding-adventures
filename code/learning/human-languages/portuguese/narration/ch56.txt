@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for to study, then the Portuguese for to 
 You'll want to know: a árvore.
 a árvore — "a tree".
 
+The word, taken apart.
+árvore from Latin arbor, "tree" (EtymDB 2.1) — inherited. Old Portuguese said arvor.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for to travel, then the Portuguese for a 
 
 You'll want to know: a flor.
 a flor — "a flower".
+
+The word, taken apart.
+flor from Latin flos, floris, "flower" (EtymDB 2.1) — inherited. It kept its fl-, though Latin fl- usually became ch-.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a tree, then the Portuguese for a flo
 You'll want to know: a folha.
 a folha — "a leaf; a sheet of paper".
 
+The word, taken apart.
+folha from Latin folia, "leaves" (EtymDB 2.1), the plural of folium — inherited. The Latin plural was heard as a feminine singular.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a flower, then the Portuguese for a l
 You'll want to know: a montanha.
 a montanha — "a mountain".
 
+The word, taken apart.
+montanha from Vulgar Latin montanea (EtymDB 2.1), from Latin mons, montis, "mountain" — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a leaf; a sheet of paper, then the Po
 
 You'll want to know: a floresta.
 a floresta — "a forest".
+
+The word, taken apart.
+floresta from Old French forest — borrowed, and reshaped after flor. EtymDB 2.1 traces it only to Old Portuguese foresta; it derives Old French forest from Medieval Latin forestis, "open wood".
 
 What you've built.
 One more word for this chapter.

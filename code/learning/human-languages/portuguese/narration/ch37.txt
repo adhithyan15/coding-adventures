@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for happy, then the Portuguese for sad.
 You'll want to know: a filha.
 a filha — "a daughter".
 
+The word, taken apart.
+filha from Latin filia, "daughter" (EtymDB 2.1) — inherited. Latin -li- became the lh sound.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for sad, then the Portuguese for a daught
 
 You'll want to know: o avô.
 o avô — "a grandfather". The closed ô is the grandfather.
+
+The word, taken apart.
+avô from Vulgar Latin aviolus, "little grandfather", from Latin avus, "grandfather" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese avoo.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a daughter, then the Portuguese for a
 You'll want to know: a avó.
 a avó — "a grandmother". The open ó is the grandmother.
 
+The word, taken apart.
+avó from Vulgar Latin aviola, "little grandmother", from Latin avia, "grandmother" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese avoa.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a grandfather, then the Portuguese fo
 You'll want to know: o marido.
 o marido — "a husband".
 
+The word, taken apart.
+marido from Latin maritus, "husband" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a grandmother, then the Portuguese fo
 
 You'll want to know: a esposa.
 a esposa — "a wife".
+
+The word, taken apart.
+esposa from Latin sponsa, "promised woman" (EtymDB 2.1), from spondere, "to pledge" — inherited.
 
 What you've built.
 One more word for this chapter.

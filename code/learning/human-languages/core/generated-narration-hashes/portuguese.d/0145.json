@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 145,
-  "sourceHash": "fnv1a64:4a8953948777e67c",
+  "sourceHash": "fnv1a64:5604b0584c8ac25a",
   "lessonIds": [
     "PT-C145-flutuar",
     "PT-C145-perseguir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch145.txt",
   "json": "portuguese/narration/ch145.json",
-  "textHash": "fnv1a64:e53e4f9513f5e066",
-  "jsonHash": "fnv1a64:c66d01952bb1d041",
+  "textHash": "fnv1a64:c8594db8451903d1",
+  "jsonHash": "fnv1a64:0ea425b1b29443ff",
   "findings": []
 }

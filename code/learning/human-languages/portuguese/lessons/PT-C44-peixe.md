@@ -13,7 +13,8 @@ gloss: "fish"
 concept_tag: PT-COMIDA1-PEIXE
 prerequisites: [PT-C43-viver, PT-C44-carne]
 sounds: []
-roots: []
+roots: [piscis-latin]
+etymology_hook: "peixe ← Latin piscis 'fish' — English Pisces shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C44-carne]
 <!-- hl-knowledge: introduces=[PT-LEX-C44-COMIDA1-02]; assesses=[] -->
 
 **o peixe** — "fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peixe** ← Latin *piscis*, "fish" — inherited. EtymDB 2.1 traces it only to Old Portuguese *peixe*; it derives Italian *pesce* and Spanish *pez* from *piscis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

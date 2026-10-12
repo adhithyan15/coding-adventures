@@ -13,7 +13,8 @@ gloss: "a show"
 concept_tag: PT-COISAS159-ESPETACULO
 prerequisites: [PT-C159-carregador, PT-C159-cantor-a-cantora]
 sounds: []
-roots: []
+roots: [spectare-latin]
+etymology_hook: "espetáculo ← Latin spectaculum 'show', from spectare 'to watch' — English spectacle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C159-cantor-a-cantora]
 <!-- hl-knowledge: introduces=[PT-LEX-C159-COISAS159-04]; assesses=[] -->
 
 **o espetáculo** — "a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espetáculo** ← Latin *spectaculum*, "show" (EtymDB 2.1), from *spectare*, "to watch" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

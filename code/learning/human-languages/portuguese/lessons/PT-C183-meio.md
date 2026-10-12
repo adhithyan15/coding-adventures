@@ -13,7 +13,8 @@ gloss: "the middle"
 concept_tag: PT-LUGAR183-MEIO
 prerequisites: [PT-C183-lado, PT-C183-canto]
 sounds: []
-roots: []
+roots: [medius-latin]
+etymology_hook: "meio ← Latin medius 'middle' — English medium shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C183-canto]
 <!-- hl-knowledge: introduces=[PT-LEX-C183-LUGAR183-05]; assesses=[] -->
 
 **o meio** — "the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**meio** ← Latin *medius*, "middle" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *meio*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

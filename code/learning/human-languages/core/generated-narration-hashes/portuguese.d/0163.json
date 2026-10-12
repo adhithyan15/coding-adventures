@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 163,
-  "sourceHash": "fnv1a64:3849da5808898b64",
+  "sourceHash": "fnv1a64:0cc91a1609dd2c00",
   "lessonIds": [
     "PT-C163-tunel",
     "PT-C163-obras",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch163.txt",
   "json": "portuguese/narration/ch163.json",
-  "textHash": "fnv1a64:b5aaeb933813daab",
-  "jsonHash": "fnv1a64:7055b161735a655b",
+  "textHash": "fnv1a64:ca7c29935729a5ec",
+  "jsonHash": "fnv1a64:cc20f423bd73c396",
   "findings": []
 }

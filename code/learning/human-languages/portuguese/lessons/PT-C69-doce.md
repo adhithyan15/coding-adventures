@@ -13,7 +13,8 @@ gloss: "sweet"
 concept_tag: PT-ADJ6-DOCE
 prerequisites: [PT-C69-verde, PT-C69-cinzento]
 sounds: []
-roots: []
+roots: [dulcis-latin]
+etymology_hook: "doce ← Latin dulcis 'sweet, pleasant' — English dulcet shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C69-cinzento]
 <!-- hl-knowledge: introduces=[PT-LEX-C69-ADJ6-03]; assesses=[] -->
 
 **doce** — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**doce** ← Latin *dulcis*, "sweet" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

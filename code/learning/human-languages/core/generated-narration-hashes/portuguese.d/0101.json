@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 101,
-  "sourceHash": "fnv1a64:f04c92023e7b472b",
+  "sourceHash": "fnv1a64:c94a23be38a56474",
   "lessonIds": [
     "PT-C101-colar",
     "PT-C101-fotografia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch101.txt",
   "json": "portuguese/narration/ch101.json",
-  "textHash": "fnv1a64:5222fd3ef8f4e28b",
-  "jsonHash": "fnv1a64:9d7af1da1688620d",
+  "textHash": "fnv1a64:c23c73bba9bf6c70",
+  "jsonHash": "fnv1a64:f9e651356df8d2df",
   "findings": []
 }

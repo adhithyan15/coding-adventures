@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 233,
-  "sourceHash": "fnv1a64:7d35c70e4994dd12",
+  "sourceHash": "fnv1a64:42bf0b927b15cbfb",
   "lessonIds": [
     "PT-C233-divertir-se",
     "PT-C233-zangar-se",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch233.txt",
   "json": "portuguese/narration/ch233.json",
-  "textHash": "fnv1a64:6f5bd8dc5ef5da08",
-  "jsonHash": "fnv1a64:8dffb72cd5a14229",
+  "textHash": "fnv1a64:9ce248a6e2ca1baa",
+  "jsonHash": "fnv1a64:d683a14fe238975d",
   "findings": []
 }

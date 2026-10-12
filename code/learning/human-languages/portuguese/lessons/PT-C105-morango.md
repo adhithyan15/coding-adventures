@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA105-MORANGO
 prerequisites: [PT-C105-cogumelo, PT-C105-pepino]
 sounds: []
 roots: []
+etymology_hook: "morango — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C105-pepino]
 <!-- hl-knowledge: introduces=[PT-LEX-C105-COMIDA105-05]; assesses=[] -->
 
 **o morango** — "a strawberry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**morango** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

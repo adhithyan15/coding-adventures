@@ -14,6 +14,7 @@ concept_tag: PT-VERB-EMPURRAR
 prerequisites: [PT-C235-emprestar, PT-C236-sonhar]
 sounds: []
 roots: []
+etymology_hook: "empurrar — origin uncertain; Spanish empujar 'to push' is often compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C236-sonhar]
 <!-- hl-knowledge: introduces=[PT-LEX-C236-VERBOS236-02]; assesses=[] -->
 
 **empurrar** — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**empurrar** — its origin is uncertain. Spanish *empujar*, "to push", from Latin *impulsare*, is often compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

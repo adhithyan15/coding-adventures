@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 252,
-  "sourceHash": "fnv1a64:e16a46b5f8435867",
+  "sourceHash": "fnv1a64:dd7a222d3d3f0a57",
   "lessonIds": [
     "PT-C252-derrota",
     "PT-C252-campeonato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch252.txt",
   "json": "portuguese/narration/ch252.json",
-  "textHash": "fnv1a64:7415a45f683a3c6b",
-  "jsonHash": "fnv1a64:c085ab0548e9daf6",
+  "textHash": "fnv1a64:a138483ceb1c9a99",
+  "jsonHash": "fnv1a64:cdc9b1deab9c78c9",
   "findings": []
 }

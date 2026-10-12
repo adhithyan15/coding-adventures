@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for to drive, then the Portuguese for to 
 You'll want to know: lavar-se.
 lavar-se — "to wash (oneself)".
 
+The word, taken apart.
+lavar from Latin lavare, "to wash" (EtymDB 2.1) — inherited. -se means "oneself".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for to get dressed, then the Portuguese f
 
 You'll want to know: levantar-se.
 levantar-se — "to get up".
+
+The word, taken apart.
+levantar from Vulgar Latin levantare (EtymDB 2.1), from Latin levare, "to lift" — inherited. -se means "oneself".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to wash, then the Portuguese for to g
 You'll want to know: sentar-se.
 sentar-se — "to sit down".
 
+The word, taken apart.
+sentar from Vulgar Latin sedentare (EtymDB 2.1), from Latin sedens, "sitting" — inherited. -se means "oneself".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to get up, then the Portuguese for to
 You'll want to know: cair.
 cair — "to fall".
 
+The word, taken apart.
+cair from Latin cadere, "to fall" (EtymDB 2.1) — inherited. The -d- between vowels fell out.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to sit down, then the Portuguese for 
 
 You'll want to know: subir.
 subir — "to go up".
+
+The word, taken apart.
+subir from Latin subire, "to go up to, to come under" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese subir.
 
 What you've built.
 One more word for this chapter.

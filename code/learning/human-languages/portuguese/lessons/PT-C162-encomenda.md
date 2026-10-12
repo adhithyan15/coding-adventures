@@ -13,7 +13,8 @@ gloss: "a parcel; an order"
 concept_tag: PT-COISAS162-ENCOMENDA
 prerequisites: [PT-C162-formulario, PT-C162-envelope]
 sounds: []
-roots: []
+roots: [commendare-latin]
+etymology_hook: "encomenda — from the verb to order, from Latin commendare 'to entrust' — English commend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C162-envelope]
 <!-- hl-knowledge: introduces=[PT-LEX-C162-COISAS162-05]; assesses=[] -->
 
 **a encomenda** — "a parcel; an order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**encomenda** is built from the verb "to order" (EtymDB 2.1), which goes back to Latin *commendare*, "to entrust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

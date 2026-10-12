@@ -13,7 +13,8 @@ gloss: "thin"
 concept_tag: PT-QUALIDADES128-MAGRO
 prerequisites: [PT-C127-leve, PT-C128-pesado]
 sounds: []
-roots: []
+roots: [macer-latin]
+etymology_hook: "magro ← Latin macer 'lean' — English meagre shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C128-pesado]
 <!-- hl-knowledge: introduces=[PT-LEX-C128-QUALIDADES128-02]; assesses=[] -->
 
 **magro** — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**magro** ← Latin *macer, macri*, "lean" — inherited. EtymDB 2.1 traces it only to Old Portuguese *magro*; it derives Spanish *magro* from Latin *macrum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

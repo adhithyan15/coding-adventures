@@ -14,6 +14,7 @@ concept_tag: PT-NATUREZA116-ROCHA
 prerequisites: [PT-C116-tempestade, PT-C116-gelo]
 sounds: []
 roots: []
+etymology_hook: "rocha ← Old French roche, from Medieval Latin rocca, of unknown origin — English rock is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C116-gelo]
 <!-- hl-knowledge: introduces=[PT-LEX-C116-NATUREZA116-04]; assesses=[] -->
 
 **a rocha** — "a rock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rocha** ← Old French *roche* — borrowed (EtymDB 2.1). Behind it is Medieval Latin *rocca*, a word of unknown origin (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "fair"
 concept_tag: PT-QUAL186-JUSTO-JUSTA
 prerequisites: [PT-C186-igual, PT-C186-parecido-parecida]
 sounds: []
-roots: []
+roots: [ius-latin]
+etymology_hook: "justo ← Latin iustus 'lawful, right', from ius 'law' — English just and justice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C186-parecido-parecida]
 <!-- hl-knowledge: introduces=[PT-LEX-C186-QUAL186-04]; assesses=[] -->
 
 **justo / justa** — "fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**justo** ← Latin *iustus*, "lawful, right" (EtymDB 2.1), from *ius*, "law" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

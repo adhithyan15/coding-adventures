@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a pencil, then the Portuguese for a b
 You'll want to know: o telefone.
 o telefone — "a phone".
 
+The word, taken apart.
+telefone — borrowed, probably from French téléphone. The French word was coined from Greek tēle, "far", and phōnē, "voice" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a bag, then the Portuguese for a phon
 
 You'll want to know: o guarda-chuva.
 o guarda-chuva — "an umbrella". Literally "guard-rain".
+
+The word, taken apart.
+guarda-chuva is built from "guard" and "rain" (EtymDB 2.1): a rain guard. The guard verb goes back to Frankish wardōn, "to keep, to guard"; the rain word from Latin pluvia (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a phone, then the Portuguese for an u
 You'll want to know: o dinheiro.
 o dinheiro — "money".
 
+The word, taken apart.
+dinheiro from Latin denarius, "a Roman silver coin" (EtymDB 2.1) — inherited. Old Portuguese dĩeiro lost the -n- and kept it as a nasal vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for an umbrella, then the Portuguese for 
 You'll want to know: o presente.
 o presente — "a present, a gift".
 
+The word, taken apart.
+presente from Latin praesens, praesentis, "present, at hand" (EtymDB 2.1) — inherited. A gift is something set before someone.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for money, then the Portuguese for a pres
 
 You'll want to know: o relógio.
 o relógio — "a watch, a clock".
+
+The word, taken apart.
+relógio from Old Catalan relotge, "clock" (EtymDB 2.1), from Latin horologium, "sundial, clock", from Greek hōrologion, "hour-teller" — borrowed.
 
 What you've built.
 One more word for this chapter.

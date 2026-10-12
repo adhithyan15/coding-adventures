@@ -13,7 +13,8 @@ gloss: "a poem"
 concept_tag: PT-COISAS190-POEMA
 prerequisites: [PT-C189-economia, PT-C190-atriz]
 sounds: []
-roots: []
+roots: [poema-latin]
+etymology_hook: "poema ← Latin poema, from Greek poiema 'a thing made' — English poem"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C190-atriz]
 <!-- hl-knowledge: introduces=[PT-LEX-C190-COISAS190-02]; assesses=[] -->
 
 **o poema** — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poema** ← Latin *poema*, "poem" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *poiēma*, "a thing made".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

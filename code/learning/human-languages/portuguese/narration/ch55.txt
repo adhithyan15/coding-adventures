@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a ticket, then the Portuguese for a m
 You'll want to know: entrar.
 entrar — "to go in, to enter".
 
+The word, taken apart.
+entrar from Latin intrare, "to go in" — inherited. EtymDB 2.1 traces it only to Old Portuguese entrar; it derives Spanish entrar from intrare.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a map, then the Portuguese for to go 
 
 You'll want to know: sair.
 sair — "to go out, to leave". The opposite of entrar.
+
+The word, taken apart.
+sair from Latin salire, "to jump" (EtymDB 2.1) — inherited. The -l- between vowels fell out.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to go in, then the Portuguese for to 
 You'll want to know: voltar.
 voltar — "to come back, to return".
 
+The word, taken apart.
+voltar from Vulgar Latin voltare, "to turn around" (EtymDB 2.1), from Latin volutare, "to roll about" — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to go out, then the Portuguese for to
 You'll want to know: estudar.
 estudar — "to study".
 
+The word, taken apart.
+estudar is built from the noun for study, a learned borrowing of Latin studium, "zeal, study" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to come back, then the Portuguese for
 
 You'll want to know: viajar.
 viajar — "to travel".
+
+The word, taken apart.
+viajar is built from the word for a journey (EtymDB 2.1), which came through Old Provençal viatge from Latin viaticum, "provisions for a journey" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

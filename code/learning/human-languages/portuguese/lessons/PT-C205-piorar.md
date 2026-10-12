@@ -13,7 +13,8 @@ gloss: "to get worse"
 concept_tag: PT-VERB-PIORAR
 prerequisites: [PT-C204-bater, PT-C204-comparar]
 sounds: []
-roots: []
+roots: [peior-latin]
+etymology_hook: "piorar ← Late Latin peiorare, from peior 'worse' — English pejorative"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C204-comparar]
 <!-- hl-knowledge: introduces=[PT-LEX-C205-VERBOS205-01]; assesses=[] -->
 
 **piorar** — "to get worse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piorar** ← Late Latin *peiorare*, "to make worse" (EtymDB 2.1), from *peior*, "worse" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

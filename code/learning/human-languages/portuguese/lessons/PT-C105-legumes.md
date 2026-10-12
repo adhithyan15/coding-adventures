@@ -13,7 +13,8 @@ gloss: "vegetables"
 concept_tag: PT-COMIDA105-LEGUMES
 prerequisites: [PT-C104-relampago, PT-C105-carne-de-vaca]
 sounds: []
-roots: []
+roots: [legumen-latin]
+etymology_hook: "legumes ← Latin legumen 'pulse, bean' — English legume is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C105-carne-de-vaca]
 <!-- hl-knowledge: introduces=[PT-LEX-C105-COMIDA105-02]; assesses=[] -->
 
 **os legumes** — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**legumes** ← Latin *legumen*, "pulse, bean" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

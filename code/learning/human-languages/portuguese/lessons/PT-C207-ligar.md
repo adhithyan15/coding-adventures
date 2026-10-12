@@ -13,7 +13,8 @@ gloss: "to ring, to phone; to switch on"
 concept_tag: PT-VERB-LIGAR
 prerequisites: [PT-C207-aproximar-se, PT-C207-conversar]
 sounds: []
-roots: []
+roots: [ligare-latin]
+etymology_hook: "ligar ← Latin ligare 'to bind' — English ligament shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C207-conversar]
 <!-- hl-knowledge: introduces=[PT-LEX-C207-VERBOS207-03]; assesses=[] -->
 
 **ligar** — "to ring, to phone; to switch on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ligar** ← Latin *ligare*, "to bind" (EtymDB 2.1) — a learned borrowing from Latin. An inherited word would have lost the *-g-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

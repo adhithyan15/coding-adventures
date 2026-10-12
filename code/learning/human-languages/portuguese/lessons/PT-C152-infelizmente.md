@@ -13,7 +13,8 @@ gloss: "unfortunately"
 concept_tag: PT-PORQUE152-INFELIZMENTE
 prerequisites: [PT-C152-embora, PT-C152-apesar-de]
 sounds: []
-roots: []
+roots: [felix]
+etymology_hook: "infelizmente — in- 'not' + feliz 'happy' (← Latin felix) + -mente '-ly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C152-apesar-de]
 <!-- hl-knowledge: introduces=[PT-LEX-C152-PORQUE152-05]; assesses=[] -->
 
 **infelizmente** — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**infelizmente** is built from *in-*, "not", *feliz*, "happy" (← Latin *felix*), and *-mente*, "-ly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

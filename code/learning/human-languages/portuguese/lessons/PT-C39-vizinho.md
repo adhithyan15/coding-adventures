@@ -13,7 +13,8 @@ gloss: "a neighbour"
 concept_tag: PT-PESSOAS-VIZINHO
 prerequisites: [PT-C38-neta, PT-C39-crianca]
 sounds: []
-roots: []
+roots: [vicinus-latin]
+etymology_hook: "vizinho ← Latin vicinus 'of the village', from vicus — English vicinity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C39-crianca]
 <!-- hl-knowledge: introduces=[PT-LEX-C39-PESSOAS-02]; assesses=[] -->
 
 **o vizinho** — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vizinho** ← Latin *vicinus*, "neighbouring", from *vicus*, "village" — inherited. EtymDB 2.1 traces it only to Old Portuguese *vizinno*; it derives Spanish *vecino* from *vicinus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a difference"
 concept_tag: PT-COISAS161-DIFERENCA
 prerequisites: [PT-C161-possibilidade, PT-C161-resultado]
 sounds: []
-roots: []
+roots: [differre-latin]
+etymology_hook: "diferença ← Latin differentia 'difference' — English difference"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C161-resultado]
 <!-- hl-knowledge: introduces=[PT-LEX-C161-COISAS161-03]; assesses=[] -->
 
 **a diferença** — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diferença** ← Latin *differentia*, "difference" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

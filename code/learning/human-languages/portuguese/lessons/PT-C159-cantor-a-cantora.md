@@ -13,7 +13,8 @@ gloss: "a singer"
 concept_tag: PT-COISAS159-CANTOR-A-CANTORA
 prerequisites: [PT-C159-bateria, PT-C159-carregador]
 sounds: []
-roots: []
+roots: [cantare-latin]
+etymology_hook: "cantor ← Latin cantor 'singer', from canere 'to sing' — English cantor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C159-carregador]
 <!-- hl-knowledge: introduces=[PT-LEX-C159-COISAS159-03]; assesses=[] -->
 
 **o cantor / a cantora** — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cantor** ← Latin *cantor*, "singer" (EtymDB 2.1), from *canere*, "to sing" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

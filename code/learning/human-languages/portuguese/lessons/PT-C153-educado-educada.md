@@ -13,7 +13,8 @@ gloss: "polite"
 concept_tag: PT-QUAL153-EDUCADO-EDUCADA
 prerequisites: [PT-C153-confortavel, PT-C153-desconfortavel]
 sounds: []
-roots: []
+roots: [educare-latin]
+etymology_hook: "educado — 'brought up': from the verb to educate ← Latin educare 'to rear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C153-desconfortavel]
 <!-- hl-knowledge: introduces=[PT-LEX-C153-QUAL153-03]; assesses=[] -->
 
 **educado / educada** — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**educado** is "brought up": the participle of the verb "to educate", which ← Latin *educare*, "to rear" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

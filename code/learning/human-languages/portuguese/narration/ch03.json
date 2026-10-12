@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:79215fb0622b3f77",
+  "sourceHash": "fnv1a64:26430a814b82994f",
   "lessons": [
     {
       "id": "PT-C03-eu",
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9916d5750d85de60",
+      "sourceHash": "fnv1a64:7fdcfeb6aeffa8e9",
       "notice": null,
       "blocks": [
         {

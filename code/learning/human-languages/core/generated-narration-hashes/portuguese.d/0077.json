@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 77,
-  "sourceHash": "fnv1a64:392b558bf3bf4615",
+  "sourceHash": "fnv1a64:30815b4b737c7203",
   "lessonIds": [
     "PT-C77-roupa",
     "PT-C77-camisa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch77.txt",
   "json": "portuguese/narration/ch77.json",
-  "textHash": "fnv1a64:863e2c0336070be9",
-  "jsonHash": "fnv1a64:47c0adcb82e12789",
+  "textHash": "fnv1a64:a1d47ba5a37832d9",
+  "jsonHash": "fnv1a64:513bac083e5d07d0",
   "findings": []
 }

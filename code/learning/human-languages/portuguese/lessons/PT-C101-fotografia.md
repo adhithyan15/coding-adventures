@@ -14,6 +14,7 @@ concept_tag: PT-COISAS101-FOTOGRAFIA
 prerequisites: [PT-C100-anel, PT-C101-colar]
 sounds: []
 roots: []
+etymology_hook: "fotografia ← French photographie, from Greek phos 'light' + graphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C101-colar]
 <!-- hl-knowledge: introduces=[PT-LEX-C101-COISAS101-02]; assesses=[] -->
 
 **a fotografia** — "a photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fotografia** ← French *photographie* (EtymDB 2.1) — borrowed. The French word was built from Greek *phōs*, "light", and *graphein*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

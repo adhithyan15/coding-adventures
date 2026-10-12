@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 234,
-  "sourceHash": "fnv1a64:855b22765ac6f218",
+  "sourceHash": "fnv1a64:14f8d055da34b708",
   "lessonIds": [
     "PT-C234-aconselhar",
     "PT-C234-convencer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch234.txt",
   "json": "portuguese/narration/ch234.json",
-  "textHash": "fnv1a64:90e2c5646c89df69",
-  "jsonHash": "fnv1a64:c270ca14b530114e",
+  "textHash": "fnv1a64:40bc854b49d903a8",
+  "jsonHash": "fnv1a64:f04b182dd73480d9",
   "findings": []
 }

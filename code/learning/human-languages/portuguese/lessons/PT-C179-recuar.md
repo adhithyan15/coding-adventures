@@ -14,6 +14,7 @@ concept_tag: PT-VERB-RECUAR
 prerequisites: [PT-C179-agir, PT-C179-avancar]
 sounds: []
 roots: []
+etymology_hook: "recuar — built from re- 'back' + the word for the backside: to move rear-first"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C179-avancar]
 <!-- hl-knowledge: introduces=[PT-LEX-C179-VERBOS179-03]; assesses=[] -->
 
 **recuar** — "to move back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recuar** is built from *re-*, "back", and the word for the backside: to move rear-first.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

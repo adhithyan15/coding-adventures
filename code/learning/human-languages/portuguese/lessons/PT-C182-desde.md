@@ -14,6 +14,7 @@ concept_tag: PT-TEMPO182-DESDE
 prerequisites: [PT-C182-de-repente, PT-C182-ate]
 sounds: []
 roots: []
+etymology_hook: "desde ← Latin de + ex + de, 'from out of from': prepositions fused into one"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C182-ate]
 <!-- hl-knowledge: introduces=[PT-LEX-C182-TEMPO182-03]; assesses=[] -->
 
 **desde** — "since".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desde** ← Latin *de*, "from", and *ex*, "out of" (EtymDB 2.1), with a second *de*: prepositions fused into one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

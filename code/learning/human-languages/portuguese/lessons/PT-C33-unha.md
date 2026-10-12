@@ -13,7 +13,8 @@ gloss: "a nail (finger or toe)"
 concept_tag: PT-CORPO4-UNHA
 prerequisites: [PT-C32-sangue, PT-C33-pele]
 sounds: []
-roots: []
+roots: [ungula-latin]
+etymology_hook: "unha ← Latin ungula 'claw, hoof' — English ungulate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C33-pele]
 <!-- hl-knowledge: introduces=[PT-LEX-C33-CORPO4-02]; assesses=[] -->
 
 **a unha** — "a nail (finger or toe)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unha** ← Latin *ungula*, "claw, hoof" (EtymDB 2.1), through Vulgar Latin *\*ungla* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

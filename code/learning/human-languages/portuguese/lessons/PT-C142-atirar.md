@@ -14,6 +14,7 @@ concept_tag: PT-VERB-ATIRAR
 prerequisites: [PT-C141-aplaudir, PT-C142-evitar]
 sounds: []
 roots: []
+etymology_hook: "atirar — built on the verb to pull, whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C142-evitar]
 <!-- hl-knowledge: introduces=[PT-LEX-C142-VERBOS142-02]; assesses=[] -->
 
 **atirar** — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**atirar** is built on the verb "to pull", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

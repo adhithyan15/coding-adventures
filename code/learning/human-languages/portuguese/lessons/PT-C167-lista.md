@@ -14,6 +14,7 @@ concept_tag: PT-COISAS167-LISTA
 prerequisites: [PT-C167-carrinho, PT-C167-cesto]
 sounds: []
 roots: []
+etymology_hook: "lista ← Italian lista 'strip, list', from Germanic — English list is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C167-cesto]
 <!-- hl-knowledge: introduces=[PT-LEX-C167-COISAS167-03]; assesses=[] -->
 
 **a lista** — "a list".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lista** ← Italian *lista*, "strip, list" (EtymDB 2.1) — borrowed. The Italian word is Germanic, from Old High German *līsta*, "strip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

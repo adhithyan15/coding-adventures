@@ -13,7 +13,8 @@ gloss: "to forget"
 concept_tag: PT-VERB-ESQUECER
 prerequisites: [PT-C80-cortar, PT-C81-lembrar]
 sounds: []
-roots: []
+roots: [cadere-latin]
+etymology_hook: "esquecer ← Vulgar Latin *excadescere 'to fall out', from cadere 'to fall': to drop from mind"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C81-lembrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C81-VERBOS7-02]; assesses=[] -->
 
 **esquecer** — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esquecer** ← Vulgar Latin *\*excadescere*, "to fall out", from Latin *cadere*, "to fall" — inherited: what you forget falls out of mind. EtymDB 2.1 records no ancestor for it; this is the usual account.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

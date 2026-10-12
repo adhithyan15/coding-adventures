@@ -13,7 +13,8 @@ gloss: "modern"
 concept_tag: PT-QUAL216-MODERNO-MODERNA
 prerequisites: [PT-C215-silencioso-silenciosa, PT-C216-gratuito-gratuita]
 sounds: []
-roots: []
+roots: [modus-latin]
+etymology_hook: "moderno ← Late Latin modernus, from modo 'just now' — English modern"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C216-gratuito-gratuita]
 <!-- hl-knowledge: introduces=[PT-LEX-C216-QUAL216-02]; assesses=[] -->
 
 **moderno / moderna** — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moderno** ← Late Latin *modernus*, "of just now" (Lewis & Short), from *modo*, "just now" — a learned borrowing from Late Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

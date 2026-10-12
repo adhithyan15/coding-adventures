@@ -11,6 +11,7 @@ concept_tag: PT-CH2-FORMAL-PRACTICE
 prerequisites: [PT-C02-practice, PT-C02-como-vai-esta]
 sounds: []
 roots: [senior-latin]
+etymology_hook: "senhor ← Latin senior 'older' — English senior and Spanish señor share it"
 duration:
   max_seconds: 214
 requires:

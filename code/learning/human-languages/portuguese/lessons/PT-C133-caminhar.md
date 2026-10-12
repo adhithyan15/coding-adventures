@@ -13,7 +13,8 @@ gloss: "to walk"
 concept_tag: PT-VERB-CAMINHAR
 prerequisites: [PT-C133-reparar, PT-C133-contar]
 sounds: []
-roots: []
+roots: [camminus-latin]
+etymology_hook: "caminhar — built from the path word, which ← Late Latin camminus 'way', a Celtic word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C133-contar]
 <!-- hl-knowledge: introduces=[PT-LEX-C133-VERBOS133-05]; assesses=[] -->
 
 **caminhar** — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caminhar** is built from the word for a road or path (EtymDB 2.1), which ← Late Latin *camminus*, "way", a word Latin took from Celtic (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

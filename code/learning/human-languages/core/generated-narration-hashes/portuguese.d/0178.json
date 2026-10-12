@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 178,
-  "sourceHash": "fnv1a64:2bec1d3703495c86",
+  "sourceHash": "fnv1a64:9c7449656e6930ad",
   "lessonIds": [
     "PT-C178-misturar",
     "PT-C178-obedecer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch178.txt",
   "json": "portuguese/narration/ch178.json",
-  "textHash": "fnv1a64:373b13aa8fbddbe6",
-  "jsonHash": "fnv1a64:8d8c360fba93c2df",
+  "textHash": "fnv1a64:a55459f5989af9ec",
+  "jsonHash": "fnv1a64:ce4c93f08d86c5b5",
   "findings": []
 }

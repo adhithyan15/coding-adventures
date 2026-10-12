@@ -13,7 +13,8 @@ gloss: "to rest"
 concept_tag: PT-VERB-DESCANSAR
 prerequisites: [PT-C202-medir, PT-C203-divorciar-se]
 sounds: []
-roots: []
+roots: [campsare-latin]
+etymology_hook: "descansar — des- 'un-' + the verb to tire (← Latin campsare): to un-tire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C203-divorciar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C203-VERBOS203-02]; assesses=[] -->
 
 **descansar** — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**descansar** is built from *des-*, "un-", and the verb "to tire", which ← Latin *campsare* (EtymDB 2.1): to un-tire.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

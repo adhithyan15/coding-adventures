@@ -13,7 +13,8 @@ gloss: "a message"
 concept_tag: PT-COISAS101-MENSAGEM
 prerequisites: [PT-C101-vela, PT-C101-calendario]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "mensagem ← Old French message, from Latin mittere 'to send' — English message"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C101-calendario]
 <!-- hl-knowledge: introduces=[PT-LEX-C101-COISAS101-05]; assesses=[] -->
 
 **a mensagem** — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mensagem** ← Old French *message*, "message" (EtymDB 2.1) — borrowed. Behind it is Late Latin *missaticum*, from *mittere*, "to send"; the *-n-* crept in later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

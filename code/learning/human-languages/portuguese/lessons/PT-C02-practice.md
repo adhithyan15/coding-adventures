@@ -11,8 +11,9 @@ concept_tag: CH2-PRACTICE
 prerequisites: [PT-C02-de-nada, PT-C02-como, PT-C02-tudo, PT-C02-tudo-bem, PT-C02-como-vai-esta, PT-C02-mais-ou-menos]
 sounds: []
 roots: []
+etymology_hook: "review: e ← Latin et 'and'; você ← vossa mercê 'your mercy'; tudo ← Latin totus 'all'"
 duration:
-  max_seconds: 204
+  max_seconds: 213
 requires:
   knowledge: [PT-SOUND-DE-NADA-02, PT-ETYMON-DE-NADA-03, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04, PT-GRAMMAR-TUDO-BEM-02, PT-LEX-COMO-VAI-ESTA-01, PT-SOUND-MAIS-OU-MENOS-02, PT-ETYMON-MAIS-OU-MENOS-03, PT-GRAMMAR-MAIS-OU-MENOS-04]
 introduces:

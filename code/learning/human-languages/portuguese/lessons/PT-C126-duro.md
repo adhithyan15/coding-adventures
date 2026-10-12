@@ -13,7 +13,8 @@ gloss: "hard"
 concept_tag: PT-QUALIDADES126-DURO
 prerequisites: [PT-C126-fresco, PT-C126-macio]
 sounds: []
-roots: []
+roots: [durus-latin]
+etymology_hook: "duro ← Latin durus 'hard' — English durable and endure share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C126-macio]
 <!-- hl-knowledge: introduces=[PT-LEX-C126-QUALIDADES126-03]; assesses=[] -->
 
 **duro** — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**duro** ← Latin *durus*, "hard" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

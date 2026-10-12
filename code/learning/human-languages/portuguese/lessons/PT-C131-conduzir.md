@@ -13,7 +13,8 @@ gloss: "to drive"
 concept_tag: PT-VERB-CONDUZIR
 prerequisites: [PT-C131-por, PT-C131-acreditar]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "conduzir ← Latin conducere 'to lead together' — English conduct shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C131-acreditar]
 <!-- hl-knowledge: introduces=[PT-LEX-C131-VERBOS131-04]; assesses=[] -->
 
 **conduzir** — "to drive". In Brazil, **dirigir**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conduzir** ← Latin *conducere*, "to lead together" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

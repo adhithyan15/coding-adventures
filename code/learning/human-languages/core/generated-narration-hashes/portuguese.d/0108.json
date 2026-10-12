@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 108,
-  "sourceHash": "fnv1a64:3cbeca5c77b30303",
+  "sourceHash": "fnv1a64:5929a6524ff38297",
   "lessonIds": [
     "PT-C108-iogurte",
     "PT-C108-gelado",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch108.txt",
   "json": "portuguese/narration/ch108.json",
-  "textHash": "fnv1a64:032fb63237b1794b",
-  "jsonHash": "fnv1a64:40ad39854c8f7401",
+  "textHash": "fnv1a64:ff1a6cc81b8c0629",
+  "jsonHash": "fnv1a64:1969b6641423cb4c",
   "findings": []
 }

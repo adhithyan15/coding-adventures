@@ -13,7 +13,8 @@ gloss: "wool"
 concept_tag: PT-COISAS251-LA
 prerequisites: [PT-C251-plastico, PT-C251-algodao]
 sounds: []
-roots: []
+roots: [lana-latin]
+etymology_hook: "lã ← Latin lana 'wool': the lost -n- left a nasal vowel — English lanolin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C251-algodao]
 <!-- hl-knowledge: introduces=[PT-LEX-C251-COISAS251-04]; assesses=[] -->
 
 **a lã** — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lã** ← Latin *lana*, "wool" (EtymDB 2.1) — inherited. The lost *-n-* left a nasal vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

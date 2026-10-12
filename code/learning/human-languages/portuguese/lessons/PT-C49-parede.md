@@ -13,7 +13,8 @@ gloss: "a wall"
 concept_tag: PT-CASA2-PAREDE
 prerequisites: [PT-C49-cama, PT-C49-chave]
 sounds: []
-roots: []
+roots: [paries-latin]
+etymology_hook: "parede ← Latin paries, parietis 'wall of a house'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C49-chave]
 <!-- hl-knowledge: introduces=[PT-LEX-C49-CASA2-03]; assesses=[] -->
 
 **a parede** — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parede** ← Latin *paries, parietis*, "wall" (EtymDB 2.1), through Vulgar Latin *\*paretem* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-VERB-ZANGAR-SE
 prerequisites: [PT-C232-telefonar, PT-C233-divertir-se]
 sounds: []
 roots: []
+etymology_hook: "zangar-se — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C233-divertir-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C233-VERBOS233-02]; assesses=[] -->
 
 **zangar-se** — "to get angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zangar** — its origin is uncertain. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

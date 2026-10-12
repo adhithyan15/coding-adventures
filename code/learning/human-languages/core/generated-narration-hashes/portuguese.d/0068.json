@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 68,
-  "sourceHash": "fnv1a64:fc4764d57fbf3843",
+  "sourceHash": "fnv1a64:72cf7298edc7dd8b",
   "lessonIds": [
     "PT-C68-forte",
     "PT-C68-fraco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch68.txt",
   "json": "portuguese/narration/ch68.json",
-  "textHash": "fnv1a64:f2103a7956a7596c",
-  "jsonHash": "fnv1a64:783be7da5c8524ac",
+  "textHash": "fnv1a64:d92147363aee448b",
+  "jsonHash": "fnv1a64:f9486a9f2725b66d",
   "findings": []
 }

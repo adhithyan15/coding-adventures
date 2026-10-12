@@ -13,7 +13,8 @@ gloss: "a half"
 concept_tag: PT-COISAS228-METADE
 prerequisites: [PT-C228-pedaco, PT-C228-duzia]
 sounds: []
-roots: []
+roots: [medius-latin]
+etymology_hook: "metade ← Latin medietas 'the middle, half', from medius"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C228-duzia]
 <!-- hl-knowledge: introduces=[PT-LEX-C228-COISAS228-05]; assesses=[] -->
 
 **a metade** — "a half".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**metade** ← Latin *medietas, medietatis*, "the middle, half" (Lewis & Short) — inherited. EtymDB 2.1 has no ancestor for *metade*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

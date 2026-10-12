@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a knife, then the Portuguese for a fo
 You'll want to know: a caneta.
 a caneta — "a pen".
 
+The word, taken apart.
+caneta is built from the word for a reed and -eta, "little" (EtymDB 2.1): a little reed, the old pen. The reed word from Latin canna, from Greek kanna (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a fork, then the Portuguese for a pen
 
 You'll want to know: o papel.
 o papel — "paper".
+
+The word, taken apart.
+papel from Catalan paper — borrowed. EtymDB 2.1 traces papel only to Old Portuguese papel; it derives Spanish papel from Catalan paper, and paper from Latin papyrus, "papyrus".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a pen, then the Portuguese for paper.
 You'll want to know: o caderno.
 o caderno — "a notebook".
 
+The word, taken apart.
+caderno from Latin quaterni, "four at a time" (EtymDB 2.1) — inherited. A notebook was a gathering of four folded sheets.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for paper, then the Portuguese for a note
 You'll want to know: o lápis.
 o lápis — "a pencil".
 
+The word, taken apart.
+lápis from Italian lapis, "pencil" (EtymDB 2.1) — borrowed. The Italian word is Latin lapis, "stone".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a notebook, then the Portuguese for a
 
 You'll want to know: a bolsa.
 a bolsa — "a bag, a handbag".
+
+The word, taken apart.
+bolsa from Late Latin bursa, "purse", from Greek byrsa, "hide" — inherited. EtymDB 2.1 traces it only to Old Portuguese bolssa; it derives Spanish bolsa from bursa.
 
 What you've built.
 One more word for this chapter.

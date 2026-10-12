@@ -13,7 +13,8 @@ gloss: "a tram"
 concept_tag: PT-VIAGEM91-ELETRICO
 prerequisites: [PT-C90-talho, PT-C91-metro]
 sounds: []
-roots: []
+roots: [electrum-latin]
+etymology_hook: "elétrico — 'electric (car)': from New Latin electricus, from Greek elektron 'amber'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C91-metro]
 <!-- hl-knowledge: introduces=[PT-LEX-C91-VIAGEM91-02]; assesses=[] -->
 
 **o elétrico** — "a tram". In Brazil, **o bonde**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elétrico** ← New Latin *electricus*, "of amber" (EtymDB 2.1) — a learned borrowing from New Latin. The tram is the electric car; *electricus* is built on Greek *ēlektron*, "amber".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

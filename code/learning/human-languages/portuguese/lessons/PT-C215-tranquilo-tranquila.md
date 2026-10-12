@@ -13,7 +13,8 @@ gloss: "quiet, peaceful"
 concept_tag: PT-QUAL215-TRANQUILO-TRANQUILA
 prerequisites: [PT-C215-orgulhoso-orgulhosa, PT-C215-nervoso-nervosa]
 sounds: []
-roots: []
+roots: [tranquillus]
+etymology_hook: "tranquilo ← Latin tranquillus 'calm' — English tranquil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C215-nervoso-nervosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C215-QUAL215-04]; assesses=[] -->
 
 **tranquilo / tranquila** — "quiet, peaceful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tranquilo** ← Latin *tranquillus*, "calm" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

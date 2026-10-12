@@ -13,7 +13,8 @@ gloss: "a spoon"
 concept_tag: PT-MESA-COLHER
 prerequisites: [PT-C51-copo, PT-C51-prato]
 sounds: []
-roots: []
+roots: [cochlear-latin]
+etymology_hook: "colher ← Latin cochlear 'spoon', from cochlea 'snail': a spoon for eating snails"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C51-prato]
 <!-- hl-knowledge: introduces=[PT-LEX-C51-MESA-03]; assesses=[] -->
 
 **a colher** — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colher** ← Latin *cochlear*, "spoon" (Lewis & Short), from *cochlea*, "snail" — inherited. It was first a spoon for eating snails.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a trolley"
 concept_tag: PT-COISAS167-CARRINHO
 prerequisites: [PT-C166-partida, PT-C166-destino]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "carrinho — carro 'car, cart' + -inho 'little'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C166-destino]
 <!-- hl-knowledge: introduces=[PT-LEX-C167-COISAS167-01]; assesses=[] -->
 
 **o carrinho** — "a trolley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carrinho** is *carro*, "cart", with *-inho*, "little".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

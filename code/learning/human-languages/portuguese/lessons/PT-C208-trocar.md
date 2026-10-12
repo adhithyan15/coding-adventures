@@ -14,6 +14,7 @@ concept_tag: PT-VERB-TROCAR
 prerequisites: [PT-C207-corrigir, PT-C208-desistir]
 sounds: []
 roots: []
+etymology_hook: "trocar — origin uncertain; Spanish trocar and French troquer are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C208-desistir]
 <!-- hl-knowledge: introduces=[PT-LEX-C208-VERBOS208-02]; assesses=[] -->
 
 **trocar** — "to exchange, to swap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trocar** — its origin is uncertain. Spanish *trocar* and French *troquer* are its cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

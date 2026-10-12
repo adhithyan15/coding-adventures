@@ -13,7 +13,8 @@ gloss: "uncomfortable"
 concept_tag: PT-QUAL153-DESCONFORTAVEL
 prerequisites: [PT-C152-infelizmente, PT-C153-confortavel]
 sounds: []
-roots: []
+roots: [fortis-latin]
+etymology_hook: "desconfortável — des- 'un-' + confortável 'comfortable'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C153-confortavel]
 <!-- hl-knowledge: introduces=[PT-LEX-C153-QUAL153-02]; assesses=[] -->
 
 **desconfortável** — "uncomfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desconfortável** is built from *des-*, "un-", and *confortável*, "comfortable".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

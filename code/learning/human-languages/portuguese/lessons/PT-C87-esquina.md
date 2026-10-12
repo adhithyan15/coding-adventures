@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES87-ESQUINA
 prerequisites: [PT-C86-fabrica, PT-C87-escritorio]
 sounds: []
 roots: []
+etymology_hook: "esquina — probably from a Gothic word for the shinbone, a jutting edge; English shin is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C87-escritorio]
 <!-- hl-knowledge: introduces=[PT-LEX-C87-LUGARES87-02]; assesses=[] -->
 
 **a esquina** — "a street corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esquina** probably comes from a Gothic word for the shinbone, a jutting edge. EtymDB 2.1 traces it only to Old Portuguese *esquina*, so the link is the usual account, not a certain one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

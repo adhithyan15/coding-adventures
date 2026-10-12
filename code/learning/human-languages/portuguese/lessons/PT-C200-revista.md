@@ -13,7 +13,8 @@ gloss: "a magazine"
 concept_tag: PT-TRAB200-REVISTA
 prerequisites: [PT-C200-carreira, PT-C200-impressora]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "revista — 'a review': from the verb to see again (from Latin revidere)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C200-impressora]
 <!-- hl-knowledge: introduces=[PT-LEX-C200-TRAB200-04]; assesses=[] -->
 
 **a revista** — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**revista** is "a review": built from the verb "to see again", which goes back to Latin *revidere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

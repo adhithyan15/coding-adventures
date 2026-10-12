@@ -14,6 +14,7 @@ concept_tag: PT-COISAS251-ALGODAO
 prerequisites: [PT-C251-gas, PT-C251-plastico]
 sounds: []
 roots: []
+etymology_hook: "algodão ← Arabic al-quṭn 'the cotton' — English cotton is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C251-plastico]
 <!-- hl-knowledge: introduces=[PT-LEX-C251-COISAS251-03]; assesses=[] -->
 
 **o algodão** — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**algodão** ← Arabic *al-quṭn*, "the cotton" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

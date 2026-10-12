@@ -13,7 +13,8 @@ gloss: "a goat"
 concept_tag: PT-ANIMAIS3-CABRA
 prerequisites: [PT-C62-pato, PT-C62-ovelha]
 sounds: []
-roots: []
+roots: [capra-latin]
+etymology_hook: "cabra ← Latin capra 'she-goat' — English caprice and Capricorn share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C62-ovelha]
 <!-- hl-knowledge: introduces=[PT-LEX-C62-ANIMAIS3-05]; assesses=[] -->
 
 **a cabra** — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cabra** ← Latin *capra*, "she-goat" (EtymDB 2.1) — inherited. The Latin *-p-* became *-b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

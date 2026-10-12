@@ -13,7 +13,8 @@ gloss: "the same, equal"
 concept_tag: PT-QUAL186-IGUAL
 prerequisites: [PT-C185-curioso-curiosa, PT-C186-diferente]
 sounds: []
-roots: []
+roots: [aequus-latin]
+etymology_hook: "igual ← Latin aequalis 'equal, even', from aequus — English equal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C186-diferente]
 <!-- hl-knowledge: introduces=[PT-LEX-C186-QUAL186-02]; assesses=[] -->
 
 **igual** — "the same, equal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**igual** ← Latin *aequalis*, "equal, even" (EtymDB 2.1), from *aequus*, "even" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

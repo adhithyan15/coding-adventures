@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES90-QUIOSQUE
 prerequisites: [PT-C89-bairro, PT-C90-passeio]
 sounds: []
 roots: []
+etymology_hook: "quiosque ← French kiosque, from Turkish köşk 'pavilion', from Persian"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C90-passeio]
 <!-- hl-knowledge: introduces=[PT-LEX-C90-LUGARES90-02]; assesses=[] -->
 
 **o quiosque** — "a kiosk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quiosque** ← French *kiosque* (EtymDB 2.1) — borrowed. French took it from Turkish *köşk*, "pavilion", and Turkish from Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

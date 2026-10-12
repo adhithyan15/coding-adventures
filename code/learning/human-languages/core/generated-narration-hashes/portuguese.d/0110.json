@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 110,
-  "sourceHash": "fnv1a64:7b0c44c714399196",
+  "sourceHash": "fnv1a64:8574bdd510c6e087",
   "lessonIds": [
     "PT-C110-enfermeira",
     "PT-C110-cozinheiro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch110.txt",
   "json": "portuguese/narration/ch110.json",
-  "textHash": "fnv1a64:30485623820a5cc3",
-  "jsonHash": "fnv1a64:901a11dcffb58894",
+  "textHash": "fnv1a64:b662d59f84f103d4",
+  "jsonHash": "fnv1a64:672ffd2e7dcbebbe",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: PT-VIAGEM91-METRO
 prerequisites: [PT-C90-padaria, PT-C90-talho]
 sounds: []
 roots: []
+etymology_hook: "metro ← French métro, short for métropolitain, from Greek meter 'mother' + polis 'city'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C90-talho]
 <!-- hl-knowledge: introduces=[PT-LEX-C91-VIAGEM91-01]; assesses=[] -->
 
 **o metro** — "the underground". In Brazil, **o metrô**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**metro** ← French *métro* (EtymDB 2.1) — borrowed. It is short for *métropolitain*, built from Greek *mētēr*, "mother", and *polis*, "city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

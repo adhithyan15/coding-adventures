@@ -13,7 +13,8 @@ gloss: "leather"
 concept_tag: PT-COISAS165-COURO
 prerequisites: [PT-C164-seixo, PT-C164-terra]
 sounds: []
-roots: []
+roots: [corium-latin]
+etymology_hook: "couro ← Latin corium 'hide, skin': Old Portuguese coiro"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C164-terra]
 <!-- hl-knowledge: introduces=[PT-LEX-C165-COISAS165-01]; assesses=[] -->
 
 **o couro** — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**couro** ← Latin *corium*, "hide, skin" (EtymDB 2.1) — inherited. Old Portuguese said *coiro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

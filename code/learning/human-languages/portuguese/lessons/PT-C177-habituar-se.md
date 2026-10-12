@@ -13,7 +13,8 @@ gloss: "to get used to"
 concept_tag: PT-VERB-HABITUAR-SE
 prerequisites: [PT-C176-voar, PT-C177-valer]
 sounds: []
-roots: []
+roots: [habere-latin]
+etymology_hook: "habituar-se ← Medieval Latin habituare, from habitus 'condition, habit'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C177-valer]
 <!-- hl-knowledge: introduces=[PT-LEX-C177-VERBOS177-02]; assesses=[] -->
 
 **habituar-se** — "to get used to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**habituar** ← Medieval Latin *habituare*, from Latin *habitus*, "condition, habit" — a learned borrowing from Medieval Latin. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

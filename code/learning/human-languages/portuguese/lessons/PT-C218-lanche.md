@@ -14,6 +14,7 @@ concept_tag: PT-COISAS218-LANCHE
 prerequisites: [PT-C217-gordo-gorda, PT-C218-pequeno-almoco]
 sounds: []
 roots: []
+etymology_hook: "lanche ← English lunch — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C218-pequeno-almoco]
 <!-- hl-knowledge: introduces=[PT-LEX-C218-COISAS218-02]; assesses=[] -->
 
 **o lanche** — "a snack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lanche** ← English *lunch*, "lunch" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

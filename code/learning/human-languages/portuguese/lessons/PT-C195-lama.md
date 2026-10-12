@@ -13,7 +13,8 @@ gloss: "mud"
 concept_tag: PT-COISAS195-LAMA
 prerequisites: [PT-C194-portao, PT-C194-vedacao]
 sounds: []
-roots: []
+roots: [lama-latin]
+etymology_hook: "lama ← Latin lama 'bog, swamp'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C194-vedacao]
 <!-- hl-knowledge: introduces=[PT-LEX-C195-COISAS195-01]; assesses=[] -->
 
 **a lama** — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lama** ← Latin *lama*, "bog, swamp" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

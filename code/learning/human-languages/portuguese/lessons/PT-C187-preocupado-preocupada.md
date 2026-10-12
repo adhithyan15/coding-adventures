@@ -13,7 +13,8 @@ gloss: "worried"
 concept_tag: PT-QUAL187-PREOCUPADO-PREOCUPADA
 prerequisites: [PT-C187-trabalhador-trabalhadora, PT-C187-falador-faladora]
 sounds: []
-roots: []
+roots: [occupare]
+etymology_hook: "preocupado — 'pre-occupied': from Latin praeoccupare 'to seize beforehand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C187-falador-faladora]
 <!-- hl-knowledge: introduces=[PT-LEX-C187-QUAL187-03]; assesses=[] -->
 
 **preocupado / preocupada** — "worried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preocupado** is "pre-occupied": the participle of a verb ← Latin *praeoccupare*, "to seize beforehand" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

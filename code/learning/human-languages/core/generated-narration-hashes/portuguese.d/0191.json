@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 191,
-  "sourceHash": "fnv1a64:69f3884bf017d8a5",
+  "sourceHash": "fnv1a64:ec3ba7781bd8bb3e",
   "lessonIds": [
     "PT-C191-adulto",
     "PT-C191-idoso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch191.txt",
   "json": "portuguese/narration/ch191.json",
-  "textHash": "fnv1a64:66cf7b7018f2dc06",
-  "jsonHash": "fnv1a64:f2c7339ed998442d",
+  "textHash": "fnv1a64:70afe7c3f0a4a61e",
+  "jsonHash": "fnv1a64:a198131c4cd08622",
   "findings": []
 }

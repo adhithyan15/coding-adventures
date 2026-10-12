@@ -13,7 +13,8 @@ gloss: "a branch; a bunch of flowers"
 concept_tag: PT-COISAS250-RAMO
 prerequisites: [PT-C250-semente, PT-C250-raiz]
 sounds: []
-roots: []
+roots: [ramus-latin]
+etymology_hook: "ramo ← Latin ramus 'branch' — English ramify shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C250-raiz]
 <!-- hl-knowledge: introduces=[PT-LEX-C250-COISAS250-03]; assesses=[] -->
 
 **o ramo** — "a branch; a bunch of flowers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ramo** ← Latin *ramus*, "branch" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

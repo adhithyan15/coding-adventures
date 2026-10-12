@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 212,
-  "sourceHash": "fnv1a64:a6595c5647539a37",
+  "sourceHash": "fnv1a64:8025ca08da4279d6",
   "lessonIds": [
     "PT-C212-fim",
     "PT-C212-inicio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch212.txt",
   "json": "portuguese/narration/ch212.json",
-  "textHash": "fnv1a64:c78059dfa5d9d234",
-  "jsonHash": "fnv1a64:56a8bf614ff56b5d",
+  "textHash": "fnv1a64:64b0439f3cb75bf9",
+  "jsonHash": "fnv1a64:f94281403fdc76b7",
   "findings": []
 }

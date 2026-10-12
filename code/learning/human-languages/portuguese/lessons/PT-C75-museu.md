@@ -13,7 +13,8 @@ gloss: "a museum"
 concept_tag: PT-CIDADE3-MUSEU
 prerequisites: [PT-C74-parque, PT-C75-igreja]
 sounds: []
-roots: []
+roots: [museum-latin]
+etymology_hook: "museu ← Latin museum, from Greek mouseion 'shrine of the Muses' — English museum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C75-igreja]
 <!-- hl-knowledge: introduces=[PT-LEX-C75-CIDADE3-02]; assesses=[] -->
 
 **o museu** — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**museu** ← Latin *museum*, "library, study" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *mouseion*, "shrine of the Muses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

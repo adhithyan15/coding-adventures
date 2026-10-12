@@ -13,7 +13,8 @@ gloss: "elsewhere"
 concept_tag: PT-LUGAR151-NOUTRO-LADO
 prerequisites: [PT-C151-em-baixo, PT-C151-ao-fundo]
 sounds: []
-roots: []
+roots: [alter-latin]
+etymology_hook: "noutro lado — 'in another side': outro ← Latin alter 'the other'; lado ← Latin latus 'side'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C151-ao-fundo]
 <!-- hl-knowledge: introduces=[PT-LEX-C151-LUGAR151-04]; assesses=[] -->
 
 **noutro lado** — "elsewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noutro lado** is "in another side": *noutro* is *em* + *outro*, "other" (← Latin *alter*, "the other one", Lewis & Short), and *lado* ← Latin *latus*, "side" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a shirt"
 concept_tag: PT-ROUPA1-CAMISA
 prerequisites: [PT-C76-biblioteca, PT-C77-roupa]
 sounds: []
-roots: []
+roots: [latin-camisia]
+etymology_hook: "camisa ← Late Latin camisia 'shirt' — English chemise shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C77-roupa]
 <!-- hl-knowledge: introduces=[PT-LEX-C77-ROUPA1-02]; assesses=[] -->
 
 **a camisa** — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camisa** ← Late Latin *camisia*, "shirt" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

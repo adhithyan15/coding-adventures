@@ -13,7 +13,8 @@ gloss: "generous"
 concept_tag: PT-QUAL155-GENEROSO-GENEROSA
 prerequisites: [PT-C155-honesto-honesta, PT-C155-paciente]
 sounds: []
-roots: []
+roots: [genus]
+etymology_hook: "generoso ← Latin generosus 'of noble birth', from genus 'birth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C155-paciente]
 <!-- hl-knowledge: introduces=[PT-LEX-C155-QUAL155-04]; assesses=[] -->
 
 **generoso / generosa** — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**generoso** ← Latin *generosus*, "of noble birth" (EtymDB 2.1), from *genus*, "birth, race" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

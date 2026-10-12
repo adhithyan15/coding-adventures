@@ -13,7 +13,8 @@ gloss: "formerly, in the old days"
 concept_tag: PT-PAS135-ANTIGAMENTE
 prerequisites: [PT-C135-recentemente, PT-C135-anteontem]
 sounds: []
-roots: []
+roots: [antiquus-latin]
+etymology_hook: "antigamente — the word for 'old' (← Latin antiquus) + -mente '-ly' — English antique"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C135-anteontem]
 <!-- hl-knowledge: introduces=[PT-LEX-C135-PAS135-03]; assesses=[] -->
 
 **antigamente** — "formerly, in the old days". It points to a long stretch of the past, not to one day: **Antigamente, a loja era aqui.** — "In the old days the shop was here." **era** is the past of **ser** for how things used to be.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**antigamente** is built from the word for "old" and *-mente*, "-ly". That word ← Latin *antiquus*, "former, old" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 243,
-  "sourceHash": "fnv1a64:48002247da902ddc",
+  "sourceHash": "fnv1a64:90043ebd786e722f",
   "lessonIds": [
     "PT-C243-jovem",
     "PT-C243-inteligente",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch243.txt",
   "json": "portuguese/narration/ch243.json",
-  "textHash": "fnv1a64:a40fd6acb9d30243",
-  "jsonHash": "fnv1a64:37642ba126e1c264",
+  "textHash": "fnv1a64:279c06201376fa2f",
+  "jsonHash": "fnv1a64:895e96648c408a20",
   "findings": []
 }

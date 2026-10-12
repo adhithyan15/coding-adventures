@@ -13,7 +13,8 @@ gloss: "tall, high"
 concept_tag: PT-ADJ4-ALTO
 prerequisites: [PT-C66-caro, PT-C67-barato]
 sounds: []
-roots: []
+roots: [altus-latin]
+etymology_hook: "alto ← Latin altus 'high, deep' — English altitude shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C67-barato]
 <!-- hl-knowledge: introduces=[PT-LEX-C67-ADJ4-02]; assesses=[] -->
 
 **alto** — "tall, high".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alto** ← Latin *altus*, "high, deep" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

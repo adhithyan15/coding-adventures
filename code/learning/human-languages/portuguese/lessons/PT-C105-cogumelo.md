@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA105-COGUMELO
 prerequisites: [PT-C105-carne-de-vaca, PT-C105-legumes]
 sounds: []
 roots: []
+etymology_hook: "cogumelo — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C105-legumes]
 <!-- hl-knowledge: introduces=[PT-LEX-C105-COMIDA105-03]; assesses=[] -->
 
 **o cogumelo** — "a mushroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cogumelo** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to notice"
 concept_tag: PT-VERB-NOTAR
 prerequisites: [PT-C239-alimentar, PT-C239-arrumar]
 sounds: []
-roots: []
+roots: [nota-latin]
+etymology_hook: "notar ← Latin notare 'to mark', from nota 'a sign' — English note"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C239-arrumar]
 <!-- hl-knowledge: introduces=[PT-LEX-C239-VERBOS239-05]; assesses=[] -->
 
 **notar** — "to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**notar** ← Latin *notare*, "to mark" (EtymDB 2.1), from *nota*, "a sign" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

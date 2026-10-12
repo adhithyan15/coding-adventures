@@ -13,7 +13,8 @@ gloss: "to reduce"
 concept_tag: PT-VERB-REDUZIR
 prerequisites: [PT-C175-merecer, PT-C175-melhorar]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "reduzir ← Latin reducere 'to lead back' — English reduce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C175-melhorar]
 <!-- hl-knowledge: introduces=[PT-LEX-C176-VERBOS176-01]; assesses=[] -->
 
 **reduzir** — "to reduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reduzir** ← Latin *reducere*, "to lead back" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

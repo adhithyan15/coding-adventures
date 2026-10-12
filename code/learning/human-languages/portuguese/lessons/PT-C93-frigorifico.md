@@ -13,7 +13,8 @@ gloss: "a fridge"
 concept_tag: PT-CASA93-FRIGORIFICO
 prerequisites: [PT-C93-televisao, PT-C93-computador]
 sounds: []
-roots: []
+roots: [frigus-latin]
+etymology_hook: "frigorífico ← Latin frigorificus 'cooling', from frigus 'cold' + facere 'to make'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C93-computador]
 <!-- hl-knowledge: introduces=[PT-LEX-C93-CASA93-04]; assesses=[] -->
 
 **o frigorífico** — "a fridge". In Brazil, **a geladeira**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frigorífico** ← Latin *frigorificus*, "cooling" (Lewis & Short), from *frigus*, "cold", and *facere*, "to make" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

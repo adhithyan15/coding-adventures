@@ -13,7 +13,8 @@ gloss: "love"
 concept_tag: PT-SAUDE149-AMOR
 prerequisites: [PT-C149-sonho, PT-C149-ansiedade]
 sounds: []
-roots: []
+roots: [amare-latin]
+etymology_hook: "amor ← Latin amor 'love', from amare 'to love' — English amorous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C149-ansiedade]
 <!-- hl-knowledge: introduces=[PT-LEX-C149-SAUDE149-03]; assesses=[] -->
 
 **o amor** — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amor** ← Latin *amor*, "love" (EtymDB 2.1), from *amare*, "to love" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

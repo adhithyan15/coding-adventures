@@ -13,7 +13,8 @@ gloss: "medicine"
 concept_tag: PT-SAUDE1-REMEDIO
 prerequisites: [PT-C34-febre, PT-C34-tosse]
 sounds: []
-roots: []
+roots: [remedium-latin]
+etymology_hook: "remédio ← Latin remedium 'cure', from mederi 'to heal' — English remedy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C34-tosse]
 <!-- hl-knowledge: introduces=[PT-LEX-C34-SAUDE1-04]; assesses=[] -->
 
 **o remédio** — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**remédio** ← Latin *remedium*, "cure" (EtymDB 2.1), from *re-*, "again", and *mederi*, "to heal" — a learned borrowing from Latin. An inherited word would have lost the *-d-* between vowels.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

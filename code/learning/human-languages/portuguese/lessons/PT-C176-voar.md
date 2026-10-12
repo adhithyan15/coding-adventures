@@ -13,7 +13,8 @@ gloss: "to fly"
 concept_tag: PT-VERB-VOAR
 prerequisites: [PT-C176-arriscar, PT-C176-resolver]
 sounds: []
-roots: []
+roots: [volare-latin]
+etymology_hook: "voar ← Latin volare 'to fly': the -l- fell out — English volatile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C176-resolver]
 <!-- hl-knowledge: introduces=[PT-LEX-C176-VERBOS176-05]; assesses=[] -->
 
 **voar** — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voar** ← Latin *volare*, "to fly" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

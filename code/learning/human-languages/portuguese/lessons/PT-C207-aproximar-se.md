@@ -13,7 +13,8 @@ gloss: "to come near"
 concept_tag: PT-VERB-APROXIMAR-SE
 prerequisites: [PT-C206-servir, PT-C206-sofrer]
 sounds: []
-roots: []
+roots: [proximus-latin]
+etymology_hook: "aproximar-se ← Late Latin approximare, from proximus 'nearest'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C206-sofrer]
 <!-- hl-knowledge: introduces=[PT-LEX-C207-VERBOS207-01]; assesses=[] -->
 
 **aproximar-se** — "to come near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aproximar** ← Late Latin *approximare*, "to come near" (EtymDB 2.1), from *proximus*, "nearest" — a learned borrowing from Late Latin. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

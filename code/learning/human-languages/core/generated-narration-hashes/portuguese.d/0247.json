@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 247,
-  "sourceHash": "fnv1a64:c9cb76819082010c",
+  "sourceHash": "fnv1a64:90f4629f2cefc1ac",
   "lessonIds": [
     "PT-C247-sucesso",
     "PT-C247-fracasso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch247.txt",
   "json": "portuguese/narration/ch247.json",
-  "textHash": "fnv1a64:d78b42eab81b7d0a",
-  "jsonHash": "fnv1a64:a885288f5d02a1fd",
+  "textHash": "fnv1a64:f4ae1c63af926256",
+  "jsonHash": "fnv1a64:546e3eb85957266c",
   "findings": []
 }

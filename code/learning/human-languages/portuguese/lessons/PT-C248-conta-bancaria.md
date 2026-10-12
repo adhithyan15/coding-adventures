@@ -13,7 +13,8 @@ gloss: "a bank account"
 concept_tag: PT-COISAS248-CONTA-BANCARIA
 prerequisites: [PT-C248-cartao-bancario, PT-C248-multibanco]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "conta bancária: conta from contar 'to count' (← Latin computare); bancária built on banco"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C248-multibanco]
 <!-- hl-knowledge: introduces=[PT-LEX-C248-COISAS248-04]; assesses=[] -->
 
 **a conta bancária** — "a bank account".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conta bancária** is "bank account": *conta* is built from *contar*, "to count" (← Latin *computare*), and *bancária* on *banco*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

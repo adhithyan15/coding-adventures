@@ -11,9 +11,9 @@ concept_tag: PT-VERB-HOPE
 prerequisites: [PT-C21-esperar]
 sounds: [open-e, prop-e]
 roots: [sperare-latin]
-etymology_hook: "hope was the oldest meaning of Latin spērāre and remains alive in esperar"
+etymology_hook: "espero que sim: esperar ← Latin sperare 'to hope'; sim ← Latin sic 'thus, so'"
 duration:
-  max_seconds: 125
+  max_seconds: 134
 requires:
   knowledge: [PT-LEX-ESPERAR-02, PT-ETYMON-ESPERAR-03]
 introduces:
@@ -50,6 +50,11 @@ You do not need to take the answer apart yet. Hear and say the four beats:
 
 The earlier meaning, “wait,” is still available. The sentence around **esperar**
 selects the meaning.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espero** is a form of *esperar* ← Latin *sperare*, "to hope" (EtymDB 2.1). **sim** ← Latin *sic*, "thus, so" (EtymDB 2.1). Both are inherited.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-ESPERAR-02, PT-ETYMON-ESPERAR-03, PT-GRAMMAR-ESPERAR-HOPE-04] -->

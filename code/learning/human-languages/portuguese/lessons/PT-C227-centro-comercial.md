@@ -13,7 +13,8 @@ gloss: "a shopping centre"
 concept_tag: PT-COISAS227-CENTRO-COMERCIAL
 prerequisites: [PT-C227-livraria, PT-C227-peixaria]
 sounds: []
-roots: []
+roots: [merx-latin]
+etymology_hook: "centro comercial: centro ← Latin centrum; comercial ← Late Latin commercialis, from commercium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C227-peixaria]
 <!-- hl-knowledge: introduces=[PT-LEX-C227-COISAS227-04]; assesses=[] -->
 
 **o centro comercial** — "a shopping centre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**centro comercial** is "commercial centre": *centro* ← Latin *centrum* (EtymDB 2.1), and *comercial* ← Late Latin *commercialis*, from *commercium*, "trade" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

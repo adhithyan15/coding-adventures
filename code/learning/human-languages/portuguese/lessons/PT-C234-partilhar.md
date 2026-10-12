@@ -13,7 +13,8 @@ gloss: "to share"
 concept_tag: PT-VERB-PARTILHAR
 prerequisites: [PT-C234-criticar, PT-C234-depender]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "partilhar — from an old word for a share, from Latin particula 'a small part'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C234-depender]
 <!-- hl-knowledge: introduces=[PT-LEX-C234-VERBOS234-05]; assesses=[] -->
 
 **partilhar** — "to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partilhar** is built from an old word for a share, from Latin *particula*, "a small part" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

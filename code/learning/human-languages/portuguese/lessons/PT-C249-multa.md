@@ -13,7 +13,8 @@ gloss: "a fine"
 concept_tag: PT-COISAS249-MULTA
 prerequisites: [PT-C249-portagem, PT-C249-autoestrada]
 sounds: []
-roots: []
+roots: [multa-latin]
+etymology_hook: "multa ← Latin multa 'a fine, a penalty'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C249-autoestrada]
 <!-- hl-knowledge: introduces=[PT-LEX-C249-COISAS249-04]; assesses=[] -->
 
 **a multa** — "a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**multa** ← Latin *multa*, "a fine, a penalty" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

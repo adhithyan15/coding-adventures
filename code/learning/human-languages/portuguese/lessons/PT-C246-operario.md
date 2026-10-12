@@ -13,7 +13,8 @@ gloss: "a factory worker"
 concept_tag: PT-COISAS246-OPERARIO
 prerequisites: [PT-C246-eletricista, PT-C246-canalizador]
 sounds: []
-roots: []
+roots: [opus-latin]
+etymology_hook: "operário ← Latin operarius 'labourer', from opus 'work'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C246-canalizador]
 <!-- hl-knowledge: introduces=[PT-LEX-C246-COISAS246-04]; assesses=[] -->
 
 **o operário** — "a factory worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**operário** ← Latin *operarius*, "labourer" (EtymDB 2.1), from *opus*, "work" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

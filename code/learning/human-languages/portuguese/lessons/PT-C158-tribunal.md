@@ -13,7 +13,8 @@ gloss: "a court"
 concept_tag: PT-COISAS158-TRIBUNAL
 prerequisites: [PT-C158-governo, PT-C158-lei]
 sounds: []
-roots: []
+roots: [tribunus-latin]
+etymology_hook: "tribunal ← Latin tribunal 'the magistrates' platform' — English tribunal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C158-lei]
 <!-- hl-knowledge: introduces=[PT-LEX-C158-COISAS158-05]; assesses=[] -->
 
 **o tribunal** — "a court".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tribunal** ← Latin *tribunal*, "the magistrates' platform" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

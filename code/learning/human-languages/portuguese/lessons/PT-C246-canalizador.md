@@ -13,7 +13,8 @@ gloss: "a plumber"
 concept_tag: PT-COISAS246-CANALIZADOR
 prerequisites: [PT-C246-mecanico, PT-C246-eletricista]
 sounds: []
-roots: []
+roots: [canalis-latin]
+etymology_hook: "canalizador — from the verb to channel (from Latin canalis 'pipe') + -dor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C246-eletricista]
 <!-- hl-knowledge: introduces=[PT-LEX-C246-COISAS246-03]; assesses=[] -->
 
 **o canalizador** — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canalizador** is built from the verb "to pipe, to channel" and *-dor*. That verb is built on the word for a channel, from Latin *canalis*, "pipe, channel" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

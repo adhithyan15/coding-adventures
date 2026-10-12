@@ -13,7 +13,8 @@ gloss: "to deserve"
 concept_tag: PT-VERB-MERECER
 prerequisites: [PT-C175-queixar-se, PT-C175-faltar]
 sounds: []
-roots: []
+roots: [merere-latin]
+etymology_hook: "merecer ← Vulgar Latin *merescere, from merere 'to earn' — English merit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C175-faltar]
 <!-- hl-knowledge: introduces=[PT-LEX-C175-VERBOS175-04]; assesses=[] -->
 
 **merecer** — "to deserve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**merecer** ← Vulgar Latin *\*merescere* (EtymDB 2.1), from Latin *merere*, "to earn" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "free of charge"
 concept_tag: PT-QUAL216-GRATUITO-GRATUITA
 prerequisites: [PT-C215-tranquilo-tranquila, PT-C215-silencioso-silenciosa]
 sounds: []
-roots: []
+roots: [gratia]
+etymology_hook: "gratuito ← Latin gratuitus 'freely given', from gratia 'favour'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C215-silencioso-silenciosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C216-QUAL216-01]; assesses=[] -->
 
 **gratuito / gratuita** — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gratuito** ← Latin *gratuitus*, "freely given" (Lewis & Short), from *gratia*, "favour" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

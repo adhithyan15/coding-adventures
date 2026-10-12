@@ -13,7 +13,8 @@ gloss: "to sing"
 concept_tag: PT-VERB-CANTAR
 prerequisites: [PT-C39-menino, PT-C39-menina]
 sounds: []
-roots: []
+roots: [cantare-latin]
+etymology_hook: "cantar ← Latin cantare 'to sing' — English chant and cantata share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C39-menina]
 <!-- hl-knowledge: introduces=[PT-LEX-C40-VERBOS1-01]; assesses=[] -->
 
 **cantar** — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cantar** ← Latin *cantare*, "to sing" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an illness"
 concept_tag: PT-SAUDE2-DOENCA
 prerequisites: [PT-C34-remedio, PT-C34-hospital]
 sounds: []
-roots: []
+roots: [dolor-latin]
+etymology_hook: "doença ← Latin dolentia 'suffering', from dolens 'hurting' — the same root as dor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C34-hospital]
 <!-- hl-knowledge: introduces=[PT-LEX-C35-SAUDE2-01]; assesses=[] -->
 
 **a doença** — "an illness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**doença** ← Latin *dolentia*, "suffering" (EtymDB 2.1), from *dolens*, "hurting" — inherited. As in *dor*, the Latin *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

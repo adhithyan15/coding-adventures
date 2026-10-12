@@ -14,6 +14,7 @@ concept_tag: PT-COISAS196-GUITARRA
 prerequisites: [PT-C196-agulha, PT-C196-ferramenta]
 sounds: []
 roots: []
+etymology_hook: "guitarra ← Arabic qitara, from Greek kithara 'lyre' — English guitar and zither"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C196-ferramenta]
 <!-- hl-knowledge: introduces=[PT-LEX-C196-COISAS196-03]; assesses=[] -->
 
 **a guitarra** — "a guitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guitarra** ← Arabic *qīthāra* (EtymDB 2.1) — borrowed. Arabic took it from Greek *kithara*, "lyre".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

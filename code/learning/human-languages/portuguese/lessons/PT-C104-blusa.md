@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA104-BLUSA
 prerequisites: [PT-C103-cachecol, PT-C103-botas]
 sounds: []
 roots: []
+etymology_hook: "blusa ← French blouse, of uncertain origin — English blouse is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C103-botas]
 <!-- hl-knowledge: introduces=[PT-LEX-C104-ROUPA104-01]; assesses=[] -->
 
 **a blusa** — "a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**blusa** ← French *blouse* (EtymDB 2.1) — borrowed. The French word's origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

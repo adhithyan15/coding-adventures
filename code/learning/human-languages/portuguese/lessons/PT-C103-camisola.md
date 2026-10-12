@@ -13,7 +13,8 @@ gloss: "a jumper"
 concept_tag: PT-ROUPA103-CAMISOLA
 prerequisites: [PT-C102-rapaz, PT-C102-arco-iris]
 sounds: []
-roots: []
+roots: [latin-camisia]
+etymology_hook: "camisola — a small form of camisa 'shirt' (← Late Latin camisia)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C102-arco-iris]
 <!-- hl-knowledge: introduces=[PT-LEX-C103-ROUPA103-01]; assesses=[] -->
 
 **a camisola** — "a jumper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camisola** is built from *camisa*, "shirt", with the small-making *-ola*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

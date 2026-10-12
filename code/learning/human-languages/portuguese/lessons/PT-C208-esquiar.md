@@ -14,6 +14,7 @@ concept_tag: PT-VERB-ESQUIAR
 prerequisites: [PT-C208-trocar, PT-C208-descarregar]
 sounds: []
 roots: []
+etymology_hook: "esquiar — built from the ski word, from Norwegian ski through French — English ski"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C208-descarregar]
 <!-- hl-knowledge: introduces=[PT-LEX-C208-VERBOS208-04]; assesses=[] -->
 
 **esquiar** — "to ski".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esquiar** is built from the word for a ski, which came through French *ski* from Norwegian *ski* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

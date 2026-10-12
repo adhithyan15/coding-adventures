@@ -13,7 +13,8 @@ gloss: "silk"
 concept_tag: PT-COISAS251-SEDA
 prerequisites: [PT-C251-algodao, PT-C251-la]
 sounds: []
-roots: []
+roots: [saeta-latin]
+etymology_hook: "seda ← Latin saeta 'bristle, animal hair': the word passed to silk"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C251-la]
 <!-- hl-knowledge: introduces=[PT-LEX-C251-COISAS251-05]; assesses=[] -->
 
 **a seda** — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seda** ← Latin *saeta*, "bristle, animal hair" (EtymDB 2.1) — inherited. The word for a bristle passed to silk thread.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

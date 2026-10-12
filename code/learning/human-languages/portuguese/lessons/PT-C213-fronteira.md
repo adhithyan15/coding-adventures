@@ -13,7 +13,8 @@ gloss: "a border"
 concept_tag: PT-LUGAR213-FRONTEIRA
 prerequisites: [PT-C213-fora, PT-C213-interior]
 sounds: []
-roots: []
+roots: [frons-latin]
+etymology_hook: "fronteira — built from an old word for the front (← Latin frons) + -eira — English frontier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C213-interior]
 <!-- hl-knowledge: introduces=[PT-LEX-C213-LUGAR213-04]; assesses=[] -->
 
 **a fronteira** — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fronteira** is built from an old word for the front (EtymDB 2.1), from Latin *frons*, "forehead", and *-eira*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

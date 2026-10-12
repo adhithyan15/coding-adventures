@@ -13,7 +13,8 @@ gloss: "pretty, handsome"
 concept_tag: PT-ADJ2-BONITO
 prerequisites: [PT-C64-velho, PT-C64-mau]
 sounds: []
-roots: []
+roots: [bonus]
+etymology_hook: "bonito ← Spanish bonito 'pretty', a small form of 'good', from Latin bonus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C64-mau]
 <!-- hl-knowledge: introduces=[PT-LEX-C65-ADJ2-01]; assesses=[] -->
 
 **bonito** — "pretty, handsome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bonito** ← Spanish *bonito*, "pretty" (EtymDB 2.1) — borrowed. The Spanish word is a small form of the word for "good", from Latin *bonus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

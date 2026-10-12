@@ -13,7 +13,8 @@ gloss: "a cousin"
 concept_tag: PT-FAMILIA2-PRIMO
 prerequisites: [PT-C38-tio, PT-C38-tia]
 sounds: []
-roots: []
+roots: [primus-latin]
+etymology_hook: "primo ← Latin primus 'first', short for consobrinus primus 'first cousin'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C38-tia]
 <!-- hl-knowledge: introduces=[PT-LEX-C38-FAMILIA2-03]; assesses=[] -->
 
 **o primo** — "a cousin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**primo** ← Latin *primus*, "first" (EtymDB 2.1), short for *consobrinus primus*, "first cousin" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

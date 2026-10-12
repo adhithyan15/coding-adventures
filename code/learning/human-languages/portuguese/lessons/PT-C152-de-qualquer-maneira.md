@@ -13,7 +13,8 @@ gloss: "anyway"
 concept_tag: PT-PORQUE152-DE-QUALQUER-MANEIRA
 prerequisites: [PT-C151-la-em-cima, PT-C152-portanto]
 sounds: []
-roots: []
+roots: [latin-manus]
+etymology_hook: "de qualquer maneira: maneira ← Vulgar Latin *manuaria, from manus 'hand'; qualquer = qual + quer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C152-portanto]
 <!-- hl-knowledge: introduces=[PT-LEX-C152-PORQUE152-02]; assesses=[] -->
 
 **de qualquer maneira** — "anyway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**de qualquer maneira** is "in whatever manner": *maneira* ← Vulgar Latin *\*manuaria*, from *manus*, "hand" (EtymDB 2.1), and *qualquer* is *qual*, "which", + *quer*, "you want".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

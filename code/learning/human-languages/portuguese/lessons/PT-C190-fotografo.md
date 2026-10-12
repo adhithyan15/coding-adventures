@@ -14,6 +14,7 @@ concept_tag: PT-COISAS190-FOTOGRAFO
 prerequisites: [PT-C190-escritor-a-escritora, PT-C190-pintor-a-pintora]
 sounds: []
 roots: []
+etymology_hook: "fotógrafo — 'light-writer', from Greek phos 'light' + -graphos, like fotografia"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C190-pintor-a-pintora]
 <!-- hl-knowledge: introduces=[PT-LEX-C190-COISAS190-05]; assesses=[] -->
 
 **o fotógrafo** — "a photographer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fotógrafo** is a "light-writer": built from Greek *phōs*, "light", and *-graphos*, "writing", like *fotografia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a dozen"
 concept_tag: PT-COISAS228-DUZIA
 prerequisites: [PT-C228-fatia, PT-C228-pedaco]
 sounds: []
-roots: []
+roots: [duodecim-latin]
+etymology_hook: "dúzia ← Latin duodecim 'twelve', from duo + decem — English dozen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C228-pedaco]
 <!-- hl-knowledge: introduces=[PT-LEX-C228-COISAS228-04]; assesses=[] -->
 
 **a dúzia** — "a dozen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dúzia** ← Latin *duodecim*, "twelve" (EtymDB 2.1), from *duo*, "two", and *decem*, "ten" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a path, a way"
 concept_tag: PT-COISAS164-CAMINHO
 prerequisites: [PT-C163-torre, PT-C164-relvado]
 sounds: []
-roots: []
+roots: [camminus-latin]
+etymology_hook: "caminho ← Late Latin camminus 'way', a word Latin took from Celtic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C164-relvado]
 <!-- hl-knowledge: introduces=[PT-LEX-C164-COISAS164-02]; assesses=[] -->
 
 **o caminho** — "a path, a way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caminho** ← Late Latin *camminus*, "way" (EtymDB 2.1) — inherited. Latin took it from Celtic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

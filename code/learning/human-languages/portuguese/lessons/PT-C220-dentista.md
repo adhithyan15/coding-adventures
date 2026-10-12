@@ -13,7 +13,8 @@ gloss: "a dentist"
 concept_tag: PT-COISAS220-DENTISTA
 prerequisites: [PT-C220-jornalista, PT-C220-arquiteto]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "dentista — built from dente 'tooth' (← Latin dens) + -ista 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C220-arquiteto]
 <!-- hl-knowledge: introduces=[PT-LEX-C220-COISAS220-03]; assesses=[] -->
 
 **o dentista** — "a dentist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dentista** is built from *dente*, "tooth", and *-ista*, "one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

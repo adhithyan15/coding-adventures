@@ -13,7 +13,8 @@ gloss: "sixty"
 concept_tag: PT-NUMEROS130-SESSENTA
 prerequisites: [PT-C129-escutar, PT-C129-olhar, PT-C28-indicador, PT-C28-indicador, PT-C28-decimo]
 sounds: []
-roots: []
+roots: [sexaginta-latin]
+etymology_hook: "sessenta ← Latin sexaginta 'sixty'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ Then say *décimo*, the tenth.
 <!-- hl-knowledge: introduces=[PT-LEX-C130-NUMEROS130-01]; assesses=[] -->
 
 **sessenta** — "sixty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sessenta** ← Latin *sexaginta*, "sixty" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

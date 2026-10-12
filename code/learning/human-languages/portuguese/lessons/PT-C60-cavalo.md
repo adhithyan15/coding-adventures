@@ -13,7 +13,8 @@ gloss: "a horse"
 concept_tag: PT-ANIMAIS1-CAVALO
 prerequisites: [PT-C60-cao, PT-C60-gato]
 sounds: []
-roots: []
+roots: [caballus-latin]
+etymology_hook: "cavalo ← Latin caballus 'workhorse' — English cavalry and cavalier share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C60-gato]
 <!-- hl-knowledge: introduces=[PT-LEX-C60-ANIMAIS1-03]; assesses=[] -->
 
 **o cavalo** — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cavalo** ← Latin *caballus*, "workhorse" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA106-CHOCOLATE
 prerequisites: [PT-C106-melao, PT-C106-alho]
 sounds: []
 roots: []
+etymology_hook: "chocolate ← Spanish chocolate, from Nahuatl — English chocolate is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C106-alho]
 <!-- hl-knowledge: introduces=[PT-LEX-C106-COMIDA106-04]; assesses=[] -->
 
 **o chocolate** — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chocolate** ← Spanish *chocolate* (EtymDB 2.1) — borrowed. Spanish took it from Nahuatl.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-CASA99-CHAVENA
 prerequisites: [PT-C98-candeeiro, PT-C98-casa-de-banho]
 sounds: []
 roots: []
+etymology_hook: "chávena ← Malay cawan 'cup', from Chinese cha wan 'tea bowl'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C98-casa-de-banho]
 <!-- hl-knowledge: introduces=[PT-LEX-C99-CASA99-01]; assesses=[] -->
 
 **a chávena** — "a cup". In Brazil, **a xícara**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chávena** ← Malay *cawan*, "cup" (EtymDB 2.1) — borrowed. Malay took it from Chinese *chá wǎn*, "tea bowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

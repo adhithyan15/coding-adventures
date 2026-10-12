@@ -14,6 +14,7 @@ concept_tag: PT-COISAS226-TENIS
 prerequisites: [PT-C226-ginasio, PT-C226-natacao]
 sounds: []
 roots: []
+etymology_hook: "ténis ← English tennis, perhaps from French tenez 'hold!', called by the server"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C226-natacao]
 <!-- hl-knowledge: introduces=[PT-LEX-C226-COISAS226-04]; assesses=[] -->
 
 **o ténis** — "tennis".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ténis** ← English *tennis* (EtymDB 2.1) — borrowed. The English word may come from French *tenez*, "hold!".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

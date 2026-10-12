@@ -14,6 +14,7 @@ concept_tag: PT-LEGUMES-TOMATE
 prerequisites: [PT-C45-uva, PT-C46-batata]
 sounds: []
 roots: []
+etymology_hook: "tomate ← Spanish tomate, from Nahuatl tomatl — English tomato is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C46-batata]
 <!-- hl-knowledge: introduces=[PT-LEX-C46-LEGUMES-02]; assesses=[] -->
 
 **o tomate** — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tomate** ← Spanish *tomate*, "tomato" (EtymDB 2.1) — borrowed. Spanish took it from Nahuatl *tomatl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

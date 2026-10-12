@@ -13,7 +13,8 @@ gloss: "difficult"
 concept_tag: PT-ADJ3-DIFICIL
 prerequisites: [PT-C66-lento, PT-C66-facil]
 sounds: []
-roots: []
+roots: [facilis-latin]
+etymology_hook: "difícil ← Latin difficilis, dis- 'not' + facilis 'doable' — English difficult"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C66-facil]
 <!-- hl-knowledge: introduces=[PT-LEX-C66-ADJ3-04]; assesses=[] -->
 
 **difícil** — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**difícil** ← Latin *difficilis*, "hard to do" (EtymDB 2.1), from *dis-*, "not", and *facilis*, "doable" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

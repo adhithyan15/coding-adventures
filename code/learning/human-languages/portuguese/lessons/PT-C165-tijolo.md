@@ -13,7 +13,8 @@ gloss: "a brick"
 concept_tag: PT-COISAS165-TIJOLO
 prerequisites: [PT-C165-couro, PT-C165-metal]
 sounds: []
-roots: []
+roots: [tegula-latin]
+etymology_hook: "tijolo ← Spanish tejuelo 'a small tile', from Latin tegula 'tile'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C165-metal]
 <!-- hl-knowledge: introduces=[PT-LEX-C165-COISAS165-03]; assesses=[] -->
 
 **o tijolo** — "a brick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tijolo** ← Spanish *tejuelo*, "a small tile" — borrowed (EtymDB 2.1). Behind it is Latin *tegula*, "tile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

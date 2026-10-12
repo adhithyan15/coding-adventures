@@ -13,7 +13,8 @@ gloss: "paper"
 concept_tag: PT-COISAS1-PAPEL
 prerequisites: [PT-C51-garfo, PT-C52-caneta]
 sounds: []
-roots: []
+roots: [papyrus-latin]
+etymology_hook: "papel ← Catalan paper, from Latin papyrus — English paper is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C52-caneta]
 <!-- hl-knowledge: introduces=[PT-LEX-C52-COISAS1-02]; assesses=[] -->
 
 **o papel** — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**papel** ← Catalan *paper* — borrowed. EtymDB 2.1 traces *papel* only to Old Portuguese *papel*; it derives Spanish *papel* from Catalan *paper*, and *paper* from Latin *papyrus*, "papyrus".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

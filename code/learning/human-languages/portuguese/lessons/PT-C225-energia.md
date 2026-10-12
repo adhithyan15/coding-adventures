@@ -13,7 +13,8 @@ gloss: "energy"
 concept_tag: PT-COISAS225-ENERGIA
 prerequisites: [PT-C225-poluicao, PT-C225-reciclagem]
 sounds: []
-roots: []
+roots: [energia-latin]
+etymology_hook: "energia ← Late Latin energia, from Greek energeia 'activity' — English energy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C225-reciclagem]
 <!-- hl-knowledge: introduces=[PT-LEX-C225-COISAS225-04]; assesses=[] -->
 
 **a energia** — "energy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**energia** ← Late Latin *energia*, "energy" (EtymDB 2.1) — a learned borrowing from Late Latin. Latin took it from Greek *energeia*, "activity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

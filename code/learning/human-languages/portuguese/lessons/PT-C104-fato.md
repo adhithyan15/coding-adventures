@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA104-FATO
 prerequisites: [PT-C103-botas, PT-C104-blusa]
 sounds: []
 roots: []
+etymology_hook: "fato — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C104-blusa]
 <!-- hl-knowledge: introduces=[PT-LEX-C104-ROUPA104-02]; assesses=[] -->
 
 **o fato** — "a suit". In Brazil, **o terno**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fato** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

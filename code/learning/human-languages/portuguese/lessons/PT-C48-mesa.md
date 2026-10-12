@@ -13,7 +13,8 @@ gloss: "a table"
 concept_tag: PT-CASA1-MESA
 prerequisites: [PT-C48-cozinha, PT-C48-janela]
 sounds: []
-roots: []
+roots: [mensa-latin]
+etymology_hook: "mesa ← Latin mensa 'table' — the same word as English mesa, a flat-topped hill"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C48-janela]
 <!-- hl-knowledge: introduces=[PT-LEX-C48-CASA1-04]; assesses=[] -->
 
 **a mesa** — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mesa** ← Latin *mensa*, "table" (EtymDB 2.1), through Vulgar Latin *\*mesa* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-LAZER115-RELVA
 prerequisites: [PT-C115-concerto, PT-C115-festa]
 sounds: []
 roots: []
+etymology_hook: "relva — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C115-festa]
 <!-- hl-knowledge: introduces=[PT-LEX-C115-LAZER115-05]; assesses=[] -->
 
 **a relva** — "grass, a lawn". In Brazil, **a grama**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**relva** — its origin is uncertain. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

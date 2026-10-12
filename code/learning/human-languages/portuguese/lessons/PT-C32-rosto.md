@@ -13,7 +13,8 @@ gloss: "the face"
 concept_tag: PT-CORPO3-ROSTO
 prerequisites: [PT-C32-cabelo, PT-C32-barriga]
 sounds: []
-roots: []
+roots: [rostrum-latin]
+etymology_hook: "rosto ← Latin rostrum 'beak, snout' — English rostrum is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C32-barriga]
 <!-- hl-knowledge: introduces=[PT-LEX-C32-CORPO3-04]; assesses=[] -->
 
 **o rosto** — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rosto** ← Latin *rostrum*, "beak, snout" — inherited. EtymDB 2.1 has no usable row for *rosto*; it derives Spanish *rostro* from Latin *rostrum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

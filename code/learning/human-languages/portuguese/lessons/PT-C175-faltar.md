@@ -13,7 +13,8 @@ gloss: "to be missing, to lack"
 concept_tag: PT-VERB-FALTAR
 prerequisites: [PT-C175-informar, PT-C175-queixar-se]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "faltar — from the word for a lack, which goes back to Latin fallere 'to fail' — English fault"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C175-queixar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C175-VERBOS175-03]; assesses=[] -->
 
 **faltar** — "to be missing, to lack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faltar** is built from the word for a lack, which goes back to Latin *fallere*, "to deceive, to fail" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

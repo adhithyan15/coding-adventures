@@ -13,7 +13,8 @@ gloss: "a party"
 concept_tag: PT-LAZER115-FESTA
 prerequisites: [PT-C115-vida, PT-C115-concerto]
 sounds: []
-roots: []
+roots: [festum-latin]
+etymology_hook: "festa ← Latin festa 'feasts', plural of festum — English feast and festival"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C115-concerto]
 <!-- hl-knowledge: introduces=[PT-LEX-C115-LAZER115-04]; assesses=[] -->
 
 **a festa** — "a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**festa** ← Latin *festa*, "feasts" (EtymDB 2.1), the plural of *festum* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

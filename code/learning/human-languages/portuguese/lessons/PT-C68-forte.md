@@ -13,7 +13,8 @@ gloss: "strong"
 concept_tag: PT-ADJ5-FORTE
 prerequisites: [PT-C67-cheio, PT-C67-vazio]
 sounds: []
-roots: []
+roots: [fortis-latin]
+etymology_hook: "forte ← Latin fortis 'strong, brave' — English fort and fortitude share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C67-vazio]
 <!-- hl-knowledge: introduces=[PT-LEX-C68-ADJ5-01]; assesses=[] -->
 
 **forte** — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forte** ← Latin *fortis*, "strong, brave" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

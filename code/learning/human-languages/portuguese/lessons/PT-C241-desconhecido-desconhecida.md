@@ -13,7 +13,8 @@ gloss: "unknown"
 concept_tag: PT-QUAL241-DESCONHECIDO-DESCONHECIDA
 prerequisites: [PT-C241-aspero-aspera, PT-C241-profundo-profunda]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "desconhecido — des- 'un-' + conhecido 'known' (← Latin cognoscere)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C241-profundo-profunda]
 <!-- hl-knowledge: introduces=[PT-LEX-C241-QUAL241-04]; assesses=[] -->
 
 **desconhecido / desconhecida** — "unknown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desconhecido** is "unknown": *des-*, "un-", and the participle of *conhecer*, "to know" (← Latin *cognoscere*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

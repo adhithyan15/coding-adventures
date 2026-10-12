@@ -13,7 +13,8 @@ gloss: "the liver"
 concept_tag: PT-SAUDE148-FIGADO
 prerequisites: [PT-C148-cerebro, PT-C148-pulmao]
 sounds: []
-roots: []
+roots: [ficus-latin]
+etymology_hook: "fígado ← Late Latin ficatum, liver fattened with figs, from ficus 'fig'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C148-pulmao]
 <!-- hl-knowledge: introduces=[PT-LEX-C148-SAUDE148-04]; assesses=[] -->
 
 **o fígado** — "the liver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fígado** ← Late Latin *ficatum*, "fig-fattened liver" (EtymDB 2.1), from *ficus*, "fig" — inherited. Geese were fattened on figs, and the liver dish named the organ.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
