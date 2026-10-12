@@ -3928,7 +3928,10 @@ impl Compiler {
             "ln" => self
                 .builtin_single_exp_nonnegative_sign_operand(actuals[0])
                 .or_else(|| self.builtin_double_exp_sign_operand(actuals[0]))
-                .or_else(|| self.builtin_triple_exp_sign_operand(actuals[0])),
+                .or_else(|| self.builtin_triple_exp_sign_operand(actuals[0]))
+                .or_else(|| {
+                    self.builtin_quadruple_exp_nonpositive_sign_operand(actuals[0])
+                }),
             _ => None,
         }
     }
@@ -4403,6 +4406,34 @@ impl Compiler {
         self.builtin_sign_operand(operand)
     }
 
+    fn builtin_quadruple_exp_nonpositive_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand =
+                self.builtin_quadruple_exp_nonpositive_sign_operand(then_node)?;
+            let else_operand =
+                self.builtin_quadruple_exp_nonpositive_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_value(then_operand)
+                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
+        let outer_middle_exp = self.builtin_exp_operand(node)?;
+        let inner_middle_exp = self.builtin_exp_operand(outer_middle_exp)?;
+        let inner_exp = self.builtin_exp_operand(inner_middle_exp)?;
+        let operand = self.builtin_exp_operand(inner_exp)?;
+        if self.contains_builtin_exp_call(operand) {
+            return None;
+        }
+        self.builtin_nonpositive_unit_sign_operand(operand)
+    }
+
     fn builtin_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
@@ -4544,7 +4575,10 @@ impl Compiler {
             "ln" => self
                 .builtin_single_exp_sign_operand(actuals[0])
                 .or_else(|| self.builtin_double_exp_sign_operand(actuals[0]))
-                .or_else(|| self.builtin_triple_exp_sign_operand(actuals[0])),
+                .or_else(|| self.builtin_triple_exp_sign_operand(actuals[0]))
+                .or_else(|| {
+                    self.builtin_quadruple_exp_nonpositive_sign_operand(actuals[0])
+                }),
             _ => None,
         }
     }
@@ -15123,9 +15157,30 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_nonpositive_quadruple_exp_result_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(ln(exp(exp(exp(exp(-abs(sign(pick())))))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real x; x := entier(sqrt(ln(exp(exp(exp(exp(-abs(sign(pick()))))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln over exactly four exponentials preserves a nonpositive sign-rooted result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_ln_exp_entier_sign_widening_rejects_unproven_mappings() {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(exp(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(exp(exp(-abs(sign(pick()))))))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(pick()))); output(result) end",
             "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(exp(exp(sign(pick()))))); output(result) end",
         ] {

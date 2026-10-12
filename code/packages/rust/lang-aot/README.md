@@ -86,8 +86,10 @@ deeper, non-runtime-real, and overridden branches remain gated.
 The same exact two-exponential proof now applies to a direct sign-rooted
 operand; unrestricted roots and overrides remain gated.
 The direct proof extends to exactly three exponentials, whose complete
-sign-rooted tower remains finite; a fourth direct layer would overflow binary64
-before `ln` and therefore remains gated.
+sign-rooted tower remains finite. Exactly four exponentials are also accepted
+over a proven nonpositive unit sign root, whose narrower tower remains finite;
+a positive-capable fourth layer or a fifth nonpositive layer would overflow
+binary64 before `ln` and therefore remains gated.
 The same bounded proof extends to exactly three built-in exponentials per
 branch; missing, deeper, non-runtime-real, and overridden branches remain gated.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
