@@ -147,6 +147,14 @@ Initialize only that immutable graph once at module scope. Keep digest creation,
 pin inventory/equality assertions and the explicit pin-update branch inside the
 case, with all temporary-root ownership regressions independent and live.
 
+Persian's real writing-ladder snapshot measured 64.8 seconds around another
+default-root corpus read. Share one parsed fixture in `tests/corpus/real-corpus.ts`
+with that case and the seven Kannada/Tamil/Telugu/Sanskrit exam coverage/probe
+cases that likewise read the immutable default corpus. Keep writing measurements,
+exam inventory reads, fresh coverage sets/reports and every assertion inside
+their original deadlines. Do not change language-continuity helpers, synthetic
+fixtures, input validation or test discovery. Verify under the same 2 GiB heap.
+
 Seven live full-corpus CLI checks exceeded their existing integration limits:
 the three Spanish report checks measured 60.5-72.3 seconds, narration measured
 71.7 seconds, and the three all-ledger shard checks measured 31.9-32.7 seconds.

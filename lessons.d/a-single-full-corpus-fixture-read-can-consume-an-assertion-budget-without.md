@@ -16,6 +16,13 @@ graph read. Its parsed default-root graph can be a module fixture, while digest
 creation, exact pin comparisons and intentional pin updates remain inside the
 case. Temporary-root ownership checks must continue to read their changed files.
 
+Persian's writing-ladder snapshot then measured 64.8 seconds around a whole-corpus
+read. Seven exam coverage/probe cases in the Kannada, Tamil, Telugu and Sanskrit
+shards read the same immutable input. Give those cases a shared parsed fixture,
+leaving live inventory reads, fresh measurements and all assertions inside their
+original deadlines. Check consumers for mutation before sharing their inputs;
+retain the normal worker count and heap cap when validating the change.
+
 The same run measured live Spanish/narration report checks at 60.5-72.3 seconds
 and all-ledger shard checks at 31.9-32.7 seconds. Those calls must still read and
 validate the filesystem inside their cases. Confirm the complete failure
