@@ -15144,7 +15144,9 @@ mod tests {
                     for _ in 0..depth { expression = format!("exp({expression})"); }
                     expression
                 };
-                let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose({root}) then {} else {})))) end", branch("left"), branch("right"));
+                let conditional = format!("if choose({root}) then {} else {}", branch("left"), branch("right"));
+                let result = if depth == 4 { format!("entier(ln({conditional}))") } else { format!("entier(sqrt(ln({conditional})))") };
+                let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * {result}) end");
                 let error = compile_source(&source, "test").expect_err("direct output must not reuse a proof invalidated by selector alias promotion");
                 assert!(format!("{error:?}").contains("cannot print a real value"), "depth={depth}, root={root}: {error:?}");
             }
@@ -15161,7 +15163,9 @@ mod tests {
                         for _ in 0..depth { expression = format!("exp({expression})"); }
                         expression
                     };
-                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose({root}) then {} else {})))) end", branch("left"), branch("right"));
+                    let conditional = format!("if choose({root}) then {} else {}", branch("left"), branch("right"));
+                    let result = if depth == 4 { format!("entier(ln({conditional}))") } else { format!("entier(sqrt(ln({conditional})))") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * {result}) end");
                     let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("depth={depth}, root={root}, condition={condition}: {error:?}"));
                     let main = module.get_function("main").expect("has main");
                     assert_eq!(main.instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
