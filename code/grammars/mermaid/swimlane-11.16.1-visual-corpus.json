@@ -38,6 +38,7 @@
     "tagged-process-shapes",
     "paper-tape-shapes",
     "lined-document-shapes",
+    "data-store-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",
