@@ -133,3 +133,22 @@ calls, explicit temporary-root loader regressions and production loader behavior
 unchanged. Validate the complete package with its ordinary configuration, coverage
 threshold and a 2 GiB heap cap before pushing, rather than repairing these same
 readonly parsing costs one cold CI case at a time.
+
+The full local two-worker coverage run also measured a single real-corpus
+cousins snapshot at 59.3 seconds, with its default-root parse still inside the
+30-second assertion. Move only that immutable input parse into the module
+fixture; retain both cousin indexes, joins and every assertion inside the
+ordinary deadline. The audit must cover single expensive fixture reads as well
+as repeated reads.
+
+Seven live full-corpus CLI checks exceeded their existing integration limits:
+the three Spanish report checks measured 60.5-72.3 seconds, narration measured
+71.7 seconds, and the three all-ledger shard checks measured 31.9-32.7 seconds.
+Confirm the completed run's diagnostics identify timeout-only failures before
+changing those cases. Keep each CLI invocation and exact report/exit comparison
+inside its test body. Give Spanish/narration checks explicit 120-second limits
+and all-ledger checks explicit 60-second limits. Do not replace live reads with
+cached reports, narrow the production loaders, alter ordinary 30-second defaults,
+change workers/heap/coverage or skip path-security cases. Revalidate these files
+with the normal two-worker configuration and 2 GiB heap cap; separately report
+the host's unavailable file-symlink privileges.
