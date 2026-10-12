@@ -1,4 +1,4 @@
-## Unreleased
+## Unreleased curve marker tangents
 
 - Fix directed marker collapse on aligned Bump and Step swimlane routes by
   selecting the first noncoincident endpoint control/waypoint, then the opposite

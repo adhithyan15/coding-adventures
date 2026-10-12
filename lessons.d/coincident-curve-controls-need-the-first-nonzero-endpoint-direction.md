@@ -27,4 +27,10 @@ For these aligned fixtures, StepBefore's waypoint equals the start and
 StepAfter's equals the end in both LR and TB. Preserve that rejected 4PASS/1FAIL
 receipt and correct the test's table, leaving production route commands intact.
 
+The corrected source passed 759 tests/docs across 32 targets and strict lint,
+then documentation checking rejected the new changelog shard's missing heading
+digest. Use the repository's rank/slug/eight-hex heading identity convention.
+Preserve the partial execution receipt; after a docs-only correction, prove
+runtime source identities before retaining its successful native rows.
+
 TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
