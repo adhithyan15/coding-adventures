@@ -13,7 +13,8 @@ gloss: "anger"
 concept_tag: IT-EMOZIONI-RABBIA
 prerequisites: [IT-C42-gioia, IT-C43-paura]
 sounds: []
-roots: []
+roots: [rabies-latin]
+etymology_hook: "rabbia ← Latin rabies 'rage, fury' — English rabies is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C43-paura]
 <!-- hl-knowledge: introduces=[IT-LEX-C43-EMOZIONI-02]; assesses=[] -->
 
 **la rabbia** — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rabbia** ← Vulgar Latin *rabia*, from Latin *rabies*, "rage, fury" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

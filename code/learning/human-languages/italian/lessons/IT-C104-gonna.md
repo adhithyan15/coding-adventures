@@ -13,7 +13,8 @@ gloss: "a skirt"
 concept_tag: IT-VESTITI104-GONNA
 prerequisites: [IT-C103-sciarpa, IT-C103-stivali]
 sounds: []
-roots: []
+roots: [gunna-latin]
+etymology_hook: "gonna ← Late Latin gunna, a fur garment of uncertain origin — English gown is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C103-stivali]
 <!-- hl-knowledge: introduces=[IT-LEX-C104-VESTITI104-01]; assesses=[] -->
 
 **la gonna** — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gonna** ← Late Latin *gunna*, a garment of fur or leather — inherited. (EtymDB 2.1) Where *gunna* itself came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a bear"
 concept_tag: IT-ANIMALI2-ORSO
 prerequisites: [IT-C69-topo, IT-C69-lupo]
 sounds: []
-roots: []
+roots: [ursus-latin]
+etymology_hook: "orso ← Latin ursus 'bear' — the Ursa of the night sky"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C69-lupo]
 <!-- hl-knowledge: introduces=[IT-LEX-C69-ANIMALI2-04]; assesses=[] -->
 
 **l'orso** — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orso** ← Latin *ursus*, "bear" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

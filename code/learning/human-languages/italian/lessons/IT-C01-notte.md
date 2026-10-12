@@ -11,6 +11,7 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [IT-C01-sera]
 sounds: [double-tt]
 roots: [noctem]
+etymology_hook: "notte ← Latin noctem 'night': Latin -ct- became -tt-; English nocturnal shares it"
 reviews_of: [IT-C01-sera, IT-C01-giorno]
 duration:
   max_seconds: 120

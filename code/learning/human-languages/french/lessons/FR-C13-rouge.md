@@ -13,7 +13,7 @@ sounds: [vowel-ou, soft-j]
 roots: [rubeus-latin]
 etymology_hook: "rouge ← rubeus ← PIE *h₁rewdʰ- — the same root as English red, rust and ruddy, and German rot; one of humanity's oldest named colours"
 duration:
-  max_seconds: 200
+  max_seconds: 214
 requires:
   knowledge: [FR-LEX-NOIR-01]
 introduces:
@@ -42,7 +42,7 @@ further than either — further than Latin itself.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-ROUGE-06]; assesses=[] -->
 
-- `vowel-ou` — the **ou** is the pure **oo** you have in **douze**.
+- `vowel-ou` — the letters **o-u** make the pure **oo** you have in **douze**.
 - `soft-j` — the **g** here is the soft *zh* of *measure*, the same sound as the
   **j** in **janvier**.
 - Together: **rouge** = *ROOZH*, one syllable. English borrowed the word whole

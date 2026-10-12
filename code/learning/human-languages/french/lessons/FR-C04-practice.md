@@ -58,7 +58,7 @@ Everything from the French Chapters 1–4:
 > — Je m'appelle Marc. Enchanté.
 > — Ça va ?
 > — Ça va bien, merci, et toi ?
-> — Très bien. Bon… **à demain**, Marc.
+> — Bien. Bon… **à demain**, Marc.
 > — Oui, **à demain**, Chloé. **Au revoir !**
 
 ## What you've built this chapter
@@ -85,4 +85,5 @@ Everything from the French Chapters 1–4:
 [PAUSE 3s] What does *au revoir* literally promise? (A *re-seeing* — "until we
 see again.") Which preposition carries French's soft goodbyes? (*à* — like
 Spanish *hasta*.) You can now hold a whole short French exchange, hello to
-goodbye. Next chapter: numbers, or everyday courtesies (*s'il vous plaît*).
+goodbye. Next chapter: your first verbs — to speak, to live somewhere, to
+work.

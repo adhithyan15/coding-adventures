@@ -14,6 +14,7 @@ concept_tag: IT-OGGETTI101-MESSAGGIO
 prerequisites: [IT-C101-calendario, IT-C101-lettera]
 sounds: []
 roots: []
+etymology_hook: "messaggio ← Old French message — borrowed; English message is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C101-lettera]
 <!-- hl-knowledge: introduces=[IT-LEX-C101-OGGETTI101-05]; assesses=[] -->
 
 **il messaggio** — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**messaggio** ← Old French or Old Provençal *message* — borrowed. (EtymDB 2.1 links it to the later Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

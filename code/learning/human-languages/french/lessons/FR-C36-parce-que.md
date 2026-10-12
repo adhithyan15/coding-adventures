@@ -54,7 +54,7 @@ pointing words, one job.
 
 Before a vowel the **que** elides, exactly as *le* and *de* do:
 
-> **parce qu'il est tard** — because it's late.
+> **parce qu'il est midi** — because it's noon.
 
 And the **ce** inside it is the same *ce* you took two chapters ago — the fourth
 place that one small pointing word has turned up.
@@ -64,7 +64,7 @@ place that one small pointing word has turned up.
 
 - [YOU SAY: the question and its answer — "Pourquoi ? — Parce que je suis
   fatigué."]
-- [YOU SAY: elided — "parce qu'il est tard"]
+- [YOU SAY: elided — "parce qu'il est midi"]
 - [YOU SAY: the three pieces, slowly — *par … ce … que*]
 - [YOU SAY: all four joiners — "et, ou, mais, parce que"]
 

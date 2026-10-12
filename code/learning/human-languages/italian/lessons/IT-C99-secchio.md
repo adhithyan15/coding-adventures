@@ -13,7 +13,8 @@ gloss: "a bucket"
 concept_tag: IT-ATTREZZI99-SECCHIO
 prerequisites: [IT-C98-padella, IT-C98-vaso]
 sounds: []
-roots: []
+roots: [situlus-latin]
+etymology_hook: "secchio ← Latin situlus 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C98-vaso]
 <!-- hl-knowledge: introduces=[IT-LEX-C99-ATTREZZI99-01]; assesses=[] -->
 
 **il secchio** — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**secchio** ← Latin *situlus*, "bucket" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-VOLERE
 prerequisites: [IT-C85-bisogno, IT-C85-mestiere]
 sounds: []
 roots: []
+etymology_hook: "volere ← Vulgar Latin volere, from Latin velle 'to want' — English voluntary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C85-mestiere]
 <!-- hl-knowledge: introduces=[IT-LEX-C86-VOLERE86-01]; assesses=[] -->
 
 **volere** — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volere** ← Vulgar Latin *volere*, remade from Latin *velle*, "to want" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

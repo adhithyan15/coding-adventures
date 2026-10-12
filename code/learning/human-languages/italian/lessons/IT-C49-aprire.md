@@ -13,7 +13,8 @@ gloss: "to open"
 concept_tag: IT-VERB-APRIRE
 prerequisites: [IT-C49-insegnare, IT-C49-imparare]
 sounds: []
-roots: []
+roots: [aperire-latin]
+etymology_hook: "aprire ← Latin aperire 'to open' — English aperture shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C49-imparare]
 <!-- hl-knowledge: introduces=[IT-LEX-C49-VERBI3-05]; assesses=[] -->
 
 **aprire** — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aprire** ← Latin *aperire*, "to open" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

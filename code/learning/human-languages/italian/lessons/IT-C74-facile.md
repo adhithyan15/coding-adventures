@@ -13,7 +13,8 @@ gloss: "easy"
 concept_tag: IT-AGG3-FACILE
 prerequisites: [IT-C74-veloce, IT-C74-lento]
 sounds: []
-roots: []
+roots: [facilis-latin]
+etymology_hook: "facile ← Latin facilis 'easy to do', from facere 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C74-lento]
 <!-- hl-knowledge: introduces=[IT-LEX-C74-AGG3-03]; assesses=[] -->
 
 **facile** — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**facile** ← Latin *facilis*, "easy to do", from *facere*, "to do" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

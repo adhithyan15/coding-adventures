@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI87-CINEMA
 prerequisites: [IT-C87-fermata, IT-C87-paese]
 sounds: []
 roots: []
+etymology_hook: "cinema ← French cinéma, from Greek kinema 'movement'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C87-paese]
 <!-- hl-knowledge: introduces=[IT-LEX-C87-LUOGHI87-04]; assesses=[] -->
 
 **il cinema** — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinema** ← French *cinéma* — borrowed; the word is built on Greek *kinema*, "movement". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 41,
-  "sourceHash": "fnv1a64:d28365ee7fbd3581",
+  "sourceHash": "fnv1a64:e4021bc659b910f6",
   "lessonIds": [
     "IT-C41-medicina",
     "IT-C41-medico",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch41.txt",
   "json": "italian/narration/ch41.json",
-  "textHash": "fnv1a64:1957d06578d26dce",
-  "jsonHash": "fnv1a64:73956d201004ba81",
+  "textHash": "fnv1a64:b41459c43f53630d",
+  "jsonHash": "fnv1a64:fda3ea92dd1b265b",
   "findings": []
 }

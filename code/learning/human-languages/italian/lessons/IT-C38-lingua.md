@@ -13,7 +13,8 @@ gloss: "the tongue; a language"
 concept_tag: IT-CORPO2-LINGUA
 prerequisites: [IT-C37-dito, IT-C37-dente]
 sounds: []
-roots: []
+roots: [lingua-latin]
+etymology_hook: "lingua ← Latin lingua 'tongue' — English language comes from it through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C37-dente]
 <!-- hl-knowledge: introduces=[IT-LEX-C38-CORPO2-01]; assesses=[] -->
 
 **la lingua** — "the tongue; a language".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lingua** ← Latin *lingua*, "tongue, language" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

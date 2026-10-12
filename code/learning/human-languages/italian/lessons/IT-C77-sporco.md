@@ -13,7 +13,8 @@ gloss: "dirty"
 concept_tag: IT-AGG6-SPORCO
 prerequisites: [IT-C77-grigio, IT-C77-pulito]
 sounds: []
-roots: []
+roots: [spurcus-latin]
+etymology_hook: "sporco ← Latin spurcus 'dirty'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C77-pulito]
 <!-- hl-knowledge: introduces=[IT-LEX-C77-AGG6-04]; assesses=[] -->
 
 **sporco** — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sporco** ← Latin *spurcus*, "dirty, foul" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

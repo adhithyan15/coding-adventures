@@ -14,6 +14,7 @@ concept_tag: IT-CIBO109-GELATO
 prerequisites: [IT-C109-pasto, IT-C109-yogurt]
 sounds: []
 roots: []
+etymology_hook: "gelato is 'frozen', from Latin gelare 'to freeze' — English jelly shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C109-yogurt]
 <!-- hl-knowledge: introduces=[IT-LEX-C109-CIBO109-03]; assesses=[] -->
 
 **il gelato** — "ice cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gelato** is "frozen", from the verb for "to freeze", which ← Latin *gelare*, "to freeze". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a theatre"
 concept_tag: IT-LUOGHI87-TEATRO
 prerequisites: [IT-C87-paese, IT-C87-cinema]
 sounds: []
-roots: []
+roots: [theatrum-latin]
+etymology_hook: "teatro ← Latin theatrum, from Greek theatron 'a place for viewing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C87-cinema]
 <!-- hl-knowledge: introduces=[IT-LEX-C87-LUOGHI87-05]; assesses=[] -->
 
 **il teatro** — "a theatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**teatro** ← Latin *theatrum* — inherited; Latin took it from Greek *theatron*, "a place for viewing". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

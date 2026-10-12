@@ -245,6 +245,18 @@
     {
       "name": "edge-class-styles",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nclassDef urgent stroke:#dc2626,stroke-width:4px,stroke-dasharray:8 3,color:#991b1b\nclass submit urgent\nstyle release stroke:#059669,stroke-width:5px,stroke-dasharray:2 2,color:#065f46"
+    },
+    {
+      "name": "edge-animation-config",
+      "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nsubmit@{ animate: true, animation: fast }\nrelease@{ animation: slow }"
+    },
+    {
+      "name": "edge-curve-config",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest curved@--> done\nreview linear@--> done\ncurved@{ curve: basis }\nlinear@{ curve: linear }"
+    },
+    {
+      "name": "edge-step-curves",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst stepped@--> sixth\nsecond before@--> fifth\nthird after@--> fourth\nstepped@{ curve: step }\nbefore@{ curve: stepBefore }\nafter@{ curve: stepAfter }"
     }
   ]
 }

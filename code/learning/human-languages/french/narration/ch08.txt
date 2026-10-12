@@ -111,7 +111,7 @@ You already own the second half. That -di is the same diēs that ends lundi and 
 Grammar Lens: a name instead of a number.
 Because midi is the hour, it does not take heures. Drop the number and drop the noun:
 Il est midi. — "It is noon."
-Not il est douze heures. The frame stays; what goes into it is a name.
+Not "it is twelve hours" with a number in the slot. The frame stays; what goes into it is a name.
 
 Why it's said this way: English noon slid.
 English noon is Latin nōna hōra, "the ninth hour" — which in Roman reckoning was the middle of the afternoon. Over centuries the meal it named crept earlier, and the word came with it until it landed on midday and stopped. So English says noon and means "the ninth hour"; French says midi and means what it says.

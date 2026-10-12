@@ -14,6 +14,7 @@ concept_tag: IT-DOVE-DENTRO
 prerequisites: [IT-C79-sopra, IT-C80-sotto]
 sounds: []
 roots: []
+etymology_hook: "dentro ← Latin de + intro 'inside'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C80-sotto]
 <!-- hl-knowledge: introduces=[IT-LEX-C80-DOVE-02]; assesses=[] -->
 
 **dentro** — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dentro** ← Latin *de* + *intro*, "inside" — built from the two. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

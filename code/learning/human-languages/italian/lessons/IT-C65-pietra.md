@@ -13,7 +13,8 @@ gloss: "a stone"
 concept_tag: IT-NATURA2-PIETRA
 prerequisites: [IT-C65-lago, IT-C65-mare]
 sounds: []
-roots: []
+roots: [petra-latin]
+etymology_hook: "pietra ← Latin petra, from Greek petra 'rock' — English petrify shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C65-mare]
 <!-- hl-knowledge: introduces=[IT-LEX-C65-NATURA2-04]; assesses=[] -->
 
 **la pietra** — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pietra** ← Latin *petra*, "rock" — inherited; Latin took it from Greek *petra*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

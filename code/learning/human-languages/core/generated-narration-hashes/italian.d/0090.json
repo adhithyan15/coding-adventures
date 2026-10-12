@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 90,
-  "sourceHash": "fnv1a64:ff9d01a737d2e878",
+  "sourceHash": "fnv1a64:740a449ad7970ff4",
   "lessonIds": [
     "IT-C90-parcheggio",
     "IT-C90-ascensore",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch90.txt",
   "json": "italian/narration/ch90.json",
-  "textHash": "fnv1a64:57ef9d5ab71201fb",
-  "jsonHash": "fnv1a64:af8e4d38b3e2bdd9",
+  "textHash": "fnv1a64:29054d78830aeec1",
+  "jsonHash": "fnv1a64:bca44ab6bd24ff6f",
   "findings": []
 }

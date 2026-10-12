@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Yes and No",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a20b2988ad532ea1",
+  "sourceHash": "fnv1a64:bb75a728c05cc6e5",
   "lessons": [
     {
       "id": "IT-C29-si",
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e54bba6832f62f03",
+      "sourceHash": "fnv1a64:c8858fc95f514c06",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +469,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sì from Latin sic, \"thus, so\", and no from Latin non, \"not\" — both inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -508,7 +519,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -726,7 +737,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0bd16fa89bb31c8",
+      "sourceHash": "fnv1a64:38923eaa513efcf7",
       "notice": null,
       "blocks": [
         {
@@ -808,6 +819,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vero from Latin verus, \"true\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar lens: the turn it does at the end of a sentence",
           "segments": [
@@ -830,7 +852,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -870,7 +892,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

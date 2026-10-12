@@ -13,7 +13,8 @@ gloss: "the sea"
 concept_tag: IT-NATURA2-MARE
 prerequisites: [IT-C65-fiume, IT-C65-lago]
 sounds: []
-roots: []
+roots: [mare-latin]
+etymology_hook: "mare ← Latin mare 'sea' — English marine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C65-lago]
 <!-- hl-knowledge: introduces=[IT-LEX-C65-NATURA2-03]; assesses=[] -->
 
 **il mare** — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mare** ← Latin *mare*, "sea" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

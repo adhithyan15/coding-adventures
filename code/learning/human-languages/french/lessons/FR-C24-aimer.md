@@ -73,9 +73,9 @@ baby's *amma*, but that is a guess. The trail genuinely ends at Latin.
 > **Je t'aime bien.** — I like you. **Much** weaker.
 
 Every English speaker gets this backwards. *Bien* means "well," so *je t'aime
-bien* looks like it ought to be **more**. It is **less**. Adding *bien* — or
-*beaucoup* — downgrades love to friendly liking, which is exactly why *je
-t'aime bien* is the polite way to turn someone down.
+bien* looks like it ought to be **more**. It is **less**. Adding *bien* downgrades
+love to friendly liking, which is exactly why *je t'aime bien* is the polite way
+to turn someone down.
 
 With a thing, no such danger: *j'aime bien le chat* is simply "I quite like the
 cat." The trap only bites when the object is a **person**.

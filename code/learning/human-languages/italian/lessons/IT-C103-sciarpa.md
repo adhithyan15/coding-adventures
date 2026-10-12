@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI103-SCIARPA
 prerequisites: [IT-C103-cravatta, IT-C103-guanti]
 sounds: []
 roots: []
+etymology_hook: "sciarpa ← French écharpe — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C103-guanti]
 <!-- hl-knowledge: introduces=[IT-LEX-C103-VESTITI103-04]; assesses=[] -->
 
 **la sciarpa** — "a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sciarpa** ← French *écharpe* — borrowed; EtymDB 2.1 traces the French word to Frankish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

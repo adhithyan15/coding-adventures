@@ -13,7 +13,8 @@ gloss: "a bathroom"
 concept_tag: IT-CASA2-BAGNO
 prerequisites: [IT-C57-giardino, IT-C57-lampada]
 sounds: []
-roots: []
+roots: [balneum-latin]
+etymology_hook: "bagno ← Latin balneum 'bath'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C57-lampada]
 <!-- hl-knowledge: introduces=[IT-LEX-C57-CASA2-05]; assesses=[] -->
 
 **il bagno** — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bagno** ← Vulgar Latin *baneum*, from Latin *balneum*, "bath" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

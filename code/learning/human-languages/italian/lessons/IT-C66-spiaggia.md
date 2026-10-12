@@ -14,6 +14,7 @@ concept_tag: IT-NATURA3-SPIAGGIA
 prerequisites: [IT-C65-pietra, IT-C65-sabbia]
 sounds: []
 roots: []
+etymology_hook: "spiaggia ← Late Latin plagia 'shore' — Spanish playa is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C65-sabbia]
 <!-- hl-knowledge: introduces=[IT-LEX-C66-NATURA3-01]; assesses=[] -->
 
 **la spiaggia** — "a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spiaggia** goes back to Late Latin *plagia*, "shore" — inherited. EtymDB 2.1 has no row for *spiaggia*; it derives Spanish *playa* from *plagia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

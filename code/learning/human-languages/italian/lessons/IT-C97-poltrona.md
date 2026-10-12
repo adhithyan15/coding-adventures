@@ -14,6 +14,7 @@ concept_tag: IT-CASA97-POLTRONA
 prerequisites: [IT-C97-scopa, IT-C97-lavatrice]
 sounds: []
 roots: []
+etymology_hook: "poltrona — EtymDB 2.1 gives an origin this book could not confirm, so none is given"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C97-lavatrice]
 <!-- hl-knowledge: introduces=[IT-LEX-C97-CASA97-05]; assesses=[] -->
 
 **la poltrona** — "an armchair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poltrona** — EtymDB 2.1 gives an origin this book could not confirm, so none is given here.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

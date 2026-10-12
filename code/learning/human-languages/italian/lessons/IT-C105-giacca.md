@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI105-GIACCA
 prerequisites: [IT-C104-camicetta, IT-C105-cappello]
 sounds: []
 roots: []
+etymology_hook: "giacca ← Old French jaque — borrowed; English jacket shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C105-cappello]
 <!-- hl-knowledge: introduces=[IT-LEX-C105-VESTITI105-02]; assesses=[] -->
 
 **la giacca** — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giacca** ← Old French *jaque* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

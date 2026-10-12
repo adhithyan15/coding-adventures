@@ -13,7 +13,8 @@ gloss: "a letter"
 concept_tag: IT-OGGETTI101-LETTERA
 prerequisites: [IT-C101-candela, IT-C101-calendario]
 sounds: []
-roots: []
+roots: [littera-latin]
+etymology_hook: "lettera ← Latin littera 'a letter' — English letter is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C101-calendario]
 <!-- hl-knowledge: introduces=[IT-LEX-C101-OGGETTI101-04]; assesses=[] -->
 
 **la lettera** — "a letter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lettera** ← Latin *littera*, "a letter of the alphabet" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

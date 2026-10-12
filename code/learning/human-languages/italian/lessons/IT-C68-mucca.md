@@ -14,6 +14,7 @@ concept_tag: IT-ANIMALI1-MUCCA
 prerequisites: [IT-C68-gatto, IT-C68-cavallo]
 sounds: []
 roots: []
+etymology_hook: "mucca — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C68-cavallo]
 <!-- hl-knowledge: introduces=[IT-LEX-C68-ANIMALI1-04]; assesses=[] -->
 
 **la mucca** — "a cow". It gives **il latte**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mucca** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

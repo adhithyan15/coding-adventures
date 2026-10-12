@@ -14,6 +14,7 @@ concept_tag: IT-STARE-MALATO
 prerequisites: [IT-C42-stanchezza, IT-C42-stanco]
 sounds: []
 roots: []
+etymology_hook: "malato ← Latin male habitus 'in poor condition' — French malade is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C42-stanco]
 <!-- hl-knowledge: introduces=[IT-LEX-C42-STARE-04]; assesses=[] -->
 
 **malato** — "ill, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**malato** ← Latin *male habitus*, "in poor condition" — inherited. EtymDB 2.1 has no row for *malato*; it derives Old French *malade* from *male habitus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 38,
-  "sourceHash": "fnv1a64:fbf7519855203a17",
+  "sourceHash": "fnv1a64:7543f89c2aecf257",
   "lessonIds": [
     "IT-C38-lingua",
     "IT-C38-collo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch38.txt",
   "json": "italian/narration/ch38.json",
-  "textHash": "fnv1a64:c23d152ac3f4dbe6",
-  "jsonHash": "fnv1a64:e7ffe38e6f265803",
+  "textHash": "fnv1a64:89a88bf91aeebf3a",
+  "jsonHash": "fnv1a64:aa946b3da4f49328",
   "findings": []
 }

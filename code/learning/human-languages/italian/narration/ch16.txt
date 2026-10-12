@@ -141,6 +141,9 @@ sei stato, you have been / stayed.
 siamo stati, we have been / stayed.
 The plural stati is the first clue: with essere, the participle describes the subject and therefore agrees with it.
 
+The phrase, taken apart.
+sono is a form of essere from Vulgar Latin essere, from Latin esse, "to be". Where andare came from is not recorded in EtymDB 2.1.
+
 Grammar Lens: motion, change, and agreement.
 Many verbs of motion or change of state take essere: andare (go), venire (come), arrivare (arrive), partire (leave), nascere (be born), morire (die), diventare (become), plus essere and stare.
 Use the four adjective endings you already know:

@@ -13,7 +13,8 @@ gloss: "fire"
 concept_tag: IT-CIELO-FUOCO
 prerequisites: [IT-C67-pioggia, IT-C67-vento]
 sounds: []
-roots: []
+roots: [focus-latin]
+etymology_hook: "fuoco ← Latin focus 'hearth' — English focus is the same Latin word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C67-vento]
 <!-- hl-knowledge: introduces=[IT-LEX-C67-CIELO-05]; assesses=[] -->
 
 **il fuoco** — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fuoco** ← Latin *focus*, "hearth, fireplace" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VIAGGIO92-DI-FRONTE
 prerequisites: [IT-C91-accanto, IT-C91-tra]
 sounds: []
 roots: []
+etymology_hook: "di fronte — di 'of' + fronte 'front' ← Latin frons 'forehead'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C91-tra]
 <!-- hl-knowledge: introduces=[IT-LEX-C92-VIAGGIO92-01]; assesses=[] -->
 
 **di fronte** — "opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**di fronte** is built from *di*, "of", and *fronte*, "forehead, front" ← Latin *frons*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

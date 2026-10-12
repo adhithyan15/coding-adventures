@@ -13,7 +13,8 @@ gloss: "an umbrella"
 concept_tag: IT-COSE2-OMBRELLO
 prerequisites: [IT-C62-borsa, IT-C62-telefono]
 sounds: []
-roots: []
+roots: [umbella-latin]
+etymology_hook: "ombrello ← Latin umbella 'sunshade', from umbra 'shade' — English umbrella is from Italian"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C62-telefono]
 <!-- hl-knowledge: introduces=[IT-LEX-C62-COSE2-03]; assesses=[] -->
 
 **l'ombrello** — "an umbrella". Literally "a little shade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ombrello** goes back to Latin *umbella*, "a sunshade", a small form of *umbra*, "shade" (Lewis & Short); EtymDB 2.1 has no row for *ombrello*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

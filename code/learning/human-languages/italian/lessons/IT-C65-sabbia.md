@@ -13,7 +13,8 @@ gloss: "sand"
 concept_tag: IT-NATURA2-SABBIA
 prerequisites: [IT-C65-mare, IT-C65-pietra]
 sounds: []
-roots: []
+roots: [sabulum-latin]
+etymology_hook: "sabbia ← Latin sabulum 'sand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C65-pietra]
 <!-- hl-knowledge: introduces=[IT-LEX-C65-NATURA2-05]; assesses=[] -->
 
 **la sabbia** — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sabbia** ← Vulgar Latin *sabla*, from Latin *sabulum*, "sand" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

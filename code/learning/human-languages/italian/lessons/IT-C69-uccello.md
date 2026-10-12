@@ -13,7 +13,8 @@ gloss: "a bird"
 concept_tag: IT-ANIMALI2-UCCELLO
 prerequisites: [IT-C68-mucca, IT-C68-maiale]
 sounds: []
-roots: []
+roots: [aucellus-latin]
+etymology_hook: "uccello ← Late Latin aucellus 'little bird', a small form of avis 'bird'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C68-maiale]
 <!-- hl-knowledge: introduces=[IT-LEX-C69-ANIMALI2-01]; assesses=[] -->
 
 **l'uccello** — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uccello** ← Late Latin *aucellus*, "little bird" — inherited; it is a small form of Latin *avis*, "bird". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

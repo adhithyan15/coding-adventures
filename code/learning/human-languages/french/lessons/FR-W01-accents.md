@@ -35,19 +35,19 @@ variety: standard-contemporary
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] French sprinkles little marks over its vowels, and they are **not**
-decoration — each does a specific job. You've read them since *enchanté* and
-*très*. Three of them ride on *e*, and one of the three hides a word you already
+decoration — each does a specific job. You've read one since *enchanté*, and
+another on the *à* of your goodbyes. Three of them ride on *e*, and one of the three hides a word you already
 know in English.
 
 ## You'll want to know: the three accents, and what they do
 <!-- hl-knowledge: introduces=[FR-SCRIPT-ACCENTS-07]; assesses=[] -->
 
 - **é** — *accent aigu* (rising stroke, like Spanish's). It fixes the sound:
-  **é = a crisp "ay"** (no glide). *café*, *enchanté*, *été* ("summer").
+  **é = a crisp "ay"** (no glide). *enchanté*, *été* ("summer").
 - **è** — *accent grave* (falling stroke). **è = an open "eh"** as in *bed*.
-  *très* ("very"), *mère* ("mother"), *père*. The grave also just **separates
-  look-alikes**: *a* ("has") vs **à** ("to"); *ou* ("or") vs **où** ("where") —
-  same job as Spanish *tu/tú*.
+  *première* ("first" — English borrowed it as *premiere*), *Genève*
+  ("Geneva"). The grave also just **separates look-alikes**: *a* ("has") vs
+  **à** ("to") — same job as Spanish *tu/tú*.
 - **ê** — *accent circonflexe* (a little hat). This one is a **fossil**.
 
 ## Why it's said this way — the circumflex is a tombstone for a lost *s*
@@ -66,7 +66,6 @@ has that s** — so the circumflex is a decoder ring between the two languages:
 | **fête** | feste | **feast** |
 | **pâte** | paste | **paste / pasta** |
 | **goût** | gust | (Latin *gustus*, cf. *gusto*) |
-| **être** | estre | (Latin *stāre*, cf. *stare/estar*) |
 
 So when you meet a circumflex, **mentally slot an *s* back in** and an English
 cousin often appears. *Hôpital → hospital.* It's the single most useful reading
@@ -83,9 +82,10 @@ right — *é* and *è* are different sounds, so the direction matters.
 <!-- hl-knowledge: introduces=[]; assesses=[FR-SCRIPT-ACCENTS-07] -->
 
 [PAUSE 1s]
-- [YOU SAY: "é" = *ay* (*café*), "è" = *eh* (*très*) — hear the two sounds]
+- [YOU SAY: "é" = *ay* (*enchanté*), "è" = *eh* (*première*) — hear the two
+  sounds]
 - [YOU SAY: forêt → forest, hôpital → hospital, île → isle — put the *s* back]
-- [YOU SAY: "à" vs "a", "où" vs "ou" — the grave that only separates]
+- [YOU SAY: "à" vs "a" — the grave that only separates]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-SCRIPT-ACCENTS-07, FR-SCRIPT-CIRCUMFLEX-08] -->

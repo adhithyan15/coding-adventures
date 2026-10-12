@@ -13,7 +13,8 @@ gloss: "a star"
 concept_tag: IT-CIELO-STELLA
 prerequisites: [IT-C66-sole, IT-C66-luna]
 sounds: []
-roots: []
+roots: [stella-latin]
+etymology_hook: "stella ← Latin stella 'star' — English stellar shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C66-luna]
 <!-- hl-knowledge: introduces=[IT-LEX-C67-CIELO-01]; assesses=[] -->
 
 **la stella** — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stella** ← Latin *stella*, "star" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

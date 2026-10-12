@@ -65,11 +65,11 @@ waiting at the end of this chapter. Spanish made *siete* from the same *septem*.
 [PAUSE 1s]
 - [YOU SAY: "sept" — *set*, no *p*]
 - [YOU SAY: the count so far, one through seven]
-- [YOU SAY: "sept" then "septembre" — the seven inside the month]
+- [YOU SAY: "sept" then English "September" — the seven inside the month]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SEPT-09, FR-LEX-SIX-07] -->
 
 [PAUSE 3s] How do you say seven? (**sept**, *set*.) Which written letter is
-silent? (The **p**.) Which month carries the same Latin *septem*? (**Septembre**
-— which is the ninth month, for a reason we come to.) Next: the number eight.
+silent? (The **p**.) Which month carries the same Latin *septem*? (**September**,
+in French as in English — the ninth month, for a reason we come to.) Next: the number eight.

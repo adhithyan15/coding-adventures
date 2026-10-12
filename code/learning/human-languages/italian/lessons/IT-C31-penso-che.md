@@ -67,6 +67,11 @@ puts the verb after *penso che* into a different set of endings called the
 present constantly, and everything above is ordinary speech. You will be
 understood. The *congiuntivo* is a whole chapter of its own and it is not this one.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**penso** is a form of *pensare* ← Latin *pensare*, "to weigh, to ponder"; **che** ← Latin *quid* or *quod* — EtymDB 2.1 records both.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PENSO-CHE-02] -->
 

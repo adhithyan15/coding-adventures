@@ -13,7 +13,8 @@ gloss: "a minute"
 concept_tag: IT-TEMPO-MINUTO
 prerequisites: [IT-C78-anno, IT-C78-mattina]
 sounds: []
-roots: []
+roots: [minutus-latin]
+etymology_hook: "minuto ← Latin minutus 'small' — English minute is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C78-mattina]
 <!-- hl-knowledge: introduces=[IT-LEX-C78-TEMPO-05]; assesses=[] -->
 
 **il minuto** — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**minuto** ← Latin *minutus*, "small, lessened" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to use"
 concept_tag: IT-VERB-USARE
 prerequisites: [IT-C60-viaggiare, IT-C60-pagare]
 sounds: []
-roots: []
+roots: [usus-latin]
+etymology_hook: "usare ← Latin usus 'use, custom' — English use shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C60-pagare]
 <!-- hl-knowledge: introduces=[IT-LEX-C60-VERBI5-05]; assesses=[] -->
 
 **usare** — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**usare** goes back to Latin *usus*, "use, custom" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

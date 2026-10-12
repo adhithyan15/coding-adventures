@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Telling the Time",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:9420b0d7170b8ab9",
+  "sourceHash": "fnv1a64:29451b6dde3466ff",
   "lessons": [
     {
       "id": "FR-C08-heure",
@@ -136,8 +136,8 @@
       "id": "FR-C08-il-est",
       "sequence": 224,
       "title": "il est … heures — telling the clock",
-      "headword": "il est … heures",
-      "romanization": "il est … heures",
+      "headword": "il est, … heures",
+      "romanization": "il est, … heures",
       "gloss": "\"it is … o'clock\" — the frame that tells the time",
       "script": "latin",
       "modality": "voice",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a215cd5c32d078a",
+      "sourceHash": "fnv1a64:304baeb025492ce4",
       "notice": null,
       "blocks": [
         {
@@ -399,7 +399,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10c11370663a1b3e",
+      "sourceHash": "fnv1a64:9d4e748630ab2431",
       "notice": null,
       "blocks": [
         {
@@ -468,7 +468,7 @@
             },
             {
               "kind": "speech",
-              "text": "Not il est douze heures. The frame stays; what goes into it is a name."
+              "text": "Not \"it is twelve hours\" with a number in the slot. The frame stays; what goes into it is a name."
             }
           ]
         },

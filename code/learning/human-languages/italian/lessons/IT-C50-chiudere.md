@@ -13,7 +13,8 @@ gloss: "to close"
 concept_tag: IT-VERB-CHIUDERE
 prerequisites: [IT-C49-imparare, IT-C49-aprire]
 sounds: []
-roots: []
+roots: [claudere-latin]
+etymology_hook: "chiudere ← Latin claudere 'to shut' — English close comes from it through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C49-aprire]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-01]; assesses=[] -->
 
 **chiudere** — "to close". The opposite of **aprire**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiudere** ← Latin *claudere*, "to shut" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

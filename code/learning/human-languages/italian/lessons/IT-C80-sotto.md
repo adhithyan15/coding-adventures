@@ -13,7 +13,8 @@ gloss: "under, below"
 concept_tag: IT-DOVE-SOTTO
 prerequisites: [IT-C79-lontano, IT-C79-sopra]
 sounds: []
-roots: []
+roots: [subtus-latin]
+etymology_hook: "sotto ← Latin subtus 'below', from sub 'under'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C79-sopra]
 <!-- hl-knowledge: introduces=[IT-LEX-C80-DOVE-01]; assesses=[] -->
 
 **sotto** — "under, below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sotto** ← Latin *subtus*, "below", from *sub*, "under" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

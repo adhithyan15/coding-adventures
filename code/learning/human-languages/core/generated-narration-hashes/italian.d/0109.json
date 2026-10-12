@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 109,
-  "sourceHash": "fnv1a64:adaf857b88267b1b",
+  "sourceHash": "fnv1a64:739ce950e6c0028a",
   "lessonIds": [
     "IT-C109-pasto",
     "IT-C109-yogurt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch109.txt",
   "json": "italian/narration/ch109.json",
-  "textHash": "fnv1a64:995fd38a90efd46c",
-  "jsonHash": "fnv1a64:20b0b44023a94876",
+  "textHash": "fnv1a64:b88757f2c1957473",
+  "jsonHash": "fnv1a64:ef6d2a6efa9396b1",
   "findings": []
 }

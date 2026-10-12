@@ -46,10 +46,10 @@ consonants at the end, and not one of them sounded. Nobody has yet said why.
 > A consonant written at the end of a French word is normally **not
 > pronounced**.
 
-*Petit* is *puh-TEE*. *Grand* is *grahn*. *Trois* is *trwah*. *Beaucoup* is
-*boh-KOO*. The letter is on the page and not in the mouth.
+*Salut* is *sa-LU*. *Deux* is *deu*. *Trois* is *trwah*. *Nuit* is *nwee*. The
+letter is on the page and not in the mouth.
 
-Those letters were once sounded. Old French said the *t* of *petit* and the *s*
+Those letters were once sounded. Old French said the *t* of *salut* and the *s*
 of *trois*, and over centuries the mouth dropped them while the spelling stayed
 where it was. Every silent consonant in French is a fossil of a sound the
 language used to make.
@@ -69,7 +69,7 @@ sound at the end: *avec*, *bonjour*, *neuf*, *il*.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-PHON-CONSONNE-FINALE-01, FR-SOUND-LIAISON-10, FR-LEX-QUAND-04, FR-LEX-ET-01, FR-GRAM-DES-01, FR-LEX-AMI-01, FR-LEX-BONJOUR-07, FR-LEX-NEUF-11, FR-LEX-TROIS-04, FR-PHON-LIAISON-NUMBERS-08, FR-GRAM-CE-DEMONSTRATIF-01, FR-LEX-LA-ADV-02, FR-LEX-LABAS-03, FR-LEX-CAFE-01] -->
 
-- [YOU SAY: silent — "petit, grand, trois, beaucoup"]
+- [YOU SAY: silent — "salut, deux, trois, nuit"]
 - [YOU SAY: woken by a vowel — "des amis", "quand est-ce que"]
 - [YOU SAY: the four that usually sound — "avec, bonjour, neuf, il"]
 - [YOU SAY: the one *t* that never wakes — "et un café"]

@@ -13,7 +13,8 @@ gloss: "a wardrobe"
 concept_tag: IT-CASA98-ARMADIO
 prerequisites: [IT-C97-lavatrice, IT-C97-poltrona]
 sounds: []
-roots: []
+roots: [armarium-latin]
+etymology_hook: "armadio ← Latin armarium 'cupboard', from arma 'tools, arms'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C97-poltrona]
 <!-- hl-knowledge: introduces=[IT-LEX-C98-CASA98-01]; assesses=[] -->
 
 **l'armadio** — "a wardrobe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**armadio** ← Latin *armarium*, "cupboard, chest", from *arma*, "tools, arms" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

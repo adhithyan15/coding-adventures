@@ -13,7 +13,8 @@ gloss: "a husband"
 concept_tag: IT-FAMIGLIA1-MARITO
 prerequisites: [IT-C44-nonno, IT-C44-nonna]
 sounds: []
-roots: []
+roots: [maritus-latin]
+etymology_hook: "marito ← Latin maritus 'husband' — English marital shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C44-nonna]
 <!-- hl-knowledge: introduces=[IT-LEX-C44-FAMIGLIA1-05]; assesses=[] -->
 
 **il marito** — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marito** ← Latin *maritus*, "husband" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

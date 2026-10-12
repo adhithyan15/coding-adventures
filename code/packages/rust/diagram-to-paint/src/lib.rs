@@ -31,7 +31,7 @@ pub const VERSION: &str = "0.75.0";
 use std::collections::HashMap;
 
 use diagram_ir::{
-    ChartTextAnchor, ChartTextBaseline, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
+    ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
     LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
@@ -41,7 +41,8 @@ use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
+    GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind,
+    TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
 use layout_ir::{
@@ -878,17 +879,69 @@ where
             stroke,
             stroke_width,
         );
+        let (start_previous, end_previous) = if edge.curve == Some(SwimlaneEdgeCurve::Basis) {
+            let dx = edge.to.x - edge.from.x;
+            let dy = edge.to.y - edge.from.y;
+            let (first, second) = if dx.abs() >= dy.abs() {
+                (
+                    Point { x: edge.from.x + dx * 0.4, y: edge.from.y },
+                    Point { x: edge.to.x - dx * 0.4, y: edge.to.y },
+                )
+            } else {
+                (
+                    Point { x: edge.from.x, y: edge.from.y + dy * 0.4 },
+                    Point { x: edge.to.x, y: edge.to.y - dy * 0.4 },
+                )
+            };
+            path.commands = vec![
+                PathCommand::MoveTo { x: edge.from.x, y: edge.from.y },
+                PathCommand::CubicTo {
+                    cx1: first.x, cy1: first.y, cx2: second.x, cy2: second.y,
+                    x: edge.to.x, y: edge.to.y,
+                },
+            ];
+            (first, second)
+        } else if matches!(edge.curve,
+            Some(SwimlaneEdgeCurve::Step | SwimlaneEdgeCurve::StepBefore | SwimlaneEdgeCurve::StepAfter)
+        ) {
+            let horizontal = matches!(diagram.direction, DiagramDirection::Lr | DiagramDirection::Rl);
+            let intermediates = match (edge.curve, horizontal) {
+                (Some(SwimlaneEdgeCurve::Step), true) => {
+                    let middle = (edge.from.x + edge.to.x) / 2.0;
+                    vec![Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y }]
+                }
+                (Some(SwimlaneEdgeCurve::Step), false) => {
+                    let middle = (edge.from.y + edge.to.y) / 2.0;
+                    vec![Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle }]
+                }
+                (Some(SwimlaneEdgeCurve::StepBefore), true) | (Some(SwimlaneEdgeCurve::StepAfter), false) => {
+                    vec![Point { x: edge.from.x, y: edge.to.y }]
+                }
+                (Some(SwimlaneEdgeCurve::StepAfter), true) | (Some(SwimlaneEdgeCurve::StepBefore), false) => {
+                    vec![Point { x: edge.to.x, y: edge.from.y }]
+                }
+                _ => unreachable!("step curve already matched"),
+            };
+            path.commands = vec![PathCommand::MoveTo { x: edge.from.x, y: edge.from.y }];
+            path.commands.extend(intermediates.iter().map(|point| PathCommand::LineTo { x: point.x, y: point.y }));
+            path.commands.push(PathCommand::LineTo { x: edge.to.x, y: edge.to.y });
+            (intermediates[0].clone(), intermediates[intermediates.len() - 1].clone())
+        } else {
+            (edge.to.clone(), edge.from.clone())
+        };
         if let Some(stroke_dash) = &edge.style.stroke_dash {
             path.stroke_dash = Some(stroke_dash.clone());
         } else if edge.kind == SwimlaneEdgeKind::Dotted {
             path.stroke_dash = Some(vec![5.0, 5.0]);
+        } else if edge.animate {
+            path.stroke_dash = Some(vec![9.0, 5.0]);
         }
         instructions.push(PaintInstruction::Path(path));
         instructions.extend(swimlane_endpoint_marker(
-            edge.start_marker, &edge.to, &edge.from, stroke, stroke_width,
+            edge.start_marker, &start_previous, &edge.from, stroke, stroke_width,
         ));
         instructions.extend(swimlane_endpoint_marker(
-            edge.end_marker, &edge.from, &edge.to, stroke, stroke_width,
+            edge.end_marker, &end_previous, &edge.to, stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
             text_children.push(text_node(
@@ -1364,6 +1417,24 @@ where
         }
         if !edge.classes.is_empty() {
             metadata.insert(format!("swimlane.edge.{index}.classes"), edge.classes.join(" "));
+        }
+        if edge.animate {
+            metadata.insert(format!("swimlane.edge.{index}.animate"), "true".into());
+        }
+        if let Some(animation) = edge.animation {
+            metadata.insert(format!("swimlane.edge.{index}.animation"), match animation {
+                SwimlaneEdgeAnimation::Slow => "slow",
+                SwimlaneEdgeAnimation::Fast => "fast",
+            }.into());
+        }
+        if let Some(curve) = edge.curve {
+            metadata.insert(format!("swimlane.edge.{index}.curve"), match curve {
+                SwimlaneEdgeCurve::Linear => "linear",
+                SwimlaneEdgeCurve::Basis => "basis",
+                SwimlaneEdgeCurve::Step => "step",
+                SwimlaneEdgeCurve::StepBefore => "stepBefore",
+                SwimlaneEdgeCurve::StepAfter => "stepAfter",
+            }.into());
         }
     }
     for link in &diagram.links {

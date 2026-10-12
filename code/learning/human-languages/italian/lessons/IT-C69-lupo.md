@@ -13,7 +13,8 @@ gloss: "a wolf"
 concept_tag: IT-ANIMALI2-LUPO
 prerequisites: [IT-C69-uccello, IT-C69-topo]
 sounds: []
-roots: []
+roots: [lupus-latin]
+etymology_hook: "lupo ← Latin lupus 'wolf'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C69-topo]
 <!-- hl-knowledge: introduces=[IT-LEX-C69-ANIMALI2-03]; assesses=[] -->
 
 **il lupo** — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lupo** ← Latin *lupus*, "wolf" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

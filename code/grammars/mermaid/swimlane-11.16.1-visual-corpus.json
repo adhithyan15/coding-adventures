@@ -58,6 +58,9 @@
     "minimum-link-lengths",
     "styled-inline-link-labels",
     "edge-identifiers",
-    "edge-class-styles"
+    "edge-class-styles",
+    "edge-animation-config",
+    "edge-curve-config",
+    "edge-step-curves"
   ]
 }

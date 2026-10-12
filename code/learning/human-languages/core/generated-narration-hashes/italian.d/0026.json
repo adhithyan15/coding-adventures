@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 26,
-  "sourceHash": "fnv1a64:9a2ba134e0a448a3",
+  "sourceHash": "fnv1a64:ab4ab0db78e04979",
   "lessonIds": [
     "IT-C26-primo",
     "IT-C26-secondo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch26.txt",
   "json": "italian/narration/ch26.json",
-  "textHash": "fnv1a64:a69787290ba1b034",
-  "jsonHash": "fnv1a64:ef99902392a8a60a",
+  "textHash": "fnv1a64:d9779a7573d932e1",
+  "jsonHash": "fnv1a64:20fd4e04616777e7",
   "findings": []
 }

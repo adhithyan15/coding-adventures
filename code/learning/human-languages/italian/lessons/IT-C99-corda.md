@@ -13,7 +13,8 @@ gloss: "a rope"
 concept_tag: IT-ATTREZZI99-CORDA
 prerequisites: [IT-C98-vaso, IT-C99-secchio]
 sounds: []
-roots: []
+roots: [chorda-latin]
+etymology_hook: "corda ← Latin chorda 'string' — English cord and chord share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C99-secchio]
 <!-- hl-knowledge: introduces=[IT-LEX-C99-ATTREZZI99-02]; assesses=[] -->
 
 **la corda** — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corda** ← Latin *chorda*, "string, cord" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

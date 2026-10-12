@@ -83,7 +83,7 @@ the participle describe. Run both.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PASSE-COMPOSE-ETRE-01, FR-GRAM-ETRE-PAS-MOUVEMENT-03, FR-GRAM-ACCORD-SUJET-05, FR-GRAM-PRONOMINAL-ACCORD-08] -->
 
-[PAUSE 3s] Say "she went." (**Elle est allée**.) Which auxiliary does *courir*
+[PAUSE 3s] Say "she went." (**Elle est allée**.) Which auxiliary does "to run"
 take, and why? (***avoir*** — it is **motion**, not **transition**.) What flips
 *monter* to *avoir*? (A **direct object**.) Which agreement rule do pronominal
 verbs follow? (***avoir*'s** — a preceding **direct** object.) State the one rule
