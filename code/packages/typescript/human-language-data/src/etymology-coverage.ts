@@ -104,13 +104,21 @@
  *     - a letter's origin rather than the word's: "**г**. It is Greek
  *       **gamma**" (RU-C03-govorit, whose word origin is in the hook only);
  *     - a "from English" that is not about a word at all: FA-C03-esm-e-
- *       shoma-chist's question mark "from English **?**".
+ *       shoma-chist's question mark "from English **?**";
+ *     - a comparison or a translation rather than a descent: "different
+ *       from English", "translated from English", "Urdu differs from
+ *       Hindi" all read as "from <language>";
+ *     - a remark about SCRIPT: "this letter is Arabic" satisfies the
+ *       bare-copula ancestor rule.
  *   FALSE NEGATIVES (says an origin, counted invisible)
  *     - an origin told without naming a language: "It grew out of *vuestra
  *       merced*" (ES-C07-hablan), or a native word called "inherited";
  *     - a derivation inside the track's own language: "the first piece is
  *       *yek* worn down" (FA-C18-yazdah) takes eleven apart into one and ten
- *       and never names a source, because there is none to name.
+ *       and never names a source, because there is none to name;
+ *     - an origin stated only in a section HEADING ("## From Latin"): the
+ *       parser keeps the heading out of the block's markdown, and headings
+ *       are matched only against the origin-heading names.
  *   The looser signals that would close the false negatives -- a bare
  *   "borrowed", "inherited", "same word" -- were measured and rejected: on
  *   samples they fired as often on "She inherited the house" and "the same
@@ -401,7 +409,8 @@ export interface EtymologyCoverageReport {
 
 /** Floor percentage; 100 only when nothing is missing, and 100 for an empty denominator. */
 function coveredPercent(total: number, missing: number): number {
-  return total === 0 ? 100 : Math.floor(((total - missing) / total) * 100);
+  // Multiply before dividing: (71/100)*100 is 70.999… in floating point.
+  return total === 0 ? 100 : Math.floor(((total - missing) * 100) / total);
 }
 
 /** Measure etymology coverage across every track in `lessons`. */

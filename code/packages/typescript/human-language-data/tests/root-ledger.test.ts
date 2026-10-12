@@ -276,7 +276,7 @@ describe("the committed corpus", () => {
             ? `${language} has ${found.length} ${kind.label}, above its pin of ${pinned}. ` +
               `Every new word says where it comes from (HL24 §9) -- from a cited source, or ` +
               `"unknown"/"disputed" stated plainly; never invented. Fix the lessons, not the pin. ` +
-              `Newest ${Math.min(found.length, NEWEST_GAPS_SHOWN)} in reading order: ${newest}`
+              `Newest ${Math.min(found.length, NEWEST_GAPS_SHOWN)}, latest first: ${newest}`
             : `${language} has ${found.length} ${kind.label}, below its pin of ${pinned}. ` +
               `Lower ETYMOLOGY_GAP_PINS.${language}.${kind.key} to ${found.length} in this change.`;
         expect(found.length, message).toBe(pinned);

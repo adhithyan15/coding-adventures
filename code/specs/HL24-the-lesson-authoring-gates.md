@@ -422,8 +422,9 @@ JSON).
 
 The visible rule is a conservative pattern match and is documented as one. Known false positives:
 a "taken apart" block that takes apart syntax (HI-C87-par), a letter's origin read as the word's
-(RU-C03-govorit). Known false negatives: an origin that names no language ("grew out of *vuestra
-merced*", ES-C07-hablan). The hook count has its own false positive no pattern can catch — a
+(RU-C03-govorit), a comparison or translation read as descent ("different from English"), a remark
+about script ("this letter is Arabic"). Known false negatives: an origin that names no language
+("grew out of *vuestra merced*", ES-C07-hablan), an origin stated only in a section heading. The hook count has its own false positive no pattern can catch — a
 non-empty hook that is not etymology (JA-C12-kami) — so both counts are floors on the debt. Neither
 measure judges whether an etymology is *true*; that needs a source and a reader.
 
