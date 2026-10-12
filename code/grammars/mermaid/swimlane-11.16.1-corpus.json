@@ -265,6 +265,10 @@
     {
       "name": "edge-monotone-curves",
       "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: monotoneX }\nvertical@{ curve: monotoneY }"
+    },
+    {
+      "name": "edge-spline-curves",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst cardinal@--> sixth\nsecond catmull@--> fifth\nthird natural@--> fourth\ncardinal@{ curve: cardinal }\ncatmull@{ curve: catmullRom }\nnatural@{ curve: natural }"
     }
   ]
 }
