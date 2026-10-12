@@ -6371,14 +6371,26 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 return Err(swimlane_error(line, format!("Swimlane class references unknown class {class:?}")));
             }
         }
-        for node_id in node_ids {
-            let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
-                swimlane_error(line, format!("Swimlane class references unknown node {node_id:?}"))
-            })?;
-            for class in &classes {
-                if !node.classes.contains(class) {
-                    node.classes.push(class.clone());
+        for target_id in node_ids {
+            let mut matched = false;
+            if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !node.classes.contains(class) {
+                        node.classes.push(class.clone());
+                    }
                 }
+            }
+            for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+                matched = true;
+                for class in &classes {
+                    if !edge.classes.contains(class) {
+                        edge.classes.push(class.clone());
+                    }
+                }
+            }
+            if !matched {
+                return Err(swimlane_error(line, format!("Swimlane class references unknown node or edge {target_id:?}")));
             }
         }
     }
@@ -6390,11 +6402,27 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut node.style, style);
         }
     }
-    for (node_id, style, line) in pending_styles {
-        let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
-            swimlane_error(line, format!("Swimlane style references unknown node {node_id:?}"))
-        })?;
-        merge_state_style(&mut node.style, &style);
+    for edge in &mut diagram.edges {
+        for class in edge.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane edge decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut edge.style, style);
+        }
+    }
+    for (target_id, style, line) in pending_styles {
+        let mut matched = false;
+        if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == target_id) {
+            matched = true;
+            merge_state_style(&mut node.style, &style);
+        }
+        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+            matched = true;
+            merge_state_style(&mut edge.style, &style);
+        }
+        if !matched {
+            return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
+        }
     }
     Ok(diagram)
 }
@@ -6656,6 +6684,8 @@ fn parse_swimlane_edge_chain(
                     start_marker,
                     end_marker,
                     min_length,
+                    classes: Vec::new(),
+                    style: DiagramStyle::default(),
                 });
             }
         }

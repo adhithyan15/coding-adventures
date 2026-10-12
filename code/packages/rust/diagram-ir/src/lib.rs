@@ -1953,6 +1953,7 @@ pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
 pub struct SwimlaneEdge {
     pub id: Option<String>, pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
+    pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
@@ -1971,6 +1972,7 @@ pub struct LayoutedSwimlaneNode {
 pub struct LayoutedSwimlaneEdge {
     pub id: Option<String>, pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
+    pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneDiagram {

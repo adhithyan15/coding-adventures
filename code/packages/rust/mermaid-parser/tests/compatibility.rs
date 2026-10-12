@@ -2149,6 +2149,23 @@ fn swimlane_edge_ids_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nclassDef urgent stroke:#dc2626,stroke-width:4px,stroke-dasharray:8 3,color:#991b1b\nclass submit urgent\nstyle release stroke:#059669,stroke-width:5px,stroke-dasharray:2 2,color:#065f46",
+    ).expect("Flowchart edge classes and direct styles should parse");
+
+    assert_eq!(diagram.edges[0].classes, ["urgent"]);
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(4.0));
+    assert_eq!(diagram.edges[0].style.stroke_dash.as_deref(), Some([8.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[0].style.text_color.as_deref(), Some("#991b1b"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#059669"));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_dash.as_deref(), Some([2.0, 2.0].as_slice()));
+    assert_eq!(diagram.edges[1].style.text_color.as_deref(), Some("#065f46"));
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
