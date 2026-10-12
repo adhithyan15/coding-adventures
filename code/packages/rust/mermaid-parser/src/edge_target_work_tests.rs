@@ -119,3 +119,30 @@ fn animation_duplicate_ids_preserve_order_and_style_passes() {
     let unknown = source_with_edges(1) + "a@{animate: true}\n";
     assert!(parse_swimlane(&unknown).expect_err("a node alone is not an animation edge").message.contains("unknown edge"));
 }
+
+
+#[test]
+fn animation_context_preserves_node_metadata_on_edge_endpoints() {
+    let ordinary = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na --> b";
+    let mut expected = parse_swimlane(ordinary).expect("ordinary edge");
+    expected.nodes[0].label = "a".into();
+    let actual = parse_swimlane("swimlane-beta LR\nsubgraph L\nb[B]\na@{ shape: rect } --> b\nend")
+        .expect("node shape metadata on an edge endpoint remains valid");
+    // The authored node order differs, so compare in ID order, then the whole IR.
+    expected.nodes.sort_by(|left, right| left.id.cmp(&right.id));
+    let mut actual = actual;
+    actual.nodes.sort_by(|left, right| left.id.cmp(&right.id));
+    expected.lanes[0].node_ids.sort();
+    actual.lanes[0].node_ids.sort();
+    assert_eq!(actual, expected);
+}
+
+#[test]
+fn animation_context_preserves_literal_metadata_text_in_node_labels() {
+    let mut expected = parse_swimlane("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na --> b")
+        .expect("ordinary label control");
+    expected.nodes[0].label = "literal @{animate: true}".into();
+    let actual = parse_swimlane("swimlane-beta LR\nsubgraph L\na[\"literal @{animate: true}\"]\nb[B]\nend\na --> b")
+        .expect("a literal node label is not an edge configuration");
+    assert_eq!(actual, expected);
+}
