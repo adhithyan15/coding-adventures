@@ -2,6 +2,50 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 Monotone Arc integration -->
+CV04a current integrated candidate (October12): reviewed marker3d4/Italian4201
+publication guard actuallyEXIT1 BEFORE PUSH after main advanced. Spec8212b2a7c8
+precedes conflict-free merge of `92f7d0f5e68687bda9c97e989bf9278578b36361` (#17371Monotone/#17325neutralArc),
+rawArc addendum27d00dd9ce precedes actual native `66a761a6a230e74bb40170825d10c54aaaf95fdb`. Older marker3d4
+review/current4201source supplement and759/32 remain accepted only in their own
+source frames; subsequent blocks are historical checkpoints, not current gates.
+
+Exact upstream MonotoneX/Y enum/parser/layout/cubic/metadata imports preserve
+the independently reviewed first-distinct-control/waypoint marker helper.
+Additional authored LR/TB both-axis controls assert exact1/3,2/3 controls,
+both endpoint triangles/area50 and metadata; allBump/Step/Basis/Linear/zero-route/
+work/context/order/resource assertions remain. RustArc tests execute all four
+neutral positive/negative/rotated/zero-sweep raw derivatives, exact IDs and
+unchanged pinned1e-12 tolerance. No native geometry algorithm change; no new
+crates.io/runtime dependency, unsafe, coordinate threshold or limit weakening.
+
+Actual metadata-derived **17package** diagram/Arc reverse cone
+(including Direct2D-C/GDI) passes **821tests/docs/37targets/
+0fail1existingignore** (unchanged GDI render doctest). Focused17 repeats excluded. Strict all-target warnings/unknown-
+lints denial, independent neutral27case oracle, completePython18tests/Ruff,
+doc reconstruction/1084lessons/whitespace PASS. COMPLETE12rows and actual
+subprocessEXIT0 required. No physical renderer/device/deployment claim.
+Complete compiler48 Rust/program/CI/LANGspec sourceobjects retain1248/118/
+1existingignore,933/16/strict4/11production/42native; every compiler validation
+script inventory entry is exact except two explicitly imported geometry leaves.
+Other Rust entries unchanged except five disclosed packages. Neutral script/
+fixture/schema/Arc spec/parity state/roadmap/Italian sources exactly match main;
+Italian accuracy/TS runtime/all geometry backends/package parity are unclaimed.
+
+Final backlog-only complete source/payload proof and independent exact-final
+security precede guarded SAME sole PR17288 publication. Re-audit main before
+push; old415/local checks cannot accept a later source. Require fresh exact-head
+terminal acceptable required checks, conflict-free/review-clean state andwhole
+three native jobs SUCCESS/actual timestampedClosurecBUILT rows beforeauto-merge.
+Actual fetched-main reachability/full payload mode/type/blob proof precedes
+cleanup/CV04b. Original324WITHHELD/red/helper/oracle/doc/placeholder/profile/
+promisor failures remain preserved; issue#17373 still awaits actual merge.
+Full final-source Miri **DEFERRED/PENDING**, neverpassed; frozenrun/497inputs/
+checkout/receipts/target untouched without polling/termination/duplicate runs.
+BaseESTree/own types/no newcrates.io deps; CV04b/fullClosure parity/outputsource
+joins/all transformationlineage/fullgoalOPEN/heartbeatACTIVE.
+<!-- /CV04 Monotone Arc integration -->
+
 <!-- CV04 curve marker repair -->
 CV04a current isolated candidate (October12), issue#17373: independent review
 WITHHELD Bump final324bf0f2 because valid authored LR/bumpY and TB/bumpX
