@@ -33,4 +33,6 @@ digest. Use the repository's rank/slug/eight-hex heading identity convention.
 Preserve the partial execution receipt; after a docs-only correction, prove
 runtime source identities before retaining its successful native rows.
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
+The lesson generator's placeholder remained below the completed prose and
+failed the next lesson gate. Replace the whole template, including its trailing
+placeholder; a filled heading and body do not make the generated stub complete.
