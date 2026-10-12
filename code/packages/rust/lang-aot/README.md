@@ -10,9 +10,10 @@ statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. Calling
 selectors may choose between selector-safe runtime-real expressions rooted in
-direct formatter-safe real procedure results that do not depend on pre-call
-local provenance. A real name-formal result is also allowed when its actual has
-the same proof. Unary signs, arithmetic composition with finite static operands,
+direct formatter-safe real procedure results or bare unaliased local
+runtime-real snapshots. Transformed locals, globals, captured locals, and
+other real-name branches remain conservative. A real name-formal result is also allowed
+when its actual has the same proof. Unary signs, arithmetic composition with finite static operands,
 and real-valued standard functions preserve it, while a finite static real
 actual is safe directly. Variable-free exact `sign` and exact-range `entier`
 results may also widen through a real name formal. Other real name-actual

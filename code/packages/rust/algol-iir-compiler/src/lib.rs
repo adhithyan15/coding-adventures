@@ -4891,8 +4891,8 @@ impl Compiler {
         }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
-                return self.is_selector_call_safe_runtime_real_value(then_node)
-                    && self.is_selector_call_safe_runtime_real_value(else_node);
+                return self.is_selector_call_safe_runtime_real_root(then_node)
+                    && self.is_selector_call_safe_runtime_real_root(else_node);
             }
             return match self.static_boolean_value(condition) {
                 Some(true) => self.is_runtime_real_assignment_value(then_node),
@@ -13537,9 +13537,28 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_conditional_selector_calls_do_not_trust_local_branches() {
+    fn al4_runtime_real_calling_selectors_allow_unaliased_local_branches() {
         for source in [
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real x; x := pick(); output(if choose() then x else x) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left else right) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left else right) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose unaliased local runtime-real snapshots for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
+        for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x) else echo(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x + 1.0) else echo(x + 1.0)) end",
@@ -13547,10 +13566,19 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x ^ 2) else echo(x ^ 2)) end",
             "begin boolean procedure choose; choose := true; integer procedure sign(x); value x; real x; sign := 1; real procedure echo(x); real x; echo := x; output(if choose() then echo(sign(-2.5)) else echo(sign(-2.5))) end",
         ] {
-            let err = compile_source(source, "test")
-                .expect_err("a calling selector must not reuse pre-call local provenance");
+            let err = compile_source(source, "test").expect_err(
+                "a calling selector must not admit transformed locals or overridden builtins",
+            );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
+    }
+
+    #[test]
+    fn al4_runtime_real_conditional_selector_calls_reject_shared_branches() {
+        let source = "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left else right) end";
+        let err = compile_source(source, "test")
+            .expect_err("shared storage must remain invalid across a calling selector");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
@@ -13598,14 +13626,10 @@ mod tests {
 
     #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
-        for source in [
-            "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
-            "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
-        ] {
-            let err = compile_source(source, "test")
-                .expect_err("computed copies must not inherit formatter provenance");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
-        }
+        let source = "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end";
+        let err = compile_source(source, "test")
+            .expect_err("computed copies must not inherit formatter provenance");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
