@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 97,
-  "sourceHash": "fnv1a64:0b26174dff0be9dd",
+  "sourceHash": "fnv1a64:363b815fa5b79b63",
   "lessonIds": [
     "IT-C97-pettine",
     "IT-C97-spazzatura",
@@ -14,6 +14,6 @@
   "text": "italian/narration/ch97.txt",
   "json": "italian/narration/ch97.json",
   "textHash": "fnv1a64:c9a77dc8775e3b91",
-  "jsonHash": "fnv1a64:d5d6b9e61decb866",
+  "jsonHash": "fnv1a64:046b1afd3d565143",
   "findings": []
 }

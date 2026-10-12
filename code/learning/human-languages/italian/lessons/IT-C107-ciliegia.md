@@ -13,8 +13,8 @@ gloss: "a cherry"
 concept_tag: IT-CIBO107-CILIEGIA
 prerequisites: [IT-C106-cetriolo, IT-C107-fragola]
 sounds: []
-roots: []
-etymology_hook: "ciliegia — origin not recorded in EtymDB 2.1; Spanish cereza and Portuguese cereja are its cousins"
+roots: [cerasum-latin]
+etymology_hook: "ciliegia goes back to Latin cerasum 'cherry' — English cherry is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C107-fragola]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ciliegia** — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish *cereza* and Portuguese *cereja* as its cognates.
+**ciliegia** goes back to Latin *cerasum*, "a cherry" (Lewis & Short), a word Latin took from Greek; EtymDB 2.1 has no row for *ciliegia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

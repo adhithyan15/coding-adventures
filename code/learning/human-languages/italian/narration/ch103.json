@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Jumper, Tie, Gloves, Scarf, Boots",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7ff29a44e2f122db",
+  "sourceHash": "fnv1a64:66378f8cf8fbf123",
   "lessons": [
     {
       "id": "IT-C103-maglione",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f4be6fb2d50a19c",
+      "sourceHash": "fnv1a64:47a35c4e60a98b4e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "maglione — its origin is not recorded in EtymDB 2.1."
+              "text": "maglione — built from the word for knitted mesh with -one, \"big\"; that word from Old Occitan malha, from Latin macula, \"a spot, a mesh\". (EtymDB 2.1)."
             }
           ]
         },

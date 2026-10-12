@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Big, Small, New, Old, Beautiful",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3be54472d296adaf",
+  "sourceHash": "fnv1a64:438b11b8cd5a3342",
   "lessons": [
     {
       "id": "IT-C72-grande",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:395caeabd892dfbd",
+      "sourceHash": "fnv1a64:6bf8a8b510deda3a",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "piccolo — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese pequeno as its cognates."
+              "text": "piccolo — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese pequeno as its cognate."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7783ef38c2a599ed",
+      "sourceHash": "fnv1a64:4d80a9afaace3991",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nuovo — its origin is not recorded in EtymDB 2.1."
+              "text": "nuovo from Latin novus, \"new\" — inherited. EtymDB 2.1 has no row for nuovo; it derives Venetian novo from novus."
             }
           ]
         },

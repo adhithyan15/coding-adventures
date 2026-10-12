@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Blanket, Towel, Soap, Toothbrush, Toothpaste",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7beef63a8161d9fe",
+  "sourceHash": "fnv1a64:4d39a9f69179b133",
   "lessons": [
     {
       "id": "IT-C96-coperta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba2e63ccdd74c6c8",
+      "sourceHash": "fnv1a64:d1bf1c1df763ffeb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "coperta — its origin is not recorded in EtymDB 2.1."
+              "text": "coperta — built from the verb \"to cover\", which from Latin cooperire, \"to cover over\". (EtymDB 2.1)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edfdaebf63b98dd1",
+      "sourceHash": "fnv1a64:94a3e22dffb69ed2",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "spazzolino — its origin is not recorded in EtymDB 2.1."
+              "text": "spazzolino — a small form (-ino, \"little\") of the word for a brush. EtymDB 2.1 has no entry; the parts are plain to see."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23d2bce90e0777fa",
+      "sourceHash": "fnv1a64:d11408f810ce23a0",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dentifricio — its origin is not recorded in EtymDB 2.1."
+              "text": "dentifricio from Latin dentifricium, \"tooth-powder\", from dens, \"tooth\", and fricare, \"to rub\" (Lewis & Short); EtymDB 2.1 has no row for dentifricio."
             }
           ]
         },

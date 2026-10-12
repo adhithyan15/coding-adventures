@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Holidays, Bicycle, Motorbike, Ship, Boat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:008188d360a450f2",
+  "sourceHash": "fnv1a64:f69769bf3c6c1e8d",
   "lessons": [
     {
       "id": "IT-C93-vacanze",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:def652da8ecd234b",
+      "sourceHash": "fnv1a64:c66190ac17798ab3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vacanze — its origin is not recorded in EtymDB 2.1."
+              "text": "vacanze goes back to Latin vacare, \"to be empty, to be free\" (Lewis & Short); EtymDB 2.1 has no row for vacanza."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ac2bec8e5a191c0",
+      "sourceHash": "fnv1a64:da82871dc0269650",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "moto — its origin is not recorded in EtymDB 2.1."
+              "text": "moto is short for the Italian word for \"motorcycle\". EtymDB 2.1 has no entry for either."
             }
           ]
         },

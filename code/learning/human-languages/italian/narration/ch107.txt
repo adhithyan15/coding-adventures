@@ -13,7 +13,7 @@ You'll want to know: la fragola.
 la fragola — "a strawberry".
 
 The word, taken apart.
-fragola from Latin fragula, "strawberry" — inherited. (EtymDB 2.1).
+fragola from Vulgar Latin fragula, a small form of Latin fragum, "strawberry" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -45,7 +45,7 @@ You'll want to know: la ciliegia.
 la ciliegia — "a cherry".
 
 The word, taken apart.
-ciliegia — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish cereza and Portuguese cereja as its cognates.
+ciliegia goes back to Latin cerasum, "a cherry" (Lewis & Short), a word Latin took from Greek; EtymDB 2.1 has no row for ciliegia.
 
 What you've built.
 One more word for this chapter.

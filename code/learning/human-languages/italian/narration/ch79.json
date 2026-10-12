@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Always, Never, Now, Far, Above",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0893417e6c0df10a",
+  "sourceHash": "fnv1a64:c844b08a403e9cfc",
   "lessons": [
     {
       "id": "IT-C79-sempre",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14d16cdf2af9bf85",
+      "sourceHash": "fnv1a64:a777386cb8fe4c59",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sempre — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish siempre and Catalan sempre as its cognates."
+              "text": "sempre from Latin semper, \"always\" — inherited. EtymDB 2.1 has no row for sempre; it derives Catalan and Galician sempre from semper."
             }
           ]
         },

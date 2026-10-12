@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Airport, Stop, Village, Cinema, Theatre",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cb2e6a3b335cb826",
+  "sourceHash": "fnv1a64:8a545fcd2055f789",
   "lessons": [
     {
       "id": "IT-C87-aeroporto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a379b2e2c20dbb63",
+      "sourceHash": "fnv1a64:bf376390afec92ac",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aeroporto — its origin is not recorded in EtymDB 2.1."
+              "text": "aeroporto — built from aero-, \"air\", and the word for a port. EtymDB 2.1 has no entry; the parts are plain to see."
             }
           ]
         },

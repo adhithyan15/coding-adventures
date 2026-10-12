@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Medicine, Doctor, Hospital, Illness, Hunger",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1cafbf0e6ed8e814",
+  "sourceHash": "fnv1a64:b7cf78b8088671bb",
   "lessons": [
     {
       "id": "IT-C41-medicina",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46862d79c707b76d",
+      "sourceHash": "fnv1a64:f0bf12a6bd519cc5",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "malattia — its origin is not recorded in EtymDB 2.1."
+              "text": "malattia — built from the word for \"ill\" with -ia; where that word came from is not recorded in EtymDB 2.1."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3aa0941c3d172e57",
+      "sourceHash": "fnv1a64:55defc9e370d9503",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fame — its origin is not recorded in EtymDB 2.1. EtymDB lists French faim and Portuguese fome as its cognates."
+              "text": "fame from Latin fames, \"hunger\" — inherited. EtymDB 2.1 has no row for fame; it derives French faim and Romanian foame from fames."
             }
           ]
         },

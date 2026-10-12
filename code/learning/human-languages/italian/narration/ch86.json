@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "To want, I would like, To prefer, To hope, To wish",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c661d4929d57ba7",
+  "sourceHash": "fnv1a64:8af1b81c55e542e7",
   "lessons": [
     {
       "id": "IT-C86-volere",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56e475f4215ebd0e",
+      "sourceHash": "fnv1a64:93457a191155b3d4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "desiderare — its origin is not recorded in EtymDB 2.1."
+              "text": "desiderare from Latin desiderare, \"to long for\" — taken from Latin. EtymDB 2.1 has no row for desiderare; it derives Dalmatian desirur from the Latin verb."
             }
           ]
         },

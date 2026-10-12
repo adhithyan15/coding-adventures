@@ -14,7 +14,7 @@ concept_tag: IT-CASA96-DENTIFRICIO
 prerequisites: [IT-C96-sapone, IT-C96-spazzolino]
 sounds: []
 roots: []
-etymology_hook: "dentifricio — origin not recorded in EtymDB 2.1"
+etymology_hook: "dentifricio ← Latin dentifricium 'tooth-powder': dens 'tooth' + fricare 'to rub'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C96-spazzolino]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dentifricio** — its origin is not recorded in EtymDB 2.1.
+**dentifricio** ← Latin *dentifricium*, "tooth-powder", from *dens*, "tooth", and *fricare*, "to rub" (Lewis & Short); EtymDB 2.1 has no row for *dentifricio*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

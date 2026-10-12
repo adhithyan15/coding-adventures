@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 93,
-  "sourceHash": "fnv1a64:008188d360a450f2",
+  "sourceHash": "fnv1a64:f69769bf3c6c1e8d",
   "lessonIds": [
     "IT-C93-vacanze",
     "IT-C93-bicicletta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch93.txt",
   "json": "italian/narration/ch93.json",
-  "textHash": "fnv1a64:409f877b1213c4f0",
-  "jsonHash": "fnv1a64:f5f3824f2e3ec904",
+  "textHash": "fnv1a64:fc8b3c9a50a3276c",
+  "jsonHash": "fnv1a64:aa0663c0c3bccd19",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Wall, Roof, Garden, Lamp, Bathroom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:17fbd5b035e8c1fe",
+  "sourceHash": "fnv1a64:87ba7dc8b05e1e0d",
   "lessons": [
     {
       "id": "IT-C57-muro",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5ed07ece4e9e6f3",
+      "sourceHash": "fnv1a64:0351944c1c5b97a3",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "lampada — its origin is not recorded in EtymDB 2.1."
+              "text": "lampada from Late Latin lampada, from Latin lampas, \"a torch, a light\" (Lewis & Short) — inherited; Latin took it from Greek. EtymDB 2.1 has no row for lampada."
             }
           ]
         },

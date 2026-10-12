@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Ugly, Long, Short, Hot, Cold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9533ebf24dcafecc",
+  "sourceHash": "fnv1a64:fb448906d22c7ca7",
   "lessons": [
     {
       "id": "IT-C73-brutto",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a980a2038600c8e2",
+      "sourceHash": "fnv1a64:cf6e54ff63ad2ea4",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "caldo — its origin is not recorded in EtymDB 2.1."
+              "text": "caldo from Latin caldus, \"warm, hot\", short for calidus (Lewis & Short) — inherited; EtymDB 2.1 has no row for caldo."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:687164bb5e4b9710",
+      "sourceHash": "fnv1a64:99fa6297ff93790d",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "freddo — its origin is not recorded in EtymDB 2.1. EtymDB lists Catalan fred and Portuguese frio as its cognates."
+              "text": "freddo from Latin frigidus, \"cold\" — inherited. EtymDB 2.1 has no row for freddo; it derives Friulian frêt from frigidus."
             }
           ]
         },

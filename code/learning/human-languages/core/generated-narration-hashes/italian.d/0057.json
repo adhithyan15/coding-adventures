@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 57,
-  "sourceHash": "fnv1a64:17fbd5b035e8c1fe",
+  "sourceHash": "fnv1a64:87ba7dc8b05e1e0d",
   "lessonIds": [
     "IT-C57-muro",
     "IT-C57-tetto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch57.txt",
   "json": "italian/narration/ch57.json",
-  "textHash": "fnv1a64:5cf9fc3738369658",
-  "jsonHash": "fnv1a64:9e50081aff6ea25a",
+  "textHash": "fnv1a64:005113fe7eb7bce0",
+  "jsonHash": "fnv1a64:93a006da7dfc9e9e",
   "findings": []
 }

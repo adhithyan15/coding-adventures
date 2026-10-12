@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 78,
-  "sourceHash": "fnv1a64:33430b68c5400fb1",
+  "sourceHash": "fnv1a64:af718ed74c1bb856",
   "lessonIds": [
     "IT-C78-settimana",
     "IT-C78-mese",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch78.txt",
   "json": "italian/narration/ch78.json",
-  "textHash": "fnv1a64:d2774484924c0711",
-  "jsonHash": "fnv1a64:161d2342f0adafed",
+  "textHash": "fnv1a64:b2027e7d894f8240",
+  "jsonHash": "fnv1a64:edf13b49da60cc9b",
   "findings": []
 }

@@ -14,7 +14,7 @@ concept_tag: IT-CASA96-SPAZZOLINO
 prerequisites: [IT-C96-asciugamano, IT-C96-sapone]
 sounds: []
 roots: []
-etymology_hook: "spazzolino — origin not recorded in EtymDB 2.1"
+etymology_hook: "spazzolino — a little brush (-ino 'little')"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C96-sapone]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**spazzolino** — its origin is not recorded in EtymDB 2.1.
+**spazzolino** — a small form (*-ino*, "little") of the word for a brush. EtymDB 2.1 has no entry; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

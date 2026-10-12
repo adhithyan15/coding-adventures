@@ -14,7 +14,7 @@ concept_tag: IT-AGG1-PICCOLO
 prerequisites: [IT-C71-elefante, IT-C72-grande]
 sounds: []
 roots: []
-etymology_hook: "piccolo — origin not recorded in EtymDB 2.1; Portuguese pequeno are its cousins"
+etymology_hook: "piccolo — origin not recorded in EtymDB 2.1; Portuguese pequeno is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C72-grande]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**piccolo** — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese *pequeno* as its cognates.
+**piccolo** — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese *pequeno* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

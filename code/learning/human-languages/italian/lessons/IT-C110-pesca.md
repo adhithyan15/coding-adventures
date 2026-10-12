@@ -13,8 +13,8 @@ gloss: "a peach"
 concept_tag: IT-CIBO110-PESCA
 prerequisites: [IT-C109-prosciutto, IT-C110-succo]
 sounds: []
-roots: []
-etymology_hook: "pesca — origin not recorded in EtymDB 2.1"
+roots: [persicum-latin]
+etymology_hook: "pesca ← Latin persicum, the 'Persian' fruit — English peach is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C110-succo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**pesca** — its origin is not recorded in EtymDB 2.1.
+**pesca** goes back to Latin *persicum*, "a peach", the "Persian" fruit (Lewis & Short) — inherited; EtymDB 2.1 has no row for *pesca*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

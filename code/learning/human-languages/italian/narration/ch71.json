@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Lion, Monkey, Bee, Ant, Elephant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9eaf45de915cab62",
+  "sourceHash": "fnv1a64:e1aefd5a9c38e5df",
   "lessons": [
     {
       "id": "IT-C71-leone",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8647b65f8db8fbd6",
+      "sourceHash": "fnv1a64:3b04adccb14339bc",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "scimmia — its origin is not recorded in EtymDB 2.1."
+              "text": "scimmia from Latin simia, \"an ape\" — inherited. EtymDB 2.1 has no row for scimmia; it derives Neapolitan scigna from simia."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Juice, Peach, Jam, Walnut, Pepper",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:59c1159e1371dab2",
+  "sourceHash": "fnv1a64:25983f550684e659",
   "lessons": [
     {
       "id": "IT-C110-succo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cab46e6ddbccf05d",
+      "sourceHash": "fnv1a64:9bc6be24dd6dddaf",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "succo from Late Latin succus, \"juice, sap\" — inherited. (EtymDB 2.1)."
+              "text": "succo from Latin succus, \"juice, sap\" — inherited. (EtymDB 2.1)."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37131f880307f588",
+      "sourceHash": "fnv1a64:4503fd149ef4ca86",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pesca — its origin is not recorded in EtymDB 2.1."
+              "text": "pesca goes back to Latin persicum, \"a peach\", the \"Persian\" fruit (Lewis & Short) — inherited; EtymDB 2.1 has no row for pesca."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:753b2e1865b0fd7c",
+      "sourceHash": "fnv1a64:2726dd8f5887ed5a",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "marmellata — its origin is not recorded in EtymDB 2.1."
+              "text": "marmellata from Portuguese marmelada, \"quince jam\", built on marmelo, \"quince\" — borrowed. EtymDB 2.1 has no row for marmellata, but records the Portuguese word."
             }
           ]
         },

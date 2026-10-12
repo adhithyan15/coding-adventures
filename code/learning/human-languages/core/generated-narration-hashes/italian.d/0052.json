@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 52,
-  "sourceHash": "fnv1a64:131e6492641849ac",
+  "sourceHash": "fnv1a64:ed1f6b6ecc03190c",
   "lessonIds": [
     "IT-C52-frutta",
     "IT-C52-mela",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch52.txt",
   "json": "italian/narration/ch52.json",
-  "textHash": "fnv1a64:8020c4827f5b8824",
-  "jsonHash": "fnv1a64:8cedfa8343284534",
+  "textHash": "fnv1a64:e16d571937a851b6",
+  "jsonHash": "fnv1a64:df761ed48842a23e",
   "findings": []
 }

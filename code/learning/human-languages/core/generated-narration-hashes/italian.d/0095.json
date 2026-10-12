@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 95,
-  "sourceHash": "fnv1a64:0fbc8624be88e8d6",
+  "sourceHash": "fnv1a64:4d72cc516d4fec84",
   "lessonIds": [
     "IT-C95-doccia",
     "IT-C95-vasca",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch95.txt",
   "json": "italian/narration/ch95.json",
-  "textHash": "fnv1a64:a387b58947a1d077",
-  "jsonHash": "fnv1a64:64d3826b9c06ca66",
+  "textHash": "fnv1a64:0c4481dd54b2aa5a",
+  "jsonHash": "fnv1a64:cdbf151a1f662cb7",
   "findings": []
 }

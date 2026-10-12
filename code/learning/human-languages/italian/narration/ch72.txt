@@ -45,7 +45,7 @@ You'll want to know: piccolo.
 piccolo — "small".
 
 The word, taken apart.
-piccolo — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese pequeno as its cognates.
+piccolo — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese pequeno as its cognate.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: nuovo.
 nuovo — "new".
 
 The word, taken apart.
-nuovo — its origin is not recorded in EtymDB 2.1.
+nuovo from Latin novus, "new" — inherited. EtymDB 2.1 has no row for nuovo; it derives Venetian novo from novus.
 
 What you've built.
 One more word for this chapter.

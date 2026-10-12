@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Hotel, Pharmacy, Post Office, Police, Library",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:78ae60cd9992c2d4",
+  "sourceHash": "fnv1a64:b0f4c002529f2ead",
   "lessons": [
     {
       "id": "IT-C84-albergo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b50293498b9f277c",
+      "sourceHash": "fnv1a64:24b632e10ffae8d8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "albergo from Medieval Latin albergum, \"lodging\" — inherited. EtymDB 2.1 records nothing further back."
+              "text": "albergo from Medieval Latin albergum, \"lodging\" (EtymDB 2.1), which came from a Germanic hariberg-, \"army shelter\" — borrowed. English harbour is its cousin."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d775b28453579ce",
+      "sourceHash": "fnv1a64:3914f9030fc36173",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "polizia — its origin is not recorded in EtymDB 2.1."
+              "text": "polizia goes back to Latin politia, \"the state, the running of the commonwealth\", from Greek politeia (Lewis & Short); EtymDB 2.1 has no row for polizia."
             }
           ]
         },

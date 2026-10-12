@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Close, Drink, Live, Go In, Go Out",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3b8602df24a0bf9",
+  "sourceHash": "fnv1a64:f3c7fb42d4081860",
   "lessons": [
     {
       "id": "IT-C50-chiudere",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afc5009e733f49b6",
+      "sourceHash": "fnv1a64:a80bff656bfecb24",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bere — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish and Portuguese beber as its cognates."
+              "text": "bere from Latin bibere, \"to drink\" — inherited. EtymDB 2.1 has no row for bere; it derives Dalmatian bar from bibere."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce17f7555ab40c7a",
+      "sourceHash": "fnv1a64:7e84bb4dbaa5595a",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "entrare — its origin is not recorded in EtymDB 2.1."
+              "text": "entrare from Latin intrare, \"to go into, to enter\" (Lewis & Short) — inherited; EtymDB 2.1 has no row for entrare."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c173be0217d1575",
+      "sourceHash": "fnv1a64:b80999f3ca94b2cc",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "uscire — its origin is not recorded in EtymDB 2.1."
+              "text": "uscire goes back to Latin exire, \"to go out\" — inherited. EtymDB 2.1 has no row for uscire; it derives Venetian usir and Friulian jessî from exire."
             }
           ]
         },

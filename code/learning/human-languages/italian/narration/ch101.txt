@@ -13,7 +13,7 @@ You'll want to know: la collana.
 la collana — "a necklace".
 
 The word, taken apart.
-collana — its origin is not recorded in EtymDB 2.1.
+collana — built from collo, "neck" from Latin collum. EtymDB 2.1 has no entry for collana; the parts are plain to see.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: il messaggio.
 il messaggio — "a message".
 
 The word, taken apart.
-messaggio from Middle French message — borrowed. (EtymDB 2.1).
+messaggio from Old French or Old Provençal message — borrowed. (EtymDB 2.1 links it to the later Middle French form.)
 
 What you've built.
 One more word for this chapter.

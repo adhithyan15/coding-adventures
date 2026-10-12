@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 72,
-  "sourceHash": "fnv1a64:3be54472d296adaf",
+  "sourceHash": "fnv1a64:438b11b8cd5a3342",
   "lessonIds": [
     "IT-C72-grande",
     "IT-C72-piccolo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch72.txt",
   "json": "italian/narration/ch72.json",
-  "textHash": "fnv1a64:12f6abbd20d102d6",
-  "jsonHash": "fnv1a64:756dd0eafc32fdec",
+  "textHash": "fnv1a64:eb94a1fdb59322ca",
+  "jsonHash": "fnv1a64:d8aa2e17c060c4d2",
   "findings": []
 }

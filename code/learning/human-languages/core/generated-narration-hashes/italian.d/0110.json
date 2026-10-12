@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 110,
-  "sourceHash": "fnv1a64:59c1159e1371dab2",
+  "sourceHash": "fnv1a64:25983f550684e659",
   "lessonIds": [
     "IT-C110-succo",
     "IT-C110-pesca",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch110.txt",
   "json": "italian/narration/ch110.json",
-  "textHash": "fnv1a64:41239d66388c51ac",
-  "jsonHash": "fnv1a64:181702a0a36a5316",
+  "textHash": "fnv1a64:8901165cadd13b51",
+  "jsonHash": "fnv1a64:c25247afd6dbf0a3",
   "findings": []
 }

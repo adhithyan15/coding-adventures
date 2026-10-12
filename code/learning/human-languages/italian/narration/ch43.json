@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Fear, Anger, Sadness, Happy, Sad",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7262e40a22616c22",
+  "sourceHash": "fnv1a64:5a9216e16ed3a053",
   "lessons": [
     {
       "id": "IT-C43-paura",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9987f78fcd467ac6",
+      "sourceHash": "fnv1a64:0067114e75638cd1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "paura — its origin is not recorded in EtymDB 2.1."
+              "text": "paura goes back to Latin pavor, \"fear, trembling\" — inherited. EtymDB 2.1 has no row for paura; it derives Friulian pôre from pavor."
             }
           ]
         },

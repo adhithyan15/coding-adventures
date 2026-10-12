@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Fruit, Apple, Banana, Orange, Grapes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:131e6492641849ac",
+  "sourceHash": "fnv1a64:ed1f6b6ecc03190c",
   "lessons": [
     {
       "id": "IT-C52-frutta",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f598591409df48b8",
+      "sourceHash": "fnv1a64:f93cbb0742b02e30",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "banana — its origin is not recorded in EtymDB 2.1."
+              "text": "banana — a loan word. EtymDB 2.1 has no row for the Italian word, but traces Portuguese and English banana to Wolof banaana."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Car park, Lift, North, South, West",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:85a4899982d128ae",
+  "sourceHash": "fnv1a64:1915d1c69835896b",
   "lessons": [
     {
       "id": "IT-C90-parcheggio",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d12e5463f7ddae6f",
+      "sourceHash": "fnv1a64:d713347942b35d1e",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ascensore — its origin is not recorded in EtymDB 2.1."
+              "text": "ascensore is built on Latin ascendere, \"to climb up\" (Lewis & Short); EtymDB 2.1 has no row for it."
             }
           ]
         },

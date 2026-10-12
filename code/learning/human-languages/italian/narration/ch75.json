@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Cheap, Tall, Low, Full, Empty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c4dd8de138a5f0fc",
+  "sourceHash": "fnv1a64:1c47ccf7ebe795ee",
   "lessons": [
     {
       "id": "IT-C75-economico",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61e60e83997d5c29",
+      "sourceHash": "fnv1a64:b0e20dabfbad2207",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "economico from Latin oeconomicus — inherited; Latin took it from Greek oikonomikos, \"skilled in running a household\". (EtymDB 2.1)."
+              "text": "economico from Latin oeconomicus — a learned borrowing; Latin took it from Greek oikonomikos, \"skilled in running a household\". (EtymDB 2.1)."
             }
           ]
         },

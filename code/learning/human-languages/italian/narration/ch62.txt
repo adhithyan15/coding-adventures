@@ -45,7 +45,7 @@ You'll want to know: il telefono.
 il telefono — "a phone".
 
 The word, taken apart.
-telefono — its origin is not recorded in EtymDB 2.1.
+telefono is built, like French téléphone, from Greek tele, "far", and phone, "voice, sound". EtymDB 2.1 has no row for telefono; it records the French word built from these two.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: l'ombrello.
 l'ombrello — "an umbrella". Literally "a little shade".
 
 The word, taken apart.
-ombrello — its origin is not recorded in EtymDB 2.1.
+ombrello goes back to Latin umbella, "a sunshade", a small form of umbra, "shade" (Lewis & Short); EtymDB 2.1 has no row for ombrello.
 
 What you've built.
 One more word for this chapter.

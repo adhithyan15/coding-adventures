@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Son, Daughter, Grandparents, Husband",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:424e9240f52dc673",
+  "sourceHash": "fnv1a64:b407647227c9bc25",
   "lessons": [
     {
       "id": "IT-C44-figlio",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b9d678e365f3331",
+      "sourceHash": "fnv1a64:ab30dbea706cd107",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nonno — its origin is not recorded in EtymDB 2.1."
+              "text": "nonno from Late Latin nonnus, \"monk; tutor; an old man\" — inherited. EtymDB 2.1 has no row for nonno; it derives Venetian nono, \"grandfather\", from nonnus."
             }
           ]
         },

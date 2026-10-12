@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Chocolate, Biscuit, Sandwich, Sauce, Vinegar",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ccf55a62d91aa2d",
+  "sourceHash": "fnv1a64:f9c1e1aa92a866d9",
   "lessons": [
     {
       "id": "IT-C108-cioccolato",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d96bb3c0bb026263",
+      "sourceHash": "fnv1a64:f8d08a5b5b0d9ec5",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "biscotto from Latin biscoctus, \"twice-cooked\" — inherited. (EtymDB 2.1)."
+              "text": "biscotto from Medieval Latin biscoctus, \"twice-cooked\" — inherited. (EtymDB 2.1)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdac2179b8791d8e",
+      "sourceHash": "fnv1a64:53f34f8ba69f422d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "panino — its origin is not recorded in EtymDB 2.1."
+              "text": "panino — built from pane, \"bread\", + -ino, \"little\": a little bread. EtymDB 2.1 has no entry; the parts are plain to see."
             }
           ]
         },

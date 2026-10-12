@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Sesto al Decimo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c312faab3c91e0f4",
+  "sourceHash": "fnv1a64:c6c4846331e42a2d",
   "lessons": [
     {
       "id": "IT-C27-sesto",
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed29082fabed0a74",
+      "sourceHash": "fnv1a64:cdcab7ad2228d921",
       "notice": null,
       "blocks": [
         {
@@ -309,7 +309,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "settimo — its origin is not recorded in EtymDB 2.1."
+              "text": "settimo from Latin septimus, \"seventh\" (Lewis & Short) — inherited; EtymDB 2.1 has no row for settimo."
             }
           ]
         },

@@ -14,7 +14,7 @@ concept_tag: IT-CITTA3-MUSEO
 prerequisites: [IT-C83-parco, IT-C83-chiesa]
 sounds: []
 roots: []
-etymology_hook: "museo — origin not recorded in EtymDB 2.1"
+etymology_hook: "museo ← Latin museum, from Greek mouseion 'a seat of the Muses'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C83-chiesa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**museo** — its origin is not recorded in EtymDB 2.1.
+**museo** ← Latin *museum*, "a place for learned work, a library", from Greek *mouseion*, "a seat of the Muses" (Lewis & Short); EtymDB 2.1 has no row for *museo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,7 @@ concept_tag: IT-CIBO106-VERDURE
 prerequisites: [IT-C105-vestito, IT-C106-manzo]
 sounds: []
 roots: []
-etymology_hook: "verdure — origin not recorded in EtymDB 2.1"
+etymology_hook: "verdure — verde 'green' (← Latin viridis) + -ura: greenery"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C106-manzo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**verdure** — its origin is not recorded in EtymDB 2.1.
+**verdure** — built from *verde*, "green" ← Latin *viridis*, with *-ura*. EtymDB 2.1 has no entry for *verdura*; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

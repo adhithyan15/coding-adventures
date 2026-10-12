@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 88,
-  "sourceHash": "fnv1a64:11e37bfbeabb6be7",
+  "sourceHash": "fnv1a64:29b11f01ea28cc00",
   "lessonIds": [
     "IT-C88-municipio",
     "IT-C88-supermercato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch88.txt",
   "json": "italian/narration/ch88.json",
-  "textHash": "fnv1a64:19462453ef17102e",
-  "jsonHash": "fnv1a64:8fbee39880419375",
+  "textHash": "fnv1a64:a8932fd79af99d09",
+  "jsonHash": "fnv1a64:e31e98cdf766dea6",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 42,
-  "sourceHash": "fnv1a64:45568d4afb6c5c08",
+  "sourceHash": "fnv1a64:ede09e0faabf9f2e",
   "lessonIds": [
     "IT-C42-sete",
     "IT-C42-stanchezza",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch42.txt",
   "json": "italian/narration/ch42.json",
-  "textHash": "fnv1a64:5dc485389883c8cb",
-  "jsonHash": "fnv1a64:3f6bbcb618da8863",
+  "textHash": "fnv1a64:c7c70b5841463885",
+  "jsonHash": "fnv1a64:2fc6bf40eda79127",
   "findings": []
 }

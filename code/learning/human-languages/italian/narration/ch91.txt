@@ -13,7 +13,7 @@ You'll want to know: dritto.
 dritto — "straight on".
 
 The word, taken apart.
-dritto — its origin is not recorded in EtymDB 2.1. EtymDB lists French droit and Catalan dret as its cognates.
+dritto from Latin directus, "laid straight" (Lewis & Short) — inherited; EtymDB 2.1 has no row for dritto.
 
 What you've built.
 One more word for this chapter.
@@ -45,7 +45,7 @@ You'll want to know: davanti.
 davanti — "in front".
 
 The word, taken apart.
-davanti — its origin is not recorded in EtymDB 2.1.
+davanti — built from da, "from", and the word for "forward", which from Late Latin abante, "before, in front". (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: dietro.
 dietro — "behind".
 
 The word, taken apart.
-dietro — its origin is not recorded in EtymDB 2.1. EtymDB lists French derrière as its cognates.
+dietro from Latin de retro, "from behind" — inherited. EtymDB 2.1 has no row for dietro; it derives Dalmatian dri from de retro.
 
 What you've built.
 One more word for this chapter.

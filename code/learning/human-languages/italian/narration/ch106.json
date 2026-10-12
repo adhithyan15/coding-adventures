@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Beef, Vegetables, Mushroom, Beans, Cucumber",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2b31cdee5acbfe90",
+  "sourceHash": "fnv1a64:85bf45da9c91deee",
   "lessons": [
     {
       "id": "IT-C106-manzo",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:effa10bd571e7106",
+      "sourceHash": "fnv1a64:59f3eaf4d2d8170d",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "verdure — its origin is not recorded in EtymDB 2.1."
+              "text": "verdure — built from verde, \"green\" from Latin viridis, with -ura. EtymDB 2.1 has no entry for verdura; the parts are plain to see."
             }
           ]
         },

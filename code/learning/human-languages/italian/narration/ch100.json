@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Scissors, Alarm clock, Mobile phone, Camera, Ring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b905a82b563ef970",
+  "sourceHash": "fnv1a64:b83e7fae519a2316",
   "lessons": [
     {
       "id": "IT-C100-forbici",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:945d025de7c18531",
+      "sourceHash": "fnv1a64:082c55aeb9a4425f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sveglia — its origin is not recorded in EtymDB 2.1."
+              "text": "sveglia is built on the verb \"to wake\", which goes back to Latin vigilare, \"to keep awake\" (Lewis & Short); EtymDB 2.1 has no row for it."
             }
           ]
         },

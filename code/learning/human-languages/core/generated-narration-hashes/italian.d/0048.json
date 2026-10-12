@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 48,
-  "sourceHash": "fnv1a64:28f34893603076c9",
+  "sourceHash": "fnv1a64:4e6411f3580aa52f",
   "lessonIds": [
     "IT-C48-cucinare",
     "IT-C48-vendere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch48.txt",
   "json": "italian/narration/ch48.json",
-  "textHash": "fnv1a64:b51764ec9a0e3305",
-  "jsonHash": "fnv1a64:8349e551fe6853f1",
+  "textHash": "fnv1a64:23ec0e8ab56b7b34",
+  "jsonHash": "fnv1a64:5e966ee80ee6d8af",
   "findings": []
 }

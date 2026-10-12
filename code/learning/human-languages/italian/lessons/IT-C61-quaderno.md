@@ -13,8 +13,8 @@ gloss: "a notebook"
 concept_tag: IT-COSE1-QUADERNO
 prerequisites: [IT-C61-penna, IT-C61-carta]
 sounds: []
-roots: []
-etymology_hook: "quaderno — origin not recorded in EtymDB 2.1; Portuguese caderno are its cousins"
+roots: [quaterni-latin]
+etymology_hook: "quaderno ← Latin quaterni 'four at a time', a gathering of four sheets — English quire"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C61-carta]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**quaderno** — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese *caderno* as its cognates.
+**quaderno** ← Latin *quaterni*, "four at a time" (Lewis & Short) — inherited: a gathering of four sheets. EtymDB 2.1 has no row for *quaderno*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

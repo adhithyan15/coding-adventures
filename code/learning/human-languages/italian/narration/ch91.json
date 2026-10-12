@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Straight on, In front, Behind, Next to, Between",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c2778800e1f98a1b",
+  "sourceHash": "fnv1a64:3a262d0721fc5751",
   "lessons": [
     {
       "id": "IT-C91-dritto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7472d9f3a4c3a532",
+      "sourceHash": "fnv1a64:d3f5f1981de9666a",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dritto — its origin is not recorded in EtymDB 2.1. EtymDB lists French droit and Catalan dret as its cognates."
+              "text": "dritto from Latin directus, \"laid straight\" (Lewis & Short) — inherited; EtymDB 2.1 has no row for dritto."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0ddbcc898ecb006",
+      "sourceHash": "fnv1a64:e70d331dd03749fe",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "davanti — its origin is not recorded in EtymDB 2.1."
+              "text": "davanti — built from da, \"from\", and the word for \"forward\", which from Late Latin abante, \"before, in front\". (EtymDB 2.1)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:071d4eb61dd25f58",
+      "sourceHash": "fnv1a64:d2fe0b251bb8b1cc",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dietro — its origin is not recorded in EtymDB 2.1. EtymDB lists French derrière as its cognates."
+              "text": "dietro from Latin de retro, \"from behind\" — inherited. EtymDB 2.1 has no row for dietro; it derives Dalmatian dri from de retro."
             }
           ]
         },

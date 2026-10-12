@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 73,
-  "sourceHash": "fnv1a64:9533ebf24dcafecc",
+  "sourceHash": "fnv1a64:fb448906d22c7ca7",
   "lessonIds": [
     "IT-C73-brutto",
     "IT-C73-lungo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch73.txt",
   "json": "italian/narration/ch73.json",
-  "textHash": "fnv1a64:1c13fd84296f684c",
-  "jsonHash": "fnv1a64:91d34d6d1ae33c42",
+  "textHash": "fnv1a64:fbeb61220c91a03f",
+  "jsonHash": "fnv1a64:21253be38d1f0692",
   "findings": []
 }

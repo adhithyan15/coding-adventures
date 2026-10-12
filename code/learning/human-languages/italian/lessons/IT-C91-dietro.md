@@ -14,7 +14,7 @@ concept_tag: IT-LUOGHI91-DIETRO
 prerequisites: [IT-C91-dritto, IT-C91-davanti]
 sounds: []
 roots: []
-etymology_hook: "dietro — origin not recorded in EtymDB 2.1; French derrière are its cousins"
+etymology_hook: "dietro ← Latin de retro 'from behind' — French derrière is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C91-davanti]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dietro** — its origin is not recorded in EtymDB 2.1. EtymDB lists French *derrière* as its cognates.
+**dietro** ← Latin *de retro*, "from behind" — inherited. EtymDB 2.1 has no row for *dietro*; it derives Dalmatian *dri* from *de retro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

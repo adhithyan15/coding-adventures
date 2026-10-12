@@ -14,7 +14,7 @@ concept_tag: IT-LUOGHI90-ASCENSORE
 prerequisites: [IT-C89-semaforo, IT-C90-parcheggio]
 sounds: []
 roots: []
-etymology_hook: "ascensore — origin not recorded in EtymDB 2.1"
+etymology_hook: "ascensore — built on Latin ascendere 'to climb up' — English ascend shares it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C90-parcheggio]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ascensore** — its origin is not recorded in EtymDB 2.1.
+**ascensore** is built on Latin *ascendere*, "to climb up" (Lewis & Short); EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

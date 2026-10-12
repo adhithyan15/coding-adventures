@@ -14,7 +14,7 @@ concept_tag: IT-VIAGGIO93-VACANZE
 prerequisites: [IT-C92-traghetto, IT-C92-viaggio]
 sounds: []
 roots: []
-etymology_hook: "vacanze — origin not recorded in EtymDB 2.1"
+etymology_hook: "vacanze goes back to Latin vacare 'to be free, empty' — English vacation and vacant"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C92-viaggio]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**vacanze** — its origin is not recorded in EtymDB 2.1.
+**vacanze** goes back to Latin *vacare*, "to be empty, to be free" (Lewis & Short); EtymDB 2.1 has no row for *vacanza*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

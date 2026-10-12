@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 84,
-  "sourceHash": "fnv1a64:78ae60cd9992c2d4",
+  "sourceHash": "fnv1a64:b0f4c002529f2ead",
   "lessonIds": [
     "IT-C84-albergo",
     "IT-C84-farmacia",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch84.txt",
   "json": "italian/narration/ch84.json",
-  "textHash": "fnv1a64:7ba414bcc2e0dfbd",
-  "jsonHash": "fnv1a64:de6b5c5f64bcaa59",
+  "textHash": "fnv1a64:cd84513350bc5dac",
+  "jsonHash": "fnv1a64:0c7dad466321d088",
   "findings": []
 }

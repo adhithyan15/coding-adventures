@@ -13,8 +13,8 @@ gloss: "a church"
 concept_tag: IT-CITTA3-CHIESA
 prerequisites: [IT-C83-ponte, IT-C83-parco]
 sounds: []
-roots: []
-etymology_hook: "chiesa — origin not recorded in EtymDB 2.1; Spanish iglesia are its cousins"
+roots: [ecclesia-latin]
+etymology_hook: "chiesa ← Latin ecclesia, from Greek ekklesia 'assembly' — English ecclesiastical"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C83-parco]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**chiesa** — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish *iglesia* as its cognates.
+**chiesa** ← Latin *ecclesia*, "an assembly", later "the church" — inherited; Latin took it from Greek *ekklesia*. EtymDB 2.1 has no row for *chiesa*; it derives Venetian *ciesa* from *ecclesia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

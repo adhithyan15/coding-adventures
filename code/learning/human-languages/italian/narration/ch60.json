@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Come Back, Study, Travel, Pay, Use",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e4f91e73317dca1e",
+  "sourceHash": "fnv1a64:b1ee6d4ae7543dd6",
   "lessons": [
     {
       "id": "IT-C60-tornare",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:049b858b28230763",
+      "sourceHash": "fnv1a64:5ed74aab1d2f0b50",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "viaggiare — its origin is not recorded in EtymDB 2.1."
+              "text": "viaggiare — built from the word for a journey, which from Old Occitan viatge, from Latin viaticum. (EtymDB 2.1)."
             }
           ]
         },

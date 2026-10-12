@@ -14,7 +14,7 @@ concept_tag: IT-DISPENSA-COLAZIONE
 prerequisites: [IT-C54-olio, IT-C54-pranzo]
 sounds: []
 roots: [collatio-latin]
-etymology_hook: "colazione ← Latin collatio 'a bringing together' — English collation, a light meal"
+etymology_hook: "colazione ← Latin collatio 'a bringing together', a learned word — English collation"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C54-pranzo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**colazione** ← Latin *collatio*, "a bringing together" — inherited. (EtymDB 2.1)
+**colazione** ← Latin *collatio*, "a bringing together" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

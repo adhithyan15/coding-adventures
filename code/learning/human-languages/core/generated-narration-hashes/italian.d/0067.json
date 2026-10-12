@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 67,
-  "sourceHash": "fnv1a64:acc8ff5a55cfde84",
+  "sourceHash": "fnv1a64:e30aa7ca1f37b9da",
   "lessonIds": [
     "IT-C67-stella",
     "IT-C67-nuvola",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch67.txt",
   "json": "italian/narration/ch67.json",
-  "textHash": "fnv1a64:bb2ba7f4bde334ed",
-  "jsonHash": "fnv1a64:fdd8f701ef5d1b4c",
+  "textHash": "fnv1a64:96cbe01701fc06a8",
+  "jsonHash": "fnv1a64:c1c793e54cfc548c",
   "findings": []
 }

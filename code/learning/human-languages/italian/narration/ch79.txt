@@ -13,7 +13,7 @@ You'll want to know: sempre.
 sempre — "always".
 
 The word, taken apart.
-sempre — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish siempre and Catalan sempre as its cognates.
+sempre from Latin semper, "always" — inherited. EtymDB 2.1 has no row for sempre; it derives Catalan and Galician sempre from semper.
 
 What you've built.
 One more word for this chapter.

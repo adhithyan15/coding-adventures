@@ -109,7 +109,7 @@ You'll want to know: la malattia.
 la malattia — "an illness".
 
 The word, taken apart.
-malattia — its origin is not recorded in EtymDB 2.1.
+malattia — built from the word for "ill" with -ia; where that word came from is not recorded in EtymDB 2.1.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: la fame.
 la fame — "hunger". ho fame: I am hungry, with avere.
 
 The word, taken apart.
-fame — its origin is not recorded in EtymDB 2.1. EtymDB lists French faim and Portuguese fome as its cognates.
+fame from Latin fames, "hunger" — inherited. EtymDB 2.1 has no row for fame; it derives French faim and Romanian foame from fames.
 
 What you've built.
 One more word for this chapter.

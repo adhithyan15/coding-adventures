@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:da8b820ab1e18c51",
+  "sourceHash": "fnv1a64:85dcfa039223718a",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c90412920f206ca",
+      "sourceHash": "fnv1a64:14c50097c5f67dec",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "prego is \"I pray, I ask\": the first-person form of pregare, \"to pray\". Where pregare came from is not recorded in EtymDB 2.1."
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare from Latin precari, \"to pray, to ask\" (Lewis & Short) — inherited."
             }
           ]
         },
@@ -255,7 +255,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa31f8e737a0311c",
+      "sourceHash": "fnv1a64:100f96eaee1d029c",
       "notice": null,
       "blocks": [
         {
@@ -301,7 +301,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "prego is \"I pray, I ask\": the first-person form of pregare, \"to pray\". Where pregare came from is not recorded in EtymDB 2.1."
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare from Latin precari, \"to pray, to ask\" (Lewis & Short) — inherited."
             }
           ]
         },
@@ -362,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7865d8e56714cea6",
+      "sourceHash": "fnv1a64:41df45dc4e27e076",
       "notice": null,
       "blocks": [
         {
@@ -408,7 +408,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "prego is \"I pray, I ask\": the first-person form of pregare, \"to pray\". Where pregare came from is not recorded in EtymDB 2.1."
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare from Latin precari, \"to pray, to ask\" (Lewis & Short) — inherited."
             }
           ]
         },

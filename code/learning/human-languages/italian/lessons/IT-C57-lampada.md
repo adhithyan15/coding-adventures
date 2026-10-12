@@ -13,8 +13,8 @@ gloss: "a lamp"
 concept_tag: IT-CASA2-LAMPADA
 prerequisites: [IT-C57-tetto, IT-C57-giardino]
 sounds: []
-roots: []
-etymology_hook: "lampada — origin not recorded in EtymDB 2.1"
+roots: [lampas-latin]
+etymology_hook: "lampada ← Latin lampas 'torch', from Greek — English lamp is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C57-giardino]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**lampada** — its origin is not recorded in EtymDB 2.1.
+**lampada** ← Late Latin *lampada*, from Latin *lampas*, "a torch, a light" (Lewis & Short) — inherited; Latin took it from Greek. EtymDB 2.1 has no row for *lampada*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

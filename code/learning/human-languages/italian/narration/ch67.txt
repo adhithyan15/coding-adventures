@@ -45,7 +45,7 @@ You'll want to know: la nuvola.
 la nuvola — "a cloud".
 
 The word, taken apart.
-nuvola — its origin is not recorded in EtymDB 2.1.
+nuvola from Latin nubila, "clouds" — inherited. EtymDB 2.1 has no row for nuvola; it derives Sicilian nuvula from nubila.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: la pioggia.
 la pioggia — "rain".
 
 The word, taken apart.
-pioggia — its origin is not recorded in EtymDB 2.1. EtymDB lists French pluie and Portuguese chuva as its cognates.
+pioggia from Vulgar Latin plovia, from Latin pluvia, "rain" — inherited. EtymDB 2.1 has no row for pioggia; it derives Venetian pióva from plovia and French pluie from pluvia.
 
 What you've built.
 One more word for this chapter.

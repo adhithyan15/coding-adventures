@@ -46,7 +46,7 @@ reviews_of: [IT-C104-calzini]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**camicetta** — built from the word for "shirt" with *-etta*, "little"; that word ← Late Latin *camisia*. (EtymDB 2.1)
+**camicetta** — built from the word for "shirt" with *-etta*, "little". EtymDB 2.1 has no entry for it; the parts are plain to see. The shirt word ← Late Latin *camisia* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Sing, Dance, Laugh, Cry, Wash",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9505e4de79dae3a9",
+  "sourceHash": "fnv1a64:20a3a49a7ffec627",
   "lessons": [
     {
       "id": "IT-C47-cantare",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5364f0fb44350a42",
+      "sourceHash": "fnv1a64:e9f9bc0be7da23c6",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ballare from Late Latin ballare, \"to dance\" — inherited; Latin took it from Greek ballo, \"I throw\". (EtymDB 2.1)."
+              "text": "ballare from Late Latin ballare, \"to dance\" — inherited (EtymDB 2.1); Latin took it from Greek ballizein, \"to jump about, to dance\"."
             }
           ]
         },

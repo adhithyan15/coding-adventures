@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Meat, Fish, Butter, Salt, Chicken",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:87d3ca4b0c29078a",
+  "sourceHash": "fnv1a64:a50e0c12212921de",
   "lessons": [
     {
       "id": "IT-C51-carne",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e892c0b2a815907",
+      "sourceHash": "fnv1a64:08aa1f5d9a490ef0",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "burro from Latin butyrum, \"butter\" — inherited; Latin took it from Greek boutyron. (EtymDB 2.1)."
+              "text": "burro from Old French burre — borrowed; behind it is Latin butyrum, which Latin took from Greek boutyron. (EtymDB 2.1 records the Latin and Greek steps.)"
             }
           ]
         },

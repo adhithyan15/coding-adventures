@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 106,
-  "sourceHash": "fnv1a64:2b31cdee5acbfe90",
+  "sourceHash": "fnv1a64:85bf45da9c91deee",
   "lessonIds": [
     "IT-C106-manzo",
     "IT-C106-verdure",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch106.txt",
   "json": "italian/narration/ch106.json",
-  "textHash": "fnv1a64:c61cb61bfbdeed2a",
-  "jsonHash": "fnv1a64:1f4e447522249c3f",
+  "textHash": "fnv1a64:dcddd8ebe4c9a5ab",
+  "jsonHash": "fnv1a64:9bf6ad0d74ddea0c",
   "findings": []
 }

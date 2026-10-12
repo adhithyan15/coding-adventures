@@ -74,7 +74,7 @@ is the introduction, and it is the ordinary one — an Italian would say it too.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**è**, "is", is a form of *essere* ← Latin *esse*, "to be". Where *questo* came from is not recorded in EtymDB 2.1.
+**è**, "is", is a form of *essere* ← Latin *esse*, "to be"; **questo** ← Vulgar Latin *eccu istu*, "look, this one". EtymDB 2.1 has no row for *questo*; it derives Romanian *acest* from that phrase.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-QUESTO-E-02] -->

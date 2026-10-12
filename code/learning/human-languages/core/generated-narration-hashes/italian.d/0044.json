@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 44,
-  "sourceHash": "fnv1a64:424e9240f52dc673",
+  "sourceHash": "fnv1a64:b407647227c9bc25",
   "lessonIds": [
     "IT-C44-figlio",
     "IT-C44-figlia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch44.txt",
   "json": "italian/narration/ch44.json",
-  "textHash": "fnv1a64:4fe3141ef43d38d0",
-  "jsonHash": "fnv1a64:6d177a9e8b17bd3c",
+  "textHash": "fnv1a64:b66d6a47730e9087",
+  "jsonHash": "fnv1a64:2014b5b5785c1b84",
   "findings": []
 }

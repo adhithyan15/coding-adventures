@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 96,
-  "sourceHash": "fnv1a64:7beef63a8161d9fe",
+  "sourceHash": "fnv1a64:4d39a9f69179b133",
   "lessonIds": [
     "IT-C96-coperta",
     "IT-C96-asciugamano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch96.txt",
   "json": "italian/narration/ch96.json",
-  "textHash": "fnv1a64:5f2febb42fd70dbb",
-  "jsonHash": "fnv1a64:0f7c393cc234011a",
+  "textHash": "fnv1a64:4794800df74b2440",
+  "jsonHash": "fnv1a64:e09d260b6ab8d0c6",
   "findings": []
 }

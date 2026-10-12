@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Cake, Soup, Honey, Oil, Lunch",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:783d11c1e5929b1e",
+  "sourceHash": "fnv1a64:cca219f6502c6e79",
   "lessons": [
     {
       "id": "IT-C54-torta",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ad8db74448f6d7c",
+      "sourceHash": "fnv1a64:98b983df4429e803",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "zuppa from a Germanic word, Proto-Germanic suppa, \"bread soaked in liquid\" — borrowed. (EtymDB 2.1)."
+              "text": "zuppa from Germanic suppa, \"bread soaked in liquid\", probably through Gothic — borrowed. English soup is the same word, through French. (EtymDB 2.1)."
             }
           ]
         },

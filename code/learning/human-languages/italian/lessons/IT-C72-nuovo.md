@@ -13,8 +13,8 @@ gloss: "new"
 concept_tag: IT-AGG1-NUOVO
 prerequisites: [IT-C72-grande, IT-C72-piccolo]
 sounds: []
-roots: []
-etymology_hook: "nuovo — origin not recorded in EtymDB 2.1"
+roots: [novus-latin]
+etymology_hook: "nuovo ← Latin novus 'new' — English novel and novice share it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C72-piccolo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**nuovo** — its origin is not recorded in EtymDB 2.1.
+**nuovo** ← Latin *novus*, "new" — inherited. EtymDB 2.1 has no row for *nuovo*; it derives Venetian *novo* from *novus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

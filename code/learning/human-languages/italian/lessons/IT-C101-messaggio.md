@@ -14,7 +14,7 @@ concept_tag: IT-OGGETTI101-MESSAGGIO
 prerequisites: [IT-C101-calendario, IT-C101-lettera]
 sounds: []
 roots: []
-etymology_hook: "messaggio ← Middle French message — borrowed; English message is the same word"
+etymology_hook: "messaggio ← Old French message — borrowed; English message is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C101-lettera]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**messaggio** ← Middle French *message* — borrowed. (EtymDB 2.1)
+**messaggio** ← Old French or Old Provençal *message* — borrowed. (EtymDB 2.1 links it to the later Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

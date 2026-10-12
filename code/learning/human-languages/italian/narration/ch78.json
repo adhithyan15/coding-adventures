@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Week, Month, Year, Morning, Minute",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:33430b68c5400fb1",
+  "sourceHash": "fnv1a64:af718ed74c1bb856",
   "lessons": [
     {
       "id": "IT-C78-settimana",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56ba54239ab24e88",
+      "sourceHash": "fnv1a64:993447412c08d9b1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mattina — its origin is not recorded in EtymDB 2.1."
+              "text": "mattina from Latin matutina, \"of the morning\" (Lewis & Short) — inherited; EtymDB 2.1 has no row for mattina."
             }
           ]
         },

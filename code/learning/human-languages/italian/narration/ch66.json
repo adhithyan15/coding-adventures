@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Beach, Island, Field, Sun, Moon",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bcaea81c4212a933",
+  "sourceHash": "fnv1a64:21f9d17900e20727",
   "lessons": [
     {
       "id": "IT-C66-spiaggia",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac7358fe599b6b48",
+      "sourceHash": "fnv1a64:66f08f777873c359",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "spiaggia — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish playa and Portuguese praia as its cognates."
+              "text": "spiaggia goes back to Late Latin plagia, \"shore\" — inherited. EtymDB 2.1 has no row for spiaggia; it derives Spanish playa from plagia."
             }
           ]
         },

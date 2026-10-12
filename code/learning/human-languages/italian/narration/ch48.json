@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Cook, Sell, Swim, Call, Sleep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:28f34893603076c9",
+  "sourceHash": "fnv1a64:4e6411f3580aa52f",
   "lessons": [
     {
       "id": "IT-C48-cucinare",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ba9c3b288f98730",
+      "sourceHash": "fnv1a64:6bc01a1bb56f12f8",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nuotare — its origin is not recorded in EtymDB 2.1."
+              "text": "nuotare from Vulgar Latin notare, from Latin natare, \"to swim\" — inherited. EtymDB 2.1 has no row for nuotare; it derives Venetian noar from notare."
             }
           ]
         },

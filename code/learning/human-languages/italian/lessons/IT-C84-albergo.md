@@ -14,7 +14,7 @@ concept_tag: IT-CITTA4-ALBERGO
 prerequisites: [IT-C83-museo, IT-C83-ristorante]
 sounds: []
 roots: []
-etymology_hook: "albergo ← Medieval Latin albergum 'lodging'"
+etymology_hook: "albergo ← Medieval Latin albergum, from Germanic hariberg- 'army shelter' — English harbour"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C83-ristorante]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**albergo** ← Medieval Latin *albergum*, "lodging" — inherited. EtymDB 2.1 records nothing further back.
+**albergo** ← Medieval Latin *albergum*, "lodging" (EtymDB 2.1), which came from a Germanic *hariberg-*, "army shelter" — borrowed. English *harbour* is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

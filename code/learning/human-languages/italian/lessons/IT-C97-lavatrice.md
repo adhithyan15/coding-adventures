@@ -14,7 +14,7 @@ concept_tag: IT-CASA97-LAVATRICE
 prerequisites: [IT-C97-spazzatura, IT-C97-scopa]
 sounds: []
 roots: []
-etymology_hook: "lavatrice — built from lavare 'to wash' with -trice, the ending for a doer"
+etymology_hook: "lavatrice — built from lavare 'to wash' with -trice, the ending for a female doer"
 duration:
   max_seconds: 200
 requires:

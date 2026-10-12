@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Comb, Rubbish, Broom, Washing machine, Armchair",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0b26174dff0be9dd",
+  "sourceHash": "fnv1a64:363b815fa5b79b63",
   "lessons": [
     {
       "id": "IT-C97-pettine",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:066f720b89c67892",
+      "sourceHash": "fnv1a64:d72041ce52dffd24",
       "notice": null,
       "blocks": [
         {

@@ -14,7 +14,7 @@ concept_tag: IT-LUOGHI89-UFFICIO
 prerequisites: [IT-C88-stadio, IT-C89-fabbrica]
 sounds: []
 roots: []
-etymology_hook: "ufficio — origin not recorded in EtymDB 2.1"
+etymology_hook: "ufficio goes back to Latin officium 'a service, a duty' — English office"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C89-fabbrica]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ufficio** — its origin is not recorded in EtymDB 2.1.
+**ufficio** goes back to Latin *officium*, "a service, a duty" (Lewis & Short); EtymDB 2.1 has no row for *ufficio*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

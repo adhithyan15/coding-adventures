@@ -52,7 +52,7 @@ handing something over. Listen to the situation and the voice together.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**prego** is "I pray, I ask": the first-person form of *pregare*, "to pray". Where *pregare* came from is not recorded in EtymDB 2.1.
+**prego** is "I pray, I ask": the first-person form of *pregare* ← Latin *precari*, "to pray, to ask" (Lewis & Short) — inherited.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-PREGO-GO-AHEAD-04, IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05, IT-PRAGMATIC-PREGO-COME-AGAIN-06] -->

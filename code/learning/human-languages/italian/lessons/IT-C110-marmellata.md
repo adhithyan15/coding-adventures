@@ -14,7 +14,7 @@ concept_tag: IT-CIBO110-MARMELLATA
 prerequisites: [IT-C110-succo, IT-C110-pesca]
 sounds: []
 roots: []
-etymology_hook: "marmellata — origin not recorded in EtymDB 2.1"
+etymology_hook: "marmellata ← Portuguese marmelada 'quince jam', from marmelo 'quince' — English marmalade"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C110-pesca]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**marmellata** — its origin is not recorded in EtymDB 2.1.
+**marmellata** ← Portuguese *marmelada*, "quince jam", built on *marmelo*, "quince" — borrowed. EtymDB 2.1 has no row for *marmellata*, but records the Portuguese word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

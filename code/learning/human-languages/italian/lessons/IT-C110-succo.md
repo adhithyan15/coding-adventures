@@ -46,7 +46,7 @@ reviews_of: [IT-C109-prosciutto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**succo** ← Late Latin *succus*, "juice, sap" — inherited. (EtymDB 2.1)
+**succo** ← Latin *succus*, "juice, sap" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

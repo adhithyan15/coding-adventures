@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Glass, Plate, Spoon, Knife, Fork",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:56877c1faf8f6d7f",
+  "sourceHash": "fnv1a64:6f3b070d8b85aa12",
   "lessons": [
     {
       "id": "IT-C59-bicchiere",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:089df6116ed8a538",
+      "sourceHash": "fnv1a64:e3f290bb6e59a8b3",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "forchetta — its origin is not recorded in EtymDB 2.1. EtymDB lists French fourchette as its cognates."
+              "text": "forchetta — a small form of the word for a pitchfork, which from Latin furca, \"a fork\" (Lewis & Short). EtymDB 2.1 has no row for forchetta."
             }
           ]
         },

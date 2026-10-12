@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "To be able to, To have to, To manage, Need, Trade",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f939ba5487c6e19b",
+  "sourceHash": "fnv1a64:daa15f01c287abe7",
   "lessons": [
     {
       "id": "IT-C85-potere",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a231f9547f698214",
+      "sourceHash": "fnv1a64:7747619aad448c52",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "riuscire — its origin is not recorded in EtymDB 2.1."
+              "text": "riuscire — built from ri-, \"again\", and uscire, \"to go out\" from Latin exire: to come out well. EtymDB 2.1 has no entry; the parts are plain to see."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3860f7005c2d4f2",
+      "sourceHash": "fnv1a64:4d1f5114c2821ce4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mestiere — its origin is not recorded in EtymDB 2.1. EtymDB lists French métier as its cognates."
+              "text": "mestiere goes back to Latin ministerium, \"service, an occupation\" (Lewis & Short); EtymDB 2.1 has no row for mestiere."
             }
           ]
         },

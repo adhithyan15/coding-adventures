@@ -13,8 +13,8 @@ gloss: "to swim"
 concept_tag: IT-VERB-NUOTARE
 prerequisites: [IT-C48-cucinare, IT-C48-vendere]
 sounds: []
-roots: []
-etymology_hook: "nuotare — origin not recorded in EtymDB 2.1"
+roots: [natare-latin]
+etymology_hook: "nuotare ← Vulgar Latin notare, from Latin natare 'to swim'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C48-vendere]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**nuotare** — its origin is not recorded in EtymDB 2.1.
+**nuotare** ← Vulgar Latin *notare*, from Latin *natare*, "to swim" — inherited. EtymDB 2.1 has no row for *nuotare*; it derives Venetian *noar* from *notare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

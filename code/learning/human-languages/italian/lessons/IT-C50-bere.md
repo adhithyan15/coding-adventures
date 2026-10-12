@@ -13,8 +13,8 @@ gloss: "to drink"
 concept_tag: IT-VERB-BERE
 prerequisites: [IT-C49-aprire, IT-C50-chiudere]
 sounds: []
-roots: []
-etymology_hook: "bere — origin not recorded in EtymDB 2.1; Spanish and Portuguese beber are its cousins"
+roots: [bibere-latin]
+etymology_hook: "bere ← Latin bibere 'to drink' — English imbibe shares it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C50-chiudere]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**bere** — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish and Portuguese *beber* as its cognates.
+**bere** ← Latin *bibere*, "to drink" — inherited. EtymDB 2.1 has no row for *bere*; it derives Dalmatian *bar* from *bibere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

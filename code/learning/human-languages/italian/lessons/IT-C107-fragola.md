@@ -14,7 +14,7 @@ concept_tag: IT-CIBO107-FRAGOLA
 prerequisites: [IT-C106-fagioli, IT-C106-cetriolo]
 sounds: []
 roots: [fragula-latin]
-etymology_hook: "fragola ← Latin fragula 'strawberry'"
+etymology_hook: "fragola ← Vulgar Latin fragula, a small form of Latin fragum 'strawberry'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C106-cetriolo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fragola** ← Latin *fragula*, "strawberry" — inherited. (EtymDB 2.1)
+**fragola** ← Vulgar Latin *fragula*, a small form of Latin *fragum*, "strawberry" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

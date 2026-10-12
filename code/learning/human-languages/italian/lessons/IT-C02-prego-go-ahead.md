@@ -54,7 +54,7 @@ Do not add another meaning yet. The same sound now owns two situations: after
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**prego** is "I pray, I ask": the first-person form of *pregare*, "to pray". Where *pregare* came from is not recorded in EtymDB 2.1.
+**prego** is "I pray, I ask": the first-person form of *pregare* ← Latin *precari*, "to pray, to ask" (Lewis & Short) — inherited.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-PRAGMATIC-PREGO-GO-AHEAD-04] -->

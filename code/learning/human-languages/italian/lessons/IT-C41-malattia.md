@@ -14,7 +14,7 @@ concept_tag: IT-SALUTE-MALATTIA
 prerequisites: [IT-C41-medico, IT-C41-ospedale]
 sounds: []
 roots: []
-etymology_hook: "malattia — origin not recorded in EtymDB 2.1"
+etymology_hook: "malattia — 'ill' + -ia; the origin of the 'ill' word is not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C41-ospedale]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**malattia** — its origin is not recorded in EtymDB 2.1.
+**malattia** — built from the word for "ill" with *-ia*; where that word came from is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

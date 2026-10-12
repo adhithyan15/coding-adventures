@@ -45,7 +45,7 @@ You'll want to know: la sveglia.
 la sveglia — "an alarm clock".
 
 The word, taken apart.
-sveglia — its origin is not recorded in EtymDB 2.1.
+sveglia is built on the verb "to wake", which goes back to Latin vigilare, "to keep awake" (Lewis & Short); EtymDB 2.1 has no row for it.
 
 What you've built.
 One more word for this chapter.

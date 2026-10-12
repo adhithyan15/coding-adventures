@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "Bottle, Pen, Paper, Notebook, Pencil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:46cf33d3d7b3595b",
+  "sourceHash": "fnv1a64:798f14b62645cdd5",
   "lessons": [
     {
       "id": "IT-C61-bottiglia",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03e280a1a0f679ff",
+      "sourceHash": "fnv1a64:9347c30d275b48c7",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "penna — its origin is not recorded in EtymDB 2.1."
+              "text": "penna from Latin penna, \"a feather, a wing\" (Lewis & Short) — inherited: pens were cut from quills. EtymDB 2.1 has no row for penna."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bc88f69fe98e28e",
+      "sourceHash": "fnv1a64:ac36d8f11e16ee03",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "quaderno — its origin is not recorded in EtymDB 2.1. EtymDB lists Portuguese caderno as its cognates."
+              "text": "quaderno from Latin quaterni, \"four at a time\" (Lewis & Short) — inherited: a gathering of four sheets. EtymDB 2.1 has no row for quaderno."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "This and That",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:382f9f825756dbed",
+  "sourceHash": "fnv1a64:ce8e83a89978c05f",
   "lessons": [
     {
       "id": "IT-C33-questo",
@@ -544,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2587b9aa63297f49",
+      "sourceHash": "fnv1a64:3fc82f5c16526191",
       "notice": null,
       "blocks": [
         {
@@ -646,7 +646,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "è, \"is\", is a form of essere from Latin esse, \"to be\". Where questo came from is not recorded in EtymDB 2.1."
+              "text": "è, \"is\", is a form of essere from Latin esse, \"to be\"; questo from Vulgar Latin eccu istu, \"look, this one\". EtymDB 2.1 has no row for questo; it derives Romanian acest from that phrase."
             }
           ]
         },

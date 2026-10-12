@@ -13,8 +13,8 @@ gloss: "a table"
 concept_tag: IT-CASA1-TAVOLO
 prerequisites: [IT-C56-cucina, IT-C56-finestra]
 sounds: []
-roots: []
-etymology_hook: "tavolo — origin not recorded in EtymDB 2.1"
+roots: [tabula-latin]
+etymology_hook: "tavolo ← the word for a board, from Latin tabula 'plank' — English table is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C56-finestra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**tavolo** — its origin is not recorded in EtymDB 2.1.
+**tavolo** is a masculine form of the word for a table or board, which ← Latin *tabula*, "a board, a plank". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

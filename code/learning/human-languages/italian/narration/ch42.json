@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Thirst, Tiredness, Tired, Ill, Joy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:45568d4afb6c5c08",
+  "sourceHash": "fnv1a64:ede09e0faabf9f2e",
   "lessons": [
     {
       "id": "IT-C42-sete",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ea75671817e5f69",
+      "sourceHash": "fnv1a64:951da9d9392ee354",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "stanchezza — its origin is not recorded in EtymDB 2.1."
+              "text": "stanchezza — built from the word for \"tired\" with -ezza, \"-ness\"; where that word came from is not recorded in EtymDB 2.1."
             }
           ]
         },

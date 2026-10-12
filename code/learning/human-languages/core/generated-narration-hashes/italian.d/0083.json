@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 83,
-  "sourceHash": "fnv1a64:e95e8381971001d6",
+  "sourceHash": "fnv1a64:5b38afe1b752cf3a",
   "lessonIds": [
     "IT-C83-ponte",
     "IT-C83-parco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch83.txt",
   "json": "italian/narration/ch83.json",
-  "textHash": "fnv1a64:b1332706ee25a4a0",
-  "jsonHash": "fnv1a64:0d2aec6ebb252765",
+  "textHash": "fnv1a64:f2f363f3aafb0dd8",
+  "jsonHash": "fnv1a64:3ed2d4cf5ccecfe3",
   "findings": []
 }

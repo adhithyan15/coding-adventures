@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 59,
-  "sourceHash": "fnv1a64:56877c1faf8f6d7f",
+  "sourceHash": "fnv1a64:6f3b070d8b85aa12",
   "lessonIds": [
     "IT-C59-bicchiere",
     "IT-C59-piatto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch59.txt",
   "json": "italian/narration/ch59.json",
-  "textHash": "fnv1a64:a483c09e04a35b3f",
-  "jsonHash": "fnv1a64:c1a15c8be3dfdd3c",
+  "textHash": "fnv1a64:c5d0f261343ccc0e",
+  "jsonHash": "fnv1a64:bc064cea8052e60b",
   "findings": []
 }

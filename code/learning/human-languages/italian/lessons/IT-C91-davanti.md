@@ -14,7 +14,7 @@ concept_tag: IT-LUOGHI91-DAVANTI
 prerequisites: [IT-C90-ovest, IT-C91-dritto]
 sounds: []
 roots: []
-etymology_hook: "davanti — origin not recorded in EtymDB 2.1"
+etymology_hook: "davanti — da 'from' + the word for 'forward' ← Late Latin abante 'in front'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C91-dritto]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**davanti** — its origin is not recorded in EtymDB 2.1.
+**davanti** — built from *da*, "from", and the word for "forward", which ← Late Latin *abante*, "before, in front". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

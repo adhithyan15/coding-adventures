@@ -13,7 +13,7 @@ You'll want to know: la coperta.
 la coperta — "a blanket".
 
 The word, taken apart.
-coperta — its origin is not recorded in EtymDB 2.1.
+coperta — built from the verb "to cover", which from Latin cooperire, "to cover over". (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: lo spazzolino.
 lo spazzolino — "a toothbrush".
 
 The word, taken apart.
-spazzolino — its origin is not recorded in EtymDB 2.1.
+spazzolino — a small form (-ino, "little") of the word for a brush. EtymDB 2.1 has no entry; the parts are plain to see.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: il dentifricio.
 il dentifricio — "toothpaste".
 
 The word, taken apart.
-dentifricio — its origin is not recorded in EtymDB 2.1.
+dentifricio from Latin dentifricium, "tooth-powder", from dens, "tooth", and fricare, "to rub" (Lewis & Short); EtymDB 2.1 has no row for dentifricio.
 
 What you've built.
 One more word for this chapter.

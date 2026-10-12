@@ -13,8 +13,8 @@ gloss: "straight on"
 concept_tag: IT-LUOGHI91-DRITTO
 prerequisites: [IT-C90-sud, IT-C90-ovest]
 sounds: []
-roots: []
-etymology_hook: "dritto — origin not recorded in EtymDB 2.1; French droit and Catalan dret are its cousins"
+roots: [directus-latin]
+etymology_hook: "dritto ← Latin directus 'laid straight' — English direct is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C90-ovest]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dritto** — its origin is not recorded in EtymDB 2.1. EtymDB lists French *droit* and Catalan *dret* as its cognates.
+**dritto** ← Latin *directus*, "laid straight" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *dritto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

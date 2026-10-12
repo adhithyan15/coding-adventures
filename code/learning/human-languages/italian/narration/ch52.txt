@@ -77,7 +77,7 @@ You'll want to know: la banana.
 la banana — "a banana".
 
 The word, taken apart.
-banana — its origin is not recorded in EtymDB 2.1.
+banana — a loan word. EtymDB 2.1 has no row for the Italian word, but traces Portuguese and English banana to Wolof banaana.
 
 What you've built.
 One more word for this chapter.

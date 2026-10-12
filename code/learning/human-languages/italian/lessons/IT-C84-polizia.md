@@ -14,7 +14,7 @@ concept_tag: IT-CITTA4-POLIZIA
 prerequisites: [IT-C84-farmacia, IT-C84-posta]
 sounds: []
 roots: []
-etymology_hook: "polizia — origin not recorded in EtymDB 2.1"
+etymology_hook: "polizia goes back to Latin politia, Greek politeia 'the state' — English police and polity"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C84-posta]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**polizia** — its origin is not recorded in EtymDB 2.1.
+**polizia** goes back to Latin *politia*, "the state, the running of the commonwealth", from Greek *politeia* (Lewis & Short); EtymDB 2.1 has no row for *polizia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

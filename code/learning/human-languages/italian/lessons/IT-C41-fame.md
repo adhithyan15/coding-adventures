@@ -13,8 +13,8 @@ gloss: "hunger"
 concept_tag: IT-SALUTE-FAME
 prerequisites: [IT-C41-ospedale, IT-C41-malattia]
 sounds: []
-roots: []
-etymology_hook: "fame — origin not recorded in EtymDB 2.1; French faim and Portuguese fome are its cousins"
+roots: [fames-latin]
+etymology_hook: "fame ← Latin fames 'hunger' — French faim is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C41-malattia]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fame** — its origin is not recorded in EtymDB 2.1. EtymDB lists French *faim* and Portuguese *fome* as its cognates.
+**fame** ← Latin *fames*, "hunger" — inherited. EtymDB 2.1 has no row for *fame*; it derives French *faim* and Romanian *foame* from *fames*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

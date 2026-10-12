@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Skirt, Coat, Shoes, Socks, Blouse",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0aee6be44ea2609b",
+  "sourceHash": "fnv1a64:120a04ad729c9126",
   "lessons": [
     {
       "id": "IT-C104-gonna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97d117258390ffb6",
+      "sourceHash": "fnv1a64:2d88305731679673",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "gonna from Late Latin gunna, \"a leather garment\" — inherited; Latin took it from Greek gouna. (EtymDB 2.1)."
+              "text": "gonna from Late Latin gunna, a garment of fur or leather — inherited. (EtymDB 2.1) Where gunna itself came from is uncertain."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c770eb45afbd3c01",
+      "sourceHash": "fnv1a64:48957098e4b08bd8",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "calzini — its origin is not recorded in EtymDB 2.1."
+              "text": "calzini — a small form (-ino) of the word for a stocking, which from Vulgar Latin calcea, a covering for foot and leg. (EtymDB 2.1)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f2ccab926bf0bb4",
+      "sourceHash": "fnv1a64:04b662212e65557e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "camicetta — built from the word for \"shirt\" with -etta, \"little\"; that word from Late Latin camisia. (EtymDB 2.1)."
+              "text": "camicetta — built from the word for \"shirt\" with -etta, \"little\". EtymDB 2.1 has no entry for it; the parts are plain to see. The shirt word from Late Latin camisia (EtymDB 2.1)."
             }
           ]
         },

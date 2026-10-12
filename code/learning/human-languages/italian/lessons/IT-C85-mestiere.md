@@ -14,7 +14,7 @@ concept_tag: IT-POTERE85-MESTIERE
 prerequisites: [IT-C85-riuscire, IT-C85-bisogno]
 sounds: []
 roots: []
-etymology_hook: "mestiere — origin not recorded in EtymDB 2.1; French métier are its cousins"
+etymology_hook: "mestiere goes back to Latin ministerium 'service' — French métier is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C85-bisogno]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**mestiere** — its origin is not recorded in EtymDB 2.1. EtymDB lists French *métier* as its cognates.
+**mestiere** goes back to Latin *ministerium*, "service, an occupation" (Lewis & Short); EtymDB 2.1 has no row for *mestiere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

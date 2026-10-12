@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 47,
-  "sourceHash": "fnv1a64:9505e4de79dae3a9",
+  "sourceHash": "fnv1a64:20a3a49a7ffec627",
   "lessonIds": [
     "IT-C47-cantare",
     "IT-C47-ballare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch47.txt",
   "json": "italian/narration/ch47.json",
-  "textHash": "fnv1a64:d820fafffc80923e",
-  "jsonHash": "fnv1a64:e7870203f79a7164",
+  "textHash": "fnv1a64:01cef60e0e56a8c7",
+  "jsonHash": "fnv1a64:e814dc309182061c",
   "findings": []
 }

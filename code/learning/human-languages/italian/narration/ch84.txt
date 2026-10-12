@@ -13,7 +13,7 @@ You'll want to know: l'albergo.
 l'albergo — "a hotel".
 
 The word, taken apart.
-albergo from Medieval Latin albergum, "lodging" — inherited. EtymDB 2.1 records nothing further back.
+albergo from Medieval Latin albergum, "lodging" (EtymDB 2.1), which came from a Germanic hariberg-, "army shelter" — borrowed. English harbour is its cousin.
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: la polizia.
 la polizia — "the police".
 
 The word, taken apart.
-polizia — its origin is not recorded in EtymDB 2.1.
+polizia goes back to Latin politia, "the state, the running of the commonwealth", from Greek politeia (Lewis & Short); EtymDB 2.1 has no row for polizia.
 
 What you've built.
 One more word for this chapter.

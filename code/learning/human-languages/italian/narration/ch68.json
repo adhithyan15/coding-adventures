@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Dog, Cat, Horse, Cow, Pig",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c596ef74263eae28",
+  "sourceHash": "fnv1a64:2d9bc027b620c318",
   "lessons": [
     {
       "id": "IT-C68-cane",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04cfe0a506be67d6",
+      "sourceHash": "fnv1a64:17dddf97cd5296c2",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "cavallo from Late Latin caballus, \"a horse, a nag\" — inherited. (EtymDB 2.1)."
+              "text": "cavallo from Latin caballus, \"a nag, a work horse\" — inherited. (EtymDB 2.1)."
             }
           ]
         },

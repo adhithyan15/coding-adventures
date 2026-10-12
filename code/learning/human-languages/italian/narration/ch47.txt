@@ -45,7 +45,7 @@ You'll want to know: ballare.
 ballare — "to dance".
 
 The word, taken apart.
-ballare from Late Latin ballare, "to dance" — inherited; Latin took it from Greek ballo, "I throw". (EtymDB 2.1).
+ballare from Late Latin ballare, "to dance" — inherited (EtymDB 2.1); Latin took it from Greek ballizein, "to jump about, to dance".
 
 What you've built.
 One more word for this chapter.

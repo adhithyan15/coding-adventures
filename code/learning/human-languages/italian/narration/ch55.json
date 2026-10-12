@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Breakfast, Pear, Rice, Cheese, Egg",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d519923576c5631b",
+  "sourceHash": "fnv1a64:539704d5fe23c345",
   "lessons": [
     {
       "id": "IT-C55-colazione",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:618929c9d4e6f981",
+      "sourceHash": "fnv1a64:06fc69fa6ef56ee3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "colazione from Latin collatio, \"a bringing together\" — inherited. (EtymDB 2.1)."
+              "text": "colazione from Latin collatio, \"a bringing together\" — a learned borrowing. (EtymDB 2.1)."
             }
           ]
         },

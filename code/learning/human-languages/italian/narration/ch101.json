@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Necklace, Candle, Calendar, Letter, Message",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0628179963407a53",
+  "sourceHash": "fnv1a64:d18746b75b670306",
   "lessons": [
     {
       "id": "IT-C101-collana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:691434535f079ce9",
+      "sourceHash": "fnv1a64:a7d88e4ba1fa5669",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "collana — its origin is not recorded in EtymDB 2.1."
+              "text": "collana — built from collo, \"neck\" from Latin collum. EtymDB 2.1 has no entry for collana; the parts are plain to see."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:852e626589032098",
+      "sourceHash": "fnv1a64:aa029c7a553e0330",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "messaggio from Middle French message — borrowed. (EtymDB 2.1)."
+              "text": "messaggio from Old French or Old Provençal message — borrowed. (EtymDB 2.1 links it to the later Middle French form.)"
             }
           ]
         },

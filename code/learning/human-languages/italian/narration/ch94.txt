@@ -109,7 +109,7 @@ You'll want to know: il frigorifero.
 il frigorifero — "a fridge".
 
 The word, taken apart.
-frigorifero — its origin is not recorded in EtymDB 2.1.
+frigorifero is built from Latin frigus, "cold", and ferre, "to carry" (Lewis & Short): a bringer of cold. EtymDB 2.1 has no row for it.
 
 What you've built.
 One more word for this chapter.

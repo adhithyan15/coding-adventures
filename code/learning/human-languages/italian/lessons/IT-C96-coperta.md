@@ -14,7 +14,7 @@ concept_tag: IT-CASA96-COPERTA
 prerequisites: [IT-C95-tenda, IT-C95-cuscino]
 sounds: []
 roots: []
-etymology_hook: "coperta — origin not recorded in EtymDB 2.1"
+etymology_hook: "coperta — from the verb 'to cover', which ← Latin cooperire 'to cover over'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C95-cuscino]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**coperta** — its origin is not recorded in EtymDB 2.1.
+**coperta** — built from the verb "to cover", which ← Latin *cooperire*, "to cover over". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

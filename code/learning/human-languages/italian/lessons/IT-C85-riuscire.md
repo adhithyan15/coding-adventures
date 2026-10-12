@@ -14,7 +14,7 @@ concept_tag: IT-VERB-RIUSCIRE
 prerequisites: [IT-C85-potere, IT-C85-dovere]
 sounds: []
 roots: []
-etymology_hook: "riuscire — origin not recorded in EtymDB 2.1"
+etymology_hook: "riuscire — ri- + uscire 'to go out' (← Latin exire): to come out well"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C85-dovere]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**riuscire** — its origin is not recorded in EtymDB 2.1.
+**riuscire** — built from *ri-*, "again", and *uscire*, "to go out" ← Latin *exire*: to come out well. EtymDB 2.1 has no entry; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

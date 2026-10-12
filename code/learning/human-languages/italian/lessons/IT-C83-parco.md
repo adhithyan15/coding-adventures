@@ -14,7 +14,7 @@ concept_tag: IT-CITTA3-PARCO
 prerequisites: [IT-C82-macchina, IT-C83-ponte]
 sounds: []
 roots: []
-etymology_hook: "parco ← Medieval Latin parricus 'an enclosure' — English park is the same word"
+etymology_hook: "parco ← French parc, from Medieval Latin parricus 'an enclosure' — English park"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C83-ponte]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**parco** goes back to Medieval Latin *parricus*, "an enclosure". (EtymDB 2.1)
+**parco** goes back, through French *parc*, to Medieval Latin *parricus*, "an enclosure". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

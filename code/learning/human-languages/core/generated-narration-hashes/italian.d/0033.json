@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 33,
-  "sourceHash": "fnv1a64:382f9f825756dbed",
+  "sourceHash": "fnv1a64:ce8e83a89978c05f",
   "lessonIds": [
     "IT-C33-questo",
     "IT-C33-quello",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch33.txt",
   "json": "italian/narration/ch33.json",
-  "textHash": "fnv1a64:1806a63f1f06ee72",
-  "jsonHash": "fnv1a64:7c037dc52afe6b4a",
+  "textHash": "fnv1a64:7722e24e1fd86d65",
+  "jsonHash": "fnv1a64:bde10f253259d1bd",
   "findings": []
 }

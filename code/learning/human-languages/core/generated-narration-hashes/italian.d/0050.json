@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 50,
-  "sourceHash": "fnv1a64:b3b8602df24a0bf9",
+  "sourceHash": "fnv1a64:f3c7fb42d4081860",
   "lessonIds": [
     "IT-C50-chiudere",
     "IT-C50-bere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch50.txt",
   "json": "italian/narration/ch50.json",
-  "textHash": "fnv1a64:89e85ccddfec5e5e",
-  "jsonHash": "fnv1a64:43d95d67173b3da4",
+  "textHash": "fnv1a64:fe8d39775cdbf867",
+  "jsonHash": "fnv1a64:bfdd1c072366c02b",
   "findings": []
 }

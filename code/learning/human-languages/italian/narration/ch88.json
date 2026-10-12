@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Town hall, Supermarket, Petrol station, Swimming pool, Stadium",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:11e37bfbeabb6be7",
+  "sourceHash": "fnv1a64:29b11f01ea28cc00",
   "lessons": [
     {
       "id": "IT-C88-municipio",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d531645d209327d",
+      "sourceHash": "fnv1a64:6e3c1d104d4a0e9c",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "distributore — its origin is not recorded in EtymDB 2.1."
+              "text": "distributore is built on Latin distribuere, \"to divide out\" (Lewis & Short); EtymDB 2.1 has no row for it."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:380408d77d04023e",
+      "sourceHash": "fnv1a64:ef8c0e24caf3715b",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "piscina — its origin is not recorded in EtymDB 2.1."
+              "text": "piscina from Latin piscina, \"a fish pond\", from piscis, \"fish\" (Lewis & Short); EtymDB 2.1 has no row for piscina."
             }
           ]
         },

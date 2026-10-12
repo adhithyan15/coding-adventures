@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Shower, Bathtub, Shelf, Curtain, Cushion",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0fbc8624be88e8d6",
+  "sourceHash": "fnv1a64:4d72cc516d4fec84",
   "lessons": [
     {
       "id": "IT-C95-doccia",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdd23311aa204d56",
+      "sourceHash": "fnv1a64:80b5939ed0bd1e68",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tenda — its origin is not recorded in EtymDB 2.1. EtymDB lists French tente and Spanish tienda as its cognates."
+              "text": "tenda from Vulgar Latin tenda, built on Latin tendere, \"to stretch\" (Lewis & Short) — inherited. EtymDB 2.1 has no row for tenda; it derives Spanish tienda from tenda."
             }
           ]
         },

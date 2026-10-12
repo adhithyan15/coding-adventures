@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 87,
-  "sourceHash": "fnv1a64:cb2e6a3b335cb826",
+  "sourceHash": "fnv1a64:8a545fcd2055f789",
   "lessonIds": [
     "IT-C87-aeroporto",
     "IT-C87-fermata",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch87.txt",
   "json": "italian/narration/ch87.json",
-  "textHash": "fnv1a64:71b7c4841c0af9c8",
-  "jsonHash": "fnv1a64:568987b1dcb700e4",
+  "textHash": "fnv1a64:62ba7f6196bde3aa",
+  "jsonHash": "fnv1a64:23ead7695aea3767",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Star, Cloud, Rain, Wind, Fire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:acc8ff5a55cfde84",
+  "sourceHash": "fnv1a64:e30aa7ca1f37b9da",
   "lessons": [
     {
       "id": "IT-C67-stella",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a47088e93847c036",
+      "sourceHash": "fnv1a64:89fd9cfe07fa354f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nuvola — its origin is not recorded in EtymDB 2.1."
+              "text": "nuvola from Latin nubila, \"clouds\" — inherited. EtymDB 2.1 has no row for nuvola; it derives Sicilian nuvula from nubila."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a87639b5bf5e4b2",
+      "sourceHash": "fnv1a64:ed39f1bc6a6249ea",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pioggia — its origin is not recorded in EtymDB 2.1. EtymDB lists French pluie and Portuguese chuva as its cognates."
+              "text": "pioggia from Vulgar Latin plovia, from Latin pluvia, \"rain\" — inherited. EtymDB 2.1 has no row for pioggia; it derives Venetian pióva from plovia and French pluie from pluvia."
             }
           ]
         },

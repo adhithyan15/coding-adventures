@@ -13,8 +13,8 @@ gloss: "a cloud"
 concept_tag: IT-CIELO-NUVOLA
 prerequisites: [IT-C66-luna, IT-C67-stella]
 sounds: []
-roots: []
-etymology_hook: "nuvola — origin not recorded in EtymDB 2.1"
+roots: [nubila-latin]
+etymology_hook: "nuvola ← Latin nubila 'clouds'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C67-stella]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**nuvola** — its origin is not recorded in EtymDB 2.1.
+**nuvola** ← Latin *nubila*, "clouds" — inherited. EtymDB 2.1 has no row for *nuvola*; it derives Sicilian *nuvula* from *nubila*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

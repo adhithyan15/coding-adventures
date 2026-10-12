@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 75,
-  "sourceHash": "fnv1a64:c4dd8de138a5f0fc",
+  "sourceHash": "fnv1a64:1c47ccf7ebe795ee",
   "lessonIds": [
     "IT-C75-economico",
     "IT-C75-alto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch75.txt",
   "json": "italian/narration/ch75.json",
-  "textHash": "fnv1a64:acb843d9f60024eb",
-  "jsonHash": "fnv1a64:370f57b0c5200c5b",
+  "textHash": "fnv1a64:4f854ba28e67fc9c",
+  "jsonHash": "fnv1a64:d6e5919e1e464aac",
   "findings": []
 }

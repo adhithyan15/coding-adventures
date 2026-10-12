@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Bag, Phone, Umbrella, Money, Present",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a03f1085504b4e18",
+  "sourceHash": "fnv1a64:c2700055c08ccbf5",
   "lessons": [
     {
       "id": "IT-C62-borsa",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff222a87f63c48eb",
+      "sourceHash": "fnv1a64:ba06a5588937e0c4",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "telefono — its origin is not recorded in EtymDB 2.1."
+              "text": "telefono is built, like French téléphone, from Greek tele, \"far\", and phone, \"voice, sound\". EtymDB 2.1 has no row for telefono; it records the French word built from these two."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84d85eecd13b3c21",
+      "sourceHash": "fnv1a64:ba0c3a37db947f57",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ombrello — its origin is not recorded in EtymDB 2.1."
+              "text": "ombrello goes back to Latin umbella, \"a sunshade\", a small form of umbra, \"shade\" (Lewis & Short); EtymDB 2.1 has no row for ombrello."
             }
           ]
         },

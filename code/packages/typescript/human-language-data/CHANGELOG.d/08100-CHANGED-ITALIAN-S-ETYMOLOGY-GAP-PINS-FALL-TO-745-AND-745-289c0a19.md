@@ -6,17 +6,21 @@ to **745** and **745**. That is the HL24 §9 pilot for one track: the first 401
 gap lessons in sequence order (IT-C01-ciao through IT-C110-pepe) now say where
 their word comes from.
 
-- **Source.** EtymDB 2.1 (Fourrier & Sagot 2020, LREC), CC BY-SA 4.0. It was
-  read locally and checked lesson by lesson. No dataset file is vendored. Each
-  statement is our own sentence and cites "(EtymDB 2.1)".
+- **Sources.** EtymDB 2.1 (Fourrier & Sagot 2020, LREC), CC BY-SA 4.0. Where
+  EtymDB has no row for a textbook word, the Latin form is cited from Lewis &
+  Short (Perseus `lexica`, CC BY-SA 4.0), and only when the derivation is
+  certain. Both were read locally and checked lesson by lesson. No dataset
+  file is vendored. Each statement is our own sentence and names its source.
 - **Shape.** A `## The word, taken apart` (or `## The phrase, taken apart`)
   block, which the parser types `etymology`, after the introducing block. A
   matching `etymology_hook` of 120 characters or fewer.
-- **Honest answers.** 239 inherited, 43 borrowed, 34 built from parts, and 85
-  "Its origin is not recorded in EtymDB 2.1". The last group includes two where
-  EtymDB's origin could not be confirmed. 33 EtymDB rows were rejected, for
-  wrong parents, loans labelled as inherited, or junk glosses.
-- **Ledger side effects.** 208 Italian lessons gained a `roots:` slug, 78 of
+- **Honest answers.** 271 inherited, 51 borrowed and 53 built from parts.
+  26 say "Its origin is not recorded in EtymDB 2.1"; these are genuinely
+  uncertain origins, or ones that neither source confirms. 18 words with no
+  EtymDB row are traced through the sister words EtymDB derives from the same
+  Latin etymon. 27 cite Lewis & Short. 40 EtymDB rows or labels were rejected,
+  for wrong parents, loans labelled as inherited, or junk glosses.
+- **Ledger side effects.** 236 Italian lessons gained a `roots:` slug, 87 of
   them reusing an existing slug. `check:root-slug-splits` reports no new split.
   The root ledger and cousin counts are floors and only grow. Nine lessons had
   `duration.max_seconds` raised to their computed length, all under 300 s; the

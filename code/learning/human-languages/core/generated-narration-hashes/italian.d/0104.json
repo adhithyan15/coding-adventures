@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 104,
-  "sourceHash": "fnv1a64:0aee6be44ea2609b",
+  "sourceHash": "fnv1a64:120a04ad729c9126",
   "lessonIds": [
     "IT-C104-gonna",
     "IT-C104-cappotto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch104.txt",
   "json": "italian/narration/ch104.json",
-  "textHash": "fnv1a64:277181ec97050f20",
-  "jsonHash": "fnv1a64:094c2a2e1888fca5",
+  "textHash": "fnv1a64:54ff396eac99b9f4",
+  "jsonHash": "fnv1a64:1029efbfacb85ed5",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Strawberry, Cherry, Melon, Garlic, Flour",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:741f3d15fc1d2542",
+  "sourceHash": "fnv1a64:37543f46f54ff47b",
   "lessons": [
     {
       "id": "IT-C107-fragola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5796ebe790cd9501",
+      "sourceHash": "fnv1a64:14809a25f4cf9b43",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fragola from Latin fragula, \"strawberry\" — inherited. (EtymDB 2.1)."
+              "text": "fragola from Vulgar Latin fragula, a small form of Latin fragum, \"strawberry\" — inherited. (EtymDB 2.1)."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:810d3c07e74fd541",
+      "sourceHash": "fnv1a64:5c7cc01631f335f8",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ciliegia — its origin is not recorded in EtymDB 2.1. EtymDB lists Spanish cereza and Portuguese cereja as its cognates."
+              "text": "ciliegia goes back to Latin cerasum, \"a cherry\" (Lewis & Short), a word Latin took from Greek; EtymDB 2.1 has no row for ciliegia."
             }
           ]
         },

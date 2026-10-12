@@ -10,7 +10,7 @@ gloss: "seventh — and the heaven that is a number"
 concept_tag: IT-ORDINAL-SETTIMO
 prerequisites: [IT-C27-sesto, IT-C26-secondo, IT-C23-nome, IT-C12-numeri-11-16, IT-C12-numeri-17-20, IT-C02-come, IT-C02-stare]
 sounds: [double-tt, stress-first]
-roots: []
+roots: [septimus-latin]
 etymology_hook: "sette gives settimo with the stress on the first syllable and the double t kept, and essere al settimo cielo -- to be in seventh heaven -- is the ordinal in the commonest idiom it appears in"
 duration:
   max_seconds: 250
@@ -58,7 +58,7 @@ at the front. A single *t* would make a different word's shape.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**settimo** — its origin is not recorded in EtymDB 2.1.
+**settimo** ← Latin *septimus*, "seventh" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *settimo*.
 
 ## You'll want to know: al settimo cielo
 <!-- hl-knowledge: introduces=[IT-ETYMON-SETTIMO-03]; assesses=[] -->

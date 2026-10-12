@@ -14,7 +14,7 @@ concept_tag: IT-CIBO1-BURRO
 prerequisites: [IT-C51-carne, IT-C51-pesce]
 sounds: []
 roots: [butyrum-latin]
-etymology_hook: "burro ← Latin butyrum, from Greek boutyron — English butter is the same word"
+etymology_hook: "burro ← Old French burre, from Latin butyrum ← Greek boutyron — English butter shares it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C51-pesce]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**burro** ← Latin *butyrum*, "butter" — inherited; Latin took it from Greek *boutyron*. (EtymDB 2.1)
+**burro** ← Old French *burre* — borrowed; behind it is Latin *butyrum*, which Latin took from Greek *boutyron*. (EtymDB 2.1 records the Latin and Greek steps.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

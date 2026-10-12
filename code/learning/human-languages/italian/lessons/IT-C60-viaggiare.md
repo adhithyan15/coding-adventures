@@ -14,7 +14,7 @@ concept_tag: IT-VERB-VIAGGIARE
 prerequisites: [IT-C60-tornare, IT-C60-studiare]
 sounds: []
 roots: []
-etymology_hook: "viaggiare — origin not recorded in EtymDB 2.1"
+etymology_hook: "viaggiare — from the word for a journey ← Old Occitan viatge, Latin viaticum"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [IT-C60-studiare]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**viaggiare** — its origin is not recorded in EtymDB 2.1.
+**viaggiare** — built from the word for a journey, which ← Old Occitan *viatge*, from Latin *viaticum*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

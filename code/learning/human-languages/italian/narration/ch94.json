@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Rug, Television, Computer, Fridge, Oven",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3cf244bee64bcf88",
+  "sourceHash": "fnv1a64:c2f06c6a572fecfa",
   "lessons": [
     {
       "id": "IT-C94-tappeto",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1f05491e08d89cd",
+      "sourceHash": "fnv1a64:747e11e896dc6c0b",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "frigorifero — its origin is not recorded in EtymDB 2.1."
+              "text": "frigorifero is built from Latin frigus, \"cold\", and ferre, \"to carry\" (Lewis & Short): a bringer of cold. EtymDB 2.1 has no row for it."
             }
           ]
         },

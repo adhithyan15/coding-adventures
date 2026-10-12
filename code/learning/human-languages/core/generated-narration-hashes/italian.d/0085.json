@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 85,
-  "sourceHash": "fnv1a64:f939ba5487c6e19b",
+  "sourceHash": "fnv1a64:daa15f01c287abe7",
   "lessonIds": [
     "IT-C85-potere",
     "IT-C85-dovere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch85.txt",
   "json": "italian/narration/ch85.json",
-  "textHash": "fnv1a64:7b23034cecda1c59",
-  "jsonHash": "fnv1a64:f3bc379b15d9f0ee",
+  "textHash": "fnv1a64:ecc6fe448892cc11",
+  "jsonHash": "fnv1a64:09aa3a8bae87984e",
   "findings": []
 }
