@@ -15089,6 +15089,46 @@ mod tests {
     }
 
     #[test]
+    fn al4_conditional_local_proof_rejects_roots_promoted_by_selector_lowering() {
+        // The pre-lowering proof sees two ordinary local snapshots. Lowering
+        // the selector's default by-name actual promotes one to shared storage.
+        // Neither branch position may retain that stale proof on the result.
+        for root in ["left", "right"] {
+            let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := false end; real procedure pick; pick := 2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end");
+            let error = compile_source(&source, "test").expect_err(
+                "selector lowering promotes the root: the cached local proof must not admit real output",
+            );
+            assert!(
+                format!("{error:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {error:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_conditional_local_proof_retains_value_selector_snapshots() {
+        // A value formal copies its actual. Mutating that copy leaves both
+        // branch snapshots local, for either actual and either selected arm.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure pick; pick := 2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end");
+                let module = compile_source(&source, "test").unwrap_or_else(|error| {
+                    panic!("the value selector preserves local proof for {source:?}: {error}")
+                });
+                let main = module.get_function("main").expect("has main");
+                assert_eq!(main.instructions.iter().filter(|instruction| {
+                    instruction.op == "call"
+                        && instruction.srcs.first().and_then(Operand::as_var)
+                            == Some("__basic_print_real")
+                }).count(), 1, "exactly one runtime real output");
+                assert!(!main.instructions.iter().any(|instruction| {
+                    matches!(instruction.op.as_str(), "global_load" | "global_store")
+                }), "value selector must not promote a branch snapshot to shared storage");
+            }
+        }
+    }
+
+    #[test]
     fn al4_conditional_local_runtime_real_result_widening_rejects_shared_roots() {
         let source = "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right, x; procedure capture; right := 0.0; left := pick(); right := pick(); x := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end";
         let err = compile_source(source, "test").expect_err(
