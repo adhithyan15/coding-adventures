@@ -1167,7 +1167,7 @@ lookup instead of scanning every unrelated edge per target, including existing
 node-only targets. Node/edge ID collisions still update both; unknown-target
 refusals, class deduplication, class-before-inline-style precedence and statement
 order stay exact. Owned keys may copy each distinct ID once, with O(E+Q+I)
-index storage for E identified-edge references, Q distinct IDs and I key bytes.
+index storage for E authored edges, Q distinct IDs and I key bytes.
 Index construction costs O(E log(Q+2)) key comparisons plus key-byte work;
 target lookup costs O(log(Q+2)) key comparisons, then visits exactly its actual
 matching edges. Include real class/style application costs separately; repeated
