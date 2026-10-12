@@ -1080,3 +1080,18 @@ into `tests/oracle/upstream-refusals-v20260915.json` and cross-checked by
 `oracle_manifest`; the recorded predicate is the narrow, re-runnable "refuses as
 invoked", not the hand-searched "no invocation could ever produce this", which
 stays on the issue where it can be argued with.
+
+## Latest main styled-label work repair (2026-10-12)
+
+Main `662e4ba520dd53a8c44ba4e5c317cdfcdbd94820` introduces an independently confirmed P2 quadratic repeated-run
+scan in Mermaid styled labels (#17335). The accepted bounded ALGOL integration
+at actual `c53c6aaf0ebc2fb16b5b95c66d753bcb562f480a` passed 1,223 tests/docs across
+109 targets, all 11 production commands and 33 exact native controls, strict
+lint and independent final review; those real receipts are retained. Read-only
+TaskApp/Sanskrit equivalence changes no native source. Latest Mermaid security
+acceptance is REJECTED/PENDING until the [styled-label work contract](DG04-mermaid-compatibility.md#swimlane-styled-label-discovery-work-contract)
+receives exact-work red/green evidence, full affected tests/lint and final review.
+The earlier duplicate-edge issue #17334 remains resolved independently. Keep the
+same sole PR #17288 and required exact-head CI/merge gates. Miri DEFERRED/PENDING,
+never passed; frozen run/497 input receipts preserved, no polling/termination.
+CV04b, full Closure parity, output-byte maps and complete lineage remain open.

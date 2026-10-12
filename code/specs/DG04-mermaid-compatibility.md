@@ -1026,6 +1026,52 @@ accept the repair before delivery; passing the prior tests alone does not close
 the resource finding. Full final-source Miri remains DEFERRED/PENDING during
 Closure implementation delivery and must genuinely finish afterward.
 
+## Swimlane styled-label discovery work contract
+
+Issue [#17335](https://github.com/adhithyan15/coding-adventures/issues/17335)
+records quadratic work in the #17333 styled-inline-label admission. A valid flat
+label containing a long repeated-character run followed by a non-suffix scans
+every remaining suffix of that run before finding a later valid terminator.
+A recursion-depth guard does not bound this work; ordinary fixture passes do
+not establish a complexity contract.
+
+For each of the three existing labeled forms (`-- label -->`, `== label ==>`,
+`-. label .->`), discover maximal repeated-character runs with one monotone
+byte cursor. Advance candidate prefix positions in authored order and retain
+only the current eligible terminating run. Consume each run once, even when it
+is not followed by the required arrow suffix; never recount that run at each
+interior character or restart suffix discovery for every candidate prefix.
+The repeated characters and suffixes are fixed ASCII delimiters; source labels
+remain borrowed UTF-8 slices until one selected label is copied. No new run
+index, unbounded collection, input-length exception or grammar fallback is
+introduced. For B input bytes, run-character discovery is O(B) per labeled form
+with O(1) cursor state; the constant three eager forms preserve existing choice.
+This contract is scoped to labeled operator discovery, not a claim about all
+lexer regex matching, node lookup, layout, drawing allocation or the whole
+Mermaid pipeline.
+
+Preserve exact existing parser behavior: earliest admitted prefix, the first
+eligible terminating run after that prefix, maximum eligible run suffix length,
+empty-label refusal, standard-vs-labeled operator precedence, chain continuation,
+Unicode labels, all three edge kinds, point markers and minimum-length values.
+When a prefix ends inside a terminating run, consider only the remaining run
+suffix, as the original iterator does. Keep default/missing/zero-layout length
+semantics and the independent duplicate-edge layout index #17334 unchanged.
+
+Test-only counters observe actual repeated-character predicates in the real
+helper. First commit an instrumented original scanner and red tests for a valid
+dotted label with N nonterminating repeated dots followed by a later valid
+suffix. Pin complete semantic output and a linear work envelope at multiple
+N values; record the actual failing operation count instead of a timing limit.
+Add exact controls for all styles, nonterminating runs, prefixes within runs,
+empty labels, Unicode and competing standard/chain operators. Tests must exercise
+public parsing as well as the private scanner and preserve refusal behavior.
+Then replace the rescans, rerun those controls, the full metadata-derived
+Mermaid/diagram drawing consumer cone, strict lint and independent final-head
+security review. Preserve original red/rejected receipts. Required CI remains
+mandatory. Full final-source local Miri is DEFERRED/PENDING, never passed; its
+frozen checkout/run/inputs/receipts stay untouched during this delivery slice.
+
 ## Swimlane Partial Compatibility
 
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
