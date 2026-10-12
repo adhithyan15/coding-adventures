@@ -366,8 +366,8 @@ Community Group format already express:
 | Text styles named on the Material 3 scale | `type-role` |
 | Font family in a text style | brand face token, plus the shipped font files |
 
-Importing a design is UI91's job (to be written; `MOSAIC-BACKLOG.md` DN-1).
-This table is the contract it imports into.
+Importing a design is UI91's job (`UI91-design-import.md`; `MOSAIC-BACKLOG.md` DN-1
+and DN-2). This table is the contract it imports into.
 
 ## 6. Order of work
 
