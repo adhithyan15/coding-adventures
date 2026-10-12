@@ -31,8 +31,8 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 22363,
-    "wordLessonsWithoutVisibleEtymology": 21988,
+    "wordLessonsWithoutEtymologyHook": 21618,
+    "wordLessonsWithoutVisibleEtymology": 21243,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341490,9 +341490,9 @@
       {
         "language": "italian",
         "wordLessons": 1247,
-        "wordLessonsWithoutEtymologyHook": 745,
-        "wordLessonsWithoutVisibleEtymology": 745,
-        "wordLessonsWithoutAnyEtymology": 745
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0
       },
       {
         "language": "japanese",
@@ -341602,11 +341602,11 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 22363,
-      "wordLessonsWithoutVisibleEtymology": 21988,
-      "wordLessonsWithoutAnyEtymology": 21327,
-      "hookPercent": 12,
-      "visiblePercent": 14
+      "wordLessonsWithoutEtymologyHook": 21618,
+      "wordLessonsWithoutVisibleEtymology": 21243,
+      "wordLessonsWithoutAnyEtymology": 20582,
+      "hookPercent": 15,
+      "visiblePercent": 17
     }
   },
   "writingStages": {
@@ -454010,15 +454010,15 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 4482,
-    "underspent": 4014,
-    "neverSpent": 2702,
+    "roots": 4938,
+    "underspent": 4462,
+    "neverSpent": 3039,
     "payoffDistribution": {
-      "0": 2702,
-      "1": 799,
-      "2": 513,
-      "3": 249,
-      "4": 119,
+      "0": 3039,
+      "1": 894,
+      "2": 529,
+      "3": 255,
+      "4": 121,
       "5": 49,
       "6": 24,
       "7": 15,
@@ -454053,21 +454053,21 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28637,
-    "usesBeforeIntroduction": 47025,
-    "technicalUsesBeforeIntroduction": 6620,
-    "technicalLessons": 3818,
+    "usesBeforeIntroduction": 47188,
+    "technicalUsesBeforeIntroduction": 6722,
+    "technicalLessons": 3893,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2134
+        "lessons": 2166
       },
       {
         "term": "noun",
-        "lessons": 1223
+        "lessons": 1263
       },
       {
         "term": "adjective",
-        "lessons": 377
+        "lessons": 379
       },
       {
         "term": "voice",
