@@ -125,6 +125,12 @@ discoveryRegistrySpec = describe "discovery/language-registry" $ do
               ,("code/packages/rust/outer/code/programs/java/demo", "java")] $ \(path, wanted) ->
             inferLanguage path `shouldBe` wanted
 
+    it "preserves the actual configured-root basename when that root contains BUILD" $ do
+        withFixture [build "code/packages/custom/ConfiguredRoot"] 1048576 $ \root -> do
+            packages <- discoverPackages (root </> "code/packages/custom/ConfiguredRoot")
+            map (\package -> (packageName package, packageLanguage package)) packages
+                `shouldBe` [("unknown/ConfiguredRoot", "unknown")]
+
     it "validates the complete bounded materialization before any write" $ do
         forM_ ["/outside/BUILD", "code/packages/go/../escape/BUILD"
               ,"code/packages/go//BUILD", "code/packages/go/./BUILD"
