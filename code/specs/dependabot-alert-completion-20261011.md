@@ -95,3 +95,14 @@ loader rejection. Preserve all malformed-content and file-symlink checks, the
 loader's lowercase-only policy and every ownership baseline assertion. Validate
 the case fixture directly on Windows and rerun the existing ownership suite;
 record any unavailable local file-symlink privilege separately from case checks.
+
+The same run completed macOS with six 30-second timeouts in letter-ledger,
+levels, verbs and track-progress tests. Reuse the existing real corpus's script
+inventory in letter-ledger; load levels' immutable corpus once and calculate its
+summary once; share verbs' immutable coverage report between snapshot assertions.
+Keep every existing assertion and independent synthetic fixture. The two progress
+cases must still invoke the real `--check` and `--report` CLI inside their test
+bodies, with an explicit 120-second full-corpus integration budget. Do not cache
+production loader results or raise ordinary deadlines, worker counts or heap
+limits. Validate these four suites together under the normal configuration and
+a 2 GiB heap cap, and record the measured CLI costs.
