@@ -15,4 +15,3 @@ operation, and repeat the real coverage-wrapped subprocess entrypoint. Do not
 infer a backend bug or change deadlines from a generic redacted error alone.
 The local Python 3.12 direct invocation and Python 3.13 coverage-wrapped invocation
 passed. Ten consecutive coverage-wrapped canonical conformance runs also passed on the local Windows host with Python 3.13.14. The Linux error remains unreproduced; the next actual Linux CI result is still required.
-
