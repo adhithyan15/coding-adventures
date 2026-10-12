@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
-import { measureReadingReach } from "../../src/reading-reach.js";
+import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../../src/loader.js";
+import { measureReadingReach } from "../../../src/reading-reach.js";
 
 it("gives a classical language all four skills, and records why that is not a category error", () => {
   const inventory = loadTaskShapeInventory("sanskrit", "pre-A1");

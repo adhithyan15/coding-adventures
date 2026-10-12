@@ -51,6 +51,13 @@
     "inline-node-styles",
     "named-node-classes",
     "semicolon-class-statements",
-    "node-class-decorators"
+    "node-class-decorators",
+    "invisible-layout-link",
+    "open-styled-links",
+    "styled-endpoint-markers",
+    "minimum-link-lengths",
+    "styled-inline-link-labels",
+    "edge-identifiers",
+    "edge-class-styles"
   ]
 }

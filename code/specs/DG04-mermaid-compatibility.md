@@ -1033,15 +1033,22 @@ Lined documents recognize `lin-doc` and `lined-document` aliases.
 Data stores recognize `datastore` and `data-store` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
-directed/undirected/dotted/thick chained links, point/circle/cross endpoint
-markers and bidirectional arrows, multiline edge continuations,
+directed/undirected/dotted/thick chained links, including open dotted and thick
+forms, point/circle/cross endpoint
+markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
+invisible layout links,
+minimum link lengths with deterministic rank spacing,
 parallel branch and join
-endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
-accessibility metadata with named and numeric entity decoding. Direct node
+endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
+thick, and dotted links, titles, and accessibility metadata with named and numeric entity
+decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
-actions, and legacy callback aliases survive as scene metadata. The family lowers through
+actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
+survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
+edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned

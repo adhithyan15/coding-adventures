@@ -69,6 +69,10 @@ Account for items 13–17:
 
 ## Writing — 20 minutes
 
+Use one continuous 20-minute clock: spend 7 minutes on the practical form and
+13 minutes on the named-reader message. Move on when the first 7 minutes end;
+stop when the full 20 minutes end. Review the attempt later, outside this paper.
+
 1. Complete all fields independently in Malayalam script: **പേര്**, **നഗരം**,
    **ഭാഷ**, **രാവിലെ എഴുന്നേൽക്കുന്ന സമയം**, **ഇഷ്ടപ്പെട്ട പാനം**,
    **ഇന്നത്തെ തീയതി**.

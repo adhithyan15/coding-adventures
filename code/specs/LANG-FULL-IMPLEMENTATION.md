@@ -1418,6 +1418,17 @@ backend immediately) come before the enabler-dependent items.
   two built-in exponentials over a proven bounded runtime-real sign root;
   missing, deeper, non-runtime-real, and overridden branches remain
   conservative.
+  The same exact two-exponential proof now applies to a direct sign-rooted
+  operand; unrestricted roots and overrides remain conservative.
+  The direct proof extends to exactly three exponentials, whose complete
+  sign-rooted tower remains finite. Exactly four exponentials are also accepted
+  over a proven nonpositive unit sign root, whose narrower tower remains finite;
+  a positive-capable fourth layer or a fifth nonpositive layer would overflow
+  binary64 before `ln` and therefore remains conservative.
+  The same bounded proof extends to exactly three built-in exponentials per
+  branch. It also extends to exactly four built-in exponentials per branch when
+  every root is proven nonpositive; positive-capable, missing, deeper,
+  non-runtime-real, and overridden branches remain conservative.
   Additional built-in `sqrt` calls may wrap that positive bounded result while
   preserving the same finite proof.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

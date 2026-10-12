@@ -55,7 +55,7 @@ An ordinary *-ar* verb, with its noun beside it: **uma pergunta**, "a question."
 > **Perguntei pelo João.** — "I asked after João."
 
 Now the neighbour. **Pedir** is "to ask **for**" — to request, to order.
-*Pergunto a hora* is asking what the time is; *peço um café* is ordering one.
+*Pergunto a hora* is asking what the time is; *peço água* is asking for some.
 English says "ask" for both and loses the difference; Portuguese never mixes
 them.
 

@@ -866,21 +866,29 @@ where
         ));
     }
     for edge in &diagram.edges {
-        let stroke_width = if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 };
+        if edge.kind == SwimlaneEdgeKind::Invisible {
+            continue;
+        }
+        let stroke = edge.style.stroke.as_deref().unwrap_or("#455a64");
+        let stroke_width = edge.style.stroke_width.unwrap_or_else(|| {
+            if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 }
+        });
         let mut path = line_path(
             &[edge.from.clone(), edge.to.clone()],
-            "#455a64",
+            stroke,
             stroke_width,
         );
-        if edge.kind == SwimlaneEdgeKind::Dotted {
+        if let Some(stroke_dash) = &edge.style.stroke_dash {
+            path.stroke_dash = Some(stroke_dash.clone());
+        } else if edge.kind == SwimlaneEdgeKind::Dotted {
             path.stroke_dash = Some(vec![5.0, 5.0]);
         }
         instructions.push(PaintInstruction::Path(path));
         instructions.extend(swimlane_endpoint_marker(
-            edge.start_marker, &edge.to, &edge.from, "#455a64", stroke_width,
+            edge.start_marker, &edge.to, &edge.from, stroke, stroke_width,
         ));
         instructions.extend(swimlane_endpoint_marker(
-            edge.end_marker, &edge.from, &edge.to, "#455a64", stroke_width,
+            edge.end_marker, &edge.from, &edge.to, stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
             text_children.push(text_node(
@@ -890,12 +898,9 @@ where
                 104.0,
                 22.0,
                 options.label_font.clone(),
-                Color {
-                    r: 55,
-                    g: 71,
-                    b: 79,
-                    a: 255,
-                },
+                edge.style.text_color.as_deref().map(css_to_color).unwrap_or(Color {
+                    r: 55, g: 71, b: 79, a: 255,
+                }),
             ));
         }
     }
@@ -1352,6 +1357,14 @@ where
     }
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
+    }
+    for (index, edge) in diagram.edges.iter().enumerate() {
+        if let Some(id) = &edge.id {
+            metadata.insert(format!("swimlane.edge.{index}.id"), id.clone());
+        }
+        if !edge.classes.is_empty() {
+            metadata.insert(format!("swimlane.edge.{index}.classes"), edge.classes.join(" "));
+        }
     }
     for link in &diagram.links {
         let prefix = format!("swimlane.node.{}.link", link.node_id);

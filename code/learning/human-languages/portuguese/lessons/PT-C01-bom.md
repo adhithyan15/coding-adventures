@@ -36,7 +36,8 @@ variety: standard-contemporary
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The word that starts *bom dia*, *boa tarde*, *boa noite*.
+[PAUSE 2s] The word that starts the Portuguese for "good morning," "good
+afternoon" and "good night."
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[PT-SOUND-BOM-02]; assesses=[] -->
@@ -55,18 +56,19 @@ Portuguese wore *bonus* down further, to the little nasal *bom*.
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-BOM-04]; assesses=[] -->
 
 **bom / boa** changes to match its noun: *bom* (m.), *boa* (f.), *bons / boas*
-(pl.) — Latin's adjective agreement, alive across the Romance family. So it's
-*bom dia* (m.) but *boa tarde* (f.).
+(pl.) — Latin's adjective agreement, alive across the Romance family. So a
+masculine noun takes *bom* and a feminine one *boa*, and this chapter's
+greetings use both.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-BOM-02, PT-ETYMON-BOM-03, PT-GRAMMAR-BOM-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bom" (nasal *bõ*), "boa" (*BOH-ah*)]
-- [YOU SAY: why *bom dia* but *boa tarde* (gender)]
+- [YOU SAY: which form goes with a masculine noun, and which with a feminine one]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-BOM-02, PT-ETYMON-BOM-03, PT-GRAMMAR-BOM-04] -->
 
-[PAUSE 3s] What Latin word is **bom** from, and why *bom dia* but *boa tarde*?
-(*bonus*; *dia* is masculine, *tarde* feminine.)
+[PAUSE 3s] What Latin word is **bom** from, and when does it become *boa*?
+(*bonus*; before a feminine noun.)

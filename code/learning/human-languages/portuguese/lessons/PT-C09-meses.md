@@ -80,5 +80,4 @@ Two payoffs:
 
 [PAUSE 3s] Which god is *março* named for? (**Mars**, the war-god.) Why is
 *dezembro* Latin for "ten"? (The Roman year began in March.) Which two months honour
-real **people**? (*Julho* — Julius; *agosto* — Augustus.) Next: the **estações**,
-the seasons.
+real **people**? (*Julho* — Julius; *agosto* — Augustus.) Next: the seasons.

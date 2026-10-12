@@ -10,10 +10,10 @@ gloss: how are you? — the “go” and “stand” versions
 concept_tag: PT-STATE-GO-AND-STAND
 prerequisites: [PT-C02-tudo-bem, PT-C02-como]
 sounds: [open-a]
-roots: [ire-latin, stare-latin]
+roots: [vadere-latin, ire-latin, stare-latin]
 etymology_hook: "Como vai? pictures wellbeing as going; Como está? pictures it as standing"
 duration:
-  max_seconds: 236
+  max_seconds: 237
 requires:
   knowledge: [PT-GRAMMAR-TUDO-BEM-02, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
 introduces:
@@ -41,11 +41,12 @@ familiar metaphors.
 
 | question | literally | verb |
 |---|---|---|
-| **Como vai?** | “How does it **go**?” | *ir*, to go |
-| **Como está?** | “How do you **stand**?” | *estar*, to be / stand |
+| **Como vai?** | “How does it **go**?” | “to go” |
+| **Como está?** | “How do you **stand**?” | “to be / to stand” |
 
-**Vai** comes from *ir*, whose Latin ancestor *īre* also sits inside English
-*exit* and *transit*. **Está** comes from Latin *stāre*, “to stand.”
+**Vai** comes from Latin *vādere*, “to advance” (English *invade*, *evade*);
+the same verb’s infinitive comes from a different Latin verb, *īre* (English
+*exit*, *transit*). **Está** comes from Latin *stāre*, “to stand.”
 
 Portuguese therefore keeps both pictures:
 
@@ -72,5 +73,5 @@ choice altogether.
 <!-- hl-knowledge: introduces=[]; assesses=[PT-GRAMMAR-TUDO-BEM-02, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-LEX-COMO-VAI-ESTA-01] -->
 
 [PAUSE 3s] Which question has no verb? (**Tudo bem?**) Which uses “go”?
-(**Como vai?**, from *ir*.) Which uses “stand”? (**Como está?**, from *estar*.)
+(**Como vai?**, from *vādere*.) Which uses “stand”? (**Como está?**, from *stāre*.)
 Portuguese keeps how many metaphors? (**Both**.) Next: the “more or less” answer.

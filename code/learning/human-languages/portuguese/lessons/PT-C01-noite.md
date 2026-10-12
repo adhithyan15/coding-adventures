@@ -60,6 +60,7 @@ for bed.
 [PAUSE 1s]
 - [YOU SAY: "boa noite"]
 - [YOU SAY: the rule — Latin *-ct-* → Portuguese *-it-* (*noite*, *feito*)]
+- [YOU SAY: the day's arc — bom dia → boa tarde → boa noite]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-NOITE-02, PT-LEX-NOITE-03] -->

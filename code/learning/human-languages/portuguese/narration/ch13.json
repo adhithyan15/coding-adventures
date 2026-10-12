@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ca7189043eabb591",
+  "sourceHash": "fnv1a64:bd80d50248089b91",
   "lessons": [
     {
       "id": "PT-C13-preto-branco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42bf7011604f52df",
+      "sourceHash": "fnv1a64:dabb76325a286c37",
       "notice": null,
       "blocks": [
         {
@@ -166,7 +166,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are Portuguese's two blacks? (Negro from niger, literary; and preto from pressus \"pressed/dense,\" the everyday one.) Why would \"pressed\" mean black? (Dense becomes thick becomes dark.) Where does branco come from? (Germanic blank, \"shining\" — borrowed into Romance.) What sound change shows in branco? (l becomes r, as in praça.) Next: vermelho, the strangest colour word in the language."
+              "text": "What are Portuguese's two blacks? (Negro from niger, literary; and preto from pressus \"pressed/dense,\" the everyday one.) Why would \"pressed\" mean black? (Dense becomes thick becomes dark.) Where does branco come from? (Germanic blank, \"shining\" — borrowed into Romance.) What sound change shows in branco? (l becomes r, as in praça.) Next: \"red,\" the strangest colour word in the language."
             }
           ]
         }

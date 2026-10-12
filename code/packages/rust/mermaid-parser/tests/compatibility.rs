@@ -2052,6 +2052,120 @@ fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_invisible_links_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  published[Published]\nend\ndraft ~~~ published",
+    ).expect("Flowchart invisible links should parse");
+
+    assert_eq!(diagram.edges.len(), 1);
+    assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible);
+    assert_eq!(diagram.edges[0].start_marker, diagram_ir::EdgeMarker::None);
+    assert_eq!(diagram.edges[0].end_marker, diagram_ir::EdgeMarker::None);
+}
+
+#[test]
+fn swimlane_open_styled_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  published[Published]\nend\ndraft -.- review === published",
+    ).expect("open dotted and thick Flowchart links should parse");
+
+    assert_eq!(diagram.edges.len(), 2);
+    assert_eq!((diagram.edges[0].kind, diagram.edges[0].end_marker),
+        (SwimlaneEdgeKind::Dotted, EdgeMarker::None));
+    assert_eq!((diagram.edges[1].kind, diagram.edges[1].end_marker),
+        (SwimlaneEdgeKind::Thick, EdgeMarker::None));
+}
+
+#[test]
+fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\n  h[H]\n  i[I]\nend\na o-.-o b x-.-x c o-.-x d x-.-o e o-.-> f x-.-> g -.-o h -.-x i\na o==o b x==x c o==x d x==o e o==> f x==> g ==o h ==x i",
+    ).expect("dotted and thick endpoint markers should parse");
+
+    let expected_markers = [
+        (EdgeMarker::Circle, EdgeMarker::Circle),
+        (EdgeMarker::Cross, EdgeMarker::Cross),
+        (EdgeMarker::Circle, EdgeMarker::Cross),
+        (EdgeMarker::Cross, EdgeMarker::Circle),
+        (EdgeMarker::Circle, EdgeMarker::Point),
+        (EdgeMarker::Cross, EdgeMarker::Point),
+        (EdgeMarker::None, EdgeMarker::Circle),
+        (EdgeMarker::None, EdgeMarker::Cross),
+    ];
+    assert_eq!(diagram.edges.len(), 16);
+    for (edge, markers) in diagram.edges[..8].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Dotted);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
+    for (edge, markers) in diagram.edges[8..].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Thick);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
+}
+
+#[test]
+fn swimlane_minimum_link_lengths_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g",
+    ).expect("minimum-length Flowchart links should parse");
+
+    assert_eq!(diagram.edges.len(), 12);
+    assert!(diagram.edges[..6].iter().all(|edge| edge.min_length == 2));
+    assert!(diagram.edges[6..].iter().all(|edge| edge.min_length == 3));
+    assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Directed);
+    assert_eq!(diagram.edges[2].kind, diagram_ir::SwimlaneEdgeKind::Thick);
+    assert_eq!(diagram.edges[4].kind, diagram_ir::SwimlaneEdgeKind::Dotted);
+}
+
+#[test]
+fn swimlane_styled_inline_labels_lower_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeKind;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na -- normal ---> b == thick ===> c -. dotted ...-> d",
+    ).expect("styled Flowchart inline labels should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+        vec![Some("normal"), Some("thick"), Some("dotted")]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(),
+        vec![SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Dotted]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![2, 2, 3]);
+}
+
+#[test]
+fn swimlane_edge_ids_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done",
+    ).expect("Flowchart edge identifiers should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
+        vec![Some("submit"), Some("release")]);
+    assert_eq!(diagram.edges[0].from, "request");
+    assert_eq!(diagram.edges[1].to, "done");
+}
+
+#[test]
+fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nclassDef urgent stroke:#dc2626,stroke-width:4px,stroke-dasharray:8 3,color:#991b1b\nclass submit urgent\nstyle release stroke:#059669,stroke-width:5px,stroke-dasharray:2 2,color:#065f46",
+    ).expect("Flowchart edge classes and direct styles should parse");
+
+    assert_eq!(diagram.edges[0].classes, ["urgent"]);
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(4.0));
+    assert_eq!(diagram.edges[0].style.stroke_dash.as_deref(), Some([8.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[0].style.text_color.as_deref(), Some("#991b1b"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#059669"));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_dash.as_deref(), Some([2.0, 2.0].as_slice()));
+    assert_eq!(diagram.edges[1].style.text_color.as_deref(), Some("#065f46"));
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

@@ -597,8 +597,8 @@ const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
  * italian 34 → 0, german 29 → 1, kannada 13 → 2, malayalam 12 → 0, marathi
  * 11 → 4, bengali 10 → 2, telugu 10 → 0, arabic 10 → 0, urdu 9 → 5, tamil 8 → 0,
  * punjabi 7 → 2, russian 5 → 0, sanskrit 3 → 0, persian 2 → 2. Spanish, French,
- * Portuguese and Latin were not worked; their pins are the counts then. Hindi
- * was worked next: 57 → 33.
+ * Portuguese and Latin were not worked in that pass; their pins were the counts
+ * then. Hindi was worked next: 57 → 33. Portuguese later: 102 → 34.
  *
  * Every non-zero pin in a worked track is one shape, read in place each time: a
  * phrase the track teaches WHOLE before a later lesson unpacks one of its words.
@@ -608,6 +608,10 @@ const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
  * break the lesson that unpacks it, which says so. Hindi adds one more shape of
  * the same kind: a BUNDLE headword (पानी रोटी) that teaches separate words under
  * one string, so each word reads as untaught until a late lesson re-teaches it.
+ * Portuguese adds two shapes that are not borrowing at all: a late headword that
+ * is a HOMOGRAPH of a word inside a phrase taught whole (a chama, "a flame",
+ * against Como se chama?), and an ENGLISH gloss that spells a late headword
+ * (a massa, "pasta", against a pasta, "a folder").
  */
 const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   arabic: 0,
@@ -653,7 +657,21 @@ const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   marwadi: 0,
   // FA-R216 and FA-R252 recall لوله کش and چوب لباسی, each an earlier headword.
   persian: 2,
-  portuguese: 102,
+  // Every Portuguese hit is a phrase the track teaches whole, used before a late
+  // vocabulary lesson gives one of its words a headword of its own, or is not
+  // Portuguese borrowing at all. Phrases: Como se chama? (PT-C03-como-se-chama,
+  // which glosses se and chama itself; two uses of se, and one more in
+  // PT-C18-dizer's Como se diz…?), até logo / até amanhã / até breve (PT-C04;
+  // six of até, two of them the same "até + when" frame: PT-C07's Até sexta!
+  // and PT-C137's Pagar até segunda-feira), de nada (PT-C02; three
+  // of nada), a pasta de dentes (PT-C95; three of pasta), ao lado and noutro
+  // lado (PT-C89, PT-C151; three of lado), o fim de semana (PT-C128; five of
+  // fim), a partir de agora (PT-C150), deitar fora (PT-C204), and the ser vs.
+  // estar headword (PT-C16-ser-vs-estar; one of estar). Not borrowing: the four
+  // uses of chama are the verb "calls", where PT-C195 teaches a chama, "a
+  // flame"; and four are the English gloss "pasta; dough" of a massa (PT-C99),
+  // which spells PT-C193's a pasta, "a folder".
+  portuguese: 34,
   // PA-C09-pasand teaches ਮੈਨੂੰ ... ਪਸੰਦ ਹੈ whole and PA-C10-chaa recalls it;
   // PA-C35-mainu takes it apart ("why the phrase could be used long before").
   punjabi: 2,

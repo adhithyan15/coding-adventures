@@ -95,7 +95,7 @@ lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
 property. Fresh `native-complete` reports currently contain 38 XAML, 83 SwiftUI,
-50 Compose, 108 Qt, and 83 Flutter drops; any new property or increase above
+50 Compose, 108 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -132,7 +132,16 @@ shares and fractional children of a native wrapping layout. The seven-column
 header and wrapped day grid therefore remain intact while the seven remaining
 `width` omissions and the grid's `flex-wrap` omission are retired, reducing the
 measured inventory from 91 to 83. Invalid or unbounded percentages remain
-explicit debt (#17289).
+explicit debt (#17289). Flutter drag-and-drop bodies now apply authored `gap`
+after dynamic child lists are evaluated, retiring the remaining four Flutter
+gap omissions and reducing the inventory from 83 to 79 (#17301).
+Conditional drag/drop bodies use the same child-list decision for helper
+definition and invocation, so a leading `If`/`Else` cannot produce an undefined
+`_mosaicWithGap`, and a following ordinary child cannot disappear (#17313).
+Flutter's ten non-inset `box-shadow` declarations that accompany supported
+`elevation` tokens now leave the report when their native shadows are emitted,
+reducing the inventory from 79 to 69. The inset theme-toggle moon shadow remains
+explicit drawing-effect debt (#17308).
 
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and
@@ -228,6 +237,13 @@ The `task-app-v0.5.2` patch rolls forward the compatible native-fidelity and
 regression-gate fixes accumulated since v0.5.1. It retains the same verified
 web/native artifact matrix and the same explicit CI-only boundary for Static
 HTML, Web Components, and Paint.
+
+The `task-app-v0.5.3` patch preserves Flutter's seven-column calendar geometry,
+evaluated drag-and-drop spacing, and complete conditional drag/drop bodies. It
+also reconciles natively emitted elevation shadows with the degradation report
+and rolls forward the matching style-ratchet correction. The downloadable
+web/native artifact matrix remains unchanged: Static HTML, Web Components, and
+Paint are CI-only, while signing, notarization, and installers remain #13977.
 
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI

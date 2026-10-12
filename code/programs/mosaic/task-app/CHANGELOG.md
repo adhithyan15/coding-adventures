@@ -4,8 +4,35 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.2` accumulate here until the next version is
+Entries added after `task-app-v0.5.3` accumulate here until the next version is
 cut.
+
+## [0.5.3] - 2026-10-12
+
+### Fixed — Flutter conditional drag gaps emit complete Dart (#17313)
+
+Flutter now emits the shared gap helper whenever an undecorated drag/drop body
+starting with `If`/`Else` calls it, and decorated conditional bodies retain any
+following ordinary child in the evaluated vertical list. This prevents an
+undefined Dart helper and silent child loss without changing TaskApp's current
+style-degradation inventory or native drag semantics.
+
+### Fixed — Flutter elevation shadows leave the degradation report (#17308)
+
+Flutter now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Flutter style inventory from 79 to 69. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
+### Fixed — Flutter preserves drag-and-drop child spacing (#17301)
+
+Flutter now applies authored `gap` values to the evaluated vertical child lists
+inside `HostDraggable` and `HostDropTarget`. Board-card single-child gaps remain
+safe no-ops, while the board-column and calendar drop targets preserve spacing
+between loop-produced cards and events. Fresh strict generation retires all
+four Flutter `gap` omissions and reduces the measured style inventory from 83
+to 79 without changing native drag, keyboard, or drop semantics.
 
 ### Fixed — Flutter preserves the seven-column calendar layout (#17289)
 

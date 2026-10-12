@@ -76,5 +76,5 @@ And two Portuguese habits: the article eroded to a single vowel (**o / a**), and
 means "[I am] obliged," so it matches the speaker: *obrigado* / *obrigada*.)
 What did the Latin article *ille* erode to in Portuguese? (A single letter, *o*.)
 
-Next chapter: introducing yourself — *o meu nome é…* / *chamo-me…* — and
+In two chapters: introducing yourself — *o meu nome é…* / *chamo-me…* — and
 Portuguese's *tu* vs. *você* (familiar / polite "you").
