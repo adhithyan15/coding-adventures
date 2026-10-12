@@ -84,3 +84,14 @@ synthetic fixtures independent and preserve every discovered shard and assertion
 Validate both suites with the normal test configuration and a 2 GiB worker heap;
 do not increase heap limits, raise ordinary deadlines or skip cases to hide the
 failure. Refresh main before implementing, then review and run CI on the new head.
+
+Run 38190146667 built 533 Windows packages successfully but failed one
+script-ductus ownership-pin assertion. Its fixture writes both `kannada.json`
+and `Kannada.json`; NTFS replaces the first file's bytes while preserving its
+lowercase directory entry, so no unsafe name reaches the loader. Construct the
+uppercase case by removing the lowercase map entry before writing any files.
+Assert each malformed fixture's exact on-disk filename inventory before testing
+loader rejection. Preserve all malformed-content and file-symlink checks, the
+loader's lowercase-only policy and every ownership baseline assertion. Validate
+the case fixture directly on Windows and rerun the existing ownership suite;
+record any unavailable local file-symlink privilege separately from case checks.
