@@ -66,7 +66,7 @@ neither up nor down.
 
 | answer | sense |
 |---|---|
-| **(Très) bien, merci** | (very) well, thank you |
+| **Bien, merci** | well, thank you |
 | **Ça va** | fine / okay ("it goes") |
 | **Comme ci, comme ça** | so-so |
 | **Pas mal** | not bad |

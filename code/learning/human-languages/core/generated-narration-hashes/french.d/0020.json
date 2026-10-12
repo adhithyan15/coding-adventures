@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 20,
-  "sourceHash": "fnv1a64:ea532af11402347e",
+  "sourceHash": "fnv1a64:69bfab0f6a6185bc",
   "lessonIds": [
     "FR-C16-suis-alle",
     "FR-C16-famille-etre",
@@ -18,7 +18,7 @@
   "drivablePrefix": 10,
   "text": "french/narration/ch20.txt",
   "json": "french/narration/ch20.json",
-  "textHash": "fnv1a64:dcba810cbfd50f5e",
-  "jsonHash": "fnv1a64:77233a9093416227",
+  "textHash": "fnv1a64:545851a81ecf12ee",
+  "jsonHash": "fnv1a64:958464dd7059820d",
   "findings": []
 }

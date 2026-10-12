@@ -85,4 +85,4 @@ Same word, new trick.
 [PAUSE 3s] What two words hide inside *bientôt*? (*bien* "well" + *tôt* "early" →
 soon.) What does the circumflex on *ô* usually mark? (A dropped *s* — *tost* →
 *tôt*.) What's the Spanish equivalent of *à bientôt*? (*hasta pronto*.) Next:
-**à demain**.
+"until tomorrow."

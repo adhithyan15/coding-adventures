@@ -12,7 +12,7 @@ prerequisites: [FR-C14-avoir-etre-langues]
 sounds: []
 roots: []
 duration:
-  max_seconds: 230
+  max_seconds: 249
 requires:
   knowledge: [FR-VERB-AVOIR-JAI-01, FR-VERB-AVOIR-AS-02, FR-VERB-AVOIR-A-03, FR-PHON-AI-AS-A-04, FR-VERB-AVOIR-AVONS-05, FR-VERB-AVOIR-AVEZ-06, FR-VERB-AVOIR-ONT-07, FR-ETYMON-HABERE-AVOIR-08, FR-LEX-AN-09, FR-LEX-QUEL-AGE-10, FR-GRAM-AVOIR-AGE-11]
 introduces:
@@ -44,7 +44,7 @@ it will earn its keep on.
 [PAUSE 1s]
 - [YOU SAY: all six — "j'ai, tu as, il a, nous avons, vous avez, ils ont"]
 - [YOU SAY: backwards — "ils ont, vous avez, nous avons, il a, tu as, j'ai"]
-- [YOU SAY: the trap — "ils ont, ils sont"]
+- [YOU SAY: "ils ont" — the liaison buzz that means *have*]
 
 [REPEAT x2] "j'ai, tu as, il a, nous avons, vous avez, ils ont"
 
@@ -72,7 +72,7 @@ it will earn its keep on.
   rather than one you were handed.
 - **why French keeps its pronouns** — the singular endings went silent, so *je*,
   *tu* and *il* carry what the verb stopped saying.
-- **age is something you have** — *J'ai vingt ans*, never *je suis*, and *ans* is
+- **age is something you have** — *J'ai vingt ans*, never "I am," and *ans* is
   compulsory. Every Romance language on the continent agrees with French, and
   every Germanic one disagrees.
 - **one root, two verbs, four English words** — *habēre* gave *avoir* and
@@ -83,6 +83,6 @@ it will earn its keep on.
 
 [PAUSE 3s] Give the six forms of *avoir*. Ask a friend their age. (**Quel âge
 as-tu ?**) Answer with your own. Which verb must you never use for age?
-(***être***.) Can *ans* be left out? (**No.**) Which other French verb shares
-*avoir*'s root? (***habiter***.) How do you hear *ils ont* against *ils sont*?
-(The **buzz** against the **hiss**.)
+(The verb **"to be"**.) Can *ans* be left out? (**No.**) Which other French verb shares
+*avoir*'s root? (***habiter***.) What marks *ils ont* as *have*?
+(The **buzz** of its liaison.)

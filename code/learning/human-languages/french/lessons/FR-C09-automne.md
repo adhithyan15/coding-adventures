@@ -43,8 +43,8 @@ intact.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-AUTOMNE-04]; assesses=[] -->
 
-- `diphthong-au` — the pair **au** is a single *o* sound, closer to English
-  *taught* than to *cow*. It never sounds like *ow*.
+- `diphthong-au` — the letter pair **a-u** is a single *o* sound, closer to
+  English *taught* than to *cow*. It never sounds like *ow*.
 - **automne** = *o-TON*. Here is the oddity worth knowing: the **m** is written
   and the **n** is not sounded — the spelling keeps a letter the mouth dropped.
 - With elision: **l'automne** = *lo-TON*.
@@ -67,7 +67,7 @@ down; **autumn** is the French one.
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-AUTOMNE-04, FR-LEX-ETE-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "l'automne" — *lo-TON*, the *au* a single *o*]
+- [YOU SAY: "l'automne" — *lo-TON*, the *a-u* a single *o*]
 - [YOU SAY: "l'été, l'automne" — both elide]
 - [YOU SAY: French "automne" then English "autumn" — the same silent letter twice]
 
@@ -75,6 +75,6 @@ down; **autumn** is the French one.
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-AUTOMNE-04, FR-LEX-ETE-03] -->
 
 [PAUSE 3s] How do you say autumn? (**l'automne**, *lo-TON*.) What sound does
-**au** make? (A single **o**.) Which written letter is not pronounced, and does
+**a-u** make? (A single **o**.) Which written letter is not pronounced, and does
 English do the same? (The **n** — and **yes**, English *autumn* copied the
 spelling from French.) Next: the cold one, and a bear.
