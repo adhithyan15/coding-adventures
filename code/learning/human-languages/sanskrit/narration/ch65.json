@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "The Last Letter You Read",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:66215dd1e8d7343e",
+  "sourceHash": "fnv1a64:947f2929b5ba56c1",
   "lessons": [
     {
       "id": "SA-W65-letter-nga",
@@ -728,10 +728,10 @@
     {
       "id": "SA-W65-a1-timed-production",
       "sequence": 3019,
-      "title": "Your first complete A1 writing paper",
-      "headword": "(timed A1 writing)",
+      "title": "A short A1 writing checkpoint",
+      "headword": "(short timed A1 writing checkpoint)",
       "romanization": "",
-      "gloss": "a complete 20-minute A1 form and named-reader message under assessment conditions",
+      "gloss": "a three-minute independent form attempt before the separate full A1 paper",
       "script": "devanagari",
       "modality": "pen",
       "derivedModality": "pen",
@@ -740,7 +740,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:0d6dd74ac40a4cd9",
+      "sourceHash": "fnv1a64:132390f359dffeaf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -766,11 +766,11 @@
             },
             {
               "kind": "speech",
-              "text": "This is an attempt, not a model. You will write the answers, and this page will not show you any copyable Sanskrit answer."
+              "text": "This is a short independent attempt, not a model. You will write the answers, and this page will not show you any copyable Sanskrit answer."
             },
             {
               "kind": "speech",
-              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Set one timer for 20 minutes. Keep it running through both tasks. Write in Devanagari. Ordinary legible handwriting is enough; decorative calligraphy is not scored."
+              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Keep a blank page ready and set a three-minute timer. Write in Devanagari. Ordinary legible handwriting is enough; decorative calligraphy is not scored."
             }
           ]
         },
@@ -781,11 +781,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Task 1 — practical form: 7 minutes, 40 points."
+              "text": "One practical form — three minutes."
             },
             {
               "kind": "speech",
-              "text": "Complete all six fields in Devanagari for a new neighbourhood activity group. Short answers are enough."
+              "text": "Complete all six fields in Devanagari for a new neighbourhood activity group. Short answers are enough. Start the timer when you begin the first field; leave any unfinished field as evidence when it rings."
             },
             {
               "kind": "speech",
@@ -813,23 +813,7 @@
             },
             {
               "kind": "speech",
-              "text": "At seven minutes, move on even if a field is unfinished. Do not restart the timer and do not polish the form with time meant for the message."
-            },
-            {
-              "kind": "speech",
-              "text": "Task 2 — message: 13 minutes, 60 points."
-            },
-            {
-              "kind": "speech",
-              "text": "Reader: Mira. Purpose: help Mira recognise you and arrange your first meeting tomorrow."
-            },
-            {
-              "kind": "speech",
-              "text": "Write 30–40 words in Devanagari. Greet Mira, introduce yourself, say where you live and which language you speak, mention one everyday action or kind of work and one drink or food you like, ask where Mira is, and close politely. The instructions give content, not sentences: choose and connect the Sanskrit yourself."
-            },
-            {
-              "kind": "speech",
-              "text": "When the 20-minute timer rings, stop, even if a line is unfinished. Record the number of completed form fields and the message word count. An honest timed attempt is more useful than a perfect untimed one."
+              "text": "When the three-minute timer rings, stop. Record the number of completed fields. An honest short attempt is more useful than a perfect untimed one."
             }
           ]
         },
@@ -840,33 +824,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Only after you have stopped, review the same attempt. Do not rewrite it yet. Mark one strength and one next step under each assessment criterion:"
+              "text": "Spend at most one minute looking at this first attempt. Note one field you completed clearly and one field to practise next; do not rewrite the timed answer. Keep the page as evidence."
             },
             {
               "kind": "speech",
-              "text": "Task fulfilment and relevant content — six fields are attempted; the named reader, meeting purpose, and requested message points are present."
-            },
-            {
-              "kind": "speech",
-              "text": "Comprehensibility and organisation — Mira can follow the message and see how its ideas connect."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit vocabulary, grammar, and register — familiar words and sentence patterns carry the intended meaning in a suitable everyday tone."
-            },
-            {
-              "kind": "speech",
-              "text": "Devanagari control — letter shapes, vowel-sign placement, conjuncts, word spacing, anusvara or final nasal spelling, and punctuation remain readable."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Keep the paper. On another day, repeat the same two-task shape with new personal details. The goal is not to memorise this prompt; it is to make a complete Sanskrit attempt calmly inside the real limit."
+              "text": "This checkpoint is not the complete A1 writing paper. On another day, close this lesson and open the separate A1 mock 1 learner paper for the authentic form and named-reader message under one 20-minute assessment clock. That paper and its later rubric review are a separate assessment session, not work inside this four-minute lesson. The second mock is a separate repeat, not a model to copy."
             }
           ]
         }
