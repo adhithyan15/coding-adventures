@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter elevation shadows leave the degradation report (#17308)
+
+Flutter now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Flutter style inventory from 79 to 69. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
 ### Fixed — Flutter preserves drag-and-drop child spacing (#17301)
 
 Flutter now applies authored `gap` values to the evaluated vertical child lists

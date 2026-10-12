@@ -3756,6 +3756,24 @@ line "Target" [35, 50, 68, 82]"##,
                         && edge.end_marker == diagram_ir::EdgeMarker::None
                 ), "open styled links must remain marker-free through layout");
             }
+            if fixture_name == "styled-endpoint-markers" {
+                assert!(layout.edges.iter().any(|edge|
+                    edge.kind == diagram_ir::SwimlaneEdgeKind::Dotted
+                        && edge.start_marker == diagram_ir::EdgeMarker::Circle
+                        && edge.end_marker == diagram_ir::EdgeMarker::Circle
+                ), "dotted endpoint markers must survive layout lowering");
+                assert!(layout.edges.iter().any(|edge|
+                    edge.kind == diagram_ir::SwimlaneEdgeKind::Thick
+                        && edge.start_marker == diagram_ir::EdgeMarker::Circle
+                        && edge.end_marker == diagram_ir::EdgeMarker::Cross
+                ), "thick endpoint markers must survive layout lowering");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 3, "styled circle markers must lower to ellipse instructions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )).count() >= 6, "styled cross markers must lower to paired path instructions");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

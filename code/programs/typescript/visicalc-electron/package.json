@@ -11,7 +11,7 @@
     "test": "node -e \"require('./main.js'); console.log('main.js parses')\""
   },
   "dependencies": {
-    "electron": "^43.4.0"
+    "electron": "^43.5.0"
   },
   "overrides": {
     "global-agent": "4.1.3"

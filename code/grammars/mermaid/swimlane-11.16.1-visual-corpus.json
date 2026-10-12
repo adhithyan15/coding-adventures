@@ -53,6 +53,7 @@
     "semicolon-class-statements",
     "node-class-decorators",
     "invisible-layout-link",
-    "open-styled-links"
+    "open-styled-links",
+    "styled-endpoint-markers"
   ]
 }
