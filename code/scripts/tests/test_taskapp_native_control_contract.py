@@ -89,7 +89,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "swiftui": 83,
         "compose": 50,
         "qt": 108,
-        "flutter": 83,
+        "flutter": 79,
     }
 
 
@@ -148,6 +148,15 @@ def test_flutter_text_align_is_no_longer_baselined() -> None:
     errors = validate_style_degradations("flutter", report, "report.json")
 
     assert any("unbaselined style drop 'text-align'" in error for error in errors)
+
+
+def test_flutter_drag_body_gap_is_no_longer_baselined() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "gap"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any("unbaselined style drop 'gap'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
