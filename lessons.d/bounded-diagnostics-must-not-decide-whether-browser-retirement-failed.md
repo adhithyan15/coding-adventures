@@ -21,3 +21,10 @@ static inspection. Preflight all targets once before any browser starts and
 reuse the fallback reports. Regression tests need real oversized files and the
 long-message/native-cleanup failures; unchanged file-symlink cases still require
 the host's existing symlink privilege and must not be weakened to pass locally.
+
+The repaired two-file suite passed 23 cases, including the new classification,
+proxy, native kill/cleanup and real oversized-artifact regressions. Three unchanged
+file-symlink cases stopped at this non-administrator Windows host's EPERM; they
+remain enabled for CI. Focused TypeScript compilation passed with the site's
+ES2022/NodeNext/strict settings. The new error identity uses private WeakSet
+membership, which does not invoke properties or proxy traps on a thrown value.

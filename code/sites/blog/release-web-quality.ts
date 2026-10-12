@@ -126,23 +126,24 @@ async function main(): Promise<void> {
     );
   }
 
+  // All artifact reads and static inspection precede even the discarded audit.
+  // Keep the reports so the retained loop never reparses those same documents.
+  const preflight = await preflightQualityTargets(targets.map(target => ({
+    target,
+    document: resolve(here, target.document),
+    root: target.id === "landing" ? landingRoot : blogRoot,
+  })));
   const mounts = await canonicalMounts();
   const server = createStaticServer(mounts);
   const port = await listen(server);
   const summaries: TargetSummary[] = [];
   try {
-    const firstTarget = targets[0];
+    const firstTarget = preflight[0]?.target;
     if (firstTarget !== undefined) {
       await discardWarmupAudit(() =>
         runLighthouse(`http://127.0.0.1:${port}${firstTarget.route}`, chromePath));
     }
-    for (const target of targets) {
-      const html = await readBoundedUtf8(
-        resolve(here, target.document),
-        target.id === "landing" ? landingRoot : blogRoot,
-        MAX_FALLBACK_HTML_BYTES,
-      );
-      const fallback = inspectStaticFallback(html, target);
+    for (const { target, fallback } of preflight) {
       let browser: LighthouseReport | null = null;
       let performanceSamples: readonly number[] = [];
       let browserDiagnostics: readonly string[] = [];
@@ -159,6 +160,7 @@ async function main(): Promise<void> {
         performanceSamples = evidence.performanceSamples;
         browserDiagnostics = browser.diagnostics;
       } catch (error) {
+        if (isChromeRetirementError(error)) throw error;
         browserDiagnostics = [`browser audit failed: ${boundedError(error)}`];
       }
       summaries.push({
@@ -196,6 +198,34 @@ async function main(): Promise<void> {
   );
 }
 
+/** Read and inspect every bounded artifact before any browser can be launched. */
+export async function preflightQualityTargets(
+  inputs: readonly { target: QualityTarget; document: string; root: string }[],
+): Promise<{ target: QualityTarget; fallback: StaticFallbackReport }[]> {
+  const reports: { target: QualityTarget; fallback: StaticFallbackReport }[] = [];
+  for (const { target, document, root } of inputs) {
+    const html = await readBoundedUtf8(document, root, MAX_FALLBACK_HTML_BYTES);
+    reports.push({ target, fallback: inspectStaticFallback(html, target) });
+  }
+  return reports;
+}
+
+// Provenance, not diagnostic wording, identifies a failed browser retirement.
+// WeakSet membership neither reads properties nor invokes a thrown proxy's traps.
+const chromeRetirementErrors = new WeakSet<object>();
+
+export class ChromeRetirementError extends Error {
+  constructor(cause: unknown, message = `Chrome retirement failed: ${boundedError(cause)}`) {
+    super(message, { cause });
+    this.name = "ChromeRetirementError";
+    chromeRetirementErrors.add(this);
+  }
+}
+
+function isChromeRetirementError(error: unknown): boolean {
+  return typeof error === "object" && error !== null && chromeRetirementErrors.has(error);
+}
+
 /**
  * One unrecorded audit before the first recorded sample.
  *
@@ -222,10 +252,8 @@ export async function discardWarmupAudit(
   try {
     await audit();
   } catch (error) {
+    if (isChromeRetirementError(error)) throw error;
     const message = boundedError(error);
-    // A browser that could not be retired may still be running and would
-    // slow every recorded sample, so that one failure is not dropped.
-    if (message.includes("retirement")) throw error;
     // Anything else is dropped: the recorded samples are the only evidence.
     report(`warm-up audit dropped: ${message}\n`);
   }
@@ -243,7 +271,7 @@ async function runLighthouse(url: string, chromePath: string): Promise<unknown> 
     try {
       await retireChrome(chrome);
     } catch (retirementError) {
-      throw new Error(
+      throw new ChromeRetirementError(retirementError,
         `Chrome startup failed: ${boundedError(error)}; retirement failed: ${boundedError(retirementError)}` +
         (startupDiagnostic === null ? "" : `; Chrome stderr: ${startupDiagnostic}`),
       );
@@ -349,7 +377,20 @@ export function chromeFlagsFor(url: string): string[] {
   ];
 }
 
-async function retireChrome(chrome: Launcher): Promise<void> {
+/** Every native kill/cleanup failure is fatal, even when its message is generic. */
+export async function retireChrome(
+  chrome: Pick<Launcher, "chromeProcess" | "kill" | "destroyTmp">,
+): Promise<void> {
+  try {
+    await retireOwnedChrome(chrome);
+  } catch (error) {
+    throw new ChromeRetirementError(error);
+  }
+}
+
+async function retireOwnedChrome(
+  chrome: Pick<Launcher, "chromeProcess" | "kill" | "destroyTmp">,
+): Promise<void> {
   const child = chrome.chromeProcess;
   if (child === undefined) {
     chrome.destroyTmp();

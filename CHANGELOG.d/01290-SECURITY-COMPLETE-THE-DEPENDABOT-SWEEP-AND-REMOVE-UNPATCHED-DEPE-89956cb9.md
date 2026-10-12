@@ -10,3 +10,4 @@
 - Remove repeated script, level and verb corpus reads from snapshot assertions. Retain both real progress CLI checks with measured case-specific budgets and all path and output assertions.
 - Reconcile concurrent main dependency updates by requiring Electron 43.7.9 in all four standalone apps, retaining every patched resolved version and the global-agent override.
 - Add the internal dependency replacement roadmap: all 33 direct npm packages, a staged test/coverage pilot, DOM/process/native/compiler replacements, other ecosystems and explicit consumer/security completion gates.
+- Preserve the concurrent browser warm-up repair while preflighting every bounded HTML artifact before Chrome starts. Propagate internally classified browser retirement failures before diagnostic truncation, including native kill/cleanup errors; retain all sample, resource, accessibility and performance budgets.

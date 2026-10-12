@@ -119,7 +119,10 @@ enforce every reviewed npm lock without dependency lifecycle scripts before
 explicitly building packages and products, and retains only the bounded
 `dist/.forme-web-quality.json` summary with three performance samples and the
 conservative median/minimum/maximum aggregate; browser phases have finite
-deadlines and fresh processes. A failed Chrome launch reports at most 1,024 printable
+deadlines and fresh processes. Every target's bounded HTML and static fallback
+is preflighted before the warm-up. Browser retirement failures, including native
+kill and temporary cleanup errors, stop the gate before diagnostic text is bounded.
+A failed Chrome launch reports at most 1,024 printable
 characters from a bounded, no-follow read of its startup log so hosted-runner
 failures remain diagnosable without retaining raw browser traces. The required
 CI gate waits for this lane.
