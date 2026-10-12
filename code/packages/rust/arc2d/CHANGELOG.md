@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Tests
+- Execute all four neutral raw center-arc tangent fixtures with exact IDs and
+  unchanged pinned tolerance, including signed rotated and zero sweeps. Preserve
+  all existing SVG degenerate fixture assertions and implementation behavior.
+
 ### Fixed
 - SVG endpoint arcs with near-zero radii or endpoints now evaluate along the endpoint line and return ordered endpoint bounds, including reversed and coincident endpoints. Center conversion remains optional and degenerate cubic output remains empty.
 - Align degenerate guards with G2D03: absolute radius `<1e-10` and endpoint distance squared `<1e-20`, with native execution of all four shared geometry fixtures.
