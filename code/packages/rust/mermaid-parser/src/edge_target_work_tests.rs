@@ -76,3 +76,46 @@ fn duplicate_ids_node_collisions_and_precedence_preserve_exact_metadata() {
     let unknown = source_with_edges(1) + "style missing stroke:#123456\n";
     assert!(parse_swimlane(&unknown).expect_err("unknown target remains refused").message.contains("unknown node or edge"));
 }
+
+
+#[test]
+fn animation_configurations_do_not_rescan_unrelated_edges() {
+    for count in [32, 128] {
+        let mut source = source_with_edges(count);
+        source.push_str("a chosen@--> b\n");
+        source.push_str(&"chosen@{animation: slow}\n".repeat(count));
+        reset_visits();
+        let diagram = parse_swimlane(&source).expect("repeated existing-edge animation directives");
+        assert_eq!(diagram.edges.len(), count + 1);
+        assert!(diagram.edges[..count].iter().all(|edge| !edge.animate && edge.animation.is_none()));
+        assert!(diagram.edges[count].animate);
+        assert_eq!(diagram.edges[count].animation, Some(SwimlaneEdgeAnimation::Slow));
+        assert_eq!(visits(), count + 1, "actual animation discovery visits={}", visits());
+        assert_eq!(SWIMLANE_TARGET_LOOKUPS.with(std::cell::Cell::get), count);
+        assert_eq!(SWIMLANE_TARGET_MATCH_VISITS.with(std::cell::Cell::get), count);
+    }
+}
+
+#[test]
+fn animation_duplicate_ids_preserve_order_and_style_passes() {
+    let source = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na a@--> b\na a@==> b\na --> b\na@{animation: slow}\na@{animate: false, animation: fast}\nclassDef marked stroke:#123456\nclass a marked\nstyle a stroke-width:7";
+    reset_visits();
+    let diagram = parse_swimlane(source).expect("animation duplicate IDs and node collision");
+    assert_eq!(visits(), 3);
+    assert_eq!(SWIMLANE_TARGET_LOOKUPS.with(std::cell::Cell::get), 4);
+    assert_eq!(SWIMLANE_TARGET_MATCH_VISITS.with(std::cell::Cell::get), 8);
+    let expected = DiagramStyle { stroke: Some("#123456".into()), stroke_width: Some(7.0), ..DiagramStyle::default() };
+    assert_eq!(diagram.nodes[0].style, expected);
+    for edge in &diagram.edges[..2] {
+        assert_eq!(edge.id.as_deref(), Some("a"));
+        assert!(!edge.animate);
+        assert_eq!(edge.animation, Some(SwimlaneEdgeAnimation::Fast));
+        assert_eq!(edge.classes, ["marked"]);
+        assert_eq!(edge.style, expected);
+    }
+    assert!(!diagram.edges[2].animate);
+    assert_eq!(diagram.edges[2].animation, None);
+    assert_eq!(diagram.edges[2].style, DiagramStyle::default());
+    let unknown = source_with_edges(1) + "a@{animate: true}\n";
+    assert!(parse_swimlane(&unknown).expect_err("a node alone is not an animation edge").message.contains("unknown edge"));
+}

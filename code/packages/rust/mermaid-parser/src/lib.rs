@@ -6367,7 +6367,13 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     }
     for config in pending_edge_configs {
         let mut matched = false;
-        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(config.id.as_str())) {
+        for edge in diagram.edges.iter_mut().filter(|edge| {
+            #[cfg(test)]
+            SWIMLANE_TARGET_EDGE_VISITS.with(|count| count.set(count.get() + 1));
+            edge.id.as_deref() == Some(config.id.as_str())
+        }) {
+            #[cfg(test)]
+            SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
             matched = true;
             edge.animate = config.animate;
             edge.animation = config.animation;
