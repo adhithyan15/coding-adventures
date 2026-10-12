@@ -6787,6 +6787,21 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     }
 }
 
+
+// These counters observe the actual scanner predicate. They are absent in
+// production, so the red phase leaves the original discovery algorithm intact.
+#[cfg(test)]
+thread_local! {
+    static SWIMLANE_LABEL_RUN_PREDICATES: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+#[inline]
+fn swimlane_label_run_matches(candidate: char, repeated: char) -> bool {
+    #[cfg(test)]
+    SWIMLANE_LABEL_RUN_PREDICATES.with(|count| count.set(count.get().checked_add(1).expect("bounded test counter")));
+    candidate == repeated
+}
+
 fn labeled_swimlane_operator(
     value: &str,
     start: &str,
@@ -6801,7 +6816,7 @@ fn labeled_swimlane_operator(
             if character != repeated {
                 return None;
             }
-            let run = tail[end_at..].chars().take_while(|candidate| *candidate == repeated).count();
+            let run = tail[end_at..].chars().take_while(|candidate| swimlane_label_run_matches(*candidate, repeated)).count();
             let suffix_at = end_at + run;
             (run >= minimum_run && tail[suffix_at..].starts_with(suffix)).then_some((end_at, run))
         })?;
@@ -17626,5 +17641,90 @@ mod tests {
         src.push('\n');
         let diagram = parse_to_diagram(&src).expect("wide edge chain must not trip the cap");
         assert_eq!(diagram.edges.len(), 5000);
+    }
+}
+
+
+#[cfg(test)]
+mod styled_label_work_tests {
+    use super::*;
+
+    fn reset_predicates() {
+        SWIMLANE_LABEL_RUN_PREDICATES.with(|count| count.set(0));
+    }
+
+    fn predicates() -> usize {
+        SWIMLANE_LABEL_RUN_PREDICATES.with(std::cell::Cell::get)
+    }
+
+    #[test]
+    fn nonterminating_dotted_label_runs_have_linear_public_parse_work() {
+        // The long dot run is label text, not a long arrow. A later one-dot
+        // terminator makes this valid authored input without huge geometry.
+        for dots in [128, 512] {
+            let label = format!("{}x", ".".repeat(dots));
+            let source = format!("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na -. {label} .-> b");
+            reset_predicates();
+            let diagram = parse_swimlane(&source).expect("valid dotted label");
+            assert_eq!(diagram.edges.len(), 1);
+            let edge = &diagram.edges[0];
+            assert_eq!((edge.source.as_str(), edge.target.as_str()), ("a", "b"));
+            assert_eq!(edge.label.as_deref(), Some(label.as_str()));
+            assert_eq!(edge.kind, SwimlaneEdgeKind::Dotted);
+            assert_eq!(edge.start_marker, EdgeMarker::None);
+            assert_eq!(edge.end_marker, EdgeMarker::Point);
+            assert_eq!(edge.min_length, 1);
+            let actual = predicates();
+            assert!(actual <= 12 * source.len(), "dots={dots}, actual run predicates={actual}, admitted linear bound={}", 12 * source.len());
+        }
+    }
+
+    #[test]
+    fn absent_terminators_do_not_restart_suffix_discovery_for_each_prefix() {
+        for repetitions in [128, 512] {
+            let value = "-.".repeat(repetitions);
+            reset_predicates();
+            assert!(labeled_swimlane_operator(&value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted).is_none());
+            assert!(predicates() <= 2 * value.len(), "absent suffix repetitions={repetitions}, actual predicates={}", predicates());
+        }
+    }
+
+    #[test]
+    fn styled_labels_preserve_exact_semantics_and_standard_precedence() {
+        let source = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na -- first ---> b == café🛰 ===> c -. third ...-> d";
+        let diagram = parse_swimlane(source).expect("all styled labels and Unicode");
+        assert_eq!(diagram.edges.len(), 3);
+        for (edge, (from, to, label, kind, length)) in diagram.edges.iter().zip([
+            ("a", "b", "first", SwimlaneEdgeKind::Directed, 2),
+            ("b", "c", "café🛰", SwimlaneEdgeKind::Thick, 2),
+            ("c", "d", "third", SwimlaneEdgeKind::Dotted, 3),
+        ]) {
+            assert_eq!((edge.source.as_str(), edge.target.as_str()), (from, to));
+            assert_eq!(edge.label.as_deref(), Some(label));
+            assert_eq!(edge.kind, kind);
+            assert_eq!(edge.min_length, length);
+            assert_eq!((edge.start_marker, edge.end_marker), (EdgeMarker::None, EdgeMarker::Point));
+        }
+        let operator = next_swimlane_operator("a --> b == later ==> c").expect("standard earliest arrow");
+        assert_eq!((operator.at, operator.len, operator.min_length), (2, 3, 1));
+        assert_eq!(operator.kind, SwimlaneEdgeKind::Directed);
+        assert_eq!(operator.label, None);
+    }
+
+    #[test]
+    fn first_eligible_run_empty_labels_and_prefixes_inside_runs_stay_exact() {
+        for (value, at, length, label) in [
+            ("a -- ok ---> b", 2, 10, "ok"),
+            ("---> x --> b", 0, 10, "-> x"),
+            ("-- --> -- label --> b", 3, 16, "> -- label"),
+        ] {
+            let operator = labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed).expect("original prefix/suffix contract");
+            assert_eq!((operator.at, operator.len), (at, length), "{value}");
+            assert_eq!(operator.label.as_deref(), Some(label), "{value}");
+            assert_eq!(operator.min_length, if value == "a -- ok ---> b" { 2 } else { 1 });
+        }
+        assert!(labeled_swimlane_operator("a --  ---> b", "--", '-', 2, ">", SwimlaneEdgeKind::Directed).is_none());
+        assert!(labeled_swimlane_operator("a == ==> b", "==", '=', 2, ">", SwimlaneEdgeKind::Thick).is_none());
+        assert!(labeled_swimlane_operator("a -. .-> b", "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted).is_none());
     }
 }
