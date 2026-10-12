@@ -58,6 +58,7 @@ pub enum DiagramShape {
     TaggedDocument,
     TaggedProcess,
     PaperTape,
+    LinedDocument,
     Cloud,
     Bang,
     Stadium,
