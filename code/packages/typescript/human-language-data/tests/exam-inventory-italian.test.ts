@@ -24,6 +24,10 @@ import {
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 describe("the committed Italian A1 inventory", () => {
   const inventory = loadExamInventory("italian", "A1");
   const spanish = loadExamInventory("spanish", "A1");
@@ -43,7 +47,7 @@ describe("the committed Italian A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "italian");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -141,7 +145,7 @@ describe("the committed Italian A1 inventory", () => {
   });
 
   it("reports the tranche that closed four columns outright, and what it did not touch", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(292);
     expect(coverage.covered).toBe(164);

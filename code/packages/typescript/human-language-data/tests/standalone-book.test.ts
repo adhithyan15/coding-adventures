@@ -5,6 +5,10 @@ import { generatedBookOutputs } from "../src/book-cli.js";
 import { loadBookCorpus, loadEverything } from "../src/loader.js";
 import { canonicalLessonSource } from "../src/hash.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 const BOOKS = loadBookCorpus().books;
 const GENERATED_BOOKS = generatedBookOutputs();
 
@@ -35,7 +39,7 @@ const CHAPTERS = [
 // and it is the authored source of truth, so it is held to the same rule.
 const SURFACES = [
   ...CHAPTERS,
-  ...loadEverything().lessons.map((lesson) => ({
+  ...REAL_LESSONS.map((lesson) => ({
     source: `${lesson.language}/lessons/${lesson.realization.lessonId}.md`,
     // canonicalLessonSource returns JSON, where a line break is the two-character
     // escape `\n`, not a newline. Un-escaping matters twice: `\\s+` in the patterns
@@ -80,7 +84,7 @@ describe("a reader holding the PDF", () => {
     // Frontmatter still reaches the narration export and the app, and it is the
     // authored source of truth, so it is held to the same rule.
     const offenders: string[] = [];
-    for (const lesson of loadEverything().lessons) {
+    for (const lesson of REAL_LESSONS) {
       const own = TRACK_PREFIX[lesson.language];
       expect(own, `${lesson.language}: no TRACK_PREFIX entry`).toBeDefined();
       for (const [, prefix] of canonicalLessonSource(lesson).matchAll(/\b([A-Z]{2})-C\d+/g)) {

@@ -24,6 +24,10 @@ import {
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 describe("the committed Persian A1 inventory", () => {
   const inventory = loadExamInventory("persian", "A1");
   const spanish = loadExamInventory("spanish", "A1");
@@ -43,7 +47,7 @@ describe("the committed Persian A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "persian");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -133,7 +137,7 @@ describe("the committed Persian A1 inventory", () => {
   });
 
   it("reports an EMPTY joining column, no demonstrative at all, and a strong script column", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(180);
     expect(coverage.covered).toBe(74);
@@ -162,7 +166,7 @@ describe("the committed Persian A1 inventory", () => {
   }, 60_000);
 
   it("keeps the numeral column CLOSED, and says what each closure cost", () => {
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taught = trackIntroducedAtoms(lessons, "persian");
     // THE COLUMN THAT WAS FLAT ZERO. yek, do, se and chahar returned no
     // occurrences in 71 files, so a learner could give no age, no price, no

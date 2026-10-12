@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import { combineLessonHashes, canonicalChapterHash, fnv1a64 } from "../src/hash.js";
 import { loadLessons } from "../src/loader.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadLessons();
+
 describe("canonical source fingerprints", () => {
   it("matches the published FNV-1a 64-bit test vectors", () => {
     expect(fnv1a64("")).toBe("fnv1a64:cbf29ce484222325");
@@ -26,7 +30,7 @@ describe("the capability in the chapter fingerprint", () => {
     // stale chapter (book-cli --check compares full text), but generated-book-hashes
     // came out byte-identical, so language-ladder's bookHashStatus reported a
     // genuinely stale .tex as synced.
-    const lessons = loadLessons().filter(
+    const lessons = REAL_LESSONS.filter(
       (l) => l.language === "spanish" && l.realization.chapter === 1,
     );
     expect(lessons.length).toBeGreaterThan(0);
@@ -36,7 +40,7 @@ describe("the capability in the chapter fingerprint", () => {
   });
 
   it("changes the hash when the canonical title or label changes", () => {
-    const lessons = loadLessons().filter(
+    const lessons = REAL_LESSONS.filter(
       (l) => l.language === "spanish" && l.realization.chapter === 1,
     );
     const canonical = canonicalChapterHash(lessons, {
@@ -63,7 +67,7 @@ describe("the capability in the chapter fingerprint", () => {
     // `payoff.note` is deliberately non-printed tooling prose. Hashing it would churn
     // every chapter that carries one, for nothing a reader could see. A fingerprint
     // covers what the artifact SHOWS.
-    const lessons = loadLessons().filter(
+    const lessons = REAL_LESSONS.filter(
       (l) => l.language === "spanish" && l.realization.chapter === 1,
     );
     const plain = canonicalChapterHash(lessons, { canDo: "A", payoff: { summary: "S" } });
@@ -77,7 +81,7 @@ describe("the capability in the chapter fingerprint", () => {
   it("leaves a chapter with no capability hashing exactly as before", () => {
     // Narration builds a spoken script from lessons alone and passes no capability,
     // so adding this must not churn 789 narration files that cannot have changed.
-    const lessons = loadLessons().filter(
+    const lessons = REAL_LESSONS.filter(
       (l) => l.language === "spanish" && l.realization.chapter === 1,
     );
     expect(canonicalChapterHash(lessons)).toBe(canonicalChapterHash(lessons, undefined));

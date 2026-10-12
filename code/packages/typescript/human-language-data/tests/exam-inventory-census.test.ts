@@ -49,6 +49,10 @@ import { readLedgerFile } from "../src/shard.js";
 import { trackIntroducedAtoms } from "../src/exam-inventory.js";
 import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadEverything().lessons;
+
 /** Where the tests themselves live, so the census can read its own suite. */
 const TESTS_ROOT = fileURLToPath(new URL(".", import.meta.url));
 
@@ -214,7 +218,7 @@ describe("the exam-inventory census", () => {
     //
     // Derived over the directory listing, so it covers the inventories nobody
     // wrote a literal for, and so a twenty-sixth is covered on the day it lands.
-    const { lessons } = loadEverything();
+    const lessons = REAL_LESSONS;
     const taughtByTrack = new Map<string, Set<string>>();
     const unknown: string[] = [];
     for (const inventory of committed) {

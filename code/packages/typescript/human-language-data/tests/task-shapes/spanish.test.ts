@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
+// These cases read one immutable corpus snapshot; synthetic inputs and
+// freshly derived counterfactual reports remain independent.
+const REAL_LESSONS = loadLessons();
+
 describe("Spanish task-shape inventories", () => {
   it("loads the official Spanish A1 performance target and its grouped pass rule", () => {
     const inventory = loadTaskShapeInventory("spanish", "A1");
@@ -84,7 +88,7 @@ describe("Spanish task-shape inventories", () => {
   it("measures how far Spanish's own reading is from the A2 inputs it now declares", () => {
     const inventories = listTaskShapeInventories().map(({ language, level }) =>
       loadTaskShapeInventory(language, level));
-    const report = measureReadingReach(loadLessons(), inventories);
+    const report = measureReadingReach(REAL_LESSONS, inventories);
     const row = report.rows.find((r) => r.language === "spanish" && r.level === "A2");
 
     // Declaring the inventory is what makes this measurable at all, and the
