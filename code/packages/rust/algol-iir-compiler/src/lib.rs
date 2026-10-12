@@ -3883,8 +3883,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_nonnegative_bounded_sign_operand(then_node)?;
             let else_operand = self.builtin_nonnegative_bounded_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -3963,8 +3963,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_direct_sign_operand(then_node)?;
             let else_operand = self.builtin_direct_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4103,8 +4103,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_nonpositive_unit_sign_operand(then_node)?;
             let else_operand = self.builtin_nonpositive_unit_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4245,8 +4245,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_nonnegative_unit_sign_operand(then_node)?;
             let else_operand = self.builtin_nonnegative_unit_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4321,8 +4321,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_single_exp_sign_operand(then_node)?;
             let else_operand = self.builtin_single_exp_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4344,8 +4344,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_single_exp_nonnegative_sign_operand(then_node)?;
             let else_operand = self.builtin_single_exp_nonnegative_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4367,8 +4367,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_double_exp_sign_operand(then_node)?;
             let else_operand = self.builtin_double_exp_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4390,8 +4390,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_triple_exp_sign_operand(then_node)?;
             let else_operand = self.builtin_triple_exp_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4443,8 +4443,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_sign_operand(then_node)?;
             let else_operand = self.builtin_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -15077,6 +15077,27 @@ mod tests {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
                     "sqrt preserves a branch-total conditional of nonpositive quadruple exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_local_runtime_real_roots_cross_all_bounded_conditional_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))); output(x) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "every bounded conditional result proof accepts unaliased local runtime-real roots for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
