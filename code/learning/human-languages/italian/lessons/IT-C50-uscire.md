@@ -13,7 +13,8 @@ gloss: "to go out"
 concept_tag: IT-VERB-USCIRE
 prerequisites: [IT-C50-vivere, IT-C50-entrare]
 sounds: []
-roots: []
+roots: [exire-latin]
+etymology_hook: "uscire goes back to Latin exire 'to go out' — English exit shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-entrare]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-05]; assesses=[] -->
 
 **uscire** — "to go out". The opposite of **entrare**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uscire** goes back to Latin *exire*, "to go out" — inherited. EtymDB 2.1 has no row for *uscire*; it derives Venetian *usir* and Friulian *jessî* from *exire*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

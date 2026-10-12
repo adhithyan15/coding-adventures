@@ -13,7 +13,8 @@ gloss: "a duck"
 concept_tag: IT-ANIMALI3-ANATRA
 prerequisites: [IT-C70-serpente, IT-C70-gallina]
 sounds: []
-roots: []
+roots: [anas-latin]
+etymology_hook: "anatra ← Latin anas, anatis 'duck'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C70-gallina]
 <!-- hl-knowledge: introduces=[IT-LEX-C70-ANIMALI3-03]; assesses=[] -->
 
 **l'anatra** — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anatra** ← Latin *anas, anatis*, "duck" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

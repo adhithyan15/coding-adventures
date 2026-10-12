@@ -13,7 +13,8 @@ gloss: "meat"
 concept_tag: IT-CIBO1-CARNE
 prerequisites: [IT-C50-entrare, IT-C50-uscire]
 sounds: []
-roots: []
+roots: [caro-latin]
+etymology_hook: "carne ← Latin caro, carnis 'flesh' — English carnivore shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-uscire]
 <!-- hl-knowledge: introduces=[IT-LEX-C51-CIBO1-01]; assesses=[] -->
 
 **la carne** — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carne** ← Latin *caro, carnis*, "flesh, meat" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

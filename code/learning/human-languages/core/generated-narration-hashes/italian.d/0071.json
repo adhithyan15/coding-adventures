@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 71,
-  "sourceHash": "fnv1a64:de6f29060da725ce",
+  "sourceHash": "fnv1a64:e1aefd5a9c38e5df",
   "lessonIds": [
     "IT-C71-leone",
     "IT-C71-scimmia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch71.txt",
   "json": "italian/narration/ch71.json",
-  "textHash": "fnv1a64:1e6e7458c61ab5f7",
-  "jsonHash": "fnv1a64:4760b9b5b9136f21",
+  "textHash": "fnv1a64:b7a6cdadc0d34b30",
+  "jsonHash": "fnv1a64:979cfdfe06da172a",
   "findings": []
 }

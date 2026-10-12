@@ -13,7 +13,8 @@ gloss: "a flower"
 concept_tag: IT-NATURA1-FIORE
 prerequisites: [IT-C63-biglietto, IT-C64-albero]
 sounds: []
-roots: []
+roots: [flos-latin]
+etymology_hook: "fiore ← Latin flos, floris 'flower' — English floral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C64-albero]
 <!-- hl-knowledge: introduces=[IT-LEX-C64-NATURA1-02]; assesses=[] -->
 
 **il fiore** — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiore** ← Latin *flos, floris*, "flower" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

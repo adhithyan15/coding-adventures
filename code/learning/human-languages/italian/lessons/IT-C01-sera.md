@@ -11,6 +11,7 @@ concept_tag: GREETING-EVENING
 prerequisites: [IT-C01-buongiorno]
 sounds: []
 roots: [serus]
+etymology_hook: "sera ← Late Latin sera 'the late hour', from serus 'late'"
 reviews_of: [IT-C01-buongiorno, IT-C01-buono]
 duration:
   max_seconds: 120

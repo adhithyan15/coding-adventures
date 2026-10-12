@@ -13,7 +13,8 @@ gloss: "pain"
 concept_tag: IT-CORPO4-DOLORE
 prerequisites: [IT-C40-mento, IT-C40-fronte]
 sounds: []
-roots: []
+roots: [dolor-latin]
+etymology_hook: "dolore ← Latin dolor 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C40-fronte]
 <!-- hl-knowledge: introduces=[IT-LEX-C40-CORPO4-03]; assesses=[] -->
 
 **il dolore** — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dolore** ← Latin *dolor*, "pain" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

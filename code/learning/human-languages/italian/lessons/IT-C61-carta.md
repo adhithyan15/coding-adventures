@@ -13,7 +13,8 @@ gloss: "paper"
 concept_tag: IT-COSE1-CARTA
 prerequisites: [IT-C61-bottiglia, IT-C61-penna]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "carta ← Latin charta, from Greek chartes — English card and chart share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C61-penna]
 <!-- hl-knowledge: introduces=[IT-LEX-C61-COSE1-03]; assesses=[] -->
 
 **la carta** — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carta** ← Latin *charta*, "a sheet of papyrus" — inherited; Latin took it from Greek *chartes*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

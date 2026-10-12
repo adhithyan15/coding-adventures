@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Knowing, and How Much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4c1cae735139f1fc",
+  "sourceHash": "fnv1a64:942e049f179ce1c8",
   "lessons": [
     {
       "id": "IT-C35-sapere",
@@ -224,7 +224,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9067919b333a091f",
+      "sourceHash": "fnv1a64:e2c6bf9aff57baec",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +329,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "non from Latin non, \"not\"; so is a form of sapere from Latin sapere, \"to taste, to be wise\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +388,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

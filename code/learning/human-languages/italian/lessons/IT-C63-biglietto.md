@@ -14,6 +14,7 @@ concept_tag: IT-COSE3-BIGLIETTO
 prerequisites: [IT-C63-scatola, IT-C63-valigia]
 sounds: []
 roots: []
+etymology_hook: "biglietto ← French billet 'a note' — borrowed; English billet is the same French word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C63-valigia]
 <!-- hl-knowledge: introduces=[IT-LEX-C63-COSE3-05]; assesses=[] -->
 
 **il biglietto** — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**biglietto** ← French *billet*, "a note" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

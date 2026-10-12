@@ -14,6 +14,7 @@ concept_tag: IT-CASA94-COMPUTER
 prerequisites: [IT-C94-tappeto, IT-C94-televisore]
 sounds: []
 roots: []
+etymology_hook: "computer ← English computer — borrowed whole"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C94-televisore]
 <!-- hl-knowledge: introduces=[IT-LEX-C94-CASA94-03]; assesses=[] -->
 
 **il computer** — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**computer** ← English *computer* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

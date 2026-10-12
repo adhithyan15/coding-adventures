@@ -13,7 +13,8 @@ gloss: "a bridge"
 concept_tag: IT-CITTA3-PONTE
 prerequisites: [IT-C82-aereo, IT-C82-macchina]
 sounds: []
-roots: []
+roots: [pons-latin]
+etymology_hook: "ponte ← Latin pons, pontis 'bridge' — English pontoon shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C82-macchina]
 <!-- hl-knowledge: introduces=[IT-LEX-C83-CITTA3-01]; assesses=[] -->
 
 **il ponte** — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ponte** ← Latin *pons, pontis*, "bridge" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

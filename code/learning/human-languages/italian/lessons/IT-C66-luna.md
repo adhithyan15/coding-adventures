@@ -13,7 +13,8 @@ gloss: "the moon"
 concept_tag: IT-NATURA3-LUNA
 prerequisites: [IT-C66-campo, IT-C66-sole]
 sounds: []
-roots: []
+roots: [luna-latin]
+etymology_hook: "luna ← Latin luna 'moon' — English lunar shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C66-sole]
 <!-- hl-knowledge: introduces=[IT-LEX-C66-NATURA3-05]; assesses=[] -->
 
 **la luna** — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**luna** ← Latin *luna*, "moon" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

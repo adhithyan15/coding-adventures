@@ -13,7 +13,8 @@ gloss: "hot"
 concept_tag: IT-AGG2-CALDO
 prerequisites: [IT-C73-lungo, IT-C73-corto]
 sounds: []
-roots: []
+roots: [calidus-latin]
+etymology_hook: "caldo ← Latin caldus, calidus 'warm' — English scald shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C73-corto]
 <!-- hl-knowledge: introduces=[IT-LEX-C73-AGG2-04]; assesses=[] -->
 
 **caldo** — "hot". Not "cold": the *c* is for warmth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caldo** ← Latin *caldus*, "warm, hot", short for *calidus* (Lewis & Short) — inherited; EtymDB 2.1 has no row for *caldo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

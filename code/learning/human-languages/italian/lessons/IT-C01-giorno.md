@@ -11,6 +11,7 @@ concept_tag: TIME-DAY
 prerequisites: [IT-C01-il-la-lo]
 sounds: [soft-g]
 roots: [diurnum, dies]
+etymology_hook: "giorno ← Latin diurnum 'daytime', from dies 'day' — English journal and journey share it"
 reviews_of: [IT-C01-il-la-lo]
 duration:
   max_seconds: 126

@@ -13,7 +13,8 @@ gloss: "lunch"
 concept_tag: IT-PASTI-PRANZO
 prerequisites: [IT-C54-miele, IT-C54-olio]
 sounds: []
-roots: []
+roots: [prandium-latin]
+etymology_hook: "pranzo ← Latin prandium 'a late breakfast, lunch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C54-olio]
 <!-- hl-knowledge: introduces=[IT-LEX-C54-PASTI-05]; assesses=[] -->
 
 **il pranzo** — "lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pranzo** ← Latin *prandium*, "a late breakfast, lunch" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

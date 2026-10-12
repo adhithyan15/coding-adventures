@@ -70,6 +70,9 @@ Penso che Marco parla italiano. — I think Marco speaks Italian. Penso che il c
 The che is the same invariable word as one lesson ago, doing its other job: there it hooked a clause onto a noun, and here it hooks a whole clause onto a verb. Italian will not let you leave it out. English drops it freely — I think he speaks Italian — and Italian never does.
 A note for later, said now so it is not a surprise. Careful written Italian puts the verb after penso che into a different set of endings called the congiuntivo: penso che Marco parli italiano. Spoken Italian uses the plain present constantly, and everything above is ordinary speech. You will be understood. The congiuntivo is a whole chapter of its own and it is not this one.
 
+The phrase, taken apart.
+penso is a form of pensare from Latin pensare, "to weigh, to ponder"; che from Latin quid or quod — EtymDB 2.1 records both.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: Penso che …]
@@ -194,6 +197,9 @@ Che caffè! — What a coffee!
 There is no verb, and none is wanted. It is the whole utterance.
 This lesson introduces no new word. Che was three lessons ago; buono has been yours since the first chapter. What that chapter never did was let you say buono about anything: it lived inside buongiorno, buonasera and buonanotte, welded to a time of day.
 You can also put a noun after it: Che caffè! — what a coffee!
+
+The phrase, taken apart.
+Che buono! is built from che from Latin quid or quod, and buono from Latin bonus, "good". (EtymDB 2.1).
 
 Grammar lens: an adjective after essere.
 The exclamation is the loud way. Here is the quiet one, and it is the ordinary Italian sentence pattern this book has gone its whole length without using:

@@ -13,7 +13,8 @@ gloss: "a mouse"
 concept_tag: IT-ANIMALI2-TOPO
 prerequisites: [IT-C68-maiale, IT-C69-uccello]
 sounds: []
-roots: []
+roots: [talpa-latin]
+etymology_hook: "topo ← Latin talpa 'mole' — the mole's name moved to the mouse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C69-uccello]
 <!-- hl-knowledge: introduces=[IT-LEX-C69-ANIMALI2-02]; assesses=[] -->
 
 **il topo** — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**topo** ← Latin *talpa*, "mole" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

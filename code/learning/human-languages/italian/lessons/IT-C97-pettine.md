@@ -13,7 +13,8 @@ gloss: "a comb"
 concept_tag: IT-CASA97-PETTINE
 prerequisites: [IT-C96-spazzolino, IT-C96-dentifricio]
 sounds: []
-roots: []
+roots: [pecten-latin]
+etymology_hook: "pettine ← Latin pecten 'comb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C96-dentifricio]
 <!-- hl-knowledge: introduces=[IT-LEX-C97-CASA97-01]; assesses=[] -->
 
 **il pettine** — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pettine** ← Latin *pecten*, "comb" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

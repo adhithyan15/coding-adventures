@@ -13,7 +13,8 @@ gloss: "straight on"
 concept_tag: IT-LUOGHI91-DRITTO
 prerequisites: [IT-C90-sud, IT-C90-ovest]
 sounds: []
-roots: []
+roots: [directus-latin]
+etymology_hook: "dritto ← Latin directus 'laid straight' — English direct is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C90-ovest]
 <!-- hl-knowledge: introduces=[IT-LEX-C91-LUOGHI91-01]; assesses=[] -->
 
 **dritto** — "straight on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dritto** ← Latin *directus*, "laid straight" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *dritto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

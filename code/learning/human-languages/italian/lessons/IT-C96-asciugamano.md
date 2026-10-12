@@ -14,6 +14,7 @@ concept_tag: IT-CASA96-ASCIUGAMANO
 prerequisites: [IT-C95-cuscino, IT-C96-coperta]
 sounds: []
 roots: []
+etymology_hook: "asciugamano — built from the verb for 'to dry' and mano 'hand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C96-coperta]
 <!-- hl-knowledge: introduces=[IT-LEX-C96-CASA96-02]; assesses=[] -->
 
 **l'asciugamano** — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**asciugamano** — built from the verb for "to dry" and *mano*, "hand". EtymDB 2.1 has no entry; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

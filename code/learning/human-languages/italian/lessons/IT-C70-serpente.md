@@ -13,7 +13,8 @@ gloss: "a snake"
 concept_tag: IT-ANIMALI3-SERPENTE
 prerequisites: [IT-C69-orso, IT-C69-volpe]
 sounds: []
-roots: []
+roots: [serpens-latin]
+etymology_hook: "serpente ← Latin serpens 'snake', from serpere 'to creep' — English serpent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C69-volpe]
 <!-- hl-knowledge: introduces=[IT-LEX-C70-ANIMALI3-01]; assesses=[] -->
 
 **il serpente** — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serpente** ← Latin *serpens*, "snake", from *serpere*, "to creep" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI103-CRAVATTA
 prerequisites: [IT-C102-petto, IT-C103-maglione]
 sounds: []
 roots: []
+etymology_hook: "cravatta ← French cravate, from Hrvat 'a Croat'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C103-maglione]
 <!-- hl-knowledge: introduces=[IT-LEX-C103-VESTITI103-02]; assesses=[] -->
 
 **la cravatta** — "a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cravatta** ← French *cravate* — borrowed; the French word came from *Hrvat*, "a Croat". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

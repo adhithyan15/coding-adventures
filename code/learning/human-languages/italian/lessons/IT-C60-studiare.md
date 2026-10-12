@@ -13,7 +13,8 @@ gloss: "to study"
 concept_tag: IT-VERB-STUDIARE
 prerequisites: [IT-C59-forchetta, IT-C60-tornare]
 sounds: []
-roots: []
+roots: [studere-latin]
+etymology_hook: "studiare ← Latin studere 'to be eager' — English study shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C60-tornare]
 <!-- hl-knowledge: introduces=[IT-LEX-C60-VERBI5-02]; assesses=[] -->
 
 **studiare** — "to study".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**studiare** goes back to Latin *studere*, "to be eager, to apply oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a market"
 concept_tag: IT-CITTA1-MERCATO
 prerequisites: [IT-C81-citta, IT-C81-negozio]
 sounds: []
-roots: []
+roots: [mercatus-latin]
+etymology_hook: "mercato ← Latin mercatus 'market' — English market is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C81-negozio]
 <!-- hl-knowledge: introduces=[IT-LEX-C81-CITTA1-03]; assesses=[] -->
 
 **il mercato** — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mercato** ← Latin *mercatus*, "trade, market" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "pleased, glad"
 concept_tag: IT-AGG6-CONTENTO
 prerequisites: [IT-C77-pulito, IT-C77-sporco]
 sounds: []
-roots: []
+roots: [contentus]
+etymology_hook: "contento ← Latin contentus 'satisfied' — English content is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C77-sporco]
 <!-- hl-knowledge: introduces=[IT-LEX-C77-AGG6-05]; assesses=[] -->
 
 **contento** — "pleased, glad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contento** ← Latin *contentus*, "satisfied" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

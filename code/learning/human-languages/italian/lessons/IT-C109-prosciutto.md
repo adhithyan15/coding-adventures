@@ -14,6 +14,7 @@ concept_tag: IT-CIBO109-PROSCIUTTO
 prerequisites: [IT-C109-gelato, IT-C109-bistecca]
 sounds: []
 roots: []
+etymology_hook: "prosciutto — built from the word for 'dry' ← Latin exsuctus 'sucked out'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C109-bistecca]
 <!-- hl-knowledge: introduces=[IT-LEX-C109-CIBO109-05]; assesses=[] -->
 
 **il prosciutto** — "ham".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prosciutto** — built from the Italian word for "dry", which ← Latin *exsuctus*, "sucked out". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

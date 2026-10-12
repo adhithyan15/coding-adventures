@@ -14,6 +14,7 @@ concept_tag: IT-DISPENSA-FORMAGGIO
 prerequisites: [IT-C55-pera, IT-C55-riso]
 sounds: []
 roots: []
+etymology_hook: "formaggio ← Old French formage, from Latin formaticum 'shaped in a mould'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C55-riso]
 <!-- hl-knowledge: introduces=[IT-LEX-C55-DISPENSA-04]; assesses=[] -->
 
 **il formaggio** — "cheese".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**formaggio** ← Old French *formage* — borrowed; behind it is Latin *formaticum*, cheese shaped in a mould. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

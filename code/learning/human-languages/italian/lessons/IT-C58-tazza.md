@@ -14,6 +14,7 @@ concept_tag: IT-CASA3-TAZZA
 prerequisites: [IT-C58-scala, IT-C58-specchio]
 sounds: []
 roots: []
+etymology_hook: "tazza ← Arabic tas 'bowl, cup' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C58-specchio]
 <!-- hl-knowledge: introduces=[IT-LEX-C58-CASA3-05]; assesses=[] -->
 
 **la tazza** — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tazza** ← Arabic *tas*, "bowl, cup" — borrowed; the Arabic word came from Middle Persian. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

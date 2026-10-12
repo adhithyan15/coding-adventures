@@ -13,7 +13,8 @@ gloss: "weak"
 concept_tag: IT-AGG5-DEBOLE
 prerequisites: [IT-C75-vuoto, IT-C76-forte]
 sounds: []
-roots: []
+roots: [debilis-latin]
+etymology_hook: "debole ← Latin debilis 'weak' — English debilitate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C76-forte]
 <!-- hl-knowledge: introduces=[IT-LEX-C76-AGG5-02]; assesses=[] -->
 
 **debole** — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**debole** ← Latin *debilis*, "weak" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

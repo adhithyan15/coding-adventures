@@ -14,6 +14,7 @@ concept_tag: IT-COSE3-VALIGIA
 prerequisites: [IT-C63-occhiali, IT-C63-scatola]
 sounds: []
 roots: []
+etymology_hook: "valigia ← Late Latin valisia — English valise is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C63-scatola]
 <!-- hl-knowledge: introduces=[IT-LEX-C63-COSE3-04]; assesses=[] -->
 
 **la valigia** — "a suitcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valigia** ← Late Latin *valisia* — inherited. EtymDB 2.1 records nothing further back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

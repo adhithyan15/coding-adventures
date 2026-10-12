@@ -1429,6 +1429,9 @@ backend immediately) come before the enabler-dependent items.
   branch. It also extends to exactly four built-in exponentials per branch when
   every root is proven nonpositive; positive-capable, missing, deeper,
   non-runtime-real, and overridden branches remain conservative.
+  Branch roots may be unaliased local real snapshots carrying runtime-real
+  provenance across assignment; globals, captured locals, and by-name aliases
+  remain conservative across a selector call.
   Additional built-in `sqrt` calls may wrap that positive bounded result while
   preserving the same finite proof.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

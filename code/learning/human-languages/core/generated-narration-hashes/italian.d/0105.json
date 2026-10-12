@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 105,
-  "sourceHash": "fnv1a64:b8bef2315afec6d5",
+  "sourceHash": "fnv1a64:101a60f2d917ddf0",
   "lessonIds": [
     "IT-C105-cappello",
     "IT-C105-giacca",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch105.txt",
   "json": "italian/narration/ch105.json",
-  "textHash": "fnv1a64:8d04a3b8cb4b8d5e",
-  "jsonHash": "fnv1a64:a9fdc335e2cf85be",
+  "textHash": "fnv1a64:c1e3724425476792",
+  "jsonHash": "fnv1a64:d83d82b6665413cc",
   "findings": []
 }

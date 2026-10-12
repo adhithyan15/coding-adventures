@@ -13,7 +13,8 @@ gloss: "above, on top"
 concept_tag: IT-QUANDO-SOPRA
 prerequisites: [IT-C79-adesso, IT-C79-lontano]
 sounds: []
-roots: []
+roots: [supra-latin]
+etymology_hook: "sopra ← Latin supra 'above'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C79-lontano]
 <!-- hl-knowledge: introduces=[IT-LEX-C79-QUANDO-05]; assesses=[] -->
 
 **sopra** — "above, on top".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sopra** ← Latin *supra*, "above" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

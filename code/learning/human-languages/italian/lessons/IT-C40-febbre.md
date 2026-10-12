@@ -13,7 +13,8 @@ gloss: "a fever"
 concept_tag: IT-CORPO4-FEBBRE
 prerequisites: [IT-C40-fronte, IT-C40-dolore]
 sounds: []
-roots: []
+roots: [febris-latin]
+etymology_hook: "febbre ← Latin febris 'fever' — English fever and febrile come from the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C40-dolore]
 <!-- hl-knowledge: introduces=[IT-LEX-C40-CORPO4-04]; assesses=[] -->
 
 **la febbre** — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**febbre** ← Latin *febris*, "fever" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

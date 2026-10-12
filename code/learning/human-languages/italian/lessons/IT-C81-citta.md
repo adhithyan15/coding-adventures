@@ -13,7 +13,8 @@ gloss: "a city"
 concept_tag: IT-CITTA1-CITTA
 prerequisites: [IT-C80-piazza, IT-C80-strada]
 sounds: []
-roots: []
+roots: [civitas-latin]
+etymology_hook: "città ← Old Italian cittade, from Latin civitas — English city is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C80-strada]
 <!-- hl-knowledge: introduces=[IT-LEX-C81-CITTA1-01]; assesses=[] -->
 
 **la città** — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**città** ← Old Italian *cittade*, from Latin *civitas*, "city" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

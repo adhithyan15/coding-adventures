@@ -14,6 +14,7 @@ concept_tag: IT-AGG4-VUOTO
 prerequisites: [IT-C75-basso, IT-C75-pieno]
 sounds: []
 roots: []
+etymology_hook: "vuoto ← Vulgar Latin vocitus 'emptied'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C75-pieno]
 <!-- hl-knowledge: introduces=[IT-LEX-C75-AGG4-05]; assesses=[] -->
 
 **vuoto** — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vuoto** ← Vulgar Latin *vocitus*, "emptied" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

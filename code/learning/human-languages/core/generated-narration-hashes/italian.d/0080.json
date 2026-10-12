@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 80,
-  "sourceHash": "fnv1a64:81c223de369a4d87",
+  "sourceHash": "fnv1a64:3450ac4ad88acbbd",
   "lessonIds": [
     "IT-C80-sotto",
     "IT-C80-dentro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch80.txt",
   "json": "italian/narration/ch80.json",
-  "textHash": "fnv1a64:501d80294a67d784",
-  "jsonHash": "fnv1a64:221bda7dcdde71a1",
+  "textHash": "fnv1a64:e13a23f03081f585",
+  "jsonHash": "fnv1a64:83b921296a69c858",
   "findings": []
 }

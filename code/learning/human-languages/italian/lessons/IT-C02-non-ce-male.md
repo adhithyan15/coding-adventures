@@ -48,6 +48,11 @@ Learn the four sounds as one useful answer for now. The pieces behind it —
 negation and the **c'è** construction — belong to later lessons. You do not need
 their rules to answer honestly today.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**male** ← Latin *male*, "badly", from *malus*, "bad" — inherited. The rest of the phrase comes apart in later lessons. (EtymDB 2.1)
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-COSI-COSI-04, IT-LEX-NON-CE-MALE-02] -->
 

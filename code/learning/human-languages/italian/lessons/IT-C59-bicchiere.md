@@ -13,7 +13,8 @@ gloss: "a glass (to drink from)"
 concept_tag: IT-TAVOLA-BICCHIERE
 prerequisites: [IT-C58-specchio, IT-C58-tazza]
 sounds: []
-roots: []
+roots: [bicarium-latin]
+etymology_hook: "bicchiere ← Late Latin bicarium 'wine vessel' — English beaker is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C58-tazza]
 <!-- hl-knowledge: introduces=[IT-LEX-C59-TAVOLA-01]; assesses=[] -->
 
 **il bicchiere** — "a glass (to drink from)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bicchiere** ← Late Latin *bicarium*, "a wine vessel" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

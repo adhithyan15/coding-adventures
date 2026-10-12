@@ -13,7 +13,8 @@ gloss: "short"
 concept_tag: IT-AGG2-CORTO
 prerequisites: [IT-C73-brutto, IT-C73-lungo]
 sounds: []
-roots: []
+roots: [curtus-latin]
+etymology_hook: "corto ← Latin curtus 'shortened' — English curt shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C73-lungo]
 <!-- hl-knowledge: introduces=[IT-LEX-C73-AGG2-03]; assesses=[] -->
 
 **corto** — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corto** ← Latin *curtus*, "shortened" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

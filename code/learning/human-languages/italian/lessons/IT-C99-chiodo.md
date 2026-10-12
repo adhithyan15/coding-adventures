@@ -13,7 +13,8 @@ gloss: "a nail"
 concept_tag: IT-ATTREZZI99-CHIODO
 prerequisites: [IT-C99-secchio, IT-C99-corda]
 sounds: []
-roots: []
+roots: [clavus-latin]
+etymology_hook: "chiodo ← Latin clavus 'nail'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C99-corda]
 <!-- hl-knowledge: introduces=[IT-LEX-C99-ATTREZZI99-03]; assesses=[] -->
 
 **il chiodo** — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiodo** ← Latin *clavus*, "nail" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

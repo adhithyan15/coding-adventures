@@ -13,7 +13,8 @@ gloss: "a daughter"
 concept_tag: IT-FAMIGLIA1-FIGLIA
 prerequisites: [IT-C43-triste, IT-C44-figlio]
 sounds: []
-roots: []
+roots: [filia-latin]
+etymology_hook: "figlia ← Latin filia 'daughter'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C44-figlio]
 <!-- hl-knowledge: introduces=[IT-LEX-C44-FAMIGLIA1-02]; assesses=[] -->
 
 **la figlia** — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**figlia** ← Latin *filia*, "daughter" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

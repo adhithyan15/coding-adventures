@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 99,
-  "sourceHash": "fnv1a64:0df4c4ac36e68e6e",
+  "sourceHash": "fnv1a64:04956034e5149bf3",
   "lessonIds": [
     "IT-C99-secchio",
     "IT-C99-corda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch99.txt",
   "json": "italian/narration/ch99.json",
-  "textHash": "fnv1a64:abeefdab38ef0f37",
-  "jsonHash": "fnv1a64:c916aecde63b647c",
+  "textHash": "fnv1a64:4c594c7af3d1a4fe",
+  "jsonHash": "fnv1a64:73da695855faa212",
   "findings": []
 }

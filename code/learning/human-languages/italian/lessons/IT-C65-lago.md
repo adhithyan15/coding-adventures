@@ -13,7 +13,8 @@ gloss: "a lake"
 concept_tag: IT-NATURA2-LAGO
 prerequisites: [IT-C64-bosco, IT-C65-fiume]
 sounds: []
-roots: []
+roots: [lacus-latin]
+etymology_hook: "lago ← Latin lacus 'lake'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C65-fiume]
 <!-- hl-knowledge: introduces=[IT-LEX-C65-NATURA2-02]; assesses=[] -->
 
 **il lago** — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lago** ← Latin *lacus*, "lake" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

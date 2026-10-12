@@ -13,7 +13,8 @@ gloss: "the chin"
 concept_tag: IT-CORPO4-MENTO
 prerequisites: [IT-C39-pelle, IT-C39-unghia]
 sounds: []
-roots: []
+roots: [mentum-latin]
+etymology_hook: "mento ← Latin mentum 'chin'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C39-unghia]
 <!-- hl-knowledge: introduces=[IT-LEX-C40-CORPO4-01]; assesses=[] -->
 
 **il mento** — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mento** ← Latin *mentum*, "chin" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

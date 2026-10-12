@@ -13,7 +13,8 @@ gloss: "an oven"
 concept_tag: IT-CASA94-FORNO
 prerequisites: [IT-C94-computer, IT-C94-frigorifero]
 sounds: []
-roots: []
+roots: [furnus-latin]
+etymology_hook: "forno ← Latin furnus 'oven'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C94-frigorifero]
 <!-- hl-knowledge: introduces=[IT-LEX-C94-CASA94-05]; assesses=[] -->
 
 **il forno** — "an oven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forno** ← Latin *furnus*, "oven" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

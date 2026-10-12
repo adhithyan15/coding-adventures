@@ -13,7 +13,8 @@ gloss: "cheap"
 concept_tag: IT-AGG4-ECONOMICO
 prerequisites: [IT-C74-difficile, IT-C74-caro]
 sounds: []
-roots: []
+roots: [oeconomicus-latin]
+etymology_hook: "economico ← Latin oeconomicus, a learned word, from Greek oikonomikos 'good at housekeeping'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C74-caro]
 <!-- hl-knowledge: introduces=[IT-LEX-C75-AGG4-01]; assesses=[] -->
 
 **economico** — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**economico** ← Latin *oeconomicus* — a learned borrowing; Latin took it from Greek *oikonomikos*, "skilled in running a household". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
