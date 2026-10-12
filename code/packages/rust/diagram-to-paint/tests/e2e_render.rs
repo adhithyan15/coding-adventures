@@ -3774,6 +3774,16 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
                 )).count() >= 6, "styled cross markers must lower to paired path instructions");
             }
+            if fixture_name == "minimum-link-lengths" {
+                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3]);
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3],
+                    "minimum link lengths must survive layout lowering");
+                let gaps = layout.nodes.windows(2).map(|nodes|
+                    nodes[1].x - (nodes[0].x + nodes[0].width)
+                ).collect::<Vec<_>>();
+                assert!(gaps[1] > gaps[0] && gaps[2] > gaps[1],
+                    "minimum link lengths must reserve progressively wider rank gaps");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

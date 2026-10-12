@@ -123,13 +123,6 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let node_width = 132.0;
     let node_height = 54.0;
     let node_gap = 42.0;
-    let max_nodes = diagram
-        .lanes
-        .iter()
-        .map(|lane| lane.node_ids.len())
-        .max()
-        .unwrap_or(1)
-        .max(1);
     let lane_cross = 150.0;
     let lane_along = if horizontal_flow {
         diagram.lanes.iter().map(|lane| {
@@ -137,11 +130,19 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 diagram.nodes.iter().find(|node| &node.id == node_id)
                     .map(|node| swimlane_node_width(&node.shape, &node.label))
             }).collect::<Vec<_>>();
-            lane_header + widths.iter().sum::<f64>()
-                + node_gap * widths.len().saturating_sub(1) as f64 + 40.0
+            let gap_units = lane.node_ids.windows(2).map(|pair|
+                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
+            ).sum::<usize>();
+            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units as f64 + 40.0
         }).fold(0.0, f64::max)
     } else {
-        lane_header + max_nodes as f64 * (node_height + node_gap) + 28.0
+        diagram.lanes.iter().map(|lane| {
+            let gap_units = lane.node_ids.windows(2).map(|pair|
+                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
+            ).sum::<usize>();
+            lane_header + lane.node_ids.len().max(1) as f64 * node_height
+                + (gap_units + 1) as f64 * node_gap + 28.0
+        }).fold(0.0, f64::max)
     };
     let (width, height) = if horizontal_flow {
         (
@@ -188,6 +189,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             member_ids.reverse();
         }
         let mut horizontal_cursor = x + lane_header + 20.0;
+        let mut vertical_cursor = y + lane_header + 20.0;
         for (node_index, node_id) in member_ids.iter().enumerate() {
             let Some(node) = diagram.nodes.iter().find(|node| &node.id == node_id) else {
                 continue;
@@ -209,8 +211,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             } else {
                 (
                     x + (lane_cross - resolved_node_width) / 2.0,
-                    y + lane_header + 20.0 + node_index as f64 * (node_height + node_gap)
-                        + (node_height - resolved_node_height) / 2.0,
+                    vertical_cursor + (node_height - resolved_node_height) / 2.0,
                 )
             };
             nodes.push(LayoutedSwimlaneNode {
@@ -224,7 +225,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 width: resolved_node_width,
                 height: resolved_node_height,
             });
-            horizontal_cursor += resolved_node_width + node_gap;
+            let gap_units = member_ids.get(node_index + 1).map(|next_id|
+                swimlane_link_gap_units(diagram, node_id, next_id)
+            ).unwrap_or(1);
+            horizontal_cursor += resolved_node_width + node_gap * gap_units as f64;
+            vertical_cursor += node_height + node_gap * gap_units as f64;
         }
     }
     let bounds = nodes
@@ -252,6 +257,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 kind: edge.kind,
                 start_marker: edge.start_marker,
                 end_marker: edge.end_marker,
+                min_length: edge.min_length,
             })
         })
         .collect();
@@ -268,6 +274,12 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         links: diagram.links.clone(),
         callbacks: diagram.callbacks.clone(),
     }
+}
+
+fn swimlane_link_gap_units(diagram: &SwimlaneDiagram, first: &str, second: &str) -> usize {
+    diagram.edges.iter().filter(|edge|
+        (edge.from == first && edge.to == second) || (edge.from == second && edge.to == first)
+    ).map(|edge| edge.min_length).max().unwrap_or(1).max(1)
 }
 
 fn swimlane_edge_endpoints(
@@ -671,6 +683,7 @@ mod tests {
                 from: "choose".into(), to: "ship".into(), label: None,
                 kind: SwimlaneEdgeKind::Directed,
                 start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Point,
+                min_length: 1,
             }],
             links: Vec::new(), callbacks: Vec::new(),
         };
