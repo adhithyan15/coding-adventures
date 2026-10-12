@@ -56,6 +56,7 @@
     "open-styled-links",
     "styled-endpoint-markers",
     "minimum-link-lengths",
-    "styled-inline-link-labels"
+    "styled-inline-link-labels",
+    "edge-identifiers"
   ]
 }

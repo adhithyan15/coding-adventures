@@ -6615,6 +6615,7 @@ fn parse_swimlane_edge_chain(
     let mut end_marker = operator.end_marker;
     let mut inline_label = operator.label;
     let mut min_length = operator.min_length;
+    let mut edge_id = operator.id;
     loop {
         let trimmed = remainder.trim_start();
         let (pipe_label, after_label) = if let Some(label_body) = trimmed.strip_prefix('|') {
@@ -6647,6 +6648,7 @@ fn parse_swimlane_edge_chain(
         for from in &previous {
             for to in &next_ids {
                 diagram.edges.push(SwimlaneEdge {
+                    id: edge_id.clone(),
                     from: from.clone(),
                     to: to.clone(),
                     label: label.clone(),
@@ -6670,6 +6672,7 @@ fn parse_swimlane_edge_chain(
         end_marker = next_operator.end_marker;
         inline_label = next_operator.label;
         min_length = next_operator.min_length;
+        edge_id = next_operator.id;
     }
     Ok(previous)
 }
@@ -6709,6 +6712,7 @@ struct SwimlaneOperator {
     end_marker: EdgeMarker,
     label: Option<String>,
     min_length: usize,
+    id: Option<String>,
 }
 
 fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
@@ -6768,6 +6772,7 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
         start_marker,
         end_marker,
         label: None,
+        id: None,
         min_length: match operator {
             "--->" | "----" | "===>" | "====" | "-..->" | "-..-" => 2,
             "---->" | "-----" | "====>" | "=====" | "-...->" | "-...-" => 3,
@@ -6780,11 +6785,30 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
         labeled_swimlane_operator(value, "==", '=', 2, ">", SwimlaneEdgeKind::Thick),
         labeled_swimlane_operator(value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
     ].into_iter().flatten().min_by_key(|operator| operator.at);
-    match (standard, labeled) {
+    let operator = match (standard, labeled) {
         (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
         (Some(standard), _) => Some(standard),
         (None, labeled) => labeled,
+    }?;
+    Some(swimlane_operator_with_id(value, operator))
+}
+
+fn swimlane_operator_with_id(value: &str, mut operator: SwimlaneOperator) -> SwimlaneOperator {
+    let prefix = &value[..operator.at];
+    if !prefix.ends_with('@') {
+        return operator;
     }
+    let token_start = prefix.rfind(char::is_whitespace).map_or(0, |index| index + 1);
+    let id = &prefix[token_start..prefix.len() - 1];
+    if id.is_empty() || !id.chars().all(|character|
+        character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+    ) {
+        return operator;
+    }
+    operator.len += operator.at - token_start;
+    operator.at = token_start;
+    operator.id = Some(id.to_string());
+    operator
 }
 
 fn labeled_swimlane_operator(
@@ -6814,6 +6838,7 @@ fn labeled_swimlane_operator(
             end_marker: EdgeMarker::Point,
             label: Some(label.to_string()),
             min_length: run - minimum_run + 1,
+            id: None,
         })
     })
 }
