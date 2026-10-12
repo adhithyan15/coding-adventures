@@ -2,6 +2,44 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 bare selector integration -->
+CV04a bare selector-root integration (October12): published415 and its
+accepted native13/current79 frames precede main `19d7a79da259f365e7fb808719bbfbf516c1ab77` (#17364), which
+admits bare unaliased local snapshots across calling selectors. Spec25fe758691
+precedes the conflict-free isolated merge and tests/docs-only actual
+`48ec9a93d9035ac0f965ed6d5b3eacfbf7c70c7d`. Production source changes only by exact upstream import; both
+assignment/output pre-proof AND post-lowering guards and original limits/
+assertions remain. New paired controls cover both actual roots, true/false
+branches and direct/assigned consumers. By-name mutation must refuse real
+output; value-formal mutation retains exactly one formatter/no main global
+load/store. Eight native source cells require exact2.25/3.5 on every available
+standard backend; present-but-no-result remains a failure.
+
+Actual complete validation passes **1248tests/docs across
+118targets**,0failures/1existing ignore; focused10 repeats
+excluded. Full compiler/shared933/16 and strict4 all-target Clippy with warnings/
+unknown-lints denied PASS; all11 unchanged production BUILD selections and all
+42exact native test targets actually PASS. Doc reconstruction,1079lesson
+shards and candidate-relative whitespace PASS. No full unfiltered LANG claim.
+Complete unchanged other Rust entries/protected programs/scripts/grammars/CI
+and all20diagram/Compose package objects retain actual13 native1352/58 and
+Python44/strict20 attribution. No old execution is relabeled. Original red/
+compatibility/input/lesson/profile/preflight and current initial promisor-diff
+fetch failure remain distinct; the separate inspected retry actuallyEXIT0.
+No implementation/numeric/UB defect is claimed by this bounded integration.
+
+Final backlog-only source proof and exact-final independent security precede
+samePR17288 update. Fresh exact-head required terminal acceptable, conflict-
+free/review-clean gates and three whole native jobs/real Closurec rows precede
+squash auto-merge; actual fetched-main reachability/fullpayload mode/type/blob
+proof precede cleanup/CV04b. Published415/local old checks cannot accept a later
+final source. Auto-mergeOFF. Full final-source local Miri **DEFERRED/PENDING**,
+neverpassed; frozenrun/497inputs/checkout/receipts/target untouched without
+polling/termination/duplicate execution. CV04b/fullClosure parity/outputjoins/
+all fold-rename-inline-motion-merge-deletionlineage/fullgoal/heartbeat OPEN;
+baseESTree/own types/no new crates.io dependencies.
+<!-- /CV04 bare selector integration -->
+
 <!-- CV04 step Compose integration -->
 CV04a step-curve/Compose integration (October12): published candidate
 `848895294295dfa2e3eef077936fa9d5f6f51f6a` accepted direct-output/native source and currentGujarati4bb source
@@ -111,7 +149,7 @@ CV04b/full parity/source-output/full transformation lineage remain OPEN.
 **Current selection:** CV04a exact lexical source intervals and bounded
 shared-consumer/native reconciliation, sole PR #17288. CV04b ingestion/wire
 contract and full Closure parity/source-output/transformation lineage remain open.
-**Current audit base:** `99d85abf0300075acccc22a87386e64cd66f0d15`
+**Current audit base:** `19d7a79da259f365e7fb808719bbfbf516c1ab77`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
