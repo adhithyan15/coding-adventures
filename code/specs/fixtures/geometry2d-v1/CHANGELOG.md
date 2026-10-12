@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Add four closed center-form tangent records for the raw normalized-parameter
+  derivative, signed sweep, rotation and zero sweep. Correct the ellipse
+  orthogonality requirement to use the rotated implicit gradient. Keep native
+  adoption separately owned and preserve all 23 earlier records.
+- Add a derivative-specific `1e7` teaching output bound while retaining the
+  existing `1e6` point/Bezier cap, v1 transport, oracle `1e-15` and native `1e-12`
+  absolute tolerances. Reject oversized integers before float conversion and
+  reject non-finite or out-of-bound derived results before comparison.
+- Exercise component mutations, wrong normalization/sign/rotation/translation,
+  full-turn output bounds, closed shapes, non-finite values and enormous integers
+  in the independent validator tests.
+
 - Schedule the neutral geometry validator and its focused tests in the
   unconditional repo-wide metadata-contracts CI step, alongside the separate
   Bezier flattening oracle. Native reader adoption remains separately owned.

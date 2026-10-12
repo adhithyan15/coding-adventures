@@ -128,7 +128,7 @@ class Geometry2DConformanceTests(unittest.TestCase):
                     MODULE.validate_document(changed)
 
     def test_new_case_shapes_and_ranges_are_closed(self) -> None:
-        for case_id, edit in [
+        edits: list[tuple[str, Callable[[dict[str, Any]], None]]] = [
             ("affine-compose-order-a", lambda c: c.update(first=[1, 0])),
             ("affine-invert-singular", lambda c: c.update(expected_inverse=[1] * 6)),
             ("bezier-quadratic-quarter", lambda c: c.update(control_points=[[0, 0]])),
@@ -137,7 +137,8 @@ class Geometry2DConformanceTests(unittest.TestCase):
             ("arc-center-bounds-positive-wrap", lambda c: c.update(rx=-1)),
             ("arc-center-cubics-zero", lambda c: c.update(sweep_angle=float("nan"))),
             ("arc-center-cubics-over-turn", lambda c: c.update(expected_count=5)),
-        ]:
+        ]
+        for case_id, edit in edits:
             with self.subTest(case_id=case_id):
                 changed = copy.deepcopy(self.document)
                 case = next(item for item in changed["cases"] if item["id"] == case_id)
@@ -245,7 +246,11 @@ class Geometry2DConformanceTests(unittest.TestCase):
 
     def tangent_case(self, index: int = 0) -> dict[str, Any]:
         return copy.deepcopy(
-            [c for c in self.document["cases"] if c["operation"] == "center-arc-tangent"][index]
+            [
+                c
+                for c in self.document["cases"]
+                if c["operation"] == "center-arc-tangent"
+            ][index]
         )
 
     def check_case(self, case: dict[str, Any]) -> None:
@@ -257,15 +262,21 @@ class Geometry2DConformanceTests(unittest.TestCase):
     def reject_case(self, case: dict[str, Any], *, schema: bool = True) -> None:
         document = {"version": 1, "absolute_tolerance": 1e-12, "cases": [case]}
         if schema:
-            validator = Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8")))
+            validator = Draft202012Validator(
+                json.loads(SCHEMA.read_text(encoding="utf-8"))
+            )
             self.assertNotEqual(list(validator.iter_errors(document)), [])
         with self.assertRaises(ValueError):
             MODULE.validate_document(document)
 
     def test_tangent_constants_translation_and_ellipse_gradient(self) -> None:
         # These pi expressions are independent of the oracle's coordinate formula.
-        answers = [(0, math.pi / 2), (-3 * math.pi / 4, -math.pi / 4),
-                   (3 * math.pi / 4, math.pi / 4), (0, 0)]
+        answers = [
+            (0, math.pi / 2),
+            (-3 * math.pi / 4, -math.pi / 4),
+            (3 * math.pi / 4, math.pi / 4),
+            (0, 0),
+        ]
         for index, answer in enumerate(answers):
             case = self.tangent_case(index)
             for got, want in zip(case["expected_derivative"], answer, strict=True):
@@ -289,9 +300,13 @@ class Geometry2DConformanceTests(unittest.TestCase):
                     self.reject_case(case, schema=False)
         correct = self.tangent_case(1)["expected_derivative"]
         length = math.hypot(*correct)
-        wrong = [[-x for x in correct], [x / (math.pi / 2) for x in correct],
-                 [x / length for x in correct], [correct[0] + 3, correct[1] - 4],
-                 [-math.pi / math.sqrt(2), math.pi / (2 * math.sqrt(2))]]
+        wrong = [
+            [-x for x in correct],
+            [x / (math.pi / 2) for x in correct],
+            [x / length for x in correct],
+            [correct[0] + 3, correct[1] - 4],
+            [-math.pi / math.sqrt(2), math.pi / (2 * math.sqrt(2))],
+        ]
         for answer in wrong:
             case = self.tangent_case(1)
             case["expected_derivative"] = answer
@@ -303,8 +318,10 @@ class Geometry2DConformanceTests(unittest.TestCase):
                 case = self.tangent_case()
                 case.update(rx=1_000_000, ry=1_000_000, sweep_angle=sweep, t=t)
                 # End of a full turn has the floating-point sine residual.
-                case["expected_derivative"] = [-sweep * 1_000_000 * math.sin(t * sweep),
-                                               sweep * 1_000_000 * math.cos(t * sweep)]
+                case["expected_derivative"] = [
+                    -sweep * 1_000_000 * math.sin(t * sweep),
+                    sweep * 1_000_000 * math.cos(t * sweep),
+                ]
                 self.check_case(case)
                 case["expected_derivative"][1] += 1e-6
                 self.reject_case(case, schema=False)
@@ -325,12 +342,20 @@ class Geometry2DConformanceTests(unittest.TestCase):
             del case[key]
             self.reject_case(case)
         edits: list[dict[str, Any]] = [
-            {"extra": 1}, {"center": [0]}, {"center": "0,0"},
-            {"expected_derivative": [0, 1, 2]}, {"expected_derivative": None},
-            {"rx": 0}, {"ry": -1}, {"rx": 1_000_001}, {"start_angle": 1_000_001},
+            {"extra": 1},
+            {"center": [0]},
+            {"center": "0,0"},
+            {"expected_derivative": [0, 1, 2]},
+            {"expected_derivative": None},
+            {"rx": 0},
+            {"ry": -1},
+            {"rx": 1_000_001},
+            {"start_angle": 1_000_001},
             {"sweep_angle": math.nextafter(math.tau, math.inf)},
             {"sweep_angle": math.nextafter(-math.tau, -math.inf)},
-            {"t": -1e-6}, {"t": 1.000001}, {"id": "Bad_id"},
+            {"t": -1e-6},
+            {"t": 1.000001},
+            {"id": "Bad_id"},
             {"operation": "center-tangent"},
         ]
         for edit in edits:
@@ -338,8 +363,9 @@ class Geometry2DConformanceTests(unittest.TestCase):
                 case = copy.deepcopy(base)
                 case.update(edit)
                 self.reject_case(case)
+        invalid_values: tuple[Any, ...] = (True, "1", None, [], {})
         for key in ("rx", "ry", "start_angle", "sweep_angle", "x_rotation", "t"):
-            for value in (True, "1", None, [], {}):
+            for value in invalid_values:
                 case = copy.deepcopy(base)
                 case[key] = value
                 self.reject_case(case)
@@ -374,11 +400,19 @@ class Geometry2DConformanceTests(unittest.TestCase):
     def test_root_caps_duplicate_tangent_transport_and_fixed_tolerance(self) -> None:
         base = self.tangent_case()
         for count in (1, 64):
-            document = {"version": 1, "absolute_tolerance": 1e-12,
-                        "cases": [dict(base, id=f"tangent-{i}") for i in range(count)]}
+            document = {
+                "version": 1,
+                "absolute_tolerance": 1e-12,
+                "cases": [dict(base, id=f"tangent-{i}") for i in range(count)],
+            }
             self.assertEqual(MODULE.validate_document(document), count)
-        for edit in ({"cases": [base] * 65}, {"cases": None}, {"version": True},
-                     {"absolute_tolerance": True}, {"absolute_tolerance": 1e-11}):
+        for edit in (
+            {"cases": [base] * 65},
+            {"cases": None},
+            {"version": True},
+            {"absolute_tolerance": True},
+            {"absolute_tolerance": 1e-11},
+        ):
             changed = copy.deepcopy(self.document)
             changed.update(edit)
             with self.assertRaises(ValueError):
@@ -387,8 +421,9 @@ class Geometry2DConformanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicate JSON key"):
             MODULE.parse_json(raw)
         with self.assertRaisesRegex(ValueError, "duplicate case id"):
-            MODULE.validate_document({"version": 1, "absolute_tolerance": 1e-12,
-                                      "cases": [base, base]})
+            MODULE.validate_document(
+                {"version": 1, "absolute_tolerance": 1e-12, "cases": [base, base]}
+            )
 
 
 if __name__ == "__main__":
