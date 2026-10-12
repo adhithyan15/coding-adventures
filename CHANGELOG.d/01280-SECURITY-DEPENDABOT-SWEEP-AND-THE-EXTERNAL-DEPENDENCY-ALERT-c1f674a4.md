@@ -22,3 +22,10 @@
   remove each family of alerts.
 - Cargo, Go, Dart and Hex dependencies were audited and have no open
   advisories.
+- **The FM-B070 web-quality gate runs one unrecorded warm-up audit first.**
+  The landing page is always the first route audited, so the hosted runner's
+  first-Chrome-launch costs landed only in its samples. On Windows it scored a
+  0.94 median on bytes this PR does not change (it scores 1.00 locally).
+  `code/sites/blog/release-web-quality.ts` now drops one bounded audit before
+  recording samples. The 0.95 budget, the three samples per route and the
+  summary schema are unchanged.
