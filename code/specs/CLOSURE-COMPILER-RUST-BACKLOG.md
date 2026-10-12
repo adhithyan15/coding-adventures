@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `e7fb84044ea8846fe0acd2a8525f9c5f8eb41753`
+**Current audit base:** `662e4ba520dd53a8c44ba4e5c317cdfcdbd94820`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -1083,15 +1083,36 @@ stays on the issue where it can be argued with.
 
 ## Latest main styled-label work repair (2026-10-12)
 
-Main `662e4ba520dd53a8c44ba4e5c317cdfcdbd94820` introduces an independently confirmed P2 quadratic repeated-run
-scan in Mermaid styled labels (#17335). The accepted bounded ALGOL integration
-at actual `c53c6aaf0ebc2fb16b5b95c66d753bcb562f480a` passed 1,223 tests/docs across
-109 targets, all 11 production commands and 33 exact native controls, strict
-lint and independent final review; those real receipts are retained. Read-only
-TaskApp/Sanskrit equivalence changes no native source. Latest Mermaid security
-acceptance is REJECTED/PENDING until the [styled-label work contract](DG04-mermaid-compatibility.md#swimlane-styled-label-discovery-work-contract)
-receives exact-work red/green evidence, full affected tests/lint and final review.
-The earlier duplicate-edge issue #17334 remains resolved independently. Keep the
-same sole PR #17288 and required exact-head CI/merge gates. Miri DEFERRED/PENDING,
-never passed; frozen run/497 input receipts preserved, no polling/termination.
-CV04b, full Closure parity, output-byte maps and complete lineage remain open.
+Main `662e4ba520dd53a8c44ba4e5c317cdfcdbd94820` introduced independently confirmed P2 #17335 in styled
+label run discovery. Spec `074faa6960891201d00eec3170ad6440539a6028` preceded the
+actual original-scanner red tests at `3579cee268583fc61fecb87734be6330350043a7`: 16,772 predicates
+for a valid 128-dot label and 16,129 for absent terminators; both semantic
+controls passed. The earlier test-field compile failure is retained separately,
+not accepted as red evidence. Ordinary main integration `aceefd41df623d8fd3d3f061e0dd64fe4eeac7de`
+passed 526/eight but security remained REJECTED; successful native tests were
+never promoted over that finding.
+
+Actual corrected source `149bc895fa02cda07ad9390fc2df395ab41b39bf` passes **531 tests/docs/eight targets**, zero
+failures/ignores, five focused work/semantic controls (included in those 531),
+strict all-target Clippy, lesson and whitespace validation. One monotone cursor
+per fixed ASCII form counts maximal runs once with constant state; UTF-8 labels,
+first eligible run, empty-label refusal, prefix-inside-run suffixes, standard
+precedence, edge kinds, point markers and minimum lengths remain exact. The
+[work contract](DG04-mermaid-compatibility.md#swimlane-styled-label-discovery-work-contract)
+claims only local operator discovery, not whole-pipeline linearity. No grammar,
+production limit, dependency, unsafe code or assertion weakening was introduced.
+An earlier 531-test receipt failed strict lint; it remains distinct from this
+final-source rerun. Publication requires independent exact-final-head review
+and fresh required native CI; no current-head/actual merge acceptance is inferred.
+
+Retained bounded ALGOL source `c53c6aaf0ebc2fb16b5b95c66d753bcb562f480a` passed
+1,223 tests/docs/109 targets, all 11 production commands and 33 exact native
+controls, strict lint and independent final review. Later TaskApp/Sanskrit
+changes leave native sources equal; no UI/release/curriculum execution is claimed.
+The earlier duplicate-edge #17334 remains independently repaired at actual
+67f0f07cc3103667c446ff8742abe917a6a4c7b2, 731/32; its original rejected/red receipts
+are preserved. Keep sole PR #17288, terminal acceptable exact-head checks,
+review/conflict gates and actual fetched-main merge/payload proof before cleanup.
+Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
+inputs/receipts preserved without polling or termination. CV04b, full Closure
+parity, output-byte maps and complete transformation lineage remain open.
