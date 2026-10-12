@@ -8858,8 +8858,8 @@ mod tests {
             ("TB", "step") => route.extend([
                 PathCommand::LineTo { x: 87.0, y: 149.0 }, PathCommand::LineTo { x: 87.0, y: 149.0 },
             ]),
-            ("LR", "stepBefore") | ("TB", "stepAfter") => route.push(PathCommand::LineTo { x: sx, y: sy }),
-            ("LR", "stepAfter") | ("TB", "stepBefore") => route.push(PathCommand::LineTo { x: ex, y: ey }),
+            (_, "stepBefore") => route.push(PathCommand::LineTo { x: sx, y: sy }),
+            (_, "stepAfter") => route.push(PathCommand::LineTo { x: ex, y: ey }),
             _ => panic!("fixture curve"),
         }
         if !matches!(curve, "basis" | "bumpX" | "bumpY") {

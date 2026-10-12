@@ -21,4 +21,10 @@ controls: actual cargo reported 2PASS/3FAIL, while the wrapper expected 1PASS.
 Keep that helper failure and assess the exact named failures from the saved log;
 never replace actual execution counts with the intended filter's counts.
 
+The first green attempt passed both Bump tests but revealed a mistaken TB Step
+waypoint expectation after the repaired start marker let the loop reach TB.
+For these aligned fixtures, StepBefore's waypoint equals the start and
+StepAfter's equals the end in both LR and TB. Preserve that rejected 4PASS/1FAIL
+receipt and correct the test's table, leaving production route commands intact.
+
 TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
