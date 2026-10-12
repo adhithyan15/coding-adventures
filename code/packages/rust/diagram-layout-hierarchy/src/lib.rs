@@ -277,9 +277,27 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
 }
 
 fn swimlane_link_gap_units(diagram: &SwimlaneDiagram, first: &str, second: &str) -> usize {
-    diagram.edges.iter().filter(|edge|
+    #[cfg(test)]
+    SWIMLANE_GAP_QUERIES.with(|count| count.set(count.get() + 1));
+    swimlane_gap_edges(diagram).filter(|edge|
         (edge.from == first && edge.to == second) || (edge.from == second && edge.to == first)
     ).map(|edge| edge.min_length).max().unwrap_or(1).max(1)
+}
+
+// Count actual constraint-edge visits, separately from ordinary output lowering.
+// Thread-local counters keep parallel tests independent; production has no counters.
+#[cfg(test)]
+std::thread_local! {
+    static SWIMLANE_GAP_EDGE_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static SWIMLANE_GAP_QUERIES: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+fn swimlane_gap_edges(diagram: &SwimlaneDiagram) -> impl Iterator<Item = &diagram_ir::SwimlaneEdge> {
+    diagram.edges.iter().map(|edge| {
+        #[cfg(test)]
+        SWIMLANE_GAP_EDGE_VISITS.with(|count| count.set(count.get() + 1));
+        edge
+    })
 }
 
 fn swimlane_edge_endpoints(
@@ -554,6 +572,90 @@ fn layout_siblings(
 mod tests {
     use super::*;
     use diagram_ir::TreemapNode;
+
+    fn gap_work_diagram(direction: DiagramDirection, node_count: usize, lengths: &[usize]) -> SwimlaneDiagram {
+        use diagram_ir::{EdgeMarker, SwimlaneEdge, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode};
+        let ids = (0..node_count).map(|index| format!("n{index}")).collect::<Vec<_>>();
+        let nodes = ids.iter().map(|id| SwimlaneNode {
+            id: id.clone(), label: id.clone(), lane_id: Some("lane".into()),
+            shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default(),
+        }).collect();
+        let edges = lengths.iter().enumerate().map(|(index, &min_length)| {
+            let (from, to) = if index % 2 == 0 { ("n0", "n1") } else { ("n1", "n0") };
+            SwimlaneEdge {
+                from: from.into(), to: to.into(), label: Some(format!("edge{index}")),
+                kind: if index % 2 == 0 { SwimlaneEdgeKind::Directed } else { SwimlaneEdgeKind::Dotted },
+                start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Cross, min_length,
+            }
+        }).collect();
+        SwimlaneDiagram {
+            direction, title: None, accessibility_title: None, accessibility_description: None,
+            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: ids }],
+            nodes, edges, links: Vec::new(), callbacks: Vec::new(),
+        }
+    }
+
+    fn layout_gap(layout: &LayoutedSwimlaneDiagram, first: &str, second: &str) -> f64 {
+        let from = layout.nodes.iter().find(|node| node.id == first).unwrap();
+        let to = layout.nodes.iter().find(|node| node.id == second).unwrap();
+        if matches!(layout.direction, DiagramDirection::Lr | DiagramDirection::Rl) {
+            (to.x - from.x).abs() - from.width
+        } else {
+            (to.y - from.y).abs() - from.height
+        }
+    }
+
+    #[test]
+    fn duplicate_swimlane_edges_are_visited_once_for_all_layout_gaps() {
+        // These are valid parser-domain constraints, including parallel/reversed
+        // edges. Counters observe the actual layout path, not a benchmark model.
+        let lengths = (0..512).map(|index| index % 3 + 1).collect::<Vec<_>>();
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            let diagram = gap_work_diagram(direction, 64, &lengths);
+            SWIMLANE_GAP_EDGE_VISITS.with(|count| count.set(0));
+            SWIMLANE_GAP_QUERIES.with(|count| count.set(0));
+            let layout = layout_swimlane(&diagram);
+            assert_eq!(SWIMLANE_GAP_EDGE_VISITS.with(std::cell::Cell::get), lengths.len());
+            assert_eq!(SWIMLANE_GAP_QUERIES.with(std::cell::Cell::get), 2 * (diagram.nodes.len() - 1));
+            assert_eq!(layout_gap(&layout, "n0", "n1"), 126.0);
+            assert_eq!(layout_gap(&layout, "n1", "n2"), 42.0);
+            assert_eq!(layout.edges.len(), diagram.edges.len());
+            for (before, after) in diagram.edges.iter().zip(&layout.edges) {
+                assert_eq!(after.label, before.label);
+                assert_eq!(after.kind, before.kind);
+                assert_eq!(after.start_marker, before.start_marker);
+                assert_eq!(after.end_marker, before.end_marker);
+                assert_eq!(after.min_length, before.min_length);
+            }
+        }
+    }
+
+    #[test]
+    fn swimlane_gap_defaults_and_reversed_maxima_preserve_spacing() {
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            let default = layout_swimlane(&gap_work_diagram(direction.clone(), 3, &[0, 0]));
+            assert_eq!(layout_gap(&default, "n0", "n1"), 42.0);
+            assert_eq!(layout_gap(&default, "n1", "n2"), 42.0);
+            let maximum = layout_swimlane(&gap_work_diagram(direction, 3, &[2, 3, 1]));
+            assert_eq!(layout_gap(&maximum, "n0", "n1"), 126.0);
+            assert_eq!(layout_gap(&maximum, "n1", "n2"), 42.0);
+        }
+    }
+
+    #[test]
+    fn caller_owned_swimlane_lengths_do_not_overflow_integer_gap_sums() {
+        for direction in [DiagramDirection::Lr, DiagramDirection::Rl, DiagramDirection::Tb, DiagramDirection::Bt] {
+            let mut diagram = gap_work_diagram(direction, 3, &[usize::MAX]);
+            let mut second = diagram.edges[0].clone();
+            second.from = "n1".into();
+            second.to = "n2".into();
+            diagram.edges.push(second);
+            let layout = layout_swimlane(&diagram);
+            assert!(layout.width.is_finite() && layout.height.is_finite());
+            assert!(layout.nodes.iter().all(|node| node.x.is_finite() && node.y.is_finite()));
+            assert!(layout.edges.iter().all(|edge| edge.min_length == usize::MAX));
+        }
+    }
 
     #[test]
     fn child_areas_follow_values_and_stay_inside_parent() {
