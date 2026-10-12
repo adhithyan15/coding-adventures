@@ -13,7 +13,8 @@ gloss: "to snow"
 concept_tag: IT-VERB-NEVICARE
 prerequisites: [IT-C144-innamorarsi, IT-C144-fumare]
 sounds: []
-roots: []
+roots: [nix-latin]
+etymology_hook: "nevicare ← Vulgar Latin nivicare 'to snow', built on nix 'snow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C144-fumare]
 <!-- hl-knowledge: introduces=[IT-LEX-C144-VERBI144-05]; assesses=[] -->
 
 **nevicare** — "to snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nevicare** ← Vulgar Latin *nivicare*, "to snow" — inherited. (EtymDB 2.1) It is built on Latin *nix*, *nivis*, "snow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

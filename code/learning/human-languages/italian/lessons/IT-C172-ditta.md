@@ -13,7 +13,8 @@ gloss: "a firm"
 concept_tag: IT-LAV172-DITTA
 prerequisites: [IT-C171-paesaggio, IT-C171-vista]
 sounds: []
-roots: []
+roots: [dicere-latin]
+etymology_hook: "ditta ← Latin dicta 'things said' — English dictum shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C171-vista]
 <!-- hl-knowledge: introduces=[IT-LEX-C172-LAV172-01]; assesses=[] -->
 
 **la ditta** — "a firm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ditta** ← Latin *dicta*, "things said" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *ditta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-GUIDARE
 prerequisites: [IT-C133-mettere, IT-C133-credere]
 sounds: []
 roots: []
+etymology_hook: "guidare ← Old Provençal guidar, from Frankish witan 'to show the way' — English guide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C133-credere]
 <!-- hl-knowledge: introduces=[IT-LEX-C133-VERBI133-05]; assesses=[] -->
 
 **guidare** — "to drive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guidare** ← Old Provençal *guidar*, "to guide" — borrowed; the Provençal verb came from Frankish *witan*, "to show the way". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

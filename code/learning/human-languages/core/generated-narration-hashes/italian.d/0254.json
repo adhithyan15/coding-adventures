@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 254,
-  "sourceHash": "fnv1a64:1ee00bab4fe83660",
+  "sourceHash": "fnv1a64:a868f275c32a172e",
   "lessonIds": [
     "IT-C254-sedile",
     "IT-C254-volante",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch254.txt",
   "json": "italian/narration/ch254.json",
-  "textHash": "fnv1a64:1f51a0cf3ee911c4",
-  "jsonHash": "fnv1a64:413a1f4ecc37de0e",
+  "textHash": "fnv1a64:1d3a0a5283ff9b05",
+  "jsonHash": "fnv1a64:b29e77cfa928e071",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a plaster"
 concept_tag: IT-SAL243-CEROTTO
 prerequisites: [IT-C242-riscuotere, IT-C242-rivolgersi]
 sounds: []
-roots: []
+roots: [cera-latin]
+etymology_hook: "cerotto ← Latin cerotum 'a wax plaster', from Greek keros 'wax'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C242-rivolgersi]
 <!-- hl-knowledge: introduces=[IT-LEX-C243-SAL243-01]; assesses=[] -->
 
 **il cerotto** — "a plaster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cerotto** ← Latin *cerotum*, "a wax plaster", from Greek *keros*, "beeswax" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SBAGLIARE
 prerequisites: [IT-C149-galleggiare, IT-C150-salvarsi]
 sounds: []
 roots: []
+etymology_hook: "sbagliare — from abbagliare 'to dazzle', s- replacing a-; only bagliare's origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C150-salvarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C150-VERBI150-02]; assesses=[] -->
 
 **sbagliare** — "to make a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sbagliare** comes from *abbagliare*, "to dazzle", with *s-* in place of *a-*. EtymDB 2.1 takes it apart as *s-* plus an old verb *bagliare*; only where *bagliare* came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

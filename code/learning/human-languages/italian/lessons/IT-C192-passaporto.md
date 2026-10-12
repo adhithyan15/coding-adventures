@@ -14,6 +14,7 @@ concept_tag: IT-COSE192-PASSAPORTO
 prerequisites: [IT-C191-cassetto, IT-C192-binario]
 sounds: []
 roots: []
+etymology_hook: "passaporto — passa 'pass' + porto 'port': leave to pass a port — English passport"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C192-binario]
 <!-- hl-knowledge: introduces=[IT-LEX-C192-COSE192-02]; assesses=[] -->
 
 **il passaporto** — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passaporto** is *passa*, "pass", plus *porto*, "a port": leave to pass through a port. French *passeport* is its twin. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

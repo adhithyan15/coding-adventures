@@ -13,7 +13,8 @@ gloss: "a ceiling"
 concept_tag: IT-COSE191-SOFFITTO
 prerequisites: [IT-C190-normale, IT-C190-diverso]
 sounds: []
-roots: []
+roots: [suffigere-latin]
+etymology_hook: "soffitto ← Vulgar Latin suffictus, Latin suffixus 'fastened underneath' — English soffit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C190-diverso]
 <!-- hl-knowledge: introduces=[IT-LEX-C191-COSE191-01]; assesses=[] -->
 
 **il soffitto** — "a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soffitto** ← Vulgar Latin *suffictus* (EtymDB 2.1), for Latin *suffixus*, "fastened underneath" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

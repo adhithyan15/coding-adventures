@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 179,
-  "sourceHash": "fnv1a64:d8108af6e9f045f8",
+  "sourceHash": "fnv1a64:e9978d09429953dc",
   "lessonIds": [
     "IT-C179-dimostrare",
     "IT-C179-dipendere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch179.txt",
   "json": "italian/narration/ch179.json",
-  "textHash": "fnv1a64:e0d6e5b50aaae7c3",
-  "jsonHash": "fnv1a64:8840575e0def0f61",
+  "textHash": "fnv1a64:07d4ebb963cce10d",
+  "jsonHash": "fnv1a64:1b0b975c083b2169",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to choose"
 concept_tag: IT-VERB-SCEGLIERE
 prerequisites: [IT-C175-ricordare, IT-C175-decidere]
 sounds: []
-roots: []
+roots: [eligere-latin]
+etymology_hook: "scegliere ← Vulgar Latin exeligere, ex- + eligere 'to pick out' — English elect shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C175-decidere]
 <!-- hl-knowledge: introduces=[IT-LEX-C175-VERBI175-05]; assesses=[] -->
 
 **scegliere** — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scegliere** ← Vulgar Latin *exeligere* — inherited. (EtymDB 2.1) It is *ex-* plus Latin *eligere*, "to pick out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

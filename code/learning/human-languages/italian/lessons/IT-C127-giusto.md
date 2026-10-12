@@ -13,7 +13,8 @@ gloss: "right, fair"
 concept_tag: IT-QUALITA127-GIUSTO
 prerequisites: [IT-C126-gentile, IT-C127-serio]
 sounds: []
-roots: []
+roots: [iustus-latin]
+etymology_hook: "giusto ← Latin iustus 'just', from ius 'law' — English just and justice share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C127-serio]
 <!-- hl-knowledge: introduces=[IT-LEX-C127-QUALITA127-02]; assesses=[] -->
 
 **giusto** — "right, fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giusto** ← Latin *iustus*, "just, lawful", from *ius*, "law, right" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

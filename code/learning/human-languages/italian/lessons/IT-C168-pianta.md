@@ -13,7 +13,8 @@ gloss: "a plant"
 concept_tag: IT-COSE168-PIANTA
 prerequisites: [IT-C168-soffitta, IT-C168-orto]
 sounds: []
-roots: []
+roots: [planta-latin]
+etymology_hook: "pianta ← Latin planta 'a sprout' — Latin pl- became Italian pi-; English plant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C168-orto]
 <!-- hl-knowledge: introduces=[IT-LEX-C168-COSE168-03]; assesses=[] -->
 
 **la pianta** — "a plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pianta** ← Latin *planta*, "a sprout, a sole of the foot" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

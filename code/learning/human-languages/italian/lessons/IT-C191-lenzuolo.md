@@ -13,7 +13,8 @@ gloss: "a sheet"
 concept_tag: IT-COSE191-LENZUOLO
 prerequisites: [IT-C191-serratura, IT-C191-campanello]
 sounds: []
-roots: []
+roots: [linteum-latin]
+etymology_hook: "lenzuolo ← Latin linteolum 'a small linen cloth' — English linen is a distant cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C191-campanello]
 <!-- hl-knowledge: introduces=[IT-LEX-C191-COSE191-04]; assesses=[] -->
 
 **il lenzuolo** — "a sheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lenzuolo** ← Latin *linteolum*, "a small linen cloth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

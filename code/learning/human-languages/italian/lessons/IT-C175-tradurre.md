@@ -13,7 +13,8 @@ gloss: "to translate"
 concept_tag: IT-VERB-TRADURRE
 prerequisites: [IT-C174-ringraziare, IT-C174-invitare]
 sounds: []
-roots: []
+roots: [traducere-latin]
+etymology_hook: "tradurre ← Latin traducere 'to lead across' — carrying words across a language border"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C174-invitare]
 <!-- hl-knowledge: introduces=[IT-LEX-C175-VERBI175-01]; assesses=[] -->
 
 **tradurre** — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tradurre** ← Latin *traducere*, "to lead across" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

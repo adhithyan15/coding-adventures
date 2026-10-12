@@ -13,7 +13,8 @@ gloss: "mathematics"
 concept_tag: IT-LAV173-MATEMATICA
 prerequisites: [IT-C172-riunione, IT-C173-geografia]
 sounds: []
-roots: []
+roots: [mathematica-latin]
+etymology_hook: "matematica ← Latin mathematica, from Greek mathema 'learning' — English mathematics"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C173-geografia]
 <!-- hl-knowledge: introduces=[IT-LEX-C173-LAV173-02]; assesses=[] -->
 
 **la matematica** — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**matematica** ← Latin *mathematica*, "mathematics", from Greek *mathema*, "learning" — a learned borrowing. EtymDB 2.1 has no row for *matematica*; it derives Spanish and Portuguese *matemática* from *mathematica*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

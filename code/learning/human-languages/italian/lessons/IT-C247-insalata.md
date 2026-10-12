@@ -13,7 +13,8 @@ gloss: "salad"
 concept_tag: IT-COSE247-INSALATA
 prerequisites: [IT-C247-taglia, IT-C247-colore]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "insalata — 'salted (greens)', built on sale 'salt' — English salad is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C247-colore]
 <!-- hl-knowledge: introduces=[IT-LEX-C247-COSE247-04]; assesses=[] -->
 
 **l'insalata** — "salad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insalata** is "salted (greens)": the past participle of *insalare*, "to salt", built on *sale*, "salt". EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

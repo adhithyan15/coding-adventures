@@ -13,7 +13,8 @@ gloss: "together"
 concept_tag: IT-PERCHE244-INSIEME
 prerequisites: [IT-C244-circa, IT-C244-soltanto]
 sounds: []
-roots: []
+roots: [simul-latin]
+etymology_hook: "insieme ← Latin insimul 'at the same time' — French ensemble is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C244-soltanto]
 <!-- hl-knowledge: introduces=[IT-LEX-C244-PERCHE244-05]; assesses=[] -->
 
 **insieme** — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insieme** ← Latin *insimul*, "at the same time" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *insieme*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-COSE247-SPUNTINO
 prerequisites: [IT-C247-colore, IT-C247-insalata]
 sounds: []
 roots: []
+etymology_hook: "spuntino — from spuntare 'to take the edge off (hunger)'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C247-insalata]
 <!-- hl-knowledge: introduces=[IT-LEX-C247-COSE247-05]; assesses=[] -->
 
 **lo spuntino** — "a snack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spuntino** — built from *spuntare*, "to take the point off", with *-ino*: a bite that blunts your hunger. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

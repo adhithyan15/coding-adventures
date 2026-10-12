@@ -13,7 +13,8 @@ gloss: "to visit"
 concept_tag: IT-VERB-VISITARE
 prerequisites: [IT-C132-novanta, IT-C133-cominciare]
 sounds: []
-roots: []
+roots: [visitare-latin]
+etymology_hook: "visitare ← Latin visitare 'to go to see' — English visit is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C133-cominciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C133-VERBI133-02]; assesses=[] -->
 
 **visitare** — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**visitare** ← Latin *visitare*, "to go to see" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

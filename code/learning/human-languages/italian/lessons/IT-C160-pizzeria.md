@@ -14,6 +14,7 @@ concept_tag: IT-COSE160-PIZZERIA
 prerequisites: [IT-C160-conto, IT-C160-mancia]
 sounds: []
 roots: []
+etymology_hook: "pizzeria — pizza + -eria 'a place for'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C160-mancia]
 <!-- hl-knowledge: introduces=[IT-LEX-C160-COSE160-03]; assesses=[] -->
 
 **la pizzeria** — "a pizzeria".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pizzeria** — built from *pizza* with *-eria*, "a place for". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

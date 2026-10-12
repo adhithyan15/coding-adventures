@@ -13,7 +13,8 @@ gloss: "a cold"
 concept_tag: IT-SAL185-RAFFREDDORE
 prerequisites: [IT-C185-ferita, IT-C185-cicatrice]
 sounds: []
-roots: []
+roots: [frigidus-latin]
+etymology_hook: "raffreddore — built on freddo 'cold', from Latin frigidus: a chill"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C185-cicatrice]
 <!-- hl-knowledge: introduces=[IT-LEX-C185-SAL185-05]; assesses=[] -->
 
 **il raffreddore** — "a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raffreddore** — built on *freddo*, "cold", with *ra-* and *-ore*: a chill. *freddo* goes back to Latin *frigidus*, "cold". EtymDB 2.1 has no row for *raffreddore*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-COLPIRE
 prerequisites: [IT-C237-buttare, IT-C237-calcolare]
 sounds: []
 roots: []
+etymology_hook: "colpire — from colpo 'a blow' ← Vulgar Latin colpus — French coup is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C237-calcolare]
 <!-- hl-knowledge: introduces=[IT-LEX-C237-VERBI237-05]; assesses=[] -->
 
 **colpire** — "to hit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colpire** — built from *colpo*, "a blow", with *-ire*. *colpo* ← Vulgar Latin *colpus*, "a stroke". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

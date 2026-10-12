@@ -13,7 +13,8 @@ gloss: "a valley"
 concept_tag: IT-COSE221-VALLE
 prerequisites: [IT-C221-foresta, IT-C221-costa]
 sounds: []
-roots: []
+roots: [vallis-latin]
+etymology_hook: "valle ← Latin vallis, vallem 'a valley' — English valley is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C221-costa]
 <!-- hl-knowledge: introduces=[IT-LEX-C221-COSE221-05]; assesses=[] -->
 
 **la valle** — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valle** ← Latin *vallis*, "a valley" (*vallem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

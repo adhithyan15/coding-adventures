@@ -13,7 +13,8 @@ gloss: "however"
 concept_tag: IT-PERCHE155-PERO
 prerequisites: [IT-C155-quindi, IT-C155-dunque]
 sounds: []
-roots: []
+roots: [hoc-latin]
+etymology_hook: "però ← Latin per hoc 'for this reason' — 'therefore' became 'however'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C155-dunque]
 <!-- hl-knowledge: introduces=[IT-LEX-C155-PERCHE155-03]; assesses=[] -->
 
 **però** — "however".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**però** ← Latin *per hoc*, "through this, for this reason" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

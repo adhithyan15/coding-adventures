@@ -13,7 +13,8 @@ gloss: "to give up"
 concept_tag: IT-VERB-RINUNCIARE
 prerequisites: [IT-C242-rallentare, IT-C242-respirare]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "rinunciare ← Latin renuntiare 'to renounce' — English renounce is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C242-respirare]
 <!-- hl-knowledge: introduces=[IT-LEX-C242-VERBI242-03]; assesses=[] -->
 
 **rinunciare** — "to give up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rinunciare** ← Latin *renuntiare*, "to bring back word, to renounce" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

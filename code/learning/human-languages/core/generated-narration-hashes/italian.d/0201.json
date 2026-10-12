@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 201,
-  "sourceHash": "fnv1a64:a6dc12fc253bfbb1",
+  "sourceHash": "fnv1a64:8c1169be66664004",
   "lessonIds": [
     "IT-C201-elettricita",
     "IT-C201-legno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch201.txt",
   "json": "italian/narration/ch201.json",
-  "textHash": "fnv1a64:11064fc5db421bff",
-  "jsonHash": "fnv1a64:f64c55ba93199e2f",
+  "textHash": "fnv1a64:c791d7da892bcd30",
+  "jsonHash": "fnv1a64:5de658a02e4fcfd2",
   "findings": []
 }

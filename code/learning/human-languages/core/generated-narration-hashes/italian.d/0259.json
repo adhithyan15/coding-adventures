@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 259,
-  "sourceHash": "fnv1a64:cf003c3b8dcbae3c",
+  "sourceHash": "fnv1a64:bdf065cc4eeb8f54",
   "lessonIds": [
     "IT-C259-universita",
     "IT-C259-voto",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch259.txt",
   "json": "italian/narration/ch259.json",
-  "textHash": "fnv1a64:e5c0d5c933fb1e27",
-  "jsonHash": "fnv1a64:82d132bcb6354467",
+  "textHash": "fnv1a64:157ced3953a75496",
+  "jsonHash": "fnv1a64:76cebd944206e0f4",
   "findings": []
 }

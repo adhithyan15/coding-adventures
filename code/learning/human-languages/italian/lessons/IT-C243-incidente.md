@@ -13,7 +13,8 @@ gloss: "an accident"
 concept_tag: IT-SAL243-INCIDENTE
 prerequisites: [IT-C243-infermeria, IT-C243-emergenza]
 sounds: []
-roots: []
+roots: [incidere-latin]
+etymology_hook: "incidente ← Latin incidens 'falling upon', from incidere — English incident"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C243-emergenza]
 <!-- hl-knowledge: introduces=[IT-LEX-C243-SAL243-05]; assesses=[] -->
 
 **l'incidente** — "an accident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**incidente** ← Latin *incidens*, "falling upon" (Lewis & Short), from *incidere* — a learned borrowing; EtymDB 2.1 has no row for *incidente*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

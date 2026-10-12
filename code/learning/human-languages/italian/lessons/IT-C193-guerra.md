@@ -14,6 +14,7 @@ concept_tag: IT-COSE193-GUERRA
 prerequisites: [IT-C193-politica, IT-C193-economia]
 sounds: []
 roots: []
+etymology_hook: "guerra ← Frankish werra 'strife' — borrowed; English war is the same Germanic word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C193-economia]
 <!-- hl-knowledge: introduces=[IT-LEX-C193-COSE193-03]; assesses=[] -->
 
 **la guerra** — "war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guerra** ← Frankish *werra*, "strife, a quarrel" — borrowed, through Late Latin *werra*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

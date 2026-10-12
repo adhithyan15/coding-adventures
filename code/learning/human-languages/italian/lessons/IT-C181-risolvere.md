@@ -13,7 +13,8 @@ gloss: "to solve"
 concept_tag: IT-VERB-RISOLVERE
 prerequisites: [IT-C180-possedere, IT-C181-rischiare]
 sounds: []
-roots: []
+roots: [resolvere-latin]
+etymology_hook: "risolvere ← Latin resolvere 'to loosen, to undo' — English resolve is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C181-rischiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C181-VERBI181-02]; assesses=[] -->
 
 **risolvere** — "to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**risolvere** ← Latin *resolvere*, "to loosen, to undo" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

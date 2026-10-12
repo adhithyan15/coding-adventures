@@ -12,6 +12,9 @@ Before the new one: say the Italian for closed, then the Italian for quiet.
 You'll want to know: rumoroso.
 rumoroso — "noisy".
 
+The word, taken apart.
+rumoroso — built from rumore, "noise", with -oso, "full of". rumore from Latin rumor, "talk, rumour" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for quiet, then the Italian for noisy.
 
 You'll want to know: ultimo.
 ultimo — "last".
+
+The word, taken apart.
+ultimo from Latin ultimus, "last" — a learned borrowing, taken from written Latin. (EtymDB 2.1 records the Latin word.)
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for noisy, then the Italian for last.
 You'll want to know: famoso.
 famoso — "famous".
 
+The word, taken apart.
+famoso from Latin famosus, "much talked of", from fama, "talk, reputation" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for last, then the Italian for famous.
 You'll want to know: importante.
 importante — "important".
 
+The word, taken apart.
+importante — built from the verb importare, "to matter", with -ante, "-ing". The verb goes back to Latin importare, "to bring in" (Lewis & Short). EtymDB 2.1 has no row for its origin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for famous, then the Italian for important.
 
 You'll want to know: interessante.
 interessante — "interesting".
+
+The word, taken apart.
+interessante — built from the verb interessare, "to concern", with -ante, "-ing". The verb goes back to Latin interesse, "to be between", whose form interest meant "it concerns, it matters" (Lewis & Short). EtymDB 2.1 has no row for its origin.
 
 What you've built.
 One more word for this chapter.

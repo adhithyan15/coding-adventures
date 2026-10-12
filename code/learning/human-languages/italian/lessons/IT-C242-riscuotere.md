@@ -13,7 +13,8 @@ gloss: "to collect (money)"
 concept_tag: IT-VERB-RISCUOTERE
 prerequisites: [IT-C242-respirare, IT-C242-rinunciare]
 sounds: []
-roots: []
+roots: [quatere-latin]
+etymology_hook: "riscuotere — ri- + scuotere 'to shake', from Latin excutere: to shake out what is owed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C242-rinunciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C242-VERBI242-04]; assesses=[] -->
 
 **riscuotere** — "to collect (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riscuotere** is *ri-* plus *scuotere*, "to shake": to shake out (money owed). *scuotere* ← Vulgar Latin *excotere*, from Latin *excutere*, "to shake off". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

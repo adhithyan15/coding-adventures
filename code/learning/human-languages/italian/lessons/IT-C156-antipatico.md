@@ -14,6 +14,7 @@ concept_tag: IT-QUAL156-ANTIPATICO
 prerequisites: [IT-C156-cortese, IT-C156-maleducato]
 sounds: []
 roots: []
+etymology_hook: "antipatico — from antipatia ← Greek antipatheia 'feeling against' — English antipathy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C156-maleducato]
 <!-- hl-knowledge: introduces=[IT-LEX-C156-QUAL156-05]; assesses=[] -->
 
 **antipatico** — "unpleasant (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**antipatico** — built from *antipatia*, "dislike", with *-ico*. *antipatia* ← Greek *antipatheia*, "feeling against". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

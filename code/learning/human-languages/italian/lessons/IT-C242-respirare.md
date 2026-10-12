@@ -13,7 +13,8 @@ gloss: "to breathe"
 concept_tag: IT-VERB-RESPIRARE
 prerequisites: [IT-C241-esagerare, IT-C242-rallentare]
 sounds: []
-roots: []
+roots: [spirare-latin]
+etymology_hook: "respirare ← Latin respirare 'to breathe out' — English respiration"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C242-rallentare]
 <!-- hl-knowledge: introduces=[IT-LEX-C242-VERBI242-02]; assesses=[] -->
 
 **respirare** — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**respirare** ← Latin *respirare*, "to breathe out" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

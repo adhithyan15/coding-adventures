@@ -13,7 +13,8 @@ gloss: "comfortable"
 concept_tag: IT-QUAL156-COMODO
 prerequisites: [IT-C155-invece, IT-C155-comunque]
 sounds: []
-roots: []
+roots: [commodus-latin]
+etymology_hook: "comodo ← Latin commodus 'fit, suitable', a learned word — English commodious shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C155-comunque]
 <!-- hl-knowledge: introduces=[IT-LEX-C156-QUAL156-01]; assesses=[] -->
 
 **comodo** — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comodo** ← Latin *commodus*, "of due measure, fit, suitable" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *comodo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

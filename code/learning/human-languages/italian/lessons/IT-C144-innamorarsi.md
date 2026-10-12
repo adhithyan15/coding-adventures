@@ -13,7 +13,8 @@ gloss: "to fall in love"
 concept_tag: IT-VERB-INNAMORARSI
 prerequisites: [IT-C144-arrabbiarsi, IT-C144-preoccuparsi]
 sounds: []
-roots: []
+roots: [amor-latin]
+etymology_hook: "innamorarsi — in- + the word for 'love' ← Latin amor + -si: to fall into love — English enamoured"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C144-preoccuparsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C144-VERBI144-03]; assesses=[] -->
 
 **innamorarsi** — "to fall in love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**innamorarsi** — built from *in-* and the word for "love", with *-si*, "oneself": to fall into love. The love word ← Latin *amor*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a lawn, a meadow"
 concept_tag: IT-COSE200-PRATO
 prerequisites: [IT-C200-tronco, IT-C200-spina]
 sounds: []
-roots: []
+roots: [pratum-latin]
+etymology_hook: "prato ← Latin pratum 'a meadow' — Spanish prado is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C200-spina]
 <!-- hl-knowledge: introduces=[IT-LEX-C200-COSE200-04]; assesses=[] -->
 
 **il prato** — "a lawn, a meadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prato** ← Latin *pratum*, "a meadow" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

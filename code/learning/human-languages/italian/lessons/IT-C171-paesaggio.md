@@ -14,6 +14,7 @@ concept_tag: IT-COSE171-PAESAGGIO
 prerequisites: [IT-C171-partenza, IT-C171-destinazione]
 sounds: []
 roots: []
+etymology_hook: "paesaggio — paese 'country' + -aggio, on the model of French paysage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C171-destinazione]
 <!-- hl-knowledge: introduces=[IT-LEX-C171-COSE171-04]; assesses=[] -->
 
 **il paesaggio** — "a landscape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paesaggio** — built from *paese*, "country", with *-aggio*, on the model of French *paysage*. EtymDB 2.1 records *paesaggio* but not its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

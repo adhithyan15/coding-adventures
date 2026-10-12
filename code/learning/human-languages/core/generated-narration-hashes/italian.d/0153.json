@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 153,
-  "sourceHash": "fnv1a64:c7808aeb188815f7",
+  "sourceHash": "fnv1a64:d064517bd5b127ca",
   "lessonIds": [
     "IT-C153-raramente",
     "IT-C153-subito",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch153.txt",
   "json": "italian/narration/ch153.json",
-  "textHash": "fnv1a64:97261092c509037c",
-  "jsonHash": "fnv1a64:26a3d24433c3059a",
+  "textHash": "fnv1a64:c99d74e198b7f596",
+  "jsonHash": "fnv1a64:d74e01d9af108cf6",
   "findings": []
 }

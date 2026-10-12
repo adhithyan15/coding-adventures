@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 213,
-  "sourceHash": "fnv1a64:04ee56b94592528e",
+  "sourceHash": "fnv1a64:0e1f0b79db5ba9e6",
   "lessonIds": [
     "IT-C213-mescolare",
     "IT-C213-nascondersi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch213.txt",
   "json": "italian/narration/ch213.json",
-  "textHash": "fnv1a64:442758492f0ffcb3",
-  "jsonHash": "fnv1a64:1267f0ec9451cbfc",
+  "textHash": "fnv1a64:25cf80505d2fbdea",
+  "jsonHash": "fnv1a64:51d3cca63a375360",
   "findings": []
 }

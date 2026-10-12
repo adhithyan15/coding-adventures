@@ -13,7 +13,8 @@ gloss: "to refuse"
 concept_tag: IT-VERB-RIFIUTARE
 prerequisites: [IT-C146-offrire, IT-C147-ridurre]
 sounds: []
-roots: []
+roots: [refutare-latin]
+etymology_hook: "rifiutare ← Latin refutare 'to drive back' — English refute is the same Latin word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C147-ridurre]
 <!-- hl-knowledge: introduces=[IT-LEX-C147-VERBI147-02]; assesses=[] -->
 
 **rifiutare** — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rifiutare** ← Latin *refutare*, "to drive back, to rebut" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

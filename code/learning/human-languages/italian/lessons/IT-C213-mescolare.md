@@ -13,7 +13,8 @@ gloss: "to mix"
 concept_tag: IT-VERB-MESCOLARE
 prerequisites: [IT-C212-chiacchierare, IT-C212-collegare]
 sounds: []
-roots: []
+roots: [miscere-latin]
+etymology_hook: "mescolare ← Vulgar Latin misculare 'to mix' — English meddle and medley are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C212-collegare]
 <!-- hl-knowledge: introduces=[IT-LEX-C213-VERBI213-01]; assesses=[] -->
 
 **mescolare** — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mescolare** ← Vulgar Latin *misculare*, "to mix" — inherited. EtymDB 2.1 has no row for *mescolare*; it derives Old French *mesler* and the Italian *mischiare* from *misculare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

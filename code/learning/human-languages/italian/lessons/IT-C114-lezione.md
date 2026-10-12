@@ -13,7 +13,8 @@ gloss: "a lesson"
 concept_tag: IT-SCUOLA114-LEZIONE
 prerequisites: [IT-C113-cassa, IT-C113-classe, IT-C36-prima-lettura, IT-C36-parole]
 sounds: []
-roots: []
+roots: [lectio-latin]
+etymology_hook: "lezione ← Latin lectio 'a reading', from legere 'to read', a learned word — English lesson"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [IT-C113-classe]
 <!-- hl-knowledge: introduces=[IT-LEX-C114-SCUOLA114-01]; assesses=[] -->
 
 **la lezione** — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lezione** ← Latin *lectio*, "a reading", from *legere*, "to read" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

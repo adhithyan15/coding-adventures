@@ -13,7 +13,8 @@ gloss: "a debt"
 concept_tag: IT-COSE253-DEBITO
 prerequisites: [IT-C253-conto-corrente, IT-C253-prestito]
 sounds: []
-roots: []
+roots: [debere-latin]
+etymology_hook: "debito ← Latin debitum 'what is owed', from debere — English debt and debit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C253-prestito]
 <!-- hl-knowledge: introduces=[IT-LEX-C253-COSE253-03]; assesses=[] -->
 
 **il debito** — "a debt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**debito** ← Latin *debitum*, "what is owed" — a learned borrowing. EtymDB 2.1 has no row for *debito*; it derives Spanish and Portuguese *débito*, borrowed the same way, from *debitum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

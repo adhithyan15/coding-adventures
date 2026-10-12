@@ -13,7 +13,8 @@ gloss: "an answer"
 concept_tag: IT-SCUOLA115-RISPOSTA
 prerequisites: [IT-C114-gomma, IT-C115-compiti]
 sounds: []
-roots: []
+roots: [latin-respondere]
+etymology_hook: "risposta — from rispondere 'to answer' ← Latin respondere — English response shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C115-compiti]
 <!-- hl-knowledge: introduces=[IT-LEX-C115-SCUOLA115-02]; assesses=[] -->
 
 **la risposta** — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**risposta** is "a thing answered": a form of *rispondere*, "to answer", used as a noun. *rispondere* ← Latin *respondere*, "to reply". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

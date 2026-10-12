@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 227,
-  "sourceHash": "fnv1a64:1adfe1129677e91a",
+  "sourceHash": "fnv1a64:81b46572dd190217",
   "lessonIds": [
     "IT-C227-guida",
     "IT-C227-ingresso",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch227.txt",
   "json": "italian/narration/ch227.json",
-  "textHash": "fnv1a64:49f232ed7f2a9da1",
-  "jsonHash": "fnv1a64:bf36e157595b0c0d",
+  "textHash": "fnv1a64:0e014170fca27392",
+  "jsonHash": "fnv1a64:f9f20eab551df22b",
   "findings": []
 }

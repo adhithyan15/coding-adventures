@@ -12,6 +12,9 @@ Before the new one: say the Italian for a player, then the Italian for a coach.
 You'll want to know: il numero.
 il numero — "a number".
 
+The word, taken apart.
+numero from Latin numerus, "a number" — a learned borrowing; the same Latin word, passed down by speech, gave the old word novero. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a coach, then the Italian for a number.
 
 You'll want to know: il foglio.
 il foglio — "a sheet of paper".
+
+The word, taken apart.
+foglio from Latin folium, "a leaf" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a number, then the Italian for a sheet o
 You'll want to know: il giornale.
 il giornale — "a newspaper".
 
+The word, taken apart.
+giornale from Latin diurnalis, "daily", from diurnus, "of the day" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a sheet of paper, then the Italian for a
 You'll want to know: la rivista.
 la rivista — "a magazine".
 
+The word, taken apart.
+rivista is the past participle of rivedere, "to see again, to review", used as a noun: a review. EtymDB 2.1 has no row for its origin; the parts are plain to see.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a newspaper, then the Italian for a maga
 
 You'll want to know: il dizionario.
 il dizionario — "a dictionary".
+
+The word, taken apart.
+dizionario from Medieval Latin dictionarium, a book of words, built on Latin dictio, "a saying, a word" (Lewis & Short) — a learned borrowing. EtymDB 2.1 has no row for it.
 
 What you've built.
 One more word for this chapter.

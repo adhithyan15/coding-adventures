@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 208,
-  "sourceHash": "fnv1a64:f371fae2ddb3d1e0",
+  "sourceHash": "fnv1a64:aea570b37b84b699",
   "lessonIds": [
     "IT-C208-applaudire",
     "IT-C208-approfittare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch208.txt",
   "json": "italian/narration/ch208.json",
-  "textHash": "fnv1a64:439861aeb46536e7",
-  "jsonHash": "fnv1a64:381546cb0e222200",
+  "textHash": "fnv1a64:e7b3d364793f5d5d",
+  "jsonHash": "fnv1a64:737ff33454ded659",
   "findings": []
 }

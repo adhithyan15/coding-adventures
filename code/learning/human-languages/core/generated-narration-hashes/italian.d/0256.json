@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 256,
-  "sourceHash": "fnv1a64:a090f7c28adf24ab",
+  "sourceHash": "fnv1a64:dc7ade9ad04571ea",
   "lessonIds": [
     "IT-C256-fiamma",
     "IT-C256-fulmine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch256.txt",
   "json": "italian/narration/ch256.json",
-  "textHash": "fnv1a64:a409fc27b70ad4e5",
-  "jsonHash": "fnv1a64:8159cbe2690f0ef1",
+  "textHash": "fnv1a64:2746044a45dc035c",
+  "jsonHash": "fnv1a64:8a03ee5fc1ca8883",
   "findings": []
 }

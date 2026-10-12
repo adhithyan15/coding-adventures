@@ -13,7 +13,8 @@ gloss: "to observe"
 concept_tag: IT-VERB-OSSERVARE
 prerequisites: [IT-C179-evitare, IT-C179-fidarsi]
 sounds: []
-roots: []
+roots: [observare-latin]
+etymology_hook: "osservare ← Latin observare 'to watch' — English observe is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C179-fidarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C180-VERBI180-01]; assesses=[] -->
 
 **osservare** — "to observe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**osservare** ← Latin *observare*, "to watch, to heed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

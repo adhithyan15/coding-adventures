@@ -880,7 +880,8 @@ where
             stroke_width,
         );
         let (start_previous, end_previous) = if matches!(edge.curve,
-            Some(SwimlaneEdgeCurve::Basis | SwimlaneEdgeCurve::BumpX | SwimlaneEdgeCurve::BumpY)
+            Some(SwimlaneEdgeCurve::Basis | SwimlaneEdgeCurve::BumpX | SwimlaneEdgeCurve::BumpY
+                | SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY)
         ) {
             let dx = edge.to.x - edge.from.x;
             let dy = edge.to.y - edge.from.y;
@@ -893,6 +894,10 @@ where
                     let middle = (edge.from.y + edge.to.y) / 2.0;
                     (Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle })
                 }
+                Some(SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY) => (
+                    Point { x: edge.from.x + dx / 3.0, y: edge.from.y + dy / 3.0 },
+                    Point { x: edge.from.x + dx * 2.0 / 3.0, y: edge.from.y + dy * 2.0 / 3.0 },
+                ),
                 Some(SwimlaneEdgeCurve::Basis) if dx.abs() >= dy.abs() => (
                     Point { x: edge.from.x + dx * 0.4, y: edge.from.y },
                     Point { x: edge.to.x - dx * 0.4, y: edge.to.y },
@@ -1449,6 +1454,8 @@ where
                 SwimlaneEdgeCurve::Basis => "basis",
                 SwimlaneEdgeCurve::BumpX => "bumpX",
                 SwimlaneEdgeCurve::BumpY => "bumpY",
+                SwimlaneEdgeCurve::MonotoneX => "monotoneX",
+                SwimlaneEdgeCurve::MonotoneY => "monotoneY",
                 SwimlaneEdgeCurve::Step => "step",
                 SwimlaneEdgeCurve::StepBefore => "stepBefore",
                 SwimlaneEdgeCurve::StepAfter => "stepAfter",

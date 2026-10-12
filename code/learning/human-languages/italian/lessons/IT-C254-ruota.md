@@ -13,7 +13,8 @@ gloss: "a wheel"
 concept_tag: IT-COSE254-RUOTA
 prerequisites: [IT-C254-sedile, IT-C254-volante]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "ruota ← Latin rota 'a wheel' — English rotate and rotary share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C254-volante]
 <!-- hl-knowledge: introduces=[IT-LEX-C254-COSE254-03]; assesses=[] -->
 
 **la ruota** — "a wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ruota** ← Latin *rota*, "a wheel" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

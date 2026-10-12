@@ -13,7 +13,8 @@ gloss: "to try"
 concept_tag: IT-VERB-PROVARE
 prerequisites: [IT-C204-risparmiare, IT-C204-costare]
 sounds: []
-roots: []
+roots: [probare-latin]
+etymology_hook: "provare ← Latin probare 'to test, to prove' — English prove and probe share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C204-costare]
 <!-- hl-knowledge: introduces=[IT-LEX-C205-VERBI205-01]; assesses=[] -->
 
 **provare** — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**provare** ← Latin *probare*, "to test, to prove" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "exactly, really"
 concept_tag: IT-PERCHE244-PROPRIO
 prerequisites: [IT-C243-emergenza, IT-C243-incidente]
 sounds: []
-roots: []
+roots: [proprius-latin]
+etymology_hook: "proprio ← Latin proprius 'one's own', a learned word — English proper and property"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C243-incidente]
 <!-- hl-knowledge: introduces=[IT-LEX-C244-PERCHE244-01]; assesses=[] -->
 
 **proprio** — "exactly, really".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proprio** ← Latin *proprius*, "one's own" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

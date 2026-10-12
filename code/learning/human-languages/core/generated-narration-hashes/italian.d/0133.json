@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 133,
-  "sourceHash": "fnv1a64:dad981c71fdf8a87",
+  "sourceHash": "fnv1a64:3835325d5ff7012b",
   "lessonIds": [
     "IT-C133-cominciare",
     "IT-C133-visitare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch133.txt",
   "json": "italian/narration/ch133.json",
-  "textHash": "fnv1a64:3517a773cf0aebee",
-  "jsonHash": "fnv1a64:4676d65515f1d929",
+  "textHash": "fnv1a64:7f7bc50d22f67a85",
+  "jsonHash": "fnv1a64:a414faaf77294e89",
   "findings": []
 }

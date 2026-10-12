@@ -14,6 +14,7 @@ concept_tag: IT-LUOGO154-LAGGIU
 prerequisites: [IT-C154-da-nessuna-parte, IT-C154-altrove]
 sounds: []
 roots: []
+etymology_hook: "laggiù — là 'there' ← Latin illac + giù 'down' ← Old Italian giuso"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C154-altrove]
 <!-- hl-knowledge: introduces=[IT-LEX-C154-LUOGO154-05]; assesses=[] -->
 
 **laggiù** — "down there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laggiù** is *là*, "there" ← Latin *illac*, "that way", plus *giù*, "down", from Old Italian *giuso*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

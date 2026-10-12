@@ -13,7 +13,8 @@ gloss: "to interrupt"
 concept_tag: IT-VERB-INTERROMPERE
 prerequisites: [IT-C183-inseguire, IT-C183-insistere]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "interrompere — inter- 'between' + rompere 'to break' — English interrupt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C183-insistere]
 <!-- hl-knowledge: introduces=[IT-LEX-C183-VERBI183-03]; assesses=[] -->
 
 **interrompere** — "to interrupt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interrompere** is *inter-*, "between", plus *rompere*, "to break", after Latin *interrumpere*. *rompere* ← Latin *rumpere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

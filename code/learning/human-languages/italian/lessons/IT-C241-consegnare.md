@@ -13,7 +13,8 @@ gloss: "to deliver"
 concept_tag: IT-VERB-CONSEGNARE
 prerequisites: [IT-C240-superare, IT-C240-svolgere]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "consegnare ← Latin consignare 'to seal' — English consign"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C240-svolgere]
 <!-- hl-knowledge: introduces=[IT-LEX-C241-VERBI241-01]; assesses=[] -->
 
 **consegnare** — "to deliver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**consegnare** ← Latin *consignare*, "to seal, to hand over" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

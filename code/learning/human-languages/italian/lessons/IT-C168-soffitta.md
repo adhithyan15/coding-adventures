@@ -13,7 +13,8 @@ gloss: "an attic"
 concept_tag: IT-COSE168-SOFFITTA
 prerequisites: [IT-C167-multa, IT-C167-patente]
 sounds: []
-roots: []
+roots: [suffigere-latin]
+etymology_hook: "soffitta — from the word for 'ceiling', from Latin suffixus 'fastened underneath'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C167-patente]
 <!-- hl-knowledge: introduces=[IT-LEX-C168-COSE168-01]; assesses=[] -->
 
 **la soffitta** — "an attic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soffitta** — the room under the roof, built from the word for "ceiling". That word ← Vulgar Latin *suffictus* (EtymDB 2.1), for Latin *suffixus*, "fastened underneath" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

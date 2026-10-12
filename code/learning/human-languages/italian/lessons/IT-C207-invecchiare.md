@@ -13,7 +13,8 @@ gloss: "to grow old"
 concept_tag: IT-VERB-INVECCHIARE
 prerequisites: [IT-C206-misurare, IT-C207-crescere]
 sounds: []
-roots: []
+roots: [vetulus-latin]
+etymology_hook: "invecchiare — in- + vecchio 'old': to become old"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C207-crescere]
 <!-- hl-knowledge: introduces=[IT-LEX-C207-VERBI207-02]; assesses=[] -->
 
 **invecchiare** — "to grow old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**invecchiare** — built from *vecchio*, "old", with *in-*: to become old. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

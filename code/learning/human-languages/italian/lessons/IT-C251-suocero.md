@@ -13,7 +13,8 @@ gloss: "a father-in-law"
 concept_tag: IT-COSE251-SUOCERO
 prerequisites: [IT-C250-farmacista, IT-C250-macellaio]
 sounds: []
-roots: []
+roots: [socer-latin]
+etymology_hook: "suocero ← Latin socer, socerum 'a father-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C250-macellaio]
 <!-- hl-knowledge: introduces=[IT-LEX-C251-COSE251-01]; assesses=[] -->
 
 **il suocero** — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suocero** ← Latin *socer*, "a father-in-law" (*socerum*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

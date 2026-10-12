@@ -13,7 +13,8 @@ gloss: "hard"
 concept_tag: IT-QUALITA129-DURO
 prerequisites: [IT-C128-fresco, IT-C128-morbido]
 sounds: []
-roots: []
+roots: [durus-latin]
+etymology_hook: "duro ← Latin durus 'hard' — English durable and endure share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C128-morbido]
 <!-- hl-knowledge: introduces=[IT-LEX-C129-QUALITA129-01]; assesses=[] -->
 
 **duro** — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**duro** ← Latin *durus*, "hard" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

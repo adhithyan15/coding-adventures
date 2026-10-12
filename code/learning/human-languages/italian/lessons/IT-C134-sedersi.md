@@ -13,7 +13,8 @@ gloss: "to sit down"
 concept_tag: IT-VERB-SEDERSI
 prerequisites: [IT-C134-lavarsi, IT-C134-alzarsi]
 sounds: []
-roots: []
+roots: [sedere-latin]
+etymology_hook: "sedersi ← Latin sedere 'to sit' + -si — English sedentary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C134-alzarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C134-VERBI134-04]; assesses=[] -->
 
 **sedersi** — "to sit down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sedersi** ← Latin *sedere*, "to sit", with *-si*, "oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

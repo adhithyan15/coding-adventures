@@ -13,7 +13,8 @@ gloss: "to decide"
 concept_tag: IT-VERB-DECIDERE
 prerequisites: [IT-C175-dimenticare, IT-C175-ricordare]
 sounds: []
-roots: []
+roots: [decidere-latin]
+etymology_hook: "decidere ← Latin decidere 'to cut off, to settle' — English decide is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C175-ricordare]
 <!-- hl-knowledge: introduces=[IT-LEX-C175-VERBI175-04]; assesses=[] -->
 
 **decidere** — "to decide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**decidere** ← Latin *decidere*, "to cut off, to settle" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "calm"
 concept_tag: IT-QUAL218-CALMO
 prerequisites: [IT-C218-orgoglioso, IT-C218-nervoso]
 sounds: []
-roots: []
+roots: [cauma-latin]
+etymology_hook: "calmo — from calma 'calm' ← Late Latin cauma 'midday heat', the still hour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C218-nervoso]
 <!-- hl-knowledge: introduces=[IT-LEX-C218-QUAL218-04]; assesses=[] -->
 
 **calmo** — "calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calmo** is the adjective of *calma*, "calm", which ← Late Latin *cauma*, "the heat of the midday sun". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

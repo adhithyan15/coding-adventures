@@ -14,6 +14,7 @@ concept_tag: IT-LAV203-STAMPANTE
 prerequisites: [IT-C203-colloquio, IT-C203-carriera]
 sounds: []
 roots: []
+etymology_hook: "stampante — 'printing', from stampare ← Frankish stampon 'to stamp' — English stamp"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C203-carriera]
 <!-- hl-knowledge: introduces=[IT-LEX-C203-LAV203-04]; assesses=[] -->
 
 **la stampante** — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stampante** is the present participle of *stampare*, "to print", used as a noun: the thing that prints. *stampare* ← Frankish *stampon*, "to stamp". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

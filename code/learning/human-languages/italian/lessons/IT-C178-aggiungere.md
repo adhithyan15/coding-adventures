@@ -13,7 +13,8 @@ gloss: "to add"
 concept_tag: IT-VERB-AGGIUNGERE
 prerequisites: [IT-C178-piovere, IT-C178-accompagnare]
 sounds: []
-roots: []
+roots: [iungere-latin]
+etymology_hook: "aggiungere ← Latin adiungere 'to join to' — English adjoin is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C178-accompagnare]
 <!-- hl-knowledge: introduces=[IT-LEX-C178-VERBI178-03]; assesses=[] -->
 
 **aggiungere** — "to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aggiungere** ← Latin *adiungere*, "to join to" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

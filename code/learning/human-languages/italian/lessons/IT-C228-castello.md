@@ -13,7 +13,8 @@ gloss: "a castle"
 concept_tag: IT-COSE228-CASTELLO
 prerequisites: [IT-C227-posto, IT-C228-grattacielo]
 sounds: []
-roots: []
+roots: [castellum-latin]
+etymology_hook: "castello ← Latin castellum, a small castrum 'fort' — English castle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C228-grattacielo]
 <!-- hl-knowledge: introduces=[IT-LEX-C228-COSE228-02]; assesses=[] -->
 
 **il castello** — "a castle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**castello** ← Latin *castellum*, "a fort", from *castrum*, "a fort" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

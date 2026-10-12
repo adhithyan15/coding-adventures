@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 255,
-  "sourceHash": "fnv1a64:3343eff0018472d1",
+  "sourceHash": "fnv1a64:106776ef9119c959",
   "lessonIds": [
     "IT-C255-fontana",
     "IT-C255-cancello",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch255.txt",
   "json": "italian/narration/ch255.json",
-  "textHash": "fnv1a64:edc042f2f65496c6",
-  "jsonHash": "fnv1a64:0285200acfe1c18d",
+  "textHash": "fnv1a64:92dc5839899f8b2b",
+  "jsonHash": "fnv1a64:4f49cd152b9687fe",
   "findings": []
 }

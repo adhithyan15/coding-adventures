@@ -13,7 +13,8 @@ gloss: "so, therefore"
 concept_tag: IT-PERCHE155-QUINDI
 prerequisites: [IT-C154-altrove, IT-C154-laggiu]
 sounds: []
-roots: []
+roots: [inde-latin]
+etymology_hook: "quindi ← Latin eccum inde 'see, from there' — 'from there' became 'therefore'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C154-laggiu]
 <!-- hl-knowledge: introduces=[IT-LEX-C155-PERCHE155-01]; assesses=[] -->
 
 **quindi** — "so, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quindi** goes back to Latin *eccum inde*, "see, from there" — inherited. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

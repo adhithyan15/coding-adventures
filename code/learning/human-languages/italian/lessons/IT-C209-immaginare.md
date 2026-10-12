@@ -13,7 +13,8 @@ gloss: "to imagine"
 concept_tag: IT-VERB-IMMAGINARE
 prerequisites: [IT-C209-girare, IT-C209-godere]
 sounds: []
-roots: []
+roots: [imago-latin]
+etymology_hook: "immaginare ← Latin imaginari, from imago 'an image', a learned word — English imagine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C209-godere]
 <!-- hl-knowledge: introduces=[IT-LEX-C209-VERBI209-05]; assesses=[] -->
 
 **immaginare** — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**immaginare** ← Latin *imaginari*, "to picture to oneself" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

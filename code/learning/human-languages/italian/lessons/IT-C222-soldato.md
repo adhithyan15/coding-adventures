@@ -13,7 +13,8 @@ gloss: "a soldier"
 concept_tag: IT-COSE222-SOLDATO
 prerequisites: [IT-C221-costa, IT-C221-valle]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "soldato — 'one paid', from soldo 'pay', Latin solidus 'a gold coin' — English soldier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C221-valle]
 <!-- hl-knowledge: introduces=[IT-LEX-C222-COSE222-01]; assesses=[] -->
 
 **il soldato** — "a soldier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soldato** is "one paid": built from *soldo*, "pay", which ← Late Latin *soldum*, from Latin *solidus*, a gold coin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

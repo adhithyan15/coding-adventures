@@ -12,6 +12,9 @@ Before the new one: say the Italian for a hill, then the Italian for a rock.
 You'll want to know: l'onda.
 l'onda — "a wave".
 
+The word, taken apart.
+onda from Latin unda, "a wave" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a rock, then the Italian for a wave.
 
 You'll want to know: il deserto.
 il deserto — "a desert".
+
+The word, taken apart.
+deserto from Latin desertum, "a wasteland", from desertus, "abandoned" — inherited. EtymDB 2.1 has no row for deserto; it derives Old French desert and Friulian disiert from desertum.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a wave, then the Italian for a desert.
 You'll want to know: il vulcano.
 il vulcano — "a volcano".
 
+The word, taken apart.
+vulcano is named after Latin Vulcanus, Vulcan, the Roman god of fire. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a desert, then the Italian for a volcano
 You'll want to know: la grotta.
 la grotta — "a cave".
 
+The word, taken apart.
+grotta from Vulgar Latin grupta, from Latin crypta, "a vault", which Latin took from Greek krypte, "hidden" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a volcano, then the Italian for a cave.
 
 You'll want to know: la cascata.
 la cascata — "a waterfall".
+
+The word, taken apart.
+cascata — built from cascare, "to tumble", with -ata: a tumbling of water. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

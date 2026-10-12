@@ -13,7 +13,8 @@ gloss: "angry"
 concept_tag: IT-QUALITA129-ARRABBIATO
 prerequisites: [IT-C129-largo, IT-C129-stretto]
 sounds: []
-roots: []
+roots: [rabies-latin]
+etymology_hook: "arrabbiato — from arrabbiare, built on rabbia 'anger' ← Vulgar Latin rabia — English rabies"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C129-stretto]
 <!-- hl-knowledge: introduces=[IT-LEX-C129-QUALITA129-05]; assesses=[] -->
 
 **arrabbiato** — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrabbiato** is the past participle of *arrabbiare*, "to make angry", built on *rabbia*, "anger" ← Vulgar Latin *rabia*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

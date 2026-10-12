@@ -13,7 +13,8 @@ gloss: "to change"
 concept_tag: IT-VERB-CAMBIARE
 prerequisites: [IT-C233-stirare, IT-C233-costruire]
 sounds: []
-roots: []
+roots: [cambiare-latin]
+etymology_hook: "cambiare ← Late Latin cambiare 'to exchange' — English change is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C233-costruire]
 <!-- hl-knowledge: introduces=[IT-LEX-C234-VERBI234-01]; assesses=[] -->
 
 **cambiare** — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cambiare** ← Late Latin *cambiare*, "to exchange" — inherited. EtymDB 2.1 has no row for *cambiare*; it derives Venetian *canbiar* and Friulian *gambiâ* from *cambiare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

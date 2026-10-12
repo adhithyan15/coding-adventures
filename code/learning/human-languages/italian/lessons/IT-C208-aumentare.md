@@ -13,7 +13,8 @@ gloss: "to increase"
 concept_tag: IT-VERB-AUMENTARE
 prerequisites: [IT-C208-approfittare, IT-C208-attraversare]
 sounds: []
-roots: []
+roots: [augmentare-latin]
+etymology_hook: "aumentare ← Late Latin augmentare 'to increase' — English augment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C208-attraversare]
 <!-- hl-knowledge: introduces=[IT-LEX-C208-VERBI208-04]; assesses=[] -->
 
 **aumentare** — "to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aumentare** ← Late Latin *augmentare*, "to increase" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

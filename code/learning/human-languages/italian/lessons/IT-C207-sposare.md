@@ -13,7 +13,8 @@ gloss: "to marry"
 concept_tag: IT-VERB-SPOSARE
 prerequisites: [IT-C207-crescere, IT-C207-invecchiare]
 sounds: []
-roots: []
+roots: [spondere-latin]
+etymology_hook: "sposare ← Latin sponsare 'to betroth' — English spouse is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C207-invecchiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C207-VERBI207-03]; assesses=[] -->
 
 **sposare** — "to marry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sposare** ← Latin *sponsare*, "to betroth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

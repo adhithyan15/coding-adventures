@@ -14,6 +14,7 @@ concept_tag: IT-QUALITA130-LEGGERO
 prerequisites: [IT-C130-amaro, IT-C130-salato]
 sounds: []
 roots: []
+etymology_hook: "leggero ← Old French legier 'light', from Latin levis — borrowed; English levity shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C130-salato]
 <!-- hl-knowledge: introduces=[IT-LEX-C130-QUALITA130-03]; assesses=[] -->
 
 **leggero** — "light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leggero** ← Old French *legier*, "light" — borrowed; behind it is Vulgar Latin *leviarius*, from Latin *levis*, "light". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

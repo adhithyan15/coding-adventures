@@ -13,7 +13,8 @@ gloss: "a thorn"
 concept_tag: IT-COSE200-SPINA
 prerequisites: [IT-C200-ramo, IT-C200-tronco]
 sounds: []
-roots: []
+roots: [spina-latin]
+etymology_hook: "spina ← Latin spina 'a thorn, a spine' — English spine is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C200-tronco]
 <!-- hl-knowledge: introduces=[IT-LEX-C200-COSE200-03]; assesses=[] -->
 
 **la spina** — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spina** ← Latin *spina*, "a thorn, a spine" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

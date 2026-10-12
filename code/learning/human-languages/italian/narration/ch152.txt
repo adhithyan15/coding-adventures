@@ -12,6 +12,9 @@ Before the new one: say the Italian for a kidney, then the Italian for a bone.
 You'll want to know: la visita.
 la visita — "a medical visit".
 
+The word, taken apart.
+visita is the noun of visitare, "to visit", which from Latin visitare. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a bone, then the Italian for a medical v
 
 You'll want to know: la dieta.
 la dieta — "a diet".
+
+The word, taken apart.
+dieta from Latin diaeta, "a way of living", from Greek diaita, "a way of life" — a learned borrowing. EtymDB 2.1 has no row for dieta; it derives Spanish dieta from diaeta.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a medical visit, then the Italian for a 
 You'll want to know: il riposo.
 il riposo — "rest".
 
+The word, taken apart.
+riposo is the noun of the verb for "to rest", which goes back to Late Latin repausare, "to rest". EtymDB 2.1 has no row for the Italian verb; it derives Spanish reposar and French reposer from repausare.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a diet, then the Italian for rest.
 You'll want to know: il sonno.
 il sonno — "sleep".
 
+The word, taken apart.
+sonno from Latin somnus, "sleep" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for rest, then the Italian for sleep.
 
 You'll want to know: il sogno.
 il sogno — "a dream".
+
+The word, taken apart.
+sogno from Latin somnium, "a dream" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

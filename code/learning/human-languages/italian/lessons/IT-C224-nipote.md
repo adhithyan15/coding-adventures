@@ -13,7 +13,8 @@ gloss: "a grandson, a nephew"
 concept_tag: IT-COSE224-NIPOTE
 prerequisites: [IT-C224-neonato, IT-C224-gemello]
 sounds: []
-roots: []
+roots: [nepos-latin]
+etymology_hook: "nipote ← Latin nepos 'a grandson, a nephew' — English nepotism shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C224-gemello]
 <!-- hl-knowledge: introduces=[IT-LEX-C224-COSE224-05]; assesses=[] -->
 
 **il nipote** — "a grandson, a nephew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nipote** ← Latin *nepos*, "a grandson, a nephew" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

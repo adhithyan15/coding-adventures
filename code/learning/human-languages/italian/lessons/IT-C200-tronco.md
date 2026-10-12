@@ -13,7 +13,8 @@ gloss: "a trunk"
 concept_tag: IT-COSE200-TRONCO
 prerequisites: [IT-C199-palazzo, IT-C200-ramo]
 sounds: []
-roots: []
+roots: [truncus-latin]
+etymology_hook: "tronco ← Latin truncus 'a trunk' — English trunk is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C200-ramo]
 <!-- hl-knowledge: introduces=[IT-LEX-C200-COSE200-02]; assesses=[] -->
 
 **il tronco** — "a trunk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tronco** ← Latin *truncus*, "a trunk" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

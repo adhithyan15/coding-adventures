@@ -13,7 +13,8 @@ gloss: "a farmer"
 concept_tag: IT-LAVORO111-CONTADINO
 prerequisites: [IT-C111-poliziotto, IT-C111-commesso]
 sounds: []
-roots: []
+roots: [comitatus-latin]
+etymology_hook: "contadino — a man of the contado, the farmland round a city, from Latin comitatus 'a count's lands'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C111-commesso]
 <!-- hl-knowledge: introduces=[IT-LEX-C111-LAVORO111-05]; assesses=[] -->
 
 **il contadino** — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contadino** — built from *contado*, the farmland around a city, with *-ino*, "one who belongs to it". *contado* goes back to Latin *comitatus*, the lands of a count. EtymDB 2.1 records the Latin word but not the Italian steps.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

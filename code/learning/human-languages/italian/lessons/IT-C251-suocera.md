@@ -13,7 +13,8 @@ gloss: "a mother-in-law"
 concept_tag: IT-COSE251-SUOCERA
 prerequisites: [IT-C250-macellaio, IT-C251-suocero]
 sounds: []
-roots: []
+roots: [socrus-latin]
+etymology_hook: "suocera ← Late Latin socera, from socrus 'a mother-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C251-suocero]
 <!-- hl-knowledge: introduces=[IT-LEX-C251-COSE251-02]; assesses=[] -->
 
 **la suocera** — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suocera** ← Late Latin *socera*, for Latin *socrus*, "a mother-in-law" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

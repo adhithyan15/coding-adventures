@@ -13,7 +13,8 @@ gloss: "a till, a checkout"
 concept_tag: IT-LAVORO113-CASSA
 prerequisites: [IT-C113-cameriere, IT-C113-cliente]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "cassa ← Latin capsa 'a box' — English case and cash are cousins, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C113-cliente]
 <!-- hl-knowledge: introduces=[IT-LEX-C113-LAVORO113-04]; assesses=[] -->
 
 **la cassa** — "a till, a checkout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cassa** ← Latin *capsa*, "a box", from *capere*, "to take, to hold" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

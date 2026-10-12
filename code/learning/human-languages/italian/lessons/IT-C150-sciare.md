@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SCIARE
 prerequisites: [IT-C150-scambiare, IT-C150-scaricare]
 sounds: []
 roots: []
+etymology_hook: "sciare — the word for 'ski', from Norwegian ski, + the verb ending -are"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C150-scaricare]
 <!-- hl-knowledge: introduces=[IT-LEX-C150-VERBI150-05]; assesses=[] -->
 
 **sciare** — "to ski".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sciare** — built from the word for "a ski", with the verb ending *-are*. Italian took the ski word from Norwegian *ski*. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

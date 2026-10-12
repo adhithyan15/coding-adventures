@@ -13,7 +13,8 @@ gloss: "the day before yesterday"
 concept_tag: IT-PAST137-LALTRO-IERI
 prerequisites: [IT-C137-scorso, IT-C137-gia]
 sounds: []
-roots: []
+roots: [heri]
+etymology_hook: "l'altro ieri — 'the other yesterday': altro ← Latin alter, ieri ← Latin heri"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C137-gia]
 <!-- hl-knowledge: introduces=[IT-LEX-C137-PAST137-03]; assesses=[] -->
 
 **l'altro ieri** — "the day before yesterday". One day further back than **ieri**: **L'altro ieri ho scritto una lettera.** — "The day before yesterday I wrote a letter."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**l'altro ieri** is "the other yesterday": *altro*, "other" ← Latin *alter*, and *ieri*, "yesterday" ← Latin *heri*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

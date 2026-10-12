@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 143,
-  "sourceHash": "fnv1a64:0e4820c765eb981d",
+  "sourceHash": "fnv1a64:84feb93c04e26e42",
   "lessonIds": [
     "IT-C143-telefonare",
     "IT-C143-discutere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "italian/narration/ch143.txt",
   "json": "italian/narration/ch143.json",
-  "textHash": "fnv1a64:4d1a36b3976517c0",
-  "jsonHash": "fnv1a64:9ec6abe6ba0fdb5e",
+  "textHash": "fnv1a64:a46af7b172d412ac",
+  "jsonHash": "fnv1a64:614a6f3aa36f4b5d",
   "findings": []
 }

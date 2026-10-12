@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 177,
-  "sourceHash": "fnv1a64:c5f787525da6c709",
+  "sourceHash": "fnv1a64:699d3d724cdd9ae9",
   "lessonIds": [
     "IT-C177-promettere",
     "IT-C177-permettere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch177.txt",
   "json": "italian/narration/ch177.json",
-  "textHash": "fnv1a64:62afafd2341fdb2e",
-  "jsonHash": "fnv1a64:2fd64d75bedea67d",
+  "textHash": "fnv1a64:950dbd04fbc267a7",
+  "jsonHash": "fnv1a64:fc903db0fbd6907c",
   "findings": []
 }

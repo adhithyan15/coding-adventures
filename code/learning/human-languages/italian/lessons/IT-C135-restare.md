@@ -13,7 +13,8 @@ gloss: "to stay"
 concept_tag: IT-VERB-RESTARE
 prerequisites: [IT-C135-salire, IT-C135-scendere]
 sounds: []
-roots: []
+roots: [restare-latin]
+etymology_hook: "restare ← Latin restare 'to stay back', re- + stare 'to stand' — English rest (remainder)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C135-scendere]
 <!-- hl-knowledge: introduces=[IT-LEX-C135-VERBI135-03]; assesses=[] -->
 
 **restare** — "to stay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**restare** ← Latin *restare*, "to stay back, to be left", from *re-*, "back", and *stare*, "to stand" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

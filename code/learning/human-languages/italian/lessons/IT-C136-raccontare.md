@@ -13,7 +13,8 @@ gloss: "to tell (a story)"
 concept_tag: IT-VERB-RACCONTARE
 prerequisites: [IT-C135-affittare, IT-C135-riparare]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "raccontare — to count out, to recount; from Latin computare 'to reckon' — English recount"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C135-riparare]
 <!-- hl-knowledge: introduces=[IT-LEX-C136-VERBI136-01]; assesses=[] -->
 
 **raccontare** — "to tell (a story)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raccontare** — built from the verb for "to count" with a prefix: to count out, to recount. That verb ← Latin *computare*, "to reckon". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

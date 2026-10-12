@@ -13,7 +13,8 @@ gloss: "to receive"
 concept_tag: IT-VERB-RICEVERE
 prerequisites: [IT-C235-compilare, IT-C235-spedire]
 sounds: []
-roots: []
+roots: [recipere-latin]
+etymology_hook: "ricevere ← Latin recipere 'to receive' — English receive is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C235-spedire]
 <!-- hl-knowledge: introduces=[IT-LEX-C235-VERBI235-05]; assesses=[] -->
 
 **ricevere** — "to receive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ricevere** ← Latin *recipere*, "to receive" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

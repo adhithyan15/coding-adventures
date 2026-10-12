@@ -13,7 +13,8 @@ gloss: "music"
 concept_tag: IT-TEMPOLIBERO116-MUSICA
 prerequisites: [IT-C115-frase, IT-C115-pagina]
 sounds: []
-roots: []
+roots: [musica-latin]
+etymology_hook: "musica ← Latin musica, from Greek mousike 'the art of the Muses' — learned"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C115-pagina]
 <!-- hl-knowledge: introduces=[IT-LEX-C116-TEMPOLIBERO116-01]; assesses=[] -->
 
 **la musica** — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**musica** ← Latin *musica*, "music", from Greek *mousike*, "the art of the Muses" — a learned borrowing. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

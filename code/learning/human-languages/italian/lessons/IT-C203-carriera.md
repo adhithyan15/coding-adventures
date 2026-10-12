@@ -14,6 +14,7 @@ concept_tag: IT-LAV203-CARRIERA
 prerequisites: [IT-C203-contratto, IT-C203-colloquio]
 sounds: []
 roots: []
+etymology_hook: "carriera ← Old Provençal carreira 'a road, a racecourse' — borrowed; English career"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C203-colloquio]
 <!-- hl-knowledge: introduces=[IT-LEX-C203-LAV203-03]; assesses=[] -->
 
 **la carriera** — "a career".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carriera** ← Old Provençal *carreira*, "a road, a racecourse" — borrowed; behind it is Late Latin *carraria*, "a road for carts". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

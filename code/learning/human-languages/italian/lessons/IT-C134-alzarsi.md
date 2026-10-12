@@ -13,7 +13,8 @@ gloss: "to get up"
 concept_tag: IT-VERB-ALZARSI
 prerequisites: [IT-C134-vestirsi, IT-C134-lavarsi]
 sounds: []
-roots: []
+roots: [altus-latin]
+etymology_hook: "alzarsi ← Vulgar Latin altiare 'to raise', from altus 'high' — raise oneself"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C134-lavarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C134-VERBI134-03]; assesses=[] -->
 
 **alzarsi** — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alzarsi** ← Vulgar Latin *altiare*, "to raise", with *-si*, "oneself" — inherited. (EtymDB 2.1) The verb is built on Latin *altus*, "high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

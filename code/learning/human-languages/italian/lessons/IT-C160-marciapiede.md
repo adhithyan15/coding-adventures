@@ -14,6 +14,7 @@ concept_tag: IT-COSE160-MARCIAPIEDE
 prerequisites: [IT-C160-pizzeria, IT-C160-villaggio]
 sounds: []
 roots: []
+etymology_hook: "marciapiede ← French marchepied 'a footboard', reshaped to look like marcia + piede"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C160-villaggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C160-COSE160-05]; assesses=[] -->
 
 **il marciapiede** — "a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marciapiede** is adapted from French *marchepied*, "a step, a footboard" — borrowed, and reshaped to look like *marcia*, "walking", plus *piede*, "foot". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

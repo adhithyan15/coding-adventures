@@ -13,7 +13,8 @@ gloss: "to come near"
 concept_tag: IT-VERB-AVVICINARSI
 prerequisites: [IT-C212-affrettarsi, IT-C212-allontanarsi]
 sounds: []
-roots: []
+roots: [vicinus-latin]
+etymology_hook: "avvicinarsi — a- + vicino 'near' + -si: to bring oneself near"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C212-allontanarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C212-VERBI212-03]; assesses=[] -->
 
 **avvicinarsi** — "to come near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avvicinarsi** — built from *vicino*, "near", with *a-* and *-si*: to bring oneself near. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

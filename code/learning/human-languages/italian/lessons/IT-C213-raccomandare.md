@@ -13,7 +13,8 @@ gloss: "to recommend"
 concept_tag: IT-VERB-RACCOMANDARE
 prerequisites: [IT-C213-obbedire, IT-C213-ospitare]
 sounds: []
-roots: []
+roots: [commandare-latin]
+etymology_hook: "raccomandare — ri- + comandare 'to entrust' ← Vulgar Latin commandare — English recommend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C213-ospitare]
 <!-- hl-knowledge: introduces=[IT-LEX-C213-VERBI213-05]; assesses=[] -->
 
 **raccomandare** — "to recommend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raccomandare** — built from *ri-* and *comandare*, "to command, to entrust", which ← Vulgar Latin *commandare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

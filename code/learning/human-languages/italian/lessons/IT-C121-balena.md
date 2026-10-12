@@ -13,7 +13,8 @@ gloss: "a whale"
 concept_tag: IT-ANIMALI121-BALENA
 prerequisites: [IT-C121-scoiattolo, IT-C121-gufo]
 sounds: []
-roots: []
+roots: [balaena-latin]
+etymology_hook: "balena ← Latin balaena, from Greek phalaina 'whale' — English baleen shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C121-gufo]
 <!-- hl-knowledge: introduces=[IT-LEX-C121-ANIMALI121-04]; assesses=[] -->
 
 **la balena** — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**balena** goes back, through Latin *balaena*, to Greek *phalaina*, "whale" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to warm up"
 concept_tag: IT-VERB-SCALDARE
 prerequisites: [IT-C176-odorare, IT-C176-assaggiare]
 sounds: []
-roots: []
+roots: [caldus-latin]
+etymology_hook: "scaldare ← Late Latin excaldare — English scald is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C176-assaggiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C176-VERBI176-05]; assesses=[] -->
 
 **scaldare** — "to warm up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scaldare** ← Late Latin *excaldare*, "to bathe in warm water" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

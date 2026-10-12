@@ -12,6 +12,9 @@ Before the new one: say the Italian for peace, then the Italian for an army.
 You'll want to know: il cantante.
 il cantante — "a singer".
 
+The word, taken apart.
+cantante is the present participle of cantare, "to sing", used as a noun: one who sings. EtymDB 2.1 has no row for it; the parts are plain to see.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for an army, then the Italian for a singer.
 
 You'll want to know: lo spettacolo.
 lo spettacolo — "a performance, a show".
+
+The word, taken apart.
+spettacolo from Latin spectaculum, "a show, a sight" — a learned borrowing. EtymDB 2.1 has no row for spettacolo; it derives French spectacle and Portuguese espetáculo from spectaculum.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a singer, then the Italian for a perform
 You'll want to know: l'attore.
 l'attore — "an actor".
 
+The word, taken apart.
+attore from Latin actor, "a doer, a performer" (actorem) — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a performance, then the Italian for an a
 You'll want to know: l'attrice.
 l'attrice — "an actress".
 
+The word, taken apart.
+attrice from Latin actrix, "a woman who acts" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for an actor, then the Italian for an actres
 
 You'll want to know: il romanzo.
 il romanzo — "a novel".
+
+The word, taken apart.
+romanzo from Old French romanz — borrowed; behind it is Vulgar Latin romanice, "in the Roman way". (EtymDB 2.1) A romanz was a tale told in the everyday tongue, not in learned Latin.
 
 What you've built.
 One more word for this chapter.

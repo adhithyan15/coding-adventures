@@ -13,7 +13,8 @@ gloss: "to move house"
 concept_tag: IT-VERB-TRASLOCARE
 prerequisites: [IT-C207-sposare, IT-C207-divorziare]
 sounds: []
-roots: []
+roots: [locare-latin]
+etymology_hook: "traslocare — tras- 'across' + locare 'to place': to place elsewhere — English locate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C207-divorziare]
 <!-- hl-knowledge: introduces=[IT-LEX-C207-VERBI207-05]; assesses=[] -->
 
 **traslocare** — "to move house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**traslocare** is *tras-*, "across", plus *locare*, "to place": to place somewhere else. *locare* ← Latin *locare*, "to place" (Lewis & Short). EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

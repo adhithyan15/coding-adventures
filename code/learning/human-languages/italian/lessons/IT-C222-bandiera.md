@@ -14,6 +14,7 @@ concept_tag: IT-COSE222-BANDIERA
 prerequisites: [IT-C221-valle, IT-C222-soldato]
 sounds: []
 roots: []
+etymology_hook: "bandiera — probably via Old Provençal bandiera, from banda 'an ensign', Gothic bandwa — English banner"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C222-soldato]
 <!-- hl-knowledge: introduces=[IT-LEX-C222-COSE222-02]; assesses=[] -->
 
 **la bandiera** — "a flag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bandiera** probably came through Old Provençal *bandiera* — borrowed; it is built on *banda*, "an ensign", from Gothic *bandwa*, "a sign". EtymDB 2.1 builds it on *banda* and lists Spanish *bandera* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

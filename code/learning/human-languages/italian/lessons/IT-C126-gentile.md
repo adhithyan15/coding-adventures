@@ -13,7 +13,8 @@ gloss: "kind"
 concept_tag: IT-QUALITA126-GENTILE
 prerequisites: [IT-C126-simpatico, IT-C126-cattivo]
 sounds: []
-roots: []
+roots: [gentilis-latin]
+etymology_hook: "gentile ← Latin gentilis 'of the same family', from gens 'clan' — English gentle and genteel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C126-cattivo]
 <!-- hl-knowledge: introduces=[IT-LEX-C126-QUALITA126-05]; assesses=[] -->
 
 **gentile** — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gentile** ← Latin *gentilis*, "of the same family", from *gens*, "a clan" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "ripe"
 concept_tag: IT-QUAL158-MATURO
 prerequisites: [IT-C157-impossibile, IT-C157-necessario]
 sounds: []
-roots: []
+roots: [maturus-latin]
+etymology_hook: "maturo ← Latin maturus 'ripe' — English mature is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C157-necessario]
 <!-- hl-knowledge: introduces=[IT-LEX-C158-QUAL158-01]; assesses=[] -->
 
 **maturo** — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maturo** ← Latin *maturus*, "ripe, timely" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

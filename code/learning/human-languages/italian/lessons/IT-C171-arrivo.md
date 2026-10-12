@@ -13,7 +13,8 @@ gloss: "arrival"
 concept_tag: IT-COSE171-ARRIVO
 prerequisites: [IT-C170-tamburo, IT-C170-pallone]
 sounds: []
-roots: []
+roots: [ripa-latin]
+etymology_hook: "arrivo — from arrivare ← Vulgar Latin arripare, ad + ripa 'shore': to come ashore"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C170-pallone]
 <!-- hl-knowledge: introduces=[IT-LEX-C171-COSE171-01]; assesses=[] -->
 
 **l'arrivo** — "arrival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrivo** is the noun of *arrivare*, "to arrive", which ← Vulgar Latin *arripare*, from *ad*, "to", and *ripa*, "a riverbank": to come to shore. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

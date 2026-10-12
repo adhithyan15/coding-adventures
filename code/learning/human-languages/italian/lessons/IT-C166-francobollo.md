@@ -14,6 +14,7 @@ concept_tag: IT-COSE166-FRANCOBOLLO
 prerequisites: [IT-C166-firma, IT-C166-busta]
 sounds: []
 roots: []
+etymology_hook: "francobollo — franco 'free' + bollo 'a seal': the stamp that pays the post"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C166-busta]
 <!-- hl-knowledge: introduces=[IT-LEX-C166-COSE166-03]; assesses=[] -->
 
 **il francobollo** — "a stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**francobollo** is *franco*, "free (of charge)", plus *bollo*, "a stamp, a seal": the stamp that makes a letter post-free. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

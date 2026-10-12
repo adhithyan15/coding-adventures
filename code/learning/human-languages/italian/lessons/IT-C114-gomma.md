@@ -13,7 +13,8 @@ gloss: "a rubber, an eraser"
 concept_tag: IT-SCUOLA114-GOMMA
 prerequisites: [IT-C114-parola, IT-C114-lavagna]
 sounds: []
-roots: []
+roots: [gummi-latin]
+etymology_hook: "gomma ← Late Latin gumma, Latin gummi 'gum', from Greek kommi — English gum is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C114-lavagna]
 <!-- hl-knowledge: introduces=[IT-LEX-C114-SCUOLA114-05]; assesses=[] -->
 
 **la gomma** — "a rubber, an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gomma** ← Late Latin *gumma*, from Latin *gummi*, "gum" — inherited; Latin took it from Greek *kommi*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

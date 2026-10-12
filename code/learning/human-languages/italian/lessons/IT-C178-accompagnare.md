@@ -13,7 +13,8 @@ gloss: "to go with, to accompany"
 concept_tag: IT-VERB-ACCOMPAGNARE
 prerequisites: [IT-C177-salvare, IT-C178-piovere]
 sounds: []
-roots: []
+roots: [companio-latin]
+etymology_hook: "accompagnare — from compagno ← Late Latin companio 'one who shares bread' — English accompany"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C178-piovere]
 <!-- hl-knowledge: introduces=[IT-LEX-C178-VERBI178-02]; assesses=[] -->
 
 **accompagnare** — "to go with, to accompany".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accompagnare** — built from *compagno*, "a companion", with *a-*. *compagno* ← Late Latin *companio*, "one who shares bread". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

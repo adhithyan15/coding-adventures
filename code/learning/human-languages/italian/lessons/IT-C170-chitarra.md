@@ -14,6 +14,7 @@ concept_tag: IT-COSE170-CHITARRA
 prerequisites: [IT-C169-riciclaggio, IT-C169-energia]
 sounds: []
 roots: []
+etymology_hook: "chitarra ← Arabic qitara, from Greek kithara 'a lyre' — borrowed; English guitar is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C169-energia]
 <!-- hl-knowledge: introduces=[IT-LEX-C170-COSE170-01]; assesses=[] -->
 
 **la chitarra** — "a guitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chitarra** ← Arabic *qitara*, "a guitar" — borrowed; the Arabic word came from Greek *kithara*, "a lyre". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
