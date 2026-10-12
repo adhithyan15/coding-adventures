@@ -33,6 +33,72 @@ history, and local test runs. This file is the result: one ordered list.
 - *Kind:* bug (wrong behaviour), feature, docs, decision or CI.
 - *Size:* S is under a day, M a few days, L a week or more.
 
+## Why products stalled (diagnosed 2026-10-12)
+
+Investigated with git history (6,465 commits on main since 2026-08-03),
+every PR closed since then, every open issue, and CI runs. In short, nothing
+was blocked in a way anyone could see: the work was driven by automated
+loops, and the stalled products had none.
+
+1. **No loop drives them, and their queues ran dry.**
+   - Work in this repo comes from long-running agent loops:
+     - `codex/*` branches: 56% of PRs;
+     - `claude/*` sessions: 12% of PRs.
+   - Since 2026-09-21 the loops have been mermaid (225 PRs), algol (139),
+     human languages (92 codex PRs plus two Claude sessions with 380
+     commits), lang (88) and parity (72). TaskApp also has a loop (40 PRs),
+     and it is the one Mosaic app that keeps moving.
+   - SpiceWorkbench, MosaicBook, Journal and Engram have no loop. VisiCalc's
+     loop is narrow (9 PRs, XAML performance only).
+   - Where a plan existed, it ran out:
+     - SpiceWorkbench's `spice-full-implementation-plan.md` marks all 24
+       items done;
+     - Venture's BR01 backlog is 82 of 82 done;
+     - both stopped on 2026-09-20.
+   - What remains is large or vague (Venture's BR02 phases; BR03 steps 5–6;
+     SpiceWorkbench's "Suggested PR Queue" has three lines), so an agent
+     looking for the next small item found none. None of the 322 open
+     issues is assigned.
+   - **Fix:** give each product an ordered queue of small, concrete items
+     (this file's rows), and a loop or a fixed share of loop time that works
+     it from the top.
+2. **Breakage outside a product's own CI is invisible.**
+   - Main CI has not passed since July (X-7), so it gives no signal.
+   - The MosaicBook gate compiles stories only for browser backends, so
+     SpiceWorkbench's failures on four native backends (SW-2) are recorded
+     nowhere.
+   - Shared emitter changes break Venture silently:
+     - #16178 sat red for 8 days, then failed again on a Flutter host
+       method removed by #16322. Its fix says "main stayed green only
+       because nothing rebuilt Venture there".
+     - #16054 and #16387 are earlier cases.
+   - So each product PR first pays for other people's regressions.
+   - **Fix:**
+     - triage X-7;
+     - add native backends to the MosaicBook gate, or record native
+       degradations;
+     - rebuild each product when the emitters or host templates change
+       (the build tool's affected set), or nightly.
+3. **Owner decisions sat unmade.** Under the specs-first rule, no code
+   starts until they are made:
+   - SwiftUI `Path`, #13206: 46 days with no comment;
+   - UI88 rich card content, blocking EN-2, EN-3 and JO-3;
+   - publishing (PR-4), signing (TR-6) and the Flutter topbar (TR-5);
+   - the UI90 decisions, which were settled on 2026-10-12.
+   - **Fix:** list them in [Decisions needed](#decisions-needed) with a
+     recommendation each, and raise them at the start of a session.
+4. **Releases never happen.**
+   - Venture's release workflow has not run since 2026-08-31 (VE-2).
+   - Journal's has never run, and there is no `journal-v*` tag (JO-1).
+   - Finished work therefore never reaches users, and nothing pulls a
+     product forward.
+   - **Fix:** one owner per release. For Venture and Journal, start with a
+     prerelease tag that exercises the pipeline.
+5. **Fixes ship in large batches.** The 2026-10-07 triage fixes went out as
+   one 27-commit PR (#16855) that took 4.5 days to merge, and fixed issues
+   stayed open meanwhile. **Fix:** one small PR per product, and close the
+   issue in the same step.
+
 ## Order of work
 
 1. **Security and visible breakage.**
@@ -76,6 +142,7 @@ history, and local test runs. This file is the result: one ordered list.
 | X-3 | Native backends drop authored style properties silently or with a warning only | **partly**. Every backend reports drops (#15532, `mosaic-package-artifact-builder/src/lib.rs:2757-2817`), but the gate fails only on capability degradations. TaskApp's ratchet (`code/scripts/taskapp_native_control_contract.py:22`) allows 741 drops: XAML 77, SwiftUI 142, Compose 89, Qt 193, Flutter 240. Tracked by #12022 | bug | L |
 | X-4 | Style values that start with `{` passed into XAML verbatim, as markup extensions | **decided and fixed** in #16855. Decision (2026-10-08): mosstyle must express every styling decision with no platform-specific values or abstraction leaks. The compiler refuses such a value (`PlatformValue`, UI15 §8 rule 8), and the XAML emitter drops it. **Follow-up:** an audit of every `.msl` for other platform leaks, and for the decisions mosstyle cannot yet express neutrally (X-6) | bug | S |
 | X-6 | **mosstyle is not yet platform-neutral or expressive enough.** Principle (decided 2026-10-08): MSL must express every styling decision with no platform-specific values or abstraction leaks. An audit of all 186 `.msl` files on 2026-10-08 found it is CSS in practice:<br>• 82 distinct properties are in use against about 25 in UI15 §2. `ErrorKind::UnknownProperty` exists but is never raised, so the web backends accept any CSS.<br>• Colours: 3,258 hex literals against 98 tokens.<br>• Web-only constructs: `box-shadow` alongside `elevation` (24 uses), `rgba()` (44, which only XAML converts), CSS font stacks, `position: absolute/sticky` with `top/left/z-index`, `vh` units, `display: flex` workarounds, `cursor`, `color-scheme`, `currentColor`, `transform: rotate()`, shorthand `border`/`outline`, and per-backend token overrides.<br>• Emitter pass-through rules: XAML's "uppercase means native" values, its verbatim fallbacks for fonts and enums, and Qt's raw font family; Flutter reads 8-digit hex as AARRGGBB while CSS reads RRGGBBAA; Compose and SwiftUI disagree on named colours.<br>**Gaps MSL cannot yet express neutrally:**<br>(1) the system palette (accent, surface, text, focus);<br>(2) dark mode in one file (95 `.light` + 70 `.dark` near-duplicates);<br>(3) elevation as the only shadow;<br>(4) type roles, tracking, text case;<br>(5) truncation and max lines;<br>(6) full corners;<br>(7) per-edge borders and stroke style;<br>(8) the focus ring;<br>(9) main- and cross-axis alignment;<br>(10) environment-conditioned blocks and motion with reduced motion.<br>**Next:** UI90 (`UI90-mosstyle-platform-neutral.md`, draft, 2026-10-09) specifies a closed, typed, platform-neutral mosstyle — a property and value table enforced by the compiler; semantic and mode-aware tokens; one colour-with-alpha syntax — with a migration path for existing `.msl` files. Brand vs native (#12029) was decided on 2026-10-11 (UI90 §5.1): use native controls, let authors brand them token by token, and let unstyled properties follow the platform. Decisions 2–4 were settled on 2026-10-12 by copying existing systems: Material 3's 15 type roles with explicit sizes still allowed; mode-aware tokens with optional high contrast; custom fonts shipped with the app. UI90 is ready for implementation in its §6 order. Closing this removes most of X-3's 741 baselined native drops | design | L |
+| X-7 | **`ci.yml` on main has not passed since 2026-07-21** | **real** (2026-10-12). X-1 made main runs finish, not pass. Each of the three runs that finished after #16855 merged failed 14 or 15 of its 15 shards at "Full build on main merge". Each run takes 4–5 hours and covers 10 or more merges. Run 38189708298's shard 6 failed in the Mosaic step "Build Trestle, Journal and Engram for Android with Flutter", with a QML Repeater binding-loop annotation. Because PRs merge on their own gate, a red main blocks nobody and is invisible. Triage the shard failures, then make a red main page someone or block merges | CI | L |
 | X-5 | Dependency style axes are not scoped to the call site | **real**. Only XAML guards against it (`xaml/pipeline.rs:1823-1834`, #14482). #14481 | bug | L |
 
 ## MosaicBook (`code/programs/go/mosaicbook-server`)
@@ -114,7 +181,7 @@ emits all nine backend projects. The browser roadmap is BR02 and BR03.
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
 | VE-1 | No web build and no continuous publishing | **real**:<br>• `host/web` and `host/react` hold only tests.<br>• VentureChrome has no stories (MB-7).<br>• `release-venture.yml` runs only on `venture-v*` tags.<br>#14494 | feature | M |
-| VE-2 | The release pipeline has never succeeded end to end | **real**:<br>• All four `release-venture` runs failed at "Publish prerelease".<br>• Their fix, #13683, merged after the last run and has never been exercised.<br>• `upload-artifact` is still pinned to v4.6.2.<br>Exercise it with a prerelease tag, then cut 0.10.0 (about 30 features unreleased since 0.9.1, 2026-08-31) | CI | S |
+| VE-2 | The release pipeline has never succeeded end to end | **real** (corrected 2026-10-12):<br>• `release-venture` has run four times, all on 2026-08-31, all failed. Two failed at "Publish prerelease"; the others at "Test portable Venture packages" and "Emit all Venture backends".<br>• The venture-v0.9.1 prerelease exists, published by hand. The fix, #13683, merged after the last run.<br>• The workflow has been edited four times since (#14212, #14216, #14452, #16955) and has never run, because no tag was pushed.<br>• Dependabot's #15723 (upload-artifact v7, download-artifact v8, action-gh-release v3) is open; the two artifact actions must move together.<br>Exercise it with a prerelease tag, then cut 0.10.0 (about 30 features unreleased since 0.9.1, 2026-08-31) | CI | S |
 | VE-3 | The changelog is out of order | **real**. `CHANGELOG.md:1-50` sits above `## [Unreleased]` (line 51) | docs | S |
 | VE-4 | The hand-written hosts replace the generated ones, so a change to a generated host breaks Venture | **real, has happened twice**: #16054 (Flutter), #16387 (Qt). Not failing today | bug risk | M |
 | VE-5 | The tree-builder rewrite stalled on 2026-09-26 | **real**:<br>• BR03 step 5 (errors by code and position) is not done.<br>• Step 6 (switch `html-parser` to the new crate) is not done.<br>• The repair passes are still in `html-parser/src/lib.rs:12146, 12311`, and `normalize_document_shell` at `:12884`. | feature | L |
@@ -132,7 +199,7 @@ was on 2026-09-20.
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
 | SW-1 | The Web Component emitter rejects `Path` | **fixed** in #16855; MosaicBook's waiver removed. Was: It falls through to `UnknownPrimitive` (`mosaic-emit-webcomponent/src/pipeline.rs:3047`), and is waived in `mosaicbook-degradations.json`. Port from `mosaic-emit-html/src/pipeline.rs:1785`, then remove the waiver. #14686 | bug | S–M |
-| SW-2 | Does not compile at all for SwiftUI, Compose, Flutter or Qt | **real, reproduced**:<br>• SwiftUI: "primitive 'Path' is not yet supported".<br>• Compose, Flutter and Qt: "Path prop 'x1' is bound … only supports a literal number".<br>Nothing records it, because MosaicBook gates only browser backends. XAML's #14682 is the template for the bound line geometry. #16926 | bug | M–L |
+| SW-2 | Does not compile at all for SwiftUI, Compose, Flutter or Qt | **real, reproduced**:<br>• SwiftUI: "primitive 'Path' is not yet supported".<br>• Compose, Flutter and Qt: "Path prop 'x1' is bound … only supports a literal number".<br>Nothing records it, because MosaicBook gates only browser backends (`mosaicbook-server/check.go`), and the only native compile test is XAML's. XAML's #14682 is the template for the bound line geometry. #16926 has no owner. SwiftUI also waits on the #13206 decision | bug | M–L |
 | SW-3 | No app shell or deploy; only package artifacts and the adapter's WASM test | **real** | feature | L |
 | SW-4 | Collapse-never pinned split: no runtime proof | **real**. `SpiceWorkbench.mll` has no `HostNavigationSplit`, and there is no runnable app to resize. #15699 (parent #15481) | feature | M |
 | SW-5 | No CHANGELOG, and the docs are out of date | **real**:<br>• It is the only `code/packages/mosaic` package without a CHANGELOG.<br>• The README calls data-bound `Path` "a native XAML follow-up"; #14682 already did it.<br>• `spice-full-implementation-plan.md` marks the WASM lifecycle "(in progress)", but #15795 landed it. | docs | S |
@@ -247,6 +314,17 @@ UI90 §5.5 is the token contract the import lands on.
 - **Signing (TR-6).** Per platform: sign, notarize, or record "unsigned, no
   credentials".
 - **Flutter topbar (TR-5).** Should the topbar wrap or flex below 1600 px?
+- **SwiftUI `Path` (#13206).** How should SwiftUI-only work be verified?
+  The options are a macOS CI runner, or accepting a reviewed lowering
+  verified only by generated-source tests. Blocks SwiftUI in SW-2, and has
+  waited since 2026-08-27. *Recommendation:* accept generated-source tests
+  now, as the other native `Path` lowerings were, and add a macOS runner
+  when one is available.
+- **Agent loops for the stalled products** (see
+  [Why products stalled](#why-products-stalled-diagnosed-2026-10-12)).
+  Which products get a loop, or a share of an existing one? *Recommendation:*
+  one Mosaic-products loop that works [Order of work](#order-of-work) from
+  the top, one small PR at a time.
 
 ## Closable now
 
