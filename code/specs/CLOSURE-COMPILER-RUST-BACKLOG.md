@@ -2,6 +2,41 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 step Compose integration -->
+CV04a step-curve/Compose integration (October12): published candidate
+`848895294295dfa2e3eef077936fa9d5f6f51f6a` accepted direct-output/native source and currentGujarati4bb source
+equivalence before main advanced through Compose1b32c3a to stepcurves
+`99d85abf0300075acccc22a87386e64cd66f0d15`. Spec441c1794ff precedes conflict-free isolated merge
+`13b44b83395a4b836a493f900d37b034a197f651`; no production code/assertion/limit alteration beyond exact upstream
+imports. Nine existing exact parser work/context controls PASS (repeats excluded).
+Full metadata-derived20-package native/downstream tests/docs and task-app Rust
+program suite actually pass 1352tests/docs/58targets,
+0failures/0ignored; strict20 all-target Clippy
+with warnings/unknown-lints denied, Python contract/Ruff, doc reconstruction,
+current lesson validation and candidate-relative whitespace PASS. Original
+shared Venture profile byte hash is unchanged; a distinct initially absent
+full-run profile keeps unchanged native host assertions and one bookmark.
+No general UI/device/runtime/deployment or curriculum accuracy claim follows.
+
+Compiler/LANG actual fa2/2007 acceptance1242/116/0fail/1existingignore,
+all11production/40native controls and strict4 remain attributed to those heads
+through COMPLETE exact compiler/CV/config/program objects. Earlier diagram
+081 and Qt979 receipts remain historical; changed diagram/Compose/shared
+dependencies are accepted only by the new affected-cone run. All previous
+red/input/compatibility/lesson/profile/preflight failures remain preserved.
+Every published81payload entry is audited; only exact upstream-overlap entries
+change, plus this current backlog checkpoint and new integration specification.
+Final backlog-only source proof and independent exact-final security are
+required before samePR17288 update. Fresh exact-head required terminal acceptable
+checks, three whole native jobs/real Closurec rows, clean review/conflict state,
+then actual fetched-main merge/fullpayload proof precede cleanup/CV04b.
+Auto-mergeOFF; prioraf CI actuallycompleted/cancelled. Current848 checks cannot
+accept a later published final source. Full local Miri **DEFERRED/PENDING**,
+neverpassed; original frozen497inputs/run/checkout/target/receipts untouched
+without polling or termination. Full Closure parity/outputjoins/all lineage,
+CV04b/fullgoal/heartbeat OPEN; own types/baseESTree/no new crates.io deps.
+<!-- /CV04 step Compose integration -->
+
 CV04a bounded-root/direct-output reconciliation (October12): main
 `e18c68942668e04b1993c8b3a25d3be2085d9568` (#17352) conflicted with publishedaf in adjacent compiler tests
 and two README descriptions. Spec50a863a/resolutionf120 retained both sides,
@@ -76,7 +111,7 @@ CV04b/full parity/source-output/full transformation lineage remain OPEN.
 **Current selection:** CV04a exact lexical source intervals and bounded
 shared-consumer/native reconciliation, sole PR #17288. CV04b ingestion/wire
 contract and full Closure parity/source-output/transformation lineage remain open.
-**Current audit base:** `e18c68942668e04b1993c8b3a25d3be2085d9568`
+**Current audit base:** `99d85abf0300075acccc22a87386e64cd66f0d15`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
