@@ -4,8 +4,6 @@ category: Compiler / VM / language pipeline
 
 # An assignment proof must survive the alias state produced by lowering
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
-
 The ALGOL runtime-real assignment proof was computed before its RHS lowered.
 A conditional selector could then pass a branch-root local to a default
 by-name formal, promoting the local to shared storage. The cached proof still
