@@ -75,10 +75,10 @@ book has kept since *la main*.
 The **si** you learned — the "yes" for contradicting a negative — fits this
 table exactly:
 
-> **Vous ne voulez pas le sucre ?** — ***Si !*** ("You don't want the
+> **Vous n'avez pas le sucre ?** — ***Si !*** ("You don't have the
 > sugar? — Yes, I do!")
 
-Plain **oui** here would agree you *don't* want it; *si* is what pushes
+Plain **oui** here would agree you *don't* have it; *si* is what pushes
 back. That same *oui* once mattered enough to **split a country** — *langue
 d'oïl* in the north, *langue d'oc* in the south.
 
@@ -89,7 +89,7 @@ d'oïl* in the north, *langue d'oc* in the south.
 - [YOU SAY: "le sucre" — masculine]
 - [YOU SAY: all four — "le café, le thé, le lait, le sucre"]
 - [YOU SAY: the exception — "l'eau" — feminine, against the lean]
-- [YOU SAY: the contradiction — "Vous ne voulez pas le sucre ? — Si !"]
+- [YOU SAY: the contradiction — "Vous n'avez pas le sucre ? — Si !"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SUCRE-07, FR-ETYMON-SUCRE-08, FR-LEX-CAFE-01, FR-CULTURE-OUI-04] -->

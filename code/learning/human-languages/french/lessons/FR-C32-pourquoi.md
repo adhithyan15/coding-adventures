@@ -51,7 +51,7 @@ and English does the same thing in *what for?*
 
 > **Pourquoi ?** — Why?
 
-The answer, "because," is built to match — *by that which* against *for what* —
+The answer, "because," is built to match — *by this that* against *for what* —
 and it gets a lesson of its own a few chapters on, where it joins two clauses into
 one sentence.
 

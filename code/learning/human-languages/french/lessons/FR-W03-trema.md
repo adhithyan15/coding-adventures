@@ -53,7 +53,7 @@ really should be sounded **separately** — and the tréma is how the spelling s
   *meh*, a different word: the dots flip the meaning.
 - **Citroën**, **Israël**, **égoïste** — same rule: split the vowels.
 
-So the tréma is the **opposite** of a blend instruction: where *ai* says "merge,"
+So the tréma is the **opposite** of a blend instruction: where *a-i* says "merge,"
 *aï* says "don't."
 
 ## Writing: the trema

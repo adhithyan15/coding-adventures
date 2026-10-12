@@ -49,7 +49,7 @@ difference between them has never been named.
 > **vert** — *vair*. · **verte** — *vairt*. ("green")
 
 Nothing is added to the sound at the end. What changes is that the *t* stops
-being final, so the rule from two lessons ago no longer silences them.
+being final, so the rule from two lessons ago no longer silences it.
 
 This is worth holding on to, because it makes the feminine **easier to hear than
 to see**. A French listener knows *petite* from *petit* instantly — one ends in a

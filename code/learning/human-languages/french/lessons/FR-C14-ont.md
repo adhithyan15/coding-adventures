@@ -11,7 +11,7 @@ concept_tag: FR-VERB-AVOIR-ONT
 prerequisites: [FR-C14-avez]
 sounds: [nasal-on, liaison-z]
 roots: [habere-latin]
-etymology_hook: "ils ont ← habent — the only form with no a in it at all, and the one that must not be confused with ils sont, 'they are'"
+etymology_hook: "ils ont ← habent — the only form with no a in it at all, and the one a later chapter will set beside its look-alike for 'they are'"
 duration:
   max_seconds: 195
 requires:
