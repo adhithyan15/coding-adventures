@@ -6775,25 +6775,47 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
         },
     }))
     .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
-    let labeled = value.match_indices("--").find_map(|(at, _)| {
-        let tail = &value[at + 2..];
-        let arrow_at = tail.find("-->")?;
-        let label = tail[..arrow_at].trim();
-        (!label.is_empty()).then(|| SwimlaneOperator {
-            at,
-            len: 2 + arrow_at + 3,
-            kind: SwimlaneEdgeKind::Directed,
-            start_marker: EdgeMarker::None,
-            end_marker: EdgeMarker::Point,
-            label: Some(label.to_string()),
-            min_length: 1,
-        })
-    });
+    let labeled = [
+        labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed),
+        labeled_swimlane_operator(value, "==", '=', 2, ">", SwimlaneEdgeKind::Thick),
+        labeled_swimlane_operator(value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
+    ].into_iter().flatten().min_by_key(|operator| operator.at);
     match (standard, labeled) {
         (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
         (Some(standard), _) => Some(standard),
         (None, labeled) => labeled,
     }
+}
+
+fn labeled_swimlane_operator(
+    value: &str,
+    start: &str,
+    repeated: char,
+    minimum_run: usize,
+    suffix: &str,
+    kind: SwimlaneEdgeKind,
+) -> Option<SwimlaneOperator> {
+    value.match_indices(start).find_map(|(at, _)| {
+        let tail = &value[at + start.len()..];
+        let (end_at, run) = tail.char_indices().find_map(|(end_at, character)| {
+            if character != repeated {
+                return None;
+            }
+            let run = tail[end_at..].chars().take_while(|candidate| *candidate == repeated).count();
+            let suffix_at = end_at + run;
+            (run >= minimum_run && tail[suffix_at..].starts_with(suffix)).then_some((end_at, run))
+        })?;
+        let label = tail[..end_at].trim();
+        (!label.is_empty()).then(|| SwimlaneOperator {
+            at,
+            len: start.len() + end_at + run + suffix.len(),
+            kind,
+            start_marker: EdgeMarker::None,
+            end_marker: EdgeMarker::Point,
+            label: Some(label.to_string()),
+            min_length: run - minimum_run + 1,
+        })
+    })
 }
 
 fn parse_swimlane_node(
