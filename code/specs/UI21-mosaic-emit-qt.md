@@ -134,6 +134,17 @@ Key structural invariants:
 | `Icon`      | `Text { font.family: "Material Icons"; text: "…" }` | Icon codepoint as text |
 | `Grid`      | `GridLayout { }` | Column count from `columns` prop |
 
+#### Control fill widths
+
+Qt Quick controls participate directly in `RowLayout` and `ColumnLayout`.
+An exact base `width: 100%` on `Input`, `HostInput`, or `HostButton` therefore
+lowers to `Layout.fillWidth: true`; it must not be parsed as the scalar value
+`100` or written as `implicitWidth: 100`. The fill lowering is valid only when
+every authored width state either omits `width` or repeats `100%`. A different
+percentage, an intrinsic keyword, a state that switches to a scalar width, or
+a `Text` width remains an explicit style degradation until that distinct
+geometry contract is implemented.
+
 ### 2.3 Slot → QML Property Type Mapping
 
 | Mosaic slot type | QML `property` type | Initial value |
