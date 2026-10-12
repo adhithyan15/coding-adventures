@@ -7,6 +7,8 @@
 - Other percentages, intrinsic widths, and controls whose states switch to a
   scalar width remain explicit degradations instead of being flattened into
   incorrect geometry.
+- Journal's inverse style-degradation ratchet drops its now-stale Qt `width`
+  pin while retaining the independently measured `min-height` gap.
 
 ## 2026-10-10 (HostDraggable preserves inherited text presentation)
 
