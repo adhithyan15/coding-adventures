@@ -14,7 +14,7 @@ concept_tag: PT-SAUDE180-FERIDA
 prerequisites: [PT-C180-musculo, PT-C180-polegar]
 sounds: []
 roots: [ferire-latin]
-etymology_hook: "ferida ← Latin ferita 'struck', from ferire 'to strike'"
+etymology_hook: "ferida ← Vulgar Latin *ferita 'struck', from ferire 'to strike'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C180-polegar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ferida** ← Latin *ferita*, "struck" (EtymDB 2.1), from *ferire*, "to strike" — inherited.
+**ferida** ← Vulgar Latin *\*ferita*, "struck" (EtymDB 2.1), from *ferire*, "to strike" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

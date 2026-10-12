@@ -4,7 +4,7 @@
   "chapter": 208,
   "title": "To give up, To exchange, To download, To ski, To slip",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:816deea95c5b37b4",
+  "sourceHash": "fnv1a64:fb3312b7612af92f",
   "lessons": [
     {
       "id": "PT-C208-desistir",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edcf96e166c38af8",
+      "sourceHash": "fnv1a64:82ccec8acbef1dd1",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "escorregar from Latin excurricare, \"to run out\" (EtymDB 2.1) — inherited."
+              "text": "escorregar from Vulgar Latin excurricare, \"to run out\" (EtymDB 2.1) — inherited."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "To go with, To add, To announce, To appear, To applaud",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f4a54a8c72cd4ee0",
+  "sourceHash": "fnv1a64:3248aafb3399a088",
   "lessons": [
     {
       "id": "PT-C141-acompanhar",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd641b982ae2ccbb",
+      "sourceHash": "fnv1a64:4ef91675cee1cdec",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "acrescentar from Latin accrescentare, \"to make grow\" (EtymDB 2.1), from crescere, \"to grow\" — inherited."
+              "text": "acrescentar from Vulgar Latin accrescentare, \"to make grow\" (EtymDB 2.1), from crescere, \"to grow\" — inherited."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69750657f108b871",
+      "sourceHash": "fnv1a64:8caa93572a82e18f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "anunciar from Latin annuntiare, \"to announce\" (EtymDB 2.1), from nuntius, \"messenger\" — inherited."
+              "text": "anunciar from Latin annuntiare, \"to announce\" (EtymDB 2.1), from nuntius, \"messenger\" — a learned borrowing from Latin."
             }
           ]
         },

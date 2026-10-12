@@ -14,7 +14,7 @@ concept_tag: PT-QUAL155-HONESTO-HONESTA
 prerequisites: [PT-C154-estranho-estranha, PT-C155-pontual]
 sounds: []
 roots: [honor-latin]
-etymology_hook: "honesto ← Latin honestus 'honourable', from honor — English honest"
+etymology_hook: "honesto ← Latin honestus 'honourable', a learned word from honor — English honest"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C155-pontual]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**honesto** ← Latin *honestus*, "honourable" (EtymDB 2.1), from *honor* — inherited. Old Portuguese wrote *onesto*.
+**honesto** ← Latin *honestus*, "honourable" (EtymDB 2.1), from *honor* — a learned borrowing from Latin: an inherited word would have lost the *-n-*. Old Portuguese wrote *onesto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

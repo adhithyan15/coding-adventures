@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 230,
-  "sourceHash": "fnv1a64:7042e856be6b6bdf",
+  "sourceHash": "fnv1a64:5159f771026021bc",
   "lessonIds": [
     "PT-C230-universidade",
     "PT-C230-erro",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch230.txt",
   "json": "portuguese/narration/ch230.json",
-  "textHash": "fnv1a64:6a7d1da67c46ba50",
-  "jsonHash": "fnv1a64:ffad541d78c550ff",
+  "textHash": "fnv1a64:d361d54ab4f03518",
+  "jsonHash": "fnv1a64:9aa6e1698ff82223",
   "findings": []
 }

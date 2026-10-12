@@ -14,7 +14,7 @@ concept_tag: PT-VERB-ESCORREGAR
 prerequisites: [PT-C208-descarregar, PT-C208-esquiar]
 sounds: []
 roots: [currere-latin]
-etymology_hook: "escorregar ← Latin excurricare, from currere 'to run'"
+etymology_hook: "escorregar ← Vulgar Latin *excurricare, from currere 'to run'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C208-esquiar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**escorregar** ← Latin *excurricare*, "to run out" (EtymDB 2.1) — inherited.
+**escorregar** ← Vulgar Latin *\*excurricare*, "to run out" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

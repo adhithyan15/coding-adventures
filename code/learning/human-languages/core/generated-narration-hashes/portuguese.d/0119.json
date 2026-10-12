@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 119,
-  "sourceHash": "fnv1a64:a558ef603d6cd199",
+  "sourceHash": "fnv1a64:ab7244858862d177",
   "lessonIds": [
     "PT-C119-esquilo",
     "PT-C119-coruja",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch119.txt",
   "json": "portuguese/narration/ch119.json",
-  "textHash": "fnv1a64:c1bbbdb1178573d7",
-  "jsonHash": "fnv1a64:bcfa7122caa33fcf",
+  "textHash": "fnv1a64:ffb065961c19dec1",
+  "jsonHash": "fnv1a64:7c99df54a4a7a5b8",
   "findings": []
 }

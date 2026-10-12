@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 117,
-  "sourceHash": "fnv1a64:7a61a54c5da14c36",
+  "sourceHash": "fnv1a64:c105248f4c806c92",
   "lessonIds": [
     "PT-C117-vulcao",
     "PT-C117-gruta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch117.txt",
   "json": "portuguese/narration/ch117.json",
-  "textHash": "fnv1a64:41ab01745c29c52c",
-  "jsonHash": "fnv1a64:027f411bfac71f74",
+  "textHash": "fnv1a64:c4513623f7d38d8e",
+  "jsonHash": "fnv1a64:f1489d0481881025",
   "findings": []
 }

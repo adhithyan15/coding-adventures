@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Glass, Plate, Spoon, Knife, Fork",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0fff56af8debb623",
+  "sourceHash": "fnv1a64:43197d59fa53dce7",
   "lessons": [
     {
       "id": "PT-C51-copo",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba8f2235cf016a6d",
+      "sourceHash": "fnv1a64:02a2385066b8e402",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "garfo from Latin graphium, \"stylus\" (EtymDB 2.1) — inherited. Latin took it from Greek; a pointed writing tool became a pointed eating tool."
+              "text": "garfo — its origin is disputed. EtymDB 2.1 derives it from Latin graphium, \"stylus\", from Greek; another account traces it to Arabic gharfa, \"a handful\"."
             }
           ]
         },

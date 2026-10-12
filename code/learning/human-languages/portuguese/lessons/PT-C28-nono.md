@@ -11,9 +11,9 @@ concept_tag: PT-ORDINAL-NONO
 prerequisites: [PT-C28-oitavo, PT-C27-quarto, PT-C25-familia, PT-C18-ter-haver, PT-C18-ha-time-ago, PT-C03-como-se-chama, PT-C03-prazer]
 sounds: [nasal-none, o-open-closed]
 roots: [nonus-latin]
-etymology_hook: "nono ← Latin nonus 'ninth', squeezed from novenus — English noon is the same word"
+etymology_hook: "nono ← Latin nonus 'ninth', shrunk from an older *nowenos — English noon is the same word"
 duration:
-  max_seconds: 256
+  max_seconds: 263
 requires:
   knowledge: [PT-LEX-OITAVO-02, PT-GRAMMAR-OITAVO-04, PT-LEX-QUARTO-02, PT-ETYMON-QUARTO-03, PT-LEX-FAMILIA-02, PT-ETYMON-FAMILIA-03, PT-LEX-TER-HAVER-02, PT-ETYMON-TER-HAVER-03, PT-GRAMMAR-HA-TIME-04, PT-ETYMON-COMO-SE-CHAMA-02, PT-SOUND-PRAZER-02, PT-ETYMON-PRAZER-03, PT-GRAMMAR-PRAZER-04]
 introduces:
@@ -53,7 +53,7 @@ reviews_of: [PT-C28-oitavo, PT-C27-quarto, PT-C25-familia, PT-C18-ter-haver, PT-
 > **o nono andar** — the ninth floor. **a nona vez** — the ninth time.
 
 *Nove* is nine. This time nothing is added: the word is **shorter** than the
-cardinal, not longer. Latin had *novēnus* and squeezed it into *nōnus*, and
+cardinal, not longer. Latin *nōnus* had already shrunk from an older *\*nowenos*, and
 Portuguese inherited the squeezed form. Two ordinals running have now bent the
 shape in two different directions — *oitavo* by taking an odd ending, *nono* by
 losing sound.
@@ -61,7 +61,7 @@ losing sound.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**nono** ← Latin *nonus*, "ninth" (EtymDB 2.1), short for *novenus* — inherited.
+**nono** ← Latin *nonus*, "ninth" (EtymDB 2.1) — inherited. Latin *nonus* had itself shrunk from an older *\*nowenos*, built on the word for nine.
 
 ## Why it's said this way: the ninth hour that moved
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

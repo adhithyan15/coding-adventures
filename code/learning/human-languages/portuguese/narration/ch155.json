@@ -4,7 +4,7 @@
   "chapter": 155,
   "title": "Punctual, Honest, Patient, Generous, Lazy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f6486bce2170e59a",
+  "sourceHash": "fnv1a64:fd000465eae71006",
   "lessons": [
     {
       "id": "PT-C155-pontual",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42d55fbf22962a49",
+      "sourceHash": "fnv1a64:6dbdc4a9dc8a29f1",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "honesto from Latin honestus, \"honourable\" (EtymDB 2.1), from honor — inherited. Old Portuguese wrote onesto."
+              "text": "honesto from Latin honestus, \"honourable\" (EtymDB 2.1), from honor — a learned borrowing from Latin: an inherited word would have lost the -n-. Old Portuguese wrote onesto."
             }
           ]
         },

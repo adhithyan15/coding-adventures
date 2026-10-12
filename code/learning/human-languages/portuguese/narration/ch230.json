@@ -4,7 +4,7 @@
   "chapter": 230,
   "title": "University, Mistake, History, Geography, Mathematics",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7042e856be6b6bdf",
+  "sourceHash": "fnv1a64:5159f771026021bc",
   "lessons": [
     {
       "id": "PT-C230-universidade",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1d7dc3542b53f1d",
+      "sourceHash": "fnv1a64:4c25b18b8bb9eb49",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "universidade from Latin universitas, universitatis, \"the whole, a guild\" (EtymDB 2.1) — inherited."
+              "text": "universidade from Latin universitas, universitatis, \"the whole, a guild\" (EtymDB 2.1) — a learned borrowing from medieval Latin."
             }
           ]
         },

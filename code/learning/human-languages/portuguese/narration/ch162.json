@@ -4,7 +4,7 @@
   "chapter": 162,
   "title": "Debt, Tax, Form, Envelope, Parcel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:acd220f96c96cc92",
+  "sourceHash": "fnv1a64:5d9a9ad49c9d34ee",
   "lessons": [
     {
       "id": "PT-C162-divida",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d5c7c3c81a720c2",
+      "sourceHash": "fnv1a64:a166623147498a8e",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "imposto from Vulgar Latin impositum, \"laid upon\" (EtymDB 2.1), from Latin imponere, \"to lay upon\" — inherited."
+              "text": "imposto from Latin impositum, \"laid upon\" (EtymDB 2.1), through Vulgar Latin impostum, from imponere, \"to lay upon\" — inherited."
             }
           ]
         },

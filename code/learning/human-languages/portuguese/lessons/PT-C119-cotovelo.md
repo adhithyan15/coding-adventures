@@ -46,7 +46,7 @@ reviews_of: [PT-C119-golfinho]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**cotovelo** ← a Vulgar Latin small form of *cubitus*, "elbow" (Lewis & Short) — inherited. EtymDB 2.1 has no ancestor for it.
+**cotovelo** ← a Vulgar Latin small form of *cubitus* (Lewis & Short), "elbow" — inherited. EtymDB 2.1 has no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

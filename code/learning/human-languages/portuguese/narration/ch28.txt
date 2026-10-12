@@ -196,10 +196,10 @@ Recalls first, then the ninth — and the best word-history in the chapter.
 
 You'll want to know: The word.
 nono (masculine), nona (feminine) — ninth. o nono andar — the ninth floor. a nona vez — the ninth time.
-Nove is nine. This time nothing is added: the word is shorter than the cardinal, not longer. Latin had novēnus and squeezed it into nōnus, and Portuguese inherited the squeezed form. Two ordinals running have now bent the shape in two different directions — oitavo by taking an odd ending, nono by losing sound.
+Nove is nine. This time nothing is added: the word is shorter than the cardinal, not longer. Latin nōnus had already shrunk from an older nowenos, and Portuguese inherited the squeezed form. Two ordinals running have now bent the shape in two different directions — oitavo by taking an odd ending, nono by losing sound.
 
 The word, taken apart.
-nono from Latin nonus, "ninth" (EtymDB 2.1), short for novenus — inherited.
+nono from Latin nonus, "ninth" (EtymDB 2.1) — inherited. Latin nonus had itself shrunk from an older nowenos, built on the word for nine.
 
 Why it's said this way: the ninth hour that moved.
 Rome counted its hours from sunrise, so the ninth hour fell in the middle of the afternoon, and nōna hōra was the hour of a fixed prayer. Over centuries the prayer crept earlier and earlier until it was being said at midday — and the name went with it.

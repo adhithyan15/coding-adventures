@@ -14,7 +14,7 @@ concept_tag: PT-MESA-GARFO
 prerequisites: [PT-C51-colher, PT-C51-faca]
 sounds: []
 roots: [graphium-latin]
-etymology_hook: "garfo ← Latin graphium 'stylus', from Greek — English graphic shares its root"
+etymology_hook: "garfo — origin disputed: Latin graphium 'stylus' or Arabic gharfa 'a handful'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C51-faca]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**garfo** ← Latin *graphium*, "stylus" (EtymDB 2.1) — inherited. Latin took it from Greek; a pointed writing tool became a pointed eating tool.
+**garfo** — its origin is disputed. EtymDB 2.1 derives it from Latin *graphium*, "stylus", from Greek; another account traces it to Arabic *gharfa*, "a handful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

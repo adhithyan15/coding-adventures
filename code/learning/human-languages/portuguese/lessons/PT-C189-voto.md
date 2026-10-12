@@ -14,7 +14,7 @@ concept_tag: PT-COISAS189-VOTO
 prerequisites: [PT-C189-juiz-a-juiza, PT-C189-eleicoes]
 sounds: []
 roots: [votum-latin]
-etymology_hook: "voto ← Latin votum 'a vow, a wish' — English vote and vow"
+etymology_hook: "voto ← Latin votum 'a vow, a wish', a learned word — English vote and vow"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C189-eleicoes]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**voto** ← Latin *votum*, "a vow, a wish" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *voto*.
+**voto** ← Latin *votum*, "a vow, a wish" (Lewis & Short) — a learned borrowing from Latin: an inherited word would have voiced the *-t-*. EtymDB 2.1 traces it only to Old Portuguese *voto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

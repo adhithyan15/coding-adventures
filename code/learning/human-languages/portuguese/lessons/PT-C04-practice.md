@@ -62,8 +62,8 @@ conversation. Run the goodbyes until the right one is automatic.
 
 - **adeus** — goodbye ("to God"; the *adiós / adieu / addio* family, and English
   *goodbye* = "God be with ye").
-- **até logo** — see you later (*até* ← **Arabic *ḥattā***, twin of Spanish
-  *hasta*; *logo* ← *locō*, kin of *luego*). *Até logo* = *hasta luego*.
+- **até logo** — see you later (*até* is usually traced to **Arabic *ḥattā***;
+  twin of Spanish *hasta*; *logo* ← *locō*, kin of *luego*). *Até logo* = *hasta luego*.
 - **até amanhã** — see you tomorrow (*amanhã* ← *ad māneāna*, kin of *mañana*; the
   *nh* = Spanish *ñ*).
 - **até breve** — see you soon (*breve* ← *brevis*, "short" — brief/brevity).
@@ -74,8 +74,8 @@ conversation. Run the goodbyes until the right one is automatic.
 [PAUSE 1s]
 - [YOU SAY: greet, ask, and close — "Olá! Tudo bem? … Até amanhã!"]
 - [YOU SAY: choose the right goodbye — leaving for good / till tomorrow / soon]
-- [YOU SAY: *até logo* and Spanish *hasta luego* — twins, Arabic *até/hasta* and
-  all]
+- [YOU SAY: *até logo* and Spanish *hasta luego* — twins, *até* and *hasta*
+  and all]
 
 [REPEAT x2] Open and close a whole tiny exchange without stopping.
 
@@ -83,6 +83,6 @@ conversation. Run the goodbyes until the right one is automatic.
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-ADEUS-02, PT-ETYMON-ADEUS-03, PT-SOUND-ATE-LOGO-02, PT-ETYMON-ATE-LOGO-03, PT-SOUND-ATE-AMANHA-02, PT-ETYMON-ATE-AMANHA-03, PT-SOUND-ATE-BREVE-02, PT-ETYMON-ATE-BREVE-03, PT-LEX-C04-PRACTICE-02, PT-NOTICE-C04-PRACTICE-03] -->
 
 [PAUSE 3s] Which Portuguese goodbye means "to God"? (*Adeus*.) Which word inside
-the *até* goodbyes came from Arabic, and what's its Spanish twin? (*Até* ← *ḥattā*
-— Spanish *hasta*.) You can now run a Portuguese conversation start to finish — the full
+the *até* goodbyes is usually traced to Arabic, and what's its Spanish twin?
+(*Até*, from *ḥattā* — Spanish *hasta*.) You can now run a Portuguese conversation start to finish — the full
 greet-to-goodbye arc.

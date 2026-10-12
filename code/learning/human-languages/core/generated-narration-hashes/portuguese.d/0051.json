@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 51,
-  "sourceHash": "fnv1a64:0fff56af8debb623",
+  "sourceHash": "fnv1a64:43197d59fa53dce7",
   "lessonIds": [
     "PT-C51-copo",
     "PT-C51-prato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch51.txt",
   "json": "portuguese/narration/ch51.json",
-  "textHash": "fnv1a64:f7e7456cd0d1733e",
-  "jsonHash": "fnv1a64:041d5cd366a0b096",
+  "textHash": "fnv1a64:d474b5495fdbcc6b",
+  "jsonHash": "fnv1a64:080246bc367f9d0b",
   "findings": []
 }

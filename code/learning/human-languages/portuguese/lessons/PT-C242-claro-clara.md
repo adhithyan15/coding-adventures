@@ -14,7 +14,7 @@ concept_tag: PT-QUAL242-CLARO-CLARA
 prerequisites: [PT-C242-maduro-madura, PT-C242-escuro-escura]
 sounds: []
 roots: [clarus]
-etymology_hook: "claro ← Latin clarus 'bright, clear' — English clear and clarity"
+etymology_hook: "claro ← Latin clarus 'bright, clear', a semi-learned form that kept its cl- — English clear"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C242-escuro-escura]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**claro** ← Latin *clarus*, "bright, clear" (EtymDB 2.1) — inherited.
+**claro** ← Latin *clarus*, "bright, clear" (EtymDB 2.1) — semi-learned. It kept its *cl-*, though Latin *cl-* usually became *ch-*; Old Portuguese also said *craro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

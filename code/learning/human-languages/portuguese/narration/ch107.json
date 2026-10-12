@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Sandwich, Sauce, Vinegar, Dessert, Meal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a341c283e4a596bb",
+  "sourceHash": "fnv1a64:737db578b5ef0c6f",
   "lessons": [
     {
       "id": "PT-C107-sandes",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ef87fd16fa0ed06",
+      "sourceHash": "fnv1a64:0165eaa5a19d1c04",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "refeição from Latin refectio, refectionis, \"restoring\" (EtymDB 2.1), from reficere, \"to remake\" — a learned borrowing from Latin."
+              "text": "refeição from Latin refectio, refectionis, \"restoring\" (EtymDB 2.1), from reficere, \"to remake\" — a semi-learned borrowing from Latin: the -ct- became -iç-, as in popular speech."
             }
           ]
         },

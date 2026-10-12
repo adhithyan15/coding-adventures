@@ -10,7 +10,7 @@ gloss: to be — present, imperfect, and preterite forms
 concept_tag: PT-VERB-BE
 prerequisites: [PT-C14-ter, PT-C15-preterito-perfeito]
 sounds: [nasal-ao, open-e]
-roots: [esse-latin]
+roots: [esse-latin, sedere-latin]
 etymology_hook: "ser ← Latin sedere 'to sit'; sou and era come from Latin esse 'to be', fui from Latin fui"
 duration:
   max_seconds: 170

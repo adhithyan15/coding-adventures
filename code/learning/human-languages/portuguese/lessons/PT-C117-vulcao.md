@@ -14,7 +14,7 @@ concept_tag: PT-NATUREZA117-VULCAO
 prerequisites: [PT-C116-rocha, PT-C116-onda]
 sounds: []
 roots: [vulcanus-latin]
-etymology_hook: "vulcão ← Latin Vulcanus, the Roman god of fire and the forge — English volcano"
+etymology_hook: "vulcão ← Italian vulcano or Spanish volcán, from Latin Vulcanus, the god of fire — English volcano"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C116-onda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**vulcão** ← Latin *Vulcanus*, "Vulcan, the god of fire" (EtymDB 2.1) — a learned borrowing from Latin. A fire-breathing mountain was named after the god.
+**vulcão** — borrowed through Italian *vulcano* or Spanish *volcán*. Behind them is Latin *Vulcanus*, the god of fire (EtymDB 2.1): a fire-breathing mountain was named after the god.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

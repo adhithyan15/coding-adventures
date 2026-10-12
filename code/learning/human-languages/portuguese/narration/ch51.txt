@@ -141,7 +141,7 @@ You'll want to know: o garfo.
 o garfo — "a fork".
 
 The word, taken apart.
-garfo from Latin graphium, "stylus" (EtymDB 2.1) — inherited. Latin took it from Greek; a pointed writing tool became a pointed eating tool.
+garfo — its origin is disputed. EtymDB 2.1 derives it from Latin graphium, "stylus", from Greek; another account traces it to Arabic gharfa, "a handful".
 
 What you've built.
 One more word for this chapter.

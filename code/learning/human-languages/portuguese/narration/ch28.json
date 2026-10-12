@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Sexto ao Decimo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:889dc4f4cfd5f0fb",
+  "sourceHash": "fnv1a64:23c65f037b13b6d0",
   "lessons": [
     {
       "id": "PT-C28-sexto",
@@ -748,7 +748,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7054fc659f80948c",
+      "sourceHash": "fnv1a64:79ca8de6875bb23b",
       "notice": null,
       "blocks": [
         {
@@ -842,7 +842,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nove is nine. This time nothing is added: the word is shorter than the cardinal, not longer. Latin had novēnus and squeezed it into nōnus, and Portuguese inherited the squeezed form. Two ordinals running have now bent the shape in two different directions — oitavo by taking an odd ending, nono by losing sound."
+              "text": "Nove is nine. This time nothing is added: the word is shorter than the cardinal, not longer. Latin nōnus had already shrunk from an older nowenos, and Portuguese inherited the squeezed form. Two ordinals running have now bent the shape in two different directions — oitavo by taking an odd ending, nono by losing sound."
             }
           ]
         },
@@ -853,7 +853,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nono from Latin nonus, \"ninth\" (EtymDB 2.1), short for novenus — inherited."
+              "text": "nono from Latin nonus, \"ninth\" (EtymDB 2.1) — inherited. Latin nonus had itself shrunk from an older nowenos, built on the word for nine."
             }
           ]
         },

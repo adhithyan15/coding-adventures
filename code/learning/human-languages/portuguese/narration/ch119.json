@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Squirrel, Owl, Whale, Dolphin, Elbow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a558ef603d6cd199",
+  "sourceHash": "fnv1a64:ab7244858862d177",
   "lessons": [
     {
       "id": "PT-C119-esquilo",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:879dc6e73d105037",
+      "sourceHash": "fnv1a64:d4ff9645ee9fcd57",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "cotovelo from a Vulgar Latin small form of cubitus, \"elbow\" (Lewis & Short) — inherited. EtymDB 2.1 has no ancestor for it."
+              "text": "cotovelo from a Vulgar Latin small form of cubitus (Lewis & Short), \"elbow\" — inherited. EtymDB 2.1 has no ancestor for it."
             }
           ]
         },

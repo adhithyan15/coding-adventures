@@ -15,16 +15,16 @@ that word comes from (HL24 §9).
   matching `etymology_hook` of 120 characters or fewer. Twelve chapter 1–4
   lessons gained only the hook; eleven whose hook was not etymology gained a
   block and a rewritten hook.
-- **Honest answers.** 469 inherited, 215 learned, 137 borrowed with the donor
-  named, 271 built from parts. 61 say the origin is uncertain or disputed. 47
+- **Honest answers.** 463 inherited, 219 learned, 138 borrowed with the donor
+  named, 271 built from parts. 62 say the origin is uncertain or disputed. 47
   words with no EtymDB ancestor row are traced through the rows for their
-  sister words, and 136 lines cite Lewis & Short. 228 EtymDB rows or labels
+  sister words, and 136 lines cite Lewis & Short. 233 EtymDB rows or labels
   were rejected: loans and learned words labelled inherited, homographs
   (*colher* "spoon" ← *colligere*, *canto* "corner" ← *cantus*), and wrong
   parents.
 - **Ledger side effects.** 940 Portuguese lessons gained a `roots:` slug, 576 of
   them reusing an existing slug; 289 slugs are new. `check:root-slug-splits`
-  reports no new split. Six lessons had `duration.max_seconds` raised to their
+  reports no new split. Nine lessons had `duration.max_seconds` raised to their
   computed length, all under 300 s; the Portuguese changelog lists them.
 - **No code changed.** The measure in `src/etymology-coverage.ts` already counts
   a "taken apart" block as visible etymology, and `measureContinuity` already

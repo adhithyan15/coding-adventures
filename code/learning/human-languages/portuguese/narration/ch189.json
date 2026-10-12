@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Judge, Elections, Vote, Politics, Economy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:57e2f5240bbc9cf0",
+  "sourceHash": "fnv1a64:58a8003328d8b5c6",
   "lessons": [
     {
       "id": "PT-C189-juiz-a-juiza",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad9e947f45f9d6fa",
+      "sourceHash": "fnv1a64:a557d1b2db2da4c2",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "eleições from Latin electio, electionis, \"a choosing\" (Lewis & Short) — a learned borrowing from Latin. It is the plural of eleição."
+              "text": "eleições from Latin electio, electionis, \"a choosing\" (Lewis & Short) — a semi-learned borrowing from Latin: the -ct- became -iç-, as in popular speech. It is the plural of eleição."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e005d36c3cf8249",
+      "sourceHash": "fnv1a64:46eae3f98aff44fd",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "voto from Latin votum, \"a vow, a wish\" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese voto."
+              "text": "voto from Latin votum, \"a vow, a wish\" (Lewis & Short) — a learned borrowing from Latin: an inherited word would have voiced the -t-. EtymDB 2.1 traces it only to Old Portuguese voto."
             }
           ]
         },

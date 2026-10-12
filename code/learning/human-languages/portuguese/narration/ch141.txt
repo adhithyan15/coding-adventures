@@ -45,7 +45,7 @@ You'll want to know: acrescentar.
 acrescentar — "to add".
 
 The word, taken apart.
-acrescentar from Latin accrescentare, "to make grow" (EtymDB 2.1), from crescere, "to grow" — inherited.
+acrescentar from Vulgar Latin accrescentare, "to make grow" (EtymDB 2.1), from crescere, "to grow" — inherited.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: anunciar.
 anunciar — "to announce".
 
 The word, taken apart.
-anunciar from Latin annuntiare, "to announce" (EtymDB 2.1), from nuntius, "messenger" — inherited.
+anunciar from Latin annuntiare, "to announce" (EtymDB 2.1), from nuntius, "messenger" — a learned borrowing from Latin.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,7 @@ concept_tag: PT-COISAS162-IMPOSTO
 prerequisites: [PT-C161-verdade, PT-C162-divida]
 sounds: []
 roots: [ponere-latin]
-etymology_hook: "imposto ← Vulgar Latin *impositum 'laid upon', from imponere — English impose"
+etymology_hook: "imposto ← Latin impositum 'laid upon', through Vulgar Latin *impostum — English impose"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C162-divida]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**imposto** ← Vulgar Latin *\*impositum*, "laid upon" (EtymDB 2.1), from Latin *imponere*, "to lay upon" — inherited.
+**imposto** ← Latin *impositum*, "laid upon" (EtymDB 2.1), through Vulgar Latin *\*impostum*, from *imponere*, "to lay upon" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

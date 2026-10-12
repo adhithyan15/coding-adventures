@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Volcano, Cave, Waterfall, Wood, Donkey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7a61a54c5da14c36",
+  "sourceHash": "fnv1a64:c105248f4c806c92",
   "lessons": [
     {
       "id": "PT-C117-vulcao",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c36dc11504108cf3",
+      "sourceHash": "fnv1a64:76e087e2f85fb16c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vulcão from Latin Vulcanus, \"Vulcan, the god of fire\" (EtymDB 2.1) — a learned borrowing from Latin. A fire-breathing mountain was named after the god."
+              "text": "vulcão — borrowed through Italian vulcano or Spanish volcán. Behind them is Latin Vulcanus, the god of fire (EtymDB 2.1): a fire-breathing mountain was named after the god."
             }
           ]
         },

@@ -233,7 +233,7 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   persian: { withoutHook: 1300, withoutVisible: 1311 },
   // portuguese: 1142 / 1141 -> 0 / 0. Every word lesson now states its word's origin in a
   // "taken apart" block and a matching etymology_hook: EtymDB 2.1 (Fourrier & Sagot 2020),
-  // CC BY-SA 4.0, with Lewis & Short for certain Latin forms EtymDB lacks. 61 say the
+  // CC BY-SA 4.0, with Lewis & Short for certain Latin forms EtymDB lacks. 62 say the
   // origin is uncertain or disputed, each a genuinely open question, never a stand-in.
   portuguese: { withoutHook: 0, withoutVisible: 0 },
   punjabi: { withoutHook: 549, withoutVisible: 524 },

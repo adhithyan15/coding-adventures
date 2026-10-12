@@ -4,7 +4,7 @@
   "chapter": 182,
   "title": "Suddenly, Until, Since, Decade, Small hours",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:695928e8792d8e22",
+  "sourceHash": "fnv1a64:db47c3295e54fd5c",
   "lessons": [
     {
       "id": "PT-C182-de-repente",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdb7129aa66a36b6",
+      "sourceHash": "fnv1a64:4c2281e7a5148299",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "até — its origin is disputed. One account traces it to Arabic ḥattā, \"until\"; another to Latin ad tenus, \"as far as\". Spanish hasta is its twin."
+              "text": "até is usually traced to Arabic ḥattā, \"until\"; some prefer Latin ad tenus, \"as far as\". Spanish hasta is its twin."
             }
           ]
         },

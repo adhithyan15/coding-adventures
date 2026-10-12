@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 141,
-  "sourceHash": "fnv1a64:f4a54a8c72cd4ee0",
+  "sourceHash": "fnv1a64:3248aafb3399a088",
   "lessonIds": [
     "PT-C141-acompanhar",
     "PT-C141-acrescentar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch141.txt",
   "json": "portuguese/narration/ch141.json",
-  "textHash": "fnv1a64:b2c1cee30679a0a4",
-  "jsonHash": "fnv1a64:c1bf0093924e0f4e",
+  "textHash": "fnv1a64:00fe5db843362f6a",
+  "jsonHash": "fnv1a64:8b26e66815585158",
   "findings": []
 }

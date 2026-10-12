@@ -14,7 +14,7 @@ concept_tag: PT-TRAB230-UNIVERSIDADE
 prerequisites: [PT-C229-tomada, PT-C229-interruptor]
 sounds: []
 roots: [unus-latin]
-etymology_hook: "universidade ← Latin universitas 'the whole, a guild' — English university"
+etymology_hook: "universidade ← Latin universitas 'the whole, a guild', a learned word — English university"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C229-interruptor]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**universidade** ← Latin *universitas, universitatis*, "the whole, a guild" (EtymDB 2.1) — inherited.
+**universidade** ← Latin *universitas, universitatis*, "the whole, a guild" (EtymDB 2.1) — a learned borrowing from medieval Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

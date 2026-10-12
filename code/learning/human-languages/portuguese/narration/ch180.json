@@ -4,7 +4,7 @@
   "chapter": 180,
   "title": "Muscle, Thumb, Wound, Scar, Cold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e3b7b1deb69b13b1",
+  "sourceHash": "fnv1a64:3b30d1684bb25a5e",
   "lessons": [
     {
       "id": "PT-C180-musculo",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82f22ebc5ab98fa2",
+      "sourceHash": "fnv1a64:7ed2044bac2f4f3b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ferida from Latin ferita, \"struck\" (EtymDB 2.1), from ferire, \"to strike\" — inherited."
+              "text": "ferida from Vulgar Latin ferita, \"struck\" (EtymDB 2.1), from ferire, \"to strike\" — inherited."
             }
           ]
         },

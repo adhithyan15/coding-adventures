@@ -14,7 +14,7 @@ concept_tag: PT-VERB-TRADUZIR
 prerequisites: [PT-C231-repetir, PT-C231-explicar]
 sounds: []
 roots: [ducere-latin]
-etymology_hook: "traduzir ← Latin traducere 'to lead across' — English traduce"
+etymology_hook: "traduzir ← Latin traducere 'to lead across', a learned Renaissance borrowing — English traduce"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [PT-C231-explicar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**traduzir** ← Latin *traducere*, "to lead across" (EtymDB 2.1) — inherited.
+**traduzir** ← Latin *traducere*, "to lead across" (EtymDB 2.1) — a learned borrowing of the Renaissance, which took the sense "to translate" from Italian *tradurre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "Cooked, Ripe, Dark, Clear, Distant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3774c444310d059f",
+  "sourceHash": "fnv1a64:8a9b29ea3b238b9d",
   "lessons": [
     {
       "id": "PT-C242-cozido-cozida",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ee404f8a6595af6",
+      "sourceHash": "fnv1a64:933f2247b23daa13",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "claro from Latin clarus, \"bright, clear\" (EtymDB 2.1) — inherited."
+              "text": "claro from Latin clarus, \"bright, clear\" (EtymDB 2.1) — semi-learned. It kept its cl-, though Latin cl- usually became ch-; Old Portuguese also said craro."
             }
           ]
         },
