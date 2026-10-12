@@ -2,6 +2,51 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 additive selector integration -->
+CV04a additive-selector reconciliation (October12) integrates main
+`8e7e8e9334a9feec1006d76784cf1fb268edf025` (#17381). Spec da0634cea0 precedes merge/tests; actual
+source `766e64d59a4a00b5617afebd2c623a75eeb2c6bf` adds sixteen by-name formatter refusals paired with
+sixteen value-formal snapshot controls across both roots, selector arms,
+direct/assigned consumers and root-first/static-first addition/subtraction.
+Sixteen native sources assert independently derived exact -1.25/1.5/3.25/5.5
+outputs on every available standard backend; present-but-no-result fails.
+Upstream bounded additive admission, alias guards, original preANDpost proof,
+finite-static fallback and production limits remain unchanged. No general
+arithmetic, runtime-sum-finiteness or broader Closure parity claim.
+
+Actual **1258 tests/docs/122 targets/0fail/1 existing archive-helper ignore**:
+compiler/shared939/16, strict four-package all-target warnings/unknown-lints
+denied, all eleven unchanged LANG production BUILD selections and all46 exact
+native targets PASS. Fourteen focused repeats excluded from unique counts.
+Docs/1097 lesson shards/whitespace PASS; COMPLETE70rows and actual
+validator EXIT0. No full unfiltered LANG acceptance claimed.
+
+Complete current spline6c17package/fixture/script objects retain824/37/strict17/
+oracle27/Python18/one existingGDIignore; SwiftUI525 six-package/script objects
+retain637/30/strict6/Python46/freshprofile1. TaskApp runtime/config inventory
+matches525 except README/CHANGELOG release docs. Other Rust entries excluding
+changedALGOL/lang and programs/scripts/grammars/CI match predecessor7dc.
+Original receipt's bare48 pointer remains historical ancestry: actual prior44
+native roster and eleven BUILD lines derive from signed4f receipt, recorded
+separately in additive attribution refinement without rewriting any original
+receipt or reattributing old execution to new source.
+
+Final backlog-only fullobject/payload proof and independent exact-final security,
+fresh main/open-PR complete inventory/review/conflict audit precede publication
+on sole PR17288. Current7dcCI remains active until a newer reviewed workflow
+exists. Exact-head terminal acceptable checks plus whole Linux/macOS/Windows
+nativeSUCCESS/packageSUCCESS/timestampedClosurecBUILT gate auto-merge. Actual
+fetched-main merge reachability/full payload mode-type-blob proof gate cleanup
+and CV04b. Earlier blocks are historical source/CI frames, not current gates.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen run/497inputs/
+checkout/receipts/target untouched without progress polling, termination or
+duplicate execution. Implementation/delivery first, genuine final-source Miri
+afterward with invalidated-input reruns. BaseESTree/ownedtypes/no newcrates.io
+dependencies. Full Closure parity/CV04b/output-byte-source joins/all folding,
+renaming,inlining,motion,merging,deletion lineage/fullgoal OPEN; heartbeatACTIVE.
+<!-- /CV04 additive selector integration -->
+
 <!-- CV04 spline integration -->
 CV04a two-point spline reconciliation (October12): publishedf4 precedes main
 `e7c6bc81064bc80c9a908e102b76cdb1977fe768` (#17376spline plus #17377TaskApp release docs). Specf377d9d8a1
