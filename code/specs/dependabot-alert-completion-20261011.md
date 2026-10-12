@@ -76,8 +76,9 @@ the same immutable corpus four times and calculate the same gate report three
 times. Share one corpus, chapter ledger, policy and gate report within that test
 file, preserving all snapshot, clean-track, pattern and sequence assertions.
 
-Four figure-target case groups independently retain the full parsed corpus and
-resolve its filmstrip targets. Give those groups one shared, immutable fixture
+Five real-corpus groups across four figure-target case shards independently
+retain the full parsed corpus and resolve its filmstrip targets. Give those
+groups one shared, immutable fixture
 containing the lessons, resolved filmstrip targets and lookup collections. Keep
 synthetic fixtures independent and preserve every discovered shard and assertion.
 Validate both suites with the normal test configuration and a 2 GiB worker heap;

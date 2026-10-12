@@ -13,7 +13,7 @@ completed-suite log identified the missing owner instead of guessing from the
 nearby timeout messages.
 
 The chapter snapshot cases repeat four corpus loads and three identical gate
-reports. The figure-target suite's four real-corpus case groups also retain
+reports. Five real-corpus groups across four figure-target case shards retain
 independent full corpus snapshots and resolve the same filmstrip targets.
 Share immutable measurements within each suite while preserving its assertions
 and keeping synthetic fixtures independent. Reproduce and validate the worker
