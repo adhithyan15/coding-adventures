@@ -1178,3 +1178,20 @@ linear. Actual public-parser operation counters must distinguish one index build
 lookups and matching visits. Repeated node-only class/style targets over many
 unidentified edges must retain O(E+D) new edge-discovery work, not E*D. Preserve
 prior delimiter/pair-index counts, UTF-8 boundaries and authored metadata.
+
+
+### Identified Swimlane animation target work
+
+The same authored edge-ID index must resolve animation configurations before
+class/style application. Build it once before all three target passes. Preserve
+all duplicate-ID updates, authored configuration order, last-configuration
+semantics, unknown-edge diagnostics and node/edge ID collision behavior.
+Configurations may update only actual matching edges; repeated configurations
+for one edge among E unrelated edges must not rescan E edges per directive.
+Count index visits, real lookups and actual matching updates separately; real
+repeated updates still cost their actual matching count. Retain the prior
+class/style work and metadata controls. Layout must preserve animate and exact
+optional slow/fast animation through the existing duplicate-gap fixture without
+weakening its ID/classes/style/labels/kinds/markers/lengths and spacing controls.
+No global pipeline linearity, animation execution, new input exception or new
+dependency claim follows from this local lookup repair.
