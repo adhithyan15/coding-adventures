@@ -50,7 +50,8 @@ reviews_of: [LA-C55-primus, LA-C54-bibo]
 **secundus, secunda, secundum** — "**second**."
 
 Like *prīmus*, it is not built on its own number. There is no *duo* in it.
-It comes from *sequī*, "**to follow**" — so second place is the place that
+It comes from the Latin verb "**to follow**" (a later chapter teaches it) — so
+second place is the place that
 **comes after**, named by what it does rather than by where it falls in a count.
 
 That single fact explains a shelf of English words. **Second** is this word,
@@ -74,7 +75,7 @@ English kept the adjective and threw the noun away, so a **second** is literally
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C55-ORDINAL-01, LA-LEX-C55-ORDINAL-02, LA-ETYMON-C55-SECUNDUS-SEQUI-01] -->
 
-[PAUSE 3s] What did the root behind *secundus* mean? (**To follow** — *sequī*.) So what
+[PAUSE 3s] What did the root behind *secundus* mean? (**To follow**.) So what
 is second place, in Latin's own terms? (**The place that comes after**.) And
 why is a *second* on a clock called that? (It is the *pars minūta*
 **secunda** — the second cutting of the hour, after the **minute**.)

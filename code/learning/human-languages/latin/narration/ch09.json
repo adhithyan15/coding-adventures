@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8dca95d7c0bbb7df",
+  "sourceHash": "fnv1a64:b7b081a832db6bac",
   "lessons": [
     {
       "id": "LA-C09-anni-tempora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bcbf395c2d4e8ff",
+      "sourceHash": "fnv1a64:dd53f86ac934cc97",
       "notice": null,
       "blocks": [
         {
@@ -72,15 +72,23 @@
             },
             {
               "kind": "speech",
-              "text": "But vēr and hiems, the plain nouns for spring and winter, mostly didn't make it into everyday Romance vocabulary. Instead, Spanish and French built brand-new words out of adjective phrases describing those seasons:"
+              "text": "But vēr and hiems, the plain nouns for spring and winter, mostly didn't make it into everyday Romance vocabulary. Instead, Spanish and French built brand-new words out of adjective phrases describing those seasons."
             },
             {
               "kind": "speech",
-              "text": "Not vēr alone, but a Vulgar Latin phrase/reanalysis, prīma vēra (roughly \"first spring\") becomes Spanish primavera, French (originally) primevère — later displaced there by printemps (\"first-time,\" from prīmum tempus, the very same \"adjective + tempus\" recipe as winter's word below; primevère narrowed to just mean \"primrose\" today) — and Italian primavera, still the everyday word there."
+              "text": "Spring was not vēr alone, but a Vulgar Latin phrase/reanalysis, roughly \"first spring\":"
             },
             {
               "kind": "speech",
-              "text": "Not hiems alone, but hībernum (tempus), \"the wintry [time]\" becomes Spanish invierno, French hiver — the same root as English hibernate."
+              "text": "prīma (\"first\") + vēra (vēr, reshaped) becomes primavera."
+            },
+            {
+              "kind": "speech",
+              "text": "That gives Spanish primavera, Italian primavera (still the everyday word there), and French (originally) primevère — later displaced there by printemps (\"first time,\" the same \"first\" put with tempus: the very same \"adjective + tempus\" recipe as winter's word below). Primevère narrowed to just mean \"primrose\" today."
+            },
+            {
+              "kind": "speech",
+              "text": "Winter was not hiems alone, but hībernum (tempus), \"the wintry [time]\" becomes Spanish invierno, French hiver — the same root as English hibernate."
             },
             {
               "kind": "speech",
@@ -124,11 +132,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two built from phrases — \"prīma vēra becomes primavera,\" \"hībernum becomes invierno, hiver\"",
+              "instruction": "the two built from phrases — \"first spring\" becomes primavera, \"hībernum becomes invierno, hiver\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two built from phrases — \"prīma vēra → primavera,\" \"hībernum → invierno, hiver\"]"
+              "source": "[YOU SAY: the two built from phrases — \"first spring\" → primavera, \"hībernum → invierno, hiver\"]"
             }
           ]
         },
@@ -145,7 +153,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are Latin's four season-nouns? (Vēr, aestās, autumnus, hiems.) Which one survived plainly into Spanish, French, and English? (Autumnus becomes otoño, automne, autumn.) What did Spanish and French build instead of the plain words vēr and hiems? (Adjective phrases — prīma vēra \"first spring\" becomes primavera/primevère; hībernum \"wintry\" becomes invierno/hiver.)"
+              "text": "What are Latin's four season-nouns? (Vēr, aestās, autumnus, hiems.) Which one survived plainly into Spanish, French, and English? (Autumnus becomes otoño, automne, autumn.) What did Spanish and French build instead of the plain words vēr and hiems? (Adjective phrases — \"first spring\" becomes primavera/primevère; hībernum \"wintry\" becomes invierno/hiver.)"
             }
           ]
         }

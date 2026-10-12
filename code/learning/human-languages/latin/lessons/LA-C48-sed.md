@@ -51,10 +51,11 @@ a word far enough back that saying it is work.
 
 **sed** — "**but**."
 
-You have met it once already without being told. The *propediem tē vidēbō* lesson quoted Cicero's own
-letter: *"**Sed**, ut spērō, propediem tē vidēbō"* — "**But**, as I hope, I shall
-see you before long." That was a real sentence by a real Roman, and this is the
-word that opened it.
+You have met its sentence already. The *propediem tē vidēbō* lesson quoted Cicero's own
+letter, trimmed to *"…ut spērō, propediem tē vidēbō"*. In the letter the line opens
+with this word: *"**Sed**, ut spērō, propediem tē vidēbō"* — "**But**, as I hope, I
+shall see you before long." A real sentence by a real Roman, and now you have its
+first word too.
 
 **Sed** joins two statements and marks the second as a correction or a contrast:
 

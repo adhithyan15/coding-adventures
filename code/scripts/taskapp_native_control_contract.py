@@ -152,7 +152,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "flex-direction": 1,
         "flex-shrink": 9,
         "font-family": 1,
-        "gap": 4,
         "height": 3,
         "left": 6,
         "margin-bottom": 1,

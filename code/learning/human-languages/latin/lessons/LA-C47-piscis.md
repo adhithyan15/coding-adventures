@@ -11,7 +11,7 @@ concept_tag: LA-NOUN-PISCIS
 prerequisites: [LA-C47-ovum]
 sounds: [macron-none-short-vowel]
 roots: []
-etymology_hook: "piscis and English fish are both from PIE *pisk-; the p→f shift is Grimm's Law, the same law that pairs pater/father and pēs/foot, and Pisces is the direct loan"
+etymology_hook: "piscis and English fish are both from PIE *pisk-; the p→f shift is Grimm's Law, the same law that pairs pater/father, and Pisces is the direct loan"
 duration:
   max_seconds: 240
 requires:
@@ -49,14 +49,12 @@ Latin ***p***\-*iscis*. English ***f***\-*ish*. Same word.
 
 The change is not random. Around two thousand years ago the Germanic branch
 shifted every inherited **p** to **f**, and it did so *without exception*. That
-is **Grimm's Law**, and you have already been shown its results without being
-told the name:
+is **Grimm's Law**, and you have already met it once, in the family chapter:
 
 - *pater* → **father**
-- *pēs*, *pedis* → **foot**
 - *piscis* → **fish**
 
-Three pairs, one rule. Once you have it, you can run it yourself: Latin *plēnus*
+Two pairs, one rule. Once you have it, you can run it yourself: Latin *plēnus*
 against English **full**, Latin *prō* against **for**.
 
 The loans came separately and kept the *p*: **Pisces** the constellation,
@@ -75,5 +73,5 @@ letter.
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C47-TABLE-01, LA-LEX-C47-TABLE-02, LA-LEX-C47-TABLE-03, LA-LEX-C47-TABLE-04, LA-LEX-C47-TABLE-05] -->
 
 [PAUSE 3s] What sound does Latin *p* correspond to in inherited English words? (**F** —
-Grimm's Law.) Give two more pairs. (*Pater*/**father**, *pēs*/**foot**.) And why
+Grimm's Law.) Give two more pairs. (*Pater*/**father**, *plēnus*/**full**.) And why
 does **Pisces** keep its *p*? (It is a **loan**, not inherited.)

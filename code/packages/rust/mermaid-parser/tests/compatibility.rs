@@ -1839,6 +1839,15 @@ fn swimlane_lined_document_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_data_store_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: datastore, label: \"First\" }\n  second@{ shape: data-store, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane data-store aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::DataStore));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
@@ -2040,6 +2049,18 @@ fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     assert_eq!((diagram.edges[1].start_marker, diagram.edges[1].end_marker), (EdgeMarker::Circle, EdgeMarker::Cross));
     assert_eq!((diagram.edges[2].start_marker, diagram.edges[2].end_marker), (EdgeMarker::Cross, EdgeMarker::Point));
     assert_eq!((diagram.edges[3].start_marker, diagram.edges[3].end_marker), (EdgeMarker::None, EdgeMarker::Cross));
+}
+
+#[test]
+fn swimlane_invisible_links_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  published[Published]\nend\ndraft ~~~ published",
+    ).expect("Flowchart invisible links should parse");
+
+    assert_eq!(diagram.edges.len(), 1);
+    assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Invisible);
+    assert_eq!(diagram.edges[0].start_marker, diagram_ir::EdgeMarker::None);
+    assert_eq!(diagram.edges[0].end_marker, diagram_ir::EdgeMarker::None);
 }
 
 #[test]

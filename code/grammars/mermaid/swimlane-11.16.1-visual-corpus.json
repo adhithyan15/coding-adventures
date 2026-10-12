@@ -38,6 +38,7 @@
     "tagged-process-shapes",
     "paper-tape-shapes",
     "lined-document-shapes",
+    "data-store-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",
@@ -50,6 +51,7 @@
     "inline-node-styles",
     "named-node-classes",
     "semicolon-class-statements",
-    "node-class-decorators"
+    "node-class-decorators",
+    "invisible-layout-link"
   ]
 }

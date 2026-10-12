@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 190,
-  "sourceHash": "fnv1a64:5116e8b7adf2fb35",
+  "sourceHash": "fnv1a64:7328ccbbaaedfb78",
   "lessonIds": [
     "LA-C190-vectigal",
     "LA-C190-tributum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch190.txt",
   "json": "latin/narration/ch190.json",
-  "textHash": "fnv1a64:a6c0117ee8fa4586",
-  "jsonHash": "fnv1a64:02a5df50744ac638",
+  "textHash": "fnv1a64:d0116eef5915162d",
+  "jsonHash": "fnv1a64:89573b30a3cbb739",
   "findings": []
 }

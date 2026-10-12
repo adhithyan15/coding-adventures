@@ -2193,6 +2193,13 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 0.0; real result; result := entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left()))))) else exp(exp(exp(sqrt(abs(sign(right()))))))))); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — ln may safely map one exponential over a bounded
     // sign-rooted result before entier and real widening.
     Prog {
@@ -14093,6 +14100,33 @@ fn algol_conditional_double_exp_result_widening_runs_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but conditional double-exp result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_triple_exp_result_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left()))))) else exp(exp(exp(sqrt(abs(sign(right()))))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL conditional triple-exp result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional triple-exp result widening did not complete"
             );
             continue;
         };

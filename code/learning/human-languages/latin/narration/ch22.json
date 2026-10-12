@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "You, Singular and Plural",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:74b57227c530aa08",
+  "sourceHash": "fnv1a64:1de98de483807e8d",
   "lessons": [
     {
       "id": "LA-C22-tu-vos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbb13f470126bb5e",
+      "sourceHash": "fnv1a64:cabfa45cb33dd85e",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "German's two words for \"you\" are about formality — du versus Sie. Latin's two words for \"you\" split on something completely different: plain number. Formality hadn't been invented yet."
+              "text": "German's two words for \"you\" are about formality — du against Sie. Latin's two words for \"you\" split on something completely different: plain number. Formality hadn't been invented yet."
             }
           ]
         },

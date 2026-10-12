@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 14,
-  "sourceHash": "fnv1a64:077c0363b7edecf3",
+  "sourceHash": "fnv1a64:2a09e52b22c4c291",
   "lessonIds": [
     "LA-C14-annos-natus"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch14.txt",
   "json": "latin/narration/ch14.json",
-  "textHash": "fnv1a64:e8527f13926a9249",
-  "jsonHash": "fnv1a64:b2f801fae534cf98",
+  "textHash": "fnv1a64:ca679969901b17d3",
+  "jsonHash": "fnv1a64:0a20c1120ece27f8",
   "findings": []
 }

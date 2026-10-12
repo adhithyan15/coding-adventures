@@ -49,8 +49,8 @@ Latin uses dedicated impersonal verbs with no subject at all:
 - **tonat** — it thunders
 
 **Pluit** is the ancestor of Spanish **llueve**. Its opening follows the
-same **pl- → ll-** path as *plovere → llover*, *clāmāre → llamar*, and
-*flamma → llama*.
+same **pl- → ll-** path as *plovere → llover* and *plēnus → lleno*; *fl-* went
+the same way, *flamma → llama*.
 
 This verb pattern resembles English "it rains" more closely than Spanish
 **hace calor**. Spanish kept the dedicated verb for rain but built a new

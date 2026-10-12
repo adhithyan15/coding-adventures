@@ -48,9 +48,10 @@ drops *please*:
 
 > *Dā mihi aquam, **quaesō*** — "Give me water, **please**" (lit. "…I ask").
 
-It's a worn-down cousin of the verb **quaerere**, "to seek, to ask" — the same
-root English took for **query**, **quest**, **question**, **require** and
-**inquire**. So *quaesō* is, at heart, "I'm seeking [this] of you."
+It's a worn-down cousin of Latin's everyday verb for "to seek, to ask" (a later
+chapter teaches it) — the same root English took for **query**, **quest**,
+**question**, **require** and **inquire**. So *quaesō* is, at heart, "I'm
+seeking [this] of you."
 
 ## Why it's said this way: Latin's other ways to say please
 <!-- hl-knowledge: introduces=[LA-PRAGMATICS-QUAESO-02]; assesses=[] -->
@@ -77,5 +78,5 @@ meeting so the absence doesn't feel like a gap:
 
 [PAUSE 3s] What did Romans literally say instead of "please"? (**quaesō** — "I
 ask/beg.") What verb is it from, and which English words share that root?
-(**quaerere** "to seek" — *query, quest, require*.) What does **sīs** stand for?
+(The verb "to seek, to ask" — *query, quest, require*.) What does **sīs** stand for?
 (***sī vīs***, "if you wish" — the same idea French uses in *s'il te plaît*.)

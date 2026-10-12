@@ -4,7 +4,7 @@
   "chapter": 164,
   "title": "A Notice, an Inscription, a Price, For Sale, Goods",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:31e1e484689e4ca9",
+  "sourceHash": "fnv1a64:6ff9454f63407ffd",
   "lessons": [
     {
       "id": "LA-C164-titulus",
@@ -537,7 +537,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a6d4055102a19f0",
+      "sourceHash": "fnv1a64:2e198063c7fc6fb8",
       "notice": null,
       "blocks": [
         {
@@ -564,7 +564,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "merx, mercis — \"goods, merchandise\". What a shop sells: mercēs in the plural. That is not the same word as mercēs, mercēdis, \"wages\". English merchant and commerce come from it."
+              "text": "merx, mercis — \"goods, merchandise\". What a shop sells is usually said in the plural:"
+            },
+            {
+              "kind": "speech",
+              "text": "merc- (the stem, as in mercis) + -ēs (the plural ending) becomes mercēs."
+            },
+            {
+              "kind": "speech",
+              "text": "English merchant and commerce come from this word."
             }
           ]
         },

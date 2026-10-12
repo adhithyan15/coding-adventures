@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Numerī Ōrdinis",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fc84c94883ff08d4",
+  "sourceHash": "fnv1a64:35a49340bc6ba018",
   "lessons": [
     {
       "id": "LA-C55-primus",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfcd958b20f70262",
+      "sourceHash": "fnv1a64:408a6f434b3b0df2",
       "notice": null,
       "blocks": [
         {
@@ -259,7 +259,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like prīmus, it is not built on its own number. There is no duo in it. It comes from sequī, \"to follow\" — so second place is the place that comes after, named by what it does rather than by where it falls in a count."
+              "text": "Like prīmus, it is not built on its own number. There is no duo in it. It comes from the Latin verb \"to follow\" (a later chapter teaches it) — so second place is the place that comes after, named by what it does rather than by where it falls in a count."
             },
             {
               "kind": "speech",
@@ -324,7 +324,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did the root behind secundus mean? (To follow — sequī.) So what is second place, in Latin's own terms? (The place that comes after.) And why is a second on a clock called that? (It is the pars minūta secunda — the second cutting of the hour, after the minute.)"
+              "text": "What did the root behind secundus mean? (To follow.) So what is second place, in Latin's own terms? (The place that comes after.) And why is a second on a clock called that? (It is the pars minūta secunda — the second cutting of the hour, after the minute.)"
             }
           ]
         }

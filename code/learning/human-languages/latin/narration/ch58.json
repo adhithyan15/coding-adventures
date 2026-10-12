@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:32da32ae105fd1cd",
+  "sourceHash": "fnv1a64:f3d23b28fedff416",
   "lessons": [
     {
       "id": "LA-C58-labels",
@@ -224,7 +224,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:196dd17e82f2c751",
+      "sourceHash": "fnv1a64:70faf22327ab2c57",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -270,7 +270,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Salvē! Valē! Nōmen meum est Marcus. Ego sum discipulus. Iterum! Bonus est."
+              "text": "Salvē! Valē! Magister meus bonus est. Ego sum discipulus. Iterum! Bonus est."
             },
             {
               "kind": "pause",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:477d96610cb15e67",
+      "sourceHash": "fnv1a64:f6bb22b247a2a851",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -477,7 +477,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Salvē! Nōmen meum est Marcus. Ego sum discipulus. Magister meus bonus est. Liber meus bonus est. Ego legō et bibō. Amīcus meus est discipulus. Schola bona est. Prīmus liber bonus est. Sextus liber bonus est. Iterum legō, quia liber bonus est. Valē!"
+              "text": "Salvē! Mihi nōmen est Mārcus. Ego sum discipulus. Magister meus bonus est. Liber meus bonus est. Ego legō et bibō. Amīcus meus est discipulus. Schola bona est. Prīmus liber bonus est. Sextus liber bonus est. Iterum legō, quia liber bonus est. Valē!"
             },
             {
               "kind": "pause",
@@ -534,7 +534,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two lines break the pattern on purpose. Nōmen meum est Marcus puts est in the middle, because the name is the point and Latin moves what matters. And the last full line is the longest, because quia hangs a whole reason off a sentence that was already complete."
+              "text": "Two lines break the pattern on purpose. Mihi nōmen est Mārcus puts est in the middle, because the name is the point and Latin moves what matters. And the last full line is the longest, because quia hangs a whole reason off a sentence that was already complete."
             },
             {
               "kind": "pause",

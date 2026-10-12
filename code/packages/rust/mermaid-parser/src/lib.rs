@@ -6709,6 +6709,7 @@ struct SwimlaneOperator {
 
 fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     let standard = [
+        ("~~~", SwimlaneEdgeKind::Invisible, EdgeMarker::None, EdgeMarker::None),
         ("<-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::Point, EdgeMarker::Point),
         ("<-->", SwimlaneEdgeKind::Directed, EdgeMarker::Point, EdgeMarker::Point),
         ("<==>", SwimlaneEdgeKind::Thick, EdgeMarker::Point, EdgeMarker::Point),
@@ -6917,6 +6918,7 @@ fn parse_swimlane_shape_attributes(
                     "tag-rect" | "tagged-rectangle" | "tag-proc" | "tagged-process" => DiagramShape::TaggedProcess,
                     "flag" | "paper-tape" => DiagramShape::PaperTape,
                     "lin-doc" | "lined-document" => DiagramShape::LinedDocument,
+                    "datastore" | "data-store" => DiagramShape::DataStore,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
