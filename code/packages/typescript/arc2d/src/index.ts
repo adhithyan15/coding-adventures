@@ -23,47 +23,87 @@ export class CenterArc {
     public readonly xRotation: number
   ) {}
 
+  // Direct construction is kept for callers. Validation at each operation
+  // stops NaN/Infinity from entering trigonometry and bounds segment work to
+  // at most four cubics. Positive radii are a center-form requirement; SVG's
+  // absolute-radius correction belongs to its separate endpoint conversion.
+  private validate(): void {
+    requireFinite(this.center.x, this.center.y, this.rx, this.ry,
+      this.startAngle, this.sweepAngle, this.xRotation);
+    if (this.rx <= 0 || this.ry <= 0) throw new RangeError("arc2d: invalid center arc");
+    if (Math.abs(this.sweepAngle) > 2 * PI) throw new RangeError("arc2d: sweep exceeds one turn");
+  }
+
+  private pointAt(angle: number): Point {
+    requireFinite(angle);
+    return this.rotateTranslate(this.rx * cos(angle), this.ry * sin(angle));
+  }
+
+  private rotateTranslate(x: number, y: number): Point {
+    const cosR = cos(this.xRotation), sinR = sin(this.xRotation);
+    const px = cosR * x - sinR * y + this.center.x;
+    const py = sinR * x + cosR * y + this.center.y;
+    requireFinite(px, py);
+    return new Point(px, py);
+  }
+
   /** Evaluate at t ∈ [0,1]: start point at t=0, end at t=1. */
   evaluate(t: number): Point {
-    const angle = this.startAngle + t * this.sweepAngle;
-    const xp = this.rx * cos(angle);
-    const yp = this.ry * sin(angle);
-    const cosR = cos(this.xRotation);
-    const sinR = sin(this.xRotation);
-    return new Point(
-      cosR * xp - sinR * yp + this.center.x,
-      sinR * xp + cosR * yp + this.center.y
-    );
+    this.validate();
+    requireFinite(t);
+    return this.pointAt(this.startAngle + t * this.sweepAngle);
   }
 
   /** Tangent vector at t (not normalized). */
   tangent(t: number): Point {
+    this.validate();
+    requireFinite(t);
     const angle = this.startAngle + t * this.sweepAngle;
+    requireFinite(angle);
     const dxp = -this.rx * sin(angle) * this.sweepAngle;
     const dyp = this.ry * cos(angle) * this.sweepAngle;
     const cosR = cos(this.xRotation);
     const sinR = sin(this.xRotation);
-    return new Point(
-      cosR * dxp - sinR * dyp,
-      sinR * dxp + cosR * dyp
-    );
+    const x = cosR * dxp - sinR * dyp, y = sinR * dxp + cosR * dyp;
+    requireFinite(x, y);
+    return new Point(x, y);
   }
 
-  /** Bounding box by sampling 100 points. */
+  /** Exact bounds from endpoints and the four possible rotated extrema. */
   boundingBox(): Rect {
-    const n = 100;
-    let minX = Infinity, maxX = -Infinity;
-    let minY = Infinity, maxY = -Infinity;
-    for (let i = 0; i <= n; i++) {
-      const p = this.evaluate(i / n);
+    this.validate();
+    const start = this.pointAt(this.startAngle);
+    let minX = start.x, maxX = start.x;
+    let minY = start.y, maxY = start.y;
+    const include = (p: Point) => {
       minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
       minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+    };
+    include(this.pointAt(this.startAngle + this.sweepAngle));
+    if (this.sweepAngle !== 0) {
+      // For x=A*cos(theta)+B*sin(theta), dx/dtheta=0 at
+      // atan2(B,A) and that angle+PI. The y coordinate has its own pair.
+      const cosR = cos(this.xRotation), sinR = sin(this.xRotation);
+      const xAngle = atan2(-this.ry * sinR, this.rx * cosR);
+      const yAngle = atan2(this.ry * cosR, this.rx * sinR);
+      for (const candidate of [xAngle, xAngle + PI, yAngle, yAngle + PI]) {
+        // JS remainder keeps the dividend's sign. Add one turn only for a
+        // negative remainder, then compare distance in the sweep direction.
+        let distance = (this.sweepAngle > 0
+          ? candidate - this.startAngle
+          : this.startAngle - candidate) % (2 * PI);
+        if (distance < 0) distance += 2 * PI;
+        if (distance <= Math.abs(this.sweepAngle)) include(this.pointAt(candidate));
+      }
     }
-    return new Rect(minX, minY, maxX - minX, maxY - minY);
+    const width = maxX - minX, height = maxY - minY;
+    requireFinite(width, height);
+    return new Rect(minX, minY, width, height);
   }
 
   /** Approximate with cubic Bezier segments (≤90° each). */
   toCubicBeziers(): CubicBezier[] {
+    this.validate();
     const maxSeg = PI / 2;
     const nSegs = Math.max(1, Math.ceil(Math.abs(this.sweepAngle) / maxSeg));
     const segSweep = this.sweepAngle / nSegs;
@@ -76,6 +116,7 @@ export class CenterArc {
     for (let i = 0; i < nSegs; i++) {
       const alpha = this.startAngle + i * segSweep;
       const beta = alpha + segSweep;
+      requireFinite(alpha, beta);
       const cosA = cos(alpha), sinA = sin(alpha);
       const cosB = cos(beta), sinB = sin(beta);
 
@@ -84,8 +125,12 @@ export class CenterArc {
       const p1l = [p0l[0] + k * (-this.rx * sinA), p0l[1] + k * (this.ry * cosA)];
       const p2l = [p3l[0] - k * (-this.rx * sinB), p3l[1] - k * (this.ry * cosB)];
 
-      const rt = (lx: number, ly: number) =>
-        new Point(cosR * lx - sinR * ly + this.center.x, sinR * lx + cosR * ly + this.center.y);
+      const rt = (lx: number, ly: number) => {
+        const x = cosR * lx - sinR * ly + this.center.x;
+        const y = sinR * lx + cosR * ly + this.center.y;
+        requireFinite(x, y);
+        return new Point(x, y);
+      };
 
       beziers.push(new CubicBezier(
         rt(p0l[0], p0l[1]), rt(p1l[0], p1l[1]),
@@ -95,6 +140,10 @@ export class CenterArc {
 
     return beziers;
   }
+}
+
+function requireFinite(...values: number[]): void {
+  if (!values.every(Number.isFinite)) throw new RangeError("arc2d: invalid center arc");
 }
 
 // ============================================================================
