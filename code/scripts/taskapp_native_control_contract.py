@@ -75,7 +75,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-left-style": 1,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
-        "box-shadow": 11,
+        # Ten non-inset declarations pair with supported elevation tokens and
+        # now leave the report when Compose emits their native depth. The
+        # inset theme-toggle moon remains an unsupported drawing effect.
+        "box-shadow": 1,
         "box-sizing": 1,
         "cursor": 2,
         "display": 1,

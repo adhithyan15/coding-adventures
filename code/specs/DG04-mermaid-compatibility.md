@@ -1136,6 +1136,8 @@ Identified edge animation attributes preserve enabled state and slow/fast timing
 with a deterministic static dash pattern for non-animated paint backends.
 Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
 to portable cubic paths with tangent-aware endpoint markers.
+The `step`, `stepBefore`, and `stepAfter` curve modes lower to deterministic orthogonal paths in
+the diagram's authored direction.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically

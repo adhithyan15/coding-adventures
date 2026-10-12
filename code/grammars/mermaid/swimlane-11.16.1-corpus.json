@@ -253,6 +253,10 @@
     {
       "name": "edge-curve-config",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest curved@--> done\nreview linear@--> done\ncurved@{ curve: basis }\nlinear@{ curve: linear }"
+    },
+    {
+      "name": "edge-step-curves",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst stepped@--> sixth\nsecond before@--> fifth\nthird after@--> fourth\nstepped@{ curve: step }\nbefore@{ curve: stepBefore }\nafter@{ curve: stepAfter }"
     }
   ]
 }
