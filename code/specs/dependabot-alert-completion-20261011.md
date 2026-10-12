@@ -68,3 +68,18 @@ After eliminating the duplicate build, the live CLI regression still measured
 direct-owner filesystem integration case an explicit 120-second budget. Ordinary
 test and hook limits remain 30 seconds. Do not bypass owner/path validation or
 move this live CLI call into unbounded module setup to avoid its deadline.
+
+Run 38176850343 built 532 macOS packages but failed human-language-data: three
+chapter snapshot assertions exceeded 30 seconds, and the figure-target worker
+exhausted its 2 GiB Node heap during shard registration. The chapter tests load
+the same immutable corpus four times and calculate the same gate report three
+times. Share one corpus, chapter ledger, policy and gate report within that test
+file, preserving all snapshot, clean-track, pattern and sequence assertions.
+
+Four figure-target case groups independently retain the full parsed corpus and
+resolve its filmstrip targets. Give those groups one shared, immutable fixture
+containing the lessons, resolved filmstrip targets and lookup collections. Keep
+synthetic fixtures independent and preserve every discovered shard and assertion.
+Validate both suites with the normal test configuration and a 2 GiB worker heap;
+do not increase heap limits, raise ordinary deadlines or skip cases to hide the
+failure. Refresh main before implementing, then review and run CI on the new head.
