@@ -13051,6 +13051,102 @@ mod tests {
     }
 
     #[test]
+    fn plain_drop_target_first_if_else_defines_the_gap_helper_it_calls() {
+        let m = component("Lane", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let mut target = node_with(
+            "HostDropTarget",
+            vec![],
+            vec![
+                if_node(
+                    LayoutPropValue::SlotRef("visible".into()),
+                    vec![text_node("yes")],
+                ),
+                else_node(vec![text_node("no")]),
+            ],
+        );
+        target.part_name = Some("lane".into());
+        let l = layout("Lane", target);
+        let s = style_with_part(
+            "Lane",
+            "lane",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "9".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit conditional drop-target gap")
+            .output;
+        let call = out
+            .find("Column(children: _mosaicWithGap(<Widget>[")
+            .expect("the evaluated conditional list must call the gap helper");
+        let condition = out[call..]
+            .find("_mosaicTruthy(visible)")
+            .expect("the If/Else pair must remain inside the evaluated list");
+        let call_end = out[call..]
+            .find("], 9, Axis.vertical))")
+            .expect("the vertical gap call must close after the conditional");
+        assert!(condition < call_end, "got:\n{out}");
+        assert_eq!(out.matches("List<Widget> _mosaicWithGap(").count(), 1);
+        assert!(out.contains("DragTarget<_MosaicDragData>("), "got:\n{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn decorated_draggable_first_if_else_keeps_a_following_child_in_the_gap_list() {
+        let m = component("Card", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let mut draggable = node_with(
+            "HostDraggable",
+            vec![],
+            vec![
+                if_node(
+                    LayoutPropValue::SlotRef("visible".into()),
+                    vec![text_node("yes")],
+                ),
+                else_node(vec![text_node("no")]),
+                text_node("after"),
+            ],
+        );
+        draggable.part_name = Some("card".into());
+        let l = layout("Card", draggable);
+        let s = style_with_part(
+            "Card",
+            "card",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#ffffff".into(),
+                },
+                StyleProp {
+                    name: "gap".into(),
+                    value: "6px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit decorated conditional draggable gap")
+            .output;
+        let call = out
+            .find("Column(children: _mosaicWithGap(<Widget>[")
+            .expect("the multi-child decorated body must call the gap helper");
+        let condition = out[call..]
+            .find("_mosaicTruthy(visible)")
+            .expect("the If/Else pair must remain inside the evaluated list");
+        let following = out[call..]
+            .find("\"after\"")
+            .expect("the ordinary child after the If/Else pair must survive lowering");
+        let call_end = out[call..]
+            .find("], 6, Axis.vertical))")
+            .expect("the vertical gap call must close after every child");
+        assert!(condition < following && following < call_end, "got:\n{out}");
+        assert_eq!(out.matches("List<Widget> _mosaicWithGap(").count(), 1);
+        assert!(out.contains("Draggable<_MosaicDragData>("), "got:\n{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
     fn drop_target_gap_spaces_a_single_for_body_after_evaluation() {
         let m = component(
             "Lane",
