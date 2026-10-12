@@ -17,7 +17,7 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
+    SwimlaneEdgeAnimation, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -6227,6 +6227,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let mut class_styles = HashMap::new();
     let mut pending_classes = Vec::new();
     let mut pending_styles = Vec::new();
+    let mut pending_edge_configs = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.trim();
@@ -6321,6 +6322,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             pending_styles.push(parse_swimlane_style(value, line_number)?);
             continue;
         }
+        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
+            pending_edge_configs.push(config);
+            continue;
+        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
@@ -6358,6 +6363,17 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     for callback in &diagram.callbacks {
         if !diagram.nodes.iter().any(|node| node.id == callback.node_id) {
             return Err(swimlane_error(1, format!("Swimlane callback references unknown node {:?}", callback.node_id)));
+        }
+    }
+    for config in pending_edge_configs {
+        let mut matched = false;
+        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(config.id.as_str())) {
+            matched = true;
+            edge.animate = config.animate;
+            edge.animation = config.animation;
+        }
+        if !matched {
+            return Err(swimlane_error(config.line, format!("Swimlane edge configuration references unknown edge {:?}", config.id)));
         }
     }
     if let Some(style) = class_styles.get("default") {
@@ -6469,6 +6485,13 @@ fn swimlane_edge_target_indices<'a>(targets: &'a std::collections::BTreeMap<Stri
     targets.get(target).map_or(&[], Vec::as_slice)
 }
 
+struct SwimlaneEdgeConfig {
+    id: String,
+    animate: bool,
+    animation: Option<SwimlaneEdgeAnimation>,
+    line: usize,
+}
+
 fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction, ParseError> {
     let Some((node_id, rest)) = value.trim().split_once(char::is_whitespace) else {
         return Err(swimlane_error(line, "Swimlane click requires a node and action"));
@@ -6560,6 +6583,55 @@ fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyl
         return Err(swimlane_error(line, "Swimlane style requires a node id and declarations"));
     };
     Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
+}
+
+fn parse_swimlane_edge_config(
+    value: &str,
+    line: usize,
+) -> Result<Option<SwimlaneEdgeConfig>, ParseError> {
+    let Some((id, attributes)) = value.split_once("@{") else {
+        return Ok(None);
+    };
+    let Some(body) = attributes.strip_suffix('}') else {
+        return Err(swimlane_error(line, "unterminated Swimlane edge configuration"));
+    };
+    let fields = split_mermaid_metadata_fields(body).into_iter().map(|field| {
+        let (key, value) = field.split_once(':')
+            .ok_or_else(|| swimlane_error(line, "Swimlane edge configuration requires key: value"))?;
+        Ok((parse_mermaid_metadata_scalar(key.trim()), parse_mermaid_metadata_scalar(value.trim())))
+    }).collect::<Result<Vec<_>, ParseError>>()?;
+    if !fields.iter().any(|(key, _)| matches!(key.as_str(), "animate" | "animation")) {
+        return Ok(None);
+    }
+    let id = id.trim();
+    if id.is_empty() || !id.chars().all(|character|
+        character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+    ) {
+        return Err(swimlane_error(line, "invalid Swimlane edge configuration id"));
+    }
+    let mut animate = None;
+    let mut animation = None;
+    for (key, value) in fields {
+        match key.as_str() {
+            "animate" => animate = Some(match value.to_ascii_lowercase().as_str() {
+                "true" => true,
+                "false" => false,
+                _ => return Err(swimlane_error(line, "Swimlane edge animate must be true or false")),
+            }),
+            "animation" => animation = Some(match value.to_ascii_lowercase().as_str() {
+                "slow" => SwimlaneEdgeAnimation::Slow,
+                "fast" => SwimlaneEdgeAnimation::Fast,
+                _ => return Err(swimlane_error(line, "Swimlane edge animation must be slow or fast")),
+            }),
+            other => return Err(swimlane_error(line, format!("unsupported Swimlane edge configuration {other:?}"))),
+        }
+    }
+    Ok(Some(SwimlaneEdgeConfig {
+        id: id.to_string(),
+        animate: animate.unwrap_or(animation.is_some()),
+        animation,
+        line,
+    }))
 }
 
 fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {
@@ -6726,6 +6798,8 @@ fn parse_swimlane_edge_chain(
                     min_length,
                     classes: Vec::new(),
                     style: DiagramStyle::default(),
+                    animate: false,
+                    animation: None,
                 });
             }
         }
