@@ -1033,7 +1033,8 @@ Lined documents recognize `lin-doc` and `lined-document` aliases.
 Data stores recognize `datastore` and `data-store` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
-directed/undirected/dotted/thick chained links, point/circle/cross endpoint
+directed/undirected/dotted/thick chained links, including open dotted and thick
+forms, point/circle/cross endpoint
 markers and bidirectional arrows, multiline edge continuations,
 invisible layout links,
 parallel branch and join

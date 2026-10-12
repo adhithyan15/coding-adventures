@@ -2064,6 +2064,21 @@ fn swimlane_invisible_links_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_open_styled_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  published[Published]\nend\ndraft -.- review === published",
+    ).expect("open dotted and thick Flowchart links should parse");
+
+    assert_eq!(diagram.edges.len(), 2);
+    assert_eq!((diagram.edges[0].kind, diagram.edges[0].end_marker),
+        (SwimlaneEdgeKind::Dotted, EdgeMarker::None));
+    assert_eq!((diagram.edges[1].kind, diagram.edges[1].end_marker),
+        (SwimlaneEdgeKind::Thick, EdgeMarker::None));
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

@@ -221,6 +221,10 @@
     {
       "name": "invisible-layout-link",
       "source": "swimlane-beta LR\nsubgraph Drafting\n  draft[Draft]\nend\nsubgraph Publishing\n  published[Published]\nend\ndraft ~~~ published"
+    },
+    {
+      "name": "open-styled-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  published[Published]\nend\ndraft -.- review === published"
     }
   ]
 }

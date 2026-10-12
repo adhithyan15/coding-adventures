@@ -3927,10 +3927,10 @@ impl Compiler {
             "exp" => self.builtin_single_exp_sign_operand(node),
             "ln" => self
                 .builtin_single_exp_nonnegative_sign_operand(actuals[0])
+                .or_else(|| self.builtin_double_exp_sign_operand(actuals[0]))
                 .or_else(|| {
                     self.conditional_expression_parts(actuals[0])?;
-                    self.builtin_double_exp_sign_operand(actuals[0])
-                        .or_else(|| self.builtin_triple_exp_sign_operand(actuals[0]))
+                    self.builtin_triple_exp_sign_operand(actuals[0])
                 }),
             _ => None,
         }
@@ -4544,7 +4544,9 @@ impl Compiler {
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
                 self.builtin_sign_operand(actuals[0])
             }
-            "ln" => self.builtin_single_exp_sign_operand(actuals[0]),
+            "ln" => self
+                .builtin_single_exp_sign_operand(actuals[0])
+                .or_else(|| self.builtin_double_exp_sign_operand(actuals[0])),
             _ => None,
         }
     }
@@ -15083,14 +15085,34 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_direct_double_exp_result_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(ln(exp(exp(sign(pick()))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(ln(exp(exp(abs(sign(pick()))))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln over exactly two bounded exponentials preserves a direct sign-rooted result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_ln_exp_entier_sign_widening_rejects_unproven_mappings() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(sign(pick()))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(sign(pick())))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(pick()))); output(result) end",
-            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(exp(sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(exp(exp(sign(pick()))))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative",
+                "deeper exponential, non-sign-rooted, and overridden exp mappings must remain conservative",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
@@ -15188,11 +15210,11 @@ mod tests {
     fn al4_sqrt_ln_exp_entier_sign_widening_rejects_unproven_mappings() {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(sign(pick()))))); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(exp(abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(exp(exp(abs(sign(pick())))))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(sqrt(ln(exp(abs(sign(pick())))))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "signed, nested exponential, and overridden exp mappings must remain conservative under sqrt-ln",
+                "signed, deeper exponential, and overridden exp mappings must remain conservative under sqrt-ln",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

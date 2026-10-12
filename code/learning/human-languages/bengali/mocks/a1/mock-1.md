@@ -118,6 +118,9 @@ Each part is played or read twice at the stated pace.
 
 Write independently in Bengali script. Six to eight fields are required in the
 form task. Do not copy from a model or a previous skill sheet.
+Use one continuous 20-minute clock: spend 7 minutes on the practical form and
+13 minutes on the named-reader message. Move on when the first 7 minutes end;
+stop when the full 20 minutes end. Review the attempt later, outside this paper.
 
 1. Practical form: a neighborhood class asks for a short registration form.
    Fill seven fields in Bengali script: name, city, one language, phone number,
