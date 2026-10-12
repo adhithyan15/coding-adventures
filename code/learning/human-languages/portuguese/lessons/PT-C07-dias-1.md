@@ -5,7 +5,7 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 350
 chapter: 7
 type: word
-headword: segunda, terça, quarta, quinta, sexta(-feira)
+headword: segunda, terça, quarta, quinta, sexta, -feira
 gloss: the weekdays (Mon–Fri) — Portuguese NUMBERS its days instead of naming planets
 concept_tag: PT-DAYS-WEEKDAYS
 prerequisites: [PT-C06-numeros-1-5]
@@ -85,4 +85,4 @@ Sunday is counted as the *first* day — the next lesson closes that loop.)
 its weekdays — *feiras* — instead of naming planet-gods.) What does *feira* mean,
 and its English cousin? ("Feast-day," ← *fēria*; English *fair*.) What number
 hides in *quinta-feira*? (Five — *quinta* ← *quintus*, cousin of *cinco*.) Next:
-the two days that **kept** their old names — *sábado* and *domingo*.
+the two days that **kept** their old names — Saturday and Sunday.

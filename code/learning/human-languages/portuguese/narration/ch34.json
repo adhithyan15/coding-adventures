@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Pain, Fever, Cough, Medicine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:494493fc0e17b0f0",
+  "sourceHash": "fnv1a64:3de0569381418225",
   "lessons": [
     {
       "id": "PT-C34-dor",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54a45e85c2289549",
+      "sourceHash": "fnv1a64:bb9ad2e623a37df5",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "a dor — \"pain\". dor de cabeça: a headache."
+              "text": "a dor — \"pain\". Put it with cabeça, \"head\", and you have a headache:"
+            },
+            {
+              "kind": "speech",
+              "text": "dor + de + cabeça becomes dor de cabeça."
             }
           ]
         },

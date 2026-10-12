@@ -56,7 +56,7 @@ Germanic, unrelated.)
 
 Every Portuguese noun is **masculine or feminine** — Latin's genders collapsed
 to two. Learn each noun *with* its article: **o** (m.), **a** (f.). Watch the
-trap next: *o dia* ("the day") is masculine even though it ends in *-a*.
+trap next: the word for "day" is masculine even though it ends in *-a*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-O-A-02, PT-GRAMMAR-O-A-03] -->

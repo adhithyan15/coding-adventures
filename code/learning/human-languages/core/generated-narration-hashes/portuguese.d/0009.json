@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 9,
-  "sourceHash": "fnv1a64:f5603ae6b6ac06ed",
+  "sourceHash": "fnv1a64:453930c0a4c65d3a",
   "lessonIds": [
     "PT-C09-meses",
     "PT-C09-estacoes"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "portuguese/narration/ch09.txt",
   "json": "portuguese/narration/ch09.json",
-  "textHash": "fnv1a64:7fa91bce52e786ef",
-  "jsonHash": "fnv1a64:202219aad68c95b0",
+  "textHash": "fnv1a64:4415c6444e3ae99b",
+  "jsonHash": "fnv1a64:13a7e5f26b5ea5ee",
   "findings": []
 }

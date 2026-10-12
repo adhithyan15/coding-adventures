@@ -13,7 +13,7 @@ sounds: [nasal-am, participle-ado]
 roots: [latin-tenere-participle]
 etymology_hook: "Portuguese built the same have+participle machine as French and Italian, then gave it a DIFFERENT job: tenho falado means 'I have been speaking (repeatedly, lately)', not 'I spoke' — because the simple past falei never vacated the slot"
 duration:
-  max_seconds: 260
+  max_seconds: 262
 requires:
   knowledge: [PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03, PT-LEX-TER-02, PT-ETYMON-TER-03]
 introduces:
@@ -45,11 +45,11 @@ one of the most common mistakes English speakers make in Portuguese.
 
 > **ter** (conjugated) + **past participle**
 
-| infinitive | participle |
-|---|---|
-| fal**ar** | fal**ado** |
-| com**er** | com**ido** |
-| part**ir** | part**ido** |
+| infinitive ending | participle ending | example |
+|---|---|---|
+| **-ar** | **-ado** | fal**ado** |
+| **-er** | **-ido** | com**ido** |
+| **-ir** | **-ido** | part**ido** |
 
 → **tenho falado**, **tens falado**, **tem falado**…
 

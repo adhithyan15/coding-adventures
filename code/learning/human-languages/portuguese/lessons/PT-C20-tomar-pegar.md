@@ -46,7 +46,7 @@ easy to feel.
 | pegar — grasp, catch, grab | tomar — consume, take in |
 |---|---|
 | **pego, pegas, pega, pegamos, pegam** | **tomo, tomas, toma, tomamos, tomam** |
-| Pego o livro. — I pick up the book. | Tomo um café. — I have a coffee. |
+| Pego o livro. — I pick up the book. | Tomo água. — I drink some water. |
 | Pegar um táxi. — To catch a taxi. | Tomar banho. — To take a bath. |
 
 The rule of thumb: if the thing ends up **in your hand**, it is *pegar*; if it
@@ -78,15 +78,15 @@ spread of senses, and no other Romance language has it at all.
 
 [PAUSE 1s]
 - [YOU SAY: "pego, pegas, pega" · "tomo, tomas, toma"]
-- [YOU SAY: "Tomo um café" · "Pegar um táxi"]
+- [YOU SAY: "Tomo água" · "Pegar um táxi"]
 - [YOU SAY: having and taking — "tenho um livro" · "pego o livro"]
 - [YOU SAY: the sticking family — "pegar · pegajoso · pitch"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-ESCREVER-02, PT-LEX-TER-HAVER-02, PT-LEX-TOMAR-PEGAR-02, PT-ETYMON-TOMAR-PEGAR-03] -->
 
-[PAUSE 3s] Which verb takes a coffee, and which takes a book? (***Tomar***;
-***pegar***.) Say "I have a coffee." (***Tomo um café***.) What did *picāre*
+[PAUSE 3s] Which verb takes a drink, and which takes a book? (***Tomar***;
+***pegar***.) Say "I drink some water." (***Tomo água***.) What did *picāre*
 mean, and what is *tomar*'s root? (To coat with **pitch**, so *pegar* is "to
 make stick"; *tomar*'s is **unknown** — disputed, and named as such.)
 Now "I have" and "I write". (***Tenho***; ***escrevo***.) Next: asking.

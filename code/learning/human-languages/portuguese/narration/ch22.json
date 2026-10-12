@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Answering, Meeting, and Three Ways to Play",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4d0e2ae2a2f2ce71",
+  "sourceHash": "fnv1a64:75d06ea81cbb7659",
   "lessons": [
     {
       "id": "PT-C22-responder",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60f4b9da93f25041",
+      "sourceHash": "fnv1a64:ef0b0f6f79740263",
       "notice": null,
       "blocks": [
         {
@@ -222,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "Encontro o livro. — I find the book. Encontramos o café. — We find the café."
+              "text": "Encontro o livro. — I find the book. Encontramos o pão. — We find the bread."
             },
             {
               "kind": "speech",
@@ -273,11 +273,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“We find the café” — Encontramos o café.",
+              "instruction": "“We find the bread” — Encontramos o pão.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “We find the café” — **Encontramos o café.**]"
+              "source": "[YOU SAY: “We find the bread” — **Encontramos o pão.**]"
             }
           ]
         },
@@ -294,7 +294,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say “I find.” (Encontro.) Say “We find the café.” (Encontramos o café.) Which English word shares the same family? (Encounter.) Next, encontrar will gain one social meaning."
+              "text": "Say “I find.” (Encontro.) Say “We find the bread.” (Encontramos o pão.) Which English word shares the same family? (Encounter.) Next, encontrar will gain one social meaning."
             }
           ]
         }
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eab631bc90081c76",
+      "sourceHash": "fnv1a64:8185c88bc33a37fe",
       "notice": null,
       "blocks": [
         {
@@ -339,7 +339,7 @@
             },
             {
               "kind": "speech",
-              "text": "First the finding: encontro o livro, encontramos o café. The object comes straight after the verb."
+              "text": "First the finding: encontro o livro, encontramos o pão. The object comes straight after the verb."
             }
           ]
         },

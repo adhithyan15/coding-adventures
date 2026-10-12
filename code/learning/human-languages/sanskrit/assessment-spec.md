@@ -4,10 +4,10 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1, A1, and A2 task inventories and two
-source mock bundles at each rung are checked in, while qualified recordings,
-B1-C2 inventories and mocks, calibration, standard setting, and human
-validation remain backlog
+**Status:** target specified; implemented evidence is represented by the
+level-owned files checked in under `task-shapes/` and `mocks/`. File presence
+does not claim qualified recordings, calibration, standard setting, independent
+human review, book-only validation, or readiness.
 
 This specification names the assessment that the complete Sanskrit book must
 eventually prepare a book-only learner to pass. It is not an external

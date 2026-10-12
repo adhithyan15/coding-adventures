@@ -76,4 +76,4 @@ called — never *what*.
 
 [PAUSE 3s] What does *Como se chama?* literally ask? ("How do you call
 yourself?") Which everyday pronoun does the polite form use? (*Você*.) What "how"
-word is it built on? (*Como* ← *quōmodo*.) Next: the warm reply — **prazer**.
+word is it built on? (*Como* ← *quōmodo*.) Next: the warm reply — "a pleasure."

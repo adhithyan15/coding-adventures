@@ -60,9 +60,9 @@ puts a signature Portuguese sound-shift on full display.
 
 The star is **oito**. Latin *octō* had a *-ct-* cluster, and Portuguese turned
 every Latin *-ct-* into ***-it-***: *octō → oito*, *noctem → noite* ("night"),
-*lactem → leite* ("milk"), *factum → feito* ("done"). So *oito*, *noite*, and
-*leite* all carry the same fingerprint — once you spot the *-it-*, you can often
-guess the Latin word had a *-ct-*. (Spanish took a different path: *octō → ocho*,
+*factum → feito* ("done"). So *oito*, *noite*, and *feito* all carry the same
+fingerprint — once you spot the *-it-*, you can often guess the Latin word had
+a *-ct-*. (Spanish took a different path: *octō → ocho*,
 with *-ct- → -ch-*. Same cluster, two sisters, two solutions — *oito* vs *ocho*.)
 
 ## Grammar Lens: why the months are "off by two"
@@ -80,12 +80,12 @@ Portuguese *dízimo*, a "tithe" (a tenth), the twin of English *dime*.
 [PAUSE 1s]
 - [YOU SAY: "seis, sete, oito, nove, dez" — finish the count]
 - [YOU SAY: "sete/setembro, oito/outubro, nove/novembro, dez/dezembro"]
-- [YOU SAY: the *-ct- → -it-* set — "oito, noite, leite" — then Spanish "ocho"]
+- [YOU SAY: the *-ct- → -it-* set — "oito, noite, feito" — then Spanish "ocho"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04] -->
 
 [PAUSE 3s] Give 6–10 in Portuguese. (*Seis, sete, oito, nove, dez*.) What Latin
 cluster became *-it-* in *oito*, and one more example? (*-ct-*; *noite* ← *noctem*
-/ *leite* ← *lactem*.) Why is *dezembro* Latin for "ten"? (The Roman year began in
+/ *feito* ← *factum*.) Why is *dezembro* Latin for "ten"? (The Roman year began in
 March.) Next chapter builds on this toward time and days.

@@ -1037,6 +1037,7 @@ directed/undirected/dotted/thick chained links, including open dotted and thick
 forms, point/circle/cross endpoint
 markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
 invisible layout links,
+minimum link lengths with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
 accessibility metadata with named and numeric entity decoding. Direct node

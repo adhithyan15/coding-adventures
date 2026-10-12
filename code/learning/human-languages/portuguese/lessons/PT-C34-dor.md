@@ -40,7 +40,9 @@ reviews_of: [PT-C33-estomago]
 ## You'll want to know: a dor
 <!-- hl-knowledge: introduces=[PT-LEX-C34-SAUDE1-01]; assesses=[] -->
 
-**a dor** — "pain". **dor de cabeça**: a headache.
+**a dor** — "pain". Put it with *cabeça*, "head", and you have a headache:
+
+*dor* + *de* + *cabeça* → *dor de cabeça*
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

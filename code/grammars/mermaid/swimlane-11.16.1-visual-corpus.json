@@ -54,6 +54,7 @@
     "node-class-decorators",
     "invisible-layout-link",
     "open-styled-links",
-    "styled-endpoint-markers"
+    "styled-endpoint-markers",
+    "minimum-link-lengths"
   ]
 }
