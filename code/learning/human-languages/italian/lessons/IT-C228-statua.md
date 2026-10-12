@@ -13,7 +13,8 @@ gloss: "a statue"
 concept_tag: IT-COSE228-STATUA
 prerequisites: [IT-C228-torre, IT-C228-monumento]
 sounds: []
-roots: []
+roots: [statuere-latin]
+etymology_hook: "statua ← Latin statua, from statuere 'to set up' — English statue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C228-monumento]
 <!-- hl-knowledge: introduces=[IT-LEX-C228-COSE228-05]; assesses=[] -->
 
 **la statua** — "a statue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**statua** ← Latin *statua*, "a statue", from *statuere*, "to set up" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wife"
 concept_tag: IT-FAMIGLIA2-MOGLIE
 prerequisites: [IT-C44-nonna, IT-C44-marito]
 sounds: []
-roots: []
+roots: [mulier-latin]
+etymology_hook: "moglie ← Latin mulier 'woman' — the word for a woman became the word for a wife"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C44-marito]
 <!-- hl-knowledge: introduces=[IT-LEX-C45-FAMIGLIA2-01]; assesses=[] -->
 
 **la moglie** — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moglie** ← Latin *mulier*, "woman" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

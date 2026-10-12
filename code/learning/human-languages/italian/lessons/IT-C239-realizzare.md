@@ -14,6 +14,7 @@ concept_tag: IT-VERB-REALIZZARE
 prerequisites: [IT-C238-mancare, IT-C239-raggiungere]
 sounds: []
 roots: []
+etymology_hook: "realizzare ← French réaliser 'to make real' — English realise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C239-raggiungere]
 <!-- hl-knowledge: introduces=[IT-LEX-C239-VERBI239-02]; assesses=[] -->
 
 **realizzare** — "to achieve, to carry out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**realizzare** ← French *réaliser*, "to make real" — borrowed. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

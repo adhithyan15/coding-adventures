@@ -13,7 +13,8 @@ gloss: "to propose"
 concept_tag: IT-VERB-PROPORRE
 prerequisites: [IT-C210-prestare, IT-C210-produrre]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "proporre ← Latin proponere 'to put forward' — English propose and proponent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C210-produrre]
 <!-- hl-knowledge: introduces=[IT-LEX-C210-VERBI210-04]; assesses=[] -->
 
 **proporre** — "to propose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proporre** ← Latin *proponere*, "to put forward" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

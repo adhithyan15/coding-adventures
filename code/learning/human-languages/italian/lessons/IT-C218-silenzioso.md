@@ -13,7 +13,8 @@ gloss: "silent"
 concept_tag: IT-QUAL218-SILENZIOSO
 prerequisites: [IT-C218-nervoso, IT-C218-calmo]
 sounds: []
-roots: []
+roots: [silentium-latin]
+etymology_hook: "silenzioso — silenzio 'silence' + -oso; from Latin silentium — English silent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C218-calmo]
 <!-- hl-knowledge: introduces=[IT-LEX-C218-QUAL218-05]; assesses=[] -->
 
 **silenzioso** — "silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**silenzioso** — built from *silenzio*, "silence", with *-oso*, "full of". *silenzio* goes back to Latin *silentium*, "silence" (Lewis & Short). EtymDB 2.1 has no row for either.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a lawyer"
 concept_tag: IT-LAVORO112-AVVOCATO
 prerequisites: [IT-C112-fornaio, IT-C112-autista]
 sounds: []
-roots: []
+roots: [advocare-latin]
+etymology_hook: "avvocato ← Latin advocatus 'one called in to help' — English advocate is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C112-autista]
 <!-- hl-knowledge: introduces=[IT-LEX-C112-LAVORO112-03]; assesses=[] -->
 
 **l'avvocato** — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avvocato** ← Latin *advocatus*, "one called in to help", from *advocare*, "to call to one's side" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

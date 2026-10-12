@@ -13,7 +13,8 @@ gloss: "the bill"
 concept_tag: IT-COSE160-CONTO
 prerequisites: [IT-C159-balcone, IT-C159-parete]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "conto ← Vulgar Latin contus, worn down from computus 'a reckoning' — English count"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C159-parete]
 <!-- hl-knowledge: introduces=[IT-LEX-C160-COSE160-01]; assesses=[] -->
 
 **il conto** — "the bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conto** ← Vulgar Latin *contus*, "a reckoning" — inherited. (EtymDB 2.1) It is a worn-down form of Latin *computus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

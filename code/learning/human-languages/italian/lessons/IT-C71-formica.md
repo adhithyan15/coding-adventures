@@ -13,7 +13,8 @@ gloss: "an ant"
 concept_tag: IT-ANIMALI4-FORMICA
 prerequisites: [IT-C71-scimmia, IT-C71-ape]
 sounds: []
-roots: []
+roots: [formica-latin]
+etymology_hook: "formica ← Latin formica 'ant'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C71-ape]
 <!-- hl-knowledge: introduces=[IT-LEX-C71-ANIMALI4-04]; assesses=[] -->
 
 **la formica** — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**formica** ← Latin *formica*, "ant" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

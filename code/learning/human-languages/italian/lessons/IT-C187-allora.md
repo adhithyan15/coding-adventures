@@ -13,7 +13,8 @@ gloss: "then, so"
 concept_tag: IT-TEMPO187-ALLORA
 prerequisites: [IT-C186-speranza, IT-C187-ancora]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "allora ← Latin ad illam horam 'at that hour' — French alors is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C187-ancora]
 <!-- hl-knowledge: introduces=[IT-LEX-C187-TEMPO187-02]; assesses=[] -->
 
 **allora** — "then, so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**allora** ← Latin *ad illam horam*, "at that hour" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

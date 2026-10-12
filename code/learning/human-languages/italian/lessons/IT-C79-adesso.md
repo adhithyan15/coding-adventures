@@ -14,6 +14,7 @@ concept_tag: IT-QUANDO-ADESSO
 prerequisites: [IT-C79-sempre, IT-C79-mai]
 sounds: []
 roots: []
+etymology_hook: "adesso ← Latin ad ipsum 'at the very (moment)'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C79-mai]
 <!-- hl-knowledge: introduces=[IT-LEX-C79-QUANDO-03]; assesses=[] -->
 
 **adesso** — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adesso** ← Latin *ad ipsum*, "at that very (moment)" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

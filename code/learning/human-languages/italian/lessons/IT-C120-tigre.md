@@ -13,7 +13,8 @@ gloss: "a tiger"
 concept_tag: IT-ANIMALI120-TIGRE
 prerequisites: [IT-C120-asino, IT-C120-coniglio]
 sounds: []
-roots: []
+roots: [tigris-latin]
+etymology_hook: "tigre ← Latin tigris, from Greek tigris — English tiger is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C120-coniglio]
 <!-- hl-knowledge: introduces=[IT-LEX-C120-ANIMALI120-03]; assesses=[] -->
 
 **la tigre** — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tigre** ← Latin *tigris*, "tiger", which Latin took from Greek *tigris*. EtymDB 2.1 has no row for *tigre*; it derives Spanish and Portuguese *tigre* from *tigris*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [double-consonant, final-vowel]
 roots: [latin-esse-participle, andare-latin]
 etymology_hook: "sono andato / sono andata preserves the participle's older job as an adjective describing the subject"
 duration:
-  max_seconds: 233
+  max_seconds: 250
 requires:
   knowledge: [IT-LEX-ANDARE-02, IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03, IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03]
 introduces:
@@ -51,6 +51,11 @@ Combine them, then watch the participle’s ending change.
 
 The plural **stati** is the first clue: with *essere*, the participle describes
 the subject and therefore agrees with it.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sono** is a form of *essere* ← Vulgar Latin *essere*, from Latin *esse*, "to be". Where *andare* came from is not recorded in EtymDB 2.1.
 
 ## Grammar Lens: motion, change, and agreement
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-PASSATO-PROSSIMO-ESSERE-03]; assesses=[] -->

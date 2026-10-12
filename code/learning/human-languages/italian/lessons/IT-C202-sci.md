@@ -14,6 +14,7 @@ concept_tag: IT-COSE202-SCI
 prerequisites: [IT-C202-corsa, IT-C202-nuoto]
 sounds: []
 roots: []
+etymology_hook: "sci ← Norwegian ski — borrowed; English ski is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C202-nuoto]
 <!-- hl-knowledge: introduces=[IT-LEX-C202-COSE202-05]; assesses=[] -->
 
 **lo sci** — "skiing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sci** ← Norwegian *ski* — borrowed. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

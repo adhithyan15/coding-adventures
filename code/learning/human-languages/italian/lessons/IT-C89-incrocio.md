@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI89-INCROCIO
 prerequisites: [IT-C89-ufficio, IT-C89-angolo]
 sounds: []
 roots: []
+etymology_hook: "incrocio — from the verb 'to cross', built on Latin crux 'cross'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C89-angolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C89-LUOGHI89-04]; assesses=[] -->
 
 **l'incrocio** — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**incrocio** — built from the verb "to cross", which comes from the word for a cross ← Latin *crux*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

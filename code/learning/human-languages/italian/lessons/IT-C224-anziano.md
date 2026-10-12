@@ -13,7 +13,8 @@ gloss: "an elderly person"
 concept_tag: IT-COSE224-ANZIANO
 prerequisites: [IT-C223-fotografo, IT-C224-adulto]
 sounds: []
-roots: []
+roots: [ante-latin]
+etymology_hook: "anziano — built on anzi 'before': one who came before — English ancient is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C224-adulto]
 <!-- hl-knowledge: introduces=[IT-LEX-C224-COSE224-02]; assesses=[] -->
 
 **l'anziano** — "an elderly person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anziano** — built on *anzi*, "before", with *-ano*: one who came before. EtymDB 2.1 lists French *ancien* and Spanish *anciano* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a flat"
 concept_tag: IT-COSE159-APPARTAMENTO
 prerequisites: [IT-C158-scuro, IT-C158-puntuale]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "appartamento — rooms set a parte 'apart', from Latin ad + pars 'part' — English apartment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C158-puntuale]
 <!-- hl-knowledge: introduces=[IT-LEX-C159-COSE159-01]; assesses=[] -->
 
 **l'appartamento** — "a flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**appartamento** — rooms set *a parte*, "apart". EtymDB 2.1 takes it back to Latin *ad*, "to", *pars*, "part", and *-mentum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

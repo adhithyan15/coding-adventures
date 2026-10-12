@@ -13,7 +13,8 @@ gloss: "the wind"
 concept_tag: IT-CIELO-VENTO
 prerequisites: [IT-C67-nuvola, IT-C67-pioggia]
 sounds: []
-roots: []
+roots: [ventus-latin]
+etymology_hook: "vento ← Latin ventus 'wind' — English ventilate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C67-pioggia]
 <!-- hl-knowledge: introduces=[IT-LEX-C67-CIELO-04]; assesses=[] -->
 
 **il vento** — "the wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vento** ← Latin *ventus*, "wind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

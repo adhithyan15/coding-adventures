@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 4,
-  "sourceHash": "fnv1a64:c0e33cc0295efa33",
+  "sourceHash": "fnv1a64:59eb9d5a5dfb4f97",
   "lessonIds": [
     "FR-C04-au-revoir",
     "FR-C04-a-plus-tard",
@@ -18,7 +18,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch04.txt",
   "json": "french/narration/ch04.json",
-  "textHash": "fnv1a64:a78ed6c4e0ba2f62",
-  "jsonHash": "fnv1a64:dd08ed490c572dfd",
+  "textHash": "fnv1a64:f73a3312f0251554",
+  "jsonHash": "fnv1a64:ba5e3574e2824b53",
   "findings": []
 }

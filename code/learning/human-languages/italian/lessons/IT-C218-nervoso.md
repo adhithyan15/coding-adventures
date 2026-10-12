@@ -13,7 +13,8 @@ gloss: "nervous"
 concept_tag: IT-QUAL218-NERVOSO
 prerequisites: [IT-C218-geloso, IT-C218-orgoglioso]
 sounds: []
-roots: []
+roots: [nervus-latin]
+etymology_hook: "nervoso ← Latin nervosus 'sinewy', from nervus 'a sinew' — English nervous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C218-orgoglioso]
 <!-- hl-knowledge: introduces=[IT-LEX-C218-QUAL218-03]; assesses=[] -->
 
 **nervoso** — "nervous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nervoso** ← Latin *nervosus*, "sinewy, vigorous" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

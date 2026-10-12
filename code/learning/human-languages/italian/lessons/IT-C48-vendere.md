@@ -13,7 +13,8 @@ gloss: "to sell"
 concept_tag: IT-VERB-VENDERE
 prerequisites: [IT-C47-lavare, IT-C48-cucinare]
 sounds: []
-roots: []
+roots: [vendere-latin]
+etymology_hook: "vendere ← Latin vendere 'to sell' — English vendor shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C48-cucinare]
 <!-- hl-knowledge: introduces=[IT-LEX-C48-VERBI2-02]; assesses=[] -->
 
 **vendere** — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vendere** ← Latin *vendere*, "to sell" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a belt"
 concept_tag: IT-COSE220-CINTURA
 prerequisites: [IT-C220-maglietta, IT-C220-calze]
 sounds: []
-roots: []
+roots: [cingere-latin]
+etymology_hook: "cintura ← Latin cinctura 'a girdle', from cingere 'to gird' — English cincture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C220-calze]
 <!-- hl-knowledge: introduces=[IT-LEX-C220-COSE220-03]; assesses=[] -->
 
 **la cintura** — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cintura** ← Latin *cinctura*, "a girdle" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

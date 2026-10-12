@@ -13,7 +13,8 @@ gloss: "busy; taken"
 concept_tag: IT-QUALITA124-OCCUPATO
 prerequisites: [IT-C123-arancione, IT-C123-carino]
 sounds: []
-roots: []
+roots: [occupare]
+etymology_hook: "occupato ← occupare, taken from Latin occupare 'to seize' — English occupied"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C123-carino]
 <!-- hl-knowledge: introduces=[IT-LEX-C124-QUALITA124-01]; assesses=[] -->
 
 **occupato** — "busy; taken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**occupato** is the past participle of *occupare*, "to occupy", taken from Latin *occupare*, "to seize" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

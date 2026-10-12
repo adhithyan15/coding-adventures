@@ -13,7 +13,8 @@ gloss: "to run"
 concept_tag: IT-VERB-CORRERE
 prerequisites: [IT-C48-chiamare, IT-C48-dormire]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "correre ← Latin currere 'to run' — English current and courier share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C48-dormire]
 <!-- hl-knowledge: introduces=[IT-LEX-C49-VERBI3-01]; assesses=[] -->
 
 **correre** — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**correre** ← Latin *currere*, "to run" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

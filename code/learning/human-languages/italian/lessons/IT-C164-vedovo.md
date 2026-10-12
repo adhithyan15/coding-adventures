@@ -13,7 +13,8 @@ gloss: "a widower"
 concept_tag: IT-COSE164-VEDOVO
 prerequisites: [IT-C164-sposo, IT-C164-sposa]
 sounds: []
-roots: []
+roots: [viduus-latin]
+etymology_hook: "vedovo ← Latin viduus 'bereft' — English widower is a distant cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C164-sposa]
 <!-- hl-knowledge: introduces=[IT-LEX-C164-COSE164-04]; assesses=[] -->
 
 **il vedovo** — "a widower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vedovo** ← Latin *viduus*, "bereft" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

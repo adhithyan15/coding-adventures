@@ -13,7 +13,8 @@ gloss: "heavy"
 concept_tag: IT-QUALITA130-PESANTE
 prerequisites: [IT-C130-salato, IT-C130-leggero]
 sounds: []
-roots: []
+roots: [pensare-latin]
+etymology_hook: "pesante — 'weighing', from pesare ← Latin pensare 'to weigh' — English pensive shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C130-leggero]
 <!-- hl-knowledge: introduces=[IT-LEX-C130-QUALITA130-04]; assesses=[] -->
 
 **pesante** — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pesante** — built from *pesare*, "to weigh", with *-ante*, "-ing". *pesare* ← Vulgar Latin *pesare*, from Latin *pensare*, "to weigh". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

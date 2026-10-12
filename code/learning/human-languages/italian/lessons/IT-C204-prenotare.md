@@ -13,7 +13,8 @@ gloss: "to book"
 concept_tag: IT-VERB-PRENOTARE
 prerequisites: [IT-C203-indirizzo, IT-C204-parcheggiare]
 sounds: []
-roots: []
+roots: [notare-latin]
+etymology_hook: "prenotare — pre- 'before' + notare 'to note': to note down in advance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C204-parcheggiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C204-VERBI204-02]; assesses=[] -->
 
 **prenotare** — "to book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prenotare** is *pre-*, "before", plus *notare*, "to note": to note down in advance, after Latin *praenotare*. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

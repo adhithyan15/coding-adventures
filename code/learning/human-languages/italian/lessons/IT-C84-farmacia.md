@@ -14,6 +14,7 @@ concept_tag: IT-CITTA4-FARMACIA
 prerequisites: [IT-C83-ristorante, IT-C84-albergo]
 sounds: []
 roots: []
+etymology_hook: "farmacia ← Latin pharmacia, from Greek pharmakeia — English pharmacy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C84-albergo]
 <!-- hl-knowledge: introduces=[IT-LEX-C84-CITTA4-02]; assesses=[] -->
 
 **la farmacia** — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farmacia** ← Medieval Latin *pharmacia* — borrowed; Latin took it from Greek *pharmakeia*, "use of drugs". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

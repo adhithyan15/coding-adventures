@@ -13,7 +13,8 @@ gloss: "a boyfriend, a fiancé"
 concept_tag: IT-COSE251-FIDANZATO
 prerequisites: [IT-C251-genero, IT-C251-nuora]
 sounds: []
-roots: []
+roots: [fidere-latin]
+etymology_hook: "fidanzato — masculine of fidanzata 'the pledged one' — French fiancé is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C251-nuora]
 <!-- hl-knowledge: introduces=[IT-LEX-C251-COSE251-05]; assesses=[] -->
 
 **il fidanzato** — "a boyfriend, a fiancé".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fidanzato** is the masculine of *fidanzata*: "the one pledged", from *fidanza*, "trust", which goes back to Latin *fidere*, "to trust". EtymDB 2.1 lists French *fiancé* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to slow down"
 concept_tag: IT-VERB-RALLENTARE
 prerequisites: [IT-C241-distruggere, IT-C241-esagerare]
 sounds: []
-roots: []
+roots: [lentus-latin]
+etymology_hook: "rallentare — ra- + lento 'slow': to make slower"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C241-esagerare]
 <!-- hl-knowledge: introduces=[IT-LEX-C242-VERBI242-01]; assesses=[] -->
 
 **rallentare** — "to slow down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rallentare** — built from *lento*, "slow", with *ra-*: to make slow. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

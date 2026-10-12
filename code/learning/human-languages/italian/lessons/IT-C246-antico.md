@@ -13,7 +13,8 @@ gloss: "ancient"
 concept_tag: IT-QUAL246-ANTICO
 prerequisites: [IT-C245-grasso, IT-C245-sconosciuto]
 sounds: []
-roots: []
+roots: [antiquus-latin]
+etymology_hook: "antico ← Latin antiquus 'old' — English antique is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C245-sconosciuto]
 <!-- hl-knowledge: introduces=[IT-LEX-C246-QUAL246-01]; assesses=[] -->
 
 **antico** — "ancient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**antico** ← Latin *antiquus*, "old, ancient" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

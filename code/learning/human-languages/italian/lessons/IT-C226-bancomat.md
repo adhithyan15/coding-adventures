@@ -14,6 +14,7 @@ concept_tag: IT-COSE226-BANCOMAT
 prerequisites: [IT-C226-moneta, IT-C226-banconota]
 sounds: []
 roots: []
+etymology_hook: "bancomat — a trade name: banca 'bank' + automatico 'automatic'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C226-banconota]
 <!-- hl-knowledge: introduces=[IT-LEX-C226-COSE226-05]; assesses=[] -->
 
 **il bancomat** — "a cash machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bancomat** is a trade name built from *banca*, "bank", and *automatico*, "automatic". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

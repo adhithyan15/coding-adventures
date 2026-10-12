@@ -13,7 +13,8 @@ gloss: "a solution"
 concept_tag: IT-COSE196-SOLUZIONE
 prerequisites: [IT-C196-pensiero, IT-C196-ricordo]
 sounds: []
-roots: []
+roots: [solvere-latin]
+etymology_hook: "soluzione ← Latin solutio 'a loosening', from solvere — English solution"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C196-ricordo]
 <!-- hl-knowledge: introduces=[IT-LEX-C196-COSE196-04]; assesses=[] -->
 
 **la soluzione** — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soluzione** ← Latin *solutio*, "a loosening", from *solvere*, "to loosen" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

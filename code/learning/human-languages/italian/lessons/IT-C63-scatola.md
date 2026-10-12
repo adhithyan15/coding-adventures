@@ -14,6 +14,7 @@ concept_tag: IT-COSE3-SCATOLA
 prerequisites: [IT-C63-orologio, IT-C63-occhiali]
 sounds: []
 roots: []
+etymology_hook: "scatola — EtymDB 2.1 gives an origin this book could not confirm, so none is given"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C63-occhiali]
 <!-- hl-knowledge: introduces=[IT-LEX-C63-COSE3-03]; assesses=[] -->
 
 **la scatola** — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scatola** — EtymDB 2.1 gives an origin this book could not confirm, so none is given here.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

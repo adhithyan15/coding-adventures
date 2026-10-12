@@ -62,6 +62,11 @@ This is why *grazie* alone is risky at an Italian table. Offered a second helpin
 a bare **grazie** with a small backward tilt of the head is heard as a refusal.
 If you want it, say **sì, grazie**.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sì** ← Latin *sic*, "thus, so", and **no** ← Latin *non*, "not" — both inherited. (EtymDB 2.1)
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-SI-NO-GRAZIE-02] -->
 

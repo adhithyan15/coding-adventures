@@ -13,7 +13,8 @@ gloss: "thirst"
 concept_tag: IT-STARE-SETE
 prerequisites: [IT-C41-malattia, IT-C41-fame]
 sounds: []
-roots: []
+roots: [sitis-latin]
+etymology_hook: "sete ← Latin sitis 'thirst'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C41-fame]
 <!-- hl-knowledge: introduces=[IT-LEX-C42-STARE-01]; assesses=[] -->
 
 **la sete** — "thirst". **ho sete**: I am thirsty.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sete** ← Latin *sitis*, "thirst" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

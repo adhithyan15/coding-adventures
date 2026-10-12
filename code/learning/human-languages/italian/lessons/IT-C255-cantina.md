@@ -14,6 +14,7 @@ concept_tag: IT-COSE255-CANTINA
 prerequisites: [IT-C255-recinzione, IT-C255-cortile]
 sounds: []
 roots: []
+etymology_hook: "cantina — probably from canto 'a corner', Vulgar Latin canthus — English canteen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C255-cortile]
 <!-- hl-knowledge: introduces=[IT-LEX-C255-COSE255-05]; assesses=[] -->
 
 **la cantina** — "a cellar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cantina** — probably built from *canto*, "a corner", with *-ina*: a corner kept for storing. EtymDB 2.1 traces it to Vulgar Latin *canthus*, "a corner".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

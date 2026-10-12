@@ -13,7 +13,8 @@ gloss: "a notebook"
 concept_tag: IT-COSE1-QUADERNO
 prerequisites: [IT-C61-penna, IT-C61-carta]
 sounds: []
-roots: []
+roots: [quaterni-latin]
+etymology_hook: "quaderno ← Latin quaterni 'four at a time', a gathering of four sheets — English quire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C61-carta]
 <!-- hl-knowledge: introduces=[IT-LEX-C61-COSE1-04]; assesses=[] -->
 
 **il quaderno** — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quaderno** ← Latin *quaterni*, "four at a time" (Lewis & Short) — inherited: a gathering of four sheets. EtymDB 2.1 has no row for *quaderno*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to remember"
 concept_tag: IT-VERB-RICORDARE
 prerequisites: [IT-C175-tradurre, IT-C175-dimenticare]
 sounds: []
-roots: []
+roots: [recordari-latin]
+etymology_hook: "ricordare ← Latin recordari 'to call to mind', built on cor 'heart' — English record"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C175-dimenticare]
 <!-- hl-knowledge: introduces=[IT-LEX-C175-VERBI175-03]; assesses=[] -->
 
 **ricordare** — "to remember".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ricordare** ← Latin *recordari*, "to call to mind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

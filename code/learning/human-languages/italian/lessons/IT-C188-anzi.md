@@ -13,7 +13,8 @@ gloss: "on the contrary"
 concept_tag: IT-PERCHE188-ANZI
 prerequisites: [IT-C187-mentre, IT-C187-decennio]
 sounds: []
-roots: []
+roots: [ante-latin]
+etymology_hook: "anzi ← Latin antea 'before': 'before that' came to mean 'rather'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C187-decennio]
 <!-- hl-knowledge: introduces=[IT-LEX-C188-PERCHE188-01]; assesses=[] -->
 
 **anzi** — "on the contrary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anzi** ← Latin *antea*, "before" — inherited. (EtymDB 2.1) "Before that" came to mean "rather, on the contrary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

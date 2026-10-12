@@ -14,6 +14,7 @@ concept_tag: IT-CIBO109-YOGURT
 prerequisites: [IT-C108-aceto, IT-C109-pasto]
 sounds: []
 roots: []
+etymology_hook: "yogurt ← Turkish yogurt — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C109-pasto]
 <!-- hl-knowledge: introduces=[IT-LEX-C109-CIBO109-02]; assesses=[] -->
 
 **lo yogurt** — "a yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**yogurt** ← Turkish *yogurt* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

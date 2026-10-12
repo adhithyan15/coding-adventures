@@ -13,7 +13,8 @@ gloss: "a dress; a suit"
 concept_tag: IT-VESTITI105-VESTITO
 prerequisites: [IT-C105-camicia, IT-C105-pantaloni]
 sounds: []
-roots: []
+roots: [vestitus-latin]
+etymology_hook: "vestito ← Latin vestitus 'clothing' — English vest and vestment share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C105-pantaloni]
 <!-- hl-knowledge: introduces=[IT-LEX-C105-VESTITI105-05]; assesses=[] -->
 
 **il vestito** — "a dress; a suit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vestito** ← Latin *vestitus*, "dressed; clothing" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

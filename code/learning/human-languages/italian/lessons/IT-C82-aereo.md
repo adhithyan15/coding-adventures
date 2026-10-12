@@ -14,6 +14,7 @@ concept_tag: IT-CITTA2-AEREO
 prerequisites: [IT-C82-autobus, IT-C82-treno]
 sounds: []
 roots: []
+etymology_hook: "aereo ← Latin aerius 'of the air', from Greek aerios; the noun is short for 'aeroplane'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C82-treno]
 <!-- hl-knowledge: introduces=[IT-LEX-C82-CITTA2-04]; assesses=[] -->
 
 **l'aereo** — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aereo** ← Latin *aerius*, "of the air", from Greek *aerios* — taken from Latin (EtymDB 2.1, Latin *aerius*); the noun is short for the word for an aeroplane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

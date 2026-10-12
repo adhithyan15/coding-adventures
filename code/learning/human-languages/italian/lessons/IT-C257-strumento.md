@@ -13,7 +13,8 @@ gloss: "a tool, an instrument"
 concept_tag: IT-COSE257-STRUMENTO
 prerequisites: [IT-C257-sacchetto, IT-C257-filo]
 sounds: []
-roots: []
+roots: [instrumentum-latin]
+etymology_hook: "strumento ← Latin instrumentum 'a tool', its first syllable worn away — English instrument"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C257-filo]
 <!-- hl-knowledge: introduces=[IT-LEX-C257-COSE257-05]; assesses=[] -->
 
 **lo strumento** — "a tool, an instrument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**strumento** ← Latin *instrumentum*, "a tool", its first syllable worn away — inherited. EtymDB 2.1 has no row for *strumento*; it derives the older Italian *istrumento* from *instrumentum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

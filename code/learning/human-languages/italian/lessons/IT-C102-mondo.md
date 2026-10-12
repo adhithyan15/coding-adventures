@@ -13,7 +13,8 @@ gloss: "the world"
 concept_tag: IT-OGGETTI102-MONDO
 prerequisites: [IT-C101-messaggio, IT-C102-zaino]
 sounds: []
-roots: []
+roots: [mundus-latin]
+etymology_hook: "mondo ← Latin mundus 'world' — English mundane shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C102-zaino]
 <!-- hl-knowledge: introduces=[IT-LEX-C102-OGGETTI102-02]; assesses=[] -->
 
 **il mondo** — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mondo** ← Latin *mundus*, "world" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

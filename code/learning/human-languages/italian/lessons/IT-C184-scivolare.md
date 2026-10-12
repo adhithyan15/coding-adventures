@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SCIVOLARE
 prerequisites: [IT-C183-lanciare, IT-C183-legare]
 sounds: []
 roots: []
+etymology_hook: "scivolare — origin uncertain, perhaps imitative of a slide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C183-legare]
 <!-- hl-knowledge: introduces=[IT-LEX-C184-VERBI184-01]; assesses=[] -->
 
 **scivolare** — "to slip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scivolare** — its origin is uncertain, perhaps imitative. EtymDB 2.1 links it to Latin *exsibilare*, "to hiss out"; that link is doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

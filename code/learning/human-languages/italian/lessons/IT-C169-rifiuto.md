@@ -13,7 +13,8 @@ gloss: "waste, a refusal"
 concept_tag: IT-COSE169-RIFIUTO
 prerequisites: [IT-C169-ambiente, IT-C169-inquinamento]
 sounds: []
-roots: []
+roots: [refutare-latin]
+etymology_hook: "rifiuto — the noun of rifiutare 'to refuse' ← Latin refutare 'to drive back'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C169-inquinamento]
 <!-- hl-knowledge: introduces=[IT-LEX-C169-COSE169-03]; assesses=[] -->
 
 **il rifiuto** — "waste, a refusal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rifiuto** is the noun of *rifiutare*, "to refuse": what is refused or thrown out. *rifiutare* ← Latin *refutare*, "to drive back". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a reason"
 concept_tag: IT-COSE225-MOTIVO
 prerequisites: [IT-C225-possibilita, IT-C225-occasione]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "motivo ← Late Latin motivus 'moving': what moves you — English motive"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C225-occasione]
 <!-- hl-knowledge: introduces=[IT-LEX-C225-COSE225-04]; assesses=[] -->
 
 **il motivo** — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**motivo** ← Late Latin *motivus*, "moving" — a learned borrowing: a reason is what moves you. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

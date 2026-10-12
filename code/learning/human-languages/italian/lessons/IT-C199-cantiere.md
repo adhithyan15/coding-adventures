@@ -14,6 +14,7 @@ concept_tag: IT-COSE199-CANTIERE
 prerequisites: [IT-C199-galleria, IT-C199-rotonda]
 sounds: []
 roots: []
+etymology_hook: "cantiere ← Venetian cantièr 'a shipyard' — borrowed from Venice's shipbuilders"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C199-rotonda]
 <!-- hl-knowledge: introduces=[IT-LEX-C199-COSE199-04]; assesses=[] -->
 
 **il cantiere** — "a building site".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cantiere** ← Venetian *cantièr*, "a shipyard" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

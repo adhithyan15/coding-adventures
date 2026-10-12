@@ -13,7 +13,8 @@ gloss: "a tree"
 concept_tag: IT-NATURA1-ALBERO
 prerequisites: [IT-C63-valigia, IT-C63-biglietto]
 sounds: []
-roots: []
+roots: [arbor-latin]
+etymology_hook: "albero ← Latin arbor 'tree' — English arboreal shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C63-biglietto]
 <!-- hl-knowledge: introduces=[IT-LEX-C64-NATURA1-01]; assesses=[] -->
 
 **l'albero** — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**albero** ← Latin *arbor*, "tree" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

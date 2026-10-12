@@ -14,6 +14,7 @@ concept_tag: IT-COSE3-OCCHIALI
 prerequisites: [IT-C62-regalo, IT-C63-orologio]
 sounds: []
 roots: []
+etymology_hook: "occhiali — built from occhio 'eye' with the suffix -ale"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C63-orologio]
 <!-- hl-knowledge: introduces=[IT-LEX-C63-COSE3-02]; assesses=[] -->
 
 **gli occhiali** — "glasses". Plural in form, like English "glasses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**occhiali** — built from *occhio*, "eye", with the suffix *-ale*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

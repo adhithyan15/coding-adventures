@@ -13,7 +13,8 @@ gloss: "a prescription, a recipe"
 concept_tag: IT-SAL215-RICETTA
 prerequisites: [IT-C214-votare, IT-C215-influenza]
 sounds: []
-roots: []
+roots: [recipere-latin]
+etymology_hook: "ricetta ← Latin recepta 'things received' — English receipt and recipe share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C215-influenza]
 <!-- hl-knowledge: introduces=[IT-LEX-C215-SAL215-02]; assesses=[] -->
 
 **la ricetta** — "a prescription, a recipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ricetta** ← Latin *recepta*, "things received" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

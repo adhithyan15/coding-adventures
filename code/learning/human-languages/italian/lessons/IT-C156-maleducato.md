@@ -13,7 +13,8 @@ gloss: "rude"
 concept_tag: IT-QUAL156-MALEDUCATO
 prerequisites: [IT-C156-scomodo, IT-C156-cortese]
 sounds: []
-roots: []
+roots: [educare-latin]
+etymology_hook: "maleducato — male 'badly' + educato 'brought up', from Latin educatus 'reared'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C156-cortese]
 <!-- hl-knowledge: introduces=[IT-LEX-C156-QUAL156-04]; assesses=[] -->
 
 **maleducato** — "rude".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maleducato** is *male*, "badly", plus *educato*, "brought up": badly brought up. *educato* goes back to Latin *educatus*, "reared" (Lewis & Short). EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

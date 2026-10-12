@@ -13,7 +13,8 @@ gloss: "to wake up"
 concept_tag: IT-VERB-SVEGLIARSI
 prerequisites: [IT-C235-ricevere, IT-C236-riposare]
 sounds: []
-roots: []
+roots: [vigilare-latin]
+etymology_hook: "svegliarsi ← Vulgar Latin exvigilare 'to wake up' + -si — English vigil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C236-riposare]
 <!-- hl-knowledge: introduces=[IT-LEX-C236-VERBI236-02]; assesses=[] -->
 
 **svegliarsi** — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**svegliarsi** ← Vulgar Latin *exvigilare*, "to wake up", with *-si*, "oneself" — inherited. EtymDB 2.1 has no row for *svegliarsi*; it derives Venetian *svejar* from *exvigilare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "fog"
 concept_tag: IT-NATURA118-NEBBIA
 prerequisites: [IT-C117-festa, IT-C117-desiderio]
 sounds: []
-roots: []
+roots: [nebula-latin]
+etymology_hook: "nebbia ← Latin nebula 'mist' — English nebula is the same Latin word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C117-desiderio]
 <!-- hl-knowledge: introduces=[IT-LEX-C118-NATURA118-01]; assesses=[] -->
 
 **la nebbia** — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nebbia** ← Latin *nebula*, "mist, a little cloud" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

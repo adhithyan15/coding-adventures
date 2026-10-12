@@ -14,6 +14,7 @@ concept_tag: IT-PERSONE-RAGAZZO
 prerequisites: [IT-C46-vicino, IT-C46-ospite]
 sounds: []
 roots: []
+etymology_hook: "ragazzo ← Medieval Latin ragatius; nothing further back is recorded"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C46-ospite]
 <!-- hl-knowledge: introduces=[IT-LEX-C46-PERSONE-04]; assesses=[] -->
 
 **il ragazzo** — "a boy, a young man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ragazzo** ← Medieval Latin *ragatius* — inherited. EtymDB 2.1 records nothing further back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

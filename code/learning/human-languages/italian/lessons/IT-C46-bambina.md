@@ -14,6 +14,7 @@ concept_tag: IT-PERSONE-BAMBINA
 prerequisites: [IT-C45-cugina, IT-C45-bambino]
 sounds: []
 roots: []
+etymology_hook: "bambina, feminine of bambino — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C45-bambino]
 <!-- hl-knowledge: introduces=[IT-LEX-C46-PERSONE-01]; assesses=[] -->
 
 **la bambina** — "a little girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bambina** is the feminine of *bambino*, whose origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

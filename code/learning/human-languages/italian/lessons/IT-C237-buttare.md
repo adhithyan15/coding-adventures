@@ -14,6 +14,7 @@ concept_tag: IT-VERB-BUTTARE
 prerequisites: [IT-C237-avvisare, IT-C237-bruciare]
 sounds: []
 roots: []
+etymology_hook: "buttare ← Old French bouter 'to strike, to push' — English butt is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C237-bruciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C237-VERBI237-03]; assesses=[] -->
 
 **buttare** — "to throw away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**buttare** ← Old French *bouter*, "to strike, to push" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

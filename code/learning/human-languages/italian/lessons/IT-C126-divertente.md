@@ -13,7 +13,8 @@ gloss: "fun, funny"
 concept_tag: IT-QUALITA126-DIVERTENTE
 prerequisites: [IT-C125-interessante, IT-C126-noioso]
 sounds: []
-roots: []
+roots: [divertere-latin]
+etymology_hook: "divertente — amusing; from Latin divertere 'to turn aside' — English divert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C126-noioso]
 <!-- hl-knowledge: introduces=[IT-LEX-C126-QUALITA126-02]; assesses=[] -->
 
 **divertente** — "fun, funny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divertente** — built from the verb for "to amuse" with *-ente*, "-ing". That verb ← Latin *divertere* (EtymDB 2.1), which meant "to turn aside" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

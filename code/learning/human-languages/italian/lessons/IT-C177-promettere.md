@@ -13,7 +13,8 @@ gloss: "to promise"
 concept_tag: IT-VERB-PROMETTERE
 prerequisites: [IT-C176-assaggiare, IT-C176-scaldare]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "promettere ← Latin promittere 'to put forth, to promise' — English promise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C176-scaldare]
 <!-- hl-knowledge: introduces=[IT-LEX-C177-VERBI177-01]; assesses=[] -->
 
 **promettere** — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**promettere** ← Latin *promittere*, "to send forth, to promise" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

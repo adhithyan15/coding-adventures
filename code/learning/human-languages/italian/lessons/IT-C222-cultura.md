@@ -13,7 +13,8 @@ gloss: "culture"
 concept_tag: IT-COSE222-CULTURA
 prerequisites: [IT-C222-bandiera, IT-C222-religione]
 sounds: []
-roots: []
+roots: [colere-latin]
+etymology_hook: "cultura ← Latin cultura 'tilling, care' — English culture and agriculture share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C222-religione]
 <!-- hl-knowledge: introduces=[IT-LEX-C222-COSE222-04]; assesses=[] -->
 
 **la cultura** — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cultura** ← Latin *cultura*, "tilling, care", from *cultus* — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

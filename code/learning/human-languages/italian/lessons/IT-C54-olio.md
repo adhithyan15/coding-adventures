@@ -13,7 +13,8 @@ gloss: "oil"
 concept_tag: IT-PASTI-OLIO
 prerequisites: [IT-C54-zuppa, IT-C54-miele]
 sounds: []
-roots: []
+roots: [oleum-latin]
+etymology_hook: "olio ← Latin oleum 'oil', from Greek elaion — English oil is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C54-miele]
 <!-- hl-knowledge: introduces=[IT-LEX-C54-PASTI-04]; assesses=[] -->
 
 **l'olio** — "oil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**olio** ← Latin *oleum*, "oil" — inherited; Latin took it from Greek *elaion*, "olive oil". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

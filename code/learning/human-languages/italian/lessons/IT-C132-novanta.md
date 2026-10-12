@@ -13,7 +13,8 @@ gloss: "ninety"
 concept_tag: IT-NUMERI132-NOVANTA
 prerequisites: [IT-C132-settanta, IT-C132-ottanta]
 sounds: []
-roots: []
+roots: [nonaginta-latin]
+etymology_hook: "novanta ← Vulgar Latin novaginta, from Latin nonaginta 'ninety'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C132-ottanta]
 <!-- hl-knowledge: introduces=[IT-LEX-C132-NUMERI132-05]; assesses=[] -->
 
 **novanta** — "ninety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**novanta** ← Vulgar Latin *novaginta*, "ninety", from Latin *nonaginta* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

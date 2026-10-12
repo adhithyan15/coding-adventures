@@ -13,7 +13,8 @@ gloss: "outside"
 concept_tag: IT-DOVE-FUORI
 prerequisites: [IT-C80-sotto, IT-C80-dentro]
 sounds: []
-roots: []
+roots: [foris-latin]
+etymology_hook: "fuori ← Latin foris 'outside' — English foreign shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C80-dentro]
 <!-- hl-knowledge: introduces=[IT-LEX-C80-DOVE-03]; assesses=[] -->
 
 **fuori** — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fuori** ← Latin *foris*, "outside, out of doors" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

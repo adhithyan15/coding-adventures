@@ -13,7 +13,8 @@ gloss: "a walnut, a nut"
 concept_tag: IT-CIBO110-NOCE
 prerequisites: [IT-C110-pesca, IT-C110-marmellata]
 sounds: []
-roots: []
+roots: [nux-latin]
+etymology_hook: "noce ← Latin nux, nucis 'nut'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C110-marmellata]
 <!-- hl-knowledge: introduces=[IT-LEX-C110-CIBO110-04]; assesses=[] -->
 
 **la noce** — "a walnut, a nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noce** ← Latin *nux, nucis*, "nut" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

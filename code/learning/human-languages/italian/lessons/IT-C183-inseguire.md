@@ -13,7 +13,8 @@ gloss: "to chase"
 concept_tag: IT-VERB-INSEGUIRE
 prerequisites: [IT-C182-abituarsi, IT-C182-accorgersi]
 sounds: []
-roots: []
+roots: [sequi-latin]
+etymology_hook: "inseguire ← Latin insequi 'to follow after' — English sequel shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C182-accorgersi]
 <!-- hl-knowledge: introduces=[IT-LEX-C183-VERBI183-01]; assesses=[] -->
 
 **inseguire** — "to chase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inseguire** ← Latin *insequi*, "to follow after" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

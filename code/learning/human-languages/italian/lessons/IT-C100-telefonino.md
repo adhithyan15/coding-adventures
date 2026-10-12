@@ -14,6 +14,7 @@ concept_tag: IT-OGGETTI100-TELEFONINO
 prerequisites: [IT-C100-forbici, IT-C100-sveglia]
 sounds: []
 roots: []
+etymology_hook: "telefonino — telefono + -ino 'little': a little phone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C100-sveglia]
 <!-- hl-knowledge: introduces=[IT-LEX-C100-OGGETTI100-03]; assesses=[] -->
 
 **il telefonino** — "a mobile phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefonino** — built from *telefono* + *-ino*, "little": a little phone. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

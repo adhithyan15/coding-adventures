@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 244,
-  "sourceHash": "fnv1a64:1858ccdc5724219f",
+  "sourceHash": "fnv1a64:e9277c1f740e377d",
   "lessonIds": [
     "IT-C244-proprio",
     "IT-C244-quasi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch244.txt",
   "json": "italian/narration/ch244.json",
-  "textHash": "fnv1a64:6755086411106d07",
-  "jsonHash": "fnv1a64:b917be0b2585aa1f",
+  "textHash": "fnv1a64:b943fd737af74852",
+  "jsonHash": "fnv1a64:9701290b6d985179",
   "findings": []
 }

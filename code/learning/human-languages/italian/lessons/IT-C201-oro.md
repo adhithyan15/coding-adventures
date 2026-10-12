@@ -13,7 +13,8 @@ gloss: "gold"
 concept_tag: IT-COSE201-ORO
 prerequisites: [IT-C201-legno, IT-C201-ferro]
 sounds: []
-roots: []
+roots: [aurum-latin]
+etymology_hook: "oro ← Latin aurum 'gold' — Latin au became Italian o; chemists write Au"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C201-ferro]
 <!-- hl-knowledge: introduces=[IT-LEX-C201-COSE201-04]; assesses=[] -->
 
 **l'oro** — "gold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oro** ← Latin *aurum*, "gold" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

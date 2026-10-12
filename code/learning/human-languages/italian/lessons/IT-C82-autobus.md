@@ -14,6 +14,7 @@ concept_tag: IT-CITTA2-AUTOBUS
 prerequisites: [IT-C81-banca, IT-C82-stazione]
 sounds: []
 roots: []
+etymology_hook: "autobus ← French autobus — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C82-stazione]
 <!-- hl-knowledge: introduces=[IT-LEX-C82-CITTA2-02]; assesses=[] -->
 
 **l'autobus** — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autobus** ← French *autobus* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

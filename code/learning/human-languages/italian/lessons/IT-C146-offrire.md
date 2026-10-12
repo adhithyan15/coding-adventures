@@ -13,7 +13,8 @@ gloss: "to offer"
 concept_tag: IT-VERB-OFFRIRE
 prerequisites: [IT-C146-peggiorare, IT-C146-nuocere]
 sounds: []
-roots: []
+roots: [offerre-latin]
+etymology_hook: "offrire ← Vulgar Latin offerire, from Latin offerre 'to bring before' — English offer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C146-nuocere]
 <!-- hl-knowledge: introduces=[IT-LEX-C146-VERBI146-05]; assesses=[] -->
 
 **offrire** — "to offer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**offrire** ← Vulgar Latin *offerire*, from Latin *offerre*, "to bring before, to offer" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

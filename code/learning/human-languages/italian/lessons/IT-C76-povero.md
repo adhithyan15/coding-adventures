@@ -13,7 +13,8 @@ gloss: "poor"
 concept_tag: IT-AGG5-POVERO
 prerequisites: [IT-C76-debole, IT-C76-ricco]
 sounds: []
-roots: []
+roots: [pauper-latin]
+etymology_hook: "povero ← Latin pauper 'poor' — English poor and pauper share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C76-ricco]
 <!-- hl-knowledge: introduces=[IT-LEX-C76-AGG5-04]; assesses=[] -->
 
 **povero** — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**povero** ← Latin *pauper*, "poor" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

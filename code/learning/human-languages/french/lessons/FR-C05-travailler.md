@@ -94,4 +94,4 @@ Nothing new to learn — that's the point. **One template, every -er verb.**
 [PAUSE 3s] What did *travailler* originally mean, and from what device? ("To
 torture," ← *tripalium*, three stakes.) What two English words share the root?
 (*Travail* and *travel*.) Its Spanish twin? (*Trabajar* — same *tripaliāre*.)
-Next: build your first full sentence — **Je parle français**.
+Next: build your first full sentence — "I speak French."

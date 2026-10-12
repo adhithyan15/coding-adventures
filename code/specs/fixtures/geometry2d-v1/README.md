@@ -48,6 +48,25 @@ NaN or infinity, so native readers need separate non-finite rejection tests.
 Existing native readers that filter by operation may continue to consume only
 their earlier families until the separate lane-conformance owners land.
 
+`center-arc-tangent` publishes raw `expected_derivative = d/dt`, including
+signed sweep and rotation, excluding translation and normalization. Four
+records pin positive axis, positive/negative rotated and zero-sweep vectors.
+The rotated positive answer is `[-3*pi/4, -pi/4]`; reversing sweep at the same
+angle reverses both components. General ellipse tangents are orthogonal to
+the rotated implicit gradient, with radius orthogonality only for circles.
+The closed record contains `id`, `operation`, `center`, `rx`, `ry`,
+`start_angle`, `sweep_angle`, `x_rotation`, `t`, and `expected_derivative`.
+Inputs are bounded to magnitude `1e6`, radii positive, sweep inclusive
+`[-tau,tau]` and `t` in `[0,1]`. Derivative components alone use a `1e7`
+teaching bound to admit `tau * 1e6`; existing point and Bezier bounds remain
+`1e6`. These corpus limits do not narrow existing native API domains.
+
+The validator rejects enormous integers before float conversion, validates
+derived finite bounded results, and pins published constants within `1e-15`
+absolute error with no relative tolerance. Native comparisons retain `1e-12`.
+The corpus now has 27 records, preserving all earlier 23. Existing native
+readers may filter the new operation until their separate adoption owners land.
+
 The independent validator recomputes every expected point and rectangle from
 the spec's formulas without calling a package implementation:
 

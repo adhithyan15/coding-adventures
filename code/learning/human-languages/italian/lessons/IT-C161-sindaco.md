@@ -13,7 +13,8 @@ gloss: "a mayor"
 concept_tag: IT-COSE161-SINDACO
 prerequisites: [IT-C161-tribunale, IT-C161-giudice]
 sounds: []
-roots: []
+roots: [syndicus-latin]
+etymology_hook: "sindaco ← Latin syndicus, from Greek syndikos 'an advocate' — English syndic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C161-giudice]
 <!-- hl-knowledge: introduces=[IT-LEX-C161-COSE161-03]; assesses=[] -->
 
 **il sindaco** — "a mayor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sindaco** ← Late Latin *syndicus*, "a representative of a body", from Greek *syndikos*, "an advocate" — a learned borrowing. EtymDB 2.1 has no row for *sindaco*; it derives Spanish *síndico* from *syndicus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

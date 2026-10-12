@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 211,
-  "sourceHash": "fnv1a64:dc121f7dc2fd24bb",
+  "sourceHash": "fnv1a64:35837bb7b341a13f",
   "lessonIds": [
     "IT-C211-sembrare",
     "IT-C211-servire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch211.txt",
   "json": "italian/narration/ch211.json",
-  "textHash": "fnv1a64:bf46d764bb8b0799",
-  "jsonHash": "fnv1a64:c237e0533ba40d5b",
+  "textHash": "fnv1a64:1e4a9b396914bd1f",
+  "jsonHash": "fnv1a64:abae5d8c793acbd7",
   "findings": []
 }

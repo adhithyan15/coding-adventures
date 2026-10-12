@@ -191,3 +191,17 @@ zero-failure table on that source head. Both CodeQL analyses, all three Forme
 host gates, the Forme verdict and the Books gate also passed. Preserve those
 source receipts while distinguishing the fresh final-head checks from the
 cancelled macOS attempt. This recovery note changes documentation only.
+
+## Reconcile the shared parity ledger with current main
+
+Merge origin/main at 92f7d0f5e68687bda9c97e989bf9278578b36361 while preserving
+its new Arc2D evidence and every automatic non-conflicting change. The only
+manual conflict is the barcode existing-lanes record. Retain the security
+refresh implementation/validation revision 50ae33c4994d60eb79aaad33bc0318f56d8dc444
+and its validation-note prefix. Preserve main's corrected historical merged head
+f12ad9eca4532044feafe8c4ac12ad6842cd0dd2 and detailed original merge notes; GitHub
+PR #16343 confirms that head and merge commit 2a75d68df071c01cbe9cd76d791904afb19819a5.
+Reject duplicate JSON keys or residual conflict markers, then rerun the barcode
+fixture registry validation. Main introduces no npm manifest or lockfile changes
+relative to the previously merged b1f4e45913. The fresh final-head CI must validate
+the reconciled tree; earlier source receipts do not replace it.

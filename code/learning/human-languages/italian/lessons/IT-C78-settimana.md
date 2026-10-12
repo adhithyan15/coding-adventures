@@ -14,6 +14,7 @@ concept_tag: IT-TEMPO-SETTIMANA
 prerequisites: [IT-C77-sporco, IT-C77-contento]
 sounds: []
 roots: []
+etymology_hook: "settimana ← Late Latin septimana 'week', built on septimus 'seventh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C77-contento]
 <!-- hl-knowledge: introduces=[IT-LEX-C78-TEMPO-01]; assesses=[] -->
 
 **la settimana** — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**settimana** ← Late Latin *septimana*, "week", built on *septimus*, "seventh" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

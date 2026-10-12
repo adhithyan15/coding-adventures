@@ -13,7 +13,8 @@ gloss: "to cry"
 concept_tag: IT-VERB-PIANGERE
 prerequisites: [IT-C47-ballare, IT-C47-ridere]
 sounds: []
-roots: []
+roots: [plangere-latin]
+etymology_hook: "piangere ← Latin plangere 'to lament' — English complaint shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C47-ridere]
 <!-- hl-knowledge: introduces=[IT-LEX-C47-VERBI1-04]; assesses=[] -->
 
 **piangere** — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piangere** ← Latin *plangere*, "to beat the breast, to lament" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

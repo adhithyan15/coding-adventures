@@ -13,7 +13,8 @@ gloss: "a hospital"
 concept_tag: IT-SALUTE-OSPEDALE
 prerequisites: [IT-C41-medicina, IT-C41-medico]
 sounds: []
-roots: []
+roots: [hospitalis-latin]
+etymology_hook: "ospedale ← Late Latin hospitale 'guesthouse' — English hospital, hostel and hotel share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C41-medico]
 <!-- hl-knowledge: introduces=[IT-LEX-C41-SALUTE-03]; assesses=[] -->
 
 **l'ospedale** — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ospedale** ← Late Latin *hospitale*, "guesthouse", from Latin *hospitalis*, "hospitable" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -179,6 +179,14 @@ rather than letting them read as silent gaps.
     preserves that event surface's supported inherited color/font size and its
     complete hidden/ellipsis/nowrap contract, retiring those five omissions
     and reducing Qt's fresh inventory to 108.
+    #17338 then lowers the 15 exact `width: 100%` declarations on Qt inputs and
+    buttons to `Layout.fillWidth: true`, reducing Qt's fresh inventory from 108
+    to 93. The three remaining Qt width drops are `Text` geometry; unsupported
+    percentages and mixed fixed/fill states remain reported.
+    #17356 reconciles Compose's ten non-inset CSS shadows with the supported
+    `elevation` tokens that already emit equivalent native depth, reducing its
+    fresh inventory from 50 to 40. The inset theme-toggle moon and raw shadows
+    without elevation remain reported drawing-effect debt.
     #17224 then preserves all 15 supported fixed Flutter `border-radius`
     declarations and paints eight coupled rounded-text backgrounds, reducing
     Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe

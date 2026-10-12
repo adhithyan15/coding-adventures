@@ -13,7 +13,8 @@ gloss: "to forget"
 concept_tag: IT-VERB-DIMENTICARE
 prerequisites: [IT-C174-invitare, IT-C175-tradurre]
 sounds: []
-roots: []
+roots: [mens-latin]
+etymology_hook: "dimenticare ← Late Latin dementicare 'to put out of mind', from mens 'mind'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C175-tradurre]
 <!-- hl-knowledge: introduces=[IT-LEX-C175-VERBI175-02]; assesses=[] -->
 
 **dimenticare** — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dimenticare** ← Late Latin *dementicare*, "to put out of mind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

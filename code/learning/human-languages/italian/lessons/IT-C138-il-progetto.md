@@ -13,7 +13,8 @@ gloss: "a plan, a project"
 concept_tag: IT-FUT138-IL-PROGETTO
 prerequisites: [IT-C138-il-futuro, IT-C138-stasera]
 sounds: []
-roots: []
+roots: [proiectus-latin]
+etymology_hook: "progetto ← Latin proiectus 'thrown forward' — English project is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C138-stasera]
 <!-- hl-knowledge: introduces=[IT-LEX-C138-FUT138-03]; assesses=[] -->
 
 **il progetto** — "a plan, a project". **Che progetti hai per il fine settimana?** — "What plans do you have for the weekend?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**progetto** ← Latin *proiectus*, "thrown forward" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

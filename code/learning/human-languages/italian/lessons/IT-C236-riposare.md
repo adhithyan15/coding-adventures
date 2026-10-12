@@ -13,7 +13,8 @@ gloss: "to rest"
 concept_tag: IT-VERB-RIPOSARE
 prerequisites: [IT-C235-spedire, IT-C235-ricevere]
 sounds: []
-roots: []
+roots: [repausare-latin]
+etymology_hook: "riposare ← Late Latin repausare 'to rest' — English repose is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C235-ricevere]
 <!-- hl-knowledge: introduces=[IT-LEX-C236-VERBI236-01]; assesses=[] -->
 
 **riposare** — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riposare** ← Late Latin *repausare*, "to rest" — inherited. EtymDB 2.1 has no row for *riposare*; it derives Spanish *reposar* and French *reposer* from *repausare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

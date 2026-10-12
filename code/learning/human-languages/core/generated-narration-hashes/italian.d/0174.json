@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 174,
-  "sourceHash": "fnv1a64:0135b2c3b679ee5e",
+  "sourceHash": "fnv1a64:1c838c05cfd57efa",
   "lessonIds": [
     "IT-C174-baciare",
     "IT-C174-abbracciare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch174.txt",
   "json": "italian/narration/ch174.json",
-  "textHash": "fnv1a64:b162c3a4995b0f13",
-  "jsonHash": "fnv1a64:ca4e884e5f8c1c2c",
+  "textHash": "fnv1a64:c3ceed0d70588eb4",
+  "jsonHash": "fnv1a64:c69129136c8bd701",
   "findings": []
 }

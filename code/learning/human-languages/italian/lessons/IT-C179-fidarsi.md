@@ -13,7 +13,8 @@ gloss: "to trust"
 concept_tag: IT-VERB-FIDARSI
 prerequisites: [IT-C179-dividere, IT-C179-evitare]
 sounds: []
-roots: []
+roots: [fidere-latin]
+etymology_hook: "fidarsi ← Vulgar Latin fidare, from fidere 'to trust' + -si — English confide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C179-evitare]
 <!-- hl-knowledge: introduces=[IT-LEX-C179-VERBI179-05]; assesses=[] -->
 
 **fidarsi** — "to trust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fidarsi** ← Vulgar Latin *fidare*, "to trust", from Latin *fidere*, with *-si*, "oneself" — inherited. EtymDB 2.1 has no row for *fidarsi*; it derives Spanish and Portuguese *fiar* from *fidare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

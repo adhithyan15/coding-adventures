@@ -13,7 +13,8 @@ gloss: "to call"
 concept_tag: IT-VERB-CHIAMARE
 prerequisites: [IT-C48-vendere, IT-C48-nuotare]
 sounds: []
-roots: []
+roots: [clamare-latin]
+etymology_hook: "chiamare ← Latin clamare 'to call out' — English claim and clamour share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C48-nuotare]
 <!-- hl-knowledge: introduces=[IT-LEX-C48-VERBI2-04]; assesses=[] -->
 
 **chiamare** — "to call". The verb inside **mi chiamo**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiamare** ← Latin *clamare*, "to call out" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

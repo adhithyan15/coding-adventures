@@ -13,7 +13,8 @@ gloss: "a medical visit"
 concept_tag: IT-SAL152-VISITA
 prerequisites: [IT-C151-rene, IT-C151-osso]
 sounds: []
-roots: []
+roots: [visitare-latin]
+etymology_hook: "visita — the noun of visitare ← Latin visitare 'to go to see' — English visit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C151-osso]
 <!-- hl-knowledge: introduces=[IT-LEX-C152-SAL152-01]; assesses=[] -->
 
 **la visita** — "a medical visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**visita** is the noun of *visitare*, "to visit", which ← Latin *visitare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

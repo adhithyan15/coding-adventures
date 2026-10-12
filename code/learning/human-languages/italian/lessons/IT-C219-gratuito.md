@@ -13,7 +13,8 @@ gloss: "free of charge"
 concept_tag: IT-QUAL219-GRATUITO
 prerequisites: [IT-C219-simile, IT-C219-falso]
 sounds: []
-roots: []
+roots: [gratia]
+etymology_hook: "gratuito ← Latin gratuitus 'free', from gratia 'favour' — English gratuitous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C219-falso]
 <!-- hl-knowledge: introduces=[IT-LEX-C219-QUAL219-04]; assesses=[] -->
 
 **gratuito** — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gratuito** ← Latin *gratuitus*, "free, done for nothing", from *gratia*, "favour" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

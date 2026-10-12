@@ -13,7 +13,8 @@ gloss: "to go in, to enter"
 concept_tag: IT-VERB-ENTRARE
 prerequisites: [IT-C50-bere, IT-C50-vivere]
 sounds: []
-roots: []
+roots: [intrare-latin]
+etymology_hook: "entrare ← Latin intrare 'to enter' — English enter is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C50-vivere]
 <!-- hl-knowledge: introduces=[IT-LEX-C50-VERBI4-04]; assesses=[] -->
 
 **entrare** — "to go in, to enter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entrare** ← Latin *intrare*, "to go into, to enter" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *entrare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a street, a road"
 concept_tag: IT-DOVE-STRADA
 prerequisites: [IT-C80-fuori, IT-C80-piazza]
 sounds: []
-roots: []
+roots: [strata-latin]
+etymology_hook: "strada ← Late Latin strata 'paved road' — English street is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C80-piazza]
 <!-- hl-knowledge: introduces=[IT-LEX-C80-DOVE-05]; assesses=[] -->
 
 **la strada** — "a street, a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**strada** ← Late Latin *strata*, "a paved road" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

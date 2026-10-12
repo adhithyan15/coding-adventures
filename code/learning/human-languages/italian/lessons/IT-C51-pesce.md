@@ -13,7 +13,8 @@ gloss: "fish"
 concept_tag: IT-CIBO1-PESCE
 prerequisites: [IT-C50-uscire, IT-C51-carne]
 sounds: []
-roots: []
+roots: [piscis-latin]
+etymology_hook: "pesce ← Latin piscis 'fish' — the Pisces of the zodiac"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C51-carne]
 <!-- hl-knowledge: introduces=[IT-LEX-C51-CIBO1-02]; assesses=[] -->
 
 **il pesce** — "fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pesce** ← Latin *piscis*, "fish" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

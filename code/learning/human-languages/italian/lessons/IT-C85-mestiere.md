@@ -14,6 +14,7 @@ concept_tag: IT-POTERE85-MESTIERE
 prerequisites: [IT-C85-riuscire, IT-C85-bisogno]
 sounds: []
 roots: []
+etymology_hook: "mestiere ← Old French mestier, from Latin ministerium 'service' — French métier is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C85-bisogno]
 <!-- hl-knowledge: introduces=[IT-LEX-C85-POTERE85-05]; assesses=[] -->
 
 **il mestiere** — "a trade, a craft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mestiere** ← Old French or Old Provençal *mestier*, from Latin *ministerium*, "service" — borrowed; French *métier* is the same word. (EtymDB 2.1, Old French *mestier*)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a platform (railway)"
 concept_tag: IT-COSE192-BINARIO
 prerequisites: [IT-C191-lenzuolo, IT-C191-cassetto]
 sounds: []
-roots: []
+roots: [bini-latin]
+etymology_hook: "binario ← Latin binarius 'of two' — two rails; English binary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C191-cassetto]
 <!-- hl-knowledge: introduces=[IT-LEX-C192-COSE192-01]; assesses=[] -->
 
 **il binario** — "a platform (railway)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**binario** ← Latin *binarius*, "of two", from *bini*, "two each": a track of two rails — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

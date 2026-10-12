@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "To phone, To discuss, To quarrel, To apologise, To forgive",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0e4820c765eb981d",
+  "sourceHash": "fnv1a64:84feb93c04e26e42",
   "lessons": [
     {
       "id": "IT-C143-telefonare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3103ad98098cb7dd",
+      "sourceHash": "fnv1a64:23e80d51a6d46415",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "telefonare — built from telefono, \"telephone\", with the verb ending -are. EtymDB 2.1 has no row for it; the parts are plain to see."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:140bc8b43b0edd3d",
+      "sourceHash": "fnv1a64:6e40d2d68989eebe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -182,6 +193,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discutere from Latin discutere, \"to strike apart, to shake to pieces\" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for discutere."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -192,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -241,7 +263,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -272,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c3d08b820f668a0",
+      "sourceHash": "fnv1a64:10827f41073487ae",
       "notice": null,
       "blocks": [
         {
@@ -305,6 +327,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "litigare from Latin litigare, \"to quarrel, to go to law\" — a learned borrowing, taken from written Latin. (EtymDB 2.1 records the Latin word.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -315,7 +348,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -364,7 +397,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -395,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d76e02646d184db",
+      "sourceHash": "fnv1a64:5269c9b25770b86a",
       "notice": null,
       "blocks": [
         {
@@ -428,6 +461,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scusarsi from Latin excusare, \"to excuse\", with -si, \"oneself\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -438,7 +482,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -487,7 +531,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -518,7 +562,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a1323dfd60325f5",
+      "sourceHash": "fnv1a64:1e90c96bcf0fe8b6",
       "notice": null,
       "blocks": [
         {
@@ -551,6 +595,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perdonare from Late Latin perdonare, \"to give completely\", from per-, \"thoroughly\", and donare, \"to give\" — inherited. EtymDB 2.1 has no row for perdonare; it derives Spanish perdonar from perdonare."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -561,7 +616,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -610,7 +665,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

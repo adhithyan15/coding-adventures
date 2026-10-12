@@ -11,7 +11,7 @@ concept_tag: FR-VERB-AVOIR-ONT
 prerequisites: [FR-C14-avez]
 sounds: [nasal-on, liaison-z]
 roots: [habere-latin]
-etymology_hook: "ils ont ← habent — the only form with no a in it at all, and the one that must not be confused with ils sont, 'they are'"
+etymology_hook: "ils ont ← habent — the only form with no a in it at all, and the one a later chapter will set beside its look-alike for 'they are'"
 duration:
   max_seconds: 195
 requires:
@@ -53,9 +53,9 @@ five.
 *avoir* has an **a** in it, and this one does not.
 
 There is a trap here worth meeting before you fall into it. **ils ont** is "they
-have." **ils sont** is "they **are**." One consonant apart, and both extremely
-common. The way to keep them apart is the liaison: *ils **ont*** buzzes — *eel-**z**-o(n)* — while *ils **sont*** hisses, *eel **s**o(n)*. The buzz means
-*have*.
+have." In two chapters you will meet "they **are**," one consonant away from it
+and just as common. The way to keep them apart is the liaison: *ils **ont***
+buzzes — *eel-**z**-o(n)* — and the "are" form hisses. The buzz means *have*.
 
 That is the whole paradigm. Six forms, and you now have all of them:
 
@@ -66,14 +66,14 @@ That is the whole paradigm. Six forms, and you now have all of them:
 
 [PAUSE 1s]
 - [YOU SAY: "ils ont" — *eel-ZO(N)*, the buzz]
-- [YOU SAY: the trap — "ils ont" then "ils sont"; buzz means have]
+- [YOU SAY: "elles ont" — *el-ZO(N)*, the same buzz; the buzz means have]
 - [YOU SAY: all six in order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-VERB-AVOIR-ONT-07] -->
 
 [PAUSE 3s] How do you say "they have"? (**ils ont**, *eel-ZO(N)*.) What
-does *ils sont* mean instead? (**They are.**) How do you tell them apart by ear?
-(**ils ont** buzzes; **ils sont** hisses.) What is unusual about *ont* among the
+tells your ear that it means *have*? (The **buzz** — *ils ont* links with a
+**z**; the "they are" form you meet later hisses.) What is unusual about *ont* among the
 six forms? (It is the only one with **no a** in it.) Next: where the whole verb
 came from.

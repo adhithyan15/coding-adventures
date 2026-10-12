@@ -14,6 +14,7 @@ concept_tag: IT-PERCHE188-SEBBENE
 prerequisites: [IT-C188-infatti, IT-C188-cioe]
 sounds: []
 roots: []
+etymology_hook: "sebbene — se 'if' + bene 'well'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C188-cioe]
 <!-- hl-knowledge: introduces=[IT-LEX-C188-PERCHE188-04]; assesses=[] -->
 
 **sebbene** — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sebbene** is *se*, "if", plus *bene*, "well": "even if, well and good". EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

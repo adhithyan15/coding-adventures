@@ -13,7 +13,8 @@ gloss: "punctual"
 concept_tag: IT-QUAL158-PUNTUALE
 prerequisites: [IT-C158-chiaro, IT-C158-scuro]
 sounds: []
-roots: []
+roots: [punctum-latin]
+etymology_hook: "puntuale — from punto 'a point' ← Latin punctum: on the dot — English punctual"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C158-scuro]
 <!-- hl-knowledge: introduces=[IT-LEX-C158-QUAL158-05]; assesses=[] -->
 
 **puntuale** — "punctual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**puntuale** — built from *punto*, "a point", with *-uale*: on the point. *punto* ← Latin *punctum*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

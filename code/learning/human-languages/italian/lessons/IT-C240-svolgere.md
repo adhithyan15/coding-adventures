@@ -13,7 +13,8 @@ gloss: "to perform, to carry out"
 concept_tag: IT-VERB-SVOLGERE
 prerequisites: [IT-C240-sprecare, IT-C240-superare]
 sounds: []
-roots: []
+roots: [volvere-latin]
+etymology_hook: "svolgere — s- + volgere 'to turn', from Latin volvere 'to roll': to unroll"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C240-superare]
 <!-- hl-knowledge: introduces=[IT-LEX-C240-VERBI240-05]; assesses=[] -->
 
 **svolgere** — "to perform, to carry out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**svolgere** is *s-*, "out", plus *volgere*, "to turn": to unroll, to carry out. *volgere* ← Latin *volvere*, "to roll". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

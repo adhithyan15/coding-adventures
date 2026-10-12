@@ -13,7 +13,8 @@ gloss: "to get worse"
 concept_tag: IT-VERB-PEGGIORARE
 prerequisites: [IT-C146-meritare, IT-C146-migliorare]
 sounds: []
-roots: []
+roots: [peiorare-latin]
+etymology_hook: "peggiorare ← Late Latin peiorare, from peior 'worse' — English pejorative shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C146-migliorare]
 <!-- hl-knowledge: introduces=[IT-LEX-C146-VERBI146-03]; assesses=[] -->
 
 **peggiorare** — "to get worse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peggiorare** ← Late Latin *peiorare*, "to make worse" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

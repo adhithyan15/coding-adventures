@@ -13,7 +13,8 @@ gloss: "clear, light (of a colour)"
 concept_tag: IT-QUAL158-CHIARO
 prerequisites: [IT-C158-maturo, IT-C158-buio]
 sounds: []
-roots: []
+roots: [clarus]
+etymology_hook: "chiaro ← Latin clarus 'clear' — Latin cl- became Italian chi-; English clear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C158-buio]
 <!-- hl-knowledge: introduces=[IT-LEX-C158-QUAL158-03]; assesses=[] -->
 
 **chiaro** — "clear, light (of a colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiaro** ← Latin *clarus*, "clear, bright" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

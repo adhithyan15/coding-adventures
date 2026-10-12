@@ -13,7 +13,8 @@ gloss: "blood"
 concept_tag: IT-CORPO3-SANGUE
 prerequisites: [IT-C39-pancia, IT-C39-viso]
 sounds: []
-roots: []
+roots: [sanguis-latin]
+etymology_hook: "sangue ← Latin sanguis 'blood' — English sanguine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C39-viso]
 <!-- hl-knowledge: introduces=[IT-LEX-C39-CORPO3-03]; assesses=[] -->
 
 **il sangue** — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sangue** ← Latin *sanguis*, "blood" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

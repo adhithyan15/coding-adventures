@@ -13,7 +13,8 @@ gloss: "to host"
 concept_tag: IT-VERB-OSPITARE
 prerequisites: [IT-C213-nascondersi, IT-C213-obbedire]
 sounds: []
-roots: []
+roots: [hospes-latin]
+etymology_hook: "ospitare ← Late Latin hospitare, from hospes 'a guest, a host' — English hospitable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C213-obbedire]
 <!-- hl-knowledge: introduces=[IT-LEX-C213-VERBI213-04]; assesses=[] -->
 
 **ospitare** — "to host".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ospitare** ← Late Latin *hospitare*, "to lodge", from *hospes*, "a guest, a host" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 214,
-  "sourceHash": "fnv1a64:824eeb8db1f8fb01",
+  "sourceHash": "fnv1a64:de73892c130227f8",
   "lessonIds": [
     "IT-C214-suggerire",
     "IT-C214-tossire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch214.txt",
   "json": "italian/narration/ch214.json",
-  "textHash": "fnv1a64:c893fa0b9c278650",
-  "jsonHash": "fnv1a64:0254c017ea78d6dc",
+  "textHash": "fnv1a64:2869385f755ebc9b",
+  "jsonHash": "fnv1a64:7c695e2c33323605",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SORPRENDERE
 prerequisites: [IT-C184-scivolare, IT-C184-sollevare]
 sounds: []
 roots: []
+etymology_hook: "sorprendere ← Old French sorprendre 'to overtake' — borrowed; English surprise is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C184-sollevare]
 <!-- hl-knowledge: introduces=[IT-LEX-C184-VERBI184-03]; assesses=[] -->
 
 **sorprendere** — "to surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sorprendere** ← Old French *sorprendre*, "to overtake" — borrowed, built from *sor-*, "over", and *prendre*, "to take". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

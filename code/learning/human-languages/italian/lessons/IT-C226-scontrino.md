@@ -14,6 +14,7 @@ concept_tag: IT-COSE226-SCONTRINO
 prerequisites: [IT-C225-motivo, IT-C225-risultato]
 sounds: []
 roots: []
+etymology_hook: "scontrino — from scontrare 'to check against' + -ino: a little check slip"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C225-risultato]
 <!-- hl-knowledge: introduces=[IT-LEX-C226-COSE226-01]; assesses=[] -->
 
 **lo scontrino** — "a till receipt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scontrino** — built from *scontrare*, "to check against", with *-ino*, "little": a slip to check a sale against. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

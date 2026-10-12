@@ -14,6 +14,7 @@ concept_tag: IT-COSE257-MATTONE
 prerequisites: [IT-C256-clima, IT-C257-metallo]
 sounds: []
 roots: []
+etymology_hook: "mattone — origin uncertain; EtymDB records no source"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C257-metallo]
 <!-- hl-knowledge: introduces=[IT-LEX-C257-COSE257-02]; assesses=[] -->
 
 **il mattone** — "a brick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mattone** — its origin is uncertain. EtymDB 2.1 records the word but not where it came from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

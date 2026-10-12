@@ -14,6 +14,7 @@ concept_tag: IT-VERB-CHIACCHIERARE
 prerequisites: [IT-C212-allontanarsi, IT-C212-avvicinarsi]
 sounds: []
 roots: []
+etymology_hook: "chiacchierare — imitates the sound of chatter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C212-avvicinarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C212-VERBI212-04]; assesses=[] -->
 
 **chiacchierare** — "to chat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiacchierare** imitates the sound of chatter. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1046,7 +1046,19 @@ styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
-also survive semantic IR, layout, and scene metadata. The family lowers through
+survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
+edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
+with a deterministic static dash pattern for non-animated paint backends.
+Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
+to portable cubic paths with tangent-aware endpoint markers.
+The `step`, `stepBefore`, and `stepAfter` curve modes lower to deterministic orthogonal paths in
+the diagram's authored direction.
+The `bumpX` and `bumpY` curve modes lower to portable cubic paths with horizontal or vertical
+midpoint tangents and preserve their authored mode in scene metadata.
+The `monotoneX` and `monotoneY` curve modes preserve their axis constraint in semantic and layout
+IR and lower their two-point routes to the equivalent monotonic cubic Hermite segment.
+The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned

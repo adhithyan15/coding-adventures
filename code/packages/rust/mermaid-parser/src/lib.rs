@@ -17,7 +17,7 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
+    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -6227,6 +6227,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let mut class_styles = HashMap::new();
     let mut pending_classes = Vec::new();
     let mut pending_styles = Vec::new();
+    let mut pending_edge_configs = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.trim();
@@ -6321,6 +6322,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             pending_styles.push(parse_swimlane_style(value, line_number)?);
             continue;
         }
+        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
+            pending_edge_configs.push(config);
+            continue;
+        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
@@ -6360,6 +6365,27 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             return Err(swimlane_error(1, format!("Swimlane callback references unknown node {:?}", callback.node_id)));
         }
     }
+    for config in pending_edge_configs {
+        let mut matched = false;
+        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(config.id.as_str())) {
+            matched = true;
+            if let Some(animate) = config.animate {
+                edge.animate = animate;
+            }
+            if let Some(animation) = config.animation {
+                edge.animation = Some(animation);
+                if config.animate.is_none() {
+                    edge.animate = true;
+                }
+            }
+            if let Some(curve) = config.curve {
+                edge.curve = Some(curve);
+            }
+        }
+        if !matched {
+            return Err(swimlane_error(config.line, format!("Swimlane edge configuration references unknown edge {:?}", config.id)));
+        }
+    }
     if let Some(style) = class_styles.get("default") {
         for node in &mut diagram.nodes {
             merge_state_style(&mut node.style, style);
@@ -6371,14 +6397,26 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 return Err(swimlane_error(line, format!("Swimlane class references unknown class {class:?}")));
             }
         }
-        for node_id in node_ids {
-            let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
-                swimlane_error(line, format!("Swimlane class references unknown node {node_id:?}"))
-            })?;
-            for class in &classes {
-                if !node.classes.contains(class) {
-                    node.classes.push(class.clone());
+        for target_id in node_ids {
+            let mut matched = false;
+            if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !node.classes.contains(class) {
+                        node.classes.push(class.clone());
+                    }
                 }
+            }
+            for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+                matched = true;
+                for class in &classes {
+                    if !edge.classes.contains(class) {
+                        edge.classes.push(class.clone());
+                    }
+                }
+            }
+            if !matched {
+                return Err(swimlane_error(line, format!("Swimlane class references unknown node or edge {target_id:?}")));
             }
         }
     }
@@ -6390,16 +6428,40 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut node.style, style);
         }
     }
-    for (node_id, style, line) in pending_styles {
-        let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
-            swimlane_error(line, format!("Swimlane style references unknown node {node_id:?}"))
-        })?;
-        merge_state_style(&mut node.style, &style);
+    for edge in &mut diagram.edges {
+        for class in edge.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane edge decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut edge.style, style);
+        }
+    }
+    for (target_id, style, line) in pending_styles {
+        let mut matched = false;
+        if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == target_id) {
+            matched = true;
+            merge_state_style(&mut node.style, &style);
+        }
+        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+            matched = true;
+            merge_state_style(&mut edge.style, &style);
+        }
+        if !matched {
+            return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
+        }
     }
     Ok(diagram)
 }
 
 enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
+
+struct SwimlaneEdgeConfig {
+    id: String,
+    animate: Option<bool>,
+    animation: Option<SwimlaneEdgeAnimation>,
+    curve: Option<SwimlaneEdgeCurve>,
+    line: usize,
+}
 
 fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction, ParseError> {
     let Some((node_id, rest)) = value.trim().split_once(char::is_whitespace) else {
@@ -6492,6 +6554,69 @@ fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyl
         return Err(swimlane_error(line, "Swimlane style requires a node id and declarations"));
     };
     Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
+}
+
+fn parse_swimlane_edge_config(
+    value: &str,
+    line: usize,
+) -> Result<Option<SwimlaneEdgeConfig>, ParseError> {
+    let Some((id, attributes)) = value.split_once("@{") else {
+        return Ok(None);
+    };
+    let Some(body) = attributes.strip_suffix('}') else {
+        return Err(swimlane_error(line, "unterminated Swimlane edge configuration"));
+    };
+    let fields = split_mermaid_metadata_fields(body).into_iter().map(|field| {
+        let (key, value) = field.split_once(':')
+            .ok_or_else(|| swimlane_error(line, "Swimlane edge configuration requires key: value"))?;
+        Ok((parse_mermaid_metadata_scalar(key.trim()), parse_mermaid_metadata_scalar(value.trim())))
+    }).collect::<Result<Vec<_>, ParseError>>()?;
+    if !fields.iter().any(|(key, _)| matches!(key.as_str(), "animate" | "animation" | "curve")) {
+        return Ok(None);
+    }
+    let id = id.trim();
+    if id.is_empty() || !id.chars().all(|character|
+        character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+    ) {
+        return Err(swimlane_error(line, "invalid Swimlane edge configuration id"));
+    }
+    let mut animate = None;
+    let mut animation = None;
+    let mut curve = None;
+    for (key, value) in fields {
+        match key.as_str() {
+            "animate" => animate = Some(match value.to_ascii_lowercase().as_str() {
+                "true" => true,
+                "false" => false,
+                _ => return Err(swimlane_error(line, "Swimlane edge animate must be true or false")),
+            }),
+            "animation" => animation = Some(match value.to_ascii_lowercase().as_str() {
+                "slow" => SwimlaneEdgeAnimation::Slow,
+                "fast" => SwimlaneEdgeAnimation::Fast,
+                _ => return Err(swimlane_error(line, "Swimlane edge animation must be slow or fast")),
+            }),
+            "curve" => curve = Some(match value.to_ascii_lowercase().as_str() {
+                "linear" => SwimlaneEdgeCurve::Linear,
+                "basis" => SwimlaneEdgeCurve::Basis,
+                "bumpx" | "bump-x" => SwimlaneEdgeCurve::BumpX,
+                "bumpy" | "bump-y" => SwimlaneEdgeCurve::BumpY,
+                "monotonex" | "monotone-x" => SwimlaneEdgeCurve::MonotoneX,
+                "monotoney" | "monotone-y" => SwimlaneEdgeCurve::MonotoneY,
+                "step" => SwimlaneEdgeCurve::Step,
+                "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
+                "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,
+                _ => return Err(swimlane_error(line, "unsupported Swimlane edge curve")),
+            }),
+            other => return Err(swimlane_error(line, format!("unsupported Swimlane edge configuration {other:?}"))),
+        }
+    }
+    Ok(Some(SwimlaneEdgeConfig {
+        id: id.to_string(),
+        animate,
+        animation,
+        curve,
+        line,
+    }))
 }
 
 fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {
@@ -6656,6 +6781,11 @@ fn parse_swimlane_edge_chain(
                     start_marker,
                     end_marker,
                     min_length,
+                    classes: Vec::new(),
+                    style: DiagramStyle::default(),
+                    animate: false,
+                    animation: None,
+                    curve: None,
                 });
             }
         }

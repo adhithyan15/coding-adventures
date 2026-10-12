@@ -13,7 +13,8 @@ gloss: "a square (in a town)"
 concept_tag: IT-DOVE-PIAZZA
 prerequisites: [IT-C80-dentro, IT-C80-fuori]
 sounds: []
-roots: []
+roots: [platea-latin]
+etymology_hook: "piazza ← Latin platea 'broad street' — English place and plaza share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C80-fuori]
 <!-- hl-knowledge: introduces=[IT-LEX-C80-DOVE-04]; assesses=[] -->
 
 **la piazza** — "a square (in a town)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piazza** ← Latin *platea*, "a broad street" — inherited; Latin took it from Greek *plateia*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

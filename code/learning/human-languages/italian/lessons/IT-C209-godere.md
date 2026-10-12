@@ -13,7 +13,8 @@ gloss: "to enjoy"
 concept_tag: IT-VERB-GODERE
 prerequisites: [IT-C209-gettare, IT-C209-girare]
 sounds: []
-roots: []
+roots: [gaudere-latin]
+etymology_hook: "godere ← Latin gaudere 'to rejoice' — English joy is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C209-girare]
 <!-- hl-knowledge: introduces=[IT-LEX-C209-VERBI209-04]; assesses=[] -->
 
 **godere** — "to enjoy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**godere** ← Latin *gaudere*, "to rejoice" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

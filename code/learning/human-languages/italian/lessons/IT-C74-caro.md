@@ -13,7 +13,8 @@ gloss: "dear; expensive"
 concept_tag: IT-AGG3-CARO
 prerequisites: [IT-C74-facile, IT-C74-difficile]
 sounds: []
-roots: []
+roots: [carus-latin]
+etymology_hook: "caro ← Latin carus 'dear' — English charity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C74-difficile]
 <!-- hl-knowledge: introduces=[IT-LEX-C74-AGG3-05]; assesses=[] -->
 
 **caro** — "dear; expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caro** ← Latin *carus*, "dear, beloved" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

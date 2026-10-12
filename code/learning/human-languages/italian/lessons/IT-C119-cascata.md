@@ -14,6 +14,7 @@ concept_tag: IT-NATURA119-CASCATA
 prerequisites: [IT-C119-vulcano, IT-C119-grotta]
 sounds: []
 roots: []
+etymology_hook: "cascata — from cascare 'to tumble': a tumbling of water — English cascade is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C119-grotta]
 <!-- hl-knowledge: introduces=[IT-LEX-C119-NATURA119-05]; assesses=[] -->
 
 **la cascata** — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cascata** — built from *cascare*, "to tumble", with *-ata*: a tumbling of water. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

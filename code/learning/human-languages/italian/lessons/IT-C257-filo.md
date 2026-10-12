@@ -13,7 +13,8 @@ gloss: "a thread, a wire"
 concept_tag: IT-COSE257-FILO
 prerequisites: [IT-C257-mattone, IT-C257-sacchetto]
 sounds: []
-roots: []
+roots: [filum-latin]
+etymology_hook: "filo ← Latin filum 'a thread' — English file (a row) and filament share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C257-sacchetto]
 <!-- hl-knowledge: introduces=[IT-LEX-C257-COSE257-04]; assesses=[] -->
 
 **il filo** — "a thread, a wire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**filo** ← Latin *filum*, "a thread" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

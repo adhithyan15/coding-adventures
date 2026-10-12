@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 253,
-  "sourceHash": "fnv1a64:b71059f68d199209",
+  "sourceHash": "fnv1a64:b43fe4fd7af959e5",
   "lessonIds": [
     "IT-C253-conto-corrente",
     "IT-C253-prestito",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch253.txt",
   "json": "italian/narration/ch253.json",
-  "textHash": "fnv1a64:75a3380f098654fe",
-  "jsonHash": "fnv1a64:ac5319ca4281d71b",
+  "textHash": "fnv1a64:377877e071f7edf6",
+  "jsonHash": "fnv1a64:912fc7dcb602cd6b",
   "findings": []
 }

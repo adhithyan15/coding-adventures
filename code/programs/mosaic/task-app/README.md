@@ -95,7 +95,7 @@ lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
 property. Fresh `native-complete` reports currently contain 38 XAML, 83 SwiftUI,
-50 Compose, 108 Qt, and 69 Flutter drops; any new property or increase above
+40 Compose, 93 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -114,6 +114,14 @@ calendar-event text omissions tracked by #17146 (#17128). Qt now passes the
 event surface's supported color and font size to descendant text and lowers
 the authored hidden/ellipsis/nowrap trio as native clipping and right elision,
 retiring those final five omissions (#17146).
+Qt controls now lower their 15 exact `width: 100%` declarations to
+`Layout.fillWidth: true`, reducing the Qt inventory from 108 to 93. The three
+remaining Qt width omissions belong to `Text` geometry, while other
+percentages and mixed fixed/fill states remain explicit debt (#17338).
+Compose now treats the ten non-inset CSS shadows paired with supported
+`elevation` tokens as consumed by their emitted native depth, reducing its
+inventory from 50 to 40. The inset theme-toggle moon and any raw shadow without
+elevation remain explicit drawing-effect debt (#17356).
 Flutter rounded surfaces now preserve all 15 supported fixed `border-radius`
 declarations across draggable cards, calendar events, text chips, inputs, and
 the timeline grid. The shared text-surface wrapper also paints eight coupled

@@ -11,6 +11,7 @@ concept_tag: GREETING-DAY
 prerequisites: [IT-C01-buono, IT-C01-giorno]
 sounds: []
 roots: [bonus, diurnum]
+etymology_hook: "buongiorno = buon (← Latin bonus 'good') + giorno (← Latin diurnum 'daytime')"
 reviews_of: [IT-C01-buono, IT-C01-giorno]
 duration:
   max_seconds: 120

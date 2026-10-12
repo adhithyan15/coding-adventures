@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 3,
-  "sourceHash": "fnv1a64:e9cc6f5bb5a6b08c",
+  "sourceHash": "fnv1a64:061c3744ddc11c99",
   "lessonIds": [
     "IT-C03-io",
     "IT-C03-mi-chiamo",
@@ -14,6 +14,6 @@
   "text": "italian/narration/ch03.txt",
   "json": "italian/narration/ch03.json",
   "textHash": "fnv1a64:12de7dd00f1184b6",
-  "jsonHash": "fnv1a64:8a34fe6a7f213085",
+  "jsonHash": "fnv1a64:0b013f1bc43876d4",
   "findings": []
 }

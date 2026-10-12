@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI103-MAGLIONE
 prerequisites: [IT-C102-donna, IT-C102-petto]
 sounds: []
 roots: []
+etymology_hook: "maglione — a big knit; the knit word ← Old Occitan malha, from Latin macula 'mesh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C102-petto]
 <!-- hl-knowledge: introduces=[IT-LEX-C103-VESTITI103-01]; assesses=[] -->
 
 **il maglione** — "a jumper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maglione** — built from the word for knitted mesh with *-one*, "big"; that word ← Old Occitan *malha*, from Latin *macula*, "a spot, a mesh". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

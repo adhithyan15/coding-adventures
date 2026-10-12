@@ -13,7 +13,8 @@ gloss: "to cough"
 concept_tag: IT-VERB-TOSSIRE
 prerequisites: [IT-C213-raccomandare, IT-C214-suggerire]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "tossire ← Latin tussire 'to cough', from tussis 'a cough'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C214-suggerire]
 <!-- hl-knowledge: introduces=[IT-LEX-C214-VERBI214-02]; assesses=[] -->
 
 **tossire** — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tossire** ← Latin *tussire*, "to cough" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

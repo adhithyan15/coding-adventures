@@ -44,16 +44,16 @@ it will mislead you within a week.
 
 These are all motion verbs, and every one of them takes **avoir**:
 
-- **marcher** (walk) — *j'ai marché*
-- **courir** (run) — *j'ai couru*
-- **nager** (swim), **danser** (dance), **voyager** (travel)
+- *j'ai marché* — I walked
+- *j'ai couru* — I ran
+- *j'ai nagé*, *j'ai dansé*, *j'ai voyagé* — I swam, danced, travelled
 
 You can run for an hour and arrive nowhere. That is the whole distinction. The
 *être* verbs are not about **movement**; they are about **arriving, leaving and
 changing state** — crossing a threshold, as the last lesson put it.
 
-*Courir* describes what your legs did. *Partir* describes that you are no longer
-here. The first is an activity; the second is a change in where you are, and it
+*J'ai couru* describes what your legs did. *Je suis parti* describes that you
+are no longer here. The first is an activity; the second is a change in where you are, and it
 is the change that takes *être*.
 
 So correct the rule in your head now, before it costs you anything: **not motion
@@ -71,7 +71,7 @@ So correct the rule in your head now, before it costs you anything: **not motion
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-ETRE-PAS-MOUVEMENT-03] -->
 
-[PAUSE 3s] Which auxiliary does *courir* take? (***avoir*** — *j'ai couru*.) But
+[PAUSE 3s] Which auxiliary does "to run" take? (***avoir*** — *j'ai couru*.) But
 is it not a motion verb? (**Yes** — which is why "motion verbs take *être*" is
 the **wrong rule**.) State the right one. (**Transition, not motion** — arriving,
 leaving, changing state.) Next: the verbs that use both.

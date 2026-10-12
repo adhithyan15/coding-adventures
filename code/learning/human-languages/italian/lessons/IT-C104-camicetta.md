@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI104-CAMICETTA
 prerequisites: [IT-C104-scarpe, IT-C104-calzini]
 sounds: []
 roots: []
+etymology_hook: "camicetta — a little shirt; the shirt word ← Late Latin camisia"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C104-calzini]
 <!-- hl-knowledge: introduces=[IT-LEX-C104-VESTITI104-05]; assesses=[] -->
 
 **la camicetta** — "a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camicetta** — built from the word for "shirt" with *-etta*, "little". EtymDB 2.1 has no entry for it; the parts are plain to see. The shirt word ← Late Latin *camisia* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

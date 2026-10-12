@@ -13,7 +13,8 @@ gloss: "to divorce"
 concept_tag: IT-VERB-DIVORZIARE
 prerequisites: [IT-C207-invecchiare, IT-C207-sposare]
 sounds: []
-roots: []
+roots: [divortium-latin]
+etymology_hook: "divorziare — from divorzio ← Latin divortium 'a separation' — English divorce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C207-sposare]
 <!-- hl-knowledge: introduces=[IT-LEX-C207-VERBI207-04]; assesses=[] -->
 
 **divorziare** — "to divorce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divorziare** — built from *divorzio*, "a divorce", which ← Latin *divortium*, "a separation", from *divertere*, "to turn aside". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

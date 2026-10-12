@@ -41,21 +41,25 @@ def _fields(value: Any, required: set[str], where: str) -> dict[str, Any]:
     return value
 
 
-def _number(value: Any, where: str) -> float:
+def _number(value: Any, where: str, *, bound: float = 1_000_000) -> float:
+    # Bound integers before math.isfinite implicitly converts them to float.
+    # Otherwise an oversized JSON integer escapes this boundary as OverflowError.
     if (
         isinstance(value, bool)
         or not isinstance(value, (int, float))
+        or abs(value) > bound
         or not math.isfinite(value)
-        or abs(value) > 1_000_000
     ):
         raise ValueError(f"{where} must be a bounded finite number")
     return float(value)
 
 
-def _tuple(value: Any, size: int, where: str) -> tuple[float, ...]:
+def _tuple(
+    value: Any, size: int, where: str, *, bound: float = 1_000_000
+) -> tuple[float, ...]:
     if not isinstance(value, list) or len(value) != size:
         raise ValueError(f"{where} must contain exactly {size} finite numbers")
-    return tuple(_number(item, where) for item in value)
+    return tuple(_number(item, where, bound=bound) for item in value)
 
 
 def _point(value: Any, where: str) -> tuple[float, float]:
@@ -63,8 +67,12 @@ def _point(value: Any, where: str) -> tuple[float, float]:
     return (x, y)
 
 
-def _expected(value: Any, answer: tuple[float, ...], where: str) -> None:
-    published = _tuple(value, len(answer), where)
+def _expected(
+    value: Any, answer: tuple[float, ...], where: str, *, bound: float = 1_000_000
+) -> None:
+    if any(abs(item) > bound or not math.isfinite(item) for item in answer):
+        raise ValueError(f"{where} derived result must be bounded and finite")
+    published = _tuple(value, len(answer), where, bound=bound)
     if any(
         not math.isclose(got, want, rel_tol=0.0, abs_tol=ORACLE_TOLERANCE)
         for got, want in zip(published, answer, strict=True)
@@ -202,6 +210,20 @@ def _center_arc_fields(case: dict[str, Any], case_id: str) -> tuple[float, ...]:
     sweep = _number(case["sweep_angle"], f"{case_id}.sweep_angle")
     rotation = _number(case["x_rotation"], f"{case_id}.x_rotation")
     return (cx, cy, rx, ry, start, sweep, rotation)
+
+
+def _center_arc_tangent(fields: tuple[float, ...], t: float) -> tuple[float, float]:
+    """Differentiate the scalar ellipse coordinates, independently of packages."""
+    _, _, rx, ry, start, sweep, rotation = fields
+    angle = start + t * sweep
+    sin_phi, cos_phi = math.sin(angle), math.cos(angle)
+    sin_r, cos_r = math.sin(rotation), math.cos(rotation)
+    # Center translation differentiates to zero. The signed sweep is dphi/dt;
+    # retaining it distinguishes a parameter derivative from a unit direction.
+    return (
+        sweep * (-rx * cos_r * sin_phi - ry * sin_r * cos_phi),
+        sweep * (-rx * sin_r * sin_phi + ry * cos_r * cos_phi),
+    )
 
 
 def _center_arc_bounds(fields: tuple[float, ...]) -> tuple[float, ...]:
@@ -427,6 +449,36 @@ def _validate_case(case: Any) -> str:
             case["expected_bounds"],
             _center_arc_bounds(fields),
             f"{case_id}.expected_bounds",
+        )
+    elif operation == "center-arc-tangent":
+        _fields(
+            case,
+            {
+                "id",
+                "operation",
+                "center",
+                "rx",
+                "ry",
+                "start_angle",
+                "sweep_angle",
+                "x_rotation",
+                "t",
+                "expected_derivative",
+            },
+            case_id,
+        )
+        fields = _center_arc_fields(case, case_id)
+        if abs(fields[5]) > math.tau:
+            raise ValueError(f"{case_id} has invalid sweep")
+        t = _number(case["t"], f"{case_id}.t")
+        if not 0.0 <= t <= 1.0:
+            raise ValueError(f"{case_id}.t must be in [0,1]")
+        _expected(
+            case["expected_derivative"],
+            _center_arc_tangent(fields, t),
+            f"{case_id}.expected_derivative",
+            # A full turn at the largest corpus radius exceeds the point cap.
+            bound=10_000_000,
         )
     elif operation == "center-arc-cubics":
         shared = {

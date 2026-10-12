@@ -13,7 +13,8 @@ gloss: "never; ever"
 concept_tag: IT-QUANDO-MAI
 prerequisites: [IT-C78-minuto, IT-C79-sempre]
 sounds: []
-roots: []
+roots: [magis-latin]
+etymology_hook: "mai ← Latin magis 'more' — the word for 'more' came to mean 'ever, never'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C79-sempre]
 <!-- hl-knowledge: introduces=[IT-LEX-C79-QUANDO-02]; assesses=[] -->
 
 **mai** — "never; ever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mai** ← Latin *magis*, "more" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

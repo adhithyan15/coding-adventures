@@ -14,6 +14,7 @@ concept_tag: IT-ANIMALI121-GUFO
 prerequisites: [IT-C121-tartaruga, IT-C121-scoiattolo]
 sounds: []
 roots: []
+etymology_hook: "gufo — origin not recorded in EtymDB; usually explained as an imitation of the owl's call"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C121-scoiattolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C121-ANIMALI121-03]; assesses=[] -->
 
 **il gufo** — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gufo** — its origin is not recorded in EtymDB 2.1. It is usually explained as an imitation of the owl's call.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

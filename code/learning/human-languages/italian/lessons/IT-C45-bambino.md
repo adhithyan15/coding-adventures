@@ -14,6 +14,7 @@ concept_tag: IT-FAMIGLIA2-BAMBINO
 prerequisites: [IT-C45-cugino, IT-C45-cugina]
 sounds: []
 roots: []
+etymology_hook: "bambino — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C45-cugina]
 <!-- hl-knowledge: introduces=[IT-LEX-C45-FAMIGLIA2-05]; assesses=[] -->
 
 **il bambino** — "a little boy, a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bambino** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

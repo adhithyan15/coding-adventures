@@ -14,6 +14,7 @@ concept_tag: IT-CORPO2-SCHIENA
 prerequisites: [IT-C38-collo, IT-C38-spalla]
 sounds: []
 roots: []
+etymology_hook: "schiena ← Lombardic skina 'a long bone' — a Germanic word; English shin is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C38-spalla]
 <!-- hl-knowledge: introduces=[IT-LEX-C38-CORPO2-04]; assesses=[] -->
 
 **la schiena** — "the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schiena** ← Lombardic *skina*, "shin, a long bone" — borrowed from the Germanic language of the Lombards. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

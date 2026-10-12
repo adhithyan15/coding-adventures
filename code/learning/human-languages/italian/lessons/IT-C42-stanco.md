@@ -14,6 +14,7 @@ concept_tag: IT-STARE-STANCO
 prerequisites: [IT-C42-sete, IT-C42-stanchezza]
 sounds: []
 roots: []
+etymology_hook: "stanco — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C42-stanchezza]
 <!-- hl-knowledge: introduces=[IT-LEX-C42-STARE-03]; assesses=[] -->
 
 **stanco** — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stanco** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

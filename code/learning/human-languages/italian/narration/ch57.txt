@@ -12,6 +12,9 @@ Before the new one: say the Italian for a chair, then the Italian for a key.
 You'll want to know: il muro.
 il muro — "a wall".
 
+The word, taken apart.
+muro from Latin murus, "wall" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a key, then the Italian for a wall.
 
 You'll want to know: il tetto.
 il tetto — "a roof".
+
+The word, taken apart.
+tetto from Latin tectum, "roof", from tegere, "to cover" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a wall, then the Italian for a roof.
 You'll want to know: il giardino.
 il giardino — "a garden".
 
+The word, taken apart.
+giardino from Old French jardin, "garden, enclosure" — borrowed (EtymDB 2.1, French jardin); the French word is built on Frankish gard, "enclosure". English garden is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a roof, then the Italian for a garden.
 You'll want to know: la lampada.
 la lampada — "a lamp".
 
+The word, taken apart.
+lampada from Late Latin lampada, from Latin lampas, "a torch, a light" (Lewis & Short) — inherited; Latin took it from Greek. EtymDB 2.1 has no row for lampada.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a garden, then the Italian for a lamp.
 
 You'll want to know: il bagno.
 il bagno — "a bathroom".
+
+The word, taken apart.
+bagno from Vulgar Latin baneum, from Latin balneum, "bath" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

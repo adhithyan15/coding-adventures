@@ -13,7 +13,8 @@ gloss: "society"
 concept_tag: IT-COSE248-SOCIETA
 prerequisites: [IT-C248-mosca, IT-C248-zanzara]
 sounds: []
-roots: []
+roots: [socius-latin]
+etymology_hook: "società ← Latin societas 'fellowship', from socius 'companion' — English society"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C248-zanzara]
 <!-- hl-knowledge: introduces=[IT-LEX-C248-COSE248-04]; assesses=[] -->
 
 **la società** — "society".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**società** ← Latin *societas*, "fellowship", from *socius*, "a companion" — a learned borrowing; the same Latin word, passed down by speech, gave *soccida*, a farming partnership. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

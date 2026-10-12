@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI88-DISTRIBUTORE
 prerequisites: [IT-C88-municipio, IT-C88-supermercato]
 sounds: []
 roots: []
+etymology_hook: "distributore — built on Latin distribuere 'to divide out'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C88-supermercato]
 <!-- hl-knowledge: introduces=[IT-LEX-C88-LUOGHI88-03]; assesses=[] -->
 
 **il distributore** — "a petrol station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**distributore** is built on Latin *distribuere*, "to divide out" (Lewis & Short); EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

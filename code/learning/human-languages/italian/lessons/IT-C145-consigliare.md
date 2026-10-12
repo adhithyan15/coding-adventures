@@ -13,7 +13,8 @@ gloss: "to advise"
 concept_tag: IT-VERB-CONSIGLIARE
 prerequisites: [IT-C144-nevicare, IT-C145-confrontare]
 sounds: []
-roots: []
+roots: [consilium-latin]
+etymology_hook: "consigliare ← Medieval Latin consiliare, from consilium 'advice' — English counsel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C145-confrontare]
 <!-- hl-knowledge: introduces=[IT-LEX-C145-VERBI145-02]; assesses=[] -->
 
 **consigliare** — "to advise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**consigliare** ← Medieval Latin *consiliare*, from Latin *consilium*, "advice, a plan" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

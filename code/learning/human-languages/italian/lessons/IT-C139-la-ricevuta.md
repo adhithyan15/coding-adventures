@@ -13,7 +13,8 @@ gloss: "a receipt"
 concept_tag: IT-READ139-LA-RICEVUTA
 prerequisites: [IT-C139-lavviso, IT-C139-laffitto]
 sounds: []
-roots: []
+roots: [recipere-latin]
+etymology_hook: "ricevuta — 'a thing received', from Latin recipere 'to receive' — English receipt"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [IT-C139-laffitto]
 [YOU READ: the receipt]
 
 The receipt says **Ricevuta: affitto, 400.** The rent is paid: keep it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ricevuta** is the past participle of the verb for "to receive", used as a noun: a thing received. That verb ← Latin *recipere*, "to receive". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

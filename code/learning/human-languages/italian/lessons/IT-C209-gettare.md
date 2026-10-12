@@ -13,7 +13,8 @@ gloss: "to throw"
 concept_tag: IT-VERB-GETTARE
 prerequisites: [IT-C208-diminuire, IT-C209-fingere]
 sounds: []
-roots: []
+roots: [iactare-latin]
+etymology_hook: "gettare ← Late Latin iectare, Latin iactare 'to throw' — English jet is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C209-fingere]
 <!-- hl-knowledge: introduces=[IT-LEX-C209-VERBI209-02]; assesses=[] -->
 
 **gettare** — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gettare** ← Late Latin *iectare*, for Latin *iactare*, "to throw" — inherited. (EtymDB 2.1 records the Latin forms and lists French *jeter* and Spanish *echar* as its cognates.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

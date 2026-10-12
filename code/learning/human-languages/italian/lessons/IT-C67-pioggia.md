@@ -13,7 +13,8 @@ gloss: "rain"
 concept_tag: IT-CIELO-PIOGGIA
 prerequisites: [IT-C67-stella, IT-C67-nuvola]
 sounds: []
-roots: []
+roots: [pluvia-latin]
+etymology_hook: "pioggia ← Latin pluvia 'rain' — English pluvial shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C67-nuvola]
 <!-- hl-knowledge: introduces=[IT-LEX-C67-CIELO-03]; assesses=[] -->
 
 **la pioggia** — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pioggia** ← Vulgar Latin *plovia*, from Latin *pluvia*, "rain" — inherited. EtymDB 2.1 has no row for *pioggia*; it derives Venetian *pióva* from *plovia* and French *pluie* from *pluvia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

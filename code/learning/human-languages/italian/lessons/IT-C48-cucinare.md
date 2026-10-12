@@ -13,7 +13,8 @@ gloss: "to cook"
 concept_tag: IT-VERB-CUCINARE
 prerequisites: [IT-C47-piangere, IT-C47-lavare]
 sounds: []
-roots: []
+roots: [coquinare-latin]
+etymology_hook: "cucinare ← Latin coquinare 'to cook'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C47-lavare]
 <!-- hl-knowledge: introduces=[IT-LEX-C48-VERBI2-01]; assesses=[] -->
 
 **cucinare** — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cucinare** ← Vulgar Latin *cocinare*, from Latin *coquinare*, "to cook" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

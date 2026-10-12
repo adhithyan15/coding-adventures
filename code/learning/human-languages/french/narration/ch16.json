@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Colours",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:df70fba0a5ea3e83",
+  "sourceHash": "fnv1a64:f297edfa503617fe",
   "lessons": [
     {
       "id": "FR-C13-noir",
@@ -428,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94139f2c69677ebe",
+      "sourceHash": "fnv1a64:ef42bc770f091ae1",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-ou — the ou is the pure oo you have in douze."
+              "text": "vowel-ou — the letters o-u make the pure oo you have in douze."
             },
             {
               "kind": "speech",

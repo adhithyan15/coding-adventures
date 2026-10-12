@@ -13,7 +13,8 @@ gloss: "smoke"
 concept_tag: IT-COSE229-FUMO
 prerequisites: [IT-C229-fango, IT-C229-polvere]
 sounds: []
-roots: []
+roots: [fumus-latin]
+etymology_hook: "fumo ← Latin fumus 'smoke' — English fume and perfume share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C229-polvere]
 <!-- hl-knowledge: introduces=[IT-LEX-C229-COSE229-05]; assesses=[] -->
 
 **il fumo** — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fumo** ← Latin *fumus*, "smoke" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

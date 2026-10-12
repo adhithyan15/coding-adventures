@@ -13,7 +13,8 @@ gloss: "important"
 concept_tag: IT-QUALITA125-IMPORTANTE
 prerequisites: [IT-C125-ultimo, IT-C125-famoso]
 sounds: []
-roots: []
+roots: [importare-latin]
+etymology_hook: "importante — 'mattering', from importare ← Latin importare 'to bring in' — English important"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C125-famoso]
 <!-- hl-knowledge: introduces=[IT-LEX-C125-QUALITA125-04]; assesses=[] -->
 
 **importante** — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**importante** — built from the verb *importare*, "to matter", with *-ante*, "-ing". The verb goes back to Latin *importare*, "to bring in" (Lewis & Short). EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

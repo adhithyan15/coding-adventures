@@ -11,6 +11,7 @@ concept_tag: CH2-PRACTICE
 prerequisites: [IT-C02-prego, IT-C02-come, IT-C02-stare, IT-C02-come-stai, IT-C02-come-sta, IT-C02-come-va, IT-C02-cosi-cosi, IT-C02-non-ce-male]
 sounds: []
 roots: []
+etymology_hook: "review: prego ← pregare 'to pray'; come ← Latin quomodo 'how'; stare ← Latin stare 'to stand'"
 duration:
   max_seconds: 297
 requires:

@@ -13,7 +13,8 @@ gloss: "calmness"
 concept_tag: IT-SAL186-CALMA
 prerequisites: [IT-C185-raffreddore, IT-C186-ansia]
 sounds: []
-roots: []
+roots: [cauma-latin]
+etymology_hook: "calma ← Late Latin cauma 'midday heat', from Greek kauma — the still hour; English calm"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C186-ansia]
 <!-- hl-knowledge: introduces=[IT-LEX-C186-SAL186-02]; assesses=[] -->
 
 **la calma** — "calmness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calma** ← Late Latin *cauma*, "the heat of the midday sun", from Greek *kauma*, "heat" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

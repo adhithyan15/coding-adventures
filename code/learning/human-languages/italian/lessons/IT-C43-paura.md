@@ -13,7 +13,8 @@ gloss: "fear"
 concept_tag: IT-EMOZIONI-PAURA
 prerequisites: [IT-C42-malato, IT-C42-gioia]
 sounds: []
-roots: []
+roots: [pavor-latin]
+etymology_hook: "paura goes back to Latin pavor 'fear, trembling'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C42-gioia]
 <!-- hl-knowledge: introduces=[IT-LEX-C43-EMOZIONI-01]; assesses=[] -->
 
 **la paura** — "fear". **ho paura**: I am afraid.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paura** goes back to Latin *pavor*, "fear, trembling" — inherited. EtymDB 2.1 has no row for *paura*; it derives Friulian *pôre* from *pavor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

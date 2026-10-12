@@ -54,7 +54,7 @@ together — and a paradigm you have already built is a recap, not a wall.
 [PAUSE 1s]
 - [YOU SAY: the three that blur — "ai, as, a"]
 - [YOU SAY: the two that do not — "-ons, -ez"]
-- [YOU SAY: the trap — "ils ont, ils sont"; buzz for have, hiss for are]
+- [YOU SAY: "ils ont" with its liaison — *eel-z-o(n)*; the buzz means have]
 
 ## Guided Practice: use it
 <!-- hl-knowledge: introduces=[]; assesses=[FR-VERB-AVOIR-JAI-01, FR-VERB-AVOIR-AS-02, FR-ETYMON-HABERE-AVOIR-08] -->
@@ -79,6 +79,6 @@ together — and a paradigm you have already built is a recap, not a wall.
 
 [PAUSE 3s] Give all six forms without stopping. Which three sound effectively the
 same? (**ai, as, a**.) Which two endings can you always hear? (**-ons** and
-**-ez**.) How do you hear the difference between *ils ont* and *ils sont*? (The
-**buzz** — *ont* takes a liaison **z**, *sont* hisses.) What Latin verb is behind
+**-ez**.) What do you hear in *ils ont* that marks it as *have*? (The
+**buzz** — *ont* takes a liaison **z**.) What Latin verb is behind
 all of it? (***habēre***.)

@@ -13,7 +13,8 @@ gloss: "a banknote"
 concept_tag: IT-COSE226-BANCONOTA
 prerequisites: [IT-C226-resto, IT-C226-moneta]
 sounds: []
-roots: []
+roots: [nota-latin]
+etymology_hook: "banconota — banco 'bank' + nota 'note', after English banknote"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C226-moneta]
 <!-- hl-knowledge: introduces=[IT-LEX-C226-COSE226-04]; assesses=[] -->
 
 **la banconota** — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banconota** is *banco*, "a bank", plus *nota*, "a note", after English *banknote*. *nota* ← Latin *nota*, "a mark". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

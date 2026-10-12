@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 16,
-  "sourceHash": "fnv1a64:df70fba0a5ea3e83",
+  "sourceHash": "fnv1a64:f297edfa503617fe",
   "lessonIds": [
     "FR-C13-noir",
     "FR-C13-blanc",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "french/narration/ch16.txt",
   "json": "french/narration/ch16.json",
-  "textHash": "fnv1a64:78ac3f64716fba1b",
-  "jsonHash": "fnv1a64:b17b24cd89e74af3",
+  "textHash": "fnv1a64:30f8ba426f2f7acb",
+  "jsonHash": "fnv1a64:1f49292cb47db670",
   "findings": []
 }

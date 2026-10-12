@@ -13,7 +13,8 @@ gloss: "a town hall"
 concept_tag: IT-LUOGHI88-MUNICIPIO
 prerequisites: [IT-C87-cinema, IT-C87-teatro]
 sounds: []
-roots: []
+roots: [municipium-latin]
+etymology_hook: "municipio ← Latin municipium 'a self-governing town' — English municipal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C87-teatro]
 <!-- hl-knowledge: introduces=[IT-LEX-C88-LUOGHI88-01]; assesses=[] -->
 
 **il municipio** — "a town hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**municipio** ← Latin *municipium*, "a self-governing town" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

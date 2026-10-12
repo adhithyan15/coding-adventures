@@ -2149,6 +2149,96 @@ fn swimlane_edge_ids_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_edge_classes_and_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nclassDef urgent stroke:#dc2626,stroke-width:4px,stroke-dasharray:8 3,color:#991b1b\nclass submit urgent\nstyle release stroke:#059669,stroke-width:5px,stroke-dasharray:2 2,color:#065f46",
+    ).expect("Flowchart edge classes and direct styles should parse");
+
+    assert_eq!(diagram.edges[0].classes, ["urgent"]);
+    assert_eq!(diagram.edges[0].style.stroke.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.edges[0].style.stroke_width, Some(4.0));
+    assert_eq!(diagram.edges[0].style.stroke_dash.as_deref(), Some([8.0, 3.0].as_slice()));
+    assert_eq!(diagram.edges[0].style.text_color.as_deref(), Some("#991b1b"));
+    assert_eq!(diagram.edges[1].style.stroke.as_deref(), Some("#059669"));
+    assert_eq!(diagram.edges[1].style.stroke_width, Some(5.0));
+    assert_eq!(diagram.edges[1].style.stroke_dash.as_deref(), Some([2.0, 2.0].as_slice()));
+    assert_eq!(diagram.edges[1].style.text_color.as_deref(), Some("#065f46"));
+}
+
+#[test]
+fn swimlane_edge_animation_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeAnimation;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nsubmit@{ animate: true, animation: fast }\nrelease@{ animation: slow }",
+    ).expect("Flowchart edge animation configuration should parse");
+
+    assert!(diagram.edges[0].animate);
+    assert_eq!(diagram.edges[0].animation, Some(SwimlaneEdgeAnimation::Fast));
+    assert!(diagram.edges[1].animate);
+    assert_eq!(diagram.edges[1].animation, Some(SwimlaneEdgeAnimation::Slow));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none link@--> two\nlink@{ animation: instant }"
+    ).is_err());
+}
+
+#[test]
+fn swimlane_edge_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest curved@--> done\nreview linear@--> done\ncurved@{ curve: basis }\nlinear@{ curve: linear }",
+    ).expect("Flowchart edge curve configuration should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(diagram.edges[1].curve, Some(SwimlaneEdgeCurve::Linear));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph A\n  one[One]\n  two[Two]\nend\none link@--> two\nlink@{ curve: imaginary }"
+    ).is_err());
+}
+
+#[test]
+fn swimlane_step_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst stepped@--> sixth\nsecond before@--> fifth\nthird after@--> fourth\nstepped@{ curve: step }\nbefore@{ curve: stepBefore }\nafter@{ curve: stepAfter }",
+    ).expect("Flowchart step curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::Step),
+        Some(SwimlaneEdgeCurve::StepBefore),
+        Some(SwimlaneEdgeCurve::StepAfter),
+    ]);
+}
+
+#[test]
+fn swimlane_bump_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: bumpX }\nvertical@{ curve: bumpY }",
+    ).expect("Flowchart bump curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::BumpX), Some(SwimlaneEdgeCurve::BumpY),
+    ]);
+}
+
+#[test]
+fn swimlane_monotone_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: monotoneX }\nvertical@{ curve: monotoneY }",
+    ).expect("Flowchart monotone curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::MonotoneX), Some(SwimlaneEdgeCurve::MonotoneY),
+    ]);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

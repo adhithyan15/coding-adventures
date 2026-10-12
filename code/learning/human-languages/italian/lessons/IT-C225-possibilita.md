@@ -13,7 +13,8 @@ gloss: "a possibility"
 concept_tag: IT-COSE225-POSSIBILITA
 prerequisites: [IT-C224-nipote, IT-C225-decisione]
 sounds: []
-roots: []
+roots: [possibilis-latin]
+etymology_hook: "possibilità ← Latin possibilitas, from possibilis — English possibility"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C225-decisione]
 <!-- hl-knowledge: introduces=[IT-LEX-C225-COSE225-02]; assesses=[] -->
 
 **la possibilità** — "a possibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**possibilità** ← Latin *possibilitas*, "possibility", from *possibilis* — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to announce"
 concept_tag: IT-VERB-ANNUNCIARE
 prerequisites: [IT-C178-accompagnare, IT-C178-aggiungere]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "annunciare ← Latin annuntiare 'to make known' — English announce is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C178-aggiungere]
 <!-- hl-knowledge: introduces=[IT-LEX-C178-VERBI178-04]; assesses=[] -->
 
 **annunciare** — "to announce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**annunciare** ← Latin *annuntiare*, "to make known" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

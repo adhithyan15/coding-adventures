@@ -13,7 +13,8 @@ gloss: "salty"
 concept_tag: IT-QUALITA130-SALATO
 prerequisites: [IT-C129-arrabbiato, IT-C130-amaro]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "salato — 'salted', from Vulgar Latin salare, built on sal 'salt' — English salary shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C130-amaro]
 <!-- hl-knowledge: introduces=[IT-LEX-C130-QUALITA130-02]; assesses=[] -->
 
 **salato** — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salato** is the past participle of the verb for "to salt", built on *sale*, "salt"; that verb ← Vulgar Latin *salare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

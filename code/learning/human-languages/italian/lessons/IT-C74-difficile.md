@@ -13,7 +13,8 @@ gloss: "difficult"
 concept_tag: IT-AGG3-DIFFICILE
 prerequisites: [IT-C74-lento, IT-C74-facile]
 sounds: []
-roots: []
+roots: [difficilis-latin]
+etymology_hook: "difficile ← Latin difficilis, dis- + facilis 'easy' — English difficult"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C74-facile]
 <!-- hl-knowledge: introduces=[IT-LEX-C74-AGG3-04]; assesses=[] -->
 
 **difficile** — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**difficile** ← Latin *difficilis*, "hard to do", built from *dis-* + *facilis* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

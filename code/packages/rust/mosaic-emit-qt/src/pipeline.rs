@@ -2267,6 +2267,42 @@ fn conditional_lowered_px_expr(
     Some(expr)
 }
 
+/// Preserve the CSS fill-width spelling on a Qt Quick control.
+///
+/// `width: 100%` is not a scalar width. A control inside `RowLayout` or
+/// `ColumnLayout` expresses the same request with the attached
+/// `Layout.fillWidth` property. The lowering is deliberately all-or-nothing
+/// across state layers: a base fill width can remain a static `true` only when
+/// every width override also asks to fill. A state that switches to `120px`,
+/// `75%`, or an intrinsic keyword stays visible to the degradation reporter
+/// rather than being flattened into the wrong geometry.
+fn host_control_has_fill_width(base: &[StyleProp], layers: &[StateLayer<'_>]) -> bool {
+    fn raw_width(props: &[StyleProp]) -> Option<&str> {
+        props
+            .iter()
+            .find(|prop| prop.name == "width")
+            .map(|prop| prop.value.trim().trim_matches('"').trim())
+    }
+    if raw_width(base) != Some("100%") {
+        return false;
+    }
+    if layers
+        .iter()
+        .filter_map(|layer| raw_width(layer.props))
+        .any(|width| width != "100%")
+    {
+        return false;
+    }
+
+    record_style_read(base, "width");
+    for layer in layers {
+        if raw_width(layer.props).is_some() {
+            record_style_read(layer.props, "width");
+        }
+    }
+    true
+}
+
 /// Shared body of the two scalar builders above. `convert` is the whole
 /// difference between them.
 fn conditional_scalar_expr(
@@ -6253,10 +6289,14 @@ fn host_control_style_qml_lines(
     // its own is insufficient when the same control is emitted inside and
     // outside a Layout. Percentages and intrinsic CSS keywords remain
     // deliberate degradations because `qml_px_or_none` rejects them.
-    let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
-    if let Some(width) = width {
-        lines.push(format!("implicitWidth: {width}"));
-        lines.push(format!("Layout.preferredWidth: {width}"));
+    if host_control_has_fill_width(base, &state_layers) {
+        lines.push("Layout.fillWidth: true".to_string());
+    } else {
+        let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
+        if let Some(width) = width {
+            lines.push(format!("implicitWidth: {width}"));
+            lines.push(format!("Layout.preferredWidth: {width}"));
+        }
     }
     let height = conditional_lowered_px_expr(base, &state_layers, "height", "0");
     if let Some(height) = height {
@@ -17471,7 +17511,61 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_host_control_geometry_remains_a_reported_drop() {
+    fn host_control_full_width_lowers_but_intrinsic_height_remains_a_drop() {
+        for tag in ["Input", "HostInput", "HostButton"] {
+            let model = component("FluidControl", vec![], vec![]);
+            let layout = LayoutDef {
+                component_name: "FluidControl".to_string(),
+                root: LayoutNode {
+                    tag: tag.to_string(),
+                    part_name: Some("control".to_string()),
+                    props: if tag == "HostButton" {
+                        vec![lp("label", LayoutPropValue::String("Save".to_string()))]
+                    } else {
+                        vec![]
+                    },
+                    children: vec![],
+                },
+            };
+            let style = StyleDef {
+                component_name: "FluidControl".to_string(),
+                parts: vec![PartStyle {
+                    name: "control".to_string(),
+                    base: vec![
+                        sp("width", "100%"),
+                        sp("height", "max-content"),
+                        sp("padding", "8px"),
+                    ],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(out.contains("Layout.fillWidth: true"), "{tag}:\n{out}");
+            assert!(!out.contains("implicitWidth: 100"), "{tag}:\n{out}");
+            assert!(!out.contains("implicitHeight: max-content"), "{tag}:\n{out}");
+
+            let dropped = dropped_style_properties(&model, &layout, &style);
+            let names: HashSet<&str> =
+                dropped.iter().map(|drop| drop.name.as_str()).collect();
+            assert!(
+                !names.contains("width"),
+                "{tag} fill width must lower: {dropped:?}"
+            );
+            assert!(
+                names.contains("height"),
+                "{tag} must report height: {dropped:?}"
+            );
+            assert!(
+                !names.contains("padding"),
+                "{tag} padding must lower: {dropped:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_host_control_percentage_width_remains_a_reported_drop() {
         let model = component("FluidButton", vec![], vec![]);
         let layout = LayoutDef {
             component_name: "FluidButton".to_string(),
@@ -17482,29 +17576,102 @@ mod tests {
                 children: vec![],
             },
         };
+        let style = style_with_part("FluidButton", "button", vec![("width", "75%")]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("Layout.fillWidth: true"), "got:\n{out}");
+        assert!(!out.contains("implicitWidth: 75"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "width");
+    }
+
+    #[test]
+    fn repeated_state_fill_width_remains_a_static_native_fill() {
+        let model = component(
+            "ResponsiveInput",
+            vec![slot("focused", SlotType::Bool, false)],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "ResponsiveInput".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("input".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
         let style = StyleDef {
-            component_name: "FluidButton".to_string(),
+            component_name: "ResponsiveInput".to_string(),
             parts: vec![PartStyle {
-                name: "button".to_string(),
-                base: vec![
-                    sp("width", "100%"),
-                    sp("height", "max-content"),
-                    sp("padding", "8px"),
-                ],
+                name: "input".to_string(),
+                base: vec![sp("width", "100%")],
                 transitions: vec![],
-                states: vec![],
+                states: vec![StateStyle {
+                    slot: Some("focused".to_string()),
+                    slot_is_bool: true,
+                    state: "true".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "100%")],
+                }],
             }],
         };
 
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
-        assert!(!out.contains("implicitWidth: 100"), "got:\n{out}");
-        assert!(!out.contains("implicitHeight: max-content"), "got:\n{out}");
+        assert!(out.contains("Layout.fillWidth: true"), "got:\n{out}");
+        assert!(
+            !dropped_style_properties(&model, &layout, &style)
+                .iter()
+                .any(|drop| drop.name == "width")
+        );
+    }
+
+    #[test]
+    fn mixed_host_control_width_modes_remain_reported() {
+        let model = component(
+            "ResponsiveButton",
+            vec![slot(
+                "size",
+                SlotType::OneOf(vec!["fluid".to_string(), "fixed".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "ResponsiveButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![lp("label", LayoutPropValue::String("Save".to_string()))],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "ResponsiveButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![sp("width", "100%")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("size".to_string()),
+                    slot_is_bool: false,
+                    state: "fixed".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "120px")],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("Layout.fillWidth: true"), "got:\n{out}");
 
         let dropped = dropped_style_properties(&model, &layout, &style);
-        let names: HashSet<&str> = dropped.iter().map(|drop| drop.name.as_str()).collect();
-        assert!(names.contains("width"), "missing width drop: {dropped:?}");
-        assert!(names.contains("height"), "missing height drop: {dropped:?}");
-        assert!(!names.contains("padding"), "padding must lower: {dropped:?}");
+        assert!(
+            dropped.iter().any(|drop| drop.name == "width" && drop.value == "100%"),
+            "mixed base fill width must remain visible: {dropped:?}"
+        );
     }
 
     /// The `For` delegate `Item` sizes to its children so the styled cell

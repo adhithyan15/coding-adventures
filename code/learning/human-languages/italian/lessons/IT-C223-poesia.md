@@ -13,7 +13,8 @@ gloss: "a poem, poetry"
 concept_tag: IT-COSE223-POESIA
 prerequisites: [IT-C222-cultura, IT-C222-tradizione]
 sounds: []
-roots: []
+roots: [poesis-latin]
+etymology_hook: "poesia ← Latin poesis, from Greek poiesis 'a making' — English poesy and poet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C222-tradizione]
 <!-- hl-knowledge: introduces=[IT-LEX-C223-COSE223-01]; assesses=[] -->
 
 **la poesia** — "a poem, poetry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poesia** ← Latin *poesis*, from Greek *poiesis*, "a making, a composing" — a learned borrowing. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

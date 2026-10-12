@@ -13,7 +13,8 @@ gloss: "a drawer"
 concept_tag: IT-COSE191-CASSETTO
 prerequisites: [IT-C191-campanello, IT-C191-lenzuolo]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "cassetto — a little cassa 'box', from Latin capsa — English cassette is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C191-lenzuolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C191-COSE191-05]; assesses=[] -->
 
 **il cassetto** — "a drawer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cassetto** — built from *cassa*, "a box", with *-etto*, "little": a little box. *cassa* ← Latin *capsa*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

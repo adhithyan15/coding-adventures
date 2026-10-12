@@ -13,7 +13,8 @@ gloss: "a queue"
 concept_tag: IT-COSE197-FILA
 prerequisites: [IT-C197-sconto, IT-C197-saldi]
 sounds: []
-roots: []
+roots: [filum-latin]
+etymology_hook: "fila ← Latin fila 'threads', plural of filum — a line like a thread; English file"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C197-saldi]
 <!-- hl-knowledge: introduces=[IT-LEX-C197-COSE197-05]; assesses=[] -->
 
 **la fila** — "a queue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fila** ← Latin *fila*, "threads", the plural of *filum*, "a thread" — inherited. EtymDB 2.1 has no row for *fila*; it derives Spanish *hilo* and Old French *fil* from *filum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

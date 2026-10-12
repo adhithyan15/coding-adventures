@@ -13,7 +13,8 @@ gloss: "to laugh"
 concept_tag: IT-VERB-RIDERE
 prerequisites: [IT-C47-cantare, IT-C47-ballare]
 sounds: []
-roots: []
+roots: [ridere-latin]
+etymology_hook: "ridere ← Latin ridere 'to laugh' — English ridicule shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C47-ballare]
 <!-- hl-knowledge: introduces=[IT-LEX-C47-VERBI1-03]; assesses=[] -->
 
 **ridere** — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ridere** ← Latin *ridere*, "to laugh" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

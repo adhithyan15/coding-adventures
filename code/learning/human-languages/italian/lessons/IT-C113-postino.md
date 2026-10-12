@@ -13,7 +13,8 @@ gloss: "a postman"
 concept_tag: IT-LAVORO113-POSTINO
 prerequisites: [IT-C112-ingegnere, IT-C112-pompiere]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "postino — posta 'the post' + -ino; posta goes back to Latin postus 'placed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C112-pompiere]
 <!-- hl-knowledge: introduces=[IT-LEX-C113-LAVORO113-01]; assesses=[] -->
 
 **il postino** — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**postino** — built from *posta*, "the post", with *-ino*: the post's man. EtymDB 2.1 traces *posta* to Latin *postus*, "placed": the post was first a relay station placed along a road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -259,6 +259,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 start_marker: edge.start_marker,
                 end_marker: edge.end_marker,
                 min_length: edge.min_length,
+                classes: edge.classes.clone(),
+                style: edge.style.clone(),
+                animate: edge.animate,
+                animation: edge.animation,
+                curve: edge.curve,
             })
         })
         .collect();
@@ -685,6 +690,9 @@ mod tests {
                 kind: SwimlaneEdgeKind::Directed,
                 start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Point,
                 min_length: 1,
+                classes: Vec::new(), style: Default::default(),
+                animate: false, animation: None,
+                curve: None,
             }],
             links: Vec::new(), callbacks: Vec::new(),
         };

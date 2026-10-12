@@ -14,6 +14,7 @@ concept_tag: IT-LAV172-AZIENDA
 prerequisites: [IT-C171-vista, IT-C172-ditta]
 sounds: []
 roots: []
+etymology_hook: "azienda ← Old Spanish fazienda, from Latin facienda 'things to be done' — Spanish hacienda"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C172-ditta]
 <!-- hl-knowledge: introduces=[IT-LEX-C172-LAV172-02]; assesses=[] -->
 
 **l'azienda** — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**azienda** ← Old Spanish *fazienda*, "affairs, business" — borrowed; behind it is Latin *facienda*, "things to be done". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
