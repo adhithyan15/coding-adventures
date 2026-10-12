@@ -2,6 +2,47 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 signed selector integration -->
+CV04a signed-root reconciliation (October12): published f202 precedes integrated
+main `c10ae4d719cddbb8a3dc11135ec06e3241fc1438` (#17372 signed local roots plus source-only Sanskrit/Kannada
+imports). Spec e526fdd695 precedes merge/tests; actual source `4f3bdcbc9913d674ca4a4e19420ba839643d99d9` adds
+sixteen by-name formatter-refusal cells and sixteen value-formal snapshot cells
+across both actuals, selected arms, direct/assigned consumers and sign forms.
+Sixteen native positives assert exact 2.25/3.5/-2.25/-3.5 outputs on every
+available standard backend; present-but-no-result fails. Upstream signed policy,
+original preANDpost guards, finite fallback, tests and production limits remain.
+
+Actual **1253 tests/docs/120 targets/0fail/1 existing ignore**: compiler/shared
+936/16, all eleven unchanged LANG production BUILD selections and all forty-four
+exact native targets PASS. Twelve focused repeats excluded from unique counts.
+Strict four-package all-target warnings/unknown-lints denied; docs,
+1096 lesson shards and whitespace PASS. COMPLETE67rows and
+actual validator EXIT0 required. No full unfiltered LANG acceptance claimed.
+
+Complete six-package SwiftUI525/TaskApp/script objects retain637/30/strict6/
+Python46/freshprofile1 and originalsharedhash identity; seventeen diagram/Arc66
+plus neutral fixtures/scripts retain821/37/strict17/oracle27/Python18/oldGDI
+ignore. Other Rust entries, programs/scripts/grammars/CI exactly match f202.
+Old compiler48 receipt remains historical; changed compiler newly executed at
+the explicit source above. Sanskrit/Kannada mocks/narration/TS/content execution
+unclaimed. Subsequent blocks are historical source/CI frames, not current gates.
+
+Final backlog-only complete-object/payload proof and independent exact-final
+security remain required before same sole PR17288 publication. Fresh live main/
+complete open-PR inventories and exact-head terminal acceptable/conflict-free/
+review-clean checks plus whole three native jobs/packageSUCCESS/timestamped
+ClosurecBUILT gate auto-merge. Actual merged reachability/payload proof gate
+cleanup/CV04b. Current f202 CI untouched; only superseded CI may be retired after
+a reviewed new-head workflow exists. All earlier failed/rejected receipts remain.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen run/497inputs/
+checkout/receipts/target untouched without progress polling, termination or
+duplicate execution. Implementation/delivery first, genuine final-source Miri
+afterward. BaseESTree/owned types/no newcrates.io dependencies. Full Closure
+parity/CV04b/output-byte-sourcejoins/allfold-rename-inline-motion-merge-deletion
+lineage/fullgoal OPEN, heartbeat ACTIVE.
+<!-- /CV04 signed selector integration -->
+
 <!-- CV04 SwiftUI report work repair -->
 CV04a current repaired candidate (October12), issue#17378: published8b79
 precedes native main `033a1d96819183910069fb2ae1f4f1b472bacfae` (#17367SwiftUI). Initial exact upstream
