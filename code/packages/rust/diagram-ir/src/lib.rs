@@ -58,6 +58,8 @@ pub enum DiagramShape {
     TaggedDocument,
     TaggedProcess,
     PaperTape,
+    LinedDocument,
+    DataStore,
     Cloud,
     Bang,
     Stadium,
@@ -1946,7 +1948,7 @@ pub struct SwimlaneNode {
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick }
+pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneEdge {
     pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,

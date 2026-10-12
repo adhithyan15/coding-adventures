@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 32,
-  "sourceHash": "fnv1a64:74a6328d47e43358",
+  "sourceHash": "fnv1a64:7693ffeb5347e306",
   "lessonIds": [
     "LA-C32-bonum-mane"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch32.txt",
   "json": "latin/narration/ch32.json",
-  "textHash": "fnv1a64:167fc9129dc6dd73",
-  "jsonHash": "fnv1a64:7c35ef9e46287998",
+  "textHash": "fnv1a64:6f8f725c2d7bf4ff",
+  "jsonHash": "fnv1a64:52d533e145250260",
   "findings": []
 }

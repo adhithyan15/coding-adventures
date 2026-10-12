@@ -2071,13 +2071,14 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .any(|child| layout_contains_tag(child, tag))
 }
 
-/// Whether this tree contains a non-empty Flutter flex container with an
-/// authored `gap`.
+/// Whether this tree contains a non-empty Flutter child list with an authored
+/// `gap` that lowers through `_mosaicWithGap`.
 ///
-/// Non-wrapping `Row` and `Column` are the only Flutter widgets whose child
-/// lists receive UI85 spacing through `_mosaicWithGap`. A wrapping `Row`
-/// lowers to `Wrap` and uses its native `spacing` / `runSpacing` arguments
-/// instead. A `Stack` is an overlay, and a multi-child `Box` happens to use an
+/// Non-wrapping `Row` and `Column` receive UI85 spacing through the helper. A
+/// wrapping `Row` lowers to `Wrap` and uses its native `spacing` /
+/// `runSpacing` arguments instead. `HostDraggable` and `HostDropTarget` have
+/// vertical content bodies, so their evaluated multi-child lists use the same
+/// helper. A `Stack` is an overlay, and a multi-child `Box` happens to use an
 /// internal Column only as a lowering detail; giving either one flex gap
 /// semantics would turn an unsupported declaration into the wrong layout.
 fn layout_contains_flex_gap(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
@@ -2092,9 +2093,13 @@ fn layout_contains_flex_gap(node: &LayoutNode, part_styles: &HashMap<String, Str
                 .get("flex-wrap")
                 .is_some_and(|value| value.trim().trim_matches('"') == "wrap")
         });
-    let own_gap = !node.children.is_empty()
+    let has_flex_children = !node.children.is_empty()
         && matches!(node.tag.as_str(), "Row" | "Column")
-        && !is_wrapping_row
+        && !is_wrapping_row;
+    let has_drag_body_children = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+        && ((node.children.len() > 1 && node.children[0].tag != "If")
+            || (node.children.len() == 1 && node.children[0].tag == "For"));
+    let own_gap = (has_flex_children || has_drag_body_children)
         && own_props
             .as_ref()
             .is_some_and(|props| props.contains_key("gap"));
@@ -3816,6 +3821,16 @@ fn emit_container(
 
     // Special case for Box → Container.
     if widget == "Container" {
+        // Drag/drop bodies are vertical lists. Reading `gap` even for a
+        // literal single child correctly treats it as a supported no-op. A
+        // single authored `For`, however, evaluates to many children and must
+        // flow through the list path below so spacing is inserted after the
+        // loop is evaluated.
+        let drag_gap = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+            .then(|| style_prop(&props, "gap"))
+            .flatten()
+            .map(|value| parse_pixel_value(value));
+        let expands_to_child_list = node.children.len() == 1 && node.children[0].tag == "For";
         // Styled-cell path (Bug B). A Box that carries a `part_name`
         // with real styling — a border, background, height, text-align,
         // and/or `state-when-*` highlights — must lower to a `Container`
@@ -3847,7 +3862,10 @@ fn emit_container(
         // multiple children need a child Column wrapper since Container
         // only accepts one direct child.
         let style_args = style_to_container_args(style_props);
-        if node.children.len() == 1 && style_args.is_empty() {
+        if node.children.len() == 1
+            && style_args.is_empty()
+            && !(drag_gap.is_some() && expands_to_child_list)
+        {
             // If the resolved Mosaic style has no Flutter-visible container
             // properties, this wrapper changes neither layout nor visuals.
             return emit_widget_tree(
@@ -3865,7 +3883,7 @@ fn emit_container(
                 style_to_container_args(style_props)
             ));
         }
-        if node.children.len() == 1 {
+        if node.children.len() == 1 && !(drag_gap.is_some() && expands_to_child_list) {
             let child_src = emit_widget_tree(
                 &node.children[0],
                 indent + 2,
@@ -3897,8 +3915,19 @@ fn emit_container(
         } else {
             format!("{inner_pad}{style_args},\n")
         };
+        let child = if matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") {
+            if let Some(gap) = drag_gap {
+                format!(
+                    "Column(children: _mosaicWithGap(<Widget>[\n{children}{pad}  ], {gap}, Axis.vertical))"
+                )
+            } else {
+                format!("Column(children: [\n{children}{pad}  ])")
+            }
+        } else {
+            format!("Column(children: [\n{children}{pad}  ])")
+        };
         return Ok(format!(
-            "{pad}Container(\n{style_prefix}{pad}  child: Column(children: [\n{children}{pad}  ])\n{pad})\n"
+            "{pad}Container(\n{style_prefix}{pad}  child: {child}\n{pad})\n"
         ));
     }
 
@@ -5294,11 +5323,24 @@ impl ElevationTier {
 /// — matches every other backend's `part_elevation_tier`; no real part
 /// conditions elevation on a state today.
 fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
-    match style_prop(props, "elevation").map(String::as_str) {
+    let tier = match style_prop(props, "elevation").map(String::as_str) {
         Some("raised") => Some(ElevationTier::Raised),
         Some("overlay") => Some(ElevationTier::Overlay),
         _ => None,
+    };
+    // The web-facing CSS shadow and the portable elevation token are authored
+    // together. A supported elevation tier already emits equivalent native
+    // depth, so its non-inset CSS companion is not a genuine style drop. Inset
+    // shadows are drawing effects rather than elevation and remain explicit
+    // degradation debt.
+    if tier.is_some()
+        && props
+            .get("box-shadow")
+            .is_some_and(|value| !value.to_ascii_lowercase().contains("inset"))
+    {
+        record_style_read("box-shadow");
     }
+    tier
 }
 
 /// A node's own part's `flex-grow` value, or `None` when unset or
@@ -5747,6 +5789,11 @@ fn emit_styled_box(
         inherited_text_style: Some(inherited_text_style.as_str()),
         ..ctx
     };
+    let drag_gap = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+        .then(|| style_prop(&base, "gap"))
+        .flatten()
+        .map(|value| parse_pixel_value(value));
+    let expands_to_child_list = node.children.len() == 1 && node.children[0].tag == "For";
 
     // The Box [cell] body is an `If (is-editing) { HostInput } Else
     // { Text }` pair — exactly one rendered widget after fusing. Detect
@@ -5769,7 +5816,7 @@ fn emit_styled_box(
         )?
         .trim_end_matches('\n')
         .to_string()
-    } else if node.children.len() == 1 {
+    } else if node.children.len() == 1 && !(drag_gap.is_some() && expands_to_child_list) {
         emit_widget_tree(
             &node.children[0],
             indent + 4,
@@ -5789,7 +5836,17 @@ fn emit_styled_box(
             emits,
             ctx,
         )?;
-        format!("{ip}Column(children: [\n{kids}{ip}])")
+        if matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") {
+            if let Some(gap) = drag_gap {
+                format!(
+                    "{ip}Column(children: _mosaicWithGap(<Widget>[\n{kids}{ip}], {gap}, Axis.vertical))"
+                )
+            } else {
+                format!("{ip}Column(children: [\n{kids}{ip}])")
+            }
+        } else {
+            format!("{ip}Column(children: [\n{kids}{ip}])")
+        }
     };
     let inner_child = inner_child.trim_start();
 
@@ -11000,6 +11057,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the shadow —
         // `elevation` is the only signal Flutter reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+        assert!(
+            dropped_style_properties(&m, &l, &style).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -11057,6 +11118,9 @@ mod tests {
         let out = from_pipeline(&m, &l, &style).unwrap().output;
 
         assert!(!out.contains("boxShadow"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     #[test]
@@ -11091,6 +11155,9 @@ mod tests {
             out.contains("blurRadius: 8, offset: const Offset(0, 4)"),
             "got:\n{out}"
         );
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
@@ -12931,6 +12998,100 @@ mod tests {
         ] {
             assert!(out.contains(expected), "missing `{expected}`:\n{out}");
         }
+    }
+
+    #[test]
+    fn styled_draggable_gap_wraps_the_evaluated_vertical_child_list() {
+        let m = component("Card", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let mut draggable = node_with(
+            "HostDraggable",
+            vec![],
+            vec![
+                text_node("always"),
+                if_node(
+                    LayoutPropValue::SlotRef("visible".into()),
+                    vec![text_node("sometimes")],
+                ),
+            ],
+        );
+        draggable.part_name = Some("card".into());
+        let l = layout("Card", draggable);
+        let s = style_with_part(
+            "Card",
+            "card",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#ffffff".into(),
+                },
+                StyleProp {
+                    name: "gap".into(),
+                    value: "6px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit draggable gap")
+            .output;
+        let list_start = out
+            .find("Column(children: _mosaicWithGap(<Widget>[")
+            .expect("draggable body must use the gap helper");
+        let conditional = out
+            .find("_mosaicTruthy(visible)")
+            .expect("conditional child must stay in the evaluated list");
+        let call_end = out
+            .find("], 6, Axis.vertical))")
+            .expect("vertical gap helper call must close after the list");
+        assert!(
+            list_start < conditional && conditional < call_end,
+            "got:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn drop_target_gap_spaces_a_single_for_body_after_evaluation() {
+        let m = component(
+            "Lane",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut target = node_with(
+            "HostDropTarget",
+            vec![],
+            vec![for_node(
+                LayoutPropValue::SlotRef("items".into()),
+                "item",
+                Some("index"),
+                vec![text_node("item")],
+            )],
+        );
+        target.part_name = Some("lane".into());
+        let l = layout("Lane", target);
+        let s = style_with_part(
+            "Lane",
+            "lane",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "9".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit drop-target gap")
+            .output;
+        assert!(
+            out.contains("child: Column(children: _mosaicWithGap(<Widget>[\n")
+                && out.contains("...items.map((item)")
+                && out.contains("], 9, Axis.vertical))"),
+            "got:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]

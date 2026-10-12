@@ -195,6 +195,15 @@ rather than letting them read as silent gaps.
     header and day grid, retires the seven remaining `width` omissions plus the
     grid's `flex-wrap`, and reduces Flutter's fresh inventory from 91 to 83.
     Invalid percentages and percentages without a finite parent remain reported.
+    #17301 then applies authored `gap` to evaluated Flutter drag-and-drop child
+    lists, retiring the four remaining gap omissions and reducing that
+    backend's fresh inventory from 83 to 79 without changing its native drag,
+    keyboard, or drop semantics.
+    #17308 reconciles Flutter's existing native elevation output with its
+    reporter, retiring ten non-inset `box-shadow` false positives and reducing
+    that backend's fresh inventory from 79 to 69. The inset theme-toggle moon
+    shadow remains explicit drawing-effect debt rather than being mistaken for
+    native elevation.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

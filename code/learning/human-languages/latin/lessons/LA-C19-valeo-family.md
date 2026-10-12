@@ -43,8 +43,8 @@ answer is already hiding inside the first farewell you learned.
 <!-- hl-knowledge: introduces=[LA-LEX-VALEO-FAMILY-01]; assesses=[] -->
 
 The attested reply is **valeō**: "I fare well" or "I am strong." Plautus's
-characters can intensify it as **valeō rēctē** ("I am properly well") or
-**valeō et salvōs sum rēctē** ("I am well and safe").
+characters can intensify it as **valeō rēctē** ("I am properly well"), or
+go on to say they are safe and sound too.
 
 The dictionary verb is **valēre**, "to be strong, be well." Watch one stem
 move through the exchange:

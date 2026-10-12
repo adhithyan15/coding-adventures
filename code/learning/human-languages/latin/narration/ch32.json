@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:74a6328d47e43358",
+  "sourceHash": "fnv1a64:7693ffeb5347e306",
   "lessons": [
     {
       "id": "LA-C32-bonum-mane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dafdd74091a9bde",
+      "sourceHash": "fnv1a64:afad665a8683c46a",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,11 @@
             },
             {
               "kind": "speech",
-              "text": "Salūtātiō comes from salūtāre (\"to greet\"), which comes from salūs (\"health, safety, wholeness\") — and salūs is a genuine doublet of salvus (\"safe, sound\"), the very root behind salvē (Chapter 1's first word, \"hello,\" literally \"be well\"). Both salūs and salvus descend from the same Proto-Indo-European root, solh₂- (\"whole\"). So Rome's real morning greeting and its very first \"hello\" share one root, arrived at by two separate paths — a wish for someone's wholeness, whether spoken as salvē or enacted at dawn as the salūtātiō."
+              "text": "salūtā- (\"greet\") + -tiō (\"the act of\") becomes salūtātiō."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb \"to greet\" comes from salūs (\"health, safety, wholeness\") — and salūs is a genuine doublet of salvus (\"safe, sound\"), the very root behind salvē (Chapter 1's first word). Both salūs and salvus descend from the same Proto-Indo-European root, solh₂- (\"whole\"). So Rome's real morning greeting and its very first \"hello\" share one root, arrived at by two separate paths — a wish for someone's wholeness, whether spoken as salvē or enacted at dawn as the salūtātiō."
             }
           ]
         },

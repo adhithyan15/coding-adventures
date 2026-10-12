@@ -1414,6 +1414,16 @@ backend immediately) come before the enabler-dependent items.
   Built-in `ln` may map a runtime conditional when every branch is one built-in
   exponential over a proven bounded runtime-real sign root; missing, nested,
   non-runtime-real, and overridden exponential branches remain conservative.
+  Built-in `ln` may also map a runtime conditional when every branch is exactly
+  two built-in exponentials over a proven bounded runtime-real sign root;
+  missing, deeper, non-runtime-real, and overridden branches remain
+  conservative.
+  The same exact two-exponential proof now applies to a direct sign-rooted
+  operand; a third direct exponential, unrestricted roots, and overrides remain
+  conservative.
+  The same bounded proof extends to exactly three built-in exponentials per
+  branch; missing, deeper, non-runtime-real, and overridden branches remain
+  conservative.
   Additional built-in `sqrt` calls may wrap that positive bounded result while
   preserving the same finite proof.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

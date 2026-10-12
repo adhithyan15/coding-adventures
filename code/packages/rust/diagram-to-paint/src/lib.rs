@@ -866,6 +866,9 @@ where
         ));
     }
     for edge in &diagram.edges {
+        if edge.kind == SwimlaneEdgeKind::Invisible {
+            continue;
+        }
         let stroke_width = if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 };
         let mut path = line_path(
             &[edge.from.clone(), edge.to.clone()],
@@ -1026,6 +1029,22 @@ where
                 commands: paper_tape_path_commands(node.x, node.y, node.width, node.height),
                 fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::LinedDocument => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: lined_document_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::DataStore => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: data_store_path_commands(node.x, node.y, node.width, node.height),
+                fill: None, fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: Some(StrokeCap::Round),
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
@@ -1260,6 +1279,7 @@ where
                 DiagramShape::TaggedDocument => (node.x + 8.0, node.y + 7.0, node.width - 28.0, node.height - 25.0),
                 DiagramShape::TaggedProcess => (node.x + 8.0, node.y + 8.0, node.width - 28.0, node.height - 16.0),
                 DiagramShape::PaperTape => (node.x + 8.0, node.y + 12.0, node.width - 16.0, node.height - 24.0),
+                DiagramShape::LinedDocument => (node.x + 20.0, node.y + 7.0, node.width - 28.0, node.height - 25.0),
                 DiagramShape::MultiDocument => (node.x + 8.0, node.y + 19.0, node.width - 28.0, node.height - 31.0),
                 DiagramShape::MultiProcess => (node.x + 8.0, node.y + 20.0, node.width - 28.0, node.height - 28.0),
                 DiagramShape::HorizontalCylinder => (node.x + 18.0, node.y + 10.0, node.width - 36.0, node.height - 16.0),
@@ -2126,6 +2146,22 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
             stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
         }),
+        DiagramShape::LinedDocument => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: lined_document_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
+        DiagramShape::DataStore => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: data_store_path_commands(node.x, node.y, node.width, node.height),
+            fill: None, fill_rule: None, stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width), stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round), stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
         DiagramShape::Delay => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -2699,6 +2735,25 @@ fn paper_tape_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<Path
             x, y: y + height * 0.12,
         },
         PathCommand::Close,
+    ]
+}
+
+fn lined_document_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let mut commands = document_path_commands(x, y, width, height);
+    let line_x = x + width * 0.1;
+    commands.extend([
+        PathCommand::MoveTo { x: line_x, y },
+        PathCommand::LineTo { x: line_x, y: y + height * 0.9 },
+    ]);
+    commands
+}
+
+fn data_store_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width, y },
+        PathCommand::MoveTo { x, y: y + height },
+        PathCommand::LineTo { x: x + width, y: y + height },
     ]
 }
 

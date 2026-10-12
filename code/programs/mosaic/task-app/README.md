@@ -95,7 +95,7 @@ lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
 property. Fresh `native-complete` reports currently contain 38 XAML, 83 SwiftUI,
-50 Compose, 108 Qt, and 83 Flutter drops; any new property or increase above
+50 Compose, 108 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -132,7 +132,13 @@ shares and fractional children of a native wrapping layout. The seven-column
 header and wrapped day grid therefore remain intact while the seven remaining
 `width` omissions and the grid's `flex-wrap` omission are retired, reducing the
 measured inventory from 91 to 83. Invalid or unbounded percentages remain
-explicit debt (#17289).
+explicit debt (#17289). Flutter drag-and-drop bodies now apply authored `gap`
+after dynamic child lists are evaluated, retiring the remaining four Flutter
+gap omissions and reducing the inventory from 83 to 79 (#17301).
+Flutter's ten non-inset `box-shadow` declarations that accompany supported
+`elevation` tokens now leave the report when their native shadows are emitted,
+reducing the inventory from 79 to 69. The inset theme-toggle moon shadow remains
+explicit drawing-effect debt (#17308).
 
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and

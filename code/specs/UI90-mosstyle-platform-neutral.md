@@ -11,7 +11,12 @@ language"). Builds on UI15 (mosstyle), UI49 (slot states) and UI41
 > mosstyle expresses every styling decision without platform-specific
 > vocabulary or abstraction leaks. *(Decided 2026-10-08.)*
 
-The principle has two halves, and the design needs both:
+> Every app can be branded in whatever ways its author wants, and still
+> feels like a native citizen of its platform: it uses the platform's own
+> controls, and mosstyle exposes ways to style them. *(Decided 2026-10-11,
+> §5.1.)*
+
+The principle has three parts, and the design needs all of them:
 
 - **No leaks.** Nothing in a `.msl` file is written for one backend: no XAML
   resource lookup, no CSS function, no web-only layout trick. The first
@@ -20,6 +25,13 @@ The principle has two halves, and the design needs both:
 - **Enough expressiveness.** Every decision an author really makes has a
   neutral way to say it. Otherwise authors reach for a leak, which is what
   happened.
+- **Native controls, styled, never replaced.** Every backend renders the
+  platform's own control: a WinUI `Button`, a SwiftUI `Button`, a Material
+  `Button`, a `QPushButton`, an HTML `<button>`. A style changes how that
+  control looks. It never swaps in a custom-drawn lookalike. Whatever the
+  author leaves unstyled keeps the platform's look and behaviour, including
+  focus, hover and press feedback, accessibility, and reduced motion.
+  Branding is opt-in, one decision at a time.
 
 ## 2. Where mosstyle is today
 
@@ -159,9 +171,10 @@ style:
 
 ### 3.3 Tokens: brand, system and mode
 
-#12029 is blocked on "brand vs native": a fixed brand palette and native
-look-and-feel conflict. The proposal is to let **each token say which kind
-it is**, so the author decides per decision rather than per app:
+#12029 was blocked on "brand vs native": a fixed brand palette and native
+look-and-feel seemed to conflict. **Decided (2026-10-11, §5.1):** they do not
+conflict. Each token says which kind it is, so the author decides one
+decision at a time rather than once for the whole app:
 
 - **Brand tokens** carry a fixed value to every platform. Today's palettes
   are this kind.
@@ -220,6 +233,10 @@ layouts cover structure.
     values;
   - passes the emitters **typed values**, not strings.
 - **The emitters**:
+  - render each part as the platform's native control, and apply styles to
+    that control (§1);
+  - emit nothing for a property the author left unset, so the control keeps
+    the platform's default for it;
   - lower every property in the table, or report a degradation (#12022);
   - delete every pass-through rule. The audit lists ten, including:
     - XAML's "uppercase means native" values and its verbatim font and
@@ -267,10 +284,16 @@ TaskApp, which has the drop ratchet; then the rest.
 
 ## 5. Decisions needed
 
-1. **Brand vs native (the #12029 blocker).** Is §3.3's per-token split
-   (brand tokens fixed, system tokens per host) the intended answer? For
-   example: Trestle keeps its warm surfaces as brand tokens, and takes
-   `$system-accent` and `$system-focus` from the host.
+1. **Brand vs native (the #12029 blocker).** **Decided 2026-10-11: yes, the
+   per-token split.** In the decision's words: "Every person building an
+   app will want to be able to 'brand' the app in whatever ways they want.
+   But the app should also feel like a native citizen of the platform. As
+   long as we use native controls and expose ways for people to style them,
+   I am more than fine with it." This is now part of §1. Brand tokens are
+   fixed, system tokens resolve per host, and unstyled properties keep the
+   platform default. For example, Trestle can keep its warm surfaces as
+   brand tokens and take `$system-accent` and `$system-focus` from the
+   host.
 2. **Type roles.** Should `type-role` be the preferred way to set text size,
    with `font-size` kept only for exceptions, or the only way?
 3. **Mode syntax.** Mode-aware tokens (§3.3), or `scheme dark { … }` blocks

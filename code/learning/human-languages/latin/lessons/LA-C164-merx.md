@@ -40,7 +40,11 @@ reviews_of: [LA-C164-venalis]
 ## You'll want to know: merx, mercis
 <!-- hl-knowledge: introduces=[LA-LEX-C164-LEG164-05]; assesses=[] -->
 
-**merx, mercis** — "goods, merchandise". What a shop sells: **mercēs** in the plural. That is not the same word as **mercēs, mercēdis**, "wages". English *merchant* and *commerce* come from it.
+**merx, mercis** — "goods, merchandise". What a shop sells is usually said in the plural:
+
+**merc-** (the stem, as in *mercis*) + **-ēs** (the plural ending) → **mercēs**
+
+English *merchant* and *commerce* come from this word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

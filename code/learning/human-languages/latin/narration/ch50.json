@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Hic, Iste, Ille, Is, Ibi",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cb18d36882e1eb29",
+  "sourceHash": "fnv1a64:bafd74c2695b9a0e",
   "lessons": [
     {
       "id": "LA-C50-hic",
@@ -681,7 +681,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96ea43858f4af38c",
+      "sourceHash": "fnv1a64:6a9cf19a50331d14",
       "notice": null,
       "blocks": [
         {
@@ -770,7 +770,7 @@
             },
             {
               "kind": "speech",
-              "text": "Liber hīc est. Amīcus ibi est. — The book is here. The friend is there."
+              "text": "Canis hīc est. Fēlēs ibi est. — The dog is here. The cat is there."
             },
             {
               "kind": "speech",
@@ -826,7 +826,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the book is here\" and \"the friend is there.\" (Liber hīc est. Amīcus ibi est.) What separates the pronoun hic from the adverb hīc? (Vowel length — the macron.)"
+              "text": "Say \"the dog is here\" and \"the cat is there.\" (Canis hīc est. Fēlēs ibi est.) What separates the pronoun hic from the adverb hīc? (Vowel length — the macron.)"
             }
           ]
         }

@@ -66,15 +66,15 @@ allowance) in return. It structured the start of the Roman day the way a
 verbal "good morning" structures yours — just as a **ritual visit**, not
 a **spoken phrase**.
 
-**Salūtātiō** comes from **salūtāre** ("to greet"), which comes from
-**salūs** ("health, safety, wholeness") — and *salūs* is a genuine
-**doublet** of **salvus** ("safe, sound"), the very root behind **salvē**
-(Chapter 1's first word, "hello," literally "be well"). Both *salūs* and
-*salvus* descend from the same **Proto-Indo-European** root,
-***\*solh₂-*** ("whole"). So Rome's real morning greeting and its very
-first "hello" share one root, arrived at by two separate paths — a wish
-for someone's wholeness, whether spoken as *salvē* or enacted at dawn as
-the *salūtātiō*.
+**salūtā-** ("greet") + **-tiō** ("the act of") → **salūtātiō**
+
+The verb "to greet" comes from **salūs** ("health, safety, wholeness") — and
+*salūs* is a genuine **doublet** of **salvus** ("safe, sound"), the very root
+behind **salvē** (Chapter 1's first word). Both *salūs* and *salvus* descend
+from the same **Proto-Indo-European** root, ***\*solh₂-*** ("whole"). So Rome's
+real morning greeting and its very first "hello" share one root, arrived at by
+two separate paths — a wish for someone's wholeness, whether spoken as *salvē*
+or enacted at dawn as the *salūtātiō*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02] -->
