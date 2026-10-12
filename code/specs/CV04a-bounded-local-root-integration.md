@@ -32,6 +32,19 @@ Use direct `1.0 * entier(ln(...))` for the four-exponential control so the
 supported form remains below that cap; retain the existing quadruple sqrt
 assignment/native2/3 controls. Re-execute the corrected red before repair.
 
+Actual repaired679 focused6 controls pass, but the full compiler/shared suite
+records927PASS/1FAIL across16 targets: the unchanged conditional user-defined
+abs/literal output test loses static Boolean tracking during the call, and the
+blanket post-assignment-proof check refuses the finite1.5 alternative. Retain
+that rejected whole-suite receipt and every old assertion. Refine only output's
+post-proof: ordinary runtime proof remains valid; a top-level conditional may
+also prove BOTH alternatives independently runtime-safe or procedure-free,
+context-free finite real arithmetic. The initial proof remains required. Do not
+reuse lost mutable selector facts, accept tracked/global variable values as
+context-free literals, or descend into multiplication/call wrappers to bypass
+the bounded local-root proof. Execute exact native mixed alternatives3/1.5 and
+rerun the full cone. Assignment's existing proof predicate remains unchanged.
+
 ## Compatibility and validation
 
 Preserve the existing refusal diagnostic for shared/captured/by-name roots and
