@@ -28,8 +28,18 @@ was committed before its implementation in a separate isolated checkout.
 The bounded repair omits Cargo dev/test debug information and incremental
 caches in both CI package steps while retaining codegen partitioning,
 assertions, overflow checks, production limits, package selection, native
-checks and lint. Repair validation/security/publication and new exact-head
-required native CI remain **PENDING**. No measured disk saving is claimed.
+checks and lint. Actual local repair source `c6f042e5c0bea5a307e0eb5064e85cc0820fd394` passes the dev/test profile safety
+probes (debug assertions and arithmetic-overflow checks remain enabled), all
+**299 lexer/JavaScript-lexer/CV tests/docs across 14 targets** (three existing
+ignored docs), **1,085 Closurec tests/docs across 179 targets plus eight example
+tests across two targets**, strict all-target lint, **86 workflow-contract tests**,
+and **739 Go test-pass events across 15 package results** plus vet. The emitted
+production plan is non-force, classifies the workflow edit as Rust-scoped, and
+retains the actual Closurec command on Linux/macOS/Windows. All package/program,
+script and grammar trees match the earlier published source. Final docs are
+reconciled after this actual execution; no receipt is relabeled as later source.
+Final exact-head independent security/publication and new required native CI
+remain **PENDING**. No hosted disk saving or completed CI is claimed.
 
 Fresh audited main `5dffd891d6f0c2edc2988a059094edf1b3a55cf5` has separately
 tested/reviewed integrations: ALGOL **1,217/106** at `319593947890c40d36ccc7b4c164e2887410ffa4`

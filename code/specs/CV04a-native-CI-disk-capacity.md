@@ -1,6 +1,7 @@
 # CV04a — bounded native CI disk-capacity repair
 
-Status: specification before implementation. Follow-up within existing Closure
+Status: implemented after the specification commit; local validation passes.
+Final security review, publication and new required native CI remain pending. Follow-up within existing Closure
 PR #17288 / foundation #16970 / provenance epic #15830. Full local Miri remains
 **DEFERRED/PENDING**, never passed; its frozen checkout/run/inputs are preserved.
 
