@@ -1058,6 +1058,8 @@ The `bumpX` and `bumpY` curve modes lower to portable cubic paths with horizonta
 midpoint tangents and preserve their authored mode in scene metadata.
 The `monotoneX` and `monotoneY` curve modes preserve their axis constraint in semantic and layout
 IR and lower their two-point routes to the equivalent monotonic cubic Hermite segment.
+The `cardinal`, `catmullRom`, and `natural` spline modes also survive semantic and layout IR; their
+two-point routes lower to pixel-equivalent collinear cubic segments while preserving mode metadata.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
