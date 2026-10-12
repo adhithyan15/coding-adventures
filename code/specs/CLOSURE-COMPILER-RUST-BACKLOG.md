@@ -2,6 +2,48 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 curve marker repair -->
+CV04a current isolated candidate (October12), issue#17373: independent review
+WITHHELD Bump final324bf0f2 because valid authored LR/bumpY and TB/bumpX
+controls coincide with endpoint tips, collapsing directed triangles; aligned
+Step markers share the defect. The following Bump754/32 block is historical
+execution evidence, not candidate acceptance. Spec79a227dc60 precedes authored
+red00fbdfcaaa: actual cargoEXIT101/2PASS3FAIL, both Bump+Step triangles collapsed;
+nondegenerate controls pass. Wrapper's expected1PASS missed an existing passing
+authored control, so wrapperEXIT1 and the assessed exact failure log stay.
+
+Repair6050f748 selects first noncoincident control/waypoint in endpoint-relative
+order, then opposite endpoint, with at most two candidates/no allocation/new
+dependency/threshold/limit change. Curve commands and metadata stay exact;
+entirely coincident route compatibility remains. Both endpoint triangles have
+exact tips/vertices/area50, covering both Bump axes/Basis/Linear/allStep variants
+through actual parser -> hierarchy layout -> paint on every platform. Existing
+mixed-axis/animation/class/style and all nine work/context/order/resource controls
+remain. Corrected actual native `4605e105b777264d2cd8ee87974adfcb294c2a92` passes **759tests/docs/32targets/
+0fail0ignore**, strict14 all-target warnings/unknown-lints denial; focused15
+repeats excluded. Wrong TB Step oracle6050/4PASS1FAIL, doc-filename4605 failure,
+and trailing lesson placeholder149c failure are retained, never accepted whole.
+Docs-only `83d54d97e7afc2433952770b6ccc924abae30724` preserves exact src/tests/Cargo/build/otherRust objects;
+actual docs reconstruction/1080lesson shards/whitespace PASS, complete8rows and
+actual continuation processEXIT0. No device/raster/renderer deployment claim.
+
+Compiler/shared actual48 bare-selector1248/118/0fail/1existingignore, compiler
+933/16/strict4, all11production/42native retained by complete source identities;
+native13 Compose/TaskApp1352/58/strict20/Python44 remains separately attributed.
+Native integration base `cecfb5db3923e8ca2795e5ba070f4e9e66ca013d`; latest audited Italian main4201 is a
+separate source-equivalence supplement with no added lesson/content/assessment
+execution claim. Final backlog-only payload/object proof and independent exact
+final/native/current-main security precede same single PR17288 publication.
+Fresh required exact-head terminal acceptable checks, conflict-free/review-clean
+state and three complete native jobs/actual Closurec rows remain mandatory;
+auto-mergeOFF until gates. Verify actual fetched-main full payload reachability
+before cleanup/CV04b. Base ESTree/own types/no new crates.io dependencies.
+Full final-source Miri **DEFERRED/PENDING**, neverpassed; frozenrun/497inputs/
+checkout/receipts/target untouched without polling/termination/duplicate run.
+FullClosure parity/CV04b/outputbyte-source joins/all transformation lineage,
+fullgoal/heartbeat OPEN/ACTIVE.
+<!-- /CV04 curve marker repair -->
+
 <!-- CV04 Bump integration -->
 CV04a Bump integration (October12): native main `cecfb5db3923e8ca2795e5ba070f4e9e66ca013d` (#17369),
 parent19d7a79d, adds BumpX/BumpY aliases, semantic/layout propagation, midpoint
