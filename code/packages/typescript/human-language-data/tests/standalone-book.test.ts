@@ -8,6 +8,16 @@ import { canonicalLessonSource } from "../src/hash.js";
 const BOOKS = loadBookCorpus().books;
 const GENERATED_BOOKS = generatedBookOutputs();
 
+// The corpus is parsed and every lesson is canonicalized ONCE for this file. The
+// frontmatter case used to call `loadEverything()` a second time, re-reading the
+// whole lesson corpus inside its own 30s budget; on a loaded macOS runner that alone
+// took 37s. Both the surface scan and the frontmatter scan read these same immutable
+// sources, so sharing them changes no assertion.
+const LESSON_SOURCES = loadEverything().lessons.map((lesson) => ({
+  lesson,
+  canonical: canonicalLessonSource(lesson),
+}));
+
 function projectedEntrypoint(path: string): string {
   const tex = GENERATED_BOOKS.get(path);
   if (tex === undefined) throw new Error(`${path}: generated book entrypoint is missing`);
@@ -35,14 +45,14 @@ const CHAPTERS = [
 // and it is the authored source of truth, so it is held to the same rule.
 const SURFACES = [
   ...CHAPTERS,
-  ...loadEverything().lessons.map((lesson) => ({
+  ...LESSON_SOURCES.map(({ lesson, canonical }) => ({
     source: `${lesson.language}/lessons/${lesson.realization.lessonId}.md`,
     // canonicalLessonSource returns JSON, where a line break is the two-character
     // escape `\n`, not a newline. Un-escaping matters twice: `\\s+` in the patterns
     // below could not cross a wrap (a pointer split as "the Spanish\ntrack" was
     // invisible, and one real defect hid there), and `[^.?!\\n]` silently bounded
     // nothing, so the 60-char window could jump paragraphs on this surface alone.
-    tex: canonicalLessonSource(lesson).replace(/\\n/g, "\n"),
+    tex: canonical.replace(/\\n/g, "\n"),
   })),
 ];
 
@@ -80,10 +90,10 @@ describe("a reader holding the PDF", () => {
     // Frontmatter still reaches the narration export and the app, and it is the
     // authored source of truth, so it is held to the same rule.
     const offenders: string[] = [];
-    for (const lesson of loadEverything().lessons) {
+    for (const { lesson, canonical } of LESSON_SOURCES) {
       const own = TRACK_PREFIX[lesson.language];
       expect(own, `${lesson.language}: no TRACK_PREFIX entry`).toBeDefined();
-      for (const [, prefix] of canonicalLessonSource(lesson).matchAll(/\b([A-Z]{2})-C\d+/g)) {
+      for (const [, prefix] of canonical.matchAll(/\b([A-Z]{2})-C\d+/g)) {
         if (prefix !== own && Object.values(TRACK_PREFIX).includes(prefix!)) {
           offenders.push(`${lesson.realization.lessonId}: ${prefix}-C…`);
         }
