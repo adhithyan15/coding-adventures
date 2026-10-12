@@ -205,3 +205,27 @@ Reject duplicate JSON keys or residual conflict markers, then rerun the barcode
 fixture registry validation. Main introduces no npm manifest or lockfile changes
 relative to the previously merged b1f4e45913. The fresh final-head CI must validate
 the reconciled tree; earlier source receipts do not replace it.
+
+## Keep Flutter cache cleanup bounded, 2026-10-12
+
+At b3abbdefa44c0ea77b3a2b6ec8a481eaa7bfbb44, macOS job 114991799640
+produced a complete result table: 535 built, 4,790 skipped, 5,325 total, and no
+failed packages. The job nevertheless failed in `Post Set up Flutter` because
+the pinned action's `hashFiles('**/pubspec.lock')` exceeded its 120-second limit
+after builds populated the checkout. This is a separate, diagnosed cache
+cleanup failure; it does not establish the cause of the earlier Go SIGBUS.
+
+The pinned Flutter action always appends that recursive hash to its pub cache
+key, so overriding only `pub-cache-key` cannot fix the traversal. Explicitly
+disable the action's optional pub cache in the general build job, retaining
+`cache: true` for the Flutter SDK. Let Dart pub resolve and download dependencies
+normally. Preserve all production code, runtime gates, package assertions,
+coverage thresholds, workers, heap limits and deadlines. Existing Flutter and
+Swift runtime workflow acceptance checks must pass, and the next hosted job must
+complete successfully through its post-job cleanup.
+
+The repair also incorporates origin/main at
+3774ebb672b6468a7304229f9c61a22ba3303265 without manual conflicts. Main has no
+npm manifest or lock changes since 92f7d0f5e68687bda9c97e989bf9278578b36361;
+the reviewed dependency graph and tested barcode ancestor remain intact. Fresh
+final-head CI must validate this combined tree before requesting merge approval.
