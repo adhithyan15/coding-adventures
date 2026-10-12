@@ -143,3 +143,8 @@ and 17.9705 ms; persistence was 1.9580 and 2.1042 ms. This two-event smoke check
 did not reproduce the earlier stall and does not resolve performance acceptance.
 Raw samples: mosaic-xaml-persistence-phases-profile-20261012.jsonl. Next step is a
 longer matched run to capture the intermittent outlier with the new breakdown.
+
+
+## Apply-props attribution follow-up (2026-10-12)
+
+A matched ten-event Debug host probe recorded an A1 outlier of 143.3883 ms to the rendering callback, with 137.398 ms inside apply-props. Split that aggregate with fixed, data-free phase names: apply-props-convert around each JSON-to-property conversion, apply-props-set around each reflective assignment, and apply-props-notify around EndInit. Preserve assignment order, strict validation, and the finally-based EndInit on conversion/setter failure. Per-property samples intentionally omit names and values and share the existing 4096-sample cap; they are repeated samples, not one aggregate per event. Validate the compiled runtime with profiling enabled, including strict conversion failure and batch release. These measurements do not close performance acceptance or establish realization counts.
