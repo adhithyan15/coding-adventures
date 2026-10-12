@@ -23,6 +23,15 @@ requires conservative refusal; formatter admission alone is not numeric-error
 or UB evidence. Value-selector direct output must remain supported and execute
 distinct-root exact results across available standard backends.
 
+Actual first red `f6c2036e7622a0562ab4c501cac767fccb42e9f2` confirms the
+single-exponential by-name direct-output admission. The same run has0PASS/2FAIL:
+its value control fails later at depth4 because the extra sqrt/direct-output
+wrappers exceed the unchanged public135 nesting cap. Preserve this distinct
+test-input rejection; do not weaken the cap or call the value control passed.
+Use direct `1.0 * entier(ln(...))` for the four-exponential control so the
+supported form remains below that cap; retain the existing quadruple sqrt
+assignment/native2/3 controls. Re-execute the corrected red before repair.
+
 ## Compatibility and validation
 
 Preserve the existing refusal diagnostic for shared/captured/by-name roots and
