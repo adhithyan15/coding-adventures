@@ -2357,6 +2357,10 @@ impl Compiler {
             // above; composed dynamic real expressions still fail closed here.
             let allow_runtime_real = self.is_runtime_real_assignment_value(actual);
             let value = self.emit_expr(actual)?;
+            // Lowering a selector can promote a formerly local branch root
+            // through a by-name actual. Both proof snapshots must admit output.
+            let allow_runtime_real =
+                allow_runtime_real && self.is_runtime_real_assignment_value(actual);
             self.emit_standard_output_value(name, value, allow_runtime_real)?;
         }
 
@@ -15193,6 +15197,42 @@ mod tests {
                     && instr.srcs.first().and_then(Operand::as_var)
                         == Some("__basic_print_real")
             }));
+        }
+    }
+
+    #[test]
+    fn al4_expanded_assignment_proof_rejects_selector_aliases() {
+        for depth in 1..=3 {
+            for root in ["left", "right"] {
+                let branch = |name: &str| {
+                    let mut expression = format!("abs(sign({name}))");
+                    for _ in 0..depth { expression = format!("exp({expression})"); }
+                    expression
+                };
+                let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := false end; real procedure pick; pick := -2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then {} else {}))); output(x) end", branch("left"), branch("right"));
+                let error = compile_source(&source, "test").expect_err("the expanded family must reject stale assignment proof");
+                assert!(format!("{error:?}").contains("cannot print a real value"), "depth={depth}, root={root}: {error:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn al4_expanded_assignment_proof_retains_value_snapshots() {
+        for depth in 1..=3 {
+            for root in ["left", "right"] {
+                for condition in ["true", "false"] {
+                    let branch = |name: &str| {
+                        let mut expression = format!("abs(sign({name}))");
+                        for _ in 0..depth { expression = format!("exp({expression})"); }
+                        expression
+                    };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure pick; pick := -2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then {} else {}))); output(x) end", branch("left"), branch("right"));
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("depth={depth}, root={root}, condition={condition}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                    assert!(!main.instructions.iter().any(|i| matches!(i.op.as_str(), "global_load" | "global_store")));
+                }
+            }
         }
     }
 

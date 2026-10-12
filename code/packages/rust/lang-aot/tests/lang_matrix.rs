@@ -14258,6 +14258,49 @@ fn algol_sqrt_conditional_nonpositive_quadruple_exp_result_widening_runs_on_ever
 }
 
 #[test]
+fn algol_direct_value_selector_proof_runs_on_every_available_standard_backend() {
+    // Value-formal mutation leaves the distinct producer roots intact. Both
+    // selected arms execute the direct real-output proof consumer on each engine.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(left) then exp(abs(sign(left))) else exp(abs(sign(right))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(right) then exp(abs(sign(left))) else exp(abs(sign(right))))))) end", "0"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(left) then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right)))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(right) then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right)))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(left) then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right))))))))) end", "3"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(right) then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right))))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(ln(if choose(left) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(ln(if choose(right) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))) end", "15"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but direct value-selector output did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_bounded_conditional_local_root_selected_sums_run_on_every_available_standard_backend() {
+    for (source, expected) in [
+        ("begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))) + entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(result) end", "5"),
+        ("begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))) + entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(result) end", "2"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but selected bounded-family sum did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+#[test]
 fn algol_local_runtime_real_roots_cross_all_bounded_conditional_result_widening_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()

@@ -2,6 +2,23 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+CV04a bounded-root reconciliation (October12): actual main
+`e18c68942668e04b1993c8b3a25d3be2085d9568` (#17352) conflicted with publishedaf
+in adjacent compiler tests and two README paragraphs. Spec50a863a precedes
+merged resolutionf120ade4: keep both sides' tests/docs and the #17350 assignment
+pre-proof AND post-proof guard. Independent review found a direct-output proof
+consumer still caching admission across selector lowering: [#17363](https://github.com/adhithyan15/coding-adventures/issues/17363).
+Spec2ecbe83e preceded actual redf6c2036e (0PASS/2FAIL: admission plus separate
+four-layer value-control nesting-cap rejection). Refined supported control
+spec c1071c07/corrected red270458c7 actually1PASS/1FAIL: refusal fails/value passes.
+No wrong-number/UB claim or production135 nesting-limit change. Direct-output
+post-proof repair plus root-position/value/native controls are implemented;
+affected compiler/LANG/full native validation and exact-final review PENDING.
+All prior receipts retain actual source attribution; source/shared PR17288 stays
+sole active, auto-merge OFF; currentpublishedaf hostedCI cannot accept the new
+unpublished repair. Miri **DEFERRED/PENDING**, frozenrun/497inputs/receipts/target
+untouched without polling/termination. Full parity/CV04b/output/lineage OPEN.
+
 CV04a current-main integration checkpoint (October12): main #17353 adds Swimlane
 edge curves. Actual isolated merge `a6aa4ad14bd85823b4fcb4c9b2d3e2c85b19b9bd`
 passed seven existing indexed-target controls, then the fourteen-package suite
