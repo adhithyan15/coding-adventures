@@ -20,3 +20,7 @@ Validation receipts must use real package identities and complete source blobs:
   native failure. If main advances, validate the inspected bounded ancestor and
   keep newer source acceptance explicitly pending. Preserve active test sources
   and targets until their validation completes.
+- Discover a validator's actual entry point and CLI before invoking it. Keep
+  dependent validation and commit steps sequential with checked return codes;
+  a later Git success must not mask a missing script or failed earlier check.
+  Preserve launch rejections separately from native test results.
