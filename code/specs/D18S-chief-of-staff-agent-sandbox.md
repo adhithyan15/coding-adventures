@@ -1918,10 +1918,39 @@ through S-I3 before two weeks are spent on Windows.
         - Behaviour change, fail-closed: a host bound to a channel with no
           configured keys fails to launch, rather than failing each
           channel request.
-        - **Open decision for the owner before 2c:** the verified launch
-          exists only on Linux. Off Linux, either `channel_keys` is refused
-          at startup (S-P3), or the old in-daemon path stays until the
-          macOS and Windows steps.
+        - **Owner's decision (2026-10-12): refuse.** Off Linux, where no
+          verified broker launch exists yet, `channel_keys` is refused at
+          startup (S-P3). There is no in-daemon fallback on any platform.
+          macOS gains channels with P2.7b, and Windows with step 8.
+
+        **How.**
+        - *The daemon.* A non-empty `channel_keys` without `[hosts.broker]`
+          stops the daemon at startup (`ChannelKeysNeedBroker`). Off Linux
+          `[hosts.broker]` is itself refused (`BrokerUnsupported`), so
+          there `channel_keys` cannot be configured at all. The daemon
+          opens no channel key file: authority provisioning keeps only
+          the model providers, and `compose_channel_brokers` is public so
+          a test composes the brokers exactly as the daemon does.
+        - *The data plane.* `ChannelKeyAuthority`,
+          `ExactChannelKeyAuthority` and the service's receive, publish
+          and acknowledge are deleted. A channel request that reaches the
+          service anyway is answered `Unauthorized`. In production none
+          can: the next rule stops such a host before it runs.
+        - *The supervisor.* `refusing_unbrokered_channels()` makes a
+          host whose launch bindings name any channel fail to launch
+          (`ChannelsNeedBroker`) unless channel brokers are configured.
+          The orchestrator always sets it. With brokers configured, a
+          channel with no key slot already fails the broker's launch
+          (`slots_for`), so in both cases the host never runs. The
+          supervisor's own tests, which answer channel requests through
+          the manual adapter API, leave it unset.
+        - *One broker body.* `chief-of-staff-agent-broker`'s library
+          exports the process entry point (`run_inherited`), so the
+          production binary and each test fixture binary are one call.
+        - *Tests.* The weather reference agent (P1.5) and the level-one
+          host's production-composition test now run their channels
+          through a real, confined broker. They are Linux-only until
+          P2.7b brings the broker to macOS.
      3. **P2.6d-3:** the broker's sandbox plan (Linux, P2.4 applier):
         - its key descriptors and its pipes, nothing else;
         - no network;
