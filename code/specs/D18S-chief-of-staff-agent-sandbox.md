@@ -1949,8 +1949,12 @@ through S-I3 before two weeks are spent on Windows.
           production binary and each test fixture binary are one call.
         - *Tests.* The weather reference agent (P1.5) and the level-one
           host's production-composition test now run their channels
-          through a real, confined broker. They are Linux-only until
-          P2.7b brings the broker to macOS.
+          through a real, confined broker, and assert one ran. Off Linux
+          they show the composition refusing instead, until P2.7b brings
+          the broker to macOS.
+
+        **Status: done.** No channel key reaches the daemon process on any
+        platform, and no host bound to a channel runs without its broker.
      3. **P2.6d-3:** the broker's sandbox plan (Linux, P2.4 applier):
         - its key descriptors and its pipes, nothing else;
         - no network;

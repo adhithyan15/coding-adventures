@@ -39,7 +39,11 @@
 //! causes: a broken frame, or a reply to the wrong callback. The broker
 //! exits on one, and the supervisor ends its agent.
 
-#![forbid(unsafe_code)]
+// `deny`, not `forbid`: `process` is the one module allowed `unsafe`, to
+// adopt inherited descriptors. Everything else stays safe.
+#![deny(unsafe_code)]
+
+pub mod process;
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -861,8 +865,9 @@ impl<R: std::io::Read, W: std::io::Write> ChannelCallbacks for FramedCallbacks<R
 /// ```
 ///
 /// `adopt` is the one step that needs `unsafe`: taking ownership of
-/// inherited descriptors. It lives with the binary, so this library stays
-/// `forbid(unsafe_code)`. The exit codes are 65 (protocol), 66 (descriptors,
+/// inherited descriptors. [`process::run_inherited`] supplies it, and is
+/// what a broker binary runs; tests call this directly with their own. The
+/// exit codes are 65 (protocol), 66 (descriptors,
 /// from `adopt`), 67 (keys), 70 (hardening) and 74 (writing).
 pub fn serve_process(
     stdin: impl std::io::Read,

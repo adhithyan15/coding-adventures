@@ -206,6 +206,15 @@ broker process (D18S P2.6d-2b). It holds only that agent's channel keys,
 and the host's Receive, Publish and Acknowledge requests go to it rather
 than to the daemon.
 
+Since P2.6d-2c that is the only channel path. The daemon holds no channel
+key and serves no channel operation, so:
+- `[data_plane] channel_keys` without `[hosts.broker]` stops the daemon at
+  startup (`ChannelKeysNeedBroker`);
+- a host bound to a channel never launches without a broker
+  (`ChannelsNeedBroker` from the supervisor);
+- off Linux, where `[hosts.broker]` is refused, `channel_keys` cannot be
+  configured yet.
+
 ```text
 [data_plane] channel_keys ─▶ broker_key_files    (read: 1 slot, write: 2)
 [hosts.broker] sha256     ─▶ VerifiedExecutable  (startup: wrong bytes stop the daemon)
@@ -228,10 +237,6 @@ symlinks on the way), or the launch is refused. That set is:
 The daemon checks them at startup too (`BrokerSecretDirectory`), so give
 the KEK and the key files directories of their own rather than `$HOME`. A
 directory that does not exist yet is skipped until it does.
-
-In this step the daemon still provisions the same keys for its own channel
-path. Step 2c removes that path, and `channel_keys` will then require
-`[hosts.broker]`.
 
 ## Validation
 

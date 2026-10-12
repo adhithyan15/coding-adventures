@@ -3,26 +3,17 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use chief_of_staff_channel_crypto::{
-    ChannelId, ChannelMasterKey, OriginatorSigningKey, ReceiverKeyPair, Sequence,
-};
-use chief_of_staff_channel_endpoints::{
-    AgentId as ChannelAgentId, ChannelDefinitionStore, ChannelEndpointError, DurableOriginator,
-    DurableReceiver, MessageId, MessageMetadataSource, Originator, Receiver,
-};
-use chief_of_staff_channel_store::ChannelStore;
 use chief_of_staff_host_control_protocol::{
     validate_data_plane_response, ChannelBindingAccess, CompletionCall, CompletionFinishReason,
-    CompletionProvider, CompletionResult, CompletionUsage, DataPlaneFailure, DataPlaneMessage,
-    DataPlaneRequest, DataPlaneResponse, ModelToolCall, ModelToolChoice, ModelToolDefinition,
-    ModelToolResult, PromptRole, ToolCompletionCall, ToolCompletionOutput, ToolCompletionResult,
-    MAX_DATA_PLANE_MESSAGES, MAX_DATA_PLANE_PAYLOAD_BYTES,
+    CompletionProvider, CompletionResult, CompletionUsage, DataPlaneFailure, DataPlaneRequest,
+    DataPlaneResponse, ModelToolCall, ModelToolChoice, ModelToolDefinition, ModelToolResult,
+    PromptRole, ToolCompletionCall, ToolCompletionOutput, ToolCompletionResult,
+    MAX_DATA_PLANE_PAYLOAD_BYTES,
 };
 use chief_of_staff_pipeline_bindings::{
-    HostPipelineBinding, PipelineBindingError, PipelineBindingStore, PipelineId,
+    HostPipelineBinding, PipelineBindingError, PipelineBindingStore,
 };
 use chief_of_staff_service_registry::HostRegistration;
-use coding_adventures_zeroize::Zeroizing;
 use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, Message, MessageContent,
     ModelToolCall as GatewayModelToolCall, ModelToolChoice as GatewayModelToolChoice,
@@ -31,10 +22,8 @@ use llm_gateway::{
     ToolCompletionRequest as GatewayToolCompletionRequest,
 };
 use std::collections::{BTreeMap, HashMap};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use storage_core::StorageBackend;
-
-const MAX_PENDING_DELIVERIES: usize = MAX_DATA_PLANE_MESSAGES * 64;
 
 /// Injected execution authority reached only after durable request authorization.
 pub trait HostDataPlaneService: Send + Sync {
@@ -198,241 +187,6 @@ impl ModelToolDispatcher for UnavailableModelToolDispatcher {
     }
 }
 
-/// Stable channel-key lookup failure supplied by an isolated custody adapter.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ChannelKeyAuthorityError {
-    /// Key custody is temporarily sealed or otherwise unavailable.
-    Unavailable,
-    /// The exact pipeline, agent, channel, or direction has no matching key authority.
-    Unauthorized,
-}
-
-impl core::fmt::Display for ChannelKeyAuthorityError {
-    fn fmt(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        formatter.write_str(match self {
-            Self::Unavailable => "channel key authority unavailable",
-            Self::Unauthorized => "channel key authority denied the request",
-        })
-    }
-}
-
-impl std::error::Error for ChannelKeyAuthorityError {}
-
-/// Owned originator secrets released for one exact authorized channel operation.
-pub struct OriginatorChannelKeys {
-    signing_key: OriginatorSigningKey,
-    channel_key: ChannelMasterKey,
-}
-
-impl OriginatorChannelKeys {
-    /// Bind one signing key and channel master key for a single service operation.
-    pub fn new(signing_key: OriginatorSigningKey, channel_key: ChannelMasterKey) -> Self {
-        Self {
-            signing_key,
-            channel_key,
-        }
-    }
-}
-
-/// Isolated authority that releases only keys for an exact durable pipeline binding.
-///
-/// Production implementations may be backed by a vault actor, hardware custodian,
-/// or another process boundary. The dispatcher and orchestration core never receive
-/// these values.
-pub trait ChannelKeyAuthority: Send + Sync {
-    /// Release the receiver private key for one exact read channel.
-    fn receiver_key(
-        &self,
-        binding: &HostPipelineBinding,
-        channel_id: ChannelId,
-    ) -> Result<ReceiverKeyPair, ChannelKeyAuthorityError>;
-
-    /// Release the signing and current-epoch channel keys for one exact write channel.
-    fn originator_keys(
-        &self,
-        binding: &HostPipelineBinding,
-        channel_id: ChannelId,
-    ) -> Result<OriginatorChannelKeys, ChannelKeyAuthorityError>;
-}
-
-/// Stable failure while provisioning an exact channel-key authority.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ChannelKeyRegistrationError {
-    /// A retained secret was an all-zero placeholder rather than provisioned key material.
-    InvalidSecret,
-    /// The exact pipeline, agent, and channel already has a read or write key binding.
-    Duplicate,
-}
-
-impl core::fmt::Display for ChannelKeyRegistrationError {
-    fn fmt(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        formatter.write_str(match self {
-            Self::InvalidSecret => "channel key registration contains an invalid secret",
-            Self::Duplicate => "channel key registration already exists",
-        })
-    }
-}
-
-impl std::error::Error for ChannelKeyRegistrationError {}
-
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct ChannelAuthorityKey {
-    pipeline_id: [u8; 16],
-    agent_id: Vec<u8>,
-    channel_id: [u8; 16],
-}
-
-impl ChannelAuthorityKey {
-    fn new(pipeline_id: PipelineId, agent_id: &ChannelAgentId, channel_id: ChannelId) -> Self {
-        Self {
-            pipeline_id: *pipeline_id.as_bytes(),
-            agent_id: agent_id.as_bytes().to_vec(),
-            channel_id: channel_id.0,
-        }
-    }
-
-    fn from_binding(binding: &HostPipelineBinding, channel_id: ChannelId) -> Self {
-        Self::new(binding.pipeline_id(), binding.agent_id(), channel_id)
-    }
-}
-
-struct StoredOriginatorKeys {
-    signing_seed: Zeroizing<[u8; 32]>,
-    channel_key: Zeroizing<[u8; 32]>,
-}
-
-/// Immutable exact pipeline/agent/channel authority for already-provisioned keys.
-///
-/// Secret inputs must already be held in zeroizing wrappers. The registry retains
-/// them in the same form, exposes no secret getters or formatting implementation,
-/// rejects cross-direction duplicates, and reconstructs short-lived cryptographic
-/// key owners only for an exact current durable binding.
-#[derive(Default)]
-pub struct ExactChannelKeyAuthority {
-    receivers: BTreeMap<ChannelAuthorityKey, Zeroizing<[u8; 32]>>,
-    originators: BTreeMap<ChannelAuthorityKey, StoredOriginatorKeys>,
-}
-
-impl ExactChannelKeyAuthority {
-    /// Create an empty authority that denies every key release.
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    /// Register one exact read-channel receiver private key before sharing the authority.
-    pub fn register_receiver(
-        &mut self,
-        pipeline_id: PipelineId,
-        agent_id: &ChannelAgentId,
-        channel_id: ChannelId,
-        private_key: Zeroizing<[u8; 32]>,
-    ) -> Result<(), ChannelKeyRegistrationError> {
-        if secret_is_zero(&private_key) {
-            return Err(ChannelKeyRegistrationError::InvalidSecret);
-        }
-        let key = ChannelAuthorityKey::new(pipeline_id, agent_id, channel_id);
-        if self.receivers.contains_key(&key) || self.originators.contains_key(&key) {
-            return Err(ChannelKeyRegistrationError::Duplicate);
-        }
-        self.receivers.insert(key, private_key);
-        Ok(())
-    }
-
-    /// Register one exact write-channel signing seed and current-epoch channel key.
-    pub fn register_originator(
-        &mut self,
-        pipeline_id: PipelineId,
-        agent_id: &ChannelAgentId,
-        channel_id: ChannelId,
-        signing_seed: Zeroizing<[u8; 32]>,
-        channel_key: Zeroizing<[u8; 32]>,
-    ) -> Result<(), ChannelKeyRegistrationError> {
-        if secret_is_zero(&signing_seed) || secret_is_zero(&channel_key) {
-            return Err(ChannelKeyRegistrationError::InvalidSecret);
-        }
-        let key = ChannelAuthorityKey::new(pipeline_id, agent_id, channel_id);
-        if self.receivers.contains_key(&key) || self.originators.contains_key(&key) {
-            return Err(ChannelKeyRegistrationError::Duplicate);
-        }
-        self.originators.insert(
-            key,
-            StoredOriginatorKeys {
-                signing_seed,
-                channel_key,
-            },
-        );
-        Ok(())
-    }
-
-    /// Return the number of exact directional key bindings retained by this authority.
-    pub fn len(&self) -> usize {
-        self.receivers.len() + self.originators.len()
-    }
-
-    /// Return whether this authority denies every key release.
-    pub fn is_empty(&self) -> bool {
-        self.receivers.is_empty() && self.originators.is_empty()
-    }
-}
-
-impl ChannelKeyAuthority for ExactChannelKeyAuthority {
-    fn receiver_key(
-        &self,
-        binding: &HostPipelineBinding,
-        channel_id: ChannelId,
-    ) -> Result<ReceiverKeyPair, ChannelKeyAuthorityError> {
-        if !binding_allows_channel(binding, channel_id, ChannelBindingAccess::Read) {
-            return Err(ChannelKeyAuthorityError::Unauthorized);
-        }
-        let private_key = self
-            .receivers
-            .get(&ChannelAuthorityKey::from_binding(binding, channel_id))
-            .ok_or(ChannelKeyAuthorityError::Unauthorized)?;
-        ReceiverKeyPair::from_private_key(copy_secret(private_key).into_inner())
-            .map_err(|_| ChannelKeyAuthorityError::Unavailable)
-    }
-
-    fn originator_keys(
-        &self,
-        binding: &HostPipelineBinding,
-        channel_id: ChannelId,
-    ) -> Result<OriginatorChannelKeys, ChannelKeyAuthorityError> {
-        if !binding_allows_channel(binding, channel_id, ChannelBindingAccess::Write) {
-            return Err(ChannelKeyAuthorityError::Unauthorized);
-        }
-        let keys = self
-            .originators
-            .get(&ChannelAuthorityKey::from_binding(binding, channel_id))
-            .ok_or(ChannelKeyAuthorityError::Unauthorized)?;
-        Ok(OriginatorChannelKeys::new(
-            OriginatorSigningKey::from_seed(copy_secret(&keys.signing_seed).into_inner()),
-            ChannelMasterKey::from_bytes(copy_secret(&keys.channel_key).into_inner()),
-        ))
-    }
-}
-
-fn secret_is_zero(secret: &Zeroizing<[u8; 32]>) -> bool {
-    secret.iter().all(|byte| *byte == 0)
-}
-
-fn copy_secret(secret: &Zeroizing<[u8; 32]>) -> Zeroizing<[u8; 32]> {
-    let mut copy = Zeroizing::new([0; 32]);
-    copy.copy_from_slice(secret.as_slice());
-    copy
-}
-
-fn binding_allows_channel(
-    binding: &HostPipelineBinding,
-    channel_id: ChannelId,
-    access: ChannelBindingAccess,
-) -> bool {
-    binding
-        .launch_bindings()
-        .channels()
-        .iter()
-        .any(|candidate| candidate.channel_id() == channel_id.0 && candidate.access() == access)
-}
-
 /// Stable exact-model provider lookup failure.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ModelProviderError;
@@ -502,215 +256,37 @@ impl ModelProviderAuthority for ExactModelProviderRegistry {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct DeliveryKey {
-    pipeline_id: [u8; 16],
-    agent_id: Vec<u8>,
-    channel_id: [u8; 16],
-    message_id: [u8; 16],
-}
-
-/// Concrete service that executes authorized operations against encrypted durable
-/// channel endpoints and exact provider-neutral LLM clients.
+/// Concrete service that executes authorized model operations against exact
+/// provider-neutral LLM clients and an injected D18D tool catalog.
 ///
-/// Receiver delivery receipts are retained until acknowledgement so a child may
-/// acknowledge only a message returned by this service instance. Channel keys and
-/// provider credentials stay behind separately injected authorities.
+/// It serves no channel operation. Since D18S P2.6d-2c each agent's channel
+/// keys live only in that agent's broker, which answers its channel requests
+/// itself; the daemon holds none. A channel request that reaches this
+/// service is answered `Unauthorized`, and in production none can: the
+/// supervisor refuses to launch a host bound to a channel without a broker.
 pub struct AuthorityBackedHostDataPlaneService {
-    backend: Arc<dyn StorageBackend>,
-    key_authority: Arc<dyn ChannelKeyAuthority>,
     model_authority: Arc<dyn ModelProviderAuthority>,
     model_tools: Arc<dyn ModelToolDispatcher>,
-    metadata_source: Arc<dyn MessageMetadataSource>,
-    deliveries: Mutex<BTreeMap<DeliveryKey, Sequence>>,
 }
 
 impl AuthorityBackedHostDataPlaneService {
-    /// Compose storage, isolated key custody, exact model authority, and metadata.
-    pub fn new(
-        backend: Arc<dyn StorageBackend>,
-        key_authority: Arc<dyn ChannelKeyAuthority>,
-        model_authority: Arc<dyn ModelProviderAuthority>,
-        metadata_source: Arc<dyn MessageMetadataSource>,
-    ) -> Self {
+    /// Compose exact model authority, with no model tools.
+    pub fn new(model_authority: Arc<dyn ModelProviderAuthority>) -> Self {
         Self {
-            backend,
-            key_authority,
             model_authority,
             model_tools: Arc::new(UnavailableModelToolDispatcher),
-            metadata_source,
-            deliveries: Mutex::new(BTreeMap::new()),
         }
     }
 
     /// Compose the data plane with an explicit D18D catalog and execution authority.
     pub fn with_model_tools(
-        backend: Arc<dyn StorageBackend>,
-        key_authority: Arc<dyn ChannelKeyAuthority>,
         model_authority: Arc<dyn ModelProviderAuthority>,
         model_tools: Arc<dyn ModelToolDispatcher>,
-        metadata_source: Arc<dyn MessageMetadataSource>,
     ) -> Self {
         Self {
-            backend,
-            key_authority,
             model_authority,
             model_tools,
-            metadata_source,
-            deliveries: Mutex::new(BTreeMap::new()),
         }
-    }
-
-    fn receive(
-        &self,
-        binding: &HostPipelineBinding,
-        id: chief_of_staff_host_control_protocol::RequestId,
-        channel_id: [u8; 16],
-        limit: u16,
-    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
-        let channel_id = ChannelId(channel_id);
-        let receiver_key = self
-            .key_authority
-            .receiver_key(binding, channel_id)
-            .map_err(key_failure)?;
-        let mut receiver = DurableReceiver::open(
-            self.backend.as_ref(),
-            channel_id,
-            binding.agent_id().clone(),
-            receiver_key,
-        )
-        .map_err(endpoint_failure)?;
-        let received = receiver
-            .receive(usize::from(limit))
-            .map_err(endpoint_failure)?;
-        let mut prepared = Vec::with_capacity(received.len());
-        for message in received {
-            let message_id = *message.message_id.as_bytes();
-            let key = delivery_key(binding, channel_id, message_id);
-            prepared.push((
-                key,
-                message.sequence,
-                DataPlaneMessage {
-                    message_id,
-                    sequence: message.sequence.0,
-                    timestamp_ns: message.timestamp_ns,
-                    content_type: message.content_type,
-                    payload: message.payload,
-                },
-            ));
-        }
-        let mut deliveries = self
-            .deliveries
-            .lock()
-            .map_err(|_| DataPlaneFailure::Internal)?;
-        let new_deliveries = prepared
-            .iter()
-            .filter(|(key, _, _)| !deliveries.contains_key(key))
-            .count();
-        if deliveries
-            .len()
-            .checked_add(new_deliveries)
-            .is_none_or(|total| total > MAX_PENDING_DELIVERIES)
-        {
-            return Err(DataPlaneFailure::Unavailable);
-        }
-        let mut messages = Vec::with_capacity(prepared.len());
-        for (key, sequence, message) in prepared {
-            if deliveries
-                .insert(key, sequence)
-                .is_some_and(|previous| previous != sequence)
-            {
-                return Err(DataPlaneFailure::Internal);
-            }
-            messages.push(message);
-        }
-        Ok(DataPlaneResponse::Received { id, messages })
-    }
-
-    fn publish(
-        &self,
-        binding: &HostPipelineBinding,
-        id: chief_of_staff_host_control_protocol::RequestId,
-        channel_id: [u8; 16],
-        content_type: &str,
-        payload: &[u8],
-    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
-        let channel_id = ChannelId(channel_id);
-        let keys = self
-            .key_authority
-            .originator_keys(binding, channel_id)
-            .map_err(key_failure)?;
-        let originator = DurableOriginator::open(
-            self.backend.as_ref(),
-            channel_id,
-            binding.agent_id(),
-            &keys.signing_key,
-            &keys.channel_key,
-            self.metadata_source.as_ref(),
-        )
-        .map_err(endpoint_failure)?;
-        let definition = ChannelDefinitionStore::new(self.backend.as_ref())
-            .load(channel_id)
-            .map_err(endpoint_failure)?
-            .ok_or(DataPlaneFailure::Unauthorized)?;
-        for receiver in definition.receivers() {
-            originator
-                .grant_receiver(&receiver.agent_id)
-                .map_err(endpoint_failure)?;
-        }
-        let published = originator
-            .publish(payload, content_type)
-            .map_err(endpoint_failure)?;
-        Ok(DataPlaneResponse::Published {
-            id,
-            message_id: *published.message_id.as_bytes(),
-            sequence: published.sequence.0,
-            timestamp_ns: published.timestamp_ns,
-        })
-    }
-
-    fn acknowledge(
-        &self,
-        binding: &HostPipelineBinding,
-        id: chief_of_staff_host_control_protocol::RequestId,
-        channel_id: [u8; 16],
-        message_id: [u8; 16],
-    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
-        let channel_id = ChannelId(channel_id);
-        let receiver_key = self
-            .key_authority
-            .receiver_key(binding, channel_id)
-            .map_err(key_failure)?;
-        DurableReceiver::open(
-            self.backend.as_ref(),
-            channel_id,
-            binding.agent_id().clone(),
-            receiver_key,
-        )
-        .map_err(endpoint_failure)?;
-        MessageId::from_uuid_v7(message_id).map_err(endpoint_failure)?;
-        let key = delivery_key(binding, channel_id, message_id);
-        let mut deliveries = self
-            .deliveries
-            .lock()
-            .map_err(|_| DataPlaneFailure::Internal)?;
-        let sequence = deliveries
-            .get(&key)
-            .copied()
-            .ok_or(DataPlaneFailure::Unauthorized)?;
-        let acknowledged = ChannelStore::new(self.backend.as_ref(), channel_id)
-            .acknowledge(binding.agent_id().as_bytes(), sequence)
-            .map_err(|_| DataPlaneFailure::Channel)?;
-        deliveries.retain(|candidate, delivered_sequence| {
-            candidate.pipeline_id != *binding.pipeline_id().as_bytes()
-                || candidate.agent_id != binding.agent_id().as_bytes()
-                || candidate.channel_id != channel_id.0
-                || *delivered_sequence >= acknowledged
-        });
-        Ok(DataPlaneResponse::Acknowledged {
-            id,
-            sequence: acknowledged.0,
-        })
     }
 
     fn complete(
@@ -942,22 +518,10 @@ impl HostDataPlaneService for AuthorityBackedHostDataPlaneService {
         request: &DataPlaneRequest,
     ) -> Result<DataPlaneResponse, DataPlaneFailure> {
         let response = match request {
-            DataPlaneRequest::Receive {
-                id,
-                channel_id,
-                limit,
-            } => self.receive(binding, *id, *channel_id, *limit),
-            DataPlaneRequest::Publish {
-                id,
-                channel_id,
-                content_type,
-                payload,
-            } => self.publish(binding, *id, *channel_id, content_type, payload),
-            DataPlaneRequest::Acknowledge {
-                id,
-                channel_id,
-                message_id,
-            } => self.acknowledge(binding, *id, *channel_id, *message_id),
+            // Channel operations are the agent's broker's (P2.6d-2c).
+            DataPlaneRequest::Receive { .. }
+            | DataPlaneRequest::Publish { .. }
+            | DataPlaneRequest::Acknowledge { .. } => Err(DataPlaneFailure::Unauthorized),
             DataPlaneRequest::Complete { id, call } => self.complete(binding, *id, call),
             DataPlaneRequest::CompleteWithTools { id, call } => {
                 self.complete_with_tools(binding, *id, call)
@@ -975,50 +539,6 @@ impl HostDataPlaneService for AuthorityBackedHostDataPlaneService {
             _ => DataPlaneFailure::Channel,
         })?;
         Ok(response)
-    }
-}
-
-fn delivery_key(
-    binding: &HostPipelineBinding,
-    channel_id: ChannelId,
-    message_id: [u8; 16],
-) -> DeliveryKey {
-    DeliveryKey {
-        pipeline_id: *binding.pipeline_id().as_bytes(),
-        agent_id: binding.agent_id().as_bytes().to_vec(),
-        channel_id: channel_id.0,
-        message_id,
-    }
-}
-
-fn key_failure(error: ChannelKeyAuthorityError) -> DataPlaneFailure {
-    match error {
-        ChannelKeyAuthorityError::Unavailable => DataPlaneFailure::Unavailable,
-        ChannelKeyAuthorityError::Unauthorized => DataPlaneFailure::Unauthorized,
-    }
-}
-
-fn endpoint_failure(error: ChannelEndpointError) -> DataPlaneFailure {
-    match error {
-        ChannelEndpointError::DefinitionNotFound
-        | ChannelEndpointError::DefinitionChanged
-        | ChannelEndpointError::ChannelDestroyed
-        | ChannelEndpointError::UnauthorizedOriginator
-        | ChannelEndpointError::UnauthorizedReceiver
-        | ChannelEndpointError::PublicKeyMismatch
-        | ChannelEndpointError::UnauthorizedMessage => DataPlaneFailure::Unauthorized,
-        ChannelEndpointError::Storage(_) | ChannelEndpointError::ConcurrentUpdate => {
-            DataPlaneFailure::Unavailable
-        }
-        ChannelEndpointError::InvalidDefinition(_)
-        | ChannelEndpointError::InvalidMessageId
-        | ChannelEndpointError::ConflictingDefinition
-        | ChannelEndpointError::CorruptDefinition(_)
-        | ChannelEndpointError::MissingKeyGrant(_)
-        | ChannelEndpointError::UnknownMessageId(_)
-        | ChannelEndpointError::Store(_)
-        | ChannelEndpointError::Crypto(_)
-        | ChannelEndpointError::Metadata(_) => DataPlaneFailure::Channel,
     }
 }
 
@@ -1362,13 +882,16 @@ mod tests {
         ));
     }
     use super::*;
+    use chief_of_staff_channel_crypto::Sequence;
     use chief_of_staff_channel_crypto::{
         ChannelId, ChannelMasterKey, KeyEpoch, OriginatorSigningKey, ReceiverKeyPair,
     };
     use chief_of_staff_channel_endpoints::{
-        AgentId, ChannelDefinition, ChannelDefinitionStore, DurableOriginator, DurableReceiver,
-        MessageMetadata, MessageMetadataError, OriginatorIdentity, ReceiverIdentity,
+        AgentId, ChannelDefinition, ChannelDefinitionStore, DurableOriginator, MessageId,
+        MessageMetadata, MessageMetadataError, MessageMetadataSource, Originator,
+        OriginatorIdentity, ReceiverIdentity,
     };
+    use chief_of_staff_channel_store::ChannelStore;
     use chief_of_staff_host_control_protocol::{
         ChannelBinding, CompletionCall, DataPlaneMessage, LevelOneModelBinding, PromptMessage,
         PromptRole, RequestId,
@@ -1571,26 +1094,6 @@ mod tests {
         input.grant_receiver(&agent("weather-agent")).unwrap();
         input.publish(b"Seattle", "text/plain").unwrap();
         binding
-    }
-
-    fn exact_keys(binding: &HostPipelineBinding) -> ExactChannelKeyAuthority {
-        let mut keys = ExactChannelKeyAuthority::new();
-        keys.register_receiver(
-            binding.pipeline_id(),
-            binding.agent_id(),
-            ChannelId(uuid_v7(1)),
-            Zeroizing::new([0x13; 32]),
-        )
-        .unwrap();
-        keys.register_originator(
-            binding.pipeline_id(),
-            binding.agent_id(),
-            ChannelId(uuid_v7(2)),
-            Zeroizing::new([0x21; 32]),
-            Zeroizing::new([0x22; 32]),
-        )
-        .unwrap();
-        keys
     }
 
     fn request_id(value: u64) -> RequestId {
@@ -1851,147 +1354,6 @@ mod tests {
         ));
     }
 
-    #[test]
-    fn exact_channel_key_authority_is_zeroizing_directional_and_identity_scoped() {
-        let backend = InMemoryStorageBackend::new();
-        let binding = install_real_binding(&backend);
-        let mut keys = ExactChannelKeyAuthority::new();
-        assert!(keys.is_empty());
-        assert_eq!(
-            keys.register_receiver(
-                binding.pipeline_id(),
-                binding.agent_id(),
-                ChannelId(uuid_v7(1)),
-                Zeroizing::new([0; 32]),
-            ),
-            Err(ChannelKeyRegistrationError::InvalidSecret)
-        );
-        keys.register_receiver(
-            binding.pipeline_id(),
-            binding.agent_id(),
-            ChannelId(uuid_v7(1)),
-            Zeroizing::new([0x13; 32]),
-        )
-        .unwrap();
-        assert_eq!(
-            keys.register_receiver(
-                binding.pipeline_id(),
-                binding.agent_id(),
-                ChannelId(uuid_v7(1)),
-                Zeroizing::new([0x14; 32]),
-            ),
-            Err(ChannelKeyRegistrationError::Duplicate)
-        );
-        assert_eq!(
-            keys.register_originator(
-                binding.pipeline_id(),
-                binding.agent_id(),
-                ChannelId(uuid_v7(1)),
-                Zeroizing::new([0x21; 32]),
-                Zeroizing::new([0x22; 32]),
-            ),
-            Err(ChannelKeyRegistrationError::Duplicate)
-        );
-        assert_eq!(
-            keys.register_originator(
-                binding.pipeline_id(),
-                binding.agent_id(),
-                ChannelId(uuid_v7(2)),
-                Zeroizing::new([0x21; 32]),
-                Zeroizing::new([0; 32]),
-            ),
-            Err(ChannelKeyRegistrationError::InvalidSecret)
-        );
-        keys.register_originator(
-            binding.pipeline_id(),
-            binding.agent_id(),
-            ChannelId(uuid_v7(2)),
-            Zeroizing::new([0x21; 32]),
-            Zeroizing::new([0x22; 32]),
-        )
-        .unwrap();
-        assert_eq!(keys.len(), 2);
-
-        assert_eq!(
-            keys.receiver_key(&binding, ChannelId(uuid_v7(1)))
-                .unwrap()
-                .public_key(),
-            ReceiverKeyPair::from_private_key([0x13; 32])
-                .unwrap()
-                .public_key()
-        );
-        let originator = keys
-            .originator_keys(&binding, ChannelId(uuid_v7(2)))
-            .unwrap();
-        assert_eq!(
-            originator.signing_key.public_key(),
-            OriginatorSigningKey::from_seed([0x21; 32]).public_key()
-        );
-        assert_eq!(originator.channel_key.as_bytes(), &[0x22; 32]);
-
-        assert!(matches!(
-            keys.originator_keys(&binding, ChannelId(uuid_v7(1))),
-            Err(ChannelKeyAuthorityError::Unauthorized)
-        ));
-        assert!(matches!(
-            keys.receiver_key(&binding, ChannelId(uuid_v7(2))),
-            Err(ChannelKeyAuthorityError::Unauthorized)
-        ));
-        assert!(matches!(
-            keys.receiver_key(&binding, ChannelId(uuid_v7(8))),
-            Err(ChannelKeyAuthorityError::Unauthorized)
-        ));
-
-        let wrong_pipeline = HostPipelineBinding::new(
-            PipelineId::new(uuid_v7(8)).unwrap(),
-            binding.registration().clone(),
-            binding.agent_id().clone(),
-            binding.launch_bindings().clone(),
-        );
-        assert!(matches!(
-            keys.receiver_key(&wrong_pipeline, ChannelId(uuid_v7(1))),
-            Err(ChannelKeyAuthorityError::Unauthorized)
-        ));
-        let wrong_agent = HostPipelineBinding::new(
-            binding.pipeline_id(),
-            binding.registration().clone(),
-            agent("other-agent"),
-            binding.launch_bindings().clone(),
-        );
-        assert!(matches!(
-            keys.receiver_key(&wrong_agent, ChannelId(uuid_v7(1))),
-            Err(ChannelKeyAuthorityError::Unauthorized)
-        ));
-
-        let wrong_directions = HostPipelineBinding::new(
-            binding.pipeline_id(),
-            binding.registration().clone(),
-            binding.agent_id().clone(),
-            chief_of_staff_host_control_protocol::LaunchBindings::new(
-                vec![
-                    ChannelBinding::new(
-                        "weather-requests",
-                        ChannelBindingAccess::Write,
-                        uuid_v7(1),
-                    )
-                    .unwrap(),
-                    ChannelBinding::new("weather-reports", ChannelBindingAccess::Read, uuid_v7(2))
-                        .unwrap(),
-                ],
-                binding.launch_bindings().level_one_model().cloned(),
-            )
-            .unwrap(),
-        );
-        assert!(matches!(
-            keys.receiver_key(&wrong_directions, ChannelId(uuid_v7(1))),
-            Err(ChannelKeyAuthorityError::Unauthorized)
-        ));
-        assert!(matches!(
-            keys.originator_keys(&wrong_directions, ChannelId(uuid_v7(2))),
-            Err(ChannelKeyAuthorityError::Unauthorized)
-        ));
-    }
-
     struct FixtureModelTools {
         definitions: Vec<ModelToolDefinition>,
     }
@@ -2018,7 +1380,7 @@ mod tests {
     }
 
     #[test]
-    fn authority_backed_service_executes_real_encrypted_turn() {
+    fn authority_backed_service_executes_model_turns_and_no_channel_operation() {
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
         let binding = install_real_binding(backend.as_ref());
         let DataPlaneRequest::Complete {
@@ -2086,33 +1448,44 @@ mod tests {
             .unwrap();
         let installed_tools = tool_call.tools.clone();
         let service = AuthorityBackedHostDataPlaneService::with_model_tools(
-            Arc::clone(&backend),
-            Arc::new(exact_keys(&binding)),
             Arc::new(models),
             Arc::new(FixtureModelTools {
                 definitions: installed_tools,
             }),
-            Arc::new(FixedMetadata {
-                message_id: uuid_v7(5),
-                timestamp_ns: 11,
-            }),
         );
 
-        let received = service
-            .execute(
-                &binding,
-                &DataPlaneRequest::Receive {
-                    id: request_id(1),
-                    channel_id: uuid_v7(1),
-                    limit: 1,
-                },
-            )
-            .unwrap();
-        let DataPlaneResponse::Received { messages, .. } = received else {
-            panic!("expected received response");
-        };
-        assert_eq!(messages.len(), 1);
-        assert_eq!(messages[0].payload, b"Seattle");
+        // The daemon serves no channel operation (P2.6d-2c), even one the
+        // binding authorizes: those are the agent's broker's.
+        for request in [
+            DataPlaneRequest::Receive {
+                id: request_id(1),
+                channel_id: uuid_v7(1),
+                limit: 1,
+            },
+            DataPlaneRequest::Publish {
+                id: request_id(3),
+                channel_id: uuid_v7(2),
+                content_type: "text/plain".to_string(),
+                payload: b"forecast".to_vec(),
+            },
+            DataPlaneRequest::Acknowledge {
+                id: request_id(4),
+                channel_id: uuid_v7(1),
+                message_id: uuid_v7(4),
+            },
+        ] {
+            assert_eq!(
+                service.execute(&binding, &request),
+                Err(DataPlaneFailure::Unauthorized)
+            );
+        }
+        // And nothing was consumed from the input channel.
+        assert_eq!(
+            ChannelStore::new(backend.as_ref(), ChannelId(uuid_v7(1)))
+                .receiver_cursor(b"weather-agent")
+                .unwrap(),
+            Sequence(0)
+        );
 
         let completed = service
             .execute(&binding, &completion(2, "test-model", 0.25, 256))
@@ -2197,63 +1570,10 @@ mod tests {
             ),
             Err(DataPlaneFailure::Unauthorized)
         );
-
-        let published = service
-            .execute(
-                &binding,
-                &DataPlaneRequest::Publish {
-                    id: request_id(3),
-                    channel_id: uuid_v7(2),
-                    content_type: "text/plain".to_string(),
-                    payload: completion_result.text.into_bytes(),
-                },
-            )
-            .unwrap();
-        assert!(matches!(
-            published,
-            DataPlaneResponse::Published {
-                message_id,
-                sequence: 0,
-                timestamp_ns: 11,
-                ..
-            } if message_id == uuid_v7(5)
-        ));
-
-        let acknowledged = service
-            .execute(
-                &binding,
-                &DataPlaneRequest::Acknowledge {
-                    id: request_id(4),
-                    channel_id: uuid_v7(1),
-                    message_id: messages[0].message_id,
-                },
-            )
-            .unwrap();
-        assert!(matches!(
-            acknowledged,
-            DataPlaneResponse::Acknowledged { sequence: 1, .. }
-        ));
-        assert_eq!(
-            ChannelStore::new(backend.as_ref(), ChannelId(uuid_v7(1)))
-                .receiver_cursor(b"weather-agent")
-                .unwrap(),
-            Sequence(1)
-        );
-
-        let mut sink = DurableReceiver::open(
-            backend.as_ref(),
-            ChannelId(uuid_v7(2)),
-            agent("report-sink"),
-            ReceiverKeyPair::from_private_key([0x23; 32]).unwrap(),
-        )
-        .unwrap();
-        let reports = sink.receive(1).unwrap();
-        assert_eq!(reports.len(), 1);
-        assert_eq!(reports[0].payload, b"Bring an umbrella");
     }
 
     #[test]
-    fn exact_model_registry_and_delivery_ledger_fail_closed() {
+    fn exact_model_registry_fails_closed() {
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
         let binding = install_real_binding(backend.as_ref());
         let mut models = ExactModelProviderRegistry::new();
@@ -2273,26 +1593,7 @@ mod tests {
             .unwrap();
         assert!(models.register("test-model", provider).is_err());
         assert!(models.resolve(&binding, "other-model").is_err());
-        let service = AuthorityBackedHostDataPlaneService::new(
-            backend,
-            Arc::new(exact_keys(&binding)),
-            Arc::new(models),
-            Arc::new(FixedMetadata {
-                message_id: uuid_v7(5),
-                timestamp_ns: 11,
-            }),
-        );
-        assert_eq!(
-            service.execute(
-                &binding,
-                &DataPlaneRequest::Acknowledge {
-                    id: request_id(1),
-                    channel_id: uuid_v7(1),
-                    message_id: uuid_v7(4),
-                },
-            ),
-            Err(DataPlaneFailure::Unauthorized)
-        );
+        let service = AuthorityBackedHostDataPlaneService::new(Arc::new(models));
         assert_eq!(
             service.execute(&binding, &completion(2, "test-model", 0.25, 256)),
             Err(DataPlaneFailure::Completion)

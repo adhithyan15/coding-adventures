@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **The end-to-end tests run their channels through a real broker** (D18S
+  P2.6d-2c). The weather reference agent and the production Level 1
+  composition now configure `[hosts.broker]`. They compose the brokers with
+  the daemon's own `compose_channel_brokers` and assert that one ran for
+  the agent. The broker is `chief-of-staff-host-test-broker`, a test
+  fixture built in this crate whose body is the production broker's. Off
+  Linux, where no verified broker launch exists yet, both tests show the
+  composition refusing instead.
 - **P1.5: the weather reference agent** (#142, #13980). It lives at
   `reference-agents/weather/SKILL.md`: one SKILL.md file and no code, Tier 1,
   asking for `net.fetch` and the `api.weather.gov` network capabilities.
