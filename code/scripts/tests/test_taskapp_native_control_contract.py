@@ -88,7 +88,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 38,
         "swiftui": 83,
         "compose": 50,
-        "qt": 108,
+        "qt": 93,
         "flutter": 69,
     }
 
@@ -199,7 +199,7 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     [
         ("qt", "align", 1, "unbaselined style drop 'align'"),
         ("qt", "height", 1, "unbaselined style drop 'height'"),
-        ("qt", "width", 19, "style drop 'width' increased from at most 18 to 19"),
+        ("qt", "width", 4, "style drop 'width' increased from at most 3 to 4"),
         ("flutter", "align", 1, "unbaselined style drop 'align'"),
         (
             "flutter",
