@@ -61,6 +61,7 @@
     "edge-class-styles",
     "edge-animation-config",
     "edge-curve-config",
-    "edge-step-curves"
+    "edge-step-curves",
+    "edge-bump-curves"
   ]
 }

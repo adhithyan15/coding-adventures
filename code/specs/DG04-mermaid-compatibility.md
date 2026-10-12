@@ -1138,6 +1138,8 @@ Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; b
 to portable cubic paths with tangent-aware endpoint markers.
 The `step`, `stepBefore`, and `stepAfter` curve modes lower to deterministic orthogonal paths in
 the diagram's authored direction.
+The `bumpX` and `bumpY` curve modes lower to portable cubic paths with horizontal or vertical
+midpoint tangents and preserve their authored mode in scene metadata.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically

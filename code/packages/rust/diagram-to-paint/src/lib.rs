@@ -879,19 +879,29 @@ where
             stroke,
             stroke_width,
         );
-        let (start_previous, end_previous) = if edge.curve == Some(SwimlaneEdgeCurve::Basis) {
+        let (start_previous, end_previous) = if matches!(edge.curve,
+            Some(SwimlaneEdgeCurve::Basis | SwimlaneEdgeCurve::BumpX | SwimlaneEdgeCurve::BumpY)
+        ) {
             let dx = edge.to.x - edge.from.x;
             let dy = edge.to.y - edge.from.y;
-            let (first, second) = if dx.abs() >= dy.abs() {
-                (
+            let (first, second) = match edge.curve {
+                Some(SwimlaneEdgeCurve::BumpX) => {
+                    let middle = (edge.from.x + edge.to.x) / 2.0;
+                    (Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y })
+                }
+                Some(SwimlaneEdgeCurve::BumpY) => {
+                    let middle = (edge.from.y + edge.to.y) / 2.0;
+                    (Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle })
+                }
+                Some(SwimlaneEdgeCurve::Basis) if dx.abs() >= dy.abs() => (
                     Point { x: edge.from.x + dx * 0.4, y: edge.from.y },
                     Point { x: edge.to.x - dx * 0.4, y: edge.to.y },
-                )
-            } else {
-                (
+                ),
+                Some(SwimlaneEdgeCurve::Basis) => (
                     Point { x: edge.from.x, y: edge.from.y + dy * 0.4 },
                     Point { x: edge.to.x, y: edge.to.y - dy * 0.4 },
-                )
+                ),
+                _ => unreachable!("cubic curve already matched"),
             };
             path.commands = vec![
                 PathCommand::MoveTo { x: edge.from.x, y: edge.from.y },
@@ -1431,6 +1441,8 @@ where
             metadata.insert(format!("swimlane.edge.{index}.curve"), match curve {
                 SwimlaneEdgeCurve::Linear => "linear",
                 SwimlaneEdgeCurve::Basis => "basis",
+                SwimlaneEdgeCurve::BumpX => "bumpX",
+                SwimlaneEdgeCurve::BumpY => "bumpY",
                 SwimlaneEdgeCurve::Step => "step",
                 SwimlaneEdgeCurve::StepBefore => "stepBefore",
                 SwimlaneEdgeCurve::StepAfter => "stepAfter",

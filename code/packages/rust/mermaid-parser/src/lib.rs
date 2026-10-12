@@ -6645,6 +6645,8 @@ fn parse_swimlane_edge_config(
             "curve" => curve = Some(match value.to_ascii_lowercase().as_str() {
                 "linear" => SwimlaneEdgeCurve::Linear,
                 "basis" => SwimlaneEdgeCurve::Basis,
+                "bumpx" | "bump-x" => SwimlaneEdgeCurve::BumpX,
+                "bumpy" | "bump-y" => SwimlaneEdgeCurve::BumpY,
                 "step" => SwimlaneEdgeCurve::Step,
                 "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
                 "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,
