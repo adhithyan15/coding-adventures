@@ -36,8 +36,19 @@ requires a once-built canonical pair maximum index and actual operation-count
 controls. The DG04 work contract is committed before repair tests/source. Use
 the existing separate delivery-repair worktree and a separate Cargo target;
 retain frozen 88e/c809 receipts, published candidate and original Miri inputs.
-Repair implementation/native/security/new-head CI are **PENDING**. No safety
-or production-limit tests, dependencies, owner decisions or full parity/lineage
+Spec commit `aec8c1b140` preceded red controls at `5a4fe979b5`: the actual
+layout visited **64,512** constraint edges for 64 nodes/512 duplicate edges,
+instead of 512, and a separate caller-owned integer gap sum overflowed. Original
+red failures and the rejected review are retained. Repair source
+`67f0f07cc3103667c446ff8742abe917a6a4c7b2` builds one borrowed canonical pair
+maximum index and accumulates geometric units without integer overflow. Actual
+full fourteen-package downstream execution passes **731 tests/docs/32 targets**,
+zero failures/ignores, strict all-target Clippy, whitespace checks and **1,056
+lesson shards/zero problems**. Four-direction controls check exactly 512 edge
+visits/126 indexed queries, reversed/default maxima and preserved edge metadata.
+The original other Rust package and runtime/config objects remain unchanged.
+Final-head independent security, same-PR publication and fresh exact-head CI
+are **PENDING**. No safety or production-limit tests, dependencies, owner decisions or full parity/lineage
 completion criteria are weakened. Full final-source Miri is **DEFERRED/PENDING**,
 never passed; its existing frozen run is neither polled nor terminated.
 
