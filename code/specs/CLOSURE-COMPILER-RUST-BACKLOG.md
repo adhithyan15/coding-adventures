@@ -2,6 +2,48 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 spline integration -->
+CV04a two-point spline reconciliation (October12): publishedf4 precedes main
+`e7c6bc81064bc80c9a908e102b76cdb1977fe768` (#17376spline plus #17377TaskApp release docs). Specf377d9d8a1
+precedes merge/tests; actualsource `6cab8a68f799da4ea8cd52b2015f9b1f83eca0e2` preserves upstream fixed
+Cardinal/CatmullRom/Natural collinear cubic dispatch. Six authored LR/TB controls
+assert exact42-unit endpoints,1/3 and2/3 controls, complete cubic commands,
+canonical metadata and both marker triangles/style/area50. Three Catmull aliases
+retain the same semantic variant. ExistingBump/Step/Basis/Linear/Monotone,
+zero-route and parser-work assertions remain exact. No generalmulti-point solver,
+new algorithm/dependency/unsafe/parser/resource-limit exemption is claimed.
+
+Actual complete metadata-derived **17packages/824tests-docs/37targets/0fail/
+1existingGDIignore**, strict17alltarget warnings/unknown-lints denied, neutral
+oracle27/Python18/Ruff/docs/1097lessons/whitespacePASS. Focus19repeats
+excluded from native count; COMPLETE13rows/actualvalidatorEXIT0. Initialimport
+preflight refused beforeCargo tests/receipt/CPwrite because three already-owned
+repair paths were incorrectly compared wholesale with upstream. Originalnegative
+preserved; eleven unmodifiedimports exact, two test-extended paths reviewed,
+three fullold/newrelative diffs preserve identical added/deleted ownedrepairs
+(paintdevdeps/parserresource-context/DG04contracts). No nativefailure relabeled.
+
+Compiler/LANG/core/Closure/CI/scripts sourceobjects remain exact to actual4f/c10
+and retain1253/120/1existingignore/strict4/all11production/44native without replay
+or reattribution. SwiftUI525 sixcompleteobjects/scripts retain637/30/strict6/
+Python46/profile1; TaskAppruntime/config inventory exact exceptREADME/CHANGELOG
+release docs. Portuguese/content/TS and TaskAppdevice/release/publication
+acceptance unclaimed. Currentf4CI remainsactive; old/localchecks cannotaccept
+newhead. Subsequent blocks are historical source/CI frames, not current gates.
+
+Finalbacklog-only fullobject/payload proof and independent exactfinalsecurity,
+freshauditedmain/openPRcompletefiles/review/conflicts precede SAMEsolePR17288
+publication. Retireoldf4CI onlyafterreviewednewheadworkflowexists; nevercurrentCI/
+Miri. Exactheadterminalacceptablechecks/whole3OSnativeSUCCESS/packageSUCCESS/
+timestampedClosurecBUILT gateauto-merge. Actual fetched-main reachability/full
+payload mode-type-blob proof gatecleanup/CV04b. Fullfinal-sourceMiri
+**DEFERRED/PENDING**, neverpassed; frozen497inputs/run/checkout/receipts/target
+untouched withoutpoll/terminate/duplicate. ImplementationdeliveryFIRST then
+genuinefinal-sourceMiri/reruninvalidatedinputs. BaseESTree/ownedtypes/no new
+crates.io deps. CV04b/fullClosureparity/outputjoins/alllineage/fullgoalOPEN/
+heartbeatACTIVE.
+<!-- /CV04 spline integration -->
+
 <!-- CV04 signed selector integration -->
 CV04a signed-root reconciliation (October12): published f202 precedes integrated
 main `c10ae4d719cddbb8a3dc11135ec06e3241fc1438` (#17372 signed local roots plus source-only Sanskrit/Kannada
