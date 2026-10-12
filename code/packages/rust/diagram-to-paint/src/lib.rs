@@ -1356,6 +1356,11 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    for (index, edge) in diagram.edges.iter().enumerate() {
+        if let Some(id) = &edge.id {
+            metadata.insert(format!("swimlane.edge.{index}.id"), id.clone());
+        }
+    }
     for link in &diagram.links {
         let prefix = format!("swimlane.node.{}.link", link.node_id);
         metadata.insert(format!("{prefix}.url"), link.url.clone());

@@ -3795,6 +3795,14 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
                 )), "labeled dotted links must lower to dashed paths");
             }
+            if fixture_name == "edge-identifiers" {
+                assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
+                    vec![Some("submit"), Some("release")]);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.id")),
+                    Some(&"submit".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.id")),
+                    Some(&"release".to_string()));
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

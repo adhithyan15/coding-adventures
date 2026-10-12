@@ -1951,7 +1951,7 @@ pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<S
 pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneEdge {
-    pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub id: Option<String>, pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
 }
 #[derive(Clone, Debug, PartialEq)]
@@ -1969,7 +1969,7 @@ pub struct LayoutedSwimlaneNode {
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneEdge {
-    pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub id: Option<String>, pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
 }
 #[derive(Clone, Debug, PartialEq)]

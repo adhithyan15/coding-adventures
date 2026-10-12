@@ -237,6 +237,10 @@
     {
       "name": "styled-inline-link-labels",
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft -- submit ---> review\nreview == approve ===> approve\napprove -. release ...-> publish"
+    },
+    {
+      "name": "edge-identifiers",
+      "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done"
     }
   ]
 }
