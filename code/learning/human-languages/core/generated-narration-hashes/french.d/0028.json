@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 28,
-  "sourceHash": "fnv1a64:6244718ef017bcec",
+  "sourceHash": "fnv1a64:4ab8509267a98de4",
   "lessonIds": [
     "FR-C24-prendre",
     "FR-C24-demander",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "french/narration/ch28.txt",
   "json": "french/narration/ch28.json",
-  "textHash": "fnv1a64:11b5f1e39b46a92a",
-  "jsonHash": "fnv1a64:09a8f5521d609f63",
+  "textHash": "fnv1a64:964b09e2a1005d9f",
+  "jsonHash": "fnv1a64:0ab3292ab2c1820b",
   "findings": []
 }

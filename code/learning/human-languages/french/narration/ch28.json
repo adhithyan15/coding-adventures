@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6244718ef017bcec",
+  "sourceHash": "fnv1a64:4ab8509267a98de4",
   "lessons": [
     {
       "id": "FR-C24-prendre",
@@ -546,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3edf548bc153e1cb",
+      "sourceHash": "fnv1a64:88de95b7a8bb40b9",
       "notice": null,
       "blocks": [
         {
@@ -619,7 +619,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every English speaker gets this backwards. Bien means \"well,\" so je t'aime bien looks like it ought to be more. It is less. Adding bien — or beaucoup — downgrades love to friendly liking, which is exactly why je t'aime bien is the polite way to turn someone down."
+              "text": "Every English speaker gets this backwards. Bien means \"well,\" so je t'aime bien looks like it ought to be more. It is less. Adding bien downgrades love to friendly liking, which is exactly why je t'aime bien is the polite way to turn someone down."
             },
             {
               "kind": "speech",

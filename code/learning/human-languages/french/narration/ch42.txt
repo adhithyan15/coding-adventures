@@ -13,15 +13,15 @@ Say quand, et, parlez, des. Four words, four written consonants at the end, and 
 
 The word, taken apart.
 A consonant written at the end of a French word is normally not pronounced.
-Petit is puh-TEE. Grand is grahn. Trois is trwah. Beaucoup is boh-KOO. The letter is on the page and not in the mouth.
-Those letters were once sounded. Old French said the t of petit and the s of trois, and over centuries the mouth dropped them while the spelling stayed where it was. Every silent consonant in French is a fossil of a sound the language used to make.
+Salut is sa-LU. Deux is deu. Trois is trwah. Nuit is nwee. The letter is on the page and not in the mouth.
+Those letters were once sounded. Old French said the t of salut and the s of trois, and over centuries the mouth dropped them while the spelling stayed where it was. Every silent consonant in French is a fossil of a sound the language used to make.
 Two things bring them back to life, and you own both:
 Liaison. Before a vowel the consonant wakes up — des amis is day-ZAH-mee, quand est-ce que is kahn-TESS-kuh. You met this on the numbers.
 A following -e. Add an -e and the consonant is no longer final, so it is no longer silent. That is the next lesson.
 There are exceptions worth naming, and the shortest way to hold them is the word CaReFuL — c, r, f, l are the four consonants that usually do sound at the end: avec, bonjour, neuf, il.
 
 Guided Practice.
-[your turn — say: silent — "petit, grand, trois, beaucoup"]
+[your turn — say: silent — "salut, deux, trois, nuit"]
 [pause 8 seconds for the answer]
 [your turn — say: woken by a vowel — "des amis", "quand est-ce que"]
 [pause 8 seconds for the answer]
@@ -79,18 +79,18 @@ Say bon and bonne. You have had both since page one, and the difference between 
 
 The word, taken apart.
 The feminine of an adjective adds -e. That -e is itself silent — and it makes the consonant in front of it audible.
-petit — puh-TEE., petite — puh-TEET.
-grand — grahn., grande — grahnd.
-Nothing is added to the sound at the end. What changes is that the t and the d stop being final, so the rule from two lessons ago no longer silences them.
+petit — puh-TEE., petite — puh-TEET. ("small").
+vert — vair., verte — vairt. ("green").
+Nothing is added to the sound at the end. What changes is that the t stops being final, so the rule from two lessons ago no longer silences them.
 This is worth holding on to, because it makes the feminine easier to hear than to see. A French listener knows petite from petit instantly — one ends in a consonant and one does not — while a reader has to notice a letter that is never said.
-The colours behave the same way, and you already own three of them: vert is vair and verte is vairt; blanc and blanche; noir and noire, where the r was already sounding and nothing changes at all.
+The other colours you own behave the same way: blanc and blanche; noir and noire, where the r was already sounding and nothing changes at all.
 
 Guided Practice.
 [your turn — say: the pair, hearing the t arrive — "petit, petite"]
 [pause 8 seconds for the answer]
-[your turn — say: "grand, grande"]
+[your turn — say: "vert, verte" — the t arrives again]
 [pause 8 seconds for the answer]
-[your turn — say: the colours — "vert, verte; blanc, blanche"]
+[your turn — say: "blanc, blanche"]
 [pause 8 seconds for the answer]
 [your turn — say: the one that does not change — "noir, noire"]
 [pause 8 seconds for the answer]
@@ -113,18 +113,18 @@ You were told that the u in au was once an l. That fact has been waiting two cha
 
 The word, taken apart.
 Nouns ending in -eau and -eu take -x in the plural instead of -s, and nouns already ending in -s, -x or -z take nothing.
-le bateau becomes les bateaux, le cheveu becomes les cheveux, le fils becomes les fils.
+le bateau becomes les bateaux, le cheveu becomes les cheveux, le nez becomes les nez.
 The x is silent, exactly as the s is, so once again the article carries the whole plural.
 Two of the three lines are the same story you already have. Cheval became chevaux because -als turned into -aus, and French wrote that -aus as -aux. That is the change that made au out of à + le — an l softening into a u somewhere around the twelfth century, right across the language.
 So chevaux is not an irregular plural at all. It is a perfectly regular plural of a word whose l melted, and the strange-looking x is a spelling convention for a u-s that got there honestly.
-The third line is simpler still: a word that already ends in s, x or z has nowhere to put another one, so it does not try. Le fils and les fils are the same six letters.
+The third line is simpler still: a word that already ends in s, x or z has nowhere to put another one, so it does not try. Le nez and les nez share the same three-letter noun.
 
 Guided Practice.
 [your turn — say: the pair — "le bateau, les bateaux"]
 [pause 8 seconds for the answer]
 [your turn — say: "le cheveu, les cheveux"]
 [pause 8 seconds for the answer]
-[your turn — say: the invariable — "le fils, les fils"]
+[your turn — say: the invariable — "le nez, les nez"]
 [pause 8 seconds for the answer]
 [your turn — say: the l that melted — "cheval, chevaux" and "à le, au"]
 [pause 8 seconds for the answer]
@@ -181,7 +181,7 @@ Warm-up.
 One rule about sound runs under this whole chapter. State it. Then name the two things that bring a silent consonant back.
 
 Guided Practice: silent, and woken.
-[your turn — say: silent — "petit, grand, trois, beaucoup"]
+[your turn — say: silent — "salut, deux, trois, nuit"]
 [pause 8 seconds for the answer]
 [your turn — say: woken by a vowel — "des amis", "quand est-ce que", "six ans", "dix ans", "neuf ans"]
 [pause 8 seconds for the answer]

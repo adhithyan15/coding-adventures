@@ -36,8 +36,8 @@ reviews_of: [FR-C01-bien]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] This is the word that starts *bonjour* and *bonsoir*. Learn it
-alone first — including the trick that its two forms *sound* completely
+[PAUSE 2s] This is the word that starts French's "good day" and "good
+evening." Learn it alone first — including the trick that its two forms *sound* completely
 different even though they look nearly the same.
 
 ## Sounds you'll need
@@ -69,7 +69,7 @@ Like every Romance adjective, *bon* **agrees** with its noun's gender and
 number — *bon* (masc.), *bonne* (fem.), *bons* (masc. pl.), *bonnes* (fem.
 pl.). This is Latin's legacy: adjectives change their ending to match the noun
 (Spanish runs the same machine on *bueno / buena*). You'll watch it in the next
-few lessons: *bon jour* (masc.) but *bonne nuit* (fem.).
+few lessons: the day greeting takes *bon*, the night one *bonne*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BON-03, FR-GRAM-ADJ-AGREEMENT-04] -->

@@ -60,23 +60,22 @@ is yours already:
 > when two Romance languages agree this exactly, you're looking straight at
 > the shared Latin parent.
 
-**Using it alone**: "*Comment ça va?*" (how's it going?) → "**Bien.**"
-("Well / good.") Intensified: "**très bien**" ("very well").
+**Using it alone**: asked "how's it going?", you can answer with one word:
+"**Bien.**" ("Well / good.")
 
 ## Grammar Lens: the "good" it pairs with
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *bien* is the **adverb** ("well" — *how* something is done). The **adjective**
-"good" (describing a thing) is a different word, **bon** — the next lesson.
+"good" (describing a thing) is a different word — the next lesson.
 This is the same *well* vs. *good* split as English, and the same *bien* vs.
-*bueno* split as Spanish; French's adjective is *bon*, from Latin *bonus*.
+*bueno* split as Spanish; French's adjective comes from Latin *bonus*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BIEN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bien" — nasal *byan*]
-- [YOU SAY: "très bien"]
 - [YOU SAY: "bien" then English "benefit", "benevolent"]
 
 ## Wrap-up Recall
@@ -84,4 +83,4 @@ This is the same *well* vs. *good* split as English, and the same *bien* vs.
 
 [PAUSE 3s] French *bien* and Spanish *bien* come from the same Latin word —
 which one? (*bene*, "well.") Adverb or adjective? (Adverb — "good" the
-adjective is *bon*, next.)
+adjective is a different word, next.)

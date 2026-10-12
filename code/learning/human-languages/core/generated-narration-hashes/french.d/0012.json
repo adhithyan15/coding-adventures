@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 12,
-  "sourceHash": "fnv1a64:1762903b18d7a391",
+  "sourceHash": "fnv1a64:82881cc7be079bb7",
   "lessonIds": [
     "FR-C10-pere",
     "FR-C10-mere",
@@ -15,7 +15,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch12.txt",
   "json": "french/narration/ch12.json",
-  "textHash": "fnv1a64:21cd28e6acd21ed9",
-  "jsonHash": "fnv1a64:ca62cc34d344b07c",
+  "textHash": "fnv1a64:135a64f88187b290",
+  "jsonHash": "fnv1a64:a00b705229dc3d16",
   "findings": []
 }

@@ -71,8 +71,8 @@ parallel with the one you just met, and two of them you already own in English:
   **su**icide (*suī*, "of oneself").
 
 Only **me** does any work here: it is what gives your own name, *je m'appelle*.
-*te* turns up once, in the informal "what's your name?" (*comment tu
-t'appelles?*), and *se* waits for a lesson that needs it. The set is named so
+*te* turns up once, in the informal "what's your name?" at the end of this
+chapter, and *se* waits for a lesson that needs it. The set is named so
 its shape is familiar, not laid out as a grid to memorize — you meet each one
 where it earns its place.
 

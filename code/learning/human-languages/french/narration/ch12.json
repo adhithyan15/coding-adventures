@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family, and the Oldest Words We Have",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1762903b18d7a391",
+  "sourceHash": "fnv1a64:82881cc7be079bb7",
   "lessons": [
     {
       "id": "FR-C10-pere",
@@ -748,7 +748,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7f0eb40eccdfbf3c",
+      "sourceHash": "fnv1a64:faa8e3edb4dd7856",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -813,7 +813,7 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: œ, and the four words that need it",
+          "title": "Writing: œ, and the everyday words that need it",
           "segments": [
             {
               "kind": "speech",
@@ -829,15 +829,7 @@
             },
             {
               "kind": "speech",
-              "text": "l'œuf — the egg."
-            },
-            {
-              "kind": "speech",
-              "text": "l'œil — the eye."
-            },
-            {
-              "kind": "speech",
-              "text": "l'œuf and l'œil both come back later in this book as words in their own right, so learning the letter now means that when they arrive, only the meaning is new. le cœur is here because you will meet it everywhere else — it is one of the most common nouns in the language — and because four words is a short enough list to simply keep."
+              "text": "The words for \"egg\" and \"eye\" need it too, and both come later in this book as words in their own right, so learning the letter now means that when they arrive, only the meaning is new. le cœur is here because you will meet it everywhere else — it is one of the most common nouns in the language."
             }
           ]
         },
@@ -873,11 +865,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the short list — \"sœur, cœur, œuf, œil\"",
+              "instruction": "the two words — \"sœur, cœur\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the short list — \"sœur, cœur, œuf, œil\"]"
+              "source": "[YOU SAY: the two words — \"sœur, cœur\"]"
             },
             {
               "kind": "prompt",
@@ -903,7 +895,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many letters is œ? (One.) What does French call it? (e dans l'o — \"e in the o\".) How many letters in sœur? (Four — s-œ-u-r.) Name two other words that use it. (cœur, œuf, œil — any two.) Next: putting the family together."
+              "text": "How many letters is œ? (One.) What does French call it? (e dans l'o — \"e in the o\".) How many letters in sœur? (Four — s-œ-u-r.) Name another word that uses it. (cœur, the heart.) Next: putting the family together."
             }
           ]
         }

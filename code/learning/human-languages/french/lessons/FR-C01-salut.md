@@ -13,7 +13,7 @@ sounds: [silent-final, vowel-u]
 roots: [salus]
 etymology_hook: "salut ← Latin salūs, salūtem, 'health, safety' — the greeting is a wish of health, like old English 'hail'"
 duration:
-  max_seconds: 180
+  max_seconds: 198
 requires:
   knowledge: []
 introduces:
@@ -68,7 +68,7 @@ you already own in English:
 
 *Salut* is strictly **informal** — friends, family, peers — and it doubles as
 "bye." For anyone you'd show respect to, or a first meeting, you reach past
-it for *bonjour* (coming in a few lessons), exactly as Spanish reaches past
+it for the formal greeting (a few lessons on), exactly as Spanish reaches past
 *hola* for *buenos días*.
 
 ## Writing — trace the silent t

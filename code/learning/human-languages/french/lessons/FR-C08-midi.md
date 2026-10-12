@@ -13,7 +13,7 @@ sounds: [vowel-i]
 roots: [medius-latin, dies-latin]
 etymology_hook: "midi ← medius diēs, 'mid-day' — the same -di you learned in lundi, with mi- 'middle' in front"
 duration:
-  max_seconds: 205
+  max_seconds: 213
 requires:
   knowledge: [FR-GRAM-IL-EST-HEURES-03, FR-GRAM-DI-JOUR-03, FR-LEX-HEURE-01]
 introduces:
@@ -67,7 +67,8 @@ drop the noun:
 
 > **Il est midi.** — "It is noon."
 
-Not *il est douze heures*. The frame stays; what goes into it is a name.
+Not "it is twelve hours" with a number in the slot. The frame stays; what goes
+into it is a name.
 
 ## Why it's said this way: English noon slid
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

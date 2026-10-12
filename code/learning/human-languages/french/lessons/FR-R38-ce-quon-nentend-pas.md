@@ -40,7 +40,7 @@ name the two things that bring a silent consonant back.
 ## Guided Practice: silent, and woken
 <!-- hl-knowledge: introduces=[]; assesses=[FR-PHON-CONSONNE-FINALE-01, FR-SOUND-LIAISON-10, FR-PHON-LIAISON-NUMBERS-08, FR-GRAM-PLURIEL-S-01, FR-GRAM-DES-01, FR-LEX-AMI-01, FR-LEX-CAFE-01, FR-LEX-QUAND-04, FR-LEX-ET-01, FR-LEX-SIX-07, FR-LEX-DIX-12, FR-LEX-NEUF-11, FR-LEX-TROIS-04, FR-LEX-BONJOUR-07] -->
 
-- [YOU SAY: silent — "petit, grand, trois, beaucoup"]
+- [YOU SAY: silent — "salut, deux, trois, nuit"]
 - [YOU SAY: woken by a vowel — "des amis", "quand est-ce que", "six ans", "dix
   ans", "neuf ans"]
 - [YOU SAY: the four that sound anyway — "avec, bonjour, neuf, il"]

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 8,
-  "sourceHash": "fnv1a64:9420b0d7170b8ab9",
+  "sourceHash": "fnv1a64:29451b6dde3466ff",
   "lessonIds": [
     "FR-C08-heure",
     "FR-C08-il-est",
@@ -17,7 +17,7 @@
   "drivablePrefix": 8,
   "text": "french/narration/ch08.txt",
   "json": "french/narration/ch08.json",
-  "textHash": "fnv1a64:feb32f57992a5bdc",
-  "jsonHash": "fnv1a64:684673645aaed8f9",
+  "textHash": "fnv1a64:64cb71617d2fa2fb",
+  "jsonHash": "fnv1a64:669b60a9e3b800b3",
   "findings": []
 }

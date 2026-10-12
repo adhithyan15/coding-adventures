@@ -53,7 +53,7 @@ two:
 
 You do **not** need to produce these, and you should not try. Nobody says them.
 Using one out loud sounds roughly like announcing "thus spake he" in an English
-café.
+pub.
 
 What you need is to **recognise** them, because they carry the past tense of
 essentially all French literature. A reader who stalls at *il parla* stalls on

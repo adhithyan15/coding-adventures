@@ -58,7 +58,7 @@ Three things follow, and they are the whole lesson:
 
 Its capital exists too, and looks like what you would expect: **Œ**.
 
-## Writing: œ, and the four words that need it
+## Writing: œ, and the everyday words that need it
 <!-- hl-knowledge: introduces=[]; assesses=[FR-SCRIPT-OE-LIGATURE-10] -->
 
 The list of everyday **œ** words is short enough to hold in your head, and you
@@ -66,14 +66,11 @@ already have one of them:
 
 - **la sœur** — the sister, which you have
 - **le cœur** — the heart
-- **l'œuf** — the egg
-- **l'œil** — the eye
 
-**l'œuf** and **l'œil** both come back later in this book as words in their own
-right, so learning the letter now means that when they arrive, only the meaning
-is new. **le cœur** is here because you will meet it everywhere else — it is one
-of the most common nouns in the language — and because four words is a short
-enough list to simply keep.
+The words for "egg" and "eye" need it too, and both come later in this book as
+words in their own right, so learning the letter now means that when they
+arrive, only the meaning is new. **le cœur** is here because you will meet it
+everywhere else — it is one of the most common nouns in the language.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-SCRIPT-OE-LIGATURE-10, FR-LEX-SOEUR-08] -->
@@ -81,7 +78,7 @@ enough list to simply keep.
 [PAUSE 1s]
 - [YOU SAY: the name of the letter — "e dans l'o"]
 - [YOU SAY: spell it — "s-œ-u-r", four letters]
-- [YOU SAY: the short list — "sœur, cœur, œuf, œil"]
+- [YOU SAY: the two words — "sœur, cœur"]
 - [YOU WRITE: **œ** three times: draw the *o*, then start the *e* inside its right edge]
 
 ## Wrap-up Recall
@@ -89,5 +86,4 @@ enough list to simply keep.
 
 [PAUSE 3s] How many letters is **œ**? (**One.**) What does French call it? (*e
 dans l'o* — "e in the o".) How many letters in **sœur**? (**Four** —
-*s-œ-u-r*.) Name two other words that use it. (**cœur**, **œuf**, **œil** — any
-two.) Next: putting the family together.
+*s-œ-u-r*.) Name another word that uses it. (**cœur**, the heart.) Next: putting the family together.

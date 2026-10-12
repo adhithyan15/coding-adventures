@@ -44,8 +44,8 @@ been waiting two chapters to pay for itself.
 > Nouns ending in **-eau** and **-eu** take **-x** in the plural instead of
 > **-s**, and nouns already ending in **-s**, **-x** or **-z** take nothing.
 
-> **le bateau → les bateaux** · **le cheveu → les cheveux** · **le fils → les
-> fils**
+> **le bateau → les bateaux** · **le cheveu → les cheveux** · **le nez → les
+> nez**
 
 The **x** is silent, exactly as the **s** is, so once again the article carries
 the whole plural.
@@ -60,15 +60,15 @@ of a word whose *l* melted, and the strange-looking *x* is a spelling convention
 for a *u-s* that got there honestly.
 
 The third line is simpler still: a word that already ends in *s*, *x* or *z* has
-nowhere to put another one, so it does not try. **Le fils** and **les fils** are
-the same six letters.
+nowhere to put another one, so it does not try. **Le nez** and **les nez** share
+the same three-letter noun.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PLURIEL-X-01, FR-GRAM-PLURIEL-S-01, FR-GRAM-AU-AUX-01, FR-GRAM-LE-LA-GENDER-05, FR-GRAM-DES-01, FR-SOUND-LIAISON-10] -->
 
 - [YOU SAY: the pair — "le bateau, les bateaux"]
 - [YOU SAY: "le cheveu, les cheveux"]
-- [YOU SAY: the invariable — "le fils, les fils"]
+- [YOU SAY: the invariable — "le nez, les nez"]
 - [YOU SAY: the *l* that melted — "cheval, chevaux" and "à le, au"]
 - [YOU SAY: with the indefinite — "des bateaux, des cheveux"]
 
