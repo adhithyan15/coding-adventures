@@ -17,6 +17,9 @@ import {
   loadLanguageCurricula,
 } from "../src/loader.js";
 
+// Keep hashing, pin comparisons and intentional pin writes inside the case.
+const REAL_CURRICULA = loadLanguageCurricula(defaultCurriculumRoot());
+
 const DIGEST_DIR = fileURLToPath(new URL("./curriculum-digests/", import.meta.url));
 
 const roots: string[] = [];
@@ -86,7 +89,7 @@ describe("direct curriculum lesson owners", () => {
   // and say in the commit why the count moved. The set of pin files must equal
   // the set of tracks, so a new or removed track cannot slip past either.
   it("pins each track's curriculum graph in its own file", () => {
-    const curricula = loadLanguageCurricula(defaultCurriculumRoot());
+    const curricula = REAL_CURRICULA;
     const actual = new Map(
       curricula.map((curriculum) => [
         curriculum.language,

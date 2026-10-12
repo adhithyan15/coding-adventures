@@ -3,7 +3,6 @@ import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
   loadChapterPolicy,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -16,6 +15,8 @@ import { measureRamp, readingOrder } from "../../../src/ramp.js";
 import { measureScriptClosure } from "../../../src/script-closure.js";
 import { expectLanguageContinuity, expectLanguageModality } from "../assert-language-corpus.js";
 
+import { REAL_EVERYTHING } from "../real-corpus.js";
+
 // ---------------------------------------------------------------------------
 // THE TAMIL A1 INVENTORY HAD NO ASSERTION IN THIS FILE -- the hole HL-C354
 // found in Telugu and Hindi and told the next reader to look for in the other
@@ -24,7 +25,7 @@ import { expectLanguageContinuity, expectLanguageModality } from "../assert-lang
 // track's own test file reads. Both halves were falsified before being kept.
 // ---------------------------------------------------------------------------
 it("probes only Tamil atoms that EXIST, so a guessed id cannot under-report", () => {
-  const { lessons } = loadEverything();
+  const { lessons } = REAL_EVERYTHING;
   const taught = trackIntroducedAtoms(lessons, "tamil");
   const unknown: string[] = [];
   for (const point of loadExamInventory("tamil", "A1").points) {

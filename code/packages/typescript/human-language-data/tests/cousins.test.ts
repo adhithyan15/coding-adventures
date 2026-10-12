@@ -9,6 +9,9 @@ import { ROMANCE_COUSINS, buildCousinIndex, cousinsFor } from "../src/cousins.js
 import { loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 
+// Only the immutable input is a fixture; indexes, joins and assertions remain timed.
+const REAL_EVERYTHING = loadEverything();
+
 function lesson(options: {
   id: string;
   headword: string;
@@ -161,7 +164,7 @@ describe("the real corpus", () => {
     // to show is not worth a rendering change. This is the honest ceiling the
     // feature is designed against, and it moves only when a track gains a
     // `roots:` slug another Romance track already carries.
-    const { lessons } = loadEverything();
+    const { lessons } = REAL_EVERYTHING;
     const index = buildCousinIndex(lessons);
     const spanish = lessons.filter((entry) => entry.language === "spanish");
     const withCousins = spanish.filter((entry) => cousinsFor(index, entry).length > 0);

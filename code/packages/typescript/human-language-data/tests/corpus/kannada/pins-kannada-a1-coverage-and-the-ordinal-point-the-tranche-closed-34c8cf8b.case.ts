@@ -2,7 +2,6 @@ import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -17,8 +16,10 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
+import { REAL_EVERYTHING } from "../real-corpus.js";
+
 it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
-  const { lessons } = loadEverything();
+  const { lessons } = REAL_EVERYTHING;
   const coverage = measureExamCoverage(loadExamInventory("kannada", "A1"), lessons);
   expect(coverage.enumerated).toBe(258);
   // 194 -> 197: KA-A1-L-12 (the full stop and the comma), KA-A1-L-13 (the

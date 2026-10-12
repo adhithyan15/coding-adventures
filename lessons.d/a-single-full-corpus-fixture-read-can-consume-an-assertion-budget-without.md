@@ -23,6 +23,14 @@ leaving live inventory reads, fresh measurements and all assertions inside their
 original deadlines. Check consumers for mutation before sharing their inputs;
 retain the normal worker count and heap cap when validating the change.
 
+The completed run passed 3,757 tests and reported 15 timeout failures plus 14
+Windows symlink-privilege errors, with no assertion mismatches. The remaining
+Kannada/Telugu/Tamil whole-corpus reads measured 61.8-72.2 seconds and exceeded
+their existing 60-second snapshot budgets. Move those inputs into the reviewed
+shared fixture while retaining the original snapshot limits. File-symlink
+security assertions stay enabled; an EPERM during fixture creation is a host
+limitation, not evidence that the loader accepted an unsafe owner.
+
 The same run measured live Spanish/narration report checks at 60.5-72.3 seconds
 and all-ledger shard checks at 31.9-32.7 seconds. Those calls must still read and
 validate the filesystem inside their cases. Confirm the complete failure
