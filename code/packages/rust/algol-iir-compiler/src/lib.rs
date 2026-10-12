@@ -15136,6 +15136,42 @@ mod tests {
     }
 
     #[test]
+    fn al4_direct_local_proof_rejects_roots_promoted_by_selector_lowering() {
+        for depth in 1..=4 {
+            for root in ["left", "right"] {
+                let branch = |name: &str| {
+                    let mut expression = if depth == 4 { format!("-abs(sign({name}))") } else { format!("abs(sign({name}))") };
+                    for _ in 0..depth { expression = format!("exp({expression})"); }
+                    expression
+                };
+                let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose({root}) then {} else {})))) end", branch("left"), branch("right"));
+                let error = compile_source(&source, "test").expect_err("direct output must not reuse a proof invalidated by selector alias promotion");
+                assert!(format!("{error:?}").contains("cannot print a real value"), "depth={depth}, root={root}: {error:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn al4_direct_local_proof_retains_value_selector_snapshots() {
+        for depth in 1..=4 {
+            for root in ["left", "right"] {
+                for condition in ["true", "false"] {
+                    let branch = |name: &str| {
+                        let mut expression = if depth == 4 { format!("-abs(sign({name}))") } else { format!("abs(sign({name}))") };
+                        for _ in 0..depth { expression = format!("exp({expression})"); }
+                        expression
+                    };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose({root}) then {} else {})))) end", branch("left"), branch("right"));
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("depth={depth}, root={root}, condition={condition}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                    assert!(!main.instructions.iter().any(|i| matches!(i.op.as_str(), "global_load" | "global_store")));
+                }
+            }
+        }
+    }
+
+    #[test]
     fn al4_local_runtime_real_roots_cross_all_bounded_conditional_result_widening() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))); output(x) end",
