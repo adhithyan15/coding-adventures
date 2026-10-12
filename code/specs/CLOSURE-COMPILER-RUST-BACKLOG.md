@@ -8,8 +8,20 @@ passed seven existing indexed-target controls, then the fourteen-package suite
 failed E0063 before any target executed: the duplicate-gap fixture omitted the
 new required curve field. Spec-first [curve integration](CV04a-swimlane-curve-integration.md)
 preserves all safety/resource assertions, adds alternating curve propagation and
-complete authored IR/update-order controls. Repair validation and exact-final
-independent security are pending; sole active PR #17288, auto-merge off.
+complete authored IR/update-order controls. Actual repaired source `08178b01988a8d8f7a33f39514e6bae81fc62560` passed **752 tests/docs across32 targets**
+in all14 affected diagram packages, zero failures/ignores; focused9 controls are
+repeats and excluded. Strict all-target lint, actual document reconstruction,
+1071 lesson shards and whitespace checks PASS. Original E0063 receipt remains
+rejected. Complete unchanged Rust entries outside four diagram packages and
+Mosaic Qt preserve prior reviewed compiler/lexical/ALGOL/LANG source attribution;
+all Mosaic Qt/program/script/CI objects match actual controlled-native979a1b80.
+No earlier native result is relabeled as new execution. Main curve-only configs
+now preserve omitted animation fields by upstream design; exact whole-diagram
+order/work controls verify that policy. No safety/resource assertions removed.
+Final backlog-only head requires exact source-object proof and independent
+security before updating the same PR. Fresh exact-head native CI/terminal checks,
+conflict-free clean reviews and actual merge/payload78 proof remain pending;
+sole active PR #17288, auto-merge off.
 Full Miri **DEFERRED/PENDING**, frozen run/497 inputs/receipts untouched.
 CV04b/full parity/source-output/full transformation lineage remain OPEN.
 **Last reprioritized:** 2026-10-12
