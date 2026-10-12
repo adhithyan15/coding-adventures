@@ -8852,6 +8852,12 @@ mod tests {
             ("TB", "bumpY") => route.push(PathCommand::CubicTo {
                 cx1: 87.0, cy1: 149.0, cx2: 87.0, cy2: 149.0, x: ex, y: ey,
             }),
+            ("LR", "monotoneX" | "monotoneY") => route.push(PathCommand::CubicTo {
+                cx1: 216.0, cy1: 91.0, cx2: 230.0, cy2: 91.0, x: ex, y: ey,
+            }),
+            ("TB", "monotoneX" | "monotoneY") => route.push(PathCommand::CubicTo {
+                cx1: 87.0, cy1: 142.0, cx2: 87.0, cy2: 156.0, x: ex, y: ey,
+            }),
             ("LR", "basis") => route.push(PathCommand::CubicTo {
                 cx1: sx + 42.0 * 0.4, cy1: sy, cx2: ex - 42.0 * 0.4, cy2: ey, x: ex, y: ey,
             }),
@@ -8869,7 +8875,7 @@ mod tests {
             (_, "stepAfter") => route.push(PathCommand::LineTo { x: ex, y: ey }),
             _ => panic!("fixture curve"),
         }
-        if !matches!(curve, "basis" | "bumpX" | "bumpY") {
+        if !matches!(curve, "basis" | "bumpX" | "bumpY" | "monotoneX" | "monotoneY") {
             route.push(PathCommand::LineTo { x: ex, y: ey });
         }
         assert_eq!(paths[0].commands, route, "authored curve coordinates stay exact");
@@ -8912,6 +8918,15 @@ mod tests {
         for (direction, curve) in [("LR", "bumpX"), ("TB", "bumpY"), ("LR", "basis"),
             ("TB", "basis"), ("LR", "linear"), ("TB", "linear")] {
             assert_aligned_swimlane_markers(direction, curve);
+        }
+    }
+
+    #[test]
+    fn authored_monotone_curve_marker_geometry() {
+        for direction in ["LR", "TB"] {
+            for curve in ["monotoneX", "monotoneY"] {
+                assert_aligned_swimlane_markers(direction, curve);
+            }
         }
     }
 

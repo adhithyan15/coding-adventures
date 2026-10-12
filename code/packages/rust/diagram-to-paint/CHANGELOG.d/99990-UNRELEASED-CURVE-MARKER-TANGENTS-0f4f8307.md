@@ -7,3 +7,5 @@
   platform using existing local parser and hierarchy dev dependencies. Cover
   both endpoint triangles, Bump axes, Basis/Linear and all Step variants, and
   preserve explicit zero-length compatibility. Tracked in #17373.
+- Extend the same authored exact route/triangle/metadata controls to MonotoneX
+  and MonotoneY after current-main integration, retaining all older assertions.
