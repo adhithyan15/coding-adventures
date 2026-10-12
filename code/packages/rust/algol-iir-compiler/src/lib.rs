@@ -4752,6 +4752,16 @@ impl Compiler {
         if self.is_selector_call_safe_runtime_real_value(node) {
             return true;
         }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-")
+                && self.is_selector_call_safe_runtime_real_root(child);
+        }
+        if direct_tokens(node).is_empty() {
+            let children = direct_nodes(node);
+            if children.len() == 1 {
+                return self.is_selector_call_safe_runtime_real_root(children[0]);
+            }
+        }
         let Some(source_name) = exact_bare_variable_expression_name(node) else {
             return false;
         };
@@ -13557,6 +13567,26 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_signed_unaliased_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then -left else +right) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then -left else +right) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose signed unaliased local runtime-real snapshots for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
@@ -13575,10 +13605,14 @@ mod tests {
 
     #[test]
     fn al4_runtime_real_conditional_selector_calls_reject_shared_branches() {
-        let source = "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left else right) end";
-        let err = compile_source(source, "test")
-            .expect_err("shared storage must remain invalid across a calling selector");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left else right) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then -left else +right) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("shared storage must remain invalid across a calling selector");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]

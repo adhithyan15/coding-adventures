@@ -1439,10 +1439,9 @@ backend immediately) come before the enabler-dependent items.
   already nonnegative and bounded; signed and nested-exponential forms stay
   conservative.
   Bare unaliased local runtime-real snapshots may cross a procedure-call
-  selector; transformed local expressions, globals, captured locals, and other
-  real-name branches remain conservative. Unary plus and
-  unary minus preserve the same runtime-real proof outside that selector
-  boundary. Additive composition,
+  selector through unary plus and minus chains; arithmetic and standard-function
+  transforms, globals, captured locals, and other real-name branches remain
+  conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

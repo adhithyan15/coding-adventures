@@ -213,8 +213,9 @@ unary signs, arithmetic composition with finite static operands, and
 real-valued standard functions preserve it, while a finite static real actual
 is safe directly. Variable-free exact `sign` and exact-range `entier` results
 may also widen through a real name formal. Selector calls may also choose bare
-unaliased local runtime-real snapshots; transformed locals, globals, captured
-locals, and other real-name branches remain conservative.
+unaliased local runtime-real snapshots through unary sign chains; arithmetic
+and standard-function transforms, globals, captured locals, and other real-name
+branches remain conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
