@@ -64,6 +64,7 @@
     "edge-step-curves",
     "edge-bump-curves",
     "edge-monotone-curves",
-    "edge-spline-curves"
+    "edge-spline-curves",
+    "edge-rounded-curve"
   ]
 }

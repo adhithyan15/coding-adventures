@@ -920,6 +920,20 @@ where
                 },
             ];
             (first, second)
+        } else if edge.curve == Some(SwimlaneEdgeCurve::Rounded) {
+            let horizontal = matches!(diagram.direction, DiagramDirection::Lr | DiagramDirection::Rl);
+            let (first, second) = if horizontal {
+                let middle = (edge.from.x + edge.to.x) / 2.0;
+                (Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y })
+            } else {
+                let middle = (edge.from.y + edge.to.y) / 2.0;
+                (Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle })
+            };
+            let (commands, start_previous, end_previous) = rounded_swimlane_path(
+                &[edge.from.clone(), first, second, edge.to.clone()], 12.0,
+            );
+            path.commands = commands;
+            (start_previous, end_previous)
         } else if matches!(edge.curve,
             Some(SwimlaneEdgeCurve::Step | SwimlaneEdgeCurve::StepBefore | SwimlaneEdgeCurve::StepAfter)
         ) {
@@ -1457,6 +1471,7 @@ where
                 SwimlaneEdgeCurve::MonotoneX => "monotoneX",
                 SwimlaneEdgeCurve::MonotoneY => "monotoneY",
                 SwimlaneEdgeCurve::Natural => "natural",
+                SwimlaneEdgeCurve::Rounded => "rounded",
                 SwimlaneEdgeCurve::Step => "step",
                 SwimlaneEdgeCurve::StepBefore => "stepBefore",
                 SwimlaneEdgeCurve::StepAfter => "stepAfter",
@@ -1533,6 +1548,51 @@ fn swimlane_endpoint_marker(
             ]
         }
     }
+}
+
+fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Point, Point) {
+    let mut commands = vec![PathCommand::MoveTo { x: points[0].x, y: points[0].y }];
+    let mut start_previous = points[1].clone();
+    let mut end_previous = points[points.len() - 2].clone();
+    let mut rounded_corner_count = 0;
+
+    for index in 1..points.len() - 1 {
+        let previous = &points[index - 1];
+        let corner = &points[index];
+        let next = &points[index + 1];
+        let incoming_x = corner.x - previous.x;
+        let incoming_y = corner.y - previous.y;
+        let outgoing_x = next.x - corner.x;
+        let outgoing_y = next.y - corner.y;
+        let incoming_length = incoming_x.hypot(incoming_y);
+        let outgoing_length = outgoing_x.hypot(outgoing_y);
+        if incoming_length <= f64::EPSILON || outgoing_length <= f64::EPSILON {
+            continue;
+        }
+        let cut = radius.min(incoming_length / 2.0).min(outgoing_length / 2.0);
+        let before = Point {
+            x: corner.x - incoming_x / incoming_length * cut,
+            y: corner.y - incoming_y / incoming_length * cut,
+        };
+        let after = Point {
+            x: corner.x + outgoing_x / outgoing_length * cut,
+            y: corner.y + outgoing_y / outgoing_length * cut,
+        };
+        commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+        commands.push(PathCommand::QuadTo {
+            cx: corner.x, cy: corner.y, x: after.x, y: after.y,
+        });
+        if rounded_corner_count == 0 {
+            start_previous = before;
+        }
+        end_previous = after;
+        rounded_corner_count += 1;
+    }
+    commands.push(PathCommand::LineTo {
+        x: points[points.len() - 1].x,
+        y: points[points.len() - 1].y,
+    });
+    (commands, start_previous, end_previous)
 }
 /// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.
 pub fn diagram_to_paint_railroad<S, M, R>(diagram: &LayoutedRailroadDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene

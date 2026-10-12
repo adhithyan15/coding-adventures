@@ -269,6 +269,10 @@
     {
       "name": "edge-spline-curves",
       "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst cardinal@--> sixth\nsecond catmull@--> fifth\nthird natural@--> fourth\ncardinal@{ curve: cardinal }\ncatmull@{ curve: catmullRom }\nnatural@{ curve: natural }"
+    },
+    {
+      "name": "edge-rounded-curve",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\n  queued[Queued]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest rounded@--> done\nrounded@{ curve: rounded }"
     }
   ]
 }
