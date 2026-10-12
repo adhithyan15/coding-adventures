@@ -72,4 +72,4 @@ Latin word.
 [PAUSE 3s] Give "bread" with its article. (**o pão**.) What Latin word is it from,
 and what happened to it? (*pānis* — worn to a single **nasal** syllable, *pānis →
 pão*.) Which family word followed the *same* erosion? (**pai**, ← *pater* — and
-*mãe* ← *māter*.) Next: **a água** and **o vinho** — water and wine.
+*mãe* ← *māter*.) Next: water and wine.

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 16,
-  "sourceHash": "fnv1a64:4afd61b609648215",
+  "sourceHash": "fnv1a64:2e2fcbd1d29153b7",
   "lessonIds": [
     "PT-C16-ser",
     "PT-C16-ser-roots",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "portuguese/narration/ch16.txt",
   "json": "portuguese/narration/ch16.json",
-  "textHash": "fnv1a64:01a8cd004256eac8",
-  "jsonHash": "fnv1a64:a8795ff5ea621cc8",
+  "textHash": "fnv1a64:f7573a9cbd09fdaa",
+  "jsonHash": "fnv1a64:40981a51882a7ad2",
   "findings": []
 }

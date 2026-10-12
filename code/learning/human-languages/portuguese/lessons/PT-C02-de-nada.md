@@ -13,7 +13,7 @@ sounds: [final-a-reduces]
 roots: [de-latin, nata-latin]
 etymology_hook: "nada ← Latin (rem) nāta 'a born thing' → 'nothing' — the same word as Spanish nada"
 duration:
-  max_seconds: 164
+  max_seconds: 165
 requires:
   knowledge: []
 introduces:
@@ -80,4 +80,4 @@ the shoulders, one Latin idea.
 
 [PAUSE 3s] What did *nada* originally mean in Latin? (A *born thing* — *nāta*.)
 Which language shares *de nada* exactly, and which uses *de rien* instead?
-(Spanish; French.) Next: **como**, "how."
+(Spanish; French.) Next: the Portuguese for "how."

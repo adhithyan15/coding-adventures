@@ -13,7 +13,7 @@ sounds: [final-r, final-a-reduces]
 roots: [morari-latin]
 etymology_hook: "morar ← Latin morārī 'to delay, to linger, to tarry' → English moratorium, demur"
 duration:
-  max_seconds: 186
+  max_seconds: 187
 requires:
   knowledge: [PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
 introduces:
@@ -81,4 +81,4 @@ live?")
 
 [PAUSE 3s] What Latin verb is *morar* from, and what did it mean? (*morārī* — "to
 delay / linger.") English cousins? (*Moratorium*, *demur*.) Say "I live in
-Lisbon." (*Moro em Lisboa.*) Next: **trabalhar**, "to work."
+Lisbon." (*Moro em Lisboa.*) Next: the verb "to work."

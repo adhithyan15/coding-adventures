@@ -48,7 +48,7 @@ reviews_of: [PT-C22-responder, PT-C18-saber-conhecer]
 | ele/ela/você **encontra** | |
 
 > **Encontro o livro.** — I find the book.
-> **Encontramos o café.** — We find the café.
+> **Encontramos o pão.** — We find the bread.
 
 Keep the object directly after the verb, as in English.
 
@@ -65,11 +65,11 @@ the same family.
 [PAUSE 1s]
 - [YOU SAY: **encontro, encontras, encontra, encontramos, encontram**]
 - [YOU SAY: “I find the book” — **Encontro o livro.**]
-- [YOU SAY: “We find the café” — **Encontramos o café.**]
+- [YOU SAY: “We find the bread” — **Encontramos o pão.**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-RESPONDER-02, PT-LEX-SABER-CONHECER-02, PT-LEX-ENCONTRAR-02, PT-GRAMMAR-ENCONTRAR-04, PT-ETYMON-ENCONTRAR-03] -->
 
-[PAUSE 3s] Say “I find.” (**Encontro.**) Say “We find the café.”
-(**Encontramos o café.**) Which English word shares the same family?
+[PAUSE 3s] Say “I find.” (**Encontro.**) Say “We find the bread.”
+(**Encontramos o pão.**) Which English word shares the same family?
 (**Encounter.**) Next, **encontrar** will gain one social meaning.

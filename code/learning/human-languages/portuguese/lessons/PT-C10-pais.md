@@ -81,5 +81,5 @@ dressed-up versions of the same word.
 happened to the *-t-* of *pater/māter* in Portuguese? (It **vanished** — *pater →
 pae → pai*.) What does **os pais** mean literally and in use? (Literally "the
 fathers"; in use, "**the parents**.") What word does *o país* (accented) mean?
-(The **country** — a spelling trap.) Next: **o irmão, a irmã** — and a surprise
+(The **country** — a spelling trap.) Next: brother and sister — and a surprise
 about where "brother" comes from.

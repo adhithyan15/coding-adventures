@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8111735e81aedb1f",
+  "sourceHash": "fnv1a64:d026df52f27a87b7",
   "lessons": [
     {
       "id": "PT-C10-pais",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a515b21ebd62f6e5",
+      "sourceHash": "fnv1a64:ce3b12d26038e4a5",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with articles. (o pai, a mãe.) What happened to the -t- of pater/māter in Portuguese? (It vanished — pater becomes pae becomes pai.) What does os pais mean literally and in use? (Literally \"the fathers\"; in use, \"the parents.\") What word does o país (accented) mean? (The country — a spelling trap.) Next: o irmão, a irmã — and a surprise about where \"brother\" comes from."
+              "text": "Give \"father\" and \"mother\" with articles. (o pai, a mãe.) What happened to the -t- of pater/māter in Portuguese? (It vanished — pater becomes pae becomes pai.) What does os pais mean literally and in use? (Literally \"the fathers\"; in use, \"the parents.\") What word does o país (accented) mean? (The country — a spelling trap.) Next: brother and sister — and a surprise about where \"brother\" comes from."
             }
           ]
         }

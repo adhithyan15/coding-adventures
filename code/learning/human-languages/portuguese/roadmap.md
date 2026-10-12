@@ -17,8 +17,8 @@ French.
   tarde/boa tarde → noite/boa noite → obrigado/obrigada → practice.
 - **Ch. 2 — "Tudo bem?"**: de nada (← *nāta*) → como (← *quōmodo*) → **tudo**
   (← *tōtus* "whole") → verb-free **tudo bem?** → **como vai? / como está?**
-  (*ir*, go / *estar*, stand) → mais ou menos → casual practice → formal
-  practice. **Authored** — the verb-free *Tudo bem?* is
+  (the verbs for "go" and "stand", named later) → mais ou menos → casual
+  practice → formal practice. **Authored** — the verb-free *Tudo bem?* is
   the distinctive Portuguese move; reordered ahead of introductions, register
   você/o senhor inline.
 - **Ch. 4 — Farewells**: adeus (← *a Deus* "to God"; twin of *adiós/adieu/addio*)
@@ -39,7 +39,7 @@ French.
 - **Ch. 6 — Numbers 1–10**: um/dois/três/quatro/cinco → seis/sete/oito/nove/dez.
   Two Portuguese signatures: **gender survives on "two"** (*dois/duas* ← *duo/duae*,
   where Spanish levelled to *dos*), and the **ct→it shift** (*octō→oito*, like
-  *noite/leite*) — contrasted with Spanish *ocho* (*ct→ch*). Plus the
+  *noite/feito*) — contrasted with Spanish *ocho* (*ct→ch*). Plus the
   **setembro–dezembro = Latin 7–10** calendar trick. **Authored.**
 - **Ch. 7 — Days of the week**: the **great Portuguese exception** — segunda–sexta
   are **numbered *feiras*** (← *fēria* "feast-day"; the ordinals of the Ch.6
@@ -92,11 +92,11 @@ French.
   grammar, not sound. The chapter's point is the **Iberian swap**: Portuguese and
   Spanish **alone** took Latin ***tenēre*** "to **hold**" (→ English
   *tenant/retain/maintain/tenacious/tenure*) as their word for *have*, while French
-  and Italian kept *habēre* — and Portuguese's own *habēre* survivor, **haver**,
-  was **demoted** to an auxiliary and to *há* ("there is"). The two verbs swapped
-  jobs → **tenho vinte anos**, age via *ter* and never *ser*, which given the root
-  literally says "**I hold twenty years**" — the most physical version of the
-  idiom. And *ano* ← *annus* shows the two Iberian outcomes of Latin **-nn-**:
+  and Italian kept *habēre* — and Portuguese's own *habēre* survivor (**haver**,
+  named in Ch. 18) was **demoted** to an auxiliary and to *há* ("there is"). The
+  two verbs swapped jobs → **tenho vinte anos**, age via *ter* and never a "to
+  be" verb, which given the root literally says "**I hold twenty years**" — the
+  most physical version of the idiom. And *ano* ← *annus* shows the two Iberian outcomes of Latin **-nn-**:
   Portuguese **simplified** it to *n*, Spanish **palatalized** it into **ñ**
   (*año*) — which is where *ñ* came from in the first place. **Authored.**
 
@@ -118,9 +118,10 @@ French.
   Latin verbs, three stems**: *sou/é/são* and *era* ← ***esse***, the preterite
   *fui* ← ***fuī*** (*esse*'s **own** ancient perfect, already suppletive in
   Latin; PIE \**bʰuH-*, the root of English **be** and German **bin**), and the
-  infinitive ***ser*** ← ***sedēre***, "**to sit**". The headline fact: ***ser*
-  and *ir* share their entire preterite** — *fui/foste/foi/fomos/foram* is both
-  "I **was**" and "I **went**" — and only ***ir*** did any borrowing, since
+  infinitive ***ser*** ← ***sedēre***, "**to sit**". The headline fact (with *ir*
+  given as "the verb *to go*" until Ch. 18 names it): ***ser* and *ir* share
+  their entire preterite** — *fui/foste/foi/fomos/foram* is both "I **was**" and
+  "I **went**" — and only ***ir*** did any borrowing, since
   Latin *īre*'s own perfect had eroded away while *fuī* was *ser*'s all along. A
   shared **Iberian** inheritance (Spanish does the same, ES-C14), so *ir*'s
   preterite costs the learner **nothing**, which is why this chapter closes the
@@ -202,7 +203,7 @@ French.
   chapter's payoff: ← *scrībere*, "to **scratch**," participle *escrito* =
   *scriptum* = *script*; and the decoding rule that pays off everywhere, the
   **propped-up e-** in front of Latin *sc-/sp-/st-* (*escola*, ***estar***,
-  *esperar*). Closes by running the chapter's four in the *eu* form. **Authored.**
+  *espaço*). Closes by running the chapter's four in the *eu* form. **Authored.**
 - **Ch. 20 — Taking, Asking, Helping, Liking: four more nobody had taught**: the
   second half of the tranche. ***tomar* / *pegar*** (`PT-C20-tomar-pegar`):
   "take" split by destination — into your hand (*pegar* ← *picāre*, "to coat
@@ -215,11 +216,11 @@ French.
   *aid, aide, adjutant, adjuvant*, with Latin *i*-before-a-vowel hardening into
   the soft Portuguese ***j*** of *hoje*, *já*, *janeiro* → ***gostar de***
   (`PT-C20-gostar`), the chapter's payoff and the tranche's signature: ←
-  *gustāre*, "**to taste**," which is why the ***de*** can never be dropped —
-  *gustāre de* was to take a taste **of** a thing. The *de + o = do* fusions come
+  *gustāre*, "**to taste**." Latin tasted a plain object; Portuguese added
+  ***de***: you like **of** a thing. The *de + o = do* fusions come
   with it. Portuguese now holds **two** verbs that stopped meaning "to taste":
   *saber* (Ch. 18) and *gostar*. Spanish escaped the same problem by inverting
-  the sentence (*me gusta el café*) — supplied in full as contrast, assumed
+  the sentence (*me gusta el pan*) — supplied in full as contrast, assumed
   nowhere. **Authored.**
 
   The tranche is **two** chapters, not one, on purpose: eight lessons together

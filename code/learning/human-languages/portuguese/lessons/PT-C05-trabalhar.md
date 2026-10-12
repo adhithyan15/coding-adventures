@@ -88,4 +88,4 @@ Three languages remember work as *torture*; only Italy remembers it as *labour*.
 [PAUSE 3s] What did *trabalhar* originally mean, and from what device? ("To
 torture," ← *tripalium*, three stakes.) Its Spanish twin, and the one difference?
 (*trabajar*; Latin *-li-* → PT *-lh-* / ES *-j-*.) Which language uses "labour"
-instead? (Italian, *lavorare*.) Next: your first sentence — **Falo português**.
+instead? (Italian, *lavorare*.) Next: your first sentence — "I speak Portuguese."

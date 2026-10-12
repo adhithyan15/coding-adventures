@@ -13,7 +13,7 @@ sounds: [nasal-ao, open-e]
 roots: [esse-latin]
 etymology_hook: "sou, era, and fui expose three historical stems inside the everyday verb ser"
 duration:
-  max_seconds: 148
+  max_seconds: 149
 requires:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03]
 introduces:
@@ -37,7 +37,7 @@ reviews_of: [PT-C14-ter, PT-C15-preterito-perfeito, PT-C05-falar]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Portuguese has two verbs for “to be.” Begin with **ser**, used for
-identity and what something is; the choice against *estar* comes later.
+identity and what something is; the choice against the other one comes later.
 
 ## You'll want to know: Present
 <!-- hl-knowledge: introduces=[PT-LEX-SER-02]; assesses=[] -->

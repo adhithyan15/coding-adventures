@@ -13,7 +13,7 @@ sounds: [open-e]
 roots: [esse-latin, sedere-latin, fui-latin]
 etymology_hook: "ser uses esse for sou/era, sedere 'sit' for the infinitive, and esse's ancient fui perfect; ir later borrowed that whole perfect"
 duration:
-  max_seconds: 173
+  max_seconds: 181
 requires:
   knowledge: [PT-LEX-SER-02, PT-LEX-SER-03]
 introduces:
@@ -53,9 +53,9 @@ English **sedentary** and **session**.
 ## The word, taken apart: fui means “was” and “went”
 <!-- hl-knowledge: introduces=[PT-ETYMON-SER-ROOTS-02]; assesses=[] -->
 
-The entire preterite is shared with **ir**, “to go”:
+The entire preterite is shared with Portuguese’s verb “to go”:
 
-| person | ser | ir |
+| person | ser | “to go” |
 |---|---|---|
 | eu | **fui** | **fui** |
 | tu | **foste** | **foste** |
@@ -65,7 +65,8 @@ The entire preterite is shared with **ir**, “to go”:
 
 **Fui professor** means “I was a teacher”; **fui ao Brasil** means “I went to
 Brazil.” What follows disambiguates them. *Fuī* already belonged to *ser*’s
-ancestor; **ir** borrowed the row after Latin *īre*’s own perfect wore away.
+ancestor; the “go” verb borrowed the row after Latin *īre*’s own perfect wore
+away.
 Spanish made the same Iberian choice.
 
 ## Guided Practice
@@ -83,4 +84,5 @@ Spanish made the same Iberian choice.
 
 [PAUSE 3s] Which Latin verb gives the infinitive? (***Sedēre**, “sit.”*) Which
 gives *sou* and *era*? (***Esse**.) What two verbs share *fui*? (**Ser** and
-**ir**.) Which borrowed it? (**Ir**.) Next: put *ser* beside *estar*.
+the verb “to go”.) Which borrowed it? (The **“go” verb**.) Next: put *ser*
+beside the other verb for “to be.”

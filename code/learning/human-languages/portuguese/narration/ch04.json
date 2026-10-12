@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bb7b439b451a6e49",
+  "sourceHash": "fnv1a64:592beb7d18c2c343",
   "lessons": [
     {
       "id": "PT-C04-adeus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58f14ad2d7858727",
+      "sourceHash": "fnv1a64:a100d749e25f7ceb",
       "notice": null,
       "blocks": [
         {
@@ -139,7 +139,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does adeus literally mean, and from what? (\"To God,\" from ad Deum.) Name two sister-language goodbyes with the same \"to God\" origin. (adiós, adieu, addio.) What English goodbye hides \"God be with ye\"? (Goodbye.) Next: the softer \"see you\" goodbyes — starting with até logo."
+              "text": "What does adeus literally mean, and from what? (\"To God,\" from ad Deum.) Name two sister-language goodbyes with the same \"to God\" origin. (adiós, adieu, addio.) What English goodbye hides \"God be with ye\"? (Goodbye.) Next: the softer \"see you\" goodbyes — starting with \"see you later.\""
             }
           ]
         }
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59dc1a6ec8551f1",
+      "sourceHash": "fnv1a64:d7d3bd8e16612a9b",
       "notice": null,
       "blocks": [
         {
@@ -403,7 +403,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does amanhã come from, and literally mean? (Ad māneāna — \"to the morning.\") How does Portuguese spell the ny sound that Spanish writes as ñ? (As nh.) Next: \"see you soon\" — até breve."
+              "text": "What does amanhã come from, and literally mean? (Ad māneāna — \"to the morning.\") How does Portuguese spell the ny sound that Spanish writes as ñ? (As nh.) Next: \"see you soon.\""
             }
           ]
         }
