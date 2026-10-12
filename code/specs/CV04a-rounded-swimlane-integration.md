@@ -32,3 +32,9 @@ Full final-source Miri DEFERRED/PENDING, never passed; frozen run/497 inputs/
 checkout/receipts/target preserved without progress polling or termination.
 Base ESTree/owned types/no new crates.io dependencies. Full parity/output joins/
 all transformation lineage and completion remain open; heartbeat active.
+
+Collapsed perpendicular LR-vertical/TB-horizontal routes and all-zero routes
+are explicit controls: a nonzero endpoint tangent must retain visible markers;
+only an actually zero-length route keeps degenerate markers. If these expose a
+regression, record the red receipt before the smallest bounded marker-reference
+repair and preserve every existing control and production limit.

@@ -8931,7 +8931,7 @@ mod tests {
             ("TB", "basis") => route.push(PathCommand::CubicTo {
                 cx1: sx, cy1: sy + 42.0 * 0.4, cx2: ex, cy2: ey - 42.0 * 0.4, x: ex, y: ey,
             }),
-            (_, "linear") => {},
+            (_, "linear" | "rounded") => {},
             ("LR", "step") => route.extend([
                 PathCommand::LineTo { x: 223.0, y: 91.0 }, PathCommand::LineTo { x: 223.0, y: 91.0 },
             ]),
@@ -9006,6 +9006,97 @@ mod tests {
             for curve in ["cardinal", "catmullRom", "natural"] {
                 assert_aligned_swimlane_markers(direction, curve);
             }
+        }
+    }
+
+    fn assert_rounded_lowering_fixture(
+        direction: &str,
+        end: Point,
+        route: Vec<PathCommand>,
+        triangles: [[(f64, f64); 3]; 2],
+        area: f64,
+    ) {
+        let source = format!("swimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\nend\na edge@<--> b\nedge@{{curve:rounded}}");
+        let diagram = mermaid_parser::parse_swimlane(&source).expect("authored rounded curve parses");
+        assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Rounded));
+        let mut layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!(layout.edges.len(), 1);
+        // Deliberate public-layout fixtures isolate routing and marker geometry
+        // from lane placement. Separate authored aligned controls keep real layout.
+        layout.edges[0].from = Point { x: 0.0, y: 0.0 };
+        layout.edges[0].to = end;
+        let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let metadata = scene.metadata.as_ref().expect("rounded metadata");
+        assert_eq!(metadata.get("swimlane.edge.0.curve").map(String::as_str), Some("rounded"));
+        assert_eq!(metadata.get("swimlane.edge.0.id").map(String::as_str), Some("edge"));
+        let paths: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+        }).collect();
+        assert_eq!(paths.len(), 3, "complete route and both point markers");
+        assert_eq!(paths[0].commands, route, "{direction}: complete rounded route");
+        for (path, [tip, left, right]) in paths[1..].iter().zip(triangles) {
+            assert_eq!(path.commands, vec![
+                PathCommand::MoveTo { x: tip.0, y: tip.1 },
+                PathCommand::LineTo { x: left.0, y: left.1 },
+                PathCommand::LineTo { x: right.0, y: right.1 }, PathCommand::Close,
+            ], "{direction}: exact rounded endpoint triangle");
+            assert_eq!(((left.0-tip.0)*(right.1-tip.1)-(right.0-tip.0)*(left.1-tip.1)).abs()/2.0, area);
+            assert_eq!(path.fill.as_deref(), Some("#455a64"));
+            assert_eq!(path.stroke, None);
+        }
+    }
+
+    #[test]
+    fn authored_rounded_aligned_marker_geometry() {
+        for direction in ["LR", "TB"] {
+            assert_aligned_swimlane_markers(direction, "rounded");
+        }
+    }
+
+    #[test]
+    fn rounded_long_and_short_route_commands_and_markers_are_exact() {
+        // Fixed golden cuts: radius12 for 60x80; half-segment4 for 16x8.
+        // Direction transforms only rotate/reflect these independently chosen
+        // coordinates; they do not compute corner lengths or call path helpers.
+        for (ex, ey, before, first_after, second_before, after) in [
+            (60.0, 80.0, 18.0, 12.0, 68.0, 42.0),
+            (16.0, 8.0, 4.0, 4.0, 4.0, 12.0),
+        ] {
+            for (direction, vertical, sign) in [("LR", false, 1.0), ("RL", false, -1.0), ("TB", true, 1.0), ("BT", true, -1.0)] {
+                let xy = |x: f64, y: f64| if vertical { (y*sign, x*sign) } else { (x*sign, y*sign) };
+                let point = |x, y| { let (x, y) = xy(x, y); Point { x, y } };
+                let line = |x, y| { let (x, y) = xy(x, y); PathCommand::LineTo { x, y } };
+                let quad = |cx, cy, x, y| { let (cx, cy) = xy(cx, cy); let (x, y) = xy(x, y); PathCommand::QuadTo { cx, cy, x, y } };
+                let mut triangles = [
+                    [xy(0.0, 0.0), xy(10.0, -5.0), xy(10.0, 5.0)],
+                    [xy(ex, ey), xy(ex-10.0, ey+5.0), xy(ex-10.0, ey-5.0)],
+                ];
+                if vertical { for triangle in &mut triangles { triangle.swap(1, 2); } }
+                assert_rounded_lowering_fixture(direction, point(ex, ey), vec![
+                    PathCommand::MoveTo { x: 0.0, y: 0.0 }, line(before, 0.0),
+                    quad(ex/2.0, 0.0, ex/2.0, first_after), line(ex/2.0, second_before),
+                    quad(ex/2.0, ey, after, ey), line(ex, ey),
+                ], triangles, 50.0);
+            }
+        }
+    }
+
+    #[test]
+    fn rounded_collapsed_perpendicular_routes_keep_visible_markers() {
+        assert_rounded_lowering_fixture("LR", Point { x: 0.0, y: 42.0 }, vec![
+            PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 0.0, y: 42.0 },
+        ], [[(0.0,0.0),(5.0,10.0),(-5.0,10.0)],[(0.0,42.0),(-5.0,32.0),(5.0,32.0)]], 50.0);
+        assert_rounded_lowering_fixture("TB", Point { x: 42.0, y: 0.0 }, vec![
+            PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 42.0, y: 0.0 },
+        ], [[(0.0,0.0),(10.0,-5.0),(10.0,5.0)],[(42.0,0.0),(32.0,5.0),(32.0,-5.0)]], 50.0);
+    }
+
+    #[test]
+    fn rounded_zero_length_keeps_existing_degenerate_marker_contract() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            assert_rounded_lowering_fixture(direction, Point { x: 0.0, y: 0.0 }, vec![
+                PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 0.0, y: 0.0 },
+            ], [[(0.0,0.0);3];2], 0.0);
         }
     }
 
