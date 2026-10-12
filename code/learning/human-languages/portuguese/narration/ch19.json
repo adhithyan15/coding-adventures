@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:80d62cff810c5ada",
+  "sourceHash": "fnv1a64:5a56387c993eafc7",
   "lessons": [
     {
       "id": "PT-C19-pensar",
@@ -469,7 +469,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7acfc2f9c9eecb3c",
+      "sourceHash": "fnv1a64:0b0b78f22f4f97b4",
       "notice": null,
       "blocks": [
         {
@@ -549,11 +549,7 @@
             },
             {
               "kind": "speech",
-              "text": "spērāre becomes esperar (\"to wait, to hope\")."
-            },
-            {
-              "kind": "speech",
-              "text": "spatium becomes espaço."
+              "text": "spatium becomes espaço (\"space\")."
             },
             {
               "kind": "speech",
@@ -602,11 +598,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the propped-up e — \"escrever, escola, estar, esperar\"",
+              "instruction": "the propped-up e — \"escrever, escola, estar, espaço\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the propped-up e — \"escrever · escola · estar · esperar\"]"
+              "source": "[YOU SAY: the propped-up e — \"escrever · escola · estar · espaço\"]"
             }
           ]
         },

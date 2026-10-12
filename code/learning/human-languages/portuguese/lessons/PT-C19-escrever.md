@@ -77,8 +77,7 @@ without exception:
 - *scrībere* → **escrever**
 - *schola* → **escola** ("school")
 - *stāre* → **estar** — the being-verb you already have
-- *spērāre* → **esperar** ("to wait, to hope")
-- *spatium* → **espaço**
+- *spatium* → **espaço** ("space")
 
 So when a Portuguese word opens with **es-** and the rest of it resembles an
 English word missing its *e*, it usually is one.
@@ -90,7 +89,7 @@ English word missing its *e*, it usually is one.
 - [YOU SAY: "escrevo, escreves, escreve, escrevemos, escrevem"]
 - [YOU SAY: "Já escrevi a carta" · "Está escrito"]
 - [YOU SAY: the chapter's four, first person — "penso, entendo, leio, escrevo"]
-- [YOU SAY: the propped-up e — "escrever · escola · estar · esperar"]
+- [YOU SAY: the propped-up e — "escrever · escola · estar · espaço"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-PENSAR-02, PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-LER-02, PT-ETYMON-LER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03] -->

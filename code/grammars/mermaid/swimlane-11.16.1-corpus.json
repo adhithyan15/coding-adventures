@@ -229,6 +229,14 @@
     {
       "name": "styled-endpoint-markers",
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\n  archive[Archive]\nend\ndraft o-.-o review\nreview x-.-> approve\napprove o==x publish\npublish x==> archive"
+    },
+    {
+      "name": "minimum-link-lengths",
+      "source": "swimlane-beta LR\nsubgraph Review\n  first[One rank]\n  second[Two ranks]\n  third[Three ranks]\n  fourth[Complete]\nend\nfirst --> second\nsecond ===> third\nthird -...-> fourth"
+    },
+    {
+      "name": "styled-inline-link-labels",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft -- submit ---> review\nreview == approve ===> approve\napprove -. release ...-> publish"
     }
   ]
 }

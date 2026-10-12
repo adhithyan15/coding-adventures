@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:36665eb50c9b496d",
+  "sourceHash": "fnv1a64:ddba452f6a79fa2d",
   "lessons": [
     {
       "id": "PT-C20-tomar-pegar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:156c1dcc37a3891a",
+      "sourceHash": "fnv1a64:294cf68c7dc0ea96",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
               "rowCount": 3,
               "utterances": [
                 "pegar — grasp, catch, grab: pego, pegas, pega, pegamos, pegam. tomar — consume, take in: tomo, tomas, toma, tomamos, tomam.",
-                "pegar — grasp, catch, grab: Pego o livro. — I pick up the book. tomar — consume, take in: Tomo um café. — I have a coffee.",
+                "pegar — grasp, catch, grab: Pego o livro. — I pick up the book. tomar — consume, take in: Tomo água. — I drink some water.",
                 "pegar — grasp, catch, grab: Pegar um táxi. — To catch a taxi. tomar — consume, take in: Tomar banho. — To take a bath."
               ]
             },
@@ -106,11 +106,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo um café\", \"Pegar um táxi\"",
+              "instruction": "\"Tomo água\", \"Pegar um táxi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo um café\" · \"Pegar um táxi\"]"
+              "source": "[YOU SAY: \"Tomo água\" · \"Pegar um táxi\"]"
             },
             {
               "kind": "prompt",
@@ -145,7 +145,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb takes a coffee, and which takes a book? (Tomar; pegar.) Say \"I have a coffee.\" (Tomo um café.) What did picāre mean, and what is tomar's root? (To coat with pitch, so pegar is \"to make stick\"; tomar's is unknown — disputed, and named as such.) Now \"I have\" and \"I write\". (Tenho; escrevo.) Next: asking."
+              "text": "Which verb takes a drink, and which takes a book? (Tomar; pegar.) Say \"I drink some water.\" (Tomo água.) What did picāre mean, and what is tomar's root? (To coat with pitch, so pegar is \"to make stick\"; tomar's is unknown — disputed, and named as such.) Now \"I have\" and \"I write\". (Tenho; escrevo.) Next: asking."
             }
           ]
         }
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:636c94918d29c035",
+      "sourceHash": "fnv1a64:d210b630e448337f",
       "notice": null,
       "blocks": [
         {
@@ -213,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now the neighbour. Pedir is \"to ask for\" — to request, to order. Pergunto a hora is asking what the time is; peço um café is ordering one. English says \"ask\" for both and loses the difference; Portuguese never mixes them."
+              "text": "Now the neighbour. Pedir is \"to ask for\" — to request, to order. Pergunto a hora is asking what the time is; peço água is asking for some. English says \"ask\" for both and loses the difference; Portuguese never mixes them."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1c25f2d67cfe00c",
+      "sourceHash": "fnv1a64:c78ff1864ef7c986",
       "notice": null,
       "blocks": [
         {
@@ -545,11 +545,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin never said \"taste a thing.\" It said taste of a thing — gustāre de — because a sip comes from what is in front of you, not the whole of it. Portuguese inherited the preposition along with the verb:"
+              "text": "Latin gustāre took a plain object: you tasted a thing. Portuguese added de, \"of\": you like of a thing, the way a sip comes from what is in front of you, not the whole of it:"
             },
             {
               "kind": "speech",
-              "text": "Gosto de café. — \"I like coffee.\" (Word for word: \"I taste of coffee.\") Gosto de você. — \"I like you.\" (Word for word: \"I like of you.\") Gostamos muito de Lisboa. — \"We like Lisbon very much.\""
+              "text": "Gosto de pão. — \"I like bread.\" (Word for word: \"I like of bread.\") Gosto de você. — \"I like you.\" (Word for word: \"I like of you.\") Gostamos muito de Lisboa. — \"We like Lisbon very much.\""
             },
             {
               "kind": "speech",
@@ -557,11 +557,11 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish, the other Iberian daughter of Latin, escaped the same problem the opposite way: it flips the sentence so the thing liked becomes the subject — me gusta el café, \"the coffee pleases me.\" Portuguese keeps you as the subject and hangs the preposition on the object instead."
+              "text": "Spanish, the other Iberian daughter of Latin, escaped the same problem the opposite way: it flips the sentence so the thing liked becomes the subject — me gusta el pan, \"the bread pleases me.\" Portuguese keeps you as the subject and hangs the preposition on the object instead."
             },
             {
               "kind": "speech",
-              "text": "For the stronger feeling: adorar, which needs no de (adoro café), and amar, kept mostly for people."
+              "text": "For the stronger feeling: adorar, which needs no de (adoro pão), and amar, kept mostly for people."
             }
           ]
         },
@@ -588,11 +588,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Gosto de café\", \"Gosto de você\", \"Gosto do vinho\"",
+              "instruction": "\"Gosto de pão\", \"Gosto de você\", \"Gosto do vinho\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Gosto de café\" · \"Gosto de você\" · \"Gosto do vinho\"]"
+              "source": "[YOU SAY: \"Gosto de pão\" · \"Gosto de você\" · \"Gosto do vinho\"]"
             },
             {
               "kind": "prompt",
@@ -627,7 +627,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I like coffee,\" then \"I like the wine.\" (Gosto de café; gosto do vinho, since de + o fuses to do.) Why the de, what did gustāre mean, and which earlier verb has the same story? (You take a taste of a thing; \"to taste\"; saber, from sapere.) Now the eight of these two chapters, in the eu form. (Penso, entendo, leio, escrevo, pego, pergunto, ajudo, gosto.)"
+              "text": "Say \"I like bread,\" then \"I like the wine.\" (Gosto de pão; gosto do vinho, since de + o fuses to do.) Why the de, what did gustāre mean, and which earlier verb has the same story? (Portuguese likes of a thing; \"to taste\"; saber, from sapere.) Now the eight of these two chapters, in the eu form. (Penso, entendo, leio, escrevo, pego, pergunto, ajudo, gosto.)"
             }
           ]
         }

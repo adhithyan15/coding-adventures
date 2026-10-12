@@ -58,7 +58,7 @@ recognise them, but write the full forms.
 |---|---|
 | Ele **é** médico. — He is a doctor. | Ele **está** doente. — He is ill. |
 | **Sou** português. — I’m Portuguese. | **Estou** em Lisboa. — I’m in Lisbon. |
-| A neve **é** branca. — Snow is white. | O café **está** frio. — The coffee is cold. |
+| A neve **é** branca. — Snow is white. | A água **está** fria. — The water is cold. |
 
 Identity, origin, profession, and defining qualities use **ser**. Location,
 health, mood, weather, and resulting conditions use **estar**.

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7e425a335bd8e04d",
+  "sourceHash": "fnv1a64:af83b7fef7ef189d",
   "lessons": [
     {
       "id": "PT-C05-falar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:574af1f2d3828ae2",
+      "sourceHash": "fnv1a64:f00804126c1a9e7a",
       "notice": null,
       "blocks": [
         {
@@ -171,7 +171,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is falar from, and which Spanish verb is its twin? (fabulārī — Spanish hablar.) What sound-law separates them? (Portuguese kept f-; Spanish shifted f- becomes h-: filho/hijo.) Does Portuguese keep or drop the pronoun? (Drops it.) Next: morar, \"to live.\""
+              "text": "What Latin verb is falar from, and which Spanish verb is its twin? (fabulārī — Spanish hablar.) What sound-law separates them? (Portuguese kept f-; Spanish shifted f- becomes h-: filho/hijo.) Does Portuguese keep or drop the pronoun? (Drops it.) Next: the verb \"to live.\""
             }
           ]
         }
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fffb4fd05f791e67",
+      "sourceHash": "fnv1a64:7f967423c8ae81e0",
       "notice": null,
       "blocks": [
         {
@@ -318,7 +318,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is morar from, and what did it mean? (morārī — \"to delay / linger.\") English cousins? (Moratorium, demur.) Say \"I live in Lisbon.\" (Moro em Lisboa.) Next: trabalhar, \"to work.\""
+              "text": "What Latin verb is morar from, and what did it mean? (morārī — \"to delay / linger.\") English cousins? (Moratorium, demur.) Say \"I live in Lisbon.\" (Moro em Lisboa.) Next: the verb \"to work.\""
             }
           ]
         }
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af4bede84c0cbe24",
+      "sourceHash": "fnv1a64:0562237a5192c92c",
       "notice": null,
       "blocks": [
         {
@@ -468,7 +468,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did trabalhar originally mean, and from what device? (\"To torture,\" from tripalium, three stakes.) Its Spanish twin, and the one difference? (trabajar; Latin -li- becomes PT -lh- / ES -j-.) Which language uses \"labour\" instead? (Italian, lavorare.) Next: your first sentence — Falo português."
+              "text": "What did trabalhar originally mean, and from what device? (\"To torture,\" from tripalium, three stakes.) Its Spanish twin, and the one difference? (trabajar; Latin -li- becomes PT -lh- / ES -j-.) Which language uses \"labour\" instead? (Italian, lavorare.) Next: your first sentence — \"I speak Portuguese.\""
             }
           ]
         }

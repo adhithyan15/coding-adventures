@@ -77,4 +77,4 @@ spellings, one sound, both from that doubled-*n*.
 
 [PAUSE 3s] What does *amanhã* come from, and literally mean? (*Ad māneāna* — "to
 the morning.") How does Portuguese spell the *ny* sound that Spanish writes as
-*ñ*? (As *nh*.) Next: "see you soon" — **até breve**.
+*ñ*? (As *nh*.) Next: "see you soon."

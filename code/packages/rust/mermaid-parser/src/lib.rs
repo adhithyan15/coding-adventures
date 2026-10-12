@@ -6614,6 +6614,7 @@ fn parse_swimlane_edge_chain(
     let mut start_marker = operator.start_marker;
     let mut end_marker = operator.end_marker;
     let mut inline_label = operator.label;
+    let mut min_length = operator.min_length;
     loop {
         let trimmed = remainder.trim_start();
         let (pipe_label, after_label) = if let Some(label_body) = trimmed.strip_prefix('|') {
@@ -6652,6 +6653,7 @@ fn parse_swimlane_edge_chain(
                     kind: edge_kind,
                     start_marker,
                     end_marker,
+                    min_length,
                 });
             }
         }
@@ -6667,6 +6669,7 @@ fn parse_swimlane_edge_chain(
         start_marker = next_operator.start_marker;
         end_marker = next_operator.end_marker;
         inline_label = next_operator.label;
+        min_length = next_operator.min_length;
     }
     Ok(previous)
 }
@@ -6705,10 +6708,23 @@ struct SwimlaneOperator {
     start_marker: EdgeMarker,
     end_marker: EdgeMarker,
     label: Option<String>,
+    min_length: usize,
 }
 
 fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     let standard = [
+        ("-...->", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::Point),
+        ("-..->", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::Point),
+        ("-...-", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::None),
+        ("-..-", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::None),
+        ("====>", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::Point),
+        ("===>", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::Point),
+        ("=====", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::None),
+        ("====", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::None),
+        ("---->", SwimlaneEdgeKind::Directed, EdgeMarker::None, EdgeMarker::Point),
+        ("--->", SwimlaneEdgeKind::Directed, EdgeMarker::None, EdgeMarker::Point),
+        ("-----", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::None),
+        ("----", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::None),
         ("~~~", SwimlaneEdgeKind::Invisible, EdgeMarker::None, EdgeMarker::None),
         ("<-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::Point, EdgeMarker::Point),
         ("<-->", SwimlaneEdgeKind::Directed, EdgeMarker::Point, EdgeMarker::Point),
@@ -6752,26 +6768,54 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
         start_marker,
         end_marker,
         label: None,
+        min_length: match operator {
+            "--->" | "----" | "===>" | "====" | "-..->" | "-..-" => 2,
+            "---->" | "-----" | "====>" | "=====" | "-...->" | "-...-" => 3,
+            _ => 1,
+        },
     }))
-    .min_by_key(|operator| operator.at);
-    let labeled = value.match_indices("--").find_map(|(at, _)| {
-        let tail = &value[at + 2..];
-        let arrow_at = tail.find("-->")?;
-        let label = tail[..arrow_at].trim();
-        (!label.is_empty()).then(|| SwimlaneOperator {
-            at,
-            len: 2 + arrow_at + 3,
-            kind: SwimlaneEdgeKind::Directed,
-            start_marker: EdgeMarker::None,
-            end_marker: EdgeMarker::Point,
-            label: Some(label.to_string()),
-        })
-    });
+    .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
+    let labeled = [
+        labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed),
+        labeled_swimlane_operator(value, "==", '=', 2, ">", SwimlaneEdgeKind::Thick),
+        labeled_swimlane_operator(value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
+    ].into_iter().flatten().min_by_key(|operator| operator.at);
     match (standard, labeled) {
         (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
         (Some(standard), _) => Some(standard),
         (None, labeled) => labeled,
     }
+}
+
+fn labeled_swimlane_operator(
+    value: &str,
+    start: &str,
+    repeated: char,
+    minimum_run: usize,
+    suffix: &str,
+    kind: SwimlaneEdgeKind,
+) -> Option<SwimlaneOperator> {
+    value.match_indices(start).find_map(|(at, _)| {
+        let tail = &value[at + start.len()..];
+        let (end_at, run) = tail.char_indices().find_map(|(end_at, character)| {
+            if character != repeated {
+                return None;
+            }
+            let run = tail[end_at..].chars().take_while(|candidate| *candidate == repeated).count();
+            let suffix_at = end_at + run;
+            (run >= minimum_run && tail[suffix_at..].starts_with(suffix)).then_some((end_at, run))
+        })?;
+        let label = tail[..end_at].trim();
+        (!label.is_empty()).then(|| SwimlaneOperator {
+            at,
+            len: start.len() + end_at + run + suffix.len(),
+            kind,
+            start_marker: EdgeMarker::None,
+            end_marker: EdgeMarker::Point,
+            label: Some(label.to_string()),
+            min_length: run - minimum_run + 1,
+        })
+    })
 }
 
 fn parse_swimlane_node(

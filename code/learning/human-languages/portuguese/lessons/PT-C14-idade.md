@@ -13,7 +13,7 @@ sounds: [nasal-anos, plural-s]
 roots: [annus-latin, aetas-latin]
 etymology_hook: "tenho vinte anos literally 'I HOLD twenty years' (ter ← tenēre), the strongest form of the Romance have-your-age idiom; ano ← annus simplified the -nn- where Spanish palatalized it to año — one Latin word, two Iberian outcomes"
 duration:
-  max_seconds: 259
+  max_seconds: 263
 requires:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03]
 introduces:
@@ -46,7 +46,8 @@ physical version of this idea in any of the five languages.
 > **Quantos anos tens?** — "How many years do you **have**?"
 > **Tenho vinte anos.** — "I **have** twenty years."
 
-*Ser* is wrong here. And **anos** can't be dropped, unlike English "I'm twenty."
+A "to be" verb is wrong here. And **anos** can't be dropped, unlike English
+"I'm twenty."
 
 ## The word, taken apart: ano ← annus, minus one n
 <!-- hl-knowledge: introduces=[PT-ETYMON-IDADE-03]; assesses=[] -->
@@ -95,7 +96,8 @@ Iberian Romance **holds** them.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03, PT-LEX-IDADE-02, PT-ETYMON-IDADE-03, PT-GRAMMAR-IDADE-04] -->
 
-[PAUSE 3s] Which verb does Portuguese use for age? (***Ter***, never *ser*.)
+[PAUSE 3s] Which verb does Portuguese use for age? (***Ter***, never a "to be"
+verb.)
 Given *ter*'s root, what does the sentence literally say? ("I **hold** twenty
 years.") Where does *ano* come from? (Latin ***annus***.) What did Portuguese and
 Spanish each do with the **-nn-**? (PT **simplified** it to *n*; ES

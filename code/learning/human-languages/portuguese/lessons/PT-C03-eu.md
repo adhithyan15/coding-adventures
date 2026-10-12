@@ -13,7 +13,7 @@ sounds: [nasal-eu]
 roots: [ego-latin]
 etymology_hook: "eu ← Latin ego 'I' → English ego; Portuguese usually drops it (pro-drop)"
 duration:
-  max_seconds: 171
+  max_seconds: 174
 requires:
   knowledge: []
 introduces:
@@ -57,7 +57,8 @@ and the same habit as its Romance sisters: Portuguese usually **leaves it out.**
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-EU-04]; assesses=[] -->
 
 The verb ending already names the speaker, so Portuguese usually **omits** the
-pronoun: *chamo-me* ("I call myself") needs no *eu* — the *-o* of *chamo* is "I."
+pronoun: next lesson's "I call myself" needs no *eu*, because its verb ends in
+an *-o* that already means "I."
 You add **eu** for **emphasis** or **contrast**:
 
 > *Eu* estou bem, e você? — "*I'm* fine, and you?"
@@ -78,4 +79,4 @@ of a Romance language: trust the verb ending, drop the pronoun.
 
 [PAUSE 3s] What Latin word is *eu* from? (*Ego* — ego, egoist.) Why does
 Portuguese usually drop it? (The verb ending already says "I.") When do you keep
-it? (Emphasis / contrast.) Next: introduce yourself — **me chamo**.
+it? (Emphasis / contrast.) Next: introduce yourself — "I call myself."
