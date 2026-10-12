@@ -4,8 +4,10 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1 task inventory is checked in, while
-A1-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** target specified; the pre-A1 and A1 task inventories and two source
+mock bundles at each rung are checked in, while qualified recordings, A2-C2
+inventories and mocks, calibration, standard setting, and human validation
+remain backlog
 
 This specification names the assessment that the complete Sanskrit book must
 eventually prepare a book-only learner to pass. It is not an external
@@ -16,8 +18,10 @@ Assessment — project-defined equivalent**.
 No `assessment.json` is checked in for Sanskrit yet, and that omission is
 deliberate. The machine-readable contract names required artifacts by path, and
 the artifact gate treats a path that leads nowhere as an error rather than as a
-promise. The contract is written after the inventories, mocks, rubrics and
-answer keys it points at, not before them.
+promise. Source masters are not qualified recordings, independent human review,
+standard setting, or book-only validation. The contract is written only after
+all artifacts it points at exist, not as a promise that source files alone have
+closed those evidence gaps.
 
 ## Why a classical language gets a speaking paper
 
