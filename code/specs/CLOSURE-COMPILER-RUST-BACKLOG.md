@@ -16,7 +16,50 @@ source inventory/ingestion-leaf reuse. CV04a implementation and local range/shar
 
 ## Delivery priority and deferred Miri (2026-10-11)
 
-### Current-main resource review repair (2026-10-12)
+### Current edge-ID and document-contract delivery reconciliation
+
+Published predecessor 8c82b405 is superseded by this reviewed delivery candidate
+only after final-head security and non-force publication. Actual required CI
+38236024433 failed in document reconstruction because the new Mermaid shard
+omitted its heading digest. The original hosted/local failure logs are retained;
+the corrected 04480-UNRELEASED-1da42e1a.md identity is derived from its exact
+heading and verified by the shared helpers. The real reconstruction command
+passes; no CI or document contract is weakened.
+
+Main b1f4e459 adds edge IDs (#17337) and conditional quadruple-exp controls
+(#17336). Spec c71ea647 preceded reconciliation/tests. Independent P2
+[#17343](https://github.com/adhithyan15/coding-adventures/issues/17343) and native
+red a09d81cb demonstrate the admitted multibyte separator panic. Advance over
+the complete whitespace scalar, retaining the bounded styled-label cursor and
+pair-maximum index. Two-byte/three-byte public parser controls compare full edge
+metadata against no-ID controls; chains and absent IDs retain authored order.
+Duplicate constraints now carry distinct IDs and layout preserves each in order
+alongside exact original resource counts. Initial 0bcb full-cone fixture compile
+rejection is separate, with zero tests executed; it is never accepted as red or
+green. Original #17334/#17335 and other validation receipts retain their heads.
+
+Actual frozen source `c79702290e6d6db34f58a15a0166367887f5cbab` passes **740 diagram tests/docs across32
+targets**, **919 ALGOL/shared tests/docs across16 targets**, strict all-target
+lint over14 diagram plus4 ALGOL packages, eleven unchanged LANG production
+commands and34 individually exact native backend controls. Total executed
+suite rows excluding the separately repeated seven focused controls:
+**1966 passed/142 targets/0 failures/1 existing ignores**.
+Full unfiltered ALGOL matrix acceptance is not claimed; #12032 remains separately
+owned. Lesson validation, lesson tests, whitespace and complete document
+reconstruction pass. The final documentation-only head must retain all actual
+runtime/config/lesson object identities and receive independent exact-head
+security before publication. Required fresh exact-head CI, whole successful
+Linux/macOS/Windows jobs and actual Closurec completion logs remain PENDING.
+Auto-merge stays disabled until current conflict-free review-clean terminal
+acceptable checks, followed by actual fetched-main merge/payload verification.
+
+Full final-source Miri is **DEFERRED/PENDING**, never passed. Its original frozen
+checkout/run/497 inputs/receipts remain preserved without polling or termination.
+CV04b, source-bound inventories/ingestion reuse, composite lineage, remaining
+fold/rename/inline/motion/merge/deletion/output mappings and full Closure parity
+remain open. Keep one active shared PR #17288 and the completion heartbeat active.
+
+### Historical current-main resource review repair (2026-10-12)
 
 Published candidate `1180fe26ba82a68ba7a606a27dae552214b38319` is still the
 single active PR #17288. Its exact-head native CI run 38214542915 remains
@@ -1116,18 +1159,3 @@ review/conflict gates and actual fetched-main merge/payload proof before cleanup
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
 inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
-
-
-### Pending edge-ID/current-main and document-contract reconciliation
-
-Published 8c82b405 has an actual required metadata CI failure: the new Mermaid
-changelog shard omitted the mandatory heading digest. Preserve the failing log,
-derive its identity using the repository shard helpers and execute the real
-document reconstruction gate. Main b1f4e459 adds edge IDs and ALGOL conditional
-quadruple-exp controls. Reconcile the existing monotone scanner with edge IDs;
-independent review found a multibyte-whitespace byte-boundary panic in ID
-discovery. The DG04 coordinate contract precedes repair tests and source.
-Actual native red/green validation, affected cones, strict lint and final-head
-independent security remain PENDING. One active PR #17288; no auto-merge or
-current-head native CI acceptance. Full final-source Miri is DEFERRED/PENDING;
-preserve the frozen checkout, inputs and receipts without polling or termination.
