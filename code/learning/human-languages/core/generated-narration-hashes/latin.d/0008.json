@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 8,
-  "sourceHash": "fnv1a64:bae7958867fdd074",
+  "sourceHash": "fnv1a64:a536e72b5aa2c0a6",
   "lessonIds": [
     "LA-C08-caput",
     "LA-C08-manus"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "latin/narration/ch08.txt",
   "json": "latin/narration/ch08.json",
-  "textHash": "fnv1a64:90f8691c683a623d",
-  "jsonHash": "fnv1a64:f649231eaf6dd36b",
+  "textHash": "fnv1a64:1e6c236784a9518c",
+  "jsonHash": "fnv1a64:9a1903ac2b2d3965",
   "findings": []
 }

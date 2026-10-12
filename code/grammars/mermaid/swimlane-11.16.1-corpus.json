@@ -147,6 +147,14 @@
       "source": "swimlane-beta LR\nsubgraph Output\n  first@{ shape: flag, label: \"First\" }\n  second@{ shape: paper-tape, label: \"Second\" }\nend\nfirst --> second"
     },
     {
+      "name": "lined-document-shapes",
+      "source": "swimlane-beta LR\nsubgraph Records\n  first@{ shape: lin-doc, label: \"First\" }\n  second@{ shape: lined-document, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "data-store-shapes",
+      "source": "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: datastore, label: \"First\" }\n  second@{ shape: data-store, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

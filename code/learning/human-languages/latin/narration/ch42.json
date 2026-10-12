@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Bringing, Getting, Playing, Waiting",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:880347127d2829a7",
+  "sourceHash": "fnv1a64:b4a4b8a0d34b1f58",
   "lessons": [
     {
       "id": "LA-C42-fero",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd153055087caccb",
+      "sourceHash": "fnv1a64:130f53436a4bce89",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,11 @@
             },
             {
               "kind": "speech",
-              "text": "Obtinēre is ob, \"over against,\" plus tenēre, \"to hold.\" The same vowel thinning shows: not ob-tenēre but obtinēre. English took it whole as obtain."
+              "text": "ob (\"over against\") + tenēre (\"to hold\") becomes obtinēre."
+            },
+            {
+              "kind": "speech",
+              "text": "The same thinning shows: e to i. English took it whole as obtain."
             },
             {
               "kind": "speech",
@@ -271,7 +275,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two flags. English receive is from recipere, a different prefix on the same verb. And retain and contain belong to tenēre at large, not to obtinēre."
+              "text": "Two flags. English receive is from recipere, a different prefix on the same verb. And retain and contain belong to the plain hold-verb at large, not to obtinēre."
             }
           ]
         },
@@ -307,11 +311,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb inside each one — capiō, and the hold-verb tenēre",
+              "instruction": "the verb inside accipiō — capiō",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb inside each one — capiō, and the hold-verb tenēre]"
+              "source": "[YOU SAY: the verb inside *accipiō* — capiō]"
             },
             {
               "kind": "prompt",
@@ -337,7 +341,7 @@
             },
             {
               "kind": "speech",
-              "text": "How does Latin say \"I receive\", and \"they receive\"? (Accipiō, accipiunt.) Which verb is buried inside it, and what happened to that verb's a? (Capiō; it thinned to i.) What are the two pieces of obtinēre? (Ob and tenēre, \"to hold.\") Which earlier verb shows the same ad- unswallowed? (Adiuvō.) And which verb means \"I bring\"? (Ferō.)"
+              "text": "How does Latin say \"I receive\", and \"they receive\"? (Accipiō, accipiunt.) Which verb is buried inside it, and what happened to that verb's a? (Capiō; it thinned to i.) What are the two pieces of obtinēre? (Ob, \"over against,\" and the verb \"to hold.\") Which earlier verb shows the same ad- unswallowed? (Adiuvō.) And which verb means \"I bring\"? (Ferō.)"
             }
           ]
         }

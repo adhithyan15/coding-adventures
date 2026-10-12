@@ -6916,6 +6916,8 @@ fn parse_swimlane_shape_attributes(
                     "tag-doc" | "tagged-document" => DiagramShape::TaggedDocument,
                     "tag-rect" | "tagged-rectangle" | "tag-proc" | "tagged-process" => DiagramShape::TaggedProcess,
                     "flag" | "paper-tape" => DiagramShape::PaperTape,
+                    "lin-doc" | "lined-document" => DiagramShape::LinedDocument,
+                    "datastore" | "data-store" => DiagramShape::DataStore,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

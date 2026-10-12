@@ -59,12 +59,12 @@ descendant dropped it: the letter is written, barely breathed.
 ## The word, taken apart: a false cognate and a wide family
 <!-- hl-knowledge: introduces=[LA-ETYMON-HABEO-02]; assesses=[] -->
 
-Here is the trap. English **have** is **not** descended from *habēre*. It
-comes from the Proto-Indo-European root ***\*keh₂p-*** ("to seize"), whose
-Latin outcome is **capere** — the verb behind **capture**, **captive**, and
-**capable**. Two languages, two unrelated verbs, one accidental match of
-sound and sense. Etymologists cite this pair as the standard warning against
-trusting a resemblance.
+Here is the trap. English **have** is **not** descended from *habēre*. It comes
+from the Proto-Indo-European root ***\*keh₂p-*** ("to seize"), whose Latin
+outcome is the verb "to take, to seize" (a later lesson teaches it) — the verb
+behind **capture**, **captive**, and **capable**. Two languages, two unrelated
+verbs, one accidental match of sound and sense. Etymologists cite this pair as
+the standard warning against trusting a resemblance.
 
 The genuine English family of *habēre* is large. From *habitus* ("condition,
 bearing") come **habit** and **habitual**; from *habitāre* ("to keep having,
@@ -87,8 +87,8 @@ contracts to **dēbēre**, which supplies **debt**, **debit**, **due**, and
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-ETYMON-HABEO-02] -->
 
-[PAUSE 3s] How does Latin say "I have"? (**Habeō**.) "They have"?
-(**Habent**.) Is English *have* descended from *habēre*? (**No** — it comes
-from the root behind Latin *capere*, "to seize".) Which English word hides
-*dē* + *habēre*? (**Debt**, and with it *debit* and *due*.) Which everyday
-word comes from *habilis*, "handy"? (**Able**.)
+[PAUSE 3s] How does Latin say "I have"? (**Habeō**.) "They have"? (**Habent**.)
+Is English *have* descended from *habēre*? (**No** — it comes from the root
+behind Latin's verb "to seize", the one in *capture*.) Which English word hides
+*dē* + *habēre*? (**Debt**, and with it *debit* and *due*.) Which everyday word
+comes from *habilis*, "handy"? (**Able**.)

@@ -3718,6 +3718,22 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
                 )).count() >= 2, "paper tape must lower to closed double-wave paths");
             }
+            if fixture_name == "lined-document-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                        && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::LineTo { .. }))
+                )).count() >= 2, "lined documents must lower to wave-edged paths with vertical rules");
+            }
+            if fixture_name == "data-store-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 4
+                        && path.fill.is_none()
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::LineTo { .. })).count() == 2
+                )).count() >= 2, "data stores must lower to paired open horizontal rules");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

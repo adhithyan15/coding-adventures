@@ -36,21 +36,21 @@ reviews_of: [LA-C19-valeo-family, LA-C19-quid-agis]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VALEO-FAMILY-01] -->
 
-[PAUSE 2s] You've already met *quōmodo* once, as part of a phrase that
-turned out **not** to be classically attested. This lesson is honest about
-the flip side: the **word itself** is completely genuine.
+[PAUSE 2s] An earlier lesson warned that a modern spoken-Latin "how are you"
+greeting is **not** classically attested. This is its first word — and the
+**word itself** is completely genuine.
 
 ## You'll want to know: quōmodo — genuinely classical, "by what manner"
 <!-- hl-knowledge: introduces=[LA-LEX-QUOMODO-01]; assesses=[] -->
 
-**Quōmodo** ("**how, in what way**") is a real, common Classical Latin
-word — a fusion of **quō** (ablative of *quis/quid*, "what") + **modō**
-(ablative of *modus*, "manner, measure"), literally "**by what manner**."
-It's attested in both **Cicero** (*Dē Inventiōne*) and **Seneca**
-(*Epistulae Mōrālēs*) — genuinely classical, unlike the specific
-*quōmodo tē habēs?* greeting from Chapter 19, which was a modern
-construction. The **word** is real; it was only that one **exact phrase**
-that wasn't.
+**Quōmodo** ("**how, in what way**") is a real, common Classical Latin word — a
+fusion of **quō** (ablative of *quis/quid*, "what") + **modō** (ablative of
+*modus*, "manner, measure"), literally "**by what manner**." It's attested in
+both **Cicero** (*Dē Inventiōne*) and **Seneca** (the *Moral Letters*) —
+genuinely classical, unlike the specific greeting
+*quōmodo tē habēs?* ("how do you hold yourself?"),
+which is a modern construction. The **word** is real; it was only that one
+**exact phrase** that wasn't.
 
 ## The word, taken apart: The direct Romance descendants: Italian come, Spanish cómo
 <!-- hl-knowledge: introduces=[LA-ETYMON-QUOMODO-02]; assesses=[] -->

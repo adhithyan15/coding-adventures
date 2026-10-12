@@ -44,7 +44,7 @@ reviews_of: [LA-C58-labels, LA-C58-phrases, LA-C52-quia, LA-C55-primus]
 <!-- hl-knowledge: introduces=[LA-SKILL-CONNECTED-READING]; assesses=[LA-LEX-C55-ORDINAL-01, LA-LEX-C56-ORDINAL-06] -->
 
 > Salvē!
-> Nōmen meum est Marcus.
+> Mihi nōmen est Mārcus.
 > Ego sum discipulus.
 > Magister meus bonus est.
 > Liber meus bonus est.
@@ -68,7 +68,7 @@ reviews_of: [LA-C58-labels, LA-C58-phrases, LA-C52-quia, LA-C55-primus]
 passage; it is how Latin was written. The verb goes last, and the reader holds
 everything before it open until it arrives.
 
-[PAUSE 2s] Two lines break the pattern on purpose. **Nōmen meum est Marcus**
+[PAUSE 2s] Two lines break the pattern on purpose. **Mihi nōmen est Mārcus**
 puts *est* in the middle, because the name is the point and Latin moves what
 matters. And the last full line is the longest, because **quia** hangs a whole
 reason off a sentence that was already complete.
