@@ -15183,6 +15183,48 @@ mod tests {
     }
 
     #[test]
+    fn al4_bare_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // The new bare-root entry must retain the same post-lowering boundary
+        // as transformed roots. Either actual may become shared, even when its
+        // arm is not selected; a parser/depth error is not this refusal.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then left else right");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test")
+                        .expect_err("a bare root promoted by a by-name selector must lose formatter admission");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_bare_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Distinct producer values make either wrong arm observable in the
+        // paired native control. Mutating the formal cannot promote its actual.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then left else right");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "exactly one runtime real output");
+                    assert!(!main.instructions.iter().any(|instruction| matches!(instruction.op.as_str(), "global_load" | "global_store")), "value selector must keep both snapshots local");
+                }
+            }
+        }
+    }
+
+    #[test]
     fn al4_direct_local_proof_rejects_roots_promoted_by_selector_lowering() {
         for depth in 1..=4 {
             for root in ["left", "right"] {

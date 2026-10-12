@@ -544,3 +544,5 @@ Unsupported ALGOL 60 features — arrays outside the supported integer/real/
 boolean/string element set, dynamic string variables, call-by-name array or
 string formals, and recursive name-formal dispatch — return explicit compiler
 errors.
+
+CV04a bare-root integration controls preserve the ordinary call-selected local snapshot policy and both post-lowering alias-proof consumers. By-name mutation must refuse either promoted root; value-formal mutation retains distinct 2.25/3.5 snapshots through direct output and intermediate assignment. Full final-source local Miri remains **DEFERRED/PENDING**.

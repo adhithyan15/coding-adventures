@@ -1128,3 +1128,5 @@ CLR simulator. Acceptance depends on the actual IIR: dynamic helper boundaries,
 McCarthy `ref<any>` and Nib narrow types remain unsupported, and the CLR01
 out-of-i32 literal gate remains in force. No type inference or fallback occurs.
 The default encoded API, CLI and textual result ABI retain their behavior.
+
+CV04a bare-root integration controls preserve the ordinary call-selected local snapshot policy and both post-lowering alias-proof consumers. By-name mutation must refuse either promoted root; value-formal mutation retains distinct 2.25/3.5 snapshots through direct output and intermediate assignment. Full final-source local Miri remains **DEFERRED/PENDING**.
