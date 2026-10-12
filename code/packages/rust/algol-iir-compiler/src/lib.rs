@@ -15032,6 +15032,44 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_nonpositive_quadruple_exp_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 0.0; real x; x := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := 2.25; real procedure right; right := 0.0; real x; x := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln preserves a branch-total conditional of nonpositive quadruple exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_nonpositive_quadruple_exp_result_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; integer procedure right; right := 2; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := 2.25; real procedure right; right := 0.0; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(-abs(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 0.0; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain exactly four built-in exponentials over a proven nonpositive bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
     fn al4_conditional_single_exp_sign_widening_rejects_unproven_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(exp(if choose() then sin(sign(left())) else sin(right()))); output(result) end",
