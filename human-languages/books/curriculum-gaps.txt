@@ -14,7 +14,7 @@ script closure: 0 lessons ask the reader to decode a glyph nobody taught them, a
 exposure: 3 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1686 glyphs and makes 714 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 1 of 29963 atoms never revisited (0%); missed windows R1 1553, R2 19839, R3 15983, R4 24355
-forward references: 892 uses of material a later lesson teaches
+forward references: 788 uses of material a later lesson teaches
 etymology: 22363 of 25682 word-introducing lessons carry no etymology_hook; 21988 show the reader no origin in the body (per track below)
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 921 evidence blocks, 0 invalid; 139 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 71 named track/debt items
@@ -157,7 +157,7 @@ info dump (report-only): 120 of 29572 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25180 of 29572 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25180, senses 25181, culture claims 25180
 
-metalanguage: 54 of 54 grammar terms appear in 28638 lessons; 47022 uses come before introduction, of which 6619 are technical terms across 3818 lessons
-  most-used-before-introduction: verb (2133 lessons), noun (1223 lessons), adjective (377 lessons), voice (278 lessons), case (273 lessons), pronoun (263 lessons)
+metalanguage: 54 of 54 grammar terms appear in 28638 lessons; 47028 uses come before introduction, of which 6620 are technical terms across 3818 lessons
+  most-used-before-introduction: verb (2134 lessons), noun (1223 lessons), adjective (377 lessons), voice (278 lessons), case (273 lessons), pronoun (263 lessons)
 literal markup: none in 29572 lessons or any generated book
 glyph coverage: every character renders -- 136 main-font and 829 script characters across 5916 generated files

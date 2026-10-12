@@ -36,7 +36,7 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
-    "forwardReferences": 892,
+    "forwardReferences": 788,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
@@ -335335,14 +335335,6 @@
         "lessonsEarly": 971
       },
       {
-        "lessonId": "FR-C04-au-revoir",
-        "language": "french",
-        "position": 31,
-        "word": "tard",
-        "taughtBy": "FR-C187-tard",
-        "lessonsEarly": 971
-      },
-      {
         "lessonId": "ES-C277-practice",
         "language": "spanish",
         "position": 490,
@@ -335895,14 +335887,6 @@
         "lessonsEarly": 805
       },
       {
-        "lessonId": "FR-W03-trema",
-        "language": "french",
-        "position": 38,
-        "word": "au",
-        "taughtBy": "FR-C157-au-dessus",
-        "lessonsEarly": 805
-      },
-      {
         "lessonId": "HI-S143-letter-tha-retroflex",
         "language": "hindi",
         "position": 131,
@@ -336015,14 +335999,6 @@
         "lessonsEarly": 752
       },
       {
-        "lessonId": "FR-C09-automne",
-        "language": "french",
-        "position": 92,
-        "word": "au",
-        "taughtBy": "FR-C157-au-dessus",
-        "lessonsEarly": 751
-      },
-      {
         "lessonId": "FR-C09-saisons-practice",
         "language": "french",
         "position": 95,
@@ -336052,14 +336028,6 @@
         "position": 365,
         "word": "fuera",
         "taughtBy": "ES-C407-fuera",
-        "lessonsEarly": 745
-      },
-      {
-        "lessonId": "FR-C36-parce-que",
-        "language": "french",
-        "position": 257,
-        "word": "tard",
-        "taughtBy": "FR-C187-tard",
         "lessonsEarly": 745
       },
       {
@@ -336132,14 +336100,6 @@
         "position": 640,
         "word": "patio",
         "taughtBy": "ES-C450-patio",
-        "lessonsEarly": 725
-      },
-      {
-        "lessonId": "FR-C03-merci",
-        "language": "french",
-        "position": 24,
-        "word": "rien",
-        "taughtBy": "FR-C139-rien",
         "lessonsEarly": 725
       },
       {
@@ -337991,14 +337951,6 @@
         "lessonsEarly": 274
       },
       {
-        "lessonId": "FR-C01-bien",
-        "language": "french",
-        "position": 5,
-        "word": "très",
-        "taughtBy": "FR-C40-tres",
-        "lessonsEarly": 274
-      },
-      {
         "lessonId": "ES-C267-negar-preguntar",
         "language": "spanish",
         "position": 445,
@@ -338108,14 +338060,6 @@
         "position": 72,
         "word": "por",
         "taughtBy": "ES-C51-por",
-        "lessonsEarly": 265
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 14,
-        "word": "très",
-        "taughtBy": "FR-C40-tres",
         "lessonsEarly": 265
       },
       {
@@ -338287,14 +338231,6 @@
         "lessonsEarly": 250
       },
       {
-        "lessonId": "FR-C03-comme-ci-comme-ca",
-        "language": "french",
-        "position": 29,
-        "word": "très",
-        "taughtBy": "FR-C40-tres",
-        "lessonsEarly": 250
-      },
-      {
         "lessonId": "ES-C268-repaso-llegar-y-quedarse",
         "language": "spanish",
         "position": 449,
@@ -338308,14 +338244,6 @@
         "position": 436,
         "word": "otro",
         "taughtBy": "ES-C317-otro",
-        "lessonsEarly": 249
-      },
-      {
-        "lessonId": "FR-C03-practice",
-        "language": "french",
-        "position": 30,
-        "word": "très",
-        "taughtBy": "FR-C40-tres",
         "lessonsEarly": 249
       },
       {
@@ -338351,14 +338279,6 @@
         "lessonsEarly": 247
       },
       {
-        "lessonId": "FR-C01-jour",
-        "language": "french",
-        "position": 8,
-        "word": "ou",
-        "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 247
-      },
-      {
         "lessonId": "ES-C06-practice",
         "language": "spanish",
         "position": 93,
@@ -338375,14 +338295,6 @@
         "lessonsEarly": 244
       },
       {
-        "lessonId": "FR-C04-practice",
-        "language": "french",
-        "position": 35,
-        "word": "très",
-        "taughtBy": "FR-C40-tres",
-        "lessonsEarly": 244
-      },
-      {
         "lessonId": "ES-C438-sintesis-cuerpo",
         "language": "spanish",
         "position": 1288,
@@ -338396,14 +338308,6 @@
         "position": 1432,
         "word": "regalar",
         "taughtBy": "ES-C506-regalar",
-        "lessonsEarly": 243
-      },
-      {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 36,
-        "word": "très",
-        "taughtBy": "FR-C40-tres",
         "lessonsEarly": 243
       },
       {
@@ -338487,14 +338391,6 @@
         "lessonsEarly": 233
       },
       {
-        "lessonId": "FR-C05-practice",
-        "language": "french",
-        "position": 45,
-        "word": "un peu",
-        "taughtBy": "FR-C40-un-peu",
-        "lessonsEarly": 233
-      },
-      {
         "lessonId": "ES-C414-apuntarse",
         "language": "spanish",
         "position": 1141,
@@ -338524,14 +338420,6 @@
         "position": 521,
         "word": "pues",
         "taughtBy": "ES-C329-pues",
-        "lessonsEarly": 224
-      },
-      {
-        "lessonId": "FR-C03-merci",
-        "language": "french",
-        "position": 24,
-        "word": "de",
-        "taughtBy": "FR-C35-de",
         "lessonsEarly": 224
       },
       {
@@ -338575,36 +338463,12 @@
         "lessonsEarly": 220
       },
       {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 36,
-        "word": "ou",
-        "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 219
-      },
-      {
         "lessonId": "FR-C03-practice",
         "language": "french",
         "position": 30,
         "word": "de",
         "taughtBy": "FR-C35-de",
         "lessonsEarly": 218
-      },
-      {
-        "lessonId": "FR-W03-trema",
-        "language": "french",
-        "position": 38,
-        "word": "mais",
-        "taughtBy": "FR-C36-mais",
-        "lessonsEarly": 218
-      },
-      {
-        "lessonId": "FR-W03-trema",
-        "language": "french",
-        "position": 38,
-        "word": "ou",
-        "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 217
       },
       {
         "lessonId": "ES-C352-mayoria",
@@ -338629,14 +338493,6 @@
         "word": "boleto",
         "taughtBy": "ES-C313-boleto",
         "lessonsEarly": 215
-      },
-      {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "position": 34,
-        "word": "de",
-        "taughtBy": "FR-C35-de",
-        "lessonsEarly": 214
       },
       {
         "lessonId": "ES-R437-repaso-planes",
@@ -338679,14 +338535,6 @@
         "lessonsEarly": 211
       },
       {
-        "lessonId": "FR-C05-practice",
-        "language": "french",
-        "position": 45,
-        "word": "et",
-        "taughtBy": "FR-C36-et",
-        "lessonsEarly": 209
-      },
-      {
         "lessonId": "FR-R05-second-pass-courtesy-and-farewells",
         "language": "french",
         "position": 39,
@@ -338725,14 +338573,6 @@
         "word": "otro",
         "taughtBy": "ES-C317-otro",
         "lessonsEarly": 195
-      },
-      {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 36,
-        "word": "où",
-        "taughtBy": "FR-C32-ou",
-        "lessonsEarly": 194
       },
       {
         "lessonId": "ES-C467-producir",
@@ -338799,14 +338639,6 @@
         "lessonsEarly": 188
       },
       {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "position": 42,
-        "word": "où",
-        "taughtBy": "FR-C32-ou",
-        "lessonsEarly": 188
-      },
-      {
         "lessonId": "ES-C439-cortar",
         "language": "spanish",
         "position": 1292,
@@ -338868,14 +338700,6 @@
         "position": 1441,
         "word": "quitar",
         "taughtBy": "ES-C496-quitar",
-        "lessonsEarly": 185
-      },
-      {
-        "lessonId": "FR-C05-practice",
-        "language": "french",
-        "position": 45,
-        "word": "où",
-        "taughtBy": "FR-C32-ou",
         "lessonsEarly": 185
       },
       {
@@ -338949,14 +338773,6 @@
         "word": "os",
         "taughtBy": "ES-C45-os",
         "lessonsEarly": 176
-      },
-      {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 36,
-        "word": "café",
-        "taughtBy": "FR-C28-cafe",
-        "lessonsEarly": 175
       },
       {
         "lessonId": "ES-C462-sintesis-jefe",
@@ -339167,14 +338983,6 @@
         "lessonsEarly": 152
       },
       {
-        "lessonId": "FR-C04-practice",
-        "language": "french",
-        "position": 35,
-        "word": "s'il vous plaît",
-        "taughtBy": "FR-C19-sil-vous-plait",
-        "lessonsEarly": 152
-      },
-      {
         "lessonId": "FA-R252-second-pass-words-from-chapters-248-252",
         "language": "persian",
         "position": 1303,
@@ -339189,14 +338997,6 @@
         "word": "material",
         "taughtBy": "ES-C475-material",
         "lessonsEarly": 150
-      },
-      {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "position": 34,
-        "word": "main",
-        "taughtBy": "FR-C17-main",
-        "lessonsEarly": 148
       },
       {
         "lessonId": "PA-C09-pasand",
@@ -339229,14 +339029,6 @@
         "word": "ayuntamiento",
         "taughtBy": "ES-C489-ayuntamiento",
         "lessonsEarly": 147
-      },
-      {
-        "lessonId": "FR-C12-douze",
-        "language": "french",
-        "position": 109,
-        "word": "ou",
-        "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 146
       },
       {
         "lessonId": "PA-C10-chaa",
@@ -339335,14 +339127,6 @@
         "lessonsEarly": 132
       },
       {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 36,
-        "word": "être",
-        "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 132
-      },
-      {
         "lessonId": "ES-C294-cuchillo",
         "language": "spanish",
         "position": 567,
@@ -339399,14 +339183,6 @@
         "lessonsEarly": 128
       },
       {
-        "lessonId": "FR-C13-rouge",
-        "language": "french",
-        "position": 127,
-        "word": "ou",
-        "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 128
-      },
-      {
         "lessonId": "ES-C294-escoba",
         "language": "spanish",
         "position": 571,
@@ -339447,30 +339223,6 @@
         "lessonsEarly": 124
       },
       {
-        "lessonId": "FR-C10-oe",
-        "language": "french",
-        "position": 101,
-        "word": "l'œil",
-        "taughtBy": "FR-C31-oeil",
-        "lessonsEarly": 122
-      },
-      {
-        "lessonId": "FR-C10-oe",
-        "language": "french",
-        "position": 101,
-        "word": "l'œuf",
-        "taughtBy": "FR-C30-oeuf",
-        "lessonsEarly": 121
-      },
-      {
-        "lessonId": "FR-C02-je",
-        "language": "french",
-        "position": 15,
-        "word": "j'ai",
-        "taughtBy": "FR-C14-jai",
-        "lessonsEarly": 117
-      },
-      {
         "lessonId": "ES-C456-aceptar",
         "language": "spanish",
         "position": 1407,
@@ -339495,14 +339247,6 @@
         "lessonsEarly": 112
       },
       {
-        "lessonId": "FR-C15-participe-ir-re",
-        "language": "french",
-        "position": 149,
-        "word": "finir",
-        "taughtBy": "FR-C37-finir",
-        "lessonsEarly": 112
-      },
-      {
         "lessonId": "ES-C456-sintesis-cuenta",
         "language": "spanish",
         "position": 1411,
@@ -339517,14 +339261,6 @@
         "word": "خرچ",
         "taughtBy": "UR-C209-kharch",
         "lessonsEarly": 110
-      },
-      {
-        "lessonId": "FR-C15-practice-compose",
-        "language": "french",
-        "position": 153,
-        "word": "finir",
-        "taughtBy": "FR-C37-finir",
-        "lessonsEarly": 108
       },
       {
         "lessonId": "ES-C445-exigente",
@@ -339695,68 +339431,12 @@
         "lessonsEarly": 92
       },
       {
-        "lessonId": "FR-C08-il-est",
-        "language": "french",
-        "position": 68,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
-        "lessonsEarly": 92
-      },
-      {
-        "lessonId": "FR-C08-une-heure",
-        "language": "french",
-        "position": 69,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
-        "lessonsEarly": 91
-      },
-      {
-        "lessonId": "FR-C08-midi",
-        "language": "french",
-        "position": 70,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
-        "lessonsEarly": 90
-      },
-      {
-        "lessonId": "FR-C08-minuit",
-        "language": "french",
-        "position": 71,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
-        "lessonsEarly": 89
-      },
-      {
-        "lessonId": "FR-C15-parler-parle-parlez",
-        "language": "french",
-        "position": 148,
-        "word": "vouloir",
-        "taughtBy": "FR-C33-vouloir",
-        "lessonsEarly": 89
-      },
-      {
         "lessonId": "PT-R155-first-pass-words-from-chapters-147-150",
         "language": "portuguese",
         "position": 768,
         "word": "partir",
         "taughtBy": "PT-C172-partir",
         "lessonsEarly": 89
-      },
-      {
-        "lessonId": "FR-C08-quart",
-        "language": "french",
-        "position": 72,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
-        "lessonsEarly": 88
-      },
-      {
-        "lessonId": "FR-C08-demie",
-        "language": "french",
-        "position": 73,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
-        "lessonsEarly": 87
       },
       {
         "lessonId": "ES-C303-ayuda",
@@ -339775,27 +339455,11 @@
         "lessonsEarly": 86
       },
       {
-        "lessonId": "FR-C08-moins",
-        "language": "french",
-        "position": 74,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
-        "lessonsEarly": 86
-      },
-      {
         "lessonId": "ES-C303-momento",
         "language": "spanish",
         "position": 613,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
-        "lessonsEarly": 85
-      },
-      {
-        "lessonId": "FR-C08-practice",
-        "language": "french",
-        "position": 75,
-        "word": "il est",
-        "taughtBy": "FR-C16-est",
         "lessonsEarly": 85
       },
       {
@@ -339852,14 +339516,6 @@
         "position": 690,
         "word": "hambre",
         "taughtBy": "ES-C334-hambre",
-        "lessonsEarly": 79
-      },
-      {
-        "lessonId": "FR-C24-aimer",
-        "language": "french",
-        "position": 198,
-        "word": "beaucoup",
-        "taughtBy": "FR-C40-beaucoup",
         "lessonsEarly": 79
       },
       {
@@ -339991,14 +339647,6 @@
         "lessonsEarly": 72
       },
       {
-        "lessonId": "FR-C38-consonne-finale",
-        "language": "french",
-        "position": 265,
-        "word": "petit",
-        "taughtBy": "FR-C58-petit-fils",
-        "lessonsEarly": 72
-      },
-      {
         "lessonId": "ES-C03-como-acento",
         "language": "spanish",
         "position": 31,
@@ -340055,22 +339703,6 @@
         "lessonsEarly": 69
       },
       {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "position": 34,
-        "word": "pain",
-        "taughtBy": "FR-C11-pain",
-        "lessonsEarly": 69
-      },
-      {
-        "lessonId": "FR-C38-pluriel-x",
-        "language": "french",
-        "position": 268,
-        "word": "fils",
-        "taughtBy": "FR-C58-petit-fils",
-        "lessonsEarly": 69
-      },
-      {
         "lessonId": "ES-C395-volver",
         "language": "spanish",
         "position": 1046,
@@ -340103,28 +339735,12 @@
         "lessonsEarly": 67
       },
       {
-        "lessonId": "FR-R38-ce-quon-nentend-pas",
-        "language": "french",
-        "position": 270,
-        "word": "petit",
-        "taughtBy": "FR-C58-petit-fils",
-        "lessonsEarly": 67
-      },
-      {
         "lessonId": "ES-C435-jubilado",
         "language": "spanish",
         "position": 1265,
         "word": "jubilarse",
         "taughtBy": "ES-C445-jubilarse",
         "lessonsEarly": 66
-      },
-      {
-        "lessonId": "FR-C28-sucre",
-        "language": "french",
-        "position": 214,
-        "word": "un peu",
-        "taughtBy": "FR-C40-un-peu",
-        "lessonsEarly": 64
       },
       {
         "lessonId": "ES-C398-dificil",
@@ -340141,14 +339757,6 @@
         "word": "se",
         "taughtBy": "PT-C22-encontrar-meet",
         "lessonsEarly": 63
-      },
-      {
-        "lessonId": "FR-C38-consonne-finale",
-        "language": "french",
-        "position": 265,
-        "word": "grand",
-        "taughtBy": "FR-C56-grand-pere",
-        "lessonsEarly": 62
       },
       {
         "lessonId": "ES-C308-nino",
@@ -340183,35 +339791,11 @@
         "lessonsEarly": 61
       },
       {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 36,
-        "word": "mère",
-        "taughtBy": "FR-C10-mere",
-        "lessonsEarly": 61
-      },
-      {
         "lessonId": "ES-C477-multa",
         "language": "spanish",
         "position": 1526,
         "word": "aparcar",
         "taughtBy": "ES-C489-aparcar",
-        "lessonsEarly": 60
-      },
-      {
-        "lessonId": "FR-C38-feminin-e",
-        "language": "french",
-        "position": 267,
-        "word": "grand",
-        "taughtBy": "FR-C56-grand-pere",
-        "lessonsEarly": 60
-      },
-      {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 36,
-        "word": "père",
-        "taughtBy": "FR-C10-pere",
         "lessonsEarly": 60
       },
       {
@@ -340236,22 +339820,6 @@
         "position": 1250,
         "word": "préstamo",
         "taughtBy": "ES-C441-prestamo",
-        "lessonsEarly": 57
-      },
-      {
-        "lessonId": "FR-C15-passe-simple",
-        "language": "french",
-        "position": 154,
-        "word": "café",
-        "taughtBy": "FR-C28-cafe",
-        "lessonsEarly": 57
-      },
-      {
-        "lessonId": "FR-R38-ce-quon-nentend-pas",
-        "language": "french",
-        "position": 270,
-        "word": "grand",
-        "taughtBy": "FR-C56-grand-pere",
         "lessonsEarly": 57
       },
       {
@@ -340447,14 +340015,6 @@
         "lessonsEarly": 40
       },
       {
-        "lessonId": "FR-C27-se-lever",
-        "language": "french",
-        "position": 208,
-        "word": "de",
-        "taughtBy": "FR-C35-de",
-        "lessonsEarly": 40
-      },
-      {
         "lessonId": "ES-C312-maleta",
         "language": "spanish",
         "position": 659,
@@ -340463,35 +340023,11 @@
         "lessonsEarly": 39
       },
       {
-        "lessonId": "FR-C08-midi",
-        "language": "french",
-        "position": 70,
-        "word": "douze",
-        "taughtBy": "FR-C12-douze",
-        "lessonsEarly": 39
-      },
-      {
-        "lessonId": "FR-C32-pourquoi",
-        "language": "french",
-        "position": 234,
-        "word": "quoi",
-        "taughtBy": "FR-C39-quoi",
-        "lessonsEarly": 39
-      },
-      {
         "lessonId": "ES-C312-mapa",
         "language": "spanish",
         "position": 660,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
-        "lessonsEarly": 38
-      },
-      {
-        "lessonId": "FR-C32-pourquoi",
-        "language": "french",
-        "position": 234,
-        "word": "que",
-        "taughtBy": "FR-C39-que",
         "lessonsEarly": 38
       },
       {
@@ -340559,22 +340095,6 @@
         "lessonsEarly": 34
       },
       {
-        "lessonId": "FR-C16-pas-tout-mouvement",
-        "language": "french",
-        "position": 172,
-        "word": "courir",
-        "taughtBy": "FR-C26-courir",
-        "lessonsEarly": 34
-      },
-      {
-        "lessonId": "FR-C28-sucre",
-        "language": "french",
-        "position": 214,
-        "word": "de",
-        "taughtBy": "FR-C35-de",
-        "lessonsEarly": 34
-      },
-      {
         "lessonId": "FR-R241-first-pass-words-from-chapters-233-236",
         "language": "french",
         "position": 1290,
@@ -340588,38 +340108,6 @@
         "position": 665,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "FR-C06-huit",
-        "language": "french",
-        "position": 53,
-        "word": "octobre",
-        "taughtBy": "FR-C09-octobre",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "FR-C06-neuf",
-        "language": "french",
-        "position": 54,
-        "word": "novembre",
-        "taughtBy": "FR-C09-novembre",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "FR-C06-sept",
-        "language": "french",
-        "position": 52,
-        "word": "septembre",
-        "taughtBy": "FR-C09-septembre",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "FR-C16-pas-tout-mouvement",
-        "language": "french",
-        "position": 172,
-        "word": "marcher",
-        "taughtBy": "FR-C26-marcher",
         "lessonsEarly": 33
       },
       {
@@ -340719,14 +340207,6 @@
         "lessonsEarly": 28
       },
       {
-        "lessonId": "FR-C30-beurre",
-        "language": "french",
-        "position": 220,
-        "word": "de",
-        "taughtBy": "FR-C35-de",
-        "lessonsEarly": 28
-      },
-      {
         "lessonId": "MR-R201-first-pass-words-from-chapters-193-196",
         "language": "marathi",
         "position": 1075,
@@ -340743,14 +340223,6 @@
         "lessonsEarly": 27
       },
       {
-        "lessonId": "FR-C16-practice-etre-past",
-        "language": "french",
-        "position": 179,
-        "word": "courir",
-        "taughtBy": "FR-C26-courir",
-        "lessonsEarly": 27
-      },
-      {
         "lessonId": "MR-W01-ii-matra",
         "language": "marathi",
         "position": 7,
@@ -340759,27 +340231,11 @@
         "lessonsEarly": 27
       },
       {
-        "lessonId": "FR-C14-jai-vingt-ans",
-        "language": "french",
-        "position": 142,
-        "word": "être",
-        "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 26
-      },
-      {
         "lessonId": "ES-C390-planta",
         "language": "spanish",
         "position": 1022,
         "word": "llegar",
         "taughtBy": "ES-C395-llegar",
-        "lessonsEarly": 25
-      },
-      {
-        "lessonId": "FR-C14-ont",
-        "language": "french",
-        "position": 138,
-        "word": "ils sont",
-        "taughtBy": "FR-C16-sont",
         "lessonsEarly": 25
       },
       {
@@ -340815,30 +340271,6 @@
         "lessonsEarly": 24
       },
       {
-        "lessonId": "FR-C14-practice",
-        "language": "french",
-        "position": 145,
-        "word": "être",
-        "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 23
-      },
-      {
-        "lessonId": "FR-C14-practice-avoir",
-        "language": "french",
-        "position": 140,
-        "word": "ils sont",
-        "taughtBy": "FR-C16-sont",
-        "lessonsEarly": 23
-      },
-      {
-        "lessonId": "FR-C32-pourquoi",
-        "language": "french",
-        "position": 234,
-        "word": "parce que",
-        "taughtBy": "FR-C36-parce-que",
-        "lessonsEarly": 23
-      },
-      {
         "lessonId": "ES-C454-servicio",
         "language": "spanish",
         "position": 1395,
@@ -340868,22 +340300,6 @@
         "position": 60,
         "word": "mars",
         "taughtBy": "FR-C09-mars",
-        "lessonsEarly": 18
-      },
-      {
-        "lessonId": "FR-C14-practice",
-        "language": "french",
-        "position": 145,
-        "word": "ils sont",
-        "taughtBy": "FR-C16-sont",
-        "lessonsEarly": 18
-      },
-      {
-        "lessonId": "FR-C16-bascule",
-        "language": "french",
-        "position": 173,
-        "word": "chien",
-        "taughtBy": "FR-C22-chien-chat",
         "lessonsEarly": 18
       },
       {
@@ -340924,14 +340340,6 @@
         "position": 274,
         "word": "gato",
         "taughtBy": "ES-C32-gato",
-        "lessonsEarly": 16
-      },
-      {
-        "lessonId": "FR-C14-jai-vingt-ans",
-        "language": "french",
-        "position": 142,
-        "word": "je suis",
-        "taughtBy": "FR-C16-suis",
         "lessonsEarly": 16
       },
       {
@@ -340991,14 +340399,6 @@
         "lessonsEarly": 13
       },
       {
-        "lessonId": "FR-C14-practice",
-        "language": "french",
-        "position": 145,
-        "word": "je suis",
-        "taughtBy": "FR-C16-suis",
-        "lessonsEarly": 13
-      },
-      {
         "lessonId": "ES-C07-practice",
         "language": "spanish",
         "position": 103,
@@ -341020,14 +340420,6 @@
         "position": 66,
         "word": "mars",
         "taughtBy": "FR-C09-mars",
-        "lessonsEarly": 12
-      },
-      {
-        "lessonId": "FR-C38-consonne-finale",
-        "language": "french",
-        "position": 265,
-        "word": "beaucoup",
-        "taughtBy": "FR-C40-beaucoup",
         "lessonsEarly": 12
       },
       {
@@ -341055,14 +340447,6 @@
         "lessonsEarly": 9
       },
       {
-        "lessonId": "FR-C01-salut",
-        "language": "french",
-        "position": 0,
-        "word": "bonjour",
-        "taughtBy": "FR-C01-bonjour",
-        "lessonsEarly": 9
-      },
-      {
         "lessonId": "FR-C32-combien",
         "language": "french",
         "position": 233,
@@ -341087,27 +340471,11 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "FR-C01-bon",
-        "language": "french",
-        "position": 6,
-        "word": "bonne nuit",
-        "taughtBy": "FR-C01-bonne-nuit",
-        "lessonsEarly": 7
-      },
-      {
         "lessonId": "FR-C16-sommes",
         "language": "french",
         "position": 161,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "FR-R38-ce-quon-nentend-pas",
-        "language": "french",
-        "position": 270,
-        "word": "beaucoup",
-        "taughtBy": "FR-C40-beaucoup",
         "lessonsEarly": 7
       },
       {
@@ -341124,14 +340492,6 @@
         "position": 331,
         "word": "por",
         "taughtBy": "ES-C51-por",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "FR-C01-bon",
-        "language": "french",
-        "position": 6,
-        "word": "nuit",
-        "taughtBy": "FR-C01-nuit",
         "lessonsEarly": 6
       },
       {
@@ -341175,60 +340535,12 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "FR-C01-bon",
-        "language": "french",
-        "position": 6,
-        "word": "bonsoir",
-        "taughtBy": "FR-C01-bonsoir",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "FR-C01-le-la",
-        "language": "french",
-        "position": 7,
-        "word": "nuit",
-        "taughtBy": "FR-C01-nuit",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 14,
-        "word": "tu",
-        "taughtBy": "FR-C02-tu-vous",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 14,
-        "word": "vous",
-        "taughtBy": "FR-C02-tu-vous",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "FR-C16-sont",
         "language": "french",
         "position": 163,
         "word": "être",
         "taughtBy": "FR-C16-ser-estar",
         "lessonsEarly": 5
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 14,
-        "word": "je m'appelle…",
-        "taughtBy": "FR-C02-je-mappelle",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "FR-C02-me",
-        "language": "french",
-        "position": 16,
-        "word": "comment",
-        "taughtBy": "FR-C02-comment",
-        "lessonsEarly": 4
       },
       {
         "lessonId": "FR-C16-esse",
@@ -341268,30 +340580,6 @@
         "position": 1246,
         "word": "garaje",
         "taughtBy": "ES-C433-garaje",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "FR-C01-bon",
-        "language": "french",
-        "position": 6,
-        "word": "bonjour",
-        "taughtBy": "FR-C01-bonjour",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "FR-C02-me",
-        "language": "french",
-        "position": 16,
-        "word": "tu",
-        "taughtBy": "FR-C02-tu-vous",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "FR-C03-practice",
-        "language": "french",
-        "position": 30,
-        "word": "à bientôt",
-        "taughtBy": "FR-C04-a-bientot",
         "lessonsEarly": 3
       },
       {
@@ -341380,38 +340668,6 @@
         "position": 1488,
         "word": "avanzado",
         "taughtBy": "ES-C471-avanzado",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C01-bon",
-        "language": "french",
-        "position": 6,
-        "word": "jour",
-        "taughtBy": "FR-C01-jour",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C01-bonjour",
-        "language": "french",
-        "position": 9,
-        "word": "bonsoir",
-        "taughtBy": "FR-C01-bonsoir",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C04-a-plus-tard",
-        "language": "french",
-        "position": 32,
-        "word": "à demain",
-        "taughtBy": "FR-C04-a-demain",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C14-jai-vingt-ans",
-        "language": "french",
-        "position": 142,
-        "word": "i am twenty",
-        "taughtBy": "FR-C14-avoir-etre-langues",
         "lessonsEarly": 2
       },
       {
@@ -341679,94 +340935,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C01-bien",
-        "language": "french",
-        "position": 5,
-        "word": "bon",
-        "taughtBy": "FR-C01-bon",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C01-le-la",
-        "language": "french",
-        "position": 7,
-        "word": "jour",
-        "taughtBy": "FR-C01-jour",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 14,
-        "word": "je",
-        "taughtBy": "FR-C02-je",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C03-merci",
-        "language": "french",
-        "position": 24,
-        "word": "de rien",
-        "taughtBy": "FR-C03-de-rien",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C03-practice",
-        "language": "french",
-        "position": 30,
-        "word": "au revoir",
-        "taughtBy": "FR-C04-au-revoir",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C04-a-bientot",
-        "language": "french",
-        "position": 33,
-        "word": "à demain",
-        "taughtBy": "FR-C04-a-demain",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C04-a-plus-tard",
-        "language": "french",
-        "position": 32,
-        "word": "à bientôt",
-        "taughtBy": "FR-C04-a-bientot",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C04-au-revoir",
-        "language": "french",
-        "position": 31,
-        "word": "à plus tard",
-        "taughtBy": "FR-C04-a-plus-tard",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "position": 42,
-        "word": "travailler",
-        "taughtBy": "FR-C05-travailler",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C05-parler",
-        "language": "french",
-        "position": 41,
-        "word": "habiter",
-        "taughtBy": "FR-C05-habiter",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C05-travailler",
-        "language": "french",
-        "position": 43,
-        "word": "je parle français",
-        "taughtBy": "FR-C05-je-parle-francais",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "FR-C14-quel-age",
         "language": "french",
         "position": 143,
@@ -341822,7 +340990,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1401,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 156
+        "forwardReferences": 52
       },
       {
         "language": "german",
@@ -342029,7 +341197,7 @@
         "R3": 15983,
         "R4": 24355
       },
-      "forwardReferences": 892
+      "forwardReferences": 788
     }
   },
   "scriptClosure": {
@@ -363120,7 +362288,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 156,
+        "forwardReferences": 52,
         "atomsTaught": 1401,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2970,
@@ -363138,7 +362306,7 @@
           {
             "language": "french",
             "kind": "forward-language",
-            "count": 156,
+            "count": 52,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -363160,7 +362328,7 @@
         "next": {
           "language": "french",
           "kind": "forward-language",
-          "count": 156,
+          "count": 52,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -364376,7 +363544,7 @@
       {
         "language": "french",
         "kind": "forward-language",
-        "count": 156,
+        "count": 52,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -454885,13 +454053,13 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28638,
-    "usesBeforeIntroduction": 47022,
-    "technicalUsesBeforeIntroduction": 6619,
+    "usesBeforeIntroduction": 47028,
+    "technicalUsesBeforeIntroduction": 6620,
     "technicalLessons": 3818,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2133
+        "lessons": 2134
       },
       {
         "term": "noun",
