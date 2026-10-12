@@ -131,6 +131,11 @@ async function main(): Promise<void> {
   const port = await listen(server);
   const summaries: TargetSummary[] = [];
   try {
+    const firstTarget = targets[0];
+    if (firstTarget !== undefined) {
+      await discardWarmupAudit(() =>
+        runLighthouse(`http://127.0.0.1:${port}${firstTarget.route}`, chromePath));
+    }
     for (const target of targets) {
       const html = await readBoundedUtf8(
         resolve(here, target.document),
@@ -189,6 +194,41 @@ async function main(): Promise<void> {
       ` a=${target.lighthouse?.accessibility.toFixed(2)}`)
       .join(", ")}\n`,
   );
+}
+
+/**
+ * One unrecorded audit before the first recorded sample.
+ *
+ * The first Chrome launch on a freshly provisioned hosted runner pays costs
+ * that no later launch pays: the OS scans the new browser binary, builds its
+ * font cache, and warms the disk cache. Those costs land on
+ * whichever route is audited first, which is always the landing page, so its
+ * samples alone have dipped below the budget on unchanged bytes:
+ *
+ *   2026-10-05  landing 0.85 on Windows, 0.92 on macOS (same bytes passed)
+ *   2026-10-12  landing median 0.94 on Windows; blog routes passed
+ *
+ * The warm-up runs the same bounded, sandboxed, fresh-process audit as a
+ * real sample, against the first target, and its result is dropped. It is
+ * not evidence, so its failure is not a gate failure either: every recorded
+ * sample after it still launches its own browser and must pass on its own.
+ * Nothing about the budgets, the sample count, or the retained summary
+ * changes.
+ */
+export async function discardWarmupAudit(
+  audit: () => Promise<unknown>,
+  report: (line: string) => void = line => process.stderr.write(line),
+): Promise<void> {
+  try {
+    await audit();
+  } catch (error) {
+    const message = boundedError(error);
+    // A browser that could not be retired may still be running and would
+    // slow every recorded sample, so that one failure is not dropped.
+    if (message.includes("retirement")) throw error;
+    // Anything else is dropped: the recorded samples are the only evidence.
+    report(`warm-up audit dropped: ${message}\n`);
+  }
 }
 
 async function runLighthouse(url: string, chromePath: string): Promise<unknown> {

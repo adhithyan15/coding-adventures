@@ -7,12 +7,43 @@ import {
   boundedError,
   chromeFlagsFor,
   createBoundedChromeLauncher,
+  discardWarmupAudit,
   reportedChromeVersionForPlatform,
   readChromeStartupDiagnostic,
   readBoundedUtf8,
 } from "./release-web-quality.js";
 
 describe("Forme release web-quality effects", () => {
+  it("runs the warm-up audit exactly once and drops its result", async () => {
+    let calls = 0;
+    await expect(discardWarmupAudit(async () => {
+      calls += 1;
+      return { categories: { performance: { score: 0.1 } } };
+    })).resolves.toBeUndefined();
+    expect(calls).toBe(1);
+  });
+
+  it("does not turn a failed warm-up audit into a gate failure", async () => {
+    let calls = 0;
+    const lines: string[] = [];
+    await expect(discardWarmupAudit(async () => {
+      calls += 1;
+      throw new Error("Chrome exited before exposing a reachable debugging port");
+    }, line => lines.push(line))).resolves.toBeUndefined();
+    expect(calls).toBe(1);
+    expect(lines).toEqual([
+      "warm-up audit dropped: Chrome exited before exposing a reachable debugging port\n",
+    ]);
+  });
+
+  it("still fails when the warm-up browser could not be retired", async () => {
+    const lines: string[] = [];
+    await expect(discardWarmupAudit(async () => {
+      throw new Error("Chrome retirement timed out");
+    }, line => lines.push(line))).rejects.toThrow("Chrome retirement timed out");
+    expect(lines).toEqual([]);
+  });
+
   it("uses the pinned setup action's file-metadata version on Windows", () => {
     expect(reportedChromeVersionForPlatform("win32", "154.0.8037.92")).toBe("154.0.8037.92");
     expect(() => reportedChromeVersionForPlatform("win32", undefined)).toThrow(/reported/);
