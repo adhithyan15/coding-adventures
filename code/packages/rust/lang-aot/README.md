@@ -91,7 +91,9 @@ over a proven nonpositive unit sign root, whose narrower tower remains finite;
 a positive-capable fourth layer or a fifth nonpositive layer would overflow
 binary64 before `ln` and therefore remains gated.
 The same bounded proof extends to exactly three built-in exponentials per
-branch; missing, deeper, non-runtime-real, and overridden branches remain gated.
+branch. It also extends to exactly four built-in exponentials per branch when
+every root is proven nonpositive; positive-capable, missing, deeper,
+non-runtime-real, and overridden branches remain gated.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

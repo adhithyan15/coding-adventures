@@ -8,6 +8,11 @@ import { summarizeGentleRamp, type GentleRampReport } from "./gentle-ramp.js";
 import { runLevelGate, type LevelGateReport } from "./level-gate.js";
 import type { AssessmentPolicy } from "./assessment.js";
 import { measureWritingStages, type WritingStageReport } from "./writing-stages.js";
+import {
+  measureEtymologyCoverage,
+  renderEtymologyCoverage,
+  type EtymologyCoverageSummary,
+} from "./etymology-coverage.js";
 import type {
   BookCorpus,
   ChapterPolicy,
@@ -163,6 +168,24 @@ export interface CurriculumGapReport {
      * how to say it.
      */
     headwordsWithoutRomanization: number;
+    /**
+     * HL24 §9: lessons that introduce a word -- a `<XX>-LEX-` atom, or `type:
+     * word` / `phrase` -- the denominator of the two etymology counts below.
+     */
+    wordLessons: number;
+    /**
+     * HL24 §9: word lessons whose `etymology_hook` is empty or whitespace.
+     *
+     * The hook reaches the app's cards and nothing that prints, which is why
+     * the next count exists beside it.
+     */
+    wordLessonsWithoutEtymologyHook: number;
+    /**
+     * HL24 §9: word lessons whose BODY -- what the book prints and narration
+     * reads -- carries no recognisable origin statement. A conservative
+     * pattern match; see `etymology-coverage.ts` for its known misses.
+     */
+    wordLessonsWithoutVisibleEtymology: number;
     /** HL09: lessons with no declared reading order. Until zero, the rest is provisional. */
     lessonsWithoutSequence: number;
     /** HL09: lessons reviewing a lesson the learner has not reached yet. */
@@ -243,6 +266,15 @@ export interface CurriculumGapReport {
    * reader arrives already knowing the alphabet.
    */
   scriptClosure: ScriptClosureReport;
+  /**
+   * HL24 §9 -- does every new word say where it comes from?
+   *
+   * Always present: like `continuity` it needs no policy, only the lessons.
+   * Per track and summed, WITHOUT the per-lesson gap list: that list runs to
+   * tens of thousands of entries and belongs to the ratchet test that names
+   * the lessons behind a moved count, not to a report read by people.
+   */
+  etymologyCoverage: EtymologyCoverageSummary;
   /** HL19: cumulative writing capability, distinct from incidental writing practice. */
   writingStages?: WritingStageReport;
   /**
@@ -673,6 +705,14 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   // never wire these sections differently.
   const { levels, ramp, continuity, scriptClosure, writingStages, levelGate } =
     buildLevelGateSections(input);
+  // One linear pass over the lessons. The gap list is dropped here rather
+  // than inside the measure, because the test suite needs it and the report
+  // does not.
+  const etymologyMeasured = measureEtymologyCoverage(lessons);
+  const etymologyCoverage: EtymologyCoverageSummary = {
+    tracks: etymologyMeasured.tracks,
+    summary: etymologyMeasured.summary,
+  };
 
   // HL05 chapter gates. Only run when the caller supplied both the ledgers and the
   // policy: the representativeness rule is meaningless without its threshold, and a
@@ -732,6 +772,9 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       scriptExposureExemptedGlyphs: scriptClosure.summary.exposureExemptedGlyphs,
       tracksTeachingNoScript: scriptClosure.summary.tracksTeachingNothing,
       headwordsWithoutRomanization: scriptClosure.summary.headwordsWithoutRomanization,
+      wordLessons: etymologyCoverage.summary.wordLessons,
+      wordLessonsWithoutEtymologyHook: etymologyCoverage.summary.wordLessonsWithoutEtymologyHook,
+      wordLessonsWithoutVisibleEtymology: etymologyCoverage.summary.wordLessonsWithoutVisibleEtymology,
       lessonsWithoutSequence: continuity.summary.lessonsWithoutSequence,
       forwardReviews: continuity.summary.forwardReviews,
       atomsNeverRevisited: continuity.summary.atomsNeverRevisited,
@@ -762,6 +805,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     ramp,
     continuity,
     scriptClosure,
+    etymologyCoverage,
     writingStages,
     gentleRamp,
     levelGate,
@@ -825,6 +869,9 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
         .map(([name, count]) => `${name} ${count}`)
         .join(", "),
     `forward references: ${report.continuity.summary.forwardReferences} uses of material a later lesson teaches`,
+    `etymology: ${summary.wordLessonsWithoutEtymologyHook} of ${summary.wordLessons} word-introducing lessons ` +
+      `carry no etymology_hook; ${summary.wordLessonsWithoutVisibleEtymology} show the reader no origin ` +
+      `in the body (per track below)`,
     ...(report.writingStages
       ? [
           `writing stages: ${report.writingStages.summary.tracksCompleteAtPreA1}/${report.writingStages.summary.tracks} ` +
@@ -1035,6 +1082,7 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
     );
   }
   lines.push("", ...renderModalitySection(report.modality));
+  lines.push("", ...renderEtymologyCoverage(report.etymologyCoverage));
   lines.push("");
   return `${lines.join("\n")}\n`;
 }

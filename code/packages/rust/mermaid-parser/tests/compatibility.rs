@@ -2137,6 +2137,18 @@ fn swimlane_styled_inline_labels_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_edge_ids_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done",
+    ).expect("Flowchart edge identifiers should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
+        vec![Some("submit"), Some("release")]);
+    assert_eq!(diagram.edges[0].from, "request");
+    assert_eq!(diagram.edges[1].to, "done");
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

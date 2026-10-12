@@ -255,6 +255,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 from_center, *from_width, *from_height, to_center, *to_width, *to_height,
             );
             Some(LayoutedSwimlaneEdge {
+                id: edge.id.clone(),
                 from,
                 to,
                 label: edge.label.clone(),
@@ -806,7 +807,7 @@ mod tests {
                 SwimlaneNode { id: "ship".into(), label: "Ship".into(), lane_id: Some("store".into()), shape: DiagramShape::RoundedRect, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![SwimlaneEdge {
-                from: "choose".into(), to: "ship".into(), label: None,
+                id: None, from: "choose".into(), to: "ship".into(), label: None,
                 kind: SwimlaneEdgeKind::Directed,
                 start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Point,
                 min_length: 1,
