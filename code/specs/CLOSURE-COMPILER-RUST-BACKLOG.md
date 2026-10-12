@@ -2,29 +2,53 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
-CV04a bounded-root reconciliation (October12): actual main
-`e18c68942668e04b1993c8b3a25d3be2085d9568` (#17352) conflicted with publishedaf
-in adjacent compiler tests and two README paragraphs. Spec50a863a precedes
-merged resolutionf120ade4: keep both sides' tests/docs and the #17350 assignment
-pre-proof AND post-proof guard. Independent review found a direct-output proof
-consumer still caching admission across selector lowering: [#17363](https://github.com/adhithyan15/coding-adventures/issues/17363).
-Spec2ecbe83e preceded actual redf6c2036e (0PASS/2FAIL: admission plus separate
-four-layer value-control nesting-cap rejection). Refined supported control
-spec c1071c07/corrected red270458c7 actually1PASS/1FAIL: refusal fails/value passes.
-No wrong-number/UB claim or production135 nesting-limit change. Direct-output
-post-proof repair plus root-position/value/native controls are implemented;
-affected compiler/LANG/full native validation and exact-final review PENDING.
-Initial repaired679 focused6 PASS, full-cone927PASS/1FAIL at16targets remains
-rejected: original conditional user-defined abs/literal output lost static
-Boolean tracking during a call. Spec22927c precedes output-only post-proof
-refinement: both top-level alternatives independently runtime-safe or call-free
-context-free finite literals, initial proof still required; never reuse mutable
-selector facts or bypass nested bounded-root checks. Original test retained;
-full rerun/native3/1.5 compatibility acceptance remains PENDING.
-All prior receipts retain actual source attribution; source/shared PR17288 stays
-sole active, auto-merge OFF; currentpublishedaf hostedCI cannot accept the new
-unpublished repair. Miri **DEFERRED/PENDING**, frozenrun/497inputs/receipts/target
-untouched without polling/termination. Full parity/CV04b/output/lineage OPEN.
+CV04a bounded-root/direct-output reconciliation (October12): main
+`e18c68942668e04b1993c8b3a25d3be2085d9568` (#17352) conflicted with publishedaf in adjacent compiler tests
+and two README descriptions. Spec50a863a/resolutionf120 retained both sides,
+all nine upstream local-root classifier changes and #17350 assignment guard.
+[#17363](https://github.com/adhithyan15/coding-adventures/issues/17363) independently
+identified a direct-output proof cached across by-name selector promotion.
+Spec2ecbe83 preceded redf6c2036e:0PASS/2FAIL (admission plus distinct four-layer
+value-input135-depth rejection). Spec c107/corrected red270458c7:1PASS/1FAIL,
+expected refusalFAIL/valuePASS. No wrong-number/UB or limit-weakening claim.
+
+First guard679 focused6PASS/full927PASS1FAIL16targets remains rejected: unchanged
+conditional user-defined abs/literal output lost static Boolean tracking.
+Spec22927c precedes output-only posthelper: initial proof AND current runtime
+proof, or strict TOP-LEVEL conditional with BOTH branches runtime-proven or
+no-call context-free finite literal arithmetic. No resurrected mutable selector/
+static-variable facts/global literal laundering/nested multiplication fallback.
+Original compatibility test stays unchanged; corrected tracked-variable refusal
+passes. Intermediate7a invalid-declaration fixture failure remains distinct.
+
+Actual runtime `fa2e2a1ca45686c9dc8bc963050ef1db4938565c` passed929 compiler/shared tests/docs/16targets,
+strict4 all-target Clippy with unknown-lint denial, actual document reconstruction
+and four new exact native controls: selected sums5/2, override/literal3/1.5,
+direct value selectors1/0,1/1,3/1,4/15, and upstream bounded-root case. Both
+alias positions, all four exponential families, prior quadruple2/3 and every
+old resource/refusal assertion remain. Its whole receipt later FAILED two
+lesson filename slugs and is preserved. Docs-only `200762634d24ec9621f66104716e64f3126c49ed` retains seven
+complete runtime/config/spec/TypeScript objects, corrects1073 lessons/whitespace,
+and actually runs all11 unchanged production BUILD selections and36 remaining
+native cases (40 total). Together these attributable native executions pass
+**1242 tests/docs across116 targets**,0failures/
+1existing ignore; focused8 repeats are excluded. No full unfiltered LANG claim.
+
+All other Rust entries, whole programs/scripts/CI/grammars and fourteen diagram
+package objects preserve earlier source/execution. Diagram752/32 remains at081;
+controlledQt629/25/strict6/Journal3/Python43/Ruff remains at979, retaining its
+profile failure and separate fresh-profile acceptance. No older execution is
+relabeled. All reds/compile/input/compatibility/lesson/preflight failures remain.
+
+Final backlog-only head requires complete source/config/lesson proof plus exact
+independent security before non-force samePR17288 publication. Fresh exact-head
+required terminal acceptable checks, whole3OS real Closurec logs, clean reviews/
+conflict-free state, then actual fetched-main/fullpayload mode/type/blob proof
+precede cleanup/CV04b. Old publishedaf CI cannot accept this source. Auto-merge
+OFF until those gates. Full local final-source Miri **DEFERRED/PENDING**, never
+passed; frozenrun/checkout/497inputs/receipts/target untouched without polling.
+Full parity/CV04b/ingestion/output-byte joins/all transformation lineage OPEN;
+baseESTree/own types/no new crates.io deps, fullgoal/heartbeat ACTIVE.
 
 CV04a current-main integration checkpoint (October12): main #17353 adds Swimlane
 edge curves. Actual isolated merge `a6aa4ad14bd85823b4fcb4c9b2d3e2c85b19b9bd`
@@ -49,14 +73,10 @@ sole active PR #17288, auto-merge off.
 Full Miri **DEFERRED/PENDING**, frozen run/497 inputs/receipts untouched.
 CV04b/full parity/source-output/full transformation lineage remain OPEN.
 **Last reprioritized:** 2026-10-12
-**Current selection:** exact lexical source intervals and coordinate ownership,
-tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/16970),
-delivery branch `codex/closurec-source-spans-delivery-20261011`. CV03 merged and is verified;
-its managed worktree is archived. The detailed [CV04 specification](CV04-exact-lexical-source-intervals.md)
-first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
-source inventory/ingestion-leaf reuse. CV04a implementation and attributable local validation pass; current-main native reconciliation is recorded below. PR #17288 awaits exact-final review and fresh required CI;
-#16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `170ce3532ed40072e1f62a2c76bbe8675c46a554`
+**Current selection:** CV04a exact lexical source intervals and bounded
+shared-consumer/native reconciliation, sole PR #17288. CV04b ingestion/wire
+contract and full Closure parity/source-output/transformation lineage remain open.
+**Current audit base:** `e18c68942668e04b1993c8b3a25d3be2085d9568`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
