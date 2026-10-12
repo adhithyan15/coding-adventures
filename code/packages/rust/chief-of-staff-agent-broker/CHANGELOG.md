@@ -8,7 +8,9 @@
   `process::run_inherited` (D18S P2.6d-2c). Every binary that runs a broker,
   the production one and each test fixture, is now one call to it, instead
   of each carrying its own copy of the descriptor checks. The library is
-  `deny(unsafe_code)`, with `process` its single exception.
+  `deny(unsafe_code)`, with `process` its single exception, which a unit
+  test enforces. `run_inherited` documents that it may only be the whole
+  of `main` in a process the broker launcher exec'd.
 
 ### Added
 

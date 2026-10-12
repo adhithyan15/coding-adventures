@@ -1212,9 +1212,10 @@ fn broker_key_files(config: &ChiefConfig, home: &Path) -> Result<BrokerKeyFiles,
 /// Compose the exact production host data plane from validated daemon authority.
 ///
 /// The returned dispatcher reloads durable pipeline authorization for every
-/// request. Non-empty data-plane declarations provision the file-backed channel
-/// keys and explicit Ollama providers used by [`run`]; absent or empty
-/// declarations retain the redacted unavailable service.
+/// request. Configured Ollama models and smart-home tool grants provision the
+/// model operations used by [`run`]; without them the redacted unavailable
+/// service answers. Channel keys play no part: they are the brokers'
+/// ([`compose_channel_brokers`], D18S P2.6d-2c).
 pub fn compose_host_data_plane(
     config: &ChiefConfig,
     home: &Path,

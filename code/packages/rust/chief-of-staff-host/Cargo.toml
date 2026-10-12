@@ -6,7 +6,7 @@ description = "Concrete authenticated host executable for Chief agent packages"
 license = "MIT"
 
 [dependencies]
-chief-of-staff-agent-broker = { path = "../chief-of-staff-agent-broker" }
+chief-of-staff-agent-broker = { path = "../chief-of-staff-agent-broker", optional = true }
 chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
 chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
@@ -47,9 +47,24 @@ name = "chief-of-staff-host"
 path = "src/main.rs"
 test = false
 
+[features]
+# Builds the test-fixture broker the end-to-end tests launch. Off by default,
+# so neither `cargo install` nor a release build of the host produces it, and
+# the host does not link the broker library. BUILD enables it.
+test-broker = ["dep:chief-of-staff-agent-broker"]
+
 # A test fixture, not part of the host: the end-to-end tests launch it as
 # the agent's channel broker. Its body is the production broker's.
 [[bin]]
 name = "chief-of-staff-host-test-broker"
 path = "src/bin/test_broker.rs"
 test = false
+required-features = ["test-broker"]
+
+[[test]]
+name = "level_one_host"
+required-features = ["test-broker"]
+
+[[test]]
+name = "weather_reference_agent"
+required-features = ["test-broker"]

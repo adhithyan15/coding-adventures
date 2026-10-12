@@ -937,3 +937,36 @@ pub fn callbacks_for(request: &DataPlaneRequest) -> &'static [CallbackOp] {
         _ => &[],
     }
 }
+
+/// The library is `deny(unsafe_code)`, not `forbid`, so that `process` can
+/// allow it. That makes an `allow` anywhere else compile silently; this
+/// keeps it to `process.rs`.
+#[cfg(test)]
+mod unsafe_scope {
+    #[test]
+    fn only_the_process_module_allows_unsafe_code() {
+        let source = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+        let mut stack = vec![source.clone()];
+        while let Some(directory) = stack.pop() {
+            for entry in std::fs::read_dir(&directory).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    stack.push(path);
+                    continue;
+                }
+                if path.extension().is_none_or(|extension| extension != "rs") {
+                    continue;
+                }
+                let text = std::fs::read_to_string(&path).unwrap();
+                // Spelled in two halves, so this file does not match itself.
+                let allows = text.contains(concat!("allow", "(unsafe_code)"));
+                let relative = path.strip_prefix(&source).unwrap();
+                if relative == std::path::Path::new("process.rs") {
+                    assert!(allows, "process.rs is the module that allows unsafe code");
+                } else {
+                    assert!(!allows, "{} allows unsafe code", relative.display());
+                }
+            }
+        }
+    }
+}

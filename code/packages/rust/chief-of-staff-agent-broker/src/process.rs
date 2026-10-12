@@ -29,6 +29,14 @@ use std::process::ExitCode;
 /// Run this process as a broker: stdin and stdout are its pipes to the
 /// supervisor, and descriptors 3..3+n are its keys. Every binary that runs
 /// a broker is `fn main() -> ExitCode { run_inherited() }`.
+///
+/// **Call it only as the whole of `main`, in a process the broker launcher
+/// exec'd.** It takes ownership of descriptors 3..3+n on the strength of
+/// their having been inherited across that exec, which only the launcher
+/// arranges. Called anywhere else, where this process already owns one of
+/// those numbers (a log file, a socket), it would make a second owner of
+/// it. The tripwire (exactly those descriptors open above stderr) and the
+/// Bootstrap frame it needs on stdin make that unlikely, not impossible.
 pub fn run_inherited() -> ExitCode {
     match run() {
         Ok(()) => ExitCode::SUCCESS,

@@ -1953,8 +1953,20 @@ through S-I3 before two weeks are spent on Windows.
           they show the composition refusing instead, until P2.7b brings
           the broker to macOS.
 
-        **Status: done.** No channel key reaches the daemon process on any
-        platform, and no host bound to a channel runs without its broker.
+        **Status: done.** No channel key's bytes reach the daemon process
+        on any platform (the launcher opens each key file only to pass its
+        descriptor to the broker), and no host bound to a channel runs
+        without its broker.
+
+        Review notes, recorded:
+        - `process::run_inherited` is a safe function that adopts
+          descriptors 3..3+n. It is sound only as the whole of `main` in a
+          process the launcher exec'd, which its documentation says. The
+          library is `deny(unsafe_code)` so that this one module can
+          allow it, and a unit test keeps any other `allow` out.
+        - The host crate's test broker is behind the `test-broker`
+          feature, so a release build or `cargo install` of the host does
+          not produce it.
      3. **P2.6d-3:** the broker's sandbox plan (Linux, P2.4 applier):
         - its key descriptors and its pipes, nothing else;
         - no network;

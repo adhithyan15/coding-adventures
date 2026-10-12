@@ -59,7 +59,7 @@ impl HostDataPlaneDispatcher for UnavailableHostDataPlaneDispatcher {
     }
 }
 
-/// Fail-closed service used until channel-key and model-provider authorities are composed.
+/// Fail-closed service used when no model provider or tool grant is composed.
 #[derive(Default)]
 pub struct UnavailableHostDataPlaneService;
 
