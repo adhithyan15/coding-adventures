@@ -121,3 +121,15 @@ that is checked before log truncation, and wrap native kill/cleanup errors too.
 Keep the same three recorded samples and 0.95 performance threshold. Regressions
 must cover oversized preflight artifacts, long startup errors hiding retirement
 text, and native cleanup errors whose messages do not name retirement.
+
+The 8d472b2d macOS build passed 209 human-language test files and failed only
+standalone-book's frontmatter assertion, which reparses the same corpus already
+used by its module fixture. Reuse that lessons fixture. Audit all remaining
+default-root snapshot reads in the package: chapter hashes, exam inventories,
+literal markup, level gates, gentle-ramp and German/Spanish reading-task shapes.
+Share immutable parsed inputs per file; preserve freshly derived mutable reports,
+synthetic counterfactuals, every assertion and existing deadline. Leave live CLI
+calls, explicit temporary-root loader regressions and production loader behavior
+unchanged. Validate the complete package with its ordinary configuration, coverage
+threshold and a 2 GiB heap cap before pushing, rather than repairing these same
+readonly parsing costs one cold CI case at a time.
