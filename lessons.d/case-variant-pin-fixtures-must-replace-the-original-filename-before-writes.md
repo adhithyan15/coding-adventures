@@ -16,3 +16,11 @@ filename inventory before checking the loader's result. That makes setup prove
 the uppercase entry exists on Windows, macOS and Linux, rather than relying on
 two names that the filesystem may collapse. Keep content and symlink rejection
 checks intact; a file-symlink privilege failure is a separate local limitation.
+
+Validation on the local NTFS host reproduced the original fixture's preserved
+lowercase entry and loader acceptance. The repaired fixture has exactly the
+requested filenames and the loader rejects `Kannada.json` as unsafe. The existing
+ownership suite passes six cases; the malformed-pin case passes every filename
+and content rejection before reaching its unchanged file-symlink fixture, which
+fails locally with EPERM. TypeScript compilation passes. CI's Windows runner can
+create file symlinks and must run the whole ownership suite before merge.

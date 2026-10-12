@@ -341,9 +341,14 @@ describe("stroke ownership migration baseline", () => {
         return files;
       };
       const kannada = JSON.parse(good.get("kannada.json")!) as Record<string, unknown>;
+      // NTFS and ordinary APFS preserve the first directory entry's case when
+      // a later write differs only by case. Replace the map entry BEFORE any
+      // writes, so this fixture really contains an uppercase filename.
+      const uppercase = variant("kannada.json", undefined);
+      uppercase.set("Kannada.json", good.get("kannada.json")!);
       const cases: [string, Map<string, string>, RegExp][] = [
         ["no registry pin", variant(REGISTRY_PIN_FILE, undefined), /_registry\.json is missing/],
-        ["an uppercase name", variant("Kannada.json", good.get("kannada.json")), /unsafe/],
+        ["an uppercase name", uppercase, /unsafe/],
         ["a non-JSON file", variant("notes.txt", "hi"), /unsafe/],
         ["an extra field", variant("kannada.json", JSON.stringify({ ...kannada, note: "x" })), /kannada\.json: expected/],
         ["a missing field", variant("kannada.json", JSON.stringify({ ...kannada, keyHash: undefined })), /kannada\.json: expected/],
@@ -352,7 +357,9 @@ describe("stroke ownership migration baseline", () => {
         ["an empty block shape", variant(REGISTRY_PIN_FILE, JSON.stringify({ scriptRuns: [], sharedIdentityGroups: 0, sharedIdentityHash: "0".repeat(64) })), /_registry\.json: expected/],
       ];
       for (const [label, files, error] of cases) {
-        expect(() => loadStrokeOwnershipPins(write(files)), label).toThrow(error);
+        const directory = write(files);
+        expect(readdirSync(directory).sort(), `${label}: fixture filenames`).toEqual([...files.keys()].sort());
+        expect(() => loadStrokeOwnershipPins(directory), label).toThrow(error);
       }
 
       const linked = write(variant("kannada.json", undefined));

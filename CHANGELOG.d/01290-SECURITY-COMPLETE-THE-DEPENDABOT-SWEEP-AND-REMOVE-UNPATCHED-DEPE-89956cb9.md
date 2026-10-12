@@ -6,3 +6,4 @@
 - Reject Windows JVM output junctions and reparse-point ancestors on Python 3.10; verify external targets remain untouched.
 - Remove duplicate modality manifest generation, cache immutable test owners, and budget the live full-corpus CLI integration explicitly while preserving every owner and path validation.
 - Reuse one chapter snapshot/report and one figure-target corpus across its five real-corpus groups, preserving all assertions and normal limits while repairing reproduced macOS timeouts and 2 GiB worker heap exhaustion.
+- Repair the script-ductus uppercase ownership-pin fixture by replacing the lowercase entry before writing, and verify actual fixture filenames; preserve lowercase-only loader and file-symlink rejection checks.
