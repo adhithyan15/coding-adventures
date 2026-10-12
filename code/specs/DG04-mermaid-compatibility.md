@@ -1195,3 +1195,16 @@ optional slow/fast animation through the existing duplicate-gap fixture without
 weakening its ID/classes/style/labels/kinds/markers/lengths and spacing controls.
 No global pipeline linearity, animation execution, new input exception or new
 dependency claim follows from this local lookup repair.
+
+
+### Swimlane animation configuration context
+
+A standalone edge-ID animation configuration must not intercept an authored
+edge whose endpoint contains node-shape metadata, or node/edge labels containing
+literal @{...} text. Preserve complete existing node shape, label, lane and edge
+metadata. Edge-line lexical classification and semantic edge parsing precede
+standalone configuration handling. A metadata-looking substring inside a node
+description is not a standalone edge identifier. Existing valid animation
+configuration forms and malformed/unknown-target refusals remain required.
+Native public-parser controls must compare these contexts with the same complete
+ordinary diagram after replacing only the intended label or node shape.
