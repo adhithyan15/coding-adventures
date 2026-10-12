@@ -258,6 +258,15 @@ in its samples. The warm-up's result is dropped and its failure is not a gate
 failure; the three recorded samples per route, the `0.95` median budget, and
 the retained summary are unchanged.
 
+Preflight every target's size-bounded, regular single-link HTML and static
+fallback before launching the warm-up or any recorded browser. Reuse those
+fallback reports in the retained target loop. A failed filesystem preflight
+must prevent browser startup. Classify all browser retirement failures with a
+dedicated internally created error, including native kill and temporary-directory
+cleanup failures. Warm-up and recorded-sample handlers must propagate that
+classification before bounding diagnostic text; a truncated startup message
+must never conceal an appended retirement failure or permit another browser.
+
 Browser scores do not replace the static contract. Before Chrome starts, the
 gate parses each size-bounded emitted HTML document with script, stylesheet,
 frame, image, and navigation loading disabled, and proves that it still

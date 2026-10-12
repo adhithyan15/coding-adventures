@@ -114,3 +114,10 @@ four declared Electron minimums to 43.7.9, matching their already-reviewed locks
 and preserve global-agent 4.1.3. Regenerate only the root manifest entries; no
 package version, registry URL or integrity hash should change. Recheck every
 current alert and audit these reconciled locks before reviewing the new head.
+
+Preserve the concurrent browser warm-up repair, but restore static preflight
+before any Chrome launch. Give retirement failures an internal typed identity
+that is checked before log truncation, and wrap native kill/cleanup errors too.
+Keep the same three recorded samples and 0.95 performance threshold. Regressions
+must cover oversized preflight artifacts, long startup errors hiding retirement
+text, and native cleanup errors whose messages do not name retirement.
