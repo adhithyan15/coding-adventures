@@ -1639,3 +1639,22 @@ remain scope, not an instruction to bypass that prioritization.
 
 Turn each remaining track into a bounded backlog item with an executed
 acceptance proof, then update this roadmap when its PR merges.
+
+
+### Runtime-real proof timing across selector lowering
+
+An assignment's runtime-real provenance must remain justified after lowering
+its RHS. Lowering a selector call can promote a previously local branch root
+to shared by-name/global storage. A cached pre-lowering proof cannot mark the
+destination runtime-real after that promotion. Recheck the existing proof in
+the post-lowering binding/alias state before retaining provenance; require both
+the original proof and its post-lowering validity rather than admitting a new
+proof merely because lowering changed compiler state. Preserve the existing
+unaliased local snapshot admission and its global/capture/by-name refusals,
+finite sign/exp/log/sqrt bounds and all ordinary source/backend behavior.
+Native controls must reject the selector's direct by-name local-root actual
+with the existing real-output refusal, compare a value-formal selector control
+that leaves the roots unaliased, and retain the current ordinary local cases.
+No numeric-error or undefined-behavior claim follows solely from formatter
+admission. Existing safety/production limits and independent ALGOL ownership
+remain unchanged; no new dependencies or full-matrix acceptance are introduced.

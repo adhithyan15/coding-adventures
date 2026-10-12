@@ -1202,3 +1202,22 @@ review/conflict gates and actual fetched-main merge/payload proof before cleanup
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
 inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
+
+
+### Pending conditional local-real proof timing repair
+
+Main ae908856 (#17344) changed ALGOL conditional local-root admission. Isolated
+4ca25043 ordinary four-cone tests921/16 and strict lint pass; eleven production
+commands/35 native controls remain RUNNING at that frozen source. Independent
+review identified a stale pre-lowering assignment proof. Actual direct-library
+probe accepts a selector's by-name branch-root actual and emits one real
+formatter call plus shared global loads/stores, contrary to the unaliased-root
+contract. Numeric output/UB is not claimed. Preserve that native receipt and the
+separate preflight rejection. [#17350](https://github.com/adhithyan15/coding-adventures/issues/17350)
+requires a post-lowering proof validity check and exact refusal/value-formal
+controls. The LANG proof-timing contract precedes tests/source. Use the separate
+staging checkout and a separate Cargo target; never mutate ongoing4ca inputs.
+Current-main security is NOT ACCEPTED until repaired; PR17288 remains the sole
+active shared implementation PR. Current0bf CI/native acceptance PENDING,
+auto-merge off. Full final-source Miri DEFERRED/PENDING, frozen run/497 inputs
+and receipts preserved without polling/termination; full Closure contract OPEN.
