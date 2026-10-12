@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
 import { loadTrackLessons } from "../../../src/loader.js";
 import { languageWritingStages } from "../assert-language-corpus.js";
@@ -23,6 +26,14 @@ it("keeps Sanskrit's timed checkpoint inside the lesson and the full paper separ
   expect(timed?.markdown).toContain("three-minute timer");
   expect(markdown).toContain("../mocks/a1/mock-1.md");
   expect(markdown).toContain("separate assessment session");
+  const mockPath = resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    "../../../../../../learning/human-languages/sanskrit/mocks/a1/mock-1.md",
+  );
+  const mock = readFileSync(mockPath, "utf8");
+  expect(mock).toContain("## Writing — 20 minutes");
+  expect(mock).toContain("Practical form — 7 minutes");
+  expect(mock).toContain("Named-reader message — 13 minutes");
   expect(timed?.markdown).toContain("**stop**");
   expect(timed?.markdown).not.toMatch(/[\u0900-\u097F]/u);
 
