@@ -132,8 +132,8 @@ gostar from Latin gustāre, "to taste" — not to like, but to put a thing in yo
 So Portuguese holds two verbs that once meant "to taste." Sapere became saber, "to know," and still tastes in sabe bem; gustāre became gostar. One language, one metaphor, taken twice.
 
 Grammar Lens: why the de is not optional.
-Latin never said "taste a thing." It said taste of a thing — gustāre de — because a sip comes from what is in front of you, not the whole of it. Portuguese inherited the preposition along with the verb:
-Gosto de pão. — "I like bread." (Word for word: "I taste of bread.") Gosto de você. — "I like you." (Word for word: "I like of you.") Gostamos muito de Lisboa. — "We like Lisbon very much."
+Latin gustāre took a plain object: you tasted a thing. Portuguese added de, "of": you like of a thing, the way a sip comes from what is in front of you, not the whole of it:
+Gosto de pão. — "I like bread." (Word for word: "I like of bread.") Gosto de você. — "I like you." (Word for word: "I like of you.") Gostamos muito de Lisboa. — "We like Lisbon very much."
 The de is fixed; dropping it is the mistake that marks a beginner fastest. And de fuses with any article it meets — de + o = do, de + a = da, de + os = dos, de + as = das — so "I like the wine" is gosto do vinho, never de o vinho.
 Spanish, the other Iberian daughter of Latin, escaped the same problem the opposite way: it flips the sentence so the thing liked becomes the subject — me gusta el pan, "the bread pleases me." Portuguese keeps you as the subject and hangs the preposition on the object instead.
 For the stronger feeling: adorar, which needs no de (adoro pão), and amar, kept mostly for people.
@@ -151,4 +151,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I like bread," then "I like the wine." (Gosto de pão; gosto do vinho, since de + o fuses to do.) Why the de, what did gustāre mean, and which earlier verb has the same story? (You take a taste of a thing; "to taste"; saber, from sapere.) Now the eight of these two chapters, in the eu form. (Penso, entendo, leio, escrevo, pego, pergunto, ajudo, gosto.)
+Say "I like bread," then "I like the wine." (Gosto de pão; gosto do vinho, since de + o fuses to do.) Why the de, what did gustāre mean, and which earlier verb has the same story? (Portuguese likes of a thing; "to taste"; saber, from sapere.) Now the eight of these two chapters, in the eu form. (Penso, entendo, leio, escrevo, pego, pergunto, ajudo, gosto.)

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:3f90dc77925796f8",
+  "sourceHash": "fnv1a64:7f84ca77d52af0ff",
   "lessons": [
     {
       "id": "PT-C02-de-nada",
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:229dc27450ba7752",
+      "sourceHash": "fnv1a64:88c5f6d6ed0a309c",
       "notice": null,
       "blocks": [
         {

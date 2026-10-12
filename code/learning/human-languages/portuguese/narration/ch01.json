@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:229139fc5c22db59",
+  "sourceHash": "fnv1a64:c5720df57a1cbc82",
   "lessons": [
     {
       "id": "PT-C01-ola",
@@ -1149,7 +1149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cba1eb28c1719d1",
+      "sourceHash": "fnv1a64:f281228676f1da01",
       "notice": null,
       "blocks": [
         {
@@ -1277,7 +1277,7 @@
             },
             {
               "kind": "speech",
-              "text": "Next chapter: introducing yourself — o meu nome é… / chamo-me… — and Portuguese's tu vs. você (familiar / polite \"you\")."
+              "text": "In two chapters: introducing yourself — o meu nome é… / chamo-me… — and Portuguese's tu vs. você (familiar / polite \"you\")."
             }
           ]
         }
