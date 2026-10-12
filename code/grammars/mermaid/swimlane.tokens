@@ -14,6 +14,8 @@ CLICK_LINE = /[ \t]*click[ \t]+[A-Za-z_][A-Za-z0-9_]*[ \t]+[^\r\n]+/
 CLASS_DEF_LINE = /[ \t]*classDef[ \t]+[A-Za-z_][A-Za-z0-9_-]*[ \t]+[^;\r\n]+[ \t]*;?/
 CLASS_LINE = /[ \t]*class[ \t]+[A-Za-z_][A-Za-z0-9_,]*[ \t]+[A-Za-z_][A-Za-z0-9_,-]*[ \t]*;?/
 STYLE_LINE = /[ \t]*style[ \t]+[A-Za-z_][A-Za-z0-9_]*[ \t]+[^\r\n]+/
+DOTTED_LABEL_CONTINUATION_LINE = /[ \t]*-\.[^\r\n]+\.+->[^\r\n]+/
+DOTTED_LABEL_EDGE_LINE = /[ \t]*[A-Za-z_][^\r\n]*-\.[^\r\n]+\.+->[^\r\n]+/
 CONTINUATION_LINE = /[ \t]*(?:-...->|-..->|-...-|-..-|====>|===>|=====|====|---->|--->|-----|----|<-.->|<-->|<==>|o-.-o|x-.-x|o-.-x|x-.-o|o-.->|x-.->|-.-o|-.-x|o==o|x==x|o==x|x==o|o==>|x==>|==o|==x|o--o|x--x|o--x|x--o|o-->|x-->|-.->|-.-|-->|---|==>|===|--o|--x|~~~)[^\r\n]+/
 EDGE_LINE = /[ \t]*[A-Za-z_][^\r\n]*(?:-...->|-..->|-...-|-..-|====>|===>|=====|====|---->|--->|-----|----|<-.->|<-->|<==>|o-.-o|x-.-x|o-.-x|x-.-o|o-.->|x-.->|-.-o|-.-x|o==o|x==x|o==x|x==o|o==>|x==>|==o|==x|o--o|x--x|o--x|x--o|o-->|x-->|-.->|-.-|-->|---|==>|===|--o|--x|~~~)[^\r\n]+/
 DECORATED_NODE_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_]*[^\r\n]*:::[A-Za-z_][A-Za-z0-9_-]*(?:::[A-Za-z_][A-Za-z0-9_-]*)*[ \t]*/
