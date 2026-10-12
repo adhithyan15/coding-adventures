@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.3` accumulate here until the next version is
 cut.
 
+### Fixed — Compose elevation shadows leave the degradation report (#17356)
+
+Compose now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Compose style inventory from 50 to 40. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
 ### Fixed — Qt controls preserve fill widths (#17338)
 
 Qt now lowers exact `width: 100%` declarations on TaskApp inputs and buttons

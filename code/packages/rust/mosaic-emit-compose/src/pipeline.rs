@@ -2593,6 +2593,17 @@ pub fn dropped_style_properties_in_layout(
             if lowered_solid_per_edge_style(&part.base, &name, &value) {
                 continue;
             }
+            // The web-facing CSS shadow and the portable elevation token are
+            // authored together. A supported elevation tier already emits
+            // equivalent native depth, so its non-inset CSS companion is not
+            // a genuine style drop. Inset shadows are drawing effects rather
+            // than elevation and remain explicit degradation debt.
+            if name == "box-shadow"
+                && !value.to_ascii_lowercase().contains("inset")
+                && part_elevation_tier(&part.base).is_some()
+            {
+                continue;
+            }
             // UI59 §4 -- the width floor is universal, so `flex-shrink: 0`
             // on a guarded part is honoured and is not a drop. A POSITIVE
             // value asks to shrink below content, which the floor refuses,
@@ -11102,6 +11113,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the modifier
         // chain — `elevation` is the only signal Compose reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+        assert!(
+            dropped_style_properties(&s).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -11140,6 +11155,9 @@ mod tests {
             !out.contains("import androidx.compose.ui.draw.shadow"),
             "got:\n{out}"
         );
+        let drops = dropped_style_properties(&s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     #[test]
@@ -11166,6 +11184,9 @@ mod tests {
         );
         let out = from_pipeline(&m, &l, &s).unwrap().output;
         assert!(out.contains(".shadow(4.dp)"), "got:\n{out}");
+        let drops = dropped_style_properties(&s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     #[test]
@@ -16454,7 +16475,7 @@ mod tests {
     /// happily producing 16 `.shadow(..)` calls. A drop report that cries wolf
     /// is worse than no report, because the real entries stop being read.
     #[test]
-    fn a_property_handled_elsewhere_is_not_reported_as_dropped() {
+    fn properties_handled_by_elevation_are_not_reported_as_dropped() {
         let mut sheet = empty_style("F");
         sheet.parts.push(part(
             "card",
@@ -16471,10 +16492,9 @@ mod tests {
             !names.iter().any(|n| n == "elevation"),
             "`elevation: raised` IS lowered, via part_elevation_tier — got: {names:?}"
         );
-        // …but the genuinely unlowered neighbour still is.
         assert!(
-            names.iter().any(|n| n == "box-shadow"),
-            "box-shadow has no lowering and must still be reported — got: {names:?}"
+            !names.iter().any(|n| n == "box-shadow"),
+            "the non-inset CSS companion is represented by native elevation — got: {names:?}"
         );
     }
 
