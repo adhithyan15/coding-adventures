@@ -16,6 +16,36 @@ source inventory/ingestion-leaf reuse. CV04a implementation and local range/shar
 
 ## Delivery priority and deferred Miri (2026-10-11)
 
+### Native CI disk-capacity follow-up (2026-10-12)
+
+Published CV04a candidate `f5389812a0469db06f4a7b8d09db48a63f12ce57`
+remains unmerged. Required Linux job 114607733873 in run 38184271841 failed
+with hosted-runner diagnostic `No space left on device`; the affected-package
+step is incomplete and is **not accepted**. Its existing reclaim step reported
+72 GiB free before later setup/build. A targeted rerun request was rejected
+while other native jobs remained active. The [capacity repair specification](CV04a-native-CI-disk-capacity.md)
+was committed before its implementation in a separate isolated checkout.
+The bounded repair omits Cargo dev/test debug information and incremental
+caches in both CI package steps while retaining codegen partitioning,
+assertions, overflow checks, production limits, package selection, native
+checks and lint. Repair validation/security/publication and new exact-head
+required native CI remain **PENDING**. No measured disk saving is claimed.
+
+Fresh audited main `5dffd891d6f0c2edc2988a059094edf1b3a55cf5` has separately
+tested/reviewed integrations: ALGOL **1,217/106** at `319593947890c40d36ccc7b4c164e2887410ffa4`
+(11 unchanged BUILD commands, 30 exact native controls); TaskApp/Venture
+**636/27 plus 42 Python** at `82f587ba9c1ba96a463d15142acc31965d91fc56`
+using a fresh supported bookmark profile after preserving the original failed
+shared-profile runs; diagrams **725/32** at `b27081bbf9f1f207b8ee9dcb622a628b6dad6ca2`.
+Strict lint and independent bounded reviews pass. All 49 prior payload modes/blobs
+are retained. Upstream TaskApp helper-definition defect [#17313](https://github.com/adhithyan15/coding-adventures/issues/17313)
+was reproduced by owned CLI generation and remains open; narrow execution/security
+reviews do not certify that generated-code issue or full current-main acceptance.
+
+Full final-source Miri remains **DEFERRED/PENDING**, never passed. Preserve its
+original frozen checkout/run/497 inputs and receipts. CV04b, full parity and
+transformation/output-byte provenance completion remain open; heartbeat active.
+
 ### Latest native CI repair checkpoint
 
 Main `846a01d6116700be742a9d6dbef06ffc66b381d9` is reconciled in the isolated

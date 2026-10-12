@@ -1,0 +1,3 @@
+# Keep runner disk failures separate from compiler results
+
+Hosted runners can exhaust disk while retaining dev/test debug symbols and incremental archives. Preserve terminal runner annotations and incomplete package status before retrying. A disk failure is not compiler or UB evidence, and a queued retry is not acceptance. Reduce disposable Cargo artifact storage independently of debug assertions, overflow checking, test selection, limits and required CI. Keep codegen partitioning explicit when disabling incremental compilation. Prove the unchanged workflow commands/gates and actual Cargo settings, then require a fresh complete native run; never claim a measured disk saving from configuration alone. Keep frozen validation checkouts and targets separate.
