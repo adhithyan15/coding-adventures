@@ -1077,8 +1077,9 @@ markers on solid, dotted, and thick links, bidirectional arrows, multiline edge 
 invisible layout links,
 minimum link lengths with deterministic rank spacing,
 parallel branch and join
-endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
-accessibility metadata with named and numeric entity decoding. Direct node
+endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
+thick, and dotted links, titles, and accessibility metadata with named and numeric entity
+decoding. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback

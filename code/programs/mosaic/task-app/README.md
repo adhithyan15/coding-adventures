@@ -238,6 +238,13 @@ regression-gate fixes accumulated since v0.5.1. It retains the same verified
 web/native artifact matrix and the same explicit CI-only boundary for Static
 HTML, Web Components, and Paint.
 
+The `task-app-v0.5.3` patch preserves Flutter's seven-column calendar geometry,
+evaluated drag-and-drop spacing, and complete conditional drag/drop bodies. It
+also reconciles natively emitted elevation shadows with the degradation report
+and rolls forward the matching style-ratchet correction. The downloadable
+web/native artifact matrix remains unchanged: Static HTML, Web Components, and
+Paint are CI-only, while signing, notarization, and installers remain #13977.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:

@@ -2214,6 +2214,13 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(exp(-abs(sign(pick())))))))); output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — ln may safely map one exponential over a bounded
     // sign-rooted result before entier and real widening.
     Prog {
@@ -14195,6 +14202,33 @@ fn algol_direct_triple_exp_result_widening_runs_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but direct triple-exp result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nonpositive_quadruple_exp_result_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(ln(exp(exp(exp(exp(-abs(sign(pick())))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL nonpositive quadruple-exp result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nonpositive quadruple-exp result widening did not complete"
             );
             continue;
         };

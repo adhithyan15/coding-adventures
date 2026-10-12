@@ -1421,7 +1421,9 @@ backend immediately) come before the enabler-dependent items.
   The same exact two-exponential proof now applies to a direct sign-rooted
   operand; unrestricted roots and overrides remain conservative.
   The direct proof extends to exactly three exponentials, whose complete
-  sign-rooted tower remains finite; a fourth direct layer would overflow
+  sign-rooted tower remains finite. Exactly four exponentials are also accepted
+  over a proven nonpositive unit sign root, whose narrower tower remains finite;
+  a positive-capable fourth layer or a fifth nonpositive layer would overflow
   binary64 before `ln` and therefore remains conservative.
   The same bounded proof extends to exactly three built-in exponentials per
   branch; missing, deeper, non-runtime-real, and overridden branches remain

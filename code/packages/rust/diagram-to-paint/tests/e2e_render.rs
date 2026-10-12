@@ -3784,6 +3784,17 @@ line "Target" [35, 50, 68, 82]"##,
                 assert!(gaps[1] > gaps[0] && gaps[2] > gaps[1],
                     "minimum link lengths must reserve progressively wider rank gaps");
             }
+            if fixture_name == "styled-inline-link-labels" {
+                assert_eq!(layout.edges.iter().map(|edge| edge.label.as_deref()).collect::<Vec<_>>(),
+                    vec![Some("submit"), Some("approve"), Some("release")]);
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![2, 2, 3]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_width == Some(3.5)
+                )), "labeled thick links must lower to wide paths");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
+                )), "labeled dotted links must lower to dashed paths");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
