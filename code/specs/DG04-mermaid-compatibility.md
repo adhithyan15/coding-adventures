@@ -1046,7 +1046,9 @@ styles, named/default classes with optional terminal semicolons, and node class
 decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
-also survive semantic IR, layout, and scene metadata. The family lowers through
+survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
+edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
