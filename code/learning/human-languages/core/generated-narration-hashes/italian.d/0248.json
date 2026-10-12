@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 248,
-  "sourceHash": "fnv1a64:ef9ba1a9d5214902",
+  "sourceHash": "fnv1a64:946e61318a76b583",
   "lessonIds": [
     "IT-C248-temperatura",
     "IT-C248-mosca",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch248.txt",
   "json": "italian/narration/ch248.json",
-  "textHash": "fnv1a64:5261f057312603a0",
-  "jsonHash": "fnv1a64:34920b602591907f",
+  "textHash": "fnv1a64:33983017d55f44d5",
+  "jsonHash": "fnv1a64:1c0c847a24f1ae34",
   "findings": []
 }

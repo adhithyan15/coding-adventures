@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 151,
-  "sourceHash": "fnv1a64:99e016df575afe91",
+  "sourceHash": "fnv1a64:81aaee508afa5a79",
   "lessonIds": [
     "IT-C151-cervello",
     "IT-C151-polmone",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch151.txt",
   "json": "italian/narration/ch151.json",
-  "textHash": "fnv1a64:2ea4248907423c9d",
-  "jsonHash": "fnv1a64:95717049e77b9979",
+  "textHash": "fnv1a64:dfa287edd2125299",
+  "jsonHash": "fnv1a64:041654bf7ad9618f",
   "findings": []
 }

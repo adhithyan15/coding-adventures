@@ -13,7 +13,8 @@ gloss: "a choice"
 concept_tag: IT-COSE196-SCELTA
 prerequisites: [IT-C196-ricordo, IT-C196-soluzione]
 sounds: []
-roots: []
+roots: [eligere-latin]
+etymology_hook: "scelta — 'a thing chosen', from scegliere 'to choose' ← Vulgar Latin exeligere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C196-soluzione]
 <!-- hl-knowledge: introduces=[IT-LEX-C196-COSE196-05]; assesses=[] -->
 
 **la scelta** — "a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scelta** is the past participle of *scegliere*, "to choose", used as a noun: a thing chosen. *scegliere* ← Vulgar Latin *exeligere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

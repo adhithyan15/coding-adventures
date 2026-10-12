@@ -13,7 +13,8 @@ gloss: "to turn"
 concept_tag: IT-VERB-GIRARE
 prerequisites: [IT-C209-fingere, IT-C209-gettare]
 sounds: []
-roots: []
+roots: [gyrare-latin]
+etymology_hook: "girare ← Latin gyrare, from Greek gyros 'a circle' — English gyrate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C209-gettare]
 <!-- hl-knowledge: introduces=[IT-LEX-C209-VERBI209-03]; assesses=[] -->
 
 **girare** — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**girare** ← Latin *gyrare*, "to turn in a circle" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

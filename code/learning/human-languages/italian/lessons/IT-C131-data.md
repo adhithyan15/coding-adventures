@@ -13,7 +13,8 @@ gloss: "a date"
 concept_tag: IT-TEMPO131-DATA
 prerequisites: [IT-C130-magro, IT-C131-fine-settimana]
 sounds: []
-roots: []
+roots: [datus-latin]
+etymology_hook: "data ← Late Latin data 'given', as letters were headed — English date is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C131-fine-settimana]
 <!-- hl-knowledge: introduces=[IT-LEX-C131-TEMPO131-02]; assesses=[] -->
 
 **la data** — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**data** ← Late Latin *data*, "given" — a word from the Latin of letters, which were headed *data*, "given (at)", before the place and the day. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

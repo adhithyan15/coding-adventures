@@ -216,12 +216,14 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   german: { withoutHook: 988, withoutVisible: 1071 },
   gujarati: { withoutHook: 529, withoutVisible: 543 },
   hindi: { withoutHook: 1126, withoutVisible: 967 },
-  // italian: 1126 / 1135 -> 745 / 745. The first 401 gap lessons in sequence order
-  // (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
+  // italian: 1126 / 1135 -> 745 / 745 -> 0 / 0. The first 401 gap lessons in sequence
+  // order (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
   // 2020), CC BY-SA 4.0, with Lewis & Short for textbook Latin forms EtymDB lacks --
   // a well-established origin stated without a source tag (4), or an explicit "not recorded in
-  // EtymDB 2.1" (12 lessons, all genuinely uncertain).
-  italian: { withoutHook: 745, withoutVisible: 745 },
+  // EtymDB 2.1" (12 lessons, all genuinely uncertain). The remaining 745 (IT-C111-infermiera
+  // through IT-C259-storia) followed the same way: from the same two sources, with sister-word
+  // tracing where EtymDB has no row; 19 say the origin is uncertain and why.
+  italian: { withoutHook: 0, withoutVisible: 0 },
   japanese: { withoutHook: 601, withoutVisible: 688 },
   kannada: { withoutHook: 1330, withoutVisible: 1281 },
   latin: { withoutHook: 1095, withoutVisible: 1105 },

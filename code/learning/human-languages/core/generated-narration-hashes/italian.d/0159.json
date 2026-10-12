@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 159,
-  "sourceHash": "fnv1a64:5135523f26478689",
+  "sourceHash": "fnv1a64:170e9b46f6c9b037",
   "lessonIds": [
     "IT-C159-appartamento",
     "IT-C159-soggiorno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch159.txt",
   "json": "italian/narration/ch159.json",
-  "textHash": "fnv1a64:ba32e97bfe40f72d",
-  "jsonHash": "fnv1a64:733ab0885a500ca8",
+  "textHash": "fnv1a64:34f7da4c782dde6a",
+  "jsonHash": "fnv1a64:9a29a4f5355dda7a",
   "findings": []
 }

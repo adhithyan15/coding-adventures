@@ -14,6 +14,7 @@ concept_tag: IT-COSE166-PACCO
 prerequisites: [IT-C166-busta, IT-C166-francobollo]
 sounds: []
 roots: []
+etymology_hook: "pacco ← Middle Dutch pak 'a pack' — borrowed; English pack is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C166-francobollo]
 <!-- hl-knowledge: introduces=[IT-LEX-C166-COSE166-04]; assesses=[] -->
 
 **il pacco** — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pacco** ← Middle Dutch *pak*, "a pack" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

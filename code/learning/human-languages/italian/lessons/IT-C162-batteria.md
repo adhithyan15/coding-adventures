@@ -14,6 +14,7 @@ concept_tag: IT-COSE162-BATTERIA
 prerequisites: [IT-C162-schermo, IT-C162-tastiera]
 sounds: []
 roots: []
+etymology_hook: "batteria ← French batterie 'a beating; a group of guns', from battre — English battery"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C162-tastiera]
 <!-- hl-knowledge: introduces=[IT-LEX-C162-COSE162-04]; assesses=[] -->
 
 **la batteria** — "a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**batteria** ← French *batterie*, "a beating; a group of guns" — borrowed. EtymDB 2.1 has no row for *batteria*, but derives the French word from *battre*, "to beat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "purple"
 concept_tag: IT-COLORI123-VIOLA
 prerequisites: [IT-C122-labbra, IT-C123-rosa]
 sounds: []
-roots: []
+roots: [viola-latin]
+etymology_hook: "viola, the colour, is the violet: Latin viola 'a violet'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C123-rosa]
 <!-- hl-knowledge: introduces=[IT-LEX-C123-COLORI123-02]; assesses=[] -->
 
 **viola** — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viola** ← Latin *viola*, "a violet" — inherited. (EtymDB 2.1) The colour is named after the flower.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

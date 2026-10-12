@@ -14,6 +14,7 @@ concept_tag: IT-COSE254-BENZINA
 prerequisites: [IT-C254-ruota, IT-C254-motore]
 sounds: []
 roots: []
+etymology_hook: "benzina ← German Benzin, named after benzoin, a resin — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C254-motore]
 <!-- hl-knowledge: introduces=[IT-LEX-C254-COSE254-05]; assesses=[] -->
 
 **la benzina** — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**benzina** ← German *Benzin*, named after benzoin, a fragrant resin — borrowed. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

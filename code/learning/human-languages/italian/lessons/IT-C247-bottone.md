@@ -14,6 +14,7 @@ concept_tag: IT-COSE247-BOTTONE
 prerequisites: [IT-C246-crudo, IT-C246-cotto]
 sounds: []
 roots: []
+etymology_hook: "bottone ← Old French boton 'a bud, a button' — English button is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C246-cotto]
 <!-- hl-knowledge: introduces=[IT-LEX-C247-COSE247-01]; assesses=[] -->
 
 **il bottone** — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bottone** ← Old French *boton*, "a bud, a button" — borrowed. EtymDB 2.1 has no row for *bottone*; it builds the French word on *bouter*, "to push".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

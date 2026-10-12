@@ -13,7 +13,8 @@ gloss: "to discover"
 concept_tag: IT-VERB-SCOPRIRE
 prerequisites: [IT-C181-rubare, IT-C181-scappare]
 sounds: []
-roots: []
+roots: [cooperire-latin]
+etymology_hook: "scoprire — s- 'un-' + coprire 'to cover': to uncover — English discover"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C181-scappare]
 <!-- hl-knowledge: introduces=[IT-LEX-C181-VERBI181-05]; assesses=[] -->
 
 **scoprire** — "to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scoprire** is *s-*, "un-", plus *coprire*, "to cover": to uncover. *coprire* ← Latin *cooperire*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

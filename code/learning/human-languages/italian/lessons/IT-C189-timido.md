@@ -13,7 +13,8 @@ gloss: "shy"
 concept_tag: IT-QUAL189-TIMIDO
 prerequisites: [IT-C188-nonostante, IT-C189-allegro]
 sounds: []
-roots: []
+roots: [timidus-latin]
+etymology_hook: "timido ← Latin timidus 'fearful', from timere 'to fear' — English timid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C189-allegro]
 <!-- hl-knowledge: introduces=[IT-LEX-C189-QUAL189-02]; assesses=[] -->
 
 **timido** — "shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**timido** ← Latin *timidus*, "fearful" — a learned borrowing. EtymDB 2.1 has no row for *timido*; it derives Spanish and Portuguese *tímido* from *timidus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

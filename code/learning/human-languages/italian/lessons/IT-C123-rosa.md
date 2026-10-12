@@ -13,7 +13,8 @@ gloss: "pink"
 concept_tag: IT-COLORI123-ROSA
 prerequisites: [IT-C122-guancia, IT-C122-labbra]
 sounds: []
-roots: []
+roots: [rosa-latin]
+etymology_hook: "rosa, the colour, is the rose: Latin rosa 'a rose'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C122-labbra]
 <!-- hl-knowledge: introduces=[IT-LEX-C123-COLORI123-01]; assesses=[] -->
 
 **rosa** — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rosa** ← Latin *rosa*, "a rose" — inherited. (EtymDB 2.1) The colour is named after the flower.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 252,
-  "sourceHash": "fnv1a64:480de4ceb7f0c98d",
+  "sourceHash": "fnv1a64:48eca46588d97732",
   "lessonIds": [
     "IT-C252-differenza",
     "IT-C252-esempio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch252.txt",
   "json": "italian/narration/ch252.json",
-  "textHash": "fnv1a64:76b4c23f53b50725",
-  "jsonHash": "fnv1a64:784f0fbf2930f26f",
+  "textHash": "fnv1a64:22493e0ce5f68215",
+  "jsonHash": "fnv1a64:eae468a8982821d5",
   "findings": []
 }

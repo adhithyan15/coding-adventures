@@ -13,7 +13,8 @@ gloss: "an opportunity"
 concept_tag: IT-COSE225-OCCASIONE
 prerequisites: [IT-C225-decisione, IT-C225-possibilita]
 sounds: []
-roots: []
+roots: [occasio-latin]
+etymology_hook: "occasione ← Latin occasio 'an opportunity', a learned word — English occasion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C225-possibilita]
 <!-- hl-knowledge: introduces=[IT-LEX-C225-COSE225-03]; assesses=[] -->
 
 **l'occasione** — "an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**occasione** ← Latin *occasio*, "an opportunity" — a learned borrowing. (EtymDB 2.1) The same Latin word, passed down by speech, became *cagione*, "a cause".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

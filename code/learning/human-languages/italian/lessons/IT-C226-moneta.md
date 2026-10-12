@@ -13,7 +13,8 @@ gloss: "a coin"
 concept_tag: IT-COSE226-MONETA
 prerequisites: [IT-C226-scontrino, IT-C226-resto]
 sounds: []
-roots: []
+roots: [moneta-latin]
+etymology_hook: "moneta ← Latin moneta, from Juno Moneta, whose temple housed Rome's mint — English money"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C226-resto]
 <!-- hl-knowledge: introduces=[IT-LEX-C226-COSE226-03]; assesses=[] -->
 
 **la moneta** — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moneta** ← Latin *moneta*, "a mint, coin" — inherited. (EtymDB 2.1) Rome's mint stood by the temple of Juno Moneta, and the coins took her name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

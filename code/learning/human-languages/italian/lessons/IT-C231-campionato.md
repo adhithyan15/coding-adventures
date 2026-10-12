@@ -14,6 +14,7 @@ concept_tag: IT-COSE231-CAMPIONATO
 prerequisites: [IT-C231-vittoria, IT-C231-sconfitta]
 sounds: []
 roots: []
+etymology_hook: "campionato — from campione 'a champion' — English championship"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C231-sconfitta]
 <!-- hl-knowledge: introduces=[IT-LEX-C231-COSE231-03]; assesses=[] -->
 
 **il campionato** — "a championship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campionato** — built from *campione*, "a champion", with *-ato*: a contest for champions. EtymDB 2.1 records *campione* but not where it came from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

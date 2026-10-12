@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 172,
-  "sourceHash": "fnv1a64:765688465b7fe1bd",
+  "sourceHash": "fnv1a64:56afd608efadba3a",
   "lessonIds": [
     "IT-C172-ditta",
     "IT-C172-azienda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch172.txt",
   "json": "italian/narration/ch172.json",
-  "textHash": "fnv1a64:14d8861200f559e4",
-  "jsonHash": "fnv1a64:9203a1ac72d000bd",
+  "textHash": "fnv1a64:9b183c56a7cba255",
+  "jsonHash": "fnv1a64:6c52e5ab242d8067",
   "findings": []
 }

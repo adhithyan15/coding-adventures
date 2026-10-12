@@ -13,7 +13,8 @@ gloss: "to run away"
 concept_tag: IT-VERB-SCAPPARE
 prerequisites: [IT-C181-risolvere, IT-C181-rubare]
 sounds: []
-roots: []
+roots: [cappa-latin]
+etymology_hook: "scappare ← Vulgar Latin excappare 'to slip out of one's cloak' — English escape is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C181-rubare]
 <!-- hl-knowledge: introduces=[IT-LEX-C181-VERBI181-04]; assesses=[] -->
 
 **scappare** — "to run away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scappare** goes back to Vulgar Latin *excappare*, "to slip out of one's cloak", from *cappa*, "a cloak". EtymDB 2.1 has no row for its origin; it lists French *échapper* and Spanish *escapar* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

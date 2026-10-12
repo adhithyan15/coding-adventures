@@ -13,7 +13,8 @@ gloss: "life"
 concept_tag: IT-TEMPOLIBERO116-VITA
 prerequisites: [IT-C116-canzone, IT-C116-disegno]
 sounds: []
-roots: []
+roots: [vita]
+etymology_hook: "vita ← Latin vita 'life', from vivere 'to live' — English vital shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C116-disegno]
 <!-- hl-knowledge: introduces=[IT-LEX-C116-TEMPOLIBERO116-05]; assesses=[] -->
 
 **la vita** — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vita** ← Latin *vita*, "life", from *vivere*, "to live" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

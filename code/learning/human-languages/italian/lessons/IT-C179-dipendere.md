@@ -13,7 +13,8 @@ gloss: "to depend"
 concept_tag: IT-VERB-DIPENDERE
 prerequisites: [IT-C178-apparire, IT-C179-dimostrare]
 sounds: []
-roots: []
+roots: [dependere-latin]
+etymology_hook: "dipendere ← Latin dependere 'to hang from' — English depend is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C179-dimostrare]
 <!-- hl-knowledge: introduces=[IT-LEX-C179-VERBI179-02]; assesses=[] -->
 
 **dipendere** — "to depend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dipendere** ← Latin *dependere*, "to hang from" — inherited. EtymDB 2.1 has no row for *dipendere*; it derives Spanish and Portuguese *depender* from *dependere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

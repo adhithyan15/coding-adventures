@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 209,
-  "sourceHash": "fnv1a64:5d5e65be16833079",
+  "sourceHash": "fnv1a64:f5bc6e7233bc7857",
   "lessonIds": [
     "IT-C209-fingere",
     "IT-C209-gettare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch209.txt",
   "json": "italian/narration/ch209.json",
-  "textHash": "fnv1a64:000746527bbd314a",
-  "jsonHash": "fnv1a64:b6688acaec15977e",
+  "textHash": "fnv1a64:14ca142ffa28208b",
+  "jsonHash": "fnv1a64:90cf2059d3ba9564",
   "findings": []
 }

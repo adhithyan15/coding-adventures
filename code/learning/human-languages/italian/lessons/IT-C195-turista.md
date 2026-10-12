@@ -14,6 +14,7 @@ concept_tag: IT-COSE195-TURISTA
 prerequisites: [IT-C195-scienziato, IT-C195-ricercatore]
 sounds: []
 roots: []
+etymology_hook: "turista ← English tourist, from tour — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C195-ricercatore]
 <!-- hl-knowledge: introduces=[IT-LEX-C195-COSE195-05]; assesses=[] -->
 
 **il turista** — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**turista** ← English *tourist*, from *tour* — borrowed. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a muscle"
 concept_tag: IT-SAL185-MUSCOLO
 prerequisites: [IT-C184-sospettare, IT-C184-stringere]
 sounds: []
-roots: []
+roots: [musculus-latin]
+etymology_hook: "muscolo ← Latin musculus 'a little mouse': a muscle moves like one — English muscle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C184-stringere]
 <!-- hl-knowledge: introduces=[IT-LEX-C185-SAL185-01]; assesses=[] -->
 
 **il muscolo** — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**muscolo** ← Latin *musculus*, "a little mouse; a muscle" — a learned borrowing: a flexing muscle looked like a mouse under the skin. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

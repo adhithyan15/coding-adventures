@@ -13,7 +13,8 @@ gloss: "to suspect"
 concept_tag: IT-VERB-SOSPETTARE
 prerequisites: [IT-C184-sollevare, IT-C184-sorprendere]
 sounds: []
-roots: []
+roots: [suspicere-latin]
+etymology_hook: "sospettare ← Latin suspectare 'to look up at, to suspect' — English suspect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C184-sorprendere]
 <!-- hl-knowledge: introduces=[IT-LEX-C184-VERBI184-04]; assesses=[] -->
 
 **sospettare** — "to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sospettare** ← Latin *suspectare*, "to suspect" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

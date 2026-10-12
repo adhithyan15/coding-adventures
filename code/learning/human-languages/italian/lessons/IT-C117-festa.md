@@ -13,7 +13,8 @@ gloss: "a party, a celebration"
 concept_tag: IT-TEMPOLIBERO117-FESTA
 prerequisites: [IT-C117-calcio, IT-C117-concerto]
 sounds: []
-roots: []
+roots: [festum-latin]
+etymology_hook: "festa ← Late Latin festa 'feast days' — English feast and festival share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C117-concerto]
 <!-- hl-knowledge: introduces=[IT-LEX-C117-TEMPOLIBERO117-04]; assesses=[] -->
 
 **la festa** — "a party, a celebration".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**festa** ← Late Latin *festa*, "feast days" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

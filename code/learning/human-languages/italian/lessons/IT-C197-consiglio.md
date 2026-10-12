@@ -13,7 +13,8 @@ gloss: "advice"
 concept_tag: IT-COSE197-CONSIGLIO
 prerequisites: [IT-C196-soluzione, IT-C196-scelta]
 sounds: []
-roots: []
+roots: [consilium-latin]
+etymology_hook: "consiglio ← Latin consilium 'a plan, advice' — English counsel is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C196-scelta]
 <!-- hl-knowledge: introduces=[IT-LEX-C197-COSE197-01]; assesses=[] -->
 
 **il consiglio** — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**consiglio** ← Latin *consilium*, "a plan, advice" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

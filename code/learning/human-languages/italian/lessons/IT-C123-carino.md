@@ -14,6 +14,7 @@ concept_tag: IT-COLORI123-CARINO
 prerequisites: [IT-C123-marrone, IT-C123-arancione]
 sounds: []
 roots: []
+etymology_hook: "carino — caro 'dear' + -ino 'little': a little dear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C123-arancione]
 <!-- hl-knowledge: introduces=[IT-LEX-C123-COLORI123-05]; assesses=[] -->
 
 **carino** — "pretty, cute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carino** — built from *caro*, "dear", with *-ino*, "little": a little dear. EtymDB 2.1 has no row for its origin; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

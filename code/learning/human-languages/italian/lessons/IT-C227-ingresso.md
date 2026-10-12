@@ -13,7 +13,8 @@ gloss: "an entrance"
 concept_tag: IT-COSE227-INGRESSO
 prerequisites: [IT-C226-bancomat, IT-C227-guida]
 sounds: []
-roots: []
+roots: [gradi-latin]
+etymology_hook: "ingresso ← Latin ingressus 'a going in' — English ingress"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C227-guida]
 <!-- hl-knowledge: introduces=[IT-LEX-C227-COSE227-02]; assesses=[] -->
 
 **l'ingresso** — "an entrance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ingresso** ← Latin *ingressus*, "a going in" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

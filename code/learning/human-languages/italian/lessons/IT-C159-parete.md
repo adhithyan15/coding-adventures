@@ -13,7 +13,8 @@ gloss: "an inner wall"
 concept_tag: IT-COSE159-PARETE
 prerequisites: [IT-C159-corridoio, IT-C159-balcone]
 sounds: []
-roots: []
+roots: [paries-latin]
+etymology_hook: "parete ← Latin paries, parietem 'a wall' — English parietal shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C159-balcone]
 <!-- hl-knowledge: introduces=[IT-LEX-C159-COSE159-05]; assesses=[] -->
 
 **la parete** — "an inner wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parete** ← Latin *paries*, "a wall" (*parietem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

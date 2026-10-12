@@ -14,6 +14,7 @@ concept_tag: IT-NATURA118-ROCCIA
 prerequisites: [IT-C118-ghiaccio, IT-C118-collina]
 sounds: []
 roots: []
+etymology_hook: "roccia ← Old French roche 'a rock' — borrowed; English rock is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C118-collina]
 <!-- hl-knowledge: introduces=[IT-LEX-C118-NATURA118-05]; assesses=[] -->
 
 **la roccia** — "a rock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**roccia** ← Old French *roche*, "a rock" — borrowed; the French word goes back to Vulgar Latin *rocca*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

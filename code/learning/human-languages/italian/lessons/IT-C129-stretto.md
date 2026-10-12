@@ -13,7 +13,8 @@ gloss: "narrow; tight"
 concept_tag: IT-QUALITA129-STRETTO
 prerequisites: [IT-C129-rotondo, IT-C129-largo]
 sounds: []
-roots: []
+roots: [strictus-latin]
+etymology_hook: "stretto ← Latin strictus 'drawn tight' — English strict and strait share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C129-largo]
 <!-- hl-knowledge: introduces=[IT-LEX-C129-QUALITA129-04]; assesses=[] -->
 
 **stretto** — "narrow; tight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stretto** ← Latin *strictus*, "drawn tight" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to own"
 concept_tag: IT-VERB-POSSEDERE
 prerequisites: [IT-C180-passeggiare, IT-C180-piegare]
 sounds: []
-roots: []
+roots: [possidere-latin]
+etymology_hook: "possedere ← Latin possidere 'to possess' — English possess shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C180-piegare]
 <!-- hl-knowledge: introduces=[IT-LEX-C180-VERBI180-05]; assesses=[] -->
 
 **possedere** — "to own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**possedere** ← Latin *possidere*, "to possess" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

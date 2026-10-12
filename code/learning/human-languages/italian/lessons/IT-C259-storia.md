@@ -13,7 +13,8 @@ gloss: "history, a story"
 concept_tag: IT-LAV259-STORIA
 prerequisites: [IT-C259-insegnante, IT-C259-errore]
 sounds: []
-roots: []
+roots: [historia-latin]
+etymology_hook: "storia ← Latin historia, Greek historia 'an inquiry' — English history and story"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C259-errore]
 <!-- hl-knowledge: introduces=[IT-LEX-C259-LAV259-05]; assesses=[] -->
 
 **la storia** — "history, a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**storia** ← Latin *historia*, from Greek *historia*, "an inquiry", with its first syllable dropped — a learned borrowing. EtymDB 2.1 has no row for *storia*; it records the older Italian form *historia* beside the Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a butcher"
 concept_tag: IT-COSE250-MACELLAIO
 prerequisites: [IT-C250-dentista, IT-C250-farmacista]
 sounds: []
-roots: []
+roots: [macellum-latin]
+etymology_hook: "macellaio — macello 'slaughterhouse' + -aio; Latin macellarius"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C250-farmacista]
 <!-- hl-knowledge: introduces=[IT-LEX-C250-COSE250-05]; assesses=[] -->
 
 **il macellaio** — "a butcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**macellaio** — built from *macello*, "a slaughterhouse", with *-aio*, "one who works there". EtymDB 2.1 derives its Romanian cousin *măcelar* from Latin *macellarius*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

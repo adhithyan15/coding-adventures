@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 212,
-  "sourceHash": "fnv1a64:d28a8122713eaade",
+  "sourceHash": "fnv1a64:db96b819356d6625",
   "lessonIds": [
     "IT-C212-affrettarsi",
     "IT-C212-allontanarsi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch212.txt",
   "json": "italian/narration/ch212.json",
-  "textHash": "fnv1a64:273db5e05236f385",
-  "jsonHash": "fnv1a64:d99629985ad99316",
+  "textHash": "fnv1a64:9c784780db589331",
+  "jsonHash": "fnv1a64:2968d29cce46978b",
   "findings": []
 }

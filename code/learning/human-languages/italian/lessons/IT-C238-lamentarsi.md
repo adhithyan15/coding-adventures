@@ -13,7 +13,8 @@ gloss: "to complain"
 concept_tag: IT-VERB-LAMENTARSI
 prerequisites: [IT-C238-informare, IT-C238-inviare]
 sounds: []
-roots: []
+roots: [lamentum-latin]
+etymology_hook: "lamentarsi ← Latin lamentari 'to wail' + -si — English lament"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C238-inviare]
 <!-- hl-knowledge: introduces=[IT-LEX-C238-VERBI238-04]; assesses=[] -->
 
 **lamentarsi** — "to complain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lamentarsi** ← Latin *lamentari*, "to wail", with *-si*, "oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

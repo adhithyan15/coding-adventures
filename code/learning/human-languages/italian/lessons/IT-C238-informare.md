@@ -13,7 +13,8 @@ gloss: "to inform"
 concept_tag: IT-VERB-INFORMARE
 prerequisites: [IT-C237-colpire, IT-C238-indicare]
 sounds: []
-roots: []
+roots: [forma-latin]
+etymology_hook: "informare ← Latin informare 'to shape, to describe' — English inform"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C238-indicare]
 <!-- hl-knowledge: introduces=[IT-LEX-C238-VERBI238-02]; assesses=[] -->
 
 **informare** — "to inform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**informare** ← Latin *informare*, "to shape, to describe" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

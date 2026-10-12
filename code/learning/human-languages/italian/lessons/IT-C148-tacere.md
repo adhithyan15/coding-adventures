@@ -13,7 +13,8 @@ gloss: "to be silent"
 concept_tag: IT-VERB-TACERE
 prerequisites: [IT-C147-ringiovanire, IT-C147-riscaldare]
 sounds: []
-roots: []
+roots: [tacere-latin]
+etymology_hook: "tacere ← Latin tacere 'to be silent' — English tacit and taciturn share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C147-riscaldare]
 <!-- hl-knowledge: introduces=[IT-LEX-C148-VERBI148-01]; assesses=[] -->
 
 **tacere** — "to be silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tacere** ← Latin *tacere*, "to be silent" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

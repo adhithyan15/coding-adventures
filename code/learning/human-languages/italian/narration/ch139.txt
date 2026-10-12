@@ -14,6 +14,9 @@ l'orario — "opening hours, a timetable".
 [once you have stopped driving — read: the door]
 The door says Orario: lunedì – venerdì, 9 – 18. Open on weekdays from nine to six: not on sabato.
 
+The word, taken apart.
+orario — built from ora, "hour", with -ario: a list of hours. EtymDB 2.1 has no row for its origin; the parts are plain to see.
+
 What you've built.
 One more word for this chapter.
 
@@ -44,6 +47,9 @@ You'll want to know: l'avviso.
 l'avviso — "a notice".
 [once you have stopped driving — read: the notice]
 The notice says Oggi il negozio è chiuso. The shop is closed today, so come back another day.
+
+The word, taken apart.
+avviso from Old French avis, "opinion" — borrowed. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -76,6 +82,9 @@ l'affitto — "the rent".
 [once you have stopped driving — read: the advert]
 The advert says Camera libera. Affitto: 400 al mese. A room is free, at 400 a month.
 
+The word, taken apart.
+affitto is the noun of affittare, "to rent": both are built on fitto, "a fixed payment", from Latin fixus, "fixed". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -107,6 +116,9 @@ la ricevuta — "a receipt".
 [once you have stopped driving — read: the receipt]
 The receipt says Ricevuta: affitto, 400. The rent is paid: keep it.
 
+The word, taken apart.
+ricevuta is the past participle of the verb for "to receive", used as a noun: a thing received. That verb from Latin recipere, "to receive". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -137,6 +149,9 @@ You'll want to know: l'appuntamento.
 l'appuntamento — "an appointment".
 [once you have stopped driving — read: the message]
 The message says Appuntamento: lunedì, ore 10. Your appointment is on Monday at ten: be there before ten.
+
+The word, taken apart.
+appuntamento — built from appuntare, "to fix to a point", with -mento. appuntare is built on punto, "a point" from Latin punctum. (EtymDB 2.1 records punto.)
 
 What you've built.
 One more word for this chapter.

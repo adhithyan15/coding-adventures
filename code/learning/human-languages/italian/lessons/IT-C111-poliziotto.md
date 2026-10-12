@@ -14,6 +14,7 @@ concept_tag: IT-LAVORO111-POLIZIOTTO
 prerequisites: [IT-C111-infermiera, IT-C111-cuoco]
 sounds: []
 roots: []
+etymology_hook: "poliziotto — polizia 'police' + the ending -otto"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C111-cuoco]
 <!-- hl-knowledge: introduces=[IT-LEX-C111-LAVORO111-03]; assesses=[] -->
 
 **il poliziotto** — "a police officer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poliziotto** — built from *polizia*, "police", with *-otto*. EtymDB 2.1 has no row for either; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 112,
-  "sourceHash": "fnv1a64:d30f4dc7b38e894c",
+  "sourceHash": "fnv1a64:06cb4ea8138c2930",
   "lessonIds": [
     "IT-C112-fornaio",
     "IT-C112-autista",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch112.txt",
   "json": "italian/narration/ch112.json",
-  "textHash": "fnv1a64:9e425545c28e2718",
-  "jsonHash": "fnv1a64:dc34b7516716c18d",
+  "textHash": "fnv1a64:4146581288d01b12",
+  "jsonHash": "fnv1a64:9a4b8f35f9e1404b",
   "findings": []
 }

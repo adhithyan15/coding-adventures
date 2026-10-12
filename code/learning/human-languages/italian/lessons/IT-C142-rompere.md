@@ -13,7 +13,8 @@ gloss: "to break"
 concept_tag: IT-VERB-ROMPERE
 prerequisites: [IT-C141-spiegare, IT-C142-vincere]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "rompere ← Latin rumpere 'to break' — English rupture and interrupt share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C142-vincere]
 <!-- hl-knowledge: introduces=[IT-LEX-C142-VERBI142-02]; assesses=[] -->
 
 **rompere** — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rompere** ← Latin *rumpere*, "to break" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

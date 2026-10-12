@@ -13,7 +13,8 @@ gloss: "uncomfortable"
 concept_tag: IT-QUAL156-SCOMODO
 prerequisites: [IT-C155-comunque, IT-C156-comodo]
 sounds: []
-roots: []
+roots: [commodus-latin]
+etymology_hook: "scomodo — s- 'un-' + comodo 'comfortable', from Latin commodus 'fit'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C156-comodo]
 <!-- hl-knowledge: introduces=[IT-LEX-C156-QUAL156-02]; assesses=[] -->
 
 **scomodo** — "uncomfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scomodo** is *s-*, "un-", plus *comodo*, "comfortable". *comodo* goes back to Latin *commodus*, "fit, suitable" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

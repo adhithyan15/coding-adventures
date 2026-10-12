@@ -14,6 +14,7 @@ concept_tag: IT-VERB-FOTOGRAFARE
 prerequisites: [IT-C141-dipingere, IT-C141-disegnare]
 sounds: []
 roots: []
+etymology_hook: "fotografare — Greek phos 'light' + graphein 'to write': to write with light"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C141-disegnare]
 <!-- hl-knowledge: introduces=[IT-LEX-C141-VERBI141-03]; assesses=[] -->
 
 **fotografare** — "to photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fotografare** — built from Greek *phos*, *photos*, "light", and *graphein*, "to write": to write with light. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

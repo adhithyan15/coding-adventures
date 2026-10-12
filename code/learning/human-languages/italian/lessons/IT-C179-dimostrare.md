@@ -13,7 +13,8 @@ gloss: "to prove, to demonstrate"
 concept_tag: IT-VERB-DIMOSTRARE
 prerequisites: [IT-C178-annunciare, IT-C178-apparire]
 sounds: []
-roots: []
+roots: [monstrare-latin]
+etymology_hook: "dimostrare ← Latin demonstrare 'to point out' — English demonstrate is the same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C178-apparire]
 <!-- hl-knowledge: introduces=[IT-LEX-C179-VERBI179-01]; assesses=[] -->
 
 **dimostrare** — "to prove, to demonstrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dimostrare** ← Latin *demonstrare*, "to point out" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

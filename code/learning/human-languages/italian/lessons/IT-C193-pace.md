@@ -13,7 +13,8 @@ gloss: "peace"
 concept_tag: IT-COSE193-PACE
 prerequisites: [IT-C193-economia, IT-C193-guerra]
 sounds: []
-roots: []
+roots: [pax-latin]
+etymology_hook: "pace ← Latin pax, pacem 'peace' — English peace is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C193-guerra]
 <!-- hl-knowledge: introduces=[IT-LEX-C193-COSE193-04]; assesses=[] -->
 
 **la pace** — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pace** ← Latin *pax*, "peace" (*pacem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

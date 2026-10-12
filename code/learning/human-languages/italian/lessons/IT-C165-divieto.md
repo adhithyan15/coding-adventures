@@ -13,7 +13,8 @@ gloss: "a ban"
 concept_tag: IT-COSE165-DIVIETO
 prerequisites: [IT-C165-regola, IT-C165-permesso]
 sounds: []
-roots: []
+roots: [vetare-latin]
+etymology_hook: "divieto — from an old verb 'to forbid', built on Latin vetare — English veto"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C165-permesso]
 <!-- hl-knowledge: introduces=[IT-LEX-C165-COSE165-03]; assesses=[] -->
 
 **il divieto** — "a ban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divieto** is the noun of an old verb *divietare*, "to forbid", built on Latin *vetare*, "to forbid". (EtymDB 2.1 records *vetare* behind the modern verb.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

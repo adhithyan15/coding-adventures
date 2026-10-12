@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 139,
-  "sourceHash": "fnv1a64:66e752cd382dcce2",
+  "sourceHash": "fnv1a64:9c7b37ce12386ac7",
   "lessonIds": [
     "IT-C139-lorario",
     "IT-C139-lavviso",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch139.txt",
   "json": "italian/narration/ch139.json",
-  "textHash": "fnv1a64:e064285dfd623227",
-  "jsonHash": "fnv1a64:5afbb02fc72876d7",
+  "textHash": "fnv1a64:237cc1e711759969",
+  "jsonHash": "fnv1a64:40f8552908401191",
   "findings": []
 }

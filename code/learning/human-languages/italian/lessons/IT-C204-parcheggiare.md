@@ -14,6 +14,7 @@ concept_tag: IT-VERB-PARCHEGGIARE
 prerequisites: [IT-C203-stampante, IT-C203-indirizzo]
 sounds: []
 roots: []
+etymology_hook: "parcheggiare — parco 'a park' + -eggiare: to put a car in a park"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C203-indirizzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C204-VERBI204-01]; assesses=[] -->
 
 **parcheggiare** — "to park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parcheggiare** — built from *parco*, "a park", with *-eggiare*: to put in a park. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

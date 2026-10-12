@@ -13,7 +13,8 @@ gloss: "to get dressed"
 concept_tag: IT-VERB-VESTIRSI
 prerequisites: [IT-C133-credere, IT-C133-guidare]
 sounds: []
-roots: []
+roots: [vestire-latin]
+etymology_hook: "vestirsi ← Latin vestire 'to clothe' + -si 'oneself' — English vest shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C133-guidare]
 <!-- hl-knowledge: introduces=[IT-LEX-C134-VERBI134-01]; assesses=[] -->
 
 **vestirsi** — "to get dressed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vestirsi** ← Latin *vestire*, "to clothe", with *-si*, "oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

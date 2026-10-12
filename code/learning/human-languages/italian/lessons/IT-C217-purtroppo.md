@@ -14,6 +14,7 @@ concept_tag: IT-PERCHE217-PURTROPPO
 prerequisites: [IT-C216-gelosia, IT-C216-sorpresa]
 sounds: []
 roots: []
+etymology_hook: "purtroppo — pur 'even' + troppo 'too much'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C216-sorpresa]
 <!-- hl-knowledge: introduces=[IT-LEX-C217-PERCHE217-01]; assesses=[] -->
 
 **purtroppo** — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**purtroppo** is *pur*, "even", plus *troppo*, "too much": all too much. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

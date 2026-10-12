@@ -13,7 +13,8 @@ gloss: "to download, to unload"
 concept_tag: IT-VERB-SCARICARE
 prerequisites: [IT-C150-sbagliare, IT-C150-scambiare]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "scaricare — s- 'un-' + caricare 'to load' ← Late Latin carricare, from carrus 'wagon'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C150-scambiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C150-VERBI150-04]; assesses=[] -->
 
 **scaricare** — "to download, to unload".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scaricare** is *s-*, "un-", plus *caricare*, "to load": to unload. *caricare* ← Late Latin *carricare*, from *carrus*, "a wagon". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

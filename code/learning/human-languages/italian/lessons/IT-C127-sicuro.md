@@ -13,7 +13,8 @@ gloss: "safe; sure"
 concept_tag: IT-QUALITA127-SICURO
 prerequisites: [IT-C127-sbagliato, IT-C127-pronto]
 sounds: []
-roots: []
+roots: [securus-latin]
+etymology_hook: "sicuro ← Latin securus, se- 'without' + cura 'care' — English secure and sure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C127-pronto]
 <!-- hl-knowledge: introduces=[IT-LEX-C127-QUALITA127-05]; assesses=[] -->
 
 **sicuro** — "safe; sure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sicuro** ← Latin *securus*, "free from care", from *se-*, "without", and *cura*, "care" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

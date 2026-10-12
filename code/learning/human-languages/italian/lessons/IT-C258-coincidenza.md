@@ -13,7 +13,8 @@ gloss: "a connection (train)"
 concept_tag: IT-COSE258-COINCIDENZA
 prerequisites: [IT-C258-premio, IT-C258-ritardo]
 sounds: []
-roots: []
+roots: [incidere-latin]
+etymology_hook: "coincidenza — from coincidere 'to fall together' — English coincidence"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C258-ritardo]
 <!-- hl-knowledge: introduces=[IT-LEX-C258-COSE258-04]; assesses=[] -->
 
 **la coincidenza** — "a connection (train)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coincidenza** — built from *coincidere*, "to fall together", with *-enza*: *co-* plus Latin *incidere*, "to fall upon" (Lewis & Short). EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

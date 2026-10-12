@@ -13,7 +13,8 @@ gloss: "plastic"
 concept_tag: IT-COSE230-PLASTICA
 prerequisites: [IT-C229-polvere, IT-C229-fumo]
 sounds: []
-roots: []
+roots: [plasticus-latin]
+etymology_hook: "plastica — from plastico 'mouldable' ← Greek plastikos — English plastic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C229-fumo]
 <!-- hl-knowledge: introduces=[IT-LEX-C230-COSE230-01]; assesses=[] -->
 
 **la plastica** — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plastica** is the feminine of *plastico*, "mouldable", used as a noun. *plastico* ← Latin *plasticus*, from Greek *plastikos*, "fit for moulding" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

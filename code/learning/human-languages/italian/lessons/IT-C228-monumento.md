@@ -13,7 +13,8 @@ gloss: "a monument"
 concept_tag: IT-COSE228-MONUMENTO
 prerequisites: [IT-C228-castello, IT-C228-torre]
 sounds: []
-roots: []
+roots: [monere-latin]
+etymology_hook: "monumento ← Latin monumentum, from monere 'to remind' — English monument"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C228-torre]
 <!-- hl-knowledge: introduces=[IT-LEX-C228-COSE228-04]; assesses=[] -->
 
 **il monumento** — "a monument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**monumento** ← Latin *monumentum*, "a memorial", from *monere*, "to remind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

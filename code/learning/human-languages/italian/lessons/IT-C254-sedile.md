@@ -13,7 +13,8 @@ gloss: "a vehicle seat"
 concept_tag: IT-COSE254-SEDILE
 prerequisites: [IT-C253-tassa, IT-C253-modulo]
 sounds: []
-roots: []
+roots: [sedere-latin]
+etymology_hook: "sedile ← Latin sedile 'a seat', from sedere 'to sit' — a learned word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C253-modulo]
 <!-- hl-knowledge: introduces=[IT-LEX-C254-COSE254-01]; assesses=[] -->
 
 **il sedile** — "a vehicle seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sedile** ← Latin *sedile*, "a seat" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *sedile*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

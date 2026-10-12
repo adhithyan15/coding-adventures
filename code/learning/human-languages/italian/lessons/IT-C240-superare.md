@@ -13,7 +13,8 @@ gloss: "to overtake, to pass"
 concept_tag: IT-VERB-SUPERARE
 prerequisites: [IT-C240-tirare, IT-C240-sprecare]
 sounds: []
-roots: []
+roots: [super-latin]
+etymology_hook: "superare ← Latin superare 'to rise above', from super 'over'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C240-sprecare]
 <!-- hl-knowledge: introduces=[IT-LEX-C240-VERBI240-04]; assesses=[] -->
 
 **superare** — "to overtake, to pass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**superare** ← Latin *superare*, "to go over, to rise above" — a learned borrowing. EtymDB 2.1 has no row for *superare*; it derives Spanish and Portuguese *superar*, borrowed the same way, from *superare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

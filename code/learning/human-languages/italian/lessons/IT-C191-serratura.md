@@ -14,6 +14,7 @@ concept_tag: IT-COSE191-SERRATURA
 prerequisites: [IT-C190-diverso, IT-C191-soffitto]
 sounds: []
 roots: []
+etymology_hook: "serratura — from serrare 'to lock' ← Vulgar Latin serrare 'to bolt'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C191-soffitto]
 <!-- hl-knowledge: introduces=[IT-LEX-C191-COSE191-02]; assesses=[] -->
 
 **la serratura** — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serratura** — built from *serrare*, "to lock", with *-tura*. *serrare* ← Vulgar Latin *serrare*, "to bolt". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

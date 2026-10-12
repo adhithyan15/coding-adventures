@@ -13,7 +13,8 @@ gloss: "to cost"
 concept_tag: IT-VERB-COSTARE
 prerequisites: [IT-C204-spendere, IT-C204-risparmiare]
 sounds: []
-roots: []
+roots: [constare-latin]
+etymology_hook: "costare ← Latin constare 'to stand together; to cost' — English cost is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C204-risparmiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C204-VERBI204-05]; assesses=[] -->
 
 **costare** — "to cost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**costare** ← Latin *constare*, "to stand firm, to cost" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

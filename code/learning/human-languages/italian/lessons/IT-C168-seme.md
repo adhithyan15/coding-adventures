@@ -13,7 +13,8 @@ gloss: "a seed"
 concept_tag: IT-COSE168-SEME
 prerequisites: [IT-C168-orto, IT-C168-pianta]
 sounds: []
-roots: []
+roots: [semen-latin]
+etymology_hook: "seme ← Latin semen 'a seed' — English seminar and disseminate share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C168-pianta]
 <!-- hl-knowledge: introduces=[IT-LEX-C168-COSE168-04]; assesses=[] -->
 
 **il seme** — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seme** ← Latin *semen*, "a seed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a branch"
 concept_tag: IT-COSE200-RAMO
 prerequisites: [IT-C199-cantiere, IT-C199-palazzo]
 sounds: []
-roots: []
+roots: [ramus-latin]
+etymology_hook: "ramo ← Latin ramus 'a branch' — English ramify shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C199-palazzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C200-COSE200-01]; assesses=[] -->
 
 **il ramo** — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ramo** ← Latin *ramus*, "a branch" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

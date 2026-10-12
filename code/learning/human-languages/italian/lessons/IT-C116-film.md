@@ -14,6 +14,7 @@ concept_tag: IT-TEMPOLIBERO116-FILM
 prerequisites: [IT-C115-pagina, IT-C116-musica]
 sounds: []
 roots: []
+etymology_hook: "film ← English film 'a thin skin, a coating' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C116-musica]
 <!-- hl-knowledge: introduces=[IT-LEX-C116-TEMPOLIBERO116-02]; assesses=[] -->
 
 **il film** — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**film** ← English *film*, "a thin skin, a film" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

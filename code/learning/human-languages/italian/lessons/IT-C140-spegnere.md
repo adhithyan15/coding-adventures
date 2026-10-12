@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SPEGNERE
 prerequisites: [IT-C139-lappuntamento, IT-C140-accendere]
 sounds: []
 roots: []
+etymology_hook: "spegnere — from Latin extinguere 'to put out', by a disputed route — English extinguish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C140-accendere]
 <!-- hl-knowledge: introduces=[IT-LEX-C140-VERBI140-02]; assesses=[] -->
 
 **spegnere** — "to switch off, to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spegnere** goes back to Latin *extinguere*, "to put out", by a route that is disputed. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

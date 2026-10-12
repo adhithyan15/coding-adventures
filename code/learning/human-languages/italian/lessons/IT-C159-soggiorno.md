@@ -14,6 +14,7 @@ concept_tag: IT-COSE159-SOGGIORNO
 prerequisites: [IT-C158-puntuale, IT-C159-appartamento]
 sounds: []
 roots: []
+etymology_hook: "soggiorno — from soggiornare 'to stay', built on giorno 'day' — English sojourn is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C159-appartamento]
 <!-- hl-knowledge: introduces=[IT-LEX-C159-COSE159-02]; assesses=[] -->
 
 **il soggiorno** — "a living room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soggiorno** is the noun of *soggiornare*, "to stay", a verb built on *giorno*, "day": the room where the day is spent. Old French *sojorner* is its sister. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

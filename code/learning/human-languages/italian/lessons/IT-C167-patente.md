@@ -13,7 +13,8 @@ gloss: "a driving licence"
 concept_tag: IT-COSE167-PATENTE
 prerequisites: [IT-C167-traffico, IT-C167-multa]
 sounds: []
-roots: []
+roots: [patere-latin]
+etymology_hook: "patente ← Latin patens 'open': an open letter of permission — English patent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C167-multa]
 <!-- hl-knowledge: introduces=[IT-LEX-C167-COSE167-05]; assesses=[] -->
 
 **la patente** — "a driving licence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patente** ← Latin *patens*, "open" — a learned borrowing: a licence was an open letter of permission. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

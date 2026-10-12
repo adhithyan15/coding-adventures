@@ -13,7 +13,8 @@ gloss: "lightning"
 concept_tag: IT-COSE256-FULMINE
 prerequisites: [IT-C255-cantina, IT-C256-fiamma]
 sounds: []
-roots: []
+roots: [fulmen-latin]
+etymology_hook: "fulmine ← Latin fulmen, fulminem 'a thunderbolt' — English fulminate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C256-fiamma]
 <!-- hl-knowledge: introduces=[IT-LEX-C256-COSE256-02]; assesses=[] -->
 
 **il fulmine** — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fulmine** ← Latin *fulmen*, "a thunderbolt" (*fulminem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

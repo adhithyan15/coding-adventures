@@ -13,7 +13,8 @@ gloss: "to float"
 concept_tag: IT-VERB-GALLEGGIARE
 prerequisites: [IT-C149-frenare, IT-C149-funzionare]
 sounds: []
-roots: []
+roots: [galla-latin]
+etymology_hook: "galleggiare — from galla 'an oak gall', which floats; Latin galla 'oak-apple'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C149-funzionare]
 <!-- hl-knowledge: introduces=[IT-LEX-C149-VERBI149-05]; assesses=[] -->
 
 **galleggiare** — "to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**galleggiare** — built from *galla*, "an oak gall", a light growth that floats: *a galla* means "afloat". *galla* ← Latin *galla*, "oak-apple". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

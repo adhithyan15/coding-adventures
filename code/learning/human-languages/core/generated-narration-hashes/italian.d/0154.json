@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 154,
-  "sourceHash": "fnv1a64:28b5eb09a1d59136",
+  "sourceHash": "fnv1a64:d2951a8528a80955",
   "lessonIds": [
     "IT-C154-intorno",
     "IT-C154-dappertutto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch154.txt",
   "json": "italian/narration/ch154.json",
-  "textHash": "fnv1a64:cc903aa1f7b39865",
-  "jsonHash": "fnv1a64:618c0e8de5374b08",
+  "textHash": "fnv1a64:bcea27221660a8d1",
+  "jsonHash": "fnv1a64:8c70af56b7da590a",
   "findings": []
 }

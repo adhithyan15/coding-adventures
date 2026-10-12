@@ -13,7 +13,8 @@ gloss: "a piece of news"
 concept_tag: IT-COSE249-NOTIZIA
 prerequisites: [IT-C248-governo, IT-C249-dialetto]
 sounds: []
-roots: []
+roots: [notitia-latin]
+etymology_hook: "notizia ← Latin notitia 'knowledge', a learned word — English notice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C249-dialetto]
 <!-- hl-knowledge: introduces=[IT-LEX-C249-COSE249-02]; assesses=[] -->
 
 **la notizia** — "a piece of news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**notizia** ← Latin *notitia*, "a being known, knowledge" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *notizia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

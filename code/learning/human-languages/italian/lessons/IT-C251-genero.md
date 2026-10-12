@@ -13,7 +13,8 @@ gloss: "a son-in-law"
 concept_tag: IT-COSE251-GENERO
 prerequisites: [IT-C251-suocero, IT-C251-suocera]
 sounds: []
-roots: []
+roots: [gener-latin]
+etymology_hook: "genero ← Latin gener 'a son-in-law' — Spanish yerno is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C251-suocera]
 <!-- hl-knowledge: introduces=[IT-LEX-C251-COSE251-03]; assesses=[] -->
 
 **il genero** — "a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**genero** ← Latin *gener*, "a son-in-law" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

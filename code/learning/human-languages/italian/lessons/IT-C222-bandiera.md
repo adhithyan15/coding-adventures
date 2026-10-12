@@ -14,6 +14,7 @@ concept_tag: IT-COSE222-BANDIERA
 prerequisites: [IT-C221-valle, IT-C222-soldato]
 sounds: []
 roots: []
+etymology_hook: "bandiera — from banda 'a troop': the flag it gathers under — English banner is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C222-soldato]
 <!-- hl-knowledge: introduces=[IT-LEX-C222-COSE222-02]; assesses=[] -->
 
 **la bandiera** — "a flag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bandiera** — built from *banda*, "a band, a troop", with *-iera*: the flag a troop gathers under. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

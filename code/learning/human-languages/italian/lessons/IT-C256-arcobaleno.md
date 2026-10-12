@@ -13,7 +13,8 @@ gloss: "a rainbow"
 concept_tag: IT-COSE256-ARCOBALENO
 prerequisites: [IT-C256-fulmine, IT-C256-tuono]
 sounds: []
-roots: []
+roots: [arcus-latin]
+etymology_hook: "arcobaleno — arco 'a bow' ← Latin arcus + baleno 'a flash': a bow of light"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C256-tuono]
 <!-- hl-knowledge: introduces=[IT-LEX-C256-COSE256-04]; assesses=[] -->
 
 **l'arcobaleno** — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arcobaleno** is *arco*, "a bow" ← Latin *arcus* (EtymDB 2.1), plus *baleno*, "a flash of lightning", whose origin is uncertain: a bow of light.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 202,
-  "sourceHash": "fnv1a64:d67632f1829772f6",
+  "sourceHash": "fnv1a64:e54d95e29e06d80b",
   "lessonIds": [
     "IT-C202-racchetta",
     "IT-C202-palestra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch202.txt",
   "json": "italian/narration/ch202.json",
-  "textHash": "fnv1a64:e332bcbef4d0efc2",
-  "jsonHash": "fnv1a64:10e5636321e0442b",
+  "textHash": "fnv1a64:ebf3c9bddfd5b982",
+  "jsonHash": "fnv1a64:487d8da31115dbb2",
   "findings": []
 }

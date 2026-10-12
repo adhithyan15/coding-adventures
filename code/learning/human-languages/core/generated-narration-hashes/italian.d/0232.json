@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 232,
-  "sourceHash": "fnv1a64:2d950cc0a6ef91e1",
+  "sourceHash": "fnv1a64:e88350ccaf1a617c",
   "lessonIds": [
     "IT-C232-numero",
     "IT-C232-foglio",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch232.txt",
   "json": "italian/narration/ch232.json",
-  "textHash": "fnv1a64:8ee8100dbc93eb34",
-  "jsonHash": "fnv1a64:f0e51e544a49a825",
+  "textHash": "fnv1a64:8b10c7f7fdc3f673",
+  "jsonHash": "fnv1a64:b268bb2c622325ef",
   "findings": []
 }

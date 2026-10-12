@@ -14,6 +14,7 @@ concept_tag: IT-TEMPO187-MENTRE
 prerequisites: [IT-C187-allora, IT-C187-durante]
 sounds: []
 roots: []
+etymology_hook: "mentre ← Old Italian domentre, Latin dum interim 'while in the meantime'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C187-durante]
 <!-- hl-knowledge: introduces=[IT-LEX-C187-TEMPO187-04]; assesses=[] -->
 
 **mentre** — "while".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mentre** goes back, through Old Italian *domentre*, to Latin *dum interim*, "while in the meantime". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

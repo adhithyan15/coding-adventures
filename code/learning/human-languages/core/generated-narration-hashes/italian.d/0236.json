@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 236,
-  "sourceHash": "fnv1a64:2a472191f64d3a8c",
+  "sourceHash": "fnv1a64:d7a4c605778c82b1",
   "lessonIds": [
     "IT-C236-riposare",
     "IT-C236-svegliarsi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch236.txt",
   "json": "italian/narration/ch236.json",
-  "textHash": "fnv1a64:8811b40aae329554",
-  "jsonHash": "fnv1a64:e38e0434b1ddbf97",
+  "textHash": "fnv1a64:8557d05f8fe63ecd",
+  "jsonHash": "fnv1a64:4d75e1114f354e84",
   "findings": []
 }

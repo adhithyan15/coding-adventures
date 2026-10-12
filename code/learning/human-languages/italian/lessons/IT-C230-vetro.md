@@ -13,7 +13,8 @@ gloss: "sheet glass, glass"
 concept_tag: IT-COSE230-VETRO
 prerequisites: [IT-C229-fumo, IT-C230-plastica]
 sounds: []
-roots: []
+roots: [vitrum-latin]
+etymology_hook: "vetro ← Latin vitrum 'glass' — English vitreous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C230-plastica]
 <!-- hl-knowledge: introduces=[IT-LEX-C230-COSE230-02]; assesses=[] -->
 
 **il vetro** — "sheet glass, glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vetro** ← Latin *vitrum*, "glass" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

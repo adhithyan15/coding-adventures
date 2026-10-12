@@ -14,6 +14,7 @@ concept_tag: IT-COSE162-SCHERMO
 prerequisites: [IT-C161-elezioni, IT-C162-sito]
 sounds: []
 roots: []
+etymology_hook: "schermo — from schermire 'to shield', from a Germanic word — English skirmish is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C162-sito]
 <!-- hl-knowledge: introduces=[IT-LEX-C162-COSE162-02]; assesses=[] -->
 
 **lo schermo** — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schermo** is the noun of *schermire*, "to shield, to fence" (EtymDB 2.1), a verb from a Germanic word for "to protect": a screen shields.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

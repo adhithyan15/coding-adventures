@@ -13,7 +13,8 @@ gloss: "a university"
 concept_tag: IT-LAV259-UNIVERSITA
 prerequisites: [IT-C258-coincidenza, IT-C258-ritorno]
 sounds: []
-roots: []
+roots: [universus-latin]
+etymology_hook: "università ← Latin universitas 'the whole, a community' — English university"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C258-ritorno]
 <!-- hl-knowledge: introduces=[IT-LEX-C259-LAV259-01]; assesses=[] -->
 
 **l'università** — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**università** ← Latin *universitas*, "the whole, a community" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

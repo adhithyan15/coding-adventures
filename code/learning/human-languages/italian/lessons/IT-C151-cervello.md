@@ -13,7 +13,8 @@ gloss: "the brain"
 concept_tag: IT-SAL151-CERVELLO
 prerequisites: [IT-C150-scaricare, IT-C150-sciare]
 sounds: []
-roots: []
+roots: [cerebrum-latin]
+etymology_hook: "cervello ← Latin cerebellum 'a little brain', from cerebrum — English cerebral"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C150-sciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C151-SAL151-01]; assesses=[] -->
 
 **il cervello** — "the brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cervello** ← Latin *cerebellum*, "a little brain", from *cerebrum*, "brain" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

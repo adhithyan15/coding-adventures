@@ -13,7 +13,8 @@ gloss: "to produce"
 concept_tag: IT-VERB-PRODURRE
 prerequisites: [IT-C210-preparare, IT-C210-prestare]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "produrre ← Latin producere 'to lead forth' — English produce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C210-prestare]
 <!-- hl-knowledge: introduces=[IT-LEX-C210-VERBI210-03]; assesses=[] -->
 
 **produrre** — "to produce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**produrre** ← Latin *producere*, "to lead forth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

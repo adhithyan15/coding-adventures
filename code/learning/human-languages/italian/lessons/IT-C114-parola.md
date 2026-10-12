@@ -13,7 +13,8 @@ gloss: "a word"
 concept_tag: IT-SCUOLA114-PAROLA
 prerequisites: [IT-C114-lezione, IT-C114-esame]
 sounds: []
-roots: []
+roots: [parabola-latin]
+etymology_hook: "parola ← Late Latin parabola 'speech', earlier 'a comparison' — English parable is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C114-esame]
 <!-- hl-knowledge: introduces=[IT-LEX-C114-SCUOLA114-03]; assesses=[] -->
 
 **la parola** — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parola** ← Late Latin *parabola*, "a word, speech" — inherited. (EtymDB 2.1) In older Latin *parabola* meant "a comparison", taken from Greek *parabole*. (Lewis & Short)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

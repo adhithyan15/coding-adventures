@@ -14,6 +14,7 @@ concept_tag: IT-SAL215-SCIROPPO
 prerequisites: [IT-C215-ricetta, IT-C215-pillola]
 sounds: []
 roots: []
+etymology_hook: "sciroppo ← Medieval Latin sirupus, from Arabic sharab 'a drink' — English syrup and sherbet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C215-pillola]
 <!-- hl-knowledge: introduces=[IT-LEX-C215-SAL215-04]; assesses=[] -->
 
 **lo sciroppo** — "a syrup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sciroppo** goes back, through Medieval Latin *sirupus*, to Arabic *sharab*, "a drink". EtymDB 2.1 has no row for *sciroppo*, but records that path for the Latin and French words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

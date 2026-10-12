@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 116,
-  "sourceHash": "fnv1a64:cf222151f113ae48",
+  "sourceHash": "fnv1a64:9ba7cdb4217ea574",
   "lessonIds": [
     "IT-C116-musica",
     "IT-C116-film",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch116.txt",
   "json": "italian/narration/ch116.json",
-  "textHash": "fnv1a64:9262db224bbcefb0",
-  "jsonHash": "fnv1a64:b1a861d25114bc8c",
+  "textHash": "fnv1a64:7db1e219ff5190d3",
+  "jsonHash": "fnv1a64:ea3202687cfe6989",
   "findings": []
 }

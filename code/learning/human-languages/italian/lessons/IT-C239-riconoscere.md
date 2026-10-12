@@ -13,7 +13,8 @@ gloss: "to recognise"
 concept_tag: IT-VERB-RICONOSCERE
 prerequisites: [IT-C239-regalare, IT-C239-restituire]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "riconoscere ← Latin recognoscere 'to know again' — English recognise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C239-restituire]
 <!-- hl-knowledge: introduces=[IT-LEX-C239-VERBI239-05]; assesses=[] -->
 
 **riconoscere** — "to recognise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riconoscere** ← Latin *recognoscere*, "to know again" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

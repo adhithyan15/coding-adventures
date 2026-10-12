@@ -13,7 +13,8 @@ gloss: "to fold"
 concept_tag: IT-VERB-PIEGARE
 prerequisites: [IT-C180-partecipare, IT-C180-passeggiare]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "piegare ← Latin plicare 'to fold' — Latin pl- became pi-; English ply"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C180-passeggiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C180-VERBI180-04]; assesses=[] -->
 
 **piegare** — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piegare** ← Latin *plicare*, "to fold" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

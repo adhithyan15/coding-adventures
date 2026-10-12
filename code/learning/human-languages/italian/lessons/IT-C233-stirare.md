@@ -14,6 +14,7 @@ concept_tag: IT-VERB-STIRARE
 prerequisites: [IT-C233-tagliare, IT-C233-asciugare]
 sounds: []
 roots: []
+etymology_hook: "stirare — s- + the verb 'to pull': to stretch the creases out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C233-asciugare]
 <!-- hl-knowledge: introduces=[IT-LEX-C233-VERBI233-04]; assesses=[] -->
 
 **stirare** — "to iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stirare** — *s-* plus the verb for "to pull": to stretch the creases out. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

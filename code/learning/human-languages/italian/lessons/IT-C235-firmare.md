@@ -13,7 +13,8 @@ gloss: "to sign"
 concept_tag: IT-VERB-FIRMARE
 prerequisites: [IT-C234-perdere, IT-C235-controllare]
 sounds: []
-roots: []
+roots: [latin-firmare]
+etymology_hook: "firmare ← Latin firmare 'to confirm' — the same Latin verb gave fermare 'to stop'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C235-controllare]
 <!-- hl-knowledge: introduces=[IT-LEX-C235-VERBI235-02]; assesses=[] -->
 
 **firmare** — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**firmare** ← Latin *firmare*, "to make firm, to confirm" — inherited. (EtymDB 2.1) The same Latin verb gave *fermare*, "to stop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

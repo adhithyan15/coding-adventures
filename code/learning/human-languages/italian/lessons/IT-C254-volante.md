@@ -13,7 +13,8 @@ gloss: "a steering wheel"
 concept_tag: IT-COSE254-VOLANTE
 prerequisites: [IT-C253-modulo, IT-C254-sedile]
 sounds: []
-roots: []
+roots: [volare-latin]
+etymology_hook: "volante — 'flying', from volare 'to fly', after French volant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C254-sedile]
 <!-- hl-knowledge: introduces=[IT-LEX-C254-COSE254-02]; assesses=[] -->
 
 **il volante** — "a steering wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volante** is the present participle of *volare*, "to fly", used as a noun, after French *volant*: the wheel that spins. *volare* ← Latin *volare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

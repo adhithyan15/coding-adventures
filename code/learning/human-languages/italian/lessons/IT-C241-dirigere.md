@@ -13,7 +13,8 @@ gloss: "to direct"
 concept_tag: IT-VERB-DIRIGERE
 prerequisites: [IT-C241-consegnare, IT-C241-correggere]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "dirigere ← Latin dirigere 'to set straight' — English direct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C241-correggere]
 <!-- hl-knowledge: introduces=[IT-LEX-C241-VERBI241-03]; assesses=[] -->
 
 **dirigere** — "to direct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dirigere** ← Latin *dirigere*, "to set straight" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

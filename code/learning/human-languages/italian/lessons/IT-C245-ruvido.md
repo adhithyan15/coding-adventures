@@ -13,7 +13,8 @@ gloss: "rough"
 concept_tag: IT-QUAL245-RUVIDO
 prerequisites: [IT-C244-insieme, IT-C245-liscio]
 sounds: []
-roots: []
+roots: [ruga-latin]
+etymology_hook: "ruvido ← Latin rugidus 'wrinkled', from ruga 'a wrinkle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C245-liscio]
 <!-- hl-knowledge: introduces=[IT-LEX-C245-QUAL245-02]; assesses=[] -->
 
 **ruvido** — "rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ruvido** ← Latin *rugidus*, "wrinkled" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

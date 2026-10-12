@@ -13,7 +13,8 @@ gloss: "thunder"
 concept_tag: IT-COSE256-TUONO
 prerequisites: [IT-C256-fiamma, IT-C256-fulmine]
 sounds: []
-roots: []
+roots: [tonus-latin]
+etymology_hook: "tuono ← Latin tonus 'a sound', from Greek tonos — English tone; Latin o became uo"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C256-fulmine]
 <!-- hl-knowledge: introduces=[IT-LEX-C256-COSE256-03]; assesses=[] -->
 
 **il tuono** — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tuono** ← Latin *tonus*, "a sound, a tone", which Latin took from Greek *tonos* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

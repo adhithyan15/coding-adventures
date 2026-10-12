@@ -13,7 +13,8 @@ gloss: "to improve"
 concept_tag: IT-VERB-MIGLIORARE
 prerequisites: [IT-C145-criticare, IT-C146-meritare]
 sounds: []
-roots: []
+roots: [meliorare-latin]
+etymology_hook: "migliorare ← Late Latin meliorare, from melior 'better' — English ameliorate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C146-meritare]
 <!-- hl-knowledge: introduces=[IT-LEX-C146-VERBI146-02]; assesses=[] -->
 
 **migliorare** — "to improve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**migliorare** ← Late Latin *meliorare*, "to make better" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

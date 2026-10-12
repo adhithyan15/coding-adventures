@@ -13,7 +13,8 @@ gloss: "a victory"
 concept_tag: IT-COSE231-VITTORIA
 prerequisites: [IT-C230-lana, IT-C230-seta]
 sounds: []
-roots: []
+roots: [victoria-latin]
+etymology_hook: "vittoria ← Latin victoria 'victory', from victor — English victory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C230-seta]
 <!-- hl-knowledge: introduces=[IT-LEX-C231-COSE231-01]; assesses=[] -->
 
 **la vittoria** — "a victory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vittoria** ← Latin *victoria*, "victory" — a learned borrowing. EtymDB 2.1 has no row for *vittoria*; it derives Spanish *victoria* and Venetian *vitoria*, borrowed the same way, from *victoria*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

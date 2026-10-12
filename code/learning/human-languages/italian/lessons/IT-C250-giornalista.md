@@ -13,7 +13,8 @@ gloss: "a journalist"
 concept_tag: IT-COSE250-GIORNALISTA
 prerequisites: [IT-C249-televisione, IT-C249-pubblicita]
 sounds: []
-roots: []
+roots: [diurnum]
+etymology_hook: "giornalista — giornale 'newspaper' + -ista — English journalist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C249-pubblicita]
 <!-- hl-knowledge: introduces=[IT-LEX-C250-COSE250-01]; assesses=[] -->
 
 **il giornalista** — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giornalista** — built from *giornale*, "a newspaper", with *-ista*. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

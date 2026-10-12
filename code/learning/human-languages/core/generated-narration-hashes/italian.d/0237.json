@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 237,
-  "sourceHash": "fnv1a64:1ecbc3d48dd3b782",
+  "sourceHash": "fnv1a64:9c819ce4baef0703",
   "lessonIds": [
     "IT-C237-avvisare",
     "IT-C237-bruciare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch237.txt",
   "json": "italian/narration/ch237.json",
-  "textHash": "fnv1a64:ccce9d1b5bee4906",
-  "jsonHash": "fnv1a64:b956039a027b7d1d",
+  "textHash": "fnv1a64:2e074884723003c6",
+  "jsonHash": "fnv1a64:5f89996df1f5c0cc",
   "findings": []
 }

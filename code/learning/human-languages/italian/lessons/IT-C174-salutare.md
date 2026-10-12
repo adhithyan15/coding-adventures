@@ -13,7 +13,8 @@ gloss: "to greet"
 concept_tag: IT-VERB-SALUTARE
 prerequisites: [IT-C174-baciare, IT-C174-abbracciare]
 sounds: []
-roots: []
+roots: [salutare-latin]
+etymology_hook: "salutare ← Latin salutare 'to greet' — English salute is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C174-abbracciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C174-VERBI174-03]; assesses=[] -->
 
 **salutare** — "to greet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salutare** ← Latin *salutare*, "to greet" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

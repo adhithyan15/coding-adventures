@@ -14,6 +14,7 @@ concept_tag: IT-COSE192-DOGANA
 prerequisites: [IT-C192-passaporto, IT-C192-frontiera]
 sounds: []
 roots: []
+etymology_hook: "dogana ← Sicilian doana, from Arabic diwan 'a register, an office' — English divan is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C192-frontiera]
 <!-- hl-knowledge: introduces=[IT-LEX-C192-COSE192-04]; assesses=[] -->
 
 **la dogana** — "customs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dogana** ← Sicilian *doana* — borrowed (EtymDB 2.1); the Sicilian word came from Arabic *diwan*, "a register, an office".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-QUAL246-PICCANTE
 prerequisites: [IT-C246-antico, IT-C246-giovane]
 sounds: []
 roots: []
+etymology_hook: "piccante — 'stinging', from piccare 'to prick'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C246-giovane]
 <!-- hl-knowledge: introduces=[IT-LEX-C246-QUAL246-03]; assesses=[] -->
 
 **piccante** — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piccante** is the present participle of *piccare*, "to prick, to sting": it stings the tongue. Where *piccare* came from is not certain; EtymDB 2.1 has no sound row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-AFFRETTARSI
 prerequisites: [IT-C211-sognare, IT-C211-somigliare]
 sounds: []
 roots: []
+etymology_hook: "affrettarsi — a- + fretta 'haste' + -si; fretta is of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C211-somigliare]
 <!-- hl-knowledge: introduces=[IT-LEX-C212-VERBI212-01]; assesses=[] -->
 
 **affrettarsi** — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**affrettarsi** — built from *fretta*, "haste", with *a-* and *-si*, "oneself": to make haste. Where *fretta* came from is uncertain; EtymDB 2.1 records no origin for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

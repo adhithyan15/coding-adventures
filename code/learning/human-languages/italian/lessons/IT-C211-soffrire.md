@@ -13,7 +13,8 @@ gloss: "to suffer"
 concept_tag: IT-VERB-SOFFRIRE
 prerequisites: [IT-C211-sembrare, IT-C211-servire]
 sounds: []
-roots: []
+roots: [sufferre-latin]
+etymology_hook: "soffrire ← Vulgar Latin sufferire, from sufferre 'to bear' — English suffer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C211-servire]
 <!-- hl-knowledge: introduces=[IT-LEX-C211-VERBI211-03]; assesses=[] -->
 
 **soffrire** — "to suffer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soffrire** ← Vulgar Latin *sufferire*, from Latin *sufferre*, "to bear up" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-COSE162-TASTIERA
 prerequisites: [IT-C162-sito, IT-C162-schermo]
 sounds: []
 roots: []
+etymology_hook: "tastiera — from tasto 'a key', from tastare 'to touch' — English taste is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C162-schermo]
 <!-- hl-knowledge: introduces=[IT-LEX-C162-COSE162-03]; assesses=[] -->
 
 **la tastiera** — "a keyboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tastiera** — built from *tasto*, "a key", with *-iera*: a row of keys. *tasto* comes from *tastare*, "to touch" ← Vulgar Latin *tastare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to save oneself"
 concept_tag: IT-VERB-SALVARSI
 prerequisites: [IT-C149-funzionare, IT-C149-galleggiare]
 sounds: []
-roots: []
+roots: [salvare-latin]
+etymology_hook: "salvarsi ← Late Latin salvare 'to save' + -si 'oneself' — English salvation shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C149-galleggiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C150-VERBI150-01]; assesses=[] -->
 
 **salvarsi** — "to save oneself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salvarsi** ← Late Latin *salvare*, "to save", with *-si*, "oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a corridor"
 concept_tag: IT-COSE159-CORRIDOIO
 prerequisites: [IT-C159-appartamento, IT-C159-soggiorno]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "corridoio — from correre 'to run' ← Latin currere — English corridor is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C159-soggiorno]
 <!-- hl-knowledge: introduces=[IT-LEX-C159-COSE159-03]; assesses=[] -->
 
 **il corridoio** — "a corridor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corridoio** — built from *correre*, "to run": a place to run along. *correre* ← Latin *currere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

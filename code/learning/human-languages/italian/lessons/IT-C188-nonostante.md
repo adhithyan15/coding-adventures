@@ -13,7 +13,8 @@ gloss: "despite"
 concept_tag: IT-PERCHE188-NONOSTANTE
 prerequisites: [IT-C188-cioe, IT-C188-sebbene]
 sounds: []
-roots: []
+roots: [obstare-latin]
+etymology_hook: "nonostante — non 'not' + ostante 'standing against', from Latin obstare — English obstacle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C188-sebbene]
 <!-- hl-knowledge: introduces=[IT-LEX-C188-PERCHE188-05]; assesses=[] -->
 
 **nonostante** — "despite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nonostante** is *non*, "not", plus *ostante*, "standing in the way", from Latin *obstare*: nothing standing in the way. EtymDB 2.1 lists French *nonobstant* and Spanish *no obstante* as its cognates.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

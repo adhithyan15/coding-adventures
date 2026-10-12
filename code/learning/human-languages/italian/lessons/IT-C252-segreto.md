@@ -13,7 +13,8 @@ gloss: "a secret"
 concept_tag: IT-COSE252-SEGRETO
 prerequisites: [IT-C252-verita, IT-C252-bugia]
 sounds: []
-roots: []
+roots: [secernere-latin]
+etymology_hook: "segreto ← Latin secretus 'set apart' — Latin c softened to g; English secret"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C252-bugia]
 <!-- hl-knowledge: introduces=[IT-LEX-C252-COSE252-05]; assesses=[] -->
 
 **il segreto** — "a secret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**segreto** ← Latin *secretus*, "set apart, secret" (Lewis & Short) — inherited: the Latin *c* softened to *g*. EtymDB 2.1 has no row for *segreto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

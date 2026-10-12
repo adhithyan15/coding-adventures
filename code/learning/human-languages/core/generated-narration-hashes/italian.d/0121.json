@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 121,
-  "sourceHash": "fnv1a64:315c5ab5fdbd4cc3",
+  "sourceHash": "fnv1a64:82708ba1eed037d6",
   "lessonIds": [
     "IT-C121-tartaruga",
     "IT-C121-scoiattolo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch121.txt",
   "json": "italian/narration/ch121.json",
-  "textHash": "fnv1a64:3f93205810412875",
-  "jsonHash": "fnv1a64:7e4fe1c09c53b7e0",
+  "textHash": "fnv1a64:4874602324be77bb",
+  "jsonHash": "fnv1a64:360d40d9919d4883",
   "findings": []
 }

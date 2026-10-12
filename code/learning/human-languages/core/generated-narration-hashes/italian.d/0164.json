@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 164,
-  "sourceHash": "fnv1a64:947ceacb2ff2bd75",
+  "sourceHash": "fnv1a64:51031f1431e6892e",
   "lessonIds": [
     "IT-C164-fidanzata",
     "IT-C164-sposo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch164.txt",
   "json": "italian/narration/ch164.json",
-  "textHash": "fnv1a64:ff2ed42251b8c9c5",
-  "jsonHash": "fnv1a64:1642760964befc3c",
+  "textHash": "fnv1a64:02c33a78a8d284b7",
+  "jsonHash": "fnv1a64:ad44c4928d5ca24e",
   "findings": []
 }

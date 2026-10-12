@@ -13,7 +13,8 @@ gloss: "a hill"
 concept_tag: IT-NATURA118-COLLINA
 prerequisites: [IT-C118-temporale, IT-C118-ghiaccio]
 sounds: []
-roots: []
+roots: [collis-latin]
+etymology_hook: "collina ← Late Latin collina, from collis 'hill'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C118-ghiaccio]
 <!-- hl-knowledge: introduces=[IT-LEX-C118-NATURA118-04]; assesses=[] -->
 
 **la collina** — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collina** ← Late Latin *collina*, from Latin *collis*, "hill" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

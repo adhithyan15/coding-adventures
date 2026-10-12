@@ -13,7 +13,8 @@ gloss: "a bride"
 concept_tag: IT-COSE164-SPOSA
 prerequisites: [IT-C164-fidanzata, IT-C164-sposo]
 sounds: []
-roots: []
+roots: [spondere-latin]
+etymology_hook: "sposa ← Latin sponsa 'a betrothed woman' — English spouse is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C164-sposo]
 <!-- hl-knowledge: introduces=[IT-LEX-C164-COSE164-03]; assesses=[] -->
 
 **la sposa** — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sposa** ← Latin *sponsa*, "a betrothed woman" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

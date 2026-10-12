@@ -13,7 +13,8 @@ gloss: "to protect"
 concept_tag: IT-VERB-PROTEGGERE
 prerequisites: [IT-C177-permettere, IT-C177-vietare]
 sounds: []
-roots: []
+roots: [protegere-latin]
+etymology_hook: "proteggere ← Latin protegere 'to cover in front' — English protect is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C177-vietare]
 <!-- hl-knowledge: introduces=[IT-LEX-C177-VERBI177-04]; assesses=[] -->
 
 **proteggere** — "to protect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proteggere** ← Latin *protegere*, "to cover in front" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

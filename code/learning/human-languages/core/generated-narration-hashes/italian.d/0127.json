@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 127,
-  "sourceHash": "fnv1a64:ea2f21f90d6085fe",
+  "sourceHash": "fnv1a64:0ff1a8c3ffa93ad9",
   "lessonIds": [
     "IT-C127-serio",
     "IT-C127-giusto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch127.txt",
   "json": "italian/narration/ch127.json",
-  "textHash": "fnv1a64:8122cf55acda7c5b",
-  "jsonHash": "fnv1a64:79b8ebf2d9dcfb37",
+  "textHash": "fnv1a64:185816864b19e999",
+  "jsonHash": "fnv1a64:7164c759de6fddbe",
   "findings": []
 }

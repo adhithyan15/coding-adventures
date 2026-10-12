@@ -13,7 +13,8 @@ gloss: "a map"
 concept_tag: IT-COSE198-MAPPA
 prerequisites: [IT-C198-etichetta, IT-C198-cartello]
 sounds: []
-roots: []
+roots: [mappa-latin]
+etymology_hook: "mappa ← Latin mappa 'a cloth': mappa mundi, the world drawn on cloth — English map"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C198-cartello]
 <!-- hl-knowledge: introduces=[IT-LEX-C198-COSE198-05]; assesses=[] -->
 
 **la mappa** — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mappa** ← Latin *mappa*, "a napkin, a cloth" (EtymDB 2.1); the sense "map" comes from Medieval Latin *mappa mundi*, "cloth of the world".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "wide"
 concept_tag: IT-QUALITA129-LARGO
 prerequisites: [IT-C129-duro, IT-C129-rotondo]
 sounds: []
-roots: []
+roots: [largus-latin]
+etymology_hook: "largo ← Latin largus 'abundant, generous' — it means 'wide', not 'large'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C129-rotondo]
 <!-- hl-knowledge: introduces=[IT-LEX-C129-QUALITA129-03]; assesses=[] -->
 
 **largo** — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**largo** ← Latin *largus*, "abundant, generous" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a worker"
 concept_tag: IT-COSE163-OPERAIO
 prerequisites: [IT-C163-elettricista, IT-C163-idraulico]
 sounds: []
-roots: []
+roots: [operarius-latin]
+etymology_hook: "operaio ← Latin operarius 'a labourer' — English opera and operate share the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C163-idraulico]
 <!-- hl-knowledge: introduces=[IT-LEX-C163-COSE163-04]; assesses=[] -->
 
 **l'operaio** — "a worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**operaio** ← Latin *operarius*, "a labourer", from *opera*, "work" — inherited: Latin *-arius* passed down by speech became *-aio*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-FUT138-STASERA
 prerequisites: [IT-C137-succedere, IT-C138-il-futuro]
 sounds: []
 roots: []
+etymology_hook: "stasera — questa sera 'this evening', worn down into one word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C138-il-futuro]
 <!-- hl-knowledge: introduces=[IT-LEX-C138-FUT138-02]; assesses=[] -->
 
 **stasera** — "this evening". The time word can stand first: **Stasera lavorerò.** — "This evening I will work." **Tra** a length of time gives "in": **tra due giorni** — "in two days".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stasera** is *questa sera*, "this evening", worn down into one word: *sta* is a short form of the word for "this". EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

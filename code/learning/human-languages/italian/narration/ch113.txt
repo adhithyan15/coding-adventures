@@ -12,6 +12,9 @@ Before the new one: say the Italian for an engineer, then the Italian for a fire
 You'll want to know: il postino.
 il postino — "a postman".
 
+The word, taken apart.
+postino — built from posta, "the post", with -ino: the post's man. EtymDB 2.1 traces posta to Latin postus, "placed": the post was first a relay station placed along a road.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a firefighter, then the Italian for a po
 
 You'll want to know: il cameriere.
 il cameriere — "a waiter".
+
+The word, taken apart.
+cameriere — built from camera, "room", with -iere, the ending for a man who does a job: first the servant of the rooms. camera from Latin camera, "a vault", from Greek kamara. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a postman, then the Italian for a waiter
 You'll want to know: il cliente.
 il cliente — "a customer".
 
+The word, taken apart.
+cliente from Latin cliens, clientis, "a client, a follower" — a learned borrowing. EtymDB 2.1 has no row for cliente; it derives French client from cliens.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a waiter, then the Italian for a custome
 You'll want to know: la cassa.
 la cassa — "a till, a checkout".
 
+The word, taken apart.
+cassa from Latin capsa, "a box", from capere, "to take, to hold" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a customer, then the Italian for a till.
 
 You'll want to know: la classe.
 la classe — "a class".
+
+The word, taken apart.
+classe from Latin classis, "a division of the people, a class" — a learned borrowing: a word passed down by speech would have turned cl- into chi-. (EtymDB 2.1 records the Latin word.)
 
 What you've built.
 One more word for this chapter.

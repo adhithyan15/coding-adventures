@@ -13,7 +13,8 @@ gloss: "a piano"
 concept_tag: IT-COSE170-PIANOFORTE
 prerequisites: [IT-C169-energia, IT-C170-chitarra]
 sounds: []
-roots: []
+roots: [fortis-latin]
+etymology_hook: "pianoforte — piano 'soft' + forte 'loud': it could play both — English piano is its short form"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C170-chitarra]
 <!-- hl-knowledge: introduces=[IT-LEX-C170-COSE170-02]; assesses=[] -->
 
 **il pianoforte** — "a piano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pianoforte** is *piano*, "soft", plus *forte*, "loud": the first keyboard that could play both. *forte* ← Latin *fortis*, "strong". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

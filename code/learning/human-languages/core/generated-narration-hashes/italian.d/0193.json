@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 193,
-  "sourceHash": "fnv1a64:826bf0fa08a69a19",
+  "sourceHash": "fnv1a64:aa0f4d1712380b0b",
   "lessonIds": [
     "IT-C193-politica",
     "IT-C193-economia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch193.txt",
   "json": "italian/narration/ch193.json",
-  "textHash": "fnv1a64:b0dae51b9377db50",
-  "jsonHash": "fnv1a64:bade04ae058d7428",
+  "textHash": "fnv1a64:adbe0f72779d3548",
+  "jsonHash": "fnv1a64:d8ce7d780391f6a5",
   "findings": []
 }

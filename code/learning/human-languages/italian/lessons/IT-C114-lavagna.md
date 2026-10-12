@@ -14,6 +14,7 @@ concept_tag: IT-SCUOLA114-LAVAGNA
 prerequisites: [IT-C114-esame, IT-C114-parola]
 sounds: []
 roots: []
+etymology_hook: "lavagna — named after Lavagna, a Ligurian town famous for its slate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C114-parola]
 <!-- hl-knowledge: introduces=[IT-LEX-C114-SCUOLA114-04]; assesses=[] -->
 
 **la lavagna** — "a board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavagna** is named after Lavagna, a town on the Ligurian coast whose slate was cut into writing boards. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

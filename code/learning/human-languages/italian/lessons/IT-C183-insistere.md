@@ -13,7 +13,8 @@ gloss: "to insist"
 concept_tag: IT-VERB-INSISTERE
 prerequisites: [IT-C182-accorgersi, IT-C183-inseguire]
 sounds: []
-roots: []
+roots: [insistere-latin]
+etymology_hook: "insistere ← Latin insistere 'to stand upon' — English insist is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C183-inseguire]
 <!-- hl-knowledge: introduces=[IT-LEX-C183-VERBI183-02]; assesses=[] -->
 
 **insistere** — "to insist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**insistere** ← Latin *insistere*, "to stand upon, to press on" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

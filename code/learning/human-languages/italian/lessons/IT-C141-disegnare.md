@@ -13,7 +13,8 @@ gloss: "to draw"
 concept_tag: IT-VERB-DISEGNARE
 prerequisites: [IT-C140-gridare, IT-C141-dipingere]
 sounds: []
-roots: []
+roots: [designare-latin]
+etymology_hook: "disegnare ← Latin designare 'to mark out' — English design and designate share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C141-dipingere]
 <!-- hl-knowledge: introduces=[IT-LEX-C141-VERBI141-02]; assesses=[] -->
 
 **disegnare** — "to draw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**disegnare** ← Latin *designare*, "to mark out" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

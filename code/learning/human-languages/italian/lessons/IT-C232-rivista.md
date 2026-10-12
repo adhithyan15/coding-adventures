@@ -13,7 +13,8 @@ gloss: "a magazine"
 concept_tag: IT-LAV232-RIVISTA
 prerequisites: [IT-C232-foglio, IT-C232-giornale]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "rivista — from rivedere 'to see again': a review"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C232-giornale]
 <!-- hl-knowledge: introduces=[IT-LEX-C232-LAV232-04]; assesses=[] -->
 
 **la rivista** — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rivista** is the past participle of *rivedere*, "to see again, to review", used as a noun: a review. EtymDB 2.1 has no row for its origin; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

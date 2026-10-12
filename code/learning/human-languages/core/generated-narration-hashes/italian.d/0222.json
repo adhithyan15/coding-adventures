@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 222,
-  "sourceHash": "fnv1a64:98d22c9c7f853de4",
+  "sourceHash": "fnv1a64:27050c352186a4b5",
   "lessonIds": [
     "IT-C222-soldato",
     "IT-C222-bandiera",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch222.txt",
   "json": "italian/narration/ch222.json",
-  "textHash": "fnv1a64:4ec8a0f94443e500",
-  "jsonHash": "fnv1a64:377e8932b54ccd38",
+  "textHash": "fnv1a64:634d3f0b870e19bf",
+  "jsonHash": "fnv1a64:b54a21cf9f055029",
   "findings": []
 }

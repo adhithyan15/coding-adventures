@@ -13,7 +13,8 @@ gloss: "equal, the same"
 concept_tag: IT-QUAL219-UGUALE
 prerequisites: [IT-C218-calmo, IT-C218-silenzioso]
 sounds: []
-roots: []
+roots: [aequalis-latin]
+etymology_hook: "uguale ← Latin aequalis, aequalem 'equal' — English equal is the same Latin word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C218-silenzioso]
 <!-- hl-knowledge: introduces=[IT-LEX-C219-QUAL219-01]; assesses=[] -->
 
 **uguale** — "equal, the same".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uguale** ← Latin *aequalis*, "equal, level" (*aequalem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 207,
-  "sourceHash": "fnv1a64:5134b223be6dece2",
+  "sourceHash": "fnv1a64:0135ef1b1f7cdade",
   "lessonIds": [
     "IT-C207-crescere",
     "IT-C207-invecchiare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch207.txt",
   "json": "italian/narration/ch207.json",
-  "textHash": "fnv1a64:e694dab776c27416",
-  "jsonHash": "fnv1a64:645e557d91350676",
+  "textHash": "fnv1a64:2d5bbcd7d052e3ca",
+  "jsonHash": "fnv1a64:2781ba8eb57252bd",
   "findings": []
 }
