@@ -9,7 +9,6 @@
 // order in front of you". See "A Writing block that is a dictation" in
 // src/figure-targets.ts and the matching HL06 section.
 import { describe, expect, it } from "vitest";
-import { resolvedFigureTargets } from "../../src/figure-cli.js";
 import {
   filmstripBlockIndex,
   filmstripCandidates,
@@ -19,9 +18,13 @@ import {
   writingLetterOf,
 } from "../../src/figure-targets.js";
 import { writtenLettersOf } from "../../src/letter-anchoring.js";
-import { defaultCurriculumRoot, loadLessons } from "../../src/loader.js";
 import type { ParsedLesson } from "../../src/parse.js";
 import { lesson } from "./fixture.js";
+import {
+  realFigureById as byId,
+  realFigureDrawn as drawn,
+  realFigureLessons as lessons,
+} from "./real-corpus.js";
 
 const NO_MODEL_STAGES = [
   "dictation-transcription",
@@ -89,14 +92,6 @@ describe("no strip above a dictation", () => {
 });
 
 describe("no-model Writing blocks in the real corpus", () => {
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const byId = new Map(lessons.map((entry) => [entry.realization.lessonId, entry]));
-  const drawn = new Set(
-    resolvedFigureTargets(root, lessons)
-      .filter((target) => target.kind === "script-filmstrip")
-      .map((target) => target.lessonId),
-  );
 
   it("prints no strip in a block that shows no model", () => {
     const blind = [...drawn].filter((id) => {
@@ -167,13 +162,6 @@ describe("a lesson that prints no filmstrip", () => {
   // prose written for strip lessons ("follow the numbered strip", "The strip
   // shows where to start") must not be left on a lesson whose strip has gone.
   const FIGURE_PROSE = /numbered strip|\bthe strip (?:shows|names|writes|gives|draws)\b/i;
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const drawn = new Set(
-    resolvedFigureTargets(root, lessons)
-      .filter((target) => target.kind === "script-filmstrip")
-      .map((target) => target.lessonId),
-  );
 
   it("never tells the learner to follow a strip", () => {
     const orphaned = lessons

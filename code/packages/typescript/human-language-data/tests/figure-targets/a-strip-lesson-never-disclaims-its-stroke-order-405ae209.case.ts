@@ -15,8 +15,7 @@
 // filmstrip may carry the disclaimer, and lessons with no strip are expected to
 // keep it.
 import { describe, expect, it } from "vitest";
-import { resolvedFigureTargets } from "../../src/figure-cli.js";
-import { defaultCurriculumRoot, loadLessons } from "../../src/loader.js";
+import { realFigureDrawn as stripLessons, realFigureLessons as lessons } from "./real-corpus.js";
 
 // The template, tolerant of the bold markers and line wrapping it is written
 // with ("does not yet tell you **where to start", across a `> ` line break),
@@ -24,13 +23,6 @@ import { defaultCurriculumRoot, loadLessons } from "../../src/loader.js";
 const DISCLAIMER = /does not (?:yet )?tell you[\s>*]*where to start|copy what you see/;
 
 describe("a lesson that prints a filmstrip", () => {
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const stripLessons = new Set(
-    resolvedFigureTargets(root, lessons)
-      .filter((target) => target.kind === "script-filmstrip")
-      .map((target) => target.lessonId),
-  );
 
   it("never says the book gives no stroke order", () => {
     const contradicting = lessons

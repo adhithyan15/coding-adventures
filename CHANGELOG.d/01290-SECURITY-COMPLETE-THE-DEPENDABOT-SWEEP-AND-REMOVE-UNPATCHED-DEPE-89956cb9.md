@@ -5,3 +5,4 @@
 - Reverify barcode conformance and its exact tree evidence. Bound corpus test workers and reuse immutable corpus measurements; reject invalid mock levels before reading lessons. Use an owned Node runtime and the production startup budget for overlapping ACL tests, retaining the 15-second case deadline.
 - Reject Windows JVM output junctions and reparse-point ancestors on Python 3.10; verify external targets remain untouched.
 - Remove duplicate modality manifest generation, cache immutable test owners, and budget the live full-corpus CLI integration explicitly while preserving every owner and path validation.
+- Reuse one chapter snapshot/report and one figure-target corpus across its five real-corpus groups, preserving all assertions and normal limits while repairing reproduced macOS timeouts and 2 GiB worker heap exhaustion.

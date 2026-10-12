@@ -4,18 +4,15 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { resolvedFigureTargets } from "../../src/figure-cli.js";
-import type { ScriptFilmstripTarget } from "../../src/figure.js";
-import { defaultCurriculumRoot, loadLessons } from "../../src/loader.js";
 import type { ParsedLesson } from "../../src/parse.js";
 import { loadFilmstripTargetCountPins } from "../filmstrip-target-count-pins.js";
+import {
+  realFigureLessons as lessons,
+  realFigureRoot as root,
+  realFigureTargets as targets,
+} from "./real-corpus.js";
 
 describe("the real corpus", () => {
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const targets = resolvedFigureTargets(root, lessons).filter(
-    (target): target is ScriptFilmstripTarget => target.kind === "script-filmstrip",
-  );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
     // 39 one-glyph lessons, 37 glyphs. வ has both TA-S01-va and the guided

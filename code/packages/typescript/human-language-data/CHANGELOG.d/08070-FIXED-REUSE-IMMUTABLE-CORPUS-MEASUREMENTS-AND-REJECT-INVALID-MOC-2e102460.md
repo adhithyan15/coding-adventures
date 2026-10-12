@@ -4,3 +4,4 @@
 - Reject unknown Spanish mock levels before loading vocabulary or lessons, with a regression against an absent corpus.
 - Build the modality manifest once per CLI invocation and reuse it for emitted owner bytes, preserving all byte, identity, reconstruction and recovery checks.
 - Give the live full-corpus modality CLI regression a measured 120-second integration budget; ordinary test and hook limits remain 30 seconds.
+- Share one chapter snapshot and gate report, and one figure-target corpus across five real-corpus groups. Preserve every shard and assertion while removing repeated scans and the reproduced 2 GiB worker heap exhaustion; expose shared figure collections as read-only.
