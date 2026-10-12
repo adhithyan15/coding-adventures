@@ -204,6 +204,12 @@ rather than letting them read as silent gaps.
     that backend's fresh inventory from 79 to 69. The inset theme-toggle moon
     shadow remains explicit drawing-effect debt rather than being mistaken for
     native elevation.
+    #17313 then aligns Flutter's drag-body helper detection with the decorated
+    and lightweight lowering paths. A leading `If`/`Else` list now receives the
+    helper definition it calls, and a decorated conditional followed by an
+    ordinary child keeps that child in the evaluated vertical list. This is a
+    generated-Dart correctness repair and does not change the 69-style-drop
+    inventory.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

@@ -135,6 +135,9 @@ measured inventory from 91 to 83. Invalid or unbounded percentages remain
 explicit debt (#17289). Flutter drag-and-drop bodies now apply authored `gap`
 after dynamic child lists are evaluated, retiring the remaining four Flutter
 gap omissions and reducing the inventory from 83 to 79 (#17301).
+Conditional drag/drop bodies use the same child-list decision for helper
+definition and invocation, so a leading `If`/`Else` cannot produce an undefined
+`_mosaicWithGap`, and a following ordinary child cannot disappear (#17313).
 Flutter's ten non-inset `box-shadow` declarations that accompany supported
 `elevation` tokens now leave the report when their native shadows are emitted,
 reducing the inventory from 79 to 69. The inset theme-toggle moon shadow remains

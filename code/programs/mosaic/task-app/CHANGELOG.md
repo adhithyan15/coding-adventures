@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter conditional drag gaps emit complete Dart (#17313)
+
+Flutter now emits the shared gap helper whenever an undecorated drag/drop body
+starting with `If`/`Else` calls it, and decorated conditional bodies retain any
+following ordinary child in the evaluated vertical list. This prevents an
+undefined Dart helper and silent child loss without changing TaskApp's current
+style-degradation inventory or native drag semantics.
+
 ### Fixed — Flutter elevation shadows leave the degradation report (#17308)
 
 Flutter now treats a non-inset `box-shadow` paired with a supported Mosaic
