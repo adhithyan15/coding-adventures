@@ -1050,6 +1050,8 @@ survive semantic IR, layout, and scene metadata; named classes and direct styles
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
 Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
 with a deterministic static dash pattern for non-animated paint backends.
+Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
+to portable cubic paths with tangent-aware endpoint markers.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically

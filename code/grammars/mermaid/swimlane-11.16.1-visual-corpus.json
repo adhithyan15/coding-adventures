@@ -59,6 +59,7 @@
     "styled-inline-link-labels",
     "edge-identifiers",
     "edge-class-styles",
-    "edge-animation-config"
+    "edge-animation-config",
+    "edge-curve-config"
   ]
 }

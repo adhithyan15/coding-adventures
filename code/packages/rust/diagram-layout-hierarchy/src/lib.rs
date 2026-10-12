@@ -263,6 +263,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 style: edge.style.clone(),
                 animate: edge.animate,
                 animation: edge.animation,
+                curve: edge.curve,
             })
         })
         .collect();
@@ -691,6 +692,7 @@ mod tests {
                 min_length: 1,
                 classes: Vec::new(), style: Default::default(),
                 animate: false, animation: None,
+                curve: None,
             }],
             links: Vec::new(), callbacks: Vec::new(),
         };
