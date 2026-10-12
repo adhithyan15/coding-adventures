@@ -313,6 +313,9 @@ non-runtime-real, and overridden exponential branches remain gated.
 Built-in `ln` may also map a runtime conditional when every branch is exactly
 two built-in exponentials over a proven bounded runtime-real sign root; missing,
 deeper, non-runtime-real, and overridden branches remain gated.
+The same exact two-exponential proof now applies to a direct sign-rooted
+operand; a third direct exponential, unrestricted roots, and overrides remain
+gated.
 The same bounded proof extends to exactly three built-in exponentials per
 branch; missing, deeper, non-runtime-real, and overridden branches remain gated.
 Additional built-in `sqrt` calls may wrap that positive bounded result while

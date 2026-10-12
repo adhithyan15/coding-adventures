@@ -1418,6 +1418,9 @@ backend immediately) come before the enabler-dependent items.
   two built-in exponentials over a proven bounded runtime-real sign root;
   missing, deeper, non-runtime-real, and overridden branches remain
   conservative.
+  The same exact two-exponential proof now applies to a direct sign-rooted
+  operand; a third direct exponential, unrestricted roots, and overrides remain
+  conservative.
   The same bounded proof extends to exactly three built-in exponentials per
   branch; missing, deeper, non-runtime-real, and overridden branches remain
   conservative.
