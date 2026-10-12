@@ -215,3 +215,4 @@ All notable changes to this package will be documented in this file.
 ## Security - 2026-10-11
 
 - Override global-agent with 4.1.3 to remove roarr and sprintf-js.
+- Require Electron 43.7.9 or later in the 43.x line, matching the patched lockfile while reconciling concurrent dependency updates.
