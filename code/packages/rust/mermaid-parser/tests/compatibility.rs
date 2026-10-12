@@ -2198,6 +2198,21 @@ fn swimlane_edge_curve_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_step_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst stepped@--> sixth\nsecond before@--> fifth\nthird after@--> fourth\nstepped@{ curve: step }\nbefore@{ curve: stepBefore }\nafter@{ curve: stepAfter }",
+    ).expect("Flowchart step curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::Step),
+        Some(SwimlaneEdgeCurve::StepBefore),
+        Some(SwimlaneEdgeCurve::StepAfter),
+    ]);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

@@ -31,7 +31,7 @@ pub const VERSION: &str = "0.75.0";
 use std::collections::HashMap;
 
 use diagram_ir::{
-    ChartTextAnchor, ChartTextBaseline, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
+    ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
     LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
@@ -901,6 +901,31 @@ where
                 },
             ];
             (first, second)
+        } else if matches!(edge.curve,
+            Some(SwimlaneEdgeCurve::Step | SwimlaneEdgeCurve::StepBefore | SwimlaneEdgeCurve::StepAfter)
+        ) {
+            let horizontal = matches!(diagram.direction, DiagramDirection::Lr | DiagramDirection::Rl);
+            let intermediates = match (edge.curve, horizontal) {
+                (Some(SwimlaneEdgeCurve::Step), true) => {
+                    let middle = (edge.from.x + edge.to.x) / 2.0;
+                    vec![Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y }]
+                }
+                (Some(SwimlaneEdgeCurve::Step), false) => {
+                    let middle = (edge.from.y + edge.to.y) / 2.0;
+                    vec![Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle }]
+                }
+                (Some(SwimlaneEdgeCurve::StepBefore), true) | (Some(SwimlaneEdgeCurve::StepAfter), false) => {
+                    vec![Point { x: edge.from.x, y: edge.to.y }]
+                }
+                (Some(SwimlaneEdgeCurve::StepAfter), true) | (Some(SwimlaneEdgeCurve::StepBefore), false) => {
+                    vec![Point { x: edge.to.x, y: edge.from.y }]
+                }
+                _ => unreachable!("step curve already matched"),
+            };
+            path.commands = vec![PathCommand::MoveTo { x: edge.from.x, y: edge.from.y }];
+            path.commands.extend(intermediates.iter().map(|point| PathCommand::LineTo { x: point.x, y: point.y }));
+            path.commands.push(PathCommand::LineTo { x: edge.to.x, y: edge.to.y });
+            (intermediates[0].clone(), intermediates[intermediates.len() - 1].clone())
         } else {
             (edge.to.clone(), edge.from.clone())
         };
@@ -1406,6 +1431,9 @@ where
             metadata.insert(format!("swimlane.edge.{index}.curve"), match curve {
                 SwimlaneEdgeCurve::Linear => "linear",
                 SwimlaneEdgeCurve::Basis => "basis",
+                SwimlaneEdgeCurve::Step => "step",
+                SwimlaneEdgeCurve::StepBefore => "stepBefore",
+                SwimlaneEdgeCurve::StepAfter => "stepAfter",
             }.into());
         }
     }
