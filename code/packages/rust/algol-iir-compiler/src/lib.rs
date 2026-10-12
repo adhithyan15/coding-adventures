@@ -17668,6 +17668,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_direct_output_post_proof_does_not_certify_tracked_variables_as_literals() {
+        let error = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; real other; other := 1.5; boolean flag; flag := true; print(if flag then abs(2.0) else other) end",
+            "test",
+        ).expect_err("a tracked variable is not context-free literal proof after user-call tracking invalidation");
+        assert!(format!("{error:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
     fn al4_print_static_conditional_selects_formatter_free_branch() {
         let module = compile_source(
             "begin real procedure choose; choose := 1.5; boolean flag; flag := false; print(if flag then choose() else 42.0) end",
