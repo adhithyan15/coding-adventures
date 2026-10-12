@@ -709,7 +709,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -769,6 +769,14 @@ mod tests {
                     shape: DiagramShape::StoredData, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "summary".into(), label: "Summary".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Summary, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "tagged-document".into(), label: "Tagged document".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::TaggedDocument, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "tagged-process".into(), label: "Tagged process".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::TaggedProcess, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "paper-tape".into(), label: "Paper tape".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::PaperTape, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "lined-document".into(), label: "Lined document".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LinedDocument, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -821,6 +829,14 @@ mod tests {
         assert_eq!((layout.nodes[27].width, layout.nodes[27].height), (132.0, 54.0));
         assert_eq!(layout.nodes[28].shape, DiagramShape::Summary);
         assert_eq!((layout.nodes[28].width, layout.nodes[28].height), (60.0, 60.0));
+        assert_eq!(layout.nodes[29].shape, DiagramShape::TaggedDocument);
+        assert_eq!((layout.nodes[29].width, layout.nodes[29].height), (136.0, 54.0));
+        assert_eq!(layout.nodes[30].shape, DiagramShape::TaggedProcess);
+        assert_eq!((layout.nodes[30].width, layout.nodes[30].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[31].shape, DiagramShape::PaperTape);
+        assert_eq!((layout.nodes[31].width, layout.nodes[31].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[32].shape, DiagramShape::LinedDocument);
+        assert_eq!((layout.nodes[32].width, layout.nodes[32].height), (132.0, 54.0));
     }
 
     #[test]

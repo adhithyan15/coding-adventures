@@ -1,20 +1,22 @@
 {
   "language": "sanskrit",
   "chapter": 65,
-  "sourceHash": "fnv1a64:50b63e98aa8947ff",
+  "sourceHash": "fnv1a64:66215dd1e8d7343e",
   "lessonIds": [
     "SA-W65-letter-nga",
     "SA-R65-letters-first-pass",
     "SA-R65-letters-second-pass",
     "SA-W65-connected-text-guided-copy",
     "SA-W65-connected-text-delayed-copy",
-    "SA-W65-connected-text-independent-recall"
+    "SA-W65-connected-text-independent-recall",
+    "SA-W65-kutra-controlled-question",
+    "SA-W65-a1-timed-production"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch65.txt",
   "json": "sanskrit/narration/ch65.json",
-  "textHash": "fnv1a64:7d6532a557fbf50f",
-  "jsonHash": "fnv1a64:761dd00ce66aba69",
+  "textHash": "fnv1a64:b09ce8dd9f754804",
+  "jsonHash": "fnv1a64:f5de9727b8f2b237",
   "findings": []
 }

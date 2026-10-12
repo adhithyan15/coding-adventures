@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Words on the Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2a4870439ae9922b",
+  "sourceHash": "fnv1a64:cbac07b71727e2f7",
   "lessons": [
     {
       "id": "HI-C74-open",
@@ -636,7 +636,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69285100fccb265c",
+      "sourceHash": "fnv1a64:eb34ceaef5feaa0a",
       "notice": null,
       "blocks": [
         {
@@ -667,7 +667,7 @@
             },
             {
               "kind": "speech",
-              "text": "Persian دیر (der), \"late, a long while\". It is a naming word rather than a describing one: Hindi does not say \"the train is late\", it says the train is with lateness — गाड़ी देर से है."
+              "text": "Persian دیر (der), \"late, a long while\". It is a naming word rather than a describing one: Hindi does not say \"the train is late\", it says the train is with lateness, using a small word for with that a later chapter teaches."
             },
             {
               "kind": "speech",
@@ -675,7 +675,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is where this chapter lands. गाड़ी देर (der) से है is a sentence built entirely from words you now hold, and it is the single most useful thing a traveller can understand on a platform."
+              "text": "That is where this chapter lands. Listen for देर (der) in an announcement about गाड़ी, your train: it is the single most useful word a traveller can catch on a platform."
             }
           ]
         },
@@ -713,11 +713,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "gāṛī der se hai",
+              "instruction": "gāṛī, then der — the two words an announcement about a late train turns on",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *gāṛī der se hai*]"
+              "source": "[YOU SAY: *gāṛī*, then *der* — the two words an announcement about a late train turns on]"
             },
             {
               "kind": "prompt",
@@ -770,7 +770,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say the train is late? (gāṛī der se hai.) Say it once more."
+              "text": "Which word in an announcement tells you the train is late? (der, lateness.) Which word sits at the other end of the same measure? (jaldī.)"
             }
           ]
         }

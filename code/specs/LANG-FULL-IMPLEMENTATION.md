@@ -1407,6 +1407,17 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Built-in `sqrt` may likewise map that one positive bounded exponential;
   nested exponentials and user-declared overrides remain conservative.
+  Built-in `sqrt` may also map a runtime conditional when every branch retains
+  a proven nonnegative bounded runtime-real sign root; unrestricted,
+  non-runtime-real, nested-exponential, and overridden branches remain
+  conservative.
+  Built-in `ln` may map a runtime conditional when every branch is one built-in
+  exponential over a proven bounded runtime-real sign root; missing, nested,
+  non-runtime-real, and overridden exponential branches remain conservative.
+  Built-in `ln` may also map a runtime conditional when every branch is exactly
+  two built-in exponentials over a proven bounded runtime-real sign root;
+  missing, deeper, non-runtime-real, and overridden branches remain
+  conservative.
   Additional built-in `sqrt` calls may wrap that positive bounded result while
   preserving the same finite proof.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

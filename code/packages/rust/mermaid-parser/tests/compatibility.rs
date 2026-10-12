@@ -1803,6 +1803,42 @@ fn swimlane_summary_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_tagged_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: tag-doc, label: \"First\" }\n  second@{ shape: tagged-document, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane tagged-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::TaggedDocument));
+}
+
+#[test]
+fn swimlane_tagged_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: tag-rect, label: \"First\" }\n  second@{ shape: tagged-rectangle, label: \"Second\" }\n  third@{ shape: tag-proc, label: \"Third\" }\n  fourth@{ shape: tagged-process, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane tagged-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::TaggedProcess));
+}
+
+#[test]
+fn swimlane_paper_tape_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Output\n  first@{ shape: flag, label: \"First\" }\n  second@{ shape: paper-tape, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane paper-tape aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::PaperTape));
+}
+
+#[test]
+fn swimlane_lined_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: lin-doc, label: \"First\" }\n  second@{ shape: lined-document, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane lined-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LinedDocument));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

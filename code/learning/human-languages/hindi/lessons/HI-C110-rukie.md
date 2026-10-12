@@ -43,8 +43,8 @@ reviews_of: [HI-C110-ekminat]
 
 **रुकिए** (*rukie*) — "please wait", "please stop".
 
-It is **रुकना**, "to stop", with the respectful ending of **बोलिए**. **रुकिए, एक मिनट** — "wait,
-one minute".
+**रुक** (*ruk*, the stem of the verb "to stop") + *-ie*, the respectful ending of **बोलिए** → **रुकिए**.
+**रुकिए, एक मिनट** — "wait, one minute".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

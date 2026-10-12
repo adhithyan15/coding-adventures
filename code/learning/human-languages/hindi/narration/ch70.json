@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:00b8da21e0750fbb",
+  "sourceHash": "fnv1a64:b448257887444463",
   "lessons": [
     {
       "id": "HI-C70-sakna",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cc1c5c506c62c21",
+      "sourceHash": "fnv1a64:e4700f32c764a027",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
             },
             {
               "kind": "speech",
-              "text": "Inside चाहना sits the noun चाह (chāh), \"longing\" or \"desire.\" Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. Its cousin चाहिए is how Hindi wants a THING rather than an action; this lesson leaves that separate construction for later."
+              "text": "Inside चाहना sits the noun चाह (chāh), \"longing\" or \"desire.\" Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. A cousin of it is how Hindi wants a THING rather than an action; that separate construction comes in a later chapter."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [HI-C40-here]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **यहाँ** *yahā̃*, which you will meet just now. The two of them
+Its partner is **यहाँ** *yahā̃*, which you met in the last lesson. The two of them
 differ by one sound at the front — **v-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 

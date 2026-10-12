@@ -119,7 +119,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // two reviews per run.
     // 1255 -> 1391: the fourth and last tranche, chapters 232-257: 130 word
     // lessons and two reviews per run. Sanskrit attains A2 here.
-    lessons: 1391,
+    // 1391 -> 1393: the chapter-65 A1 writing close adds one controlled
+    // meaning-only question and one genuine timed form-plus-message paper. Both
+    // reuse known atoms, so idiom, sense, and culture-claim totals do not move.
+    lessons: 1393,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,
