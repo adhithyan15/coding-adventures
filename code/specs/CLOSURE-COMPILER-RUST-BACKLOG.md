@@ -7,16 +7,69 @@ tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/1697
 delivery branch `codex/closurec-source-spans-delivery-20261011`. CV03 merged and is verified;
 its managed worktree is archived. The detailed [CV04 specification](CV04-exact-lexical-source-intervals.md)
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
-source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
+source inventory/ingestion-leaf reuse. CV04a implementation and attributable local validation pass; current-main native reconciliation is recorded below. PR #17288 awaits exact-final review and fresh required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `e32e5788f6c51fc8927bdb48e2955a5721a39195`
+**Current audit base:** `170ce3532ed40072e1f62a2c76bbe8675c46a554`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
 
 ## Delivery priority and deferred Miri (2026-10-11)
 
-### Current edge-target resource repair delivery
+### Current by-name proof and animation reconciliation
+
+Sole active implementation PR17288 retains the lexical source-interval API;
+CV04b and full parity/source/output/transformation-lineage delivery remain OPEN.
+Main `170ce3532ed40072e1f62a2c76bbe8675c46a554` adds ALGOL local-root proofs (#17344) and Swimlane animation
+configuration (#17347). Independent review withheld current-main acceptance.
+
+[#17350](https://github.com/adhithyan15/coding-adventures/issues/17350): native
+probe4ca25043 admitted a root promoted to shared by-name storage during selector
+lowering, while cached pre-lowering assignment proof admitted real output.
+Spec0602319e preceded original-code redccf86302: exact refusal failed, value
+control passed. The repair retains pre-proof AND post-lowering proof, covering
+both root positions, both value-selector arms, exactly one formatter and no
+shared-storage loads/stores for value controls. Distinct2.25/0.0 procedure roots
+execute both arms with exact outputs2/3 on every available standard backend.
+Original ordinary4ca baseline1229/111/48commands passed with one existing ignore
+but remains SECURITYREJECTED; no numeric-error or UB claim is inferred.
+
+[17355](https://github.com/adhithyan15/coding-adventures/issues/17355): animation configs repeated full-edge
+discovery. Spec63aa152a/red436e62a2 recorded1089 visits for32 directives/33edges,
+two executed failures. Context speceb06ff80/red531129e3 recorded two legacy
+node-metadata/quoted-label refusals. One ordered IDindex now serves configs,
+classes and styles. Actual discovery/lookups/matches are separate; duplicate-ID
+updates, configuration order, unknown-target refusal and complete authored IR
+remain exact. Layout retains animate/slow/fast alongside old ID/classes/styles/
+labels/kinds/markers/lengths and all spacing/resource/overflow controls. No new
+dependency, grammar/input exception, unsafe code or whole-pipeline linearity.
+
+Actual runtime source `d48e8da0eef6c2014227f5be84a2f2f5505a436e` passed923 ALGOL/shared tests/docs/16targets,
+830 diagram tests/docs/34targets, strict19-package all-target lint and actual
+document reconstruction. Its later lesson validation FAILED (two generated
+placeholders), and that incomplete receipt remains separate. Docs-only
+`bf728ab44ed7089c68b7c05389f0e878aca633a2` corrected them, validated1070 lessons/whitespace, and actually ran
+all11 unchanged production BUILD commands and36 exact native controls. Seven
+complete runtime/config/spec/TypeScript trees equal the original executed frame.
+Together these attributable executions pass **2062 tests/docs across146 targets**,
+zero failures/one existing ignore; focused2+7 repeats are excluded from counts.
+Initial UTF-8/cone preflight refusals executed no Rust tests; all receipts remain.
+No full unfiltered LANG acceptance is claimed. Original compiler/lexical/CV and
+other consumers retain their own unchanged complete source proofs and execution.
+
+Final backlog-only head requires complete source-object equality and independent
+exact-final review before non-force publication to PR17288. Fresh conflict-free,
+review-clean terminal acceptable required checks and whole Linux/macOS/Windows
+SUCCESS with actual Closurec completion log rows precede squash auto-merge.
+Actual fetched-main merge reachability and exact complete payload modes/types/
+blobs precede cleanup and CV04b selection; no local/prior-head hosted acceptance.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen run/checkout/
+497inputs/receipts remain untouched without polling or termination. Preserve
+base ESTree canonical boundary/own types/no new crates.io dependencies, all
+limits and independent ALGOL ownership. Full goal and heartbeat remain ACTIVE.
+
+### Historical edge-target resource repair delivery
 
 Main `e32e5788f6c51fc8927bdb48e2955a5721a39195` adds identified-edge styling (#17342), after predecessor
 eec87335 passed independent review/publication for its b1f4e459 frame. New-main
@@ -1202,22 +1255,3 @@ review/conflict gates and actual fetched-main merge/payload proof before cleanup
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
 inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
-
-
-### Pending conditional local-real proof timing repair
-
-Main ae908856 (#17344) changed ALGOL conditional local-root admission. Isolated
-4ca25043 ordinary four-cone tests921/16 and strict lint pass; eleven production
-commands/35 native controls remain RUNNING at that frozen source. Independent
-review identified a stale pre-lowering assignment proof. Actual direct-library
-probe accepts a selector's by-name branch-root actual and emits one real
-formatter call plus shared global loads/stores, contrary to the unaliased-root
-contract. Numeric output/UB is not claimed. Preserve that native receipt and the
-separate preflight rejection. [#17350](https://github.com/adhithyan15/coding-adventures/issues/17350)
-requires a post-lowering proof validity check and exact refusal/value-formal
-controls. The LANG proof-timing contract precedes tests/source. Use the separate
-staging checkout and a separate Cargo target; never mutate ongoing4ca inputs.
-Current-main security is NOT ACCEPTED until repaired; PR17288 remains the sole
-active shared implementation PR. Current0bf CI/native acceptance PENDING,
-auto-merge off. Full final-source Miri DEFERRED/PENDING, frozen run/497 inputs
-and receipts preserved without polling/termination; full Closure contract OPEN.
