@@ -200,3 +200,8 @@ are diagnostic measurements, not wall-clock durations of automation commands.
 Capture an isolated warm workload and compare the same app/build configuration
 before and after optimization; do not infer a production percentile from a few
 clicks. Hard termination may lose buffered samples.
+
+Persistence samples further split adapter snapshot serialization
+(`persist-snapshot-ffi`), UTF-8 encoding (`persist-encode`), temporary file write
+(`persist-write`) and replacement (`persist-replace`). These nested scopes keep
+the existing synchronous save behavior and never record paths or workbook data.

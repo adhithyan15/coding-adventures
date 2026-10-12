@@ -134,3 +134,12 @@ scopes. Record only phase duration and managed allocation, never workbook bytes
 or file paths. This separates adapter serialization from disk stalls before
 choosing a durability-preserving performance change. Existing aggregate
 persist-snapshot remains comparable with older native traces.
+
+Persistence-phase validation: 44 bindings unit tests and the emitted-XAML effect
+driver pass; generated Release WinUI builds with zero errors (two existing unused
+event warnings), and security review passed. Native A20 then E5 interactions
+verified selection and emitted every nested phase. Render callbacks were 26.9731
+and 17.9705 ms; persistence was 1.9580 and 2.1042 ms. This two-event smoke check
+did not reproduce the earlier stall and does not resolve performance acceptance.
+Raw samples: mosaic-xaml-persistence-phases-profile-20261012.jsonl. Next step is a
+longer matched run to capture the intermittent outlier with the new breakdown.

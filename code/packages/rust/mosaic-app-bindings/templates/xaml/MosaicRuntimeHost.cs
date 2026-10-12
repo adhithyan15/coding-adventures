@@ -1339,7 +1339,11 @@ public static class MosaicRuntimeHost
             if (app == IntPtr.Zero || library == IntPtr.Zero) return;
             try
             {
-                var value = Invoke(delegate(out MosaicBuffer output)
+                // Separate adapter serialization from disk latency without
+                // changing the synchronous durability boundary or logging data.
+                JsonElement value;
+                using (BeginProfile("persist-snapshot-ffi"))
+                value = Invoke(delegate(out MosaicBuffer output)
                 {
                     return snapshot(app, out output);
                 });
@@ -1352,8 +1356,13 @@ public static class MosaicRuntimeHost
                 var directory = Path.GetDirectoryName(path)!;
                 Directory.CreateDirectory(directory);
                 var temporary = path + ".tmp";
-                File.WriteAllBytes(temporary, Encoding.UTF8.GetBytes(value.GetRawText()));
-                File.Move(temporary, path, true);
+                byte[] encoded;
+                using (BeginProfile("persist-encode"))
+                    encoded = Encoding.UTF8.GetBytes(value.GetRawText());
+                using (BeginProfile("persist-write"))
+                    File.WriteAllBytes(temporary, encoded);
+                using (BeginProfile("persist-replace"))
+                    File.Move(temporary, path, true);
                 persistenceWarning = null;
             }
             catch (Exception error)
