@@ -14,7 +14,7 @@ concept_tag: GE-THING195-TURM
 prerequisites: [GE-C195-dom, GE-C195-denkmal]
 sounds: []
 roots: [turris-latin]
-etymology_hook: "Turm ← Old High German turn ← Old French tor ← Latin turris 'tower' — borrowed"
+etymology_hook: "Turm ← Middle High German turn ← Old French tor ← Latin turris 'tower' — borrowed"
 duration:
   max_seconds: 200
 requires:

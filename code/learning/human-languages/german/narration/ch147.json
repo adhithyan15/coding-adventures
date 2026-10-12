@@ -4,7 +4,7 @@
   "chapter": 147,
   "title": "To win, To hang, To marry, To know, To ring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ec52e394493b0e9b",
+  "sourceHash": "fnv1a64:e1ff165bcd6812a6",
   "lessons": [
     {
       "id": "GE-C147-gewinnen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36be217f5ce4af4f",
+      "sourceHash": "fnv1a64:89f6d64a9c0f1e27",
       "notice": null,
       "blocks": [
         {

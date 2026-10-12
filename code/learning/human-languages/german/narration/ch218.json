@@ -4,7 +4,7 @@
   "chapter": 218,
   "title": "Tasty, Kind, Relaxed, Thin, Brave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:594e5eefaf380ca4",
+  "sourceHash": "fnv1a64:db29586243fb152e",
   "lessons": [
     {
       "id": "GE-C218-lecker",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69eb52a1351cdf2a",
+      "sourceHash": "fnv1a64:c9850687a7f9acce",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "locker, \"loose\", spread into standard German from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
+              "text": "locker, \"loose\", was borrowed into standard German from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d371fdcdb8cfe9c",
+      "sourceHash": "fnv1a64:1598daab8a5be2c5",
       "notice": null,
       "blocks": [
         {

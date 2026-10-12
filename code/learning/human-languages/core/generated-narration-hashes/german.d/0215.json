@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 215,
-  "sourceHash": "fnv1a64:8a3723d1818aaf05",
+  "sourceHash": "fnv1a64:9b39b813f73dcbdf",
   "lessonIds": [
     "GE-C215-gerecht",
     "GE-C215-geschieden",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch215.txt",
   "json": "german/narration/ch215.json",
-  "textHash": "fnv1a64:5991e42b494b3405",
-  "jsonHash": "fnv1a64:7778942e2d86a0f2",
+  "textHash": "fnv1a64:64dfff5be8577cc8",
+  "jsonHash": "fnv1a64:c8c20e7d788bc986",
   "findings": []
 }

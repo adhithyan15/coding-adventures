@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "North, South, East, West, Straight on",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:624f4fafaf5e872c",
+  "sourceHash": "fnv1a64:e6aa9b2d1fffe315",
   "lessons": [
     {
       "id": "GE-C108-norden",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd5b803989c9635a",
+      "sourceHash": "fnv1a64:e317aa50ed3b47ee",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Süden came into German through Middle Dutch suden (EtymDB 2.1). EtymDB traces English south to Proto-Germanic sunþrą and lists German Süd beside it."
+              "text": "Süden came into German through Middle Dutch suden (EtymDB 2.1). EtymDB traces English south to Proto-Germanic sunþrą, \"southward\", an adverb of sunþaz, \"south\", and lists German Süd beside it."
             }
           ]
         },

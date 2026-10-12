@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 156,
-  "sourceHash": "fnv1a64:15907ebb23cbfd32",
+  "sourceHash": "fnv1a64:4ab9cf98159d7b77",
   "lessonIds": [
     "GE-C156-rezept",
     "GE-C156-schmerz",
@@ -14,6 +14,6 @@
   "text": "german/narration/ch156.txt",
   "json": "german/narration/ch156.json",
   "textHash": "fnv1a64:d33c4c46beb290d0",
-  "jsonHash": "fnv1a64:92ed7abe2f397f76",
+  "jsonHash": "fnv1a64:8bacad8a7f18e16f",
   "findings": []
 }

@@ -14,7 +14,7 @@ concept_tag: GE-VERB-MIETEN
 prerequisites: [GE-C140-fallen, GE-C141-zahlen]
 sounds: []
 roots: [germanic-mezdo]
-etymology_hook: "mieten — the verb made from Miete 'rent' ← Old High German miata 'payment'; English meed is a cousin"
+etymology_hook: "mieten — the verb of the word for 'rent', Old High German miata 'payment'; English meed is a cousin"
 duration:
   max_seconds: 200
 requires:

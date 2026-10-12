@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Boring, Difficult, Finished, Ready, Safe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1462ac7ea73d2a69",
+  "sourceHash": "fnv1a64:961503971b12a1c6",
   "lessons": [
     {
       "id": "GE-C134-langweilig",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da2f1ec3d7de43e5",
+      "sourceHash": "fnv1a64:616aeab170122c15",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "schwierig has an uncertain origin. The usual account links it to an old word for a swelling or sore, so first \"troublesome\"; EtymDB 2.1 has no source for it."
+              "text": "schwierig from Middle High German swiric, \"full of sores\": swër, \"ulcer\" (compare Geschwür, \"abscess\"), + -ic. What was full of sores became troublesome, then difficult."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50c181c085ae714f",
+      "sourceHash": "fnv1a64:45c793978dc1667c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sicher from Old High German sihhur from Proto-Germanic sikuraz, from Latin sēcūrus, \"free from care\" (EtymDB 2.1) — an early loan, like English secure."
+              "text": "sicher is an early West Germanic loan (Old High German sihhur, Old English sicor) from Latin sēcūrus, \"free from care\" (EtymDB 2.1). English secure is a later loan of the same Latin word."
             }
           ]
         },

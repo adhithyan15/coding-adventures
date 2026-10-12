@@ -14,7 +14,7 @@ concept_tag: GE-HAUS3-TREPPE
 prerequisites: [GE-C78-schrank, GE-C78-boden]
 sounds: []
 roots: []
-etymology_hook: "Treppe — taken into standard German from Low German, where treppe meant 'step, stair'"
+etymology_hook: "Treppe — borrowed into standard German from Low German, where treppe meant 'step, stair'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C78-boden]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Treppe** came into standard German from Low German: Middle Low German *treppe* meant "step, stair" (EtymDB 2.1). It is related to an old verb for "to tread".
+**Treppe** was borrowed into standard German from Low German: Middle Low German *treppe* meant "step, stair" (EtymDB 2.1). It is related to an old verb for "to tread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

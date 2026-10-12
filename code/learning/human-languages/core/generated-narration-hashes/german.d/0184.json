@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 184,
-  "sourceHash": "fnv1a64:85ed9d74d7983b7a",
+  "sourceHash": "fnv1a64:62e697d39e302e4b",
   "lessonIds": [
     "GE-C184-parken",
     "GE-C184-pflegen",
@@ -14,6 +14,6 @@
   "text": "german/narration/ch184.txt",
   "json": "german/narration/ch184.json",
   "textHash": "fnv1a64:cc524a7d3ce9b745",
-  "jsonHash": "fnv1a64:39891b857e93a053",
+  "jsonHash": "fnv1a64:5eb2d5dfaeb9ce33",
   "findings": []
 }

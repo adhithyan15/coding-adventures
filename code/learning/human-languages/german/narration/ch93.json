@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Right, Wrong, Important, Simple, Brown",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7a5f7ea3a7a5fbb0",
+  "sourceHash": "fnv1a64:52a4f467c892de56",
   "lessons": [
     {
       "id": "GE-C93-richtig",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c075e03b2dcec938",
+      "sourceHash": "fnv1a64:31f058946c892ac8",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "wichtig came in from Middle Low German wichtich, \"weighty\", built on the word for \"weight\"; EtymDB 2.1 lists that word beside English weight. What matters carries weight."
+              "text": "wichtig was borrowed from Middle Low German wichtich, \"weighty\", built on the word for \"weight\"; EtymDB 2.1 lists that word beside English weight. What matters carries weight."
             }
           ]
         },

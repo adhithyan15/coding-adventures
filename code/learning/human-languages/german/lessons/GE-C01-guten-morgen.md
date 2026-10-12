@@ -11,7 +11,7 @@ concept_tag: GREETING-MORNING
 prerequisites: [GE-C01-guten-tag, GE-C01-morgen]
 sounds: [vowel-u-german]
 roots: [godaz, murganaz]
-etymology_hook: "Guten Morgen — gut + Morgen; Morgen ← Proto-Germanic *murganaz, the same word as English morn"
+etymology_hook: "Guten Morgen — gut 'good' + Morgen 'morning'; Morgen is masculine like Tag, so gut takes -en"
 duration:
   max_seconds: 120
 requires:

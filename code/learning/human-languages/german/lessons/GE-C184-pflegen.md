@@ -14,7 +14,7 @@ concept_tag: GE-VERB-PFLEGEN
 prerequisites: [GE-C183-niesen, GE-C184-parken]
 sounds: []
 roots: []
-etymology_hook: "pflegen ← Old High German plegan 'to look after' — the same verb as English plight, 'pledge'"
+etymology_hook: "pflegen ← Old High German plegan 'to look after' — English plight, 'pledge', is a cousin"
 duration:
   max_seconds: 200
 requires:

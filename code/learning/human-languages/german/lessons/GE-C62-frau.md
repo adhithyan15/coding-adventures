@@ -14,7 +14,7 @@ concept_tag: GE-FAMILIE-FRAU
 prerequisites: [GE-C61-grossvater, GE-C62-grossmutter]
 sounds: []
 roots: [germanic-frawjo]
-etymology_hook: "Frau ← Old High German frouwa 'lady' ← Proto-Germanic *frawjōn; Norse Freyja is a cousin"
+etymology_hook: "Frau ← Old High German frouwa 'lady' ← Proto-Germanic *frawjōn; the Norse goddess Freyja is the same word"
 duration:
   max_seconds: 200
 requires:

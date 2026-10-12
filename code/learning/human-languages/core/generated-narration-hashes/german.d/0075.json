@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 75,
-  "sourceHash": "fnv1a64:0270dc59afeb799a",
+  "sourceHash": "fnv1a64:5fe61c86296abfb4",
   "lessonIds": [
     "GE-C75-sahne",
     "GE-C75-pfeffer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch75.txt",
   "json": "german/narration/ch75.json",
-  "textHash": "fnv1a64:8aa3735242d1b0c6",
-  "jsonHash": "fnv1a64:3cbdec488f836e36",
+  "textHash": "fnv1a64:ee3cddcd1fbb2bcf",
+  "jsonHash": "fnv1a64:f918104e37d12ee1",
   "findings": []
 }

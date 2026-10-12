@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Ice, Hill, Desert, Horse, Cow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aebe09355f9388d7",
+  "sourceHash": "fnv1a64:7063fd6add3bbb5b",
   "lessons": [
     {
       "id": "GE-C85-eis",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51b22cf8298b091f",
+      "sourceHash": "fnv1a64:3b6a8a41b44cc10f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hügel spread into standard German from central German dialects. It is usually explained as a diminutive of an older word for \"hill\", related to the word for \"high\", but EtymDB 2.1 has no source for it, so treat that account as likely, not certain."
+              "text": "Hügel spread into standard German from central German dialects. It is a diminutive of Middle High German houc, \"hill\", related to the word for \"high\"; compare Old Norse haugr, \"mound\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:563f85e5923bb4aa",
+      "sourceHash": "fnv1a64:f77bb12d1d067324",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Pferd from Old High German pfārifrit from Late Latin paraverēdus, \"spare post horse\" (EtymDB 2.1) — borrowed and worn down. English palfrey comes from the same Latin word through French."
+              "text": "Pferd from Old High German pfarifrit from Late Latin paraverēdus, \"spare post horse\" (EtymDB 2.1) — borrowed and worn down. English palfrey comes from the same Latin word through French."
             }
           ]
         },

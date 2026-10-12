@@ -45,7 +45,7 @@ You'll want to know: der Hügel.
 der Hügel — "a hill".
 
 The word, taken apart.
-Hügel spread into standard German from central German dialects. It is usually explained as a diminutive of an older word for "hill", related to the word for "high", but EtymDB 2.1 has no source for it, so treat that account as likely, not certain.
+Hügel spread into standard German from central German dialects. It is a diminutive of Middle High German houc, "hill", related to the word for "high"; compare Old Norse haugr, "mound".
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: das Pferd.
 das Pferd — "a horse".
 
 The word, taken apart.
-Pferd from Old High German pfārifrit from Late Latin paraverēdus, "spare post horse" (EtymDB 2.1) — borrowed and worn down. English palfrey comes from the same Latin word through French.
+Pferd from Old High German pfarifrit from Late Latin paraverēdus, "spare post horse" (EtymDB 2.1) — borrowed and worn down. English palfrey comes from the same Latin word through French.
 
 What you've built.
 One more word for this chapter.

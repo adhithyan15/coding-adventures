@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "To want, Wish, To hope, To order, Rather",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:26d7529740514617",
+  "sourceHash": "fnv1a64:9aa0027ca6d1aede",
   "lessons": [
     {
       "id": "GE-C136-wollen",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e8ed1ada935e58f",
+      "sourceHash": "fnv1a64:48804884fc1ca4be",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hoffen from Middle High German hoffen, which spread south from Low German — inherited; EtymDB 2.1 lists it beside English hope and Dutch hopen."
+              "text": "hoffen from Middle High German hoffen, borrowed from Low German; EtymDB 2.1 lists it beside English hope and Dutch hopen."
             }
           ]
         },

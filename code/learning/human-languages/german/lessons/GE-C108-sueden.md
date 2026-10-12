@@ -46,7 +46,7 @@ reviews_of: [GE-C108-norden]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Süden** came into German through Middle Dutch *suden* (EtymDB 2.1). EtymDB traces English *south* to Proto-Germanic *\*sunþrą* and lists German *Süd* beside it.
+**Süden** came into German through Middle Dutch *suden* (EtymDB 2.1). EtymDB traces English *south* to Proto-Germanic *\*sunþrą*, "southward", an adverb of *\*sunþaz*, "south", and lists German *Süd* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

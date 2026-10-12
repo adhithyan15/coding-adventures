@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Seasons Go Native",
   "drivablePrefix": 11,
-  "sourceHash": "fnv1a64:5367606d73c1bb80",
+  "sourceHash": "fnv1a64:e84e6e1e67a35a71",
   "lessons": [
     {
       "id": "GE-C09-jahr",
@@ -1211,7 +1211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f90d4c7578ca9686",
+      "sourceHash": "fnv1a64:b1cb69da9e4895fc",
       "notice": null,
       "blocks": [
         {
@@ -1253,7 +1253,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Winter from Middle High German winder — inherited, from Proto-Germanic wintruz. EtymDB 2.1 traces English winter to the same wintruz."
+              "text": "Winter from Middle High German winter from Old High German wintar — inherited, from Proto-Germanic wintruz. EtymDB 2.1 traces English winter to the same wintruz."
             }
           ]
         },

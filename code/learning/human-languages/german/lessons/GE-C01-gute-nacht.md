@@ -11,7 +11,7 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [GE-C01-gut, GE-C01-guten-tag, GE-C01-nacht]
 sounds: [ch-ach]
 roots: [godaz, nahts]
-etymology_hook: "Gute Nacht — gut + Nacht; Nacht ← Proto-Germanic *nahts, the same word as English night"
+etymology_hook: "Gute Nacht — gut 'good' + Nacht 'night': good night"
 duration:
   max_seconds: 180
 requires:

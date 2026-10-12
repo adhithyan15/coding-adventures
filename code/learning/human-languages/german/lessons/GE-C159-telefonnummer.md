@@ -14,7 +14,7 @@ concept_tag: GE-THING159-TELEFONNUMMER
 prerequisites: [GE-C158-briefmarke, GE-C159-adresse]
 sounds: []
 roots: [numerus-latin]
-etymology_hook: "Telefonnummer — Telefon + Nummer 'number' ← Italian numero ← Latin numerus"
+etymology_hook: "Telefonnummer — Telefon + the word for 'number' ← Italian numero ← Latin numerus"
 duration:
   max_seconds: 200
 requires:

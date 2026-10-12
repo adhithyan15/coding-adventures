@@ -14,7 +14,7 @@ concept_tag: GE-THING158-TUETE
 prerequisites: [GE-C158-angebot, GE-C158-rechnung]
 sounds: []
 roots: []
-etymology_hook: "Tüte ← Middle Low German tūte — a word from the north, related to Dutch tuit 'spout'"
+etymology_hook: "Tüte ← Middle Low German tūte, borrowed from Low German; related to Dutch tuit 'spout'"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C158-rechnung]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Tüte** ← Middle Low German *tūte* (EtymDB 2.1) — a northern word; EtymDB lists Dutch *tuit*, "spout", beside it. A paper bag was rolled into a cone.
+**Tüte** ← Middle Low German *tūte* (EtymDB 2.1) — borrowed from Low German; EtymDB lists Dutch *tuit*, "spout", beside it. A paper bag was rolled into a cone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

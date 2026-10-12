@@ -13,7 +13,7 @@ gloss: "a granddaughter"
 concept_tag: GE-THING164-ENKELIN
 prerequisites: [GE-C164-nachbarin, GE-C164-cousine]
 sounds: []
-roots: []
+roots: [germanic-ano]
 etymology_hook: "Enkelin — Enkel 'grandson' + -in; Enkel was once 'little grandfather'"
 duration:
   max_seconds: 200

@@ -4,7 +4,7 @@
   "chapter": 221,
   "title": "Slim, Dreadful, Shy, Independent, Sunny",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4baef50c63606060",
+  "sourceHash": "fnv1a64:22790f5f59ea185c",
   "lessons": [
     {
       "id": "GE-C221-schlank",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53d98d5fe31c3f00",
+      "sourceHash": "fnv1a64:491fd36dd1e6baf0",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "schlank first meant \"flexible, thin\" and spread from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
+              "text": "schlank first meant \"flexible, thin\" and was borrowed from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b69c6715d0b5e66d",
+      "sourceHash": "fnv1a64:6d845aba35893ab0",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "schüchtern came into standard German from Middle Low German schüchter, \"shy, easily scared\" (EtymDB 2.1) — a northern word, related to English shy."
+              "text": "schüchtern was borrowed into standard German from Middle Low German schüchter, \"shy, easily scared\" (EtymDB 2.1). It is related to English shy."
             }
           ]
         },

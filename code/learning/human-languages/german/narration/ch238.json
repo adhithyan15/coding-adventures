@@ -4,7 +4,7 @@
   "chapter": 238,
   "title": "A difficulty, Safety, Sense, A worry, A voice",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8aacc69688fd746d",
+  "sourceHash": "fnv1a64:ede36eb1a329a2be",
   "lessons": [
     {
       "id": "GE-C238-schwierigkeit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f654b246fc4d4f6",
+      "sourceHash": "fnv1a64:25c1c094aa88fc24",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Schwierigkeit is schwierig, \"difficult\", + -keit, the ending that makes a noun. The origin of schwierig itself is uncertain."
+              "text": "Schwierigkeit is schwierig, \"difficult\", + -keit, the ending that makes a noun. schwierig first meant \"full of sores\", from Middle High German swër, \"ulcer\"."
             }
           ]
         },

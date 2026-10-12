@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "To pay, To rent, To pack, To repair, To start",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:46625105b04f36e2",
+  "sourceHash": "fnv1a64:98f2e40d0ef567e6",
   "lessons": [
     {
       "id": "GE-C141-zahlen",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32873fc335caf252",
+      "sourceHash": "fnv1a64:5109cc8b51e663ae",
       "notice": null,
       "blocks": [
         {
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c52aac9d08c5291d",
+      "sourceHash": "fnv1a64:577cc03fd86a0897",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "packen from Middle Low German packen, \"to pack\" (EtymDB 2.1) — taken from Low German, the language of the Hanseatic traders. English pack is the same word."
+              "text": "packen from Middle Low German packen, \"to pack\" (EtymDB 2.1) — borrowed from Low German, the language of the Hanseatic traders. English pack is the same word."
             }
           ]
         },

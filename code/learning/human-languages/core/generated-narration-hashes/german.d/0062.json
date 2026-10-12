@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 62,
-  "sourceHash": "fnv1a64:92acc285db019f83",
+  "sourceHash": "fnv1a64:205d44edd05de0bb",
   "lessonIds": [
     "GE-C62-grossmutter",
     "GE-C62-frau",
@@ -14,6 +14,6 @@
   "text": "german/narration/ch62.txt",
   "json": "german/narration/ch62.json",
   "textHash": "fnv1a64:5e448db7ecaea1e7",
-  "jsonHash": "fnv1a64:6a99b20de4db41e1",
+  "jsonHash": "fnv1a64:fbb9da7d0b02e5e5",
   "findings": []
 }

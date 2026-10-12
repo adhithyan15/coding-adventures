@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 158,
-  "sourceHash": "fnv1a64:dff94c3c30819429",
+  "sourceHash": "fnv1a64:8e8f88463f1f8b13",
   "lessonIds": [
     "GE-C158-angebot",
     "GE-C158-rechnung",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch158.txt",
   "json": "german/narration/ch158.json",
-  "textHash": "fnv1a64:2c1bed820295705a",
-  "jsonHash": "fnv1a64:3bf104b484e78d69",
+  "textHash": "fnv1a64:72d254b28aa1d3e7",
+  "jsonHash": "fnv1a64:960ebcb25edc6b99",
   "findings": []
 }

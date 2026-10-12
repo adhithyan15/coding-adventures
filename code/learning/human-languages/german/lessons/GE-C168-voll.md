@@ -46,7 +46,7 @@ reviews_of: [GE-C168-dunkel]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**voll** ← Middle High German *vol* ← Old High German *foll*, "full" — inherited, the same word as English *full*. (EtymDB 2.1)
+**voll** ← Middle High German *vol* ← Old High German *fol*, "full" — inherited, the same word as English *full*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 98,
-  "sourceHash": "fnv1a64:55ecf28a535f3852",
+  "sourceHash": "fnv1a64:f3ebd65e8fde4e9b",
   "lessonIds": [
     "GE-C98-bibliothek",
     "GE-C98-fahrrad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch98.txt",
   "json": "german/narration/ch98.json",
-  "textHash": "fnv1a64:2a3e6960602e5786",
-  "jsonHash": "fnv1a64:9e379fb2d4af0924",
+  "textHash": "fnv1a64:6cd65facb08a0e15",
+  "jsonHash": "fnv1a64:6b9c1c36728e32eb",
   "findings": []
 }

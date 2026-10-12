@@ -14,7 +14,7 @@ concept_tag: GE-VERB-GEWINNEN
 prerequisites: [GE-C146-fuellen, GE-C146-gefallen]
 sounds: []
 roots: [germanic-winnana]
-etymology_hook: "gewinnen ← Middle High German gewinnen — kin to English win; Old English gewinnan meant 'to fight for'"
+etymology_hook: "gewinnen ← Middle High German gewinnen — kin to English win; Old English ġewinnan meant 'to conquer, to gain'"
 duration:
   max_seconds: 200
 requires:

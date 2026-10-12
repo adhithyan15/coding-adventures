@@ -13,7 +13,7 @@ You'll want to know: schlank.
 schlank — "slim".
 
 The word, taken apart.
-schlank first meant "flexible, thin" and spread from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
+schlank first meant "flexible, thin" and was borrowed from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: schüchtern.
 schüchtern — "shy".
 
 The word, taken apart.
-schüchtern came into standard German from Middle Low German schüchter, "shy, easily scared" (EtymDB 2.1) — a northern word, related to English shy.
+schüchtern was borrowed into standard German from Middle Low German schüchter, "shy, easily scared" (EtymDB 2.1). It is related to English shy.
 
 What you've built.
 One more word for this chapter.

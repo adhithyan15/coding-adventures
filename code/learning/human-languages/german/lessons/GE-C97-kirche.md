@@ -14,7 +14,7 @@ concept_tag: GE-STADT2-KIRCHE
 prerequisites: [GE-C96-auto, GE-C97-bruecke]
 sounds: []
 roots: [kyriakon-greek]
-etymology_hook: "Kirche ← Old High German chirihha ← Greek kyriakón '(house) of the Lord' — borrowed; English church shares it"
+etymology_hook: "Kirche ← Old High German chirihha, an early loan from Greek kyriakón '(house) of the Lord'; English church shares it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C97-bruecke]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Kirche** ← Old High German *chirihha* ← Proto-Germanic *\*kirikōn* ← Greek *kyriakón*, "(the house) of the Lord" (EtymDB 2.1) — an early loan. English *church* and Scots *kirk* are the same word.
+**Kirche** is an early West Germanic loan (Old High German *chirihha*, Old English *cirice*) from Greek *kyriakón*, "(the house) of the Lord" (EtymDB 2.1). English *church* and Scots *kirk* are the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

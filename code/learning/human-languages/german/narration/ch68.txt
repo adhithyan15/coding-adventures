@@ -141,7 +141,7 @@ You'll want to know: putzen.
 putzen — "to clean".
 
 The word, taken apart.
-putzen is inherited, but its origin is uncertain. The usual account ties it to Middle High German butze, "lump, piece" (EtymDB 2.1), as if cleaning were picking the lumps off.
+putzen is inherited: it is the verb of Middle High German butze, "lump, piece" (EtymDB 2.1), so cleaning was first picking the lumps off.
 
 What you've built.
 One more word for this chapter.

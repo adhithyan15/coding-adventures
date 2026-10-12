@@ -4,7 +4,7 @@
   "chapter": 213,
   "title": "Jealous, Successful, Having a cold, Fantastic, Damp",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e7da1bf44e22b18d",
+  "sourceHash": "fnv1a64:81335f7f2b41a2c2",
   "lessons": [
     {
       "id": "GE-C213-eifersuechtig",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1fe50e70bfc5608",
+      "sourceHash": "fnv1a64:37d4c904c7d4dd80",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "eifersüchtig is the word for \"zeal\" + the word for \"sickness, craving\", Old High German suht (EtymDB 2.1), + -ig: sick with zeal, jealous. English sick is a cousin of Sucht."
+              "text": "eifersüchtig is the word for \"zeal\" + the word for \"sickness, craving\", Old High German suht (EtymDB 2.1), + -ig: sick with zeal, jealous. English sick is a cousin of that word."
             }
           ]
         },

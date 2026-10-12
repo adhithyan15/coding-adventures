@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 147,
-  "sourceHash": "fnv1a64:ec52e394493b0e9b",
+  "sourceHash": "fnv1a64:e1ff165bcd6812a6",
   "lessonIds": [
     "GE-C147-gewinnen",
     "GE-C147-haengen",
@@ -14,6 +14,6 @@
   "text": "german/narration/ch147.txt",
   "json": "german/narration/ch147.json",
   "textHash": "fnv1a64:6d10edc13289867d",
-  "jsonHash": "fnv1a64:4ca63b083f60bc02",
+  "jsonHash": "fnv1a64:8224ee67fa5b066a",
   "findings": []
 }

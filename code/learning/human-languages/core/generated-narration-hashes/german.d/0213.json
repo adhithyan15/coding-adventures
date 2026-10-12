@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 213,
-  "sourceHash": "fnv1a64:e7da1bf44e22b18d",
+  "sourceHash": "fnv1a64:81335f7f2b41a2c2",
   "lessonIds": [
     "GE-C213-eifersuechtig",
     "GE-C213-erfolgreich",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch213.txt",
   "json": "german/narration/ch213.json",
-  "textHash": "fnv1a64:d52c7c1c2fdb7ba4",
-  "jsonHash": "fnv1a64:d22ef7087df43f75",
+  "textHash": "fnv1a64:fb2bc2e766c03fde",
+  "jsonHash": "fnv1a64:1da0a4388b151f52",
   "findings": []
 }

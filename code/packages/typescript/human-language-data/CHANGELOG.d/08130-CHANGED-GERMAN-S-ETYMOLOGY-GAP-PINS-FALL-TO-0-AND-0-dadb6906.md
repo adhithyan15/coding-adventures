@@ -14,12 +14,13 @@ to **0** and **0**. Every German word lesson now says where its word comes from
 - **Shape.** A `## The word, taken apart` (or `phrase` / `letter`) block,
   which the parser types `etymology`, after the introducing block, and a
   matching `etymology_hook` of 120 characters or fewer.
-- **What they say.** 360 inherited, 195 borrowed, 501 built from parts, 15
-  genuinely uncertain (each hedged), and 6 lessons that already told their
+- **What they say.** 355 inherited, 202 borrowed (Germanic words taken from Low German
+  count as borrowed), 502 built from parts, 12 genuinely uncertain (each
+  hedged), and 6 lessons that already told their
   story gained only a hook. Over 90 EtymDB rows or labels were rejected:
   homographs (*Salat* ← Arabic *ṣalāt* "prayer", *Hafen* ← *hafan* "pot"),
   Latin loans labelled inherited (*Fenster*, *Wein*, *Käse*), and junk parents.
-- **Ledger side effects.** 770 German lessons gained a `roots:` slug; 227 of
+- **Ledger side effects.** 775 German lessons gained a `roots:` slug; 227 of
   the additions reuse an existing slug, so German cousins now join Spanish and
   Italian ones (`fenestra-latin`, `gardaz-germanic`, `northa-germanic`).
   `check:root-slug-splits` reports no new split. 61 lessons had

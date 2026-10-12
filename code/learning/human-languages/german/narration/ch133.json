@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Angry, Funny, Serious, Famous, Interesting",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ecfdcf9d421be9b6",
+  "sourceHash": "fnv1a64:d77383c6d2a756f5",
   "lessons": [
     {
       "id": "GE-C133-boese",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:449682f5502f90d9",
+      "sourceHash": "fnv1a64:c57abcc22c7247de",
       "notice": null,
       "blocks": [
         {

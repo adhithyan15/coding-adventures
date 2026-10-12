@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2e7046ffdc2bdc6a",
+  "sourceHash": "fnv1a64:d54fc8a4bda45f3b",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -1067,7 +1067,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dfd747d8a687b7a",
+      "sourceHash": "fnv1a64:5d2ce3a544236e4a",
       "notice": null,
       "blocks": [
         {
@@ -1307,7 +1307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c1f71e45b0dd64a",
+      "sourceHash": "fnv1a64:70257f3eb780342c",
       "notice": null,
       "blocks": [
         {
@@ -1563,7 +1563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96eda3b4f8c3ab47",
+      "sourceHash": "fnv1a64:2382887aa223c8d2",
       "notice": null,
       "blocks": [
         {

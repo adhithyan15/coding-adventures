@@ -14,7 +14,7 @@ concept_tag: GE-STADT3-KLEIDUNG
 prerequisites: [GE-C98-fahrrad, GE-C98-haltestelle]
 sounds: []
 roots: [germanic-klaitha]
-etymology_hook: "Kleidung ← Middle High German kleidunge: the verb 'to clothe' + -ung; Kleid is kin to English cloth"
+etymology_hook: "Kleidung ← Middle High German kleidunge: the verb 'to clothe' + -ung; its root is kin to English cloth"
 duration:
   max_seconds: 200
 requires:

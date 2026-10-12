@@ -14,7 +14,7 @@ concept_tag: GE-THING195-DOM
 prerequisites: [GE-C194-marktplatz, GE-C195-fussgaengerzone]
 sounds: []
 roots: [domus-latin]
-etymology_hook: "Dom ← French dôme ← Italian duomo, from Latin domus (Deī) 'the house (of God)' — borrowed"
+etymology_hook: "Dom ← Middle High German tuom ← Medieval Latin domus 'house', reshaped after French dôme — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C195-fussgaengerzone]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Dom** ← French *dôme* ← Italian *duomo* (EtymDB 2.1), from Latin *domus Deī*, "the house of God" — borrowed.
+**Dom** ← Middle High German *tuom* ← Medieval Latin *domus* (*episcopalis*), "the (bishop's) house" — borrowed. The modern form was reshaped after French *dôme* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

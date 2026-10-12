@@ -14,7 +14,7 @@ concept_tag: GE-QUAL221-SCHLANK
 prerequisites: [GE-C220-salzig, GE-C220-sauer]
 sounds: []
 roots: []
-etymology_hook: "schlank — first 'flexible, thin', a word from the north whose origin is uncertain"
+etymology_hook: "schlank — first 'flexible, thin', borrowed from Low German; its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C220-sauer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**schlank** first meant "flexible, thin" and spread from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
+**schlank** first meant "flexible, thin" and was borrowed from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

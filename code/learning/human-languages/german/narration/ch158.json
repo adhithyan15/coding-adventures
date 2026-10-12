@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "An offer, A bill, A bag, A parcel, A stamp",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dff94c3c30819429",
+  "sourceHash": "fnv1a64:8e8f88463f1f8b13",
   "lessons": [
     {
       "id": "GE-C158-angebot",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba015056660789c6",
+      "sourceHash": "fnv1a64:67eae28c67878a8e",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tüte from Middle Low German tūte (EtymDB 2.1) — a northern word; EtymDB lists Dutch tuit, \"spout\", beside it. A paper bag was rolled into a cone."
+              "text": "Tüte from Middle Low German tūte (EtymDB 2.1) — borrowed from Low German; EtymDB lists Dutch tuit, \"spout\", beside it. A paper bag was rolled into a cone."
             }
           ]
         },

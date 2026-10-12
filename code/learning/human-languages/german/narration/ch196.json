@@ -4,7 +4,7 @@
   "chapter": 196,
   "title": "A harbour, A bank, A beach, A meadow, A valley",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:04e40f8ba8cddb38",
+  "sourceHash": "fnv1a64:b58a87e332ba6363",
   "lessons": [
     {
       "id": "GE-C196-hafen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a0a1ad854293f22",
+      "sourceHash": "fnv1a64:901611ae42e282f7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hafen came into standard German from Middle Low German havene; EtymDB 2.1 lists it beside English haven and Dutch haven: one Germanic word."
+              "text": "Hafen was borrowed into standard German from Middle Low German havene; EtymDB 2.1 lists it beside English haven and Dutch haven: one Germanic word."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae058f2e9216ed25",
+      "sourceHash": "fnv1a64:3a605b2248fe2f13",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Strand from Middle High German strant from Old High German strand — inherited, the same word as English strand, \"shore\". (EtymDB 2.1)."
+              "text": "Strand from Middle High German strant, borrowed from Low German — the same word as English strand, \"shore\". (EtymDB 2.1)."
             }
           ]
         },

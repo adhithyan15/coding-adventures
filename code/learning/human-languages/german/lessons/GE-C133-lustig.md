@@ -14,7 +14,7 @@ concept_tag: GE-EIGEN133-LUSTIG
 prerequisites: [GE-C132-freundlich, GE-C133-boese]
 sounds: []
 roots: [germanic-lustuz]
-etymology_hook: "lustig ← Old High German lustīg: Lust 'pleasure' + -ig, English lust"
+etymology_hook: "lustig ← Old High German lustīg: the word for 'pleasure' (English lust) + -ig"
 duration:
   max_seconds: 200
 requires:

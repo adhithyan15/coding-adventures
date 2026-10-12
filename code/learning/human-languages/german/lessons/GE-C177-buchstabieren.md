@@ -46,7 +46,7 @@ reviews_of: [GE-C177-braten]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**buchstabieren** is built on the word for "a letter of the alphabet", literally "beech staff", commonly explained by the beech staves runes were carved on, + the ending *-ieren*.
+**buchstabieren** is built on the word for "a letter of the alphabet", literally "beech staff", + the ending *-ieren*. The beech staff is traditionally explained by the beech staves runes were carved on, though this is disputed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

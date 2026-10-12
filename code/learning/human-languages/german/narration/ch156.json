@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "A prescription, A pain, A cold, A cough, The flu",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:15907ebb23cbfd32",
+  "sourceHash": "fnv1a64:4ab9cf98159d7b77",
   "lessons": [
     {
       "id": "GE-C156-rezept",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9326af5593974f67",
+      "sourceHash": "fnv1a64:f3868e22e4f1d263",
       "notice": null,
       "blocks": [
         {

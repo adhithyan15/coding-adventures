@@ -14,7 +14,7 @@ concept_tag: GE-ADJ3-SCHWACH
 prerequisites: [GE-C90-leer, GE-C91-stark]
 sounds: []
 roots: [germanic-swakaz]
-etymology_hook: "schwach ← Old High German swah ← Proto-Germanic *swakaz 'weak' — inherited"
+etymology_hook: "schwach ← Middle High German swach ← Proto-Germanic *swakaz 'weak' — inherited"
 duration:
   max_seconds: 200
 requires:

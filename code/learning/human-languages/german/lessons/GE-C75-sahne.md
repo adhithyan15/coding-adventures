@@ -46,7 +46,7 @@ reviews_of: [GE-C74-nudeln]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Sahne** came into standard German from Low German and Dutch. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
+**Sahne** was borrowed into standard German from Low German and Dutch. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

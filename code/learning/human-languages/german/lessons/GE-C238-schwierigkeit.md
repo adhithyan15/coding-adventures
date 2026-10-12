@@ -46,7 +46,7 @@ reviews_of: [GE-C237-schritt]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Schwierigkeit** is *schwierig*, "difficult", + *-keit*, the ending that makes a noun. The origin of *schwierig* itself is uncertain.
+**Schwierigkeit** is *schwierig*, "difficult", + *-keit*, the ending that makes a noun. *schwierig* first meant "full of sores", from Middle High German *swër*, "ulcer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

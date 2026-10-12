@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 168,
-  "sourceHash": "fnv1a64:6f747f429cf9c2da",
+  "sourceHash": "fnv1a64:75ee3800fb931068",
   "lessonIds": [
     "GE-C168-unmoeglich",
     "GE-C168-hell",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch168.txt",
   "json": "german/narration/ch168.json",
-  "textHash": "fnv1a64:47b4ea85a44040aa",
-  "jsonHash": "fnv1a64:4b145761076c4cc6",
+  "textHash": "fnv1a64:3c7df4cc4a897782",
+  "jsonHash": "fnv1a64:ebf372babc8924c1",
   "findings": []
 }

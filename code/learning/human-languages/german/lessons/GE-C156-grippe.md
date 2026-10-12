@@ -14,7 +14,7 @@ concept_tag: GE-THING156-GRIPPE
 prerequisites: [GE-C156-erkaeltung, GE-C156-husten]
 sounds: []
 roots: [germanic-gripana]
-etymology_hook: "Grippe ← French grippe 'a seizing', from Frankish grīpan 'to seize' — English gripe and grip share the root"
+etymology_hook: "Grippe ← French grippe 'a seizing', from Frankish *grīpan 'to seize' — English gripe and grip share the root"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C156-husten]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Grippe** ← French *grippe*, "flu, a seizing", from Frankish *grīpan*, "to seize" (EtymDB 2.1) — borrowed from French, which took it from Germanic. English *grip* shares the root.
+**Grippe** ← French *grippe*, "flu, a seizing", from Frankish *\*grīpan*, "to seize" (EtymDB 2.1) — borrowed from French, which took it from Germanic. English *grip* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

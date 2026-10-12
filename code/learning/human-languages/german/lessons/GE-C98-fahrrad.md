@@ -46,7 +46,7 @@ reviews_of: [GE-C98-bibliothek]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Fahrrad** is *fahren*, "to travel", + the word for "wheel", a cousin of Latin *rota*, "wheel" (EtymDB 2.1 lists it beside English *rotary*): a wheel you ride.
+**Fahrrad** is *fahren*, "to travel", + the word for "wheel", a cousin of Latin *rota*, "wheel" (EtymDB 2.1): a wheel you ride.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

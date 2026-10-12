@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Cupboard, Floor, Stairs, Mirror, Flat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ffbc3bc95aff55f2",
+  "sourceHash": "fnv1a64:64fae05ccef93bb4",
   "lessons": [
     {
       "id": "GE-C78-schrank",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1399fbf106203e99",
+      "sourceHash": "fnv1a64:c14ecd14241a027e",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Treppe came into standard German from Low German: Middle Low German treppe meant \"step, stair\" (EtymDB 2.1). It is related to an old verb for \"to tread\"."
+              "text": "Treppe was borrowed into standard German from Low German: Middle Low German treppe meant \"step, stair\" (EtymDB 2.1). It is related to an old verb for \"to tread\"."
             }
           ]
         },

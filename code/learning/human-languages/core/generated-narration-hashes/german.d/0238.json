@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 238,
-  "sourceHash": "fnv1a64:8aacc69688fd746d",
+  "sourceHash": "fnv1a64:ede36eb1a329a2be",
   "lessonIds": [
     "GE-C238-schwierigkeit",
     "GE-C238-sicherheit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch238.txt",
   "json": "german/narration/ch238.json",
-  "textHash": "fnv1a64:ce848bfc718e09be",
-  "jsonHash": "fnv1a64:0b186220ac5e3b38",
+  "textHash": "fnv1a64:3e80d046d36986ab",
+  "jsonHash": "fnv1a64:0e08c5db198d0136",
   "findings": []
 }

@@ -14,7 +14,7 @@ concept_tag: GE-NATUR4-PFERD
 prerequisites: [GE-C85-huegel, GE-C85-wueste]
 sounds: []
 roots: [paraveredus-latin]
-etymology_hook: "Pferd ← Old High German pfärifrit ← Late Latin paraverēdus 'post horse' — borrowed; English palfrey shares it"
+etymology_hook: "Pferd ← Old High German pfarifrit ← Late Latin paraverēdus 'post horse' — borrowed; English palfrey shares it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C85-wueste]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Pferd** ← Old High German *pfārifrit* ← Late Latin *paraverēdus*, "spare post horse" (EtymDB 2.1) — borrowed and worn down. English *palfrey* comes from the same Latin word through French.
+**Pferd** ← Old High German *pfarifrit* ← Late Latin *paraverēdus*, "spare post horse" (EtymDB 2.1) — borrowed and worn down. English *palfrey* comes from the same Latin word through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

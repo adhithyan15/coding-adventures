@@ -45,7 +45,7 @@ You'll want to know: schwierig.
 schwierig — "difficult".
 
 The word, taken apart.
-schwierig has an uncertain origin. The usual account links it to an old word for a swelling or sore, so first "troublesome"; EtymDB 2.1 has no source for it.
+schwierig from Middle High German swiric, "full of sores": swër, "ulcer" (compare Geschwür, "abscess"), + -ic. What was full of sores became troublesome, then difficult.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: sicher.
 sicher — "safe; sure".
 
 The word, taken apart.
-sicher from Old High German sihhur from Proto-Germanic sikuraz, from Latin sēcūrus, "free from care" (EtymDB 2.1) — an early loan, like English secure.
+sicher is an early West Germanic loan (Old High German sihhur, Old English sicor) from Latin sēcūrus, "free from care" (EtymDB 2.1). English secure is a later loan of the same Latin word.
 
 What you've built.
 One more word for this chapter.

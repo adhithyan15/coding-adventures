@@ -14,7 +14,7 @@ concept_tag: GE-EIGEN134-SCHWIERIG
 prerequisites: [GE-C133-interessant, GE-C134-langweilig]
 sounds: []
 roots: []
-etymology_hook: "schwierig — origin uncertain; usually linked to an old word for a sore, so first 'troublesome'"
+etymology_hook: "schwierig ← Middle High German swiric 'full of sores', from swër 'ulcer': troublesome, then difficult"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C134-langweilig]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**schwierig** has an uncertain origin. The usual account links it to an old word for a swelling or sore, so first "troublesome"; EtymDB 2.1 has no source for it.
+**schwierig** ← Middle High German *swiric*, "full of sores": *swër*, "ulcer" (compare *Geschwür*, "abscess"), + *-ic*. What was full of sores became troublesome, then difficult.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

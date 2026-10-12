@@ -4,7 +4,7 @@
   "chapter": 201,
   "title": "A tin, A pot, A frying pan, An oven, A dishwasher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7272aa8b4f6fee13",
+  "sourceHash": "fnv1a64:b22520cc5ad05211",
   "lessons": [
     {
       "id": "GE-C201-dose",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17b892b2b9351661",
+      "sourceHash": "fnv1a64:8df4adc449e2ece7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Dose came into standard German from Low German dose, \"box, case\". Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
+              "text": "Dose was borrowed into standard German from Low German dose, \"box, case\". Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
             }
           ]
         },

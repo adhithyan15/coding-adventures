@@ -46,7 +46,7 @@ reviews_of: [GE-C215-gleichzeitig]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**großzügig** is the word for "great" + *Zug*, here "a trait", + *-ig*: of great traits, generous. *groß* ← Old High German *grōz* ← Proto-Germanic *\*grautaz*. (EtymDB 2.1)
+**großzügig** is the word for "great" + *Zug*, here "a trait", + *-ig*: of great traits, generous. The word for "great" ← Old High German *grōz* ← Proto-Germanic *\*grautaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

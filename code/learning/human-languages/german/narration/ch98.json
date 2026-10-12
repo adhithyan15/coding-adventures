@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Library, Bicycle, Bus or tram stop, Clothes, Shirt",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:55ecf28a535f3852",
+  "sourceHash": "fnv1a64:f3ebd65e8fde4e9b",
   "lessons": [
     {
       "id": "GE-C98-bibliothek",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cb78aae17028536",
+      "sourceHash": "fnv1a64:e0a1ad095e55fec0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Fahrrad is fahren, \"to travel\", + the word for \"wheel\", a cousin of Latin rota, \"wheel\" (EtymDB 2.1 lists it beside English rotary): a wheel you ride."
+              "text": "Fahrrad is fahren, \"to travel\", + the word for \"wheel\", a cousin of Latin rota, \"wheel\" (EtymDB 2.1): a wheel you ride."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13f718ad2e256a0b",
+      "sourceHash": "fnv1a64:e24b957f589ca3c4",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 215,
   "title": "Fair, Divorced, At the same time, Generous, Good value",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8a3723d1818aaf05",
+  "sourceHash": "fnv1a64:9b39b813f73dcbdf",
   "lessons": [
     {
       "id": "GE-C215-gerecht",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63197fabaca06d44",
+      "sourceHash": "fnv1a64:017ebdd4e0cf1e58",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "großzügig is the word for \"great\" + Zug, here \"a trait\", + -ig: of great traits, generous. groß from Old High German grōz from Proto-Germanic grautaz. (EtymDB 2.1)."
+              "text": "großzügig is the word for \"great\" + Zug, here \"a trait\", + -ig: of great traits, generous. The word for \"great\" from Old High German grōz from Proto-Germanic grautaz. (EtymDB 2.1)."
             }
           ]
         },

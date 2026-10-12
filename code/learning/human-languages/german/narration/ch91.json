@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Strong, Weak, Rich, Ugly, Sweet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:563fbc2f85d2e33d",
+  "sourceHash": "fnv1a64:5bed2c25bec4bba9",
   "lessons": [
     {
       "id": "GE-C91-stark",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72e8df551f051302",
+      "sourceHash": "fnv1a64:564d6d20fe1cca39",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 168,
   "title": "Impossible, Bright, Dark, Full, Old-fashioned",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6f747f429cf9c2da",
+  "sourceHash": "fnv1a64:75ee3800fb931068",
   "lessons": [
     {
       "id": "GE-C168-unmoeglich",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f5626c82319e8f4",
+      "sourceHash": "fnv1a64:449e980d99e5f736",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "voll from Middle High German vol from Old High German foll, \"full\" — inherited, the same word as English full. (EtymDB 2.1)."
+              "text": "voll from Middle High German vol from Old High German fol, \"full\" — inherited, the same word as English full. (EtymDB 2.1)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 58,
-  "sourceHash": "fnv1a64:704388adfdf3463d",
+  "sourceHash": "fnv1a64:086f122873002fc8",
   "lessonIds": [
     "GE-C58-ruecken",
     "GE-C58-zunge",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch58.txt",
   "json": "german/narration/ch58.json",
-  "textHash": "fnv1a64:a15869c8de1f3a59",
-  "jsonHash": "fnv1a64:a0a67f6bfe7bfa65",
+  "textHash": "fnv1a64:07e6a4fd1548ec6a",
+  "jsonHash": "fnv1a64:0a5e1b2df7ba416c",
   "findings": []
 }

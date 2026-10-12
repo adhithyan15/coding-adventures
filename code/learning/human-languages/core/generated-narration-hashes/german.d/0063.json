@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 63,
-  "sourceHash": "fnv1a64:acaa830c5ce9f4b0",
+  "sourceHash": "fnv1a64:e39273680dc9b47f",
   "lessonIds": [
     "GE-C63-nachbar",
     "GE-C63-gast",
@@ -14,6 +14,6 @@
   "text": "german/narration/ch63.txt",
   "json": "german/narration/ch63.json",
   "textHash": "fnv1a64:90656f307649c0ce",
-  "jsonHash": "fnv1a64:06e9d98e4781e8a3",
+  "jsonHash": "fnv1a64:a0d19a69971341f4",
   "findings": []
 }

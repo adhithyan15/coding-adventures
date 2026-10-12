@@ -14,7 +14,7 @@ concept_tag: GE-VERB-LANDEN
 prerequisites: [GE-C182-klettern, GE-C182-kuemmern]
 sounds: []
 roots: [germanic-landa]
-etymology_hook: "landen ← Middle Low German landen — the verb of Land 'land', the same word as English land"
+etymology_hook: "landen ← Middle Low German landen, borrowed from Low German — the verb of the word for 'land', English land"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C182-kuemmern]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**landen** came in from Middle Low German *landen* (EtymDB 2.1), the verb of the word for "land", Proto-Germanic *\*landą*, the same as English *land*.
+**landen** was borrowed from Middle Low German *landen* (EtymDB 2.1), the verb of the word for "land", Proto-Germanic *\*landą*, the same as English *land*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

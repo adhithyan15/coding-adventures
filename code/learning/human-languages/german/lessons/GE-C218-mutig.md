@@ -14,7 +14,7 @@ concept_tag: GE-QUAL218-MUTIG
 prerequisites: [GE-C218-locker, GE-C218-mager]
 sounds: []
 roots: [germanic-modaz]
-etymology_hook: "mutig ← Old High German muotag: Mut 'courage' + -ig; Mut is the same word as English mood"
+etymology_hook: "mutig ← Old High German muotag: the word for 'courage' + -ig; that word is the same as English mood"
 duration:
   max_seconds: 200
 requires:

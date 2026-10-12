@@ -14,7 +14,7 @@ concept_tag: GE-QUAL221-SCHUECHTERN
 prerequisites: [GE-C221-schlank, GE-C221-schrecklich]
 sounds: []
 roots: []
-etymology_hook: "schüchtern ← Middle Low German schüchter 'shy, easily scared' — a word from the north"
+etymology_hook: "schüchtern ← Middle Low German schüchter 'shy, easily scared' — borrowed from Low German"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C221-schrecklich]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**schüchtern** came into standard German from Middle Low German *schüchter*, "shy, easily scared" (EtymDB 2.1) — a northern word, related to English *shy*.
+**schüchtern** was borrowed into standard German from Middle Low German *schüchter*, "shy, easily scared" (EtymDB 2.1). It is related to English *shy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

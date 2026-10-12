@@ -4,7 +4,7 @@
   "chapter": 195,
   "title": "A pedestrian zone, A cathedral, A monument, A tower, A castle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:df6aeb782bc668bf",
+  "sourceHash": "fnv1a64:568179a7459859f5",
   "lessons": [
     {
       "id": "GE-C195-fussgaengerzone",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dc167efc340029d",
+      "sourceHash": "fnv1a64:dfd8acd9cd2ec1be",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Dom from French dôme from Italian duomo (EtymDB 2.1), from Latin domus Deī, \"the house of God\" — borrowed."
+              "text": "Dom from Middle High German tuom from Medieval Latin domus (episcopalis), \"the (bishop's) house\" — borrowed. The modern form was reshaped after French dôme (EtymDB 2.1)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c27264050f17a5a7",
+      "sourceHash": "fnv1a64:0d4c59f4edfd88e5",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 182,
   "title": "To fight, To climb, To take care, To land, To smile",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:625b8c6fcec05c2c",
+  "sourceHash": "fnv1a64:af2c44f36e9d916e",
   "lessons": [
     {
       "id": "GE-C182-kaempfen",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb3e885135525dd8",
+      "sourceHash": "fnv1a64:c0ca96bd38f24f98",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "landen came in from Middle Low German landen (EtymDB 2.1), the verb of the word for \"land\", Proto-Germanic landą, the same as English land."
+              "text": "landen was borrowed from Middle Low German landen (EtymDB 2.1), the verb of the word for \"land\", Proto-Germanic landą, the same as English land."
             }
           ]
         },

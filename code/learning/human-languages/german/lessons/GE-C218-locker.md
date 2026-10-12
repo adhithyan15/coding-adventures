@@ -46,7 +46,7 @@ reviews_of: [GE-C218-lieb]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**locker**, "loose", spread into standard German from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
+**locker**, "loose", was borrowed into standard German from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

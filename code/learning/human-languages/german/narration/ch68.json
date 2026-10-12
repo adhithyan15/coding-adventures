@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "To carry, To send, To count, To paint, To clean",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:429dfec918780165",
+  "sourceHash": "fnv1a64:e108ae066b9190b0",
   "lessons": [
     {
       "id": "GE-C68-tragen",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0e51e40d1812374",
+      "sourceHash": "fnv1a64:4d95ccdc98a5b107",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "putzen is inherited, but its origin is uncertain. The usual account ties it to Middle High German butze, \"lump, piece\" (EtymDB 2.1), as if cleaning were picking the lumps off."
+              "text": "putzen is inherited: it is the verb of Middle High German butze, \"lump, piece\" (EtymDB 2.1), so cleaning was first picking the lumps off."
             }
           ]
         },

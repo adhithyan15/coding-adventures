@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 93,
-  "sourceHash": "fnv1a64:7a5f7ea3a7a5fbb0",
+  "sourceHash": "fnv1a64:52a4f467c892de56",
   "lessonIds": [
     "GE-C93-richtig",
     "GE-C93-falsch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch93.txt",
   "json": "german/narration/ch93.json",
-  "textHash": "fnv1a64:98f33d465e137140",
-  "jsonHash": "fnv1a64:ed9e6569bb694691",
+  "textHash": "fnv1a64:b8cff792bf88b378",
+  "jsonHash": "fnv1a64:49f7514a83cd2b11",
   "findings": []
 }

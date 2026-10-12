@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Cream, Pepper, Nut, Beer, To cut",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0270dc59afeb799a",
+  "sourceHash": "fnv1a64:5fe61c86296abfb4",
   "lessons": [
     {
       "id": "GE-C75-sahne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a256ef9c9a71b9c",
+      "sourceHash": "fnv1a64:ab3a28660d900bc4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Sahne came into standard German from Low German and Dutch. Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
+              "text": "Sahne was borrowed into standard German from Low German and Dutch. Its origin is uncertain; EtymDB 2.1 has the word but no source for it."
             }
           ]
         },

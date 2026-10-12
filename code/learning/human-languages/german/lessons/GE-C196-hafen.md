@@ -13,8 +13,8 @@ gloss: "a harbour"
 concept_tag: GE-THING196-HAFEN
 prerequisites: [GE-C195-turm, GE-C195-burg]
 sounds: []
-roots: []
-etymology_hook: "Hafen ← Middle Low German havene — the same Germanic word as English haven"
+roots: [germanic-habno]
+etymology_hook: "Hafen ← Middle Low German havene, borrowed from Low German — the same Germanic word as English haven"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [GE-C195-burg]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Hafen** came into standard German from Middle Low German *havene*; EtymDB 2.1 lists it beside English *haven* and Dutch *haven*: one Germanic word.
+**Hafen** was borrowed into standard German from Middle Low German *havene*; EtymDB 2.1 lists it beside English *haven* and Dutch *haven*: one Germanic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

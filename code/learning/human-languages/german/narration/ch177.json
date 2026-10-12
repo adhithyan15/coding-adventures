@@ -4,7 +4,7 @@
   "chapter": 177,
   "title": "To apply, To bend, To fry, To spell, To print",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:78a40370b72c6724",
+  "sourceHash": "fnv1a64:256d891b81e74078",
   "lessons": [
     {
       "id": "GE-C177-bewerben",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83cd789caf10d5a4",
+      "sourceHash": "fnv1a64:c78de3881925ab4a",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "buchstabieren is built on the word for \"a letter of the alphabet\", literally \"beech staff\", commonly explained by the beech staves runes were carved on, + the ending -ieren."
+              "text": "buchstabieren is built on the word for \"a letter of the alphabet\", literally \"beech staff\", + the ending -ieren. The beech staff is traditionally explained by the beech staves runes were carved on, though this is disputed."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 218,
-  "sourceHash": "fnv1a64:594e5eefaf380ca4",
+  "sourceHash": "fnv1a64:db29586243fb152e",
   "lessonIds": [
     "GE-C218-lecker",
     "GE-C218-lieb",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch218.txt",
   "json": "german/narration/ch218.json",
-  "textHash": "fnv1a64:f2116763aa9f40e9",
-  "jsonHash": "fnv1a64:78a172a85626d6da",
+  "textHash": "fnv1a64:fd03bd4915dce999",
+  "jsonHash": "fnv1a64:b56e46d833362be8",
   "findings": []
 }

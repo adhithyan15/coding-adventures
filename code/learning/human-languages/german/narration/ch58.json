@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Back, Tongue, Lip, Toe, Stomach",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:704388adfdf3463d",
+  "sourceHash": "fnv1a64:086f122873002fc8",
   "lessons": [
     {
       "id": "GE-C58-ruecken",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b202fb6e6f137ee7",
+      "sourceHash": "fnv1a64:29ae3a8878197243",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Lippe is the Germanic word for \"lip\", Proto-Germanic lipjô. EtymDB 2.1 traces English lip to lipjô and lists Lippe beside it. Standard German took this form from Low German."
+              "text": "Lippe is the Germanic word for \"lip\", Proto-Germanic lipjô. EtymDB 2.1 traces English lip to lipjô and lists Lippe beside it. Standard German borrowed this form from Low German."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Neighbour, Guest, Grandson, Pupil, Pupil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:acaa830c5ce9f4b0",
+  "sourceHash": "fnv1a64:e39273680dc9b47f",
   "lessons": [
     {
       "id": "GE-C63-nachbar",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97b4eee64799463a",
+      "sourceHash": "fnv1a64:48e3805375c4f75f",
       "notice": null,
       "blocks": [
         {
