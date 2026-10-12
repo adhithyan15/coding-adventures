@@ -6598,7 +6598,10 @@ fn parse_swimlane_edge_config(
             "curve" => curve = Some(match value.to_ascii_lowercase().as_str() {
                 "linear" => SwimlaneEdgeCurve::Linear,
                 "basis" => SwimlaneEdgeCurve::Basis,
-                _ => return Err(swimlane_error(line, "Swimlane edge curve must be linear or basis")),
+                "step" => SwimlaneEdgeCurve::Step,
+                "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
+                "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,
+                _ => return Err(swimlane_error(line, "unsupported Swimlane edge curve")),
             }),
             other => return Err(swimlane_error(line, format!("unsupported Swimlane edge configuration {other:?}"))),
         }
