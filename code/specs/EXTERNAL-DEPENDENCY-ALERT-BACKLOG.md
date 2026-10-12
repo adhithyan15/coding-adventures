@@ -145,9 +145,13 @@ written as a candidate work package.
      postcss come along for the ride, even in packages with no CSS and no dev
      server.
    - **Proposed:** an in-house TypeScript test runner (`describe` / `it` /
-     `expect`, run on plain Node with type stripping). It would have zero
-     transitive dependencies and would take vite, postcss, nanoid,
+     `expect`, initially compiled to JavaScript with the retained checker and
+     run on plain Node). The runner itself would have zero third-party npm
+     dependencies and would take vite, postcss, nanoid,
      source-map-js, picomatch and esbuild out of every library package at once.
+     Node and the checker remain explicit bootstrap dependencies; type stripping
+     is usable only for source/import shapes proven compatible with its limits.
+     DEP-010/020/060 in the delivery roadmap specify those removal gates.
    - **Builds on:** `typescript/compiler-source-map` models compiler pipeline
      positions. Browser source-map v3/VLQ encoding and coverage attribution need
      their own capability work; it is not already a drop-in stack-trace mapper.
