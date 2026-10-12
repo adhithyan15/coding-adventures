@@ -13,7 +13,8 @@ gloss: "a sentence"
 concept_tag: PT-LAZER114-FRASE
 prerequisites: [PT-C113-trabalhos-de-casa, PT-C113-problema]
 sounds: []
-roots: []
+roots: [phrasis-latin]
+etymology_hook: "frase ← Late Latin phrasis, from Greek phrasis 'way of speaking' — English phrase"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C113-problema]
 <!-- hl-knowledge: introduces=[PT-LEX-C114-LAZER114-01]; assesses=[] -->
 
 **a frase** — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frase** ← Late Latin *phrasis*, "diction" (EtymDB 2.1) — a learned borrowing from Late Latin. Latin took it from Greek *phrasis*, "way of speaking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

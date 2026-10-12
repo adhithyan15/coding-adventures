@@ -13,7 +13,8 @@ gloss: "a dolphin"
 concept_tag: PT-ANIMAIS119-GOLFINHO
 prerequisites: [PT-C119-coruja, PT-C119-baleia]
 sounds: []
-roots: []
+roots: [delphinus-latin]
+etymology_hook: "golfinho ← Latin delphinus, from Greek delphis 'dolphin' — English dolphin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C119-baleia]
 <!-- hl-knowledge: introduces=[PT-LEX-C119-ANIMAIS119-04]; assesses=[] -->
 
 **o golfinho** — "a dolphin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**golfinho** ← Latin *delphinus*, "dolphin" (EtymDB 2.1) — inherited. Latin took it from Greek *delphis*. Old Portuguese said *golfinno*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

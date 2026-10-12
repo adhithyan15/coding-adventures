@@ -13,7 +13,8 @@ gloss: "salty"
 concept_tag: PT-QUALIDADES127-SALGADO
 prerequisites: [PT-C127-zangado, PT-C127-amargo]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "salgado — 'salted': from Vulgar Latin *salicare 'to salt', from sal 'salt'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C127-amargo]
 <!-- hl-knowledge: introduces=[PT-LEX-C127-QUALIDADES127-04]; assesses=[] -->
 
 **salgado** — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salgado** ← Vulgar Latin *\*salicare*, "to salt" (EtymDB 2.1), from Latin *sal*, "salt" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "possible"
 concept_tag: PT-QUAL243-POSSIVEL
 prerequisites: [PT-C243-jovem, PT-C243-inteligente]
 sounds: []
-roots: []
+roots: [posse-latin]
+etymology_hook: "possível ← Latin possibilis, from posse 'to be able' — English possible"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C243-inteligente]
 <!-- hl-knowledge: introduces=[PT-LEX-C243-QUAL243-03]; assesses=[] -->
 
 **possível** — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**possível** ← Latin *possibilis*, "possible" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

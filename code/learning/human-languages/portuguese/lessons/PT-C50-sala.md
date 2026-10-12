@@ -14,6 +14,7 @@ concept_tag: PT-CASA3-SALA
 prerequisites: [PT-C49-jardim, PT-C50-lampada]
 sounds: []
 roots: []
+etymology_hook: "sala ← a Germanic word for a hall — English saloon and salon are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C50-lampada]
 <!-- hl-knowledge: introduces=[PT-LEX-C50-CASA3-02]; assesses=[] -->
 
 **a sala** — "the living room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sala** ← a Germanic word for a hall or a one-roomed house — borrowed. EtymDB 2.1 has no ancestor row for *sala*; it derives Italian *sala* from Lombardic *sala*, "room, house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

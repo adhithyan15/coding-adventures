@@ -11,6 +11,7 @@ concept_tag: WORD-GOOD
 prerequisites: [PT-C01-ola]
 sounds: [nasal-om]
 roots: [bonus]
+etymology_hook: "bom ← Latin bonus 'good' — English bonus and bonanza share it"
 reviews_of: [PT-C01-ola]
 duration:
   max_seconds: 120

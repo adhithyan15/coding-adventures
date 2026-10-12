@@ -13,7 +13,8 @@ gloss: "a church"
 concept_tag: PT-CIDADE3-IGREJA
 prerequisites: [PT-C74-ponte, PT-C74-parque]
 sounds: []
-roots: []
+roots: [ecclesia-latin]
+etymology_hook: "igreja ← Latin ecclesia, from Greek ekklesia 'assembly' — English ecclesiastical"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C74-parque]
 <!-- hl-knowledge: introduces=[PT-LEX-C75-CIDADE3-01]; assesses=[] -->
 
 **a igreja** — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**igreja** ← Latin *ecclesia*, "church" (EtymDB 2.1) — inherited. Latin took it from Greek *ekklēsia*, "assembly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to announce"
 concept_tag: PT-VERB-ANUNCIAR
 prerequisites: [PT-C141-acompanhar, PT-C141-acrescentar]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "anunciar ← Latin annuntiare, from nuntius 'messenger', a learned word — English announce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C141-acrescentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C141-VERBOS141-03]; assesses=[] -->
 
 **anunciar** — "to announce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anunciar** ← Latin *annuntiare*, "to announce" (EtymDB 2.1), from *nuntius*, "messenger" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

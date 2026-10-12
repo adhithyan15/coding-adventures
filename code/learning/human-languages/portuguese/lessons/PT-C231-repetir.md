@@ -13,7 +13,8 @@ gloss: "to repeat"
 concept_tag: PT-VERB-REPETIR
 prerequisites: [PT-C231-construir, PT-C231-fotografar]
 sounds: []
-roots: []
+roots: [petere-latin]
+etymology_hook: "repetir ← Latin repetere 'to seek again' — English repeat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C231-fotografar]
 <!-- hl-knowledge: introduces=[PT-LEX-C231-VERBOS231-03]; assesses=[] -->
 
 **repetir** — "to repeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**repetir** ← Latin *repetere*, "to seek again" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

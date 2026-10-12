@@ -11,6 +11,7 @@ concept_tag: GREETING-AFTERNOON
 prerequisites: [PT-C01-bom-dia]
 sounds: []
 roots: [tardus]
+etymology_hook: "tarde ← Latin tarde 'late', from tardus 'slow' — English tardy shares it"
 reviews_of: [PT-C01-bom-dia, PT-C01-bom]
 duration:
   max_seconds: 120

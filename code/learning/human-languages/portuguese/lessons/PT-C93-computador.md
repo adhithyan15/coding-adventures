@@ -13,7 +13,8 @@ gloss: "a computer"
 concept_tag: PT-CASA93-COMPUTADOR
 prerequisites: [PT-C93-tapete, PT-C93-televisao]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "computador ← Latin computator 'reckoner', from computare 'to count up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C93-televisao]
 <!-- hl-knowledge: introduces=[PT-LEX-C93-CASA93-03]; assesses=[] -->
 
 **o computador** — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**computador** ← Latin *computator*, "reckoner" (EtymDB 2.1), from *computare*, "to count up" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

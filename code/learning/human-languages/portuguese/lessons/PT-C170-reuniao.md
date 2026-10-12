@@ -13,7 +13,8 @@ gloss: "a meeting"
 concept_tag: PT-TRAB170-REUNIAO
 prerequisites: [PT-C170-colega, PT-C170-salario]
 sounds: []
-roots: []
+roots: [unus-latin]
+etymology_hook: "reunião — re- 'again' + the union word (← Latin unio, from unus 'one')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C170-salario]
 <!-- hl-knowledge: introduces=[PT-LEX-C170-TRAB170-04]; assesses=[] -->
 
 **a reunião** — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reunião** is built from *re-*, "again", and the word for union, from Latin *unio*, "oneness", from *unus*, "one" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

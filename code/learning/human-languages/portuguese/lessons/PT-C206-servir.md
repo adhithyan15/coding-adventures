@@ -13,7 +13,8 @@ gloss: "to serve"
 concept_tag: PT-VERB-SERVIR
 prerequisites: [PT-C206-descobrir, PT-C206-parecer]
 sounds: []
-roots: []
+roots: [servire-latin]
+etymology_hook: "servir ← Latin servire 'to serve' — English serve and servant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C206-parecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C206-VERBOS206-04]; assesses=[] -->
 
 **servir** — "to serve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**servir** ← Latin *servire*, "to serve" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

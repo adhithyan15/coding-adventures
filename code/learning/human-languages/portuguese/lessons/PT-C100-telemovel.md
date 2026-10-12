@@ -13,7 +13,8 @@ gloss: "a mobile phone"
 concept_tag: PT-COISAS100-TELEMOVEL
 prerequisites: [PT-C99-pera, PT-C100-despertador]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "telemóvel = tele- 'far' (from Greek) + the word for mobile (← Latin mobilis 'movable')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C100-despertador]
 <!-- hl-knowledge: introduces=[PT-LEX-C100-COISAS100-02]; assesses=[] -->
 
 **o telemóvel** — "a mobile phone". In Brazil, **o celular**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telemóvel** is built from *tele-*, "far" (from Greek *tēle*), and the word for "mobile" ← Latin *mobilis*, "movable".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

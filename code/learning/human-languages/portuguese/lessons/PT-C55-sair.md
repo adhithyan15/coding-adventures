@@ -13,7 +13,8 @@ gloss: "to go out, to leave"
 concept_tag: PT-VERB-SAIR
 prerequisites: [PT-C54-mapa, PT-C55-entrar]
 sounds: []
-roots: []
+roots: [salire-latin]
+etymology_hook: "sair ← Latin salire 'to jump': the -l- fell out — English salient shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C55-entrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C55-VERBOS5-02]; assesses=[] -->
 
 **sair** — "to go out, to leave". The opposite of **entrar**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sair** ← Latin *salire*, "to jump" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

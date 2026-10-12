@@ -14,6 +14,7 @@ concept_tag: PT-QUAL241-LISO-LISA
 prerequisites: [PT-C240-dieta, PT-C240-descanso]
 sounds: []
 roots: []
+etymology_hook: "liso — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C240-descanso]
 <!-- hl-knowledge: introduces=[PT-LEX-C241-QUAL241-01]; assesses=[] -->
 
 **liso / lisa** — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**liso** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

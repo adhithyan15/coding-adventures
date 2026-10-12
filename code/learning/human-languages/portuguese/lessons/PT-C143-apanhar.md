@@ -13,7 +13,8 @@ gloss: "to pick up, to catch"
 concept_tag: PT-VERB-APANHAR
 prerequisites: [PT-C142-imaginar, PT-C143-propor]
 sounds: []
-roots: []
+roots: [pannus-latin]
+etymology_hook: "apanhar — built on the cloth word, from Latin pannus 'cloth': to gather up as in a cloth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C143-propor]
 <!-- hl-knowledge: introduces=[PT-LEX-C143-VERBOS143-02]; assesses=[] -->
 
 **apanhar** — "to pick up, to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apanhar** is built on the word for cloth, from Latin *pannus*, "cloth" (EtymDB 2.1): to gather up, as in a cloth. EtymDB 2.1 says Portuguese took it from Spanish *apañar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 198,
-  "sourceHash": "fnv1a64:b6578cf636576844",
+  "sourceHash": "fnv1a64:7f6e7374a66657f9",
   "lessonIds": [
     "PT-C198-quantidade",
     "PT-C198-quilo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch198.txt",
   "json": "portuguese/narration/ch198.json",
-  "textHash": "fnv1a64:d96533146d4cf38f",
-  "jsonHash": "fnv1a64:2fad8bce866e85d9",
+  "textHash": "fnv1a64:ff5a8f24aa666f45",
+  "jsonHash": "fnv1a64:e2f43cdbef3439d0",
   "findings": []
 }

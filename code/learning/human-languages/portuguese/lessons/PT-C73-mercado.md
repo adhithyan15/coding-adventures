@@ -13,7 +13,8 @@ gloss: "a market"
 concept_tag: PT-CIDADE1-MERCADO
 prerequisites: [PT-C73-rua, PT-C73-loja]
 sounds: []
-roots: []
+roots: [mercatus-latin]
+etymology_hook: "mercado ← Latin mercatus 'trade, market', from merx 'goods' — English market"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C73-loja]
 <!-- hl-knowledge: introduces=[PT-LEX-C73-CIDADE1-04]; assesses=[] -->
 
 **o mercado** — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mercado** ← Latin *mercatus*, "trade, market" (EtymDB 2.1), from *merx*, "goods" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

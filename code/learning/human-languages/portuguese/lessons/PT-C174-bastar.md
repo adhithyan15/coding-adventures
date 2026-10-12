@@ -14,6 +14,7 @@ concept_tag: PT-VERB-BASTAR
 prerequisites: [PT-C174-diminuir, PT-C174-avisar]
 sounds: []
 roots: []
+etymology_hook: "bastar — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C174-avisar]
 <!-- hl-knowledge: introduces=[PT-LEX-C174-VERBOS174-05]; assesses=[] -->
 
 **bastar** — "to be enough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bastar** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

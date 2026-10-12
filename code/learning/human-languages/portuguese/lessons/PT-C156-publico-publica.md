@@ -13,7 +13,8 @@ gloss: "public"
 concept_tag: PT-QUAL156-PUBLICO-PUBLICA
 prerequisites: [PT-C156-anterior, PT-C156-seguinte]
 sounds: []
-roots: []
+roots: [publicus-latin]
+etymology_hook: "público ← Latin publicus 'of the people' — English public"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C156-seguinte]
 <!-- hl-knowledge: introduces=[PT-LEX-C156-QUAL156-03]; assesses=[] -->
 
 **público / pública** — "public".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**público** ← Latin *publicus*, "of the people" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

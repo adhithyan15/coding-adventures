@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 146,
-  "sourceHash": "fnv1a64:831a3d696e31908b",
+  "sourceHash": "fnv1a64:9ea76e15e1a14a4c",
   "lessonIds": [
     "PT-C146-tossir",
     "PT-C146-tremer",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch146.txt",
   "json": "portuguese/narration/ch146.json",
-  "textHash": "fnv1a64:b4acf4ac774bb8b1",
-  "jsonHash": "fnv1a64:72a4fa60e1c0a064",
+  "textHash": "fnv1a64:5cc2746a70687fb4",
+  "jsonHash": "fnv1a64:83f9bff90f95bf3f",
   "findings": []
 }

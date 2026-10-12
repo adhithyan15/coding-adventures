@@ -13,7 +13,8 @@ gloss: "a steering wheel"
 concept_tag: PT-COISAS223-VOLANTE
 prerequisites: [PT-C223-bagagem, PT-C223-lugar]
 sounds: []
-roots: []
+roots: [volare-latin]
+etymology_hook: "volante ← Latin volans 'flying', from volare 'to fly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C223-lugar]
 <!-- hl-knowledge: introduces=[PT-LEX-C223-COISAS223-04]; assesses=[] -->
 
 **o volante** — "a steering wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volante** ← Latin *volans, volantis*, "flying" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

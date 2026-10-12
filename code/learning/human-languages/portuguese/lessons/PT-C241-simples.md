@@ -13,7 +13,8 @@ gloss: "simple"
 concept_tag: PT-QUAL241-SIMPLES
 prerequisites: [PT-C241-profundo-profunda, PT-C241-desconhecido-desconhecida]
 sounds: []
-roots: []
+roots: [simplex-latin]
+etymology_hook: "simples ← Latin simplex 'single, simple' — English simple"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C241-desconhecido-desconhecida]
 <!-- hl-knowledge: introduces=[PT-LEX-C241-QUAL241-05]; assesses=[] -->
 
 **simples** — "simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**simples** ← Latin *simplex*, "single, simple" (EtymDB 2.1) — inherited. Old Portuguese said *simplez*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

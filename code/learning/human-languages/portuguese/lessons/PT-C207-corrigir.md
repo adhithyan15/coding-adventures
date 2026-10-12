@@ -13,7 +13,8 @@ gloss: "to correct"
 concept_tag: PT-VERB-CORRIGIR
 prerequisites: [PT-C207-ligar, PT-C207-entregar]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "corrigir ← Latin corrigere 'to make straight' — English correct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C207-entregar]
 <!-- hl-knowledge: introduces=[PT-LEX-C207-VERBOS207-05]; assesses=[] -->
 
 **corrigir** — "to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corrigir** ← Latin *corrigere*, "to make straight" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

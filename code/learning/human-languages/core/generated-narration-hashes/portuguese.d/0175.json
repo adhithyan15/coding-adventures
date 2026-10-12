@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 175,
-  "sourceHash": "fnv1a64:b5066d6ad61aef17",
+  "sourceHash": "fnv1a64:46953405e9ce717b",
   "lessonIds": [
     "PT-C175-informar",
     "PT-C175-queixar-se",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch175.txt",
   "json": "portuguese/narration/ch175.json",
-  "textHash": "fnv1a64:db7e4e22d710ffd9",
-  "jsonHash": "fnv1a64:c255d8cc9c7b1cae",
+  "textHash": "fnv1a64:700d576724937dbe",
+  "jsonHash": "fnv1a64:fe203ce2dceddd8a",
   "findings": []
 }

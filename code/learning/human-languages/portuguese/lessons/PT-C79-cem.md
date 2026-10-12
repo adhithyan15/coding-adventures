@@ -13,7 +13,8 @@ gloss: "a hundred"
 concept_tag: PT-NUMEROS-CEM
 prerequisites: [PT-C79-quarenta, PT-C79-cinquenta]
 sounds: []
-roots: []
+roots: [centum-latin]
+etymology_hook: "cem ← Latin centum 'a hundred' — English cent and century share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C79-cinquenta]
 <!-- hl-knowledge: introduces=[PT-LEX-C79-NUMEROS-03]; assesses=[] -->
 
 **cem** — "a hundred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cem** ← Latin *centum*, "a hundred" (EtymDB 2.1) — inherited. Old Portuguese *cento* was cut short to *cem*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

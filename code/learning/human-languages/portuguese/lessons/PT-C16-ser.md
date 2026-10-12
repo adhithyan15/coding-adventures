@@ -10,10 +10,10 @@ gloss: to be — present, imperfect, and preterite forms
 concept_tag: PT-VERB-BE
 prerequisites: [PT-C14-ter, PT-C15-preterito-perfeito]
 sounds: [nasal-ao, open-e]
-roots: [esse-latin]
-etymology_hook: "sou, era, and fui expose three historical stems inside the everyday verb ser"
+roots: [esse-latin, sedere-latin]
+etymology_hook: "ser ← Latin sedere 'to sit'; sou and era come from Latin esse 'to be', fui from Latin fui"
 duration:
-  max_seconds: 149
+  max_seconds: 170
 requires:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03]
 introduces:
@@ -65,6 +65,11 @@ Imperfect, for background or ongoing past:
 The three anchors **sou — fui — era** look unrelated. That is a clue that
 several historical pieces have been welded together, which the next lesson will
 unpack. For now, retrieve each row as a usable pattern.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ser** ← Latin *sedere*, "to sit" — inherited (EtymDB 2.1). Most of its forms, *sou* and *era* among them, come from Latin *esse*, "to be", and *fui* is Latin *fui*, "I was".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-02, PT-ETYMON-TER-03, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03, PT-LEX-SER-02, PT-LEX-SER-03] -->

@@ -13,7 +13,8 @@ gloss: "a valley"
 concept_tag: PT-COISAS244-VALE
 prerequisites: [PT-C244-alfandega, PT-C244-reserva]
 sounds: []
-roots: []
+roots: [vallis-latin]
+etymology_hook: "vale ← Latin vallis 'valley' — English valley"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C244-reserva]
 <!-- hl-knowledge: introduces=[PT-LEX-C244-COISAS244-03]; assesses=[] -->
 
 **o vale** — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vale** ← Latin *vallis*, "valley" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

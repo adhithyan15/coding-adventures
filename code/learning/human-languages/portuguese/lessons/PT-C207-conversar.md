@@ -13,7 +13,8 @@ gloss: "to chat"
 concept_tag: PT-VERB-CONVERSAR
 prerequisites: [PT-C206-sofrer, PT-C207-aproximar-se]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "conversar ← Latin conversari 'to keep company' — English converse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C207-aproximar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C207-VERBOS207-02]; assesses=[] -->
 
 **conversar** — "to chat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conversar** ← Latin *conversari*, "to keep company" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

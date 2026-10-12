@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 35,
-  "sourceHash": "fnv1a64:e36f373ab56b8462",
+  "sourceHash": "fnv1a64:ddd023f2b6bb4ee9",
   "lessonIds": [
     "PT-C35-doenca",
     "PT-C35-fome",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch35.txt",
   "json": "portuguese/narration/ch35.json",
-  "textHash": "fnv1a64:55c58cb248b531ee",
-  "jsonHash": "fnv1a64:e9914463a4496b3c",
+  "textHash": "fnv1a64:ebfb4a6320f663e5",
+  "jsonHash": "fnv1a64:f6452f4d73934ed6",
   "findings": []
 }

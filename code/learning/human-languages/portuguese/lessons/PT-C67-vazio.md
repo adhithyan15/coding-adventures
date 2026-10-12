@@ -13,7 +13,8 @@ gloss: "empty"
 concept_tag: PT-ADJ4-VAZIO
 prerequisites: [PT-C67-baixo, PT-C67-cheio]
 sounds: []
-roots: []
+roots: [vacare-latin]
+etymology_hook: "vazio ← Latin vacivus 'empty', from vacare 'to be empty' — English vacant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C67-cheio]
 <!-- hl-knowledge: introduces=[PT-LEX-C67-ADJ4-05]; assesses=[] -->
 
 **vazio** — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vazio** ← Latin *vacivus*, "empty" (EtymDB 2.1), from *vacare*, "to be empty" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

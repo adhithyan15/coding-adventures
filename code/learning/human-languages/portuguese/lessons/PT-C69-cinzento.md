@@ -13,7 +13,8 @@ gloss: "grey"
 concept_tag: PT-ADJ6-CINZENTO
 prerequisites: [PT-C68-amarelo, PT-C69-verde]
 sounds: []
-roots: []
+roots: [cinis-latin]
+etymology_hook: "cinzento — 'ash-coloured': built from the word for ash (← Latin cinis) + -ento"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C69-verde]
 <!-- hl-knowledge: introduces=[PT-LEX-C69-ADJ6-02]; assesses=[] -->
 
 **cinzento** — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinzento** is "ash-coloured": built from the word for ash and *-ento* (EtymDB 2.1). The ash word ← Vulgar Latin *\*cinisia*, from Latin *cinis*, "ash" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

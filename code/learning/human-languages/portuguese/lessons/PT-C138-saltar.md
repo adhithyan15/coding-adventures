@@ -13,7 +13,8 @@ gloss: "to jump"
 concept_tag: PT-VERB-SALTAR
 prerequisites: [PT-C138-acender, PT-C138-apagar]
 sounds: []
-roots: []
+roots: [salire-latin]
+etymology_hook: "saltar ← Latin saltare 'to leap, to dance', from salire 'to jump' — English somersault"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C138-apagar]
 <!-- hl-knowledge: introduces=[PT-LEX-C138-VERBOS138-03]; assesses=[] -->
 
 **saltar** — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saltar** ← Latin *saltare*, "to leap, to dance" (EtymDB 2.1), from *salire*, "to jump" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 157,
-  "sourceHash": "fnv1a64:7f1724edcf2486ae",
+  "sourceHash": "fnv1a64:c7d9892c1ce079dc",
   "lessonIds": [
     "PT-C157-apartamento",
     "PT-C157-sala-de-jantar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch157.txt",
   "json": "portuguese/narration/ch157.json",
-  "textHash": "fnv1a64:fb76d2d952a59c73",
-  "jsonHash": "fnv1a64:ff89540b10adbc95",
+  "textHash": "fnv1a64:f9a3ad95e8bbb26e",
+  "jsonHash": "fnv1a64:86f09d461ee31e37",
   "findings": []
 }

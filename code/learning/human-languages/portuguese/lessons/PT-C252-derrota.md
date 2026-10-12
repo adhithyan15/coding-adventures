@@ -14,6 +14,7 @@ concept_tag: PT-COISAS252-DERROTA
 prerequisites: [PT-C251-la, PT-C251-seda]
 sounds: []
 roots: []
+etymology_hook: "derrota — usually traced to Latin dirupta 'broken up'; the origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C251-seda]
 <!-- hl-knowledge: introduces=[PT-LEX-C252-COISAS252-01]; assesses=[] -->
 
 **a derrota** — "a defeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**derrota** — its origin is uncertain. It is usually traced to Latin *dirupta*, "broken up": a broken army.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

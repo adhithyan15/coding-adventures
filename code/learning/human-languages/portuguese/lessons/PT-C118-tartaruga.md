@@ -14,6 +14,7 @@ concept_tag: PT-ANIMAIS118-TARTARUGA
 prerequisites: [PT-C118-borboleta, PT-C118-ra]
 sounds: []
 roots: []
+etymology_hook: "tartaruga ← Italian tartaruga, from Late Latin tartarucha 'of the underworld'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C118-ra]
 <!-- hl-knowledge: introduces=[PT-LEX-C118-ANIMAIS118-05]; assesses=[] -->
 
 **a tartaruga** — "a tortoise, a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tartaruga** ← Italian *tartaruga* — borrowed (EtymDB 2.1). Behind it is Late Latin *tartarucha*, "of Tartarus, of the underworld" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

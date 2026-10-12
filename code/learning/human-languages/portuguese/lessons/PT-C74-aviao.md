@@ -13,7 +13,8 @@ gloss: "an aeroplane"
 concept_tag: PT-CIDADE2-AVIAO
 prerequisites: [PT-C73-banco, PT-C74-estacao]
 sounds: []
-roots: []
+roots: [avis-latin]
+etymology_hook: "avião ← French avion, coined from Latin avis 'bird' — English aviation shares avis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C74-estacao]
 <!-- hl-knowledge: introduces=[PT-LEX-C74-CIDADE2-02]; assesses=[] -->
 
 **o avião** — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avião** ← French *avion*, "aeroplane" (EtymDB 2.1) — borrowed. The French word was coined from Latin *avis*, "bird".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

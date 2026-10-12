@@ -13,7 +13,8 @@ gloss: "a cupboard, a wardrobe"
 concept_tag: PT-CASA96-ARMARIO
 prerequisites: [PT-C96-maquina-de-lavar, PT-C96-sofa]
 sounds: []
-roots: []
+roots: [arma-latin]
+etymology_hook: "armário ← Latin armarium 'cupboard', from arma 'tools, weapons' — English armoire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C96-sofa]
 <!-- hl-knowledge: introduces=[PT-LEX-C96-CASA96-05]; assesses=[] -->
 
 **o armário** — "a cupboard, a wardrobe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**armário** ← Latin *armarium*, "cupboard" (EtymDB 2.1), from *arma*, "tools, weapons" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

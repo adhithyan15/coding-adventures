@@ -13,7 +13,8 @@ gloss: "maize, sweetcorn"
 concept_tag: PT-COISAS199-MILHO
 prerequisites: [PT-C198-pacote, PT-C198-lata]
 sounds: []
-roots: []
+roots: [milium-latin]
+etymology_hook: "milho ← Latin milium 'millet': the grain from America took an old grain's name"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C198-lata]
 <!-- hl-knowledge: introduces=[PT-LEX-C199-COISAS199-01]; assesses=[] -->
 
 **o milho** — "maize, sweetcorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**milho** ← Latin *milium*, "millet" (EtymDB 2.1) — inherited. Maize from America took the name of an old grain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

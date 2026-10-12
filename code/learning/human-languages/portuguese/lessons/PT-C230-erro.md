@@ -13,7 +13,8 @@ gloss: "a mistake"
 concept_tag: PT-TRAB230-ERRO
 prerequisites: [PT-C229-interruptor, PT-C230-universidade]
 sounds: []
-roots: []
+roots: [errare-latin]
+etymology_hook: "erro ← Latin error 'a wandering', from errare — English error"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C230-universidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C230-TRAB230-02]; assesses=[] -->
 
 **o erro** — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erro** ← Latin *error*, "a wandering" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *erro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

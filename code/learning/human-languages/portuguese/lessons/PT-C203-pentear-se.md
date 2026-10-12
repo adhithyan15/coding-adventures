@@ -13,7 +13,8 @@ gloss: "to comb one's hair"
 concept_tag: PT-VERB-PENTEAR-SE
 prerequisites: [PT-C203-descansar, PT-C203-acordar]
 sounds: []
-roots: []
+roots: [pecten-latin]
+etymology_hook: "pentear-se — built from pente 'comb' (← Latin pecten) + -ear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C203-acordar]
 <!-- hl-knowledge: introduces=[PT-LEX-C203-VERBOS203-04]; assesses=[] -->
 
 **pentear-se** — "to comb one's hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pentear-se** is built from *pente*, "comb", and *-ear*; *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

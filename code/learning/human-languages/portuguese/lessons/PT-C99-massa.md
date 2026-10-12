@@ -13,7 +13,8 @@ gloss: "pasta; dough"
 concept_tag: PT-CASA99-MASSA
 prerequisites: [PT-C99-garrafa, PT-C99-caixa-de-correio]
 sounds: []
-roots: []
+roots: [massa-latin]
+etymology_hook: "massa ← Latin massa 'lump, dough', from Greek maza 'barley cake' — English mass"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C99-caixa-de-correio]
 <!-- hl-knowledge: introduces=[PT-LEX-C99-CASA99-04]; assesses=[] -->
 
 **a massa** — "pasta; dough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**massa** ← Latin *massa*, "lump, dough" (EtymDB 2.1) — inherited. Latin took it from Greek *maza*, "barley cake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

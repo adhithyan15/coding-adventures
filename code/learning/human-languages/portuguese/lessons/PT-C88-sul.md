@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES88-SUL
 prerequisites: [PT-C88-elevador, PT-C88-norte]
 sounds: []
 roots: []
+etymology_hook: "sul ← French sud, from Old English suþ — English south is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C88-norte]
 <!-- hl-knowledge: introduces=[PT-LEX-C88-LUGARES88-03]; assesses=[] -->
 
 **o sul** — "the south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sul** ← French *sud*, "south" (EtymDB 2.1) — borrowed. The French word came from Old English *sūþ*; Old Portuguese said *sur*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

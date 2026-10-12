@@ -13,7 +13,8 @@ gloss: "a biscuit"
 concept_tag: PT-COMIDA106-BOLACHA
 prerequisites: [PT-C106-alho, PT-C106-chocolate]
 sounds: []
-roots: []
+roots: [bulla]
+etymology_hook: "bolacha — built from bolo 'cake' + -acha: a small flat cake"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C106-chocolate]
 <!-- hl-knowledge: introduces=[PT-LEX-C106-COMIDA106-05]; assesses=[] -->
 
 **a bolacha** — "a biscuit". In Brazil, **o biscoito**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bolacha** is built from *bolo*, "cake", and *-acha* (EtymDB 2.1): a small flat cake.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

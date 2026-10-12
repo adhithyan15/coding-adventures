@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 203,
-  "sourceHash": "fnv1a64:8ade50057a1be333",
+  "sourceHash": "fnv1a64:402cce4e5677971b",
   "lessonIds": [
     "PT-C203-divorciar-se",
     "PT-C203-descansar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch203.txt",
   "json": "portuguese/narration/ch203.json",
-  "textHash": "fnv1a64:8eba221a68fd8d29",
-  "jsonHash": "fnv1a64:9948c2f07ca3c537",
+  "textHash": "fnv1a64:8a50e0b6d27b7d6e",
+  "jsonHash": "fnv1a64:88971551d31f3216",
   "findings": []
 }

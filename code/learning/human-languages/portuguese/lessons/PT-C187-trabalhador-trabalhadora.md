@@ -13,7 +13,8 @@ gloss: "hard-working"
 concept_tag: PT-QUAL187-TRABALHADOR-TRABALHADORA
 prerequisites: [PT-C186-justo-justa, PT-C186-falso-falsa]
 sounds: []
-roots: []
+roots: [tripalium-latin]
+etymology_hook: "trabalhador — built from trabalhar 'to work' + -dor 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C186-falso-falsa]
 <!-- hl-knowledge: introduces=[PT-LEX-C187-QUAL187-01]; assesses=[] -->
 
 **trabalhador / trabalhadora** — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trabalhador** is built from *trabalhar*, "to work", and *-dor*, "one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

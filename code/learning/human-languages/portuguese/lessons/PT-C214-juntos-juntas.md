@@ -13,7 +13,8 @@ gloss: "together"
 concept_tag: PT-PORQUE214-JUNTOS-JUNTAS
 prerequisites: [PT-C213-regiao, PT-C214-apenas]
 sounds: []
-roots: []
+roots: [iungere-latin]
+etymology_hook: "juntos ← Latin iunctus 'joined', from iungere — English junction"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C214-apenas]
 <!-- hl-knowledge: introduces=[PT-LEX-C214-PORQUE214-02]; assesses=[] -->
 
 **juntos / juntas** — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**juntos** ← Latin *iunctus*, "joined" (Lewis & Short), from *iungere*, "to join" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

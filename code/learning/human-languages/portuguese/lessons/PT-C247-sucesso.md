@@ -13,7 +13,8 @@ gloss: "success"
 concept_tag: PT-COISAS247-SUCESSO
 prerequisites: [PT-C246-operario, PT-C246-piloto]
 sounds: []
-roots: []
+roots: [cedere-latin]
+etymology_hook: "sucesso ← Latin successus 'an outcome, a success', from succedere — English success"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C246-piloto]
 <!-- hl-knowledge: introduces=[PT-LEX-C247-COISAS247-01]; assesses=[] -->
 
 **o sucesso** — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sucesso** ← Latin *successus*, "an outcome" (EtymDB 2.1), from *succedere*, "to come after" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

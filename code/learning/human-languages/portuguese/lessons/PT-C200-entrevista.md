@@ -13,7 +13,8 @@ gloss: "an interview"
 concept_tag: PT-TRAB200-ENTREVISTA
 prerequisites: [PT-C199-aquecimento, PT-C199-torneira]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "entrevista — 'inter-view': entre 'between' + the sight word, like French entrevue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C199-torneira]
 <!-- hl-knowledge: introduces=[PT-LEX-C200-TRAB200-01]; assesses=[] -->
 
 **a entrevista** — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entrevista** is built from *entre*, "between", and the word for a sight, like French *entrevue*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

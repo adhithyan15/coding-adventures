@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 76,
-  "sourceHash": "fnv1a64:ed78864d947cd780",
+  "sourceHash": "fnv1a64:bb5b6e09d9cce8c0",
   "lessonIds": [
     "PT-C76-aldeia",
     "PT-C76-correio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch76.txt",
   "json": "portuguese/narration/ch76.json",
-  "textHash": "fnv1a64:4215a9762b032cb2",
-  "jsonHash": "fnv1a64:b685843a0a112679",
+  "textHash": "fnv1a64:d1e3834be61c56af",
+  "jsonHash": "fnv1a64:db6e4f28096e34d5",
   "findings": []
 }

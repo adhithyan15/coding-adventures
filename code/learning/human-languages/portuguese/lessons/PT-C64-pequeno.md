@@ -14,6 +14,7 @@ concept_tag: PT-ADJ1-PEQUENO
 prerequisites: [PT-C63-elefante, PT-C64-grande]
 sounds: []
 roots: []
+etymology_hook: "pequeno — origin uncertain, probably an expressive root pikk- for 'small'; Italian piccolo is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C64-grande]
 <!-- hl-knowledge: introduces=[PT-LEX-C64-ADJ1-02]; assesses=[] -->
 
 **pequeno** — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pequeno** — its origin is uncertain, probably an expressive root *pikk-* for small things. EtymDB 2.1 traces it only to Old Portuguese *pequeno*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

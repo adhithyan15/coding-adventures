@@ -14,6 +14,7 @@ concept_tag: PT-CASA97-BALDE
 prerequisites: [PT-C97-panela, PT-C97-frigideira]
 sounds: []
 roots: []
+etymology_hook: "balde — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C97-frigideira]
 <!-- hl-knowledge: introduces=[PT-LEX-C97-CASA97-03]; assesses=[] -->
 
 **o balde** — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**balde** — its origin is uncertain. EtymDB 2.1 has no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

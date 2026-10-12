@@ -14,6 +14,7 @@ concept_tag: PT-COISAS228-FRASCO
 prerequisites: [PT-C227-centro-comercial, PT-C227-montra]
 sounds: []
 roots: []
+etymology_hook: "frasco ← Late Latin flasco 'flask', probably Germanic — English flask is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C227-montra]
 <!-- hl-knowledge: introduces=[PT-LEX-C228-COISAS228-01]; assesses=[] -->
 
 **o frasco** — "a jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frasco** ← Late Latin *flasco*, "flask" — probably a Germanic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

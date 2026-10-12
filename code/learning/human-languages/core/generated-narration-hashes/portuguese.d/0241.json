@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 241,
-  "sourceHash": "fnv1a64:1d3fc295cc622070",
+  "sourceHash": "fnv1a64:45d3900a53eb5006",
   "lessonIds": [
     "PT-C241-liso-lisa",
     "PT-C241-aspero-aspera",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch241.txt",
   "json": "portuguese/narration/ch241.json",
-  "textHash": "fnv1a64:bd380103469ba7e3",
-  "jsonHash": "fnv1a64:0a8e47e2054e57c8",
+  "textHash": "fnv1a64:ced23fc22eabed57",
+  "jsonHash": "fnv1a64:4019620aac05ec69",
   "findings": []
 }

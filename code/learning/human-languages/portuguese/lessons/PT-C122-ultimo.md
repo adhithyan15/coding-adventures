@@ -13,7 +13,8 @@ gloss: "last"
 concept_tag: PT-QUALIDADES122-ULTIMO
 prerequisites: [PT-C122-calmo, PT-C122-barulhento]
 sounds: []
-roots: []
+roots: [ultimus-latin]
+etymology_hook: "último ← Latin ultimus 'farthest, last' — English ultimate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C122-barulhento]
 <!-- hl-knowledge: introduces=[PT-LEX-C122-QUALIDADES122-05]; assesses=[] -->
 
 **último** — "last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**último** ← Latin *ultimus*, "farthest, last" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

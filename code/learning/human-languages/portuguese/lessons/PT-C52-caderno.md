@@ -13,7 +13,8 @@ gloss: "a notebook"
 concept_tag: PT-COISAS1-CADERNO
 prerequisites: [PT-C52-caneta, PT-C52-papel]
 sounds: []
-roots: []
+roots: [quaterni-latin]
+etymology_hook: "caderno ← Latin quaterni 'four at a time': a gathering of four sheets"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C52-papel]
 <!-- hl-knowledge: introduces=[PT-LEX-C52-COISAS1-03]; assesses=[] -->
 
 **o caderno** — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caderno** ← Latin *quaterni*, "four at a time" (EtymDB 2.1) — inherited. A notebook was a gathering of four folded sheets.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

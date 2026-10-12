@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 58,
-  "sourceHash": "fnv1a64:a9a69cd8c39d8844",
+  "sourceHash": "fnv1a64:dbe9b59ca921bc8b",
   "lessonIds": [
     "PT-C58-campo",
     "PT-C58-ceu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch58.txt",
   "json": "portuguese/narration/ch58.json",
-  "textHash": "fnv1a64:4859db028b5ed4ad",
-  "jsonHash": "fnv1a64:241a7a64e02ba963",
+  "textHash": "fnv1a64:6ade5dd47c5fd24f",
+  "jsonHash": "fnv1a64:92591d604d2e07c8",
   "findings": []
 }

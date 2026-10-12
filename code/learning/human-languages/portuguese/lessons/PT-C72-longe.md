@@ -13,7 +13,8 @@ gloss: "far"
 concept_tag: PT-ONDE-LONGE
 prerequisites: [PT-C72-aqui, PT-C72-ali]
 sounds: []
-roots: []
+roots: [longus-latin]
+etymology_hook: "longe ← Latin longe 'far off', the adverb of longus 'long'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C72-ali]
 <!-- hl-knowledge: introduces=[PT-LEX-C72-ONDE-03]; assesses=[] -->
 
 **longe** — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**longe** ← Latin *longe*, "far off" (EtymDB 2.1), the adverb of *longus*, "long" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

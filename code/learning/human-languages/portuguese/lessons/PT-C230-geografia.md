@@ -13,7 +13,8 @@ gloss: "geography"
 concept_tag: PT-TRAB230-GEOGRAFIA
 prerequisites: [PT-C230-erro, PT-C230-historia]
 sounds: []
-roots: []
+roots: [geographia-latin]
+etymology_hook: "geografia ← Latin geographia, from Greek ge 'earth' + graphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C230-historia]
 <!-- hl-knowledge: introduces=[PT-LEX-C230-TRAB230-04]; assesses=[] -->
 
 **a geografia** — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geografia** ← Latin *geographia*, "geography" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek, "earth-writing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a leaf; a sheet of paper"
 concept_tag: PT-NATUREZA1-FOLHA
 prerequisites: [PT-C56-arvore, PT-C56-flor]
 sounds: []
-roots: []
+roots: [folium-latin]
+etymology_hook: "folha ← Latin folia 'leaves', plural of folium — English foliage and folio share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C56-flor]
 <!-- hl-knowledge: introduces=[PT-LEX-C56-NATUREZA1-03]; assesses=[] -->
 
 **a folha** — "a leaf; a sheet of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**folha** ← Latin *folia*, "leaves" (EtymDB 2.1), the plural of *folium* — inherited. The Latin plural was heard as a feminine singular.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

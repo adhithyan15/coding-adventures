@@ -13,7 +13,8 @@ gloss: "a class (of pupils)"
 concept_tag: PT-ESCOLA112-TURMA
 prerequisites: [PT-C112-cliente, PT-C112-chefe]
 sounds: []
-roots: []
+roots: [turma-latin]
+etymology_hook: "turma ← Latin turma 'a troop, a squadron': a class as a band of pupils"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C112-chefe]
 <!-- hl-knowledge: introduces=[PT-LEX-C112-ESCOLA112-03]; assesses=[] -->
 
 **a turma** — "a class (of pupils)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**turma** ← Latin *turma*, "a troop, a squadron" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

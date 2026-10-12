@@ -13,7 +13,8 @@ gloss: "to discuss, to argue"
 concept_tag: PT-VERB-DISCUTIR
 prerequisites: [PT-C139-parar, PT-C139-mudar]
 sounds: []
-roots: []
+roots: [discutere-latin]
+etymology_hook: "discutir ← Latin discutere 'to shake apart, to examine' — English discuss"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C139-mudar]
 <!-- hl-knowledge: introduces=[PT-LEX-C140-VERBOS140-01]; assesses=[] -->
 
 **discutir** — "to discuss, to argue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**discutir** ← Latin *discutere*, "to shake apart, to examine" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

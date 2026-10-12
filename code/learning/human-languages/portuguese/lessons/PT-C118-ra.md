@@ -13,7 +13,8 @@ gloss: "a frog"
 concept_tag: PT-ANIMAIS118-RA
 prerequisites: [PT-C118-tigre, PT-C118-borboleta]
 sounds: []
-roots: []
+roots: [rana-latin]
+etymology_hook: "rã ← Latin rana 'frog': the lost -n- left a nasal vowel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C118-borboleta]
 <!-- hl-knowledge: introduces=[PT-LEX-C118-ANIMAIS118-04]; assesses=[] -->
 
 **a rã** — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rã** ← Latin *rana*, "frog" (EtymDB 2.1) — inherited. The lost *-n-* left a nasal vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

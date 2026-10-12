@@ -13,7 +13,8 @@ gloss: "a banknote; a mark"
 concept_tag: PT-COISAS248-NOTA
 prerequisites: [PT-C247-escolha, PT-C247-decisao]
 sounds: []
-roots: []
+roots: [nota-latin]
+etymology_hook: "nota ← Latin nota 'mark, sign' — English note"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C247-decisao]
 <!-- hl-knowledge: introduces=[PT-LEX-C248-COISAS248-01]; assesses=[] -->
 
 **a nota** — "a banknote; a mark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nota** ← Latin *nota*, "mark, sign" (EtymDB 2.1) — a learned borrowing from Latin. An inherited word would have turned the *-t-* into *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

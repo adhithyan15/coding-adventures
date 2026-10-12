@@ -13,7 +13,8 @@ gloss: "a cave"
 concept_tag: PT-NATUREZA117-GRUTA
 prerequisites: [PT-C116-onda, PT-C117-vulcao]
 sounds: []
-roots: []
+roots: [crypta-latin]
+etymology_hook: "gruta ← Italian grotta, from Latin crypta 'vault', from Greek — English grotto and crypt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C117-vulcao]
 <!-- hl-knowledge: introduces=[PT-LEX-C117-NATUREZA117-02]; assesses=[] -->
 
 **a gruta** — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gruta** ← Italian *grotta*, "cave" (EtymDB 2.1) — borrowed. Behind it is Latin *crypta*, "vault", from Greek.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

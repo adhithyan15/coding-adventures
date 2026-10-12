@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for to kill, then the Portuguese for to u
 You'll want to know: flutuar.
 flutuar — "to float".
 
+The word, taken apart.
+flutuar from Latin fluctuare, "to toss like waves" (Lewis & Short) — a learned borrowing from Latin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for to unite, then the Portuguese for to 
 
 You'll want to know: perseguir.
 perseguir — "to chase".
+
+The word, taken apart.
+perseguir from Latin persequi, "to follow through", from sequi, "to follow" — inherited. EtymDB 2.1 has no ancestor row for perseguir; it derives Spanish perseguir from persequi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to float, then the Portuguese for to 
 You'll want to know: insistir.
 insistir — "to insist".
 
+The word, taken apart.
+insistir from Latin insistere, "to stand upon" (EtymDB 2.1) — a learned borrowing from Latin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to chase, then the Portuguese for to 
 You'll want to know: interromper.
 interromper — "to interrupt".
 
+The word, taken apart.
+interromper from Latin interrumpere, "to break in between" (EtymDB 2.1) — a learned borrowing from Latin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to insist, then the Portuguese for to
 
 You'll want to know: amarrar.
 amarrar — "to tie".
+
+The word, taken apart.
+amarrar from French amarrer, "to moor" (EtymDB 2.1) — borrowed. French took it from Dutch.
 
 What you've built.
 One more word for this chapter.

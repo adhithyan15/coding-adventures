@@ -13,7 +13,8 @@ gloss: "an advert, an announcement"
 concept_tag: PT-LER137-O-ANUNCIO
 prerequisites: [PT-C137-o-aviso, PT-C137-a-renda]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "anúncio — from the verb to announce ← Latin annuntiare, from nuntius 'messenger'"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [PT-C137-a-renda]
 
 The advert says **Aluga-se quarto. Renda: 400 euros.** A room to let, at 400 a
 month.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anúncio** is built from the verb "to announce", which ← Latin *annuntiare*, from *nuntius*, "messenger" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

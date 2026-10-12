@@ -13,7 +13,8 @@ gloss: "which, which one"
 concept_tag: PT-NEG134-QUAL
 prerequisites: [PT-C134-nenhum, PT-C134-ninguem]
 sounds: []
-roots: []
+roots: [qualis]
+etymology_hook: "qual ← Latin qualis 'of what kind' — English quality shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C134-ninguem]
 <!-- hl-knowledge: introduces=[PT-LEX-C134-NEG134-04]; assesses=[] -->
 
 **qual** — "which, which one". A question that picks from a set: **Qual é a tua mala?** — "Which is your suitcase?" For more than one, **quais**: **Quais?** — "Which ones?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**qual** ← Latin *qualis*, "of what kind" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

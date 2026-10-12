@@ -13,7 +13,8 @@ gloss: "a cow"
 concept_tag: PT-ANIMAIS1-VACA
 prerequisites: [PT-C60-gato, PT-C60-cavalo]
 sounds: []
-roots: []
+roots: [vacca-latin]
+etymology_hook: "vaca ← Latin vacca 'cow' — English vaccine, first made from cowpox"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C60-cavalo]
 <!-- hl-knowledge: introduces=[PT-LEX-C60-ANIMAIS1-04]; assesses=[] -->
 
 **a vaca** — "a cow". It gives **o leite**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vaca** ← Latin *vacca*, "cow" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

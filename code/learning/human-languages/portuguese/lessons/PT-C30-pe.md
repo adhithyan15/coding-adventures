@@ -13,7 +13,8 @@ gloss: "a foot"
 concept_tag: PT-CORPO1-PE
 prerequisites: [PT-C30-braco, PT-C30-perna]
 sounds: []
-roots: []
+roots: [pes-latin]
+etymology_hook: "pé ← Latin pes, pedis 'foot' — English pedal and pedestrian share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C30-perna]
 <!-- hl-knowledge: introduces=[PT-LEX-C30-CORPO1-03]; assesses=[] -->
 
 **o pé** — "a foot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pé** ← Latin *pes, pedis*, "foot" (EtymDB 2.1) — inherited. The *-d-* of the form *pedem* fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

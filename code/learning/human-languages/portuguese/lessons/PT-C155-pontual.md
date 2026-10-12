@@ -13,7 +13,8 @@ gloss: "punctual"
 concept_tag: PT-QUAL155-PONTUAL
 prerequisites: [PT-C154-inutil, PT-C154-estranho-estranha]
 sounds: []
-roots: []
+roots: [punctum-latin]
+etymology_hook: "pontual — built from the point word (← Latin punctum) + -al: on the dot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C154-estranho-estranha]
 <!-- hl-knowledge: introduces=[PT-LEX-C155-QUAL155-01]; assesses=[] -->
 
 **pontual** — "punctual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pontual** is built from the word for a point and *-al*: on the dot. The point word ← Latin *punctum*, "a prick, a point" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

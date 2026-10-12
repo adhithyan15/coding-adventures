@@ -13,7 +13,8 @@ gloss: "to lift, to raise"
 concept_tag: PT-VERB-LEVANTAR
 prerequisites: [PT-C237-travar, PT-C237-funcionar]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "levantar ← Vulgar Latin *levantare, from levare 'to lift' — English Levant, where the sun rises"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C237-funcionar]
 <!-- hl-knowledge: introduces=[PT-LEX-C238-VERBOS238-01]; assesses=[] -->
 
 **levantar** — "to lift, to raise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**levantar** ← Vulgar Latin *\*levantare* (EtymDB 2.1), from Latin *levare*, "to lift" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

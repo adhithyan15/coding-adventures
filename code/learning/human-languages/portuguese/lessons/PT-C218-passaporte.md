@@ -14,6 +14,7 @@ concept_tag: PT-COISAS218-PASSAPORTE
 prerequisites: [PT-C218-gorjeta, PT-C218-cais]
 sounds: []
 roots: []
+etymology_hook: "passaporte ← French passeport 'pass the port' — English passport"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C218-cais]
 <!-- hl-knowledge: introduces=[PT-LEX-C218-COISAS218-05]; assesses=[] -->
 
 **o passaporte** — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passaporte** ← French *passeport* — borrowed: "pass the port".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

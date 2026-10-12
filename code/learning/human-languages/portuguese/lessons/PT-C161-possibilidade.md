@@ -13,7 +13,8 @@ gloss: "a possibility"
 concept_tag: PT-COISAS161-POSSIBILIDADE
 prerequisites: [PT-C160-estrangeiro, PT-C160-turista]
 sounds: []
-roots: []
+roots: [posse-latin]
+etymology_hook: "possibilidade ← Latin possibilitas, from possibilis, from posse 'to be able'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C160-turista]
 <!-- hl-knowledge: introduces=[PT-LEX-C161-COISAS161-01]; assesses=[] -->
 
 **a possibilidade** — "a possibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**possibilidade** ← Latin *possibilitas*, "possibility" (EtymDB 2.1), from *possibilis*, "possible" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

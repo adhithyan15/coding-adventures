@@ -13,7 +13,8 @@ gloss: "to switch on, to light"
 concept_tag: PT-VERB-ACENDER
 prerequisites: [PT-C137-o-anuncio, PT-C137-a-fatura]
 sounds: []
-roots: []
+roots: [candere-latin]
+etymology_hook: "acender ← Latin accendere 'to set alight' — English incendiary shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C137-a-fatura]
 <!-- hl-knowledge: introduces=[PT-LEX-C138-VERBOS138-01]; assesses=[] -->
 
 **acender** — "to switch on, to light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acender** ← Latin *accendere*, "to set alight" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

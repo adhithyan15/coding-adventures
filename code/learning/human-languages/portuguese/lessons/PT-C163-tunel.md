@@ -14,6 +14,7 @@ concept_tag: PT-COISAS163-TUNEL
 prerequisites: [PT-C162-envelope, PT-C162-encomenda]
 sounds: []
 roots: []
+etymology_hook: "túnel ← English tunnel, from Old French tonel 'cask'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C162-encomenda]
 <!-- hl-knowledge: introduces=[PT-LEX-C163-COISAS163-01]; assesses=[] -->
 
 **o túnel** — "a tunnel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**túnel** ← English *tunnel* — borrowed. The English word came from Old French *tonel*, "cask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

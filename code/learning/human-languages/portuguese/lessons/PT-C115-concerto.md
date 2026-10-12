@@ -14,6 +14,7 @@ concept_tag: PT-LAZER115-CONCERTO
 prerequisites: [PT-C115-desenho, PT-C115-vida]
 sounds: []
 roots: []
+etymology_hook: "concerto ← Italian concerto, from concertare 'to bring into agreement' — English concert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C115-vida]
 <!-- hl-knowledge: introduces=[PT-LEX-C115-LAZER115-03]; assesses=[] -->
 
 **o concerto** — "a concert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**concerto** ← Italian *concerto*, "concert" — borrowed. The Italian word comes from *concertare*, "to bring into agreement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

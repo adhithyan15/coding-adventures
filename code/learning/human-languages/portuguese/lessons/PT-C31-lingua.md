@@ -13,7 +13,8 @@ gloss: "the tongue; a language"
 concept_tag: PT-CORPO2-LINGUA
 prerequisites: [PT-C30-dedo, PT-C30-dente]
 sounds: []
-roots: []
+roots: [lingua-latin]
+etymology_hook: "língua ← Latin lingua 'tongue, language' — English language and linguist share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C30-dente]
 <!-- hl-knowledge: introduces=[PT-LEX-C31-CORPO2-01]; assesses=[] -->
 
 **a língua** — "the tongue; a language". Both meanings, as in English *tongue*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**língua** ← Latin *lingua*, "tongue, language" — inherited. EtymDB 2.1 lists *língua* only beside its cognates; it derives Italian *lingua* and Romanian *limbă* from Latin *lingua*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

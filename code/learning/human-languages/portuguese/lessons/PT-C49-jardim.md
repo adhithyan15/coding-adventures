@@ -14,6 +14,7 @@ concept_tag: PT-CASA2-JARDIM
 prerequisites: [PT-C49-parede, PT-C49-telhado]
 sounds: []
 roots: []
+etymology_hook: "jardim ← French jardin, of Frankish origin — English garden and yard are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C49-telhado]
 <!-- hl-knowledge: introduces=[PT-LEX-C49-CASA2-05]; assesses=[] -->
 
 **o jardim** — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jardim** ← French *jardin* — borrowed (EtymDB 2.1). The French word goes back to a Frankish word for an enclosure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

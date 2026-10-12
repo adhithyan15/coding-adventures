@@ -13,7 +13,8 @@ gloss: "to deliver, to hand over"
 concept_tag: PT-VERB-ENTREGAR
 prerequisites: [PT-C207-conversar, PT-C207-ligar]
 sounds: []
-roots: []
+roots: [integer-latin]
+etymology_hook: "entregar ← Latin integrare 'to make whole, to restore' — English integrate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C207-ligar]
 <!-- hl-knowledge: introduces=[PT-LEX-C207-VERBOS207-04]; assesses=[] -->
 
 **entregar** — "to deliver, to hand over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entregar** ← Latin *integrare*, "to make whole, to restore" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *entregar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

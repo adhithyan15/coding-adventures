@@ -13,7 +13,8 @@ gloss: "a side"
 concept_tag: PT-LUGAR183-LADO
 prerequisites: [PT-C183-arredores, PT-C183-centro]
 sounds: []
-roots: []
+roots: [latus-latin]
+etymology_hook: "lado ← Latin latus 'side' — English lateral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C183-centro]
 <!-- hl-knowledge: introduces=[PT-LEX-C183-LUGAR183-03]; assesses=[] -->
 
 **o lado** — "a side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lado** ← Latin *latus, lateris*, "side" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "safety, security"
 concept_tag: PT-COISAS192-SEGURANCA
 prerequisites: [PT-C192-autorizacao, PT-C192-proibicao]
 sounds: []
-roots: []
+roots: [cura-latin]
+etymology_hook: "segurança — built from the verb to make safe + -ança, from seguro 'safe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C192-proibicao]
 <!-- hl-knowledge: introduces=[PT-LEX-C192-COISAS192-05]; assesses=[] -->
 
 **a segurança** — "safety, security".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**segurança** is built from the verb "to make safe" and *-ança* (EtymDB 2.1), from *seguro*, "safe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

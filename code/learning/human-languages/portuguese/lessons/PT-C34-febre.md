@@ -13,7 +13,8 @@ gloss: "a fever"
 concept_tag: PT-SAUDE1-FEBRE
 prerequisites: [PT-C33-estomago, PT-C34-dor]
 sounds: []
-roots: []
+roots: [febris-latin]
+etymology_hook: "febre ← Latin febris 'fever' — English fever and febrile share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C34-dor]
 <!-- hl-knowledge: introduces=[PT-LEX-C34-SAUDE1-02]; assesses=[] -->
 
 **a febre** — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**febre** ← Latin *febris*, "fever" — inherited. EtymDB 2.1 traces it only to Old Portuguese *febre*; it derives Italian *febbre* and Catalan *febre* from *febris*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [nasal-em, final-e-reduces]
 roots: [hatta-arabic, brevis-latin]
 etymology_hook: "breve ← Latin brevis 'short' → English brief, brevity, abbreviate"
 duration:
-  max_seconds: 141
+  max_seconds: 143
 requires:
   knowledge: [PT-SOUND-ATE-LOGO-02, PT-ETYMON-ATE-LOGO-03]
 introduces:
@@ -48,7 +48,7 @@ reviews_of: [PT-C04-ate-amanha]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-ATE-BREVE-03]; assesses=[] -->
 
-- **até** = "until" (← Arabic *ḥattā*).
+- **até** = "until" (usually traced to Arabic *ḥattā*).
 - **breve** = "short, brief," from Latin **brevis**, *"short."*
 
 You already own *brevis* in English, several times over:

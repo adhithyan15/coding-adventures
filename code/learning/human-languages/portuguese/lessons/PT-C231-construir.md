@@ -13,7 +13,8 @@ gloss: "to build"
 concept_tag: PT-VERB-CONSTRUIR
 prerequisites: [PT-C230-geografia, PT-C230-matematica]
 sounds: []
-roots: []
+roots: [struere-latin]
+etymology_hook: "construir ← Latin construere 'to pile together' — English construct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C230-matematica]
 <!-- hl-knowledge: introduces=[PT-LEX-C231-VERBOS231-01]; assesses=[] -->
 
 **construir** — "to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**construir** ← Latin *construere*, "to pile together" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

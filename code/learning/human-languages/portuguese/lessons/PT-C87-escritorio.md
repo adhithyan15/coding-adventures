@@ -13,7 +13,8 @@ gloss: "an office"
 concept_tag: PT-LUGARES87-ESCRITORIO
 prerequisites: [PT-C86-estadio, PT-C86-fabrica]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "escritório — 'writing room', like Medieval Latin scriptorium; from Latin scribere 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C86-fabrica]
 <!-- hl-knowledge: introduces=[PT-LEX-C87-LUGARES87-01]; assesses=[] -->
 
 **o escritório** — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escritório** is a "writing room": built on the past participle of *escrever*, "to write" (← Latin *scribere*), after Medieval Latin *scriptorium*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

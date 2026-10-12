@@ -13,7 +13,8 @@ gloss: "hope"
 concept_tag: PT-SAUDE149-ESPERANCA
 prerequisites: [PT-C149-amor, PT-C149-amizade]
 sounds: []
-roots: []
+roots: [sperare-latin]
+etymology_hook: "esperança — built from esperar 'to hope' (← Latin sperare) + -ança"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C149-amizade]
 <!-- hl-knowledge: introduces=[PT-LEX-C149-SAUDE149-05]; assesses=[] -->
 
 **a esperança** — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esperança** is built from *esperar*, "to hope" (← Latin *sperare*), and *-ança*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

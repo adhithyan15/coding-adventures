@@ -13,7 +13,8 @@ gloss: "a pebble"
 concept_tag: PT-COISAS164-SEIXO
 prerequisites: [PT-C164-caminho, PT-C164-planicie]
 sounds: []
-roots: []
+roots: [saxum-latin]
+etymology_hook: "seixo ← Latin saxum 'rock, stone' — English saxifrage shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C164-planicie]
 <!-- hl-knowledge: introduces=[PT-LEX-C164-COISAS164-04]; assesses=[] -->
 
 **o seixo** — "a pebble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seixo** ← Latin *saxum*, "rock, stone" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

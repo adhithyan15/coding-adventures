@@ -13,7 +13,8 @@ gloss: "to give"
 concept_tag: PT-VERB-DAR
 prerequisites: [PT-C43-beber, PT-C43-comer]
 sounds: []
-roots: []
+roots: [dare-latin]
+etymology_hook: "dar ← Latin dare 'to give' — English donor shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C43-comer]
 <!-- hl-knowledge: introduces=[PT-LEX-C43-VERBOS4-04]; assesses=[] -->
 
 **dar** — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dar** ← Latin *dare*, "to give" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

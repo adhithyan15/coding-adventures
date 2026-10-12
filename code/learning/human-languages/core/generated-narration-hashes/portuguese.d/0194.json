@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 194,
-  "sourceHash": "fnv1a64:9e89092e57d4c177",
+  "sourceHash": "fnv1a64:b1d24e6e2014d6a9",
   "lessonIds": [
     "PT-C194-monumento",
     "PT-C194-estatua",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch194.txt",
   "json": "portuguese/narration/ch194.json",
-  "textHash": "fnv1a64:10aa897a60880cb7",
-  "jsonHash": "fnv1a64:877bc3d8f601f28f",
+  "textHash": "fnv1a64:57ddc2a264ab00d2",
+  "jsonHash": "fnv1a64:4ac526aecba38b66",
   "findings": []
 }

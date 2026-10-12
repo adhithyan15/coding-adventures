@@ -13,7 +13,8 @@ gloss: "a baker"
 concept_tag: PT-TRABALHO110-PADEIRO
 prerequisites: [PT-C110-empregado, PT-C110-agricultor]
 sounds: []
-roots: []
+roots: [panis-latin]
+etymology_hook: "padeiro ← Vulgar Latin *panatarius, from panis 'bread' — the same root as pão"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C110-agricultor]
 <!-- hl-knowledge: introduces=[PT-LEX-C110-TRABALHO110-05]; assesses=[] -->
 
 **o padeiro** — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**padeiro** ← Vulgar Latin *\*panatarius* (EtymDB 2.1), from Latin *panis*, "bread" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

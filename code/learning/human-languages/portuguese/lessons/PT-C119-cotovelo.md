@@ -13,7 +13,8 @@ gloss: "an elbow"
 concept_tag: PT-ANIMAIS119-COTOVELO
 prerequisites: [PT-C119-baleia, PT-C119-golfinho]
 sounds: []
-roots: []
+roots: [cubitus-latin]
+etymology_hook: "cotovelo ← a small form of Latin cubitus 'elbow' — English cubit, a forearm's length"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C119-golfinho]
 <!-- hl-knowledge: introduces=[PT-LEX-C119-ANIMAIS119-05]; assesses=[] -->
 
 **o cotovelo** — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cotovelo** ← a Vulgar Latin small form of *cubitus* (Lewis & Short), "elbow" — inherited. EtymDB 2.1 has no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

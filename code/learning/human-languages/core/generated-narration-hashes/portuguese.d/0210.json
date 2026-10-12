@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 210,
-  "sourceHash": "fnv1a64:390c23c841a7f1d7",
+  "sourceHash": "fnv1a64:a040d9342675b591",
   "lessonIds": [
     "PT-C210-gripe",
     "PT-C210-receita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch210.txt",
   "json": "portuguese/narration/ch210.json",
-  "textHash": "fnv1a64:91638e155f49a6b8",
-  "jsonHash": "fnv1a64:ee10dd77bc7bf675",
+  "textHash": "fnv1a64:ce51815b5fc7dce2",
+  "jsonHash": "fnv1a64:633924a67e79aff2",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "fat"
 concept_tag: PT-QUAL217-GORDO-GORDA
 prerequisites: [PT-C217-solarengo-solarenga, PT-C217-chuvoso-chuvosa]
 sounds: []
-roots: []
+roots: [gurdus-latin]
+etymology_hook: "gordo ← Latin gurdus 'dull, stupid': the sense shifted to 'fat'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C217-chuvoso-chuvosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C217-QUAL217-05]; assesses=[] -->
 
 **gordo / gorda** — "fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gordo** ← Latin *gurdus*, "dull, stupid" (EtymDB 2.1) — inherited. The sense shifted from "dull" to "fat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

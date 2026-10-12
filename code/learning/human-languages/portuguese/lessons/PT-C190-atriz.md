@@ -13,7 +13,8 @@ gloss: "an actress"
 concept_tag: PT-COISAS190-ATRIZ
 prerequisites: [PT-C189-politica, PT-C189-economia]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "atriz ← Latin actrix 'a woman who acts', from agere 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C189-economia]
 <!-- hl-knowledge: introduces=[PT-LEX-C190-COISAS190-01]; assesses=[] -->
 
 **a atriz** — "an actress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**atriz** ← Latin *actrix*, "a woman who acts" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

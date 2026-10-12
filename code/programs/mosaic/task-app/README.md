@@ -94,7 +94,7 @@ rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
-property. Fresh `native-complete` reports currently contain 38 XAML, 83 SwiftUI,
+property. Fresh `native-complete` reports currently contain 38 XAML, 63 SwiftUI,
 40 Compose, 93 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
@@ -122,6 +122,10 @@ Compose now treats the ten non-inset CSS shadows paired with supported
 `elevation` tokens as consumed by their emitted native depth, reducing its
 inventory from 50 to 40. The inset theme-toggle moon and any raw shadow without
 elevation remain explicit drawing-effect debt (#17356).
+SwiftUI now lowers supported `raised` and `overlay` elevation tokens to native
+`.shadow` modifiers and consumes only their paired non-inset CSS fallbacks,
+reducing its inventory from 83 to 63. The inset theme-toggle moon, standalone
+raw shadows, and unsupported elevation values remain explicit debt (#17365).
 Flutter rounded surfaces now preserve all 15 supported fixed `border-radius`
 declarations across draggable cards, calendar events, text chips, inputs, and
 the timeline grid. The shared text-surface wrapper also paints eight coupled

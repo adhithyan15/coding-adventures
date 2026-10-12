@@ -13,7 +13,8 @@ gloss: "a bag, a handbag"
 concept_tag: PT-COISAS1-BOLSA
 prerequisites: [PT-C52-caderno, PT-C52-lapis]
 sounds: []
-roots: []
+roots: [bursa-latin]
+etymology_hook: "bolsa ← Late Latin bursa 'purse', from Greek byrsa 'hide' — English purse and bursar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C52-lapis]
 <!-- hl-knowledge: introduces=[PT-LEX-C52-COISAS1-05]; assesses=[] -->
 
 **a bolsa** — "a bag, a handbag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bolsa** ← Late Latin *bursa*, "purse", from Greek *byrsa*, "hide" — inherited. EtymDB 2.1 traces it only to Old Portuguese *bolssa*; it derives Spanish *bolsa* from *bursa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

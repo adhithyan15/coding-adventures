@@ -13,7 +13,8 @@ gloss: "a lamp; a light bulb"
 concept_tag: PT-CASA3-LAMPADA
 prerequisites: [PT-C49-telhado, PT-C49-jardim]
 sounds: []
-roots: []
+roots: [lampas-latin]
+etymology_hook: "lâmpada ← Late Latin lampada, from Greek lampas 'torch' — English lamp shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C49-jardim]
 <!-- hl-knowledge: introduces=[PT-LEX-C50-CASA3-01]; assesses=[] -->
 
 **a lâmpada** — "a lamp; a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lâmpada** ← Late Latin *lampada*, "torch, lamp" — a learned borrowing from Late Latin. EtymDB 2.1 traces it only to Old Portuguese *lampada*; it derives Spanish *lámpada* from Late Latin *lampada*, from Latin *lampas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to sit down"
 concept_tag: PT-VERB-SENTAR
 prerequisites: [PT-C41-chamar, PT-C41-dormir]
 sounds: []
-roots: []
+roots: [sedere-latin]
+etymology_hook: "sentar ← Vulgar Latin *sedentare, from sedens 'sitting' — English sedentary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C41-dormir]
 <!-- hl-knowledge: introduces=[PT-LEX-C41-VERBOS2-05]; assesses=[] -->
 
 **sentar** — "to sit down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sentar** ← Vulgar Latin *\*sedentare* (EtymDB 2.1), from Latin *sedens*, "sitting" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

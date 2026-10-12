@@ -13,7 +13,8 @@ gloss: "a waiter; an employee"
 concept_tag: PT-TRABALHO110-EMPREGADO
 prerequisites: [PT-C110-enfermeira, PT-C110-cozinheiro]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "empregado — 'employed': from the verb to employ ← Latin implicare 'to enfold' — English employ"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C110-cozinheiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C110-TRABALHO110-03]; assesses=[] -->
 
 **o empregado** — "a waiter; an employee". In Brazil, **o garçom, for a waiter**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**empregado** is "employed": the participle of the verb "to employ", which ← Latin *implicare*, "to involve, to enfold" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a hotel"
 concept_tag: PT-CIDADE3-HOTEL
 prerequisites: [PT-C75-museu, PT-C75-restaurante]
 sounds: []
-roots: []
+roots: [hospes-latin]
+etymology_hook: "hotel ← French hôtel, from Latin hospitale 'guesthouse' — English hostel and hospital"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C75-restaurante]
 <!-- hl-knowledge: introduces=[PT-LEX-C75-CIDADE3-04]; assesses=[] -->
 
 **o hotel** — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hotel** ← French *hôtel* (EtymDB 2.1) — borrowed. Behind the French word is Latin *hospitale*, "guesthouse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

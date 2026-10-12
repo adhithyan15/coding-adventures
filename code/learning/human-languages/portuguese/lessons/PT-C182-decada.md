@@ -13,7 +13,8 @@ gloss: "a decade"
 concept_tag: PT-TEMPO182-DECADA
 prerequisites: [PT-C182-ate, PT-C182-desde]
 sounds: []
-roots: []
+roots: [decem-latin]
+etymology_hook: "década ← Latin decas, decadis, from Greek dekas 'a group of ten' — English decade"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C182-desde]
 <!-- hl-knowledge: introduces=[PT-LEX-C182-TEMPO182-04]; assesses=[] -->
 
 **a década** — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**década** ← Latin *decas, decadis*, "a group of ten" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *dekas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

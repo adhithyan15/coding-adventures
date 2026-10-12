@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for short, then the Portuguese for hot.
 You'll want to know: rápido.
 rápido — "fast".
 
+The word, taken apart.
+rápido from Latin rapidus, "swift" (EtymDB 2.1), from rapere, "to seize" — a learned borrowing from Latin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for hot, then the Portuguese for fast.
 
 You'll want to know: lento.
 lento — "slow".
+
+The word, taken apart.
+lento from Latin lentus, "slow, pliant" — inherited. EtymDB 2.1 has no ancestor row for lento; it derives Italian lento from lentus.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for fast, then the Portuguese for slow.
 You'll want to know: fácil.
 fácil — "easy".
 
+The word, taken apart.
+fácil from Latin facilis, "doable, easy" (EtymDB 2.1), from facere, "to do" — a learned borrowing from Latin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for slow, then the Portuguese for easy.
 You'll want to know: difícil.
 difícil — "difficult".
 
+The word, taken apart.
+difícil from Latin difficilis, "hard to do" (EtymDB 2.1), from dis-, "not", and facilis, "doable" — a learned borrowing from Latin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for easy, then the Portuguese for difficu
 
 You'll want to know: caro.
 caro — "expensive; dear".
+
+The word, taken apart.
+caro from Latin carus, "dear, beloved" (EtymDB 2.1) — inherited.
 
 What you've built.
 One more word for this chapter.

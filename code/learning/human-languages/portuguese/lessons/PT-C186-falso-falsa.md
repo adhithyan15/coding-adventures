@@ -13,7 +13,8 @@ gloss: "false"
 concept_tag: PT-QUAL186-FALSO-FALSA
 prerequisites: [PT-C186-parecido-parecida, PT-C186-justo-justa]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "falso ← Latin falsus 'false', from fallere 'to deceive' — English false"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C186-justo-justa]
 <!-- hl-knowledge: introduces=[PT-LEX-C186-QUAL186-05]; assesses=[] -->
 
 **falso / falsa** — "false".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**falso** ← Latin *falsus*, "false" (EtymDB 2.1), from *fallere*, "to deceive" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

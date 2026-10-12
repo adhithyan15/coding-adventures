@@ -13,7 +13,8 @@ gloss: "to come back, to return"
 concept_tag: PT-VERB-VOLTAR
 prerequisites: [PT-C55-entrar, PT-C55-sair]
 sounds: []
-roots: []
+roots: [volvere-latin]
+etymology_hook: "voltar ← Vulgar Latin *voltare 'to turn', from volutare 'to roll' — English revolve shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C55-sair]
 <!-- hl-knowledge: introduces=[PT-LEX-C55-VERBOS5-03]; assesses=[] -->
 
 **voltar** — "to come back, to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voltar** ← Vulgar Latin *\*voltare*, "to turn around" (EtymDB 2.1), from Latin *volutare*, "to roll about" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

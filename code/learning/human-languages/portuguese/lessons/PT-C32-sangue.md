@@ -13,7 +13,8 @@ gloss: "blood"
 concept_tag: PT-CORPO3-SANGUE
 prerequisites: [PT-C32-barriga, PT-C32-rosto]
 sounds: []
-roots: []
+roots: [sanguis-latin]
+etymology_hook: "sangue ← Latin sanguis 'blood' — English sanguine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C32-rosto]
 <!-- hl-knowledge: introduces=[PT-LEX-C32-CORPO3-05]; assesses=[] -->
 
 **o sangue** — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sangue** ← Latin *sanguis*, "blood", through Vulgar Latin *\*sanguem* — inherited. EtymDB 2.1 has no ancestor row for *sangue*; it derives Romanian *sânge* from *\*sanguem*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

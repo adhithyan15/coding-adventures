@@ -13,7 +13,8 @@ gloss: "to weigh"
 concept_tag: PT-VERB-PESAR
 prerequisites: [PT-C231-explicar, PT-C231-traduzir]
 sounds: []
-roots: []
+roots: [pensare-latin]
+etymology_hook: "pesar ← Latin pensare 'to weigh', through Vulgar Latin *pesare — the same verb as pensar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C231-traduzir]
 <!-- hl-knowledge: introduces=[PT-LEX-C232-VERBOS232-01]; assesses=[] -->
 
 **pesar** — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pesar** ← Latin *pensare*, "to weigh" (EtymDB 2.1), through Vulgar Latin *\*pesare* — inherited. *pensar* is a later borrowing of the same Latin verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to calculate"
 concept_tag: PT-VERB-CALCULAR
 prerequisites: [PT-C204-queimar, PT-C204-deitar-fora]
 sounds: []
-roots: []
+roots: [calculus-latin]
+etymology_hook: "calcular ← Latin calculare, from calculus 'pebble': counting with stones"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C204-deitar-fora]
 <!-- hl-knowledge: introduces=[PT-LEX-C204-VERBOS204-03]; assesses=[] -->
 
 **calcular** — "to calculate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calcular** ← Latin *calculare*, "to reckon" (EtymDB 2.1), from *calculus*, "pebble" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

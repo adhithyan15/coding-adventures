@@ -13,7 +13,8 @@ gloss: "a pocket"
 concept_tag: PT-COISAS169-BOLSO
 prerequisites: [PT-C168-ervilha, PT-C169-sandalia]
 sounds: []
-roots: []
+roots: [bursa-latin]
+etymology_hook: "bolso — a masculine of bolsa 'bag' (← Late Latin bursa)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C169-sandalia]
 <!-- hl-knowledge: introduces=[PT-LEX-C169-COISAS169-02]; assesses=[] -->
 
 **o bolso** — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bolso** is a masculine of *bolsa*, "bag" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

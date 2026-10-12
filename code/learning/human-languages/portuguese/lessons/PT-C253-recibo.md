@@ -13,7 +13,8 @@ gloss: "a receipt"
 concept_tag: PT-COISAS253-RECIBO
 prerequisites: [PT-C253-tamanho, PT-C253-troco]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "recibo — from the verb to receive (← Latin recipere) — English receipt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C253-troco]
 <!-- hl-knowledge: introduces=[PT-LEX-C253-COISAS253-04]; assesses=[] -->
 
 **o recibo** — "a receipt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recibo** is built from the verb "to receive" (EtymDB 2.1), which ← Latin *recipere*, "to take back" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

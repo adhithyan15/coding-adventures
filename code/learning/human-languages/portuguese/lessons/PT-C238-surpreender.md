@@ -13,7 +13,8 @@ gloss: "to surprise"
 concept_tag: PT-VERB-SURPREENDER
 prerequisites: [PT-C237-funcionar, PT-C238-levantar]
 sounds: []
-roots: []
+roots: [prehendere-latin]
+etymology_hook: "surpreender ← French surprendre 'to overtake' — English surprise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C238-levantar]
 <!-- hl-knowledge: introduces=[PT-LEX-C238-VERBOS238-02]; assesses=[] -->
 
 **surpreender** — "to surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**surpreender** ← French *surprendre*, "to overtake" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

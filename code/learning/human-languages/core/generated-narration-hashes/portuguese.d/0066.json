@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 66,
-  "sourceHash": "fnv1a64:71a94f48fb13ad76",
+  "sourceHash": "fnv1a64:5e5a335bed5f463c",
   "lessonIds": [
     "PT-C66-rapido",
     "PT-C66-lento",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch66.txt",
   "json": "portuguese/narration/ch66.json",
-  "textHash": "fnv1a64:d9220d24ea1cb25d",
-  "jsonHash": "fnv1a64:be7052e345e7074f",
+  "textHash": "fnv1a64:182458b2d74e5326",
+  "jsonHash": "fnv1a64:5d4b56083324f750",
   "findings": []
 }

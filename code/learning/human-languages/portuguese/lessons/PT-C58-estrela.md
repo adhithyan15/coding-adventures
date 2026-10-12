@@ -13,7 +13,8 @@ gloss: "a star"
 concept_tag: PT-CEU-ESTRELA
 prerequisites: [PT-C58-ceu, PT-C58-sol]
 sounds: []
-roots: []
+roots: [stella-latin]
+etymology_hook: "estrela ← Latin stella 'star', with an -r- perhaps from astrum — English stellar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C58-sol]
 <!-- hl-knowledge: introduces=[PT-LEX-C58-CEU-04]; assesses=[] -->
 
 **a estrela** — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estrela** ← Latin *stella*, "star" (EtymDB 2.1) — inherited. The *-r-* crept in, perhaps from Latin *astrum*, "star".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 116,
-  "sourceHash": "fnv1a64:c3bd6ca9df2d725e",
+  "sourceHash": "fnv1a64:75e9bf2315fcc97d",
   "lessonIds": [
     "PT-C116-nevoeiro",
     "PT-C116-tempestade",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch116.txt",
   "json": "portuguese/narration/ch116.json",
-  "textHash": "fnv1a64:62c7feac503123bb",
-  "jsonHash": "fnv1a64:7e4a56dbc4155508",
+  "textHash": "fnv1a64:ab95c1e8ba12f2ef",
+  "jsonHash": "fnv1a64:f10898e3f264fa89",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 61,
-  "sourceHash": "fnv1a64:88bbe56402571791",
+  "sourceHash": "fnv1a64:ac0eded0053fbbb3",
   "lessonIds": [
     "PT-C61-passaro",
     "PT-C61-rato",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch61.txt",
   "json": "portuguese/narration/ch61.json",
-  "textHash": "fnv1a64:63d85809ccf0d58a",
-  "jsonHash": "fnv1a64:690c61d24fe1d217",
+  "textHash": "fnv1a64:3e68fe8348973135",
+  "jsonHash": "fnv1a64:e9d53d5289a40838",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a mirror"
 concept_tag: PT-CASA3-ESPELHO
 prerequisites: [PT-C50-chao, PT-C50-escada]
 sounds: []
-roots: []
+roots: [speculum-latin]
+etymology_hook: "espelho ← Latin speculum 'mirror' — English speculate shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C50-escada]
 <!-- hl-knowledge: introduces=[PT-LEX-C50-CASA3-05]; assesses=[] -->
 
 **o espelho** — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espelho** ← Latin *speculum*, "mirror" (EtymDB 2.1), through Vulgar Latin *\*speclum* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

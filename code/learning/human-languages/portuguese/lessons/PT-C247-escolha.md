@@ -13,7 +13,8 @@ gloss: "a choice"
 concept_tag: PT-COISAS247-ESCOLHA
 prerequisites: [PT-C247-fracasso, PT-C247-experiencia]
 sounds: []
-roots: []
+roots: [colligere-latin]
+etymology_hook: "escolha — from the verb to choose, from Vulgar Latin *excolligere 'to pick out'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C247-experiencia]
 <!-- hl-knowledge: introduces=[PT-LEX-C247-COISAS247-04]; assesses=[] -->
 
 **a escolha** — "a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escolha** is built from the verb "to choose" (EtymDB 2.1), which goes back to Vulgar Latin *\*excolligere*, "to pick out", from *colligere*, "to gather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

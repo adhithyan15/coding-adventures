@@ -13,7 +13,8 @@ gloss: "to have fun"
 concept_tag: PT-VERB-DIVERTIR-SE
 prerequisites: [PT-C232-preencher, PT-C232-telefonar]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "divertir-se ← Latin divertere 'to turn aside', with -se 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C232-telefonar]
 <!-- hl-knowledge: introduces=[PT-LEX-C233-VERBOS233-01]; assesses=[] -->
 
 **divertir-se** — "to have fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divertir** ← Latin *divertere*, "to turn aside" (EtymDB 2.1) — a learned borrowing from Latin. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

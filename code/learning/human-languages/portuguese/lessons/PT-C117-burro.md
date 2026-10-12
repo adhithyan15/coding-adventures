@@ -13,7 +13,8 @@ gloss: "a donkey"
 concept_tag: PT-NATUREZA117-BURRO
 prerequisites: [PT-C117-cascata, PT-C117-bosque]
 sounds: []
-roots: []
+roots: [burricus-latin]
+etymology_hook: "burro — cut back from an older donkey word, which ← Late Latin burricus 'a small horse'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C117-bosque]
 <!-- hl-knowledge: introduces=[PT-LEX-C117-NATUREZA117-05]; assesses=[] -->
 
 **o burro** — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**burro** is cut back from an older word for a donkey (EtymDB 2.1), which ← Late Latin *burricus*, "a small horse" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

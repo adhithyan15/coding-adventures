@@ -14,6 +14,7 @@ concept_tag: PT-COISAS188-BOTAO
 prerequisites: [PT-C188-poltrona, PT-C188-pijama]
 sounds: []
 roots: []
+etymology_hook: "botão ← French bouton 'bud, button' — English button is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C188-pijama]
 <!-- hl-knowledge: introduces=[PT-LEX-C188-COISAS188-05]; assesses=[] -->
 
 **o botão** — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**botão** ← French *bouton*, "bud, button" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

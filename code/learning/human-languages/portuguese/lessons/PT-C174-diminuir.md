@@ -13,7 +13,8 @@ gloss: "to decrease"
 concept_tag: PT-VERB-DIMINUIR
 prerequisites: [PT-C174-atravessar, PT-C174-aumentar]
 sounds: []
-roots: []
+roots: [minuere-latin]
+etymology_hook: "diminuir ← Latin diminuere 'to make smaller' — English diminish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C174-aumentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C174-VERBOS174-03]; assesses=[] -->
 
 **diminuir** — "to decrease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diminuir** ← Latin *diminuere*, "to break into small pieces" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a lake"
 concept_tag: PT-NATUREZA2-LAGO
 prerequisites: [PT-C56-floresta, PT-C57-rio]
 sounds: []
-roots: []
+roots: [lacus-latin]
+etymology_hook: "lago ← Latin lacus 'lake, basin' — English lake and lagoon share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C57-rio]
 <!-- hl-knowledge: introduces=[PT-LEX-C57-NATUREZA2-02]; assesses=[] -->
 
 **o lago** — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lago** ← Latin *lacus*, "lake, basin" (EtymDB 2.1) — inherited. The Latin *-c-* between vowels became *-g-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

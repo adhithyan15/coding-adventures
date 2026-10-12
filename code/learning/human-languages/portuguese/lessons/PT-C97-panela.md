@@ -14,6 +14,7 @@ concept_tag: PT-CASA97-PANELA
 prerequisites: [PT-C96-sofa, PT-C96-armario]
 sounds: []
 roots: []
+etymology_hook: "panela — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C96-armario]
 <!-- hl-knowledge: introduces=[PT-LEX-C97-CASA97-01]; assesses=[] -->
 
 **a panela** — "a pot, a saucepan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**panela** — its origin is uncertain. EtymDB 2.1 traces it only to Old Portuguese *panela*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

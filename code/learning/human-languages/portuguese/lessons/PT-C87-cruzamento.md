@@ -13,7 +13,8 @@ gloss: "a crossroads"
 concept_tag: PT-LUGARES87-CRUZAMENTO
 prerequisites: [PT-C87-escritorio, PT-C87-esquina]
 sounds: []
-roots: []
+roots: [crux-latin]
+etymology_hook: "cruzamento — 'a crossing': from the verb to cross, built on the cross word ← Latin crux"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C87-esquina]
 <!-- hl-knowledge: introduces=[PT-LEX-C87-LUGARES87-03]; assesses=[] -->
 
 **o cruzamento** — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cruzamento** is "a crossing": built from the verb "to cross" and *-mento*. The verb is built on the word for a cross ← Latin *crux*, "cross" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

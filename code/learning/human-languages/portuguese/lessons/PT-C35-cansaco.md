@@ -14,6 +14,7 @@ concept_tag: PT-SAUDE2-CANSACO
 prerequisites: [PT-C35-fome, PT-C35-sede]
 sounds: []
 roots: []
+etymology_hook: "cansaço — built from the verb 'to tire', which ← Latin campsare 'to sail around a headland'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C35-sede]
 <!-- hl-knowledge: introduces=[PT-LEX-C35-SAUDE2-04]; assesses=[] -->
 
 **o cansaço** — "tiredness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cansaço** is built from the verb "to tire" and the suffix *-aço*. That verb ← Latin *campsare*, "to turn around (a headland)" (EtymDB 2.1): a long way round wears you out. EtymDB 2.1 has no row for *cansaço* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

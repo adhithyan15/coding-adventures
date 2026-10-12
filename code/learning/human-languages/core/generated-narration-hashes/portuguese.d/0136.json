@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 136,
-  "sourceHash": "fnv1a64:51b29de6e4bbfe75",
+  "sourceHash": "fnv1a64:99047dd8af1a5bd1",
   "lessonIds": [
     "PT-C136-o-futuro",
     "PT-C136-daqui-a",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch136.txt",
   "json": "portuguese/narration/ch136.json",
-  "textHash": "fnv1a64:e3eb6e3131435a72",
-  "jsonHash": "fnv1a64:bb3751f48f5a3d0c",
+  "textHash": "fnv1a64:c9d214d7dcf35549",
+  "jsonHash": "fnv1a64:2edef649c59e3f14",
   "findings": []
 }

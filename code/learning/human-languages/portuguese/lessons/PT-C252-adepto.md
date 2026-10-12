@@ -13,7 +13,8 @@ gloss: "a fan, a supporter"
 concept_tag: PT-COISAS252-ADEPTO
 prerequisites: [PT-C252-jogador, PT-C252-treinador]
 sounds: []
-roots: []
+roots: [adipisci-latin]
+etymology_hook: "adepto ← Latin adeptus 'having attained' — English adept"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C252-treinador]
 <!-- hl-knowledge: introduces=[PT-LEX-C252-COISAS252-05]; assesses=[] -->
 
 **o adepto** — "a fan, a supporter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adepto** ← Latin *adeptus*, "having attained" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

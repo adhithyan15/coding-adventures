@@ -13,7 +13,8 @@ gloss: "a thousand"
 concept_tag: PT-NUMEROS-MIL
 prerequisites: [PT-C79-cinquenta, PT-C79-cem]
 sounds: []
-roots: []
+roots: [mille-latin]
+etymology_hook: "mil ← Latin mille 'a thousand' — English mile and million share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C79-cem]
 <!-- hl-knowledge: introduces=[PT-LEX-C79-NUMEROS-04]; assesses=[] -->
 
 **mil** — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mil** ← Latin *mille*, "a thousand" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

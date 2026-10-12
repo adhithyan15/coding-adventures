@@ -13,7 +13,8 @@ gloss: "busy; taken"
 concept_tag: PT-CORES121-OCUPADO
 prerequisites: [PT-C121-roxo, PT-C121-castanho]
 sounds: []
-roots: []
+roots: [occupare]
+etymology_hook: "ocupado — 'occupied': from the verb to occupy ← Latin occupare 'to seize'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C121-castanho]
 <!-- hl-knowledge: introduces=[PT-LEX-C121-CORES121-04]; assesses=[] -->
 
 **ocupado** — "busy; taken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ocupado** is the participle of the verb "to occupy", which ← Latin *occupare*, "to seize" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

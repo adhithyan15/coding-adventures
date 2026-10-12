@@ -14,6 +14,7 @@ concept_tag: PT-SAUDE210-GRIPE
 prerequisites: [PT-C209-existir, PT-C209-exprimir]
 sounds: []
 roots: []
+etymology_hook: "gripe ← French grippe 'a seizure', from gripper 'to grab' — English grip"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C209-exprimir]
 <!-- hl-knowledge: introduces=[PT-LEX-C210-SAUDE210-01]; assesses=[] -->
 
 **a gripe** — "flu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gripe** ← French *grippe*, "a seizure" — borrowed, from *gripper*, "to grab".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

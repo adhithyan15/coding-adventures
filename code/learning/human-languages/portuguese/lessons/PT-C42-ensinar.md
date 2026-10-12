@@ -13,7 +13,8 @@ gloss: "to teach"
 concept_tag: PT-VERB-ENSINAR
 prerequisites: [PT-C42-correr, PT-C42-ouvir]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "ensinar ← Medieval Latin insignare 'to mark with a sign', from signum — English signal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C42-ouvir]
 <!-- hl-knowledge: introduces=[PT-LEX-C42-VERBOS3-03]; assesses=[] -->
 
 **ensinar** — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ensinar** ← Medieval Latin *insignare*, "to mark with a sign" (EtymDB 2.1), from Latin *signum*, "sign" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

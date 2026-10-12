@@ -14,6 +14,7 @@ concept_tag: PT-PESSOAS-MENINA
 prerequisites: [PT-C39-convidado, PT-C39-menino]
 sounds: []
 roots: []
+etymology_hook: "menina — the feminine of menino, whose own origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C39-menino]
 <!-- hl-knowledge: introduces=[PT-LEX-C39-PESSOAS-05]; assesses=[] -->
 
 **a menina** — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**menina** is the feminine of *menino* (EtymDB 2.1), whose own origin is uncertain, probably children's speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

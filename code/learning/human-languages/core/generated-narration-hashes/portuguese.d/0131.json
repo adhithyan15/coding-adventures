@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 131,
-  "sourceHash": "fnv1a64:c99f7894abf68ebd",
+  "sourceHash": "fnv1a64:b368b362d6b62412",
   "lessonIds": [
     "PT-C131-visitar",
     "PT-C131-por",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch131.txt",
   "json": "portuguese/narration/ch131.json",
-  "textHash": "fnv1a64:7d506bde15bf43a4",
-  "jsonHash": "fnv1a64:4caec5832df4a51e",
+  "textHash": "fnv1a64:383e22a6959a98c6",
+  "jsonHash": "fnv1a64:de817b0e3dcfade6",
   "findings": []
 }

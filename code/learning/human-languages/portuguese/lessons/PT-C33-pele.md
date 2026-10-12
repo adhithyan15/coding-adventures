@@ -13,7 +13,8 @@ gloss: "skin"
 concept_tag: PT-CORPO4-PELE
 prerequisites: [PT-C32-rosto, PT-C32-sangue]
 sounds: []
-roots: []
+roots: [pellis-latin]
+etymology_hook: "pele ← Latin pellis 'skin, hide' — English pellicle shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C32-sangue]
 <!-- hl-knowledge: introduces=[PT-LEX-C33-CORPO4-01]; assesses=[] -->
 
 **a pele** — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pele** ← Latin *pellis*, "skin, hide" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

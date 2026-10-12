@@ -14,6 +14,7 @@ concept_tag: PT-VERB-ROUBAR
 prerequisites: [PT-C205-participar, PT-C205-passear]
 sounds: []
 roots: []
+etymology_hook: "roubar ← a Germanic verb, Frankish raubōn 'to plunder' — English rob"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C205-passear]
 <!-- hl-knowledge: introduces=[PT-LEX-C206-VERBOS206-01]; assesses=[] -->
 
 **roubar** — "to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**roubar** ← Medieval Latin *raubare*, "to plunder" (EtymDB 2.1) — borrowed. It is a Germanic verb, Frankish *raubōn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

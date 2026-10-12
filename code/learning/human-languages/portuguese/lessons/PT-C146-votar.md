@@ -13,7 +13,8 @@ gloss: "to vote"
 concept_tag: PT-VERB-VOTAR
 prerequisites: [PT-C146-tossir, PT-C146-tremer]
 sounds: []
-roots: []
+roots: [votum-latin]
+etymology_hook: "votar ← Medieval Latin votare, from votum 'a vow, a wish' — English vote"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C146-tremer]
 <!-- hl-knowledge: introduces=[PT-LEX-C146-VERBOS146-03]; assesses=[] -->
 
 **votar** — "to vote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**votar** ← Medieval Latin *votare*, "to vow" (EtymDB 2.1), from Latin *votum*, "a vow, a wish" — a learned borrowing from Medieval Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

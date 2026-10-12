@@ -14,6 +14,7 @@ concept_tag: PT-VERB-AMARRAR
 prerequisites: [PT-C145-insistir, PT-C145-interromper]
 sounds: []
 roots: []
+etymology_hook: "amarrar ← French amarrer 'to moor', from Dutch — English moor is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C145-interromper]
 <!-- hl-knowledge: introduces=[PT-LEX-C145-VERBOS145-05]; assesses=[] -->
 
 **amarrar** — "to tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amarrar** ← French *amarrer*, "to moor" (EtymDB 2.1) — borrowed. French took it from Dutch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

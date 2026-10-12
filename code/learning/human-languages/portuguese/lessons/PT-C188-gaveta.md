@@ -13,7 +13,8 @@ gloss: "a drawer"
 concept_tag: PT-COISAS188-GAVETA
 prerequisites: [PT-C187-solteiro-solteira, PT-C188-lencol]
 sounds: []
-roots: []
+roots: [gabata-latin]
+etymology_hook: "gaveta — goes back to Latin gabata 'a dish, a bowl'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C188-lencol]
 <!-- hl-knowledge: introduces=[PT-LEX-C188-COISAS188-02]; assesses=[] -->
 
 **a gaveta** — "a drawer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gaveta** goes back to Latin *gabata*, "a dish, a bowl" (EtymDB 2.1, which gives the route through Old Provençal *gaveda*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a grandmother"
 concept_tag: PT-FAMILIA1-AVO-F
 prerequisites: [PT-C37-filha, PT-C37-avo-m]
 sounds: []
-roots: []
+roots: [avus]
+etymology_hook: "avó ← Vulgar Latin *aviola, a small form of Latin avia 'grandmother'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C37-avo-m]
 <!-- hl-knowledge: introduces=[PT-LEX-C37-FAMILIA1-03]; assesses=[] -->
 
 **a avó** — "a grandmother". The open ó is the grandmother.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avó** ← Vulgar Latin *\*aviola*, "little grandmother", from Latin *avia*, "grandmother" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *avoa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

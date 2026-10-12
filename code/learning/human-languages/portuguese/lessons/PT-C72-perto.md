@@ -14,6 +14,7 @@ concept_tag: PT-ONDE-PERTO
 prerequisites: [PT-C72-ali, PT-C72-longe]
 sounds: []
 roots: []
+etymology_hook: "perto — origin uncertain; usually traced to Latin pressus 'pressed close'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C72-longe]
 <!-- hl-knowledge: introduces=[PT-LEX-C72-ONDE-04]; assesses=[] -->
 
 **perto** — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perto** — its origin is uncertain. Old Portuguese said *preto*, "close, tight" (EtymDB 2.1), and the usual account traces that word to Latin *pressus*, "pressed close".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

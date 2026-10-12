@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 38,
-  "sourceHash": "fnv1a64:a0544cd1b2086b23",
+  "sourceHash": "fnv1a64:ad006634abe771c4",
   "lessonIds": [
     "PT-C38-tio",
     "PT-C38-tia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch38.txt",
   "json": "portuguese/narration/ch38.json",
-  "textHash": "fnv1a64:6ba6aa70ebbfd0c9",
-  "jsonHash": "fnv1a64:00d0a8fb0f848016",
+  "textHash": "fnv1a64:52b3e0e5539d06de",
+  "jsonHash": "fnv1a64:8edcbaa42f3fc320",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "politics"
 concept_tag: PT-COISAS189-POLITICA
 prerequisites: [PT-C189-eleicoes, PT-C189-voto]
 sounds: []
-roots: []
+roots: [politia-latin]
+etymology_hook: "política ← Latin politica, from Greek politike 'the art of the citizen' — English politics"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C189-voto]
 <!-- hl-knowledge: introduces=[PT-LEX-C189-COISAS189-04]; assesses=[] -->
 
 **a política** — "politics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**política** ← Latin *politica*, "politics" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *politikē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COISAS168-ESPINAFRES
 prerequisites: [PT-C168-polvo, PT-C168-alface]
 sounds: []
 roots: []
+etymology_hook: "espinafres — the spinach word ← Arabic isfanakh, from Persian — English spinach is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C168-alface]
 <!-- hl-knowledge: introduces=[PT-LEX-C168-COISAS168-03]; assesses=[] -->
 
 **os espinafres** — "spinach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espinafres** is the plural of the spinach word ← Arabic *isfānākh* — borrowed; Arabic took it from Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
