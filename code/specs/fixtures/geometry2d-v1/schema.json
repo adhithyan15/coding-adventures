@@ -20,6 +20,7 @@
         {"$ref": "#/$defs/bezierQuadratic"},
         {"$ref": "#/$defs/bezierCubic"},
         {"$ref": "#/$defs/centerArcBounds"},
+        {"$ref": "#/$defs/centerArcTangent"},
         {"$ref": "#/$defs/centerArcCubicsValid"},
         {"$ref": "#/$defs/centerArcCubicsInvalid"}
       ]}
@@ -29,6 +30,10 @@
     "point": {
       "type": "array", "minItems": 2, "maxItems": 2,
       "items": {"type": "number", "minimum": -1000000, "maximum": 1000000}
+    },
+    "derivativeVector": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {"type": "number", "minimum": -10000000, "maximum": 10000000}
     },
     "bounds": {
       "type": "array", "minItems": 4, "maxItems": 4,
@@ -147,6 +152,22 @@
         "sweep_angle": {"type": "number", "minimum": -6.283185307179586, "maximum": 6.283185307179586},
         "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
         "expected_bounds": {"$ref": "#/$defs/bounds"}
+      }
+    },
+    "centerArcTangent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "center", "rx", "ry", "start_angle", "sweep_angle", "x_rotation", "t", "expected_derivative"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "center-arc-tangent"},
+        "center": {"$ref": "#/$defs/point"},
+        "rx": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "ry": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "start_angle": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "sweep_angle": {"type": "number", "minimum": -6.283185307179586, "maximum": 6.283185307179586},
+        "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "t": {"type": "number", "minimum": 0, "maximum": 1},
+        "expected_derivative": {"$ref": "#/$defs/derivativeVector"}
       }
     },
     "centerArcCubicsValid": {
