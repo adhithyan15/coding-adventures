@@ -1839,6 +1839,15 @@ fn swimlane_lined_document_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_data_store_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: datastore, label: \"First\" }\n  second@{ shape: data-store, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane data-store aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::DataStore));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
