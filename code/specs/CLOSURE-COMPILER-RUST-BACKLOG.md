@@ -14,6 +14,13 @@ spec c1071c07/corrected red270458c7 actually1PASS/1FAIL: refusal fails/value pas
 No wrong-number/UB claim or production135 nesting-limit change. Direct-output
 post-proof repair plus root-position/value/native controls are implemented;
 affected compiler/LANG/full native validation and exact-final review PENDING.
+Initial repaired679 focused6 PASS, full-cone927PASS/1FAIL at16targets remains
+rejected: original conditional user-defined abs/literal output lost static
+Boolean tracking during a call. Spec22927c precedes output-only post-proof
+refinement: both top-level alternatives independently runtime-safe or call-free
+context-free finite literals, initial proof still required; never reuse mutable
+selector facts or bypass nested bounded-root checks. Original test retained;
+full rerun/native3/1.5 compatibility acceptance remains PENDING.
 All prior receipts retain actual source attribution; source/shared PR17288 stays
 sole active, auto-merge OFF; currentpublishedaf hostedCI cannot accept the new
 unpublished repair. Miri **DEFERRED/PENDING**, frozenrun/497inputs/receipts/target

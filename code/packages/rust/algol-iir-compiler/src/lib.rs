@@ -2360,7 +2360,7 @@ impl Compiler {
             // Lowering a selector can promote a formerly local branch root
             // through a by-name actual. Both proof snapshots must admit output.
             let allow_runtime_real =
-                allow_runtime_real && self.is_runtime_real_assignment_value(actual);
+                allow_runtime_real && self.is_runtime_real_output_after_lowering(actual);
             self.emit_standard_output_value(name, value, allow_runtime_real)?;
         }
 
@@ -2467,6 +2467,25 @@ impl Compiler {
             return None;
         }
         Some((condition, branches[0], branches[1]))
+    }
+
+    fn is_runtime_real_output_after_lowering(&self, node: &GrammarASTNode) -> bool {
+        if self.is_runtime_real_assignment_value(node) {
+            return true;
+        }
+        // A call can erase the selector's static Boolean fact. Prove both
+        // alternatives independently rather than reuse that mutable fact.
+        // Literal arithmetic is context-free: no calls or tracked variables.
+        let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) else {
+            return false;
+        };
+        let safe_branch = |branch: &GrammarASTNode| {
+            self.is_runtime_real_assignment_value(branch)
+                || (!self.contains_procedure_call(branch)
+                    && expr_static_real_arithmetic_value_with(branch, &|_| None)
+                        .is_some_and(|value| value.is_finite()))
+        };
+        safe_branch(then_node) && safe_branch(else_node)
     }
 
     fn is_static_real_output_expr(&self, node: &GrammarASTNode) -> bool {

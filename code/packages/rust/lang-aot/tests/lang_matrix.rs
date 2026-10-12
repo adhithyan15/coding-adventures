@@ -14258,6 +14258,24 @@ fn algol_sqrt_conditional_nonpositive_quadruple_exp_result_widening_runs_on_ever
 }
 
 #[test]
+fn algol_conditional_override_literal_output_runs_on_every_available_standard_backend() {
+    for (source, expected) in [
+        ("begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := true; print(if flag then abs(2.0) else 1.5) end", "3"),
+        ("begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := false; print(if flag then abs(2.0) else 1.5) end", "1.5"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but conditional override/literal output did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
 fn algol_direct_value_selector_proof_runs_on_every_available_standard_backend() {
     // Value-formal mutation leaves the distinct producer roots intact. Both
     // selected arms execute the direct real-output proof consumer on each engine.
