@@ -17409,3 +17409,14 @@ fixture pins language/program identities and exact generated-component pruning.
 All 15 open PR scopes are cleared, including immutable tree comparisons for the
 3,493-file PR beyond the GitHub file-list cap. The existing native CI mapping
 applies; no workflow change or native-authority expansion is required.
+
+Native execution exposed a separately owned coverage-qualification gap before
+the next selection. Add `build-tool-haskell-production-coverage-qualification`
+as pending after the current registry owner: 93 native examples plus real
+help/version/repository-plan runs yield 85% BuildTool expression coverage and
+132/132 expressions in the changed discovery region, but the seven-module
+production total is 61%, including the generated Unicode table module at 56%.
+HPC expression counts do not establish line coverage or whole-package threshold
+compliance. Keep per-module evidence, qualify existing contract/official-vector
+and CLI coverage, and leave any exception for external review. The graph now
+has 1,336 owners and 2,386 edges with one serial implementation in progress.

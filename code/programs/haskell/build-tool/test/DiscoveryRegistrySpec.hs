@@ -58,7 +58,7 @@ discoveryRegistrySpec = describe "discovery/language-registry" $ do
         domain `shouldBe` "discovery"
         length files `shouldBe` 29
         length expected `shouldBe` 25
-        let expectedPaths = concat [[root, build] | ExpectedPackage _ _ root build _ <- expected]
+        let expectedPaths = concat [[root, buildFile] | ExpectedPackage _ _ root buildFile _ <- expected]
         all safeFixturePath expectedPaths `shouldBe` True
         -- This fixture publishes shell BUILD records, including the starlark
         -- language bucket; it does not publish evaluated Starlark metadata.

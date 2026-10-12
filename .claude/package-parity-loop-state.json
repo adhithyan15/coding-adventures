@@ -872,7 +872,8 @@
       "notes": "Fresh post-#17283 read-only audit: #16891 already fixed exact _build. Six generated components remain missing (.cargo, .dart_tool, .gradle, blib, dist-newstyle, gradle-build), language inference uses any absolute path component, and the specification tree can enter discovery. Consume the complete 29-record/25-package shared registry fixture with exact relative bucket identity; retain the existing four-record Dune regression and add exact/near-case generated component and ancestor-name tests. Existing Haskell native fixture CI mapping applies. Canonical BUILD membership/platform variants and duplicate identities have separate owners. External validation plan saved: haskell-registry-validation-plan.md. Existing cabal.project enables the build-tool/graph/directed-graph/sha256 closure tests; optimized full suite and separate focused HPC coverage avoid SHA allocation-test instrumentation interference. Coverage remains unmeasured until actual execution. Full fixture materializer must allow specs decoys while bounding and validating all paths and counts.",
       "selected_at": "2026-10-12T19:38:37.348335+00:00",
       "selection_notes": "Post-#17325 actual auto-merge, collision-checked inventory and all-15-open-PR immutable overlap clearance. Haskell registry has two immediate concrete follow-ups; Ruby/Python one each; TS tangent and Go empty-plan zero. Select one bounded full 29-file/25-root fixture adoption with exact code-relative buckets, specification-tree exclusion and shared 27 generated components. Retain narrow Dune and all resolver/hash regressions; canonical BUILD/platform and duplicate identities stay separately owned. Native optimized tests, separate HPC, build fronts, real plans, parity and exact-head security required.",
-      "worktree": "C:\\Users\\adhit\\.codex\\worktrees\\parity-haskell-registry-20261012\\coding-adventures"
+      "worktree": "C:\\Users\\adhit\\.codex\\worktrees\\parity-haskell-registry-20261012\\coding-adventures",
+      "validation_notes": "Native RED7examples5failures, laterconfigured-rootRED1/1; final93build-toolexamples plus graph4,directedgraph3,SHA25625 and allocationbudgetpass.8registryexamples retainDune4/3, consumeall29/25,27exact+27case-near and23languagepairs. Cabalcheck andGHC-Wall-Werror pass; unchanged BUILD_windows/POSIXBUILD executealltests throughverifiedshortalias. RealCLIhelp/version/validatedforce-dry-run exit0/210skipped,210name/language/root/commandtuples and496nativeedges matchGo. CombinedHPC changeddiscovery132/132expressions;BuildTool5482/6403(85%),entryMain10/12(83%),all7production43117/69790(61%),generatedUnicode33687/59242(56%); pendingseparatecoveragequalification,no line/fullprogramclaim.179neutralcases/298files valid,10paritytests,Go nativefixturetest/vet/trimpathbuild,45Starlark/38existingexemptions repositoryplan,1064lessons/diffcheck pass. Exactheadsecurity and hostedCI stillrequired."
     },
     {
       "id": "build-tool-haskell-discovery-duplicate-identity-conformance",
@@ -18178,6 +18179,17 @@
       "branch": null,
       "pr_number": null,
       "notes": "Bounded read-only governing-spec audit: G2D00/G2D01/G2D02/G2D03 eachlist12 lanes andomitC#,F#,Haskell despiteall60 family/lane roots existing. Exact namespaces/modules verified,including F# Point2D sharingCodingAdventures.Point2D andotherthree.FSharp. Four-spec documentation-only slice after17325 shared-file merge; no native correction/adoption claim, noOCaml promotion. Existing correctness/adoption umbrellas have distinctscope; proposedIDexact/normalizedcollision0 across1334owners. External geometry-governing-package-matrix-audit.md pins evidence. Registeronlyinlocaljournal while17325active; no secondimplementation/commit/push."
+    },
+    {
+      "id": "build-tool-haskell-production-coverage-qualification",
+      "title": "Qualify whole Haskell build-tool production coverage with native evidence",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-haskell-discovery-language-registry-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Actual native HPC from 93 tests plus help/version/repository-plan CLI, all nonzero and test modules excluded: BuildTool 5482/6403 expressions (85%), executable Main10/12(83%), changed discovery132/132; all seven production modules43117/69790 expressions(61%), generatedUnicode33687/59242(56%). These are expression/boolean/alternative metrics, not line coverage or whole-package 80/95 compliance. No existing numerical coverage leaf or exact/canonical collision in1335owners. Portable follow-up should establish program/library metric scope, add deterministic existing contract/official-vector and bounded CLI coverage, retain raw per-module and generated-table evidence, and prepare any exception for review without self-waiver. Missing semantics, native snapshot/host authority and adapter readiness remain separateowners. External haskell-production-coverage-owner-classification.md and combinedHPCevidence pin classification."
     }
   ]
 }
