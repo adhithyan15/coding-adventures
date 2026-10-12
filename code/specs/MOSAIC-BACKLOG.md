@@ -37,15 +37,15 @@ history, and local test runs. This file is the result: one ordered list.
 
 1. **Security and visible breakage.**
    - EM-1, the XAML `{` literal (*fixed on main, #16883 and #16948*);
-   - MB-14, MosaicBook listened on every interface (*fixed, unpushed*);
-   - MB-1, apps cannot be previewed (*fixed, unpushed*);
+   - MB-14, MosaicBook listened on every interface (*fixed in #16855*);
+   - MB-1, apps cannot be previewed (*fixed in #16855*);
    - SW-2, SpiceWorkbench does not compile on four native backends;
-   - SW-1, `Path` on Web Components (*fixed, unpushed*);
+   - SW-1, `Path` on Web Components (*fixed in #16855*);
    - VC-1, VisiCalc's native Open/Save.
 2. **Small bugs, batched by package.**
-   - MosaicBook: MB-2, MB-3 and MB-4 (*fixed, unpushed*);
-   - emitters: EM-3, EM-5 and EM-9 (*fixed, unpushed*);
-   - X-2, the compiler's search path on Windows (*fixed, unpushed*).
+   - MosaicBook: MB-2, MB-3 and MB-4 (*fixed in #16855*);
+   - emitters: EM-3, EM-5 and EM-9 (*fixed in #16855*);
+   - X-2, the compiler's search path on Windows (*fixed in #16855*).
 3. **Housekeeping.** Close the issues in [Closable now](#closable-now),
    update the out-of-date epic checklists, and refresh the docs rows (MB-12,
    SW-5, VE-3).
@@ -56,11 +56,16 @@ history, and local test runs. This file is the result: one ordered list.
    - EM-2, `align`: land #16297, then #16293;
    - EM-4, SwiftUI layout;
    - TR-2 and TR-3, the native progress ring and elevation;
-   - EM-6, Compose fixtures (also unblocks MB-5).
+   - EM-6, Compose fixtures (also unblocks MB-5, and is the first step of
+     DN-3).
 6. **Product features**, smallest high-value first: MB-6, VE-1, SW-3, TR-5,
    EN-1 and the remaining VisiCalc native work.
 7. **Decisions** in [Decisions needed](#decisions-needed), which unblock
    EN-2, EN-3, JO-3 and PR-4.
+8. **Platform-neutral mosstyle and design to native.** UI90's §6 order
+   (X-6), then UI91 for DN-1 and DN-2, and DN-3's fixtures on every native
+   backend. The UI90 compiler and token steps come first, because the design
+   import lands on them.
 
 ## Cross-cutting
 
@@ -70,7 +75,7 @@ history, and local test runs. This file is the result: one ordered list.
 | X-2 | `mosaic-compile` splits `--package-search-path` on `:` on every OS | **fixed** in #16855: Windows splits on `;` and `:` and keeps a drive colon. Was: `mosaic-compile/src/main.rs:755` uses `split(':')`, so a Windows drive path (`C:\…`) breaks in two. MosaicBook's sibling search path is absolute, so it is affected on Windows. Fix: `std::env::split_paths`, plus OS-specific joining in MosaicBook. #16931 | bug | S |
 | X-3 | Native backends drop authored style properties silently or with a warning only | **partly**. Every backend reports drops (#15532, `mosaic-package-artifact-builder/src/lib.rs:2757-2817`), but the gate fails only on capability degradations. TaskApp's ratchet (`code/scripts/taskapp_native_control_contract.py:22`) allows 741 drops: XAML 77, SwiftUI 142, Compose 89, Qt 193, Flutter 240. Tracked by #12022 | bug | L |
 | X-4 | Style values that start with `{` passed into XAML verbatim, as markup extensions | **decided and fixed** in #16855. Decision (2026-10-08): mosstyle must express every styling decision with no platform-specific values or abstraction leaks. The compiler refuses such a value (`PlatformValue`, UI15 §8 rule 8), and the XAML emitter drops it. **Follow-up:** an audit of every `.msl` for other platform leaks, and for the decisions mosstyle cannot yet express neutrally (X-6) | bug | S |
-| X-6 | **mosstyle is not yet platform-neutral or expressive enough.** Principle (decided 2026-10-08): MSL must express every styling decision with no platform-specific values or abstraction leaks. An audit of all 186 `.msl` files on 2026-10-08 found it is CSS in practice:<br>• 82 distinct properties are in use against about 25 in UI15 §2. `ErrorKind::UnknownProperty` exists but is never raised, so the web backends accept any CSS.<br>• Colours: 3,258 hex literals against 98 tokens.<br>• Web-only constructs: `box-shadow` alongside `elevation` (24 uses), `rgba()` (44, which only XAML converts), CSS font stacks, `position: absolute/sticky` with `top/left/z-index`, `vh` units, `display: flex` workarounds, `cursor`, `color-scheme`, `currentColor`, `transform: rotate()`, shorthand `border`/`outline`, and per-backend token overrides.<br>• Emitter pass-through rules: XAML's "uppercase means native" values, its verbatim fallbacks for fonts and enums, and Qt's raw font family; Flutter reads 8-digit hex as AARRGGBB while CSS reads RRGGBBAA; Compose and SwiftUI disagree on named colours.<br>**Gaps MSL cannot yet express neutrally:**<br>(1) the system palette (accent, surface, text, focus);<br>(2) dark mode in one file (95 `.light` + 70 `.dark` near-duplicates);<br>(3) elevation as the only shadow;<br>(4) type roles, tracking, text case;<br>(5) truncation and max lines;<br>(6) full corners;<br>(7) per-edge borders and stroke style;<br>(8) the focus ring;<br>(9) main- and cross-axis alignment;<br>(10) environment-conditioned blocks and motion with reduced motion.<br>**Next:** UI90 (`UI90-mosstyle-platform-neutral.md`, draft, 2026-10-09) specifies a closed, typed, platform-neutral mosstyle — a property and value table enforced by the compiler; semantic and mode-aware tokens; one colour-with-alpha syntax — with a migration path for existing `.msl` files. Brand vs native (#12029) was decided on 2026-10-11 (UI90 §5.1): use native controls, let authors brand them token by token, and let unstyled properties follow the platform. UI90 §5 decisions 2–4 are still open. Specs come first, so no code before it is agreed. Closing this removes most of X-3's 741 baselined native drops | design | L |
+| X-6 | **mosstyle is not yet platform-neutral or expressive enough.** Principle (decided 2026-10-08): MSL must express every styling decision with no platform-specific values or abstraction leaks. An audit of all 186 `.msl` files on 2026-10-08 found it is CSS in practice:<br>• 82 distinct properties are in use against about 25 in UI15 §2. `ErrorKind::UnknownProperty` exists but is never raised, so the web backends accept any CSS.<br>• Colours: 3,258 hex literals against 98 tokens.<br>• Web-only constructs: `box-shadow` alongside `elevation` (24 uses), `rgba()` (44, which only XAML converts), CSS font stacks, `position: absolute/sticky` with `top/left/z-index`, `vh` units, `display: flex` workarounds, `cursor`, `color-scheme`, `currentColor`, `transform: rotate()`, shorthand `border`/`outline`, and per-backend token overrides.<br>• Emitter pass-through rules: XAML's "uppercase means native" values, its verbatim fallbacks for fonts and enums, and Qt's raw font family; Flutter reads 8-digit hex as AARRGGBB while CSS reads RRGGBBAA; Compose and SwiftUI disagree on named colours.<br>**Gaps MSL cannot yet express neutrally:**<br>(1) the system palette (accent, surface, text, focus);<br>(2) dark mode in one file (95 `.light` + 70 `.dark` near-duplicates);<br>(3) elevation as the only shadow;<br>(4) type roles, tracking, text case;<br>(5) truncation and max lines;<br>(6) full corners;<br>(7) per-edge borders and stroke style;<br>(8) the focus ring;<br>(9) main- and cross-axis alignment;<br>(10) environment-conditioned blocks and motion with reduced motion.<br>**Next:** UI90 (`UI90-mosstyle-platform-neutral.md`, draft, 2026-10-09) specifies a closed, typed, platform-neutral mosstyle — a property and value table enforced by the compiler; semantic and mode-aware tokens; one colour-with-alpha syntax — with a migration path for existing `.msl` files. Brand vs native (#12029) was decided on 2026-10-11 (UI90 §5.1): use native controls, let authors brand them token by token, and let unstyled properties follow the platform. Decisions 2–4 were settled on 2026-10-12 by copying existing systems: Material 3's 15 type roles with explicit sizes still allowed; mode-aware tokens with optional high contrast; custom fonts shipped with the app. UI90 is ready for implementation in its §6 order. Closing this removes most of X-3's 741 baselined native drops | design | L |
 | X-5 | Dependency style axes are not scoped to the call site | **real**. Only XAML guards against it (`xaml/pipeline.rs:1823-1834`, #14482). #14481 | bug | L |
 
 ## MosaicBook (`code/programs/go/mosaicbook-server`)
@@ -83,11 +88,11 @@ get analysis only (the drop panel); nothing renders natively. Spec: UI19.
 
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
-| MB-1 | App components could not find dependencies outside their own directory, so VisiCalc, TaskApp, EngramApp and JournalApp failed on every backend | **fixed** on `claude/brave-ride-edfrqw` (c615a9499e, unpushed): `--package-search-path` | bug | S |
+| MB-1 | App components could not find dependencies outside their own directory, so VisiCalc, TaskApp, EngramApp and JournalApp failed on every backend | **fixed** in #16855: `--package-search-path` | bug | S |
 | MB-14 | The server listened on every network interface, not just localhost as its README says. Another machine on the network could fetch previews by sending `Host: localhost` | **fixed** in #16855: it binds `127.0.0.1` | security | S |
 | MB-2 | The browser shell never shows a component's `storiesError` | **fixed** in #16855. Was: `static/index.html` has no reference to it. UI19 §6.2 asks for a ⚠️ badge. #16928 | bug | S |
 | MB-3 | The watcher reloads once without a change at startup, and re-runs discovery while holding the server lock | **fixed** in #16855. Was: Its file-time snapshot starts empty, so "detected file change" appears 1 second after start. Discovery runs `--describe` subprocesses under `s.mu` (`watcher.go`). #16929 | bug | S |
-| MB-4 | Compose ignores `--fixtures` and `--emit-project`, even with `--strict-fixtures` (output byte-identical, exit 0) | **fail-loud fixed** on `claude/brave-ride-edfrqw` (unpushed): strict mode refuses, otherwise it warns; real support is EM-6. Was: This breaks the `--strict-fixtures` contract in `mosaic-compile.json`. Fail loudly first; the fix is EM-6. #16930 | bug | S then M |
+| MB-4 | Compose ignores `--fixtures` and `--emit-project`, even with `--strict-fixtures` (output byte-identical, exit 0) | **fail-loud fixed** in #16855: strict mode refuses, otherwise it warns; real support is EM-6. Was: This breaks the `--strict-fixtures` contract in `mosaic-compile.json`. Fail loudly first; the fix is EM-6. #16930 | bug | S then M |
 | MB-5 | Surface's `$mosaic-child-slot` cannot compile in isolation on html, webcomponent or react | **real**. Reproduced: "not yet supported by the pipeline HTML emitter". 3 recorded degradations. #14685 | bug | M |
 | MB-6 | Form-factor layouts (`*.desktop.mll`, `*.touch.mll`) are never discovered | **real**. VisiCalc's Grid and FormulaBar and EngramApp's touch layout are invisible ("2 candidate(s) skipped") | feature | M |
 | MB-7 | App components have no stories, so `--check` cannot cover them, and CI's check scans only `code/packages/mosaic` | **real**. VisiCalc, VisiCalcStartup, VentureChrome and others report "missing explicit .stories.json file" | feature | M |
@@ -220,11 +225,21 @@ exist.
 | PR-6 | Adopt `HostNavigationSplit` in notes, note-type-editor and spice-workbench; UI29-6 still says "draft" | **real**. #15481 follow-up | feature | S |
 | PR-7 | Qt releases cover macOS only (`engram_release.py:527`) | **real**. #14223 | feature | M–L |
 
+## Design to native (DN)
+
+Goal (2026-10-12): a design made in Figma, or a similar tool, becomes a
+native Mosaic app on every backend quickly. It first runs on sample data,
+then a backend is connected. Copy existing formats rather than invent them.
+UI90 §5.5 is the token contract the import lands on.
+
+| ID | Problem | Status and evidence | Kind | Size |
+|---|---|---|---|---|
+| DN-1 | **No way to bring a design in.** Nothing in the repo reads Figma or design-token files | **to spec** as UI91. The proposed import lands on the existing JSON token palette (`mosaic-compile pkg --token-palette`, `[styles].token_palette`):<br>• W3C DTCG tokens or Figma variables, with their modes, become mode-aware brand tokens;<br>• text styles become `type-role`s;<br>• font families become shipped brand faces.<br>Depends on UI90 §6 steps 2–3 | design | M |
+| DN-2 | **No way to turn a design's screens into Mosaic layouts** | **to spec** in UI91, after DN-1. Frames and auto-layout map to `.mll` layouts over toolkit components, and the design's sample content becomes MosaicBook stories. Open question for UI91: how much is generated, and how much is a starting point that an author edits | design | L |
+| DN-3 | **A "dummy" native app needs sample data on every backend** | **real**. Fixtures (`--fixtures`, a JSON object of slot values) are applied only by the HTML backend, per `code/specs/mosaic-compile.json`. Compose refuses them under `--strict-fixtures` and warns otherwise. Each native backend needs fixture support so a design runs as an app before its `.mil` interface is connected to a real backend | feature | L |
+
 ## Decisions needed
 
-- **UI90 §5, mosstyle decisions 2–4.** Type roles, mode syntax and brand
-  faces. Decision 1 (brand vs native) was decided on 2026-10-11. These block
-  the UI90 compiler work (X-6).
 - **UI88 §6, rich card content.** Blocks EN-2, EN-3 and Journal photos
   (JO-3).
 - **Publishing (PR-4).** Should the `mosaic-pkg-*` crates be published, and
