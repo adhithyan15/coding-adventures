@@ -24,6 +24,10 @@
     {"id": "arc-center-bounds-rotated-extrema", "operation": "center-arc-bounds", "center": [0, 0], "rx": 2, "ry": 1, "start_angle": -0.7853981633974483, "sweep_angle": 1.5707963267948966, "x_rotation": 0.7853981633974483, "expected_bounds": [0.5, 0.5, 1.0811388300841898, 1.0811388300841898]},
     {"id": "arc-center-cubics-zero", "operation": "center-arc-cubics", "center": [1, 2], "rx": 2, "ry": 1, "start_angle": 0.3, "sweep_angle": 0, "x_rotation": 0, "expected_count": 1},
     {"id": "arc-center-cubics-full-turn", "operation": "center-arc-cubics", "center": [0, 0], "rx": 2, "ry": 1, "start_angle": 0, "sweep_angle": 6.283185307179586, "x_rotation": 0, "expected_count": 4},
-    {"id": "arc-center-cubics-over-turn", "operation": "center-arc-cubics", "center": [0, 0], "rx": 2, "ry": 1, "start_angle": 0, "sweep_angle": 7, "x_rotation": 0, "expected_error": "invalid-sweep"}
+    {"id": "arc-center-cubics-over-turn", "operation": "center-arc-cubics", "center": [0, 0], "rx": 2, "ry": 1, "start_angle": 0, "sweep_angle": 7, "x_rotation": 0, "expected_error": "invalid-sweep"},
+    {"id": "arc-center-tangent-positive-axis", "operation": "center-arc-tangent", "center": [3, -4], "rx": 2, "ry": 1, "start_angle": 0, "sweep_angle": 1.5707963267948966, "x_rotation": 0, "t": 0, "expected_derivative": [0, 1.5707963267948966]},
+    {"id": "arc-center-tangent-positive-rotated", "operation": "center-arc-tangent", "center": [3, -4], "rx": 2, "ry": 1, "start_angle": 0, "sweep_angle": 1.5707963267948966, "x_rotation": 0.7853981633974483, "t": 0.5, "expected_derivative": [-2.356194490192345, -0.7853981633974483]},
+    {"id": "arc-center-tangent-negative-rotated", "operation": "center-arc-tangent", "center": [3, -4], "rx": 2, "ry": 1, "start_angle": 1.5707963267948966, "sweep_angle": -1.5707963267948966, "x_rotation": 0.7853981633974483, "t": 0.5, "expected_derivative": [2.356194490192345, 0.7853981633974483]},
+    {"id": "arc-center-tangent-zero-rotated", "operation": "center-arc-tangent", "center": [3, -4], "rx": 2, "ry": 1, "start_angle": 0.3, "sweep_angle": 0, "x_rotation": 0.7853981633974483, "t": 0.5, "expected_derivative": [0, 0]}
   ]
 }
