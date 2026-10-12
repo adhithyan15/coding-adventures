@@ -222,20 +222,27 @@ rather than letting them read as silent gaps.
     accumulated after v0.5.1 into an immutable patch release. Keep the verified
     web/native downloadable artifact matrix unchanged; Static HTML, Web
     Components, and Paint remain CI-only, while signing and notarization remain
-    tracked by #13977.
+    tracked by #13977. **Published and independently audited.**
+12. **P1 [#17328](https://github.com/adhithyan15/coding-adventures/issues/17328)
+    — publish `task-app-v0.5.3`.** Roll the compatible Flutter calendar,
+    drag/drop spacing, conditional-body correctness, and elevation-reporting
+    fixes into an immutable patch release, together with the matching
+    style-ratchet correction. Keep the verified downloadable artifact matrix
+    unchanged: Static HTML, Web Components, and Paint remain CI-only, while
+    signing, notarization, and installers remain tracked by #13977.
 
 ### Tier C — reach, stated honestly
 
-12. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
+13. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
     #16041, and #16144.** The generated app carries the real runtime, launches
     on iPhone and iPad simulators, restores state from its sandbox, and
     quarantines corrupt state. Signing, device execution, and a downloadable
     iOS artifact remain outside that claim.
-13. **Android has no backend.** `compose` is Compose Desktop. An Android target
+14. **Android has no backend.** `compose` is Compose Desktop. An Android target
     is a new Mosaic backend, not a TaskApp task, and belongs to
     [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
     here. Recorded so its absence is a decision rather than an oversight.
-14. **Signing, notarization, and installers**
+15. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up
