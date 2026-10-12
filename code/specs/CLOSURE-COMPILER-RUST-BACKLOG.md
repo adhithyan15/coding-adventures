@@ -2,6 +2,56 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 SwiftUI report work repair -->
+CV04a current repaired candidate (October12), issue#17378: published8b79
+precedes native main `033a1d96819183910069fb2ae1f4f1b472bacfae` (#17367SwiftUI). Initial exact upstream
+b0e794b9 full634/30/strict6/Python46/docs1084 passes EXECUTION ONLY; independent
+reviewWITHHELD for valid repeatedshadow properties causing per-drop elevation
+rescans. Spec066f75bb59 precedes privateobserver/red df0ce275: actualcargo101/
+1PASS2FAIL, N32 yields1024absent/1056late visits versus required32/33; semantic
+inset/standalone/ordercontrol passes. Both original negative review/red preserved.
+
+Repair actual `52554eb128c83bcc128341273f66d4cc0f04f21c` caches the EXACT existing predicate once per expanded
+immutable base part, preserving expansion/shared emitter props, report fields/
+order, gap/align/border filters and supported/inset/standalone behavior. Private
+generic observer is no-op through unchanged publicAPI; no new allocation/unsafe/
+dependency/resource or grammar exemption. Actual authored duplicate declarations
+at32/128 retain exactN/N+1 visits; unsupported enum via publicIR gives2, multi-
+part case5, with complete publicreport equality/order. Authored compiler correctly
+rejects unsupported elevation; no invalid-source resource claim/timing proxy.
+
+Full six-package SwiftUI reverse cone and actualTaskApp Rust package pass
+**637tests/docs/30targets/0fail0ignore**, focus3 repeats excluded. Strict6alltarget
+warnings/unknown-lints, completePython46/Ruff, docs/1085lesson shards/whitespace
+PASS; COMPLETE9rows/actualprocessEXIT0. Distinct fresh full-run Venture profile
+has exactly onebookmark; original shared profile hash unchanged, no interactive
+acceptance skip. No macOS/device/render/runtime/deployment/fullMosaic claim.
+
+Complete native66 diagram/Arc17packages and neutralfixture/script sourceobjects
+retain821/37/1existingGDIignore/strict17/oracle27/Python18 without replay/relabel.
+Compiler48 Rust/Closureprogram/CI/LANGspec and complete script inventory except
+four disclosed geometry/TaskApp upstream leaves remain exact:1248/118/1oldignore,
+933/16/strict4/11production/42native. OtherRustonlySwiftUI changed; programruntime
+exact except disclosed TaskAppREADME. Five unchanged upstream objects exact;
+SwiftUI pipeline adds only observer/work tests/cache repair, README/changelog/
+spec/lesson documented. Native base33 is explicit; live Sanskrit a54 ref drift
+failed first preflight BEFORECargo/receipt, then controlled runner pinned33 and
+records observedref separately. Current-main supplement/review needed, no native
+execution attributed to a newer ref. Subsequent blocks are historical frames.
+
+Final backlog-only source/payload proof and independent exact-final security,
+freshlive main/review/conflict/required exact-head terminal acceptable checks,
+whole three nativeSUCCESS/timestampedClosurecBUILT rows precede auto-merge.
+SAME sole PR17288; published8b CI stillpending, superseded415actualcompleted/
+cancelled after normal and>=120secqueuedgate-only force; currentCI/Miri untouched.
+Actual fetched-main/fullpayload proof precedescleanup/CV04b. All rejection/
+preflight/profile/input/promisor histories preserved. Full final-source Miri
+**DEFERRED/PENDING**, neverpassed; frozenrun/497inputs/checkout/receipts/target
+untouched without polling/termination/duplicate run. BaseESTree/own types/no new
+crates.io deps; CV04b/fullClosure parity/outputjoins/alllineage/fullgoalOPEN/
+heartbeatACTIVE. Delivery first, genuine final-source Miri afterward.
+<!-- /CV04 SwiftUI report work repair -->
+
 <!-- CV04 Monotone Arc integration -->
 CV04a current integrated candidate (October12): reviewed marker3d4/Italian4201
 publication guard actuallyEXIT1 BEFORE PUSH after main advanced. Spec8212b2a7c8
