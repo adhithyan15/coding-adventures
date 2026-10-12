@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited for native Ruby arithmetic AST token validation
+Status date: 2026-10-11 — re-audited for PREP01 octal integer stringization
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -508,18 +508,34 @@ Canonical operator/grouping tokens, native IIR execution and existing bounds
 are preserved. The refreshed selection rotates to a distinct own-source
 partial Perl 5.004_72 pair, including its source-backed CR whitespace change.
 
+PR #17275 delivered the distinct own-source partial Perl 5.004_72 pair and
+merged as `87875d7dc74fdce6077daaf8189d9111dd72a502` after every exact-head
+workflow and required gate passed. Its source-backed CR whitespace and
+250-digit bound are retained; earlier pairs and LANG81 execution are unchanged.
+The refreshed inventory has 776 unique rows, 117 partial pairs and 659 pending,
+with none complete. The next selection rotates to PREP01 unsuffixed octal
+integer stringization, preserving raw spelling and generic bounds.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
-The refreshed queue is:
+The refreshed queue follows the user's 2026-10-11 consumer-priority correction.
+Alternate bounded work across the streams below; the list is not a requirement
+to finish one language before advancing another. At most two independent
+implementation PRs may be active. Include documentation, lesson shards,
+generated files and transitive dependencies in each DAG ownership audit.
 
-1. **LANG82 continued (selected):** add the distinct own-source partial
-   Perl 5.004_72 pair with CR whitespace and the 250-digit decimal bound.
+1. **PREP01 generic engine / MacroNib and MacroOct:** these are the first
+   consumers. Audit their existing composition and select a demonstrated gap
+   in preprocessing, provenance, bounds or IIR identity against hand-expanded
+   Nib/Oct. The already published octal-stringize PR #17281 is existing work;
+   further C-specific stages and full C preprocessing are long-term work,
+   not the default next PREP01 selection.
 2. **LANG79 Python:** arithmetic AST token validation is complete; broader
    native frontend semantics remain open. Host Python is oracle only.
 3. **LANG78 JavaScript:** restricted numeric division is complete; general
    lexical-goal selection and broader native semantics remain open, Node oracle only.
-4. **PREP01 C:** unsuffixed hexadecimal integer stringization is complete.
-   Full C `#if`, broader stringize and general paste remain open.
+4. **LANG82 continued:** the partial Perl 5.004_72 contract is complete.
+   Continue distinct own-release source-backed pairs; full syntax remains open.
 5. **LANG80 Ruby:** arithmetic/grouping AST token validation is complete;
    broader native semantics remain open. Perl 5.004_01-t1 stays pending
    without its own pinned source; no exhaustive release coverage is claimed.

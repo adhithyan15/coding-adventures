@@ -2079,6 +2079,35 @@ fn swimlane_open_styled_links_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\n  h[H]\n  i[I]\nend\na o-.-o b x-.-x c o-.-x d x-.-o e o-.-> f x-.-> g -.-o h -.-x i\na o==o b x==x c o==x d x==o e o==> f x==> g ==o h ==x i",
+    ).expect("dotted and thick endpoint markers should parse");
+
+    let expected_markers = [
+        (EdgeMarker::Circle, EdgeMarker::Circle),
+        (EdgeMarker::Cross, EdgeMarker::Cross),
+        (EdgeMarker::Circle, EdgeMarker::Cross),
+        (EdgeMarker::Cross, EdgeMarker::Circle),
+        (EdgeMarker::Circle, EdgeMarker::Point),
+        (EdgeMarker::Cross, EdgeMarker::Point),
+        (EdgeMarker::None, EdgeMarker::Circle),
+        (EdgeMarker::None, EdgeMarker::Cross),
+    ];
+    assert_eq!(diagram.edges.len(), 16);
+    for (edge, markers) in diagram.edges[..8].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Dotted);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
+    for (edge, markers) in diagram.edges[8..].iter().zip(expected_markers) {
+        assert_eq!(edge.kind, SwimlaneEdgeKind::Thick);
+        assert_eq!((edge.start_marker, edge.end_marker), markers);
+    }
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

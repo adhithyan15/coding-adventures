@@ -2,7 +2,7 @@
   "name": "journal-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Markdown journal app with pluggable storage backends \u2014 browser + Electron desktop app",
+  "description": "Markdown journal app with pluggable storage backends — browser + Electron desktop app",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -37,7 +37,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "jsdom": "^25.0.0",
-    "electron": "^43.4.0",
+    "electron": "^43.7.9",
     "electron-builder": "^26.8.1",
     "cross-env": "^7.0.0",
     "@types/node": "^22.20.1"

@@ -2,7 +2,7 @@
   "name": "todo-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Offline-first todo list app \u2014 beautiful dark UI with IndexedDB persistence, styled with Lattice",
+  "description": "Offline-first todo list app — beautiful dark UI with IndexedDB persistence, styled with Lattice",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -36,7 +36,7 @@
     "@vitejs/plugin-react": "^6.0.0",
     "@vitest/coverage-v8": "^4.1.11",
     "cross-env": "^7.0.0",
-    "electron": "^43.4.0",
+    "electron": "^43.7.9",
     "electron-builder": "^26.8.1",
     "jsdom": "^25.0.0",
     "typescript": "~5.7.0",
