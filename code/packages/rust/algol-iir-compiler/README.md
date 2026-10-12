@@ -547,3 +547,9 @@ string formals, and recursive name-formal dispatch — return explicit compiler
 errors.
 
 CV04a bare-root integration controls preserve the ordinary call-selected local snapshot policy and both post-lowering alias-proof consumers. By-name mutation must refuse either promoted root; value-formal mutation retains distinct 2.25/3.5 snapshots through direct output and intermediate assignment. Full final-source local Miri remains **DEFERRED/PENDING**.
+
+Signed calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and sign arrangements; native
+controls assert exact 2.25/3.5/-2.25/-3.5 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
