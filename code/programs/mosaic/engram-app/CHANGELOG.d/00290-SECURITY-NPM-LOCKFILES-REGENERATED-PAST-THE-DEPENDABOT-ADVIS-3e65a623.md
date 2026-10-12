@@ -15,7 +15,7 @@
   - `shell-quote` (critical, via `concurrently` 10.0.4; fixed in 10.0.6).
   - `http-cache-semantics` (high; fixed in 4.3.0).
   - `sprintf-js` (moderate; no patched release exists).
-  
+
   All three are recorded in `code/specs/EXTERNAL-DEPENDENCY-ALERT-BACKLOG.md`.
 - **`electron-winstaller` added to `INSTALL_SCRIPT_PACKAGES`** in
   `tests/npm_lockfiles.rs`. electron-builder 26 brings it in as a peer of

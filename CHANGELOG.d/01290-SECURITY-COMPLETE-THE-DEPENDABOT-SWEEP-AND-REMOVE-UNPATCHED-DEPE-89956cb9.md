@@ -7,3 +7,4 @@
 - Remove duplicate modality manifest generation, cache immutable test owners, and budget the live full-corpus CLI integration explicitly while preserving every owner and path validation.
 - Reuse one chapter snapshot/report and one figure-target corpus across its five real-corpus groups, preserving all assertions and normal limits while repairing reproduced macOS timeouts and 2 GiB worker heap exhaustion.
 - Repair the script-ductus uppercase ownership-pin fixture by replacing the lowercase entry before writing, and verify actual fixture filenames; preserve lowercase-only loader and file-symlink rejection checks.
+- Remove repeated script, level and verb corpus reads from snapshot assertions. Retain both real progress CLI checks with measured case-specific budgets and all path and output assertions.

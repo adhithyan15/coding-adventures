@@ -17,3 +17,9 @@ as with the modality CLI integration, while keeping their real invocations in th
 tests. Ordinary limits remain 30 seconds, workers remain two, and validation uses
 a 2 GiB heap cap. Do not introduce a production loader cache or conceal live CLI
 work in unbounded module initialization.
+
+The unchanged progress suite reproduced both failures on Windows with the normal
+configuration and a 2 GiB heap: `--check` took 80.497 seconds and `--report` took
+89.562 seconds, both exceeding 30 seconds. Its corpus fixture imported in 80.17
+seconds; total runtime was 250.42 seconds. This directly measures why these two
+filesystem integration cases need a larger explicit budget.

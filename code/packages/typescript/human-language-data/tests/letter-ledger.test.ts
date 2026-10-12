@@ -277,7 +277,9 @@ describe("summary", () => {
 // --- The real ledgers --------------------------------------------------------
 
 describe("the committed ledgers against the real corpus", () => {
-  const { lessons, letterLedgers } = loadEverything();
+  // These assertions only read the committed corpus; share its script inventory
+  // with the ledgers instead of reparsing every lesson to check one Tamil shape.
+  const { lessons, letterLedgers, scripts } = loadEverything();
   const policy = loadChapterPolicy();
 
   it("loads one ledger per script that has one", () => {
@@ -289,7 +291,6 @@ describe("the committed ledgers against the real corpus", () => {
   it("does not let a ledger masquerade as a script inventory", () => {
     // Both files live in data/scripts and both carry the same `script` key, so
     // reading them into one map would have had one silently overwrite the other.
-    const { scripts } = loadEverything();
     expect(scripts["tamil"]?.letters?.length ?? 0).toBeGreaterThan(0);
     expect((scripts["tamil"] as unknown as LetterLedger).letters[0]).not.toHaveProperty(
       "position");

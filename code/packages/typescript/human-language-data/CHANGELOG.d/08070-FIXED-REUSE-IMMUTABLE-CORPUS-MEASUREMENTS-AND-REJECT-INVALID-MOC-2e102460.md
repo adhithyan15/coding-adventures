@@ -5,3 +5,4 @@
 - Build the modality manifest once per CLI invocation and reuse it for emitted owner bytes, preserving all byte, identity, reconstruction and recovery checks.
 - Give the live full-corpus modality CLI regression a measured 120-second integration budget; ordinary test and hook limits remain 30 seconds.
 - Share one chapter snapshot and gate report, and one figure-target corpus across five real-corpus groups. Preserve every shard and assertion while removing repeated scans and the reproduced 2 GiB worker heap exhaustion; expose shared figure collections as read-only.
+- Share the script inventory, level summary and verb coverage between their immutable corpus assertions. Keep both live progress CLI invocations inside their tests with an explicit 120-second integration budget, measured at 80.5 and 89.6 seconds locally; ordinary limits and production loader behavior remain unchanged.

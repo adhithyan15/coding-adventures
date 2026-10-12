@@ -20,6 +20,11 @@ import {
 } from "../src/levels.js";
 import type { CurriculumSpine, LanguageCurriculum } from "../src/types.js";
 
+// The exam and level snapshots inspect the same immutable corpus. Synthetic
+// lessons below remain independent; no assertion mutates this shared snapshot.
+const { registry, lessons, curricula: paths, spine } = loadEverything();
+const summary = summarizeLevels(lessons, paths, spine);
+
 function lesson(id: string, language = "spanish") {
   return parseLesson(
     `---\nschema_version: 2\nid: ${id}\nchapter: 1\ntype: word\n` +
@@ -166,7 +171,6 @@ describe("exam alignment", () => {
     ) as {
       tracks: Record<string, { basis: string; mapping: unknown; exam: string }>;
     };
-    const { registry } = loadEverything();
 
     for (const language of registry.languages) {
       const entry = exams.tracks[language.id];
@@ -214,8 +218,6 @@ describe("corpus level summary", () => {
   // and all three were wrong about the total. It is re-measured here against the merged
   // corpus, which is the only place the real number exists.
   it("derives an exact closed summary without tracked generated rollups", () => {
-    const { registry, lessons, curricula: paths, spine } = loadEverything();
-    const summary = summarizeLevels(lessons, paths, spine);
     expect(summary.tracks.map((track) => track.language)).toEqual(
       registry.languages.map((language) => language.id).sort((a, b) => a.localeCompare(b)),
     );
@@ -262,8 +264,6 @@ describe("corpus level summary", () => {
     }
   });
   it("shows twenty-two tracks have reached A2, and every track has now reached A1", () => {
-    const { lessons, curricula: paths, spine } = loadEverything();
-    const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
     // rather than counting them — "no track is at A2" has become a list, and listing it
     // keeps the assertion as tight as the original. Spanish has now left this list --
@@ -338,7 +338,6 @@ describe("corpus level summary", () => {
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {
-    const { lessons, curricula: paths, spine } = loadEverything();
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
     // +4, measured as a set difference against the pre-change corpus rather than inferred
