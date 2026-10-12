@@ -2359,9 +2359,12 @@ jobs:
           flutter-version: '3.44.0'
           channel: stable
           cache: true
-          # The action re-hashes **/pubspec.lock in post-job cleanup, after
-          # generated dependency trees can make that traversal exceed 120s.
-          # Keep the SDK cache; Dart pub resolves and fetches normally.
+          # Keep the SDK cache, but not the action's pub-dependency cache. Its
+          # key is hashFiles('**/pubspec.lock') over the WHOLE workspace, and
+          # the post-job save re-evaluates it after the full build has filled
+          # the tree with node_modules and build output. On macOS that glob
+          # ran past GitHub's 120-second hashFiles limit and failed a job whose
+          # 535 package builds had all passed.
           pub-cache: false
 
       - name: Enable Flutter native assets
