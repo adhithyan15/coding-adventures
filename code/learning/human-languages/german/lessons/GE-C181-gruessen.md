@@ -14,6 +14,7 @@ concept_tag: GE-VERB-GRUESSEN
 prerequisites: [GE-C181-fruehstuecken, GE-C181-giessen]
 sounds: []
 roots: []
+etymology_hook: "grüßen ← Old High German gruozen — the same verb as English greet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C181-giessen]
 <!-- hl-knowledge: introduces=[GE-LEX-C181-VERB181-04]; assesses=[] -->
 
 **grüßen** — "to greet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grüßen** ← Old High German *gruozen* — inherited; EtymDB 2.1 lists it beside English *greet* and Dutch *groeten*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wall"
 concept_tag: GE-HAUS1-WAND
 prerequisites: [GE-C76-stuhl, GE-C76-tisch]
 sounds: []
-roots: []
+roots: [germanic-wanduz]
+etymology_hook: "Wand ← Old High German want ← Proto-Germanic *wanduz 'rod; a fence of rods' — kin to English wand"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C76-tisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C76-HAUS1-04]; assesses=[] -->
 
 **die Wand** — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wand** ← Old High German *want* ← Proto-Germanic *\*wanduz*, "rod; a fence of woven rods" — inherited. (EtymDB 2.1) Early walls were woven; English *wand* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

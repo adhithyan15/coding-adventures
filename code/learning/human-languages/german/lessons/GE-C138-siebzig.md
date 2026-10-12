@@ -13,7 +13,8 @@ gloss: "seventy"
 concept_tag: GE-ZAHL138-SIEBZIG
 prerequisites: [GE-C137-oft, GE-C138-sechzig]
 sounds: []
-roots: []
+roots: [sebun-germanic]
+etymology_hook: "siebzig — sieben 'seven' + -zig 'tens', clipped like siebzehn; the same build as seventy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C138-sechzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C138-ZAHL138-02]; assesses=[] -->
 
 **siebzig** — "seventy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**siebzig** is *sieben*, "seven", + *-zig*, "tens", clipped as in *siebzehn* — the same build as English *seventy*. EtymDB 2.1 has the German word but not its parts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

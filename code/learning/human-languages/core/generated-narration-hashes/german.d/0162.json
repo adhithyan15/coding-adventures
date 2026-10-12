@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 162,
-  "sourceHash": "fnv1a64:56b8522c2d4db983",
+  "sourceHash": "fnv1a64:57ae2eb7834799ea",
   "lessonIds": [
     "GE-C162-sofa",
     "GE-C162-radio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch162.txt",
   "json": "german/narration/ch162.json",
-  "textHash": "fnv1a64:c83969db64737802",
-  "jsonHash": "fnv1a64:9383eed05121c68d",
+  "textHash": "fnv1a64:8bf8223b9916cc50",
+  "jsonHash": "fnv1a64:54e718607de47a28",
   "findings": []
 }

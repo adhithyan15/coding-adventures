@@ -14,6 +14,7 @@ concept_tag: GE-THING160-AUFGABE
 prerequisites: [GE-C160-universitaet, GE-C160-kurs]
 sounds: []
 roots: []
+etymology_hook: "Aufgabe ← Middle High German ūfgābe — auf + Gabe 'gift': something given up to you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C160-kurs]
 <!-- hl-knowledge: introduces=[GE-LEX-C160-THING160-03]; assesses=[] -->
 
 **die Aufgabe** — "a task, an exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Aufgabe** ← Middle High German *ūfgābe* (EtymDB 2.1): *auf* + the word for "gift", from the verb "to give". A task is something given to you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

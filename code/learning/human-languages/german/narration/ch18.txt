@@ -13,6 +13,9 @@ You'll want to know: elf.
 elf — "eleven."
 Not einszehn. Not "oneteen" in English either. Eleven is the first of two numbers that refuse the pattern, in German and in English alike.
 
+The word, taken apart.
+elf from Old High German einlif from Proto-Germanic ainalif, "one left" — inherited, the same word as English eleven. (EtymDB 2.1).
+
 Sounds you'll need.
 herz-short-e — a short open e, the vowel of English bed.
 f-final — and a clean f to close.
@@ -45,6 +48,9 @@ You'll want to know: zwölf.
 zwölf — "twelve."
 The second number to refuse the pattern, and the last. After this one German turns regular and stays regular.
 You can hear zwei inside it if you listen for the opening: zw- is the same start.
+
+The word, taken apart.
+zwölf goes back to Proto-Germanic twalif, "two left" — inherited. EtymDB 2.1 traces English twelve to twalif and lists zwölf beside it.
 
 Sounds you'll need.
 z-ts — German z is ts.

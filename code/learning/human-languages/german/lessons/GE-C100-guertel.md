@@ -13,7 +13,8 @@ gloss: "a belt"
 concept_tag: GE-WELT-GUERTEL
 prerequisites: [GE-C99-muetze, GE-C99-socke]
 sounds: []
-roots: []
+roots: [germanic-gurdilaz]
+etymology_hook: "Gürtel ← Old High German gurtil ← Proto-Germanic *gurdilaz — the same word as English girdle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C99-socke]
 <!-- hl-knowledge: introduces=[GE-LEX-C100-WELT-01]; assesses=[] -->
 
 **der Gürtel** — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gürtel** ← Old High German *gurtil* ← Proto-Germanic *\*gurdilaz*, from *\*gurdijaną*, "to gird" — inherited, the same word as English *girdle*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

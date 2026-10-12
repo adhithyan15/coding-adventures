@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 237,
-  "sourceHash": "fnv1a64:28294ae363595115",
+  "sourceHash": "fnv1a64:d7518891c335b5ea",
   "lessonIds": [
     "GE-C237-rolle",
     "GE-C237-ruhe",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch237.txt",
   "json": "german/narration/ch237.json",
-  "textHash": "fnv1a64:73f57b438fe5d409",
-  "jsonHash": "fnv1a64:6a52ffd996cdb748",
+  "textHash": "fnv1a64:1f5f95ed6172ef86",
+  "jsonHash": "fnv1a64:3d28b6adf25d988a",
   "findings": []
 }

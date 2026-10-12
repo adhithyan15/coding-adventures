@@ -13,7 +13,8 @@ gloss: "a dessert"
 concept_tag: GE-ESSEN123-NACHTISCH
 prerequisites: [GE-C123-sosse, GE-C123-essig]
 sounds: []
-roots: []
+roots: [discus-latin]
+etymology_hook: "Nachtisch — 'after' + Tisch 'table': what comes after the meal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C123-essig]
 <!-- hl-knowledge: introduces=[GE-LEX-C123-ESSEN123-04]; assesses=[] -->
 
 **der Nachtisch** — "a dessert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nachtisch** is the word for "after" + *Tisch*, "table" (EtymDB 2.1): what comes after the meal.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

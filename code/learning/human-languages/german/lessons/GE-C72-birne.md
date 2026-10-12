@@ -13,7 +13,8 @@ gloss: "a pear"
 concept_tag: GE-ESSEN4-BIRNE
 prerequisites: [GE-C72-fruehstueck, GE-C72-reis]
 sounds: []
-roots: []
+roots: [pirum-latin]
+etymology_hook: "Birne ← Middle High German bir, from Latin pira 'pears' — borrowed, like English pear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C72-reis]
 <!-- hl-knowledge: introduces=[GE-LEX-C72-ESSEN4-04]; assesses=[] -->
 
 **die Birne** — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Birne** ← Middle High German *bir* (EtymDB 2.1), from Latin *pira*, "pears" — borrowed, like English *pear*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

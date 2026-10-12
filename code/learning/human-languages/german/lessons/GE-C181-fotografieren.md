@@ -14,6 +14,7 @@ concept_tag: GE-VERB-FOTOGRAFIEREN
 prerequisites: [GE-C180-festhalten, GE-C180-fluestern]
 sounds: []
 roots: []
+etymology_hook: "fotografieren — the verb of the word for 'photography', from Greek phōs 'light' + gráphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C180-fluestern]
 <!-- hl-knowledge: introduces=[GE-LEX-C181-VERB181-01]; assesses=[] -->
 
 **fotografieren** — "to photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fotografieren** is the verb of the word for "photography", a modern coinage from Greek *phōs*, "light", and *gráphein*, "to write", + the ending *-ieren*. See *Foto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

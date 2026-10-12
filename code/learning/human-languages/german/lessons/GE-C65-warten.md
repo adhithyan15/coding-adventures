@@ -13,7 +13,8 @@ gloss: "to wait"
 concept_tag: GE-VERB-WARTEN
 prerequisites: [GE-C64-finden, GE-C64-suchen]
 sounds: []
-roots: []
+roots: [wardon-germanic]
+etymology_hook: "warten ← Old High German wartēn 'to watch, to look after' — a cousin of English ward"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C64-suchen]
 <!-- hl-knowledge: introduces=[GE-LEX-C65-VERBEN2-01]; assesses=[] -->
 
 **warten** — "to wait".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**warten** ← Old High German *wartēn*, "to watch, to look after" ← Proto-Germanic *\*wardāną*, "to guard" — inherited, a cousin of English *ward*. (EtymDB 2.1) Waiting began as keeping watch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

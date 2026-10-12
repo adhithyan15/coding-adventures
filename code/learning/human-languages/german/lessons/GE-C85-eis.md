@@ -13,7 +13,8 @@ gloss: "ice; ice cream"
 concept_tag: GE-NATUR4-EIS
 prerequisites: [GE-C84-teich, GE-C84-feuer]
 sounds: []
-roots: []
+roots: [germanic-isa]
+etymology_hook: "Eis ← Old High German īs ← Proto-Germanic *īsą — the same word as English ice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C84-feuer]
 <!-- hl-knowledge: introduces=[GE-LEX-C85-NATUR4-01]; assesses=[] -->
 
 **das Eis** — "ice; ice cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Eis** ← Old High German *īs* ← Proto-Germanic *\*īsą* — inherited, the same word as English *ice*. (EtymDB 2.1) "Ice cream" is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

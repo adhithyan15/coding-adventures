@@ -13,7 +13,8 @@ gloss: "a stadium"
 concept_tag: GE-ORT106-STADION
 prerequisites: [GE-C106-tankstelle, GE-C106-schwimmbad]
 sounds: []
-roots: []
+roots: [stadium-latin]
+etymology_hook: "Stadion ← Greek stádion, a measure of length and the racecourse of that length — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C106-schwimmbad]
 <!-- hl-knowledge: introduces=[GE-LEX-C106-ORT106-04]; assesses=[] -->
 
 **das Stadion** — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stadion** ← Greek *stádion* (EtymDB 2.1), a measure of about 180 metres and the racecourse of that length — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

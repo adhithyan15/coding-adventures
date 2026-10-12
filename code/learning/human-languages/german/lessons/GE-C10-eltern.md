@@ -13,7 +13,7 @@ sounds: [herz-short-e, r-final]
 roots: [germanic-althiz]
 etymology_hook: "Eltern is a comparative frozen into a noun — literally the older ones — and English once had the same word as elders, which it kept for a different job"
 duration:
-  max_seconds: 175
+  max_seconds: 203
 requires:
   knowledge: [GE-LEX-VATER-01, GE-LEX-MUTTER-01, GE-GRAMMAR-PLURAL-DIE-01, GE-GRAMMAR-NATIVE-VS-LOAN-01]
 introduces:
@@ -50,6 +50,11 @@ it. You cannot say "one *Eltern*"; a single one is *der Vater* or *die Mutter*.
 Underneath, it is a **comparative** that hardened into a noun: it means "the
 **older** ones." English had the same formation and kept it as **elders**,
 narrowed to people of standing rather than to the two who raised you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Eltern** ← Old High German *eltirōn* ← Proto-Germanic *\*alþizô*, "older" — inherited; EtymDB 2.1 sets it beside English *elders*.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-ELTERN-01] -->

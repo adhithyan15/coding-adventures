@@ -13,7 +13,8 @@ gloss: "a guest"
 concept_tag: GE-LEUTE-GAST
 prerequisites: [GE-C62-tante, GE-C63-nachbar]
 sounds: []
-roots: []
+roots: [germanic-gastiz]
+etymology_hook: "Gast ← Old High German gast ← Proto-Germanic *gastiz 'guest, stranger' — the same word as English guest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C63-nachbar]
 <!-- hl-knowledge: introduces=[GE-LEX-C63-LEUTE-02]; assesses=[] -->
 
 **der Gast** — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gast** ← Old High German *gast* ← Proto-Germanic *\*gastiz*, "guest, stranger" — inherited, the same word as English *guest*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

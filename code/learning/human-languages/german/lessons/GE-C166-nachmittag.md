@@ -13,7 +13,8 @@ gloss: "the afternoon"
 concept_tag: GE-THING166-NACHMITTAG
 prerequisites: [GE-C166-erfahrung, GE-C166-moeglichkeit]
 sounds: []
-roots: []
+roots: [germanic-medja, dagaz]
+etymology_hook: "Nachmittag — 'after' + Mittag 'noon': the afternoon, built like English"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C166-moeglichkeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C166-THING166-05]; assesses=[] -->
 
 **der Nachmittag** — "the afternoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nachmittag** is the word for "after" + *Mittag*, "noon": after noon, built the same way as English *afternoon*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

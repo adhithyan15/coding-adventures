@@ -13,7 +13,8 @@ gloss: "to introduce"
 concept_tag: GE-VERB-VORSTELLEN
 prerequisites: [GE-C152-verkaufen, GE-C152-versprechen]
 sounds: []
-roots: []
+roots: [germanic-stallijana]
+etymology_hook: "vorstellen — 'before' + stellen 'to put': to put someone in front of others"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C152-versprechen]
 <!-- hl-knowledge: introduces=[GE-LEX-C152-VERB152-05]; assesses=[] -->
 
 **vorstellen** — "to introduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vorstellen** is the word for "before, in front" + *stellen*, "to put" ← Proto-Germanic *\*stallijaną* (EtymDB 2.1): to put someone in front of others.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the German for a room, then the German for a bed.
 You'll want to know: der Schrank.
 der Schrank — "a cupboard".
 
+The word, taken apart.
+Schrank from Middle High German schranc, "a closed-off space" — inherited, and related to the word for "a barrier". Its older history is uncertain, and EtymDB 2.1 has no source for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a bed, then the German for a cupboard.
 
 You'll want to know: der Boden.
 der Boden — "the floor; the ground".
+
+The word, taken apart.
+Boden from Old High German bodam, "floor, bottom" from Proto-Germanic butmaz — inherited, the same word as English bottom. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a cupboard, then the German for the floor
 You'll want to know: die Treppe.
 die Treppe — "the stairs".
 
+The word, taken apart.
+Treppe came into standard German from Low German: Middle Low German treppe meant "step, stair" (EtymDB 2.1). It is related to an old verb for "to tread".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for the floor; the ground, then the German fo
 You'll want to know: der Spiegel.
 der Spiegel — "a mirror".
 
+The word, taken apart.
+Spiegel from Middle High German spiegel, from Latin speculum, "mirror", built on specere, "to look" (EtymDB 2.1) — borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for the stairs, then the German for a mirror.
 
 You'll want to know: die Wohnung.
 die Wohnung — "a flat, an apartment".
+
+The word, taken apart.
+Wohnung from Middle High German wonunge from Old High German wonunga — wohnen + -ung: "a dwelling". (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a court, a dish"
 concept_tag: GE-THING207-GERICHT
 prerequisites: [GE-C207-dieb, GE-C207-diebstahl]
 sounds: []
-roots: []
+roots: [germanic-rihtijana]
+etymology_hook: "Gericht — ge- + the verb 'to set right': both a court that judges and a dish that is prepared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C207-diebstahl]
 <!-- hl-knowledge: introduces=[GE-LEX-C207-THING207-05]; assesses=[] -->
 
 **das Gericht** — "a court, a dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gericht** is *ge-* + the verb "to set right, to make ready", Old High German *rihten* (EtymDB 2.1): a court sets things right; a dish is something made ready.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

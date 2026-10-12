@@ -13,7 +13,7 @@ sounds: [ge-prefix, r-uvular-german, final-t]
 roots: [liznojan-germanic]
 etymology_hook: "lernen and English learn are the same word, and so are their participles: gelernt and learned differ only in which end of the stem the marking sits on"
 duration:
-  max_seconds: 145
+  max_seconds: 153
 requires:
   knowledge: [GE-GRAMMAR-PARTIZIP-GE-T-01, GE-LEX-GEMACHT-01]
 introduces:
@@ -48,6 +48,11 @@ been doing since page one.
 cousin is doing the very same job with the very same stem — *learn*, *learned* —
 and differs only in where the marking sits. German puts a piece at each end;
 English puts both pieces at the back.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gelernt** is *ge-* + the stem of *lernen* + *-t*. *lernen* ← Middle High German *lernen* ← Old High German *lernēn* (EtymDB 2.1), a cousin of English *learn*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GELERNT-01] -->

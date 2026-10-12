@@ -13,7 +13,8 @@ gloss: "advertising"
 concept_tag: GE-THING243-WERBUNG
 prerequisites: [GE-C243-nachteil, GE-C243-wahrheit]
 sounds: []
-roots: []
+roots: [germanic-hwerbana]
+etymology_hook: "Werbung — the verb 'to recruit, to woo' + -ung: wooing customers"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C243-wahrheit]
 <!-- hl-knowledge: introduces=[GE-LEX-C243-THING243-03]; assesses=[] -->
 
 **die Werbung** — "advertising".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Werbung** is the verb "to recruit, to woo", Old High German *werban* (EtymDB 2.1), + *-ung*: wooing customers. See *bewerben*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

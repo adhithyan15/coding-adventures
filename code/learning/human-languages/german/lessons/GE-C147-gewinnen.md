@@ -13,7 +13,8 @@ gloss: "to win"
 concept_tag: GE-VERB-GEWINNEN
 prerequisites: [GE-C146-fuellen, GE-C146-gefallen]
 sounds: []
-roots: []
+roots: [germanic-winnana]
+etymology_hook: "gewinnen ← Middle High German gewinnen — kin to English win; Old English gewinnan meant 'to fight for'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C146-gefallen]
 <!-- hl-knowledge: introduces=[GE-LEX-C147-VERB147-01]; assesses=[] -->
 
 **gewinnen** — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gewinnen** ← Middle High German *gewinnen* — inherited; EtymDB 2.1 lists Old English *ġewinnan*, "to conquer, to gain", and Dutch *winnen* beside it. English *win* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

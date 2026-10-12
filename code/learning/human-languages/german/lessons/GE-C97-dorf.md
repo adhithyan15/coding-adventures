@@ -13,7 +13,8 @@ gloss: "a village"
 concept_tag: GE-STADT2-DORF
 prerequisites: [GE-C97-kirche, GE-C97-apotheke]
 sounds: []
-roots: []
+roots: [germanic-thurpa]
+etymology_hook: "Dorf ← Old High German dorf ← Proto-Germanic *þurpą 'village' — the same word as English thorp"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C97-apotheke]
 <!-- hl-knowledge: introduces=[GE-LEX-C97-STADT2-04]; assesses=[] -->
 
 **das Dorf** — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Dorf** ← Old High German *dorf* ← Proto-Germanic *\*þurpą*, "village, estate" — inherited. (EtymDB 2.1) English place names ending in *-thorpe* keep the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

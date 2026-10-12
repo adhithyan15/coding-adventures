@@ -14,6 +14,7 @@ concept_tag: GE-QUAL213-EIFERSUECHTIG
 prerequisites: [GE-C212-eilig, GE-C212-einsam]
 sounds: []
 roots: []
+etymology_hook: "eifersüchtig — the word for 'zeal' + the word for 'sickness' + -ig: sick with zeal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C212-einsam]
 <!-- hl-knowledge: introduces=[GE-LEX-C213-QUAL213-01]; assesses=[] -->
 
 **eifersüchtig** — "jealous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**eifersüchtig** is the word for "zeal" + the word for "sickness, craving", Old High German *suht* (EtymDB 2.1), + *-ig*: sick with zeal, jealous. English *sick* is a cousin of *Sucht*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

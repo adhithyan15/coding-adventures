@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 85,
-  "sourceHash": "fnv1a64:805af5af942f7936",
+  "sourceHash": "fnv1a64:aebe09355f9388d7",
   "lessonIds": [
     "GE-C85-eis",
     "GE-C85-huegel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch85.txt",
   "json": "german/narration/ch85.json",
-  "textHash": "fnv1a64:43b0bea8527269ba",
-  "jsonHash": "fnv1a64:74b45b0bf9eaacec",
+  "textHash": "fnv1a64:c676e2011b4e91ed",
+  "jsonHash": "fnv1a64:e4b3d8a957b17205",
   "findings": []
 }

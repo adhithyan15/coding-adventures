@@ -13,7 +13,8 @@ gloss: "a valley"
 concept_tag: GE-THING196-TAL
 prerequisites: [GE-C196-strand, GE-C196-wiese]
 sounds: []
-roots: []
+roots: [germanic-dala]
+etymology_hook: "Tal ← Old High German tal — the same word as English dale"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C196-wiese]
 <!-- hl-knowledge: introduces=[GE-LEX-C196-THING196-05]; assesses=[] -->
 
 **das Tal** — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tal** ← Middle High German *tal* ← Old High German *tal* — inherited, the same word as English *dale*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

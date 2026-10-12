@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 64,
-  "sourceHash": "fnv1a64:9f366273ec830460",
+  "sourceHash": "fnv1a64:fee21e1654facdf4",
   "lessonIds": [
     "GE-C64-kaufen",
     "GE-C64-spielen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch64.txt",
   "json": "german/narration/ch64.json",
-  "textHash": "fnv1a64:4a698a7508262ff5",
-  "jsonHash": "fnv1a64:596ede856f6ac745",
+  "textHash": "fnv1a64:5de2388f312ac56b",
+  "jsonHash": "fnv1a64:ae4ac4e5428323f3",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a cousin (woman)"
 concept_tag: GE-THING164-COUSINE
 prerequisites: [GE-C163-einladung, GE-C164-nachbarin]
 sounds: []
-roots: []
+roots: [consobrinus-latin]
+etymology_hook: "Cousine ← French cousine ← Latin cōnsōbrīna 'a mother's sister's daughter' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C164-nachbarin]
 <!-- hl-knowledge: introduces=[GE-LEX-C164-THING164-02]; assesses=[] -->
 
 **die Cousine** — "a cousin (woman)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Cousine** ← French *cousine* ← Latin *cōnsōbrīna*, a cousin on the mother's side (EtymDB 2.1) — borrowed, like English *cousin*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

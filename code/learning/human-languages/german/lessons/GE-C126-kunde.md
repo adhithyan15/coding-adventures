@@ -13,7 +13,8 @@ gloss: "a customer"
 concept_tag: GE-BERUF126-KUNDE
 prerequisites: [GE-C126-brieftraeger, GE-C126-kellner]
 sounds: []
-roots: []
+roots: [germanic-kunthaz]
+etymology_hook: "Kunde ← Old High German kundo 'acquaintance', from kund 'known' — English uncouth shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C126-kellner]
 <!-- hl-knowledge: introduces=[GE-LEX-C126-BERUF126-03]; assesses=[] -->
 
 **der Kunde** — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kunde** ← Old High German *cundo*, "one who is known", from *kund*, "known" ← Proto-Germanic *\*kunþaz* (EtymDB 2.1) — inherited. English *uncouth*, "unknown, strange", shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

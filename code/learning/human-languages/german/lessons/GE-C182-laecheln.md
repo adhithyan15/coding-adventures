@@ -13,7 +13,8 @@ gloss: "to smile"
 concept_tag: GE-VERB-LAECHELN
 prerequisites: [GE-C182-kuemmern, GE-C182-landen]
 sounds: []
-roots: []
+roots: [germanic-hlahjana]
+etymology_hook: "lächeln — lachen 'to laugh' + the small-scale ending -eln: a little laugh"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C182-landen]
 <!-- hl-knowledge: introduces=[GE-LEX-C182-VERB182-05]; assesses=[] -->
 
 **lächeln** — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lächeln** is *lachen*, "to laugh", with the ending *-eln*, which makes an action small: a little laugh. *lachen* ← Proto-Germanic *\*hlahjaną*, English *laugh*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a university"
 concept_tag: GE-THING160-UNIVERSITAET
 prerequisites: [GE-C159-e-mail, GE-C159-nachricht]
 sounds: []
-roots: []
+roots: [universitas-latin]
+etymology_hook: "Universität ← Latin ūniversitās 'the whole, a community' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C159-nachricht]
 <!-- hl-knowledge: introduces=[GE-LEX-C160-THING160-01]; assesses=[] -->
 
 **die Universität** — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Universität** ← Latin *ūniversitās*, "the whole, a community", in the Middle Ages a guild of teachers and students (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

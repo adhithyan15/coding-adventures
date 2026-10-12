@@ -14,6 +14,7 @@ concept_tag: GE-QUAL168-HELL
 prerequisites: [GE-C167-moeglich, GE-C168-unmoeglich]
 sounds: []
 roots: []
+etymology_hook: "hell ← Middle High German hel 'ringing, clear' — a word for sound that came to mean light"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C168-unmoeglich]
 <!-- hl-knowledge: introduces=[GE-LEX-C168-QUAL168-02]; assesses=[] -->
 
 **hell** — "bright, light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hell** ← Middle High German *hel*, "ringing, clear-sounding" — inherited; EtymDB 2.1 lists Dutch *hel* beside it. A word for a clear sound came to mean a clear light.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a shirt"
 concept_tag: GE-STADT3-HEMD
 prerequisites: [GE-C98-haltestelle, GE-C98-kleidung]
 sounds: []
-roots: []
+roots: [germanic-hamithija]
+etymology_hook: "Hemd ← Old High German hemidi ← Proto-Germanic *hamiþiją 'clothing, shirt' — Dutch hemd is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C98-kleidung]
 <!-- hl-knowledge: introduces=[GE-LEX-C98-STADT3-05]; assesses=[] -->
 
 **das Hemd** — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hemd** ← Middle High German *hemde* ← Old High German *hemidi* ← Proto-Germanic *\*hamiþiją*, "clothing, shirt" — inherited; Dutch *hemd* is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 174,
-  "sourceHash": "fnv1a64:4e2c33cd51b09e72",
+  "sourceHash": "fnv1a64:6c22ce109af5a930",
   "lessonIds": [
     "GE-C174-abholen",
     "GE-C174-abfahren",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch174.txt",
   "json": "german/narration/ch174.json",
-  "textHash": "fnv1a64:4a3c2ccd5efb1c05",
-  "jsonHash": "fnv1a64:680713d5689f7970",
+  "textHash": "fnv1a64:c4ba0b1e8436bfe7",
+  "jsonHash": "fnv1a64:ebe3ba574503827d",
   "findings": []
 }

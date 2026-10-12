@@ -13,7 +13,8 @@ gloss: "a bottle"
 concept_tag: GE-SACHEN-FLASCHE
 prerequisites: [GE-C79-messer, GE-C80-loeffel]
 sounds: []
-roots: []
+roots: [germanic-flasko]
+etymology_hook: "Flasche ← Old High German flasca ← Proto-Germanic *flaskōn 'a wicker-covered bottle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C80-loeffel]
 <!-- hl-knowledge: introduces=[GE-LEX-C80-SACHEN-02]; assesses=[] -->
 
 **die Flasche** — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Flasche** ← Old High German *flasca* ← Proto-Germanic *\*flaskōn*, "a wicker-covered bottle", from a verb for "to plait" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

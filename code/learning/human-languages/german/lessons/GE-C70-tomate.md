@@ -13,7 +13,8 @@ gloss: "a tomato"
 concept_tag: GE-ESSEN2-TOMATE
 prerequisites: [GE-C70-banane, GE-C70-kartoffel]
 sounds: []
-roots: []
+roots: [tomatl-nahuatl]
+etymology_hook: "Tomate ← Spanish tomate ← Nahuatl tomatl — borrowed, like English tomato"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C70-kartoffel]
 <!-- hl-knowledge: introduces=[GE-LEX-C70-ESSEN2-03]; assesses=[] -->
 
 **die Tomate** — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tomate** ← Spanish *tomate* ← Nahuatl *tomatl* — borrowed; EtymDB 2.1 traces English *tomato* the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 108,
-  "sourceHash": "fnv1a64:cb3ebe3d4224cdd6",
+  "sourceHash": "fnv1a64:624f4fafaf5e872c",
   "lessonIds": [
     "GE-C108-norden",
     "GE-C108-sueden",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch108.txt",
   "json": "german/narration/ch108.json",
-  "textHash": "fnv1a64:6fd357797575c57b",
-  "jsonHash": "fnv1a64:6b60c6ba41fe9a0b",
+  "textHash": "fnv1a64:c91f4147fc5f28fa",
+  "jsonHash": "fnv1a64:5ac0d63e710746c5",
   "findings": []
 }

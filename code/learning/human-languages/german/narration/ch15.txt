@@ -47,6 +47,9 @@ die Zeit — "time."
 Germanic, through and through, and the twin of an English word you would not guess: tide.
 Tide once meant a stretch of time, and it still does in the leftovers — Yuletide, eventide, in good time. Then the sea took the word, and English had to borrow time's job out to a different root. German never had that problem and kept Zeit for the whole idea.
 
+The word, taken apart.
+Zeit from Old High German zīt from Proto-Germanic tīdiz, "time, period" — inherited, the same word as English tide, with German z where English kept t. (EtymDB 2.1).
+
 Sounds you'll need.
 z-ts — German z is ts, as it was at the front of Dezember.
 diphthong-ei — and ei is the vowel of English eye.
@@ -113,6 +116,9 @@ You'll want to know: früh.
 früh — "early."
 Not a noun and not capitalised: an adjective, and one you will meet constantly — früh aufstehen, to get up early.
 
+The word, taken apart.
+früh from Old High German fruoji from Proto-Germanic frōwijaz, "early" — inherited. Dutch vroeg is the same word. (EtymDB 2.1).
+
 Sounds you'll need.
 umlaut-ue — ü is a sound English does not have. Say ee. Hold it. Now round your lips as if for oo, and do not let your tongue move. That is ü.
 h-silent-lengthening — and the h is silent again, stretching the vowel, as it did in Jahr.
@@ -147,6 +153,9 @@ You'll want to know: der Frühling.
 der Frühling — "spring," and literally "the early one."
 The ending -ling takes a quality and makes a thing that has it. Früh is early; a Frühling is the early one — the year's first Jahreszeit.
 You will meet -ling again elsewhere, and it does the same job every time.
+
+The word, taken apart.
+Frühling is früh, "early" from Old High German fruoji (EtymDB 2.1), with the ending -ling: "the early one".
 
 Sounds you'll need.
 umlaut-ue — the same ü as in früh, unchanged by the ending.
@@ -183,6 +192,9 @@ der Sommer — "summer."
 One Germanic word, kept whole by both languages: Sommer, summer. The difference between them is the vowel letter and nothing else.
 Words survive like this when nobody ever has a reason to replace them, and a hot season is one of those things every generation needs to talk about.
 
+The word, taken apart.
+Sommer from Old High German sumar from Proto-Germanic sumaraz — inherited, the same word as English summer. (EtymDB 2.1).
+
 Sounds you'll need.
 vowel-o-german — a short, rounded o, steadier than the English vowel.
 r-final — and the ending is the soft r you have on Uhr and November.
@@ -214,6 +226,9 @@ The third season, and the only one whose name you will not recognise at first he
 You'll want to know: der Herbst.
 der Herbst — "autumn," or "fall."
 It is the reaping season: the stretch of the year when the crop comes in. That meaning is the whole of the word, and the next lesson is about where else you already have it.
+
+The word, taken apart.
+Herbst from Old High German herbist from Proto-Germanic harbistaz — inherited, the same word as English harvest. (EtymDB 2.1).
 
 Sounds you'll need.
 herz-short-e — a short, open e, the vowel of English bed, with the German r colouring it from behind.
@@ -282,6 +297,9 @@ You'll want to know: der Winter.
 der Winter — "winter."
 Same six letters as English, same inherited Germanic word, and like Sommer it was never worth replacing.
 
+The word, taken apart.
+Winter from Middle High German winder — inherited, from Proto-Germanic wintruz. EtymDB 2.1 traces English winter to the same wintruz.
+
 Sounds you'll need.
 w-as-v — German w is an English v. The season is VIN-ter.
 i-short — and the i is short and bright.
@@ -316,6 +334,9 @@ You'll want to know: der Lenz.
 der Lenz — "spring," in poetry and in set phrases.
 Frühling is the word you use. Lenz is the word that turns up in songs, in older writing, and in the odd fixed expression. Recognise it; reach for Frühling.
 It is older than Frühling, and it is the twin of English Lent — which was the spring season before the Church attached a fast to it. Both go back to a root about the lengthening of the days, which is the one thing a northern spring reliably does.
+
+The word, taken apart.
+Lenz from Old High German lenzo from Proto-Germanic langatīnaz, "spring", built from "long" and "day" — inherited, a cousin of English Lent. (EtymDB 2.1).
 
 Sounds you'll need.
 z-ts — the z is ts, as in Zeit and Dezember: lents.

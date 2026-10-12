@@ -14,6 +14,7 @@ concept_tag: GE-VERB-HOLEN
 prerequisites: [GE-C88-ameise, GE-C88-elefant]
 sounds: []
 roots: []
+etymology_hook: "holen ← Old High German holōn 'to get, to fetch' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C88-elefant]
 <!-- hl-knowledge: introduces=[GE-LEX-C88-TIERE3-04]; assesses=[] -->
 
 **holen** — "to fetch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**holen** ← Middle High German *holen* ← Old High German *holōn*, "to get, to fetch" (EtymDB 2.1) — inherited. English *haul* is a cousin that came back through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Simple Past",
   "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:8853b5d99fbd784a",
+  "sourceHash": "fnv1a64:c031a4030848e499",
   "lessons": [
     {
       "id": "GE-C15-praeteritum",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef8f3f4a21bb475b",
+      "sourceHash": "fnv1a64:973d86a60cb9a793",
       "notice": null,
       "blocks": [
         {
@@ -198,6 +198,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sagte is the stem of sagen + the past ending -te. sagen from Old High German sagēn from Proto-Germanic sagjaną, the same verb as English say. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -212,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -261,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -292,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04cd4a4ef0adfe40",
+      "sourceHash": "fnv1a64:b4085e40e26f89f9",
       "notice": null,
       "blocks": [
         {
@@ -351,6 +362,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "machte is the stem of machen + the past ending -te. machen is the same verb as English make, which EtymDB 2.1 traces to Proto-Germanic makōną."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -399,7 +421,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -565,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:953a2d8d8c4bc9ec",
+      "sourceHash": "fnv1a64:a0481ea67cbdbf86",
       "notice": null,
       "blocks": [
         {
@@ -610,6 +632,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hatte is the past of haben from Old High German habēn from Proto-Germanic habjaną, the same verb as English have. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -624,7 +657,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -673,7 +706,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

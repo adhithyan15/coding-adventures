@@ -13,7 +13,7 @@ sounds: [ge-prefix, final-t]
 roots: [germanic-sagjana]
 etymology_hook: "gesagt wraps sagen at both ends at once — ge- in front and -t behind — which is one piece of grammar in two places, not two pieces"
 duration:
-  max_seconds: 150
+  max_seconds: 188
 requires:
   knowledge: [GE-LEX-SAGEN-01, GE-SOUND-FINAL-DEVOICING-D-01]
 introduces:
@@ -53,6 +53,11 @@ its place:
 
 That is the word English calls a **past participle**: the form that goes with
 *have* in *I have said*. German's has a hat on as well as boots.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gesagt** is *ge-* + the stem of *sagen* + *-t*. *sagen* ← Old High German *sagēn* ← Proto-Germanic *\*sagjaną*, the same verb as English *say*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GESAGT-01, GE-SOUND-FINAL-DEVOICING-D-01] -->

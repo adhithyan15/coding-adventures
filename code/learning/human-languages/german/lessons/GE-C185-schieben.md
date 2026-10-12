@@ -13,7 +13,8 @@ gloss: "to push"
 concept_tag: GE-VERB-SCHIEBEN
 prerequisites: [GE-C185-retten, GE-C185-rudern]
 sounds: []
-roots: []
+roots: [germanic-skeubana]
+etymology_hook: "schieben ← Old High German skioban — the same verb as English shove"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C185-rudern]
 <!-- hl-knowledge: introduces=[GE-LEX-C185-VERB185-03]; assesses=[] -->
 
 **schieben** — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schieben** ← Middle High German *schieben* ← Old High German *skioban* — inherited; EtymDB 2.1 lists it beside English *shove* and Dutch *schuiven*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

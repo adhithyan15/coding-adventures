@@ -13,7 +13,8 @@ gloss: "a comb"
 concept_tag: GE-HAUS115-KAMM
 prerequisites: [GE-C114-zahnbuerste, GE-C114-zahnpasta]
 sounds: []
-roots: []
+roots: [germanic-kambaz]
+etymology_hook: "Kamm ← Old High German chamb ← Proto-Germanic *kambaz — the same word as English comb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C114-zahnpasta]
 <!-- hl-knowledge: introduces=[GE-LEX-C115-HAUS115-01]; assesses=[] -->
 
 **der Kamm** — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kamm** ← Old High German *chamb* ← Proto-Germanic *\*kambaz*, "comb" — inherited, the same word as English *comb*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

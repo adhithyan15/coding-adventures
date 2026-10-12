@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 84,
-  "sourceHash": "fnv1a64:41c01c4999b41898",
+  "sourceHash": "fnv1a64:2d2d186af7e03b27",
   "lessonIds": [
     "GE-C84-stern",
     "GE-C84-wolke",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch84.txt",
   "json": "german/narration/ch84.json",
-  "textHash": "fnv1a64:42fd92ec25ddf65c",
-  "jsonHash": "fnv1a64:fca1cce0cca7351e",
+  "textHash": "fnv1a64:625b4f84982d75b8",
+  "jsonHash": "fnv1a64:b0f2eb5aee3805e7",
   "findings": []
 }

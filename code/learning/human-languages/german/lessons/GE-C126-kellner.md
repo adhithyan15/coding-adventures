@@ -13,7 +13,8 @@ gloss: "a waiter"
 concept_tag: GE-BERUF126-KELLNER
 prerequisites: [GE-C125-ingenieur, GE-C126-brieftraeger]
 sounds: []
-roots: []
+roots: [cella-latin]
+etymology_hook: "Kellner ← Old High German kelnere ← Medieval Latin cellenarius 'cellarer' — the man in charge of the wine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C126-brieftraeger]
 <!-- hl-knowledge: introduces=[GE-LEX-C126-BERUF126-02]; assesses=[] -->
 
 **der Kellner** — "a waiter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kellner** ← Old High German *kelnere* ← Medieval Latin *cellenārius*, "cellar master" (EtymDB 2.1) — borrowed: the man who kept the wine cellar.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

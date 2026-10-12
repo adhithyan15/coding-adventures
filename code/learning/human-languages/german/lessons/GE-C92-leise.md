@@ -14,6 +14,7 @@ concept_tag: GE-ADJ4-LEISE
 prerequisites: [GE-C92-dick, GE-C92-duenn]
 sounds: []
 roots: []
+etymology_hook: "leise ← Old High German līso 'weak, slow, quiet' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C92-duenn]
 <!-- hl-knowledge: introduces=[GE-LEX-C92-ADJ4-05]; assesses=[] -->
 
 **leise** — "quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leise** ← Old High German *līso*, "weak, slow, quiet" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

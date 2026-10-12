@@ -13,7 +13,8 @@ gloss: "a daughter"
 concept_tag: GE-GEFUEHLE2-TOCHTER
 prerequisites: [GE-C61-freude, GE-C61-sohn]
 sounds: []
-roots: []
+roots: [germanic-duhter]
+etymology_hook: "Tochter ← Old High German tohter ← Proto-Germanic *duhtēr — the same word as English daughter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C61-sohn]
 <!-- hl-knowledge: introduces=[GE-LEX-C61-GEFUEHLE2-04]; assesses=[] -->
 
 **die Tochter** — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tochter** ← Old High German *tohter* ← Proto-Germanic *\*duhtēr* — inherited, the same word as English *daughter*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ANMELDEN
 prerequisites: [GE-C244-ablehnen, GE-C244-abschliessen]
 sounds: []
 roots: []
+etymology_hook: "anmelden — an- + melden 'to report, to announce' ← Old High German meldōn"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C244-abschliessen]
 <!-- hl-knowledge: introduces=[GE-LEX-C244-VERB244-05]; assesses=[] -->
 
 **anmelden** — "to register".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anmelden** is *an-* + the verb "to report, to announce", Old High German *meldōn* (EtymDB 2.1): to announce yourself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

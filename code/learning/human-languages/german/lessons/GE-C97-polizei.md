@@ -13,7 +13,8 @@ gloss: "the police"
 concept_tag: GE-STADT2-POLIZEI
 prerequisites: [GE-C97-apotheke, GE-C97-dorf]
 sounds: []
-roots: []
+roots: [politia-latin]
+etymology_hook: "Polizei ← Latin politia ← Greek politeía 'government' — borrowed; English police and policy share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C97-dorf]
 <!-- hl-knowledge: introduces=[GE-LEX-C97-STADT2-05]; assesses=[] -->
 
 **die Polizei** — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Polizei** ← Medieval Latin *politia* ← Greek *politeía*, "government", from *pólis*, "city" (EtymDB 2.1) — borrowed. English *police* and *policy* share the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

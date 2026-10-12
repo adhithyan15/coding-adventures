@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 1,
-  "sourceHash": "fnv1a64:18f58fab061cef49",
+  "sourceHash": "fnv1a64:2e7046ffdc2bdc6a",
   "lessonIds": [
     "GE-C01-hallo",
     "GE-W01-hallo-guided-copy",
@@ -24,7 +24,7 @@
   "drivablePrefix": 1,
   "text": "german/narration/ch01.txt",
   "json": "german/narration/ch01.json",
-  "textHash": "fnv1a64:b1567c0463d549c7",
-  "jsonHash": "fnv1a64:23253e47bd5e9fe2",
+  "textHash": "fnv1a64:61636bca1716fdbd",
+  "jsonHash": "fnv1a64:2a1323267143d467",
   "findings": []
 }

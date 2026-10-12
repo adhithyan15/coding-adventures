@@ -12,6 +12,9 @@ Before the new one: say the German for an injection, then the German for an emer
 You'll want to know: der Krankenwagen.
 der Krankenwagen — "an ambulance".
 
+The word, taken apart.
+Krankenwagen from krank + -n- + the word for "vehicle", Middle High German wagen from Proto-Germanic wagnaz, English wagon (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for an emergency, then the German for an ambu
 
 You'll want to know: die Feuerwehr.
 die Feuerwehr — "the fire brigade".
+
+The word, taken apart.
+Feuerwehr is Feuer, "fire", + the word for "defence", Old High German werī from Proto-Germanic warīniz (EtymDB 2.1): the defence against fire. English weir is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for an ambulance, then the German for the fir
 You'll want to know: der Dieb.
 der Dieb — "a thief".
 
+The word, taken apart.
+Dieb from Middle High German diep from Old High German diob — inherited, the same word as English thief and Gothic þiufs. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for the fire brigade, then the German for a t
 You'll want to know: der Diebstahl.
 der Diebstahl — "a theft".
 
+The word, taken apart.
+Diebstahl is Dieb, "thief", + an old noun from stehlen, "to steal": a thief's stealing.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a thief, then the German for a theft.
 
 You'll want to know: das Gericht.
 das Gericht — "a court, a dish".
+
+The word, taken apart.
+Gericht is ge- + the verb "to set right, to make ready", Old High German rihten (EtymDB 2.1): a court sets things right; a dish is something made ready.
 
 What you've built.
 One more word for this chapter.

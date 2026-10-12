@@ -13,7 +13,8 @@ gloss: "a bus or tram stop"
 concept_tag: GE-STADT3-HALTESTELLE
 prerequisites: [GE-C98-bibliothek, GE-C98-fahrrad]
 sounds: []
-roots: []
+roots: [germanic-haldana]
+etymology_hook: "Haltestelle — the verb 'to hold, to stop' + the word for 'place': the stopping place"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C98-fahrrad]
 <!-- hl-knowledge: introduces=[GE-LEX-C98-STADT3-03]; assesses=[] -->
 
 **die Haltestelle** — "a bus or tram stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Haltestelle** is the verb "to hold, to stop" (Old High German *haltan* ← Proto-Germanic *\*haldaną*, English *hold*, EtymDB 2.1) + the word for "place": the stopping place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

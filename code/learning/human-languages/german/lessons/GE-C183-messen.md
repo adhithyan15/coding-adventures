@@ -13,7 +13,8 @@ gloss: "to measure"
 concept_tag: GE-VERB-MESSEN
 prerequisites: [GE-C182-laecheln, GE-C183-leiden]
 sounds: []
-roots: []
+roots: [germanic-metana]
+etymology_hook: "messen ← Old High German mezzen ← Proto-Germanic *metaną — the same verb as English mete"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C183-leiden]
 <!-- hl-knowledge: introduces=[GE-LEX-C183-VERB183-02]; assesses=[] -->
 
 **messen** — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**messen** ← Old High German *mezzen* ← Proto-Germanic *\*metaną*, "to measure" — inherited, the same verb as English *mete*, as in "mete out". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

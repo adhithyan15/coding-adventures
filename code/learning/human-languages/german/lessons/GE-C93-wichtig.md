@@ -14,6 +14,7 @@ concept_tag: GE-ADJ5-WICHTIG
 prerequisites: [GE-C93-richtig, GE-C93-falsch]
 sounds: []
 roots: []
+etymology_hook: "wichtig — from Low German wichtich 'weighty', built on the word for 'weight'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C93-falsch]
 <!-- hl-knowledge: introduces=[GE-LEX-C93-ADJ5-03]; assesses=[] -->
 
 **wichtig** — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wichtig** came in from Middle Low German *wichtich*, "weighty", built on the word for "weight"; EtymDB 2.1 lists that word beside English *weight*. What matters carries weight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

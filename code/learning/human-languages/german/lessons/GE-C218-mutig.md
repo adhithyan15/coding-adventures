@@ -13,7 +13,8 @@ gloss: "brave"
 concept_tag: GE-QUAL218-MUTIG
 prerequisites: [GE-C218-locker, GE-C218-mager]
 sounds: []
-roots: []
+roots: [germanic-modaz]
+etymology_hook: "mutig ← Old High German muotag: Mut 'courage' + -ig; Mut is the same word as English mood"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C218-mager]
 <!-- hl-knowledge: introduces=[GE-LEX-C218-QUAL218-05]; assesses=[] -->
 
 **mutig** — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mutig** ← Middle High German *muotic* ← Old High German *muotag* (EtymDB 2.1): the word for "courage, spirit" + *-ig*. That word, Old High German *muot*, is the same as English *mood*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

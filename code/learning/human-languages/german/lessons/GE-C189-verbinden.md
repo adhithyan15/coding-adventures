@@ -13,7 +13,8 @@ gloss: "to connect, to bandage"
 concept_tag: GE-VERB-VERBINDEN
 prerequisites: [GE-C189-verabreden, GE-C189-verbieten]
 sounds: []
-roots: []
+roots: [germanic-bindana]
+etymology_hook: "verbinden — ver- + binden 'to bind', the same verb as English bind"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C189-verbieten]
 <!-- hl-knowledge: introduces=[GE-LEX-C189-VERB189-05]; assesses=[] -->
 
 **verbinden** — "to connect, to bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verbinden** is *ver-* + the verb "to bind", Old High German *bintan* (EtymDB 2.1), the same verb as English *bind*: to tie together, or to bind a wound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

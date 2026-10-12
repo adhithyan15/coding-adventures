@@ -14,6 +14,7 @@ concept_tag: GE-THING192-GLEIS
 prerequisites: [GE-C192-abflug, GE-C192-verspaetung]
 sounds: []
 roots: []
+etymology_hook: "Gleis ← Middle High German geleise 'rut, track' — the ruts carts wore into a road"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C192-verspaetung]
 <!-- hl-knowledge: introduces=[GE-LEX-C192-THING192-05]; assesses=[] -->
 
 **das Gleis** — "a platform, a track".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gleis** is worn down from Middle High German *geleise*, "rut, track": *ge-* + an old word for "a track", the ruts carts cut into a road. EtymDB 2.1 has no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "up, upstairs"
 concept_tag: GE-RICHTUNG109-OBEN
 prerequisites: [GE-C108-westen, GE-C108-geradeaus]
 sounds: []
-roots: []
+roots: [germanic-uber]
+etymology_hook: "oben ← Old High German obana 'from above' — kin to English above and over"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C108-geradeaus]
 <!-- hl-knowledge: introduces=[GE-LEX-C109-RICHTUNG109-01]; assesses=[] -->
 
 **oben** — "up, upstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oben** ← Old High German *obana*, "from above" (EtymDB 2.1) — inherited, from the same root as English *over* and *above*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

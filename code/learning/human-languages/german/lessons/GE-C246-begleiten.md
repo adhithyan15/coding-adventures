@@ -13,7 +13,8 @@ gloss: "to accompany"
 concept_tag: GE-VERB-BEGLEITEN
 prerequisites: [GE-C245-beantworten, GE-C245-beenden]
 sounds: []
-roots: []
+roots: [germanic-laidijana]
+etymology_hook: "begleiten — be- + an older verb 'to escort', built on the verb 'to lead', English lead"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C245-beenden]
 <!-- hl-knowledge: introduces=[GE-LEX-C246-VERB246-01]; assesses=[] -->
 
 **begleiten** — "to accompany".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**begleiten** is *be-* + an older verb "to escort", built on the verb "to lead", Old High German *leiten*, English *lead* (EtymDB 2.1). It is not the verb for "to glide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

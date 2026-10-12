@@ -13,7 +13,8 @@ gloss: "a disadvantage"
 concept_tag: GE-THING243-NACHTEIL
 prerequisites: [GE-C242-vorsicht, GE-C242-vorteil]
 sounds: []
-roots: []
+roots: [germanic-daila]
+etymology_hook: "Nachteil — 'after' + Teil 'part': the share left over"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C242-vorteil]
 <!-- hl-knowledge: introduces=[GE-LEX-C243-THING243-01]; assesses=[] -->
 
 **der Nachteil** — "a disadvantage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nachteil** is the word for "after" + the word for "part", Old High German *teil* ← Proto-Germanic *\*dailą* (EtymDB 2.1): the share that comes last.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

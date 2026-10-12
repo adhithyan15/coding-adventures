@@ -13,7 +13,8 @@ gloss: "a broom"
 concept_tag: GE-HAUS115-BESEN
 prerequisites: [GE-C115-kamm, GE-C115-muelleimer]
 sounds: []
-roots: []
+roots: [germanic-besamo]
+etymology_hook: "Besen ← Old High German besamo ← Proto-Germanic *besamô 'broom' — the same word as English besom"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C115-muelleimer]
 <!-- hl-knowledge: introduces=[GE-LEX-C115-HAUS115-03]; assesses=[] -->
 
 **der Besen** — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Besen** ← Old High German *besamo* ← Proto-Germanic *\*besamô*, "broom" — inherited, the same word as English *besom*, a broom of twigs. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to furnish, to set up"
 concept_tag: GE-VERB-EINRICHTEN
 prerequisites: [GE-C247-diskutieren, GE-C247-einpacken]
 sounds: []
-roots: []
+roots: [germanic-rihtijana]
+etymology_hook: "einrichten — ein- 'in' + the verb 'to set right': to set a room in order"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C247-einpacken]
 <!-- hl-knowledge: introduces=[GE-LEX-C248-VERB248-01]; assesses=[] -->
 
 **einrichten** — "to furnish, to set up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einrichten** is *ein-*, "in", + the verb "to set right, to arrange", Old High German *rihten* (EtymDB 2.1): to arrange a room, to set something up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

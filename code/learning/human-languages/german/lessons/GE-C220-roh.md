@@ -13,7 +13,8 @@ gloss: "raw"
 concept_tag: GE-QUAL220-ROH
 prerequisites: [GE-C220-puenktlich, GE-C220-regnerisch]
 sounds: []
-roots: []
+roots: [germanic-hrawaz]
+etymology_hook: "roh ← Old High German rāo — the same word as English raw"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C220-regnerisch]
 <!-- hl-knowledge: introduces=[GE-LEX-C220-QUAL220-03]; assesses=[] -->
 
 **roh** — "raw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**roh** ← Middle High German *rō* ← Old High German *rāo* — inherited, the same word as English *raw*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the south"
 concept_tag: GE-RICHTUNG108-SUEDEN
 prerequisites: [GE-C107-parkplatz, GE-C108-norden]
 sounds: []
-roots: []
+roots: [sunthaz-germanic]
+etymology_hook: "Süden — the same Germanic word as English south; this form came through Dutch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C108-norden]
 <!-- hl-knowledge: introduces=[GE-LEX-C108-RICHTUNG108-02]; assesses=[] -->
 
 **der Süden** — "the south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Süden** came into German through Middle Dutch *suden* (EtymDB 2.1). EtymDB traces English *south* to Proto-Germanic *\*sunþrą* and lists German *Süd* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

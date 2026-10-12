@@ -13,7 +13,8 @@ gloss: "garlic"
 concept_tag: GE-ESSEN122-KNOBLAUCH
 prerequisites: [GE-C121-kirsche, GE-C121-melone]
 sounds: []
-roots: []
+roots: [germanic-laukaz]
+etymology_hook: "Knoblauch ← Middle High German knobelouch, older klobelouch 'split leek' — the leek with cloves"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C121-melone]
 <!-- hl-knowledge: introduces=[GE-LEX-C122-ESSEN122-01]; assesses=[] -->
 
 **der Knoblauch** — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Knoblauch** ← Middle High German *knobelouch* (EtymDB 2.1), older *klobelouch*, "split leek" for its cloves: the "leek" word ← Proto-Germanic *\*laukaz*, English *leek*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

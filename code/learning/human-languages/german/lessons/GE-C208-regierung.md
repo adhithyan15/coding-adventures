@@ -13,7 +13,8 @@ gloss: "the government"
 concept_tag: GE-THING208-REGIERUNG
 prerequisites: [GE-C208-gesetz, GE-C208-strafe]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "Regierung — the verb 'to govern' + -ung; from Old French reger ← Latin regere 'to rule'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C208-strafe]
 <!-- hl-knowledge: introduces=[GE-LEX-C208-THING208-03]; assesses=[] -->
 
 **die Regierung** — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Regierung** is the verb "to govern", Middle High German *regieren* (EtymDB 2.1), from Old French *reger* ← Latin *regere*, "to rule", + *-ung*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

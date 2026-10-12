@@ -13,7 +13,8 @@ gloss: "a spoon"
 concept_tag: GE-SACHEN-LOEFFEL
 prerequisites: [GE-C79-gabel, GE-C79-messer]
 sounds: []
-roots: []
+roots: [germanic-lapilaz]
+etymology_hook: "Löffel ← Old High German leffil ← Proto-Germanic *lapilaz 'spoon', from a verb 'to lap, to lick'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C79-messer]
 <!-- hl-knowledge: introduces=[GE-LEX-C80-SACHEN-01]; assesses=[] -->
 
 **der Löffel** — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Löffel** ← Old High German *leffil* ← Proto-Germanic *\*lapilaz*, "spoon" — inherited; Dutch *lepel* is the same word. (EtymDB 2.1) It is related to English *lap*, "to lick up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

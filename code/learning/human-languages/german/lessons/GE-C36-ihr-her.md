@@ -50,6 +50,11 @@ lesson adds one more.
 Said *eer*: the **h** is silent and stretches the *i*, exactly as it does in
 *Ihnen*. The endings are *ein*'s, for the fourth time.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ihr** ← Old High German *iru*, *iro*, "her, their" (EtymDB 2.1) — inherited, a form of the pronoun for "she".
+
 ## Grammar Lens: three jobs, all settled by position
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-IHR-HER-01, GE-LEX-IHR-01, GE-GRAMMAR-IHR-T-02, GE-LEX-SIE-SHE-02, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
 

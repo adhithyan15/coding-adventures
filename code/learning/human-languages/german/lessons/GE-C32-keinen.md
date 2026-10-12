@@ -13,7 +13,7 @@ sounds: [diphthong-ei]
 roots: [ohg-nihein]
 etymology_hook: "einen and keinen carry the identical -en, because keinen is einen with the same two letters on the front; whatever marked one marks the other, which is what makes a family of words worth having"
 duration:
-  max_seconds: 240
+  max_seconds: 290
 requires:
   knowledge: [GE-LEX-KEIN-01, GE-LEX-KEINE-01, GE-LEX-EINEN-01, GE-LEX-HABEN-01, GE-GRAMMAR-HABEN-REGULAR-01, GE-GRAMMAR-HABEN-DU-HAST-01]
 introduces:
@@ -52,6 +52,11 @@ The *-en* is the one from *einen*, unchanged. You are not learning a second
 ending; you are watching the ending you already own ride along on the negative
 word, because *kein* is *ein* with two letters welded to the front and nothing
 else touched.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**keinen** is a form of *kein*, which grew out of Old High German *nihein*, "not one": the word for "one" with a negative fused on the front.
 
 ## Grammar Lens: three shapes, and the one that moves
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KEINEN-01, GE-LEX-KEIN-01, GE-LEX-KEINE-01, GE-LEX-HUND-02, GE-LEX-SCHWESTER-01, GE-LEX-BROT-01] -->

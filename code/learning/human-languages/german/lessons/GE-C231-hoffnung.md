@@ -14,6 +14,7 @@ concept_tag: GE-THING231-HOFFNUNG
 prerequisites: [GE-C230-gewohnheit, GE-C231-hobby]
 sounds: []
 roots: []
+etymology_hook: "Hoffnung — hoffen 'to hope' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C231-hobby]
 <!-- hl-knowledge: introduces=[GE-LEX-C231-THING231-02]; assesses=[] -->
 
 **die Hoffnung** — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hoffnung** is *hoffen*, "to hope", + *-ung* (EtymDB 2.1). *hoffen* is the same verb as English *hope*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

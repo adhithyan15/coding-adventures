@@ -12,6 +12,9 @@ Before the new one: say the German for oil, then the German for lunch.
 You'll want to know: das Abendessen.
 das Abendessen — "dinner".
 
+The word, taken apart.
+Abendessen is Abend + the word for "a meal", which is the verb "to eat" from Old High German ezzan from Proto-Germanic etaną, English eat. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for lunch, then the German for dinner.
 
 You'll want to know: das Frühstück.
 das Frühstück — "breakfast".
+
+The word, taken apart.
+Frühstück is früh, "early", + the word for "a piece", Old High German stucki (EtymDB 2.1): the early bite of bread.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for dinner, then the German for breakfast.
 You'll want to know: der Reis.
 der Reis — "rice".
 
+The word, taken apart.
+Reis from Middle High German rīs from Latin oryza from Greek óryza — borrowed, like English rice. (EtymDB 2.1 has the Latin and Greek step; its German Reis row is a different word, "twig".)
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for breakfast, then the German for rice.
 You'll want to know: die Birne.
 die Birne — "a pear".
 
+The word, taken apart.
+Birne from Middle High German bir (EtymDB 2.1), from Latin pira, "pears" — borrowed, like English pear.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for rice, then the German for a pear.
 
 You'll want to know: die Zitrone.
 die Zitrone — "a lemon".
+
+The word, taken apart.
+Zitrone from French citron, "lemon" from Latin citrus (EtymDB 2.1) — borrowed.
 
 What you've built.
 One more word for this chapter.

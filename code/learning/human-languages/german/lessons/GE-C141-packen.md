@@ -14,6 +14,7 @@ concept_tag: GE-VERB-PACKEN
 prerequisites: [GE-C141-zahlen, GE-C141-mieten]
 sounds: []
 roots: []
+etymology_hook: "packen ← Middle Low German packen 'to pack' — borrowed; English pack is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C141-mieten]
 <!-- hl-knowledge: introduces=[GE-LEX-C141-VERB141-03]; assesses=[] -->
 
 **packen** — "to pack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**packen** ← Middle Low German *packen*, "to pack" (EtymDB 2.1) — taken from Low German, the language of the Hanseatic traders. English *pack* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

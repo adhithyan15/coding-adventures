@@ -13,7 +13,8 @@ gloss: "a cherry"
 concept_tag: GE-ESSEN121-KIRSCHE
 prerequisites: [GE-C121-gurke, GE-C121-erdbeere]
 sounds: []
-roots: []
+roots: [cerasus-latin]
+etymology_hook: "Kirsche ← Old High German kirsa ← Vulgar Latin ceresia 'cherry' — borrowed, like English cherry"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C121-erdbeere]
 <!-- hl-knowledge: introduces=[GE-LEX-C121-ESSEN121-04]; assesses=[] -->
 
 **die Kirsche** — "a cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kirsche** ← Old High German *chirsa* ← Vulgar Latin *ceresia*, "cherry" (EtymDB 2.1) — borrowed, like English *cherry*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

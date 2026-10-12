@@ -14,6 +14,7 @@ concept_tag: GE-THING201-DOSE
 prerequisites: [GE-C200-kellnerin, GE-C200-besteck]
 sounds: []
 roots: []
+etymology_hook: "Dose — from Low German dose 'box'; where that word came from is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C200-besteck]
 <!-- hl-knowledge: introduces=[GE-LEX-C201-THING201-01]; assesses=[] -->
 
 **die Dose** — "a tin, a can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Dose** came into standard German from Low German *dose*, "box, case". Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

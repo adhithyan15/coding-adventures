@@ -13,7 +13,8 @@ gloss: "a wish"
 concept_tag: GE-WUNSCH136-WUNSCH
 prerequisites: [GE-C135-weich, GE-C136-wollen]
 sounds: []
-roots: []
+roots: [germanic-wunskijana]
+etymology_hook: "Wunsch ← Old High German wunsc ← Proto-Germanic *wunskō — the same word as English wish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C136-wollen]
 <!-- hl-knowledge: introduces=[GE-LEX-C136-WUNSCH136-02]; assesses=[] -->
 
 **der Wunsch** — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wunsch** ← Old High German *wunsc* ← Proto-Germanic *\*wunskō*, "wish, desire" — inherited, the same word as English *wish*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

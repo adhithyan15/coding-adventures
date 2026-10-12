@@ -13,7 +13,8 @@ gloss: "quiet, calm"
 concept_tag: GE-EIGEN131-RUHIG
 prerequisites: [GE-C131-frei, GE-C131-geschlossen]
 sounds: []
-roots: []
+roots: [germanic-rowo]
+etymology_hook: "ruhig — the word for 'rest, calm' + -ig; rest ← Old High German ruowa"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C131-geschlossen]
 <!-- hl-knowledge: introduces=[GE-LEX-C131-EIGEN131-04]; assesses=[] -->
 
 **ruhig** — "quiet, calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ruhig** ← Middle High German *ruowec*: the word for "rest, quiet", Old High German *ruowa* ← Proto-Germanic *\*rōwō*, + *-ig* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

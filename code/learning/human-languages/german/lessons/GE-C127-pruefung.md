@@ -13,7 +13,8 @@ gloss: "an exam"
 concept_tag: GE-SCHULE127-PRUEFUNG
 prerequisites: [GE-C127-beruf, GE-C127-klasse]
 sounds: []
-roots: []
+roots: [probare-latin]
+etymology_hook: "Prüfung — the verb 'to test' + -ung; the verb ← Middle High German brüeven ← Latin probāre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C127-klasse]
 <!-- hl-knowledge: introduces=[GE-LEX-C127-SCHULE127-03]; assesses=[] -->
 
 **die Prüfung** — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Prüfung** is the verb "to test" + *-ung*. The verb ← Middle High German *brüeven* (EtymDB 2.1), from Old French *prover* ← Latin *probāre*, "to test" — borrowed, like English *prove*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

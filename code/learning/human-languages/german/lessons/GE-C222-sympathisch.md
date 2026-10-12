@@ -14,6 +14,7 @@ concept_tag: GE-QUAL222-SYMPATHISCH
 prerequisites: [GE-C222-sportlich, GE-C222-streng]
 sounds: []
 roots: []
+etymology_hook: "sympathisch ← French sympathique, from Greek sympátheia 'feeling with' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C222-streng]
 <!-- hl-knowledge: introduces=[GE-LEX-C222-QUAL222-04]; assesses=[] -->
 
 **sympathisch** — "likeable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sympathisch** ← French *sympathique*, "likeable" (EtymDB 2.1), from Greek *sympátheia*, "feeling with" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

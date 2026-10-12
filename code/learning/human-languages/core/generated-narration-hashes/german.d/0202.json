@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 202,
-  "sourceHash": "fnv1a64:6b4ebb84138d89de",
+  "sourceHash": "fnv1a64:94cdfdfaab47ca69",
   "lessonIds": [
     "GE-C202-staubsauger",
     "GE-C202-buegeleisen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch202.txt",
   "json": "german/narration/ch202.json",
-  "textHash": "fnv1a64:61e25fb6f56f6335",
-  "jsonHash": "fnv1a64:c96f201cbf21b624",
+  "textHash": "fnv1a64:f0f24f61a5ff18da",
+  "jsonHash": "fnv1a64:496fc117349042e0",
   "findings": []
 }

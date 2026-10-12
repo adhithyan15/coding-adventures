@@ -14,6 +14,7 @@ concept_tag: GE-ADV172-LEIDER
 prerequisites: [GE-C171-vorher, GE-C171-nachher]
 sounds: []
 roots: []
+etymology_hook: "leider ← Old High German leidir, from the word for 'sorrow' — English loath shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C171-nachher]
 <!-- hl-knowledge: introduces=[GE-LEX-C172-ADV172-01]; assesses=[] -->
 
 **leider** — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leider** ← Old High German *leidir* (EtymDB 2.1), a form of the word for "sorrow, harm", which EtymDB lists beside English *loath*: "sadly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

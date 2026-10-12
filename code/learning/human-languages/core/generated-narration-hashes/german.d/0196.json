@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 196,
-  "sourceHash": "fnv1a64:16c7771ffeac2b45",
+  "sourceHash": "fnv1a64:04e40f8ba8cddb38",
   "lessonIds": [
     "GE-C196-hafen",
     "GE-C196-ufer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch196.txt",
   "json": "german/narration/ch196.json",
-  "textHash": "fnv1a64:fb755183fd431a6b",
-  "jsonHash": "fnv1a64:e20fb504dd149334",
+  "textHash": "fnv1a64:efe5d3deee4f581d",
+  "jsonHash": "fnv1a64:99508b9bae2d0458",
   "findings": []
 }

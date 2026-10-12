@@ -13,7 +13,8 @@ gloss: "a girl"
 concept_tag: GE-FAMILIE-MAEDCHEN
 prerequisites: [GE-C62-grossmutter, GE-C62-frau]
 sounds: []
-roots: []
+roots: [germanic-magaths]
+etymology_hook: "Mädchen — older Mägdchen, 'little maid'; maid ← Proto-Germanic *magaþs, kin to English maid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C62-frau]
 <!-- hl-knowledge: introduces=[GE-LEX-C62-FAMILIE-03]; assesses=[] -->
 
 **das Mädchen** — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mädchen** is a worn-down older form, *Mägdchen*, "little maid": the word for "maid" ← Old High German *magad* ← Proto-Germanic *\*magaþs* (EtymDB 2.1), + the diminutive *-chen*. English *maid* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

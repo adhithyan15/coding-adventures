@@ -13,7 +13,8 @@ gloss: "to postpone"
 concept_tag: GE-VERB-VERSCHIEBEN
 prerequisites: [GE-C190-verletzen, GE-C190-verpassen]
 sounds: []
-roots: []
+roots: [germanic-skeubana]
+etymology_hook: "verschieben — ver- + schieben 'to push': to push something to another time"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C190-verpassen]
 <!-- hl-knowledge: introduces=[GE-LEX-C190-VERB190-04]; assesses=[] -->
 
 **verschieben** — "to postpone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verschieben** is *ver-* + *schieben*, "to push", the same verb as English *shove* (EtymDB 2.1): to push something to another place or time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

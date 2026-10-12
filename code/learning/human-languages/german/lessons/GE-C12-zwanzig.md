@@ -13,7 +13,7 @@ sounds: [z-ts, ich-laut]
 roots: [germanic-twaintig]
 etymology_hook: "zwanzig ends -zig rather than -zehn, and the g is said as the soft ich-sound you were given in the very first chapters, so the word closes -tsikh"
 duration:
-  max_seconds: 170
+  max_seconds: 172
 requires:
   knowledge: [GE-LEX-NEUNZEHN-01, GE-LEX-ZWEI-01, GE-SOUND-ICH-LAUT-01, GE-SOUND-W-AS-V-01]
 introduces:
@@ -46,6 +46,11 @@ takes instead is worth a lesson of its own.
 
 It opens like *zwei* and *zwölf* — *tsv-* — and then closes on **-zig** where
 every number before it closed on *-zehn*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zwanzig** is inherited: "two" plus an old Germanic word for "tens", the same build as English *twenty*. EtymDB 2.1 lists *zwanzig* beside *twenty* and Dutch *twintig*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-ICH-LAUT-01, GE-SOUND-W-AS-V-01, GE-LEX-ZWANZIG-01] -->

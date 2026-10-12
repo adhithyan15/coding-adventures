@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 65,
-  "sourceHash": "fnv1a64:a382f93e5e62783a",
+  "sourceHash": "fnv1a64:a2a0c1c984d27bff",
   "lessonIds": [
     "GE-C65-warten",
     "GE-C65-bezahlen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch65.txt",
   "json": "german/narration/ch65.json",
-  "textHash": "fnv1a64:a44bafd71de71bc2",
-  "jsonHash": "fnv1a64:155a24aee50bc108",
+  "textHash": "fnv1a64:8259b435e619dd6d",
+  "jsonHash": "fnv1a64:3af83db6066e94ac",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to lose"
 concept_tag: GE-VERB-VERLIEREN
 prerequisites: [GE-C66-bringen, GE-C66-vergessen]
 sounds: []
-roots: []
+roots: [germanic-fraleusana]
+etymology_hook: "verlieren ← Old High German firliosan ← Proto-Germanic *fraleusaną — English forlorn shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C66-vergessen]
 <!-- hl-knowledge: introduces=[GE-LEX-C67-VERBEN4-01]; assesses=[] -->
 
 **verlieren** — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verlieren** ← Old High German *firliosan* ← Proto-Germanic *\*fraleusaną*, "to lose" — inherited. English *forlorn*, "lost", is built on the same verb. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

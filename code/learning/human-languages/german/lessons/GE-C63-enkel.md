@@ -14,6 +14,7 @@ concept_tag: GE-LEUTE-ENKEL
 prerequisites: [GE-C63-nachbar, GE-C63-gast]
 sounds: []
 roots: []
+etymology_hook: "Enkel ← Old High German eniklīn, a diminutive of ano 'grandfather' — once a 'little grandfather'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C63-gast]
 <!-- hl-knowledge: introduces=[GE-LEX-C63-LEUTE-03]; assesses=[] -->
 
 **der Enkel** — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Enkel** ← Middle High German *enikel* ← Old High German *eniklīn*, a diminutive of *ano*, "grandfather" (EtymDB 2.1) — a grandson was once a "little grandfather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

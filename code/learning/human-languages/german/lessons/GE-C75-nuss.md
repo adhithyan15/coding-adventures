@@ -13,7 +13,8 @@ gloss: "a nut"
 concept_tag: GE-ESSEN7-NUSS
 prerequisites: [GE-C75-sahne, GE-C75-pfeffer]
 sounds: []
-roots: []
+roots: [germanic-hnuts]
+etymology_hook: "Nuss ← Old High German nuz ← Proto-Germanic *hnuts — the same word as English nut"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C75-pfeffer]
 <!-- hl-knowledge: introduces=[GE-LEX-C75-ESSEN7-03]; assesses=[] -->
 
 **die Nuss** — "a nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nuss** ← Old High German *nuz* ← Proto-Germanic *\*hnuts* — inherited, the same word as English *nut*, with German *ss* where English kept *t*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

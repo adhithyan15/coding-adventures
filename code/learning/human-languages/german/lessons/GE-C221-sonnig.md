@@ -13,7 +13,8 @@ gloss: "sunny"
 concept_tag: GE-QUAL221-SONNIG
 prerequisites: [GE-C221-schuechtern, GE-C221-selbststaendig]
 sounds: []
-roots: []
+roots: [germanic-sunnon]
+etymology_hook: "sonnig — Sonne 'sun' + -ig: sunny"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C221-selbststaendig]
 <!-- hl-knowledge: introduces=[GE-LEX-C221-QUAL221-05]; assesses=[] -->
 
 **sonnig** — "sunny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sonnig** ← Middle High German *sunnec*: *Sonne* + *-ig* — the same build as English *sunny*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

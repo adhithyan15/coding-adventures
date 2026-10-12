@@ -13,7 +13,8 @@ gloss: "to put, to stick"
 concept_tag: GE-VERB-STECKEN
 prerequisites: [GE-C187-spuelen, GE-C187-starten]
 sounds: []
-roots: []
+roots: [germanic-stikana]
+etymology_hook: "stecken ← Old High German steckōn — from the root of English stick"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C187-starten]
 <!-- hl-knowledge: introduces=[GE-LEX-C187-VERB187-03]; assesses=[] -->
 
 **stecken** — "to put, to stick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stecken** ← Old High German *steckōn* (EtymDB 2.1) — inherited, from the same root as the verb "to prick, to stick", Proto-Germanic *\*stikaną*, English *stick*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

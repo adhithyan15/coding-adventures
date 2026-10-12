@@ -14,6 +14,7 @@ concept_tag: GE-VERB-BUCHSTABIEREN
 prerequisites: [GE-C177-biegen, GE-C177-braten]
 sounds: []
 roots: []
+etymology_hook: "buchstabieren — built on the word for 'a letter', literally 'beech staff', + -ieren"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C177-braten]
 <!-- hl-knowledge: introduces=[GE-LEX-C177-VERB177-04]; assesses=[] -->
 
 **buchstabieren** — "to spell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**buchstabieren** is built on the word for "a letter of the alphabet", literally "beech staff", commonly explained by the beech staves runes were carved on, + the ending *-ieren*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "weak"
 concept_tag: GE-ADJ3-SCHWACH
 prerequisites: [GE-C90-leer, GE-C91-stark]
 sounds: []
-roots: []
+roots: [germanic-swakaz]
+etymology_hook: "schwach ← Old High German swah ← Proto-Germanic *swakaz 'weak' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C91-stark]
 <!-- hl-knowledge: introduces=[GE-LEX-C91-ADJ3-02]; assesses=[] -->
 
 **schwach** — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schwach** ← Middle High German *swach* ← Proto-Germanic *\*swakaz*, "weak" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

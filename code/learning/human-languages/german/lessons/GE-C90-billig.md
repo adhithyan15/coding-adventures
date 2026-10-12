@@ -14,6 +14,7 @@ concept_tag: GE-ADJ2-BILLIG
 prerequisites: [GE-C89-leicht, GE-C90-schwer]
 sounds: []
 roots: []
+etymology_hook: "billig ← Old High German billīh 'fitting, fair' — a fair price became a cheap one"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C90-schwer]
 <!-- hl-knowledge: introduces=[GE-LEX-C90-ADJ2-02]; assesses=[] -->
 
 **billig** — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**billig** ← Old High German *billīh*, "appropriate, fair" (EtymDB 2.1) — inherited. A fair price slid into a cheap one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

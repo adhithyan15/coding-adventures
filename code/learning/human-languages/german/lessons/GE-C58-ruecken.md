@@ -13,7 +13,8 @@ gloss: "the back (of the body)"
 concept_tag: GE-KOERPER3-RUECKEN
 prerequisites: [GE-C57-haar, GE-C57-bauch]
 sounds: []
-roots: []
+roots: [germanic-hrugjaz]
+etymology_hook: "Rücken ← Old High German rucki 'back' — the same Germanic word as English ridge, which first meant 'back'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C57-bauch]
 <!-- hl-knowledge: introduces=[GE-LEX-C58-KOERPER3-01]; assesses=[] -->
 
 **der Rücken** — "the back (of the body)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rücken** is inherited, from Old High German *rucki*, "back". EtymDB 2.1 lists it beside English *ridge*, Dutch *rug* and Swedish *rygg*; Old English *hrycg* still meant "back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 80,
-  "sourceHash": "fnv1a64:bb9f5d15b2f3d56d",
+  "sourceHash": "fnv1a64:42b66448315f62b1",
   "lessonIds": [
     "GE-C80-loeffel",
     "GE-C80-flasche",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch80.txt",
   "json": "german/narration/ch80.json",
-  "textHash": "fnv1a64:48e01375befbc3a1",
-  "jsonHash": "fnv1a64:9c2f3e1307903935",
+  "textHash": "fnv1a64:21751419aa61ff89",
+  "jsonHash": "fnv1a64:04fb3ecd9d72cab0",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to fill in (a form)"
 concept_tag: GE-VERB-AUSFUELLEN
 prerequisites: [GE-C174-ausziehen, GE-C174-aufraeumen]
 sounds: []
-roots: []
+roots: [germanic-fullaz]
+etymology_hook: "ausfüllen — aus- 'out' + füllen 'to fill': to fill out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C174-aufraeumen]
 <!-- hl-knowledge: introduces=[GE-LEX-C175-VERB175-01]; assesses=[] -->
 
 **ausfüllen** — "to fill in (a form)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ausfüllen** is *aus-*, "out", + *füllen*, "to fill", the same verb as English *fill* (EtymDB 2.1): to fill out a form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-ORT104-FLUGHAFEN
 prerequisites: [GE-C103-reise, GE-C103-urlaub, GE-C01-der-die-das, GE-C01-tag]
 sounds: []
 roots: []
+etymology_hook: "Flughafen — the word for 'flight' + the word for 'harbour': a harbour for planes"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C103-urlaub]
 <!-- hl-knowledge: introduces=[GE-LEX-C104-ORT104-01]; assesses=[] -->
 
 **der Flughafen** — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Flughafen** is built from the word for "flight", Old High German *flug* (EtymDB 2.1), and the word for "harbour", which came from Low German: a harbour for planes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

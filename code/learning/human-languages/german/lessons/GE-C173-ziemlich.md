@@ -14,6 +14,7 @@ concept_tag: GE-ADV173-ZIEMLICH
 prerequisites: [GE-C172-natuerlich, GE-C172-genau]
 sounds: []
 roots: []
+etymology_hook: "ziemlich ← Old High German zimilīh 'befitting' — what is proper, then 'fairly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C172-genau]
 <!-- hl-knowledge: introduces=[GE-LEX-C173-ADV173-01]; assesses=[] -->
 
 **ziemlich** — "quite, fairly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ziemlich** ← Old High German *zimilīh*, "befitting, proper" (EtymDB 2.1), from a verb meaning "to suit". What was proper came to mean "fairly, quite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

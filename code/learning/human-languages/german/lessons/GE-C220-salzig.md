@@ -13,7 +13,8 @@ gloss: "salty"
 concept_tag: GE-QUAL220-SALZIG
 prerequisites: [GE-C220-regnerisch, GE-C220-roh]
 sounds: []
-roots: []
+roots: [germanic-salta]
+etymology_hook: "salzig — Salz 'salt' + -ig: salty"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C220-roh]
 <!-- hl-knowledge: introduces=[GE-LEX-C220-QUAL220-04]; assesses=[] -->
 
 **salzig** — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salzig** is *Salz*, "salt", + *-ig*, built like English *salty*. *Salz* ← Proto-Germanic *\*saltą*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

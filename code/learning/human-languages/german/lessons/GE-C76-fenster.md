@@ -13,7 +13,8 @@ gloss: "a window"
 concept_tag: GE-HAUS1-FENSTER
 prerequisites: [GE-C75-bier, GE-C75-schneiden]
 sounds: []
-roots: []
+roots: [fenestra-latin]
+etymology_hook: "Fenster ← Old High German fenstar ← Latin fenestra — borrowed from Roman builders"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C75-schneiden]
 <!-- hl-knowledge: introduces=[GE-LEX-C76-HAUS1-01]; assesses=[] -->
 
 **das Fenster** — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fenster** ← Old High German *fenstar* ← Latin *fenestra*, "window" (EtymDB 2.1) — borrowed, one of the building words German took from Roman builders.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wage"
 concept_tag: GE-THING234-LOHN
 prerequisites: [GE-C233-leistung, GE-C233-lektion]
 sounds: []
-roots: []
+roots: [germanic-launa]
+etymology_hook: "Lohn ← Old High German lōn ← Proto-Germanic *launą 'reward' — Old English lēan was the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C233-lektion]
 <!-- hl-knowledge: introduces=[GE-LEX-C234-THING234-01]; assesses=[] -->
 
 **der Lohn** — "a wage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lohn** ← Old High German *lōn* ← Proto-Germanic *\*launą*, "reward" — inherited; Old English *lēan*, "reward", was the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

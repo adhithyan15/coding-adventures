@@ -13,7 +13,8 @@ gloss: "full"
 concept_tag: GE-QUAL168-VOLL
 prerequisites: [GE-C168-hell, GE-C168-dunkel]
 sounds: []
-roots: []
+roots: [germanic-fullaz]
+etymology_hook: "voll ← Old High German fol ← Proto-Germanic *fullaz — the same word as English full"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C168-dunkel]
 <!-- hl-knowledge: introduces=[GE-LEX-C168-QUAL168-04]; assesses=[] -->
 
 **voll** — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voll** ← Middle High German *vol* ← Old High German *foll*, "full" — inherited, the same word as English *full*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

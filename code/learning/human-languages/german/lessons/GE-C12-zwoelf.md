@@ -50,6 +50,11 @@ turns regular and stays regular.
 You can hear *zwei* inside it if you listen for the opening: *zw-* is the same
 start.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zwölf** goes back to Proto-Germanic *\*twalif*, "two left" — inherited. EtymDB 2.1 traces English *twelve* to *\*twalif* and lists *zwölf* beside it.
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-UMLAUT-OE-01, GE-SOUND-W-AS-V-01, GE-LEX-ZWOELF-01] -->
 

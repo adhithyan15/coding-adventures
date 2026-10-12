@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 127,
-  "sourceHash": "fnv1a64:8438ed3e019ed482",
+  "sourceHash": "fnv1a64:47a666a81e5652c5",
   "lessonIds": [
     "GE-C127-beruf",
     "GE-C127-klasse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch127.txt",
   "json": "german/narration/ch127.json",
-  "textHash": "fnv1a64:f08996dd2ec8f358",
-  "jsonHash": "fnv1a64:cc9221e2ebe218a8",
+  "textHash": "fnv1a64:aae487d139e8d0af",
+  "jsonHash": "fnv1a64:14091f73f76c76af",
   "findings": []
 }

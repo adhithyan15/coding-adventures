@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 81,
-  "sourceHash": "fnv1a64:bd8690d57207e455",
+  "sourceHash": "fnv1a64:7a3206955a5661ec",
   "lessonIds": [
     "GE-C81-schule",
     "GE-C81-karte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch81.txt",
   "json": "german/narration/ch81.json",
-  "textHash": "fnv1a64:02e68be69d44d92a",
-  "jsonHash": "fnv1a64:d8880f7b2b1b1950",
+  "textHash": "fnv1a64:174f7273130f566e",
+  "jsonHash": "fnv1a64:ab8ccd983b54d122",
   "findings": []
 }

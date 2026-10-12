@@ -47,6 +47,11 @@ weekdays were German's gods — this word is neither.
 A *die*-word, and one syllable. It does two jobs: the object on the wall, and
 the word you say when telling the time.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Uhr** ← Latin *hōra*, "hour" (EtymDB 2.1) — borrowed, not inherited; it reached German through Old French and Middle Dutch with the clocks themselves.
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-UHR-01]; assesses=[GE-LEX-UHR-01] -->
 

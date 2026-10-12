@@ -13,7 +13,8 @@ gloss: "to complete, to add"
 concept_tag: GE-VERB-ERGAENZEN
 prerequisites: [GE-C248-entschuldigen, GE-C248-erfahren]
 sounds: []
-roots: []
+roots: [germanic-gantaz]
+etymology_hook: "ergänzen — er- + the word for 'whole' + -en: to make whole"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C248-erfahren]
 <!-- hl-knowledge: introduces=[GE-LEX-C249-VERB249-01]; assesses=[] -->
 
 **ergänzen** — "to complete, to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ergänzen** is *er-* + the word for "whole", Old High German *ganz* ← Proto-Germanic *\*gantaz* (EtymDB 2.1): to make whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 91,
-  "sourceHash": "fnv1a64:e6e79a4773e25b46",
+  "sourceHash": "fnv1a64:563fbc2f85d2e33d",
   "lessonIds": [
     "GE-C91-stark",
     "GE-C91-schwach",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch91.txt",
   "json": "german/narration/ch91.json",
-  "textHash": "fnv1a64:94c850b3d6303921",
-  "jsonHash": "fnv1a64:1f3eec7f8c236b17",
+  "textHash": "fnv1a64:e5f39a0d7df2d2c5",
+  "jsonHash": "fnv1a64:5aca6725ea4fae02",
   "findings": []
 }

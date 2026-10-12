@@ -213,7 +213,11 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   bengali: { withoutHook: 1136, withoutVisible: 1144 },
   chinese: { withoutHook: 0, withoutVisible: 62 },
   french: { withoutHook: 1048, withoutVisible: 1049 },
-  german: { withoutHook: 988, withoutVisible: 1071 },
+  // german: 988 / 1071 -> 0 / 0. Every German word lesson now carries an etymology_hook
+  // and a learner-visible "taken apart" block, sourced from EtymDB 2.1 (Fourrier &
+  // Sagot 2020), CC BY-SA 4.0, where a row supports the line; well-established origins
+  // with no supporting row carry no source tag, and 15 genuinely uncertain origins say so.
+  german: { withoutHook: 0, withoutVisible: 0 },
   gujarati: { withoutHook: 529, withoutVisible: 543 },
   hindi: { withoutHook: 1126, withoutVisible: 967 },
   // italian: 1126 / 1135 -> 745 / 745 -> 0 / 0. The first 401 gap lessons in sequence

@@ -13,7 +13,8 @@ gloss: "a cathedral"
 concept_tag: GE-THING195-DOM
 prerequisites: [GE-C194-marktplatz, GE-C195-fussgaengerzone]
 sounds: []
-roots: []
+roots: [domus-latin]
+etymology_hook: "Dom ← French dôme ← Italian duomo, from Latin domus (Deī) 'the house (of God)' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C195-fussgaengerzone]
 <!-- hl-knowledge: introduces=[GE-LEX-C195-THING195-02]; assesses=[] -->
 
 **der Dom** — "a cathedral".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Dom** ← French *dôme* ← Italian *duomo* (EtymDB 2.1), from Latin *domus Deī*, "the house of God" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

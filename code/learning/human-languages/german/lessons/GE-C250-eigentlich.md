@@ -13,7 +13,8 @@ gloss: "actually"
 concept_tag: GE-LINK250-EIGENTLICH
 prerequisites: [GE-C250-trotzdem, GE-C250-jedenfalls]
 sounds: []
-roots: []
+roots: [germanic-aiganaz]
+etymology_hook: "eigentlich ← Middle High German eigenlīche — eigen 'own' + -lich; eigen is the same word as English own"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C250-jedenfalls]
 <!-- hl-knowledge: introduces=[GE-LEX-C250-LINK250-05]; assesses=[] -->
 
 **eigentlich** — "actually".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**eigentlich** ← Middle High German *eigenlīche* (EtymDB 2.1): the word for "own", Old High German *eigan*, English *own*, + *-lich*: in its own nature, actually.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

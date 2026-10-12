@@ -13,7 +13,8 @@ gloss: "an alarm clock"
 concept_tag: GE-DINGE116-WECKER
 prerequisites: [GE-C115-waschmaschine, GE-C115-sessel, GE-C01-morgen, GE-C01-tag]
 sounds: []
-roots: []
+roots: [germanic-wakjana]
+etymology_hook: "Wecker — the verb 'to wake someone' + -er: the waker"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C115-sessel]
 <!-- hl-knowledge: introduces=[GE-LEX-C116-DINGE116-01]; assesses=[] -->
 
 **der Wecker** — "an alarm clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wecker** is the verb "to wake someone" + *-er*: "the waker". The verb ← Old High German *wecchen* ← Proto-Germanic *\*wakjaną*, a cousin of English *wake*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

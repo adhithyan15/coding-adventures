@@ -14,6 +14,7 @@ concept_tag: GE-THING165-SPASS
 prerequisites: [GE-C165-leute, GE-C165-glueck]
 sounds: []
 roots: []
+etymology_hook: "Spaß ← Italian spasso 'pastime, amusement' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C165-glueck]
 <!-- hl-knowledge: introduces=[GE-LEX-C165-THING165-03]; assesses=[] -->
 
 **der Spaß** — "fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Spaß** ← Italian *spasso*, "pastime, amusement" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

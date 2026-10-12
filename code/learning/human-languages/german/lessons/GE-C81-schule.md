@@ -13,7 +13,8 @@ gloss: "a school"
 concept_tag: GE-SCHULE-SCHULE
 prerequisites: [GE-C80-stift, GE-C80-papier]
 sounds: []
-roots: []
+roots: [schola-latin]
+etymology_hook: "Schule ← Old High German scuola ← Latin schola ← Greek scholē — borrowed, like English school"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C80-papier]
 <!-- hl-knowledge: introduces=[GE-LEX-C81-SCHULE-01]; assesses=[] -->
 
 **die Schule** — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schule** ← Old High German *scuola* ← Latin *schola* ← Greek *scholḗ* (EtymDB 2.1) — borrowed, like English *school*. The Greek word first meant "leisure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a song"
 concept_tag: GE-FREIZEIT-LIED
 prerequisites: [GE-C102-arbeit, GE-C102-musik]
 sounds: []
-roots: []
+roots: [germanic-leutha]
+etymology_hook: "Lied ← Old High German liod ← Proto-Germanic *leuþą 'song' — Old English lēoþ is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C102-musik]
 <!-- hl-knowledge: introduces=[GE-LEX-C103-FREIZEIT-01]; assesses=[] -->
 
 **das Lied** — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lied** ← Old High German *liod*, "song" ← Proto-Germanic *\*leuþą* — inherited; Old English *lēoþ*, "song, poem", is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

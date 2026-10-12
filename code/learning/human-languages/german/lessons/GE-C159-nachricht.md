@@ -13,7 +13,8 @@ gloss: "a message, the news"
 concept_tag: GE-THING159-NACHRICHT
 prerequisites: [GE-C159-internet, GE-C159-e-mail]
 sounds: []
-roots: []
+roots: [germanic-rihtijana]
+etymology_hook: "Nachricht — 'after' + a noun from the verb 'to direct': first a guideline, then news"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C159-e-mail]
 <!-- hl-knowledge: introduces=[GE-LEX-C159-THING159-05]; assesses=[] -->
 
 **die Nachricht** — "a message, the news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nachricht** is the word for "after" + a noun from the verb "to direct, to set right", Old High German *rihten* (EtymDB 2.1): first an instruction to go by, then news.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

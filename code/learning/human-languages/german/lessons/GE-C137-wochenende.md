@@ -13,7 +13,8 @@ gloss: "the weekend"
 concept_tag: GE-ZEIT137-WOCHENENDE
 prerequisites: [GE-C136-bestellen, GE-C136-lieber, GE-C07-sonnabend]
 sounds: []
-roots: []
+roots: [germanic-wiko, germanic-andijaz]
+etymology_hook: "Wochenende — the word for 'week' + Ende 'end': the end of the week, after English weekend"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C136-lieber]
 <!-- hl-knowledge: introduces=[GE-LEX-C137-ZEIT137-01]; assesses=[] -->
 
 **das Wochenende** — "the weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wochenende** is the word for "week", Old High German *wohha*, + *Ende*, Proto-Germanic *\*andijaz*, English *end* (EtymDB 2.1): built after English *weekend*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

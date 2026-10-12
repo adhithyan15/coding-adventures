@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 221,
-  "sourceHash": "fnv1a64:222cec9c03001d0f",
+  "sourceHash": "fnv1a64:4baef50c63606060",
   "lessonIds": [
     "GE-C221-schlank",
     "GE-C221-schrecklich",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch221.txt",
   "json": "german/narration/ch221.json",
-  "textHash": "fnv1a64:e59fa7aea90ef61c",
-  "jsonHash": "fnv1a64:794ee9c3a3f926f3",
+  "textHash": "fnv1a64:53a14365c4b950d3",
+  "jsonHash": "fnv1a64:817ab10ca8098fc0",
   "findings": []
 }

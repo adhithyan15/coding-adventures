@@ -13,7 +13,8 @@ gloss: "a cook"
 concept_tag: GE-BERUF124-KOCH
 prerequisites: [GE-C124-joghurt, GE-C124-krankenschwester]
 sounds: []
-roots: []
+roots: [coquus-latin]
+etymology_hook: "Koch ← Old High German koch ← Latin coquus 'cook' — borrowed, like English cook"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C124-krankenschwester]
 <!-- hl-knowledge: introduces=[GE-LEX-C124-BERUF124-03]; assesses=[] -->
 
 **der Koch** — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Koch** ← Old High German *koch* ← Latin *coquus*, "cook" (EtymDB 2.1) — borrowed, like English *cook*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

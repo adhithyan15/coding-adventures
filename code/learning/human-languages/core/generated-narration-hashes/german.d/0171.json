@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 171,
-  "sourceHash": "fnv1a64:8c2c193f5e83f971",
+  "sourceHash": "fnv1a64:32563102a10f9aed",
   "lessonIds": [
     "GE-C171-erst",
     "GE-C171-zuerst",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch171.txt",
   "json": "german/narration/ch171.json",
-  "textHash": "fnv1a64:dc61a70235de39f4",
-  "jsonHash": "fnv1a64:d13150562ef000e7",
+  "textHash": "fnv1a64:0863ad0cee3a4d2c",
+  "jsonHash": "fnv1a64:ccbd702a57f8f7ee",
   "findings": []
 }

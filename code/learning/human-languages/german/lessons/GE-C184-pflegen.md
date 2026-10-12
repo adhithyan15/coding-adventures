@@ -14,6 +14,7 @@ concept_tag: GE-VERB-PFLEGEN
 prerequisites: [GE-C183-niesen, GE-C184-parken]
 sounds: []
 roots: []
+etymology_hook: "pflegen ← Old High German plegan 'to look after' — the same verb as English plight, 'pledge'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C184-parken]
 <!-- hl-knowledge: introduces=[GE-LEX-C184-VERB184-02]; assesses=[] -->
 
 **pflegen** — "to look after, to nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pflegen** ← Middle High German *phlëgen* ← Old High German *plegan*, "to look after, to be responsible for" (EtymDB 2.1) — inherited. English *plight*, a pledge, is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

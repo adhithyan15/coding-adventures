@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 83,
-  "sourceHash": "fnv1a64:f06c6d1c5a0822af",
+  "sourceHash": "fnv1a64:ef6112d1b0c42d94",
   "lessonIds": [
     "GE-C83-wald",
     "GE-C83-stein",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch83.txt",
   "json": "german/narration/ch83.json",
-  "textHash": "fnv1a64:ae8f635bb4e110a5",
-  "jsonHash": "fnv1a64:f7f172446e5a3bd2",
+  "textHash": "fnv1a64:3fc8a4b84f9aaad7",
+  "jsonHash": "fnv1a64:32e820fdd704f9d2",
   "findings": []
 }

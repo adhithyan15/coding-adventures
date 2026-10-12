@@ -14,6 +14,7 @@ concept_tag: GE-VERB-FLUESTERN
 prerequisites: [GE-C180-fernsehen, GE-C180-festhalten]
 sounds: []
 roots: []
+etymology_hook: "flüstern — a word built on the sound of whispering, like English whisper"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C180-festhalten]
 <!-- hl-knowledge: introduces=[GE-LEX-C180-VERB180-05]; assesses=[] -->
 
 **flüstern** — "to whisper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**flüstern** is a sound-word, shaped to imitate whispering, as English *whisper* is. EtymDB 2.1 lists Dutch *fluisteren* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

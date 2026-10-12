@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 68,
-  "sourceHash": "fnv1a64:b333d963a76ac6da",
+  "sourceHash": "fnv1a64:429dfec918780165",
   "lessonIds": [
     "GE-C68-tragen",
     "GE-C68-schicken",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch68.txt",
   "json": "german/narration/ch68.json",
-  "textHash": "fnv1a64:8c60353e4fba380a",
-  "jsonHash": "fnv1a64:a54d69121334b682",
+  "textHash": "fnv1a64:2c59ea0849edfd6a",
+  "jsonHash": "fnv1a64:146479dfdc15b7c8",
   "findings": []
 }

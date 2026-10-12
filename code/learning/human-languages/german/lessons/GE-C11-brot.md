@@ -48,6 +48,11 @@ A ***das***-word. That completes the set on real nouns: *der Vater*, *die
 Mutter*, *das Brot* — one of each, and now you have met all three doing their
 job rather than sitting in a list.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Brot** ← Old High German *brōt* ← Proto-Germanic *\*braudą* — inherited, the same word as English *bread*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BROT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
 

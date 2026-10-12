@@ -13,7 +13,8 @@ gloss: "a dishwasher"
 concept_tag: GE-THING201-SPUELMASCHINE
 prerequisites: [GE-C201-pfanne, GE-C201-ofen]
 sounds: []
-roots: []
+roots: [machina-latin]
+etymology_hook: "Spülmaschine — spülen 'to rinse' + Maschine 'machine' ← Latin māchina"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C201-ofen]
 <!-- hl-knowledge: introduces=[GE-LEX-C201-THING201-05]; assesses=[] -->
 
 **die Spülmaschine** — "a dishwasher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Spülmaschine** is *spülen*, "to rinse", + the word for "machine" ← French *machine* ← Latin *māchina* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

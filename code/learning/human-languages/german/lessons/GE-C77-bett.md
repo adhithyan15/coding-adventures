@@ -13,7 +13,8 @@ gloss: "a bed"
 concept_tag: GE-HAUS2-BETT
 prerequisites: [GE-C77-bad, GE-C77-zimmer]
 sounds: []
-roots: []
+roots: [germanic-badja]
+etymology_hook: "Bett ← Old High German betti ← Proto-Germanic *badją — the same word as English bed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C77-zimmer]
 <!-- hl-knowledge: introduces=[GE-LEX-C77-HAUS2-05]; assesses=[] -->
 
 **das Bett** — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bett** ← Old High German *betti* ← Proto-Germanic *\*badją* — inherited, the same word as English *bed*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

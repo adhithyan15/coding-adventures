@@ -13,7 +13,7 @@ sounds: [u-long, final-t]
 roots: [pie-wes]
 etymology_hook: "warst is war plus the same -st you put on bist, so the past behaves where the present did not"
 duration:
-  max_seconds: 145
+  max_seconds: 173
 requires:
   knowledge: [GE-GRAMMAR-SEIN-ICH-WAR-01, GE-GRAMMAR-SEIN-DU-BIST-01, GE-GRAMMAR-VERB-ENDINGS-01, GE-LEX-DU-SIE-02]
 introduces:
@@ -50,6 +50,11 @@ out of *bin*, and *gehst* out of *gehen*.
 So the past tense of this verb is better behaved than its present: you take one
 stem, *war-*, and add ordinary endings to it. Everything difficult about *sein*
 happens in the present.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**warst** is the past stem *war* + *-st*. The stem goes back to Old High German *wesan*, "to be" ← Proto-Germanic *\*wesaną*, the verb behind English *was*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SEIN-DU-WARST-01] -->

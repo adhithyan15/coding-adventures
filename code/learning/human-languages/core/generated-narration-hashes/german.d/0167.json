@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 167,
-  "sourceHash": "fnv1a64:4543a1e8942b8c74",
+  "sourceHash": "fnv1a64:31a33595b5d20abe",
   "lessonIds": [
     "GE-C167-bequem",
     "GE-C167-unfreundlich",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch167.txt",
   "json": "german/narration/ch167.json",
-  "textHash": "fnv1a64:696466d7acb7aa9f",
-  "jsonHash": "fnv1a64:2f475c5cddcf9c1a",
+  "textHash": "fnv1a64:1b94ab2c7a7ac993",
+  "jsonHash": "fnv1a64:82d392ffff1ac7e2",
   "findings": []
 }

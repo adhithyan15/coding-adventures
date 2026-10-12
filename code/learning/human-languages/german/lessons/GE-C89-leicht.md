@@ -13,7 +13,8 @@ gloss: "light; easy"
 concept_tag: GE-ADJ1-LEICHT
 prerequisites: [GE-C89-schnell, GE-C89-langsam]
 sounds: []
-roots: []
+roots: [germanic-linhtaz]
+etymology_hook: "leicht ← Old High German līht ← Proto-Germanic *linhtaz — the same word as English light, 'not heavy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C89-langsam]
 <!-- hl-knowledge: introduces=[GE-LEX-C89-ADJ1-05]; assesses=[] -->
 
 **leicht** — "light; easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leicht** ← Old High German *līht* ← Proto-Germanic *\*linhtaz* — inherited, the same word as English *light* in the sense "not heavy". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

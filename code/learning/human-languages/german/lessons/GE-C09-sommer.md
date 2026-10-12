@@ -50,6 +50,11 @@ difference between them is the vowel letter and nothing else.
 Words survive like this when nobody ever has a reason to replace them, and a hot
 season is one of those things every generation needs to talk about.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sommer** ← Old High German *sumar* ← Proto-Germanic *\*sumaraz* — inherited, the same word as English *summer*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SOMMER-01] -->
 

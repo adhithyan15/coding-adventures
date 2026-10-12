@@ -13,7 +13,8 @@ gloss: "a field"
 concept_tag: GE-NATUR2-FELD
 prerequisites: [GE-C83-stein, GE-C83-insel]
 sounds: []
-roots: []
+roots: [germanic-feltha]
+etymology_hook: "Feld ← Old High German feld ← Proto-Germanic *felþą — the same word as English field"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C83-insel]
 <!-- hl-knowledge: introduces=[GE-LEX-C83-NATUR2-04]; assesses=[] -->
 
 **das Feld** — "a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Feld** ← Old High German *feld* ← Proto-Germanic *\*felþą* — inherited, the same word as English *field*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "never"
 concept_tag: GE-ZEIT137-NIE
 prerequisites: [GE-C137-datum, GE-C137-jahrhundert]
 sounds: []
-roots: []
+roots: [germanic-aiwaz]
+etymology_hook: "nie ← Old High German nio 'never': 'not' + the old word for 'ever'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C137-jahrhundert]
 <!-- hl-knowledge: introduces=[GE-LEX-C137-ZEIT137-04]; assesses=[] -->
 
 **nie** — "never".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nie** ← Old High German *nio*, "never" (EtymDB 2.1): the negative *ni*, "not", fused with *io*, "ever": *nio* is "not ever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

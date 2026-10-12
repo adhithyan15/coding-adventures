@@ -14,6 +14,7 @@ concept_tag: GE-LINK250-AUSSERDEM
 prerequisites: [GE-C249-erzeugen, GE-C249-fordern]
 sounds: []
 roots: []
+etymology_hook: "außerdem — außer 'besides, outside' + dem 'that': besides that"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C249-fordern]
 <!-- hl-knowledge: introduces=[GE-LEX-C250-LINK250-01]; assesses=[] -->
 
 **außerdem** — "besides, moreover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**außerdem** is the word for "besides, outside", built on the word for "out", + *dem*, a form of *der*: "besides that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

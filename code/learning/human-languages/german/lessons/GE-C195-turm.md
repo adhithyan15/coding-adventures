@@ -13,7 +13,8 @@ gloss: "a tower"
 concept_tag: GE-THING195-TURM
 prerequisites: [GE-C195-dom, GE-C195-denkmal]
 sounds: []
-roots: []
+roots: [turris-latin]
+etymology_hook: "Turm ← Old High German turn ← Old French tor ← Latin turris 'tower' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C195-denkmal]
 <!-- hl-knowledge: introduces=[GE-LEX-C195-THING195-04]; assesses=[] -->
 
 **der Turm** — "a tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Turm** ← Middle High German *turn* ← Old French *torn*, *tor* ← Latin *turris*, "tower" (EtymDB 2.1) — borrowed, like English *tower*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

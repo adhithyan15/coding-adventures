@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 151,
-  "sourceHash": "fnv1a64:515b0e76a1e6e835",
+  "sourceHash": "fnv1a64:fd525da6c1a4ffed",
   "lessonIds": [
     "GE-C151-treffen",
     "GE-C151-traeumen",
@@ -9,11 +9,11 @@
     "GE-C151-ueberlegen",
     "GE-C151-umziehen"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
   "text": "german/narration/ch151.txt",
   "json": "german/narration/ch151.json",
-  "textHash": "fnv1a64:62beeb76c66beb2d",
-  "jsonHash": "fnv1a64:a55466a523a7d7f1",
+  "textHash": "fnv1a64:411e2664fce23633",
+  "jsonHash": "fnv1a64:fc9b8b9cb34d76e7",
   "findings": []
 }

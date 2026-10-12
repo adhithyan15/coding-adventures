@@ -13,7 +13,8 @@ gloss: "opening hours"
 concept_tag: GE-READ143-OEFFNUNGSZEITEN
 prerequisites: [GE-C143-anzeige, GE-C143-termin]
 sounds: []
-roots: []
+roots: [germanic-upanona, germanic-tidiz]
+etymology_hook: "Öffnungszeiten — 'opening' + Zeiten 'times'; öffnen ← Old High German offanōn, English open"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [GE-C143-termin]
 
 The door says **Montag bis Freitag, neun bis achtzehn Uhr.** Open on weekdays
 from nine to six: not on Saturday.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Öffnungszeiten** is the noun of "to open", Old High German *offanōn*, English *open*, + *Zeit* in the plural (EtymDB 2.1): opening times.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to order (food, a taxi)"
 concept_tag: GE-VERB-BESTELLEN
 prerequisites: [GE-C136-wunsch, GE-C136-hoffen]
 sounds: []
-roots: []
+roots: [germanic-stallijana]
+etymology_hook: "bestellen — be- + the verb 'to put, to place': to arrange for something to be put before you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C136-hoffen]
 <!-- hl-knowledge: introduces=[GE-LEX-C136-WUNSCH136-04]; assesses=[] -->
 
 **bestellen** — "to order (food, a taxi)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bestellen** is *be-* + the verb "to put, to place", Old High German *stellen* ← Proto-Germanic *\*stallijaną* (EtymDB 2.1): to arrange for something to be put in place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

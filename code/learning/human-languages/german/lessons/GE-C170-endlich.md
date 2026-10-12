@@ -13,7 +13,8 @@ gloss: "finally"
 concept_tag: GE-TIME170-ENDLICH
 prerequisites: [GE-C170-meistens, GE-C170-gleich]
 sounds: []
-roots: []
+roots: [germanic-andijaz]
+etymology_hook: "endlich — Ende 'end' + -lich: at the end"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C170-gleich]
 <!-- hl-knowledge: introduces=[GE-LEX-C170-TIME170-04]; assesses=[] -->
 
 **endlich** — "finally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**endlich** ← Middle High German *endelīch*, "final" (EtymDB 2.1): *Ende* + *-lich*. Finally is at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

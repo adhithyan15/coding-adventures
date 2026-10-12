@@ -13,7 +13,8 @@ gloss: "to sing"
 concept_tag: GE-VERB-SINGEN
 prerequisites: [GE-C65-lachen, GE-C65-weinen]
 sounds: []
-roots: []
+roots: [germanic-singwana]
+etymology_hook: "singen ← Old High German singan ← Proto-Germanic *singwaną — the same verb as English sing"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C65-weinen]
 <!-- hl-knowledge: introduces=[GE-LEX-C66-VERBEN3-01]; assesses=[] -->
 
 **singen** — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**singen** ← Old High German *singan* ← Proto-Germanic *\*singwaną* — inherited, the same verb as English *sing*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-THING196-STRAND
 prerequisites: [GE-C196-hafen, GE-C196-ufer]
 sounds: []
 roots: []
+etymology_hook: "Strand ← Middle High German strant — the same word as English strand, 'shore'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C196-ufer]
 <!-- hl-knowledge: introduces=[GE-LEX-C196-THING196-03]; assesses=[] -->
 
 **der Strand** — "a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Strand** ← Middle High German *strant* ← Old High German *strand* — inherited, the same word as English *strand*, "shore". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

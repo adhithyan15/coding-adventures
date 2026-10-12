@@ -14,6 +14,7 @@ concept_tag: GE-VERB-PUTZEN
 prerequisites: [GE-C68-zaehlen, GE-C68-malen]
 sounds: []
 roots: []
+etymology_hook: "putzen — origin uncertain; usually tied to Middle High German butze 'lump', as if cleaning were picking off lumps"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C68-malen]
 <!-- hl-knowledge: introduces=[GE-LEX-C68-VERBEN5-05]; assesses=[] -->
 
 **putzen** — "to clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**putzen** is inherited, but its origin is uncertain. The usual account ties it to Middle High German *butze*, "lump, piece" (EtymDB 2.1), as if cleaning were picking the lumps off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

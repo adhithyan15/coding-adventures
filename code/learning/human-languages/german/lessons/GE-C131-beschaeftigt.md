@@ -13,7 +13,8 @@ gloss: "busy"
 concept_tag: GE-EIGEN131-BESCHAEFTIGT
 prerequisites: [GE-C130-rund, GE-C130-breit, GE-C06-sechs, GE-C14-haben]
 sounds: []
-roots: []
+roots: [germanic-skapjana]
+etymology_hook: "beschäftigt — 'kept busy', built on the word for 'business', from a verb 'to make', English shape"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C130-breit]
 <!-- hl-knowledge: introduces=[GE-LEX-C131-EIGEN131-01]; assesses=[] -->
 
 **beschäftigt** — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beschäftigt** means "kept busy", from the verb built on the word for "business", Old High German *giscaft*, and that from the verb "to make, to create", Old High German *scaffan*, English *shape* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

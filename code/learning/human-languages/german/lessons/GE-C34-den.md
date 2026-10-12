@@ -13,7 +13,7 @@ sounds: [long-e]
 roots: []
 etymology_hook: "English ran this system too and kept exactly three survivors of it — whom, him, them — all three ending in the same -m that German's dative keeps; the -n of den is the last of the family German still writes on its article"
 duration:
-  max_seconds: 250
+  max_seconds: 288
 requires:
   knowledge: [GE-LEX-DER-DIE-DAS-02, GE-LEX-EINEN-01, GE-LEX-KEINEN-01, GE-LEX-KEIN-01, GE-LEX-KEINE-01, GE-LEX-HABEN-01]
 introduces:
@@ -50,6 +50,11 @@ promise that the system behind them would come later. It comes now.
 The dog standing is *der Hund*; the dog being had is *den Hund*. German writes
 the difference on the article rather than on the noun.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**den** is a form of *der*, inherited from the Germanic pointing word behind English *the* and *that*.
+
 ## Grammar Lens: one row of three moves
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01]; assesses=[GE-LEX-DEN-01, GE-LEX-EINEN-01, GE-LEX-KEINEN-01, GE-LEX-DER-DIE-DAS-02, GE-LEX-BROT-01, GE-LEX-MILCH-02] -->
 
@@ -65,9 +70,6 @@ That is the whole announcement, and it is smaller than German's reputation
 suggests. *Die* and *das* stand still. So do their *ein* and *kein* partners —
 **eine**, **keine**, **ein**, **kein** — while *ein* becomes **einen** and *kein*
 becomes **keinen** on exactly the row where *der* becomes *den*.
-
-Three words you already say, all moving together, all on one row. Nothing new
-has been added; a pattern has been pointed at.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01, GE-LEX-DEN-01] -->

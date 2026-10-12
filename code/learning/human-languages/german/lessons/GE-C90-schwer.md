@@ -13,7 +13,8 @@ gloss: "heavy; difficult"
 concept_tag: GE-ADJ2-SCHWER
 prerequisites: [GE-C89-langsam, GE-C89-leicht]
 sounds: []
-roots: []
+roots: [germanic-sweraz]
+etymology_hook: "schwer ← Old High German swār ← Proto-Germanic *swēraz 'heavy' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C89-leicht]
 <!-- hl-knowledge: introduces=[GE-LEX-C90-ADJ2-01]; assesses=[] -->
 
 **schwer** — "heavy; difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schwer** ← Old High German *swār* ← Proto-Germanic *\*swēraz*, "heavy" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

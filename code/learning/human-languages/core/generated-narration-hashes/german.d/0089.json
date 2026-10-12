@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 89,
-  "sourceHash": "fnv1a64:c023c9fdb3464fc2",
+  "sourceHash": "fnv1a64:6438172698ccb1b6",
   "lessonIds": [
     "GE-C89-klein",
     "GE-C89-kurz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch89.txt",
   "json": "german/narration/ch89.json",
-  "textHash": "fnv1a64:f838fd4f1007af7d",
-  "jsonHash": "fnv1a64:6a5cb9388deacf97",
+  "textHash": "fnv1a64:865211da91637bb1",
+  "jsonHash": "fnv1a64:69144ea3e46a97eb",
   "findings": []
 }

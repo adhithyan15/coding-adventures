@@ -10,7 +10,7 @@ gloss: seventeen — sieben without its -en, one syllable saved
 concept_tag: GE-NUMBER-17
 prerequisites: [GE-C12-sechzehn]
 sounds: [ie-long-ee, consonant-b-final, z-ts]
-roots: []
+roots: [sebun-germanic, tehun-germanic]
 etymology_hook: "siebzehn drops the -en of sieben, and the b it leaves behind is said as a b because the ending protects it from the final hardening"
 duration:
   max_seconds: 160
@@ -46,6 +46,11 @@ to twenty.
 
 *Sieben-zehn* would be four syllables for one number, three of them unstressed.
 German trimmed the middle and kept the meaning.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**siebzehn** ← Old High German *sibunzehan* ← Proto-Germanic *\*sebuntehun*, "seven-ten" — the same compound as English *seventeen*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SIEBZEHN-01] -->

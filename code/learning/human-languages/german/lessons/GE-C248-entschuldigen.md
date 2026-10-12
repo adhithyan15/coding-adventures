@@ -13,7 +13,8 @@ gloss: "to excuse (sich entschuldigen: to apologise)"
 concept_tag: GE-VERB-ENTSCHULDIGEN
 prerequisites: [GE-C248-enden, GE-C248-entdecken]
 sounds: []
-roots: []
+roots: [schuld-german]
+etymology_hook: "entschuldigen ← Middle High German entschuldigen: ent- 'free of' + Schuld 'guilt'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C248-entdecken]
 <!-- hl-knowledge: introduces=[GE-LEX-C248-VERB248-04]; assesses=[] -->
 
 **entschuldigen** — "to excuse (sich entschuldigen: to apologise)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entschuldigen** ← Middle High German *entschuldigen* (EtymDB 2.1): *ent-*, "free of", + the word for "guilt, debt": to free someone of guilt.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

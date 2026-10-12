@@ -13,7 +13,8 @@ gloss: "a team"
 concept_tag: GE-THING234-MANNSCHAFT
 prerequisites: [GE-C233-lektion, GE-C234-lohn]
 sounds: []
-roots: []
+roots: [germanic-mann]
+etymology_hook: "Mannschaft — Mann 'man' + -schaft: a body of men, a crew, a team"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C234-lohn]
 <!-- hl-knowledge: introduces=[GE-LEX-C234-THING234-02]; assesses=[] -->
 
 **die Mannschaft** — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mannschaft** is the word for "man", Old High German *man* (EtymDB 2.1), + *-schaft*: a body of men, a crew, then a team.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

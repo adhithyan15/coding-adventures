@@ -13,7 +13,8 @@ gloss: "a computer"
 concept_tag: GE-HAUS112-COMPUTER
 prerequisites: [GE-C112-teppich, GE-C112-fernseher]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "Computer ← English computer, from compute ← Latin computāre 'to reckon' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C112-fernseher]
 <!-- hl-knowledge: introduces=[GE-LEX-C112-HAUS112-03]; assesses=[] -->
 
 **der Computer** — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Computer** ← English *computer*, from *compute* + *-er* (EtymDB 2.1), and *compute* ← Latin *computāre*, "to reckon" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

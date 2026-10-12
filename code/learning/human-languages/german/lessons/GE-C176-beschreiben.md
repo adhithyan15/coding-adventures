@@ -13,7 +13,8 @@ gloss: "to describe"
 concept_tag: GE-VERB-BESCHREIBEN
 prerequisites: [GE-C176-beeilen, GE-C176-behalten]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "beschreiben — be- + schreiben 'to write': to write about"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C176-behalten]
 <!-- hl-knowledge: introduces=[GE-LEX-C176-VERB176-04]; assesses=[] -->
 
 **beschreiben** — "to describe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beschreiben** is *be-* + *schreiben*, "to write": to write something down in full. *schreiben* comes from Latin *scrībere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

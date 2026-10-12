@@ -13,7 +13,8 @@ gloss: "at the same time"
 concept_tag: GE-QUAL215-GLEICHZEITIG
 prerequisites: [GE-C215-gerecht, GE-C215-geschieden]
 sounds: []
-roots: []
+roots: [germanic-galikaz, germanic-tidiz]
+etymology_hook: "gleichzeitig — gleich 'same' + Zeit 'time' + -ig: at the same time"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C215-geschieden]
 <!-- hl-knowledge: introduces=[GE-LEX-C215-QUAL215-03]; assesses=[] -->
 
 **gleichzeitig** — "at the same time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gleichzeitig** is *gleich*, "same", + *Zeit*, "time", + *-ig*: at the same time. Both are inherited; *Zeit* ← Proto-Germanic *\*tīdiz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a departure"
 concept_tag: GE-THING192-ABFAHRT
 prerequisites: [GE-C191-wiegen, GE-C191-zeichnen]
 sounds: []
-roots: []
+roots: [germanic-fardiz]
+etymology_hook: "Abfahrt — ab- 'off' + Fahrt 'journey', from fahren"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C191-zeichnen]
 <!-- hl-knowledge: introduces=[GE-LEX-C192-THING192-01]; assesses=[] -->
 
 **die Abfahrt** — "a departure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Abfahrt** is *ab-*, "off", + the word for "a journey", Old High German *vart* ← Proto-Germanic *\*fardiz* (EtymDB 2.1), from *fahren*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

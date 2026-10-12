@@ -14,6 +14,7 @@ concept_tag: GE-ADJ4-SCHMUTZIG
 prerequisites: [GE-C91-suess, GE-C92-sauber]
 sounds: []
 roots: []
+etymology_hook: "schmutzig — the word for 'dirt' + -ig; 'dirt' ← Middle High German smuz, kin to English smut"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C92-sauber]
 <!-- hl-knowledge: introduces=[GE-LEX-C92-ADJ4-02]; assesses=[] -->
 
 **schmutzig** — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schmutzig** is the word for "dirt" + *-ig*. That word ← Middle High German *smuz*, and EtymDB 2.1 lists it beside English *smut*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

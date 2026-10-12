@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN7-SAHNE
 prerequisites: [GE-C74-salat, GE-C74-nudeln]
 sounds: []
 roots: []
+etymology_hook: "Sahne — from Low German; its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C74-nudeln]
 <!-- hl-knowledge: introduces=[GE-LEX-C75-ESSEN7-01]; assesses=[] -->
 
 **die Sahne** — "cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sahne** came into standard German from Low German and Dutch. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

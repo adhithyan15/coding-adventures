@@ -13,7 +13,8 @@ gloss: "humour"
 concept_tag: GE-THING231-HUMOR
 prerequisites: [GE-C231-hobby, GE-C231-hoffnung]
 sounds: []
-roots: []
+roots: [umor-latin]
+etymology_hook: "Humor ← Latin (h)ūmor 'moisture' — the body's fluids were thought to set your mood"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C231-hoffnung]
 <!-- hl-knowledge: introduces=[GE-LEX-C231-THING231-03]; assesses=[] -->
 
 **der Humor** — "humour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Humor** ← Latin *(h)ūmor*, "moisture, fluid" (EtymDB 2.1) — borrowed: the body's fluids, the humours, were thought to set your temper.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

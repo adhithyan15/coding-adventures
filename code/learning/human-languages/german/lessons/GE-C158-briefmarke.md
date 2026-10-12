@@ -13,7 +13,8 @@ gloss: "a stamp"
 concept_tag: GE-THING158-BRIEFMARKE
 prerequisites: [GE-C158-tuete, GE-C158-paket]
 sounds: []
-roots: []
+roots: [brevis-latin]
+etymology_hook: "Briefmarke — the word for 'letter' + Marke 'mark, token', from French marque"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C158-paket]
 <!-- hl-knowledge: introduces=[GE-LEX-C158-THING158-05]; assesses=[] -->
 
 **die Briefmarke** — "a stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Briefmarke** is the word for "letter" + *Marke*, "token, mark" ← French *marque* (EtymDB 2.1): a token stuck on a letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

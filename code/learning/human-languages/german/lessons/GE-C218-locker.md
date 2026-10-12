@@ -14,6 +14,7 @@ concept_tag: GE-QUAL218-LOCKER
 prerequisites: [GE-C218-lecker, GE-C218-lieb]
 sounds: []
 roots: []
+etymology_hook: "locker — 'loose', a word from Low German whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C218-lieb]
 <!-- hl-knowledge: introduces=[GE-LEX-C218-QUAL218-03]; assesses=[] -->
 
 **locker** — "relaxed, loose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**locker**, "loose", spread into standard German from Low German. Its origin is uncertain; EtymDB 2.1 has the word but no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-SCHULE128-HAUSAUFGABE
 prerequisites: [GE-C127-tafel, GE-C127-radiergummi]
 sounds: []
 roots: []
+etymology_hook: "Hausaufgabe — the word for 'house' + the word for 'task': a task for home"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C127-radiergummi]
 <!-- hl-knowledge: introduces=[GE-LEX-C128-SCHULE128-01]; assesses=[] -->
 
 **die Hausaufgabe** — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hausaufgabe** is the word for "house" + the word for "task", itself built from "up" and "to give": a task given out to be done at home.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

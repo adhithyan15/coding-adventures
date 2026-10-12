@@ -14,6 +14,7 @@ concept_tag: GE-VERB-BLUEHEN
 prerequisites: [GE-C247-bestehen, GE-C247-beweisen]
 sounds: []
 roots: []
+etymology_hook: "blühen ← Old High German bluoen — the same verb as English blow, 'to bloom'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C247-beweisen]
 <!-- hl-knowledge: introduces=[GE-LEX-C247-VERB247-03]; assesses=[] -->
 
 **blühen** — "to bloom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**blühen** ← Middle High German *blüen* ← Old High German *bluoen* — inherited, the same verb as English *blow* in its old sense "to bloom". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

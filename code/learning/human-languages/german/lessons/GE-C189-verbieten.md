@@ -14,6 +14,7 @@ concept_tag: GE-VERB-VERBIETEN
 prerequisites: [GE-C189-umarmen, GE-C189-verabreden]
 sounds: []
 roots: []
+etymology_hook: "verbieten — ver- + the verb 'to bid' — the same build as English forbid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C189-verabreden]
 <!-- hl-knowledge: introduces=[GE-LEX-C189-VERB189-04]; assesses=[] -->
 
 **verbieten** — "to forbid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verbieten** is *ver-* + an old verb meaning "to bid, to command" — the same build as English *forbid*, which EtymDB 2.1 lists beside it with Gothic *faurbiudan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -80,6 +80,9 @@ du hast — "you have," to one person you are on familiar terms with.
 The rule predicts hab-st. German says hast. The b is simply gone, and the long a goes with it: the vowel is short and clipped now, and the -st lands crisply on the end.
 This is not a spelling convenience. It is one of exactly two places in the whole verb where the machine fails, and it is worth meeting on its own so that it is a form you know rather than a form you derive wrongly.
 
+The phrase, taken apart.
+hast is a form of haben from Old High German habēn from Proto-Germanic habjaną — inherited, the same verb as English have. (EtymDB 2.1).
+
 Sounds you'll need.
 vowel-a — short and clipped, the a of English hat, not the long a of haben. The form is one syllable: hast, rhyming with English mast.
 d-t-final — the -st is fully released; German does not soften it.
@@ -111,6 +114,9 @@ You'll want to know: er hat.
 er hat — "he has." Also sie hat, "she has," and es hat, "it has."
 The rule predicts hab-t. German says hat: the same b gone, the same vowel shortened. One syllable, rhyming with English hut rather than hat — the German a sits further back than the English one.
 One form covers er, sie and es, exactly as the third-person -t always does. So the two breaks in this verb are neighbours: du hast, er hat, and every other form is the machine.
+
+The phrase, taken apart.
+hat is a form of haben from Old High German habēn from Proto-Germanic habjaną — inherited, the same verb as English have. (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -175,6 +181,9 @@ The -en on the end is the part English threw away. German marks a der-word diffe
 Ich habe einen Bruder. — "I have a brother."
 Der Bruder is a der-word, and he is what you have, so ein becomes einen. Nothing else in the sentence moves.
 Take this one as a word for now, not as a system. The system behind it — German's cases — gets a chapter of its own later; this is the first place the book cannot avoid it, because a sentence with haben in it needs something to have.
+
+The word, taken apart.
+einen is a form of ein from Old High German ein from Proto-Germanic ainaz, "one" — inherited, the same word as English one. (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

@@ -13,7 +13,8 @@ gloss: "anxious, timid"
 concept_tag: GE-QUAL211-AENGSTLICH
 prerequisites: [GE-C210-metzgerei, GE-C210-kaufhaus]
 sounds: []
-roots: []
+roots: [germanic-angustiz]
+etymology_hook: "ängstlich — Angst 'fear' + -lich: fearful"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C210-kaufhaus]
 <!-- hl-knowledge: introduces=[GE-LEX-C211-QUAL211-01]; assesses=[] -->
 
 **ängstlich** — "anxious, timid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ängstlich** is *Angst*, "fear", + *-lich*: fearful. *Angst* ← Proto-Germanic *\*angustiz*, from a word for "narrow". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
