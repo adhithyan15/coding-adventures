@@ -13,7 +13,8 @@ gloss: "industry"
 concept_tag: GE-THING210-INDUSTRIE
 prerequisites: [GE-C209-politik, GE-C209-wirtschaft]
 sounds: []
-roots: []
+roots: [industria-latin]
+etymology_hook: "Industrie ← French industrie ← Latin industria 'diligence' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C209-wirtschaft]
 <!-- hl-knowledge: introduces=[GE-LEX-C210-THING210-01]; assesses=[] -->
 
 **die Industrie** — "industry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Industrie** ← French *industrie* ← Latin *industria*, "diligence, activity" (EtymDB 2.1) — borrowed, like English *industry*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

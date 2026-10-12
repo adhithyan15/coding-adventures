@@ -13,7 +13,8 @@ gloss: "a pupil (a boy)"
 concept_tag: GE-LEUTE-SCHUELER
 prerequisites: [GE-C63-gast, GE-C63-enkel]
 sounds: []
-roots: []
+roots: [schola-latin]
+etymology_hook: "Schüler — the word for 'school' + -er; school ← Old High German scuola ← Latin schola"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C63-enkel]
 <!-- hl-knowledge: introduces=[GE-LEX-C63-LEUTE-04]; assesses=[] -->
 
 **der Schüler** — "a pupil (a boy)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schüler** ← Middle High German *schuolære*, built on the word for "school", Old High German *scuola* ← Latin *schola* (EtymDB 2.1) — a borrowed stem with the German ending *-er*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

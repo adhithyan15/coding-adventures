@@ -13,7 +13,8 @@ gloss: "a club, an association"
 concept_tag: GE-THING242-VEREIN
 prerequisites: [GE-C242-verkehr, GE-C242-vertrauen]
 sounds: []
-roots: []
+roots: [germanic-ainaz]
+etymology_hook: "Verein — ver- + ein 'one': people made one"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C242-vertrauen]
 <!-- hl-knowledge: introduces=[GE-LEX-C242-THING242-03]; assesses=[] -->
 
 **der Verein** — "a club, an association".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Verein** is *ver-* + *ein*, "one": people made one, a union. *ein* ← Proto-Germanic *\*ainaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

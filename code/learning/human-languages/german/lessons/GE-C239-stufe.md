@@ -14,6 +14,7 @@ concept_tag: GE-THING239-STUFE
 prerequisites: [GE-C239-streit, GE-C239-studium]
 sounds: []
 roots: []
+etymology_hook: "Stufe ← Old High German stuofa 'step' — inherited, from the root of English step"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C239-studium]
 <!-- hl-knowledge: introduces=[GE-LEX-C239-THING239-04]; assesses=[] -->
 
 **die Stufe** — "a step, a level".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stufe** ← Middle High German *stuofe* ← Old High German *stuofa*, "step" (EtymDB 2.1) — inherited, from the same root as English *step*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

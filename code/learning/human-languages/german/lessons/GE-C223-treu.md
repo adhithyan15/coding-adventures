@@ -13,7 +13,8 @@ gloss: "faithful, loyal"
 concept_tag: GE-QUAL223-TREU
 prerequisites: [GE-C222-sympathisch, GE-C222-tot]
 sounds: []
-roots: []
+roots: [germanic-treuwaz]
+etymology_hook: "treu ← Old High German triuwi 'true, faithful' — the same word as English true"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C222-tot]
 <!-- hl-knowledge: introduces=[GE-LEX-C223-QUAL223-01]; assesses=[] -->
 
 **treu** — "faithful, loyal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**treu** ← Middle High German *triuwe* ← Old High German *triuwi*, "true, faithful" (EtymDB 2.1) — inherited, the same word as English *true*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

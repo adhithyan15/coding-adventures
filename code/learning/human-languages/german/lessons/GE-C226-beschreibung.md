@@ -13,7 +13,8 @@ gloss: "a description"
 concept_tag: GE-THING226-BESCHREIBUNG
 prerequisites: [GE-C226-bedeutung, GE-C226-begruessung]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "Beschreibung — beschreiben 'to describe' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C226-begruessung]
 <!-- hl-knowledge: introduces=[GE-LEX-C226-THING226-04]; assesses=[] -->
 
 **die Beschreibung** — "a description".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Beschreibung** is *beschreiben*, "to describe", + *-ung* (EtymDB 2.1). *schreiben* comes from Latin *scrībere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

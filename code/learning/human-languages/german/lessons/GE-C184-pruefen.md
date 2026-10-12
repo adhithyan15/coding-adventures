@@ -13,7 +13,8 @@ gloss: "to test, to check"
 concept_tag: GE-VERB-PRUEFEN
 prerequisites: [GE-C184-pflegen, GE-C184-pfluecken]
 sounds: []
-roots: []
+roots: [probare-latin]
+etymology_hook: "prüfen ← Middle High German brüeven, from Old French prover ← Latin probāre 'to test'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C184-pfluecken]
 <!-- hl-knowledge: introduces=[GE-LEX-C184-VERB184-04]; assesses=[] -->
 
 **prüfen** — "to test, to check".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prüfen** ← Middle High German *brüeven* (EtymDB 2.1), from Old French *prover* ← Latin *probāre*, "to test" — borrowed, like English *prove*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

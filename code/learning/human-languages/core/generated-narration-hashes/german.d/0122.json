@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 122,
-  "sourceHash": "fnv1a64:db5329796a08bae8",
+  "sourceHash": "fnv1a64:55c317389e5cf6cd",
   "lessonIds": [
     "GE-C122-knoblauch",
     "GE-C122-mehl",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch122.txt",
   "json": "german/narration/ch122.json",
-  "textHash": "fnv1a64:d85f22e92bec5848",
-  "jsonHash": "fnv1a64:3d6f87f74c2e8e79",
+  "textHash": "fnv1a64:d49468ec6e2e8bad",
+  "jsonHash": "fnv1a64:cc5eb30fad2a3ff4",
   "findings": []
 }

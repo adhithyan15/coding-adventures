@@ -49,6 +49,11 @@ On the page it looks unrelated to **sister**. In the mouth it is not: take the
 *shv* back to a plain *s* and what is left — *s-e-s-t-e-r* — is the English word
 with one vowel moved.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schwester** ← Old High German *swester* ← Proto-Germanic *\*swestēr* — inherited, the same word as English *sister*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SCHWESTER-01, GE-SOUND-SCHW-01] -->
 

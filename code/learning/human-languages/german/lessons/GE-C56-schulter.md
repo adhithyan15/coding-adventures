@@ -13,7 +13,8 @@ gloss: "a shoulder"
 concept_tag: GE-KOERPER1-SCHULTER
 prerequisites: [GE-C56-zahn, GE-C56-hals]
 sounds: []
-roots: []
+roots: [germanic-skuldro]
+etymology_hook: "Schulter is inherited, from Old High German scultirra — the same word as English shoulder"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C56-hals]
 <!-- hl-knowledge: introduces=[GE-LEX-C56-KOERPER1-04]; assesses=[] -->
 
 **die Schulter** — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schulter** is inherited, from Old High German *scultirra*. EtymDB 2.1 lists it beside English *shoulder*, Dutch *schouder* and Swedish *skuldra* — the same Germanic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

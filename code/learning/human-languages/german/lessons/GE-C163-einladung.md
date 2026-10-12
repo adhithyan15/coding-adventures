@@ -14,6 +14,7 @@ concept_tag: GE-THING163-EINLADUNG
 prerequisites: [GE-C163-hochzeit, GE-C163-party]
 sounds: []
 roots: []
+etymology_hook: "Einladung — einladen 'to invite' + -ung: an invitation"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C163-party]
 <!-- hl-knowledge: introduces=[GE-LEX-C163-THING163-05]; assesses=[] -->
 
 **die Einladung** — "an invitation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Einladung** is *einladen*, "to invite" ← Old High German *inladōn* (EtymDB 2.1), + *-ung*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

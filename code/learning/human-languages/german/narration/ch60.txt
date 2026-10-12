@@ -12,6 +12,9 @@ Before the new one: say the German for a hospital, then the German for ill.
 You'll want to know: gesund.
 gesund — "healthy".
 
+The word, taken apart.
+gesund from Old High German gisunt from Proto-Germanic gasundaz, "sound, whole, healthy" — inherited, a cousin of English sound, as in "safe and sound". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for ill, then the German for healthy.
 
 You'll want to know: der Durst.
 der Durst — "thirst".
+
+The word, taken apart.
+Durst from Old High German durst from Proto-Germanic þurstuz, "dryness, thirst" — inherited, the same word as English thirst. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for healthy, then the German for thirst.
 You'll want to know: der Hunger.
 der Hunger — "hunger".
 
+The word, taken apart.
+Hunger from Old High German hungar from Proto-Germanic hungruz — inherited, the same word as English hunger. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for thirst, then the German for hunger.
 You'll want to know: traurig.
 traurig — "sad".
 
+The word, taken apart.
+traurig from Middle High German trūrec from Old High German trūrag (EtymDB 2.1) — inherited. A link to English dreary is often suggested, but it is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for hunger, then the German for sad.
 
 You'll want to know: glücklich.
 glücklich — "happy".
+
+The word, taken apart.
+glücklich is the word for "luck", Middle High German gelücke (EtymDB 2.1), + -lich. English luck is the same word, taken from Low German or Dutch; where gelücke itself came from is uncertain.
 
 What you've built.
 One more word for this chapter.

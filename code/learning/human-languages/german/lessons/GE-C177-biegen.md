@@ -13,7 +13,8 @@ gloss: "to bend, to turn"
 concept_tag: GE-VERB-BIEGEN
 prerequisites: [GE-C176-betreten, GE-C177-bewerben]
 sounds: []
-roots: []
+roots: [germanic-beugana]
+etymology_hook: "biegen ← Old High German biogan — kin to English bow, 'to bend'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C177-bewerben]
 <!-- hl-knowledge: introduces=[GE-LEX-C177-VERB177-02]; assesses=[] -->
 
 **biegen** — "to bend, to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**biegen** ← Middle High German *biegen* ← Old High German *biogan* (EtymDB 2.1) — inherited, a cousin of English *bow*, "to bend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

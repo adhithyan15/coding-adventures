@@ -13,7 +13,8 @@ gloss: "an uncle"
 concept_tag: GE-FAMILIE-ONKEL
 prerequisites: [GE-C62-frau, GE-C62-maedchen]
 sounds: []
-roots: []
+roots: [avunculus-latin]
+etymology_hook: "Onkel ← French oncle ← Latin avunculus 'mother's brother' — borrowed, like English uncle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C62-maedchen]
 <!-- hl-knowledge: introduces=[GE-LEX-C62-FAMILIE-04]; assesses=[] -->
 
 **der Onkel** — "an uncle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Onkel** ← French *oncle* ← Latin *avunculus*, "mother's brother" (EtymDB 2.1) — borrowed, as English *uncle* was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

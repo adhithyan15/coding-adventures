@@ -13,7 +13,8 @@ gloss: "finished, ready"
 concept_tag: GE-EIGEN134-FERTIG
 prerequisites: [GE-C134-langweilig, GE-C134-schwierig]
 sounds: []
-roots: []
+roots: [farana-germanic]
+etymology_hook: "fertig ← Old High German fartīg 'ready to travel', from the word for 'a journey'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C134-schwierig]
 <!-- hl-knowledge: introduces=[GE-LEX-C134-EIGEN134-03]; assesses=[] -->
 
 **fertig** — "finished, ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fertig** ← Old High German *fartīg*, "ready for the journey" (EtymDB 2.1), built on the word for "a journey", from *fahren*. Ready to go became finished.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

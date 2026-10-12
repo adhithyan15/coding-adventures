@@ -13,7 +13,8 @@ gloss: "a couple, a pair"
 concept_tag: GE-THING235-PAAR
 prerequisites: [GE-C235-oeffentlichkeit, GE-C235-ordnung]
 sounds: []
-roots: []
+roots: [par]
+etymology_hook: "Paar ← Latin pār 'equal, a pair' — borrowed, like English pair"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C235-ordnung]
 <!-- hl-knowledge: introduces=[GE-LEX-C235-THING235-05]; assesses=[] -->
 
 **das Paar** — "a couple, a pair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Paar** ← Middle High German *par* ← Latin *pār*, "equal" (EtymDB 2.1) — borrowed, like English *pair*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

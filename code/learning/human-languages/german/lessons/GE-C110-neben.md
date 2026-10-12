@@ -14,6 +14,7 @@ concept_tag: GE-RICHTUNG110-NEBEN
 prerequisites: [GE-C109-hinten, GE-C109-gegenueber]
 sounds: []
 roots: []
+etymology_hook: "neben ← Middle High German eneben 'level with': in + the word for 'even, level'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C109-gegenueber]
 <!-- hl-knowledge: introduces=[GE-LEX-C110-RICHTUNG110-01]; assesses=[] -->
 
 **neben** — "next to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neben** ← Middle High German *eneben*, "level with": *in* + the word for "even, level", which EtymDB 2.1 lists beside English *even*. Next to is "on a level with".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

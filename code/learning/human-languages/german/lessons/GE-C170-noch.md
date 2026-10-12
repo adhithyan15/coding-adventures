@@ -14,6 +14,7 @@ concept_tag: GE-TIME170-NOCH
 prerequisites: [GE-C170-gleich, GE-C170-endlich]
 sounds: []
 roots: []
+etymology_hook: "noch ← Middle High German noch, Old High German noh — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C170-endlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C170-TIME170-05]; assesses=[] -->
 
 **noch** — "still, yet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noch** ← Middle High German *noch* ← Old High German *noh* (EtymDB 2.1 has the Middle High German) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

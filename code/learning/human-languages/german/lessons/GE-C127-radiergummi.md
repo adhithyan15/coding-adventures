@@ -13,7 +13,8 @@ gloss: "a rubber, an eraser"
 concept_tag: GE-SCHULE127-RADIERGUMMI
 prerequisites: [GE-C127-pruefung, GE-C127-tafel]
 sounds: []
-roots: []
+roots: [radere-latin]
+etymology_hook: "Radiergummi — a verb 'to rub out' ← Latin rādere 'to scrape' + the word for 'rubber'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C127-tafel]
 <!-- hl-knowledge: introduces=[GE-LEX-C127-SCHULE127-05]; assesses=[] -->
 
 **der Radiergummi** — "a rubber, an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Radiergummi** is the verb "to rub out", from Latin *rādere*, "to scrape", + *Gummi*, "rubber" ← Latin *cummi* ← Greek *kómmi* (EtymDB 2.1): a rubber for erasing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

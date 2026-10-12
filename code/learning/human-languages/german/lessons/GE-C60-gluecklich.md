@@ -14,6 +14,7 @@ concept_tag: GE-GEFUEHLE1-GLUECKLICH
 prerequisites: [GE-C60-hunger, GE-C60-traurig]
 sounds: []
 roots: []
+etymology_hook: "glücklich — the word for 'luck' + -lich; English luck is the same word, taken from Low German or Dutch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C60-traurig]
 <!-- hl-knowledge: introduces=[GE-LEX-C60-GEFUEHLE1-05]; assesses=[] -->
 
 **glücklich** — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**glücklich** is the word for "luck", Middle High German *gelücke* (EtymDB 2.1), + *-lich*. English *luck* is the same word, taken from Low German or Dutch; where *gelücke* itself came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

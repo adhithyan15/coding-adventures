@@ -13,7 +13,8 @@ gloss: "a credit card"
 concept_tag: GE-THING157-KREDITKARTE
 prerequisites: [GE-C157-versicherung, GE-C157-konto]
 sounds: []
-roots: []
+roots: [credere-latin, charta-latin]
+etymology_hook: "Kreditkarte — Kredit 'credit' ← Latin crēditum 'a loan' + Karte 'card'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C157-konto]
 <!-- hl-knowledge: introduces=[GE-LEX-C157-THING157-04]; assesses=[] -->
 
 **die Kreditkarte** — "a credit card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kreditkarte** is *Kredit*, "credit" ← French *crédit* ← Latin *crēditum*, "a loan, a thing trusted", + *Karte*, "card" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

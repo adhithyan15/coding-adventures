@@ -13,7 +13,8 @@ gloss: "to name, to call"
 concept_tag: GE-VERB-NENNEN
 prerequisites: [GE-C148-mitbringen, GE-C148-mitnehmen]
 sounds: []
-roots: []
+roots: [namo]
+etymology_hook: "nennen ← Old High German nemnen, built on the word for 'name' ← Proto-Germanic *namô"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C148-mitnehmen]
 <!-- hl-knowledge: introduces=[GE-LEX-C149-VERB149-01]; assesses=[] -->
 
 **nennen** — "to name, to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nennen** ← Old High German *nemnen* ← Proto-Germanic *\*namnijaną*, built on *\*namô*, "name" (EtymDB 2.1) — the verb of the word English keeps as *name*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

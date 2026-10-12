@@ -15,6 +15,9 @@ The -en on the end is the infinitive ending you already own from gehen and sehen
 That is where the resemblance stops. Gehen and sehen keep their stem in every form — ich gehe, ich sehe. Sein keeps nothing. Not one of its present forms contains the letters s-e-i-n in that order.
 This is the only verb in the book that has to be met one form at a time, and the next several lessons do exactly that: one form each, said until it is automatic, before any of them are ever seen side by side.
 
+The word, taken apart.
+sein from Middle High German sīn — inherited. Its forms come from three old roots; ist is the same word as English is, which EtymDB 2.1 traces to Proto-Germanic isti.
+
 Sounds you'll need.
 s-voiced — a German s before a vowel buzzes like English z, exactly as it does in sehen. So sein opens with a z.
 diphthong-ei — German ei is the vowel of English eye, never "ee".
@@ -84,6 +87,9 @@ You'll want to know: du bist.
 du bist — "you are."
 Take bin, drop the n, add the familiar -st: bi- plus -st is bist. That is the same ending as du gehst, du heißt, du siehst.
 Of the six present forms of sein, this is the only one that can be derived from another one. Enjoy it; it does not happen again.
+
+The phrase, taken apart.
+bist from Old High German bist — inherited, from the same root as Old High German bim, "I am", which EtymDB 2.1 traces to Proto-Germanic beuną, "to be, to become". English be shares it.
 
 Sounds you'll need.
 u-long — du has a long, rounded oo, the vowel of English do, held.
@@ -158,6 +164,9 @@ wir sind — "we are."
 wir is "we." And sind shares its first two letters with the infinitive sein, which is the first visible family resemblance in this verb.
 Its Latin twin is sunt, "they are" — same s, same n, same closing stop, the same root wearing a different vowel.
 
+The phrase, taken apart.
+sind from Old High German sint — inherited, from the same root as English is and Latin sunt, "they are". EtymDB 2.1 traces English is to Proto-Germanic isti.
+
 Sounds you'll need.
 w-as-v — German w is English v. Wir begins like veer.
 ie-long-ee — ie is a long ee. Wir is veer, not wire.
@@ -191,6 +200,9 @@ ihr seid — "you are," said to more than one person you would each call du.
 ihr is the familiar plural "you" — a crowd of friends, a group of children, your own family. English once had ye here and let it go, which is why one English you now does the work of four German words.
 seid opens exactly like the infinitive: sei- is sein without its n. Both the s and the ei behave as they did there.
 
+The phrase, taken apart.
+ihr from Old High German ir from Proto-Germanic jīz — inherited, the same word as English ye. (EtymDB 2.1) seid is a form of sein.
+
 Sounds you'll need.
 ie-long-ee — ihr is eer, one long vowel; the h only stretches it.
 s-voiced — seid opens with the buzzing z of sein.
@@ -223,6 +235,9 @@ The polite Sie is literally the word for "they," worn as a courtesy. Its verb fo
 You'll want to know: sie sind and Sie sind.
 sie sind — "they are." Sie sind — "you are," to someone you would address formally.
 The form is sind, the very same word you learned for wir. Nothing changes in the mouth at all: wir sind, sie sind, Sie sind are three subjects and one verb form.
+
+The phrase, taken apart.
+sind from Old High German sint — inherited, from the same root as English is (EtymDB 2.1 traces is to Proto-Germanic isti). The polite Sie is the word for "they", capitalised.
 
 Grammar Lens: the capital carries the politeness.
 On the page, sie and Sie differ by exactly one capital letter — and German already spends capitals on grammar rather than decoration. In speech there is no difference at all; the context tells you which one is meant.
@@ -259,6 +274,9 @@ müde — "tired."
 Ich bin müde. — "I am tired."
 Two syllables, stress on the first: mü-duh. It is an adjective, and after sein an adjective takes no ending at all — the same bare form serves every subject. Ich bin müde, du bist müde, wir sind müde.
 That is worth noticing, because German adjectives are famous for their endings. They only take them in front of a noun. Standing after sein, they stand still.
+
+The word, taken apart.
+müde from Old High German muodi, "tired" from Proto-Germanic mōþijaz — inherited. (EtymDB 2.1).
 
 Sounds you'll need.
 umlaut-ue — ü is the vowel you make by rounding your lips for oo and then saying ee without moving them. The dots are the fronting mark you already know: the mouth shifts forward, the lips stay round.

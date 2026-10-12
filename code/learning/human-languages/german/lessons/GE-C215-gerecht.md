@@ -13,7 +13,8 @@ gloss: "fair, even-handed"
 concept_tag: GE-QUAL215-GERECHT
 prerequisites: [GE-C214-geizig, GE-C214-gemuetlich]
 sounds: []
-roots: []
+roots: [germanic-rehtaz]
+etymology_hook: "gerecht ← Old High German gireht — built on the word for 'right', English right"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C214-gemuetlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C215-QUAL215-01]; assesses=[] -->
 
 **gerecht** — "fair, even-handed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gerecht** ← Middle High German *gereht* ← Old High German *gireht* — inherited, built on the word for "right", Proto-Germanic *\*rehtaz*, English *right*. EtymDB 2.1 lists Gothic *garaihts*, "righteous", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 248,
-  "sourceHash": "fnv1a64:f793494b07474eb9",
+  "sourceHash": "fnv1a64:0d57b4895801a75d",
   "lessonIds": [
     "GE-C248-einrichten",
     "GE-C248-enden",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch248.txt",
   "json": "german/narration/ch248.json",
-  "textHash": "fnv1a64:89b70a4b98117885",
-  "jsonHash": "fnv1a64:bb982583ba7941a0",
+  "textHash": "fnv1a64:61ad3ccba132f406",
+  "jsonHash": "fnv1a64:270442ffc76a3d9c",
   "findings": []
 }

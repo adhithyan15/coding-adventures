@@ -14,6 +14,7 @@ concept_tag: GE-EIGEN132-FLEISSIG
 prerequisites: [GE-C131-ruhig, GE-C131-eng]
 sounds: []
 roots: []
+etymology_hook: "fleißig — the word for 'diligence' + -ig; diligence ← Middle High German vlīz 'zeal'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C131-eng]
 <!-- hl-knowledge: introduces=[GE-LEX-C132-EIGEN132-01]; assesses=[] -->
 
 **fleißig** — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fleißig** is the word for "diligence" + *-ig*. That word ← Middle High German *vlīz*, "zeal, effort" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

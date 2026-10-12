@@ -13,7 +13,8 @@ gloss: "first"
 concept_tag: GE-TIME171-ZUERST
 prerequisites: [GE-C170-noch, GE-C171-erst]
 sounds: []
-roots: []
+roots: [germanic-airistaz]
+etymology_hook: "zuerst — zu- + erst 'first': at first"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C171-erst]
 <!-- hl-knowledge: introduces=[GE-LEX-C171-TIME171-02]; assesses=[] -->
 
 **zuerst** — "first".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zuerst** is *zu-*, "at", + *erst*, "first" ← Proto-Germanic *\*airistaz* (EtymDB 2.1): at first.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

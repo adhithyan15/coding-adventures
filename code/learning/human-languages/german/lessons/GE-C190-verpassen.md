@@ -14,6 +14,7 @@ concept_tag: GE-VERB-VERPASSEN
 prerequisites: [GE-C190-vergleichen, GE-C190-verletzen]
 sounds: []
 roots: []
+etymology_hook: "verpassen — ver- + passen, from Dutch passen ← French passer 'to pass': to let something pass by"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C190-verletzen]
 <!-- hl-knowledge: introduces=[GE-LEX-C190-VERB190-03]; assesses=[] -->
 
 **verpassen** — "to miss (a train, a chance)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verpassen** is *ver-* + the verb "to fit, to pass", from Dutch *passen* ← French *passer*, "to pass" (EtymDB 2.1): to let something pass you by.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

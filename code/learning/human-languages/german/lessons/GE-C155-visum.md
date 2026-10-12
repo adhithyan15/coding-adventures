@@ -13,7 +13,8 @@ gloss: "a visa"
 concept_tag: GE-THING155-VISUM
 prerequisites: [GE-C155-gehalt, GE-C155-ausweis]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "Visum ← Latin vīsum 'seen', from vidēre 'to see' — a visa is a document that has been seen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C155-ausweis]
 <!-- hl-knowledge: introduces=[GE-LEX-C155-THING155-03]; assesses=[] -->
 
 **das Visum** — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Visum** ← Latin *vīsum*, "seen" (EtymDB 2.1), from *vidēre*, "to see" — borrowed: a visa is a passport that has been seen and approved.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

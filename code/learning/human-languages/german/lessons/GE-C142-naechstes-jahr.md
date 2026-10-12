@@ -13,7 +13,8 @@ gloss: "next year"
 concept_tag: GE-FUT142-NAECHSTES-JAHR
 prerequisites: [GE-C142-naechste-woche, GE-C142-uebermorgen]
 sounds: []
-roots: []
+roots: [germanic-jera]
+etymology_hook: "nächstes Jahr — 'nearest' + Jahr 'year'; Jahr ← Proto-Germanic *jērą, English year"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C142-uebermorgen]
 <!-- hl-knowledge: introduces=[GE-LEX-C142-FUT142-04]; assesses=[] -->
 
 **nächstes Jahr** — "next year". *Werden* changes with the person: *ich werde*, *du wirst*, *er wird*. **Nächstes Jahr wirst du Deutsch lernen.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nächstes Jahr** is "nearest" + *Jahr*, "year" ← Old High German *jār* ← Proto-Germanic *\*jērą*, English *year*. (EtymDB 2.1) *nächst-* is the superlative of the word for "near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

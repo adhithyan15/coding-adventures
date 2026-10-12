@@ -13,7 +13,8 @@ gloss: "a youth hostel"
 concept_tag: GE-THING193-JUGENDHERBERGE
 prerequisites: [GE-C193-rueckfahrt, GE-C193-unterkunft]
 sounds: []
-roots: []
+roots: [germanic-harjabergo]
+etymology_hook: "Jugendherberge — 'youth' + Herberge 'inn' ← Old High German heriberga, 'army shelter'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C193-unterkunft]
 <!-- hl-knowledge: introduces=[GE-LEX-C193-THING193-04]; assesses=[] -->
 
 **die Jugendherberge** — "a youth hostel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Jugendherberge** is the word for "youth" + *Herberge*, "inn" ← Old High German *heriberga*, "shelter for an army" (EtymDB 2.1). English *harbour* and French *auberge* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

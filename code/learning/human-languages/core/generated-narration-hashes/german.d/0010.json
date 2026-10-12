@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 10,
-  "sourceHash": "fnv1a64:fcd5032c5b1c20ed",
+  "sourceHash": "fnv1a64:a97d93262228b13d",
   "lessonIds": [
     "GE-C07-tag-muster",
     "GE-C07-mond",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "german/narration/ch10.txt",
   "json": "german/narration/ch10.json",
-  "textHash": "fnv1a64:bd27d4bb7bbb4cc8",
-  "jsonHash": "fnv1a64:fe996ed3053f866e",
+  "textHash": "fnv1a64:e33e39a5f736ec10",
+  "jsonHash": "fnv1a64:3613520ff05e8de3",
   "findings": []
 }

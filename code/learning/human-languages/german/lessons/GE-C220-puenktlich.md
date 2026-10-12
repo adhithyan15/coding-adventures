@@ -13,7 +13,8 @@ gloss: "punctual"
 concept_tag: GE-QUAL220-PUENKTLICH
 prerequisites: [GE-C219-ordentlich, GE-C219-persoenlich]
 sounds: []
-roots: []
+roots: [punctum-latin]
+etymology_hook: "pünktlich — the word for 'point' (Latin punctum) + -lich: on the dot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C219-persoenlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C220-QUAL220-01]; assesses=[] -->
 
 **pünktlich** — "punctual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pünktlich** is the word for "point", from Latin *pūnctum*, "a prick, a point" (EtymDB 2.1), + *-lich*: on the dot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "cosy"
 concept_tag: GE-QUAL214-GEMUETLICH
 prerequisites: [GE-C214-geduldig, GE-C214-geizig]
 sounds: []
-roots: []
+roots: [germanic-modaz]
+etymology_hook: "gemütlich ← Middle High German gemüetlich: Gemüt 'mind, heart' + -lich — good for the heart"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C214-geizig]
 <!-- hl-knowledge: introduces=[GE-LEX-C214-QUAL214-05]; assesses=[] -->
 
 **gemütlich** — "cosy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gemütlich** ← Middle High German *gemüetlich*: the word for "mind, heart", Old High German *gimuati*, + *-lich* (EtymDB 2.1). Cosy is what suits your mood; English *mood* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

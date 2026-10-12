@@ -13,7 +13,8 @@ gloss: "to plan, to intend"
 concept_tag: GE-VERB-VORHABEN
 prerequisites: [GE-C142-uebermorgen, GE-C142-naechstes-jahr]
 sounds: []
-roots: []
+roots: [germanic-habjana]
+etymology_hook: "vorhaben — 'before' + haben 'to have': to have something in front of you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C142-naechstes-jahr]
 <!-- hl-knowledge: introduces=[GE-LEX-C142-FUT142-05]; assesses=[] -->
 
 **vorhaben** — "to plan, to intend". It splits like the other separable verbs: **Was hast du vor?** — "What are you planning?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vorhaben** is the word for "before, in front" + *haben*, "to have": to have a plan in front of you. *haben* is the same verb as English *have*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

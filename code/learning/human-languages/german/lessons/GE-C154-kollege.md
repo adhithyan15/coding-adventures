@@ -13,7 +13,8 @@ gloss: "a colleague (man)"
 concept_tag: GE-THING154-KOLLEGE
 prerequisites: [GE-C154-firma, GE-C154-kollegin]
 sounds: []
-roots: []
+roots: [collega-latin]
+etymology_hook: "Kollege ← Latin collēga 'partner in office' — borrowed, like English colleague"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C154-kollegin]
 <!-- hl-knowledge: introduces=[GE-LEX-C154-THING154-04]; assesses=[] -->
 
 **der Kollege** — "a colleague (man)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kollege** ← Latin *collēga*, "partner in office", from *com-*, "with", and *lēgāre*, "to delegate" (EtymDB 2.1) — borrowed, like English *colleague*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

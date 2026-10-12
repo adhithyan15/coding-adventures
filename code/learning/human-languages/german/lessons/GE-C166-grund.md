@@ -13,7 +13,8 @@ gloss: "a reason"
 concept_tag: GE-THING166-GRUND
 prerequisites: [GE-C165-lust, GE-C165-meinung]
 sounds: []
-roots: []
+roots: [germanic-grunduz]
+etymology_hook: "Grund ← Old High German grunt ← Proto-Germanic *grunduz — the same word as English ground"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C165-meinung]
 <!-- hl-knowledge: introduces=[GE-LEX-C166-THING166-01]; assesses=[] -->
 
 **der Grund** — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Grund** ← Old High German *grunt* ← Proto-Germanic *\*grunduz* — inherited, the same word as English *ground*. (EtymDB 2.1) A reason is the ground something stands on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

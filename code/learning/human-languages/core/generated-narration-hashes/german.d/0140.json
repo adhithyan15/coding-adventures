@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 140,
-  "sourceHash": "fnv1a64:1ff69e9bce10d3e0",
+  "sourceHash": "fnv1a64:8b1aa2729abf4bb6",
   "lessonIds": [
     "GE-C140-liegen",
     "GE-C140-sich-anziehen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch140.txt",
   "json": "german/narration/ch140.json",
-  "textHash": "fnv1a64:0a014cdfea3e2f18",
-  "jsonHash": "fnv1a64:3332bcd9f04743f1",
+  "textHash": "fnv1a64:025ad27732e56136",
+  "jsonHash": "fnv1a64:f2c602e7db2c8ef3",
   "findings": []
 }

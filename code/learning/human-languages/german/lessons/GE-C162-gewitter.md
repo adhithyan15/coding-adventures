@@ -13,7 +13,8 @@ gloss: "a thunderstorm"
 concept_tag: GE-THING162-GEWITTER
 prerequisites: [GE-C162-wetter, GE-C162-wind]
 sounds: []
-roots: []
+roots: [germanic-wetter-weather]
+etymology_hook: "Gewitter ← Old High German giwitiri — ge- + Wetter: 'weather' gathered into a storm"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C162-wind]
 <!-- hl-knowledge: introduces=[GE-LEX-C162-THING162-05]; assesses=[] -->
 
 **das Gewitter** — "a thunderstorm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gewitter** ← Old High German *giwitiri*: *ge-*, the gathering prefix, + *Wetter*, "weather" (EtymDB 2.1 has *giwitiri*). A thunderstorm is weather all at once.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

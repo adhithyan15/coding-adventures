@@ -14,6 +14,7 @@ concept_tag: GE-LINK251-MINDESTENS
 prerequisites: [GE-C251-sowieso, GE-C251-hoechstens]
 sounds: []
 roots: []
+etymology_hook: "mindestens — the superlative of an old word for 'less' + -ens: at the least"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C251-hoechstens]
 <!-- hl-knowledge: introduces=[GE-LEX-C251-LINK251-04]; assesses=[] -->
 
 **mindestens** — "at least".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mindestens** is the superlative of an old word for "less", a cousin of Latin *minus*, + *-ens*: at the least.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

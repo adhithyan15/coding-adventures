@@ -14,6 +14,7 @@ concept_tag: GE-QUAL223-UNGLUECKLICH
 prerequisites: [GE-C223-typisch, GE-C223-ungeduldig]
 sounds: []
 roots: []
+etymology_hook: "unglücklich — un- + glücklich 'happy'; from Middle High German unglück 'misfortune'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C223-ungeduldig]
 <!-- hl-knowledge: introduces=[GE-LEX-C223-QUAL223-04]; assesses=[] -->
 
 **unglücklich** — "unhappy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unglücklich** is *un-*, "not", + *glücklich*, "happy". Middle High German *unglück*, "misfortune", is the noun beside it (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

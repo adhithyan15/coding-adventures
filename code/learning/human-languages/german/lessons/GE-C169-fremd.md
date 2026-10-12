@@ -14,6 +14,7 @@ concept_tag: GE-QUAL169-FREMD
 prerequisites: [GE-C168-altmodisch, GE-C169-bekannt]
 sounds: []
 roots: []
+etymology_hook: "fremd ← Middle High German vremde 'away from home' — English fremd is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C169-bekannt]
 <!-- hl-knowledge: introduces=[GE-LEX-C169-QUAL169-02]; assesses=[] -->
 
 **fremd** — "foreign, strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fremd** ← Middle High German *vremde*, from Old High German *framadi*, "away from here" — inherited; EtymDB 2.1 lists the old English *fremd*, "strange", and Dutch *vreemd* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

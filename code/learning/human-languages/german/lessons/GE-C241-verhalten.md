@@ -13,7 +13,8 @@ gloss: "behaviour"
 concept_tag: GE-THING241-VERHALTEN
 prerequisites: [GE-C241-unterschied, GE-C241-ursache]
 sounds: []
-roots: []
+roots: [germanic-haldana]
+etymology_hook: "Verhalten — ver- + the verb 'to hold': how you hold yourself"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C241-ursache]
 <!-- hl-knowledge: introduces=[GE-LEX-C241-THING241-05]; assesses=[] -->
 
 **das Verhalten** — "behaviour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Verhalten** is *ver-* + the verb "to hold", Old High German *haltan*, English *hold* (EtymDB 2.1): how you hold yourself, behaviour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

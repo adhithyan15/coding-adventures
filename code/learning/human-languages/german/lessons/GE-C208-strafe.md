@@ -14,6 +14,7 @@ concept_tag: GE-THING208-STRAFE
 prerequisites: [GE-C207-gericht, GE-C208-gesetz]
 sounds: []
 roots: []
+etymology_hook: "Strafe ← Middle High German strāfe 'rebuke' — a word of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C208-gesetz]
 <!-- hl-knowledge: introduces=[GE-LEX-C208-THING208-02]; assesses=[] -->
 
 **die Strafe** — "a punishment, a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Strafe** ← Middle High German *strāfe*, "rebuke, punishment" (EtymDB 2.1). Its earlier origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

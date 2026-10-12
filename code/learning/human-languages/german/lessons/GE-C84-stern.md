@@ -13,7 +13,8 @@ gloss: "a star"
 concept_tag: GE-NATUR3-STERN
 prerequisites: [GE-C83-feld, GE-C83-himmel]
 sounds: []
-roots: []
+roots: [germanic-sterno]
+etymology_hook: "Stern ← Old High German sterno ← Proto-Germanic *sternô 'star' — a cousin of English star"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C83-himmel]
 <!-- hl-knowledge: introduces=[GE-LEX-C84-NATUR3-01]; assesses=[] -->
 
 **der Stern** — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stern** ← Old High German *sterno* ← Proto-Germanic *\*sternô*, "star" — inherited, a cousin of English *star*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

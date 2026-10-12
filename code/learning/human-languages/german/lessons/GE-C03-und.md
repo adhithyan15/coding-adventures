@@ -13,7 +13,7 @@ sounds: [d-t-final]
 roots: [und-germanic]
 etymology_hook: "und is English and, barely changed in a thousand years, and its final d hardens to t like the g in Tag"
 duration:
-  max_seconds: 180
+  max_seconds: 248
 requires:
   knowledge: [GE-LEX-DIR-01, GE-LEX-IHNEN-01, GE-GRAMMAR-DATIVE-01]
 introduces:
@@ -46,6 +46,11 @@ you ask back — and German returns the question in two words.
 
 It is English **and** with the vowel darkened, and it has barely changed in a
 thousand years — one of the oldest words either language still uses daily.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**und** ← Old High German *unti* ← Proto-Germanic *\*andi* — inherited, the same word as English *and*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-FINAL-DEVOICING-D-01]; assesses=[GE-LEX-UND-01] -->

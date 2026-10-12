@@ -14,6 +14,7 @@ concept_tag: GE-THING229-GEGEND
 prerequisites: [GE-C229-gebuehr, GE-C229-gefuehl]
 sounds: []
 roots: []
+etymology_hook: "Gegend ← Middle High German gegende — built on gegen 'towards': what lies over against you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C229-gefuehl]
 <!-- hl-knowledge: introduces=[GE-LEX-C229-THING229-05]; assesses=[] -->
 
 **die Gegend** — "an area, a region".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gegend** ← Middle High German *gegende* (EtymDB 2.1), built on the word for "towards, against": the land that lies before you, a copy of Medieval Latin *contrāta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

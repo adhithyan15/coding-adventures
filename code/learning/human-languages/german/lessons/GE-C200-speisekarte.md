@@ -13,7 +13,8 @@ gloss: "a menu"
 concept_tag: GE-THING200-SPEISEKARTE
 prerequisites: [GE-C199-haehnchen, GE-C199-torte]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "Speisekarte — the word for 'food, a dish' + Karte 'card': the card of dishes"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C199-torte]
 <!-- hl-knowledge: introduces=[GE-LEX-C200-THING200-01]; assesses=[] -->
 
 **die Speisekarte** — "a menu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Speisekarte** is the word for "food, a dish" (itself from Medieval Latin *spēsa*, "provisions") + *Karte*, "card", from Latin *charta* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a desert"
 concept_tag: GE-NATUR4-WUESTE
 prerequisites: [GE-C85-eis, GE-C85-huegel]
 sounds: []
-roots: []
+roots: [germanic-wostijaz]
+etymology_hook: "Wüste ← Old High German wuostī 'wasteland' — a cousin of English waste"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C85-huegel]
 <!-- hl-knowledge: introduces=[GE-LEX-C85-NATUR4-03]; assesses=[] -->
 
 **die Wüste** — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wüste** ← Old High German *wuostī* ← Proto-Germanic *\*wōstinjō*, "wasteland" — inherited. (EtymDB 2.1) English *waste*, which came through French from Latin *vastus*, is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,7 @@ gloss: nineteen — the last of the -zehn numbers, and the rule's eighth clean r
 concept_tag: GE-NUMBER-19
 prerequisites: [GE-C12-achtzehn]
 sounds: [diphthong-eu, z-ts]
-roots: []
+roots: [newun-germanic, tehun-germanic]
 etymology_hook: "neunzehn is the last number built with zehn on the end; twenty stops using it and starts using a worn-down form instead"
 duration:
   max_seconds: 155
@@ -46,6 +46,11 @@ reading on.
 
 Seven numbers built from one rule and not one of them broke it. Two shortened a
 digit at the join and kept the rule intact.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neunzehn** ← Old High German *niunzehan* ← Proto-Germanic *\*newuntehun*, "nine-ten" — the same compound as English *nineteen*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-NEUNZEHN-01] -->

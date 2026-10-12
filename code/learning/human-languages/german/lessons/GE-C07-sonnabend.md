@@ -10,10 +10,10 @@ gloss: Saturday in the north — Sun-eve, built from two words you already own
 concept_tag: GE-WEEKDAY-SATURDAY-NORTH
 prerequisites: [GE-C07-samstag, GE-C01-abend]
 sounds: [vowel-o]
-roots: [germanic-sunnon]
+roots: [germanic-sunnon, abanths]
 etymology_hook: "northern Germany says Sonnabend, 'Sun-eve', for the evening before Sunday — the same reckoning that puts Christmas Eve before Christmas, and it is transparent once Sonne and Abend are both yours"
 duration:
-  max_seconds: 160
+  max_seconds: 172
 requires:
   knowledge: [GE-LEX-SAMSTAG-01, GE-LEX-SONNE-01, GE-LEX-ABEND-02, GE-LEX-SONNTAG-01]
 introduces:
@@ -49,6 +49,11 @@ means, because both halves are already yours.
 
 That is the same reckoning English keeps in *Christmas Eve* and *New Year's
 Eve* — the day taking its name from the night that runs up to it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sonnabend** ← Middle High German *sunābent* (EtymDB 2.1): *Sonne* + *Abend*, the eve of Sunday.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SONNABEND-01, GE-LEX-SAMSTAG-01] -->

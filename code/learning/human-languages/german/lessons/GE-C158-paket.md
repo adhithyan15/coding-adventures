@@ -14,6 +14,7 @@ concept_tag: GE-THING158-PAKET
 prerequisites: [GE-C158-rechnung, GE-C158-tuete]
 sounds: []
 roots: []
+etymology_hook: "Paket ← French paquet, from a Dutch word for 'a pack' — borrowed; English packet shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C158-tuete]
 <!-- hl-knowledge: introduces=[GE-LEX-C158-THING158-04]; assesses=[] -->
 
 **das Paket** — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Paket** ← French *paquet*, "packet", from Dutch *pak*, "bundle" (EtymDB 2.1) — borrowed. English *packet* is the same French word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

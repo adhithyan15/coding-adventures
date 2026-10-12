@@ -14,6 +14,7 @@ concept_tag: GE-TIME170-SELTEN
 prerequisites: [GE-C169-stolz, GE-C169-wuetend]
 sounds: []
 roots: []
+etymology_hook: "selten ← Middle High German selten — the same word as English seldom"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C169-wuetend]
 <!-- hl-knowledge: introduces=[GE-LEX-C170-TIME170-01]; assesses=[] -->
 
 **selten** — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**selten** ← Middle High German *selten* — inherited; EtymDB 2.1 lists it beside English *seldom* and Dutch *zelden*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

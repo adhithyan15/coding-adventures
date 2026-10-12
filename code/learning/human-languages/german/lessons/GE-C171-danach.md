@@ -14,6 +14,7 @@ concept_tag: GE-TIME171-DANACH
 prerequisites: [GE-C171-erst, GE-C171-zuerst]
 sounds: []
 roots: []
+etymology_hook: "danach — da 'there, that' + nach 'after': after that"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C171-zuerst]
 <!-- hl-knowledge: introduces=[GE-LEX-C171-TIME171-03]; assesses=[] -->
 
 **danach** — "afterwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**danach** is the word for "there, that" + the word for "after": after that. EtymDB 2.1 has the compound but not its parts; both are inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

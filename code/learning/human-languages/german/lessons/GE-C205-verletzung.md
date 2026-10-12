@@ -14,6 +14,7 @@ concept_tag: GE-THING205-VERLETZUNG
 prerequisites: [GE-C205-sprechstunde, GE-C205-untersuchung]
 sounds: []
 roots: []
+etymology_hook: "Verletzung — verletzen 'to injure' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C205-untersuchung]
 <!-- hl-knowledge: introduces=[GE-LEX-C205-THING205-05]; assesses=[] -->
 
 **die Verletzung** — "an injury".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Verletzung** is *verletzen*, "to injure" ← Middle High German *verletzen* (EtymDB 2.1), + *-ung*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

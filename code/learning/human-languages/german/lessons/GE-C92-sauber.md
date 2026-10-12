@@ -13,7 +13,8 @@ gloss: "clean"
 concept_tag: GE-ADJ4-SAUBER
 prerequisites: [GE-C91-haesslich, GE-C91-suess]
 sounds: []
-roots: []
+roots: [sobrius-latin]
+etymology_hook: "sauber ← Old High German sūbar, from Latin sōbrius 'sober' — an early loan; English sober shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C91-suess]
 <!-- hl-knowledge: introduces=[GE-LEX-C92-ADJ4-01]; assesses=[] -->
 
 **sauber** — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sauber** ← Old High German *sūbar*, from Latin *sōbrius*, "sober" — an early loan. EtymDB 2.1 traces English *sober* to the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

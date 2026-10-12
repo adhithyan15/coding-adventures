@@ -14,6 +14,7 @@ concept_tag: GE-RICHTUNG108-GERADEAUS
 prerequisites: [GE-C108-osten, GE-C108-westen]
 sounds: []
 roots: []
+etymology_hook: "geradeaus — the word for 'straight' + the word for 'out': straight out ahead"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C108-westen]
 <!-- hl-knowledge: introduces=[GE-LEX-C108-RICHTUNG108-05]; assesses=[] -->
 
 **geradeaus** — "straight on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geradeaus** is built from the word for "straight" and the word for "out" (EtymDB 2.1): straight out ahead. The "out" word is the same as English *out*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

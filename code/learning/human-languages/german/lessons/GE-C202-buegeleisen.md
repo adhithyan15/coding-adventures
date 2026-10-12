@@ -13,7 +13,8 @@ gloss: "an iron"
 concept_tag: GE-THING202-BUEGELEISEN
 prerequisites: [GE-C201-spuelmaschine, GE-C202-staubsauger]
 sounds: []
-roots: []
+roots: [germanic-isarna]
+etymology_hook: "Bügeleisen — the verb 'to iron' + Eisen 'iron': the same metal word as English iron"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C202-staubsauger]
 <!-- hl-knowledge: introduces=[GE-LEX-C202-THING202-02]; assesses=[] -->
 
 **das Bügeleisen** — "an iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bügeleisen** is the verb "to iron, to smooth" + the word for "iron", Old High German *īsarn* ← Proto-Germanic *\*īsarną*, the same word as English *iron* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

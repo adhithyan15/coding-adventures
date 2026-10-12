@@ -13,7 +13,8 @@ gloss: "a number"
 concept_tag: GE-THING235-NUMMER
 prerequisites: [GE-C234-mut, GE-C235-neuigkeit]
 sounds: []
-roots: []
+roots: [numerus-latin]
+etymology_hook: "Nummer ← Italian numero ← Latin numerus 'number' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C235-neuigkeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C235-THING235-02]; assesses=[] -->
 
 **die Nummer** — "a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nummer** ← Italian *numero* ← Latin *numerus*, "number" — borrowed, like English *number*. EtymDB 2.1 has the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

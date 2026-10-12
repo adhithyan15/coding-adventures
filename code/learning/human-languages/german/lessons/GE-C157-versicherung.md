@@ -13,7 +13,8 @@ gloss: "insurance"
 concept_tag: GE-THING157-VERSICHERUNG
 prerequisites: [GE-C156-grippe, GE-C157-tablette]
 sounds: []
-roots: []
+roots: [securus-latin]
+etymology_hook: "Versicherung — the verb 'to insure' + -ung; built on sicher 'safe' ← Latin sēcūrus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C157-tablette]
 <!-- hl-knowledge: introduces=[GE-LEX-C157-THING157-02]; assesses=[] -->
 
 **die Versicherung** — "insurance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Versicherung** is the noun of the verb "to insure" (EtymDB 2.1), built from *ver-* + *sicher*, "safe", which goes back to Latin *sēcūrus*: insurance makes you safe.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

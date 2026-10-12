@@ -13,7 +13,8 @@ gloss: "next week"
 concept_tag: GE-FUT142-NAECHSTE-WOCHE
 prerequisites: [GE-C141-anfangen, GE-C142-zukunft]
 sounds: []
-roots: []
+roots: [germanic-wiko]
+etymology_hook: "nächste Woche — 'nearest' + Woche 'week'; Woche ← Proto-Germanic *wikōn, English week"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C142-zukunft]
 <!-- hl-knowledge: introduces=[GE-LEX-C142-FUT142-02]; assesses=[] -->
 
 **nächste Woche** — "next week". Put the time first and the verb stays second: **Nächste Woche werde ich Deutsch lernen.** *Werde* comes before *ich*, and *lernen* waits at the end.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nächste Woche** is "nearest" + *Woche*, "week". *Woche* ← Old High German *wohha* ← Proto-Germanic *\*wikōn*, "turn, succession" (EtymDB 2.1), the same word as English *week*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

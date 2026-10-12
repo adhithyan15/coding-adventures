@@ -13,7 +13,8 @@ gloss: "a plant"
 concept_tag: GE-THING198-PFLANZE
 prerequisites: [GE-C198-fliege, GE-C198-schmetterling]
 sounds: []
-roots: []
+roots: [planta-latin]
+etymology_hook: "Pflanze ← Old High German pflanza ← Latin planta 'shoot, cutting' — an early loan, like English plant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C198-schmetterling]
 <!-- hl-knowledge: introduces=[GE-LEX-C198-THING198-05]; assesses=[] -->
 
 **die Pflanze** — "a plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Pflanze** ← Old High German *pflanza* ← Latin *planta*, "shoot, cutting" (EtymDB 2.1) — borrowed so early that its *p* shifted to *pf*. English *plant* is the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

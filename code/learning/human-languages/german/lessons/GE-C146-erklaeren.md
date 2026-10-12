@@ -13,7 +13,8 @@ gloss: "to explain"
 concept_tag: GE-VERB-ERKLAEREN
 prerequisites: [GE-C145-empfehlen, GE-C145-entscheiden]
 sounds: []
-roots: []
+roots: [clarus]
+etymology_hook: "erklären — er- + the verb 'to make clear', built on klar ← Latin clārus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C145-entscheiden]
 <!-- hl-knowledge: introduces=[GE-LEX-C146-VERB146-01]; assesses=[] -->
 
 **erklären** — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erklären** is *er-* + the verb "to make clear", built on the word for "clear", Middle High German *klār* ← Latin *clārus* (EtymDB 2.1). To explain is to make clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "pronunciation"
 concept_tag: GE-THING226-AUSSPRACHE
 prerequisites: [GE-C225-ausbildung, GE-C225-ausstellung]
 sounds: []
-roots: []
+roots: [germanic-sprekijo]
+etymology_hook: "Aussprache — aus- 'out' + Sprache 'speech': how a word is spoken out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C225-ausstellung]
 <!-- hl-knowledge: introduces=[GE-LEX-C226-THING226-01]; assesses=[] -->
 
 **die Aussprache** — "pronunciation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Aussprache** is *aus-*, "out", + *Sprache*, "speech" ← Proto-Germanic *\*sprēkijō* (EtymDB 2.1): how a word is spoken out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

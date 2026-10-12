@@ -13,7 +13,8 @@ gloss: "a class"
 concept_tag: GE-SCHULE127-KLASSE
 prerequisites: [GE-C126-chef, GE-C127-beruf]
 sounds: []
-roots: []
+roots: [classis-latin]
+etymology_hook: "Klasse ← Latin classis 'a division of the people' — borrowed, like English class"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C127-beruf]
 <!-- hl-knowledge: introduces=[GE-LEX-C127-SCHULE127-02]; assesses=[] -->
 
 **die Klasse** — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Klasse** ← Latin *classis*, "a division of the Roman people" (EtymDB 2.1) — borrowed through French, like English *class*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

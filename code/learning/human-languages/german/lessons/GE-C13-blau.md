@@ -13,7 +13,7 @@ sounds: [diphthong-au, w-is-v]
 roots: [germanic-blewaz]
 etymology_hook: "blau ← Germanic *blēwaz, and like blank it was borrowed INTO Romance — German lent two of its four colour words abroad"
 duration:
-  max_seconds: 150
+  max_seconds: 151
 requires:
   knowledge: [GE-LEX-ROT-01, GE-ETYMON-ROT-RUBER-01]
 introduces:
@@ -45,6 +45,11 @@ lent abroad.
 > **blau** — "blue."
 
 Four letters, one syllable, and the vowel is the trap.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**blau** ← Middle High German *blā* (EtymDB 2.1), from Proto-Germanic *\*blēwaz*, "blue" — inherited. English *blue* is the same Germanic word, brought back through French.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-BLAU-01]; assesses=[GE-LEX-BLAU-01] -->

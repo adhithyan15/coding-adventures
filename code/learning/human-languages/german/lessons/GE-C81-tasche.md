@@ -14,6 +14,7 @@ concept_tag: GE-SCHULE-TASCHE
 prerequisites: [GE-C81-karte, GE-C81-bild]
 sounds: []
 roots: []
+etymology_hook: "Tasche ← Old High German tasca 'pouch'; where tasca came from is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C81-bild]
 <!-- hl-knowledge: introduces=[GE-LEX-C81-SCHULE-04]; assesses=[] -->
 
 **die Tasche** — "a bag; a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tasche** ← Old High German *tasca*, "pouch" (EtymDB 2.1). Where *tasca* itself came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 250,
-  "sourceHash": "fnv1a64:72e9b24c88f7d6fe",
+  "sourceHash": "fnv1a64:ab8bde7710cf6ded",
   "lessonIds": [
     "GE-C250-ausserdem",
     "GE-C250-deshalb",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch250.txt",
   "json": "german/narration/ch250.json",
-  "textHash": "fnv1a64:e87f607df6addecf",
-  "jsonHash": "fnv1a64:f4f8485722e0b0ca",
+  "textHash": "fnv1a64:cdc37b0639e8df83",
+  "jsonHash": "fnv1a64:3d581965976efc2d",
   "findings": []
 }

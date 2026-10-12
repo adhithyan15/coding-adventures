@@ -13,7 +13,8 @@ gloss: "a landscape"
 concept_tag: GE-THING232-LANDSCHAFT
 prerequisites: [GE-C232-kultur, GE-C232-kunst]
 sounds: []
-roots: []
+roots: [germanic-landa]
+etymology_hook: "Landschaft ← Old High German lantskaf: Land + -schaft — English landscape came from the Dutch cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C232-kunst]
 <!-- hl-knowledge: introduces=[GE-LEX-C232-THING232-05]; assesses=[] -->
 
 **die Landschaft** — "a landscape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Landschaft** ← Middle High German *lantschaft* ← Old High German *lantskaf* (EtymDB 2.1): the word for "land" + *-schaft*. English *landscape* came from its Dutch cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

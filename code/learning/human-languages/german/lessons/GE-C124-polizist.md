@@ -13,7 +13,8 @@ gloss: "a police officer"
 concept_tag: GE-BERUF124-POLIZIST
 prerequisites: [GE-C124-krankenschwester, GE-C124-koch]
 sounds: []
-roots: []
+roots: [politia-latin]
+etymology_hook: "Polizist — Polizei 'police' + -ist; Polizei ← Medieval Latin politia ← Greek politeía"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C124-koch]
 <!-- hl-knowledge: introduces=[GE-LEX-C124-BERUF124-04]; assesses=[] -->
 
 **der Polizist** — "a police officer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Polizist** is *Polizei* + *-ist*, the ending for a person who does a job. *Polizei* ← Medieval Latin *politia* ← Greek *politeía*, "government". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

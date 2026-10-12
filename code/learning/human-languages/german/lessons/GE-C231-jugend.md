@@ -13,7 +13,8 @@ gloss: "youth"
 concept_tag: GE-THING231-JUGEND
 prerequisites: [GE-C231-humor, GE-C231-interesse]
 sounds: []
-roots: []
+roots: [germanic-juguthiz]
+etymology_hook: "Jugend ← Old High German jugund ← Proto-Germanic *jugunþiz 'youth' — the same word as English youth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C231-interesse]
 <!-- hl-knowledge: introduces=[GE-LEX-C231-THING231-05]; assesses=[] -->
 
 **die Jugend** — "youth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Jugend** ← Old High German *jugund* ← Proto-Germanic *\*jugunþiz*, "youth" — inherited, the same word as English *youth*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

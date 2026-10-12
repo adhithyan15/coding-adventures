@@ -13,7 +13,8 @@ gloss: "knowledge (of something)"
 concept_tag: GE-THING232-KENNTNIS
 prerequisites: [GE-C231-jugend, GE-C232-kindheit]
 sounds: []
-roots: []
+roots: [germanic-kannijana]
+etymology_hook: "Kenntnis — kennen 'to know' + -nis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C232-kindheit]
 <!-- hl-knowledge: introduces=[GE-LEX-C232-THING232-02]; assesses=[] -->
 
 **die Kenntnis** — "knowledge (of something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kenntnis** is *kennen*, "to know", + *-nis*, an ending that makes a noun (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

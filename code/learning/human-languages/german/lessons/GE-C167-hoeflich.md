@@ -13,7 +13,8 @@ gloss: "polite"
 concept_tag: GE-QUAL167-HOEFLICH
 prerequisites: [GE-C167-bequem, GE-C167-unfreundlich]
 sounds: []
-roots: []
+roots: [germanic-hufa]
+etymology_hook: "höflich ← Middle High German hovelich 'fit for the court' — built like English courteous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C167-unfreundlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C167-QUAL167-03]; assesses=[] -->
 
 **höflich** — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**höflich** ← Middle High German *hovelich*, "in keeping with the customs of the court": the word for "court" + *-lich* (EtymDB 2.1). English *courteous* is built on *court* the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

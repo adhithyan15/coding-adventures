@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 77,
-  "sourceHash": "fnv1a64:a8cfd352b234614a",
+  "sourceHash": "fnv1a64:7fdf544349340d9d",
   "lessonIds": [
     "GE-C77-garten",
     "GE-C77-lampe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch77.txt",
   "json": "german/narration/ch77.json",
-  "textHash": "fnv1a64:6e426f513100f9ea",
-  "jsonHash": "fnv1a64:6617db87eff9abd8",
+  "textHash": "fnv1a64:3cfaaf722133978a",
+  "jsonHash": "fnv1a64:002f30168d9c91c1",
   "findings": []
 }

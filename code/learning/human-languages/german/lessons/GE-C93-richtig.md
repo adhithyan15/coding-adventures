@@ -13,7 +13,8 @@ gloss: "right, correct"
 concept_tag: GE-ADJ5-RICHTIG
 prerequisites: [GE-C92-duenn, GE-C92-leise]
 sounds: []
-roots: []
+roots: [germanic-rehtaz]
+etymology_hook: "richtig ← Old High German rihtīg: reht 'right' + -ig — the same 'right' as in English"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C92-leise]
 <!-- hl-knowledge: introduces=[GE-LEX-C93-ADJ5-01]; assesses=[] -->
 
 **richtig** — "right, correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**richtig** ← Old High German *rihtīg*, built from *reht*, "right", + *-ig*; *reht* ← Proto-Germanic *\*rehtaz*, the same word as English *right*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

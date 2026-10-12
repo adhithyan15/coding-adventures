@@ -13,7 +13,8 @@ gloss: "to feel"
 concept_tag: GE-VERB-FUEHLEN
 prerequisites: [GE-C140-sich-anziehen, GE-C140-erzaehlen]
 sounds: []
-roots: []
+roots: [germanic-folijana]
+etymology_hook: "fühlen ← Old High German fuolen ← Proto-Germanic *fōlijaną — the same verb as English feel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C140-erzaehlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C140-VERB140-04]; assesses=[] -->
 
 **fühlen** — "to feel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fühlen** ← Old High German *fuolen* ← Proto-Germanic *\*fōlijaną*, "to feel" — inherited, the same verb as English *feel*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

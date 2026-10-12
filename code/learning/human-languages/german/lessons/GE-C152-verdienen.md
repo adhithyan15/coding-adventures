@@ -13,7 +13,8 @@ gloss: "to earn"
 concept_tag: GE-VERB-VERDIENEN
 prerequisites: [GE-C151-umziehen, GE-C152-unterschreiben]
 sounds: []
-roots: []
+roots: [germanic-theunona]
+etymology_hook: "verdienen ← Middle High German verdienen: ver- + dienen 'to serve' — earning is what service brings"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C152-unterschreiben]
 <!-- hl-knowledge: introduces=[GE-LEX-C152-VERB152-02]; assesses=[] -->
 
 **verdienen** — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verdienen** ← Middle High German *verdienen* (EtymDB 2.1): *ver-* + the verb "to serve", Old High German *dionōn*. What you earn is what your service brings in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

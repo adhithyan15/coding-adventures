@@ -14,6 +14,7 @@ concept_tag: GE-THING229-GEBUEHR
 prerequisites: [GE-C229-erlebnis, GE-C229-fuehrung]
 sounds: []
 roots: []
+etymology_hook: "Gebühr — from an old verb 'to be due, to befit': what is due"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C229-fuehrung]
 <!-- hl-knowledge: introduces=[GE-LEX-C229-THING229-03]; assesses=[] -->
 
 **die Gebühr** — "a fee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gebühr** comes from Middle High German *gebür*, "what is due", from an old verb meaning "to befall, to be fitting". EtymDB 2.1 has no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

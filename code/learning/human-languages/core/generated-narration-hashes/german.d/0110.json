@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 110,
-  "sourceHash": "fnv1a64:f0e9936ecd526301",
+  "sourceHash": "fnv1a64:cdfb22c466d8e47e",
   "lessonIds": [
     "GE-C110-neben",
     "GE-C110-zwischen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch110.txt",
   "json": "german/narration/ch110.json",
-  "textHash": "fnv1a64:5e1c62dde4d22b6b",
-  "jsonHash": "fnv1a64:5c389fb475d737ea",
+  "textHash": "fnv1a64:c80f7eeae302c09c",
+  "jsonHash": "fnv1a64:dd1400b503e7042f",
   "findings": []
 }

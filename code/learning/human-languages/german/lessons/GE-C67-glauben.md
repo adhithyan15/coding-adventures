@@ -13,7 +13,8 @@ gloss: "to believe"
 concept_tag: GE-VERB-GLAUBEN
 prerequisites: [GE-C66-vergessen, GE-C67-verlieren]
 sounds: []
-roots: []
+roots: [germanic-galaubijana]
+etymology_hook: "glauben ← Old High German gilouben ← Proto-Germanic *galaubijaną — a cousin of English believe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C67-verlieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C67-VERBEN4-02]; assesses=[] -->
 
 **glauben** — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**glauben** ← Old High German *gilouben* ← Proto-Germanic *\*galaubijaną*, "to hold dear, to believe" — inherited, a cousin of English *believe*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "tasty"
 concept_tag: GE-QUAL218-LECKER
 prerequisites: [GE-C217-kraeftig, GE-C217-ledig]
 sounds: []
-roots: []
+roots: [germanic-likkona]
+etymology_hook: "lecker ← Middle High German lecker — from the verb 'to lick': worth licking your lips for"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C217-ledig]
 <!-- hl-knowledge: introduces=[GE-LEX-C218-QUAL218-01]; assesses=[] -->
 
 **lecker** — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lecker** ← Middle High German *lecker* (EtymDB 2.1), from the verb "to lick", Old High German *lecchōn*, English *lick*: food worth licking your lips for.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "grey"
 concept_tag: GE-WANN-GRAU
 prerequisites: [GE-C93-einfach, GE-C93-braun]
 sounds: []
-roots: []
+roots: [germanic-grewaz]
+etymology_hook: "grau ← Old High German grāo ← Proto-Germanic *grēwaz — the same word as English grey"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C93-braun]
 <!-- hl-knowledge: introduces=[GE-LEX-C94-WANN-01]; assesses=[] -->
 
 **grau** — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grau** ← Old High German *grāo* ← Proto-Germanic *\*grēwaz* — inherited, the same word as English *grey*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

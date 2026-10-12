@@ -13,7 +13,8 @@ gloss: "a workshop, a garage"
 concept_tag: GE-THING210-WERKSTATT
 prerequisites: [GE-C209-wirtschaft, GE-C210-industrie]
 sounds: []
-roots: []
+roots: [germanic-werka]
+etymology_hook: "Werkstatt — Werk 'work' + Statt 'place': a place of work"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C210-industrie]
 <!-- hl-knowledge: introduces=[GE-LEX-C210-THING210-02]; assesses=[] -->
 
 **die Werkstatt** — "a workshop, a garage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Werkstatt** is the word for "work", Old High German *werc* ← Proto-Germanic *\*werką*, English *work* (EtymDB 2.1), + an old word for "place", English *stead*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

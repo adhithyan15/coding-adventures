@@ -13,7 +13,8 @@ gloss: "a shop"
 concept_tag: GE-STADT1-LADEN
 prerequisites: [GE-C95-weit, GE-C95-rechts]
 sounds: []
-roots: []
+roots: [germanic-latho]
+etymology_hook: "Laden ← Middle High German lade 'board, shutter' — a shop was first the board goods lay on"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C95-rechts]
 <!-- hl-knowledge: introduces=[GE-LEX-C96-STADT1-01]; assesses=[] -->
 
 **der Laden** — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Laden** ← Middle High German *lade*, "board, plank, shutter" ← Old High German *lado* ← Proto-Germanic *\*laþô* (EtymDB 2.1) — inherited: a shop was first the shutter-board goods were laid out on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

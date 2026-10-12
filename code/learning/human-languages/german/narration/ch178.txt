@@ -12,6 +12,9 @@ Before the new one: say the German for to spell, then the German for to print.
 You'll want to know: duschen.
 duschen — "to shower".
 
+The word, taken apart.
+duschen is the verb made from Dusche from French douche from Italian doccia, "water pipe" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for to print, then the German for to shower.
 
 You'll want to know: einschlafen.
 einschlafen — "to fall asleep".
+
+The word, taken apart.
+einschlafen is ein-, "into", + schlafen, "to sleep" from Proto-Germanic slēpaną, English sleep (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for to shower, then the German for to fall as
 You'll want to know: einsteigen.
 einsteigen — "to get on (a vehicle)".
 
+The word, taken apart.
+einsteigen is ein-, "in", + the verb "to climb", Old High German stīgan (EtymDB 2.1): to climb into a vehicle. English stile and stirrup share the root.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for to fall asleep, then the German for to ge
 You'll want to know: aussteigen.
 aussteigen — "to get off (a vehicle)".
 
+The word, taken apart.
+aussteigen is aus-, "out", + the verb "to climb", Old High German stīgan (EtymDB 2.1): to climb out of a vehicle.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for to get on, then the German for to get off
 
 You'll want to know: umsteigen.
 umsteigen — "to change (trains or buses)".
+
+The word, taken apart.
+umsteigen is um-, "over, around", + the verb "to climb", Old High German stīgan (EtymDB 2.1): to climb over into another train.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "an island"
 concept_tag: GE-NATUR2-INSEL
 prerequisites: [GE-C83-wald, GE-C83-stein]
 sounds: []
-roots: []
+roots: [insula-latin]
+etymology_hook: "Insel ← Middle High German insel ← Latin īnsula 'island' — borrowed; English insular shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C83-stein]
 <!-- hl-knowledge: introduces=[GE-LEX-C83-NATUR2-03]; assesses=[] -->
 
 **die Insel** — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Insel** ← Middle High German *insel* ← Latin *īnsula*, "island" (EtymDB 2.1) — borrowed. English *insular* and *peninsula* share the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

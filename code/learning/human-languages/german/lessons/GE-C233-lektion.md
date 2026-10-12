@@ -13,7 +13,8 @@ gloss: "a lesson (in a textbook)"
 concept_tag: GE-THING233-LEKTION
 prerequisites: [GE-C233-lebenslauf, GE-C233-leistung]
 sounds: []
-roots: []
+roots: [lectio-latin]
+etymology_hook: "Lektion ← Latin lēctiō 'a reading' — borrowed, like English lesson"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C233-leistung]
 <!-- hl-knowledge: introduces=[GE-LEX-C233-THING233-05]; assesses=[] -->
 
 **die Lektion** — "a lesson (in a textbook)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lektion** ← Latin *lēctiō*, "a reading" (EtymDB 2.1 has the Latin word) — borrowed. English *lesson* is the same Latin word through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

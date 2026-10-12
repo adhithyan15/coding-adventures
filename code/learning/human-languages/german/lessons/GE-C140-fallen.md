@@ -13,7 +13,8 @@ gloss: "to fall"
 concept_tag: GE-VERB-FALLEN
 prerequisites: [GE-C140-erzaehlen, GE-C140-fuehlen]
 sounds: []
-roots: []
+roots: [germanic-fallana]
+etymology_hook: "fallen ← Old High German fallan ← Proto-Germanic *fallaną — the same verb as English fall"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C140-fuehlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C140-VERB140-05]; assesses=[] -->
 
 **fallen** — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fallen** ← Old High German *fallan* ← Proto-Germanic *\*fallaną* — inherited, the same verb as English *fall*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

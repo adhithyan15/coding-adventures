@@ -14,6 +14,7 @@ concept_tag: GE-VERB-BEDEUTEN
 prerequisites: [GE-C175-baden, GE-C175-bauen]
 sounds: []
 roots: []
+etymology_hook: "bedeuten — be- + deuten 'to interpret', built on the old word for 'people', like deutsch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C175-bauen]
 <!-- hl-knowledge: introduces=[GE-LEX-C176-VERB176-01]; assesses=[] -->
 
 **bedeuten** — "to mean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bedeuten** is *be-* + the verb "to interpret", Old High German *diuten*, "to make plain to the people" (EtymDB 2.1). It shares its root with *Deutsch*, "of the people".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

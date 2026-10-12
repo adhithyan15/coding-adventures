@@ -14,6 +14,7 @@ concept_tag: GE-HAUS113-KISSEN
 prerequisites: [GE-C113-regal, GE-C113-vorhang]
 sounds: []
 roots: []
+etymology_hook: "Kissen ← Old High German kussīn, from Old French coissin — borrowed, like English cushion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C113-vorhang]
 <!-- hl-knowledge: introduces=[GE-LEX-C113-HAUS113-05]; assesses=[] -->
 
 **das Kissen** — "a cushion, a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kissen** ← Old High German *kussīn* (EtymDB 2.1), from Old French *coissin* — borrowed, like English *cushion*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

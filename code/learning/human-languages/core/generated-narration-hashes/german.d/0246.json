@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 246,
-  "sourceHash": "fnv1a64:510277a249ffe4e8",
+  "sourceHash": "fnv1a64:b1482659e8784011",
   "lessonIds": [
     "GE-C246-begleiten",
     "GE-C246-bemerken",
@@ -11,11 +11,11 @@
     "GE-R246-first-pass-words-from-chapters-238-241",
     "GE-R246-second-pass-words-from-chapters-242-246"
   ],
-  "voiceLessons": 7,
-  "drivablePrefix": 7,
+  "voiceLessons": 6,
+  "drivablePrefix": 4,
   "text": "german/narration/ch246.txt",
   "json": "german/narration/ch246.json",
-  "textHash": "fnv1a64:ad4f2f6dfd6acc3d",
-  "jsonHash": "fnv1a64:6c20d20257ff1406",
+  "textHash": "fnv1a64:2e7014652b51fc63",
+  "jsonHash": "fnv1a64:6799b481212f548c",
   "findings": []
 }

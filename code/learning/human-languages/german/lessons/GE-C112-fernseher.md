@@ -13,7 +13,8 @@ gloss: "a television"
 concept_tag: GE-HAUS112-FERNSEHER
 prerequisites: [GE-C111-fliegen, GE-C112-teppich]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "Fernseher — 'far' + sehen + -er: the far-seer, a German build of Greek-Latin television"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C112-teppich]
 <!-- hl-knowledge: introduces=[GE-LEX-C112-HAUS112-02]; assesses=[] -->
 
 **der Fernseher** — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fernseher** is the word for "far" + *sehen*, "to see", + *-er*: "the far-seer". It translates *television* piece by piece, Greek *tēle*, "far", + Latin *vīsiō*, "seeing". *sehen* ← Proto-Germanic *\*sehwaną*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

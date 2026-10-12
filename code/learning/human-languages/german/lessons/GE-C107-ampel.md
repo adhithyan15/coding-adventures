@@ -13,7 +13,8 @@ gloss: "traffic lights"
 concept_tag: GE-ORT107-AMPEL
 prerequisites: [GE-C107-ecke, GE-C107-kreuzung]
 sounds: []
-roots: []
+roots: [ampulla-latin]
+etymology_hook: "Ampel ← Latin ampulla 'small flask' — first a hanging lamp, then the traffic light"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C107-kreuzung]
 <!-- hl-knowledge: introduces=[GE-LEX-C107-ORT107-04]; assesses=[] -->
 
 **die Ampel** — "traffic lights".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ampel** ← Old High German *ampula* ← Latin *ampulla*, "small flask" (EtymDB 2.1) — borrowed. It named a hanging lamp in church before it named the traffic light.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

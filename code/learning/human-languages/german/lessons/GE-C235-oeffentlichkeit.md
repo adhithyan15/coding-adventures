@@ -13,7 +13,8 @@ gloss: "the public"
 concept_tag: GE-THING235-OEFFENTLICHKEIT
 prerequisites: [GE-C235-neuigkeit, GE-C235-nummer]
 sounds: []
-roots: []
+roots: [germanic-upanona]
+etymology_hook: "Öffentlichkeit — öffentlich 'public' + -keit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C235-nummer]
 <!-- hl-knowledge: introduces=[GE-LEX-C235-THING235-03]; assesses=[] -->
 
 **die Öffentlichkeit** — "the public".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Öffentlichkeit** is *öffentlich*, "public", + *-keit*. *öffentlich* is built on the word for "open", English *open*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

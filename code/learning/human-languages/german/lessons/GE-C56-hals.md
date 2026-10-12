@@ -13,7 +13,8 @@ gloss: "the neck; the throat"
 concept_tag: GE-KOERPER1-HALS
 prerequisites: [GE-C56-bein, GE-C56-zahn]
 sounds: []
-roots: []
+roots: [germanic-halsaz]
+etymology_hook: "Hals ← Old High German hals ← Proto-Germanic *halsaz 'neck'; Old English heals is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C56-zahn]
 <!-- hl-knowledge: introduces=[GE-LEX-C56-KOERPER1-03]; assesses=[] -->
 
 **der Hals** — "the neck; the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hals** ← Old High German *hals* ← Proto-Germanic *\*halsaz*, "neck" — inherited. Old English *heals*, "neck", is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

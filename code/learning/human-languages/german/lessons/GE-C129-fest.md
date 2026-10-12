@@ -13,7 +13,8 @@ gloss: "a celebration, a festival"
 concept_tag: GE-FREIZEIT129-FEST
 prerequisites: [GE-C129-fussball, GE-C129-konzert]
 sounds: []
-roots: []
+roots: [festum-latin]
+etymology_hook: "Fest ← Middle High German fëst ← Latin festum 'feast day' — borrowed; English feast shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C129-konzert]
 <!-- hl-knowledge: introduces=[GE-LEX-C129-FREIZEIT129-05]; assesses=[] -->
 
 **das Fest** — "a celebration, a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fest** ← Middle High German *fëst* ← Latin *fēstum*, "holiday, feast" (EtymDB 2.1) — borrowed. English *feast* and *festival* share the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

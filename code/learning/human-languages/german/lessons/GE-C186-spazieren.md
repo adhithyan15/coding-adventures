@@ -13,7 +13,8 @@ gloss: "to stroll (spazieren gehen)"
 concept_tag: GE-VERB-SPAZIEREN
 prerequisites: [GE-C186-segeln, GE-C186-senden]
 sounds: []
-roots: []
+roots: [spatium-latin]
+etymology_hook: "spazieren ← Italian spaziare 'to roam' ← Latin spatiārī 'to walk about' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C186-senden]
 <!-- hl-knowledge: introduces=[GE-LEX-C186-VERB186-05]; assesses=[] -->
 
 **spazieren** — "to stroll (spazieren gehen)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spazieren** ← Italian *spaziare*, "to roam" ← Latin *spatiārī*, "to walk about", from *spatium*, "space" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

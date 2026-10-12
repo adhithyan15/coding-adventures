@@ -14,6 +14,7 @@ concept_tag: GE-VERB-TRENNEN
 prerequisites: [GE-C188-teilen, GE-C188-telefonieren]
 sounds: []
 roots: []
+etymology_hook: "trennen ← Old High German trennen 'to split' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C188-telefonieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C188-VERB188-04]; assesses=[] -->
 
 **trennen** — "to separate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trennen** ← Middle High German *trennen* ← Old High German *trennen*, "to split, to separate" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

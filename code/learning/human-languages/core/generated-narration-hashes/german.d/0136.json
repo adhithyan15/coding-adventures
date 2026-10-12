@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 136,
-  "sourceHash": "fnv1a64:d6ee7ea15aeef0aa",
+  "sourceHash": "fnv1a64:9aa0027ca6d1aede",
   "lessonIds": [
     "GE-C136-wollen",
     "GE-C136-wunsch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch136.txt",
   "json": "german/narration/ch136.json",
-  "textHash": "fnv1a64:2f7069d98f051bd0",
-  "jsonHash": "fnv1a64:761158759b598c7a",
+  "textHash": "fnv1a64:884d207243ebd3d3",
+  "jsonHash": "fnv1a64:fb8f249cb519ff18",
   "findings": []
 }

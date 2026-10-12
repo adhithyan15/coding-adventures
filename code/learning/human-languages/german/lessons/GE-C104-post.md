@@ -13,7 +13,8 @@ gloss: "the post office; the post"
 concept_tag: GE-ORT104-POST
 prerequisites: [GE-C104-museum, GE-C104-hotel]
 sounds: []
-roots: []
+roots: [positus-latin]
+etymology_hook: "Post ← Italian posta 'a station', from Latin positus 'placed' — the relay stations of the mail"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C104-hotel]
 <!-- hl-knowledge: introduces=[GE-LEX-C104-ORT104-05]; assesses=[] -->
 
 **die Post** — "the post office; the post".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Post** ← Italian *posta*, from *posto*, "placed", ← Latin *positus* (EtymDB 2.1) — borrowed: the post was a chain of stations placed along the road.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

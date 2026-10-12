@@ -13,7 +13,8 @@ gloss: "a plaster"
 concept_tag: GE-THING206-PFLASTER
 prerequisites: [GE-C205-verletzung, GE-C206-wunde]
 sounds: []
-roots: []
+roots: [emplastrum-latin]
+etymology_hook: "Pflaster ← Old High German pflastar ← Latin emplastrum 'a salve spread on' — borrowed, like English plaster"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C206-wunde]
 <!-- hl-knowledge: introduces=[GE-LEX-C206-THING206-02]; assesses=[] -->
 
 **das Pflaster** — "a plaster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Pflaster** ← Old High German *pflastar* ← Latin *emplastrum*, "a salve spread on" (EtymDB 2.1) — borrowed, like English *plaster*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

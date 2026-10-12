@@ -13,7 +13,8 @@ gloss: "a pupil (a girl)"
 concept_tag: GE-LEUTE-SCHUELERIN
 prerequisites: [GE-C63-enkel, GE-C63-schueler]
 sounds: []
-roots: []
+roots: [schola-latin]
+etymology_hook: "Schülerin — Schüler + -in; the stem goes back to Latin schola 'school'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C63-schueler]
 <!-- hl-knowledge: introduces=[GE-LEX-C63-LEUTE-05]; assesses=[] -->
 
 **die Schülerin** — "a pupil (a girl)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schülerin** is *Schüler* + *-in*, the ending that names a woman or girl (EtymDB 2.1). The stem goes back to Latin *schola*, "school".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

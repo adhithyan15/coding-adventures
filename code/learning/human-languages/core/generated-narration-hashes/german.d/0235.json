@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 235,
-  "sourceHash": "fnv1a64:e335afd4b564f43b",
+  "sourceHash": "fnv1a64:233e5348e2bd2e8a",
   "lessonIds": [
     "GE-C235-neuigkeit",
     "GE-C235-nummer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch235.txt",
   "json": "german/narration/ch235.json",
-  "textHash": "fnv1a64:550ec3abbbbfebeb",
-  "jsonHash": "fnv1a64:d5424c95352e9d36",
+  "textHash": "fnv1a64:e48540b50878325d",
+  "jsonHash": "fnv1a64:7d819cd71eee8221",
   "findings": []
 }

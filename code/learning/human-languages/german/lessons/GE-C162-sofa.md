@@ -14,6 +14,7 @@ concept_tag: GE-THING162-SOFA
 prerequisites: [GE-C161-balkon, GE-C161-keller]
 sounds: []
 roots: []
+etymology_hook: "Sofa ← French sofa ← Arabic ṣuffa 'a raised stone bench' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C161-keller]
 <!-- hl-knowledge: introduces=[GE-LEX-C162-THING162-01]; assesses=[] -->
 
 **das Sofa** — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sofa** came in from French *sofa*, which EtymDB 2.1 traces to Arabic *ṣuffa*, "a long raised bench" — borrowed, like English *sofa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

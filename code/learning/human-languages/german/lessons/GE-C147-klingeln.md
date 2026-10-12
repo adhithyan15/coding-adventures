@@ -13,7 +13,8 @@ gloss: "to ring"
 concept_tag: GE-VERB-KLINGELN
 prerequisites: [GE-C147-heiraten, GE-C147-kennen]
 sounds: []
-roots: []
+roots: [germanic-klingana]
+etymology_hook: "klingeln — the verb 'to sound, to ring' + the repeating ending -eln: to ring and ring"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C147-kennen]
 <!-- hl-knowledge: introduces=[GE-LEX-C147-VERB147-05]; assesses=[] -->
 
 **klingeln** — "to ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**klingeln** is built on the verb "to sound", Old High German *klingan* ← Proto-Germanic *\*klinganą* (EtymDB 2.1), with *-eln*, an ending for small repeated actions.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

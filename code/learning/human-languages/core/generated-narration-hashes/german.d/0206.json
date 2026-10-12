@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 206,
-  "sourceHash": "fnv1a64:9c31a02097921c87",
+  "sourceHash": "fnv1a64:593cbf7e69cd32e7",
   "lessonIds": [
     "GE-C206-wunde",
     "GE-C206-pflaster",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch206.txt",
   "json": "german/narration/ch206.json",
-  "textHash": "fnv1a64:b528a94e5655e077",
-  "jsonHash": "fnv1a64:3568884e91204b87",
+  "textHash": "fnv1a64:7e034c50495f6dae",
+  "jsonHash": "fnv1a64:f6b9a1464d953f0d",
   "findings": []
 }

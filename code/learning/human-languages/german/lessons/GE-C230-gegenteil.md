@@ -13,7 +13,8 @@ gloss: "the opposite"
 concept_tag: GE-THING230-GEGENTEIL
 prerequisites: [GE-C229-gefuehl, GE-C229-gegend]
 sounds: []
-roots: []
+roots: [germanic-daila]
+etymology_hook: "Gegenteil — 'against' + Teil 'part': the part on the other side"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C229-gegend]
 <!-- hl-knowledge: introduces=[GE-LEX-C230-THING230-01]; assesses=[] -->
 
 **das Gegenteil** — "the opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gegenteil** is the word for "against" + the word for "part", Old High German *teil* ← Proto-Germanic *\*dailą*, English *deal* (EtymDB 2.1): the opposite part.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

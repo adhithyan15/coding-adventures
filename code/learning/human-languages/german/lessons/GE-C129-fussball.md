@@ -13,7 +13,8 @@ gloss: "football"
 concept_tag: GE-FREIZEIT129-FUSSBALL
 prerequisites: [GE-C129-sport, GE-C129-film]
 sounds: []
-roots: []
+roots: [germanic-balluz]
+etymology_hook: "Fußball — Fuß 'foot' + Ball, built after English football"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C129-film]
 <!-- hl-knowledge: introduces=[GE-LEX-C129-FREIZEIT129-03]; assesses=[] -->
 
 **der Fußball** — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fußball** is *Fuß*, "foot", + *Ball* ← Old High German *bal* ← Proto-Germanic *\*balluz* (EtymDB 2.1), built after English *football*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

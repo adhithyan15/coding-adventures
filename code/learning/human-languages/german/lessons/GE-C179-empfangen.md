@@ -13,7 +13,8 @@ gloss: "to receive, to welcome"
 concept_tag: GE-VERB-EMPFANGEN
 prerequisites: [GE-C178-aussteigen, GE-C178-umsteigen]
 sounds: []
-roots: []
+roots: [germanic-fanhana]
+etymology_hook: "empfangen ← Old High German intfāhan: ent- + the verb 'to catch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C178-umsteigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C179-VERB179-01]; assesses=[] -->
 
 **empfangen** — "to receive, to welcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**empfangen** ← Middle High German *enphāhen* ← Old High German *intfāhan* (EtymDB 2.1): *ent-* + the verb "to catch, to take". Dutch *ontvangen* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

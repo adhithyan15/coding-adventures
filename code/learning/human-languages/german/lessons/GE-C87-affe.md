@@ -13,7 +13,8 @@ gloss: "a monkey"
 concept_tag: GE-TIERE2-AFFE
 prerequisites: [GE-C87-ziege, GE-C87-loewe]
 sounds: []
-roots: []
+roots: [germanic-apo]
+etymology_hook: "Affe ← Old High German affo ← Proto-Germanic *apô — the same word as English ape"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C87-loewe]
 <!-- hl-knowledge: introduces=[GE-LEX-C87-TIERE2-05]; assesses=[] -->
 
 **der Affe** — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Affe** ← Old High German *affo* ← Proto-Germanic *\*apô*, "monkey, ape" — inherited, the same word as English *ape*, with German *ff* where English kept *p*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "down, downstairs"
 concept_tag: GE-RICHTUNG109-UNTEN
 prerequisites: [GE-C108-geradeaus, GE-C109-oben]
 sounds: []
-roots: []
+roots: [germanic-under]
+etymology_hook: "unten ← Old High German untana 'from below' — from the same root as English under"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C109-oben]
 <!-- hl-knowledge: introduces=[GE-LEX-C109-RICHTUNG109-02]; assesses=[] -->
 
 **unten** — "down, downstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unten** ← Old High German *untana*, "from below" — inherited, built on the root that gave English *under*, which EtymDB 2.1 traces to Proto-Germanic *\*under*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

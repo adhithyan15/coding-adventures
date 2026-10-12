@@ -13,7 +13,8 @@ gloss: "a fork"
 concept_tag: GE-GESCHIRR-GABEL
 prerequisites: [GE-C79-teller, GE-C79-glas]
 sounds: []
-roots: []
+roots: [germanic-gabalo]
+etymology_hook: "Gabel ← Old High German gabala ← Proto-Germanic *gabalō 'fork' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C79-glas]
 <!-- hl-knowledge: introduces=[GE-LEX-C79-GESCHIRR-04]; assesses=[] -->
 
 **die Gabel** — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gabel** ← Old High German *gabala* ← Proto-Germanic *\*gabalō*, "fork" — inherited; EtymDB 2.1 links it to a Celtic *\*gablā*, "forked branch". At first a *Gabel* was a pitchfork.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

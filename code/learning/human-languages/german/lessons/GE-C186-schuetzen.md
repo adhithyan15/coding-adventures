@@ -14,6 +14,7 @@ concept_tag: GE-VERB-SCHUETZEN
 prerequisites: [GE-C185-schmecken, GE-C186-schneien]
 sounds: []
 roots: []
+etymology_hook: "schützen ← Middle High German schützen 'to dam up, to shelter', the verb of the word for 'protection'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C186-schneien]
 <!-- hl-knowledge: introduces=[GE-LEX-C186-VERB186-02]; assesses=[] -->
 
 **schützen** — "to protect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schützen** is the verb of the word for "protection", Middle High German *schuz* (EtymDB 2.1): first "to dam up water", then "to shield".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

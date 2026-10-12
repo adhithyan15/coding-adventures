@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ERZEUGEN
 prerequisites: [GE-C249-erledigen, GE-C249-erscheinen]
 sounds: []
 roots: []
+etymology_hook: "erzeugen — er- + zeugen 'to beget, to produce'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C249-erscheinen]
 <!-- hl-knowledge: introduces=[GE-LEX-C249-VERB249-04]; assesses=[] -->
 
 **erzeugen** — "to produce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erzeugen** is *er-* + the verb "to beget, to produce", Middle High German *ziugen* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to fill"
 concept_tag: GE-VERB-FUELLEN
 prerequisites: [GE-C146-fehlen, GE-C146-feiern]
 sounds: []
-roots: []
+roots: [germanic-fullaz]
+etymology_hook: "füllen ← Old High German fullen ← Proto-Germanic *fullijaną — the same verb as English fill"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C146-feiern]
 <!-- hl-knowledge: introduces=[GE-LEX-C146-VERB146-04]; assesses=[] -->
 
 **füllen** — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**füllen** ← Old High German *fullen* ← Proto-Germanic *\*fullijaną*, "to make full" — inherited, the same verb as English *fill*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

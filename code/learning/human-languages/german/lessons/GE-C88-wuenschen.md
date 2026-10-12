@@ -13,7 +13,8 @@ gloss: "to wish"
 concept_tag: GE-VERB-WUENSCHEN
 prerequisites: [GE-C88-elefant, GE-C88-holen]
 sounds: []
-roots: []
+roots: [germanic-wunskijana]
+etymology_hook: "wünschen ← Middle High German wünschen — the same verb as English wish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C88-holen]
 <!-- hl-knowledge: introduces=[GE-LEX-C88-TIERE3-05]; assesses=[] -->
 
 **wünschen** — "to wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wünschen** ← Middle High German *wünschen*, from Proto-Germanic *\*wunskijaną*, "to wish" — inherited, the same verb as English *wish*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

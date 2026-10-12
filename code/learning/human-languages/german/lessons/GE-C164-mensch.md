@@ -13,7 +13,8 @@ gloss: "a human being"
 concept_tag: GE-THING164-MENSCH
 prerequisites: [GE-C164-enkelin, GE-C164-baby]
 sounds: []
-roots: []
+roots: [germanic-mann]
+etymology_hook: "Mensch ← Middle High German mensche, from Old High German mennisco 'human', built on man"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C164-baby]
 <!-- hl-knowledge: introduces=[GE-LEX-C164-THING164-05]; assesses=[] -->
 
 **der Mensch** — "a human being".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mensch** ← Middle High German *mensche* (EtymDB 2.1), from Old High German *mennisco*, "human", built on *man*, "person" ← Proto-Germanic *\*mann-* + *-isk*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

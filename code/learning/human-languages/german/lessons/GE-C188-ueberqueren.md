@@ -14,6 +14,7 @@ concept_tag: GE-VERB-UEBERQUEREN
 prerequisites: [GE-C188-telefonieren, GE-C188-trennen]
 sounds: []
 roots: []
+etymology_hook: "überqueren — 'over' + the verb 'to cross', from quer 'across', a cousin of English thwart"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C188-trennen]
 <!-- hl-knowledge: introduces=[GE-LEX-C188-VERB188-05]; assesses=[] -->
 
 **überqueren** — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**überqueren** is the word for "over" + a verb built on the word for "across" (EtymDB 2.1 links the two). That word, Middle High German *twer*, is a cousin of English *thwart*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

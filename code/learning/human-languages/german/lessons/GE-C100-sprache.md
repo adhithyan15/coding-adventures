@@ -13,7 +13,8 @@ gloss: "a language"
 concept_tag: GE-WELT-SPRACHE
 prerequisites: [GE-C100-grenze, GE-C100-welt]
 sounds: []
-roots: []
+roots: [germanic-sprekijo]
+etymology_hook: "Sprache ← Old High German sprāhha ← Proto-Germanic *sprēkijō 'speech' — kin to English speech"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C100-welt]
 <!-- hl-knowledge: introduces=[GE-LEX-C100-WELT-05]; assesses=[] -->
 
 **die Sprache** — "a language".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sprache** ← Old High German *sprāhha* ← Proto-Germanic *\*sprēkijō*, "speech, language" — inherited, a cousin of English *speech*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

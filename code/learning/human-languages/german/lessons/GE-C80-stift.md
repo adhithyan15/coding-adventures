@@ -14,6 +14,7 @@ concept_tag: GE-SACHEN-STIFT
 prerequisites: [GE-C80-flasche, GE-C80-heft]
 sounds: []
 roots: []
+etymology_hook: "Stift ← Middle High German stift 'pin, spike' — probably a cousin of the word for 'stiff'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C80-heft]
 <!-- hl-knowledge: introduces=[GE-LEX-C80-SACHEN-04]; assesses=[] -->
 
 **der Stift** — "a pen, a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stift** ← Middle High German *stift*, "pin, spike" (EtymDB 2.1) — inherited, and probably related to the word for "stiff". A pencil is a pointed rod.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

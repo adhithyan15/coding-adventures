@@ -13,7 +13,7 @@ sounds: [i-short]
 roots: [bis-german]
 etymology_hook: "bis is German's farewell preposition, the counterpart of Spanish hasta and French a: add a time word"
 duration:
-  max_seconds: 150
+  max_seconds: 198
 requires:
   knowledge: [GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-TSCHUESS-01]
 introduces:
@@ -48,6 +48,11 @@ small word.
 Said *biss*: a short *i* as in English *bit*, and a crisp unvoiced **s** at the
 end — this one does *not* buzz, because the buzzing rule only applies before a
 vowel.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bis** ← Middle High German *biz* (EtymDB 2.1) — inherited, most likely two small words meaning "by" and "to" run together.
 
 ## Grammar Lens: bis plus a time word
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BIS-01] -->

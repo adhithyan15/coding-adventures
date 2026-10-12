@@ -14,6 +14,7 @@ concept_tag: GE-VERB-STARTEN
 prerequisites: [GE-C186-spazieren, GE-C187-spuelen]
 sounds: []
 roots: []
+etymology_hook: "starten ← English start — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C187-spuelen]
 <!-- hl-knowledge: introduces=[GE-LEX-C187-VERB187-02]; assesses=[] -->
 
 **starten** — "to start, to take off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**starten** is taken from English *start*, which EtymDB 2.1 traces to Old English *styrtan*, "to leap up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

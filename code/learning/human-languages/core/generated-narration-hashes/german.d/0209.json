@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 209,
-  "sourceHash": "fnv1a64:f58f57ea9ecea76f",
+  "sourceHash": "fnv1a64:a635b0e797fac518",
   "lessonIds": [
     "GE-C209-buerger",
     "GE-C209-wahl",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch209.txt",
   "json": "german/narration/ch209.json",
-  "textHash": "fnv1a64:72e635e534a66e1a",
-  "jsonHash": "fnv1a64:a292c53fe64fcbae",
+  "textHash": "fnv1a64:eb462685ea0c5775",
+  "jsonHash": "fnv1a64:fb877eb8ec22df2f",
   "findings": []
 }

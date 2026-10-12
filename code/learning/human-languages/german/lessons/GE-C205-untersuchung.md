@@ -13,7 +13,8 @@ gloss: "an examination"
 concept_tag: GE-THING205-UNTERSUCHUNG
 prerequisites: [GE-C205-zahnarzt, GE-C205-sprechstunde]
 sounds: []
-roots: []
+roots: [germanic-sokijana]
+etymology_hook: "Untersuchung — 'under' + suchen 'to seek' + -ung: a searching beneath"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C205-sprechstunde]
 <!-- hl-knowledge: introduces=[GE-LEX-C205-THING205-04]; assesses=[] -->
 
 **die Untersuchung** — "an examination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Untersuchung** is the noun of a verb built from the word for "under" + *suchen*, "to seek" (EtymDB 2.1 lists it beside Dutch *onderzoeken*): a search beneath the surface.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

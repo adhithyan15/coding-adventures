@@ -13,7 +13,8 @@ gloss: "to be missing"
 concept_tag: GE-VERB-FEHLEN
 prerequisites: [GE-C145-entscheiden, GE-C146-erklaeren]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "fehlen ← Middle High German vælen, from Old French faillir 'to fail' — borrowed, like English fail"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C146-erklaeren]
 <!-- hl-knowledge: introduces=[GE-LEX-C146-VERB146-02]; assesses=[] -->
 
 **fehlen** — "to be missing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fehlen** ← Middle High German *vælen*, from Old French *faillir*, "to fail" (EtymDB 2.1 traces *faillir* to Vulgar Latin *fallīre*) — borrowed, like English *fail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

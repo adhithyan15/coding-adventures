@@ -13,7 +13,7 @@ sounds: [final-te, d-t-final]
 roots: [germanic-habjana]
 etymology_hook: "hatte is haben with the b gone and the dental ending doubled onto what is left, exactly as English had is have with the same two things done to it"
 duration:
-  max_seconds: 160
+  max_seconds: 189
 requires:
   knowledge: [GE-ETYMON-DENTALES-PRAETERITUM-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-GRAMMAR-PERFEKT-HABEN-01]
 introduces:
@@ -55,6 +55,11 @@ down further: *have* lost its consonant and took a *-d*, giving *had*. So
 *Haben* has a *Perfekt* of its own as well — *ich habe gehabt*, "I have had" —
 built by the ordinary recipe, since *haben* is a perfectly ordinary verb when it
 is not busy helping another one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hatte** is the past of *haben* ← Old High German *habēn* ← Proto-Germanic *\*habjaną*, the same verb as English *have*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HATTE-01] -->

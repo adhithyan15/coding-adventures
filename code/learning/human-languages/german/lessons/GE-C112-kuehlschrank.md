@@ -14,6 +14,7 @@ concept_tag: GE-HAUS112-KUEHLSCHRANK
 prerequisites: [GE-C112-fernseher, GE-C112-computer]
 sounds: []
 roots: []
+etymology_hook: "Kühlschrank — the word for 'cool' + Schrank 'cupboard': a cooling cupboard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C112-computer]
 <!-- hl-knowledge: introduces=[GE-LEX-C112-HAUS112-04]; assesses=[] -->
 
 **der Kühlschrank** — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kühlschrank** is the word for "cool" + *Schrank*, "cupboard": a cooling cupboard. The "cool" word, Old High German *kuoli*, is listed in EtymDB 2.1 beside English *cool*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

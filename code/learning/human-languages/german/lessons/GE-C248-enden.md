@@ -13,7 +13,8 @@ gloss: "to end"
 concept_tag: GE-VERB-ENDEN
 prerequisites: [GE-C247-einpacken, GE-C248-einrichten]
 sounds: []
-roots: []
+roots: [germanic-andijaz]
+etymology_hook: "enden — the verb of Ende 'end', the same root as English end"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C248-einrichten]
 <!-- hl-knowledge: introduces=[GE-LEX-C248-VERB248-02]; assesses=[] -->
 
 **enden** — "to end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enden** is the verb of *Ende*, "end" ← Old High German *enti* ← Proto-Germanic *\*andijaz*, English *end*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

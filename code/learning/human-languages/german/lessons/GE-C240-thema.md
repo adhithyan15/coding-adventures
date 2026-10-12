@@ -13,7 +13,8 @@ gloss: "a topic"
 concept_tag: GE-THING240-THEMA
 prerequisites: [GE-C239-stufe, GE-C239-tatsache]
 sounds: []
-roots: []
+roots: [thema-latin]
+etymology_hook: "Thema ← Latin thema ← Greek théma 'what is set down', from títhēmi 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C239-tatsache]
 <!-- hl-knowledge: introduces=[GE-LEX-C240-THING240-01]; assesses=[] -->
 
 **das Thema** — "a topic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Thema** ← Latin *thema* ← Greek *théma*, "what is set down", from *títhēmi*, "to put" (EtymDB 2.1) — borrowed. English *theme* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "lonely"
 concept_tag: GE-QUAL212-EINSAM
 prerequisites: [GE-C212-ehrlich, GE-C212-eilig]
 sounds: []
-roots: []
+roots: [germanic-ainaz]
+etymology_hook: "einsam — ein 'one' + -sam: on one's own, like English lonesome"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C212-eilig]
 <!-- hl-knowledge: introduces=[GE-LEX-C212-QUAL212-05]; assesses=[] -->
 
 **einsam** — "lonely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einsam** is *ein*, "one", + *-sam*, the same ending as in English *lonesome*: being on one's own. *ein* ← Proto-Germanic *\*ainaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

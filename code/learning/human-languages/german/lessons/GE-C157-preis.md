@@ -13,7 +13,8 @@ gloss: "a price, a prize"
 concept_tag: GE-THING157-PREIS
 prerequisites: [GE-C157-konto, GE-C157-kreditkarte]
 sounds: []
-roots: []
+roots: [pretium-latin]
+etymology_hook: "Preis ← Middle High German prīs ← Old French pris ← Latin pretium 'worth, price' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C157-kreditkarte]
 <!-- hl-knowledge: introduces=[GE-LEX-C157-THING157-05]; assesses=[] -->
 
 **der Preis** — "a price, a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Preis** ← Middle High German *prīs*, from Old French *pris* ← Latin *pretium*, "worth, price, reward" (EtymDB 2.1) — borrowed. English *price*, *prize* and *praise* share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

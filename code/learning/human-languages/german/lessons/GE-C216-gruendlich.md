@@ -13,7 +13,8 @@ gloss: "thorough"
 concept_tag: GE-QUAL216-GRUENDLICH
 prerequisites: [GE-C215-grosszuegig, GE-C215-guenstig]
 sounds: []
-roots: []
+roots: [germanic-grunduz]
+etymology_hook: "gründlich — Grund 'ground, bottom' + -lich: down to the ground"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C215-guenstig]
 <!-- hl-knowledge: introduces=[GE-LEX-C216-QUAL216-01]; assesses=[] -->
 
 **gründlich** — "thorough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gründlich** is *Grund*, "ground, bottom", + *-lich*: going down to the bottom. *Grund* is the same word as English *ground*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

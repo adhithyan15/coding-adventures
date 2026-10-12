@@ -14,6 +14,7 @@ concept_tag: GE-THING228-ERINNERUNG
 prerequisites: [GE-C227-eintrittskarte, GE-C228-entscheidung]
 sounds: []
 roots: []
+etymology_hook: "Erinnerung — erinnern 'to remind' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C228-entscheidung]
 <!-- hl-knowledge: introduces=[GE-LEX-C228-THING228-02]; assesses=[] -->
 
 **die Erinnerung** — "a memory, a reminder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Erinnerung** is *erinnern*, "to remind", + *-ung*: what is brought back inside the mind.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

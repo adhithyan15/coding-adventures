@@ -13,7 +13,8 @@ gloss: "interesting"
 concept_tag: GE-EIGEN133-INTERESSANT
 prerequisites: [GE-C133-ernst, GE-C133-beruehmt]
 sounds: []
-roots: []
+roots: [interesse-latin]
+etymology_hook: "interessant ← French intéressant — borrowed, from Latin interesse 'to be between, to matter'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C133-beruehmt]
 <!-- hl-knowledge: introduces=[GE-LEX-C133-EIGEN133-05]; assesses=[] -->
 
 **interessant** — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interessant** ← French *intéressant*, "interesting" (EtymDB 2.1) — borrowed, from Latin *interesse*, "to be between, to matter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

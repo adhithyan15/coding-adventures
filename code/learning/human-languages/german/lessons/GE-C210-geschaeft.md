@@ -13,7 +13,8 @@ gloss: "a shop, a business"
 concept_tag: GE-THING210-GESCHAEFT
 prerequisites: [GE-C210-industrie, GE-C210-werkstatt]
 sounds: []
-roots: []
+roots: [germanic-skapjana]
+etymology_hook: "Geschäft ← Old High German giscaft — from schaffen 'to make, to create', English shape"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C210-werkstatt]
 <!-- hl-knowledge: introduces=[GE-LEX-C210-THING210-03]; assesses=[] -->
 
 **das Geschäft** — "a shop, a business".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Geschäft** ← Middle High German *gescheft* ← Old High German *giscaft*, "creation, affair" (EtymDB 2.1) — inherited, from the verb "to make, to create", English *shape*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

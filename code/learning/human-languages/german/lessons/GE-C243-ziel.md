@@ -13,7 +13,8 @@ gloss: "a goal, a destination"
 concept_tag: GE-THING243-ZIEL
 prerequisites: [GE-C243-werbung, GE-C243-wettbewerb]
 sounds: []
-roots: []
+roots: [germanic-tila]
+etymology_hook: "Ziel ← Old High German zil ← Proto-Germanic *tila- 'goal' — English till, 'up to', shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C243-wettbewerb]
 <!-- hl-knowledge: introduces=[GE-LEX-C243-THING243-05]; assesses=[] -->
 
 **das Ziel** — "a goal, a destination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ziel** ← Old High German *zil* ← Proto-Germanic *\*tila-*, "goal" — inherited. (EtymDB 2.1) English *till*, "up to", shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

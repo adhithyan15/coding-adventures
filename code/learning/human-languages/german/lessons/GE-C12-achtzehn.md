@@ -10,7 +10,7 @@ gloss: eighteen — the digit whole again, and the -cht you have had since Nacht
 concept_tag: GE-NUMBER-18
 prerequisites: [GE-C12-siebzehn]
 sounds: [ch-ach, z-ts]
-roots: []
+roots: [ahto-germanic, tehun-germanic]
 etymology_hook: "achtzehn is acht plus zehn untouched, and its -cht is the same one that ties acht to eight and Nacht to night"
 duration:
   max_seconds: 155
@@ -42,6 +42,11 @@ reviews_of: [GE-C12-siebzehn, GE-C06-acht]
 <!-- hl-knowledge: introduces=[GE-LEX-ACHTZEHN-01]; assesses=[GE-LEX-ACHT-01, GE-GRAMMAR-ZIFFER-PLUS-ZEHN-01] -->
 
 > **achtzehn** — "eighteen." *acht* + *zehn*, both whole.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**achtzehn** ← Old High German *ahtozehan* ← Proto-Germanic *\*ahtōutehun*, "eight" + "ten" — the same compound as English *eighteen*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-ACHT-EIGHT-02, GE-LEX-ACHTZEHN-01] -->

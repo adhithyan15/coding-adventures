@@ -13,7 +13,8 @@ gloss: "toothpaste"
 concept_tag: GE-HAUS114-ZAHNPASTA
 prerequisites: [GE-C114-seife, GE-C114-zahnbuerste]
 sounds: []
-roots: []
+roots: [germanic-tanths]
+etymology_hook: "Zahnpasta — Zahn 'tooth' + Pasta 'paste', from Italian pasta"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C114-zahnbuerste]
 <!-- hl-knowledge: introduces=[GE-LEX-C114-HAUS114-05]; assesses=[] -->
 
 **die Zahnpasta** — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zahnpasta** is *Zahn*, "tooth", + *Pasta*, "paste", from Italian *pasta*. *Zahn* ← Proto-Germanic *\*tanþs*, English *tooth*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

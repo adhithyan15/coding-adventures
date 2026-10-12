@@ -13,7 +13,8 @@ gloss: "a snake; a queue"
 concept_tag: GE-TIERE1-SCHLANGE
 prerequisites: [GE-C86-maus, GE-C86-fuchs]
 sounds: []
-roots: []
+roots: [germanic-slango]
+etymology_hook: "Schlange ← Old High German slango ← Proto-Germanic *slangô 'snake' — a queue is a snake of people"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C86-fuchs]
 <!-- hl-knowledge: introduces=[GE-LEX-C86-TIERE1-05]; assesses=[] -->
 
 **die Schlange** — "a snake; a queue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schlange** ← Old High German *slango* ← Proto-Germanic *\*slangô*, "snake" — inherited. (EtymDB 2.1) A queue is a line that winds like a snake.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

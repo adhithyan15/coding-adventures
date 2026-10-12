@@ -13,7 +13,8 @@ gloss: "a bridge"
 concept_tag: GE-STADT2-BRUECKE
 prerequisites: [GE-C96-flugzeug, GE-C96-auto]
 sounds: []
-roots: []
+roots: [germanic-brugjo]
+etymology_hook: "Brücke ← Old High German brugga ← Proto-Germanic *brugjōn — the same word as English bridge"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C96-auto]
 <!-- hl-knowledge: introduces=[GE-LEX-C97-STADT2-01]; assesses=[] -->
 
 **die Brücke** — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Brücke** ← Old High German *brugga* ← Proto-Germanic *\*brugjōn* — inherited, the same word as English *bridge*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

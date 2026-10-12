@@ -10,7 +10,8 @@ gloss: "Katze"
 concept_tag: GE-C22-HUND-KATZE-MORE
 prerequisites: [GE-C22-hund-katze]
 sounds: []
-roots: []
+roots: [latin-cattus-afroasiatic]
+etymology_hook: "Katze ← Proto-Germanic *kattuz, itself an early borrowing of Late Latin cattus 'cat'"
 duration:
   max_seconds: 150
 requires:

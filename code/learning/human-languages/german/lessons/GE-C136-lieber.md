@@ -13,7 +13,8 @@ gloss: "rather, preferably"
 concept_tag: GE-WUNSCH136-LIEBER
 prerequisites: [GE-C136-hoffen, GE-C136-bestellen]
 sounds: []
-roots: []
+roots: [germanic-leubaz]
+etymology_hook: "lieber — the comparative of 'dear': 'more dear'; English lief, as in 'I'd as lief', is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C136-bestellen]
 <!-- hl-knowledge: introduces=[GE-LEX-C136-WUNSCH136-05]; assesses=[] -->
 
 **lieber** — "rather, preferably".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lieber** is the comparative of the word for "dear", Old High German *liob* ← Proto-Germanic *\*leubaz* (EtymDB 2.1): "more dear". English *lief*, as in "I'd as lief", is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: []
 roots: [gehen-german]
 etymology_hook: "es geht adds nothing to it goes, and the missing gut is the message: neither well nor badly"
 duration:
-  max_seconds: 180
+  max_seconds: 226
 requires:
   knowledge: [GE-LEX-ES-01, GE-LEX-GEHEN-01, GE-LEX-WIE-GEHTS-02, GE-LEX-GUT-02, GE-LEX-SEHR-01, GE-LEX-NICHT-01, GE-LEX-SO-LALA-01]
 introduces:
@@ -51,6 +51,11 @@ become vague — it becomes *pointed*. The listener was waiting for a *gut* or a
 *schlecht*, and you gave neither. The **absence** is the meaning.
 
 English does this too, with tone rather than deletion: "It's… going."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geht** ← Old High German *gān* ← Proto-Germanic *\*gāną*, "to go", the same verb as English *go*; **es** ← Old High German *iz*, "it", English *it*'s twin. (EtymDB 2.1)
 
 ## Grammar Lens: the answer ladder
 <!-- hl-knowledge: introduces=[GE-PRAGMATICS-ES-GEHT-SHRUG-02]; assesses=[GE-LEX-ES-GEHT-01, GE-LEX-SEHR-01, GE-LEX-NICHT-01, GE-LEX-SO-LALA-01] -->

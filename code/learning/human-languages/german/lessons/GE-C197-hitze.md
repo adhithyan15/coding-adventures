@@ -14,6 +14,7 @@ concept_tag: GE-THING197-HITZE
 prerequisites: [GE-C197-kueste, GE-C197-nebel]
 sounds: []
 roots: []
+etymology_hook: "Hitze ← Old High German hizza — the same Germanic word as English heat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C197-nebel]
 <!-- hl-knowledge: introduces=[GE-LEX-C197-THING197-03]; assesses=[] -->
 
 **die Hitze** — "heat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hitze** ← Middle High German *hitze* ← Old High German *hizza* — inherited, a cousin of English *heat*; Dutch *hitte* is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

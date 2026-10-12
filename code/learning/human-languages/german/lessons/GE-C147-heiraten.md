@@ -14,6 +14,7 @@ concept_tag: GE-VERB-HEIRATEN
 prerequisites: [GE-C147-gewinnen, GE-C147-haengen]
 sounds: []
 roots: []
+etymology_hook: "heiraten — the verb of Heirat 'marriage' ← Old High German hīrāt, 'household arrangement'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C147-haengen]
 <!-- hl-knowledge: introduces=[GE-LEX-C147-VERB147-03]; assesses=[] -->
 
 **heiraten** — "to marry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**heiraten** ← Middle High German *hīrāten*, from *hīrāt* ← Old High German *hīrāt*, "marriage" (EtymDB 2.1): a word for "household" + *rāt*, "arrangement". Old English *hīred*, "household", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

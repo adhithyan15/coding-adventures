@@ -13,7 +13,8 @@ gloss: "a lift"
 concept_tag: GE-FAHRT111-AUFZUG
 prerequisites: [GE-C111-fahrkarte, GE-C111-koffer]
 sounds: []
-roots: []
+roots: [germanic-teuhana]
+etymology_hook: "Aufzug — auf 'up' + Zug 'a pull': a lift is pulled up"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C111-koffer]
 <!-- hl-knowledge: introduces=[GE-LEX-C111-FAHRT111-04]; assesses=[] -->
 
 **der Aufzug** — "a lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Aufzug** is *auf*, "up", + *Zug*, "a pull", the noun of the verb "to pull", Old High German *ziohan* ← Proto-Germanic *\*teuhaną* (EtymDB 2.1): what is pulled up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

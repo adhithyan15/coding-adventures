@@ -14,6 +14,7 @@ concept_tag: GE-ADV172-GENAU
 prerequisites: [GE-C172-wahrscheinlich, GE-C172-natuerlich]
 sounds: []
 roots: []
+etymology_hook: "genau ← Middle High German genouwe 'close, careful' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C172-natuerlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C172-ADV172-05]; assesses=[] -->
 
 **genau** — "exactly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**genau** ← Middle High German *genouwe*, "close, careful" — inherited; EtymDB 2.1 lists Dutch *nauw*, "narrow, close", beside it. Exact is close to the mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

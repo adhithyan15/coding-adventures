@@ -13,7 +13,8 @@ gloss: "to enter, to step on"
 concept_tag: GE-VERB-BETRETEN
 prerequisites: [GE-C176-behalten, GE-C176-beschreiben]
 sounds: []
-roots: []
+roots: [germanic-tredana]
+etymology_hook: "betreten — be- + treten 'to step', the same verb as English tread"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C176-beschreiben]
 <!-- hl-knowledge: introduces=[GE-LEX-C176-VERB176-05]; assesses=[] -->
 
 **betreten** — "to enter, to step on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**betreten** is *be-* + the verb "to step", Old High German *tretan*, which EtymDB 2.1 lists beside English *tread*: to step onto or into.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-WO-DORT
 prerequisites: [GE-C95-heute, GE-C95-manchmal]
 sounds: []
 roots: []
+etymology_hook: "dort ← Old High German dorot — built on the same pointing stem as English there"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C95-manchmal]
 <!-- hl-knowledge: introduces=[GE-LEX-C95-WO-03]; assesses=[] -->
 
 **dort** — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dort** ← Old High German *dorot* (EtymDB 2.1) — inherited, built on the same pointing stem as English *there*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

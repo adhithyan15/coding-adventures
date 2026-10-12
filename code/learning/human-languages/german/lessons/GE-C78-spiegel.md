@@ -13,7 +13,8 @@ gloss: "a mirror"
 concept_tag: GE-HAUS3-SPIEGEL
 prerequisites: [GE-C78-boden, GE-C78-treppe]
 sounds: []
-roots: []
+roots: [speculum-latin]
+etymology_hook: "Spiegel ← Latin speculum 'mirror', built on specere 'to look' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C78-treppe]
 <!-- hl-knowledge: introduces=[GE-LEX-C78-HAUS3-04]; assesses=[] -->
 
 **der Spiegel** — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Spiegel** ← Middle High German *spiegel*, from Latin *speculum*, "mirror", built on *specere*, "to look" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

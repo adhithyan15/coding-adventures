@@ -13,7 +13,8 @@ gloss: "careful"
 concept_tag: GE-QUAL224-VORSICHTIG
 prerequisites: [GE-C224-verliebt, GE-C224-verschieden]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "vorsichtig — 'before' + Sicht 'sight' + -ig: looking ahead"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C224-verschieden]
 <!-- hl-knowledge: introduces=[GE-LEX-C224-QUAL224-03]; assesses=[] -->
 
 **vorsichtig** — "careful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vorsichtig** is the word for "before" + the word for "sight", from *sehen*, + *-ig*: looking ahead. EtymDB 2.1 lists Dutch *voorzichtig* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

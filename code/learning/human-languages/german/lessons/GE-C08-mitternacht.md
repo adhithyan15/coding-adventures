@@ -10,10 +10,10 @@ gloss: midnight — the second pivot, and the -cht/-ght pair paying off again
 concept_tag: GE-TIME-MIDNIGHT
 prerequisites: [GE-C08-mittag-midi, GE-C01-nacht]
 sounds: [ch-ach, vowel-a]
-roots: [germanic-medja]
+roots: [germanic-medja, nahts]
 etymology_hook: "Mitternacht and midnight are the same compound in two Germanic tongues, and the Nacht/night pair is the -cht/-ght correspondence the numbers chapter already gave you with acht/eight"
 duration:
-  max_seconds: 165
+  max_seconds: 180
 requires:
   knowledge: [GE-LEX-MITTAG-01, GE-LEX-MITTE-01, GE-LEX-NACHT-02, GE-SOUND-NACHT-CH-01, GE-ETYMON-ACHT-EIGHT-02]
 introduces:
@@ -48,6 +48,11 @@ can assemble from words you already have.
 *-nacht* is the night. English **midnight** is the same two words again.
 
 To say it: *Es ist Mitternacht.* Like *Mittag*, no number and no *Uhr*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mitternacht** is "mid" + *Nacht*, from Old High German *mittinaht*; EtymDB 2.1 lists it beside English *midnight*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-NACHT-CH-01, GE-ETYMON-ACHT-EIGHT-02] -->

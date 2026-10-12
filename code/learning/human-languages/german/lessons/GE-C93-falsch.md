@@ -13,7 +13,8 @@ gloss: "wrong"
 concept_tag: GE-ADJ5-FALSCH
 prerequisites: [GE-C92-leise, GE-C93-richtig]
 sounds: []
-roots: []
+roots: [falsus-latin]
+etymology_hook: "falsch ← Middle High German vals ← Old French fals ← Latin falsus — borrowed, like English false"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C93-richtig]
 <!-- hl-knowledge: introduces=[GE-LEX-C93-ADJ5-02]; assesses=[] -->
 
 **falsch** — "wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**falsch** ← Middle High German *vals* (EtymDB 2.1), from Old French *fals* ← Latin *falsus* — borrowed, like English *false*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

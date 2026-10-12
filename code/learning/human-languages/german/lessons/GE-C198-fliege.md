@@ -13,7 +13,8 @@ gloss: "a fly"
 concept_tag: GE-THING198-FLIEGE
 prerequisites: [GE-C198-tier, GE-C198-hase]
 sounds: []
-roots: []
+roots: [germanic-fleugana]
+etymology_hook: "Fliege ← Middle High German vliege, from fliegen 'to fly' — like English fly, an insect named for flying"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C198-hase]
 <!-- hl-knowledge: introduces=[GE-LEX-C198-THING198-03]; assesses=[] -->
 
 **die Fliege** — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fliege** ← Middle High German *vliege* (EtymDB 2.1), named from *fliegen*, "to fly" — as English *fly* names the insect after flying.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

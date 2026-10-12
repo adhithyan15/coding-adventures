@@ -42,6 +42,9 @@ ich habe gesagt — "I said."
 Three words, three jobs. Ich is who; habe is the form of haben that goes with ich; gesagt is what happened. Nothing here is new except the way the last two sit together.
 Say it as one run rather than three separate words. The stress lands on gesagt, and habe shrinks in ordinary speech to something close to hab: ich HAB gezahkt. That contraction is not sloppy — it is how the sentence sounds when a German says it at speed.
 
+The phrase, taken apart.
+ich habe gesagt — habe from Old High German habēn from Proto-Germanic habjaną, English have; gesagt from sagēn, English say. (EtymDB 2.1).
+
 Sounds you'll need.
 ich-laut — ich still ends in the soft breathy sound from the very first chapter, not a k.
 ge-prefix — and the ge- that follows two words later is just as soft. The sentence has two unstressed mumbles in it and one loud syllable.
@@ -75,6 +78,9 @@ The b of haben has gone. Not worn away here and kept elsewhere — this is one o
 English does exactly the same thing to exactly the same verb: I have, but thou hast, and still today he has. Two languages, one shortcut, inherited together rather than invented twice.
 The participle has not moved. Gesagt is gesagt whoever did the saying, so half of every sentence in this chapter is already yours.
 
+The phrase, taken apart.
+du hast gesagt — hast from Old High German habēn, English have; gesagt from Old High German sagēn, English say. (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "du hast gesagt"]
@@ -102,6 +108,9 @@ You'll want to know: er hat das gemacht.
 er hat das gemacht — "he did that."
 Hat is the second of haben's two b-less forms, the twin of English has. And das, the little word you met as an article, doubles as "that" — the thing he did.
 Notice where it went. Das did not follow gemacht; it slipped in before it. The participle stayed at the far end of the sentence and let the rest of the words file in ahead of it. That is not a quirk of this one sentence, and the next lesson but one is about it.
+
+The phrase, taken apart.
+er hat das gemacht — hat from Old High German habēn, English have; gemacht is built on machen, the same verb as English make. (EtymDB 2.1).
 
 Sounds you'll need.
 ch-ach — the throat scrape is back, in the middle of gemacht.
@@ -134,6 +143,9 @@ You'll want to know: wir haben gesagt.
 wir haben gesagt — "we said."
 The helper here is haben itself, unchanged from the dictionary form. German does that everywhere: the wir form of any verb is the infinitive over again, which is one of the few completely free pieces of the ending system.
 So the sentence has haben in it twice over in a sense — as the recipe's helper and as its own plain shape — and the participle at the back is still gesagt.
+
+The phrase, taken apart.
+wir haben gesagt — haben from Old High German habēn from Proto-Germanic habjaną, English have; gesagt from sagēn, English say. (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

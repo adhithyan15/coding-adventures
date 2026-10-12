@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "I Am, You Are",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:1ecfac6c3c4e2cf6",
+  "sourceHash": "fnv1a64:5862ee80bd697791",
   "lessons": [
     {
       "id": "GE-C16-sein",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa9ced53061251d9",
+      "sourceHash": "fnv1a64:cfa4f2ffe9401d7b",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sein from Middle High German sīn — inherited. Its forms come from three old roots; ist is the same word as English is, which EtymDB 2.1 traces to Proto-Germanic isti."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -86,7 +97,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -135,7 +146,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -316,7 +327,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a753f69ee2f10d5",
+      "sourceHash": "fnv1a64:26370279737506dc",
       "notice": null,
       "blocks": [
         {
@@ -357,6 +368,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bist from Old High German bist — inherited, from the same root as Old High German bim, \"I am\", which EtymDB 2.1 traces to Proto-Germanic beuną, \"to be, to become\". English be shares it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -371,7 +393,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +442,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -616,7 +638,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42e727d425166d18",
+      "sourceHash": "fnv1a64:87509b7460603997",
       "notice": null,
       "blocks": [
         {
@@ -657,6 +679,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sind from Old High German sint — inherited, from the same root as English is and Latin sunt, \"they are\". EtymDB 2.1 traces English is to Proto-Germanic isti."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -675,7 +708,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -724,7 +757,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -755,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80b6ffedabaf4218",
+      "sourceHash": "fnv1a64:a21bf6def0157d57",
       "notice": null,
       "blocks": [
         {
@@ -796,6 +829,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ihr from Old High German ir from Proto-Germanic jīz — inherited, the same word as English ye. (EtymDB 2.1) seid is a form of sein."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -818,7 +862,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -867,7 +911,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -898,7 +942,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59a6ef68821703c6",
+      "sourceHash": "fnv1a64:23b97f01e4eab32e",
       "notice": null,
       "blocks": [
         {
@@ -935,6 +979,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sind from Old High German sint — inherited, from the same root as English is (EtymDB 2.1 traces is to Proto-Germanic isti). The polite Sie is the word for \"they\", capitalised."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the capital carries the politeness",
           "segments": [
@@ -962,7 +1017,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1011,7 +1066,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1042,7 +1097,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62a9f0b68e63c4be",
+      "sourceHash": "fnv1a64:a635168c025e9bb0",
       "notice": null,
       "blocks": [
         {
@@ -1087,6 +1142,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "müde from Old High German muodi, \"tired\" from Proto-Germanic mōþijaz — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1101,7 +1167,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1150,7 +1216,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -13,7 +13,8 @@ gloss: "rich"
 concept_tag: GE-ADJ3-REICH
 prerequisites: [GE-C91-stark, GE-C91-schwach]
 sounds: []
-roots: []
+roots: [germanic-rikijaz]
+etymology_hook: "reich ← Old High German rīhhi 'mighty' ← Proto-Germanic *rīkijaz — the same word as English rich"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C91-schwach]
 <!-- hl-knowledge: introduces=[GE-LEX-C91-ADJ3-03]; assesses=[] -->
 
 **reich** — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reich** ← Old High German *rīhhi*, "mighty" ← Proto-Germanic *\*rīkijaz*, from a Celtic word for "king" — inherited, the same word as English *rich*. (EtymDB 2.1) Power came first, wealth after.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-ORT107-BUERO
 prerequisites: [GE-C106-stadion, GE-C106-fabrik, GE-C14-jahr, GE-C14-alter-sein-haben]
 sounds: []
 roots: []
+etymology_hook: "Büro ← French bureau 'desk, office', from bure, the woollen cloth that covered a desk"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C106-fabrik]
 <!-- hl-knowledge: introduces=[GE-LEX-C107-ORT107-01]; assesses=[] -->
 
 **das Büro** — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Büro** ← French *bureau*, "desk, office", from *bure*, "woollen cloth" (EtymDB 2.1) — borrowed: the cloth covered the desk, then named the desk and the room.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

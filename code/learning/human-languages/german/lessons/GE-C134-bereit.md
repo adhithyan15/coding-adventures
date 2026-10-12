@@ -14,6 +14,7 @@ concept_tag: GE-EIGEN134-BEREIT
 prerequisites: [GE-C134-schwierig, GE-C134-fertig]
 sounds: []
 roots: []
+etymology_hook: "bereit ← Old High German bireiti — the same word as English ready, with be- for the prefix"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C134-fertig]
 <!-- hl-knowledge: introduces=[GE-LEX-C134-EIGEN134-04]; assesses=[] -->
 
 **bereit** — "ready, willing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bereit** ← Old High German *bireiti* — inherited; EtymDB 2.1 lists it beside English *ready* and Dutch *gereed*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

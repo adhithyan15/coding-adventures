@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ABLEHNEN
 prerequisites: [GE-C244-anbieten, GE-C244-annehmen]
 sounds: []
 roots: []
+etymology_hook: "ablehnen — ab- 'away' + the verb 'to lean': to lean away from an offer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C244-annehmen]
 <!-- hl-knowledge: introduces=[GE-LEX-C244-VERB244-03]; assesses=[] -->
 
 **ablehnen** — "to refuse, to reject".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ablehnen** is *ab-*, "away", + the verb "to lean", which EtymDB 2.1 lists beside English *lean*: to lean away from something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

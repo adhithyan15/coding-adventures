@@ -13,7 +13,8 @@ gloss: "socks"
 concept_tag: GE-KLEIDUNG120-SOCKEN
 prerequisites: [GE-C119-mantel, GE-C119-schuhe]
 sounds: []
-roots: []
+roots: [soccus-latin]
+etymology_hook: "Socken — the plural of Socke ← Latin soccus 'slipper', an early loan, like English sock"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C119-schuhe]
 <!-- hl-knowledge: introduces=[GE-LEX-C120-KLEIDUNG120-01]; assesses=[] -->
 
 **die Socken** — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Socken** is the plural of *Socke* ← Old High German *soc* ← Latin *soccus*, "slipper" (EtymDB 2.1) — an early loan, like English *sock*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

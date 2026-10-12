@@ -13,7 +13,7 @@ sounds: [long-o, d-t-final]
 roots: [germanic-raudaz]
 etymology_hook: "across the world's languages, the third colour a language names is red — after black and white, before anything else"
 duration:
-  max_seconds: 150
+  max_seconds: 193
 requires:
   knowledge: [GE-LEX-SCHWARZ-01, GE-LEX-WEISS-01]
 introduces:
@@ -46,6 +46,11 @@ languages the world over reach for the same one third.
 
 Three letters, one syllable, and very close to the English word underneath the
 spelling.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rot** ← Old High German *rōt* ← Proto-Germanic *\*raudaz* — inherited, the same word as English *red*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-ROT-01]; assesses=[GE-LEX-ROT-01] -->

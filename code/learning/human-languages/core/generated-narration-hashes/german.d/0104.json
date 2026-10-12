@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 104,
-  "sourceHash": "fnv1a64:6ab1c25e04aeaba6",
+  "sourceHash": "fnv1a64:75981d69cfee2402",
   "lessonIds": [
     "GE-C104-flughafen",
     "GE-C104-platz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch104.txt",
   "json": "german/narration/ch104.json",
-  "textHash": "fnv1a64:39c6c2125b95ba9a",
-  "jsonHash": "fnv1a64:76cf8a772806163a",
+  "textHash": "fnv1a64:171a3e31d1e575d9",
+  "jsonHash": "fnv1a64:7fee164a2d66d80d",
   "findings": []
 }
