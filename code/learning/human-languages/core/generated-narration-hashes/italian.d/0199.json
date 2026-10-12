@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 199,
-  "sourceHash": "fnv1a64:a1405ceab61c930c",
+  "sourceHash": "fnv1a64:d404cb8be3591767",
   "lessonIds": [
     "IT-C199-casco",
     "IT-C199-galleria",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch199.txt",
   "json": "italian/narration/ch199.json",
-  "textHash": "fnv1a64:63563d832495d6fd",
-  "jsonHash": "fnv1a64:0532ae001e316863",
+  "textHash": "fnv1a64:837c8bbf4b1af083",
+  "jsonHash": "fnv1a64:83cab95e6cb0ece8",
   "findings": []
 }

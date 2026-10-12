@@ -13,7 +13,8 @@ gloss: "a plain"
 concept_tag: IT-COSE229-PIANURA
 prerequisites: [IT-C228-monumento, IT-C228-statua]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "pianura — piano 'flat' + -ura: flat land; from Latin planus — English plain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C228-statua]
 <!-- hl-knowledge: introduces=[IT-LEX-C229-COSE229-01]; assesses=[] -->
 
 **la pianura** — "a plain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pianura** — built from *piano*, "flat", with *-ura*: flat land. *piano* ← Latin *planus*, "flat". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

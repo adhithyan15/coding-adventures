@@ -13,7 +13,8 @@ gloss: "a cave"
 concept_tag: IT-NATURA119-GROTTA
 prerequisites: [IT-C119-deserto, IT-C119-vulcano]
 sounds: []
-roots: []
+roots: [crypta-latin]
+etymology_hook: "grotta ← Vulgar Latin grupta, Latin crypta 'a vault' ← Greek krypte — English crypt and grotto"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C119-vulcano]
 <!-- hl-knowledge: introduces=[IT-LEX-C119-NATURA119-04]; assesses=[] -->
 
 **la grotta** — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grotta** ← Vulgar Latin *grupta*, from Latin *crypta*, "a vault", which Latin took from Greek *krypte*, "hidden" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

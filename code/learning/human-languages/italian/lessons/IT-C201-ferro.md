@@ -13,7 +13,8 @@ gloss: "iron"
 concept_tag: IT-COSE201-FERRO
 prerequisites: [IT-C201-elettricita, IT-C201-legno]
 sounds: []
-roots: []
+roots: [ferrum-latin]
+etymology_hook: "ferro ← Latin ferrum 'iron' — English ferrous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C201-legno]
 <!-- hl-knowledge: introduces=[IT-LEX-C201-COSE201-03]; assesses=[] -->
 
 **il ferro** — "iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ferro** ← Latin *ferrum*, "iron" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

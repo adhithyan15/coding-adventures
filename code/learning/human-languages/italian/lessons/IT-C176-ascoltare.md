@@ -13,7 +13,8 @@ gloss: "to listen to"
 concept_tag: IT-VERB-ASCOLTARE
 prerequisites: [IT-C175-decidere, IT-C175-scegliere]
 sounds: []
-roots: []
+roots: [auscultare-latin]
+etymology_hook: "ascoltare ← Latin auscultare 'to listen' — doctors still auscultate a chest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C175-scegliere]
 <!-- hl-knowledge: introduces=[IT-LEX-C176-VERBI176-01]; assesses=[] -->
 
 **ascoltare** — "to listen to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ascoltare** ← Latin *auscultare*, "to listen" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

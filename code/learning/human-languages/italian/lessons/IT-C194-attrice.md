@@ -13,7 +13,8 @@ gloss: "an actress"
 concept_tag: IT-COSE194-ATTRICE
 prerequisites: [IT-C194-spettacolo, IT-C194-attore]
 sounds: []
-roots: []
+roots: [actor-latin]
+etymology_hook: "attrice ← Latin actrix 'a woman who acts' — French actrice is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C194-attore]
 <!-- hl-knowledge: introduces=[IT-LEX-C194-COSE194-04]; assesses=[] -->
 
 **l'attrice** — "an actress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**attrice** ← Latin *actrix*, "a woman who acts" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

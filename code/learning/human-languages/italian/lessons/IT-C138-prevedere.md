@@ -13,7 +13,8 @@ gloss: "to foresee, to forecast"
 concept_tag: IT-VERB-PREVEDERE
 prerequisites: [IT-C138-stasera, IT-C138-il-progetto]
 sounds: []
-roots: []
+roots: [praevidere-latin]
+etymology_hook: "prevedere — pre- 'before' + vedere 'to see', after Latin praevidere 'to foresee'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C138-il-progetto]
 <!-- hl-knowledge: introduces=[IT-LEX-C138-FUT138-04]; assesses=[] -->
 
 **prevedere** — "to foresee, to forecast". **vedere** with **pre-**, "before": seeing a thing before it comes. The future of **essere** is irregular: **sarò**, **sarai**, **sarà**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prevedere** is "to see beforehand": *pre-*, "before", plus *vedere*, "to see", after Latin *praevidere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

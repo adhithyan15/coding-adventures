@@ -14,6 +14,7 @@ concept_tag: IT-QUALITA126-NOIOSO
 prerequisites: [IT-C125-importante, IT-C125-interessante]
 sounds: []
 roots: []
+etymology_hook: "noioso ← Old Provençal enojos 'troublesome' — borrowed; English annoy is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C125-interessante]
 <!-- hl-knowledge: introduces=[IT-LEX-C126-QUALITA126-01]; assesses=[] -->
 
 **noioso** — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noioso** ← Old Provençal *enojos*, "troublesome" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-COSE160-VILLAGGIO
 prerequisites: [IT-C160-mancia, IT-C160-pizzeria]
 sounds: []
 roots: []
+etymology_hook: "villaggio ← Old French village, from Latin villaticus — borrowed; English village is the same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C160-pizzeria]
 <!-- hl-knowledge: introduces=[IT-LEX-C160-COSE160-04]; assesses=[] -->
 
 **il villaggio** — "a hamlet, a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**villaggio** ← Old French *village* — borrowed; behind it is Latin *villaticus*, "of a farmstead". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

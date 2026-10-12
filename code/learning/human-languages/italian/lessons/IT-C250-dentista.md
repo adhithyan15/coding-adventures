@@ -13,7 +13,8 @@ gloss: "a dentist"
 concept_tag: IT-COSE250-DENTISTA
 prerequisites: [IT-C250-giornalista, IT-C250-architetto]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "dentista — dente 'tooth' + -ista — English dentist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C250-architetto]
 <!-- hl-knowledge: introduces=[IT-LEX-C250-COSE250-03]; assesses=[] -->
 
 **il dentista** — "a dentist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dentista** — built from *dente*, "tooth", with *-ista*. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

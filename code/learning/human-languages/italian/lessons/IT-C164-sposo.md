@@ -13,7 +13,8 @@ gloss: "a bridegroom"
 concept_tag: IT-COSE164-SPOSO
 prerequisites: [IT-C163-impiegato, IT-C164-fidanzata]
 sounds: []
-roots: []
+roots: [spondere-latin]
+etymology_hook: "sposo ← Latin sponsus 'betrothed', from spondere 'to promise' — English spouse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C164-fidanzata]
 <!-- hl-knowledge: introduces=[IT-LEX-C164-COSE164-02]; assesses=[] -->
 
 **lo sposo** — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sposo** ← Latin *sponsus*, "a betrothed man" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

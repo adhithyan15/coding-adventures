@@ -14,6 +14,7 @@ concept_tag: IT-COSE250-FARMACISTA
 prerequisites: [IT-C250-architetto, IT-C250-dentista]
 sounds: []
 roots: []
+etymology_hook: "farmacista — farmacia + -ista; Greek pharmakeia 'the use of drugs' — English pharmacist"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C250-dentista]
 <!-- hl-knowledge: introduces=[IT-LEX-C250-COSE250-04]; assesses=[] -->
 
 **il farmacista** — "a pharmacist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farmacista** — built from *farmacia*, "a chemist's", with *-ista*. *farmacia* ← Medieval Latin *pharmacia*, from Greek *pharmakeia*, "the use of drugs". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

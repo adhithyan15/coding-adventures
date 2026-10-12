@@ -13,7 +13,8 @@ gloss: "to halt, to stop"
 concept_tag: IT-VERB-FERMARE
 prerequisites: [IT-C205-continuare, IT-C205-smettere]
 sounds: []
-roots: []
+roots: [latin-firmare]
+etymology_hook: "fermare ← Latin firmare 'to make firm' — to hold fast; English firm"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C205-smettere]
 <!-- hl-knowledge: introduces=[IT-LEX-C205-VERBI205-05]; assesses=[] -->
 
 **fermare** — "to halt, to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fermare** ← Latin *firmare*, "to make firm" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

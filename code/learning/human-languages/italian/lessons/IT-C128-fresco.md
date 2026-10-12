@@ -14,6 +14,7 @@ concept_tag: IT-QUALITA128-FRESCO
 prerequisites: [IT-C128-bagnato, IT-C128-asciutto]
 sounds: []
 roots: []
+etymology_hook: "fresco ← Germanic frisk- 'fresh', through Medieval Latin friscus — English fresh is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C128-asciutto]
 <!-- hl-knowledge: introduces=[IT-LEX-C128-QUALITA128-04]; assesses=[] -->
 
 **fresco** — "cool; fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fresco** ← Germanic *frisk-*, "fresh" — borrowed, through Medieval Latin *friscus*. (EtymDB 2.1) English *fresh* is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

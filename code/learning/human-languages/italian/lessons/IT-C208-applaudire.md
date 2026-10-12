@@ -13,7 +13,8 @@ gloss: "to applaud"
 concept_tag: IT-VERB-APPLAUDIRE
 prerequisites: [IT-C207-divorziare, IT-C207-traslocare]
 sounds: []
-roots: []
+roots: [plaudere-latin]
+etymology_hook: "applaudire ← Latin applaudere 'to clap the hands' — English applaud"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C207-traslocare]
 <!-- hl-knowledge: introduces=[IT-LEX-C208-VERBI208-01]; assesses=[] -->
 
 **applaudire** — "to applaud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**applaudire** ← Latin *applaudere*, "to clap the hands", from *ad*, "to", and *plaudere*, "to clap" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 138,
-  "sourceHash": "fnv1a64:40167450b86c7087",
+  "sourceHash": "fnv1a64:01b25780d8324fe5",
   "lessonIds": [
     "IT-C138-il-futuro",
     "IT-C138-stasera",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch138.txt",
   "json": "italian/narration/ch138.json",
-  "textHash": "fnv1a64:85616677057d76d8",
-  "jsonHash": "fnv1a64:33933f97e596ba0b",
+  "textHash": "fnv1a64:56ce150f28971680",
+  "jsonHash": "fnv1a64:659b4eb5290eaad6",
   "findings": []
 }

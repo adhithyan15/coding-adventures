@@ -13,7 +13,8 @@ gloss: "to cover"
 concept_tag: IT-VERB-COPRIRE
 prerequisites: [IT-C145-consigliare, IT-C145-convincere]
 sounds: []
-roots: []
+roots: [cooperire-latin]
+etymology_hook: "coprire ← Latin cooperire 'to cover' — English cover is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C145-convincere]
 <!-- hl-knowledge: introduces=[IT-LEX-C145-VERBI145-04]; assesses=[] -->
 
 **coprire** — "to cover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coprire** ← Latin *cooperire*, "to cover" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

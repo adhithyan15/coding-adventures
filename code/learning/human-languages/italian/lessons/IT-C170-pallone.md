@@ -14,6 +14,7 @@ concept_tag: IT-COSE170-PALLONE
 prerequisites: [IT-C170-violino, IT-C170-tamburo]
 sounds: []
 roots: []
+etymology_hook: "pallone — palla 'a ball' + -one 'big'; palla ← Lombardic palla — English balloon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C170-tamburo]
 <!-- hl-knowledge: introduces=[IT-LEX-C170-COSE170-05]; assesses=[] -->
 
 **il pallone** — "a ball (football)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pallone** — built from *palla*, "a ball", with *-one*, "big". *palla* ← Lombardic *palla* — borrowed from the Germanic language of the Lombards. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

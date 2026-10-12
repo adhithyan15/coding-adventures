@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SEMBRARE
 prerequisites: [IT-C210-proporre, IT-C210-raccogliere]
 sounds: []
 roots: []
+etymology_hook: "sembrare ← Old Provençal semblar, from Late Latin similare — English semblance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C210-raccogliere]
 <!-- hl-knowledge: introduces=[IT-LEX-C211-VERBI211-01]; assesses=[] -->
 
 **sembrare** — "to seem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sembrare** ← Old Provençal *semblar*, "to seem" — borrowed; behind it is Late Latin *similare*, "to be like". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

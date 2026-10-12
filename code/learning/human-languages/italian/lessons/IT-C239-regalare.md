@@ -14,6 +14,7 @@ concept_tag: IT-VERB-REGALARE
 prerequisites: [IT-C239-raggiungere, IT-C239-realizzare]
 sounds: []
 roots: []
+etymology_hook: "regalare ← Spanish regalar 'to give as a gift' — borrowed, like regalo"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C239-realizzare]
 <!-- hl-knowledge: introduces=[IT-LEX-C239-VERBI239-03]; assesses=[] -->
 
 **regalare** — "to give (as a present)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regalare** ← Spanish *regalar*, "to give as a gift" — borrowed, like *regalo*, "a present". EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

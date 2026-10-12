@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 223,
-  "sourceHash": "fnv1a64:d926e3dc091f4d55",
+  "sourceHash": "fnv1a64:b99f000a33f18ae5",
   "lessonIds": [
     "IT-C223-poesia",
     "IT-C223-quadro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch223.txt",
   "json": "italian/narration/ch223.json",
-  "textHash": "fnv1a64:c91615418fac3556",
-  "jsonHash": "fnv1a64:8832c019e75c51ca",
+  "textHash": "fnv1a64:cab11f7895d488ff",
+  "jsonHash": "fnv1a64:4a6f54a3405bab07",
   "findings": []
 }

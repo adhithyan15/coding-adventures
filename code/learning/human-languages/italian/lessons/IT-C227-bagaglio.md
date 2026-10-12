@@ -14,6 +14,7 @@ concept_tag: IT-COSE227-BAGAGLIO
 prerequisites: [IT-C227-ingresso, IT-C227-uscita]
 sounds: []
 roots: []
+etymology_hook: "bagaglio — usually traced to Old French bagage — English baggage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C227-uscita]
 <!-- hl-knowledge: introduces=[IT-LEX-C227-COSE227-04]; assesses=[] -->
 
 **il bagaglio** — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bagaglio** is usually traced to Old French *bagage*, "baggage" — borrowed. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

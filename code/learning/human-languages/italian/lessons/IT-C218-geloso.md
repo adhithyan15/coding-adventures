@@ -13,7 +13,8 @@ gloss: "jealous"
 concept_tag: IT-QUAL218-GELOSO
 prerequisites: [IT-C217-certo, IT-C217-davvero]
 sounds: []
-roots: []
+roots: [zelus-latin]
+etymology_hook: "geloso ← Old Provençal gelos, from Late Latin zelosus 'full of zeal' — English jealous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C217-davvero]
 <!-- hl-knowledge: introduces=[IT-LEX-C218-QUAL218-01]; assesses=[] -->
 
 **geloso** — "jealous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geloso** ← Old Provençal *gelos* — borrowed, a word of the troubadours; behind it is Late Latin *zelosus*, "full of zeal". (EtymDB 2.1 records the Latin word, but calls the Italian inherited.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

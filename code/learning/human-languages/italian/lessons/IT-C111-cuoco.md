@@ -13,7 +13,8 @@ gloss: "a cook"
 concept_tag: IT-LAVORO111-CUOCO
 prerequisites: [IT-C110-pepe, IT-C111-infermiera]
 sounds: []
-roots: []
+roots: [coquus-latin]
+etymology_hook: "cuoco ← Latin coquus 'a cook', from coquere 'to cook' — English cook is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C111-infermiera]
 <!-- hl-knowledge: introduces=[IT-LEX-C111-LAVORO111-02]; assesses=[] -->
 
 **il cuoco** — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuoco** ← Latin *coquus*, "a cook", from *coquere*, "to cook" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

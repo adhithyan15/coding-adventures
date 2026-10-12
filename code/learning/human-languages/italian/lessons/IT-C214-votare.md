@@ -13,7 +13,8 @@ gloss: "to vote"
 concept_tag: IT-VERB-VOTARE
 prerequisites: [IT-C214-tremare, IT-C214-urlare]
 sounds: []
-roots: []
+roots: [votum-latin]
+etymology_hook: "votare — from the word for 'a vote' ← Latin votum 'a vow' — English vote"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C214-urlare]
 <!-- hl-knowledge: introduces=[IT-LEX-C214-VERBI214-05]; assesses=[] -->
 
 **votare** — "to vote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**votare** — built from the word for "a vote", which ← Latin *votum*, "a vow, a promise". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

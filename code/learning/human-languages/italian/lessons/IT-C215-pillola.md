@@ -13,7 +13,8 @@ gloss: "a pill"
 concept_tag: IT-SAL215-PILLOLA
 prerequisites: [IT-C215-influenza, IT-C215-ricetta]
 sounds: []
-roots: []
+roots: [pilula-latin]
+etymology_hook: "pillola ← Latin pilula 'a little ball, a pill' — English pill shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C215-ricetta]
 <!-- hl-knowledge: introduces=[IT-LEX-C215-SAL215-03]; assesses=[] -->
 
 **la pillola** — "a pill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pillola** ← Latin *pilula*, "a little ball, a pill" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *pillola*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

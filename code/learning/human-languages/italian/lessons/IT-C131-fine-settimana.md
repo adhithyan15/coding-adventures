@@ -13,7 +13,8 @@ gloss: "the weekend"
 concept_tag: IT-TEMPO131-FINE-SETTIMANA
 prerequisites: [IT-C130-pesante, IT-C130-magro]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "fine settimana — 'week's end': fine ← Latin finis 'end' + settimana ← Late Latin septimana"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C130-magro]
 <!-- hl-knowledge: introduces=[IT-LEX-C131-TEMPO131-01]; assesses=[] -->
 
 **il fine settimana** — "the weekend".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fine settimana** is "the end of the week": *fine*, "end" ← Latin *finis*, and *settimana*, "week" ← Late Latin *septimana*, from *septimus*, "seventh". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to continue"
 concept_tag: IT-VERB-CONTINUARE
 prerequisites: [IT-C205-provare, IT-C205-finire]
 sounds: []
-roots: []
+roots: [continuare-latin]
+etymology_hook: "continuare ← Latin continuare 'to go on', a learned word — English continue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C205-finire]
 <!-- hl-knowledge: introduces=[IT-LEX-C205-VERBI205-03]; assesses=[] -->
 
 **continuare** — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**continuare** ← Latin *continuare*, "to join together, to go on" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

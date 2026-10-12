@@ -13,7 +13,8 @@ gloss: "to fix, to stare at"
 concept_tag: IT-VERB-FISSARE
 prerequisites: [IT-C148-trasportare, IT-C149-festeggiare]
 sounds: []
-roots: []
+roots: [fixus-latin]
+etymology_hook: "fissare — from fisso 'fixed' ← Latin fixus — English fix is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C149-festeggiare]
 <!-- hl-knowledge: introduces=[IT-LEX-C149-VERBI149-02]; assesses=[] -->
 
 **fissare** — "to fix, to stare at".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fissare** — built from *fisso*, "fixed", which ← Latin *fixus*, "fixed". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

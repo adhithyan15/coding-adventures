@@ -14,6 +14,7 @@ concept_tag: IT-COSE195-PILOTA
 prerequisites: [IT-C194-attrice, IT-C194-romanzo]
 sounds: []
 roots: []
+etymology_hook: "pilota — usually traced to Byzantine Greek pedotes 'a steersman' — English pilot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C194-romanzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C195-COSE195-01]; assesses=[] -->
 
 **il pilota** — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pilota** is usually traced to Byzantine Greek *pedotes*, "a steersman", from *pedon*, "an oar blade". EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

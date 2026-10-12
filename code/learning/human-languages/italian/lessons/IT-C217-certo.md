@@ -13,7 +13,8 @@ gloss: "certainly"
 concept_tag: IT-PERCHE217-CERTO
 prerequisites: [IT-C217-forse, IT-C217-magari]
 sounds: []
-roots: []
+roots: [certus-latin]
+etymology_hook: "certo ← Latin certus 'settled, sure' — English certain shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C217-magari]
 <!-- hl-knowledge: introduces=[IT-LEX-C217-PERCHE217-04]; assesses=[] -->
 
 **certo** — "certainly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**certo** ← Latin *certus*, "settled, sure" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

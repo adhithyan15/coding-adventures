@@ -14,6 +14,7 @@ concept_tag: IT-ANIMALI120-FARFALLA
 prerequisites: [IT-C120-coniglio, IT-C120-tigre]
 sounds: []
 roots: []
+etymology_hook: "farfalla — origin uncertain; EtymDB links it to Old Italian parpaglione 'butterfly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C120-tigre]
 <!-- hl-knowledge: introduces=[IT-LEX-C120-ANIMALI120-04]; assesses=[] -->
 
 **la farfalla** — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farfalla** — its origin is uncertain. EtymDB 2.1 links it to Old Italian *parpaglione*, "butterfly", but how one word became the other is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to grow younger"
 concept_tag: IT-VERB-RINGIOVANIRE
 prerequisites: [IT-C147-rifiutare, IT-C147-rimanere]
 sounds: []
-roots: []
+roots: [iuvenis-latin]
+etymology_hook: "ringiovanire — ri- 'again' + the word for 'young' ← Latin iuvenis — English juvenile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C147-rimanere]
 <!-- hl-knowledge: introduces=[IT-LEX-C147-VERBI147-04]; assesses=[] -->
 
 **ringiovanire** — "to grow younger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ringiovanire** — built from the word for "young", with *ri-*, "again", and *in-*: to become young again. That word goes back to Latin *iuvenis*, "young" (Lewis & Short). EtymDB 2.1 has no row for the verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to go down, to get off"
 concept_tag: IT-VERB-SCENDERE
 prerequisites: [IT-C134-cadere, IT-C135-salire]
 sounds: []
-roots: []
+roots: [descendere-latin]
+etymology_hook: "scendere ← Latin descendere 'to come down', its de- worn away — English descend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C135-salire]
 <!-- hl-knowledge: introduces=[IT-LEX-C135-VERBI135-02]; assesses=[] -->
 
 **scendere** — "to go down, to get off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scendere** ← Latin *descendere*, "to come down", with its first syllable worn away — inherited. EtymDB 2.1 has no row for *scendere*; it derives Sicilian *scìnniri* from *descendere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

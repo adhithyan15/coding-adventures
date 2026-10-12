@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 234,
-  "sourceHash": "fnv1a64:c585f737ae697f82",
+  "sourceHash": "fnv1a64:504ad47220ea7a21",
   "lessonIds": [
     "IT-C234-cambiare",
     "IT-C234-spostare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch234.txt",
   "json": "italian/narration/ch234.json",
-  "textHash": "fnv1a64:279fc1947316470a",
-  "jsonHash": "fnv1a64:8f90dc611d6a1c5e",
+  "textHash": "fnv1a64:ec48c4c3440175ae",
+  "jsonHash": "fnv1a64:1d3bc9d0f2f985de",
   "findings": []
 }

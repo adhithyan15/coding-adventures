@@ -12,6 +12,9 @@ Before the new one: say the Italian for a courtyard, then the Italian for a cell
 You'll want to know: la fiamma.
 la fiamma — "a flame".
 
+The word, taken apart.
+fiamma from Latin flamma, "a flame" — inherited. EtymDB 2.1 has no row for fiamma; it derives Spanish llama and Old French flamme from flamma.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a cellar, then the Italian for a flame.
 
 You'll want to know: il fulmine.
 il fulmine — "lightning".
+
+The word, taken apart.
+fulmine from Latin fulmen, fulminis, "a thunderbolt" (Lewis & Short) — inherited, from the stem fulmin-. (EtymDB 2.1 records the word.)
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a flame, then the Italian for lightning.
 You'll want to know: il tuono.
 il tuono — "thunder".
 
+The word, taken apart.
+tuono goes back to Latin tonus, "thunder", a noun from tonare, "to thunder" (Lewis & Short) — inherited; Latin o became uo. EtymDB 2.1 ties it to Greek tonos, "a tone", a different word, so that row is not used.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for lightning, then the Italian for thunder.
 You'll want to know: l'arcobaleno.
 l'arcobaleno — "a rainbow".
 
+The word, taken apart.
+arcobaleno is arco, "a bow" from Latin arcus (EtymDB 2.1), plus baleno, "a flash of lightning", whose origin is uncertain: a bow of light.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for thunder, then the Italian for a rainbow.
 
 You'll want to know: il clima.
 il clima — "the climate".
+
+The word, taken apart.
+clima from Latin clima, from Greek klima, "a slope; a zone of the earth" — a learned borrowing. EtymDB 2.1 has no row for clima; it derives Spanish clima and French climat from the Latin word.
 
 What you've built.
 One more word for this chapter.

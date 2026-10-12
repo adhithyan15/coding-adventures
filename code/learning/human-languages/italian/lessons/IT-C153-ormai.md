@@ -13,7 +13,8 @@ gloss: "by now"
 concept_tag: IT-TEMPO153-ORMAI
 prerequisites: [IT-C153-infine, IT-C153-intanto]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "ormai — ora 'now' ← Latin hora + mai ← Latin magis 'more'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C153-intanto]
 <!-- hl-knowledge: introduces=[IT-LEX-C153-TEMPO153-05]; assesses=[] -->
 
 **ormai** — "by now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ormai** is *ora*, "now" ← Latin *hora*, "hour", plus *mai*, "ever" ← Latin *magis*, "more". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

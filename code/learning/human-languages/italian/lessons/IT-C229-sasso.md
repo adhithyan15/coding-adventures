@@ -13,7 +13,8 @@ gloss: "a pebble"
 concept_tag: IT-COSE229-SASSO
 prerequisites: [IT-C228-statua, IT-C229-pianura]
 sounds: []
-roots: []
+roots: [saxum-latin]
+etymology_hook: "sasso ← Latin saxum 'a rock' — Latin x became Italian ss"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C229-pianura]
 <!-- hl-knowledge: introduces=[IT-LEX-C229-COSE229-02]; assesses=[] -->
 
 **il sasso** — "a pebble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sasso** ← Latin *saxum*, "a rock" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

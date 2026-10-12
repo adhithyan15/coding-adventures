@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 239,
-  "sourceHash": "fnv1a64:bff07459f4291df9",
+  "sourceHash": "fnv1a64:e2c1e740d1346b31",
   "lessonIds": [
     "IT-C239-raggiungere",
     "IT-C239-realizzare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch239.txt",
   "json": "italian/narration/ch239.json",
-  "textHash": "fnv1a64:a14db6cbae6f0aa2",
-  "jsonHash": "fnv1a64:5284cd5eb587da03",
+  "textHash": "fnv1a64:4f51f255db51e57c",
+  "jsonHash": "fnv1a64:641a156e4289a23f",
   "findings": []
 }

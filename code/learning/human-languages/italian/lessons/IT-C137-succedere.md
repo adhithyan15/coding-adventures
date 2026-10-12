@@ -13,7 +13,8 @@ gloss: "to happen"
 concept_tag: IT-VERB-SUCCEDERE
 prerequisites: [IT-C137-laltro-ieri, IT-C137-recentemente]
 sounds: []
-roots: []
+roots: [succedere-latin]
+etymology_hook: "succedere ← Latin succedere 'to come after', a learned word — English succeed shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C137-recentemente]
 <!-- hl-knowledge: introduces=[IT-LEX-C137-PAST137-05]; assesses=[] -->
 
 **succedere** — "to happen". Its past takes **essere**, like **andare**: **Che cosa è successo?** — "What happened?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**succedere** ← Latin *succedere*, "to come after, to follow" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

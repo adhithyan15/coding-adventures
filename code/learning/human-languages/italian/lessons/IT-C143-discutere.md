@@ -13,7 +13,8 @@ gloss: "to discuss"
 concept_tag: IT-VERB-DISCUTERE
 prerequisites: [IT-C142-guardare, IT-C143-telefonare]
 sounds: []
-roots: []
+roots: [discutere-latin]
+etymology_hook: "discutere ← Latin discutere 'to shake apart', a learned word — English discuss shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C143-telefonare]
 <!-- hl-knowledge: introduces=[IT-LEX-C143-VERBI143-02]; assesses=[] -->
 
 **discutere** — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**discutere** ← Latin *discutere*, "to strike apart, to shake to pieces" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *discutere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

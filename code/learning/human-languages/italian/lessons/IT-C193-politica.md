@@ -13,7 +13,8 @@ gloss: "politics"
 concept_tag: IT-COSE193-POLITICA
 prerequisites: [IT-C192-dogana, IT-C192-prenotazione]
 sounds: []
-roots: []
+roots: [politica-latin]
+etymology_hook: "politica ← Latin politica, from Greek politike 'the citizen's art' — English politics"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C192-prenotazione]
 <!-- hl-knowledge: introduces=[IT-LEX-C193-COSE193-01]; assesses=[] -->
 
 **la politica** — "politics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**politica** ← Latin *politica*, from Greek *politike*, "the art of the citizen" — a learned borrowing. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

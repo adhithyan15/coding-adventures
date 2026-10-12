@@ -14,6 +14,7 @@ concept_tag: IT-COSE252-BUGIA
 prerequisites: [IT-C252-esempio, IT-C252-verita]
 sounds: []
 roots: []
+etymology_hook: "bugia — usually traced to Old Provençal bauzia 'deceit', of Germanic origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C252-verita]
 <!-- hl-knowledge: introduces=[IT-LEX-C252-COSE252-04]; assesses=[] -->
 
 **la bugia** — "a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bugia** is usually traced to Old Provençal *bauzia*, "deceit", a word of Germanic origin — borrowed. EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

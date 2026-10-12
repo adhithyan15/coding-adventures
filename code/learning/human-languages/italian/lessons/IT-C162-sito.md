@@ -13,7 +13,8 @@ gloss: "a website"
 concept_tag: IT-COSE162-SITO
 prerequisites: [IT-C161-comune, IT-C161-elezioni]
 sounds: []
-roots: []
+roots: [situs-latin]
+etymology_hook: "sito ← Latin situs 'a place' — the web sense follows English site"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C161-elezioni]
 <!-- hl-knowledge: introduces=[IT-LEX-C162-COSE162-01]; assesses=[] -->
 
 **il sito** — "a website".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sito** ← Latin *situs*, "a place, a position" — inherited. (EtymDB 2.1) The web sense follows English *site*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to measure"
 concept_tag: IT-VERB-MISURARE
 prerequisites: [IT-C206-svuotare, IT-C206-contare]
 sounds: []
-roots: []
+roots: [mensura-latin]
+etymology_hook: "misurare ← Late Latin mensurare, from mensura 'a measure' — English measure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C206-contare]
 <!-- hl-knowledge: introduces=[IT-LEX-C206-VERBI206-05]; assesses=[] -->
 
 **misurare** — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**misurare** ← Late Latin *mensurare*, "to measure" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

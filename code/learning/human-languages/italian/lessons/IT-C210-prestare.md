@@ -13,7 +13,8 @@ gloss: "to lend"
 concept_tag: IT-VERB-PRESTARE
 prerequisites: [IT-C209-immaginare, IT-C210-preparare]
 sounds: []
-roots: []
+roots: [praestare-latin]
+etymology_hook: "prestare ← Latin praestare 'to vouch for, to provide' — Spanish prestar is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C210-preparare]
 <!-- hl-knowledge: introduces=[IT-LEX-C210-VERBI210-02]; assesses=[] -->
 
 **prestare** — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prestare** ← Latin *praestare*, "to stand surety, to provide" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

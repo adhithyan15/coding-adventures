@@ -13,7 +13,8 @@ gloss: "a scar"
 concept_tag: IT-SAL185-CICATRICE
 prerequisites: [IT-C185-pollice, IT-C185-ferita]
 sounds: []
-roots: []
+roots: [cicatrix-latin]
+etymology_hook: "cicatrice ← Latin cicatrix, cicatricem 'a scar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C185-ferita]
 <!-- hl-knowledge: introduces=[IT-LEX-C185-SAL185-04]; assesses=[] -->
 
 **la cicatrice** — "a scar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cicatrice** ← Latin *cicatrix*, "a scar" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

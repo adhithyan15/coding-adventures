@@ -13,7 +13,8 @@ gloss: "dangerous"
 concept_tag: IT-QUALITA128-PERICOLOSO
 prerequisites: [IT-C127-pronto, IT-C127-sicuro]
 sounds: []
-roots: []
+roots: [periculosus-latin]
+etymology_hook: "pericoloso ← Latin periculosus 'dangerous', a learned word — English perilous is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C127-sicuro]
 <!-- hl-knowledge: introduces=[IT-LEX-C128-QUALITA128-01]; assesses=[] -->
 
 **pericoloso** — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pericoloso** ← Latin *periculosus*, "dangerous" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *pericoloso*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

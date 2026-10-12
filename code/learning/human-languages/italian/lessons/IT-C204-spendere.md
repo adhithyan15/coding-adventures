@@ -13,7 +13,8 @@ gloss: "to spend"
 concept_tag: IT-VERB-SPENDERE
 prerequisites: [IT-C204-parcheggiare, IT-C204-prenotare]
 sounds: []
-roots: []
+roots: [expendere-latin]
+etymology_hook: "spendere ← Latin expendere 'to pay out' — English spend and expend share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C204-prenotare]
 <!-- hl-knowledge: introduces=[IT-LEX-C204-VERBI204-03]; assesses=[] -->
 
 **spendere** — "to spend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spendere** ← Latin *expendere*, "to weigh out, to pay out" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to take off, to remove"
 concept_tag: IT-VERB-TOGLIERE
 prerequisites: [IT-C234-cambiare, IT-C234-spostare]
 sounds: []
-roots: []
+roots: [tollere-latin]
+etymology_hook: "togliere ← Latin tollere 'to lift, to take away'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C234-spostare]
 <!-- hl-knowledge: introduces=[IT-LEX-C234-VERBI234-03]; assesses=[] -->
 
 **togliere** — "to take off, to remove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**togliere** ← Latin *tollere*, "to lift, to take away" — inherited. EtymDB 2.1 has no row for *togliere*; it derives Spanish *toller* and Catalan *toldre* from *tollere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

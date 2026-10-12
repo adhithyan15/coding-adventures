@@ -13,7 +13,8 @@ gloss: "wet"
 concept_tag: IT-QUALITA128-BAGNATO
 prerequisites: [IT-C127-sicuro, IT-C128-pericoloso]
 sounds: []
-roots: []
+roots: [balneare-latin]
+etymology_hook: "bagnato — 'bathed', from Late Latin balneare 'to bathe' — French baigner is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C128-pericoloso]
 <!-- hl-knowledge: introduces=[IT-LEX-C128-QUALITA128-02]; assesses=[] -->
 
 **bagnato** — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bagnato** is the past participle of the verb for "to wet, to bathe", which ← Vulgar Latin *baneare*, from Late Latin *balneare*, "to bathe". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

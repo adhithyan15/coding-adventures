@@ -14,6 +14,7 @@ concept_tag: IT-COSE249-TELEGIORNALE
 prerequisites: [IT-C249-dialetto, IT-C249-notizia]
 sounds: []
 roots: []
+etymology_hook: "telegiornale — tele- (television) + giornale 'newspaper'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C249-notizia]
 <!-- hl-knowledge: introduces=[IT-LEX-C249-COSE249-03]; assesses=[] -->
 
 **il telegiornale** — "the TV news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telegiornale** is *tele-*, from the word for television, plus *giornale*, "a newspaper": the news on the screen. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a concert"
 concept_tag: IT-TEMPOLIBERO117-CONCERTO
 prerequisites: [IT-C117-prezzo, IT-C117-calcio]
 sounds: []
-roots: []
+roots: [concertare-latin]
+etymology_hook: "concerto — from concertare 'to agree, to play together' ← Latin concertare 'to contend'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C117-calcio]
 <!-- hl-knowledge: introduces=[IT-LEX-C117-TEMPOLIBERO117-03]; assesses=[] -->
 
 **il concerto** — "a concert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**concerto** is the noun of *concertare*, "to agree, to play together" ← Latin *concertare*, "to contend". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

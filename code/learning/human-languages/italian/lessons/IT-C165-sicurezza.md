@@ -13,7 +13,8 @@ gloss: "safety"
 concept_tag: IT-COSE165-SICUREZZA
 prerequisites: [IT-C165-divieto, IT-C165-pericolo]
 sounds: []
-roots: []
+roots: [securus-latin]
+etymology_hook: "sicurezza — sicuro 'safe' + -ezza '-ness'; from Latin securus — English security"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C165-pericolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C165-COSE165-05]; assesses=[] -->
 
 **la sicurezza** — "safety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sicurezza** — built from *sicuro*, "safe", with *-ezza*, "-ness". *sicuro* ← Latin *securus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

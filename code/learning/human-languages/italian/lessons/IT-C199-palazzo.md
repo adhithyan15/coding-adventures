@@ -13,7 +13,8 @@ gloss: "a building, a palace"
 concept_tag: IT-COSE199-PALAZZO
 prerequisites: [IT-C199-rotonda, IT-C199-cantiere]
 sounds: []
-roots: []
+roots: [palatium-latin]
+etymology_hook: "palazzo ← Latin palatium, named after the Palatine hill where emperors lived — English palace"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C199-cantiere]
 <!-- hl-knowledge: introduces=[IT-LEX-C199-COSE199-05]; assesses=[] -->
 
 **il palazzo** — "a building, a palace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**palazzo** ← Latin *palatium*, "a palace", named after the Palatine hill, where the emperors lived — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

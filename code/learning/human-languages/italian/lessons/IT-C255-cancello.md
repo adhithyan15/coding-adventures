@@ -13,7 +13,8 @@ gloss: "a gate"
 concept_tag: IT-COSE255-CANCELLO
 prerequisites: [IT-C254-benzina, IT-C255-fontana]
 sounds: []
-roots: []
+roots: [cancellus-latin]
+etymology_hook: "cancello ← Latin cancellus 'a lattice' — English chancel and cancel share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C255-fontana]
 <!-- hl-knowledge: introduces=[IT-LEX-C255-COSE255-02]; assesses=[] -->
 
 **il cancello** — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cancello** ← Latin *cancellus*, "a lattice, a grating" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

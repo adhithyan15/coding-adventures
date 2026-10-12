@@ -13,7 +13,8 @@ gloss: "a performance, a show"
 concept_tag: IT-COSE194-SPETTACOLO
 prerequisites: [IT-C193-esercito, IT-C194-cantante]
 sounds: []
-roots: []
+roots: [spectaculum-latin]
+etymology_hook: "spettacolo ← Latin spectaculum 'a show', from spectare 'to watch' — English spectacle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C194-cantante]
 <!-- hl-knowledge: introduces=[IT-LEX-C194-COSE194-02]; assesses=[] -->
 
 **lo spettacolo** — "a performance, a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spettacolo** ← Latin *spectaculum*, "a show, a sight" — a learned borrowing. EtymDB 2.1 has no row for *spettacolo*; it derives French *spectacle* and Portuguese *espetáculo* from *spectaculum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

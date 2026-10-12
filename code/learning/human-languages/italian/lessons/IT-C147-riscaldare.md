@@ -13,7 +13,8 @@ gloss: "to heat up"
 concept_tag: IT-VERB-RISCALDARE
 prerequisites: [IT-C147-rimanere, IT-C147-ringiovanire]
 sounds: []
-roots: []
+roots: [caldus-latin]
+etymology_hook: "riscaldare — ri- + the verb 'to warm' ← Late Latin excaldare, from caldus 'warm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C147-ringiovanire]
 <!-- hl-knowledge: introduces=[IT-LEX-C147-VERBI147-05]; assesses=[] -->
 
 **riscaldare** — "to heat up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riscaldare** — the verb for "to warm" with *ri-*, "again". That verb ← Late Latin *excaldare* (EtymDB 2.1), "to bathe in warm water", from *caldus*, "warm" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

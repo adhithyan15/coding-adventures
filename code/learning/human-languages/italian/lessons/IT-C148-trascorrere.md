@@ -13,7 +13,8 @@ gloss: "to pass (time)"
 concept_tag: IT-VERB-TRASCORRERE
 prerequisites: [IT-C148-temere, IT-C148-tentare]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "trascorrere — tras- 'through' + correre 'to run' ← Latin currere — English current"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C148-tentare]
 <!-- hl-knowledge: introduces=[IT-LEX-C148-VERBI148-04]; assesses=[] -->
 
 **trascorrere** — "to pass (time)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trascorrere** is *tras-*, "through", plus *correre*, "to run": time runs through. *correre* ← Latin *currere*, "to run". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

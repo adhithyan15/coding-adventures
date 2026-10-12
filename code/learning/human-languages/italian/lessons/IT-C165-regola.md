@@ -13,7 +13,8 @@ gloss: "a rule"
 concept_tag: IT-COSE165-REGOLA
 prerequisites: [IT-C164-vedovo, IT-C164-fallimento]
 sounds: []
-roots: []
+roots: [regula-latin]
+etymology_hook: "regola ← Latin regula 'a straight stick, a rule' — English rule and regular share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C164-fallimento]
 <!-- hl-knowledge: introduces=[IT-LEX-C165-COSE165-01]; assesses=[] -->
 
 **la regola** — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regola** ← Latin *regula*, "a straight stick, a rule" — a learned borrowing. EtymDB 2.1 has no row for *regola*; it records French *règle* and Portuguese *regra* as taken from *regula*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to lift"
 concept_tag: IT-VERB-SOLLEVARE
 prerequisites: [IT-C183-legare, IT-C184-scivolare]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "sollevare ← Latin sublevare 'to lift from below' — English lever shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C184-scivolare]
 <!-- hl-knowledge: introduces=[IT-LEX-C184-VERBI184-02]; assesses=[] -->
 
 **sollevare** — "to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sollevare** ← Latin *sublevare*, "to lift from below" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

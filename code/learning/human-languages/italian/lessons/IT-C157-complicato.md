@@ -13,7 +13,8 @@ gloss: "complicated"
 concept_tag: IT-QUAL157-COMPLICATO
 prerequisites: [IT-C156-antipatico, IT-C157-semplice]
 sounds: []
-roots: []
+roots: [complicare-latin]
+etymology_hook: "complicato ← Latin complicatus 'folded together', a learned word — English complicated"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C157-semplice]
 <!-- hl-knowledge: introduces=[IT-LEX-C157-QUAL157-02]; assesses=[] -->
 
 **complicato** — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**complicato** ← Latin *complicatus*, "folded together", from *complicare* — a learned borrowing. (EtymDB 2.1 records *complicare* as taken from Latin.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

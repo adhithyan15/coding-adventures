@@ -14,6 +14,7 @@ concept_tag: IT-COSE198-ETICHETTA
 prerequisites: [IT-C198-cartella, IT-C198-busta-paga]
 sounds: []
 roots: []
+etymology_hook: "etichetta ← French étiquette 'a label' — borrowed; English etiquette and ticket are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C198-busta-paga]
 <!-- hl-knowledge: introduces=[IT-LEX-C198-COSE198-03]; assesses=[] -->
 
 **l'etichetta** — "a label".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**etichetta** ← French *étiquette*, "a label, a ticket" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a delay"
 concept_tag: IT-COSE258-RITARDO
 prerequisites: [IT-C258-tifoso, IT-C258-premio]
 sounds: []
-roots: []
+roots: [tardus-latin]
+etymology_hook: "ritardo — from ritardare ← Latin retardare 'to slow down' — English retard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C258-premio]
 <!-- hl-knowledge: introduces=[IT-LEX-C258-COSE258-03]; assesses=[] -->
 
 **il ritardo** — "a delay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ritardo** is the noun of *ritardare*, "to delay", which ← Latin *retardare*, "to slow down". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

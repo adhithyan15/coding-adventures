@@ -13,7 +13,8 @@ gloss: "a fly"
 concept_tag: IT-COSE248-MOSCA
 prerequisites: [IT-C247-spuntino, IT-C248-temperatura]
 sounds: []
-roots: []
+roots: [musca-latin]
+etymology_hook: "mosca ← Latin musca 'a fly' — English mosquito is a cousin, through Spanish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C248-temperatura]
 <!-- hl-knowledge: introduces=[IT-LEX-C248-COSE248-02]; assesses=[] -->
 
 **la mosca** — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mosca** ← Latin *musca*, "a fly" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

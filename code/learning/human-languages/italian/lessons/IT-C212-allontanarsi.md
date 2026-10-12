@@ -13,7 +13,8 @@ gloss: "to move away"
 concept_tag: IT-VERB-ALLONTANARSI
 prerequisites: [IT-C211-somigliare, IT-C212-affrettarsi]
 sounds: []
-roots: []
+roots: [longe-latin]
+etymology_hook: "allontanarsi — a- + lontano 'far' + -si; from Vulgar Latin longitanus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C212-affrettarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C212-VERBI212-02]; assesses=[] -->
 
 **allontanarsi** — "to move away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**allontanarsi** — built from *lontano*, "far", with *a-* and *-si*: to move oneself far off. *lontano* ← Vulgar Latin *longitanus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

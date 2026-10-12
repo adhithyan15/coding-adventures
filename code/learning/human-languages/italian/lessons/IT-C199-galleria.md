@@ -14,6 +14,7 @@ concept_tag: IT-COSE199-GALLERIA
 prerequisites: [IT-C198-mappa, IT-C199-casco]
 sounds: []
 roots: []
+etymology_hook: "galleria ← Medieval Latin galeria 'a covered walk' — English gallery"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C199-casco]
 <!-- hl-knowledge: introduces=[IT-LEX-C199-COSE199-02]; assesses=[] -->
 
 **la galleria** — "a tunnel, a gallery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**galleria** ← Medieval Latin *galeria*, "a covered walk" — taken from Medieval Latin. EtymDB 2.1 traces *galeria* to *Galilaea*, Galilee, a name for a church porch; that step is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

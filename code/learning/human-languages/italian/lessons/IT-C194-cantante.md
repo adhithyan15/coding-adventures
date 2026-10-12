@@ -13,7 +13,8 @@ gloss: "a singer"
 concept_tag: IT-COSE194-CANTANTE
 prerequisites: [IT-C193-pace, IT-C193-esercito]
 sounds: []
-roots: []
+roots: [cantare-latin]
+etymology_hook: "cantante — 'singing', from cantare 'to sing': the one who sings — English cantata"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C193-esercito]
 <!-- hl-knowledge: introduces=[IT-LEX-C194-COSE194-01]; assesses=[] -->
 
 **il cantante** — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cantante** is the present participle of *cantare*, "to sing", used as a noun: one who sings. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

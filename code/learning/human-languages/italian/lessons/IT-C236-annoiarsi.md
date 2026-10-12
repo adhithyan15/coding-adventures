@@ -14,6 +14,7 @@ concept_tag: IT-VERB-ANNOIARSI
 prerequisites: [IT-C236-svegliarsi, IT-C236-pettinarsi]
 sounds: []
 roots: []
+etymology_hook: "annoiarsi ← Old Provençal enojar 'to vex' + -si — English annoy is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C236-pettinarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C236-VERBI236-04]; assesses=[] -->
 
 **annoiarsi** — "to be bored".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**annoiarsi** ← Old Provençal *enojar*, "to vex", with *-si*, "oneself" — borrowed. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

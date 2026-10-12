@@ -13,7 +13,8 @@ gloss: "jealousy"
 concept_tag: IT-SAL216-GELOSIA
 prerequisites: [IT-C216-coraggio, IT-C216-vergogna]
 sounds: []
-roots: []
+roots: [zelus-latin]
+etymology_hook: "gelosia — from the word for 'jealous', Late Latin zelosus, Greek zelos 'zeal' — English jealousy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C216-vergogna]
 <!-- hl-knowledge: introduces=[IT-LEX-C216-SAL216-04]; assesses=[] -->
 
 **la gelosia** — "jealousy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gelosia** — built from the word for "jealous" with *-ia*. That word goes back to Late Latin *zelosus* (EtymDB 2.1), from *zelus*, "zeal", which Latin took from Greek *zelos* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

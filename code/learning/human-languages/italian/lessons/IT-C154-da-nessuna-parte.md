@@ -13,7 +13,8 @@ gloss: "nowhere"
 concept_tag: IT-LUOGO154-DA-NESSUNA-PARTE
 prerequisites: [IT-C154-intorno, IT-C154-dappertutto]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "da nessuna parte — 'from no part': parte ← Latin partem 'part'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C154-dappertutto]
 <!-- hl-knowledge: introduces=[IT-LEX-C154-LUOGO154-03]; assesses=[] -->
 
 **da nessuna parte** — "nowhere".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**da nessuna parte** is "from no part": *da*, "from"; *nessuna*, "not one", from Latin *ne ipse una*, "not even one"; and *parte*, "part" ← Latin *partem*. (EtymDB 2.1 records *da* and *parte*, and derives Neapolitan *nisciuno* from *ne ipse unus*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

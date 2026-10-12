@@ -13,7 +13,8 @@ gloss: "to exaggerate"
 concept_tag: IT-VERB-ESAGERARE
 prerequisites: [IT-C241-dirigere, IT-C241-distruggere]
 sounds: []
-roots: []
+roots: [exaggerare-latin]
+etymology_hook: "esagerare ← Latin exaggerare 'to heap up', a learned word — English exaggerate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C241-distruggere]
 <!-- hl-knowledge: introduces=[IT-LEX-C241-VERBI241-05]; assesses=[] -->
 
 **esagerare** — "to exaggerate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esagerare** ← Latin *exaggerare*, "to heap up" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

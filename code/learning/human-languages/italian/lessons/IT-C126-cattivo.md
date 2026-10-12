@@ -13,7 +13,8 @@ gloss: "bad; nasty"
 concept_tag: IT-QUALITA126-CATTIVO
 prerequisites: [IT-C126-divertente, IT-C126-simpatico]
 sounds: []
-roots: []
+roots: [captivus-latin]
+etymology_hook: "cattivo ← Latin captivus 'a captive' — of the devil, hence 'bad'; English caitiff is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C126-simpatico]
 <!-- hl-knowledge: introduces=[IT-LEX-C126-QUALITA126-04]; assesses=[] -->
 
 **cattivo** — "bad; nasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cattivo** ← Latin *captivus*, "a captive" — inherited. (EtymDB 2.1) It came to mean "bad" through the Christian phrase *captivus diaboli*, "a captive of the devil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

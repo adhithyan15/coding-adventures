@@ -14,6 +14,7 @@ concept_tag: IT-COSE223-FOTOGRAFO
 prerequisites: [IT-C223-scrittore, IT-C223-pittore]
 sounds: []
 roots: []
+etymology_hook: "fotografo — Greek phos 'light' + graphein 'to write': one who writes with light"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C223-pittore]
 <!-- hl-knowledge: introduces=[IT-LEX-C223-COSE223-05]; assesses=[] -->
 
 **il fotografo** — "a photographer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fotografo** — built, like *fotografare*, from Greek *phos*, *photos*, "light", and *graphein*, "to write". EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

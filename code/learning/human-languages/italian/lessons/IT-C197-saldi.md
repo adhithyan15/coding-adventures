@@ -13,7 +13,8 @@ gloss: "the sales"
 concept_tag: IT-COSE197-SALDI
 prerequisites: [IT-C197-promessa, IT-C197-sconto]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "saldi — plural of saldo 'a settled balance', from Latin solidus 'whole' — English solid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C197-sconto]
 <!-- hl-knowledge: introduces=[IT-LEX-C197-COSE197-04]; assesses=[] -->
 
 **i saldi** — "the sales".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saldi** is the plural of *saldo*, "a settled balance": goods sold off to settle the books. *saldo* goes back to Latin *solidus*, "solid, whole" (Lewis & Short). EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

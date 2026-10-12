@@ -13,7 +13,8 @@ gloss: "during"
 concept_tag: IT-TEMPO187-DURANTE
 prerequisites: [IT-C187-ancora, IT-C187-allora]
 sounds: []
-roots: []
+roots: [durare]
+etymology_hook: "durante — 'lasting', from durare ← Latin durare 'to last' — English during"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C187-allora]
 <!-- hl-knowledge: introduces=[IT-LEX-C187-TEMPO187-03]; assesses=[] -->
 
 **durante** — "during".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**durante** is the present participle of *durare*, "to last": while (it is) lasting. *durare* ← Latin *durare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

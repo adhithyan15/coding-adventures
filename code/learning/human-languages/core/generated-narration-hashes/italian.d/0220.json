@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 220,
-  "sourceHash": "fnv1a64:1d6dfe4cfa08ce76",
+  "sourceHash": "fnv1a64:d66e4cefa484ebe3",
   "lessonIds": [
     "IT-C220-maglietta",
     "IT-C220-calze",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch220.txt",
   "json": "italian/narration/ch220.json",
-  "textHash": "fnv1a64:221d51a4f115b08c",
-  "jsonHash": "fnv1a64:8b70e114f7856d29",
+  "textHash": "fnv1a64:3c74a2a9aea0c816",
+  "jsonHash": "fnv1a64:4b90bebfdeb1d509",
   "findings": []
 }

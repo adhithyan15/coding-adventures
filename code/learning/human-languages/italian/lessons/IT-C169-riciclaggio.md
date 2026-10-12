@@ -13,7 +13,8 @@ gloss: "recycling"
 concept_tag: IT-COSE169-RICICLAGGIO
 prerequisites: [IT-C169-inquinamento, IT-C169-rifiuto]
 sounds: []
-roots: []
+roots: [cyclus-latin]
+etymology_hook: "riciclaggio — ri- 'again' + ciclo 'a cycle' ← Greek kyklos 'a wheel' — English recycling"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C169-rifiuto]
 <!-- hl-knowledge: introduces=[IT-LEX-C169-COSE169-04]; assesses=[] -->
 
 **il riciclaggio** — "recycling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riciclaggio** — built from *ri-*, "again", and *ciclo*, "a cycle", with *-aggio*. *ciclo* ← Late Latin *cyclus*, from Greek *kyklos*, "a wheel, a circle". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

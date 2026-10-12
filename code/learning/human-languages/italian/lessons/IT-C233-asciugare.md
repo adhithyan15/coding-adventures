@@ -13,7 +13,8 @@ gloss: "to dry"
 concept_tag: IT-VERB-ASCIUGARE
 prerequisites: [IT-C233-ordinare, IT-C233-tagliare]
 sounds: []
-roots: []
+roots: [sucus-latin]
+etymology_hook: "asciugare ← Latin exsucare 'to suck out the juice' — Spanish enjugar is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C233-tagliare]
 <!-- hl-knowledge: introduces=[IT-LEX-C233-VERBI233-03]; assesses=[] -->
 
 **asciugare** — "to dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**asciugare** ← Latin *exsucare*, "to suck out the juice" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

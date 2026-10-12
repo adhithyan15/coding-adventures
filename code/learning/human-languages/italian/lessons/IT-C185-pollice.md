@@ -13,7 +13,8 @@ gloss: "a thumb"
 concept_tag: IT-SAL185-POLLICE
 prerequisites: [IT-C184-stringere, IT-C185-muscolo]
 sounds: []
-roots: []
+roots: [pollex-latin]
+etymology_hook: "pollice ← Latin pollex, pollicem 'a thumb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C185-muscolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C185-SAL185-02]; assesses=[] -->
 
 **il pollice** — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pollice** ← Latin *pollex*, "a thumb" (*pollicem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

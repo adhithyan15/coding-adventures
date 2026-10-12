@@ -13,7 +13,8 @@ gloss: "to convince"
 concept_tag: IT-VERB-CONVINCERE
 prerequisites: [IT-C145-confrontare, IT-C145-consigliare]
 sounds: []
-roots: []
+roots: [convincere-latin]
+etymology_hook: "convincere ← Latin convincere 'to overcome, to prove' — English convince is the same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C145-consigliare]
 <!-- hl-knowledge: introduces=[IT-LEX-C145-VERBI145-03]; assesses=[] -->
 
 **convincere** — "to convince".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**convincere** ← Latin *convincere*, "to overcome, to prove" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

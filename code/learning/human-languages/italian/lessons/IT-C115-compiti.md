@@ -13,7 +13,8 @@ gloss: "homework"
 concept_tag: IT-SCUOLA115-COMPITI
 prerequisites: [IT-C114-lavagna, IT-C114-gomma, IT-C36-frasi, IT-C36-prima-lettura]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "compiti — plural of compito, from Latin computus 'a reckoning' — English compute shares it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [IT-C114-gomma]
 <!-- hl-knowledge: introduces=[IT-LEX-C115-SCUOLA115-01]; assesses=[] -->
 
 **i compiti** — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compiti** is the plural of *compito*, "a task" ← Latin *computus*, "a reckoning" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

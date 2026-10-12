@@ -14,6 +14,7 @@ concept_tag: IT-COLORI123-ARANCIONE
 prerequisites: [IT-C123-viola, IT-C123-marrone]
 sounds: []
 roots: []
+etymology_hook: "arancione — arancia 'an orange (the fruit)' + the ending -one: the fruit's colour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C123-marrone]
 <!-- hl-knowledge: introduces=[IT-LEX-C123-COLORI123-04]; assesses=[] -->
 
 **arancione** — "orange (the colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arancione** — built from *arancia*, "an orange", with the ending *-one*: the colour of the fruit. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

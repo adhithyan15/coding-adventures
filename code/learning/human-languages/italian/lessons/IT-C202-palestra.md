@@ -13,7 +13,8 @@ gloss: "a gym"
 concept_tag: IT-COSE202-PALESTRA
 prerequisites: [IT-C201-argento, IT-C202-racchetta]
 sounds: []
-roots: []
+roots: [palaestra-latin]
+etymology_hook: "palestra ← Latin palaestra, from Greek palaistra 'a wrestling school'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C202-racchetta]
 <!-- hl-knowledge: introduces=[IT-LEX-C202-COSE202-02]; assesses=[] -->
 
 **la palestra** — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**palestra** ← Latin *palaestra*, "a wrestling school" (Lewis & Short), from Greek *palaistra* — a learned borrowing; EtymDB 2.1 has no row for *palestra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

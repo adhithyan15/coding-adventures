@@ -13,7 +13,8 @@ gloss: "useful"
 concept_tag: IT-QUAL190-UTILE
 prerequisites: [IT-C189-pauroso, IT-C189-curioso]
 sounds: []
-roots: []
+roots: [utilis-latin]
+etymology_hook: "utile ← Latin utilis 'useful', from uti 'to use' — English utility"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C189-curioso]
 <!-- hl-knowledge: introduces=[IT-LEX-C190-QUAL190-01]; assesses=[] -->
 
 **utile** — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**utile** ← Latin *utilis*, "useful", from *uti*, "to use" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a nurse"
 concept_tag: IT-LAVORO111-INFERMIERA
 prerequisites: [IT-C110-noce, IT-C110-pepe]
 sounds: []
-roots: []
+roots: [infirmus]
+etymology_hook: "infermiera — the one who tends the sick; infermo 'sick' ← Latin infirmus 'weak' — English infirmary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C110-pepe]
 <!-- hl-knowledge: introduces=[IT-LEX-C111-LAVORO111-01]; assesses=[] -->
 
 **l'infermiera** — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**infermiera** — built from the old word *infermo*, "sick", with *-iera*, the ending for a woman who does a job: the woman who tends the sick. *infermo* ← Latin *infirmus*, "not strong, weak" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

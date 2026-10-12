@@ -13,7 +13,8 @@ gloss: "in fact"
 concept_tag: IT-PERCHE188-INFATTI
 prerequisites: [IT-C187-decennio, IT-C188-anzi]
 sounds: []
-roots: []
+roots: [factum-latin]
+etymology_hook: "infatti — in fatti 'in deeds', from Latin factum 'a thing done' — English fact"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C188-anzi]
 <!-- hl-knowledge: introduces=[IT-LEX-C188-PERCHE188-02]; assesses=[] -->
 
 **infatti** — "in fact".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**infatti** is *in fatti*, "in facts, in deed": *fatto*, "a fact, a deed", goes back to Latin *factum*, "a thing done". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

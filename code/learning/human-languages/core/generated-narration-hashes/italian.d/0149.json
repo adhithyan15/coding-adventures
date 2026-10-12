@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 149,
-  "sourceHash": "fnv1a64:edc2ad676a4f980e",
+  "sourceHash": "fnv1a64:52d02a7139175f28",
   "lessonIds": [
     "IT-C149-festeggiare",
     "IT-C149-fissare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch149.txt",
   "json": "italian/narration/ch149.json",
-  "textHash": "fnv1a64:2087545c28cd4800",
-  "jsonHash": "fnv1a64:0071f08877729424",
+  "textHash": "fnv1a64:84acd7b4bf346fa0",
+  "jsonHash": "fnv1a64:1dfe95ed95ad1eb3",
   "findings": []
 }

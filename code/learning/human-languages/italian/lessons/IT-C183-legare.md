@@ -13,7 +13,8 @@ gloss: "to tie"
 concept_tag: IT-VERB-LEGARE
 prerequisites: [IT-C183-interrompere, IT-C183-lanciare]
 sounds: []
-roots: []
+roots: [ligare-latin]
+etymology_hook: "legare ← Latin ligare 'to bind' — English ligament and league share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C183-lanciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C183-VERBI183-05]; assesses=[] -->
 
 **legare** — "to tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**legare** ← Latin *ligare*, "to bind" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

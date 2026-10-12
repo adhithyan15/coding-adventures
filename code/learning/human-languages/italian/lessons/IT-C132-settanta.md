@@ -13,7 +13,8 @@ gloss: "seventy"
 concept_tag: IT-NUMERI132-SETTANTA
 prerequisites: [IT-C132-zero, IT-C132-sessanta]
 sounds: []
-roots: []
+roots: [septuaginta-latin]
+etymology_hook: "settanta ← Latin septuaginta 'seventy' — English Septuagint shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C132-sessanta]
 <!-- hl-knowledge: introduces=[IT-LEX-C132-NUMERI132-03]; assesses=[] -->
 
 **settanta** — "seventy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**settanta** ← Latin *septuaginta*, "seventy" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

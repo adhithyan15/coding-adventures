@@ -13,7 +13,8 @@ gloss: "temperature"
 concept_tag: IT-COSE248-TEMPERATURA
 prerequisites: [IT-C247-insalata, IT-C247-spuntino]
 sounds: []
-roots: []
+roots: [temperare-latin]
+etymology_hook: "temperatura ← Latin temperatura 'due measure', from temperare — English temperature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C247-spuntino]
 <!-- hl-knowledge: introduces=[IT-LEX-C248-COSE248-01]; assesses=[] -->
 
 **la temperatura** — "temperature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**temperatura** ← Latin *temperatura*, "due measure, mixture" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

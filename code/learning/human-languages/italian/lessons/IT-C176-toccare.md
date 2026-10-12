@@ -14,6 +14,7 @@ concept_tag: IT-VERB-TOCCARE
 prerequisites: [IT-C175-scegliere, IT-C176-ascoltare]
 sounds: []
 roots: []
+etymology_hook: "toccare ← Vulgar Latin toccare 'to knock' — English touch is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C176-ascoltare]
 <!-- hl-knowledge: introduces=[IT-LEX-C176-VERBI176-02]; assesses=[] -->
 
 **toccare** — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**toccare** ← Vulgar Latin *toccare*, "to knock, to strike" — inherited. (EtymDB 2.1) The word is thought to imitate a knock.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

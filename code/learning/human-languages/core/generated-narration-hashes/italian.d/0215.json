@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 215,
-  "sourceHash": "fnv1a64:cf40d60b2afd6361",
+  "sourceHash": "fnv1a64:b912e8d7fe71ae9b",
   "lessonIds": [
     "IT-C215-influenza",
     "IT-C215-ricetta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch215.txt",
   "json": "italian/narration/ch215.json",
-  "textHash": "fnv1a64:23b92c38d5fa89d6",
-  "jsonHash": "fnv1a64:fe4579053473a734",
+  "textHash": "fnv1a64:42c170833e4cfba8",
+  "jsonHash": "fnv1a64:51012fc6f1b4b42b",
   "findings": []
 }

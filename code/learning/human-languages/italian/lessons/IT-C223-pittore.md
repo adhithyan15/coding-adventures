@@ -13,7 +13,8 @@ gloss: "a painter"
 concept_tag: IT-COSE223-PITTORE
 prerequisites: [IT-C223-quadro, IT-C223-scrittore]
 sounds: []
-roots: []
+roots: [pingere-latin]
+etymology_hook: "pittore ← Latin pictor, pictorem 'a painter' — English picture shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C223-scrittore]
 <!-- hl-knowledge: introduces=[IT-LEX-C223-COSE223-04]; assesses=[] -->
 
 **il pittore** — "a painter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pittore** ← Latin *pictor*, "a painter" (*pictorem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

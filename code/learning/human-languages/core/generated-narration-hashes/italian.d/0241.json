@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 241,
-  "sourceHash": "fnv1a64:8cdf7546c93a3a39",
+  "sourceHash": "fnv1a64:5205cd0a441f3a0a",
   "lessonIds": [
     "IT-C241-consegnare",
     "IT-C241-correggere",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch241.txt",
   "json": "italian/narration/ch241.json",
-  "textHash": "fnv1a64:482c47c64872f0cd",
-  "jsonHash": "fnv1a64:2b17252bbef963bb",
+  "textHash": "fnv1a64:583287bef6afd512",
+  "jsonHash": "fnv1a64:39e076a006aa3013",
   "findings": []
 }

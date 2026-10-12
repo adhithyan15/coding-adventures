@@ -13,7 +13,8 @@ gloss: "to compare"
 concept_tag: IT-VERB-CONFRONTARE
 prerequisites: [IT-C144-fumare, IT-C144-nevicare]
 sounds: []
-roots: []
+roots: [frons-latin]
+etymology_hook: "confrontare ← Medieval Latin confrontari, con- + frons 'forehead' — English confront"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C144-nevicare]
 <!-- hl-knowledge: introduces=[IT-LEX-C145-VERBI145-01]; assesses=[] -->
 
 **confrontare** — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**confrontare** ← Medieval Latin *confrontari*, from *con-*, "together", and *frons*, "forehead": to set face to face — taken from Medieval Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

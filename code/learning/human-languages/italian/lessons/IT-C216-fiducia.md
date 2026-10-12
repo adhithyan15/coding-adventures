@@ -13,7 +13,8 @@ gloss: "trust"
 concept_tag: IT-SAL216-FIDUCIA
 prerequisites: [IT-C215-sciroppo, IT-C215-pomata]
 sounds: []
-roots: []
+roots: [fidere-latin]
+etymology_hook: "fiducia ← Latin fiducia 'trust', from fidere — English fiduciary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C215-pomata]
 <!-- hl-knowledge: introduces=[IT-LEX-C216-SAL216-01]; assesses=[] -->
 
 **la fiducia** — "trust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiducia** ← Latin *fiducia*, "trust", from *fidere*, "to trust" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

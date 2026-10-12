@@ -13,7 +13,8 @@ gloss: "an adult"
 concept_tag: IT-COSE224-ADULTO
 prerequisites: [IT-C223-pittore, IT-C223-fotografo]
 sounds: []
-roots: []
+roots: [adultus-latin]
+etymology_hook: "adulto ← Latin adultus 'grown up', a learned word — English adult"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C223-fotografo]
 <!-- hl-knowledge: introduces=[IT-LEX-C224-COSE224-01]; assesses=[] -->
 
 **l'adulto** — "an adult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adulto** ← Latin *adultus*, "grown up" — a learned borrowing. EtymDB 2.1 has no row for *adulto*; it derives Spanish and Portuguese *adulto* from *adultus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

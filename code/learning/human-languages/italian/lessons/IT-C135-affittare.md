@@ -13,7 +13,8 @@ gloss: "to rent"
 concept_tag: IT-VERB-AFFITTARE
 prerequisites: [IT-C135-scendere, IT-C135-restare]
 sounds: []
-roots: []
+roots: [fixus-latin]
+etymology_hook: "affittare — built on fitto 'a fixed rent', from Latin fixus 'fixed' — English fixed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C135-restare]
 <!-- hl-knowledge: introduces=[IT-LEX-C135-VERBI135-04]; assesses=[] -->
 
 **affittare** — "to rent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**affittare** — built on *fitto*, "a fixed payment, a rent", which ← Vulgar Latin *fictus*, from Latin *fixus*, "fixed". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

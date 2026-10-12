@@ -13,7 +13,8 @@ gloss: "to smile"
 concept_tag: IT-VERB-SORRIDERE
 prerequisites: [IT-C140-spegnere, IT-C140-saltare]
 sounds: []
-roots: []
+roots: [subridere-latin]
+etymology_hook: "sorridere ← Latin subridere 'to smile', sub- 'under' + ridere 'to laugh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C140-saltare]
 <!-- hl-knowledge: introduces=[IT-LEX-C140-VERBI140-04]; assesses=[] -->
 
 **sorridere** — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sorridere** ← Latin *subridere*, "to smile", from *sub-*, "under", and *ridere*, "to laugh" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an engine"
 concept_tag: IT-COSE254-MOTORE
 prerequisites: [IT-C254-volante, IT-C254-ruota]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "motore ← Latin motor 'a mover', from movere 'to move' — English motor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C254-ruota]
 <!-- hl-knowledge: introduces=[IT-LEX-C254-COSE254-04]; assesses=[] -->
 
 **il motore** — "an engine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**motore** ← Latin *motor*, "a mover" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to thank"
 concept_tag: IT-VERB-RINGRAZIARE
 prerequisites: [IT-C174-abbracciare, IT-C174-salutare]
 sounds: []
-roots: []
+roots: [gratia]
+etymology_hook: "ringraziare — rin- + grazia 'thanks' ← Latin gratia: to give thanks back"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C174-salutare]
 <!-- hl-knowledge: introduces=[IT-LEX-C174-VERBI174-04]; assesses=[] -->
 
 **ringraziare** — "to thank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ringraziare** — built from *grazia*, "grace, thanks", with *rin-*: to give thanks back. *grazia* ← Latin *gratia*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

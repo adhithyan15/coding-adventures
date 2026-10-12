@@ -13,7 +13,8 @@ gloss: "a class"
 concept_tag: IT-LAVORO113-CLASSE
 prerequisites: [IT-C113-cliente, IT-C113-cassa]
 sounds: []
-roots: []
+roots: [classis-latin]
+etymology_hook: "classe ← Latin classis 'a division of the people', a learned word — English class is the same"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C113-cassa]
 <!-- hl-knowledge: introduces=[IT-LEX-C113-LAVORO113-05]; assesses=[] -->
 
 **la classe** — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**classe** ← Latin *classis*, "a division of the people, a class" — a learned borrowing: a word passed down by speech would have turned *cl-* into *chi-*. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

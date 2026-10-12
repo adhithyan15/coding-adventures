@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 165,
-  "sourceHash": "fnv1a64:7ccc8cdb1295d152",
+  "sourceHash": "fnv1a64:40547c21d46fccdd",
   "lessonIds": [
     "IT-C165-regola",
     "IT-C165-permesso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch165.txt",
   "json": "italian/narration/ch165.json",
-  "textHash": "fnv1a64:b858bc97ef40677b",
-  "jsonHash": "fnv1a64:3e9b37b88b007802",
+  "textHash": "fnv1a64:26d363289c9bedf4",
+  "jsonHash": "fnv1a64:300efb3f2641d875",
   "findings": []
 }

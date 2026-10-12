@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 111,
-  "sourceHash": "fnv1a64:65f3f9a75942a57b",
+  "sourceHash": "fnv1a64:d1af4b9da38490f0",
   "lessonIds": [
     "IT-C111-infermiera",
     "IT-C111-cuoco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch111.txt",
   "json": "italian/narration/ch111.json",
-  "textHash": "fnv1a64:b93d83623b730ae9",
-  "jsonHash": "fnv1a64:ee14bd222104f005",
+  "textHash": "fnv1a64:581feac7a147845b",
+  "jsonHash": "fnv1a64:abd928a6ca6f9a31",
   "findings": []
 }

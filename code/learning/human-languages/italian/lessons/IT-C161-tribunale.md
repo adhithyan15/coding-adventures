@@ -13,7 +13,8 @@ gloss: "a court"
 concept_tag: IT-COSE161-TRIBUNALE
 prerequisites: [IT-C160-villaggio, IT-C160-marciapiede]
 sounds: []
-roots: []
+roots: [tribunal-latin]
+etymology_hook: "tribunale ← Latin tribunal, the magistrate's raised platform — English tribunal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C160-marciapiede]
 <!-- hl-knowledge: introduces=[IT-LEX-C161-COSE161-01]; assesses=[] -->
 
 **il tribunale** — "a court".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tribunale** ← Latin *tribunal*, "a magistrate's platform" — a learned borrowing. EtymDB 2.1 has no row for *tribunale*; it derives Spanish and Portuguese *tribunal* from *tribunal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

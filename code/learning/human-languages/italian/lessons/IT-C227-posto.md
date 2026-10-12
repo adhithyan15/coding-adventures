@@ -13,7 +13,8 @@ gloss: "a place, a seat"
 concept_tag: IT-COSE227-POSTO
 prerequisites: [IT-C227-uscita, IT-C227-bagaglio]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "posto ← Latin postus, positus 'placed' — English post and position share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C227-bagaglio]
 <!-- hl-knowledge: introduces=[IT-LEX-C227-COSE227-05]; assesses=[] -->
 
 **il posto** — "a place, a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**posto** ← Latin *postus*, "placed", a short form of *positus* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

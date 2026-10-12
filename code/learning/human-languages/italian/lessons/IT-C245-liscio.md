@@ -14,6 +14,7 @@ concept_tag: IT-QUAL245-LISCIO
 prerequisites: [IT-C244-soltanto, IT-C244-insieme]
 sounds: []
 roots: []
+etymology_hook: "liscio — origin uncertain; EtymDB records no source"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C244-insieme]
 <!-- hl-knowledge: introduces=[IT-LEX-C245-QUAL245-01]; assesses=[] -->
 
 **liscio** — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**liscio** — its origin is uncertain. EtymDB 2.1 records the word but not where it came from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

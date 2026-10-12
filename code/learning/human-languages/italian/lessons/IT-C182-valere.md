@@ -13,7 +13,8 @@ gloss: "to be worth"
 concept_tag: IT-VERB-VALERE
 prerequisites: [IT-C181-scoprire, IT-C182-uccidere]
 sounds: []
-roots: []
+roots: [valere-latin]
+etymology_hook: "valere ← Latin valere 'to be strong' — English value and valid share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C182-uccidere]
 <!-- hl-knowledge: introduces=[IT-LEX-C182-VERBI182-02]; assesses=[] -->
 
 **valere** — "to be worth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valere** ← Latin *valere*, "to be strong, to be worth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

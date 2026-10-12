@@ -13,7 +13,8 @@ gloss: "football"
 concept_tag: IT-TEMPOLIBERO117-CALCIO
 prerequisites: [IT-C116-vita, IT-C117-prezzo]
 sounds: []
-roots: []
+roots: [calx-latin]
+etymology_hook: "calcio first meant 'a kick': it goes back to Latin calx 'heel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C117-prezzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C117-TEMPOLIBERO117-02]; assesses=[] -->
 
 **il calcio** — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calcio** first meant "a kick", and the game is named after it: it goes back to Latin *calx*, "heel" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

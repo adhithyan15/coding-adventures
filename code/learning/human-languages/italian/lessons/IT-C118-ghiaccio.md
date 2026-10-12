@@ -13,7 +13,8 @@ gloss: "ice"
 concept_tag: IT-NATURA118-GHIACCIO
 prerequisites: [IT-C118-nebbia, IT-C118-temporale]
 sounds: []
-roots: []
+roots: [glacies-latin]
+etymology_hook: "ghiaccio ← Vulgar Latin glacia, from Latin glacies 'ice' — English glacier shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C118-temporale]
 <!-- hl-knowledge: introduces=[IT-LEX-C118-NATURA118-03]; assesses=[] -->
 
 **il ghiaccio** — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ghiaccio** ← Vulgar Latin *glacia*, from Latin *glacies*, "ice" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

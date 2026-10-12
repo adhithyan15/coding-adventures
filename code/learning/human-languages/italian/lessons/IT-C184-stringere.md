@@ -13,7 +13,8 @@ gloss: "to squeeze"
 concept_tag: IT-VERB-STRINGERE
 prerequisites: [IT-C184-sorprendere, IT-C184-sospettare]
 sounds: []
-roots: []
+roots: [stringere-latin]
+etymology_hook: "stringere ← Latin stringere 'to draw tight' — English stringent shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C184-sospettare]
 <!-- hl-knowledge: introduces=[IT-LEX-C184-VERBI184-05]; assesses=[] -->
 
 **stringere** — "to squeeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stringere** ← Latin *stringere*, "to draw tight" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

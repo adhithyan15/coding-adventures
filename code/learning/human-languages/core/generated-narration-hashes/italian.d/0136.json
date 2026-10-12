@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 136,
-  "sourceHash": "fnv1a64:7edc9878444398e3",
+  "sourceHash": "fnv1a64:5f2795c2df42050d",
   "lessonIds": [
     "IT-C136-raccontare",
     "IT-C136-camminare",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch136.txt",
   "json": "italian/narration/ch136.json",
-  "textHash": "fnv1a64:05f3c994580ec081",
-  "jsonHash": "fnv1a64:cfad737e58f91c14",
+  "textHash": "fnv1a64:aeff02fae732e997",
+  "jsonHash": "fnv1a64:ad7372d81779d036",
   "findings": []
 }

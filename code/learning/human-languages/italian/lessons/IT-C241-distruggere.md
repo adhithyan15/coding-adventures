@@ -13,7 +13,8 @@ gloss: "to destroy"
 concept_tag: IT-VERB-DISTRUGGERE
 prerequisites: [IT-C241-correggere, IT-C241-dirigere]
 sounds: []
-roots: []
+roots: [struere-latin]
+etymology_hook: "distruggere ← Vulgar Latin destrugere, from destruere 'to pull down' — English destroy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C241-dirigere]
 <!-- hl-knowledge: introduces=[IT-LEX-C241-VERBI241-04]; assesses=[] -->
 
 **distruggere** — "to destroy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**distruggere** ← Vulgar Latin *destrugere* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

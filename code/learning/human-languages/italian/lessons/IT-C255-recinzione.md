@@ -13,7 +13,8 @@ gloss: "a fence"
 concept_tag: IT-COSE255-RECINZIONE
 prerequisites: [IT-C255-fontana, IT-C255-cancello]
 sounds: []
-roots: []
+roots: [cingere-latin]
+etymology_hook: "recinzione — from recingere 'to enclose', Latin cingere 'to gird'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C255-cancello]
 <!-- hl-knowledge: introduces=[IT-LEX-C255-COSE255-03]; assesses=[] -->
 
 **la recinzione** — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recinzione** — built from *recingere*, "to enclose", with *-zione*. The verb goes back to Latin *cingere*, "to gird, to surround" (Lewis & Short). EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

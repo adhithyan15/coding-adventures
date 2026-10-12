@@ -13,7 +13,8 @@ gloss: "a bakery"
 concept_tag: IT-COSE221-PANETTERIA
 prerequisites: [IT-C220-pigiama, IT-C220-tasca]
 sounds: []
-roots: []
+roots: [panis-latin]
+etymology_hook: "panetteria — from panettiere 'a baker', built on pane 'bread'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C220-tasca]
 <!-- hl-knowledge: introduces=[IT-LEX-C221-COSE221-01]; assesses=[] -->
 
 **la panetteria** — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**panetteria** — built from *panettiere*, "a baker", with *-ia*: the baker's shop. *panettiere* is built on *pane*, "bread". EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

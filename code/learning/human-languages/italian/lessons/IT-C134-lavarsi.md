@@ -13,7 +13,8 @@ gloss: "to wash (oneself)"
 concept_tag: IT-VERB-LAVARSI
 prerequisites: [IT-C133-guidare, IT-C134-vestirsi]
 sounds: []
-roots: []
+roots: [lavare-latin]
+etymology_hook: "lavarsi — lavare 'to wash' + -si 'oneself'; lavare ← Latin lavare — English lavatory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C134-vestirsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C134-VERBI134-02]; assesses=[] -->
 
 **lavarsi** — "to wash (oneself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavarsi** is *lavare*, "to wash", with *-si*, "oneself". *lavare* ← Latin *lavare* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

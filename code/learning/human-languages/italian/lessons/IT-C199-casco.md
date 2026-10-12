@@ -14,6 +14,7 @@ concept_tag: IT-COSE199-CASCO
 prerequisites: [IT-C198-cartello, IT-C198-mappa]
 sounds: []
 roots: []
+etymology_hook: "casco ← Spanish casco 'a helmet' — borrowed; French casque is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C198-mappa]
 <!-- hl-knowledge: introduces=[IT-LEX-C199-COSE199-01]; assesses=[] -->
 
 **il casco** — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casco** ← Spanish *casco*, "a helmet; a skull" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
