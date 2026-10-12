@@ -8859,10 +8859,10 @@ mod tests {
             ("TB", "bumpY") => route.push(PathCommand::CubicTo {
                 cx1: 87.0, cy1: 149.0, cx2: 87.0, cy2: 149.0, x: ex, y: ey,
             }),
-            ("LR", "monotoneX" | "monotoneY") => route.push(PathCommand::CubicTo {
+            ("LR", "monotoneX" | "monotoneY" | "cardinal" | "catmullRom" | "natural") => route.push(PathCommand::CubicTo {
                 cx1: 216.0, cy1: 91.0, cx2: 230.0, cy2: 91.0, x: ex, y: ey,
             }),
-            ("TB", "monotoneX" | "monotoneY") => route.push(PathCommand::CubicTo {
+            ("TB", "monotoneX" | "monotoneY" | "cardinal" | "catmullRom" | "natural") => route.push(PathCommand::CubicTo {
                 cx1: 87.0, cy1: 142.0, cx2: 87.0, cy2: 156.0, x: ex, y: ey,
             }),
             ("LR", "basis") => route.push(PathCommand::CubicTo {
@@ -8882,7 +8882,7 @@ mod tests {
             (_, "stepAfter") => route.push(PathCommand::LineTo { x: ex, y: ey }),
             _ => panic!("fixture curve"),
         }
-        if !matches!(curve, "basis" | "bumpX" | "bumpY" | "monotoneX" | "monotoneY") {
+        if !matches!(curve, "basis" | "bumpX" | "bumpY" | "monotoneX" | "monotoneY" | "cardinal" | "catmullRom" | "natural") {
             route.push(PathCommand::LineTo { x: ex, y: ey });
         }
         assert_eq!(paths[0].commands, route, "authored curve coordinates stay exact");
@@ -8932,6 +8932,18 @@ mod tests {
     fn authored_monotone_curve_marker_geometry() {
         for direction in ["LR", "TB"] {
             for curve in ["monotoneX", "monotoneY"] {
+                assert_aligned_swimlane_markers(direction, curve);
+            }
+        }
+    }
+
+    #[test]
+    fn authored_spline_curve_marker_geometry() {
+        // Two-point splines have collinear one-third/two-thirds controls.
+        // The shared authored helper asserts complete route commands, mode
+        // metadata and both exact marker triangles (including area and style).
+        for direction in ["LR", "TB"] {
+            for curve in ["cardinal", "catmullRom", "natural"] {
                 assert_aligned_swimlane_markers(direction, curve);
             }
         }

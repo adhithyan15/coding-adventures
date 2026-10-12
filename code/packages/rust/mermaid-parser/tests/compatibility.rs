@@ -2303,3 +2303,14 @@ fn zenuml_dispatches_to_shared_sequence_ir() {
         _ => panic!("zenuml should lower to shared sequence IR"),
     }
 }
+
+#[test]
+fn swimlane_spline_aliases_preserve_the_same_semantic_curve() {
+    use diagram_ir::SwimlaneEdgeCurve;
+    for name in ["catmullRom", "catmullrom", "catmull-rom"] {
+        let source = format!("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na edge@--> b\nedge@{{curve:{name}}}");
+        let diagram = parse_swimlane(&source).expect("authored spline alias parses");
+        assert_eq!(diagram.edges.len(), 1);
+        assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::CatmullRom));
+    }
+}
