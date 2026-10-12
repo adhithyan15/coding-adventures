@@ -13,7 +13,8 @@ gloss: "fast"
 concept_tag: IT-AGG3-VELOCE
 prerequisites: [IT-C73-caldo, IT-C73-freddo]
 sounds: []
-roots: []
+roots: [velox-latin]
+etymology_hook: "veloce ← Latin velox 'swift' — English velocity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C73-freddo]
 <!-- hl-knowledge: introduces=[IT-LEX-C74-AGG3-01]; assesses=[] -->
 
 **veloce** — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**veloce** ← Latin *velox*, "swift" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "money"
 concept_tag: IT-COSE2-SOLDI
 prerequisites: [IT-C62-telefono, IT-C62-ombrello]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "soldi ← Latin solidus, a gold coin — the soldier was the man paid in it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C62-ombrello]
 <!-- hl-knowledge: introduces=[IT-LEX-C62-COSE2-04]; assesses=[] -->
 
 **i soldi** — "money". Plural in form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soldi** is the plural of *soldo*, an old coin ← Late Latin *soldus*, from Latin *solidus*, "solid", the name of a gold coin — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

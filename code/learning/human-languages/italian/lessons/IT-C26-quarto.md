@@ -54,6 +54,11 @@ reviews_of: [IT-C26-terzo, IT-C22-zucchero, IT-C07-giorni-2, IT-C08-ora, IT-C01-
 *Quattro* is four and *quarto* is four with the ordinal ending, the double *t*
 squeezed out. Two in a row now behave the same way.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quarto** ← Latin *quartus*, "fourth" — inherited. (EtymDB 2.1)
+
 ## You'll want to know: a quarter of an hour
 <!-- hl-knowledge: introduces=[IT-LEX-QUARTO-03]; assesses=[] -->
 

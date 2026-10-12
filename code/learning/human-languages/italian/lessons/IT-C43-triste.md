@@ -13,7 +13,8 @@ gloss: "sad"
 concept_tag: IT-EMOZIONI-TRISTE
 prerequisites: [IT-C43-tristezza, IT-C43-felice]
 sounds: []
-roots: []
+roots: [tristis]
+etymology_hook: "triste ← Latin tristis 'sad'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C43-felice]
 <!-- hl-knowledge: introduces=[IT-LEX-C43-EMOZIONI-05]; assesses=[] -->
 
 **triste** — "sad". The adjective beside **la tristezza**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**triste** ← Latin *tristis*, "sad" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a pig"
 concept_tag: IT-ANIMALI1-MAIALE
 prerequisites: [IT-C68-cavallo, IT-C68-mucca]
 sounds: []
-roots: []
+roots: [maialis-latin]
+etymology_hook: "maiale ← Latin maialis 'a castrated hog'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C68-mucca]
 <!-- hl-knowledge: introduces=[IT-LEX-C68-ANIMALI1-05]; assesses=[] -->
 
 **il maiale** — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maiale** ← Latin *maialis*, "a castrated hog" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 81,
-  "sourceHash": "fnv1a64:890b8dd2c57a05fd",
+  "sourceHash": "fnv1a64:05adbee0a724c7bd",
   "lessonIds": [
     "IT-C81-citta",
     "IT-C81-negozio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch81.txt",
   "json": "italian/narration/ch81.json",
-  "textHash": "fnv1a64:fb8ec65693d050e9",
-  "jsonHash": "fnv1a64:a238951ac9c3dd20",
+  "textHash": "fnv1a64:2753fb32a37c8356",
+  "jsonHash": "fnv1a64:aa00d210a9365450",
   "findings": []
 }

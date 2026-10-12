@@ -13,7 +13,8 @@ gloss: "a field"
 concept_tag: IT-NATURA3-CAMPO
 prerequisites: [IT-C66-spiaggia, IT-C66-isola]
 sounds: []
-roots: []
+roots: [campus-latin]
+etymology_hook: "campo ← Latin campus 'field' — English camp and campus share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C66-isola]
 <!-- hl-knowledge: introduces=[IT-LEX-C66-NATURA3-03]; assesses=[] -->
 
 **il campo** — "a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campo** ← Latin *campus*, "a plain, a field" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

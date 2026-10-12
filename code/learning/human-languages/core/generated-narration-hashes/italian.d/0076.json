@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 76,
-  "sourceHash": "fnv1a64:44e9ed8c3b132924",
+  "sourceHash": "fnv1a64:b1f9f5f622656c97",
   "lessonIds": [
     "IT-C76-forte",
     "IT-C76-debole",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch76.txt",
   "json": "italian/narration/ch76.json",
-  "textHash": "fnv1a64:be9ad50aaedbd15e",
-  "jsonHash": "fnv1a64:1ef38b479ed85ae7",
+  "textHash": "fnv1a64:530f3ea9642d2270",
+  "jsonHash": "fnv1a64:44e5c473ad11578a",
   "findings": []
 }

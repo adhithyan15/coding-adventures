@@ -14,6 +14,7 @@ concept_tag: IT-CASA95-VASCA
 prerequisites: [IT-C94-forno, IT-C95-doccia]
 sounds: []
 roots: []
+etymology_hook: "vasca — origin not recorded in EtymDB 2.1"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C95-doccia]
 <!-- hl-knowledge: introduces=[IT-LEX-C95-CASA95-02]; assesses=[] -->
 
 **la vasca** — "a bathtub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vasca** — its origin is not recorded in EtymDB 2.1.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

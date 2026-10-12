@@ -13,7 +13,8 @@ gloss: "a year"
 concept_tag: IT-TEMPO-ANNO
 prerequisites: [IT-C78-settimana, IT-C78-mese]
 sounds: []
-roots: []
+roots: [annus-latin]
+etymology_hook: "anno ← Latin annus 'year' — English annual shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C78-mese]
 <!-- hl-knowledge: introduces=[IT-LEX-C78-TEMPO-03]; assesses=[] -->
 
 **l'anno** — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anno** ← Latin *annus*, "year" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

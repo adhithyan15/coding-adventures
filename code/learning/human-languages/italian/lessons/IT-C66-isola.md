@@ -13,7 +13,8 @@ gloss: "an island"
 concept_tag: IT-NATURA3-ISOLA
 prerequisites: [IT-C65-sabbia, IT-C66-spiaggia]
 sounds: []
-roots: []
+roots: [insula-latin]
+etymology_hook: "isola ← Latin insula 'island' — English isle and insulate share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C66-spiaggia]
 <!-- hl-knowledge: introduces=[IT-LEX-C66-NATURA3-02]; assesses=[] -->
 
 **l'isola** — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**isola** ← Vulgar Latin *isula*, from Latin *insula*, "island" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

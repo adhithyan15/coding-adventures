@@ -13,7 +13,8 @@ gloss: "the neck"
 concept_tag: IT-CORPO2-COLLO
 prerequisites: [IT-C37-dente, IT-C38-lingua]
 sounds: []
-roots: []
+roots: [collum-latin]
+etymology_hook: "collo ← Latin collum 'neck' — English collar shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C38-lingua]
 <!-- hl-knowledge: introduces=[IT-LEX-C38-CORPO2-02]; assesses=[] -->
 
 **il collo** — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collo** ← Latin *collum*, "neck" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 46,
-  "sourceHash": "fnv1a64:503b8a159226eaf6",
+  "sourceHash": "fnv1a64:1b3dc833d2380f86",
   "lessonIds": [
     "IT-C46-bambina",
     "IT-C46-vicino",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch46.txt",
   "json": "italian/narration/ch46.json",
-  "textHash": "fnv1a64:06a4ea55a1513a3f",
-  "jsonHash": "fnv1a64:121806c7382b007d",
+  "textHash": "fnv1a64:864934dcd096b129",
+  "jsonHash": "fnv1a64:4a3243ee5d419a14",
   "findings": []
 }

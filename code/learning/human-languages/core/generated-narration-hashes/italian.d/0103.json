@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 103,
-  "sourceHash": "fnv1a64:958ce2a397cf0952",
+  "sourceHash": "fnv1a64:66378f8cf8fbf123",
   "lessonIds": [
     "IT-C103-maglione",
     "IT-C103-cravatta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch103.txt",
   "json": "italian/narration/ch103.json",
-  "textHash": "fnv1a64:978ece5671535a42",
-  "jsonHash": "fnv1a64:34d8aa17a5e18e01",
+  "textHash": "fnv1a64:7c8a12bdc09c2481",
+  "jsonHash": "fnv1a64:90b84a170043e3e4",
   "findings": []
 }

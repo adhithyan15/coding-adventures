@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 35,
-  "sourceHash": "fnv1a64:4c1cae735139f1fc",
+  "sourceHash": "fnv1a64:942e049f179ce1c8",
   "lessonIds": [
     "IT-C35-sapere",
     "IT-C35-non-so",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch35.txt",
   "json": "italian/narration/ch35.json",
-  "textHash": "fnv1a64:a141319997b95c3c",
-  "jsonHash": "fnv1a64:85a37068324951d2",
+  "textHash": "fnv1a64:e8134cf56f616598",
+  "jsonHash": "fnv1a64:090e77970406ffa5",
   "findings": []
 }

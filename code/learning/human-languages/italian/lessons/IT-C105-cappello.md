@@ -13,7 +13,8 @@ gloss: "a hat"
 concept_tag: IT-VESTITI105-CAPPELLO
 prerequisites: [IT-C104-calzini, IT-C104-camicetta]
 sounds: []
-roots: []
+roots: [cappa-latin]
+etymology_hook: "cappello ← Vulgar Latin cappellus, from Late Latin cappa 'hooded cloak'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C104-camicetta]
 <!-- hl-knowledge: introduces=[IT-LEX-C105-VESTITI105-01]; assesses=[] -->
 
 **il cappello** — "a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cappello** ← Vulgar Latin *cappellus*, from Late Latin *cappa*, "a hooded cloak" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

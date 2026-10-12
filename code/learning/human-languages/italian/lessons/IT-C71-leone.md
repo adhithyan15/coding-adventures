@@ -13,7 +13,8 @@ gloss: "a lion"
 concept_tag: IT-ANIMALI4-LEONE
 prerequisites: [IT-C70-pecora, IT-C70-capra]
 sounds: []
-roots: []
+roots: [leo-latin]
+etymology_hook: "leone ← Latin leo, from Greek leon — English lion is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C70-capra]
 <!-- hl-knowledge: introduces=[IT-LEX-C71-ANIMALI4-01]; assesses=[] -->
 
 **il leone** — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leone** ← Latin *leo*, "lion" — inherited; Latin took it from Greek *leon*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

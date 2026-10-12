@@ -13,7 +13,8 @@ gloss: "a car"
 concept_tag: IT-CITTA2-MACCHINA
 prerequisites: [IT-C82-treno, IT-C82-aereo]
 sounds: []
-roots: []
+roots: [machina-latin]
+etymology_hook: "macchina ← Latin machina, from Greek mechane — English machine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C82-aereo]
 <!-- hl-knowledge: introduces=[IT-LEX-C82-CITTA2-05]; assesses=[] -->
 
 **la macchina** — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**macchina** ← Latin *machina*, "machine, device" — borrowed; Latin took it from Greek *mechane*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

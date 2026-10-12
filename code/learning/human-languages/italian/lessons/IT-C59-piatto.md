@@ -14,6 +14,7 @@ concept_tag: IT-TAVOLA-PIATTO
 prerequisites: [IT-C58-tazza, IT-C59-bicchiere]
 sounds: []
 roots: []
+etymology_hook: "piatto ← Vulgar Latin plattus 'flat', from Greek platys 'wide' — English plate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C59-bicchiere]
 <!-- hl-knowledge: introduces=[IT-LEX-C59-TAVOLA-02]; assesses=[] -->
 
 **il piatto** — "a plate; a dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piatto** ← Vulgar Latin *plattus*, "flat" — inherited; Latin took it from Greek *platys*, "wide". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the belly"
 concept_tag: IT-CORPO3-PANCIA
 prerequisites: [IT-C38-schiena, IT-C38-capelli]
 sounds: []
-roots: []
+roots: [pantex-latin]
+etymology_hook: "pancia ← Latin pantex 'belly' — English paunch is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C38-capelli]
 <!-- hl-knowledge: introduces=[IT-LEX-C39-CORPO3-01]; assesses=[] -->
 
 **la pancia** — "the belly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pancia** ← Latin *pantex*, "belly" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a guest; a host"
 concept_tag: IT-PERSONE-OSPITE
 prerequisites: [IT-C46-bambina, IT-C46-vicino]
 sounds: []
-roots: []
+roots: [hospes-latin]
+etymology_hook: "ospite ← Latin hospes 'guest, host' — English host is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C46-vicino]
 <!-- hl-knowledge: introduces=[IT-LEX-C46-PERSONE-03]; assesses=[] -->
 
 **l'ospite** — "a guest; a host". One word for both, like English *host* and *hospitality*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ospite** ← Latin *hospes, hospitis*, "guest; host" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

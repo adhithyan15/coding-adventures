@@ -12,6 +12,9 @@ Before the new one: say the Italian for a fever, then the Italian for a cough.
 You'll want to know: la medicina.
 la medicina — "medicine".
 
+The word, taken apart.
+medicina from Latin medicina, "the art of healing" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a cough, then the Italian for medicine.
 
 You'll want to know: il medico.
 il medico — "a doctor".
+
+The word, taken apart.
+medico from Latin medicus, "doctor" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for medicine, then the Italian for a doctor.
 You'll want to know: l'ospedale.
 l'ospedale — "a hospital".
 
+The word, taken apart.
+ospedale from Late Latin hospitale, "guesthouse", from Latin hospitalis, "hospitable" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a doctor, then the Italian for a hospita
 You'll want to know: la malattia.
 la malattia — "an illness".
 
+The word, taken apart.
+malattia — built from the word for "ill" with -ia; that word from Latin male habitus, "in poor condition". (EtymDB 2.1, Old French malade).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a hospital, then the Italian for an illn
 
 You'll want to know: la fame.
 la fame — "hunger". ho fame: I am hungry, with avere.
+
+The word, taken apart.
+fame from Latin fames, "hunger" — inherited. EtymDB 2.1 has no row for fame; it derives French faim and Romanian foame from fames.
 
 What you've built.
 One more word for this chapter.

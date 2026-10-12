@@ -13,7 +13,8 @@ gloss: "a candle"
 concept_tag: IT-OGGETTI101-CANDELA
 prerequisites: [IT-C100-anello, IT-C101-collana]
 sounds: []
-roots: []
+roots: [candela-latin]
+etymology_hook: "candela ← Latin candela, from candere 'to shine' — English candle and candid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C101-collana]
 <!-- hl-knowledge: introduces=[IT-LEX-C101-OGGETTI101-02]; assesses=[] -->
 
 **la candela** — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**candela** ← Latin *candela*, "candle", from *candere*, "to shine" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

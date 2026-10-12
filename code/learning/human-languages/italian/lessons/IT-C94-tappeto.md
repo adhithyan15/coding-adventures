@@ -13,7 +13,8 @@ gloss: "a rug, a carpet"
 concept_tag: IT-CASA94-TAPPETO
 prerequisites: [IT-C93-nave, IT-C93-barca]
 sounds: []
-roots: []
+roots: [tapete-latin]
+etymology_hook: "tappeto ← Latin tapete 'a carpet, a hanging'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C93-barca]
 <!-- hl-knowledge: introduces=[IT-LEX-C94-CASA94-01]; assesses=[] -->
 
 **il tappeto** — "a rug, a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tappeto** ← Latin *tapete*, "a carpet, a hanging" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

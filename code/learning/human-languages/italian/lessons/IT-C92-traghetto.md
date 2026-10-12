@@ -14,6 +14,7 @@ concept_tag: IT-VIAGGIO92-TRAGHETTO
 prerequisites: [IT-C92-metropolitana, IT-C92-taxi]
 sounds: []
 roots: []
+etymology_hook: "traghetto — built from a verb meaning 'to ferry across'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C92-taxi]
 <!-- hl-knowledge: introduces=[IT-LEX-C92-VIAGGIO92-04]; assesses=[] -->
 
 **il traghetto** — "a ferry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**traghetto** — built from an Italian verb meaning "to ferry across". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

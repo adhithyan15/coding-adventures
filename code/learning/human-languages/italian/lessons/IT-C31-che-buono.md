@@ -13,7 +13,7 @@ sounds: [hard-ch, uo-glide]
 roots: []
 etymology_hook: "buono was taught in the first chapter and has spent the whole book inside buongiorno without once being said about anything; this lesson says it about something"
 duration:
-  max_seconds: 250
+  max_seconds: 280
 requires:
   knowledge: [IT-LEX-CHE-COSA-02, IT-NOTICE-CHE-COSA-03, IT-GRAMMAR-CE-02, IT-NOTICE-CE-03, IT-LEX-SECONDO-02, IT-NOTICE-SECONDO-03, IT-LEX-TERZO-02, IT-ETYMON-TERZO-03, IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-GRAMMAR-ORA-04]
 introduces:
@@ -64,6 +64,11 @@ say *buono* about anything: it lived inside **buongiorno**, **buonasera** and
 **buonanotte**, welded to a time of day.
 
 You can also put a noun after it: **Che caffè!** — what a coffee!
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Che buono!** is built from *che* ← Latin *quid* or *quod*, and *buono* ← Latin *bonus*, "good". (EtymDB 2.1)
 
 ## Grammar lens: an adjective after essere
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-BUONO-PREDICATO-03]; assesses=[] -->

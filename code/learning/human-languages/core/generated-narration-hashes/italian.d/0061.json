@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 61,
-  "sourceHash": "fnv1a64:6e3524357af5a7de",
+  "sourceHash": "fnv1a64:798f14b62645cdd5",
   "lessonIds": [
     "IT-C61-bottiglia",
     "IT-C61-penna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch61.txt",
   "json": "italian/narration/ch61.json",
-  "textHash": "fnv1a64:abb65aa1119939f6",
-  "jsonHash": "fnv1a64:7fb24580b3db8cfa",
+  "textHash": "fnv1a64:1daa2e3316177cb7",
+  "jsonHash": "fnv1a64:74b34e923e6bf2ce",
   "findings": []
 }

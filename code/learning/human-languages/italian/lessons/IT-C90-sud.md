@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI90-SUD
 prerequisites: [IT-C90-ascensore, IT-C90-nord]
 sounds: []
 roots: []
+etymology_hook: "sud ← French sud, from Old English suth — English south is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C90-nord]
 <!-- hl-knowledge: introduces=[IT-LEX-C90-LUOGHI90-04]; assesses=[] -->
 
 **il sud** — "the south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sud** ← French *sud*, "south" — borrowed; the French word came from Old English *suth*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

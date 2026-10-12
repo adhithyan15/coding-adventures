@@ -13,7 +13,8 @@ gloss: "a fork"
 concept_tag: IT-TAVOLA-FORCHETTA
 prerequisites: [IT-C59-cucchiaio, IT-C59-coltello]
 sounds: []
-roots: []
+roots: [furca-latin]
+etymology_hook: "forchetta — a little pitchfork, from Latin furca 'fork' — English fork is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C59-coltello]
 <!-- hl-knowledge: introduces=[IT-LEX-C59-TAVOLA-05]; assesses=[] -->
 
 **la forchetta** — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forchetta** — a small form of the word for a pitchfork, which ← Latin *furca*, "a fork" (Lewis & Short). EtymDB 2.1 has no row for *forchetta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

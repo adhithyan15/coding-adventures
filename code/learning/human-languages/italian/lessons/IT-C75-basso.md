@@ -13,7 +13,8 @@ gloss: "short, low"
 concept_tag: IT-AGG4-BASSO
 prerequisites: [IT-C75-economico, IT-C75-alto]
 sounds: []
-roots: []
+roots: [bassus-latin]
+etymology_hook: "basso ← Late Latin bassus 'low' — English bass, the low voice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C75-alto]
 <!-- hl-knowledge: introduces=[IT-LEX-C75-AGG4-03]; assesses=[] -->
 
 **basso** — "short, low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**basso** ← Late Latin *bassus*, "low" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

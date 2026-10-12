@@ -14,6 +14,7 @@ concept_tag: IT-CITTA4-POSTA
 prerequisites: [IT-C84-albergo, IT-C84-farmacia]
 sounds: []
 roots: []
+etymology_hook: "posta ← Latin postus 'placed, stationed' — English post shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C84-farmacia]
 <!-- hl-knowledge: introduces=[IT-LEX-C84-CITTA4-03]; assesses=[] -->
 
 **la posta** — "the post office; the post".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**posta** goes back to Latin *postus*, "placed, stationed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

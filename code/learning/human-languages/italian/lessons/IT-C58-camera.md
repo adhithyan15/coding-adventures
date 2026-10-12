@@ -13,7 +13,8 @@ gloss: "a bedroom, a room"
 concept_tag: IT-CASA3-CAMERA
 prerequisites: [IT-C57-lampada, IT-C57-bagno]
 sounds: []
-roots: []
+roots: [latin-camera]
+etymology_hook: "camera ← Latin camera 'vaulted room' — English chamber is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C57-bagno]
 <!-- hl-knowledge: introduces=[IT-LEX-C58-CASA3-01]; assesses=[] -->
 
 **la camera** — "a bedroom, a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camera** ← Latin *camera*, "a vaulted room" — inherited; Latin took it from Greek *kamara*, "vault". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

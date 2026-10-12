@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 98,
-  "sourceHash": "fnv1a64:a318194aaa99de77",
+  "sourceHash": "fnv1a64:4e6922bcd845f53a",
   "lessonIds": [
     "IT-C98-armadio",
     "IT-C98-divano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch98.txt",
   "json": "italian/narration/ch98.json",
-  "textHash": "fnv1a64:97ddf21db8f38463",
-  "jsonHash": "fnv1a64:e21003712a0b8a16",
+  "textHash": "fnv1a64:cbf222016b029138",
+  "jsonHash": "fnv1a64:859d174b0f0bbbd1",
   "findings": []
 }

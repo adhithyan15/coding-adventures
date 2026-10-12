@@ -13,7 +13,8 @@ gloss: "grapes"
 concept_tag: IT-FRUTTA-UVA
 prerequisites: [IT-C52-banana, IT-C52-arancia]
 sounds: []
-roots: []
+roots: [uva-latin]
+etymology_hook: "uva ← Latin uva 'grape'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C52-arancia]
 <!-- hl-knowledge: introduces=[IT-LEX-C52-FRUTTA-05]; assesses=[] -->
 
 **l'uva** — "grapes". What **il vino** is made from.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uva** ← Latin *uva*, "grape, a bunch of grapes" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

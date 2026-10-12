@@ -76,6 +76,11 @@ The pair to hold together is the pair a beginner needs hourly:
 > **Non capisco.** — I didn't follow you.
 > **Non so.** — I followed you, and I have no answer.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**non** ← Latin *non*, "not"; **so** is a form of *sapere* ← Latin *sapere*, "to taste, to be wise". (EtymDB 2.1)
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-NON-SO-02] -->
 

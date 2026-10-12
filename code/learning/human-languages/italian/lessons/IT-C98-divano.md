@@ -14,6 +14,7 @@ concept_tag: IT-CASA98-DIVANO
 prerequisites: [IT-C97-poltrona, IT-C98-armadio]
 sounds: []
 roots: []
+etymology_hook: "divano ← Arabic diwan, from Persian divan — English divan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C98-armadio]
 <!-- hl-knowledge: introduces=[IT-LEX-C98-CASA98-02]; assesses=[] -->
 
 **il divano** — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divano** ← Arabic *diwan* — borrowed; the Arabic word came from Persian *divan*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

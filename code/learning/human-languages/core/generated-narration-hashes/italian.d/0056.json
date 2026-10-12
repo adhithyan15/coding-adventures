@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 56,
-  "sourceHash": "fnv1a64:8ca45b05643369f0",
+  "sourceHash": "fnv1a64:d33a45574a4245e5",
   "lessonIds": [
     "IT-C56-cucina",
     "IT-C56-finestra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch56.txt",
   "json": "italian/narration/ch56.json",
-  "textHash": "fnv1a64:9d5d5882b80a41f0",
-  "jsonHash": "fnv1a64:8fd281749ff1759d",
+  "textHash": "fnv1a64:2a51f00a620ae6a9",
+  "jsonHash": "fnv1a64:70074895d114e41d",
   "findings": []
 }

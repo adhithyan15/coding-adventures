@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI87-PAESE
 prerequisites: [IT-C87-aeroporto, IT-C87-fermata]
 sounds: []
 roots: []
+etymology_hook: "paese ← Late Latin pagensis 'of the district' — English peasant shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C87-fermata]
 <!-- hl-knowledge: introduces=[IT-LEX-C87-LUOGHI87-03]; assesses=[] -->
 
 **il paese** — "a village; a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paese** ← Vulgar Latin *pagenses*, from Late Latin *pagensis*, "someone from the district" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

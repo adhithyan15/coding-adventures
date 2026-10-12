@@ -13,7 +13,8 @@ gloss: "garlic"
 concept_tag: IT-CIBO107-AGLIO
 prerequisites: [IT-C107-ciliegia, IT-C107-melone]
 sounds: []
-roots: []
+roots: [alium-latin]
+etymology_hook: "aglio ← Latin alium 'garlic'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C107-melone]
 <!-- hl-knowledge: introduces=[IT-LEX-C107-CIBO107-04]; assesses=[] -->
 
 **l'aglio** — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aglio** ← Latin *alium*, "garlic" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

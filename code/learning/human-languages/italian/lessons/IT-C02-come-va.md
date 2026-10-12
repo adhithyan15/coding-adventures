@@ -13,7 +13,7 @@ sounds: [open-a]
 roots: [andare-latin]
 etymology_hook: "Come va? changes the wellbeing metaphor from stare, 'stand', to andare, 'go'"
 duration:
-  max_seconds: 250
+  max_seconds: 275
 requires:
   knowledge: [IT-GRAMMAR-COME-STA-02]
 introduces:
@@ -57,6 +57,11 @@ comparison is only a memory aid: in Italian, simply connect **stai** with
 
 You will learn the whole verb “to go” much later. For now, **va** is one
 ready-made piece inside this question.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Come va?** is built from *come*, "how" ← Latin *quomodo*, and *va*, "goes" ← Latin *vadit*, "goes". (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02] -->

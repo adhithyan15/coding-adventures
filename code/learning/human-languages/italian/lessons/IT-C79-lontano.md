@@ -13,7 +13,8 @@ gloss: "far"
 concept_tag: IT-QUANDO-LONTANO
 prerequisites: [IT-C79-mai, IT-C79-adesso]
 sounds: []
-roots: []
+roots: [longe-latin]
+etymology_hook: "lontano ← Vulgar Latin longitanus, from Latin longe 'far away'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C79-adesso]
 <!-- hl-knowledge: introduces=[IT-LEX-C79-QUANDO-04]; assesses=[] -->
 
 **lontano** — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lontano** ← Vulgar Latin *longitanus*, from Latin *longe*, "far away" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

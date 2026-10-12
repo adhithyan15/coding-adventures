@@ -13,7 +13,8 @@ gloss: "a watch, a clock"
 concept_tag: IT-COSE3-OROLOGIO
 prerequisites: [IT-C62-soldi, IT-C62-regalo]
 sounds: []
-roots: []
+roots: [horologium-latin]
+etymology_hook: "orologio ← Latin horologium, from Greek horologion 'hour-teller'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C62-regalo]
 <!-- hl-knowledge: introduces=[IT-LEX-C63-COSE3-01]; assesses=[] -->
 
 **l'orologio** — "a watch, a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orologio** ← Latin *horologium*, "sundial, clock" — inherited; Latin took it from Greek *horologion*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

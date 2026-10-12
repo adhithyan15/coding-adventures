@@ -13,7 +13,8 @@ gloss: "clean"
 concept_tag: IT-AGG6-PULITO
 prerequisites: [IT-C77-verde, IT-C77-grigio]
 sounds: []
-roots: []
+roots: [politus-latin]
+etymology_hook: "pulito ← Latin politus 'polished' — English polite is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C77-grigio]
 <!-- hl-knowledge: introduces=[IT-LEX-C77-AGG6-03]; assesses=[] -->
 
 **pulito** — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulito** ← Latin *politus*, "polished" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to wash"
 concept_tag: IT-VERB-LAVARE
 prerequisites: [IT-C47-ridere, IT-C47-piangere]
 sounds: []
-roots: []
+roots: [lavare-latin]
+etymology_hook: "lavare ← Latin lavare 'to wash' — English lavatory shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C47-piangere]
 <!-- hl-knowledge: introduces=[IT-LEX-C47-VERBI1-05]; assesses=[] -->
 
 **lavare** — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavare** ← Latin *lavare*, "to wash" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
