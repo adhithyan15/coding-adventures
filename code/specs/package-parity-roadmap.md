@@ -17366,3 +17366,46 @@ small foundation for 14 pending descendants. Pin raw d/dt, signed sweep,
 rotation, zero sweep, finite output, strict absolute tolerance and closed
 transport. Native adoption, Perl/Swift API completion, Gradle input tracking,
 Haskell registry, Ruby digest and Python center-form work remain separate.
+
+## Post-#17325 inventory and backlog refresh
+
+#17325 merged by GitHub auto-merge at `2026-10-12T19:31:00Z` as
+`92f7d0f5e68687bda9c97e989bf9278578b36361`, from reviewed head
+`9fb306901ee17b94caedbb5e9f9da65633908258`. All 32 checks were terminal and
+acceptable, including both required gates. The auto-only request succeeded;
+no manual merge occurred. The merge is verified on fetched `origin/main`.
+
+The fresh collision-checked inventory remains 1,506 implementation identities,
+4,788 occupied slots and 1,548 reported identities across 15 established lanes,
+with zero collisions or unknown buckets. The five OCaml roots remain emerging.
+No new package identity or unowned gap appeared. Saved parallel audits preserve
+the distinction between structural presence and executed native conformance.
+
+Two collision-checked pending owners discovered while #17325 was open are
+retained before selecting another implementation:
+
+- `build-tool-go-empty-plan-hash-work-scope-conformance` covers unnecessary
+  source hashing when an explicitly empty plan schedules no work. It must
+  preserve metadata validation, executor cycle checks, null and force behavior,
+  and failures for nonempty plans. The observed run succeeded with 5,326 skipped
+  packages; this is useful work reduction, not a failed-build repair.
+- `geometry-g2d00-g2d03-established-package-matrix-documentation` covers the
+  missing C#, F# and Haskell rows in four governing geometry package tables.
+  All 60 corresponding roots exist. Adding rows does not qualify native tangent
+  consumption or promote OCaml.
+
+The reconciled journal contains 1,335 owners and 2,385 dependency edges:
+297 merged, 1,038 pending, and no active implementation. Practical priority
+counts immediate concrete follow-ups: Haskell registry discovery unlocks two;
+Ruby dependency framing and Python center repair unlock one each; the prepared
+TypeScript tangent reader and Go empty-plan hashing slice unlock none. Native
+JVM/Dart tangent adoption still waits for its fixture-input tracking owner.
+Canonical BUILD/platform selection, duplicate identities, adapter execution,
+and native authority remain separately owned.
+
+Select `build-tool-haskell-discovery-language-registry-conformance` in a fresh
+clean worktree at the verified merge revision. Its complete shared discovery
+fixture pins language/program identities and exact generated-component pruning.
+All 15 open PR scopes are cleared, including immutable tree comparisons for the
+3,493-file PR beyond the GitHub file-list cap. The existing native CI mapping
+applies; no workflow change or native-authority expansion is required.
