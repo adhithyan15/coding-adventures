@@ -187,6 +187,10 @@ rather than letting them read as silent gaps.
     `elevation` tokens that already emit equivalent native depth, reducing its
     fresh inventory from 50 to 40. The inset theme-toggle moon and raw shadows
     without elevation remain reported drawing-effect debt.
+    #17365 lowers SwiftUI's supported elevation tokens to native `.shadow`
+    modifiers and reconciles only their ten non-inset CSS companions, reducing
+    its fresh inventory from 83 to 63. Standalone, inset, and unsupported
+    shadows or elevation values remain reported drawing-effect debt.
     #17224 then preserves all 15 supported fixed Flutter `border-radius`
     declarations and paints eight coupled rounded-text backgrounds, reducing
     Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe

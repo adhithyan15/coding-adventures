@@ -86,7 +86,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
         "xaml": 38,
-        "swiftui": 83,
+        "swiftui": 63,
         "compose": 40,
         "qt": 93,
         "flutter": 69,
@@ -181,6 +181,27 @@ def test_compose_elevation_shadows_leave_only_one_inset_baseline() -> None:
         "style drop 'box-shadow' increased from at most 1 to 2" in error
         for error in errors
     )
+
+
+def test_swiftui_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("swiftui")
+    report["styleDegradations"].append(_style_entry("swiftui", "box-shadow"))
+
+    errors = validate_style_degradations("swiftui", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
+def test_swiftui_elevation_is_no_longer_baselined() -> None:
+    report = _report("swiftui")
+    report["styleDegradations"].append(_style_entry("swiftui", "elevation"))
+
+    errors = validate_style_degradations("swiftui", report, "report.json")
+
+    assert any("unbaselined style drop 'elevation'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
