@@ -52,6 +52,7 @@
     "named-node-classes",
     "semicolon-class-statements",
     "node-class-decorators",
-    "invisible-layout-link"
+    "invisible-layout-link",
+    "open-styled-links"
   ]
 }
