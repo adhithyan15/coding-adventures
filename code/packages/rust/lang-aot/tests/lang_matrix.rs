@@ -2217,6 +2217,13 @@ fn main() { out(1, VALUE); }\n",
     Prog {
         lang: Language::Algol60,
         ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))) + entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(result) end",
+        expect: Expect::Stdout("5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
         src: "begin real procedure pick; pick := 3.5; real result; result := entier(sqrt(ln(exp(exp(abs(sign(pick()))))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
@@ -14216,6 +14223,33 @@ fn algol_sqrt_conditional_nonpositive_quadruple_exp_result_widening_runs_on_ever
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but sqrt-wrapped conditional nonpositive quadruple-exp result widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_local_runtime_real_roots_cross_all_bounded_conditional_result_widening_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right)))))))",
+                )
+        })
+        .expect(
+            "the ALGOL local-root bounded conditional result widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but local-root bounded conditional result widening did not complete"
             );
             continue;
         };
