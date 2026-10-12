@@ -1159,3 +1159,18 @@ review/conflict gates and actual fetched-main merge/payload proof before cleanup
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
 inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
+
+
+### Pending current-main edge styling resource reconciliation
+
+Published eec87335 retains actual c797 native1966/142 and exact-head local
+security acceptance against main b1f4e459. During publication main advanced to
+e32e5788 (#17342). Independent review rejects its new class/style edge scans:
+each node-only target scans every edge despite absent edge IDs. The isolated
+dd9b81c8 integration also actually fails compile at the preserved resource
+fixture's new classes/style fields, zero tests executed. Retain both findings.
+The DG04 target-index work/semantic contract precedes repair tests/source.
+New bounded diagram validation, current-main final review and current-head CI
+remain PENDING; auto-merge disabled. Keep one active PR17288. No ALGOL/compiler
+source receipt is relabeled or full pipeline linearity claimed. Full final-source
+Miri DEFERRED/PENDING, frozen run/497 inputs/receipts untouched without polling.

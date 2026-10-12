@@ -1154,3 +1154,23 @@ ASCII, two-byte and three-byte separators, standard and labeled operators,
 chained IDs and edges without IDs. Preserve existing operation-count bounds,
 empty-label refusal and first-terminator semantics. No grammar, dependencies,
 production limits or unrelated ALGOL ownership changes are introduced.
+
+
+### Identified Swimlane edge target work
+
+After all authored edges are parsed, build one deterministic ID-to-all-edge-
+indices lookup. Visit every edge once and skip absent IDs; retain duplicate-ID
+edges and authored index order. Class/style target resolution must query that
+lookup instead of scanning every unrelated edge per target, including existing
+node-only targets. Node/edge ID collisions still update both; unknown-target
+refusals, class deduplication, class-before-inline-style precedence and statement
+order stay exact. Owned keys may copy each distinct ID once, with O(E+Q+I)
+index storage for E identified-edge references, Q distinct IDs and I key bytes.
+Index construction costs O(E log(Q+2)) key comparisons plus key-byte work;
+target lookup costs O(log(Q+2)) key comparisons, then visits exactly its actual
+matching edges. Include real class/style application costs separately; repeated
+matching updates and existing node lookup/class merge costs are not claimed
+linear. Actual public-parser operation counters must distinguish one index build,
+lookups and matching visits. Repeated node-only class/style targets over many
+unidentified edges must retain O(E+D) new edge-discovery work, not E*D. Preserve
+prior delimiter/pair-index counts, UTF-8 boundaries and authored metadata.
