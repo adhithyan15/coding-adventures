@@ -13,7 +13,8 @@ gloss: "to forbid"
 concept_tag: PT-VERB-PROIBIR
 prerequisites: [PT-C140-prometer, PT-C140-permitir]
 sounds: []
-roots: []
+roots: [habere-latin]
+etymology_hook: "proibir ← Latin prohibere 'to hold back', from habere 'to hold' — English prohibit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C140-permitir]
 <!-- hl-knowledge: introduces=[PT-LEX-C140-VERBOS140-04]; assesses=[] -->
 
 **proibir** — "to forbid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proibir** ← Latin *prohibere*, "to hold back" (EtymDB 2.1), from *habere*, "to hold" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

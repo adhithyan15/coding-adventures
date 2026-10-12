@@ -13,7 +13,8 @@ gloss: "the ocean"
 concept_tag: PT-COISAS255-OCEANO
 prerequisites: [PT-C255-corredor, PT-C255-quintal]
 sounds: []
-roots: []
+roots: [oceanus-latin]
+etymology_hook: "oceano ← Latin oceanus, from Greek okeanos, the river round the world — English ocean"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C255-quintal]
 <!-- hl-knowledge: introduces=[PT-LEX-C255-COISAS255-03]; assesses=[] -->
 
 **o oceano** — "the ocean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oceano** ← Latin *oceanus*, "the ocean" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *ōkeanos*, the great river round the world.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -62,6 +62,9 @@ infinitive ending: -er. participle ending: -ido. example: comido.
 infinitive ending: -ir. participle ending: -ido. example: partido.
 becomes tenho falado, tens falado, tem falado…
 
+The phrase, taken apart.
+tenho is a form of ter from Latin tenere, "to hold" (EtymDB 2.1). falado is the participle of falar from Latin fabulari, "to chat" (EtymDB 2.1).
+
 Grammar Lens: What it actually means.
 [a table of 2 rows, read aloud]
 falei means "I spoke" — one finished event.

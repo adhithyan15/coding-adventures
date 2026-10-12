@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for an advert, then the Portuguese for a 
 You'll want to know: acender.
 acender — "to switch on, to light".
 
+The word, taken apart.
+acender from Latin accendere, "to set alight" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a bill, then the Portuguese for to sw
 
 You'll want to know: apagar.
 apagar — "to switch off, to put out".
+
+The word, taken apart.
+apagar is probably built from a- and pagar in its old sense "to quiet, to pacify" ( from Latin pacare): to quiet a flame. That is the usual account, not a certain one.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to switch on, then the Portuguese for
 You'll want to know: saltar.
 saltar — "to jump".
 
+The word, taken apart.
+saltar from Latin saltare, "to leap, to dance" (EtymDB 2.1), from salire, "to jump" — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to switch off, then the Portuguese fo
 You'll want to know: sorrir.
 sorrir — "to smile".
 
+The word, taken apart.
+sorrir from Latin subridere, "to smile" (EtymDB 2.1) — inherited. It is sub-, "under", and ridere, "to laugh": a laugh held under.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to jump, then the Portuguese for to s
 
 You'll want to know: gritar.
 gritar — "to shout".
+
+The word, taken apart.
+gritar from Latin quiritare, "to cry out for help" (Lewis & Short) — inherited. EtymDB 2.1 has no ancestor row for gritar; it derives Old Provençal cridar from Medieval Latin cridare.
 
 What you've built.
 One more word for this chapter.

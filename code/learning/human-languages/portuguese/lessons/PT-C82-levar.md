@@ -13,7 +13,8 @@ gloss: "to take, to carry"
 concept_tag: PT-VERB-LEVAR
 prerequisites: [PT-C82-necessidade, PT-C82-oficio]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "levar ← Latin levare 'to lift', from levis 'light' — English lever and elevate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C82-oficio]
 <!-- hl-knowledge: introduces=[PT-LEX-C82-PODER82-05]; assesses=[] -->
 
 **levar** — "to take, to carry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**levar** ← Latin *levare*, "to lift" (EtymDB 2.1), from *levis*, "light" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

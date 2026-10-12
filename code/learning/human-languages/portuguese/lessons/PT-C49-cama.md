@@ -13,7 +13,8 @@ gloss: "a bed"
 concept_tag: PT-CASA2-CAMA
 prerequisites: [PT-C48-mesa, PT-C48-cadeira]
 sounds: []
-roots: []
+roots: [cama-latin]
+etymology_hook: "cama ← Late Latin cama 'a low bed', a word of unknown earlier origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C48-cadeira]
 <!-- hl-knowledge: introduces=[PT-LEX-C49-CASA2-01]; assesses=[] -->
 
 **a cama** — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cama** ← Late Latin *cama*, "a low bed" (EtymDB 2.1) — inherited. Where the Latin word came from is unknown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

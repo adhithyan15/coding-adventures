@@ -13,7 +13,8 @@ gloss: "a loan"
 concept_tag: PT-COISAS248-EMPRESTIMO
 prerequisites: [PT-C248-multibanco, PT-C248-conta-bancaria]
 sounds: []
-roots: []
+roots: [praestare-latin]
+etymology_hook: "empréstimo — built from emprestar 'to lend' (from Latin praestare)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C248-conta-bancaria]
 <!-- hl-knowledge: introduces=[PT-LEX-C248-COISAS248-05]; assesses=[] -->
 
 **o empréstimo** — "a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**empréstimo** is built from *emprestar*, "to lend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

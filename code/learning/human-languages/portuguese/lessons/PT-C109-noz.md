@@ -13,7 +13,8 @@ gloss: "a walnut, a nut"
 concept_tag: PT-COMIDA109-NOZ
 prerequisites: [PT-C109-pessego, PT-C109-compota]
 sounds: []
-roots: []
+roots: [nux-latin]
+etymology_hook: "noz ← Latin nux, nucis 'nut' — English nucleus shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C109-compota]
 <!-- hl-knowledge: introduces=[PT-LEX-C109-COMIDA109-03]; assesses=[] -->
 
 **a noz** — "a walnut, a nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noz** ← Latin *nux, nucis*, "nut" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

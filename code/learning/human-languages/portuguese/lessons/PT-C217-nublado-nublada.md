@@ -13,7 +13,8 @@ gloss: "cloudy"
 concept_tag: PT-QUAL217-NUBLADO-NUBLADA
 prerequisites: [PT-C216-cru-crua, PT-C217-divorciado-divorciada]
 sounds: []
-roots: []
+roots: [nubes-latin]
+etymology_hook: "nublado — 'clouded': from Latin nubilare 'to be cloudy', from nubes 'cloud'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C217-divorciado-divorciada]
 <!-- hl-knowledge: introduces=[PT-LEX-C217-QUAL217-02]; assesses=[] -->
 
 **nublado / nublada** — "cloudy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nublado** is "clouded": from a verb ← Latin *nubilare*, "to be cloudy", from *nubes*, "cloud" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

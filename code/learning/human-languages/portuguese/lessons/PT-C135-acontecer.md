@@ -13,7 +13,8 @@ gloss: "to happen"
 concept_tag: PT-VERB-ACONTECER
 prerequisites: [PT-C135-antigamente, PT-C135-o-passado]
 sounds: []
-roots: []
+roots: [contingere-latin]
+etymology_hook: "acontecer — a- + an old verb ← Vulgar Latin *contingescere, from contingere 'to befall'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C135-o-passado]
 <!-- hl-knowledge: introduces=[PT-LEX-C135-PAS135-05]; assesses=[] -->
 
 **acontecer** — "to happen". **O que aconteceu?** — "What happened?" Like **falar**, its past is one word: **falou**, **aconteceu**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acontecer** is built from *a-* and an older verb (EtymDB 2.1) ← Vulgar Latin *\*contingescere*, from Latin *contingere*, "to touch, to befall" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

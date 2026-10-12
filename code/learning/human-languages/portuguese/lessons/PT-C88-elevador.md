@@ -13,7 +13,8 @@ gloss: "a lift"
 concept_tag: PT-LUGARES88-ELEVADOR
 prerequisites: [PT-C87-semaforo, PT-C87-estacionamento]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "elevador — 'lifter': from the verb to raise (← Latin elevare 'to lift up') + -dor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C87-estacionamento]
 <!-- hl-knowledge: introduces=[PT-LEX-C88-LUGARES88-01]; assesses=[] -->
 
 **o elevador** — "a lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elevador** is "a lifter": built from the verb "to raise" and *-dor*, "one that does". The verb ← Latin *elevare*, "to lift up" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

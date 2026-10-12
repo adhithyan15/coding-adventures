@@ -13,7 +13,8 @@ gloss: "an octopus"
 concept_tag: PT-COISAS168-POLVO
 prerequisites: [PT-C167-marca, PT-C167-qualidade]
 sounds: []
-roots: []
+roots: [polypus-latin]
+etymology_hook: "polvo ← Latin polypus, from Greek polypous 'many-footed' — English polyp"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C167-qualidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C168-COISAS168-01]; assesses=[] -->
 
 **o polvo** — "an octopus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**polvo** ← Latin *polypus*, "octopus" (EtymDB 2.1) — inherited. Latin took it from Greek *polypous*, "many-footed". Old Portuguese said *polbo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

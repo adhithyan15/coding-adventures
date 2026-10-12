@@ -14,6 +14,7 @@ concept_tag: PT-COISAS247-FRACASSO
 prerequisites: [PT-C246-piloto, PT-C247-sucesso]
 sounds: []
 roots: []
+etymology_hook: "fracasso ← Italian fracasso 'a crash, a smash', from fracassare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C247-sucesso]
 <!-- hl-knowledge: introduces=[PT-LEX-C247-COISAS247-02]; assesses=[] -->
 
 **o fracasso** — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fracasso** ← Italian *fracasso*, "a crash, a smash" (EtymDB 2.1) — borrowed. The Italian word comes from *fracassare*, "to smash".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

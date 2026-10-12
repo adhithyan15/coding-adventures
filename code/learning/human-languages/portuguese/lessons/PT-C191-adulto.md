@@ -13,7 +13,8 @@ gloss: "an adult"
 concept_tag: PT-COISAS191-ADULTO
 prerequisites: [PT-C190-pintor-a-pintora, PT-C190-fotografo]
 sounds: []
-roots: []
+roots: [adolescere-latin]
+etymology_hook: "adulto ← Latin adultus 'grown up', from adolescere 'to grow up' — English adult"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C190-fotografo]
 <!-- hl-knowledge: introduces=[PT-LEX-C191-COISAS191-01]; assesses=[] -->
 
 **o adulto** — "an adult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adulto** ← Latin *adultus*, "grown up" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

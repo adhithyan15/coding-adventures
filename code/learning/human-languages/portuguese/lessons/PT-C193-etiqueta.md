@@ -14,6 +14,7 @@ concept_tag: PT-COISAS193-ETIQUETA
 prerequisites: [PT-C193-postal, PT-C193-pasta]
 sounds: []
 roots: []
+etymology_hook: "etiqueta ← French étiquette 'label, ticket' — English ticket and etiquette"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C193-pasta]
 <!-- hl-knowledge: introduces=[PT-LEX-C193-COISAS193-03]; assesses=[] -->
 
 **a etiqueta** — "a label".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**etiqueta** ← French *étiquette*, "label, ticket" (EtymDB 2.1) — borrowed. English *ticket* came from the same French word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

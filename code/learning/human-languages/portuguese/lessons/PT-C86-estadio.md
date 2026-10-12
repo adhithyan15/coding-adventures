@@ -13,7 +13,8 @@ gloss: "a stadium"
 concept_tag: PT-LUGARES86-ESTADIO
 prerequisites: [PT-C86-bomba-de-gasolina, PT-C86-piscina]
 sounds: []
-roots: []
+roots: [stadium-latin]
+etymology_hook: "estádio ← Latin stadium, from Greek stadion, a racecourse's length — English stadium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C86-piscina]
 <!-- hl-knowledge: introduces=[PT-LEX-C86-LUGARES86-04]; assesses=[] -->
 
 **o estádio** — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estádio** ← Latin *stadium*, "racecourse" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *stadion*, a measure of length and the track that long.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 159,
-  "sourceHash": "fnv1a64:09f41b17ef8c11d5",
+  "sourceHash": "fnv1a64:cc28a85d2e4c481a",
   "lessonIds": [
     "PT-C159-bateria",
     "PT-C159-carregador",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch159.txt",
   "json": "portuguese/narration/ch159.json",
-  "textHash": "fnv1a64:4345b09d7ccf5768",
-  "jsonHash": "fnv1a64:7011da5b173d00e6",
+  "textHash": "fnv1a64:d765a3d439b33822",
+  "jsonHash": "fnv1a64:3c0430374272c27f",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "interesting"
 concept_tag: PT-QUALIDADES123-INTERESSANTE
 prerequisites: [PT-C123-famoso, PT-C123-importante]
 sounds: []
-roots: []
+roots: [interesse-latin]
+etymology_hook: "interessante — from the verb to interest + -ante; it goes back to Latin interesse 'to matter'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C123-importante]
 <!-- hl-knowledge: introduces=[PT-LEX-C123-QUALIDADES123-03]; assesses=[] -->
 
 **interessante** — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interessante** is built from the verb "to interest" and *-ante* (EtymDB 2.1). That verb goes back to Latin *interesse*, "to be between, to matter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

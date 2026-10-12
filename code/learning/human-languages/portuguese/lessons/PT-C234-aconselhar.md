@@ -13,7 +13,8 @@ gloss: "to advise"
 concept_tag: PT-VERB-ACONSELHAR
 prerequisites: [PT-C233-fumar, PT-C233-nevar]
 sounds: []
-roots: []
+roots: [consilium-latin]
+etymology_hook: "aconselhar — built from conselho 'advice' (← Latin consilium) + a- and -ar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C233-nevar]
 <!-- hl-knowledge: introduces=[PT-LEX-C234-VERBOS234-01]; assesses=[] -->
 
 **aconselhar** — "to advise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aconselhar** is built from *conselho*, "advice", with *a-* and *-ar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

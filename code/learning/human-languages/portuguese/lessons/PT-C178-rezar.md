@@ -13,7 +13,8 @@ gloss: "to pray"
 concept_tag: PT-VERB-REZAR
 prerequisites: [PT-C178-misturar, PT-C178-obedecer]
 sounds: []
-roots: []
+roots: [citare-latin]
+etymology_hook: "rezar ← Latin recitare 'to read aloud' — English recite is the same verb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C178-obedecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C178-VERBOS178-03]; assesses=[] -->
 
 **rezar** — "to pray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rezar** ← Latin *recitare*, "to read aloud" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

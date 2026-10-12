@@ -13,7 +13,8 @@ gloss: "fun, funny"
 concept_tag: PT-QUALIDADES123-DIVERTIDO
 prerequisites: [PT-C123-interessante, PT-C123-aborrecido]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "divertido — from the verb to amuse ← Latin divertere 'to turn aside' — English divert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C123-aborrecido]
 <!-- hl-knowledge: introduces=[PT-LEX-C123-QUALIDADES123-05]; assesses=[] -->
 
 **divertido** — "fun, funny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divertido** is the participle of the verb "to amuse" (EtymDB 2.1), which ← Latin *divertere*, "to turn aside" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

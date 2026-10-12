@@ -13,7 +13,8 @@ gloss: "to look for"
 concept_tag: PT-VERB-PROCURAR
 prerequisites: [PT-C81-lembrar, PT-C81-esquecer]
 sounds: []
-roots: []
+roots: [cura-latin]
+etymology_hook: "procurar ← Latin procurare 'to take care of', from cura 'care' — English procure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C81-esquecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C81-VERBOS7-03]; assesses=[] -->
 
 **procurar** — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**procurar** ← Latin *procurare*, "to take care of" (EtymDB 2.1), from *cura*, "care" — a learned borrowing from Latin. An inherited word would have turned the *-c-* into *-g-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

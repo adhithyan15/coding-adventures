@@ -13,7 +13,8 @@ gloss: "glue"
 concept_tag: PT-CASA98-COLA
 prerequisites: [PT-C97-prego, PT-C98-martelo]
 sounds: []
-roots: []
+roots: [colla-latin]
+etymology_hook: "cola ← Vulgar Latin *colla, from Greek kolla 'glue' — English collage shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C98-martelo]
 <!-- hl-knowledge: introduces=[PT-LEX-C98-CASA98-02]; assesses=[] -->
 
 **a cola** — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cola** ← Vulgar Latin *\*colla*, "glue" (EtymDB 2.1), from Greek *kolla* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

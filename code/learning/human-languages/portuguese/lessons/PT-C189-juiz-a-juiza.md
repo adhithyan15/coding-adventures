@@ -13,7 +13,8 @@ gloss: "a judge"
 concept_tag: PT-COISAS189-JUIZ-A-JUIZA
 prerequisites: [PT-C188-pijama, PT-C188-botao]
 sounds: []
-roots: []
+roots: [ius-latin]
+etymology_hook: "juiz ← Latin iudex 'judge', from ius 'law' + dicere 'to say' — English judge"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C188-botao]
 <!-- hl-knowledge: introduces=[PT-LEX-C189-COISAS189-01]; assesses=[] -->
 
 **o juiz / a juíza** — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**juiz** ← Latin *iudex, iudicis*, "judge" — inherited. EtymDB 2.1 traces it only to Old Portuguese *juyz*; it derives Spanish *juez* from *iudex*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

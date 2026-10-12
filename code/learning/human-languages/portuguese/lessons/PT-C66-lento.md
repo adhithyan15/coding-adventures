@@ -13,7 +13,8 @@ gloss: "slow"
 concept_tag: PT-ADJ3-LENTO
 prerequisites: [PT-C65-quente, PT-C66-rapido]
 sounds: []
-roots: []
+roots: [lentus-latin]
+etymology_hook: "lento ← Latin lentus 'slow, pliant' — Italian and Spanish lento are the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C66-rapido]
 <!-- hl-knowledge: introduces=[PT-LEX-C66-ADJ3-02]; assesses=[] -->
 
 **lento** — "slow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lento** ← Latin *lentus*, "slow, pliant" — inherited. EtymDB 2.1 has no ancestor row for *lento*; it derives Italian *lento* from *lentus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

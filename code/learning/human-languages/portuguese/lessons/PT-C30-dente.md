@@ -13,7 +13,8 @@ gloss: "a tooth"
 concept_tag: PT-CORPO1-DENTE
 prerequisites: [PT-C30-pe, PT-C30-dedo]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "dente ← Latin dens, dentis 'tooth' — English dental and dentist share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C30-dedo]
 <!-- hl-knowledge: introduces=[PT-LEX-C30-CORPO1-05]; assesses=[] -->
 
 **o dente** — "a tooth". English *dentist* shares the root.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dente** ← Latin *dens, dentis*, "tooth" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

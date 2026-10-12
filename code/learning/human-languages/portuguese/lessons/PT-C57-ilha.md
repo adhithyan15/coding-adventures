@@ -13,7 +13,8 @@ gloss: "an island"
 concept_tag: PT-NATUREZA2-ILHA
 prerequisites: [PT-C57-pedra, PT-C57-areia]
 sounds: []
-roots: []
+roots: [insula-latin]
+etymology_hook: "ilha ← Old Catalan illa, from Latin insula 'island' — English isle and peninsula"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C57-areia]
 <!-- hl-knowledge: introduces=[PT-LEX-C57-NATUREZA2-05]; assesses=[] -->
 
 **a ilha** — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ilha** ← Old Catalan *illa*, "island" (EtymDB 2.1), from Latin *insula*, "island" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COISAS168-ABOBORA
 prerequisites: [PT-C168-alface, PT-C168-espinafres]
 sounds: []
 roots: []
+etymology_hook: "abóbora — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C168-espinafres]
 <!-- hl-knowledge: introduces=[PT-LEX-C168-COISAS168-04]; assesses=[] -->
 
 **a abóbora** — "a pumpkin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abóbora** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

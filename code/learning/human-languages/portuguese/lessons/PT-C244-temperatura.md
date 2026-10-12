@@ -13,7 +13,8 @@ gloss: "temperature"
 concept_tag: PT-COISAS244-TEMPERATURA
 prerequisites: [PT-C244-reserva, PT-C244-vale]
 sounds: []
-roots: []
+roots: [temperare-latin]
+etymology_hook: "temperatura ← Latin temperatura 'due measure', from temperare — English temperature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C244-vale]
 <!-- hl-knowledge: introduces=[PT-LEX-C244-COISAS244-04]; assesses=[] -->
 
 **a temperatura** — "temperature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**temperatura** ← Latin *temperatura*, "due measure" (EtymDB 2.1), from *temperare*, "to mix in due measure" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to express"
 concept_tag: PT-VERB-EXPRIMIR
 prerequisites: [PT-C209-manter, PT-C209-existir]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "exprimir ← Latin exprimere 'to press out' — English express"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C209-existir]
 <!-- hl-knowledge: introduces=[PT-LEX-C209-VERBOS209-05]; assesses=[] -->
 
 **exprimir** — "to express".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exprimir** ← Latin *exprimere*, "to press out" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

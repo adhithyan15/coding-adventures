@@ -13,7 +13,8 @@ gloss: "to wake up"
 concept_tag: PT-VERB-ACORDAR
 prerequisites: [PT-C203-divorciar-se, PT-C203-descansar]
 sounds: []
-roots: []
+roots: [latin-cor-cordis]
+etymology_hook: "acordar ← Vulgar Latin *accordare, from cor 'heart': to bring back to one's senses"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C203-descansar]
 <!-- hl-knowledge: introduces=[PT-LEX-C203-VERBOS203-03]; assesses=[] -->
 
 **acordar** — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acordar** ← Vulgar Latin *\*accordare* (EtymDB 2.1), built on Latin *cor, cordis*, "heart": to bring back to one's senses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

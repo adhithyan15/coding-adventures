@@ -13,7 +13,8 @@ gloss: "similar"
 concept_tag: PT-QUAL186-PARECIDO-PARECIDA
 prerequisites: [PT-C186-diferente, PT-C186-igual]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "parecido — from the verb to seem, from Latin parere 'to appear' — English appear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C186-igual]
 <!-- hl-knowledge: introduces=[PT-LEX-C186-QUAL186-03]; assesses=[] -->
 
 **parecido / parecida** — "similar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parecido** is the participle of the verb "to seem", which goes back to Latin *parere*, "to appear" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

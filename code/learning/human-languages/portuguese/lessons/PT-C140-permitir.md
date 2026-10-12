@@ -13,7 +13,8 @@ gloss: "to allow"
 concept_tag: PT-VERB-PERMITIR
 prerequisites: [PT-C140-discutir, PT-C140-prometer]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "permitir ← Latin permittere 'to let through' — English permit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C140-prometer]
 <!-- hl-knowledge: introduces=[PT-LEX-C140-VERBOS140-03]; assesses=[] -->
 
 **permitir** — "to allow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permitir** ← Latin *permittere*, "to let through" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

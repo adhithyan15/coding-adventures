@@ -13,7 +13,8 @@ gloss: "to overtake"
 concept_tag: PT-VERB-ULTRAPASSAR
 prerequisites: [PT-C236-puxar, PT-C236-desperdicar]
 sounds: []
-roots: []
+roots: [passus]
+etymology_hook: "ultrapassar — ultra- 'beyond' (← Latin ultra) + the verb to pass"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C236-desperdicar]
 <!-- hl-knowledge: introduces=[PT-LEX-C236-VERBOS236-05]; assesses=[] -->
 
 **ultrapassar** — "to overtake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ultrapassar** is built from *ultra-*, "beyond" (← Latin *ultra*), and the verb "to pass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

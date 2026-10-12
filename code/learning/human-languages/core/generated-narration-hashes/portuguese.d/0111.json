@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 111,
-  "sourceHash": "fnv1a64:9c3ff736a4b79e71",
+  "sourceHash": "fnv1a64:2e849c4d8e0dee70",
   "lessonIds": [
     "PT-C111-motorista",
     "PT-C111-advogado",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch111.txt",
   "json": "portuguese/narration/ch111.json",
-  "textHash": "fnv1a64:63e78b1adc34c502",
-  "jsonHash": "fnv1a64:3e76a84b3bfe896a",
+  "textHash": "fnv1a64:b1590a220867c4f4",
+  "jsonHash": "fnv1a64:2fff401406a9398a",
   "findings": []
 }

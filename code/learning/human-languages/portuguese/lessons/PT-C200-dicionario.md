@@ -13,7 +13,8 @@ gloss: "a dictionary"
 concept_tag: PT-TRAB200-DICIONARIO
 prerequisites: [PT-C200-impressora, PT-C200-revista]
 sounds: []
-roots: []
+roots: [dicere-latin]
+etymology_hook: "dicionário ← Medieval Latin dictionarium, from dictio 'a saying' — English dictionary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C200-revista]
 <!-- hl-knowledge: introduces=[PT-LEX-C200-TRAB200-05]; assesses=[] -->
 
 **o dicionário** — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dicionário** ← Medieval Latin *dictionarium*, "word book" (EtymDB 2.1), from Latin *dictio*, "a saying" — a learned borrowing from Medieval Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

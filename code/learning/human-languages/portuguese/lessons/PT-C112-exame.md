@@ -13,7 +13,8 @@ gloss: "an exam"
 concept_tag: PT-ESCOLA112-EXAME
 prerequisites: [PT-C112-turma, PT-C112-aula]
 sounds: []
-roots: []
+roots: [examen-latin]
+etymology_hook: "exame ← Latin examen 'a weighing, a test' — English examine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C112-aula]
 <!-- hl-knowledge: introduces=[PT-LEX-C112-ESCOLA112-05]; assesses=[] -->
 
 **o exame** — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exame** ← Latin *examen*, "a weighing, a test" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

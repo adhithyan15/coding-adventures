@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 137,
-  "sourceHash": "fnv1a64:0f8bde83d5bf1caf",
+  "sourceHash": "fnv1a64:316e7e170a3f140a",
   "lessonIds": [
     "PT-C137-o-horario",
     "PT-C137-o-aviso",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch137.txt",
   "json": "portuguese/narration/ch137.json",
-  "textHash": "fnv1a64:c95bf69f20b4cd48",
-  "jsonHash": "fnv1a64:6c4d34558036c87e",
+  "textHash": "fnv1a64:fe9162d8638fc115",
+  "jsonHash": "fnv1a64:7996167cc99a415e",
   "findings": []
 }

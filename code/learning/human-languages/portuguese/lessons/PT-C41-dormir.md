@@ -13,7 +13,8 @@ gloss: "to sleep"
 concept_tag: PT-VERB-DORMIR
 prerequisites: [PT-C41-vender, PT-C41-chamar]
 sounds: []
-roots: []
+roots: [dormire-latin]
+etymology_hook: "dormir ← Latin dormire 'to sleep' — English dormitory and dormant share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C41-chamar]
 <!-- hl-knowledge: introduces=[PT-LEX-C41-VERBOS2-04]; assesses=[] -->
 
 **dormir** — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dormir** ← Latin *dormire*, "to sleep" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

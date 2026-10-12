@@ -13,7 +13,8 @@ gloss: "to pull"
 concept_tag: PT-VERB-PUXAR
 prerequisites: [PT-C236-sonhar, PT-C236-empurrar]
 sounds: []
-roots: []
+roots: [pellere-latin]
+etymology_hook: "puxar ← Latin pulsare 'to push, to beat': the sense flipped to 'pull'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C236-empurrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C236-VERBOS236-03]; assesses=[] -->
 
 **puxar** — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**puxar** ← Latin *pulsare*, "to push, to beat" (EtymDB 2.1) — inherited. The sense flipped from pushing to pulling.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

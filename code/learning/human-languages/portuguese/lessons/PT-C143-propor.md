@@ -13,7 +13,8 @@ gloss: "to propose"
 concept_tag: PT-VERB-PROPOR
 prerequisites: [PT-C142-aproveitar, PT-C142-imaginar]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "propor ← Latin proponere 'to put forward', remade on pôr — English propose"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C142-imaginar]
 <!-- hl-knowledge: introduces=[PT-LEX-C143-VERBOS143-01]; assesses=[] -->
 
 **propor** — "to propose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**propor** ← Latin *proponere*, "to put forward" (EtymDB 2.1) — a learned borrowing from Latin. Its shape was remade on *pôr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

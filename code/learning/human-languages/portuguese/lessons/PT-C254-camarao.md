@@ -13,7 +13,8 @@ gloss: "a prawn"
 concept_tag: PT-COISAS254-CAMARAO
 prerequisites: [PT-C253-fila, PT-C254-marisco]
 sounds: []
-roots: []
+roots: [cammarus-latin]
+etymology_hook: "camarão ← Latin cammarus 'lobster', from Greek kammaros"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C254-marisco]
 <!-- hl-knowledge: introduces=[PT-LEX-C254-COISAS254-02]; assesses=[] -->
 
 **o camarão** — "a prawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camarão** ← Latin *cammarus*, "lobster" (EtymDB 2.1) — inherited. Latin took it from Greek *kammaros*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

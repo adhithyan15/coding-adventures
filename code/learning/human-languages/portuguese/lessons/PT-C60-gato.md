@@ -13,7 +13,8 @@ gloss: "a cat"
 concept_tag: PT-ANIMAIS1-GATO
 prerequisites: [PT-C59-fogo, PT-C60-cao]
 sounds: []
-roots: []
+roots: [cattus-latin]
+etymology_hook: "gato ← Late Latin cattus 'cat' — English cat is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C60-cao]
 <!-- hl-knowledge: introduces=[PT-LEX-C60-ANIMAIS1-02]; assesses=[] -->
 
 **o gato** — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gato** ← Late Latin *cattus*, "cat" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

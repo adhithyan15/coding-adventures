@@ -13,7 +13,8 @@ gloss: "a mattress"
 concept_tag: PT-COISAS229-COLCHAO
 prerequisites: [PT-C229-lavatorio, PT-C229-sanita]
 sounds: []
-roots: []
+roots: [culcita-latin]
+etymology_hook: "colchão — a big form of the quilt word, from Latin culcita 'mattress' — English quilt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C229-sanita]
 <!-- hl-knowledge: introduces=[PT-LEX-C229-COISAS229-03]; assesses=[] -->
 
 **o colchão** — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colchão** is a big form (*-ão*) of the word for a quilt (EtymDB 2.1), which ← Latin *culcita*, "mattress, cushion" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

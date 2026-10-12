@@ -14,6 +14,7 @@ concept_tag: PT-QUALIDADES122-FECHADO
 prerequisites: [PT-C121-livre, PT-C122-aberto]
 sounds: []
 roots: []
+etymology_hook: "fechado — the participle of fechar 'to close', whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C122-aberto]
 <!-- hl-knowledge: introduces=[PT-LEX-C122-QUALIDADES122-02]; assesses=[] -->
 
 **fechado** — "closed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fechado** is the participle of *fechar*, "to close", whose own origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

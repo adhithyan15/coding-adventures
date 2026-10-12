@@ -13,7 +13,8 @@ gloss: "to smile"
 concept_tag: PT-VERB-SORRIR
 prerequisites: [PT-C138-apagar, PT-C138-saltar]
 sounds: []
-roots: []
+roots: [ridere-latin]
+etymology_hook: "sorrir ← Latin subridere 'to smile', sub 'under' + ridere 'to laugh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C138-saltar]
 <!-- hl-knowledge: introduces=[PT-LEX-C138-VERBOS138-04]; assesses=[] -->
 
 **sorrir** — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sorrir** ← Latin *subridere*, "to smile" (EtymDB 2.1) — inherited. It is *sub-*, "under", and *ridere*, "to laugh": a laugh held under.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

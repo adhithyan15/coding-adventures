@@ -13,7 +13,8 @@ gloss: "nor, not even"
 concept_tag: PT-NEG134-NEM
 prerequisites: [PT-C134-ninguem, PT-C134-qual]
 sounds: []
-roots: []
+roots: [nec-latin]
+etymology_hook: "nem ← Latin nec 'and not, nor'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C134-qual]
 <!-- hl-knowledge: introduces=[PT-LEX-C134-NEG134-05]; assesses=[] -->
 
 **nem** — "nor, not even". **nem ... nem** is "neither ... nor": **Não bebo nem café nem chá.** — "I drink neither coffee nor tea." After a no, **nem eu** means "me neither".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nem** ← Latin *nec*, "and not, nor" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

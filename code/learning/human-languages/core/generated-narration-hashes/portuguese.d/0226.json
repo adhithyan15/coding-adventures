@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 226,
-  "sourceHash": "fnv1a64:6d19943530ecd855",
+  "sourceHash": "fnv1a64:6ed1e97ac75771fd",
   "lessonIds": [
     "PT-C226-raquete",
     "PT-C226-ginasio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch226.txt",
   "json": "portuguese/narration/ch226.json",
-  "textHash": "fnv1a64:2fc73aa7ed5289b5",
-  "jsonHash": "fnv1a64:fc029bb4cf50960a",
+  "textHash": "fnv1a64:1394e871bb55490d",
+  "jsonHash": "fnv1a64:b91a92271393f899",
   "findings": []
 }

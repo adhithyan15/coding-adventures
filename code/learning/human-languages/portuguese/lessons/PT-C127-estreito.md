@@ -13,7 +13,8 @@ gloss: "narrow"
 concept_tag: PT-QUALIDADES127-ESTREITO
 prerequisites: [PT-C126-redondo, PT-C126-largo]
 sounds: []
-roots: []
+roots: [stringere-latin]
+etymology_hook: "estreito ← Latin strictus 'drawn tight' — English strict and strait share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C126-largo]
 <!-- hl-knowledge: introduces=[PT-LEX-C127-QUALIDADES127-01]; assesses=[] -->
 
 **estreito** — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estreito** ← Latin *strictus*, "drawn tight" (EtymDB 2.1) — inherited. Latin *-ct-* became *-it-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

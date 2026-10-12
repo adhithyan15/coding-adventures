@@ -13,7 +13,8 @@ gloss: "following, next"
 concept_tag: PT-QUAL156-SEGUINTE
 prerequisites: [PT-C155-preguicoso-preguicosa, PT-C156-anterior]
 sounds: []
-roots: []
+roots: [sequi-latin]
+etymology_hook: "seguinte ← Latin sequens 'following', from sequi 'to follow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C156-anterior]
 <!-- hl-knowledge: introduces=[PT-LEX-C156-QUAL156-02]; assesses=[] -->
 
 **seguinte** — "following, next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seguinte** ← Latin *sequens, sequentis*, "following" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

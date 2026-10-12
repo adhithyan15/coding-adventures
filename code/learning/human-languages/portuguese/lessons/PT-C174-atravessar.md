@@ -13,7 +13,8 @@ gloss: "to cross"
 concept_tag: PT-VERB-ATRAVESSAR
 prerequisites: [PT-C173-envelhecer, PT-C173-casar]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "atravessar — built on an old word for 'across', from Latin transversus 'turned across'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C173-casar]
 <!-- hl-knowledge: introduces=[PT-LEX-C174-VERBOS174-01]; assesses=[] -->
 
 **atravessar** — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**atravessar** is built on an old word for "across", from Latin *transversus*, "turned across" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

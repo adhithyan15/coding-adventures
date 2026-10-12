@@ -13,7 +13,8 @@ gloss: "a folder; a briefcase"
 concept_tag: PT-COISAS193-PASTA
 prerequisites: [PT-C192-seguranca, PT-C193-postal]
 sounds: []
-roots: []
+roots: [pasta-latin]
+etymology_hook: "pasta ← Late Latin pasta 'dough, paste': a flat mass, then a flat case for papers"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C193-postal]
 <!-- hl-knowledge: introduces=[PT-LEX-C193-COISAS193-02]; assesses=[] -->
 
 **a pasta** — "a folder; a briefcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pasta** ← Late Latin *pasta*, "dough, paste", from Greek (EtymDB 2.1): a flattened mass, and then a flat case for papers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

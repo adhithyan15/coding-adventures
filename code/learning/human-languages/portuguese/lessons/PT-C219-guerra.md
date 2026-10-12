@@ -14,6 +14,7 @@ concept_tag: PT-COISAS219-GUERRA
 prerequisites: [PT-C218-cais, PT-C218-passaporte]
 sounds: []
 roots: []
+etymology_hook: "guerra ← Frankish werra 'strife', through Late Latin — English war is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C218-passaporte]
 <!-- hl-knowledge: introduces=[PT-LEX-C219-COISAS219-01]; assesses=[] -->
 
 **a guerra** — "war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guerra** ← Frankish *werra*, "strife, confusion" (EtymDB 2.1) — borrowed. It came into Late Latin as *werra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

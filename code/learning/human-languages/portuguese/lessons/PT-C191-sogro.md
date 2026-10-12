@@ -13,7 +13,8 @@ gloss: "a father-in-law"
 concept_tag: PT-COISAS191-SOGRO
 prerequisites: [PT-C191-gemeo-a-gemea, PT-C191-sogra]
 sounds: []
-roots: []
+roots: [socer-latin]
+etymology_hook: "sogro ← Latin socer 'father-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C191-sogra]
 <!-- hl-knowledge: introduces=[PT-LEX-C191-COISAS191-05]; assesses=[] -->
 
 **o sogro** — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sogro** ← Latin *socer*, "father-in-law" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *sogro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

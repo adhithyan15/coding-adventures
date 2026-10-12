@@ -13,7 +13,8 @@ gloss: "a pastry shop"
 concept_tag: PT-LUGARES90-PASTELARIA
 prerequisites: [PT-C90-passeio, PT-C90-quiosque]
 sounds: []
-roots: []
+roots: [pasta-latin]
+etymology_hook: "pastelaria — built from the pastry word + -aria 'shop'; it goes back to Late Latin pasta 'dough'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C90-quiosque]
 <!-- hl-knowledge: introduces=[PT-LEX-C90-LUGARES90-03]; assesses=[] -->
 
 **a pastelaria** — "a pastry shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pastelaria** is built from the word for a pastry and *-aria*, "shop". The pastry word goes back to Late Latin *pasta*, "dough, paste" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

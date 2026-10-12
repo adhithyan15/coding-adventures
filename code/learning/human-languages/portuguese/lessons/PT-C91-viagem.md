@@ -13,7 +13,8 @@ gloss: "a journey"
 concept_tag: PT-VIAGEM91-VIAGEM
 prerequisites: [PT-C91-metro, PT-C91-eletrico]
 sounds: []
-roots: []
+roots: [viaticum-latin]
+etymology_hook: "viagem ← Old Provençal viatge, from Latin viaticum 'journey money' — English voyage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C91-eletrico]
 <!-- hl-knowledge: introduces=[PT-LEX-C91-VIAGEM91-03]; assesses=[] -->
 
 **a viagem** — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viagem** ← Old Provençal *viatge*, "journey" (EtymDB 2.1), from Latin *viaticum*, "provisions for a journey" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 109,
-  "sourceHash": "fnv1a64:5e9f96e4ec80fdaf",
+  "sourceHash": "fnv1a64:759a522e8c6c36a4",
   "lessonIds": [
     "PT-C109-pessego",
     "PT-C109-compota",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch109.txt",
   "json": "portuguese/narration/ch109.json",
-  "textHash": "fnv1a64:9c2c452dfb9ea777",
-  "jsonHash": "fnv1a64:4c8b4a9c4292aa3e",
+  "textHash": "fnv1a64:ac58a11c14585487",
+  "jsonHash": "fnv1a64:f411b454ea9fb026",
   "findings": []
 }

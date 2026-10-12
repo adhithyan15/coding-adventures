@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 150,
-  "sourceHash": "fnv1a64:ce7bfb5da727242a",
+  "sourceHash": "fnv1a64:cb41cbed0e8e67f0",
   "lessonIds": [
     "PT-C150-raramente",
     "PT-C150-seguir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch150.txt",
   "json": "portuguese/narration/ch150.json",
-  "textHash": "fnv1a64:fcb1cdc91fc83171",
-  "jsonHash": "fnv1a64:c5515356c15829ae",
+  "textHash": "fnv1a64:51f091af089e5e4e",
+  "jsonHash": "fnv1a64:275df37149c09d31",
   "findings": []
 }

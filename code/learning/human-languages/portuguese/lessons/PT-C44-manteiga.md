@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA1-MANTEIGA
 prerequisites: [PT-C44-carne, PT-C44-peixe]
 sounds: []
 roots: []
+etymology_hook: "manteiga — origin uncertain, perhaps pre-Latin; Spanish manteca 'lard' is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C44-peixe]
 <!-- hl-knowledge: introduces=[PT-LEX-C44-COMIDA1-03]; assesses=[] -->
 
 **a manteiga** — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manteiga** — its origin is uncertain, perhaps a word from a language spoken in Iberia before Latin. EtymDB 2.1 lists only cognates, such as Spanish *manteca*, "lard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

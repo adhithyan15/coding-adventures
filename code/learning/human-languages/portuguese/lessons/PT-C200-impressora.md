@@ -13,7 +13,8 @@ gloss: "a printer"
 concept_tag: PT-TRAB200-IMPRESSORA
 prerequisites: [PT-C200-entrevista, PT-C200-carreira]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "impressora — built from the word for printed (← Latin impressus 'pressed in') + -ora"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C200-carreira]
 <!-- hl-knowledge: introduces=[PT-LEX-C200-TRAB200-03]; assesses=[] -->
 
 **a impressora** — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impressora** is built from the word for "printed" and *-ora*, "one that does" (EtymDB 2.1). That word ← Latin *impressus*, "pressed in" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

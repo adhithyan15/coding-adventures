@@ -13,7 +13,8 @@ gloss: "a meal"
 concept_tag: PT-COMIDA107-REFEICAO
 prerequisites: [PT-C107-vinagre, PT-C107-sobremesa]
 sounds: []
-roots: []
+roots: [reficere-latin]
+etymology_hook: "refeição ← Latin refectio 'restoring', a semi-learned word — English refectory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C107-sobremesa]
 <!-- hl-knowledge: introduces=[PT-LEX-C107-COMIDA107-05]; assesses=[] -->
 
 **a refeição** — "a meal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**refeição** ← Latin *refectio, refectionis*, "restoring" (EtymDB 2.1), from *reficere*, "to remake" — a semi-learned borrowing from Latin: the *-ct-* became *-iç-*, as in popular speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

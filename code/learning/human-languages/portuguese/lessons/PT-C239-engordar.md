@@ -13,7 +13,8 @@ gloss: "to put on weight"
 concept_tag: PT-VERB-ENGORDAR
 prerequisites: [PT-C238-apertar, PT-C238-sugerir]
 sounds: []
-roots: []
+roots: [gurdus-latin]
+etymology_hook: "engordar — built from gordo 'fat' (← Latin gurdus) + en- and -ar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C238-sugerir]
 <!-- hl-knowledge: introduces=[PT-LEX-C239-VERBOS239-01]; assesses=[] -->
 
 **engordar** — "to put on weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**engordar** is built from *gordo*, "fat", with *en-* and *-ar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

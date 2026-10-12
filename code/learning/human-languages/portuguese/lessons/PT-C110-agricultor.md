@@ -13,7 +13,8 @@ gloss: "a farmer"
 concept_tag: PT-TRABALHO110-AGRICULTOR
 prerequisites: [PT-C110-cozinheiro, PT-C110-empregado]
 sounds: []
-roots: []
+roots: [ager-latin]
+etymology_hook: "agricultor ← Latin agricultor, from ager 'field' + colere 'to till'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C110-empregado]
 <!-- hl-knowledge: introduces=[PT-LEX-C110-TRABALHO110-04]; assesses=[] -->
 
 **o agricultor** — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agricultor** ← Latin *agricultor*, "field-tiller" (EtymDB 2.1), from *ager*, "field", and *colere*, "to till" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

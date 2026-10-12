@@ -14,6 +14,7 @@ concept_tag: PT-LAZER114-FILME
 prerequisites: [PT-C114-pagina, PT-C114-musica]
 sounds: []
 roots: []
+etymology_hook: "filme ← English film 'thin skin' — the coating on the reel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C114-musica]
 <!-- hl-knowledge: introduces=[PT-LEX-C114-LAZER114-04]; assesses=[] -->
 
 **o filme** — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**filme** ← English *film*, "thin skin" (EtymDB 2.1) — borrowed. The film was the thin coating on the reel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

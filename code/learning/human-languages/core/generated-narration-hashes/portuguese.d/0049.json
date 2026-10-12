@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 49,
-  "sourceHash": "fnv1a64:ff789404b7be412a",
+  "sourceHash": "fnv1a64:615ff3b2cde2a58a",
   "lessonIds": [
     "PT-C49-cama",
     "PT-C49-chave",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch49.txt",
   "json": "portuguese/narration/ch49.json",
-  "textHash": "fnv1a64:d3e2935d45c28ac6",
-  "jsonHash": "fnv1a64:839e0e572c061051",
+  "textHash": "fnv1a64:5ffd06b655b1f69b",
+  "jsonHash": "fnv1a64:a11da3e5dbaad89f",
   "findings": []
 }

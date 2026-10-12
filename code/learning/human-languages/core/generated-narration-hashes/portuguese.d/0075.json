@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 75,
-  "sourceHash": "fnv1a64:0a101106c930de92",
+  "sourceHash": "fnv1a64:6460182003dedec0",
   "lessonIds": [
     "PT-C75-igreja",
     "PT-C75-museu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch75.txt",
   "json": "portuguese/narration/ch75.json",
-  "textHash": "fnv1a64:8805277a3a15be11",
-  "jsonHash": "fnv1a64:66c583cfdaa848e2",
+  "textHash": "fnv1a64:797c480746d7fe64",
+  "jsonHash": "fnv1a64:671d1e8467632e1c",
   "findings": []
 }

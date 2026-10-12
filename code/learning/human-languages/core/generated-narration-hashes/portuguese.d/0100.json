@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 100,
-  "sourceHash": "fnv1a64:41219564b3df5f5e",
+  "sourceHash": "fnv1a64:9a4d14fe43f5ba5f",
   "lessonIds": [
     "PT-C100-despertador",
     "PT-C100-telemovel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch100.txt",
   "json": "portuguese/narration/ch100.json",
-  "textHash": "fnv1a64:8f73059ec9cf4ad2",
-  "jsonHash": "fnv1a64:24564d2a0c818078",
+  "textHash": "fnv1a64:2ac13e84a51c36e5",
+  "jsonHash": "fnv1a64:3241d40e7ca9e3ad",
   "findings": []
 }

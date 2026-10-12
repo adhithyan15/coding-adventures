@@ -13,7 +13,8 @@ gloss: "the end"
 concept_tag: PT-TEMPO212-FIM
 prerequisites: [PT-C211-alergia, PT-C211-dor-de-cabeca]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "fim ← Latin finis 'end' — English final and finish share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C211-dor-de-cabeca]
 <!-- hl-knowledge: introduces=[PT-LEX-C212-TEMPO212-01]; assesses=[] -->
 
 **o fim** — "the end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fim** ← Latin *finis*, "end" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *fim*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

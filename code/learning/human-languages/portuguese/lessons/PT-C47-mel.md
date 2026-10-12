@@ -13,7 +13,8 @@ gloss: "honey"
 concept_tag: PT-REFEICOES-MEL
 prerequisites: [PT-C46-feijao, PT-C47-bolo]
 sounds: []
-roots: []
+roots: [mel-latin]
+etymology_hook: "mel ← Latin mel 'honey' — English mellifluous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C47-bolo]
 <!-- hl-knowledge: introduces=[PT-LEX-C47-REFEICOES-02]; assesses=[] -->
 
 **o mel** — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mel** ← Latin *mel*, "honey" — inherited. EtymDB 2.1 lists *mel* only beside its cognates; it derives Romanian *miere* from Latin *mel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

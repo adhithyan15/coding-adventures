@@ -13,7 +13,8 @@ gloss: "a prescription; a recipe"
 concept_tag: PT-SAUDE210-RECEITA
 prerequisites: [PT-C209-exprimir, PT-C210-gripe]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "receita ← Latin recepta 'things received' — English receipt and recipe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C210-gripe]
 <!-- hl-knowledge: introduces=[PT-LEX-C210-SAUDE210-02]; assesses=[] -->
 
 **a receita** — "a prescription; a recipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**receita** ← Latin *recepta*, "things received" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

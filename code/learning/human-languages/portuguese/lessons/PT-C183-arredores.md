@@ -14,6 +14,7 @@ concept_tag: PT-LUGAR183-ARREDORES
 prerequisites: [PT-C182-decada, PT-C182-madrugada]
 sounds: []
 roots: []
+etymology_hook: "arredores — built on an old word for 'around', whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C182-madrugada]
 <!-- hl-knowledge: introduces=[PT-LEX-C183-LUGAR183-01]; assesses=[] -->
 
 **os arredores** — "the outskirts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arredores** is built on an old word for "around", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

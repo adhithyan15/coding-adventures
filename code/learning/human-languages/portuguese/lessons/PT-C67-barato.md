@@ -14,6 +14,7 @@ concept_tag: PT-ADJ4-BARATO
 prerequisites: [PT-C66-dificil, PT-C66-caro]
 sounds: []
 roots: []
+etymology_hook: "barato — from an old verb for trading cheaply, of uncertain origin; English barter is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C66-caro]
 <!-- hl-knowledge: introduces=[PT-LEX-C67-ADJ4-01]; assesses=[] -->
 
 **barato** — "cheap". The opposite of **caro**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barato** comes from an old verb for trading and selling low, whose own origin is uncertain. Old French *barater*, behind English *barter*, belongs to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

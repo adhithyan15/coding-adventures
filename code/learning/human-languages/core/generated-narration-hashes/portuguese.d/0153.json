@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 153,
-  "sourceHash": "fnv1a64:13803813d2ba6f60",
+  "sourceHash": "fnv1a64:1859bf8906fc5a5c",
   "lessonIds": [
     "PT-C153-confortavel",
     "PT-C153-desconfortavel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch153.txt",
   "json": "portuguese/narration/ch153.json",
-  "textHash": "fnv1a64:b125f2014239d3cd",
-  "jsonHash": "fnv1a64:bcc5cdc0e86e3c7b",
+  "textHash": "fnv1a64:ab386e1791a395c1",
+  "jsonHash": "fnv1a64:a00ded2618381015",
   "findings": []
 }

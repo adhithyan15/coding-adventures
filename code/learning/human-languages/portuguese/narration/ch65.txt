@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for old, then the Portuguese for bad.
 You'll want to know: bonito.
 bonito — "pretty, handsome".
 
+The word, taken apart.
+bonito from Spanish bonito, "pretty" (EtymDB 2.1) — borrowed. The Spanish word is a small form of the word for "good", from Latin bonus.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for bad, then the Portuguese for pretty.
 
 You'll want to know: feio.
 feio — "ugly".
+
+The word, taken apart.
+feio from Latin foedus, "foul, hideous" (EtymDB 2.1) — inherited. The -d- between vowels fell out.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for pretty, then the Portuguese for ugly.
 You'll want to know: longo.
 longo — "long".
 
+The word, taken apart.
+longo from Latin longus, "long" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for ugly, then the Portuguese for long.
 You'll want to know: curto.
 curto — "short".
 
+The word, taken apart.
+curto from Latin curtus, "shortened, cut off" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for long, then the Portuguese for short.
 
 You'll want to know: quente.
 quente — "hot".
+
+The word, taken apart.
+quente from Latin calens, calentis, "being hot" (EtymDB 2.1) — inherited. Old Portuguese caente had already lost the -l-.
 
 What you've built.
 One more word for this chapter.

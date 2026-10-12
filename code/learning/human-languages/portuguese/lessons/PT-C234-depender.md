@@ -13,7 +13,8 @@ gloss: "to depend"
 concept_tag: PT-VERB-DEPENDER
 prerequisites: [PT-C234-convencer, PT-C234-criticar]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "depender ← Latin dependere 'to hang down from' — English depend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C234-criticar]
 <!-- hl-knowledge: introduces=[PT-LEX-C234-VERBOS234-04]; assesses=[] -->
 
 **depender** — "to depend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**depender** ← Latin *dependere*, "to hang down" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a coin; a currency"
 concept_tag: PT-COISAS222-MOEDA
 prerequisites: [PT-C222-desconto, PT-C222-saldos]
 sounds: []
-roots: []
+roots: [moneta-latin]
+etymology_hook: "moeda ← Latin moneta 'mint, coin', after Juno Moneta's temple — English money"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C222-saldos]
 <!-- hl-knowledge: introduces=[PT-LEX-C222-COISAS222-05]; assesses=[] -->
 
 **a moeda** — "a coin; a currency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moeda** ← Latin *moneta*, "mint, coin" (EtymDB 2.1) — inherited. Rome's mint stood by the temple of Juno Moneta. The *-n-* fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

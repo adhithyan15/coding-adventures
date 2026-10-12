@@ -14,6 +14,7 @@ concept_tag: PT-COISAS253-TROCO
 prerequisites: [PT-C253-provador, PT-C253-tamanho]
 sounds: []
 roots: []
+etymology_hook: "troco — built from trocar 'to exchange': what you get back"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C253-tamanho]
 <!-- hl-knowledge: introduces=[PT-LEX-C253-COISAS253-03]; assesses=[] -->
 
 **o troco** — "the change you get back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**troco** is built from *trocar*, "to exchange" (EtymDB 2.1): what you get back in exchange.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

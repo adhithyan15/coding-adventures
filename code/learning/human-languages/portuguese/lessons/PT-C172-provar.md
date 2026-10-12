@@ -13,7 +13,8 @@ gloss: "to taste; to prove"
 concept_tag: PT-VERB-PROVAR
 prerequisites: [PT-C172-segurar, PT-C172-partir]
 sounds: []
-roots: []
+roots: [probare-latin]
+etymology_hook: "provar ← Latin probare 'to test, to prove' — English prove and probe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C172-partir]
 <!-- hl-knowledge: introduces=[PT-LEX-C172-VERBOS172-05]; assesses=[] -->
 
 **provar** — "to taste; to prove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**provar** ← Latin *probare*, "to test, to prove" (EtymDB 2.1) — inherited. The Latin *-b-* became *-v-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

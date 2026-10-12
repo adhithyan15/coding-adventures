@@ -11,6 +11,7 @@ concept_tag: GREETING-DAY
 prerequisites: [PT-C01-bom, PT-C01-dia]
 sounds: []
 roots: [bonus, dies]
+etymology_hook: "bom dia = bom (← Latin bonus 'good') + dia (← Latin dies 'day'): 'good day'"
 reviews_of: [PT-C01-bom, PT-C01-dia]
 duration:
   max_seconds: 120

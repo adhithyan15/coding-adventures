@@ -13,7 +13,8 @@ gloss: "unpleasant"
 concept_tag: PT-QUAL153-DESAGRADAVEL
 prerequisites: [PT-C153-educado-educada, PT-C153-mal-educado-mal-educada]
 sounds: []
-roots: []
+roots: [gratus]
+etymology_hook: "desagradável — des- 'un-' + the word for pleasant, from Latin gratus 'pleasing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C153-mal-educado-mal-educada]
 <!-- hl-knowledge: introduces=[PT-LEX-C153-QUAL153-05]; assesses=[] -->
 
 **desagradável** — "unpleasant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desagradável** is built from *des-*, "un-", and the word for "pleasant", which goes back to Latin *gratus*, "pleasing" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

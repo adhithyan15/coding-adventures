@@ -13,7 +13,8 @@ gloss: "a car"
 concept_tag: PT-CIDADE2-CARRO
 prerequisites: [PT-C74-estacao, PT-C74-aviao]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "carro ← Latin carrus 'wagon', from Gaulish — English car and carry share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C74-aviao]
 <!-- hl-knowledge: introduces=[PT-LEX-C74-CIDADE2-03]; assesses=[] -->
 
 **o carro** — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carro** ← Latin *carrus*, "wagon" (EtymDB 2.1) — inherited. Latin took it from Gaulish *karros*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

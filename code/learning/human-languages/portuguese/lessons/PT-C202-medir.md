@@ -13,7 +13,8 @@ gloss: "to measure"
 concept_tag: PT-VERB-MEDIR
 prerequisites: [PT-C202-encher, PT-C202-esvaziar]
 sounds: []
-roots: []
+roots: [metiri-latin]
+etymology_hook: "medir ← Latin metiri 'to measure', through Vulgar Latin *metire — English measure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C202-esvaziar]
 <!-- hl-knowledge: introduces=[PT-LEX-C202-VERBOS202-05]; assesses=[] -->
 
 **medir** — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medir** ← Latin *metiri*, "to measure" (EtymDB 2.1), through Vulgar Latin *\*metire* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

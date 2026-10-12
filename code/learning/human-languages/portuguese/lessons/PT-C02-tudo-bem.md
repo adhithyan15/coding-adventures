@@ -11,9 +11,9 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [PT-C02-tudo, PT-C02-como]
 sounds: [nasal-em]
 roots: [totus-latin]
-etymology_hook: "Tudo bem? literally asks 'everything well?' and needs neither a verb nor a pronoun"
+etymology_hook: "Tudo bem? = tudo (← Latin totus 'all') + bem (← Latin bene 'well'): 'everything well?'"
 duration:
-  max_seconds: 234
+  max_seconds: 258
 requires:
   knowledge: [PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
 introduces:
@@ -47,6 +47,11 @@ The friendly answer can be identical:
 
 Because the question contains no “you” and no verb, it avoids choosing a social
 register. That simplicity is exactly why it is everywhere.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tudo bem?** is built from *tudo*, "everything" ← Latin *totus*, "all, whole" (EtymDB 2.1), and *bem*, "well" ← Latin *bene*, "well" (EtymDB 2.1).
 
 ## Grammar Lens: Add the listener only when useful
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-TUDO-BEM-02]; assesses=[] -->

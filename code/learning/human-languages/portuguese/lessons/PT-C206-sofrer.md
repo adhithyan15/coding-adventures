@@ -13,7 +13,8 @@ gloss: "to suffer"
 concept_tag: PT-VERB-SOFRER
 prerequisites: [PT-C206-parecer, PT-C206-servir]
 sounds: []
-roots: []
+roots: [ferre-latin]
+etymology_hook: "sofrer ← Latin sufferre 'to carry under, to endure' — English suffer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C206-servir]
 <!-- hl-knowledge: introduces=[PT-LEX-C206-VERBOS206-05]; assesses=[] -->
 
 **sofrer** — "to suffer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sofrer** ← Latin *sufferre*, "to carry under, to endure" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

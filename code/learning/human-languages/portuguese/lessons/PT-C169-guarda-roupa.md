@@ -14,6 +14,7 @@ concept_tag: PT-COISAS169-GUARDA-ROUPA
 prerequisites: [PT-C169-fecho, PT-C169-manga]
 sounds: []
 roots: []
+etymology_hook: "guarda-roupa — 'clothes keeper': guard (from Frankish) + roupa 'clothes' (from Gothic)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C169-manga]
 <!-- hl-knowledge: introduces=[PT-LEX-C169-COISAS169-05]; assesses=[] -->
 
 **o guarda-roupa** — "a wardrobe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guarda-roupa** is "clothes keeper": built from the verb "to guard" and *roupa*, "clothes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

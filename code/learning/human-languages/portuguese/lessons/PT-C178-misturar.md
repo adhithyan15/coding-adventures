@@ -13,7 +13,8 @@ gloss: "to mix"
 concept_tag: PT-VERB-MISTURAR
 prerequisites: [PT-C177-apressar-se, PT-C177-afastar-se]
 sounds: []
-roots: []
+roots: [miscere-latin]
+etymology_hook: "misturar ← Late Latin mixturare, from mixtura 'a mixing' — English mixture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C177-afastar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C178-VERBOS178-01]; assesses=[] -->
 
 **misturar** — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**misturar** ← Late Latin *mixturare*, "to mix" (EtymDB 2.1), from *mixtura*, "a mixing" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

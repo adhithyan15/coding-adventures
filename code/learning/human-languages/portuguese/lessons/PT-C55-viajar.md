@@ -13,7 +13,8 @@ gloss: "to travel"
 concept_tag: PT-VERB-VIAJAR
 prerequisites: [PT-C55-voltar, PT-C55-estudar]
 sounds: []
-roots: []
+roots: [viaticum-latin]
+etymology_hook: "viajar — from the journey word, which ← Provençal viatge, from Latin viaticum — English voyage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C55-estudar]
 <!-- hl-knowledge: introduces=[PT-LEX-C55-VERBOS5-05]; assesses=[] -->
 
 **viajar** — "to travel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viajar** is built from the word for a journey (EtymDB 2.1), which came through Old Provençal *viatge* from Latin *viaticum*, "provisions for a journey" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

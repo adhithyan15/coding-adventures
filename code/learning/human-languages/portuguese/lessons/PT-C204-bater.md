@@ -13,7 +13,8 @@ gloss: "to hit, to knock"
 concept_tag: PT-VERB-BATER
 prerequisites: [PT-C204-deitar-fora, PT-C204-calcular]
 sounds: []
-roots: []
+roots: [battuere-latin]
+etymology_hook: "bater ← Late Latin battere 'to beat' — English battle and battery share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C204-calcular]
 <!-- hl-knowledge: introduces=[PT-LEX-C204-VERBOS204-04]; assesses=[] -->
 
 **bater** — "to hit, to knock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bater** ← Late Latin *battere*, "to beat" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

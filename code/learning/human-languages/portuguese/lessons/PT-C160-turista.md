@@ -14,6 +14,7 @@ concept_tag: PT-COISAS160-TURISTA
 prerequisites: [PT-C160-investigador, PT-C160-estrangeiro]
 sounds: []
 roots: []
+etymology_hook: "turista ← French touriste or English tourist, from tour 'a round trip'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C160-estrangeiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C160-COISAS160-05]; assesses=[] -->
 
 **o turista** — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**turista** — borrowed from French *touriste* or English *tourist*, built on *tour*, "a round trip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

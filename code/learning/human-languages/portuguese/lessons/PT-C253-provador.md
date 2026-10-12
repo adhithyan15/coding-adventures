@@ -13,7 +13,8 @@ gloss: "a fitting room"
 concept_tag: PT-COISAS253-PROVADOR
 prerequisites: [PT-C252-treinador, PT-C252-adepto]
 sounds: []
-roots: []
+roots: [probare-latin]
+etymology_hook: "provador — built from provar 'to try on' (← Latin probare) + -dor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C252-adepto]
 <!-- hl-knowledge: introduces=[PT-LEX-C253-COISAS253-01]; assesses=[] -->
 
 **o provador** — "a fitting room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**provador** is built from *provar*, "to try on", and *-dor*: the place where you try.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

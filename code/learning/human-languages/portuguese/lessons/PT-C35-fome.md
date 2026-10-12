@@ -13,7 +13,8 @@ gloss: "hunger"
 concept_tag: PT-SAUDE2-FOME
 prerequisites: [PT-C34-hospital, PT-C35-doenca]
 sounds: []
-roots: []
+roots: [fames-latin]
+etymology_hook: "fome ← Latin fames 'hunger' — English famine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C35-doenca]
 <!-- hl-knowledge: introduces=[PT-LEX-C35-SAUDE2-02]; assesses=[] -->
 
 **a fome** — "hunger". **tenho fome**: I am hungry, with **ter**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fome** ← Latin *fames*, "hunger" — inherited. EtymDB 2.1 has no ancestor row for *fome*; it derives Romanian *foame* from *fames*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

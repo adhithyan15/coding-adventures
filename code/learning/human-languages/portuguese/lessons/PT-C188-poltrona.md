@@ -14,6 +14,7 @@ concept_tag: PT-COISAS188-POLTRONA
 prerequisites: [PT-C188-lencol, PT-C188-gaveta]
 sounds: []
 roots: []
+etymology_hook: "poltrona ← Italian poltrona, a word of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C188-gaveta]
 <!-- hl-knowledge: introduces=[PT-LEX-C188-COISAS188-03]; assesses=[] -->
 
 **a poltrona** — "an armchair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poltrona** ← Italian *poltrona* — borrowed (EtymDB 2.1). The Italian word's own origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

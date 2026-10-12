@@ -13,7 +13,8 @@ gloss: "to obey"
 concept_tag: PT-VERB-OBEDECER
 prerequisites: [PT-C177-afastar-se, PT-C178-misturar]
 sounds: []
-roots: []
+roots: [oboedire-latin]
+etymology_hook: "obedecer ← Vulgar Latin *oboedescere, from oboedire 'to obey' — English obey"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C178-misturar]
 <!-- hl-knowledge: introduces=[PT-LEX-C178-VERBOS178-02]; assesses=[] -->
 
 **obedecer** — "to obey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**obedecer** ← Vulgar Latin *\*oboedescere* (EtymDB 2.1), from Latin *oboedire*, "to obey" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to recommend"
 concept_tag: PT-VERB-RECOMENDAR
 prerequisites: [PT-C178-obedecer, PT-C178-rezar]
 sounds: []
-roots: []
+roots: [commendare-latin]
+etymology_hook: "recomendar ← Latin re- + commendare 'to entrust' — English recommend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C178-rezar]
 <!-- hl-knowledge: introduces=[PT-LEX-C178-VERBOS178-04]; assesses=[] -->
 
 **recomendar** — "to recommend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recomendar** ← Latin *re-* and *commendare*, "to entrust" (EtymDB 2.1) — a learned formation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

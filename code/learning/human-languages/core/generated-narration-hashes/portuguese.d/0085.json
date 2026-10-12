@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 85,
-  "sourceHash": "fnv1a64:6d3cf5a90095b7aa",
+  "sourceHash": "fnv1a64:7ed600c00eb6f294",
   "lessonIds": [
     "PT-C85-aeroporto",
     "PT-C85-paragem",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch85.txt",
   "json": "portuguese/narration/ch85.json",
-  "textHash": "fnv1a64:2c7accb1ea5aec98",
-  "jsonHash": "fnv1a64:5857fd5b6a98949d",
+  "textHash": "fnv1a64:309c0d3c256fc4b2",
+  "jsonHash": "fnv1a64:24f918836ab669a7",
   "findings": []
 }

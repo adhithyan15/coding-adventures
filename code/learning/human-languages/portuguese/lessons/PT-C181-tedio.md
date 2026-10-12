@@ -13,7 +13,8 @@ gloss: "boredom"
 concept_tag: PT-SAUDE181-TEDIO
 prerequisites: [PT-C181-vergonha, PT-C181-ciume]
 sounds: []
-roots: []
+roots: [taedium-latin]
+etymology_hook: "tédio ← Latin taedium 'weariness, boredom' — English tedium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C181-ciume]
 <!-- hl-knowledge: introduces=[PT-LEX-C181-SAUDE181-05]; assesses=[] -->
 
 **o tédio** — "boredom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tédio** ← Latin *taedium*, "weariness" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

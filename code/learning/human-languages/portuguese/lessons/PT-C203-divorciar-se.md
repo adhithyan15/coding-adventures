@@ -13,7 +13,8 @@ gloss: "to get divorced"
 concept_tag: PT-VERB-DIVORCIAR-SE
 prerequisites: [PT-C202-esvaziar, PT-C202-medir]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "divorciar-se — from the divorce word ← Latin divortium 'a parting of the ways'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C202-medir]
 <!-- hl-knowledge: introduces=[PT-LEX-C203-VERBOS203-01]; assesses=[] -->
 
 **divorciar-se** — "to get divorced".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divorciar-se** is built from the word for a divorce, from Latin *divortium*, "a parting of the ways" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to increase"
 concept_tag: PT-VERB-AUMENTAR
 prerequisites: [PT-C173-casar, PT-C174-atravessar]
 sounds: []
-roots: []
+roots: [augere-latin]
+etymology_hook: "aumentar ← Late Latin augmentare, from augmentum 'growth' — English augment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C174-atravessar]
 <!-- hl-knowledge: introduces=[PT-LEX-C174-VERBOS174-02]; assesses=[] -->
 
 **aumentar** — "to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aumentar** ← Late Latin *augmentare*, "to increase" (EtymDB 2.1), from *augmentum*, "growth" — a learned borrowing from Late Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-MESA-FACA
 prerequisites: [PT-C51-prato, PT-C51-colher]
 sounds: []
 roots: []
+etymology_hook: "faca — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C51-colher]
 <!-- hl-knowledge: introduces=[PT-LEX-C51-MESA-04]; assesses=[] -->
 
 **a faca** — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faca** — its origin is uncertain, and EtymDB 2.1 records no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

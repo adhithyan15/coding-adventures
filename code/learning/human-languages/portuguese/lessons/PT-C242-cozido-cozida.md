@@ -13,7 +13,8 @@ gloss: "cooked, boiled"
 concept_tag: PT-QUAL242-COZIDO-COZIDA
 prerequisites: [PT-C241-desconhecido-desconhecida, PT-C241-simples]
 sounds: []
-roots: []
+roots: [coquina-latin]
+etymology_hook: "cozido — the participle of the verb to cook, from Latin coquere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C241-simples]
 <!-- hl-knowledge: introduces=[PT-LEX-C242-QUAL242-01]; assesses=[] -->
 
 **cozido / cozida** — "cooked, boiled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cozido** is "cooked": the participle of the verb "to cook", which goes back to Latin *coquere*, "to cook".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

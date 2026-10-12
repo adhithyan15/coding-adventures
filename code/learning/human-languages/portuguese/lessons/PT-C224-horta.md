@@ -13,7 +13,8 @@ gloss: "a vegetable garden"
 concept_tag: PT-COISAS224-HORTA
 prerequisites: [PT-C224-sotao, PT-C224-garagem]
 sounds: []
-roots: []
+roots: [hortus-latin]
+etymology_hook: "horta ← Latin hortus 'garden' — English horticulture shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C224-garagem]
 <!-- hl-knowledge: introduces=[PT-LEX-C224-COISAS224-03]; assesses=[] -->
 
 **a horta** — "a vegetable garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**horta** ← Latin *hortus*, "garden" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

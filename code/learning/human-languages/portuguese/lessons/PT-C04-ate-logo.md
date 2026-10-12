@@ -11,9 +11,9 @@ concept_tag: FAREWELL-LATER
 prerequisites: [PT-C04-adeus]
 sounds: [final-o-is-u]
 roots: [hatta-arabic, loco-latin]
-etymology_hook: "até ← Arabic ḥattā (the SAME Arabic loan as Spanish hasta); logo ← Latin locō 'in place' → 'soon'"
+etymology_hook: "até ← usually traced to Arabic ḥattā, like Spanish hasta; logo ← Latin locō 'in place' → 'soon'"
 duration:
-  max_seconds: 189
+  max_seconds: 197
 requires:
   knowledge: [PT-SOUND-ADEUS-02, PT-ETYMON-ADEUS-03]
 introduces:
@@ -49,13 +49,13 @@ Spanish's *hasta* does: it came from **Arabic**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-ATE-LOGO-03]; assesses=[] -->
 
-- **até** = "until, up to." Like Spanish **hasta**, it comes from **Arabic
-  *ḥattā* (حتى)**, "until" — carried into Iberian speech across the **800 years
-  of al-Andalus**. Both Iberian languages borrowed the *same* Arabic word for
-  this everyday preposition. That's remarkable: languages freely borrow *nouns*
-  (Portuguese has thousands from Arabic — *almofada*, *açúcar*, *azeite*), but a
-  **function word** like "until" almost never crosses. *até* and *hasta* are twin
-  survivors of that deep Arabic layer under Iberian Romance.
+- **até** = "until, up to." Like Spanish **hasta**, it is usually traced to
+  **Arabic *ḥattā* (حتى)**, "until" — carried into Iberian speech across the
+  **800 years of al-Andalus**; some prefer Latin *ad tenus*, "as far as". If the
+  Arabic account is right, both Iberian languages borrowed the *same* word for
+  this everyday preposition. That would be remarkable: languages freely borrow
+  *nouns* (Portuguese has thousands from Arabic — *almofada*, *açúcar*,
+  *azeite*), but a **function word** like "until" almost never crosses.
 - **logo** = "soon, right away, then," from Latin **locō**, *"in [that] place"* →
   "on the spot" → "soon." (Spanish did the identical thing: **luego** ← *locō*,
   and *hasta luego* is the word-for-word twin of *até logo*.)
@@ -68,14 +68,15 @@ Arabic preposition and all.
 
 [PAUSE 1s]
 - [YOU SAY: "até logo" — *ah-TEH LOH-goo*]
-- [YOU SAY: Portuguese *até* and Spanish *hasta* — both from Arabic *ḥattā*]
+- [YOU SAY: Portuguese *até* and Spanish *hasta* — both usually traced to Arabic *ḥattā*]
 - [YOU SAY: *até logo* = *hasta luego*, twin for twin]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-ADEUS-02, PT-ETYMON-ADEUS-03, PT-SOUND-ATE-LOGO-02, PT-ETYMON-ATE-LOGO-03] -->
 
 [PAUSE 3s] Where does *até* come from, and which Spanish word is its twin?
-(Arabic *ḥattā* — Spanish *hasta*.) Why is borrowing it surprising? (It's a
-*function word*; languages rarely borrow those.) What does *logo* share with
+(Usually traced to Arabic *ḥattā*; some prefer Latin *ad tenus* — Spanish
+*hasta*.) Why would borrowing it be surprising? (It's a *function word*;
+languages rarely borrow those.) What does *logo* share with
 Spanish *luego*? (Both ← Latin *locō*, "in place" → "soon".) Next: **até
 amanhã**.

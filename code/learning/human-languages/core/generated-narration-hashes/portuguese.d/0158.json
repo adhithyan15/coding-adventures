@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 158,
-  "sourceHash": "fnv1a64:2c15372d27ff3a46",
+  "sourceHash": "fnv1a64:677cf18bcd0e57b7",
   "lessonIds": [
     "PT-C158-mosquito",
     "PT-C158-sociedade",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch158.txt",
   "json": "portuguese/narration/ch158.json",
-  "textHash": "fnv1a64:78845bd3f1f4017c",
-  "jsonHash": "fnv1a64:0d9ba6fec4004229",
+  "textHash": "fnv1a64:55aeb7c87b5af3bf",
+  "jsonHash": "fnv1a64:6856d2be21a5c969",
   "findings": []
 }

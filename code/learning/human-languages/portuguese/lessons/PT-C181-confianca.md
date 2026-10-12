@@ -13,7 +13,8 @@ gloss: "trust"
 concept_tag: PT-SAUDE181-CONFIANCA
 prerequisites: [PT-C180-cicatriz, PT-C180-constipacao]
 sounds: []
-roots: []
+roots: [fidere-latin]
+etymology_hook: "confiança — built from the verb to trust (from Latin confidere) + -ança — English confidence"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C180-constipacao]
 <!-- hl-knowledge: introduces=[PT-LEX-C181-SAUDE181-01]; assesses=[] -->
 
 **a confiança** — "trust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**confiança** is built from the verb "to trust" and *-ança* (EtymDB 2.1). The verb goes back to Latin *confidere*, "to trust fully", from *fidere*, "to trust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

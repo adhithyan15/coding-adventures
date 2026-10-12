@@ -13,7 +13,8 @@ gloss: "then, next"
 concept_tag: PT-TEMPO150-SEGUIR
 prerequisites: [PT-C149-esperanca, PT-C150-raramente]
 sounds: []
-roots: []
+roots: [sequi-latin]
+etymology_hook: "a seguir — 'to follow': seguir ← Latin sequi 'to follow', through Vulgar Latin *sequire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C150-raramente]
 <!-- hl-knowledge: introduces=[PT-LEX-C150-TEMPO150-02]; assesses=[] -->
 
 **a seguir** — "then, next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**a seguir** is "to follow": *seguir* ← Latin *sequi*, "to follow" (Lewis & Short), through Vulgar Latin *\*sequire*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

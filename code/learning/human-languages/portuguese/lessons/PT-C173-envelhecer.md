@@ -13,7 +13,8 @@ gloss: "to grow old"
 concept_tag: PT-VERB-ENVELHECER
 prerequisites: [PT-C173-nascer, PT-C173-morrer]
 sounds: []
-roots: []
+roots: [vetulus-latin]
+etymology_hook: "envelhecer — built from velho 'old' (← Latin vetulus) + en- and -ecer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C173-morrer]
 <!-- hl-knowledge: introduces=[PT-LEX-C173-VERBOS173-04]; assesses=[] -->
 
 **envelhecer** — "to grow old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**envelhecer** is built from *velho*, "old", with *en-* and *-ecer*, "to become".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

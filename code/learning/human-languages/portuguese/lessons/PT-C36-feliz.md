@@ -13,7 +13,8 @@ gloss: "happy"
 concept_tag: PT-SENTIR-FELIZ
 prerequisites: [PT-C36-raiva, PT-C36-tristeza]
 sounds: []
-roots: []
+roots: [felix]
+etymology_hook: "feliz ← Latin felix 'lucky, happy' — a learned word; English felicity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C36-tristeza]
 <!-- hl-knowledge: introduces=[PT-LEX-C36-SENTIR-04]; assesses=[] -->
 
 **feliz** — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feliz** ← Latin *felix*, "lucky, happy" — a learned borrowing from Latin. EtymDB 2.1 traces it only to Old Portuguese *feliz*; it records Spanish *feliz* as borrowed from Latin *felix*. An inherited word would have lost the *-l-* between vowels.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

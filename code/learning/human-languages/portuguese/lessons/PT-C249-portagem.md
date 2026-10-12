@@ -13,7 +13,8 @@ gloss: "a toll"
 concept_tag: PT-COISAS249-PORTAGEM
 prerequisites: [PT-C248-emprestimo, PT-C249-motor]
 sounds: []
-roots: []
+roots: [porta-latin]
+etymology_hook: "portagem — built on the gate word (← Latin porta) + -agem: a charge for passing"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C249-motor]
 <!-- hl-knowledge: introduces=[PT-LEX-C249-COISAS249-02]; assesses=[] -->
 
 **a portagem** — "a toll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**portagem** is built on the word for a gate or pass, from Latin *porta*, with *-agem*: a charge for passing. EtymDB 2.1 links it to French *portage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

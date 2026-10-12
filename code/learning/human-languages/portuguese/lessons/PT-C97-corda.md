@@ -13,7 +13,8 @@ gloss: "a rope"
 concept_tag: PT-CASA97-CORDA
 prerequisites: [PT-C97-frigideira, PT-C97-balde]
 sounds: []
-roots: []
+roots: [chorda-latin]
+etymology_hook: "corda ← Latin chorda 'string', from Greek chorde — English cord and chord share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C97-balde]
 <!-- hl-knowledge: introduces=[PT-LEX-C97-CASA97-04]; assesses=[] -->
 
 **a corda** — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corda** ← Latin *chorda*, "string, cord" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

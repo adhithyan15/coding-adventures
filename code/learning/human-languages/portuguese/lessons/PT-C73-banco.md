@@ -14,6 +14,7 @@ concept_tag: PT-CIDADE1-BANCO
 prerequisites: [PT-C73-loja, PT-C73-mercado]
 sounds: []
 roots: []
+etymology_hook: "banco ← Italian banco 'bench, counter', a Germanic word — English bench and bank"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C73-mercado]
 <!-- hl-knowledge: introduces=[PT-LEX-C73-CIDADE1-05]; assesses=[] -->
 
 **o banco** — "a bank; a bench".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banco** ← Italian *banco*, "bench, counter" (EtymDB 2.1) — borrowed. The Italian word is Germanic, a cousin of English *bench*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

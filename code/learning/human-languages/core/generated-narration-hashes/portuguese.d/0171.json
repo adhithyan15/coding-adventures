@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 171,
-  "sourceHash": "fnv1a64:47662077576acca6",
+  "sourceHash": "fnv1a64:70879e5a85a7e37f",
   "lessonIds": [
     "PT-C171-beijar",
     "PT-C171-cumprimentar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch171.txt",
   "json": "portuguese/narration/ch171.json",
-  "textHash": "fnv1a64:0ac7b665ea355271",
-  "jsonHash": "fnv1a64:2e017cf01f8aa290",
+  "textHash": "fnv1a64:de7a4f5fecf3546d",
+  "jsonHash": "fnv1a64:b9bde06b2f0270e5",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to squeeze, to tighten"
 concept_tag: PT-VERB-APERTAR
 prerequisites: [PT-C238-surpreender, PT-C238-suspeitar]
 sounds: []
-roots: []
+roots: [pectus-latin]
+etymology_hook: "apertar ← Late Latin appectorare 'to press to the breast', from pectus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C238-suspeitar]
 <!-- hl-knowledge: introduces=[PT-LEX-C238-VERBOS238-04]; assesses=[] -->
 
 **apertar** — "to squeeze, to tighten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apertar** ← Late Latin *appectorare*, "to press to the breast" (EtymDB 2.1), from *pectus*, "breast" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

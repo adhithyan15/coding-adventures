@@ -13,7 +13,8 @@ gloss: "to begin"
 concept_tag: PT-VERB-COMECAR
 prerequisites: [PT-C130-oitenta, PT-C130-noventa]
 sounds: []
-roots: []
+roots: [initium-latin]
+etymology_hook: "começar ← Vulgar Latin *cominitiare, from initium 'beginning' — English initiate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C130-noventa]
 <!-- hl-knowledge: introduces=[PT-LEX-C130-NUMEROS130-05]; assesses=[] -->
 
 **começar** — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**começar** ← Vulgar Latin *\*cominitiare* (EtymDB 2.1), from Latin *initium*, "beginning" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

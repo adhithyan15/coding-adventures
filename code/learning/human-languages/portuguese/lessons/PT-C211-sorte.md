@@ -13,7 +13,8 @@ gloss: "luck"
 concept_tag: PT-SAUDE211-SORTE
 prerequisites: [PT-C210-pomada, PT-C211-paciencia]
 sounds: []
-roots: []
+roots: [sors-latin]
+etymology_hook: "sorte ← Latin sors, sortis 'lot' — English sort shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C211-paciencia]
 <!-- hl-knowledge: introduces=[PT-LEX-C211-SAUDE211-02]; assesses=[] -->
 
 **a sorte** — "luck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sorte** ← Latin *sors, sortis*, "lot" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *sorte*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-ANIMAIS119-CORUJA
 prerequisites: [PT-C118-tartaruga, PT-C119-esquilo]
 sounds: []
 roots: []
+etymology_hook: "coruja — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C119-esquilo]
 <!-- hl-knowledge: introduces=[PT-LEX-C119-ANIMAIS119-02]; assesses=[] -->
 
 **a coruja** — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coruja** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

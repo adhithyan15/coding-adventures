@@ -11,6 +11,7 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [PT-C01-tarde]
 sounds: []
 roots: [noctem]
+etymology_hook: "noite ← Latin noctem 'night': Latin -ct- became -it-; English nocturnal shares it"
 reviews_of: [PT-C01-tarde, PT-C01-dia]
 duration:
   max_seconds: 120

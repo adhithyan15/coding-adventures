@@ -13,7 +13,8 @@ gloss: "rough"
 concept_tag: PT-QUAL241-ASPERO-ASPERA
 prerequisites: [PT-C240-descanso, PT-C241-liso-lisa]
 sounds: []
-roots: []
+roots: [asper-latin]
+etymology_hook: "áspero ← Latin asper 'rough' — English asperity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C241-liso-lisa]
 <!-- hl-knowledge: introduces=[PT-LEX-C241-QUAL241-02]; assesses=[] -->
 
 **áspero / áspera** — "rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**áspero** ← Latin *asper*, "rough" (EtymDB 2.1) — a learned borrowing from Latin. It kept the Latin stress on the first syllable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

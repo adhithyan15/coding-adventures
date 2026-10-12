@@ -13,7 +13,8 @@ gloss: "to cry"
 concept_tag: PT-VERB-CHORAR
 prerequisites: [PT-C40-dancar, PT-C40-rir]
 sounds: []
-roots: []
+roots: [plorare-latin]
+etymology_hook: "chorar ← Latin plorare 'to wail': Latin pl- became ch- — English deplore shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C40-rir]
 <!-- hl-knowledge: introduces=[PT-LEX-C40-VERBOS1-04]; assesses=[] -->
 
 **chorar** — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chorar** ← Latin *plorare*, "to wail, to weep aloud" (EtymDB 2.1) — inherited. Latin *pl-* at the start of a word became *ch-* in Portuguese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

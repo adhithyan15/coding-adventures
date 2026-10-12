@@ -13,7 +13,8 @@ gloss: "despite"
 concept_tag: PT-PORQUE152-APESAR-DE
 prerequisites: [PT-C152-de-qualquer-maneira, PT-C152-embora]
 sounds: []
-roots: []
+roots: [pensare-latin]
+etymology_hook: "apesar de — 'to the grief of': a + a noun for sorrow, from Latin pensare 'to weigh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C152-embora]
 <!-- hl-knowledge: introduces=[PT-LEX-C152-PORQUE152-04]; assesses=[] -->
 
 **apesar de** — "despite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apesar de** is "to the grief of": built from *a* and a noun for "sorrow, weight" (EtymDB 2.1), which ← Latin *pensare*, "to weigh" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 103,
-  "sourceHash": "fnv1a64:ccab96599dec1583",
+  "sourceHash": "fnv1a64:38b9e8bb2e0c8e8b",
   "lessonIds": [
     "PT-C103-camisola",
     "PT-C103-gravata",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch103.txt",
   "json": "portuguese/narration/ch103.json",
-  "textHash": "fnv1a64:e09f0e87694955f4",
-  "jsonHash": "fnv1a64:7bfb7800a955b260",
+  "textHash": "fnv1a64:b6afd827b5567a42",
+  "jsonHash": "fnv1a64:d8b09e0cfbf06065",
   "findings": []
 }

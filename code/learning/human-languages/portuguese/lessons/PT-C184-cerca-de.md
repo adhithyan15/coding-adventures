@@ -13,7 +13,8 @@ gloss: "about, approximately"
 concept_tag: PT-PORQUE184-CERCA-DE
 prerequisites: [PT-C184-realmente, PT-C184-quase]
 sounds: []
-roots: []
+roots: [circa-latin]
+etymology_hook: "cerca de — 'around': cerca ← Latin circa 'around' — English circa"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C184-quase]
 <!-- hl-knowledge: introduces=[PT-LEX-C184-PORQUE184-05]; assesses=[] -->
 
 **cerca de** — "about, approximately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cerca de** is "around": *cerca* ← Latin *circa*, "around" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

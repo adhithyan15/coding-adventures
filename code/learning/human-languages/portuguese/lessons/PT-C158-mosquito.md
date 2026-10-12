@@ -13,7 +13,8 @@ gloss: "a mosquito"
 concept_tag: PT-COISAS158-MOSQUITO
 prerequisites: [PT-C157-fechadura, PT-C157-campainha]
 sounds: []
-roots: []
+roots: [musca-latin]
+etymology_hook: "mosquito — 'little fly': the fly word (← Latin musca) + -ito"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C157-campainha]
 <!-- hl-knowledge: introduces=[PT-LEX-C158-COISAS158-01]; assesses=[] -->
 
 **o mosquito** — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mosquito** is "little fly": the word for a fly, from Latin *musca* (EtymDB 2.1), with the small-making *-ito*, an ending more at home in Spanish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

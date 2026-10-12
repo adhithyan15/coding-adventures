@@ -257,6 +257,12 @@ and rolls forward the matching style-ratchet correction. The downloadable
 web/native artifact matrix remains unchanged: Static HTML, Web Components, and
 Paint are CI-only, while signing, notarization, and installers remain #13977.
 
+The `task-app-v0.5.4` patch preserves authored fill widths on Qt controls and
+reconciles supported elevation-backed shadows across Compose Desktop and
+SwiftUI. The downloadable web/native artifact matrix remains unchanged: Static
+HTML, Web Components, and Paint are CI-only, while signing, notarization, and
+installers remain #13977.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:

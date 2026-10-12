@@ -14,6 +14,7 @@ concept_tag: PT-LEGUMES-BATATA
 prerequisites: [PT-C45-laranja, PT-C45-uva]
 sounds: []
 roots: []
+etymology_hook: "batata ← Taíno batata 'sweet potato', through Spanish — English potato is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C45-uva]
 <!-- hl-knowledge: introduces=[PT-LEX-C46-LEGUMES-01]; assesses=[] -->
 
 **a batata** — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**batata** ← Taíno *batata*, "sweet potato" (EtymDB 2.1) — borrowed, most likely through Spanish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

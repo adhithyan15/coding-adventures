@@ -881,7 +881,9 @@ where
         );
         let (start_previous, end_previous) = if matches!(edge.curve,
             Some(SwimlaneEdgeCurve::Basis | SwimlaneEdgeCurve::BumpX | SwimlaneEdgeCurve::BumpY
-                | SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY)
+                | SwimlaneEdgeCurve::Cardinal | SwimlaneEdgeCurve::CatmullRom
+                | SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY
+                | SwimlaneEdgeCurve::Natural)
         ) {
             let dx = edge.to.x - edge.from.x;
             let dy = edge.to.y - edge.from.y;
@@ -894,7 +896,9 @@ where
                     let middle = (edge.from.y + edge.to.y) / 2.0;
                     (Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle })
                 }
-                Some(SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY) => (
+                Some(SwimlaneEdgeCurve::Cardinal | SwimlaneEdgeCurve::CatmullRom
+                    | SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY
+                    | SwimlaneEdgeCurve::Natural) => (
                     Point { x: edge.from.x + dx / 3.0, y: edge.from.y + dy / 3.0 },
                     Point { x: edge.from.x + dx * 2.0 / 3.0, y: edge.from.y + dy * 2.0 / 3.0 },
                 ),
@@ -1454,8 +1458,11 @@ where
                 SwimlaneEdgeCurve::Basis => "basis",
                 SwimlaneEdgeCurve::BumpX => "bumpX",
                 SwimlaneEdgeCurve::BumpY => "bumpY",
+                SwimlaneEdgeCurve::Cardinal => "cardinal",
+                SwimlaneEdgeCurve::CatmullRom => "catmullRom",
                 SwimlaneEdgeCurve::MonotoneX => "monotoneX",
                 SwimlaneEdgeCurve::MonotoneY => "monotoneY",
+                SwimlaneEdgeCurve::Natural => "natural",
                 SwimlaneEdgeCurve::Step => "step",
                 SwimlaneEdgeCurve::StepBefore => "stepBefore",
                 SwimlaneEdgeCurve::StepAfter => "stepAfter",

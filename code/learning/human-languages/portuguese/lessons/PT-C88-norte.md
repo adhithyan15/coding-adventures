@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES88-NORTE
 prerequisites: [PT-C87-estacionamento, PT-C88-elevador]
 sounds: []
 roots: []
+etymology_hook: "norte ← French nord, from Old English norþ — English north is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C88-elevador]
 <!-- hl-knowledge: introduces=[PT-LEX-C88-LUGARES88-02]; assesses=[] -->
 
 **o norte** — "the north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**norte** ← French *nord*, "north" (EtymDB 2.1) — borrowed. The French word came from Old English *norþ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

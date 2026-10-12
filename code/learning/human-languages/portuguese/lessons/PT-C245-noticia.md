@@ -13,7 +13,8 @@ gloss: "a piece of news"
 concept_tag: PT-COISAS245-NOTICIA
 prerequisites: [PT-C244-mosca, PT-C245-dialeto]
 sounds: []
-roots: []
+roots: [noscere-latin]
+etymology_hook: "notícia ← Latin notitia 'a being known', from noscere 'to know' — English notice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C245-dialeto]
 <!-- hl-knowledge: introduces=[PT-LEX-C245-COISAS245-02]; assesses=[] -->
 
 **a notícia** — "a piece of news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**notícia** ← Latin *notitia*, "a being known" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

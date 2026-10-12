@@ -13,7 +13,8 @@ gloss: "vinegar"
 concept_tag: PT-COMIDA107-VINAGRE
 prerequisites: [PT-C107-sandes, PT-C107-molho]
 sounds: []
-roots: []
+roots: [vinum-latin]
+etymology_hook: "vinagre ← Catalan vinagre 'sour wine', from Latin vinum + acer — English vinegar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C107-molho]
 <!-- hl-knowledge: introduces=[PT-LEX-C107-COMIDA107-03]; assesses=[] -->
 
 **o vinagre** — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vinagre** ← Catalan *vinagre*, "sour wine" — borrowed, from Latin *vinum*, "wine", and *acer*, "sour". EtymDB 2.1 traces it only to Old Portuguese *vinagre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

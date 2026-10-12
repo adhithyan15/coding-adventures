@@ -13,7 +13,8 @@ gloss: "a problem"
 concept_tag: PT-ESCOLA113-PROBLEMA
 prerequisites: [PT-C113-borracha, PT-C113-trabalhos-de-casa]
 sounds: []
-roots: []
+roots: [problema-latin]
+etymology_hook: "problema ← Latin problema, from Greek problema 'something thrown forward'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C113-trabalhos-de-casa]
 <!-- hl-knowledge: introduces=[PT-LEX-C113-ESCOLA113-05]; assesses=[] -->
 
 **o problema** — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**problema** ← Latin *problema* (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *problēma*, "something thrown forward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

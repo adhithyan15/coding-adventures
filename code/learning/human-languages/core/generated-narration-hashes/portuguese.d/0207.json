@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 207,
-  "sourceHash": "fnv1a64:17986adcb3f74782",
+  "sourceHash": "fnv1a64:a35fb6d48aecd689",
   "lessonIds": [
     "PT-C207-aproximar-se",
     "PT-C207-conversar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch207.txt",
   "json": "portuguese/narration/ch207.json",
-  "textHash": "fnv1a64:6d13f79ac37dcb25",
-  "jsonHash": "fnv1a64:154fb85157a0c7a8",
+  "textHash": "fnv1a64:a0b4f92c4e882bb5",
+  "jsonHash": "fnv1a64:8ce324badfaae31f",
   "findings": []
 }

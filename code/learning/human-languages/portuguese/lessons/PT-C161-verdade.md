@@ -13,7 +13,8 @@ gloss: "the truth"
 concept_tag: PT-COISAS161-VERDADE
 prerequisites: [PT-C161-diferenca, PT-C161-exemplo]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "verdade ← Latin veritas 'truth', from verus 'true' — English verity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C161-exemplo]
 <!-- hl-knowledge: introduces=[PT-LEX-C161-COISAS161-05]; assesses=[] -->
 
 **a verdade** — "the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verdade** ← Latin *veritas, veritatis*, "truth" (EtymDB 2.1), from *verus*, "true" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

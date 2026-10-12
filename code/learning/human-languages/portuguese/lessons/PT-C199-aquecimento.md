@@ -13,7 +13,8 @@ gloss: "heating"
 concept_tag: PT-COISAS199-AQUECIMENTO
 prerequisites: [PT-C199-canela, PT-C199-ementa]
 sounds: []
-roots: []
+roots: [calere-latin]
+etymology_hook: "aquecimento — from the verb to heat (from Latin calescere 'to grow warm') + -mento"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C199-ementa]
 <!-- hl-knowledge: introduces=[PT-LEX-C199-COISAS199-04]; assesses=[] -->
 
 **o aquecimento** — "heating".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aquecimento** is built from the verb "to heat" and *-mento*. That verb goes back to Latin *calescere*, "to grow warm" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "distant"
 concept_tag: PT-QUAL242-DISTANTE
 prerequisites: [PT-C242-escuro-escura, PT-C242-claro-clara]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "distante ← Latin distans 'standing apart' — English distant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C242-claro-clara]
 <!-- hl-knowledge: introduces=[PT-LEX-C242-QUAL242-05]; assesses=[] -->
 
 **distante** — "distant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**distante** ← Latin *distans, distantis*, "standing apart" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

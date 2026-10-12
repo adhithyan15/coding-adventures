@@ -13,7 +13,8 @@ gloss: "the chest"
 concept_tag: PT-CORPO120-PEITO
 prerequisites: [PT-C120-bochecha, PT-C120-labios]
 sounds: []
-roots: []
+roots: [pectus-latin]
+etymology_hook: "peito ← Latin pectus 'breast': -ct- became -it- — English pectoral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C120-labios]
 <!-- hl-knowledge: introduces=[PT-LEX-C120-CORPO120-05]; assesses=[] -->
 
 **o peito** — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peito** ← Latin *pectus*, "breast" (EtymDB 2.1) — inherited. Latin *-ct-* became *-it-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

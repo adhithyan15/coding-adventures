@@ -13,7 +13,8 @@ gloss: "homework"
 concept_tag: PT-ESCOLA113-TRABALHOS-DE-CASA
 prerequisites: [PT-C113-quadro, PT-C113-borracha]
 sounds: []
-roots: []
+roots: [tripalium-latin]
+etymology_hook: "trabalhos de casa — 'works of the house': the work word ← Vulgar Latin *tripalium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C113-borracha]
 <!-- hl-knowledge: introduces=[PT-LEX-C113-ESCOLA113-04]; assesses=[] -->
 
 **os trabalhos de casa** — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trabalhos de casa** is "works of the house". The work word ← Vulgar Latin *\*tripalium*, a three-staked device for torture, and *casa* ← Latin *casa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

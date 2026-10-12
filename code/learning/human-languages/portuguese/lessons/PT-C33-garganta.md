@@ -14,6 +14,7 @@ concept_tag: PT-CORPO4-GARGANTA
 prerequisites: [PT-C33-unha, PT-C33-queixo]
 sounds: []
 roots: []
+etymology_hook: "garganta — built on an imitative root garg-, the throat's own sound; English gargle echoes it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C33-queixo]
 <!-- hl-knowledge: introduces=[PT-LEX-C33-CORPO4-04]; assesses=[] -->
 
 **a garganta** — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**garganta** is built on an imitative root *garg-*, the sound of the throat; English *gargle* comes from the same sound. Its exact formation is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

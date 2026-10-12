@@ -13,7 +13,8 @@ gloss: "a tree"
 concept_tag: PT-NATUREZA1-ARVORE
 prerequisites: [PT-C55-estudar, PT-C55-viajar]
 sounds: []
-roots: []
+roots: [arbor-latin]
+etymology_hook: "árvore ← Latin arbor 'tree' — English arbour and arboretum share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C55-viajar]
 <!-- hl-knowledge: introduces=[PT-LEX-C56-NATUREZA1-01]; assesses=[] -->
 
 **a árvore** — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**árvore** ← Latin *arbor*, "tree" (EtymDB 2.1) — inherited. Old Portuguese said *arvor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

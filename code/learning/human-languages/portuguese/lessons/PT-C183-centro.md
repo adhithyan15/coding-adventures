@@ -13,7 +13,8 @@ gloss: "the centre"
 concept_tag: PT-LUGAR183-CENTRO
 prerequisites: [PT-C182-madrugada, PT-C183-arredores]
 sounds: []
-roots: []
+roots: [centrum-latin]
+etymology_hook: "centro ← Latin centrum, from Greek kentron 'sharp point' — English centre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C183-arredores]
 <!-- hl-knowledge: introduces=[PT-LEX-C183-LUGAR183-02]; assesses=[] -->
 
 **o centro** — "the centre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**centro** ← Latin *centrum*, "centre" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *kentron*, the point of a compass.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-VERB-AGUENTAR
 prerequisites: [PT-C147-sangrar, PT-C147-enganar-se]
 sounds: []
 roots: []
+etymology_hook: "aguentar ← Italian agguantare 'to grip', from guanto 'glove', a Frankish word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C147-enganar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C147-VERBOS147-05]; assesses=[] -->
 
 **aguentar** — "to put up with, to bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aguentar** ← Italian *agguantare*, "to grip" (EtymDB 2.1) — borrowed. The Italian verb is built on *guanto*, "glove", a Frankish word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

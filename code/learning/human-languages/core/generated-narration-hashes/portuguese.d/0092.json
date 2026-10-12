@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 92,
-  "sourceHash": "fnv1a64:127a3f2d18c3bb25",
+  "sourceHash": "fnv1a64:cf3a13afefefdbe1",
   "lessonIds": [
     "PT-C92-mota",
     "PT-C92-navio",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch92.txt",
   "json": "portuguese/narration/ch92.json",
-  "textHash": "fnv1a64:66ceae33f107ed96",
-  "jsonHash": "fnv1a64:de0aac1ada7414a9",
+  "textHash": "fnv1a64:8d754b6c942a2c52",
+  "jsonHash": "fnv1a64:a137e1ca51291dbe",
   "findings": []
 }

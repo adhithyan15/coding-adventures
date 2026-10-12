@@ -13,7 +13,8 @@ gloss: "to pay"
 concept_tag: PT-VERB-PAGAR
 prerequisites: [PT-C79-mil, PT-C79-zero]
 sounds: []
-roots: []
+roots: [pacare-latin]
+etymology_hook: "pagar ← Latin pacare 'to pacify': paying settles a creditor — English pay is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C79-zero]
 <!-- hl-knowledge: introduces=[PT-LEX-C80-VERBOS6-01]; assesses=[] -->
 
 **pagar** — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pagar** ← Latin *pacare*, "to pacify" (EtymDB 2.1) — inherited. Paying a debt pacifies the creditor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

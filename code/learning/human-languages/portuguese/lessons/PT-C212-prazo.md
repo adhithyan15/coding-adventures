@@ -13,7 +13,8 @@ gloss: "a deadline"
 concept_tag: PT-TEMPO212-PRAZO
 prerequisites: [PT-C212-fim, PT-C212-inicio]
 sounds: []
-roots: []
+roots: [placere-latin]
+etymology_hook: "prazo ← Latin placitum 'what is agreed': pl- became pr-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C212-inicio]
 <!-- hl-knowledge: introduces=[PT-LEX-C212-TEMPO212-03]; assesses=[] -->
 
 **o prazo** — "a deadline".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prazo** ← Latin *placitum*, "what is agreed" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *prazo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

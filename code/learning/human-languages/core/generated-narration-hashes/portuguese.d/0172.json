@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 172,
-  "sourceHash": "fnv1a64:aa1f5f7816d17e1c",
+  "sourceHash": "fnv1a64:353a87211af7fbe7",
   "lessonIds": [
     "PT-C172-mover",
     "PT-C172-tirar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch172.txt",
   "json": "portuguese/narration/ch172.json",
-  "textHash": "fnv1a64:85321dc5e0ad2f6b",
-  "jsonHash": "fnv1a64:7fe3984f0f0d1f8a",
+  "textHash": "fnv1a64:7823de019330aafe",
+  "jsonHash": "fnv1a64:16d7879085d222a5",
   "findings": []
 }

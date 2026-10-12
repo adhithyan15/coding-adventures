@@ -13,7 +13,8 @@ gloss: "the back"
 concept_tag: PT-CORPO3-COSTAS
 prerequisites: [PT-C31-ombro, PT-C31-joelho]
 sounds: []
-roots: []
+roots: [costa-latin]
+etymology_hook: "costas ← Latin costa 'rib, side' — English coast and accost share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C31-joelho]
 <!-- hl-knowledge: introduces=[PT-LEX-C32-CORPO3-01]; assesses=[] -->
 
 **as costas** — "the back". Plural in form, like English "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**costas** ← Latin *costa*, "rib, side" (EtymDB 2.1) — inherited. The plural came to name the whole back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

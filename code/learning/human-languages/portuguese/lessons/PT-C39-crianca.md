@@ -13,7 +13,8 @@ gloss: "a child"
 concept_tag: PT-PESSOAS-CRIANCA
 prerequisites: [PT-C38-neto, PT-C38-neta]
 sounds: []
-roots: []
+roots: [creare-latin]
+etymology_hook: "criança — built from the verb 'to raise' (← Latin creare 'to create') + -ança: one being raised"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C38-neta]
 <!-- hl-knowledge: introduces=[PT-LEX-C39-PESSOAS-01]; assesses=[] -->
 
 **a criança** — "a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**criança** was built in Old Portuguese from the verb "to raise, to bring up" and the suffix *-ança*: a child is one being raised (EtymDB 2.1). The verb ← Latin *creare*, "to create" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

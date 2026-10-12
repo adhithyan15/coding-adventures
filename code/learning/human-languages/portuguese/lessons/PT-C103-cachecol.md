@@ -13,7 +13,8 @@ gloss: "a scarf"
 concept_tag: PT-ROUPA103-CACHECOL
 prerequisites: [PT-C103-gravata, PT-C103-luvas]
 sounds: []
-roots: []
+roots: [collum-latin]
+etymology_hook: "cachecol ← French cache-col 'hide-neck': cacher 'to hide' + col 'neck'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C103-luvas]
 <!-- hl-knowledge: introduces=[PT-LEX-C103-ROUPA103-04]; assesses=[] -->
 
 **o cachecol** — "a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cachecol** ← French *cache-col*, "hide-neck" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

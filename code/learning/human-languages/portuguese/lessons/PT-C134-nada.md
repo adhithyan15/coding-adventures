@@ -13,7 +13,8 @@ gloss: "nothing"
 concept_tag: PT-NEG134-NADA
 prerequisites: [PT-C133-contar, PT-C133-caminhar]
 sounds: []
-roots: []
+roots: [nata-latin]
+etymology_hook: "nada ← Latin (res) nata 'a thing born': 'not a thing born' became 'nothing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C133-caminhar]
 <!-- hl-knowledge: introduces=[PT-LEX-C134-NEG134-01]; assesses=[] -->
 
 **nada** — "nothing". With a verb, Portuguese keeps **não** in front as well: **Não vejo nada.** — "I don't see anything." It is the same word as in **de nada**: "it's nothing", so "you're welcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nada** ← Latin *(rem) natam*, "a thing born" — inherited: "not a thing born" became "nothing". EtymDB 2.1 traces it only to Old Portuguese *nada*; it derives Spanish *nada* from *nulla res nata*, "no thing born".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

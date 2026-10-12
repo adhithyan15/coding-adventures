@@ -13,7 +13,8 @@ gloss: "a fence"
 concept_tag: PT-COISAS194-VEDACAO
 prerequisites: [PT-C194-fonte, PT-C194-portao]
 sounds: []
-roots: []
+roots: [vetare-latin]
+etymology_hook: "vedação — from the verb to close off, from Latin vetare 'to forbid' — English veto"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C194-portao]
 <!-- hl-knowledge: introduces=[PT-LEX-C194-COISAS194-05]; assesses=[] -->
 
 **a vedação** — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vedação** is built from the verb "to close off", which ← Latin *vetare*, "to forbid" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

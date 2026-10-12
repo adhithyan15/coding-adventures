@@ -13,7 +13,8 @@ gloss: "dry"
 concept_tag: PT-QUALIDADES125-SECO
 prerequisites: [PT-C125-perigoso, PT-C125-molhado]
 sounds: []
-roots: []
+roots: [siccus-latin]
+etymology_hook: "seco ← Latin siccus 'dry' — English desiccate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C125-molhado]
 <!-- hl-knowledge: introduces=[PT-LEX-C125-QUALIDADES125-05]; assesses=[] -->
 
 **seco** — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seco** ← Latin *siccus*, "dry" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

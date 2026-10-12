@@ -13,7 +13,8 @@ gloss: "the emergency department"
 concept_tag: PT-SAUDE240-URGENCIAS
 prerequisites: [PT-C239-arrumar, PT-C239-notar]
 sounds: []
-roots: []
+roots: [urgere-latin]
+etymology_hook: "urgências — the plural of the emergency word, from Latin urgere 'to press'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C239-notar]
 <!-- hl-knowledge: introduces=[PT-LEX-C240-SAUDE240-01]; assesses=[] -->
 
 **as urgências** — "the emergency department".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urgências** is the plural of the word for an emergency, from Latin *urgere*, "to press, to drive" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

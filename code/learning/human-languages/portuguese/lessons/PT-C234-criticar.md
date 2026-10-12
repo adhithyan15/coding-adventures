@@ -13,7 +13,8 @@ gloss: "to criticise"
 concept_tag: PT-VERB-CRITICAR
 prerequisites: [PT-C234-aconselhar, PT-C234-convencer]
 sounds: []
-roots: []
+roots: [criticus-latin]
+etymology_hook: "criticar — built on the critic word, from Greek kritikos 'able to judge'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C234-convencer]
 <!-- hl-knowledge: introduces=[PT-LEX-C234-VERBOS234-03]; assesses=[] -->
 
 **criticar** — "to criticise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**criticar** is built on the word for a critic, from Latin *criticus*, from Greek *kritikos*, "able to judge" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

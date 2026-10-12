@@ -13,7 +13,8 @@ gloss: "to sign"
 concept_tag: PT-VERB-ASSINAR
 prerequisites: [PT-C232-pesar, PT-C232-verificar]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "assinar ← Latin assignare 'to mark with a sign' — English assign"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C232-verificar]
 <!-- hl-knowledge: introduces=[PT-LEX-C232-VERBOS232-03]; assesses=[] -->
 
 **assinar** — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**assinar** ← Latin *assignare*, "to mark with a sign" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

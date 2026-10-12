@@ -14,6 +14,7 @@ concept_tag: PT-COISAS252-CAMPEONATO
 prerequisites: [PT-C251-seda, PT-C252-derrota]
 sounds: []
 roots: []
+etymology_hook: "campeonato — built from the champion word (from Italian campione) + -ato"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C252-derrota]
 <!-- hl-knowledge: introduces=[PT-LEX-C252-COISAS252-02]; assesses=[] -->
 
 **o campeonato** — "a championship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campeonato** is built from the word for a champion and *-ato* (EtymDB 2.1). The champion word came from Italian *campione* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

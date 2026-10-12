@@ -13,7 +13,8 @@ gloss: "a scar"
 concept_tag: PT-SAUDE180-CICATRIZ
 prerequisites: [PT-C180-polegar, PT-C180-ferida]
 sounds: []
-roots: []
+roots: [cicatrix-latin]
+etymology_hook: "cicatriz ← Latin cicatrix, cicatricis 'scar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C180-ferida]
 <!-- hl-knowledge: introduces=[PT-LEX-C180-SAUDE180-04]; assesses=[] -->
 
 **a cicatriz** — "a scar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cicatriz** ← Latin *cicatrix, cicatricis*, "scar" (EtymDB 2.1) — a learned borrowing from Latin. An inherited word would have softened the *-c-* between vowels.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to laugh"
 concept_tag: PT-VERB-RIR
 prerequisites: [PT-C40-cantar, PT-C40-dancar]
 sounds: []
-roots: []
+roots: [ridere-latin]
+etymology_hook: "rir ← Latin ridere 'to laugh' — English ridiculous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C40-dancar]
 <!-- hl-knowledge: introduces=[PT-LEX-C40-VERBOS1-03]; assesses=[] -->
 
 **rir** — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rir** ← Latin *ridere*, "to laugh" (EtymDB 2.1) — inherited. The *-d-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to believe"
 concept_tag: PT-VERB-ACREDITAR
 prerequisites: [PT-C131-visitar, PT-C131-por]
 sounds: []
-roots: []
+roots: [credere-latin]
+etymology_hook: "acreditar — built on the credit word, from Latin credere 'to believe' — English credit and credo"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C131-por]
 <!-- hl-knowledge: introduces=[PT-LEX-C131-VERBOS131-03]; assesses=[] -->
 
 **acreditar** — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acreditar** is built on the word for credit, which goes back to Latin *creditum*, "a thing entrusted", from *credere*, "to believe" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

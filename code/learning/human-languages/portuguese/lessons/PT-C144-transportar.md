@@ -13,7 +13,8 @@ gloss: "to transport"
 concept_tag: PT-VERB-TRANSPORTAR
 prerequisites: [PT-C144-calar-se, PT-C144-temer]
 sounds: []
-roots: []
+roots: [portare-latin]
+etymology_hook: "transportar ← Latin transportare 'to carry across' — English transport"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C144-temer]
 <!-- hl-knowledge: introduces=[PT-LEX-C144-VERBOS144-03]; assesses=[] -->
 
 **transportar** — "to transport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**transportar** ← Latin *transportare*, "to carry across" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

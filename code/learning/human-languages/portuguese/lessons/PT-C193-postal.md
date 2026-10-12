@@ -13,7 +13,8 @@ gloss: "a postcard"
 concept_tag: PT-COISAS193-POSTAL
 prerequisites: [PT-C192-proibicao, PT-C192-seguranca]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "postal — built from the post word, from Italian posta, from Latin posita 'placed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C192-seguranca]
 <!-- hl-knowledge: introduces=[PT-LEX-C193-COISAS193-01]; assesses=[] -->
 
 **o postal** — "a postcard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**postal** is built from the word for the post, which came from Italian *posta*, from Latin *posita*, "placed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

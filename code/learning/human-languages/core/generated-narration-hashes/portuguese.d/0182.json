@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 182,
-  "sourceHash": "fnv1a64:c42cd7056cf9f15e",
+  "sourceHash": "fnv1a64:db47c3295e54fd5c",
   "lessonIds": [
     "PT-C182-de-repente",
     "PT-C182-ate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch182.txt",
   "json": "portuguese/narration/ch182.json",
-  "textHash": "fnv1a64:2cf8d33cd6278a82",
-  "jsonHash": "fnv1a64:9c95bfe1253709ec",
+  "textHash": "fnv1a64:0c5c8435717c6014",
+  "jsonHash": "fnv1a64:57fb7336b508384f",
   "findings": []
 }

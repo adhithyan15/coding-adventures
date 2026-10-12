@@ -13,7 +13,8 @@ gloss: "to make the most of, to enjoy"
 concept_tag: PT-VERB-APROVEITAR
 prerequisites: [PT-C142-atirar, PT-C142-virar]
 sounds: []
-roots: []
+roots: [proficere-latin]
+etymology_hook: "aproveitar — built on the profit word, from Latin profectus 'progress, gain' — English profit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C142-virar]
 <!-- hl-knowledge: introduces=[PT-LEX-C142-VERBOS142-04]; assesses=[] -->
 
 **aproveitar** — "to make the most of, to enjoy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aproveitar** is built on the word for profit, which goes back to Latin *profectus*, "progress, gain" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

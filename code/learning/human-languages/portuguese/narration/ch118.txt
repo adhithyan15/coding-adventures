@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a wood, then the Portuguese for a don
 You'll want to know: o coelho.
 o coelho — "a rabbit".
 
+The word, taken apart.
+coelho from Latin cuniculus, "rabbit" (EtymDB 2.1) — inherited. The -n- fell out between vowels.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a donkey, then the Portuguese for a r
 
 You'll want to know: o tigre.
 o tigre — "a tiger".
+
+The word, taken apart.
+tigre from Latin tigris, "tiger" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek tigris.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a rabbit, then the Portuguese for a t
 You'll want to know: a borboleta.
 a borboleta — "a butterfly".
 
+The word, taken apart.
+borboleta — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a tiger, then the Portuguese for a bu
 You'll want to know: a rã.
 a rã — "a frog".
 
+The word, taken apart.
+rã from Latin rana, "frog" (EtymDB 2.1) — inherited. The lost -n- left a nasal vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a butterfly, then the Portuguese for 
 
 You'll want to know: a tartaruga.
 a tartaruga — "a tortoise, a turtle".
+
+The word, taken apart.
+tartaruga from Italian tartaruga — borrowed (EtymDB 2.1). Behind it is Late Latin tartarucha, "of Tartarus, of the underworld" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a field; the countryside"
 concept_tag: PT-CEU-CAMPO
 prerequisites: [PT-C57-areia, PT-C57-ilha]
 sounds: []
-roots: []
+roots: [campus-latin]
+etymology_hook: "campo ← Latin campus 'plain, field' — English camp, campus and champion share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C57-ilha]
 <!-- hl-knowledge: introduces=[PT-LEX-C58-CEU-01]; assesses=[] -->
 
 **o campo** — "a field; the countryside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campo** ← Latin *campus*, "plain, field" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "at the bottom, at the back"
 concept_tag: PT-LUGAR151-AO-FUNDO
 prerequisites: [PT-C151-em-cima, PT-C151-em-baixo]
 sounds: []
-roots: []
+roots: [fundus-latin]
+etymology_hook: "ao fundo — 'at the bottom': fundo ← Latin fundus 'bottom' — English foundation"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C151-em-baixo]
 <!-- hl-knowledge: introduces=[PT-LEX-C151-LUGAR151-03]; assesses=[] -->
 
 **ao fundo** — "at the bottom, at the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ao fundo** is "at the bottom": *fundo* ← Latin *fundus*, "bottom, base" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

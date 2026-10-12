@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 225,
-  "sourceHash": "fnv1a64:3b52b4451b7142ff",
+  "sourceHash": "fnv1a64:3d39cd8e8e66abcc",
   "lessonIds": [
     "PT-C225-ambiente",
     "PT-C225-poluicao",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch225.txt",
   "json": "portuguese/narration/ch225.json",
-  "textHash": "fnv1a64:cdd96c15ae4984da",
-  "jsonHash": "fnv1a64:b3fdb0314b2d1d88",
+  "textHash": "fnv1a64:da0227e620fe1d0d",
+  "jsonHash": "fnv1a64:07d0cf3b55e64f20",
   "findings": []
 }

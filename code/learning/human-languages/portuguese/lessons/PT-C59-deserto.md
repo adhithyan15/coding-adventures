@@ -13,7 +13,8 @@ gloss: "a desert"
 concept_tag: PT-TEMPO-DESERTO
 prerequisites: [PT-C59-vento, PT-C59-colina]
 sounds: []
-roots: []
+roots: [deserere-latin]
+etymology_hook: "deserto ← Latin desertus 'abandoned', from deserere 'to forsake' — English desert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C59-colina]
 <!-- hl-knowledge: introduces=[PT-LEX-C59-TEMPO-04]; assesses=[] -->
 
 **o deserto** — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**deserto** ← Latin *desertus*, "abandoned" (EtymDB 2.1), from *deserere*, "to forsake" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

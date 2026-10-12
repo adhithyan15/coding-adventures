@@ -13,7 +13,8 @@ gloss: "to celebrate"
 concept_tag: PT-VERB-CELEBRAR
 prerequisites: [PT-C237-destruir, PT-C237-exagerar]
 sounds: []
-roots: []
+roots: [celeber-latin]
+etymology_hook: "celebrar ← Latin celebrare 'to throng, to honour' — English celebrate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C237-exagerar]
 <!-- hl-knowledge: introduces=[PT-LEX-C237-VERBOS237-03]; assesses=[] -->
 
 **celebrar** — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**celebrar** ← Latin *celebrare*, "to throng, to honour" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

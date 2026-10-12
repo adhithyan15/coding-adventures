@@ -14,6 +14,7 @@ concept_tag: PT-SAUDE210-XAROPE
 prerequisites: [PT-C210-receita, PT-C210-comprimido]
 sounds: []
 roots: []
+etymology_hook: "xarope ← Arabic sharāb 'drink' — English syrup and sherbet are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C210-comprimido]
 <!-- hl-knowledge: introduces=[PT-LEX-C210-SAUDE210-04]; assesses=[] -->
 
 **o xarope** — "a syrup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**xarope** ← Arabic *sharāb*, "drink" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

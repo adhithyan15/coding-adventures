@@ -13,7 +13,8 @@ gloss: "a car park"
 concept_tag: PT-LUGARES87-ESTACIONAMENTO
 prerequisites: [PT-C87-cruzamento, PT-C87-semaforo]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "estacionamento — from the verb to park, built on estação (← Latin statio 'a standing place')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C87-semaforo]
 <!-- hl-knowledge: introduces=[PT-LEX-C87-LUGARES87-05]; assesses=[] -->
 
 **o estacionamento** — "a car park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estacionamento** is built from the verb "to park" and *-mento*. The verb is built on *estação* (← Latin *statio*, "a standing place").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

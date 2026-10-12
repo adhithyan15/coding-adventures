@@ -13,7 +13,8 @@ gloss: "single"
 concept_tag: PT-QUAL187-SOLTEIRO-SOLTEIRA
 prerequisites: [PT-C187-preocupado-preocupada, PT-C187-constipado-constipada]
 sounds: []
-roots: []
+roots: [solus-latin]
+etymology_hook: "solteiro ← Latin solitarius 'alone', from solus — English solitary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C187-constipado-constipada]
 <!-- hl-knowledge: introduces=[PT-LEX-C187-QUAL187-05]; assesses=[] -->
 
 **solteiro / solteira** — "single".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**solteiro** ← Latin *solitarius*, "alone" (EtymDB 2.1), from *solus*, "alone" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

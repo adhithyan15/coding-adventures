@@ -118,6 +118,9 @@ The friendly answer can be identical:
 Tudo bem. — “Everything’s well.”
 Because the question contains no “you” and no verb, it avoids choosing a social register. That simplicity is exactly why it is everywhere.
 
+The phrase, taken apart.
+Tudo bem? is built from tudo, "everything" from Latin totus, "all, whole" (EtymDB 2.1), and bem, "well" from Latin bene, "well" (EtymDB 2.1).
+
 Grammar Lens: Add the listener only when useful.
 To bounce the question back, say:
 Tudo bem, e você? — “All well, and you?”

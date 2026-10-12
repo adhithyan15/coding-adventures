@@ -14,6 +14,7 @@ concept_tag: PT-CORPO2-PESCOCO
 prerequisites: [PT-C31-lingua, PT-C31-nariz]
 sounds: []
 roots: []
+etymology_hook: "pescoço — origin uncertain; Spanish pescuezo 'neck' is its close cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C31-nariz]
 <!-- hl-knowledge: introduces=[PT-LEX-C31-CORPO2-03]; assesses=[] -->
 
 **o pescoço** — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pescoço** — its origin is uncertain. Spanish *pescuezo*, "neck", is its close cousin, and where the pair came from is disputed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

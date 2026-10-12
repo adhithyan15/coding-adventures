@@ -13,7 +13,8 @@ gloss: "a foreigner; abroad"
 concept_tag: PT-COISAS160-ESTRANGEIRO
 prerequisites: [PT-C160-cientista, PT-C160-investigador]
 sounds: []
-roots: []
+roots: [extraneus-latin]
+etymology_hook: "estrangeiro ← Old French estrangier, from Latin extraneus 'from outside'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C160-investigador]
 <!-- hl-knowledge: introduces=[PT-LEX-C160-COISAS160-04]; assesses=[] -->
 
 **o estrangeiro** — "a foreigner; abroad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estrangeiro** ← Old French *estrangier*, "foreigner" (EtymDB 2.1) — borrowed. Behind it is Latin *extraneus*, "from outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

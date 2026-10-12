@@ -13,7 +13,8 @@ gloss: "a rainbow"
 concept_tag: PT-COISAS102-ARCO-IRIS
 prerequisites: [PT-C102-pessoas, PT-C102-rapaz]
 sounds: []
-roots: []
+roots: [arcus-latin]
+etymology_hook: "arco-íris = arco 'arch, bow' (← Latin arcus) + íris 'rainbow' (← Greek iris)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C102-rapaz]
 <!-- hl-knowledge: introduces=[PT-LEX-C102-COISAS102-05]; assesses=[] -->
 
 **o arco-íris** — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arco-íris** is built from *arco*, "bow, arch" ← Latin *arcus* (EtymDB 2.1), and *íris*, "rainbow" ← Latin *iris*, from Greek *iris* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

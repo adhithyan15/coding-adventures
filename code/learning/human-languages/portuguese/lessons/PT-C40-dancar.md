@@ -14,6 +14,7 @@ concept_tag: PT-VERB-DANCAR
 prerequisites: [PT-C39-menina, PT-C40-cantar]
 sounds: []
 roots: []
+etymology_hook: "dançar ← Old French dancier 'to dance' — borrowed; English dance is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C40-cantar]
 <!-- hl-knowledge: introduces=[PT-LEX-C40-VERBOS1-02]; assesses=[] -->
 
 **dançar** — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dançar** ← Old French *dancier*, "to dance" — borrowed. EtymDB 2.1 traces the French verb to Frankish, a Germanic language. English *dance* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

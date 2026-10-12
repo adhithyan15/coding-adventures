@@ -13,7 +13,8 @@ gloss: "to book"
 concept_tag: PT-VERB-RESERVAR
 prerequisites: [PT-C200-revista, PT-C200-dicionario]
 sounds: []
-roots: []
+roots: [servare-latin]
+etymology_hook: "reservar ← Latin reservare 'to keep back' — English reserve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C200-dicionario]
 <!-- hl-knowledge: introduces=[PT-LEX-C201-VERBOS201-01]; assesses=[] -->
 
 **reservar** — "to book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reservar** ← Latin *reservare*, "to keep back" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

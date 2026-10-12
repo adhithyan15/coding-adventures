@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 201,
-  "sourceHash": "fnv1a64:98581e7c304bb70a",
+  "sourceHash": "fnv1a64:84724b2eac16abd3",
   "lessonIds": [
     "PT-C201-reservar",
     "PT-C201-gastar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch201.txt",
   "json": "portuguese/narration/ch201.json",
-  "textHash": "fnv1a64:b822c786d5aa6278",
-  "jsonHash": "fnv1a64:bed942fa68b6f09b",
+  "textHash": "fnv1a64:026f62963c3e2527",
+  "jsonHash": "fnv1a64:da44c451f0e45022",
   "findings": []
 }

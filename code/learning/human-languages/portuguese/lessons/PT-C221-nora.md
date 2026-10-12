@@ -13,7 +13,8 @@ gloss: "a daughter-in-law"
 concept_tag: PT-COISAS221-NORA
 prerequisites: [PT-C220-talhante, PT-C221-genro]
 sounds: []
-roots: []
+roots: [nurus-latin]
+etymology_hook: "nora ← Latin nurus 'daughter-in-law', through Vulgar Latin *nora"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C221-genro]
 <!-- hl-knowledge: introduces=[PT-LEX-C221-COISAS221-02]; assesses=[] -->
 
 **a nora** — "a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nora** ← Latin *nurus*, "daughter-in-law" (EtymDB 2.1), through Vulgar Latin *\*nora* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
