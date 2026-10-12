@@ -5,6 +5,13 @@ and geometric diagrams into a `PaintScene` for rendering by `paint-metal` and ot
 backends. Text rendering is **delegated to `layout-to-paint`**
 so every paint backend receives real glyph IDs from the TXT00 shaping pipeline.
 
+Swimlane cubic and Step endpoint markers use the first distinct control or
+waypoint in endpoint-relative order. Aligned Bump/Step routes retain visible
+directed triangles without changing their authored curve commands or metadata.
+Authored parser/layout/paint geometry tests run on every platform, checking
+exact triangle vertices, area and curve commands. Entirely coincident routes
+keep their existing directionless marker behavior.
+
 ## Usage
 
 ```rust

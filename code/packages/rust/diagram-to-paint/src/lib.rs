@@ -910,7 +910,10 @@ where
                     x: edge.to.x, y: edge.to.y,
                 },
             ];
-            (first, second)
+            (
+                swimlane_marker_reference(&edge.from, [&first, &second], &edge.to),
+                swimlane_marker_reference(&edge.to, [&second, &first], &edge.from),
+            )
         } else if matches!(edge.curve,
             Some(SwimlaneEdgeCurve::Step | SwimlaneEdgeCurve::StepBefore | SwimlaneEdgeCurve::StepAfter)
         ) {
@@ -935,7 +938,10 @@ where
             path.commands = vec![PathCommand::MoveTo { x: edge.from.x, y: edge.from.y }];
             path.commands.extend(intermediates.iter().map(|point| PathCommand::LineTo { x: point.x, y: point.y }));
             path.commands.push(PathCommand::LineTo { x: edge.to.x, y: edge.to.y });
-            (intermediates[0].clone(), intermediates[intermediates.len() - 1].clone())
+            (
+                swimlane_marker_reference(&edge.from, intermediates.iter(), &edge.to),
+                swimlane_marker_reference(&edge.to, intermediates.iter().rev(), &edge.from),
+            )
         } else {
             (edge.to.clone(), edge.from.clone())
         };
@@ -8635,6 +8641,19 @@ where
     }
 }
 
+/// Coincident controls have a zero first derivative. The next distinct control
+/// supplies the limiting endpoint direction; a step route similarly skips its
+/// zero-length first/last leg. Callers supply at most two points in route order.
+/// Entirely coincident routes retain their existing directionless behavior.
+fn swimlane_marker_reference<'a>(
+    tip: &Point,
+    candidates: impl IntoIterator<Item = &'a Point>,
+    opposite: &Point,
+) -> Point {
+    candidates.into_iter().find(|point| point.x != tip.x || point.y != tip.y)
+        .unwrap_or(opposite).clone()
+}
+
 fn simple_arrowhead(prev: &Point, tip: &Point, stroke: &str) -> PaintPath {
     let dx = tip.x - prev.x;
     let dy = tip.y - prev.y;
@@ -8887,6 +8906,24 @@ mod tests {
             ("TB", "basis"), ("LR", "linear"), ("TB", "linear")] {
             assert_aligned_swimlane_markers(direction, curve);
         }
+    }
+
+    #[test]
+    fn marker_reference_preserves_control_order_and_zero_length_routes() {
+        let tip = Point { x: 3.0, y: 4.0 };
+        let first = Point { x: 6.0, y: 4.0 };
+        let second = Point { x: 6.0, y: 9.0 };
+        let opposite = Point { x: 12.0, y: 14.0 };
+        assert_eq!(swimlane_marker_reference(&tip, [&first, &second], &opposite), first);
+        assert_eq!(swimlane_marker_reference(&tip, [&tip, &second], &opposite), second);
+        assert_eq!(swimlane_marker_reference(&tip, [&tip, &tip], &opposite), opposite);
+        let reference = swimlane_marker_reference(&tip, [&tip, &tip], &tip);
+        assert_eq!(reference, tip);
+        assert_eq!(simple_arrowhead(&reference, &tip, "#455a64").commands, vec![
+            PathCommand::MoveTo { x: 3.0, y: 4.0 },
+            PathCommand::LineTo { x: 3.0, y: 4.0 },
+            PathCommand::LineTo { x: 3.0, y: 4.0 }, PathCommand::Close,
+        ]);
     }
 
     fn default_style() -> ResolvedDiagramStyle {
