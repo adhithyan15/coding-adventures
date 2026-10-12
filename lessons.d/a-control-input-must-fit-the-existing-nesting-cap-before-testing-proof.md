@@ -18,3 +18,11 @@ after an assignment. Actual7a validation passed the unchanged compatibility
 control, then rejected the malformed fixture at1:89. Keep that1-pass/1-fail
 partial receipt and move declarations before statements; do not mistake the
 parser error for the intended formatter-proof refusal or alter the grammar.
+
+Actualfa2 subsequently passed929 compiler/shared tests across16 targets, strict
+four-package lint, four new native controls and document reconstruction, then
+lesson validation rejected two filenames beyond the title-slug truncation.
+Keep that incomplete whole-run receipt and rename only the two lesson files to
+their actual validator-derived slugs. Complete runtime/config/spec objects must
+match before retaining native results in a docs-only continuation; finish the
+remaining unchanged production/native commands at their real execution head.
