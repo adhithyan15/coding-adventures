@@ -4417,8 +4417,8 @@ impl Compiler {
                 self.builtin_quadruple_exp_nonpositive_sign_operand(then_node)?;
             let else_operand =
                 self.builtin_quadruple_exp_nonpositive_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4723,6 +4723,23 @@ impl Compiler {
         }
         let children = direct_nodes(node);
         children.len() == 1 && self.is_selector_call_safe_runtime_real_value(children[0])
+    }
+
+    fn is_selector_call_safe_runtime_real_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_runtime_real_value(node) {
+            return true;
+        }
+        let Some(source_name) = exact_bare_variable_expression_name(node) else {
+            return false;
+        };
+        if self.active_by_name_binding(&source_name).is_some() {
+            return false;
+        }
+        self.require_var(&source_name).is_ok_and(|binding| {
+            binding.ty == ScalarType::Real
+                && !binding.is_global
+                && self.runtime_real_slots.contains(&binding.slot)
+        })
     }
 
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
@@ -15049,6 +15066,38 @@ mod tests {
                         == Some("__basic_print_real")
             }));
         }
+    }
+
+    #[test]
+    fn al4_sqrt_wraps_conditional_nonpositive_quadruple_exp_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves a branch-total conditional of nonpositive quadruple exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_local_runtime_real_result_widening_rejects_shared_roots() {
+        let source = "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right, x; procedure capture; right := 0.0; left := pick(); right := pick(); x := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end";
+        let err = compile_source(source, "test").expect_err(
+            "a captured local is shared storage and cannot root a selector-call-safe conditional proof",
+        );
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "failed with an unexpected diagnostic: {err:?}"
+        );
     }
 
     #[test]
