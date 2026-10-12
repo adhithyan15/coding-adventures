@@ -2,6 +2,39 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 Bump integration -->
+CV04a Bump integration (October12): native main `cecfb5db3923e8ca2795e5ba070f4e9e66ca013d` (#17369),
+parent19d7a79d, adds BumpX/BumpY aliases, semantic/layout propagation, midpoint
+cubic tangents and exact scene metadata. Spec893d9a2af5 precedes conflict-free
+isolated actual `24dc1b645628203a43eeff5f9748f27fe0ab0cdc`. Exact upstream imports only; no own implementation,
+dependency, unsafe addition or assertion/resource/grammar-limit weakening.
+All nine original work/context/order controls and prior Linear/Basis/Step,
+animation/class/style and duplicate-gap fixtures remain. Actual full14package
+diagram cone passes **754tests/docs/32targets/0fail0ignore**, focused9 repeats
+excluded; strict14 all-target warnings/unknown-lints denial, doc reconstruction,
+1079lesson shards and candidate-relative whitespace PASS. Actual session95586
+EXIT0/complete6rows; no general UI/device/deployment acceptance inferred.
+
+Complete compiler/LANG/CV/program/script/CI object proof preserves actual48
+bare-root1248/118/0fail/1existingignore, compiler933/16/strict4, all11production/
+42native acceptance and its independent final9f source review. Every other Rust
+entry remains unchanged except four exact upstream diagram packages. Old
+native20/Compose evidence remains source-attributed, never relabeled. Initial
+promisor-diff failure, successful retry and all older rejected receipts stay.
+All83candidate payload objects are audited; only exact upstream Mermaid/DGspec
+overlaps change, plus new Bump specification/currentbacklog. Final backlog-only
+proof and exact-final independent security precede guarded samePR17288 update.
+Latest Italian-only content/test/lesson extension requires separate protected
+object/payload/lesson identity; no new content/TS/assessment or added-lesson
+execution claim from source equivalence. Fresh exact-head terminal acceptable
+checks, clean review/conflict state/three whole native jobs/real Closurec rows,
+then actual fetched-main/fullpayload proof precede cleanup/CV04b. Auto-mergeOFF.
+Full final-source Miri **DEFERRED/PENDING**, neverpassed; frozenrun/checkout/
+497inputs/receipts/target untouched without polling/termination/duplicate run.
+FullClosure parity/outputjoins/alltransformationlineage/CV04b/fullgoal OPEN;
+baseESTree/own types/no new crates.io dependencies retained.
+<!-- /CV04 Bump integration -->
+
 <!-- CV04 bare selector integration -->
 CV04a bare selector-root integration (October12): published415 and its
 accepted native13/current79 frames precede main `19d7a79da259f365e7fb808719bbfbf516c1ab77` (#17364), which
@@ -149,7 +182,7 @@ CV04b/full parity/source-output/full transformation lineage remain OPEN.
 **Current selection:** CV04a exact lexical source intervals and bounded
 shared-consumer/native reconciliation, sole PR #17288. CV04b ingestion/wire
 contract and full Closure parity/source-output/transformation lineage remain open.
-**Current audit base:** `19d7a79da259f365e7fb808719bbfbf516c1ab77`
+**Current audit base:** `cecfb5db3923e8ca2795e5ba070f4e9e66ca013d`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
