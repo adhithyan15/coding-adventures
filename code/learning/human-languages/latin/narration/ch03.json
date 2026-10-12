@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d65f76b1c950745c",
+  "sourceHash": "fnv1a64:49479ee8a97f0e39",
   "lessons": [
     {
       "id": "LA-C03-quaeso",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:544b9c4ef6c34cbe",
+      "sourceHash": "fnv1a64:df154fe3da971076",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "It's a worn-down cousin of the verb quaerere, \"to seek, to ask\" — the same root English took for query, quest, question, require and inquire. So quaesō is, at heart, \"I'm seeking [this] of you.\""
+              "text": "It's a worn-down cousin of Latin's everyday verb for \"to seek, to ask\" (a later chapter teaches it) — the same root English took for query, quest, question, require and inquire. So quaesō is, at heart, \"I'm seeking [this] of you.\""
             }
           ]
         },
@@ -130,7 +130,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did Romans literally say instead of \"please\"? (quaesō — \"I ask/beg.\") What verb is it from, and which English words share that root? (quaerere \"to seek\" — query, quest, require.) What does sīs stand for? (sī vīs, \"if you wish\" — the same idea French uses in s'il te plaît.)"
+              "text": "What did Romans literally say instead of \"please\"? (quaesō — \"I ask/beg.\") What verb is it from, and which English words share that root? (The verb \"to seek, to ask\" — query, quest, require.) What does sīs stand for? (sī vīs, \"if you wish\" — the same idea French uses in s'il te plaît.)"
             }
           ]
         }

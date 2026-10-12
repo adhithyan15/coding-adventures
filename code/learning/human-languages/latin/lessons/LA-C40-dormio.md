@@ -11,7 +11,7 @@ concept_tag: VERB-SLEEP
 prerequisites: [LA-C40-audio]
 sounds: [macron-long-vowel, macron-none-short-vowel]
 roots: [dormire-latin]
-etymology_hook: "dormīre ('to sleep') is from PIE *drem-, the root behind Sanskrit and Greek sleep-words, and gives dormitory, dorm, dormant and dormer; the unrelated noun somnus supplies insomnia, somnolent and soporific, while dormouse only looks like a member of the family and is not securely one"
+etymology_hook: "dormīre ('to sleep') is from PIE *drem-, the root behind Sanskrit and Greek sleep-words, and gives dormitory, dorm, dormant and dormer; the unrelated noun somnus supplies insomnia and somnolent (its cousin sopor gives soporific), while dormouse only looks like a member of the family and is not securely one"
 duration:
   max_seconds: 285
 requires:
@@ -76,11 +76,9 @@ to come from, and the *-mouse* half may simply be English speakers making
 sense of a syllable they did not recognise. A hook you have to defend is
 not a hook.
 
-Latin's other word for sleep is the noun **somnus**, from a different root
-entirely, and English took plenty from that too: **insomnia** ("no sleep"),
-**somnolent**, and **soporific**. So the two Latin sleep-words divided the
-English vocabulary between them: the verb gave the rooms you sleep in, the
-noun gave the sleep itself.
+Latin's other word for sleep is a noun from a different root: English took
+**insomnia** ("no sleep") and **somnolent** from it, and **soporific** from its
+cousin *sopor*. The verb gave the rooms you sleep in; the noun gave the sleep.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-AUDIO-01, LA-LEX-VIDEO-01, LA-LEX-DORMIO-01, LA-ETYMON-DORMIO-02] -->
@@ -99,5 +97,5 @@ noun gave the sleep itself.
 (**Dormiunt**.) Which conjugation, and which other verb shares it here?
 (**The fourth** — with **audiō**.) Why is **dormouse** not a safe example?
 (**Because the connection is not secure** — the English word is older than
-the French one it supposedly comes from.) Which Latin noun gives **insomnia**,
-and which verb means "I see"? (**Somnus**, and **videō**.)
+the French one it supposedly comes from.) What does **insomnia**
+literally mean? (**No sleep**.) Which verb means "I see"? (**Videō**.)

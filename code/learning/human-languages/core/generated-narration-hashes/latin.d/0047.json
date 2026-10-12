@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 47,
-  "sourceHash": "fnv1a64:3bd3e9bce8caabec",
+  "sourceHash": "fnv1a64:80f801fd3f3c2f9f",
   "lessonIds": [
     "LA-C47-sal",
     "LA-C47-mel",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "latin/narration/ch47.txt",
   "json": "latin/narration/ch47.json",
-  "textHash": "fnv1a64:a38e5ac53ebb30a8",
-  "jsonHash": "fnv1a64:ec59217554b6ea1d",
+  "textHash": "fnv1a64:9da49906423d0d5f",
+  "jsonHash": "fnv1a64:8b497d6bafb1df9c",
   "findings": []
 }

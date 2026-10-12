@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 26,
-  "sourceHash": "fnv1a64:7a094870661d841d",
+  "sourceHash": "fnv1a64:07d728b1bc02c892",
   "lessonIds": [
     "LA-C26-quomodo"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch26.txt",
   "json": "latin/narration/ch26.json",
-  "textHash": "fnv1a64:1fe244e6dba970dd",
-  "jsonHash": "fnv1a64:3ab6756f0b7cc584",
+  "textHash": "fnv1a64:4e53b72f4aa84bb4",
+  "jsonHash": "fnv1a64:904649dff3652054",
   "findings": []
 }

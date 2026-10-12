@@ -36,9 +36,9 @@ reviews_of: [LA-C12-medius-dies-nox]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02] -->
 
-[PAUSE 2s] You already met **nōna hōra**, "the ninth hour," in an earlier lesson —
-now meet the word itself, and an honest surprise about what a Roman "hour"
-actually was.
+[PAUSE 2s] The last lesson traced English *noon* to a Latin phrase, "the ninth
+hour" — now meet its word for "hour" itself, and an honest surprise about what a
+Roman "hour" actually was.
 
 ## You'll want to know: hōra ← Greek hṓrā
 <!-- hl-knowledge: introduces=[LA-LEX-HORA-01]; assesses=[] -->
@@ -51,15 +51,15 @@ one twelfth of the day.
 ## Why it's said this way: Be honest: a Roman hōra was NOT a fixed length
 <!-- hl-knowledge: introduces=[LA-PRAGMATICS-HORA-02]; assesses=[] -->
 
-Here's the part that trips people up: the Romans divided **daylight** — sunrise to
-sunset — into **12 equal hōrae**, and **night** into another 12. But since daylight
-itself is longer in summer and shorter in winter, **each hōra stretched or shrank
-with the seasons**: a summer daytime hōra in Rome could run close to 75 modern
-minutes, a winter one closer to 45. Only at the two equinoxes did an hōra land
-close to today's fixed 60 minutes. This is exactly why **nōna hōra** ("the ninth
-hour," counted from sunrise) landed around 3 p.m. at the equinox but could shift
-earlier or later depending on the season — and why it drifted, over centuries, into
-the fixed clock-time we call "noon."
+Here's the part that trips people up: the Romans divided **daylight** — sunrise
+to sunset — into **12 equal hōrae**, and **night** into another 12. But since
+daylight itself is longer in summer and shorter in winter, **each hōra stretched
+or shrank with the seasons**: a summer daytime hōra in Rome could run close to
+75 modern minutes, a winter one closer to 45. Only at the two equinoxes did an
+hōra land close to today's fixed 60 minutes. This is exactly why the ninth
+**hōra** (counted from sunrise) landed around 3 p.m. at the equinox but could
+shift earlier or later depending on the season — and why it drifted, over
+centuries, into the fixed clock-time we call "noon."
 
 ## The word, taken apart: The one Latin word, four different fates
 <!-- hl-knowledge: introduces=[LA-ETYMON-HORA-03]; assesses=[] -->

@@ -178,7 +178,7 @@ Six recalls before the new word, at growing distances. They are not decoration: 
 The word, taken apart.
 ibi — "there."
 Every demonstrative in this chapter has an adverb beside it, and this is the pair that matters most: hīc ("here") and ibi ("there").
-Liber hīc est. Amīcus ibi est. — The book is here. The friend is there.
+Canis hīc est. Fēlēs ibi est. — The dog is here. The cat is there.
 Note the macron. The pronoun is hic, short; the adverb "here" is hīc, long. Same four letters, different words, and only the vowel length tells them apart — which is the whole argument for writing macrons, made once more.
 Ibi survives into Italian ivi and, worn down almost to nothing, into the French y of il y a — "there is." A single letter of modern French is this Latin word.
 
@@ -191,4 +191,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the book is here" and "the friend is there." (Liber hīc est. Amīcus ibi est.) What separates the pronoun hic from the adverb hīc? (Vowel length — the macron.)
+Say "the dog is here" and "the cat is there." (Canis hīc est. Fēlēs ibi est.) What separates the pronoun hic from the adverb hīc? (Vowel length — the macron.)

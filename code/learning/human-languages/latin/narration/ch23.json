@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "You're Welcome",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f4ea2a1f68282166",
+  "sourceHash": "fnv1a64:b2cbd1f8c909ee6f",
   "lessons": [
     {
       "id": "LA-C23-nihil-est",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dbbf1f5b3ea3d04",
+      "sourceHash": "fnv1a64:200b01c3f412f712",
       "notice": null,
       "blocks": [
         {
@@ -72,7 +72,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the careful part: nihil and est are both thoroughly classical, and nihil est itself appears in real Latin texts — but always meaning things like \"there's nothing to it\" (\"nihil est, nūgae\", \"nothing, trifles,\" Plautus's Bacchidēs) or \"that's nothing\" (\"istuc quidem [edepol] nihil est\", Plautus's Mīles Glōriōsus), never specifically attested as a reply to thanks. No surviving Roman text shows someone answering grātiās agō with nihil est. Treat it the way you already treated quōmodo tē habēs?: real Latin words, put to a genuinely useful modern job, but not a citation from a Roman play."
+              "text": "Here's the careful part: nihil and est are both thoroughly classical, and nihil est itself appears in real Latin texts — but always meaning things like \"there's nothing to it\" (\"nihil est, nūgae\", \"nothing, trifles,\" Plautus's Bacchidēs) or \"that's nothing\" (\"istuc quidem [edepol] nihil est\", Plautus's The Braggart Soldier), never specifically attested as a reply to thanks. No surviving Roman text shows someone answering grātiās agō with nihil est. Treat it the way you already treated the modern \"how are you?\" of spoken-Latin courses: real Latin words, put to a genuinely useful modern job, but not a citation from a Roman play."
             }
           ]
         },

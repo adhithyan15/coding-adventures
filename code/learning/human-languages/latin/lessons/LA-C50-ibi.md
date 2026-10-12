@@ -54,7 +54,7 @@ a word far enough back that saying it is work.
 Every demonstrative in this chapter has an adverb beside it, and this is the pair
 that matters most: **hīc** ("here") and **ibi** ("there").
 
-> **Liber hīc est. Amīcus ibi est.** — The book is here. The friend is there.
+> **Canis hīc est. Fēlēs ibi est.** — The dog is here. The cat is there.
 
 Note the macron. The pronoun is **hic**, short; the adverb "here" is **hīc**, long.
 Same four letters, different words, and only the vowel length tells them apart —
@@ -74,4 +74,4 @@ word.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C50-POINT-01, LA-LEX-C50-POINT-02, LA-LEX-C50-POINT-03, LA-LEX-C50-POINT-04, LA-LEX-C50-POINT-05] -->
 
-[PAUSE 3s] Say "the book is here" and "the friend is there." (***Liber hīc est. Amīcus ibi est***.) What separates the pronoun *hic* from the adverb *hīc*? (**Vowel length** — the macron.)
+[PAUSE 3s] Say "the dog is here" and "the cat is there." (***Canis hīc est. Fēlēs ibi est***.) What separates the pronoun *hic* from the adverb *hīc*? (**Vowel length** — the macron.)

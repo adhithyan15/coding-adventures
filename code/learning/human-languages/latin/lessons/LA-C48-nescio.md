@@ -51,7 +51,7 @@ a word far enough back that saying it is work.
 
 **nesciō** — "**I do not know**."
 
-Take it apart. It is **nē-** ("not") welded onto **sciō**, the verb the
+Take it apart. It is **ne-** ("not") welded onto **sciō**, the verb the
 eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: *nesciō* is one
 word, and it is the word a Roman actually said.
 
@@ -81,7 +81,7 @@ State it once, plainly, because everything else in this tranche leans on it.
 - **nōn valeō** — I am not well.
 - **nōn intellegō** — I do not understand.
 - **nōn sciō** — I do not know (and **nesciō** is the word a Roman preferred).
-- **nōn possum** — I cannot. (The next chapter's verb, negated with this rule.)
+- **nōn audiō** — I do not hear.
 
 Nothing else changes. Latin does not add an auxiliary, does not move the verb and
 does not have a second negative word to pair it with. One word, in front.
@@ -96,4 +96,4 @@ does not have a second negative word to pair it with. One word, in front.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C48-DENY-01, LA-GRAMMAR-C48-NON-VERB-01] -->
 
-[PAUSE 3s] How does Latin negate an ordinary verb? (**nōn** immediately before it.) Say "I do not understand." (***Nōn intellegō***.) And what two words are inside *nesciō*? (***Nē-*** and ***sciō***.)
+[PAUSE 3s] How does Latin negate an ordinary verb? (**nōn** immediately before it.) Say "I do not understand." (***Nōn intellegō***.) And what two words are inside *nesciō*? (***Ne-*** and ***sciō***.)

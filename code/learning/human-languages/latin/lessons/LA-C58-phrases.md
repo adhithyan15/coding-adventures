@@ -45,7 +45,7 @@ reviews_of: [LA-C58-labels, LA-C53-iterum, LA-C52-meus]
 
 > Salvē!
 > Valē!
-> Nōmen meum est Marcus.
+> Magister meus bonus est.
 > Ego sum discipulus.
 > Iterum!
 > Bonus est.

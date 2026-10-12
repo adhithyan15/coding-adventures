@@ -636,7 +636,15 @@ const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
   // KA-S114 finds ◌ೊ in ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (KA-C06's headword, two lessons
   // earlier; KA-C32-gottu unpacks it), and KA-R175 recalls ಗೊರಕೆ ಹೊಡೆ (KA-C167).
   kannada: 2,
-  latin: 73,
+  // Every Latin hit is a phrase the track teaches whole, used before a late
+  // vocabulary lesson gives one of its words a headword of its own: grātiās
+  // (tibi) agō (LA-C01-gratias; five uses of agō), quid tibi nōmen est? / mihi
+  // nōmen est and puerō nōmen est (LA-C20; nine of nōmen), medius diēs, media
+  // nox (LA-C12; five of medius/media), nihil est (LA-C23; four of nihil), ante
+  // and post merīdiem (LA-C35) with salvē (post merīdiem) (LA-C36; four of
+  // ante/post), and the weekday phrases diēs Lūnae… (LA-C05; one each of diēs
+  // and lūnae).
+  latin: 29,
   malayalam: 0,
   // Chapter 1's script ladder writes हो and नाही (MR-W01-o-matra, MR-W01-ii-matra)
   // before chapter 4's word lessons, and chapter 1 is at its twelve-atom ceiling;
