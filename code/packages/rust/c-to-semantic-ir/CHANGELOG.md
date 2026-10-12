@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C octal integer stringize
+
+- Admit one unsuffixed raw `0[0-7]+` integer at `#`, preserving every leading
+  zero without numeric conversion. Keep named `INT_LIT` handling, existing
+  decimal/hex/identifier behavior and the separate octal condition refusal.
+- Retain generic precharge, raw/plain argument use and forwarded provenance.
+  Reject 8/9 after a leading zero, suffixes, floats, binary forms, signs,
+  multi-token arguments and quoted literals. General stringize/paste remain open.
+- Cover acceptance/refusal, exact/cumulative/default byte boundaries and rooted
+  native C/emitted C/emitted Ruby byte conformance through a real local header.
+
 ## Unreleased — PREP01 bounded C hexadecimal integer stringize
 
 - Admit one unsuffixed raw hexadecimal integer at `#`, preserving prefix/digit
