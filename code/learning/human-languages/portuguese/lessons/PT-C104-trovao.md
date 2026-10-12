@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA104-TROVAO
 prerequisites: [PT-C104-fato, PT-C104-tubarao]
 sounds: []
 roots: []
+etymology_hook: "trovão — origin disputed: Latin turbo 'whirlwind' or tonitrus 'thunder'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C104-tubarao]
 <!-- hl-knowledge: introduces=[PT-LEX-C104-ROUPA104-04]; assesses=[] -->
 
 **o trovão** — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trovão** — its origin is disputed. One account traces it to Latin *turbo*, "whirlwind"; another to *tonitrus*, "thunder". EtymDB 2.1 has no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

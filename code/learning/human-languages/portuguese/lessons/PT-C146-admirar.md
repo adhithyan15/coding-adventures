@@ -13,7 +13,8 @@ gloss: "to admire"
 concept_tag: PT-VERB-ADMIRAR
 prerequisites: [PT-C146-votar, PT-C146-acolher]
 sounds: []
-roots: []
+roots: [mirari]
+etymology_hook: "admirar ← Latin admirari 'to wonder at' — English admire and miracle share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C146-acolher]
 <!-- hl-knowledge: introduces=[PT-LEX-C146-VERBOS146-05]; assesses=[] -->
 
 **admirar** — "to admire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**admirar** ← Latin *admirari*, "to wonder at" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

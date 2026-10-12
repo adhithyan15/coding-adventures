@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA103-LUVAS
 prerequisites: [PT-C103-camisola, PT-C103-gravata]
 sounds: []
 roots: []
+etymology_hook: "luvas — the glove word ← Gothic lofa 'palm of the hand' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C103-gravata]
 <!-- hl-knowledge: introduces=[PT-LEX-C103-ROUPA103-03]; assesses=[] -->
 
 **as luvas** — "gloves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**luvas** ← Gothic *lofa*, "palm of the hand" (EtymDB 2.1) — borrowed. *luvas* is the plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

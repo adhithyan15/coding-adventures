@@ -14,6 +14,7 @@ concept_tag: PT-CASA95-TOALHA
 prerequisites: [PT-C94-cortina, PT-C94-cobertor]
 sounds: []
 roots: []
+etymology_hook: "toalha ← Old Provençal toalha, from Frankish — English towel is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C94-cobertor]
 <!-- hl-knowledge: introduces=[PT-LEX-C95-CASA95-01]; assesses=[] -->
 
 **a toalha** — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**toalha** ← Old Provençal *toalha*, "cloth" (EtymDB 2.1) — borrowed. The Provençal word is Frankish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

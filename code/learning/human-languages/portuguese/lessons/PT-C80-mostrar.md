@@ -13,7 +13,8 @@ gloss: "to show"
 concept_tag: PT-VERB-MOSTRAR
 prerequisites: [PT-C80-pagar, PT-C80-usar]
 sounds: []
-roots: []
+roots: [monstrare-latin]
+etymology_hook: "mostrar ← Latin monstrare 'to show' — English demonstrate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C80-usar]
 <!-- hl-knowledge: introduces=[PT-LEX-C80-VERBOS6-03]; assesses=[] -->
 
 **mostrar** — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mostrar** ← Latin *monstrare*, "to show" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

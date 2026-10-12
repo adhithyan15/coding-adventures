@@ -13,7 +13,8 @@ gloss: "a stone"
 concept_tag: PT-NATUREZA2-PEDRA
 prerequisites: [PT-C57-rio, PT-C57-lago]
 sounds: []
-roots: []
+roots: [petra-latin]
+etymology_hook: "pedra ← Latin petra, from Greek petra 'rock' — English petrify shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C57-lago]
 <!-- hl-knowledge: introduces=[PT-LEX-C57-NATUREZA2-03]; assesses=[] -->
 
 **a pedra** — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pedra** ← Latin *petra*, "rock, stone" (EtymDB 2.1) — inherited. Latin took it from Greek *petra*; the *-t-* became *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

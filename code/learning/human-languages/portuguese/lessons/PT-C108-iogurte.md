@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA108-IOGURTE
 prerequisites: [PT-C107-sobremesa, PT-C107-refeicao]
 sounds: []
 roots: []
+etymology_hook: "iogurte ← Turkish yoğurt — English yoghurt is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C107-refeicao]
 <!-- hl-knowledge: introduces=[PT-LEX-C108-COMIDA108-01]; assesses=[] -->
 
 **o iogurte** — "a yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iogurte** ← Turkish *yoğurt* — borrowed (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

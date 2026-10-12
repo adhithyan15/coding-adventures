@@ -13,7 +13,8 @@ gloss: "a wave"
 concept_tag: PT-NATUREZA116-ONDA
 prerequisites: [PT-C116-gelo, PT-C116-rocha]
 sounds: []
-roots: []
+roots: [unda-latin]
+etymology_hook: "onda ← Latin unda 'wave' — English undulate and abundant share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C116-rocha]
 <!-- hl-knowledge: introduces=[PT-LEX-C116-NATUREZA116-05]; assesses=[] -->
 
 **a onda** — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**onda** ← Latin *unda*, "wave" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

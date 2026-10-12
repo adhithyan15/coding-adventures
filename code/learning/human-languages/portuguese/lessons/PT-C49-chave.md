@@ -13,7 +13,8 @@ gloss: "a key"
 concept_tag: PT-CASA2-CHAVE
 prerequisites: [PT-C48-cadeira, PT-C49-cama]
 sounds: []
-roots: []
+roots: [clavis-latin]
+etymology_hook: "chave ← Latin clavis 'key': cl- became ch- — English clavicle and clef share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C49-cama]
 <!-- hl-knowledge: introduces=[PT-LEX-C49-CASA2-02]; assesses=[] -->
 
 **a chave** — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chave** ← Latin *clavis*, "key" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

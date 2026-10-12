@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a choice, then the Portuguese for a d
 You'll want to know: a nota.
 a nota — "a banknote; a mark".
 
+The word, taken apart.
+nota from Latin nota, "mark, sign" (EtymDB 2.1) — a learned borrowing from Latin. An inherited word would have turned the -t- into -d-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a decision, then the Portuguese for a
 
 You'll want to know: o cartão bancário.
 o cartão bancário — "a bank card".
+
+The word, taken apart.
+cartão bancário is "bank card": cartão is a big form (-ão) of the word for a card or letter (EtymDB 2.1), from Latin charta, "paper", and bancário, "of a bank", is built on banco.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a banknote; a mark, then the Portugue
 You'll want to know: o multibanco.
 o multibanco — "a cash machine".
 
+The word, taken apart.
+multibanco is built from multi-, "many" ( from Latin multus), and banco, "bank"; it began as the name of the Portuguese cash-machine network.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a bank card, then the Portuguese for 
 You'll want to know: a conta bancária.
 a conta bancária — "a bank account".
 
+The word, taken apart.
+conta bancária is "bank account": conta is built from contar, "to count" ( from Latin computare), and bancária on banco.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a cash machine, then the Portuguese f
 
 You'll want to know: o empréstimo.
 o empréstimo — "a loan".
+
+The word, taken apart.
+empréstimo is built from emprestar, "to lend".
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a cheek"
 concept_tag: PT-CORPO120-BOCHECHA
 prerequisites: [PT-C120-tornozelo, PT-C120-pulso]
 sounds: []
-roots: []
+roots: [bucca-latin]
+etymology_hook: "bochecha — probably built on boca 'mouth' (← Latin bucca 'cheek'); its exact formation is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C120-pulso]
 <!-- hl-knowledge: introduces=[PT-LEX-C120-CORPO120-03]; assesses=[] -->
 
 **a bochecha** — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bochecha** is probably built on *boca*, "mouth" (← Latin *bucca*, "cheek"); its exact formation is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

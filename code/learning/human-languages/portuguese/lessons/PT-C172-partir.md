@@ -13,7 +13,8 @@ gloss: "to break; to leave"
 concept_tag: PT-VERB-PARTIR
 prerequisites: [PT-C172-tirar, PT-C172-segurar]
 sounds: []
-roots: []
+roots: [partire-latin]
+etymology_hook: "partir ← Latin partire 'to divide, to share out' — English part"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C172-segurar]
 <!-- hl-knowledge: introduces=[PT-LEX-C172-VERBOS172-04]; assesses=[] -->
 
 **partir** — "to break; to leave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partir** ← Latin *partire*, "to divide, to share out" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

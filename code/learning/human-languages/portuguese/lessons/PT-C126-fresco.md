@@ -14,6 +14,7 @@ concept_tag: PT-QUALIDADES126-FRESCO
 prerequisites: [PT-C125-molhado, PT-C125-seco]
 sounds: []
 roots: []
+etymology_hook: "fresco ← a Germanic word, Medieval Latin frescus — English fresh is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C125-seco]
 <!-- hl-knowledge: introduces=[PT-LEX-C126-QUALIDADES126-01]; assesses=[] -->
 
 **fresco** — "cool; fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fresco** ← a Germanic word, which Medieval Latin wrote *frescus* (EtymDB 2.1) — borrowed. English *fresh* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

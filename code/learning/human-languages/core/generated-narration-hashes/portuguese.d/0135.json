@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 135,
-  "sourceHash": "fnv1a64:99611804f7e9a229",
+  "sourceHash": "fnv1a64:7b65b8ff073f7f99",
   "lessonIds": [
     "PT-C135-recentemente",
     "PT-C135-anteontem",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch135.txt",
   "json": "portuguese/narration/ch135.json",
-  "textHash": "fnv1a64:adeef473e49af712",
-  "jsonHash": "fnv1a64:9e022f59fd2ec59f",
+  "textHash": "fnv1a64:80fb69284bb3a441",
+  "jsonHash": "fnv1a64:57b33d3ab8c38dd7",
   "findings": []
 }

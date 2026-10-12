@@ -13,7 +13,8 @@ gloss: "outside"
 concept_tag: PT-LUGAR213-FORA
 prerequisites: [PT-C212-feriado, PT-C213-dentro]
 sounds: []
-roots: []
+roots: [foras-latin]
+etymology_hook: "fora ← Latin foras 'out of doors'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C213-dentro]
 <!-- hl-knowledge: introduces=[PT-LEX-C213-LUGAR213-02]; assesses=[] -->
 
 **fora** — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fora** ← Latin *foras*, "out of doors" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

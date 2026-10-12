@@ -13,7 +13,8 @@ gloss: "the sun"
 concept_tag: PT-CEU-SOL
 prerequisites: [PT-C58-campo, PT-C58-ceu]
 sounds: []
-roots: []
+roots: [sol-latin]
+etymology_hook: "sol ← Latin sol 'sun' — English solar shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C58-ceu]
 <!-- hl-knowledge: introduces=[PT-LEX-C58-CEU-03]; assesses=[] -->
 
 **o sol** — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sol** ← Latin *sol*, "sun" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

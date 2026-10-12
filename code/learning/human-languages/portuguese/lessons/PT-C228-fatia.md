@@ -14,6 +14,7 @@ concept_tag: PT-COISAS228-FATIA
 prerequisites: [PT-C227-montra, PT-C228-frasco]
 sounds: []
 roots: []
+etymology_hook: "fatia — probably from Arabic futāt 'crumbs, pieces'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C228-frasco]
 <!-- hl-knowledge: introduces=[PT-LEX-C228-COISAS228-02]; assesses=[] -->
 
 **a fatia** — "a slice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fatia** probably ← Arabic *futāt*, "crumbs, pieces" (EtymDB 2.1); the link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

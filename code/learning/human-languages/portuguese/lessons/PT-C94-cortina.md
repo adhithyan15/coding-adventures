@@ -13,7 +13,8 @@ gloss: "a curtain"
 concept_tag: PT-CASA94-CORTINA
 prerequisites: [PT-C94-banheira, PT-C94-prateleira]
 sounds: []
-roots: []
+roots: [cortina-latin]
+etymology_hook: "cortina ← Late Latin cortina 'curtain' — English curtain is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C94-prateleira]
 <!-- hl-knowledge: introduces=[PT-LEX-C94-CASA94-04]; assesses=[] -->
 
 **a cortina** — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cortina** ← Late Latin *cortina*, "curtain" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

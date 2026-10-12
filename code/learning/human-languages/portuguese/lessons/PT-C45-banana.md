@@ -14,6 +14,7 @@ concept_tag: PT-FRUTA-BANANA
 prerequisites: [PT-C45-fruta, PT-C45-maca]
 sounds: []
 roots: []
+etymology_hook: "banana ← a West African language, probably Wolof banaana; Portuguese passed it on to English"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C45-maca]
 <!-- hl-knowledge: introduces=[PT-LEX-C45-FRUTA-03]; assesses=[] -->
 
 **a banana** — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banana** ← a West African language, probably Wolof *banaana* (EtymDB 2.1) — borrowed. Portuguese traders passed the word on to English and the rest of Europe.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

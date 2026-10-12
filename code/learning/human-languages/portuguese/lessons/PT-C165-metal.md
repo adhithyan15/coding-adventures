@@ -13,7 +13,8 @@ gloss: "metal"
 concept_tag: PT-COISAS165-METAL
 prerequisites: [PT-C164-terra, PT-C165-couro]
 sounds: []
-roots: []
+roots: [metallum-latin]
+etymology_hook: "metal ← Latin metallum 'mine, metal', from Greek metallon — English metal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C165-couro]
 <!-- hl-knowledge: introduces=[PT-LEX-C165-COISAS165-02]; assesses=[] -->
 
 **o metal** — "metal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**metal** ← Latin *metallum*, "mine, metal" (Lewis & Short) — a learned borrowing from Latin. Latin took it from Greek *metallon*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

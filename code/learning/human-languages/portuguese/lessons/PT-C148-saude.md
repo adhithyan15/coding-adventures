@@ -13,7 +13,8 @@ gloss: "health"
 concept_tag: PT-SAUDE148-SAUDE
 prerequisites: [PT-C147-enganar-se, PT-C147-aguentar]
 sounds: []
-roots: []
+roots: [salus]
+etymology_hook: "saúde ← Latin salus, salutis 'health, safety': the -l- fell out — English salute"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C147-aguentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C148-SAUDE148-01]; assesses=[] -->
 
 **a saúde** — "health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saúde** ← Latin *salus, salutis*, "health, safety" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

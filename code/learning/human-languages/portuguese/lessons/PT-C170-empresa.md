@@ -14,6 +14,7 @@ concept_tag: PT-TRAB170-EMPRESA
 prerequisites: [PT-C169-manga, PT-C169-guarda-roupa]
 sounds: []
 roots: []
+etymology_hook: "empresa ← Italian impresa 'undertaking' — English enterprise is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C169-guarda-roupa]
 <!-- hl-knowledge: introduces=[PT-LEX-C170-TRAB170-01]; assesses=[] -->
 
 **a empresa** — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**empresa** ← Italian *impresa*, "undertaking" (EtymDB 2.1) — borrowed. The Italian word comes from *imprendere*, "to undertake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

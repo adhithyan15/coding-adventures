@@ -13,7 +13,8 @@ gloss: "lightning"
 concept_tag: PT-ROUPA104-RELAMPAGO
 prerequisites: [PT-C104-tubarao, PT-C104-trovao]
 sounds: []
-roots: []
+roots: [lampas-latin]
+etymology_hook: "relâmpago — built on Latin lampas 'torch, lamp', with re-; its exact formation is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C104-trovao]
 <!-- hl-knowledge: introduces=[PT-LEX-C104-ROUPA104-05]; assesses=[] -->
 
 **o relâmpago** — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**relâmpago** is built on Latin *lampas*, "torch, lamp" (EtymDB 2.1), with *re-*; its exact formation is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

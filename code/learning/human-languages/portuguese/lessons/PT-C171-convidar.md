@@ -13,7 +13,8 @@ gloss: "to invite"
 concept_tag: PT-VERB-CONVIDAR
 prerequisites: [PT-C171-cumprimentar, PT-C171-agradecer]
 sounds: []
-roots: []
+roots: [invitare-latin]
+etymology_hook: "convidar ← Vulgar Latin *convitare, reshaped from Latin invitare 'to invite'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C171-agradecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C171-VERBOS171-04]; assesses=[] -->
 
 **convidar** — "to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**convidar** ← Vulgar Latin *\*convitare* (EtymDB 2.1), reshaped from Latin *invitare*, "to invite" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

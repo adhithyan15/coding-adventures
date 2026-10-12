@@ -13,7 +13,8 @@ gloss: "earth, land"
 concept_tag: PT-COISAS164-TERRA
 prerequisites: [PT-C164-planicie, PT-C164-seixo]
 sounds: []
-roots: []
+roots: [terra-latin]
+etymology_hook: "terra ← Latin terra 'earth, land' — English terrain and territory share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C164-seixo]
 <!-- hl-knowledge: introduces=[PT-LEX-C164-COISAS164-05]; assesses=[] -->
 
 **a terra** — "earth, land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**terra** ← Latin *terra*, "earth, land" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

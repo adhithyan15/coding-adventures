@@ -14,6 +14,7 @@ concept_tag: PT-VERB-QUEIXAR-SE
 prerequisites: [PT-C174-bastar, PT-C175-informar]
 sounds: []
 roots: []
+etymology_hook: "queixar-se — usually traced to Latin quassare 'to shake, to shatter'; details uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C175-informar]
 <!-- hl-knowledge: introduces=[PT-LEX-C175-VERBOS175-02]; assesses=[] -->
 
 **queixar-se** — "to complain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**queixar** is usually traced to Latin *quassare*, "to shake, to shatter", through a Vulgar Latin form; the details are uncertain. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

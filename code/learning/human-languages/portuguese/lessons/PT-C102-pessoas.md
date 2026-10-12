@@ -13,7 +13,8 @@ gloss: "people"
 concept_tag: PT-COISAS102-PESSOAS
 prerequisites: [PT-C102-mochila, PT-C102-mundo]
 sounds: []
-roots: []
+roots: [persona-latin]
+etymology_hook: "pessoas — plural of pessoa ← Latin persona 'mask, role' — English person"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C102-mundo]
 <!-- hl-knowledge: introduces=[PT-LEX-C102-COISAS102-03]; assesses=[] -->
 
 **as pessoas** — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pessoas** ← Latin *persona*, "an actor's mask, a role" (EtymDB 2.1), through Vulgar Latin *\*pessona* — inherited. It is the plural of *pessoa*, "person".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to offer; to give as a present"
 concept_tag: PT-VERB-OFERECER
 prerequisites: [PT-C204-comparar, PT-C205-piorar]
 sounds: []
-roots: []
+roots: [ferre-latin]
+etymology_hook: "oferecer ← Vulgar Latin *offerescere, from offerre 'to bring before' — English offer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C205-piorar]
 <!-- hl-knowledge: introduces=[PT-LEX-C205-VERBOS205-02]; assesses=[] -->
 
 **oferecer** — "to offer; to give as a present".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oferecer** ← Vulgar Latin *\*offerescere*, from Latin *offerre*, "to bring before" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

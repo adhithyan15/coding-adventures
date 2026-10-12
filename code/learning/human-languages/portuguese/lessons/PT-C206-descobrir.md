@@ -13,7 +13,8 @@ gloss: "to discover"
 concept_tag: PT-VERB-DESCOBRIR
 prerequisites: [PT-C205-passear, PT-C206-roubar]
 sounds: []
-roots: []
+roots: [cooperire-latin]
+etymology_hook: "descobrir ← Late Latin discooperire 'to uncover' — English discover"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C206-roubar]
 <!-- hl-knowledge: introduces=[PT-LEX-C206-VERBOS206-02]; assesses=[] -->
 
 **descobrir** — "to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**descobrir** ← Late Latin *discooperire*, "to uncover" — inherited. EtymDB 2.1 traces it only to Old Portuguese *descobrir*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

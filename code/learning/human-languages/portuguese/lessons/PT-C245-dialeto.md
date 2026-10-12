@@ -13,7 +13,8 @@ gloss: "a dialect"
 concept_tag: PT-COISAS245-DIALETO
 prerequisites: [PT-C244-temperatura, PT-C244-mosca]
 sounds: []
-roots: []
+roots: [dialectus-latin]
+etymology_hook: "dialeto ← Latin dialectus, from Greek dialektos 'way of speaking' — English dialect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C244-mosca]
 <!-- hl-knowledge: introduces=[PT-LEX-C245-COISAS245-01]; assesses=[] -->
 
 **o dialeto** — "a dialect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dialeto** ← Latin *dialectus*, "way of speaking" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *dialektos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

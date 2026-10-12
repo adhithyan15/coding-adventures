@@ -13,7 +13,8 @@ gloss: "rainy"
 concept_tag: PT-QUAL217-CHUVOSO-CHUVOSA
 prerequisites: [PT-C217-nublado-nublada, PT-C217-solarengo-solarenga]
 sounds: []
-roots: []
+roots: [pluvia-latin]
+etymology_hook: "chuvoso — built from chuva 'rain' (← Latin pluvia) + -oso 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C217-solarengo-solarenga]
 <!-- hl-knowledge: introduces=[PT-LEX-C217-QUAL217-04]; assesses=[] -->
 
 **chuvoso / chuvosa** — "rainy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chuvoso** is built from *chuva*, "rain" (← Latin *pluvia*), and *-oso*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

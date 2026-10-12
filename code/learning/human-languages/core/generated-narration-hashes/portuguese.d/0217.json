@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 217,
-  "sourceHash": "fnv1a64:e57b00c8b8eead3e",
+  "sourceHash": "fnv1a64:1067453b7a74e878",
   "lessonIds": [
     "PT-C217-divorciado-divorciada",
     "PT-C217-nublado-nublada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch217.txt",
   "json": "portuguese/narration/ch217.json",
-  "textHash": "fnv1a64:22a9b57f9fddde1a",
-  "jsonHash": "fnv1a64:88a734c5d545920a",
+  "textHash": "fnv1a64:e49dcb87b8c0f0a1",
+  "jsonHash": "fnv1a64:bbc47656fca7b4ca",
   "findings": []
 }

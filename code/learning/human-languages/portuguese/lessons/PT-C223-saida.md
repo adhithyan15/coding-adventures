@@ -13,7 +13,8 @@ gloss: "an exit"
 concept_tag: PT-COISAS223-SAIDA
 prerequisites: [PT-C222-saldos, PT-C222-moeda]
 sounds: []
-roots: []
+roots: [salire-latin]
+etymology_hook: "saída — built from sair 'to go out' (← Latin salire) + -ida"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C222-moeda]
 <!-- hl-knowledge: introduces=[PT-LEX-C223-COISAS223-01]; assesses=[] -->
 
 **a saída** — "an exit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saída** is built from *sair*, "to go out" (EtymDB 2.1), and *-ida*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

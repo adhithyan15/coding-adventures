@@ -13,7 +13,8 @@ gloss: "a chair"
 concept_tag: PT-CASA1-CADEIRA
 prerequisites: [PT-C48-janela, PT-C48-mesa]
 sounds: []
-roots: []
+roots: [cathedra-latin]
+etymology_hook: "cadeira ← Latin cathedra 'chair', from Greek kathedra — English cathedral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C48-mesa]
 <!-- hl-knowledge: introduces=[PT-LEX-C48-CASA1-05]; assesses=[] -->
 
 **a cadeira** — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cadeira** ← Latin *cathedra*, "chair" (EtymDB 2.1) — inherited. Latin took it from Greek *kathedra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

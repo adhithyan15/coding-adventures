@@ -13,7 +13,8 @@ gloss: "besides, in fact"
 concept_tag: PT-PORQUE214-ALIAS
 prerequisites: [PT-C214-contudo, PT-C214-talvez]
 sounds: []
-roots: []
+roots: [alius-latin]
+etymology_hook: "aliás ← Latin alias 'at another time, otherwise', from alius 'other'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C214-talvez]
 <!-- hl-knowledge: introduces=[PT-LEX-C214-PORQUE214-05]; assesses=[] -->
 
 **aliás** — "besides, in fact".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aliás** ← Latin *alias*, "at another time, otherwise" (EtymDB 2.1), from *alius*, "other" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

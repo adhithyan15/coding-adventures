@@ -13,7 +13,8 @@ gloss: "a cook"
 concept_tag: PT-TRABALHO110-COZINHEIRO
 prerequisites: [PT-C109-planeta, PT-C110-enfermeira]
 sounds: []
-roots: []
+roots: [coquina-latin]
+etymology_hook: "cozinheiro — built from cozinha 'kitchen' + -eiro 'one who works at'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C110-enfermeira]
 <!-- hl-knowledge: introduces=[PT-LEX-C110-TRABALHO110-02]; assesses=[] -->
 
 **o cozinheiro** — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cozinheiro** is built from *cozinha*, "kitchen", and *-eiro*, "one who works at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

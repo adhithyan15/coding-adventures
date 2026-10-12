@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA107-SANDES
 prerequisites: [PT-C106-chocolate, PT-C106-bolacha]
 sounds: []
 roots: []
+etymology_hook: "sandes ← English sandwich, named after the Earl of Sandwich"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C106-bolacha]
 <!-- hl-knowledge: introduces=[PT-LEX-C107-COMIDA107-01]; assesses=[] -->
 
 **a sandes** — "a sandwich". In Brazil, **o sanduíche**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sandes** is a Portuguese reshaping of English *sandwich*, named after the Earl of Sandwich — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

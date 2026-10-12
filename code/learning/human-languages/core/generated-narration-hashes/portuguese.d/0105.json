@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 105,
-  "sourceHash": "fnv1a64:4013dff639c2dbd5",
+  "sourceHash": "fnv1a64:31d669e168e6ed58",
   "lessonIds": [
     "PT-C105-carne-de-vaca",
     "PT-C105-legumes",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch105.txt",
   "json": "portuguese/narration/ch105.json",
-  "textHash": "fnv1a64:3fb9447fa6ba7ea7",
-  "jsonHash": "fnv1a64:4bafd3b438e21390",
+  "textHash": "fnv1a64:a00f59d28f2ad0e4",
+  "jsonHash": "fnv1a64:814a057426ccbd05",
   "findings": []
 }

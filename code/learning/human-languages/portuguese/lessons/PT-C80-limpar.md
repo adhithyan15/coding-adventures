@@ -13,7 +13,8 @@ gloss: "to clean"
 concept_tag: PT-VERB-LIMPAR
 prerequisites: [PT-C80-usar, PT-C80-mostrar]
 sounds: []
-roots: []
+roots: [limpidus-latin]
+etymology_hook: "limpar — built from limpo 'clean' (← Latin limpidus) + -ar: 'to make clean'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C80-mostrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C80-VERBOS6-04]; assesses=[] -->
 
 **limpar** — "to clean". The verb beside **limpo**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**limpar** is built from *limpo*, "clean", and the verb ending *-ar* (EtymDB 2.1): "to make clean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

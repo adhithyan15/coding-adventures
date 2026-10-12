@@ -13,7 +13,8 @@ gloss: "a discount"
 concept_tag: PT-COISAS222-DESCONTO
 prerequisites: [PT-C222-conselho, PT-C222-promessa]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "desconto — from the verb to discount: des- + contar 'to count'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C222-promessa]
 <!-- hl-knowledge: introduces=[PT-LEX-C222-COISAS222-03]; assesses=[] -->
 
 **o desconto** — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desconto** is built from the verb "to discount": *des-* and *contar*, "to count".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

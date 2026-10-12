@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 45,
-  "sourceHash": "fnv1a64:dfa14fa2e589afc9",
+  "sourceHash": "fnv1a64:dee12329faffbe0e",
   "lessonIds": [
     "PT-C45-fruta",
     "PT-C45-maca",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch45.txt",
   "json": "portuguese/narration/ch45.json",
-  "textHash": "fnv1a64:01f45282c7154c8f",
-  "jsonHash": "fnv1a64:4c201f27fefc7c15",
+  "textHash": "fnv1a64:e689b0107802d0b6",
+  "jsonHash": "fnv1a64:54833d87642f5881",
   "findings": []
 }

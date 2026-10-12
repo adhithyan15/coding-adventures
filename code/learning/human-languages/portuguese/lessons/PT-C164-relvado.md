@@ -14,6 +14,7 @@ concept_tag: PT-COISAS164-RELVADO
 prerequisites: [PT-C163-castelo, PT-C163-torre]
 sounds: []
 roots: []
+etymology_hook: "relvado — built from relva 'grass' + -ado"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C163-torre]
 <!-- hl-knowledge: introduces=[PT-LEX-C164-COISAS164-01]; assesses=[] -->
 
 **o relvado** — "a lawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**relvado** is built from *relva*, "grass", and *-ado*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

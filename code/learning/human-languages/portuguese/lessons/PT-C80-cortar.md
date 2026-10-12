@@ -13,7 +13,8 @@ gloss: "to cut"
 concept_tag: PT-VERB-CORTAR
 prerequisites: [PT-C80-mostrar, PT-C80-limpar]
 sounds: []
-roots: []
+roots: [curtus-latin]
+etymology_hook: "cortar ← Latin curtare 'to shorten', from curtus 'short' — English curtail"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C80-limpar]
 <!-- hl-knowledge: introduces=[PT-LEX-C80-VERBOS6-05]; assesses=[] -->
 
 **cortar** — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cortar** ← Latin *curtare*, "to shorten" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

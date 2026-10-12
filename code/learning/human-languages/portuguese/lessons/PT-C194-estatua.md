@@ -13,7 +13,8 @@ gloss: "a statue"
 concept_tag: PT-COISAS194-ESTATUA
 prerequisites: [PT-C193-entrada, PT-C194-monumento]
 sounds: []
-roots: []
+roots: [statuere-latin]
+etymology_hook: "estátua ← Latin statua 'statue', from statuere 'to set up' — English statue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C194-monumento]
 <!-- hl-knowledge: introduces=[PT-LEX-C194-COISAS194-02]; assesses=[] -->
 
 **a estátua** — "a statue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estátua** ← Latin *statua*, "statue" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

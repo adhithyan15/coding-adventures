@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 89,
-  "sourceHash": "fnv1a64:6202e62809a54a30",
+  "sourceHash": "fnv1a64:42e240e1c8e7ceb0",
   "lessonIds": [
     "PT-C89-em-frente",
     "PT-C89-atras",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch89.txt",
   "json": "portuguese/narration/ch89.json",
-  "textHash": "fnv1a64:984e8f0c18013b78",
-  "jsonHash": "fnv1a64:5bedbbbada31b128",
+  "textHash": "fnv1a64:ca3cf00ab687e31e",
+  "jsonHash": "fnv1a64:c4e415d1e47ff8f3",
   "findings": []
 }

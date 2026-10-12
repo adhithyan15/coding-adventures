@@ -13,7 +13,8 @@ gloss: "an elephant"
 concept_tag: PT-ANIMAIS4-ELEFANTE
 prerequisites: [PT-C63-abelha, PT-C63-formiga]
 sounds: []
-roots: []
+roots: [elephas-latin]
+etymology_hook: "elefante ← Latin elephas, elephantis, from Greek — English elephant is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C63-formiga]
 <!-- hl-knowledge: introduces=[PT-LEX-C63-ANIMAIS4-05]; assesses=[] -->
 
 **o elefante** — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elefante** ← Latin *elephas*, "elephant" — a learned borrowing from Latin. EtymDB 2.1 traces it only to Old Portuguese *elefante*; it derives Italian *elefante* from Latin *elephas*, from Greek *elephas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

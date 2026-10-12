@@ -14,6 +14,7 @@ concept_tag: PT-NATUREZA117-CASCATA
 prerequisites: [PT-C117-vulcao, PT-C117-gruta]
 sounds: []
 roots: []
+etymology_hook: "cascata ← Italian cascata, from cascare 'to fall' — English cascade shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C117-gruta]
 <!-- hl-knowledge: introduces=[PT-LEX-C117-NATUREZA117-03]; assesses=[] -->
 
 **a cascata** — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cascata** ← Italian *cascata*, "waterfall" (EtymDB 2.1) — borrowed. The Italian word comes from *cascare*, "to fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to open"
 concept_tag: PT-VERB-ABRIR
 prerequisites: [PT-C42-ensinar, PT-C42-aprender]
 sounds: []
-roots: []
+roots: [aperire-latin]
+etymology_hook: "abrir ← Latin aperire 'to open' — English aperture shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C42-aprender]
 <!-- hl-knowledge: introduces=[PT-LEX-C42-VERBOS3-05]; assesses=[] -->
 
 **abrir** — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abrir** ← Latin *aperire*, "to open, to uncover" (EtymDB 2.1) — inherited. The Latin *-p-* between vowels became *-b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a farmer, then the Portuguese for a b
 You'll want to know: o motorista.
 o motorista — "a driver".
 
+The word, taken apart.
+motorista is built from the word for a motor and -ista, "one who". That word from Latin motor, "one that moves", from movere, "to move".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a baker, then the Portuguese for a dr
 
 You'll want to know: o advogado.
 o advogado — "a lawyer".
+
+The word, taken apart.
+advogado from Latin advocatus, "one called in to help" (Lewis & Short), from advocare, "to call to one's aid".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a driver, then the Portuguese for a l
 You'll want to know: o engenheiro.
 o engenheiro — "an engineer".
 
+The word, taken apart.
+engenheiro is built from the word for an engine or device and -eiro, like Medieval Latin ingeniarius (EtymDB 2.1). The engine word from Latin ingenium, "talent, clever device".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a lawyer, then the Portuguese for an 
 You'll want to know: o bombeiro.
 o bombeiro — "a firefighter".
 
+The word, taken apart.
+bombeiro is "the pump man": built from the word for a pump and -eiro.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for an engineer, then the Portuguese for 
 
 You'll want to know: o carteiro.
 o carteiro — "a postman".
+
+The word, taken apart.
+carteiro is built from the word for a letter and -eiro (EtymDB 2.1). The letter word from Latin charta, "paper" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

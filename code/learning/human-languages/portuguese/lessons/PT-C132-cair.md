@@ -13,7 +13,8 @@ gloss: "to fall"
 concept_tag: PT-VERB-CAIR
 prerequisites: [PT-C132-levantar-se, PT-C132-sentar-se]
 sounds: []
-roots: []
+roots: [cadere-latin]
+etymology_hook: "cair ← Latin cadere 'to fall': the -d- fell out — English cadence and decay"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C132-sentar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C132-VERBOS132-04]; assesses=[] -->
 
 **cair** — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cair** ← Latin *cadere*, "to fall" (EtymDB 2.1) — inherited. The *-d-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

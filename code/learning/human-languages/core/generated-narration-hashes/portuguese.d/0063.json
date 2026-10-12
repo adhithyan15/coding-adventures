@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 63,
-  "sourceHash": "fnv1a64:276bddf9b8784de8",
+  "sourceHash": "fnv1a64:d8d41ba52e2e361d",
   "lessonIds": [
     "PT-C63-leao",
     "PT-C63-macaco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch63.txt",
   "json": "portuguese/narration/ch63.json",
-  "textHash": "fnv1a64:4bc7b064dd5a1d39",
-  "jsonHash": "fnv1a64:a5990b33554300c8",
+  "textHash": "fnv1a64:034a52aa5e982994",
+  "jsonHash": "fnv1a64:251759d89b474fe2",
   "findings": []
 }

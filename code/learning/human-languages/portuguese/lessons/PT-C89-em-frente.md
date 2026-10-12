@@ -13,7 +13,8 @@ gloss: "straight ahead; opposite"
 concept_tag: PT-LUGARES89-EM-FRENTE
 prerequisites: [PT-C88-leste, PT-C88-oeste]
 sounds: []
-roots: []
+roots: [frons-latin]
+etymology_hook: "em frente: em ← Latin in; frente ← Spanish frente, from Latin frons 'forehead'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C88-oeste]
 <!-- hl-knowledge: introduces=[PT-LEX-C89-LUGARES89-01]; assesses=[] -->
 
 **em frente** — "straight ahead; opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**em frente** is "in front": *em* ← Latin *in* (EtymDB 2.1), and *frente* ← Spanish *frente*, "front", from Latin *frons*, "forehead" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

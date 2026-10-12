@@ -13,7 +13,8 @@ gloss: "lips"
 concept_tag: PT-CORPO120-LABIOS
 prerequisites: [PT-C120-pulso, PT-C120-bochecha]
 sounds: []
-roots: []
+roots: [labium-latin]
+etymology_hook: "lábios ← Latin labium 'lip' — English labial shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C120-bochecha]
 <!-- hl-knowledge: introduces=[PT-LEX-C120-CORPO120-04]; assesses=[] -->
 
 **os lábios** — "lips".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lábios** ← Latin *labium*, "lip" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

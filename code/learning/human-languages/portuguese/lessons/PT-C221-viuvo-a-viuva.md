@@ -13,7 +13,8 @@ gloss: "a widower, a widow"
 concept_tag: PT-COISAS221-VIUVO-A-VIUVA
 prerequisites: [PT-C221-noivo, PT-C221-noiva]
 sounds: []
-roots: []
+roots: [viduus-latin]
+etymology_hook: "viúvo ← Latin viduus 'bereft' — English widow is a distant cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C221-noiva]
 <!-- hl-knowledge: introduces=[PT-LEX-C221-COISAS221-05]; assesses=[] -->
 
 **o viúvo / a viúva** — "a widower, a widow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viúvo** ← Latin *viduus*, "bereft" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

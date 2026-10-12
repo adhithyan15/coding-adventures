@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for thunder, then the Portuguese for ligh
 You'll want to know: a carne de vaca.
 a carne de vaca — "beef".
 
+The word, taken apart.
+carne de vaca is "meat of cow": carne from Latin caro, carnis, "flesh" (EtymDB 2.1), and vaca from Latin vacca (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for lightning, then the Portuguese for be
 
 You'll want to know: os legumes.
 os legumes — "vegetables".
+
+The word, taken apart.
+legumes from Latin legumen, "pulse, bean" (Lewis & Short) — a learned borrowing from Latin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for beef, then the Portuguese for vegetab
 You'll want to know: o cogumelo.
 o cogumelo — "a mushroom".
 
+The word, taken apart.
+cogumelo — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for vegetables, then the Portuguese for a
 You'll want to know: o pepino.
 o pepino — "a cucumber".
 
+The word, taken apart.
+pepino from Spanish pepino — borrowed (EtymDB 2.1). Behind it is Latin pepo, "melon", from Greek pepōn, "ripe" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a mushroom, then the Portuguese for a
 
 You'll want to know: o morango.
 o morango — "a strawberry".
+
+The word, taken apart.
+morango — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 What you've built.
 One more word for this chapter.

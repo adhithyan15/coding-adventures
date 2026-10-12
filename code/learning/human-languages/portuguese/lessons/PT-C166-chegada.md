@@ -13,7 +13,8 @@ gloss: "arrival"
 concept_tag: PT-COISAS166-CHEGADA
 prerequisites: [PT-C166-ligacao, PT-C166-regresso]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "chegada — built from chegar 'to arrive' (← Latin plicare 'to fold')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C166-regresso]
 <!-- hl-knowledge: introduces=[PT-LEX-C166-COISAS166-03]; assesses=[] -->
 
 **a chegada** — "arrival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chegada** is built from *chegar*, "to arrive" (EtymDB 2.1), which ← Latin *plicare*, "to fold" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

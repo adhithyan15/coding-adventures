@@ -13,7 +13,8 @@ gloss: "a tablet (medicine)"
 concept_tag: PT-SAUDE210-COMPRIMIDO
 prerequisites: [PT-C210-gripe, PT-C210-receita]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "comprimido — 'pressed together': from Latin comprimere 'to press together'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C210-receita]
 <!-- hl-knowledge: introduces=[PT-LEX-C210-SAUDE210-03]; assesses=[] -->
 
 **o comprimido** — "a tablet (medicine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comprimido** is "pressed together": the participle of a verb ← Latin *comprimere*, "to press together" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

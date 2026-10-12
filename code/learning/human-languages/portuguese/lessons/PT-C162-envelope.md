@@ -14,6 +14,7 @@ concept_tag: PT-COISAS162-ENVELOPE
 prerequisites: [PT-C162-imposto, PT-C162-formulario]
 sounds: []
 roots: []
+etymology_hook: "envelope ← French enveloppe, from envelopper 'to wrap up' — English envelope"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C162-formulario]
 <!-- hl-knowledge: introduces=[PT-LEX-C162-COISAS162-04]; assesses=[] -->
 
 **o envelope** — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**envelope** ← French *enveloppe* (EtymDB 2.1) — borrowed. The French word comes from *envelopper*, "to wrap up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

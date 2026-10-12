@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for medicine, then the Portuguese for a h
 You'll want to know: a doença.
 a doença — "an illness".
 
+The word, taken apart.
+doença from Latin dolentia, "suffering" (EtymDB 2.1), from dolens, "hurting" — inherited. As in dor, the Latin -l- between vowels fell out.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a hospital, then the Portuguese for a
 
 You'll want to know: a fome.
 a fome — "hunger". tenho fome: I am hungry, with ter.
+
+The word, taken apart.
+fome from Latin fames, "hunger" — inherited. EtymDB 2.1 has no ancestor row for fome; it derives Romanian foame from fames.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for an illness, then the Portuguese for h
 You'll want to know: a sede.
 a sede — "thirst". tenho sede: I am thirsty.
 
+The word, taken apart.
+sede from Latin sitis, "thirst" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for hunger, then the Portuguese for thirs
 You'll want to know: o cansaço.
 o cansaço — "tiredness".
 
+The word, taken apart.
+cansaço is built from the verb "to tire" and the suffix -aço. That verb from Latin campsare, "to turn around (a headland)" (EtymDB 2.1): a long way round wears you out. EtymDB 2.1 has no row for cansaço itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for thirst, then the Portuguese for tired
 
 You'll want to know: a alegria.
 a alegria — "joy".
+
+The word, taken apart.
+alegria is built from the adjective for "cheerful" and -ia. That adjective from Latin alacer, "brisk, eager" (EtymDB 2.1), through Vulgar Latin alecrem.
 
 What you've built.
 One more word for this chapter.

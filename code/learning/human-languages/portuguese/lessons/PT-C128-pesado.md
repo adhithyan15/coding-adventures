@@ -13,7 +13,8 @@ gloss: "heavy"
 concept_tag: PT-QUALIDADES128-PESADO
 prerequisites: [PT-C127-salgado, PT-C127-leve]
 sounds: []
-roots: []
+roots: [pensare-latin]
+etymology_hook: "pesado — 'weighed down': from the verb to weigh ← Latin pensare, the same verb as pensar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C127-leve]
 <!-- hl-knowledge: introduces=[PT-LEX-C128-QUALIDADES128-01]; assesses=[] -->
 
 **pesado** — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pesado** is the participle of the verb "to weigh", which ← Latin *pensare*, "to weigh, to ponder" (EtymDB 2.1) — the same Latin verb as *pensar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

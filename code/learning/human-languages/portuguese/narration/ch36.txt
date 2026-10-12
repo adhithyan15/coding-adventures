@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for tiredness, then the Portuguese for jo
 You'll want to know: o medo.
 o medo — "fear". tenho medo: I am afraid.
 
+The word, taken apart.
+medo from Latin metus, "fear" (EtymDB 2.1) — inherited. The Latin -t- between vowels became -d-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for joy, then the Portuguese for fear.
 
 You'll want to know: a raiva.
 a raiva — "anger".
+
+The word, taken apart.
+raiva from Vulgar Latin rabia, from Latin rabies, "rage, madness" — inherited. EtymDB 2.1 traces it only to Old Portuguese raiva; it derives Italian rabbia from rabia.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for fear, then the Portuguese for anger.
 You'll want to know: a tristeza.
 a tristeza — "sadness".
 
+The word, taken apart.
+tristeza from Latin tristitia, "sadness" (EtymDB 2.1), from tristis, "sad" — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for anger, then the Portuguese for sadnes
 You'll want to know: feliz.
 feliz — "happy".
 
+The word, taken apart.
+feliz from Latin felix, "lucky, happy" — a learned borrowing from Latin. EtymDB 2.1 traces it only to Old Portuguese feliz; it records Spanish feliz as borrowed from Latin felix. An inherited word would have lost the -l- between vowels.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for sadness, then the Portuguese for happ
 
 You'll want to know: triste.
 triste — "sad". The adjective beside a tristeza.
+
+The word, taken apart.
+triste from Latin tristis, "sad" (EtymDB 2.1) — inherited.
 
 What you've built.
 One more word for this chapter.

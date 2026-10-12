@@ -13,7 +13,8 @@ gloss: "a postman"
 concept_tag: PT-TRABALHO111-CARTEIRO
 prerequisites: [PT-C111-engenheiro, PT-C111-bombeiro]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "carteiro — 'letter man': built from the letter word (← Latin charta 'paper') + -eiro"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C111-bombeiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C111-TRABALHO111-05]; assesses=[] -->
 
 **o carteiro** — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carteiro** is built from the word for a letter and *-eiro* (EtymDB 2.1). The letter word ← Latin *charta*, "paper" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

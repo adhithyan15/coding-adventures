@@ -13,7 +13,8 @@ gloss: "to continue"
 concept_tag: PT-VERB-CONTINUAR
 prerequisites: [PT-C139-decidir, PT-C139-experimentar]
 sounds: []
-roots: []
+roots: [continere-latin]
+etymology_hook: "continuar ← Latin continuare 'to join together', from continere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C139-experimentar]
 <!-- hl-knowledge: introduces=[PT-LEX-C139-VERBOS139-03]; assesses=[] -->
 
 **continuar** — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**continuar** ← Latin *continuare*, "to join together" (EtymDB 2.1), from *continere*, "to hold together" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "right, correct"
 concept_tag: PT-QUALIDADES124-CERTO
 prerequisites: [PT-C124-gentil, PT-C124-serio]
 sounds: []
-roots: []
+roots: [certus-latin]
+etymology_hook: "certo ← Latin certus 'fixed, sure' — English certain shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C124-serio]
 <!-- hl-knowledge: introduces=[PT-LEX-C124-QUALIDADES124-04]; assesses=[] -->
 
 **certo** — "right, correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**certo** ← Latin *certus*, "fixed, sure" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "socks"
 concept_tag: PT-ROUPA2-MEIAS
 prerequisites: [PT-C78-casaco, PT-C78-saia]
 sounds: []
-roots: []
+roots: [medius-latin]
+etymology_hook: "meias — 'halves', short for half-hose; the half word ← Latin medius 'middle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C78-saia]
 <!-- hl-knowledge: introduces=[PT-LEX-C78-ROUPA2-04]; assesses=[] -->
 
 **as meias** — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**meias** is short for "half-hose": the word is the feminine of the word for "half", which ← Latin *medius*, "middle" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

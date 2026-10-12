@@ -13,7 +13,8 @@ gloss: "a plant"
 concept_tag: PT-COISAS224-PLANTA
 prerequisites: [PT-C224-horta, PT-C224-jarra]
 sounds: []
-roots: []
+roots: [planta-latin]
+etymology_hook: "planta ← Latin planta 'sprout, cutting' — English plant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C224-jarra]
 <!-- hl-knowledge: introduces=[PT-LEX-C224-COISAS224-05]; assesses=[] -->
 
 **a planta** — "a plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**planta** ← Latin *planta*, "sprout, cutting" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

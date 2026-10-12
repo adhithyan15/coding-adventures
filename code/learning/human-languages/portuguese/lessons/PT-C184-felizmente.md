@@ -13,7 +13,8 @@ gloss: "luckily"
 concept_tag: PT-PORQUE184-FELIZMENTE
 prerequisites: [PT-C183-canto, PT-C183-meio]
 sounds: []
-roots: []
+roots: [felix]
+etymology_hook: "felizmente — feliz 'happy' (← Latin felix) + -mente '-ly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C183-meio]
 <!-- hl-knowledge: introduces=[PT-LEX-C184-PORQUE184-01]; assesses=[] -->
 
 **felizmente** — "luckily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**felizmente** is built from *feliz*, "happy" (← Latin *felix*), and *-mente*, "-ly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

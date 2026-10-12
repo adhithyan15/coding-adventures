@@ -14,6 +14,7 @@ concept_tag: PT-VERB-FECHAR
 prerequisites: [PT-C42-aprender, PT-C42-abrir]
 sounds: []
 roots: []
+etymology_hook: "fechar — from an old word for a bolt, usually traced to Latin fistula 'pipe'; the details are uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C42-abrir]
 <!-- hl-knowledge: introduces=[PT-LEX-C43-VERBOS4-01]; assesses=[] -->
 
 **fechar** — "to close". The opposite of **abrir**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fechar** is built on an old word for a bolt, which is usually traced to Latin *fistula*, "pipe, tube". The details are uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

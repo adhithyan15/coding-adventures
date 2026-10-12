@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Sexto ao Decimo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ef0ea47495e94958",
+  "sourceHash": "fnv1a64:889dc4f4cfd5f0fb",
   "lessons": [
     {
       "id": "PT-C28-sexto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18a4ab8e1e949499",
+      "sourceHash": "fnv1a64:ba212ee64e6efa6d",
       "notice": null,
       "blocks": [
         {
@@ -119,6 +119,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sexto from Latin sextus, \"sixth\", from sex, \"six\" — inherited. EtymDB 2.1 has no ancestor row for sexto; it derives Old Portuguese sexto, also written sesto, from sextus."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: five numbered days, not seven",
           "segments": [
@@ -133,7 +144,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -173,7 +184,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -737,7 +748,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9c55a157afef4fb",
+      "sourceHash": "fnv1a64:7054fc659f80948c",
       "notice": null,
       "blocks": [
         {
@@ -837,6 +848,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nono from Latin nonus, \"ninth\" (EtymDB 2.1), short for novenus — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: the ninth hour that moved",
           "segments": [
@@ -851,7 +873,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -891,7 +913,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -922,7 +944,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6716fb69872d8528",
+      "sourceHash": "fnv1a64:83dc6d86ba496993",
       "notice": null,
       "blocks": [
         {
@@ -1022,6 +1044,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "décimo from Latin decimus, \"tenth\" (Lewis & Short), from decem, \"ten\" — a learned borrowing from Latin. The inherited descendant of decimus is a different word, meaning a tithe."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: past ten, the words stack",
           "segments": [
@@ -1054,7 +1087,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1094,7 +1127,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

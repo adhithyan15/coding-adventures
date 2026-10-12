@@ -13,7 +13,8 @@ gloss: "to imagine"
 concept_tag: PT-VERB-IMAGINAR
 prerequisites: [PT-C142-virar, PT-C142-aproveitar]
 sounds: []
-roots: []
+roots: [imago-latin]
+etymology_hook: "imaginar ← Latin imaginari 'to picture', from imago 'image' — English imagine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C142-aproveitar]
 <!-- hl-knowledge: introduces=[PT-LEX-C142-VERBOS142-05]; assesses=[] -->
 
 **imaginar** — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**imaginar** ← Latin *imaginari*, "to picture" (EtymDB 2.1), from *imago*, "image" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

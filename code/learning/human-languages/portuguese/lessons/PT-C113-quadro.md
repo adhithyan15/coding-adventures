@@ -13,7 +13,8 @@ gloss: "a board; a painting"
 concept_tag: PT-ESCOLA113-QUADRO
 prerequisites: [PT-C112-exame, PT-C113-palavra]
 sounds: []
-roots: []
+roots: [quadrum-latin]
+etymology_hook: "quadro ← Latin quadrum 'a square', from quattuor 'four' — English square shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C113-palavra]
 <!-- hl-knowledge: introduces=[PT-LEX-C113-ESCOLA113-02]; assesses=[] -->
 
 **o quadro** — "a board; a painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quadro** ← Latin *quadrum*, "a square" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

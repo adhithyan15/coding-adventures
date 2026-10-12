@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 221,
-  "sourceHash": "fnv1a64:dc2dc4ac66b9c2e9",
+  "sourceHash": "fnv1a64:9db1a51f37447e68",
   "lessonIds": [
     "PT-C221-genro",
     "PT-C221-nora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch221.txt",
   "json": "portuguese/narration/ch221.json",
-  "textHash": "fnv1a64:05dff906824c2bb9",
-  "jsonHash": "fnv1a64:c1e06b7f238ce10d",
+  "textHash": "fnv1a64:eee36aea4753867d",
+  "jsonHash": "fnv1a64:3059b10e94ceccb2",
   "findings": []
 }

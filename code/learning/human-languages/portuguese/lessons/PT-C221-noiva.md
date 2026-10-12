@@ -13,7 +13,8 @@ gloss: "a fiancée, a bride"
 concept_tag: PT-COISAS221-NOIVA
 prerequisites: [PT-C221-nora, PT-C221-noivo]
 sounds: []
-roots: []
+roots: [novus-latin]
+etymology_hook: "noiva ← Vulgar Latin *novia 'newly wed', from novus 'new'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C221-noivo]
 <!-- hl-knowledge: introduces=[PT-LEX-C221-COISAS221-04]; assesses=[] -->
 
 **a noiva** — "a fiancée, a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noiva** ← Vulgar Latin *\*novia*, "newly wed", from Latin *novus*, "new" — inherited. EtymDB 2.1 traces it only to Old Portuguese *novia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

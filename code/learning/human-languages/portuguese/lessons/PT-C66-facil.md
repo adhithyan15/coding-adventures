@@ -13,7 +13,8 @@ gloss: "easy"
 concept_tag: PT-ADJ3-FACIL
 prerequisites: [PT-C66-rapido, PT-C66-lento]
 sounds: []
-roots: []
+roots: [facilis-latin]
+etymology_hook: "fácil ← Latin facilis 'doable', from facere 'to do' — English facility shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C66-lento]
 <!-- hl-knowledge: introduces=[PT-LEX-C66-ADJ3-03]; assesses=[] -->
 
 **fácil** — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fácil** ← Latin *facilis*, "doable, easy" (EtymDB 2.1), from *facere*, "to do" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

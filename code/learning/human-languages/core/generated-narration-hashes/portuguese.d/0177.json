@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 177,
-  "sourceHash": "fnv1a64:8d87b54aef9457e6",
+  "sourceHash": "fnv1a64:d3d83cb4723eeeaa",
   "lessonIds": [
     "PT-C177-valer",
     "PT-C177-habituar-se",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch177.txt",
   "json": "portuguese/narration/ch177.json",
-  "textHash": "fnv1a64:52790d58c6919fe7",
-  "jsonHash": "fnv1a64:3b7e455ac643a0d9",
+  "textHash": "fnv1a64:d4be27b82c5f0ff1",
+  "jsonHash": "fnv1a64:7f9717897a4d327a",
   "findings": []
 }

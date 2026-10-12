@@ -13,7 +13,8 @@ gloss: "to wash (oneself)"
 concept_tag: PT-VERB-LAVAR-SE
 prerequisites: [PT-C131-conduzir, PT-C131-vestir-se]
 sounds: []
-roots: []
+roots: [lavare-latin]
+etymology_hook: "lavar-se — lavar ← Latin lavare 'to wash', with -se 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C131-vestir-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C132-VERBOS132-01]; assesses=[] -->
 
 **lavar-se** — "to wash (oneself)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavar** ← Latin *lavare*, "to wash" (EtymDB 2.1) — inherited. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "rarely"
 concept_tag: PT-TEMPO150-RARAMENTE
 prerequisites: [PT-C149-amizade, PT-C149-esperanca]
 sounds: []
-roots: []
+roots: [rarus-latin]
+etymology_hook: "raramente — raro 'rare' (← Latin rarus) + -mente '-ly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C149-esperanca]
 <!-- hl-knowledge: introduces=[PT-LEX-C150-TEMPO150-01]; assesses=[] -->
 
 **raramente** — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raramente** is built from *raro*, "rare" (← Latin *rarus*), and *-mente*, "-ly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

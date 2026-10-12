@@ -13,7 +13,8 @@ gloss: "a hairdresser"
 concept_tag: PT-COISAS197-CABELEIREIRO
 prerequisites: [PT-C197-rececao, PT-C197-lavandaria]
 sounds: []
-roots: []
+roots: [capillus-latin]
+etymology_hook: "cabeleireiro — built from cabelo 'hair' (← Latin capillus) + -eiro"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C197-lavandaria]
 <!-- hl-knowledge: introduces=[PT-LEX-C197-COISAS197-05]; assesses=[] -->
 
 **o cabeleireiro** — "a hairdresser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cabeleireiro** is built from *cabelo*, "hair" (← Latin *capillus*), and *-eiro*, "one who works at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

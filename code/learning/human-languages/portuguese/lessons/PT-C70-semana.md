@@ -13,7 +13,8 @@ gloss: "a week"
 concept_tag: PT-QUANDO1-SEMANA
 prerequisites: [PT-C69-limpo, PT-C69-sujo]
 sounds: []
-roots: []
+roots: [septimana-latin]
+etymology_hook: "semana ← Late Latin septimana 'a set of seven', from septem 'seven'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C69-sujo]
 <!-- hl-knowledge: introduces=[PT-LEX-C70-QUANDO1-01]; assesses=[] -->
 
 **a semana** — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semana** ← Late Latin *septimana*, "a set of seven" (EtymDB 2.1), from *septem*, "seven" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

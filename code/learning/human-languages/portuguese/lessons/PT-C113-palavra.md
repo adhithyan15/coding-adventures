@@ -13,7 +13,8 @@ gloss: "a word"
 concept_tag: PT-ESCOLA113-PALAVRA
 prerequisites: [PT-C112-aula, PT-C112-exame, PT-C29-linhas, PT-C29-primeira-leitura]
 sounds: []
-roots: []
+roots: [parabola-latin]
+etymology_hook: "palavra ← Latin parabola 'speech', from Greek parabole — English parable and parole"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PT-C112-exame]
 <!-- hl-knowledge: introduces=[PT-LEX-C113-ESCOLA113-01]; assesses=[] -->
 
 **a palavra** — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**palavra** ← Latin *parabola*, "comparison, speech" (EtymDB 2.1) — inherited. Latin took it from Greek *parabolē*; the *r* and *l* swapped places.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

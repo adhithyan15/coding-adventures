@@ -13,7 +13,8 @@ gloss: "holidays"
 concept_tag: PT-VIAGEM91-FERIAS
 prerequisites: [PT-C91-eletrico, PT-C91-viagem]
 sounds: []
-roots: []
+roots: [feria-latin]
+etymology_hook: "férias ← Latin feriae 'feast days, holidays' — English fair shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C91-viagem]
 <!-- hl-knowledge: introduces=[PT-LEX-C91-VIAGEM91-04]; assesses=[] -->
 
 **as férias** — "holidays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**férias** ← Latin *feriae*, "feast days, holidays" (Lewis & Short) — a learned borrowing from Latin. The inherited form of the same Latin word names the weekdays: *segunda-feira*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

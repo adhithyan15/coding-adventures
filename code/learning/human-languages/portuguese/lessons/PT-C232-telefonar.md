@@ -14,6 +14,7 @@ concept_tag: PT-VERB-TELEFONAR
 prerequisites: [PT-C232-assinar, PT-C232-preencher]
 sounds: []
 roots: []
+etymology_hook: "telefonar — built from telefone 'phone' + -ar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C232-preencher]
 <!-- hl-knowledge: introduces=[PT-LEX-C232-VERBOS232-05]; assesses=[] -->
 
 **telefonar** — "to phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefonar** is built from *telefone*, "phone" (EtymDB 2.1), and *-ar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

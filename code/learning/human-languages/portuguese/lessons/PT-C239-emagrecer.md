@@ -13,7 +13,8 @@ gloss: "to lose weight"
 concept_tag: PT-VERB-EMAGRECER
 prerequisites: [PT-C238-sugerir, PT-C239-engordar]
 sounds: []
-roots: []
+roots: [macer-latin]
+etymology_hook: "emagrecer — built from magro 'thin' (← Latin macer) + en- and -ecer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C239-engordar]
 <!-- hl-knowledge: introduces=[PT-LEX-C239-VERBOS239-02]; assesses=[] -->
 
 **emagrecer** — "to lose weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**emagrecer** is built from *magro*, "thin", with *en-* and *-ecer*, "to become" (EtymDB 2.1 has the Old Portuguese form).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

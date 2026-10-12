@@ -14,6 +14,7 @@ concept_tag: PT-VERB-AFASTAR-SE
 prerequisites: [PT-C177-perceber, PT-C177-apressar-se]
 sounds: []
 roots: []
+etymology_hook: "afastar-se — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C177-apressar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C177-VERBOS177-05]; assesses=[] -->
 
 **afastar-se** — "to move away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**afastar** — its origin is uncertain. EtymDB 2.1 traces it only to Old Portuguese *afastar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

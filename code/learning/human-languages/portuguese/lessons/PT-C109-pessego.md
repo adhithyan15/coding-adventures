@@ -13,7 +13,8 @@ gloss: "a peach"
 concept_tag: PT-COMIDA109-PESSEGO
 prerequisites: [PT-C108-fiambre, PT-C108-sumo]
 sounds: []
-roots: []
+roots: [persicum-latin]
+etymology_hook: "pêssego ← Latin persicum 'Persian (apple)' — English peach is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C108-sumo]
 <!-- hl-knowledge: introduces=[PT-LEX-C109-COMIDA109-01]; assesses=[] -->
 
 **o pêssego** — "a peach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pêssego** ← Latin *persicum*, "Persian (apple)" (EtymDB 2.1) — inherited. The fruit was named after Persia.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

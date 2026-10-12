@@ -13,7 +13,8 @@ gloss: "a gate"
 concept_tag: PT-COISAS194-PORTAO
 prerequisites: [PT-C194-estatua, PT-C194-fonte]
 sounds: []
-roots: []
+roots: [porta-latin]
+etymology_hook: "portão — 'big door': the door word (← Latin porta 'gate') + -ão 'big'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C194-fonte]
 <!-- hl-knowledge: introduces=[PT-LEX-C194-COISAS194-04]; assesses=[] -->
 
 **o portão** — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**portão** is "a big door": the word for a door, from Latin *porta*, "gate", with *-ão*, "big".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

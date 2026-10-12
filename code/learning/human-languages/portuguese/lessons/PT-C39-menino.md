@@ -14,6 +14,7 @@ concept_tag: PT-PESSOAS-MENINO
 prerequisites: [PT-C39-vizinho, PT-C39-convidado]
 sounds: []
 roots: []
+etymology_hook: "menino — origin uncertain, probably a word from children's own speech"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C39-convidado]
 <!-- hl-knowledge: introduces=[PT-LEX-C39-PESSOAS-04]; assesses=[] -->
 
 **o menino** — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**menino** — its origin is uncertain. It is usually explained as a word from children's own speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

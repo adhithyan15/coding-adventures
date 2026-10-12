@@ -13,7 +13,8 @@ gloss: "a bookshop"
 concept_tag: PT-COISAS227-LIVRARIA
 prerequisites: [PT-C226-vitoria, PT-C227-papelaria]
 sounds: []
-roots: []
+roots: [liber-latin]
+etymology_hook: "livraria — built from livro 'book' (← Latin liber) + -aria 'shop'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C227-papelaria]
 <!-- hl-knowledge: introduces=[PT-LEX-C227-COISAS227-02]; assesses=[] -->
 
 **a livraria** — "a bookshop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**livraria** is built from *livro*, "book" (← Latin *liber*, "book"), and *-aria*, "shop". It is not a library.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

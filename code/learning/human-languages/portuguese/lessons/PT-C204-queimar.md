@@ -13,7 +13,8 @@ gloss: "to burn"
 concept_tag: PT-VERB-QUEIMAR
 prerequisites: [PT-C203-pentear-se, PT-C203-aborrecer-se]
 sounds: []
-roots: []
+roots: [cremare-latin]
+etymology_hook: "queimar ← Latin cremare 'to burn' — English cremate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C203-aborrecer-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C204-VERBOS204-01]; assesses=[] -->
 
 **queimar** — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**queimar** ← Latin *cremare*, "to burn" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

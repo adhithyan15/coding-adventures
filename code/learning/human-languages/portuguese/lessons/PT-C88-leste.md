@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES88-LESTE
 prerequisites: [PT-C88-norte, PT-C88-sul]
 sounds: []
 roots: []
+etymology_hook: "leste ← French l'est 'the east', article and all — English east is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C88-sul]
 <!-- hl-knowledge: introduces=[PT-LEX-C88-LUGARES88-04]; assesses=[] -->
 
 **o leste** — "the east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leste** ← French *l'est*, "the east" (EtymDB 2.1) — borrowed. The French article came along with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

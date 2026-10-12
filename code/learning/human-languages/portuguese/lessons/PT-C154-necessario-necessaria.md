@@ -13,7 +13,8 @@ gloss: "necessary"
 concept_tag: PT-QUAL154-NECESSARIO-NECESSARIA
 prerequisites: [PT-C153-desagradavel, PT-C154-complicado-complicada]
 sounds: []
-roots: []
+roots: [necesse-latin]
+etymology_hook: "necessário ← Latin necessarius 'unavoidable' — English necessary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C154-complicado-complicada]
 <!-- hl-knowledge: introduces=[PT-LEX-C154-QUAL154-02]; assesses=[] -->
 
 **necessário / necessária** — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**necessário** ← Latin *necessarius*, "unavoidable" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "fearful"
 concept_tag: PT-QUAL185-MEDROSO-MEDROSA
 prerequisites: [PT-C185-timido-timida, PT-C185-corajoso-corajosa]
 sounds: []
-roots: []
+roots: [metus-latin]
+etymology_hook: "medroso — built from medo 'fear' (← Latin metus) + -oso 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C185-corajoso-corajosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C185-QUAL185-04]; assesses=[] -->
 
 **medroso / medrosa** — "fearful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medroso** is built from *medo*, "fear" (← Latin *metus*), and *-oso*, "full of" (EtymDB 2.1 has its Old Portuguese form).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

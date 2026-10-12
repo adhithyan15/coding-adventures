@@ -13,7 +13,8 @@ gloss: "inside"
 concept_tag: PT-LUGAR213-DENTRO
 prerequisites: [PT-C212-epoca, PT-C212-feriado]
 sounds: []
-roots: []
+roots: [intro-latin]
+etymology_hook: "dentro ← Latin de intro 'from within'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C212-feriado]
 <!-- hl-knowledge: introduces=[PT-LEX-C213-LUGAR213-01]; assesses=[] -->
 
 **dentro** — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dentro** ← Latin *de intro*, "from within" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

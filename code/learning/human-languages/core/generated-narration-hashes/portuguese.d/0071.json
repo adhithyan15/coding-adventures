@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 71,
-  "sourceHash": "fnv1a64:039571f67512a72c",
+  "sourceHash": "fnv1a64:85258ecae2580e67",
   "lessonIds": [
     "PT-C71-nunca",
     "PT-C71-agora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch71.txt",
   "json": "portuguese/narration/ch71.json",
-  "textHash": "fnv1a64:98a4feba4e2d8f84",
-  "jsonHash": "fnv1a64:b91e7e2e631ec096",
+  "textHash": "fnv1a64:c40dfb8971a11c5b",
+  "jsonHash": "fnv1a64:21b5744308536535",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a pencil"
 concept_tag: PT-COISAS1-LAPIS
 prerequisites: [PT-C52-papel, PT-C52-caderno]
 sounds: []
-roots: []
+roots: [lapis-latin]
+etymology_hook: "lápis ← Italian lapis 'pencil', from Latin lapis 'stone' — English lapidary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C52-caderno]
 <!-- hl-knowledge: introduces=[PT-LEX-C52-COISAS1-04]; assesses=[] -->
 
 **o lápis** — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lápis** ← Italian *lapis*, "pencil" (EtymDB 2.1) — borrowed. The Italian word is Latin *lapis*, "stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

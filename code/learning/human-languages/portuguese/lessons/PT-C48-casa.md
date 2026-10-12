@@ -13,7 +13,8 @@ gloss: "a house, home"
 concept_tag: PT-CASA1-CASA
 prerequisites: [PT-C47-jantar, PT-C47-limao]
 sounds: []
-roots: []
+roots: [casa-latin]
+etymology_hook: "casa ← Latin casa 'hut, cottage' — Spanish and Italian casa are the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C47-limao]
 <!-- hl-knowledge: introduces=[PT-LEX-C48-CASA1-01]; assesses=[] -->
 
 **a casa** — "a house, home". **em casa**: at home.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casa** ← Latin *casa*, "hut, cottage" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

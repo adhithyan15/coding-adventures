@@ -14,6 +14,7 @@ concept_tag: PT-NEG134-NINGUEM
 prerequisites: [PT-C134-nada, PT-C134-nenhum]
 sounds: []
 roots: []
+etymology_hook: "ninguém ← Latin nec quem 'not whom': not anyone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C134-nenhum]
 <!-- hl-knowledge: introduces=[PT-LEX-C134-NEG134-03]; assesses=[] -->
 
 **ninguém** — "nobody, no one". **Não vejo ninguém.** — "I don't see anybody." On its own it answers a question: **Ninguém.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ninguém** ← Latin *nec quem*, "not whom" (EtymDB 2.1) — inherited. Not anyone, and so nobody.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

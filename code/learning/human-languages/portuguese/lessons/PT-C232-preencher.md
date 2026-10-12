@@ -13,7 +13,8 @@ gloss: "to fill in (a form)"
 concept_tag: PT-VERB-PREENCHER
 prerequisites: [PT-C232-verificar, PT-C232-assinar]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "preencher — pre- + encher 'to fill' (← Latin implere)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C232-assinar]
 <!-- hl-knowledge: introduces=[PT-LEX-C232-VERBOS232-04]; assesses=[] -->
 
 **preencher** — "to fill in (a form)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preencher** is built from *pre-*, "before", and *encher*, "to fill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

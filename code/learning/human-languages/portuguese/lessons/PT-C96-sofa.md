@@ -14,6 +14,7 @@ concept_tag: PT-CASA96-SOFA
 prerequisites: [PT-C96-vassoura, PT-C96-maquina-de-lavar]
 sounds: []
 roots: []
+etymology_hook: "sofá ← French sofa, from Arabic ṣuffa 'a raised bench' — English sofa is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C96-maquina-de-lavar]
 <!-- hl-knowledge: introduces=[PT-LEX-C96-CASA96-04]; assesses=[] -->
 
 **o sofá** — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sofá** ← French *sofa* (EtymDB 2.1) — borrowed. French took it, through Turkish, from Arabic *ṣuffa*, "a raised bench".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

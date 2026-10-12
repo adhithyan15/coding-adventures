@@ -13,7 +13,8 @@ gloss: "an example"
 concept_tag: PT-COISAS161-EXEMPLO
 prerequisites: [PT-C161-resultado, PT-C161-diferenca]
 sounds: []
-roots: []
+roots: [exemplum]
+etymology_hook: "exemplo ← Latin exemplum 'sample, pattern' — English example and sample"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C161-diferenca]
 <!-- hl-knowledge: introduces=[PT-LEX-C161-COISAS161-04]; assesses=[] -->
 
 **o exemplo** — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exemplo** ← Latin *exemplum*, "sample, pattern" (Lewis & Short) — a learned borrowing from Latin. Old Portuguese also had an inherited form, *enxemplo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

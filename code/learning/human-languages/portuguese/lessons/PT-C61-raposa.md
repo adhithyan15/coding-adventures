@@ -14,6 +14,7 @@ concept_tag: PT-ANIMAIS2-RAPOSA
 prerequisites: [PT-C61-lobo, PT-C61-urso]
 sounds: []
 roots: []
+etymology_hook: "raposa — 'the bushy-tailed one': built from the word for a tail + -osa 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C61-urso]
 <!-- hl-knowledge: introduces=[PT-LEX-C61-ANIMAIS2-05]; assesses=[] -->
 
 **a raposa** — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raposa** is "the bushy-tailed one": built from the word for a tail and *-osa*, "full of". Spanish has the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

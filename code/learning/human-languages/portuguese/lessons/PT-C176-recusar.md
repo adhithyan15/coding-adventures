@@ -13,7 +13,8 @@ gloss: "to refuse"
 concept_tag: PT-VERB-RECUSAR
 prerequisites: [PT-C175-melhorar, PT-C176-reduzir]
 sounds: []
-roots: []
+roots: [causa-latin]
+etymology_hook: "recusar ← Latin recusare 'to object, to refuse', from causa — English recuse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C176-reduzir]
 <!-- hl-knowledge: introduces=[PT-LEX-C176-VERBOS176-02]; assesses=[] -->
 
 **recusar** — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recusar** ← Latin *recusare*, "to object, to refuse" (EtymDB 2.1), from *causa*, "cause" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

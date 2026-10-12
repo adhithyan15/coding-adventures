@@ -13,7 +13,8 @@ gloss: "fog"
 concept_tag: PT-NATUREZA116-NEVOEIRO
 prerequisites: [PT-C115-festa, PT-C115-relva]
 sounds: []
-roots: []
+roots: [nebula-latin]
+etymology_hook: "nevoeiro — built from the mist word (← Latin nebula 'mist, cloud') + -eiro"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C115-relva]
 <!-- hl-knowledge: introduces=[PT-LEX-C116-NATUREZA116-01]; assesses=[] -->
 
 **o nevoeiro** — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nevoeiro** is built from the word for mist and *-eiro*. The mist word ← Latin *nebula*, "mist, cloud" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

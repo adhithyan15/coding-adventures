@@ -13,7 +13,8 @@ gloss: "the small hours, dawn"
 concept_tag: PT-TEMPO182-MADRUGADA
 prerequisites: [PT-C182-desde, PT-C182-decada]
 sounds: []
-roots: []
+roots: [maturus-latin]
+etymology_hook: "madrugada — from the verb to rise early, from Latin maturus 'early, ripe' — English mature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C182-decada]
 <!-- hl-knowledge: introduces=[PT-LEX-C182-TEMPO182-05]; assesses=[] -->
 
 **a madrugada** — "the small hours, dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**madrugada** is built from the verb "to rise early" (EtymDB 2.1), which goes back to Latin *maturus*, "early, ripe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

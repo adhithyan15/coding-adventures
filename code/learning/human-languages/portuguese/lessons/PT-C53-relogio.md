@@ -13,7 +13,8 @@ gloss: "a watch, a clock"
 concept_tag: PT-COISAS2-RELOGIO
 prerequisites: [PT-C53-dinheiro, PT-C53-presente]
 sounds: []
-roots: []
+roots: [horologium-latin]
+etymology_hook: "relógio ← Old Catalan relotge, from Latin horologium 'hour-teller' — English horology"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C53-presente]
 <!-- hl-knowledge: introduces=[PT-LEX-C53-COISAS2-05]; assesses=[] -->
 
 **o relógio** — "a watch, a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**relógio** ← Old Catalan *relotge*, "clock" (EtymDB 2.1), from Latin *horologium*, "sundial, clock", from Greek *hōrologion*, "hour-teller" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

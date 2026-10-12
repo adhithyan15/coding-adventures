@@ -13,7 +13,8 @@ gloss: "beef"
 concept_tag: PT-COMIDA105-CARNE-DE-VACA
 prerequisites: [PT-C104-trovao, PT-C104-relampago]
 sounds: []
-roots: []
+roots: [caro-latin]
+etymology_hook: "carne de vaca — 'meat of cow': carne ← Latin caro, carnis; vaca ← Latin vacca"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C104-relampago]
 <!-- hl-knowledge: introduces=[PT-LEX-C105-COMIDA105-01]; assesses=[] -->
 
 **a carne de vaca** — "beef".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carne de vaca** is "meat of cow": *carne* ← Latin *caro, carnis*, "flesh" (EtymDB 2.1), and *vaca* ← Latin *vacca* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

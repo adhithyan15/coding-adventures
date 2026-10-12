@@ -13,7 +13,8 @@ gloss: "a lesson"
 concept_tag: PT-ESCOLA112-AULA
 prerequisites: [PT-C112-chefe, PT-C112-turma, PT-C29-palavras, PT-C29-primeira-leitura]
 sounds: []
-roots: []
+roots: [aula-latin]
+etymology_hook: "aula ← Latin aula 'hall, court', from Greek aule 'courtyard'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PT-C112-turma]
 <!-- hl-knowledge: introduces=[PT-LEX-C112-ESCOLA112-04]; assesses=[] -->
 
 **a aula** — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aula** ← Latin *aula*, "hall, court" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *aulē*, "courtyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

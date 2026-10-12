@@ -13,7 +13,8 @@ gloss: "brave"
 concept_tag: PT-QUAL185-CORAJOSO-CORAJOSA
 prerequisites: [PT-C185-alegre, PT-C185-timido-timida]
 sounds: []
-roots: []
+roots: [latin-cor-cordis]
+etymology_hook: "corajoso — built from coragem 'courage' + -oso 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C185-timido-timida]
 <!-- hl-knowledge: introduces=[PT-LEX-C185-QUAL185-03]; assesses=[] -->
 
 **corajoso / corajosa** — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corajoso** is built from *coragem*, "courage", and *-oso*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

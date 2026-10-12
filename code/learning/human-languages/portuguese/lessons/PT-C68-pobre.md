@@ -13,7 +13,8 @@ gloss: "poor"
 concept_tag: PT-ADJ5-POBRE
 prerequisites: [PT-C68-fraco, PT-C68-rico]
 sounds: []
-roots: []
+roots: [pauper-latin]
+etymology_hook: "pobre ← Latin pauper 'poor' — English poor and poverty share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C68-rico]
 <!-- hl-knowledge: introduces=[PT-LEX-C68-ADJ5-04]; assesses=[] -->
 
 **pobre** — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pobre** ← Latin *pauper*, "poor" (EtymDB 2.1) — inherited. The Latin *-p-* between vowels became *-b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

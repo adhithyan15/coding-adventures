@@ -13,7 +13,8 @@ gloss: "a sausage"
 concept_tag: PT-COISAS254-SALSICHA
 prerequisites: [PT-C254-atum, PT-C254-bacalhau]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "salsicha ← Italian salsiccia, from Late Latin salsicia, from salsus 'salted'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C254-bacalhau]
 <!-- hl-knowledge: introduces=[PT-LEX-C254-COISAS254-05]; assesses=[] -->
 
 **a salsicha** — "a sausage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salsicha** ← Italian *salsiccia*, "sausage" (EtymDB 2.1) — borrowed. Behind it is Late Latin *salsicia*, from *salsus*, "salted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

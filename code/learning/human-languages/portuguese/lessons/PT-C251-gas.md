@@ -14,6 +14,7 @@ concept_tag: PT-COISAS251-GAS
 prerequisites: [PT-C250-tronco, PT-C250-espinho]
 sounds: []
 roots: []
+etymology_hook: "gás ← French gaz, from Dutch gas, a word coined from Greek khaos"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C250-espinho]
 <!-- hl-knowledge: introduces=[PT-LEX-C251-COISAS251-01]; assesses=[] -->
 
 **o gás** — "gas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gás** ← French *gaz*, "gas" (EtymDB 2.1) — borrowed. French took it from Dutch *gas*, a word coined from Greek *khaos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

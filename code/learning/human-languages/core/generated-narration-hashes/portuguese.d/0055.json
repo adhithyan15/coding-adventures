@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 55,
-  "sourceHash": "fnv1a64:954e2952358e76f1",
+  "sourceHash": "fnv1a64:9fd03bfbf4a1b535",
   "lessonIds": [
     "PT-C55-entrar",
     "PT-C55-sair",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch55.txt",
   "json": "portuguese/narration/ch55.json",
-  "textHash": "fnv1a64:0514a2943788cd4d",
-  "jsonHash": "fnv1a64:766c9da900f1bce1",
+  "textHash": "fnv1a64:832ad8c93f38b68f",
+  "jsonHash": "fnv1a64:4e2f04e57eebabd1",
   "findings": []
 }

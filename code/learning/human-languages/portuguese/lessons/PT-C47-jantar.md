@@ -13,7 +13,8 @@ gloss: "dinner"
 concept_tag: PT-REFEICOES-JANTAR
 prerequisites: [PT-C47-mel, PT-C47-almoco]
 sounds: []
-roots: []
+roots: [ientare-latin]
+etymology_hook: "jantar ← Latin ientare 'to have breakfast': the meal moved to the evening"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C47-almoco]
 <!-- hl-knowledge: introduces=[PT-LEX-C47-REFEICOES-04]; assesses=[] -->
 
 **o jantar** — "dinner". Also the verb: **jantar**, to have dinner.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jantar** ← Latin *ientare*, "to have breakfast" (EtymDB 2.1) — inherited. The verb became a noun, and the meal moved to the evening.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

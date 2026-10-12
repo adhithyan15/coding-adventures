@@ -13,7 +13,8 @@ gloss: "the sky"
 concept_tag: PT-CEU-CEU
 prerequisites: [PT-C57-ilha, PT-C58-campo]
 sounds: []
-roots: []
+roots: [caelum-latin]
+etymology_hook: "céu ← Latin caelum 'sky, heaven' — English celestial shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C58-campo]
 <!-- hl-knowledge: introduces=[PT-LEX-C58-CEU-02]; assesses=[] -->
 
 **o céu** — "the sky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**céu** ← Latin *caelum*, "sky, heaven" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

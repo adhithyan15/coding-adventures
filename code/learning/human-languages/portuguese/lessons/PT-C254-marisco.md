@@ -13,7 +13,8 @@ gloss: "seafood"
 concept_tag: PT-COISAS254-MARISCO
 prerequisites: [PT-C253-recibo, PT-C253-fila]
 sounds: []
-roots: []
+roots: [mare-latin]
+etymology_hook: "marisco — built from the sea word (← Latin mare) + -isco: things from the sea"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C253-fila]
 <!-- hl-knowledge: introduces=[PT-LEX-C254-COISAS254-01]; assesses=[] -->
 
 **o marisco** — "seafood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marisco** is built from the word for the sea, from Latin *mare* (EtymDB 2.1), and *-isco*: things from the sea.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,7 @@ concept_tag: PT-OBLIGATION-HAVE-TO
 prerequisites: [PT-C18-ter-haver, PT-C05-falar]
 sounds: [circumflex-tem]
 roots: [tenere-latin]
-etymology_hook: "ter 'have' extends naturally into ter que 'have to'"
+etymology_hook: "ter que: ter ← Latin tenere 'to hold'; que ← Latin quid 'what'"
 duration:
   max_seconds: 135
 requires:
@@ -52,6 +52,11 @@ Build it in three pieces:
 
 Only **ter** changes with the person. The following action stays in its
 dictionary form: **temos que falar**, “we have to speak.”
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ter** ← Latin *tenere*, "to hold" (EtymDB 2.1), and **que** ← Latin *quid*, "what" (EtymDB 2.1) — both inherited.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-HAVER-02, PT-GRAMMAR-TER-QUE-04] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 236,
-  "sourceHash": "fnv1a64:ed326bc28aae2ece",
+  "sourceHash": "fnv1a64:d9f791d4129aaa4d",
   "lessonIds": [
     "PT-C236-sonhar",
     "PT-C236-empurrar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch236.txt",
   "json": "portuguese/narration/ch236.json",
-  "textHash": "fnv1a64:313237fec5c97fe5",
-  "jsonHash": "fnv1a64:62ca28dee2bc19e6",
+  "textHash": "fnv1a64:770c039417f7a18a",
+  "jsonHash": "fnv1a64:b114b5f27879db19",
   "findings": []
 }

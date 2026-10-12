@@ -13,7 +13,8 @@ gloss: "a theatre"
 concept_tag: PT-CIDADE4-TEATRO
 prerequisites: [PT-C76-correio, PT-C76-policia]
 sounds: []
-roots: []
+roots: [theatrum-latin]
+etymology_hook: "teatro ← Latin theatrum, from Greek theatron 'place for viewing' — English theatre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C76-policia]
 <!-- hl-knowledge: introduces=[PT-LEX-C76-CIDADE4-04]; assesses=[] -->
 
 **o teatro** — "a theatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**teatro** ← Latin *theatrum*, "theatre" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *theatron*, "place for viewing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

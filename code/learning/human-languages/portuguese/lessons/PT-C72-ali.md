@@ -13,7 +13,8 @@ gloss: "there"
 concept_tag: PT-ONDE-ALI
 prerequisites: [PT-C71-devagar, PT-C72-aqui]
 sounds: []
-roots: []
+roots: [illic-latin]
+etymology_hook: "ali ← Latin illic 'there', with a- from ad 'to' — Spanish allí is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C72-aqui]
 <!-- hl-knowledge: introduces=[PT-LEX-C72-ONDE-02]; assesses=[] -->
 
 **ali** — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ali** ← Latin *illic*, "there" (Lewis & Short), with *a-* from *ad*, "to" — inherited. EtymDB 2.1 traces it only to Old Portuguese *ali*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

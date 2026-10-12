@@ -231,7 +231,11 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   marathi: { withoutHook: 1163, withoutVisible: 1116 },
   marwadi: { withoutHook: 552, withoutVisible: 716 },
   persian: { withoutHook: 1300, withoutVisible: 1311 },
-  portuguese: { withoutHook: 1142, withoutVisible: 1141 },
+  // portuguese: 1142 / 1141 -> 0 / 0. Every word lesson now states its word's origin in a
+  // "taken apart" block and a matching etymology_hook: EtymDB 2.1 (Fourrier & Sagot 2020),
+  // CC BY-SA 4.0, with Lewis & Short for certain Latin forms EtymDB lacks. 61 say the
+  // origin is uncertain or disputed, each a genuinely open question, never a stand-in.
+  portuguese: { withoutHook: 0, withoutVisible: 0 },
   punjabi: { withoutHook: 549, withoutVisible: 524 },
   russian: { withoutHook: 1135, withoutVisible: 1148 },
   sanskrit: { withoutHook: 1200, withoutVisible: 1099 },

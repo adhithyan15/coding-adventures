@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 57,
-  "sourceHash": "fnv1a64:1a14457418e39ea9",
+  "sourceHash": "fnv1a64:5c1aca302f30357b",
   "lessonIds": [
     "PT-C57-rio",
     "PT-C57-lago",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch57.txt",
   "json": "portuguese/narration/ch57.json",
-  "textHash": "fnv1a64:db84c242cf59b2ad",
-  "jsonHash": "fnv1a64:3ddad699811777aa",
+  "textHash": "fnv1a64:10f4c56cbeda2848",
+  "jsonHash": "fnv1a64:d40e1759fd5c342d",
   "findings": []
 }

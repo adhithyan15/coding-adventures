@@ -14,6 +14,7 @@ concept_tag: PT-SAUDE210-POMADA
 prerequisites: [PT-C210-comprimido, PT-C210-xarope]
 sounds: []
 roots: []
+etymology_hook: "pomada ← French pommade, from Italian, from the word for apple: early ointments used apples"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C210-xarope]
 <!-- hl-knowledge: introduces=[PT-LEX-C210-SAUDE210-05]; assesses=[] -->
 
 **a pomada** — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pomada** ← French *pommade* — borrowed, from Italian, built on the word for an apple: early ointments used apples.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a soldier"
 concept_tag: PT-COISAS219-SOLDADO
 prerequisites: [PT-C219-paz, PT-C219-exercito]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "soldado — 'one paid': built on the old pay word, from Late Latin solidus, a gold coin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C219-exercito]
 <!-- hl-knowledge: introduces=[PT-LEX-C219-COISAS219-04]; assesses=[] -->
 
 **o soldado** — "a soldier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soldado** is "one paid": built on an old word for pay, from Late Latin *solidus*, a gold coin. Italian *soldato* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

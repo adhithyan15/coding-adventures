@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 115,
-  "sourceHash": "fnv1a64:b93d5bce36157063",
+  "sourceHash": "fnv1a64:37006f9ab4ec8f92",
   "lessonIds": [
     "PT-C115-desenho",
     "PT-C115-vida",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch115.txt",
   "json": "portuguese/narration/ch115.json",
-  "textHash": "fnv1a64:a3537e09e5fd1e21",
-  "jsonHash": "fnv1a64:e1c562dffbbe9113",
+  "textHash": "fnv1a64:ca133402e7e1d48b",
+  "jsonHash": "fnv1a64:c07a793d84d6b71c",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to shout"
 concept_tag: PT-VERB-GRITAR
 prerequisites: [PT-C138-saltar, PT-C138-sorrir]
 sounds: []
-roots: []
+roots: [quiritare-latin]
+etymology_hook: "gritar ← Latin quiritare 'to cry out for help' — English cry is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C138-sorrir]
 <!-- hl-knowledge: introduces=[PT-LEX-C138-VERBOS138-05]; assesses=[] -->
 
 **gritar** — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gritar** ← Latin *quiritare*, "to cry out for help" (Lewis & Short) — inherited. EtymDB 2.1 has no ancestor row for *gritar*; it derives Old Provençal *cridar* from Medieval Latin *cridare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

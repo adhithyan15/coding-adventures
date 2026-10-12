@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 242,
-  "sourceHash": "fnv1a64:958fe53587fed224",
+  "sourceHash": "fnv1a64:3774c444310d059f",
   "lessonIds": [
     "PT-C242-cozido-cozida",
     "PT-C242-maduro-madura",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch242.txt",
   "json": "portuguese/narration/ch242.json",
-  "textHash": "fnv1a64:e33296f8128eeed9",
-  "jsonHash": "fnv1a64:b6a4912b7ccac9f3",
+  "textHash": "fnv1a64:2e5e36a3f03d6d6d",
+  "jsonHash": "fnv1a64:e77020952055c141",
   "findings": []
 }

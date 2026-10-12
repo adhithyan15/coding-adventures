@@ -13,7 +13,8 @@ gloss: "to fold"
 concept_tag: PT-VERB-DOBRAR
 prerequisites: [PT-C234-depender, PT-C234-partilhar]
 sounds: []
-roots: []
+roots: [duplus-latin]
+etymology_hook: "dobrar ← Late Latin duplare 'to double', from duplus — English double"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C234-partilhar]
 <!-- hl-knowledge: introduces=[PT-LEX-C235-VERBOS235-01]; assesses=[] -->
 
 **dobrar** — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dobrar** ← Late Latin *duplare*, "to double" (EtymDB 2.1), from *duplus*, "double" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

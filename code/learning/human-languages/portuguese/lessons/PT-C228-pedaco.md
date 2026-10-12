@@ -13,7 +13,8 @@ gloss: "a piece"
 concept_tag: PT-COISAS228-PEDACO
 prerequisites: [PT-C228-frasco, PT-C228-fatia]
 sounds: []
-roots: []
+roots: [pittacium-latin]
+etymology_hook: "pedaço ← Latin pittacium 'a patch, a label', from Greek pittakion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C228-fatia]
 <!-- hl-knowledge: introduces=[PT-LEX-C228-COISAS228-03]; assesses=[] -->
 
 **o pedaço** — "a piece".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pedaço** ← Latin *pittacium*, "a patch, a label" (EtymDB 2.1) — inherited. Latin took it from Greek *pittakion*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

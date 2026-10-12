@@ -13,7 +13,8 @@ gloss: "a whale"
 concept_tag: PT-ANIMAIS119-BALEIA
 prerequisites: [PT-C119-esquilo, PT-C119-coruja]
 sounds: []
-roots: []
+roots: [ballaena-latin]
+etymology_hook: "baleia ← Latin ballaena, from Greek phallaina 'whale' — English baleen shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C119-coruja]
 <!-- hl-knowledge: introduces=[PT-LEX-C119-ANIMAIS119-03]; assesses=[] -->
 
 **a baleia** — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**baleia** ← Latin *ballaena*, "whale" (EtymDB 2.1) — inherited. Latin took it from Greek *phallaina*; the *-n-* fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

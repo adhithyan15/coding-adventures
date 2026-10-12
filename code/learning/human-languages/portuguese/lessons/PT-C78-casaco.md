@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA2-CASACO
 prerequisites: [PT-C77-sapatos, PT-C78-chapeu]
 sounds: []
 roots: []
+etymology_hook: "casaco — from an older coat word borrowed from French casaque"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C78-chapeu]
 <!-- hl-knowledge: introduces=[PT-LEX-C78-ROUPA2-02]; assesses=[] -->
 
 **o casaco** — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casaco** is a masculine of an older word for a coat (EtymDB 2.1), borrowed from French *casaque* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "serious"
 concept_tag: PT-QUALIDADES124-SERIO
 prerequisites: [PT-C124-simpatico, PT-C124-gentil]
 sounds: []
-roots: []
+roots: [serius-latin]
+etymology_hook: "sério ← Latin serius 'earnest, grave' — English serious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C124-gentil]
 <!-- hl-knowledge: introduces=[PT-LEX-C124-QUALIDADES124-03]; assesses=[] -->
 
 **sério** — "serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sério** ← Latin *serius*, "earnest, grave" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to dry"
 concept_tag: PT-VERB-SECAR
 prerequisites: [PT-C201-poupar, PT-C201-encomendar]
 sounds: []
-roots: []
+roots: [siccus-latin]
+etymology_hook: "secar ← Latin siccare 'to dry', from siccus — the same root as seco"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C201-encomendar]
 <!-- hl-knowledge: introduces=[PT-LEX-C201-VERBOS201-05]; assesses=[] -->
 
 **secar** — "to dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**secar** ← Latin *siccare*, "to dry" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

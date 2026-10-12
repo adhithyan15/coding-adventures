@@ -13,7 +13,8 @@ gloss: "deep"
 concept_tag: PT-QUAL241-PROFUNDO-PROFUNDA
 prerequisites: [PT-C241-liso-lisa, PT-C241-aspero-aspera]
 sounds: []
-roots: []
+roots: [fundus-latin]
+etymology_hook: "profundo ← Latin profundus 'deep', from fundus 'bottom' — English profound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C241-aspero-aspera]
 <!-- hl-knowledge: introduces=[PT-LEX-C241-QUAL241-03]; assesses=[] -->
 
 **profundo / profunda** — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**profundo** ← Latin *profundus*, "deep" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *profundo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

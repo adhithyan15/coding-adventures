@@ -13,7 +13,8 @@ gloss: "to heat, to warm up"
 concept_tag: PT-VERB-AQUECER
 prerequisites: [PT-C201-encomendar, PT-C201-secar]
 sounds: []
-roots: []
+roots: [calere-latin]
+etymology_hook: "aquecer ← Vulgar Latin *adcalescere, from calescere 'to grow warm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C201-secar]
 <!-- hl-knowledge: introduces=[PT-LEX-C202-VERBOS202-01]; assesses=[] -->
 
 **aquecer** — "to heat, to warm up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aquecer** ← Vulgar Latin *\*adcalescere*, from Latin *calescere*, "to grow warm" (Lewis & Short) — inherited. EtymDB 2.1 has no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 235,
-  "sourceHash": "fnv1a64:6526dbb9c9e92041",
+  "sourceHash": "fnv1a64:12ef4ce45c15314f",
   "lessonIds": [
     "PT-C235-dobrar",
     "PT-C235-possuir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch235.txt",
   "json": "portuguese/narration/ch235.json",
-  "textHash": "fnv1a64:f4db91f8e1c79f9c",
-  "jsonHash": "fnv1a64:bb1f294288420b95",
+  "textHash": "fnv1a64:926200819a27ee37",
+  "jsonHash": "fnv1a64:bf5421adfecec278",
   "findings": []
 }

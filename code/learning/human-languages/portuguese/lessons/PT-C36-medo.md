@@ -13,7 +13,8 @@ gloss: "fear"
 concept_tag: PT-SENTIR-MEDO
 prerequisites: [PT-C35-cansaco, PT-C35-alegria]
 sounds: []
-roots: []
+roots: [metus-latin]
+etymology_hook: "medo ← Latin metus 'fear': the Latin -t- between vowels became -d-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C35-alegria]
 <!-- hl-knowledge: introduces=[PT-LEX-C36-SENTIR-01]; assesses=[] -->
 
 **o medo** — "fear". **tenho medo**: I am afraid.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medo** ← Latin *metus*, "fear" (EtymDB 2.1) — inherited. The Latin *-t-* between vowels became *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

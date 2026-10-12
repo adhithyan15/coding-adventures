@@ -13,7 +13,8 @@ gloss: "a bird"
 concept_tag: PT-ANIMAIS2-PASSARO
 prerequisites: [PT-C60-vaca, PT-C60-porco]
 sounds: []
-roots: []
+roots: [passer-latin]
+etymology_hook: "pássaro ← Latin passer 'sparrow' — English passerine, the perching birds"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C60-porco]
 <!-- hl-knowledge: introduces=[PT-LEX-C61-ANIMAIS2-01]; assesses=[] -->
 
 **o pássaro** — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pássaro** ← Latin *passer*, "sparrow" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

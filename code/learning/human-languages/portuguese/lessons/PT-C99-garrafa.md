@@ -14,6 +14,7 @@ concept_tag: PT-CASA99-GARRAFA
 prerequisites: [PT-C98-casa-de-banho, PT-C99-chavena]
 sounds: []
 roots: []
+etymology_hook: "garrafa — origin uncertain, perhaps Arabic; English carafe may be a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C99-chavena]
 <!-- hl-knowledge: introduces=[PT-LEX-C99-CASA99-02]; assesses=[] -->
 
 **a garrafa** — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**garrafa** — its origin is uncertain, perhaps Arabic. EtymDB 2.1 has no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

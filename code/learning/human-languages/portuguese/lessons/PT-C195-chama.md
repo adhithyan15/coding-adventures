@@ -13,7 +13,8 @@ gloss: "a flame"
 concept_tag: PT-COISAS195-CHAMA
 prerequisites: [PT-C195-po, PT-C195-fumo]
 sounds: []
-roots: []
+roots: [flamma-latin]
+etymology_hook: "chama ← Latin flamma 'flame': fl- became ch- — English flame"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C195-fumo]
 <!-- hl-knowledge: introduces=[PT-LEX-C195-COISAS195-04]; assesses=[] -->
 
 **a chama** — "a flame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chama** ← Latin *flamma*, "flame" (EtymDB 2.1) — inherited. Latin *fl-* became *ch-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

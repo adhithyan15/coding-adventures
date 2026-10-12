@@ -13,7 +13,8 @@ gloss: "a knee"
 concept_tag: PT-CORPO2-JOELHO
 prerequisites: [PT-C31-pescoco, PT-C31-ombro]
 sounds: []
-roots: []
+roots: [genu-latin]
+etymology_hook: "joelho ← Vulgar Latin *genuculum 'little knee', from genu — English genuflect shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C31-ombro]
 <!-- hl-knowledge: introduces=[PT-LEX-C31-CORPO2-05]; assesses=[] -->
 
 **o joelho** — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**joelho** ← Vulgar Latin *\*genuculum*, "little knee" (EtymDB 2.1), from Latin *genu*, "knee" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

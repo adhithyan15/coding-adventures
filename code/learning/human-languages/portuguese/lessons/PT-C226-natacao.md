@@ -13,7 +13,8 @@ gloss: "swimming"
 concept_tag: PT-COISAS226-NATACAO
 prerequisites: [PT-C226-raquete, PT-C226-ginasio]
 sounds: []
-roots: []
+roots: [natare-latin]
+etymology_hook: "natação ← Latin natatio 'swimming', from natare 'to swim'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C226-ginasio]
 <!-- hl-knowledge: introduces=[PT-LEX-C226-COISAS226-03]; assesses=[] -->
 
 **a natação** — "swimming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**natação** ← Latin *natatio, natationis*, "swimming" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

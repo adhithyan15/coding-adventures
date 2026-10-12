@@ -13,7 +13,8 @@ gloss: "personal"
 concept_tag: PT-QUAL156-PESSOAL
 prerequisites: [PT-C156-publico-publica, PT-C156-privado-privada]
 sounds: []
-roots: []
+roots: [persona-latin]
+etymology_hook: "pessoal — built from pessoa 'person' (← Latin persona) + -al"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C156-privado-privada]
 <!-- hl-knowledge: introduces=[PT-LEX-C156-QUAL156-05]; assesses=[] -->
 
 **pessoal** — "personal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pessoal** is built from *pessoa*, "person", and *-al*, like Late Latin *personalis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

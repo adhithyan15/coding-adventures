@@ -14,6 +14,7 @@ concept_tag: PT-CIDADE3-RESTAURANTE
 prerequisites: [PT-C75-igreja, PT-C75-museu]
 sounds: []
 roots: []
+etymology_hook: "restaurante ← French restaurant 'restoring', from restaurer 'to restore'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C75-museu]
 <!-- hl-knowledge: introduces=[PT-LEX-C75-CIDADE3-03]; assesses=[] -->
 
 **o restaurante** — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**restaurante** ← French *restaurant*, "restoring" (EtymDB 2.1) — borrowed. A restaurant first served a restoring broth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "dangerous"
 concept_tag: PT-QUALIDADES125-PERIGOSO
 prerequisites: [PT-C125-pronto, PT-C125-seguro]
 sounds: []
-roots: []
+roots: [periculum-latin]
+etymology_hook: "perigoso — built from the danger word (from Latin periculum) + -oso 'full of' — English peril"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C125-seguro]
 <!-- hl-knowledge: introduces=[PT-LEX-C125-QUALIDADES125-03]; assesses=[] -->
 
 **perigoso** — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perigoso** is built from the word for danger and *-oso*, "full of" (EtymDB 2.1). The danger word goes back to Latin *periculum*, "trial, danger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

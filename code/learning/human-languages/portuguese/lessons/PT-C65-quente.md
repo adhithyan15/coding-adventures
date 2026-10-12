@@ -13,7 +13,8 @@ gloss: "hot"
 concept_tag: PT-ADJ2-QUENTE
 prerequisites: [PT-C65-longo, PT-C65-curto]
 sounds: []
-roots: []
+roots: [calere-latin]
+etymology_hook: "quente ← Latin calens 'being hot': Old Portuguese caente lost its -l-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C65-curto]
 <!-- hl-knowledge: introduces=[PT-LEX-C65-ADJ2-05]; assesses=[] -->
 
 **quente** — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quente** ← Latin *calens, calentis*, "being hot" (EtymDB 2.1) — inherited. Old Portuguese *caente* had already lost the *-l-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

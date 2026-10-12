@@ -14,6 +14,7 @@ concept_tag: PT-COISAS224-SOTAO
 prerequisites: [PT-C223-volante, PT-C223-roda]
 sounds: []
 roots: []
+etymology_hook: "sótão — usually traced to a Latin form built on subtus 'beneath'; the exact form is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C223-roda]
 <!-- hl-knowledge: introduces=[PT-LEX-C224-COISAS224-01]; assesses=[] -->
 
 **o sótão** — "an attic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sótão** — Old Portuguese said *sotoo* (EtymDB 2.1). It is usually traced to a Latin form built on *subtus*, "beneath"; the exact form is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

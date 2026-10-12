@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 48,
-  "sourceHash": "fnv1a64:a76bba4c89c858ca",
+  "sourceHash": "fnv1a64:855b31e9167c198f",
   "lessonIds": [
     "PT-C48-casa",
     "PT-C48-cozinha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch48.txt",
   "json": "portuguese/narration/ch48.json",
-  "textHash": "fnv1a64:9723cf9fea498998",
-  "jsonHash": "fnv1a64:85f77d2b49b0999c",
+  "textHash": "fnv1a64:7636ba5a1e899dc3",
+  "jsonHash": "fnv1a64:6229dbcd16269767",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a fork"
 concept_tag: PT-MESA-GARFO
 prerequisites: [PT-C51-colher, PT-C51-faca]
 sounds: []
-roots: []
+roots: [graphium-latin]
+etymology_hook: "garfo ← Latin graphium 'stylus', from Greek — English graphic shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C51-faca]
 <!-- hl-knowledge: introduces=[PT-LEX-C51-MESA-05]; assesses=[] -->
 
 **o garfo** — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**garfo** ← Latin *graphium*, "stylus" (EtymDB 2.1) — inherited. Latin took it from Greek; a pointed writing tool became a pointed eating tool.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

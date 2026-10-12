@@ -11,7 +11,7 @@ concept_tag: VERB-MEET
 prerequisites: [PT-C22-encontrar, PT-C18-saber-conhecer, PT-C07-dias-2, PT-C08-meio-dia-meia-noite]
 sounds: [nasal-en, nasal-on]
 roots: [latin-in-contra, contra-latin]
-etymology_hook: "the face-to-face image in encontrar extends from finding to meeting"
+etymology_hook: "encontrar ← Late Latin incontrare, from in + contra 'against' — English encounter shares it"
 duration:
   max_seconds: 150
 requires:
@@ -53,6 +53,11 @@ after the verb as shown. In Brazil, **nós nos encontramos** is more usual.
 For a first introduction, keep using the **conhecer** family you already know:
 **Conheci o Pedro**, “I met Pedro for the first time.” Today’s **encontrar-se**
 is for meeting up.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**encontrar** ← Late Latin *incontrare*, from *in*, "in", and *contra*, "against" — inherited. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-ENCONTRAR-02, PT-LEX-SABER-CONHECER-02, PT-ETYMON-DIAS-2-02, PT-ETYMON-MEIO-DIA-MEIA-NOITE-02, PT-GRAMMAR-ENCONTRAR-MEET-04] -->

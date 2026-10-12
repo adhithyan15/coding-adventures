@@ -13,7 +13,8 @@ gloss: "ugly"
 concept_tag: PT-ADJ2-FEIO
 prerequisites: [PT-C64-mau, PT-C65-bonito]
 sounds: []
-roots: []
+roots: [foedus-latin]
+etymology_hook: "feio ← Latin foedus 'foul, hideous': the -d- fell out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C65-bonito]
 <!-- hl-knowledge: introduces=[PT-LEX-C65-ADJ2-02]; assesses=[] -->
 
 **feio** — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feio** ← Latin *foedus*, "foul, hideous" (EtymDB 2.1) — inherited. The *-d-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

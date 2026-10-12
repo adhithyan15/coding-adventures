@@ -13,7 +13,8 @@ gloss: "ninety"
 concept_tag: PT-NUMEROS130-NOVENTA
 prerequisites: [PT-C130-setenta, PT-C130-oitenta]
 sounds: []
-roots: []
+roots: [nonaginta-latin]
+etymology_hook: "noventa ← Latin nonaginta 'ninety', reshaped after the word for nine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C130-oitenta]
 <!-- hl-knowledge: introduces=[PT-LEX-C130-NUMEROS130-04]; assesses=[] -->
 
 **noventa** — "ninety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noventa** ← Latin *nonaginta*, "ninety" (Lewis & Short) — inherited. It was reshaped after the word for nine; EtymDB 2.1 traces it only to Old Portuguese *noveenta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

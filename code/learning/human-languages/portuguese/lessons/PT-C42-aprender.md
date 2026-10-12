@@ -13,7 +13,8 @@ gloss: "to learn"
 concept_tag: PT-VERB-APRENDER
 prerequisites: [PT-C42-ouvir, PT-C42-ensinar]
 sounds: []
-roots: []
+roots: [apprehendere-latin]
+etymology_hook: "aprender ← Latin apprendere, apprehendere 'to seize' — English apprehend shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C42-ensinar]
 <!-- hl-knowledge: introduces=[PT-LEX-C42-VERBOS3-04]; assesses=[] -->
 
 **aprender** — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aprender** ← Latin *apprendere*, "to seize, to grasp" (EtymDB 2.1), a short form of *apprehendere* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

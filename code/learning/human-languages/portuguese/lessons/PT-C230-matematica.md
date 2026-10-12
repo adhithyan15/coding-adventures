@@ -13,7 +13,8 @@ gloss: "mathematics"
 concept_tag: PT-TRAB230-MATEMATICA
 prerequisites: [PT-C230-historia, PT-C230-geografia]
 sounds: []
-roots: []
+roots: [mathematica-latin]
+etymology_hook: "matemática ← Latin mathematica, from Greek mathema 'learning'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C230-geografia]
 <!-- hl-knowledge: introduces=[PT-LEX-C230-TRAB230-05]; assesses=[] -->
 
 **a matemática** — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**matemática** ← Latin *mathematica*, "mathematics" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *mathēma*, "learning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

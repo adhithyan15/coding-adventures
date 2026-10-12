@@ -13,7 +13,8 @@ gloss: "a tax"
 concept_tag: PT-COISAS162-IMPOSTO
 prerequisites: [PT-C161-verdade, PT-C162-divida]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "imposto ← Vulgar Latin *impositum 'laid upon', from imponere — English impose"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C162-divida]
 <!-- hl-knowledge: introduces=[PT-LEX-C162-COISAS162-02]; assesses=[] -->
 
 **o imposto** — "a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**imposto** ← Vulgar Latin *\*impositum*, "laid upon" (EtymDB 2.1), from Latin *imponere*, "to lay upon" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "friendship"
 concept_tag: PT-SAUDE149-AMIZADE
 prerequisites: [PT-C149-ansiedade, PT-C149-amor]
 sounds: []
-roots: []
+roots: [amicus-latin]
+etymology_hook: "amizade ← Vulgar Latin *amicitatem, from amicus 'friend' — English amity shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C149-amor]
 <!-- hl-knowledge: introduces=[PT-LEX-C149-SAUDE149-04]; assesses=[] -->
 
 **a amizade** — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amizade** ← Vulgar Latin *\*amicitatem*, from Latin *amicus*, "friend" — inherited. EtymDB 2.1 traces it only to Old Portuguese *amizade*; it derives Spanish *amistad* from Vulgar Latin *\*amicitas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

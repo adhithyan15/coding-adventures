@@ -13,7 +13,8 @@ gloss: "a sack, a carrier bag"
 concept_tag: PT-COISAS165-SACO
 prerequisites: [PT-C165-metal, PT-C165-tijolo]
 sounds: []
-roots: []
+roots: [saccus-latin]
+etymology_hook: "saco ← Latin saccus, from Greek sakkos 'sack' — English sack is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C165-tijolo]
 <!-- hl-knowledge: introduces=[PT-LEX-C165-COISAS165-04]; assesses=[] -->
 
 **o saco** — "a sack, a carrier bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saco** ← Latin *saccus*, "sack" (EtymDB 2.1) — inherited. Latin took it from Greek *sakkos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

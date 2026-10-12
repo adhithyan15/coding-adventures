@@ -13,7 +13,8 @@ gloss: "the post; the post office"
 concept_tag: PT-CIDADE4-CORREIO
 prerequisites: [PT-C75-farmacia, PT-C76-aldeia]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "correio ← Spanish correo, through Catalan from Provençal 'messenger', from currere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C76-aldeia]
 <!-- hl-knowledge: introduces=[PT-LEX-C76-CIDADE4-02]; assesses=[] -->
 
 **o correio** — "the post; the post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**correio** ← Spanish *correo*, "post, courier" (EtymDB 2.1) — borrowed. Behind it are Catalan *correu* and Old Provençal *corrieu*, "messenger", from Latin *currere*, "to run".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

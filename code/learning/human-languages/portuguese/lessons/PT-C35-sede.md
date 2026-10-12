@@ -13,7 +13,8 @@ gloss: "thirst"
 concept_tag: PT-SAUDE2-SEDE
 prerequisites: [PT-C35-doenca, PT-C35-fome]
 sounds: []
-roots: []
+roots: [sitis-latin]
+etymology_hook: "sede ← Latin sitis 'thirst' — Spanish sed and Italian sete are its sisters"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C35-fome]
 <!-- hl-knowledge: introduces=[PT-LEX-C35-SAUDE2-03]; assesses=[] -->
 
 **a sede** — "thirst". **tenho sede**: I am thirsty.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sede** ← Latin *sitis*, "thirst" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

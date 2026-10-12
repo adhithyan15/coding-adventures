@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a dolphin, then the Portuguese for an
 You'll want to know: o tornozelo.
 o tornozelo — "an ankle".
 
+The word, taken apart.
+tornozelo is built on the word for a turn, with a small-making ending: the joint the foot turns on. EtymDB 2.1 links it to the verb "to turn", which from Latin tornare, "to turn on a lathe".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for an elbow, then the Portuguese for an 
 
 You'll want to know: o pulso.
 o pulso — "a wrist".
+
+The word, taken apart.
+pulso from Latin pulsus, "a beat" (EtymDB 2.1), from pellere, "to drive" — a learned borrowing from Latin. The wrist is where the pulse beats.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for an ankle, then the Portuguese for a w
 You'll want to know: a bochecha.
 a bochecha — "a cheek".
 
+The word, taken apart.
+bochecha is probably built on boca, "mouth" ( from Latin bucca, "cheek"); its exact formation is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a wrist, then the Portuguese for a ch
 You'll want to know: os lábios.
 os lábios — "lips".
 
+The word, taken apart.
+lábios from Latin labium, "lip" (Lewis & Short) — a learned borrowing from Latin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for a cheek, then the Portuguese for lips
 
 You'll want to know: o peito.
 o peito — "the chest".
+
+The word, taken apart.
+peito from Latin pectus, "breast" (EtymDB 2.1) — inherited. Latin -ct- became -it-.
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 162,
-  "sourceHash": "fnv1a64:1dba2bfcc9469979",
+  "sourceHash": "fnv1a64:acd220f96c96cc92",
   "lessonIds": [
     "PT-C162-divida",
     "PT-C162-imposto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch162.txt",
   "json": "portuguese/narration/ch162.json",
-  "textHash": "fnv1a64:10cc0e88901277a6",
-  "jsonHash": "fnv1a64:af09742444910db5",
+  "textHash": "fnv1a64:f0588efa43b04e84",
+  "jsonHash": "fnv1a64:84de03d33191c16c",
   "findings": []
 }

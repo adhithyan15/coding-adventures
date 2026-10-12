@@ -13,7 +13,8 @@ gloss: "a hammer"
 concept_tag: PT-CASA98-MARTELO
 prerequisites: [PT-C97-corda, PT-C97-prego]
 sounds: []
-roots: []
+roots: [martellus-latin]
+etymology_hook: "martelo ← Late Latin martellus, a small form of marculus 'hammer'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C97-prego]
 <!-- hl-knowledge: introduces=[PT-LEX-C98-CASA98-01]; assesses=[] -->
 
 **o martelo** — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**martelo** ← Late Latin *martellus*, "hammer" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

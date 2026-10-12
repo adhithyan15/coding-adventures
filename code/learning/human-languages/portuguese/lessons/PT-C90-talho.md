@@ -13,7 +13,8 @@ gloss: "a butcher's"
 concept_tag: PT-LUGARES90-TALHO
 prerequisites: [PT-C90-pastelaria, PT-C90-padaria]
 sounds: []
-roots: []
+roots: [taliare-latin]
+etymology_hook: "talho — 'cutting place': from the verb to cut ← Late Latin taliare — English tailor shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C90-padaria]
 <!-- hl-knowledge: introduces=[PT-LEX-C90-LUGARES90-05]; assesses=[] -->
 
 **o talho** — "a butcher's". In Brazil, **o açougue**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**talho** is built from the verb "to cut, to carve", which ← Late Latin *taliare*, "to cut". EtymDB 2.1 links *talho* to Spanish *tajar*, "to cut", from *taliare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

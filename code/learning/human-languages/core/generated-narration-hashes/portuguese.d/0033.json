@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 33,
-  "sourceHash": "fnv1a64:509810fbaf58652a",
+  "sourceHash": "fnv1a64:8adec914da7d2fbb",
   "lessonIds": [
     "PT-C33-pele",
     "PT-C33-unha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch33.txt",
   "json": "portuguese/narration/ch33.json",
-  "textHash": "fnv1a64:d5da0cddda5a7f51",
-  "jsonHash": "fnv1a64:b4e3b67315c338b5",
+  "textHash": "fnv1a64:ad95e37838b3d292",
+  "jsonHash": "fnv1a64:cee70f70f7c124de",
   "findings": []
 }

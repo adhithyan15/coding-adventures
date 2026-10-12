@@ -13,7 +13,8 @@ gloss: "an uncle"
 concept_tag: PT-FAMILIA2-TIO
 prerequisites: [PT-C37-marido, PT-C37-esposa]
 sounds: []
-roots: []
+roots: [thius]
+etymology_hook: "tio ← Late Latin thius, from Greek theios 'uncle' — Spanish tío and Italian zio share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C37-esposa]
 <!-- hl-knowledge: introduces=[PT-LEX-C38-FAMILIA2-01]; assesses=[] -->
 
 **o tio** — "an uncle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tio** ← Late Latin *thius*, "uncle", from Greek *theios* — inherited. EtymDB 2.1 has no ancestor row for *tio*; it derives Spanish *tío* and Italian *zio* from *thius*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

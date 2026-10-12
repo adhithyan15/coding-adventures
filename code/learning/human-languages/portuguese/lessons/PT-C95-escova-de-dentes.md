@@ -13,7 +13,8 @@ gloss: "a toothbrush"
 concept_tag: PT-CASA95-ESCOVA-DE-DENTES
 prerequisites: [PT-C95-toalha, PT-C95-sabonete]
 sounds: []
-roots: []
+roots: [scopa-latin]
+etymology_hook: "escova de dentes: escova ← Latin scopa 'twigs, broom'; dente ← Latin dens 'tooth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C95-sabonete]
 <!-- hl-knowledge: introduces=[PT-LEX-C95-CASA95-03]; assesses=[] -->
 
 **a escova de dentes** — "a toothbrush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escova de dentes** is "brush of teeth": *escova* ← Latin *scopa*, "twigs, a broom" (Lewis & Short), and *dentes* is the plural of *dente* ← Latin *dens*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

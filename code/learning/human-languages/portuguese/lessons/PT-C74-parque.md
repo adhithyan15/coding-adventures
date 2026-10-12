@@ -14,6 +14,7 @@ concept_tag: PT-CIDADE2-PARQUE
 prerequisites: [PT-C74-carro, PT-C74-ponte]
 sounds: []
 roots: []
+etymology_hook: "parque ← French parc 'enclosure' — English park is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C74-ponte]
 <!-- hl-knowledge: introduces=[PT-LEX-C74-CIDADE2-05]; assesses=[] -->
 
 **o parque** — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parque** ← French *parc*, "enclosure, park" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

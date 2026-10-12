@@ -13,7 +13,8 @@ gloss: "to eat"
 concept_tag: PT-VERB-COMER
 prerequisites: [PT-C43-fechar, PT-C43-beber]
 sounds: []
-roots: []
+roots: [comedere-latin]
+etymology_hook: "comer ← Latin comedere 'to eat up', from edere 'to eat' — English edible shares edere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C43-beber]
 <!-- hl-knowledge: introduces=[PT-LEX-C43-VERBOS4-03]; assesses=[] -->
 
 **comer** — "to eat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comer** ← Latin *comedere*, "to eat up" (EtymDB 2.1), from *edere*, "to eat" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

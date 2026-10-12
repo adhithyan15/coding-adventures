@@ -13,7 +13,8 @@ gloss: "a lawyer"
 concept_tag: PT-TRABALHO111-ADVOGADO
 prerequisites: [PT-C110-padeiro, PT-C111-motorista]
 sounds: []
-roots: []
+roots: [vocare-latin]
+etymology_hook: "advogado ← Latin advocatus 'one called in to help' — English advocate is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C111-motorista]
 <!-- hl-knowledge: introduces=[PT-LEX-C111-TRABALHO111-02]; assesses=[] -->
 
 **o advogado** — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**advogado** ← Latin *advocatus*, "one called in to help" (Lewis & Short), from *advocare*, "to call to one's aid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

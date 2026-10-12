@@ -13,7 +13,8 @@ gloss: "a date"
 concept_tag: PT-QUALIDADES128-DATA
 prerequisites: [PT-C128-contente, PT-C128-fim-de-semana, PT-C07-dias-2]
 sounds: []
-roots: []
+roots: [dare-latin]
+etymology_hook: "data ← Late Latin data 'given': letters were 'given' at a place on a day — English date"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C128-fim-de-semana]
 <!-- hl-knowledge: introduces=[PT-LEX-C128-QUALIDADES128-05]; assesses=[] -->
 
 **a data** — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**data** ← Late Latin *data*, "given" (EtymDB 2.1) — a learned borrowing from Late Latin. Letters began *data*, "given", at a place on a day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

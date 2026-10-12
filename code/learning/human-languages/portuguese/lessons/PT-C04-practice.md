@@ -11,6 +11,7 @@ concept_tag: CH4-PRACTICE
 prerequisites: [PT-C04-adeus, PT-C04-ate-logo, PT-C04-ate-amanha, PT-C04-ate-breve]
 sounds: []
 roots: []
+etymology_hook: "review: adeus ← a Deus 'to God'; breve ← Latin brevis 'short'; logo ← Latin loco 'on the spot'"
 duration:
   max_seconds: 216
 requires:

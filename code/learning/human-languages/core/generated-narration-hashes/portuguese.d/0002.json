@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 2,
-  "sourceHash": "fnv1a64:7f84ca77d52af0ff",
+  "sourceHash": "fnv1a64:be311ae1d6f8c821",
   "lessonIds": [
     "PT-C02-de-nada",
     "PT-C02-como",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "portuguese/narration/ch02.txt",
   "json": "portuguese/narration/ch02.json",
-  "textHash": "fnv1a64:4ef39ac5b06479a2",
-  "jsonHash": "fnv1a64:d8eb1035a75ba314",
+  "textHash": "fnv1a64:353efdf698edc4a1",
+  "jsonHash": "fnv1a64:db19d3725efe618f",
   "findings": []
 }

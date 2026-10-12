@@ -14,6 +14,7 @@ concept_tag: PT-SAUDE211-ALERGIA
 prerequisites: [PT-C211-sorte, PT-C211-osso]
 sounds: []
 roots: []
+etymology_hook: "alergia — coined in German from Greek allos 'other' + ergon 'work'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C211-osso]
 <!-- hl-knowledge: introduces=[PT-LEX-C211-SAUDE211-04]; assesses=[] -->
 
 **a alergia** — "an allergy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alergia** — borrowed. The word was coined in German, from Greek *allos*, "other", and *ergon*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
