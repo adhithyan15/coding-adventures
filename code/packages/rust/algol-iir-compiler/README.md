@@ -327,6 +327,9 @@ non-runtime-real, and overridden branches remain gated.
 Branch roots may be unaliased local real snapshots carrying runtime-real
 provenance across assignment; globals, captured locals, and by-name aliases
 remain gated across a selector call.
+Assignment provenance is checked before and after RHS lowering. A selector
+that promotes a branch root through a by-name actual invalidates the cached
+local proof; a value formal leaves its caller's snapshots unaliased.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

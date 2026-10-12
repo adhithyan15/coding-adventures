@@ -6489,6 +6489,13 @@ impl Compiler {
 
         let rhs = self.emit_expr(expr)?;
 
+        // Lowering can promote a local branch root to shared by-name storage.
+        // Keep the proof only if it was valid before lowering and remains valid
+        // in the actual alias state afterward. A newly valid post-state alone
+        // cannot turn an originally unproven expression into a safe value.
+        let runtime_real_value =
+            runtime_real_value && self.is_runtime_real_assignment_value(expr);
+
         for left in left_parts {
             let var_node = first_direct_node(left, "variable")
                 .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
