@@ -4,7 +4,7 @@
   "chapter": 121,
   "title": "Beer, Juice, Ice cream, Chocolate, Biscuit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c4044ee6aadd006",
+  "sourceHash": "fnv1a64:25cb8070399d191b",
   "lessons": [
     {
       "id": "FR-C121-biere",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55185cef973a190e",
+      "sourceHash": "fnv1a64:fdcbca760c61acaa",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bière from Middle Dutch bier — borrowed in the 1400s, with hopped beer. (EtymDB 2.1)."
+              "text": "bière from Middle Dutch bier (EtymDB 2.1) — borrowed in the 1400s, with hopped beer."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afa8e3b42c00e578",
+      "sourceHash": "fnv1a64:39229def5d7691aa",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jus from Latin ius, \"broth, sauce\" — taken from Latin. (EtymDB 2.1)."
+              "text": "jus from Latin ius, \"broth, sauce\" (EtymDB 2.1) — inherited: Latin i- before a vowel regularly became French j-."
             }
           ]
         },

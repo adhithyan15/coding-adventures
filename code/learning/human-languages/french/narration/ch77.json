@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Spoon, Knife, Fork, Bottle, Cup",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:50dfd824b7eba2fc",
+  "sourceHash": "fnv1a64:e1e4c41b8b1faa21",
   "lessons": [
     {
       "id": "FR-C77-cuillere",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c661e3a96626b2c",
+      "sourceHash": "fnv1a64:aa527dc6817ff0d5",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "cuillère from Latin cochlearium, \"a spoon\", from cochlea, \"a snail\", from Greek kokhlias (EtymDB 2.1) — inherited: early spoons were snail shells."
+              "text": "cuillère from Latin cochlearium, \"a spoon\", from cochlear, a pointed spoon for getting snails out of their shells, and cochlea, \"a snail\", from Greek kokhlias (EtymDB 2.1) — inherited."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [FR-C120-farine]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**bière** ← Middle Dutch *bier* — borrowed in the 1400s, with hopped beer. (EtymDB 2.1)
+**bière** ← Middle Dutch *bier* (EtymDB 2.1) — borrowed in the 1400s, with hopped beer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

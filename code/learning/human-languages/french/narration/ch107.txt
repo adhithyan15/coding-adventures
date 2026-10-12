@@ -45,7 +45,7 @@ You'll want to know: le cinéma.
 le cinéma — "a cinema".
 
 The word, taken apart.
-cinéma — short for cinématographe, a coinage of the 1890s from Greek kinema, "movement", and graphein, "to write". (EtymDB 2.1).
+cinéma — short for cinématographe, a coinage of the 1890s from Greek kinema, "movement" (EtymDB 2.1), and graphein, "to write".
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "So, However, Anyway, On the contrary, Although",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6263a2dd6f546f8c",
+  "sourceHash": "fnv1a64:80508876abcd5768",
   "lessons": [
     {
       "id": "FR-C158-donc",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bf2df94541fcba6",
+      "sourceHash": "fnv1a64:6368851b3380edce",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "donc — its origin is uncertain. The usual account takes it to Late Latin dunc, a blend of tunc, \"then\", and dum, \"while\". (EtymDB 2.1 has its Middle French form.)"
+              "text": "donc from Late Latin dunc, \"then, so\" — inherited. How dunc was formed is debated; the usual account blends tunc, \"then\", with dum, \"while\". (EtymDB 2.1 has its Middle French form.)"
             }
           ]
         },

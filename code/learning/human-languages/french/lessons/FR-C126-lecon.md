@@ -14,7 +14,7 @@ concept_tag: FR-ECOLE78-LECON
 prerequisites: [FR-C125-caisse, FR-C126-classe, FR-C45-instructions, FR-C45-premiere-lecture]
 sounds: []
 roots: [legere-latin]
-etymology_hook: "leçon ← Latin lectio 'a reading', from legere 'to read' — English lesson"
+etymology_hook: "leçon ← Latin lectio 'a reading', from legere, in a half-learned form — English lesson"
 duration:
   max_seconds: 200
 requires:
@@ -50,7 +50,7 @@ reviews_of: [FR-C126-classe]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**leçon** ← Latin *lectio*, "a reading", from *legere*, "to read" — inherited. (EtymDB 2.1)
+**leçon** ← Latin *lectio*, "a reading", from *legere*, "to read" (EtymDB 2.1) — semi-learned: the *-ct-* did not become *-it-*, as it did in the word for "bed" from *lectum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

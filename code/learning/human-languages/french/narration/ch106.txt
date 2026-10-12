@@ -13,7 +13,7 @@ You'll want to know: le vélo.
 le vélo — "a bicycle".
 
 The word, taken apart.
-vélo — short for vélocipède, a 19th-century coinage from Latin velox, "swift", and pes, pedis, "foot". (EtymDB 2.1).
+vélo — short for vélocipède, a 19th-century coinage from Latin velox, "swift", and pes, pedis, "foot" (EtymDB 2.1 gives the two Latin parts).
 
 What you've built.
 One more word for this chapter.

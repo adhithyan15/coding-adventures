@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 116,
-  "sourceHash": "fnv1a64:35621e3761304d1b",
+  "sourceHash": "fnv1a64:cffcbb193da7f620",
   "lessonIds": [
     "FR-C116-veste",
     "FR-C116-cravate",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch116.txt",
   "json": "french/narration/ch116.json",
-  "textHash": "fnv1a64:e94eb6f937b091e0",
-  "jsonHash": "fnv1a64:e2de81d08b6a4f5b",
+  "textHash": "fnv1a64:ae2ec9b6fb947d3c",
+  "jsonHash": "fnv1a64:f09b084ea62a6e88",
   "findings": []
 }

@@ -46,7 +46,7 @@ reviews_of: [FR-C65-envoyer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**recevoir** ← Latin *recipere*, "to take back, to receive" — inherited, through a Vulgar Latin form *\*recipere* stressed on its middle syllable. (EtymDB 2.1)
+**recevoir** ← Latin *recipere*, "to take back, to receive" (EtymDB 2.1) — inherited, through a Vulgar Latin form *\*recipere* stressed on its middle syllable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

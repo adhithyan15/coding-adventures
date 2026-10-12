@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Class, Lesson, Exam, Word, Board",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:206036c7f27ae839",
+  "sourceHash": "fnv1a64:f5ba2c162d328d19",
   "lessons": [
     {
       "id": "FR-C126-classe",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46cc7827efcf063f",
+      "sourceHash": "fnv1a64:ef1327d41c3eb5c5",
       "notice": null,
       "blocks": [
         {
@@ -215,7 +215,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "leçon from Latin lectio, \"a reading\", from legere, \"to read\" — inherited. (EtymDB 2.1)."
+              "text": "leçon from Latin lectio, \"a reading\", from legere, \"to read\" (EtymDB 2.1) — semi-learned: the -ct- did not become -it-, as it did in the word for \"bed\" from lectum."
             }
           ]
         },

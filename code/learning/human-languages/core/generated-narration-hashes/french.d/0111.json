@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 111,
-  "sourceHash": "fnv1a64:7f1452a676345dfb",
+  "sourceHash": "fnv1a64:fb6f726a88e40621",
   "lessonIds": [
     "FR-C111-tapis",
     "FR-C111-television",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch111.txt",
   "json": "french/narration/ch111.json",
-  "textHash": "fnv1a64:5168ea29403f2880",
-  "jsonHash": "fnv1a64:fcd1afe1bdb41573",
+  "textHash": "fnv1a64:dbb733d04f043056",
+  "jsonHash": "fnv1a64:67a2a9c908549172",
   "findings": []
 }

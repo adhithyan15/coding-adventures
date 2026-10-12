@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 87,
-  "sourceHash": "fnv1a64:75183b60881d02fc",
+  "sourceHash": "fnv1a64:5a7853f4607ec238",
   "lessonIds": [
     "FR-C87-mouton",
     "FR-C87-chevre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch87.txt",
   "json": "french/narration/ch87.json",
-  "textHash": "fnv1a64:f32c311635b76a78",
-  "jsonHash": "fnv1a64:744580860d5d6024",
+  "textHash": "fnv1a64:5bcf2dfb045e59ce",
+  "jsonHash": "fnv1a64:52428f9491b9bedf",
   "findings": []
 }

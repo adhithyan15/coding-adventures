@@ -14,7 +14,7 @@ concept_tag: FR-TRAV257-GEOGRAPHIE
 prerequisites: [FR-C256-violon, FR-C256-tambour]
 sounds: []
 roots: []
-etymology_hook: "géographie ← Greek geographia 'a description of the earth' — English geography"
+etymology_hook: "géographie ← Latin geographia, from Greek geographia 'a description of the earth'"
 duration:
   max_seconds: 200
 requires:

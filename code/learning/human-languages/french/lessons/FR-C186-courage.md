@@ -14,7 +14,7 @@ concept_tag: FR-SANTE186-COURAGE
 prerequisites: [FR-C186-espoir, FR-C186-confiance]
 sounds: []
 roots: [cor-latin]
-etymology_hook: "courage ← Vulgar Latin *coraticum, from cor 'heart' — English courage and cordial"
+etymology_hook: "courage — Old French cuer 'heart', from Latin cor, + -age — English courage and cordial"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C186-confiance]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**courage** ← Vulgar Latin *\*coraticum*, from Latin *cor*, "heart" — built with *-age*: heart in action. (EtymDB 2.1)
+**courage** — built in Old French from *cuer*, "heart", ← Latin *cor* (EtymDB 2.1), with *-age*: heart in action.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Banana, Orange, Potato, Tomato, Onion",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3106c8138328dd83",
+  "sourceHash": "fnv1a64:462e76dec4ed8f7b",
   "lessons": [
     {
       "id": "FR-C68-banane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ced3fdf650f4693c",
+      "sourceHash": "fnv1a64:312ae5153d6145e2",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "banane from Portuguese banana, from a West African language, probably Wolof — borrowed. (EtymDB 2.1)."
+              "text": "banane from Portuguese banana (EtymDB 2.1), from a West African language, perhaps Wolof — borrowed."
             }
           ]
         },

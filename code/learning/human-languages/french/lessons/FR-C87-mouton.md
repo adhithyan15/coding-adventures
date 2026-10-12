@@ -46,7 +46,7 @@ reviews_of: [FR-C86-canard]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**mouton** ← Old French *mouton* ← Medieval Latin *\*multo*, from Gaulish *\*multon-*, "sheep" — inherited, a Celtic word that came into French through Latin. (EtymDB 2.1)
+**mouton** ← Old French *mouton* ← Medieval Latin *\*multo*, from Gaulish *\*multon-*, "sheep" (EtymDB 2.1) — inherited, a Celtic word that came into French through Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

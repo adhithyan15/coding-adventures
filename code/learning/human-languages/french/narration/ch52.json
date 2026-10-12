@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Chest, Stomach, Ankle, Elbow, Wrist",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d1db06d7b3ac4a14",
+  "sourceHash": "fnv1a64:675c7b1d96353b67",
   "lessons": [
     {
       "id": "FR-C52-poitrine",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e6ad9c57797cc89",
+      "sourceHash": "fnv1a64:3ab161256675f821",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ade7b3990951e40d",
+      "sourceHash": "fnv1a64:2656b0b222c99b51",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "coude from Latin cubitus, \"elbow\" — inherited; the b between vowels dropped out and the t softened to d. (EtymDB 2.1 records the Latin word.)"
+              "text": "coude from Latin cubitus, \"elbow\" (EtymDB 2.1 records the Latin word) — inherited: once the i dropped out, cubitu became cobdo, the b was lost, and Old French had code."
             }
           ]
         },

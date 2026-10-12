@@ -46,7 +46,7 @@ reviews_of: [FR-C78-sac]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**téléphone** — a 19th-century coinage from Greek *tele*, "far off", and *phone*, "voice, sound". (EtymDB 2.1)
+**téléphone** — a 19th-century coinage from Greek *tele*, "far off", and *phone*, "voice, sound" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

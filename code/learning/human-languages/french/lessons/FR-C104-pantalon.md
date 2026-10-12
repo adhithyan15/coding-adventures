@@ -46,7 +46,7 @@ reviews_of: [FR-C103-robe]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**pantalon** — named after *Pantalone*, the old Venetian of Italian comedy, who wore long trousers. (EtymDB 2.1)
+**pantalon** — named after *Pantalone* (EtymDB 2.1), the old Venetian of Italian comedy, who wore long trousers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

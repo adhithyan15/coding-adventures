@@ -14,7 +14,7 @@ concept_tag: FR-CORPS4-POITRINE
 prerequisites: [FR-C51-gorge, FR-C51-joue]
 sounds: []
 roots: [pectus-latin]
-etymology_hook: "poitrine ← Late Latin pectorina, from pectus 'chest' — English pectoral shares it"
+etymology_hook: "poitrine ← Late Latin *pectorina, from pectus 'chest' — English pectoral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C51-joue]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**poitrine** ← Old French *peitrine* ← Late Latin *pectorina*, from Latin *pectus*, *pectoris*, "chest" — inherited. (EtymDB 2.1)
+**poitrine** ← Old French *peitrine* ← Late Latin *\*pectorina*, from Latin *pectus*, *pectoris*, "chest" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

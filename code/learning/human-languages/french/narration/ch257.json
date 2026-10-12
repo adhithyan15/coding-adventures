@@ -4,7 +4,7 @@
   "chapter": 257,
   "title": "Geography, Mathematics, Art, Team, Birthday",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3cb354289c8e72a0",
+  "sourceHash": "fnv1a64:42be7661bb47902b",
   "lessons": [
     {
       "id": "FR-C257-geographie",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc120c8d6129ec59",
+      "sourceHash": "fnv1a64:67ec751917ac1918",
       "notice": null,
       "blocks": [
         {

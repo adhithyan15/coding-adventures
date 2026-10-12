@@ -46,7 +46,7 @@ reviews_of: [FR-C73-mur]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**toit** ← Latin *tectum*, "roof", from *tegere*, "to cover" (EtymDB 2.1 records the Latin word) — inherited: Latin *-ct-* became French *-it*, as in *lait* from *lactem*.
+**toit** ← Latin *tectum*, "roof", from *tegere*, "to cover" (EtymDB 2.1 records the Latin word) — inherited: Latin *-ct-* became French *-it*, as in *lait* from Latin *lac*, *lactis*, through Vulgar Latin *\*lacte*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

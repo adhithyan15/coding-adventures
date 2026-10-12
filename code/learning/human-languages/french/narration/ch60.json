@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Cry, Wash, Cook, Play, Learn",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:abccd53b7b039c0e",
+  "sourceHash": "fnv1a64:516c29dc81eb442d",
   "lessons": [
     {
       "id": "FR-C60-pleurer",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4bf1cec4631bda0",
+      "sourceHash": "fnv1a64:e1ac1b660d7ef3a0",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "apprendre from Old French aprendre from Latin apprehendere, \"to seize, to grasp\" — inherited: to learn is to grasp. (EtymDB 2.1) It is prendre, \"to take\", with a- in front."
+              "text": "apprendre from Old French aprendre from Latin apprehendere, \"to seize, to grasp\" (EtymDB 2.1) — inherited: to learn is to grasp. It is prendre, \"to take\", with a- in front."
             }
           ]
         },

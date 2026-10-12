@@ -46,7 +46,7 @@ reviews_of: [FR-C210-offrir-un-cadeau]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**rendre** ← Vulgar Latin *\*rendere* ← Latin *reddere*, "to give back" — inherited, its *-n-* taken from the Latin verb for "to take". (EtymDB 2.1)
+**rendre** ← Vulgar Latin *\*rendere* ← Latin *reddere*, "to give back" (EtymDB 2.1) — inherited, its *-n-* taken from the Latin verb for "to take".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -46,7 +46,7 @@ reviews_of: [FR-C105-cent]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**vélo** — short for *vélocipède*, a 19th-century coinage from Latin *velox*, "swift", and *pes*, *pedis*, "foot". (EtymDB 2.1)
+**vélo** — short for *vélocipède*, a 19th-century coinage from Latin *velox*, "swift", and *pes*, *pedis*, "foot" (EtymDB 2.1 gives the two Latin parts).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -46,7 +46,7 @@ reviews_of: [FR-C107-supermarche]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**cinéma** — short for *cinématographe*, a coinage of the 1890s from Greek *kinema*, "movement", and *graphein*, "to write". (EtymDB 2.1)
+**cinéma** — short for *cinématographe*, a coinage of the 1890s from Greek *kinema*, "movement" (EtymDB 2.1), and *graphein*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 255,
   "title": "Rubbish, Recycling, Energy, Electricity, Gas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2514b5a90de2bd14",
+  "sourceHash": "fnv1a64:e015f733d4e9c0a8",
   "lessons": [
     {
       "id": "FR-C255-dechets",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eab4d7d568999b6f",
+      "sourceHash": "fnv1a64:d70f10dcfbaca1f7",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "électricité from English electricity, built on Latin electrum, \"amber\" — borrowed in the 1700s. (EtymDB 2.1)."
+              "text": "électricité from English electricity (EtymDB 2.1), built on Latin electrum, \"amber\" — borrowed in the 1700s."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57256a9c1c5f4598",
+      "sourceHash": "fnv1a64:3416d12c3001d1a0",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "gaz — coined in the 1600s by the Flemish chemist Jan Baptist van Helmont from Greek khaos, \"empty space\". (EtymDB 2.1)."
+              "text": "gaz — coined in the 1600s by the Flemish chemist Jan Baptist van Helmont from Greek khaos, \"empty space\" (EtymDB 2.1 links Dutch gas to khaos)."
             }
           ]
         },

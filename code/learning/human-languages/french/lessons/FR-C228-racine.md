@@ -14,7 +14,7 @@ concept_tag: FR-CHOSES228-RACINE
 prerequisites: [FR-C228-plante, FR-C228-graine]
 sounds: []
 roots: [radix-latin]
-etymology_hook: "racine ← Late Latin radicina, from radix 'a root' — English radical and radish"
+etymology_hook: "racine ← Late Latin *radicina, from radix 'a root' — English radical and radish"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C228-graine]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**racine** ← Late Latin *radicina*, from *radix*, *radicis*, "a root" — inherited. (EtymDB 2.1)
+**racine** ← Late Latin *\*radicina*, from *radix*, *radicis*, "a root" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

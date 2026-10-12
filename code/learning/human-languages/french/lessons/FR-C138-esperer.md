@@ -46,7 +46,7 @@ reviews_of: [FR-C138-preferer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**espérer** ← Latin *sperare*, "to hope" — inherited, with an *e-* added in front of *sp-*. (EtymDB 2.1)
+**espérer** ← Latin *sperare*, "to hope" (EtymDB 2.1) — inherited, with an *e-* added in front of *sp-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

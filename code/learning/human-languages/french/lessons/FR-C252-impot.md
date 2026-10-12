@@ -14,7 +14,7 @@ concept_tag: FR-CHOSES252-IMPOT
 prerequisites: [FR-C251-verite, FR-C251-mensonge]
 sounds: []
 roots: [ponere-latin]
-etymology_hook: "impôt ← Latin impositum 'a thing laid on', from imponere — English impose"
+etymology_hook: "impôt ← Medieval Latin impositum 'a thing laid on', a learned word — English impose"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C251-mensonge]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**impôt** ← Middle French *impost* ← Latin *impositum*, "a thing laid on", from *imponere* (EtymDB 2.1) — inherited; the circumflex marks the lost *s*.
+**impôt** ← Middle French *impost* ← Medieval Latin *impositum*, "a thing laid on", from *imponere* (EtymDB 2.1) — a learned borrowing; the circumflex marks the *s* French later stopped writing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

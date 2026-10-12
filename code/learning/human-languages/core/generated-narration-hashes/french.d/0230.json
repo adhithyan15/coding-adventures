@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 230,
-  "sourceHash": "fnv1a64:e11ceb89c53d5bf3",
+  "sourceHash": "fnv1a64:19f8cc4390672553",
   "lessonIds": [
     "FR-C230-fil",
     "FR-C230-aiguille",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch230.txt",
   "json": "french/narration/ch230.json",
-  "textHash": "fnv1a64:787cc22f557acfdd",
-  "jsonHash": "fnv1a64:8dea4a0ae568dcf7",
+  "textHash": "fnv1a64:344496de3becefeb",
+  "jsonHash": "fnv1a64:e2575f0c8bcebb46",
   "findings": []
 }

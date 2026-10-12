@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Skin, Nail, Chin, Throat, Cheek",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1bcbe236ba34d9b2",
+  "sourceHash": "fnv1a64:2f359669e416bc4d",
   "lessons": [
     {
       "id": "FR-C51-peau",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7cbf6f86b9204c6",
+      "sourceHash": "fnv1a64:36b11a810319c7b0",
       "notice": null,
       "blocks": [
         {

@@ -13,7 +13,7 @@ You'll want to know: la bière.
 la bière — "beer".
 
 The word, taken apart.
-bière from Middle Dutch bier — borrowed in the 1400s, with hopped beer. (EtymDB 2.1).
+bière from Middle Dutch bier (EtymDB 2.1) — borrowed in the 1400s, with hopped beer.
 
 What you've built.
 One more word for this chapter.
@@ -45,7 +45,7 @@ You'll want to know: le jus.
 le jus — "juice".
 
 The word, taken apart.
-jus from Latin ius, "broth, sauce" — taken from Latin. (EtymDB 2.1).
+jus from Latin ius, "broth, sauce" (EtymDB 2.1) — inherited: Latin i- before a vowel regularly became French j-.
 
 What you've built.
 One more word for this chapter.

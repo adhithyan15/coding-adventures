@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 255,
-  "sourceHash": "fnv1a64:2514b5a90de2bd14",
+  "sourceHash": "fnv1a64:e015f733d4e9c0a8",
   "lessonIds": [
     "FR-C255-dechets",
     "FR-C255-recyclage",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch255.txt",
   "json": "french/narration/ch255.json",
-  "textHash": "fnv1a64:bf365c7a55219d5a",
-  "jsonHash": "fnv1a64:a1cc3d50fbe27e97",
+  "textHash": "fnv1a64:837576dd5e6eb6ef",
+  "jsonHash": "fnv1a64:9b3c20e5101d4a97",
   "findings": []
 }

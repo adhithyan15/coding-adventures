@@ -46,7 +46,7 @@ reviews_of: [FR-C60-jouer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**apprendre** ← Old French *aprendre* ← Latin *apprehendere*, "to seize, to grasp" — inherited: to learn is to grasp. (EtymDB 2.1) It is *prendre*, "to take", with *a-* in front.
+**apprendre** ← Old French *aprendre* ← Latin *apprehendere*, "to seize, to grasp" (EtymDB 2.1) — inherited: to learn is to grasp. It is *prendre*, "to take", with *a-* in front.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

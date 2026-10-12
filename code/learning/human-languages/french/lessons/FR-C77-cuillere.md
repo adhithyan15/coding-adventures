@@ -14,7 +14,7 @@ concept_tag: FR-TABLE29-CUILLERE
 prerequisites: [FR-C76-verre, FR-C76-assiette]
 sounds: []
 roots: [cochlearium-latin]
-etymology_hook: "cuillère ← Latin cochlearium 'spoon', from cochlea 'snail' — English cochlea"
+etymology_hook: "cuillère ← Latin cochlearium, from cochlear, a spoon for eating snails — English cochlea"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C76-assiette]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**cuillère** ← Latin *cochlearium*, "a spoon", from *cochlea*, "a snail", from Greek *kokhlias* (EtymDB 2.1) — inherited: early spoons were snail shells.
+**cuillère** ← Latin *cochlearium*, "a spoon", from *cochlear*, a pointed spoon for getting snails out of their shells, and *cochlea*, "a snail", from Greek *kokhlias* (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

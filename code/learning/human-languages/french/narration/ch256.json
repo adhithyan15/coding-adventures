@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Tool, Guitar, Piano, Violin, Drum",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8a919e4f6480e0c1",
+  "sourceHash": "fnv1a64:ff326afda65afc4c",
   "lessons": [
     {
       "id": "FR-C256-outil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dbd024637fd2496",
+      "sourceHash": "fnv1a64:fef353ed6dc44db2",
       "notice": null,
       "blocks": [
         {

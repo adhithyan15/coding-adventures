@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 68,
-  "sourceHash": "fnv1a64:3106c8138328dd83",
+  "sourceHash": "fnv1a64:462e76dec4ed8f7b",
   "lessonIds": [
     "FR-C68-banane",
     "FR-C68-orange",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch68.txt",
   "json": "french/narration/ch68.json",
-  "textHash": "fnv1a64:e2b1ecf2a915aed5",
-  "jsonHash": "fnv1a64:954b04bf9a1a0831",
+  "textHash": "fnv1a64:09362ce47ec38959",
+  "jsonHash": "fnv1a64:defdcc964deb2440",
   "findings": []
 }

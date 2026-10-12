@@ -14,7 +14,7 @@ concept_tag: FR-CORPS3-GORGE
 prerequisites: [FR-C51-ongle, FR-C51-menton]
 sounds: []
 roots: [gurges-latin]
-etymology_hook: "gorge ← Late Latin gurga, from Latin gurges 'whirlpool' — English gorge is the same word"
+etymology_hook: "gorge ← Late Latin *gurga, from Latin gurges 'whirlpool' — English gorge is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C51-menton]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**gorge** ← Late Latin *gurga*, from Latin *gurges*, "a whirlpool, an abyss" — inherited. (EtymDB 2.1)
+**gorge** ← Late Latin *\*gurga*, from Latin *gurges*, "a whirlpool, an abyss" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

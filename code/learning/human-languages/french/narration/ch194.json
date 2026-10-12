@@ -4,7 +4,7 @@
   "chapter": 194,
   "title": "Valley, Temperature, Butterfly, Fly, Mosquito",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:900fc18c50c49df0",
+  "sourceHash": "fnv1a64:a8eb17bbda649614",
   "lessons": [
     {
       "id": "FR-C194-vallee",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dfba24870966b5c",
+      "sourceHash": "fnv1a64:49a01c1d1e7cf5ff",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "papillon from Latin papilio, papilionis, \"a butterfly\" — inherited. (EtymDB 2.1)."
+              "text": "papillon from Latin papilio, papilionis, \"a butterfly\" (EtymDB 2.1) — semi-learned: it kept its middle p. The fully inherited twin, with v, became the word for a tent, English pavilion."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Supermarket, Cinema, Stadium, Swimming pool, Grocer's shop",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:baf1ada10f2cceaa",
+  "sourceHash": "fnv1a64:bf2765d4e7527807",
   "lessons": [
     {
       "id": "FR-C107-supermarche",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e93b57234b248afc",
+      "sourceHash": "fnv1a64:ef87bed5cd5ae7f4",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "cinéma — short for cinématographe, a coinage of the 1890s from Greek kinema, \"movement\", and graphein, \"to write\". (EtymDB 2.1)."
+              "text": "cinéma — short for cinématographe, a coinage of the 1890s from Greek kinema, \"movement\" (EtymDB 2.1), and graphein, \"to write\"."
             }
           ]
         },

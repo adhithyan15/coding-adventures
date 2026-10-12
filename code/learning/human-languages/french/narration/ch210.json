@@ -4,7 +4,7 @@
   "chapter": 210,
   "title": "To reach, To achieve, To give a present, To give back, To recognise",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9ac5c2863db6971e",
+  "sourceHash": "fnv1a64:39a9e5a65213193e",
   "lessons": [
     {
       "id": "FR-C210-atteindre",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c237314bb6f9441d",
+      "sourceHash": "fnv1a64:ea84a5ff451b6cbd",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "rendre from Vulgar Latin rendere from Latin reddere, \"to give back\" — inherited, its -n- taken from the Latin verb for \"to take\". (EtymDB 2.1)."
+              "text": "rendre from Vulgar Latin rendere from Latin reddere, \"to give back\" (EtymDB 2.1) — inherited, its -n- taken from the Latin verb for \"to take\"."
             }
           ]
         },

@@ -11,7 +11,7 @@ concept_tag: FR-C22-CHIEN-CHAT-MORE
 prerequisites: [FR-C22-chien-chat]
 sounds: []
 roots: []
-etymology_hook: "chat ← Late Latin cattus 'cat', probably from Afro-Asiatic — Spanish gato and Italian gatto share it"
+etymology_hook: "chat ← Late Latin cattus 'cat', perhaps from Afro-Asiatic — Spanish gato and Italian gatto share it"
 duration:
   max_seconds: 150
 requires:

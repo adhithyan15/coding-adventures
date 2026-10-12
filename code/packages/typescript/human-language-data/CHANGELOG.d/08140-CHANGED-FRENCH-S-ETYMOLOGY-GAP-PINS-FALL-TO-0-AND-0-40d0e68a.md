@@ -16,11 +16,11 @@ every French word lesson does.
   (`## The phrase, taken apart` for multi-word headwords), typed `etymology` by
   the parser, after the introducing block, and a matching `etymology_hook` of
   120 characters or fewer.
-- **Answers.** 391 inherited, 191 learned borrowings, 107 borrowed from other
+- **Answers.** 388 inherited, 194 learned or semi-learned borrowings, 107 borrowed from other
   languages, 259 built from parts, 71 compounds and phrases, 8 named after a
   person or a thing, and 18 that say the origin is uncertain. 57 EtymDB rows
-  were rejected (homographs, wrong parents, junk derivations) and 25 loans or
-  Latinisms labelled inherited are given as borrowed or learned. The French
+  were rejected (homographs, wrong parents, junk derivations) and 30 loans or
+  Latinisms labelled inherited are given as borrowed, learned or semi-learned. The French
   changelog lists examples.
 - **Ledger side effects.** 671 lessons gained or extended `roots:`, reusing the
   corpus's existing spelling of an etymon wherever one exists; 40 slugs are new

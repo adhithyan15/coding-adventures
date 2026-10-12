@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 228,
-  "sourceHash": "fnv1a64:7c81031b11e81ee1",
+  "sourceHash": "fnv1a64:821d235ebe9e509e",
   "lessonIds": [
     "FR-C228-vase",
     "FR-C228-plante",
@@ -14,6 +14,6 @@
   "text": "french/narration/ch228.txt",
   "json": "french/narration/ch228.json",
   "textHash": "fnv1a64:532ca8e9aeb9b34f",
-  "jsonHash": "fnv1a64:0e0903e56d2377a6",
+  "jsonHash": "fnv1a64:9b43b16cf1420789",
   "findings": []
 }

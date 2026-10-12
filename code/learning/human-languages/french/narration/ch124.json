@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Baker, Student, Driver, Lawyer, Engineer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:757d351951eb13e5",
+  "sourceHash": "fnv1a64:a2f12f74e3e98005",
   "lessons": [
     {
       "id": "FR-C124-boulanger",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6ee68e160e64cf0",
+      "sourceHash": "fnv1a64:225f60e4b744b80e",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "avocat — two words in one. The lawyer from Latin advocatus, \"one called in to help\" — a learned borrowing. The fruit from Spanish aguacate, from Nahuatl ahuacatl, reshaped to look like the lawyer word. (EtymDB 2.1)."
+              "text": "avocat — two words in one. The lawyer from Latin advocatus, \"one called in to help\" (EtymDB 2.1) — a learned borrowing. The fruit from Spanish aguacate, from Nahuatl ahuacatl (EtymDB 2.1), reshaped to look like the lawyer word."
             }
           ]
         },

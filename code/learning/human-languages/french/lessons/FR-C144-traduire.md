@@ -46,7 +46,7 @@ reviews_of: [FR-C144-expliquer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**traduire** ← Latin *traducere*, "to lead across" — a learned borrowing of the 1500s. (EtymDB 2.1)
+**traduire** ← Latin *traducere*, "to lead across" (EtymDB 2.1) — a learned borrowing of the 1500s.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -46,7 +46,7 @@ reviews_of: [FR-C177-promettre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**permettre** ← Latin *permittere*, "to let through, to allow" — inherited, reshaped on *mettre*. (EtymDB 2.1)
+**permettre** ← Latin *permittere*, "to let through, to allow" (EtymDB 2.1) — inherited, reshaped on *mettre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

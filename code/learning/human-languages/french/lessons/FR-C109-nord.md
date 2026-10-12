@@ -14,7 +14,7 @@ concept_tag: FR-LIEU61-NORD
 prerequisites: [FR-C108-feu-rouge, FR-C109-frontiere]
 sounds: []
 roots: []
-etymology_hook: "nord ← Old English north — French took its compass points from English sailors"
+etymology_hook: "nord ← Old English north — French took its compass points from Old English"
 duration:
   max_seconds: 200
 requires:

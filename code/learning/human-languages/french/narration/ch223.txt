@@ -77,7 +77,7 @@ You'll want to know: le chanteur.
 le chanteur — "a singer".
 
 The word, taken apart.
-chanteur from Old French chanteor from Latin cantor, cantoris, "a singer" (EtymDB 2.1) — inherited: the same root as chanson.
+chanteur from Old French chanteor (EtymDB 2.1) from Latin cantator, cantatoris, "a singer", from cantare, "to sing" (Lewis & Short) — inherited: the same root as chanson. Latin cantor gave a different word, the one for a church precentor.
 
 What you've built.
 One more word for this chapter.

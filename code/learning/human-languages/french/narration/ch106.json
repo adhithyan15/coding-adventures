@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Bicycle, Underground, Taxi, Car park, Lift",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:df9a72643018a68d",
+  "sourceHash": "fnv1a64:bb2e1b3306e7ad7b",
   "lessons": [
     {
       "id": "FR-C106-velo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d95acfe1d8aefca5",
+      "sourceHash": "fnv1a64:c75733dfe9dde011",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vélo — short for vélocipède, a 19th-century coinage from Latin velox, \"swift\", and pes, pedis, \"foot\". (EtymDB 2.1)."
+              "text": "vélo — short for vélocipède, a 19th-century coinage from Latin velox, \"swift\", and pes, pedis, \"foot\" (EtymDB 2.1 gives the two Latin parts)."
             }
           ]
         },

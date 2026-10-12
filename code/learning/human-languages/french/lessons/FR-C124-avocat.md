@@ -46,7 +46,7 @@ reviews_of: [FR-C124-chauffeur]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**avocat** — two words in one. The lawyer ← Latin *advocatus*, "one called in to help" — a learned borrowing. The fruit ← Spanish *aguacate*, from Nahuatl *ahuacatl*, reshaped to look like the lawyer word. (EtymDB 2.1)
+**avocat** — two words in one. The lawyer ← Latin *advocatus*, "one called in to help" (EtymDB 2.1) — a learned borrowing. The fruit ← Spanish *aguacate*, from Nahuatl *ahuacatl* (EtymDB 2.1), reshaped to look like the lawyer word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

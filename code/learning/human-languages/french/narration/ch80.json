@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Box, Suitcase, Ticket, Map, Photo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f7189a2d725287a6",
+  "sourceHash": "fnv1a64:c95f246978c35c85",
   "lessons": [
     {
       "id": "FR-C80-boite",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59680f128e1c1d2",
+      "sourceHash": "fnv1a64:7ac1cef8419dc5b2",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "carte from Latin charta, \"a sheet of paper\", from Greek chartes — a learned borrowing: an inherited form would begin with ch-. (EtymDB 2.1) The worn-down form gave French its word for a charter."
+              "text": "carte from Latin charta, \"a sheet of paper\", from Greek chartes (EtymDB 2.1) — a learned borrowing: an inherited form would begin with ch-. The worn-down form gave French its word for a charter."
             }
           ]
         },

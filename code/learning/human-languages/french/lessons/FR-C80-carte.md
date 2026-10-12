@@ -46,7 +46,7 @@ reviews_of: [FR-C80-billet]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**carte** ← Latin *charta*, "a sheet of paper", from Greek *chartes* — a learned borrowing: an inherited form would begin with *ch-*. (EtymDB 2.1) The worn-down form gave French its word for a charter.
+**carte** ← Latin *charta*, "a sheet of paper", from Greek *chartes* (EtymDB 2.1) — a learned borrowing: an inherited form would begin with *ch-*. The worn-down form gave French its word for a charter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

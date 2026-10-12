@@ -4,7 +4,7 @@
   "chapter": 177,
   "title": "To promise, To allow, To forbid, To protect, To rescue",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7a79450e6923230c",
+  "sourceHash": "fnv1a64:a82f9eb5049eb67e",
   "lessons": [
     {
       "id": "FR-C177-promettre",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d16489eae5cef6d0",
+      "sourceHash": "fnv1a64:c3eec9905aa8d990",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "permettre from Latin permittere, \"to let through, to allow\" — inherited, reshaped on mettre. (EtymDB 2.1)."
+              "text": "permettre from Latin permittere, \"to let through, to allow\" (EtymDB 2.1) — inherited, reshaped on mettre."
             }
           ]
         },

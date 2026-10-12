@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Roof, Garden, Lamp, Bathroom, Bedroom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9e3b5d10fbe46021",
+  "sourceHash": "fnv1a64:082dc21bf1b47be5",
   "lessons": [
     {
       "id": "FR-C74-toit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c43cdd9777b0e282",
+      "sourceHash": "fnv1a64:28fc5850e300a0d8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "toit from Latin tectum, \"roof\", from tegere, \"to cover\" (EtymDB 2.1 records the Latin word) — inherited: Latin -ct- became French -it, as in lait from lactem."
+              "text": "toit from Latin tectum, \"roof\", from tegere, \"to cover\" (EtymDB 2.1 records the Latin word) — inherited: Latin -ct- became French -it, as in lait from Latin lac, lactis, through Vulgar Latin lacte."
             }
           ]
         },

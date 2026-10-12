@@ -4,7 +4,7 @@
   "chapter": 223,
   "title": "Battery, Charger, Singer, Concert, Show",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f727adec67cc0ea",
+  "sourceHash": "fnv1a64:3f9358a403545776",
   "lessons": [
     {
       "id": "FR-C223-batterie",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e2f260080494913",
+      "sourceHash": "fnv1a64:83d7865345b0f200",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "chanteur from Old French chanteor from Latin cantor, cantoris, \"a singer\" (EtymDB 2.1) — inherited: the same root as chanson."
+              "text": "chanteur from Old French chanteor (EtymDB 2.1) from Latin cantator, cantatoris, \"a singer\", from cantare, \"to sing\" (Lewis & Short) — inherited: the same root as chanson. Latin cantor gave a different word, the one for a church precentor."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [FR-C111-television]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ordinateur** ← Latin *ordinator*, "one who sets in order" — a learned borrowing, chosen in 1955 as the French name for the computer. (EtymDB 2.1)
+**ordinateur** ← Latin *ordinator*, "one who sets in order" (EtymDB 2.1) — a learned borrowing, chosen in 1955 as the French name for the computer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

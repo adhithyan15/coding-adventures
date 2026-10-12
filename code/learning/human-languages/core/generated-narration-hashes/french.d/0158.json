@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 158,
-  "sourceHash": "fnv1a64:6263a2dd6f546f8c",
+  "sourceHash": "fnv1a64:80508876abcd5768",
   "lessonIds": [
     "FR-C158-donc",
     "FR-C158-pourtant",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch158.txt",
   "json": "french/narration/ch158.json",
-  "textHash": "fnv1a64:73721a827aac04b0",
-  "jsonHash": "fnv1a64:4f530d1784746e81",
+  "textHash": "fnv1a64:e6ce22cad02bbdbc",
+  "jsonHash": "fnv1a64:10dbd65739fb9631",
   "findings": []
 }

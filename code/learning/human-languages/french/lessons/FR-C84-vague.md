@@ -46,7 +46,7 @@ reviews_of: [FR-C84-desert]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**vague** ← Old French *wague*, from Old Norse *vagr*, "sea, wave" — borrowed from the Norse settlers. (EtymDB 2.1)
+**vague** ← Old French *wague*, from Old Norse *vagr*, "sea, wave" (EtymDB 2.1) — borrowed from the Norse settlers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

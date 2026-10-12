@@ -46,7 +46,7 @@ reviews_of: [FR-C67-pomme]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**banane** ← Portuguese *banana*, from a West African language, probably Wolof — borrowed. (EtymDB 2.1)
+**banane** ← Portuguese *banana* (EtymDB 2.1), from a West African language, perhaps Wolof — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

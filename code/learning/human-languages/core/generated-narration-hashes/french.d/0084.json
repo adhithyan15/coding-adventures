@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 84,
-  "sourceHash": "fnv1a64:558aeb1129deb139",
+  "sourceHash": "fnv1a64:5a219fe7f0f1e01f",
   "lessonIds": [
     "FR-C84-vent",
     "FR-C84-feu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch84.txt",
   "json": "french/narration/ch84.json",
-  "textHash": "fnv1a64:e4f5a22031fed106",
-  "jsonHash": "fnv1a64:2ea74ef3437b0575",
+  "textHash": "fnv1a64:27b01f63edd6f49a",
+  "jsonHash": "fnv1a64:cc221d262d5fa173",
   "findings": []
 }

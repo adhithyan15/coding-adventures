@@ -46,7 +46,7 @@ reviews_of: [FR-C230-marteau]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**échelle** ← Old French *eschale* (EtymDB 2.1) ← Latin *scala*, "a ladder" — inherited; *escalier* came later from a word built on the same *scala*.
+**échelle** ← Old French *eschele*, *eschiele* ← Latin *scala*, "a ladder" (EtymDB 2.1) — inherited; *escalier* came later from a word built on the same *scala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

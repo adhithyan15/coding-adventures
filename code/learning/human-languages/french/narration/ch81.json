@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Tree, Flower, Leaf, Mountain, River",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5e48124d90b895ae",
+  "sourceHash": "fnv1a64:dd7361f06fd3e994",
   "lessons": [
     {
       "id": "FR-C81-arbre",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8614bf55a93b71ed",
+      "sourceHash": "fnv1a64:9fe69fe0ec7e2739",
       "notice": null,
       "blocks": [
         {

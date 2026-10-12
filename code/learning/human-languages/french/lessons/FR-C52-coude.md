@@ -46,7 +46,7 @@ reviews_of: [FR-C52-cheville]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**coude** ← Latin *cubitus*, "elbow" — inherited; the *b* between vowels dropped out and the *t* softened to *d*. (EtymDB 2.1 records the Latin word.)
+**coude** ← Latin *cubitus*, "elbow" (EtymDB 2.1 records the Latin word) — inherited: once the *i* dropped out, *cubitu* became *\*cobdo*, the *b* was lost, and Old French had *code*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

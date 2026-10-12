@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Border, North, South, West, Letterbox",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9addbfcce1300050",
+  "sourceHash": "fnv1a64:470d2043fc3ee624",
   "lessons": [
     {
       "id": "FR-C109-frontiere",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b25855e40ed7520",
+      "sourceHash": "fnv1a64:8a599a493ffff184",
       "notice": null,
       "blocks": [
         {

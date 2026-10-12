@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Wind, Fire, Hill, Desert, Wave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:558aeb1129deb139",
+  "sourceHash": "fnv1a64:5a219fe7f0f1e01f",
   "lessons": [
     {
       "id": "FR-C84-vent",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f10890ebf6fb9d6",
+      "sourceHash": "fnv1a64:14362fd550620586",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vague from Old French wague, from Old Norse vagr, \"sea, wave\" — borrowed from the Norse settlers. (EtymDB 2.1)."
+              "text": "vague from Old French wague, from Old Norse vagr, \"sea, wave\" (EtymDB 2.1) — borrowed from the Norse settlers."
             }
           ]
         },

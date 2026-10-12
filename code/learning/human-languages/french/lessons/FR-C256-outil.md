@@ -14,7 +14,7 @@ concept_tag: FR-CHOSES256-OUTIL
 prerequisites: [FR-C255-electricite, FR-C255-gaz]
 sounds: []
 roots: [utilis-latin]
-etymology_hook: "outil ← Late Latin usitilium 'a tool', from uti 'to use' — English utensil is a cousin"
+etymology_hook: "outil ← Late Latin *usitilium 'a tool', from uti 'to use' — English utensil is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C255-gaz]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**outil** ← Old French *ustil* ← Late Latin *usitilium*, "a tool", from *uti*, "to use" — inherited. (EtymDB 2.1)
+**outil** ← Old French *ustil* ← Late Latin *\*usitilium*, "a tool", from *uti*, "to use" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

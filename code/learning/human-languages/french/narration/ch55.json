@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Joy, Fear, Anger, Sadness, Happy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:86f9c38e12deebb6",
+  "sourceHash": "fnv1a64:dd2a2e44d13e14d1",
   "lessons": [
     {
       "id": "FR-C55-joie",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9a8558bb27788ca",
+      "sourceHash": "fnv1a64:9c3127310007c86c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "joie from Latin gaudia, \"joys\", the plural of gaudium — inherited. (EtymDB 2.1) Latin ga- became French jo-, as in jambe from gamba."
+              "text": "joie from Latin gaudia, \"joys\", the plural of gaudium (EtymDB 2.1) — inherited: the g became j, as in jambe."
             }
           ]
         },

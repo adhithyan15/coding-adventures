@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 211,
-  "sourceHash": "fnv1a64:52e528025088ac0e",
+  "sourceHash": "fnv1a64:50c046c607e5d4ca",
   "lessonIds": [
     "FR-C211-taire",
     "FR-C211-craindre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch211.txt",
   "json": "french/narration/ch211.json",
-  "textHash": "fnv1a64:1ad96551eb5b6b87",
-  "jsonHash": "fnv1a64:6f10055e908b1f98",
+  "textHash": "fnv1a64:3fd89e2e461486ff",
+  "jsonHash": "fnv1a64:9c8dc0e3bb69a9b9",
   "findings": []
 }

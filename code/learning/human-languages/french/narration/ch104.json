@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Trousers, Shoes, Hat, Coat, Skirt",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4b1abe5c6cc462b2",
+  "sourceHash": "fnv1a64:078f71c30223a21f",
   "lessons": [
     {
       "id": "FR-C104-pantalon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9186c1957317ecf2",
+      "sourceHash": "fnv1a64:6e845e1e053da342",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pantalon — named after Pantalone, the old Venetian of Italian comedy, who wore long trousers. (EtymDB 2.1)."
+              "text": "pantalon — named after Pantalone (EtymDB 2.1), the old Venetian of Italian comedy, who wore long trousers."
             }
           ]
         },

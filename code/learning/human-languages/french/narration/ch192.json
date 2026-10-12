@@ -4,7 +4,7 @@
   "chapter": 192,
   "title": "Cooked, Ripe, Dark, Clear, Distant",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a0d47fbd64f67619",
+  "sourceHash": "fnv1a64:2c3584b88f7271d9",
   "lessons": [
     {
       "id": "FR-C192-cuit-cuite",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4578cc18432f71d",
+      "sourceHash": "fnv1a64:754c238a20a3ae1e",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "clair from Old French cler from Latin clarus, \"bright, clear\" (EtymDB 2.1) — inherited: the stressed a became ai."
+              "text": "clair from Old French cler from Latin clarus, \"bright, clear\" (EtymDB 2.1) — inherited: the stressed a became e; the ai spelling was put back later to look more like the Latin."
             }
           ]
         },

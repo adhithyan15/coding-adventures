@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Look at, Listen to, Wait for, Buy, Know",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:387704bb653a3b8b",
+  "sourceHash": "fnv1a64:af999bb936babb03",
   "lessons": [
     {
       "id": "FR-C64-regarder",
@@ -569,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22083ccc3ccd260e",
+      "sourceHash": "fnv1a64:b9845e8e4785524a",
       "notice": null,
       "blocks": [
         {
@@ -607,7 +607,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "savoir from Latin sapere, \"to taste, to be wise\", through a Vulgar Latin sapere stressed on its middle syllable — inherited. (EtymDB 2.1)."
+              "text": "savoir from Latin sapere, \"to taste, to be wise\" (EtymDB 2.1) — inherited, through a Vulgar Latin sapere stressed on its middle syllable."
             }
           ]
         },

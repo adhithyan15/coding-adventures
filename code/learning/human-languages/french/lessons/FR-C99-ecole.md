@@ -14,7 +14,7 @@ concept_tag: FR-VILLE51-ECOLE
 prerequisites: [FR-C98-rue, FR-C99-magasin]
 sounds: []
 roots: [schola-latin]
-etymology_hook: "école ← Latin schola, from Greek schole 'leisure' — English school and scholar"
+etymology_hook: "école ← Latin schola, from Greek schole 'leisure', in a half-learned form — English school"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C99-magasin]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**école** ← Old French *escole* ← Latin *schola*, from Greek *schole*, "leisure, a place for talk" — inherited. (EtymDB 2.1) The *é-* stands where an *s* once was.
+**école** ← Old French *escole* ← Latin *schola*, from Greek *schole*, "leisure, a place for talk" (EtymDB 2.1) — semi-learned: a fully inherited form would have broken the *o* into *ue*. The *é-* stands where an *s* once was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

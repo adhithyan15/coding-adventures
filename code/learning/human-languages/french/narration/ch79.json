@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Phone, Umbrella, Money, Present, Glasses",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2277a70190feefc",
+  "sourceHash": "fnv1a64:4d43914d0124e0fc",
   "lessons": [
     {
       "id": "FR-C79-telephone",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04461fceb00569e6",
+      "sourceHash": "fnv1a64:323f89513460c42e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "téléphone — a 19th-century coinage from Greek tele, \"far off\", and phone, \"voice, sound\". (EtymDB 2.1)."
+              "text": "téléphone — a 19th-century coinage from Greek tele, \"far off\", and phone, \"voice, sound\" (EtymDB 2.1)."
             }
           ]
         },

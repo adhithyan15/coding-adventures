@@ -48,7 +48,7 @@ reviews_of: [FR-C128-musique]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**sport** ← English *sport* — borrowed in the 19th century. English had shortened it from Old French *desport*, "a pastime". (EtymDB 2.1)
+**sport** ← English *sport* (EtymDB 2.1) — borrowed in the 19th century. English had shortened it from Old French *desport*, "a pastime".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

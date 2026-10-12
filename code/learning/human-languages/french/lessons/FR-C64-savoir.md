@@ -46,7 +46,7 @@ reviews_of: [FR-C64-acheter]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**savoir** ← Latin *sapere*, "to taste, to be wise", through a Vulgar Latin *\*sapere* stressed on its middle syllable — inherited. (EtymDB 2.1)
+**savoir** ← Latin *sapere*, "to taste, to be wise" (EtymDB 2.1) — inherited, through a Vulgar Latin *\*sapere* stressed on its middle syllable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

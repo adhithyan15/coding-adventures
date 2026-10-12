@@ -46,7 +46,7 @@ reviews_of: [FR-C255-electricite]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**gaz** — coined in the 1600s by the Flemish chemist Jan Baptist van Helmont from Greek *khaos*, "empty space". (EtymDB 2.1)
+**gaz** — coined in the 1600s by the Flemish chemist Jan Baptist van Helmont from Greek *khaos*, "empty space" (EtymDB 2.1 links Dutch *gas* to *khaos*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

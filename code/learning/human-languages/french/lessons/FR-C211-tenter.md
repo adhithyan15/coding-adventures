@@ -46,7 +46,7 @@ reviews_of: [FR-C211-craindre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**tenter** ← Latin *temptare*, "to test, to try" — taken from Latin. (EtymDB 2.1)
+**tenter** ← Latin *temptare*, "to test, to try" (EtymDB 2.1) — inherited: *-mpt-* regularly became *-nt-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 104,
-  "sourceHash": "fnv1a64:4b1abe5c6cc462b2",
+  "sourceHash": "fnv1a64:078f71c30223a21f",
   "lessonIds": [
     "FR-C104-pantalon",
     "FR-C104-chaussures",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch104.txt",
   "json": "french/narration/ch104.json",
-  "textHash": "fnv1a64:feda43fdf5186291",
-  "jsonHash": "fnv1a64:79b7a85dcfb7d3e8",
+  "textHash": "fnv1a64:3137eedbf7dbbed5",
+  "jsonHash": "fnv1a64:c0d8fa9407193e6e",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Leave, Carry, Send, Receive, Feel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0a113c9c90f16d52",
+  "sourceHash": "fnv1a64:b5cba94a0ff5eb2f",
   "lessons": [
     {
       "id": "FR-C65-laisser",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7c62b32741ed67a",
+      "sourceHash": "fnv1a64:080d621ac91bb076",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "recevoir from Latin recipere, \"to take back, to receive\" — inherited, through a Vulgar Latin form recipere stressed on its middle syllable. (EtymDB 2.1)."
+              "text": "recevoir from Latin recipere, \"to take back, to receive\" (EtymDB 2.1) — inherited, through a Vulgar Latin form recipere stressed on its middle syllable."
             }
           ]
         },

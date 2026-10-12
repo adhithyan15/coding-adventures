@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Car, Bridge, Park, Church, Museum",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8eb6c2f71887f4e0",
+  "sourceHash": "fnv1a64:2e41b182a5a1e5cf",
   "lessons": [
     {
       "id": "FR-C100-voiture",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a75dc9b6191c64eb",
+      "sourceHash": "fnv1a64:8c5ab7194ed51477",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "église from Latin ecclesia, from Greek ekklesia, \"an assembly\" — inherited. (EtymDB 2.1)."
+              "text": "église from Latin ecclesia, from Greek ekklesia, \"an assembly\" (EtymDB 2.1) — semi-learned, a Church word: a fully inherited form would show -oi-."
             }
           ]
         },

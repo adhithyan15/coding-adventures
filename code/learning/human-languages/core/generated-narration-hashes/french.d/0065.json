@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 65,
-  "sourceHash": "fnv1a64:0a113c9c90f16d52",
+  "sourceHash": "fnv1a64:b5cba94a0ff5eb2f",
   "lessonIds": [
     "FR-C65-laisser",
     "FR-C65-porter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch65.txt",
   "json": "french/narration/ch65.json",
-  "textHash": "fnv1a64:78ef7a2e01bf1003",
-  "jsonHash": "fnv1a64:dbcf5bdda5563fe8",
+  "textHash": "fnv1a64:2a61399916a12fbd",
+  "jsonHash": "fnv1a64:2d136d0078158072",
   "findings": []
 }

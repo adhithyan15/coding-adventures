@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Sheep, Goat, Lion, Monkey, Bee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:75183b60881d02fc",
+  "sourceHash": "fnv1a64:5a7853f4607ec238",
   "lessons": [
     {
       "id": "FR-C87-mouton",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aec8d5439a16d63e",
+      "sourceHash": "fnv1a64:a5fef3f28085109a",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mouton from Old French mouton from Medieval Latin multo, from Gaulish multon-, \"sheep\" — inherited, a Celtic word that came into French through Latin. (EtymDB 2.1)."
+              "text": "mouton from Old French mouton from Medieval Latin multo, from Gaulish multon-, \"sheep\" (EtymDB 2.1) — inherited, a Celtic word that came into French through Latin."
             }
           ]
         },

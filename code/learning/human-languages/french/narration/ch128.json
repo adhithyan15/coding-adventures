@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "Music, Sport, Game, Film, Song",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2374306e47625e42",
+  "sourceHash": "fnv1a64:8beeffe5951ba7f5",
   "lessons": [
     {
       "id": "FR-C128-musique",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0b9a224106636a2",
+      "sourceHash": "fnv1a64:4f19c0d2fb0ba68a",
       "notice": null,
       "blocks": [
         {
@@ -211,7 +211,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sport from English sport — borrowed in the 19th century. English had shortened it from Old French desport, \"a pastime\". (EtymDB 2.1)."
+              "text": "sport from English sport (EtymDB 2.1) — borrowed in the 19th century. English had shortened it from Old French desport, \"a pastime\"."
             }
           ]
         },

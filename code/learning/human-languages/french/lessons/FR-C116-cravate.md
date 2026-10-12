@@ -46,7 +46,7 @@ reviews_of: [FR-C116-veste]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**cravate** — an old French form of the word for "a Croat": Croatian soldiers in 17th-century France wore knotted neck scarves, and the fashion took their name. (EtymDB 2.1)
+**cravate** — an old French form of the word for "a Croat" (EtymDB 2.1): Croatian soldiers in 17th-century France wore knotted neck scarves, and the fashion took their name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

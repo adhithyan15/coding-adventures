@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 99,
-  "sourceHash": "fnv1a64:3b4d3a0d7adffda1",
+  "sourceHash": "fnv1a64:b696873333710c0a",
   "lessonIds": [
     "FR-C99-magasin",
     "FR-C99-ecole",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch99.txt",
   "json": "french/narration/ch99.json",
-  "textHash": "fnv1a64:ae2ade187cfffa92",
-  "jsonHash": "fnv1a64:aa5f828c7fac558c",
+  "textHash": "fnv1a64:ec45a4319c196763",
+  "jsonHash": "fnv1a64:9ac77e9f130104ef",
   "findings": []
 }

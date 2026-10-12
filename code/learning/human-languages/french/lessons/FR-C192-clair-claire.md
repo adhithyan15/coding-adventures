@@ -14,7 +14,7 @@ concept_tag: FR-QUAL192-CLAIR-CLAIRE
 prerequisites: [FR-C192-mur-mure, FR-C192-sombre]
 sounds: []
 roots: [clarus]
-etymology_hook: "clair ← Latin clarus 'bright, clear' — English clear and clarity"
+etymology_hook: "clair ← Old French cler, from Latin clarus 'bright, clear' — English clear and clarity"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C192-sombre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**clair** ← Old French *cler* ← Latin *clarus*, "bright, clear" (EtymDB 2.1) — inherited: the stressed *a* became *ai*.
+**clair** ← Old French *cler* ← Latin *clarus*, "bright, clear" (EtymDB 2.1) — inherited: the stressed *a* became *e*; the *ai* spelling was put back later to look more like the Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

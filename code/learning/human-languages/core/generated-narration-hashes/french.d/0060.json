@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 60,
-  "sourceHash": "fnv1a64:abccd53b7b039c0e",
+  "sourceHash": "fnv1a64:516c29dc81eb442d",
   "lessonIds": [
     "FR-C60-pleurer",
     "FR-C60-laver",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch60.txt",
   "json": "french/narration/ch60.json",
-  "textHash": "fnv1a64:0b7d80bc918ecb23",
-  "jsonHash": "fnv1a64:f7d4d213603a6d13",
+  "textHash": "fnv1a64:44e98b8c3ace9b57",
+  "jsonHash": "fnv1a64:a9dc9bd1889bef2f",
   "findings": []
 }

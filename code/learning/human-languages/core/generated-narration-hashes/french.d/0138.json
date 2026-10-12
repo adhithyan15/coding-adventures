@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 138,
-  "sourceHash": "fnv1a64:f184104b13b1234f",
+  "sourceHash": "fnv1a64:aefa9f3e93db45e6",
   "lessonIds": [
     "FR-C138-connaitre",
     "FR-C138-preferer",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch138.txt",
   "json": "french/narration/ch138.json",
-  "textHash": "fnv1a64:f6ef4e5ac373abea",
-  "jsonHash": "fnv1a64:5d671cb59fc5f3ab",
+  "textHash": "fnv1a64:98ab2f594d62bc9c",
+  "jsonHash": "fnv1a64:6af38f5c7191a95c",
   "findings": []
 }

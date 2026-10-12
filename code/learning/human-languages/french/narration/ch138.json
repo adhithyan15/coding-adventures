@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "To know (a person, a place), To prefer, To hope, To drive, To get dressed",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f184104b13b1234f",
+  "sourceHash": "fnv1a64:aefa9f3e93db45e6",
   "lessons": [
     {
       "id": "FR-C138-connaitre",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fadce6751318d2c9",
+      "sourceHash": "fnv1a64:0724f0388ac674a9",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "espérer from Latin sperare, \"to hope\" — inherited, with an e- added in front of sp-. (EtymDB 2.1)."
+              "text": "espérer from Latin sperare, \"to hope\" (EtymDB 2.1) — inherited, with an e- added in front of sp-."
             }
           ]
         },

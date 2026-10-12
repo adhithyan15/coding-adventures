@@ -4,7 +4,7 @@
   "chapter": 116,
   "title": "Jacket, Tie, Belt, Gloves, Scarf",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:35621e3761304d1b",
+  "sourceHash": "fnv1a64:cffcbb193da7f620",
   "lessons": [
     {
       "id": "FR-C116-veste",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:174ba345926adfd8",
+      "sourceHash": "fnv1a64:70728e91d871d4a0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "cravate — an old French form of the word for \"a Croat\": Croatian soldiers in 17th-century France wore knotted neck scarves, and the fashion took their name. (EtymDB 2.1)."
+              "text": "cravate — an old French form of the word for \"a Croat\" (EtymDB 2.1): Croatian soldiers in 17th-century France wore knotted neck scarves, and the fashion took their name."
             }
           ]
         },

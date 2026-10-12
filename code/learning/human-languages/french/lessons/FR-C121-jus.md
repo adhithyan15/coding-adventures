@@ -46,7 +46,7 @@ reviews_of: [FR-C121-biere]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**jus** ← Latin *ius*, "broth, sauce" — taken from Latin. (EtymDB 2.1)
+**jus** ← Latin *ius*, "broth, sauce" (EtymDB 2.1) — inherited: Latin *i-* before a vowel regularly became French *j-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

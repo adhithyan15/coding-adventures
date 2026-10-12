@@ -46,7 +46,7 @@ reviews_of: [FR-C255-energie]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**électricité** ← English *electricity*, built on Latin *electrum*, "amber" — borrowed in the 1700s. (EtymDB 2.1)
+**électricité** ← English *electricity* (EtymDB 2.1), built on Latin *electrum*, "amber" — borrowed in the 1700s.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

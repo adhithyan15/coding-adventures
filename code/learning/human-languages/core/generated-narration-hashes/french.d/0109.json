@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 109,
-  "sourceHash": "fnv1a64:9addbfcce1300050",
+  "sourceHash": "fnv1a64:470d2043fc3ee624",
   "lessonIds": [
     "FR-C109-frontiere",
     "FR-C109-nord",
@@ -14,6 +14,6 @@
   "text": "french/narration/ch109.txt",
   "json": "french/narration/ch109.json",
   "textHash": "fnv1a64:754c4580c9338e20",
-  "jsonHash": "fnv1a64:53531adc2c5df7d1",
+  "jsonHash": "fnv1a64:850068ae527cc865",
   "findings": []
 }

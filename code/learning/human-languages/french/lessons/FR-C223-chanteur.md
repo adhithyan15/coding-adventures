@@ -14,7 +14,7 @@ concept_tag: FR-CHOSES223-CHANTEUR
 prerequisites: [FR-C223-batterie, FR-C223-chargeur]
 sounds: []
 roots: [canere-latin]
-etymology_hook: "chanteur ← Latin cantor 'a singer' — the same root as chanson"
+etymology_hook: "chanteur ← Latin cantator 'a singer', from cantare — the same root as chanson"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C223-chargeur]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**chanteur** ← Old French *chanteor* ← Latin *cantor*, *cantoris*, "a singer" (EtymDB 2.1) — inherited: the same root as *chanson*.
+**chanteur** ← Old French *chanteor* (EtymDB 2.1) ← Latin *cantator*, *cantatoris*, "a singer", from *cantare*, "to sing" (Lewis & Short) — inherited: the same root as *chanson*. Latin *cantor* gave a different word, the one for a church precentor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

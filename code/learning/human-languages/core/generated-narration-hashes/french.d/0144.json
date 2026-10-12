@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 144,
-  "sourceHash": "fnv1a64:7055e709fa6ccb2b",
+  "sourceHash": "fnv1a64:a32adfd7494993e6",
   "lessonIds": [
     "FR-C144-expliquer",
     "FR-C144-traduire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch144.txt",
   "json": "french/narration/ch144.json",
-  "textHash": "fnv1a64:283bc29f2bc36b43",
-  "jsonHash": "fnv1a64:be47b52b6011c3f4",
+  "textHash": "fnv1a64:23c3027ee179ca93",
+  "jsonHash": "fnv1a64:c62497b000fc108f",
   "findings": []
 }

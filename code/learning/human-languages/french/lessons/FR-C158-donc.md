@@ -14,7 +14,7 @@ concept_tag: FR-POURQUOI158-DONC
 prerequisites: [FR-C157-derriere, FR-C157-a-cote]
 sounds: []
 roots: []
-etymology_hook: "donc — origin uncertain, usually Late Latin dunc, a blend of tunc 'then' and dum"
+etymology_hook: "donc ← Late Latin dunc 'then, so'; how dunc was formed is debated"
 duration:
   max_seconds: 200
 requires:
@@ -46,7 +46,7 @@ reviews_of: [FR-C157-a-cote]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**donc** — its origin is uncertain. The usual account takes it to Late Latin *dunc*, a blend of *tunc*, "then", and *dum*, "while". (EtymDB 2.1 has its Middle French form.)
+**donc** ← Late Latin *dunc*, "then, so" — inherited. How *dunc* was formed is debated; the usual account blends *tunc*, "then", with *dum*, "while". (EtymDB 2.1 has its Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
