@@ -31,6 +31,15 @@ shared fixture while retaining the original snapshot limits. File-symlink
 security assertions stay enabled; an EPERM during fixture creation is a host
 limitation, not evidence that the loader accepted an unsafe owner.
 
+The focused two-worker rerun passed all input/measurement snapshots and the
+standalone-book scans, but three live CLI checks still exceeded their explicit
+limits: the first Spanish audit took 141.7 seconds and two shard checks took
+86.6 and 61.0 seconds. These were again timeout-only diagnostics; the 22 selected
+cases yielded 19 passes and three timeouts. Runtime samples on a shared desktop
+vary substantially. Report those failures, keep live calls and ordinary limits
+intact, and require full exact-head cross-platform CI rather than presenting
+static review or cached-input assertions as proof that every live CLI passed.
+
 The same run measured live Spanish/narration report checks at 60.5-72.3 seconds
 and all-ledger shard checks at 31.9-32.7 seconds. Those calls must still read and
 validate the filesystem inside their cases. Confirm the complete failure

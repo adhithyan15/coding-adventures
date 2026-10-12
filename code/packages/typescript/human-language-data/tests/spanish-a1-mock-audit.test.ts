@@ -37,8 +37,8 @@ describe("Spanish A1 book-bounded mock audit", () => {
 
   // `--check` runs the CLI end to end, so it rebuilds this level's audit from the
   // corpus rather than reading the shared one above; that rebuild is the path
-  // under test. The three --check cases keep an explicit budget: under full-suite
-  // parallel load on CI one measured 25s against the 30s default.
+  // under test. The full two-worker coverage run measured 60.5-72.3 seconds.
+  // Keep these live rebuilds inside a 120s integration case; ordinary limits stay 30s.
   it("keeps the committed report canonical and current", { timeout: 120_000 }, () => {
     expect(runSpanishA1MockAudit(["--check"], defaultCurriculumRoot())).toBe(0);
   });
