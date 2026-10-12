@@ -6720,9 +6720,11 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
         ("o-->", SwimlaneEdgeKind::Directed, EdgeMarker::Circle, EdgeMarker::Point),
         ("x-->", SwimlaneEdgeKind::Directed, EdgeMarker::Cross, EdgeMarker::Point),
         ("-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::Point),
+        ("-.-", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::None),
         ("-->", SwimlaneEdgeKind::Directed, EdgeMarker::None, EdgeMarker::Point),
         ("---", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::None),
         ("==>", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::Point),
+        ("===", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::None),
         ("--o", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Circle),
         ("--x", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Cross),
     ]

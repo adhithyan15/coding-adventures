@@ -3744,6 +3744,18 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(_)
                 )), "invisible links must not lower to visible paint");
             }
+            if fixture_name == "open-styled-links" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0])
+                )), "open dotted links must lower to dashed paths");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke_width == Some(3.5)
+                )), "open thick links must lower to wide paths");
+                assert!(layout.edges.iter().all(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::None
+                        && edge.end_marker == diagram_ir::EdgeMarker::None
+                ), "open styled links must remain marker-free through layout");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
