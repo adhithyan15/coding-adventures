@@ -6798,7 +6798,11 @@ fn swimlane_operator_with_id(value: &str, mut operator: SwimlaneOperator) -> Swi
     if !prefix.ends_with('@') {
         return operator;
     }
-    let token_start = prefix.rfind(char::is_whitespace).map_or(0, |index| index + 1);
+    // Character indices are byte offsets. Advance over the complete separator,
+    // so an admitted multibyte whitespace scalar cannot split the ID slice.
+    let token_start = prefix.char_indices().rev()
+        .find(|(_, character)| character.is_whitespace())
+        .map_or(0, |(index, character)| index + character.len_utf8());
     let id = &prefix[token_start..prefix.len() - 1];
     if id.is_empty() || !id.chars().all(|character|
         character.is_ascii_alphanumeric() || matches!(character, '_' | '-')

@@ -299,3 +299,6 @@ operator discovery; it does not certify all lexer regex costs, node lookup,
 layout or drawing allocation. Exact parser predicate tests cover the admitted
 work bound and semantic corner cases; the independent layout duplicate-edge
 index remains unchanged. See DG04's styled-label discovery contract and #17335.
+
+Swimlane authored edge IDs also preserve metadata after multibyte whitespace
+separators; identifier slicing advances over the complete UTF-8 scalar.
