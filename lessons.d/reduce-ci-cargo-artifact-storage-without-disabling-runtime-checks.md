@@ -15,3 +15,8 @@ Validation receipts must use real package identities and complete source blobs:
   accepted changes, rather than an older published head. Preserve rejected
   preflights and exact merge parents when correcting audit helpers; rerun full
   identity proofs before execution and never relabel rejected attempts green.
+- Refresh each isolated checkout's own remote refs before a main-state guard.
+  A stale-ref rejection before merge/tests is a refused audit preflight, not a
+  native failure. If main advances, validate the inspected bounded ancestor and
+  keep newer source acceptance explicitly pending. Preserve active test sources
+  and targets until their validation completes.

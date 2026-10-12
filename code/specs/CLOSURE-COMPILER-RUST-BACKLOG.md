@@ -1,7 +1,7 @@
 # Closure Compiler on Rust — parity backlog
 
 **Status:** active — resumed with provenance as a completion requirement
-**Last reprioritized:** 2026-10-11
+**Last reprioritized:** 2026-10-12
 **Current selection:** exact lexical source intervals and coordinate ownership,
 tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/16970),
 delivery branch `codex/closurec-source-spans-delivery-20261011`. CV03 merged and is verified;
@@ -9,12 +9,52 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `846a01d6116700be742a9d6dbef06ffc66b381d9`
+**Current audit base:** `b163f87617be59e490f39a812e436ec5769671b0`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
 
 ## Delivery priority and deferred Miri (2026-10-11)
+
+### Shared-crate main reconciliation (2026-10-12)
+
+Published head `d69e6113f6775ab10df5fd4145a80cd0699d74e1` remains unmerged;
+its required native CI run 38198479132 is incomplete and **not accepted**.
+Upstream PREP01 octal stringizing made the C frontend changelog conflict.
+Isolated reconciliation `0e5438948841061d0d03577b7a549d2ef9dbebb6` has exact
+parents `[d69e6113, b163f876]` and retains both upstream octal and existing
+Windows native-conformance entries. Fifty of 52 candidate payload entries
+retain identical blob/type/mode; only the two C frontend documents combine
+both branches. All twenty protected compiler/lexical/ALGOL/Mermaid/TaskApp/CI
+source identities match the previously tested integration.
+
+The actual metadata-derived reverse dependency cone is only `c-to-semantic-ir`.
+It passes **127 tests/docs across four targets**, zero failures/ignores, strict
+all-target lint and independent bounded security review at actual source
+`0e5438948841061d0d03577b7a549d2ef9dbebb6`. Raw octal spelling, exact expansion
+ancestry and default/exact/cumulative/refusal bounds are retained. There are no
+new crates.io dependencies or weakened production limits. Final checkpoint
+documents follow this execution; exact final-head review/publication and fresh
+required native CI remain **PENDING**. No receipt is relabeled to a later head.
+
+Retained actual integrations: Mermaid **524/8** at
+`3306b2ba14a8f1471010605923fb4ca79298eb1e`; ALGOL **1,219/107**, all eleven
+unchanged production BUILD commands and 31 exact native controls, at
+`1aa64e76442a2979808e77743c8e075d04476584`; controlled TaskApp **636/27 plus
+43 Python tests**, strict lint/Ruff and a fresh documented bookmark profile,
+at `ec77f269e8949528ecc7af6d145cc38d90be9268`. Their independent reviews pass;
+prior failed/shared-profile receipts remain retained. Known generated Flutter
+helper defect [#17313](https://github.com/adhithyan15/coding-adventures/issues/17313)
+and generic current-main acceptance remain pending. Unfiltered LANG failures
+stay separately owned in #12032; no generic UI/Dart or curriculum acceptance
+is claimed. UI90 native-control decisions and PREP01 MacroNib/MacroOct consumer
+priority remain authoritative without expanding this Closure slice.
+
+Full final-source Miri is **DEFERRED/PENDING**, never passed. Preserve its frozen
+checkout/run/497 inputs and receipts without progress polling. Keep one active
+PR; require current exact-head terminal acceptable CI/reviews, conflict-free
+state and fetched-main merge/payload proof. CV04b, full parity and complete
+transformation/output-byte lineage remain open; heartbeat active.
 
 ### Native CI disk-capacity follow-up (2026-10-12)
 
