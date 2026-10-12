@@ -2071,6 +2071,43 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .any(|child| layout_contains_tag(child, tag))
 }
 
+/// Whether a native drag/drop body lowers to a `Column` child list rather
+/// than one direct child.
+///
+/// This predicate deliberately mirrors the two `Container` writers. The
+/// lightweight writer needs a list for every authored multi-child body and
+/// for a lone `For`, whose collection spread can evaluate to many widgets.
+/// The decorated writer has one narrower case: a leading `If` plus its
+/// optional `Else`, with no following child, lowers directly to one ternary
+/// widget. A later ordinary child makes the body a real list again. Keeping
+/// that distinction here prevents generated Dart from calling
+/// `_mosaicWithGap` without emitting its definition.
+fn drag_body_lowers_to_child_list(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> bool {
+    if !matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") || node.children.is_empty()
+    {
+        return false;
+    }
+
+    let uses_styled_box = node.part_name.as_deref().is_some_and(|part| {
+        let style_props = part_styles.get(part).map(String::as_str).unwrap_or("");
+        part_has_decoration(style_props)
+            || node_has_state_when(node)
+            || part_has_slot_state(part, part_styles)
+    });
+    let leading_if_is_entire_body = node.children[0].tag == "If"
+        && (node.children.len() == 1
+            || (node.children.len() == 2 && node.children[1].tag == "Else"));
+
+    if uses_styled_box && leading_if_is_entire_body {
+        return false;
+    }
+
+    node.children.len() > 1 || node.children[0].tag == "For"
+}
+
 /// Whether this tree contains a non-empty Flutter child list with an authored
 /// `gap` that lowers through `_mosaicWithGap`.
 ///
@@ -2096,9 +2133,7 @@ fn layout_contains_flex_gap(node: &LayoutNode, part_styles: &HashMap<String, Str
     let has_flex_children = !node.children.is_empty()
         && matches!(node.tag.as_str(), "Row" | "Column")
         && !is_wrapping_row;
-    let has_drag_body_children = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
-        && ((node.children.len() > 1 && node.children[0].tag != "If")
-            || (node.children.len() == 1 && node.children[0].tag == "For"));
+    let has_drag_body_children = drag_body_lowers_to_child_list(node, part_styles);
     let own_gap = (has_flex_children || has_drag_body_children)
         && own_props
             .as_ref()
@@ -5794,6 +5829,7 @@ fn emit_styled_box(
         .flatten()
         .map(|value| parse_pixel_value(value));
     let expands_to_child_list = node.children.len() == 1 && node.children[0].tag == "For";
+    let drag_body_uses_child_list = drag_body_lowers_to_child_list(node, part_styles);
 
     // The Box [cell] body is an `If (is-editing) { HostInput } Else
     // { Text }` pair — exactly one rendered widget after fusing. Detect
@@ -5803,7 +5839,7 @@ fn emit_styled_box(
     // Other shapes fall back to single-child / Column wrapping.
     let inner_child = if node.children.is_empty() {
         format!("{ip}const SizedBox.shrink()")
-    } else if node.children[0].tag == "If" {
+    } else if node.children[0].tag == "If" && !drag_body_uses_child_list {
         let else_node = node.children.get(1).filter(|n| n.tag == "Else");
         emit_if_dart(
             &node.children[0],
