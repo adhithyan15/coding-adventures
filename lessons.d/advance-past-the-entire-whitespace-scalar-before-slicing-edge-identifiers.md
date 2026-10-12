@@ -11,3 +11,9 @@ independent review identified the same fault for U+2003. Retain that one-test
 red and advance by the matched character's len_utf8. Compare complete edges
 with no-ID controls over two-byte and three-byte separators and all styled
 operators, keeping the prior resource-count controls and authored metadata.
+
+The first full downstream build then caught the existing resource-test fixture's
+missing new id field. Its exit101 with zero executed targets is retained as a
+compile rejection, not a test success. Give every duplicate constraint a distinct
+ID and assert that layout preserves them in order alongside the original exact
+operation counts, labels, kinds, markers and lengths. Rerun the full affected cone.
