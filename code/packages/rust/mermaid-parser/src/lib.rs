@@ -17668,7 +17668,7 @@ mod styled_label_work_tests {
             let diagram = parse_swimlane(&source).expect("valid dotted label");
             assert_eq!(diagram.edges.len(), 1);
             let edge = &diagram.edges[0];
-            assert_eq!((edge.source.as_str(), edge.target.as_str()), ("a", "b"));
+            assert_eq!((edge.from.as_str(), edge.to.as_str()), ("a", "b"));
             assert_eq!(edge.label.as_deref(), Some(label.as_str()));
             assert_eq!(edge.kind, SwimlaneEdgeKind::Dotted);
             assert_eq!(edge.start_marker, EdgeMarker::None);
@@ -17699,7 +17699,7 @@ mod styled_label_work_tests {
             ("b", "c", "café🛰", SwimlaneEdgeKind::Thick, 2),
             ("c", "d", "third", SwimlaneEdgeKind::Dotted, 3),
         ]) {
-            assert_eq!((edge.source.as_str(), edge.target.as_str()), (from, to));
+            assert_eq!((edge.from.as_str(), edge.to.as_str()), (from, to));
             assert_eq!(edge.label.as_deref(), Some(label));
             assert_eq!(edge.kind, kind);
             assert_eq!(edge.min_length, length);

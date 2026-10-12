@@ -18,3 +18,9 @@ first eligible terminator, prefix-inside-run and standard operator precedence;
 Unicode label text must not be confused with ASCII delimiter byte positions.
 Full downstream tests and an independent exact-final-head review remain
 required; Miri DEFERRED/PENDING is never acceptance of a resource finding.
+
+The first regression build guessed source/target fields instead of inspecting
+SwimlaneEdge.from/to and failed to compile. The receipt guard rejected that
+exit101 with zero executed tests; preserve it as a compile failure, fix only
+the test names, then require a named executed assertion failure and exact
+operation evidence before accepting the red phase.
