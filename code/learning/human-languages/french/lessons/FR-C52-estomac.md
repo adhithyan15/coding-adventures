@@ -13,7 +13,8 @@ gloss: "the stomach"
 concept_tag: FR-CORPS4-ESTOMAC
 prerequisites: [FR-C51-joue, FR-C52-poitrine]
 sounds: []
-roots: []
+roots: [stomachus-latin]
+etymology_hook: "estomac ← Latin stomachus, from Greek stomachos, built on stoma 'mouth' — English stomach"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C52-poitrine]
 <!-- hl-knowledge: introduces=[FR-LEX-C52-CORPS4-02]; assesses=[] -->
 
 **l'estomac** — "the stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estomac** ← Old French *estomac* ← Latin *stomachus*, from Greek *stomachos*, built on *stoma*, "mouth" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

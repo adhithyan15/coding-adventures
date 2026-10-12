@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE22-RIZ
 prerequisites: [FR-C70-diner, FR-C70-petit-dejeuner]
 sounds: []
 roots: []
+etymology_hook: "riz ← Italian riso, from Latin and Greek oryza — English rice came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C70-petit-dejeuner]
 <!-- hl-knowledge: introduces=[FR-LEX-C70-CUISINE22-04]; assesses=[] -->
 
 **le riz** — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riz** ← Old French *ris* ← Italian *riso* ← Latin *oryza*, from Greek *oryza* — borrowed from Italian. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to give"
 concept_tag: FR-VERB-DONNER
 prerequisites: [FR-C61-boire, FR-C61-manger]
 sounds: []
-roots: []
+roots: [donare-latin]
+etymology_hook: "donner ← Latin donare 'to give as a gift' — English donate and donor share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C61-manger]
 <!-- hl-knowledge: introduces=[FR-LEX-C61-VERBES13-04]; assesses=[] -->
 
 **donner** — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**donner** ← Latin *donare*, "to give as a gift", from *donum*, "a gift" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

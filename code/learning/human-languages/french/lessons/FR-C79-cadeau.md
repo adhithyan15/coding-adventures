@@ -13,7 +13,8 @@ gloss: "a present, a gift"
 concept_tag: FR-CHOSES31-CADEAU
 prerequisites: [FR-C79-parapluie, FR-C79-argent]
 sounds: []
-roots: []
+roots: [caput-latin]
+etymology_hook: "cadeau ← Old Provençal capdel 'capital letter', from Latin capitellum 'little head'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C79-argent]
 <!-- hl-knowledge: introduces=[FR-LEX-C79-CHOSES31-04]; assesses=[] -->
 
 **le cadeau** — "a present, a gift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cadeau** ← Old Provençal *capdel*, "a chief; a capital letter", ← Latin *capitellum*, "a little head" — borrowed. (EtymDB 2.1) It meant a flourished capital letter, then a flourish, a treat, and finally a gift.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

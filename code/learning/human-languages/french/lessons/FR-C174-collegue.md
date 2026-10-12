@@ -14,6 +14,7 @@ concept_tag: FR-TRAV174-COLLEGUE
 prerequisites: [FR-C173-victoire, FR-C174-entreprise]
 sounds: []
 roots: []
+etymology_hook: "collègue ← Latin collega 'a partner in office' — English colleague"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C174-entreprise]
 <!-- hl-knowledge: introduces=[FR-LEX-C174-TRAV174-02]; assesses=[] -->
 
 **le collègue** — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collègue** ← Latin *collega*, "a partner in office" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a computer"
 concept_tag: FR-MAISON63-ORDINATEUR
 prerequisites: [FR-C111-tapis, FR-C111-television]
 sounds: []
-roots: []
+roots: [ordo-latin]
+etymology_hook: "ordinateur ← Latin ordinator 'one who sets in order', chosen for the computer in 1955"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C111-television]
 <!-- hl-knowledge: introduces=[FR-LEX-C111-MAISON63-03]; assesses=[] -->
 
 **l'ordinateur** — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ordinateur** ← Latin *ordinator*, "one who sets in order" — a learned borrowing, chosen in 1955 as the French name for the computer. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

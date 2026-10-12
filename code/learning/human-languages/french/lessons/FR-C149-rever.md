@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REVER
 prerequisites: [FR-C149-servir, FR-C149-souffrir]
 sounds: []
 roots: []
+etymology_hook: "rêver ← Old French resver 'to wander, to rave', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C149-souffrir]
 <!-- hl-knowledge: introduces=[FR-LEX-C149-VERBES149-05]; assesses=[] -->
 
 **rêver** — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rêver** ← Old French *resver*, "to wander, to be delirious" (EtymDB 2.1), whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

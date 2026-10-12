@@ -13,7 +13,8 @@ gloss: "an entrance"
 concept_tag: FR-CHOSES199-ENTREE
 prerequisites: [FR-C198-piece, FR-C198-billet-de-banque]
 sounds: []
-roots: []
+roots: [intrare-latin]
+etymology_hook: "entrée — from the verb 'to enter', Latin intrare — English entry"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C198-billet-de-banque]
 <!-- hl-knowledge: introduces=[FR-LEX-C199-CHOSES199-01]; assesses=[] -->
 
 **l'entrée** — "an entrance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entrée** is the past participle of the verb for "to enter", used as a noun, ← Latin *intrare* (Lewis & Short): the way in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

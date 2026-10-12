@@ -13,7 +13,8 @@ gloss: "to transport"
 concept_tag: FR-VERB-TRANSPORTER
 prerequisites: [FR-C211-craindre, FR-C211-tenter]
 sounds: []
-roots: []
+roots: [portare-latin]
+etymology_hook: "transporter ← Latin transportare 'to carry across' — English transport"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C211-tenter]
 <!-- hl-knowledge: introduces=[FR-LEX-C211-VERBES211-04]; assesses=[] -->
 
 **transporter** — "to transport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**transporter** ← Latin *transportare*, "to carry across" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

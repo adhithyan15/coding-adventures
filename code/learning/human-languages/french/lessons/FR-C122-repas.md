@@ -14,6 +14,7 @@ concept_tag: FR-REPAS74-REPAS
 prerequisites: [FR-C122-vinaigre, FR-C122-dessert]
 sounds: []
 roots: []
+etymology_hook: "repas ← Old French repast, from Latin pascere 'to feed' — English repast and pasture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C122-dessert]
 <!-- hl-knowledge: introduces=[FR-LEX-C122-REPAS74-05]; assesses=[] -->
 
 **le repas** — "a meal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**repas** ← Old French *repast*, from Late Latin *repascere*, "to feed", built on Latin *pascere*, "to feed, to graze" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "rubbish"
 concept_tag: FR-CHOSES255-DECHETS
 prerequisites: [FR-C254-sentier, FR-C254-grotte]
 sounds: []
-roots: []
+roots: [cadere-latin]
+etymology_hook: "déchets — from the verb 'to fall away', built on Latin cadere 'to fall'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C254-grotte]
 <!-- hl-knowledge: introduces=[FR-LEX-C255-CHOSES255-01]; assesses=[] -->
 
 **les déchets** — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**déchets** is the plural of a word formed from the verb for "to fall away", built on Latin *cadere*, "to fall" (Lewis & Short): what falls away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

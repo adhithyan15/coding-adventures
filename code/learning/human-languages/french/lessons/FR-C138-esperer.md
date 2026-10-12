@@ -13,7 +13,8 @@ gloss: "to hope"
 concept_tag: FR-VERB-ESPERER
 prerequisites: [FR-C138-connaitre, FR-C138-preferer]
 sounds: []
-roots: []
+roots: [sperare-latin]
+etymology_hook: "espérer ← Latin sperare 'to hope' — English despair is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C138-preferer]
 <!-- hl-knowledge: introduces=[FR-LEX-C138-VERBES90-03]; assesses=[] -->
 
 **espérer** — "to hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espérer** ← Latin *sperare*, "to hope" — inherited, with an *e-* added in front of *sp-*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

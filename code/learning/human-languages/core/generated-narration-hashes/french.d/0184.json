@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 184,
-  "sourceHash": "fnv1a64:15e6de13a7a42f31",
+  "sourceHash": "fnv1a64:5d26446e13a88d16",
   "lessonIds": [
     "FR-C184-bouger",
     "FR-C184-cueillir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch184.txt",
   "json": "french/narration/ch184.json",
-  "textHash": "fnv1a64:775a9ef9f76d5791",
-  "jsonHash": "fnv1a64:52f92bcd552f6cdd",
+  "textHash": "fnv1a64:33113e6e30b19e6b",
+  "jsonHash": "fnv1a64:fa63708f877ca040",
   "findings": []
 }

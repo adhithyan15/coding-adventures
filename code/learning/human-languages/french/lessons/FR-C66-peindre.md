@@ -13,7 +13,8 @@ gloss: "to paint"
 concept_tag: FR-VERB-PEINDRE
 prerequisites: [FR-C65-sentir, FR-C66-dessiner]
 sounds: []
-roots: []
+roots: [pingere-latin]
+etymology_hook: "peindre ← Latin pingere 'to paint' — English paint, depict and pigment share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C66-dessiner]
 <!-- hl-knowledge: introduces=[FR-LEX-C66-VERBES18-02]; assesses=[] -->
 
 **peindre** — "to paint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peindre** ← Old French *peindre* ← Latin *pingere*, "to paint" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

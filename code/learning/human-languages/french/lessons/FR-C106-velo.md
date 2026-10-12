@@ -13,7 +13,8 @@ gloss: "a bicycle"
 concept_tag: FR-TRAJET58-VELO
 prerequisites: [FR-C105-cinquante, FR-C105-cent]
 sounds: []
-roots: []
+roots: [pes-latin]
+etymology_hook: "vélo — short for vélocipède, from Latin velox 'swift' + pes 'foot' — English velocity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C105-cent]
 <!-- hl-knowledge: introduces=[FR-LEX-C106-TRAJET58-01]; assesses=[] -->
 
 **le vélo** — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vélo** — short for *vélocipède*, a 19th-century coinage from Latin *velox*, "swift", and *pes*, *pedis*, "foot". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-REPAS72-FARINE
 prerequisites: [FR-C120-melon, FR-C120-ail]
 sounds: []
 roots: []
+etymology_hook: "farine ← Latin farina 'flour', from far 'spelt' — English farinaceous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C120-ail]
 <!-- hl-knowledge: introduces=[FR-LEX-C120-REPAS72-05]; assesses=[] -->
 
 **la farine** — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farine** ← Latin *farina*, "flour, meal", from *far*, "spelt" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

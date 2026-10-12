@@ -13,7 +13,8 @@ gloss: "earth, land"
 concept_tag: FR-CHOSES201-TERRE
 prerequisites: [FR-C200-grenier, FR-C200-potager]
 sounds: []
-roots: []
+roots: [terra-latin]
+etymology_hook: "terre ← Latin terra 'earth, land' — English terrain and territory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C200-potager]
 <!-- hl-knowledge: introduces=[FR-LEX-C201-CHOSES201-01]; assesses=[] -->
 
 **la terre** — "earth, land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**terre** ← Old French *terre* ← Latin *terra*, "earth, land" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

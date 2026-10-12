@@ -14,6 +14,7 @@ concept_tag: FR-VERB-BRANCHER
 prerequisites: [FR-C150-approcher, FR-C150-bavarder]
 sounds: []
 roots: []
+etymology_hook: "brancher — from the word for 'branch', Late Latin branca 'paw'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C150-bavarder]
 <!-- hl-knowledge: introduces=[FR-LEX-C150-VERBES150-04]; assesses=[] -->
 
 **brancher** — "to plug in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brancher** — built from the word for "a branch", ← Late Latin *branca*, "a paw" (EtymDB 2.1): to join on like a branch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a star"
 concept_tag: FR-NATURE35-ETOILE
 prerequisites: [FR-C82-ile, FR-C83-soleil]
 sounds: []
-roots: []
+roots: [stella-latin]
+etymology_hook: "étoile ← Old French estoile, from Latin stella 'star' — English stellar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C83-soleil]
 <!-- hl-knowledge: introduces=[FR-LEX-C83-NATURE35-02]; assesses=[] -->
 
 **l'étoile** — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étoile** ← Old French *estoile* ← Latin *stella*, "star" — inherited. (EtymDB 2.1) The *é-* stands where an *s* once was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

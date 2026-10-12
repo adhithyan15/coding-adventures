@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 106,
-  "sourceHash": "fnv1a64:21c4e6ff5685325a",
+  "sourceHash": "fnv1a64:df9a72643018a68d",
   "lessonIds": [
     "FR-C106-velo",
     "FR-C106-metro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch106.txt",
   "json": "french/narration/ch106.json",
-  "textHash": "fnv1a64:4bf4a27ac0170f20",
-  "jsonHash": "fnv1a64:44ceffdc57e54e7d",
+  "textHash": "fnv1a64:b3d21dfb9dd579a2",
+  "jsonHash": "fnv1a64:e760ea2197bdc07f",
   "findings": []
 }

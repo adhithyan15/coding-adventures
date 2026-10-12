@@ -13,7 +13,8 @@ gloss: "to allow"
 concept_tag: FR-VERB-PERMETTRE
 prerequisites: [FR-C176-tenir, FR-C177-promettre]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "permettre ← Latin permittere 'to let through' — mettre with per-; English permit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C177-promettre]
 <!-- hl-knowledge: introduces=[FR-LEX-C177-VERBES177-02]; assesses=[] -->
 
 **permettre** — "to allow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permettre** ← Latin *permittere*, "to let through, to allow" — inherited, reshaped on *mettre*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

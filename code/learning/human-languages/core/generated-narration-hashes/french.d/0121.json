@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 121,
-  "sourceHash": "fnv1a64:0c45924fb921c34f",
+  "sourceHash": "fnv1a64:6c4044ee6aadd006",
   "lessonIds": [
     "FR-C121-biere",
     "FR-C121-jus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch121.txt",
   "json": "french/narration/ch121.json",
-  "textHash": "fnv1a64:4fad6ad8a40395e9",
-  "jsonHash": "fnv1a64:405e4321a3a9376e",
+  "textHash": "fnv1a64:f0b328d7dc855c5c",
+  "jsonHash": "fnv1a64:7bedd341d5fe007f",
   "findings": []
 }

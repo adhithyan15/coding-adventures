@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES196-BOUCHER
 prerequisites: [FR-C195-ecran, FR-C195-clavier]
 sounds: []
 roots: []
+etymology_hook: "boucher — from Old French bouc 'he-goat': first a seller of goat's meat — English butcher"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C195-clavier]
 <!-- hl-knowledge: introduces=[FR-LEX-C196-CHOSES196-01]; assesses=[] -->
 
 **le boucher** — "a butcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**boucher** ← Old French *bouchier*, built from *bouc*, "a he-goat" (EtymDB 2.1): first a seller of goat's meat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

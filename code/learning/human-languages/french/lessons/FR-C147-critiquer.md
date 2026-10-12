@@ -14,6 +14,7 @@ concept_tag: FR-VERB-CRITIQUER
 prerequisites: [FR-C147-conseiller, FR-C147-convaincre]
 sounds: []
 roots: []
+etymology_hook: "critiquer — from Latin criticus, Greek kritikos 'able to judge' — English critic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C147-convaincre]
 <!-- hl-knowledge: introduces=[FR-LEX-C147-VERBES147-04]; assesses=[] -->
 
 **critiquer** — "to criticise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**critiquer** — formed from the word for "criticism", ← Latin *criticus*, from Greek *kritikos*, "able to judge". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

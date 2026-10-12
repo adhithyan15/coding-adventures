@@ -14,6 +14,7 @@ concept_tag: FR-VERB-PRESENTER
 prerequisites: [FR-C179-tourner, FR-C180-preparer]
 sounds: []
 roots: []
+etymology_hook: "présenter ← Latin praesentare 'to place before' — English present"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C180-preparer]
 <!-- hl-knowledge: introduces=[FR-LEX-C180-VERBES180-02]; assesses=[] -->
 
 **présenter** — "to introduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**présenter** ← Latin *praesentare*, "to show, to place before" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 93,
-  "sourceHash": "fnv1a64:0111646bfc2be845",
+  "sourceHash": "fnv1a64:6322e181f1689a98",
   "lessonIds": [
     "FR-C93-mince",
     "FR-C93-gros",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch93.txt",
   "json": "french/narration/ch93.json",
-  "textHash": "fnv1a64:34fed03af0289f8f",
-  "jsonHash": "fnv1a64:4ae47430088fbe13",
+  "textHash": "fnv1a64:42a4d0db26a52860",
+  "jsonHash": "fnv1a64:c1cb8d0f2eb5e4a0",
   "findings": []
 }

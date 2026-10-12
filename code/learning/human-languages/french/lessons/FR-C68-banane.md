@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE20-BANANE
 prerequisites: [FR-C67-fruit, FR-C67-pomme]
 sounds: []
 roots: []
+etymology_hook: "banane ← Portuguese banana, from a West African language — English banana"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C67-pomme]
 <!-- hl-knowledge: introduces=[FR-LEX-C68-CUISINE20-01]; assesses=[] -->
 
 **la banane** — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banane** ← Portuguese *banana*, from a West African language, probably Wolof — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

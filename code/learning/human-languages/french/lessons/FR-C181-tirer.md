@@ -14,6 +14,7 @@ concept_tag: FR-VERB-TIRER
 prerequisites: [FR-C181-ressembler, FR-C181-pousser]
 sounds: []
 roots: []
+etymology_hook: "tirer ← Old French tirer 'to draw out', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C181-pousser]
 <!-- hl-knowledge: introduces=[FR-LEX-C181-VERBES181-03]; assesses=[] -->
 
 **tirer** — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tirer** ← Old French *tirer*, "to draw out" (EtymDB 2.1), of uncertain origin; EtymDB links it to Gothic *tairan*, "to tear", one of several proposals.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

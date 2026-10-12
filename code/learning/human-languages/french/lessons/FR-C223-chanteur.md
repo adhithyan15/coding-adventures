@@ -13,7 +13,8 @@ gloss: "a singer"
 concept_tag: FR-CHOSES223-CHANTEUR
 prerequisites: [FR-C223-batterie, FR-C223-chargeur]
 sounds: []
-roots: []
+roots: [canere-latin]
+etymology_hook: "chanteur ← Latin cantor 'a singer' — the same root as chanson"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C223-chargeur]
 <!-- hl-knowledge: introduces=[FR-LEX-C223-CHOSES223-03]; assesses=[] -->
 
 **le chanteur** — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chanteur** ← Old French *chanteor* ← Latin *cantor*, *cantoris*, "a singer" (EtymDB 2.1) — inherited: the same root as *chanson*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

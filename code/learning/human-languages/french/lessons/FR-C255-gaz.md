@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES255-GAZ
 prerequisites: [FR-C255-energie, FR-C255-electricite]
 sounds: []
 roots: []
+etymology_hook: "gaz — coined by the chemist van Helmont from Greek khaos 'empty space' — English gas"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C255-electricite]
 <!-- hl-knowledge: introduces=[FR-LEX-C255-CHOSES255-05]; assesses=[] -->
 
 **le gaz** — "gas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gaz** — coined in the 1600s by the Flemish chemist Jan Baptist van Helmont from Greek *khaos*, "empty space". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

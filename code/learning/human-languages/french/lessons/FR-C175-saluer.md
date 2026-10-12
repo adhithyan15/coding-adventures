@@ -13,7 +13,8 @@ gloss: "to greet"
 concept_tag: FR-VERB-SALUER
 prerequisites: [FR-C174-contrat, FR-C175-embrasser]
 sounds: []
-roots: []
+roots: [salus]
+etymology_hook: "saluer ← Latin salutare 'to wish health', from salus — English salute"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C175-embrasser]
 <!-- hl-knowledge: introduces=[FR-LEX-C175-VERBES175-02]; assesses=[] -->
 
 **saluer** — "to greet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saluer** ← Latin *salutare*, "to greet, to wish health", from *salus*, "health" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

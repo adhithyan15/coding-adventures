@@ -13,7 +13,8 @@ gloss: "to announce"
 concept_tag: FR-VERB-ANNONCER
 prerequisites: [FR-C178-accompagner, FR-C178-ajouter]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "annoncer ← Latin annuntiare 'to make known' — English announce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C178-ajouter]
 <!-- hl-knowledge: introduces=[FR-LEX-C178-VERBES178-04]; assesses=[] -->
 
 **annoncer** — "to announce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**annoncer** ← Old French *anoncier* ← Latin *annuntiare*, "to make known", from *nuntius*, "a messenger" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

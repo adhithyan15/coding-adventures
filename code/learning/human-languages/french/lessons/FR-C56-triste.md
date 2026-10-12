@@ -13,7 +13,8 @@ gloss: "sad"
 concept_tag: FR-SENTIR8-TRISTE
 prerequisites: [FR-C55-tristesse, FR-C55-heureux]
 sounds: []
-roots: []
+roots: [tristis]
+etymology_hook: "triste ← Latin tristis 'sad, gloomy' — Spanish and Italian triste are the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C55-heureux]
 <!-- hl-knowledge: introduces=[FR-LEX-C56-SENTIR8-01]; assesses=[] -->
 
 **triste** — "sad". The adjective beside **la tristesse**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**triste** ← Latin *tristis*, "sad, gloomy" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

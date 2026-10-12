@@ -13,7 +13,8 @@ gloss: "thirst"
 concept_tag: FR-SANTE6-SOIF
 prerequisites: [FR-C54-hopital, FR-C54-maladie]
 sounds: []
-roots: []
+roots: [sitis-latin]
+etymology_hook: "soif ← Latin sitis 'thirst' — Latin i became French oi, as in doigt from digitus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C54-maladie]
 <!-- hl-knowledge: introduces=[FR-LEX-C54-SANTE6-03]; assesses=[] -->
 
 **la soif** — "thirst". **j'ai soif**: I am thirsty, with **avoir**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soif** ← Old French *soif* ← Latin *sitis*, "thirst" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

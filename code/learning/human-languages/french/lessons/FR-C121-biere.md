@@ -14,6 +14,7 @@ concept_tag: FR-REPAS73-BIERE
 prerequisites: [FR-C120-ail, FR-C120-farine]
 sounds: []
 roots: []
+etymology_hook: "bière ← Middle Dutch bier — English beer is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C120-farine]
 <!-- hl-knowledge: introduces=[FR-LEX-C121-REPAS73-01]; assesses=[] -->
 
 **la bière** — "beer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bière** ← Middle Dutch *bier* — borrowed in the 1400s, with hopped beer. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

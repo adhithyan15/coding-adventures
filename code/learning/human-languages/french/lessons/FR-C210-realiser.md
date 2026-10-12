@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REALISER
 prerequisites: [FR-C209-plaindre, FR-C210-atteindre]
 sounds: []
 roots: []
+etymology_hook: "réaliser — from Late Latin realis, from res 'a thing': to make real — English realise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C210-atteindre]
 <!-- hl-knowledge: introduces=[FR-LEX-C210-VERBES210-02]; assesses=[] -->
 
 **réaliser** — "to achieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réaliser** — built from the word for "real", ← Late Latin *realis*, from *res*, "a thing", with *-iser*: to make real. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

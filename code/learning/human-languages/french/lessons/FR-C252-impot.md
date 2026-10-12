@@ -13,7 +13,8 @@ gloss: "a tax"
 concept_tag: FR-CHOSES252-IMPOT
 prerequisites: [FR-C251-verite, FR-C251-mensonge]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "impôt ← Latin impositum 'a thing laid on', from imponere — English impose"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C251-mensonge]
 <!-- hl-knowledge: introduces=[FR-LEX-C252-CHOSES252-01]; assesses=[] -->
 
 **l'impôt** — "a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impôt** ← Middle French *impost* ← Latin *impositum*, "a thing laid on", from *imponere* (EtymDB 2.1) — inherited; the circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

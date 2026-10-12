@@ -13,7 +13,8 @@ gloss: "a river"
 concept_tag: FR-NATURE33-RIVIERE
 prerequisites: [FR-C81-feuille, FR-C81-montagne]
 sounds: []
-roots: []
+roots: [ripa-latin]
+etymology_hook: "rivière ← Vulgar Latin riparia 'riverbank', from ripa 'bank' — English river"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C81-montagne]
 <!-- hl-knowledge: introduces=[FR-LEX-C81-NATURE33-05]; assesses=[] -->
 
 **la rivière** — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rivière** ← Vulgar Latin *riparia*, "a riverbank", from Latin *ripa*, "bank" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

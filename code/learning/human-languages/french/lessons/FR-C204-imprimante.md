@@ -13,7 +13,8 @@ gloss: "a printer"
 concept_tag: FR-TRAV204-IMPRIMANTE
 prerequisites: [FR-C204-entretien, FR-C204-carriere]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "imprimante — from the verb 'to print', Latin imprimere 'to press into' — English imprint"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C204-carriere]
 <!-- hl-knowledge: introduces=[FR-LEX-C204-TRAV204-03]; assesses=[] -->
 
 **l'imprimante** — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**imprimante** — the feminine present participle of the verb for "to print", ← Latin *imprimere*, "to press into" (Lewis & Short): the printing machine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

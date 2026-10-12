@@ -13,7 +13,8 @@ gloss: "a valley"
 concept_tag: FR-CHOSES194-VALLEE
 prerequisites: [FR-C193-casserole, FR-C193-poele]
 sounds: []
-roots: []
+roots: [vallis-latin]
+etymology_hook: "vallée — Old French val 'valley', from Latin vallis, + -ée — English valley"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C193-poele]
 <!-- hl-knowledge: introduces=[FR-LEX-C194-CHOSES194-01]; assesses=[] -->
 
 **la vallée** — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vallée** — built in Old French from *val*, "a valley", ← Latin *vallis*, with *-ée*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

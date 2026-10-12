@@ -14,6 +14,7 @@ concept_tag: FR-MAISON26-LAMPE
 prerequisites: [FR-C74-toit, FR-C74-jardin]
 sounds: []
 roots: []
+etymology_hook: "lampe ← Latin lampas 'a torch', from Greek lampas — English lamp"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C74-jardin]
 <!-- hl-knowledge: introduces=[FR-LEX-C74-MAISON26-03]; assesses=[] -->
 
 **la lampe** — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lampe** ← Late Latin *lampada* ← Latin *lampas*, "a torch", from Greek *lampas* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

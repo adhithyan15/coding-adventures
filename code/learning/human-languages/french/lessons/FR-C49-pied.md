@@ -13,7 +13,8 @@ gloss: "a foot"
 concept_tag: FR-CORPS1-PIED
 prerequisites: [FR-C49-bras, FR-C49-jambe]
 sounds: []
-roots: []
+roots: [pes-latin]
+etymology_hook: "pied ← Latin pes, pedis 'foot' — English pedal and pedestrian share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C49-jambe]
 <!-- hl-knowledge: introduces=[FR-LEX-C49-CORPS1-03]; assesses=[] -->
 
 **le pied** — "a foot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pied** ← Old French *pié* ← Latin *pes*, *pedis*, "foot" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

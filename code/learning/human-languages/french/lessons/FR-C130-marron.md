@@ -14,6 +14,7 @@ concept_tag: FR-COULEURS82-MARRON
 prerequisites: [FR-C130-rose, FR-C130-violet]
 sounds: []
 roots: []
+etymology_hook: "marron ← Italian marrone 'a large chestnut', of uncertain origin — English maroon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C130-violet]
 <!-- hl-knowledge: introduces=[FR-LEX-C130-COULEURS82-03]; assesses=[] -->
 
 **marron** — "brown (chestnut)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marron** ← Italian *marrone*, "a large chestnut" (EtymDB 2.1) — borrowed; the colour is named after the nut. The Italian word's own origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

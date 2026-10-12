@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 100,
-  "sourceHash": "fnv1a64:7fedcf63eb793000",
+  "sourceHash": "fnv1a64:8eb6c2f71887f4e0",
   "lessonIds": [
     "FR-C100-voiture",
     "FR-C100-pont",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch100.txt",
   "json": "french/narration/ch100.json",
-  "textHash": "fnv1a64:a353caac37b718c5",
-  "jsonHash": "fnv1a64:04354425c77c5ca8",
+  "textHash": "fnv1a64:bac609906c9bd973",
+  "jsonHash": "fnv1a64:a42ba8e7e8d453d1",
   "findings": []
 }

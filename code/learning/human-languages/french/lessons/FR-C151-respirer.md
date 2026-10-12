@@ -13,7 +13,8 @@ gloss: "to breathe"
 concept_tag: FR-VERB-RESPIRER
 prerequisites: [FR-C151-recommander, FR-C151-ralentir]
 sounds: []
-roots: []
+roots: [spirare-latin]
+etymology_hook: "respirer ← Latin respirare 'to breathe' — English respiration"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C151-ralentir]
 <!-- hl-knowledge: introduces=[FR-LEX-C151-VERBES151-05]; assesses=[] -->
 
 **respirer** — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**respirer** ← Latin *respirare*, "to breathe back, to breathe" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

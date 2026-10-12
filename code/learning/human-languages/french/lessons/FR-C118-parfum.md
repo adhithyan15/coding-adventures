@@ -13,7 +13,8 @@ gloss: "perfume"
 concept_tag: FR-OBJETS70-PARFUM
 prerequisites: [FR-C118-bague, FR-C118-collier]
 sounds: []
-roots: []
+roots: [fumus-latin]
+etymology_hook: "parfum ← Italian perfumare 'to smoke through', from Latin per + fumare — English perfume"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C118-collier]
 <!-- hl-knowledge: introduces=[FR-LEX-C118-OBJETS70-04]; assesses=[] -->
 
 **le parfum** — "perfume".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parfum** — formed from the verb for "to scent", which came from Italian *perfumare*, "to smoke through", from Latin *per*, "through", and *fumare*, "to smoke". (EtymDB 2.1 records the Latin parts.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

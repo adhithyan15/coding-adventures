@@ -13,7 +13,8 @@ gloss: "an umbrella"
 concept_tag: FR-CHOSES31-PARAPLUIE
 prerequisites: [FR-C78-sac, FR-C79-telephone]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "parapluie — para- 'guarding against' + the word for 'rain' — English parasol"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C79-telephone]
 <!-- hl-knowledge: introduces=[FR-LEX-C79-CHOSES31-02]; assesses=[] -->
 
 **le parapluie** — "an umbrella". Literally "guard-rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parapluie** — built from *para-*, "guarding against", and the French word for "rain". *para-* came from Italian *parare*, "to shield", ← Latin *parare*, "to prepare". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

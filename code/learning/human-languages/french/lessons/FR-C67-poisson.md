@@ -13,7 +13,8 @@ gloss: "fish"
 concept_tag: FR-VERBES19-POISSON
 prerequisites: [FR-C66-cacher, FR-C67-trouver]
 sounds: []
-roots: []
+roots: [piscis-latin]
+etymology_hook: "poisson ← Latin piscis 'fish' — the Pisces of the zodiac share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C67-trouver]
 <!-- hl-knowledge: introduces=[FR-LEX-C67-VERBES19-02]; assesses=[] -->
 
 **le poisson** — "fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poisson** ← Latin *piscis*, "fish", through a Vulgar Latin form *\*piscio* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

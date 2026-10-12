@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES32-CARTE
 prerequisites: [FR-C80-valise, FR-C80-billet]
 sounds: []
 roots: []
+etymology_hook: "carte ← Latin charta 'sheet of paper', from Greek chartes — English card, chart, charter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C80-billet]
 <!-- hl-knowledge: introduces=[FR-LEX-C80-CHOSES32-04]; assesses=[] -->
 
 **la carte** — "a map; a card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carte** ← Latin *charta*, "a sheet of paper", from Greek *chartes* — a learned borrowing: an inherited form would begin with *ch-*. (EtymDB 2.1) The worn-down form gave French its word for a charter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

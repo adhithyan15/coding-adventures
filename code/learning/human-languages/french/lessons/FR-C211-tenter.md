@@ -13,7 +13,8 @@ gloss: "to attempt"
 concept_tag: FR-VERB-TENTER
 prerequisites: [FR-C211-taire, FR-C211-craindre]
 sounds: []
-roots: []
+roots: [temptare-latin]
+etymology_hook: "tenter ← Latin temptare 'to test, to try' — English tempt and attempt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C211-craindre]
 <!-- hl-knowledge: introduces=[FR-LEX-C211-VERBES211-03]; assesses=[] -->
 
 **tenter** — "to attempt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tenter** ← Latin *temptare*, "to test, to try" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

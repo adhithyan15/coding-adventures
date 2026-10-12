@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 147,
-  "sourceHash": "fnv1a64:665017b9b8abbb00",
+  "sourceHash": "fnv1a64:20f3e813bc2ece0a",
   "lessonIds": [
     "FR-C147-comparer",
     "FR-C147-conseiller",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch147.txt",
   "json": "french/narration/ch147.json",
-  "textHash": "fnv1a64:6e2df3441a097701",
-  "jsonHash": "fnv1a64:5591eed89c75891d",
+  "textHash": "fnv1a64:820a84e1aff9897d",
+  "jsonHash": "fnv1a64:5ee8394a18c1d6fa",
   "findings": []
 }

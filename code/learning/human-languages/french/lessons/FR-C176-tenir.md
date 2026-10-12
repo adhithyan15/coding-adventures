@@ -13,7 +13,8 @@ gloss: "to hold"
 concept_tag: FR-VERB-TENIR
 prerequisites: [FR-C176-deplacer, FR-C176-enlever]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "tenir ← Latin tenere 'to hold' — English tenant and tenacious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C176-enlever]
 <!-- hl-knowledge: introduces=[FR-LEX-C176-VERBES176-05]; assesses=[] -->
 
 **tenir** — "to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tenir** ← Vulgar Latin *\*tenire* ← Latin *tenere*, "to hold" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

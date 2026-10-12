@@ -13,7 +13,8 @@ gloss: "to turn"
 concept_tag: FR-VERB-TOURNER
 prerequisites: [FR-C179-eviter, FR-C179-lancer]
 sounds: []
-roots: []
+roots: [tornus-latin]
+etymology_hook: "tourner ← Latin tornare 'to turn on a lathe' — English turn"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C179-lancer]
 <!-- hl-knowledge: introduces=[FR-LEX-C179-VERBES179-05]; assesses=[] -->
 
 **tourner** — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tourner** ← Old French *torner* ← Latin *tornare*, "to turn on a lathe", from *tornus*, "a lathe" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

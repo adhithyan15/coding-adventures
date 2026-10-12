@@ -13,7 +13,8 @@ gloss: "to throw"
 concept_tag: FR-VERB-LANCER
 prerequisites: [FR-C179-partager, FR-C179-eviter]
 sounds: []
-roots: []
+roots: [lancea-latin]
+etymology_hook: "lancer ← Late Latin lanceare 'to wield a lance' — English launch and lance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C179-eviter]
 <!-- hl-knowledge: introduces=[FR-LEX-C179-VERBES179-04]; assesses=[] -->
 
 **lancer** — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lancer** ← Old French *lancier* ← Late Latin *lanceare*, "to wield a lance", from *lancea*, "a lance" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

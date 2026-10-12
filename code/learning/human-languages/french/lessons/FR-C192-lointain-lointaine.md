@@ -13,7 +13,8 @@ gloss: "distant"
 concept_tag: FR-QUAL192-LOINTAIN-LOINTAINE
 prerequisites: [FR-C192-sombre, FR-C192-clair-claire]
 sounds: []
-roots: []
+roots: [longus-latin]
+etymology_hook: "lointain ← Vulgar Latin *longitanus, from longe 'far off' — the Latin of loin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C192-clair-claire]
 <!-- hl-knowledge: introduces=[FR-LEX-C192-QUAL192-05]; assesses=[] -->
 
 **lointain / lointaine** — "distant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lointain** ← Old French *loingtien* ← Vulgar Latin *\*longitanus*, from Latin *longe*, "far off", the Latin of *loin* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "hard"
 concept_tag: FR-QUAL244-DUR-DURE
 prerequisites: [FR-C244-silencieux-silencieuse, FR-C244-propre]
 sounds: []
-roots: []
+roots: [durus-latin]
+etymology_hook: "dur ← Latin durus 'hard' — English durable and endure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C244-propre]
 <!-- hl-knowledge: introduces=[FR-LEX-C244-QUAL244-03]; assesses=[] -->
 
 **dur / dure** — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dur** ← Latin *durus*, "hard" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

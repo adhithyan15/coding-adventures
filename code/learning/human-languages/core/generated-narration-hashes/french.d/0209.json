@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 209,
-  "sourceHash": "fnv1a64:5d01dfb6d68e3dd2",
+  "sourceHash": "fnv1a64:3860f0e22db1efe5",
   "lessonIds": [
     "FR-C209-profiter",
     "FR-C209-imaginer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch209.txt",
   "json": "french/narration/ch209.json",
-  "textHash": "fnv1a64:889dd3d49614588c",
-  "jsonHash": "fnv1a64:a3b0a5d6a77efb7e",
+  "textHash": "fnv1a64:e9bbce9053cd033b",
+  "jsonHash": "fnv1a64:9726e9eb44fe9655",
   "findings": []
 }

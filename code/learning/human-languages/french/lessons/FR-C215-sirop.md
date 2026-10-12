@@ -14,6 +14,7 @@ concept_tag: FR-SANTE215-SIROP
 prerequisites: [FR-C215-ordonnance, FR-C215-comprime]
 sounds: []
 roots: []
+etymology_hook: "sirop ← Medieval Latin siruppus, from Arabic sharab 'a drink' — English syrup and sherbet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C215-comprime]
 <!-- hl-knowledge: introduces=[FR-LEX-C215-SANTE215-04]; assesses=[] -->
 
 **le sirop** — "a syrup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sirop** ← Medieval Latin *siruppus*, from Arabic *sharab*, "a drink" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

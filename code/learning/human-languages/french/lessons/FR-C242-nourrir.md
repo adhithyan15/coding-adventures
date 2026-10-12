@@ -13,7 +13,8 @@ gloss: "to feed"
 concept_tag: FR-VERB-NOURRIR
 prerequisites: [FR-C241-accueillir, FR-C242-maigrir]
 sounds: []
-roots: []
+roots: [nutrire-latin]
+etymology_hook: "nourrir ← Latin nutrire 'to feed' — English nourish and nutrition"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C242-maigrir]
 <!-- hl-knowledge: introduces=[FR-LEX-C242-VERBES242-02]; assesses=[] -->
 
 **nourrir** — "to feed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nourrir** ← Old French *norrir* ← Latin *nutrire*, "to suckle, to feed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

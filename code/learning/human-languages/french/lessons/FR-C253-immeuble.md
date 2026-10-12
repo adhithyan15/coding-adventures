@@ -13,7 +13,8 @@ gloss: "a block of flats"
 concept_tag: FR-CHOSES253-IMMEUBLE
 prerequisites: [FR-C253-tunnel, FR-C253-chantier]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "immeuble ← Latin immobilis 'that cannot be moved' — English immobile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C253-chantier]
 <!-- hl-knowledge: introduces=[FR-LEX-C253-CHOSES253-05]; assesses=[] -->
 
 **l'immeuble** — "a block of flats".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**immeuble** ← Latin *immobilis*, "that cannot be moved" (Lewis & Short) — a learned borrowing: first property in land and buildings.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "oil"
 concept_tag: FR-CUISINE21-HUILE
 prerequisites: [FR-C69-soupe, FR-C69-miel]
 sounds: []
-roots: []
+roots: [oleum-latin]
+etymology_hook: "huile ← Latin oleum 'olive oil', from Greek elaion — English oil came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C69-miel]
 <!-- hl-knowledge: introduces=[FR-LEX-C69-CUISINE21-05]; assesses=[] -->
 
 **l'huile** — "oil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**huile** ← Old French *oile* ← Latin *oleum*, "olive oil", from Greek *elaion* — inherited. (EtymDB 2.1) The *h* was added to the spelling only.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

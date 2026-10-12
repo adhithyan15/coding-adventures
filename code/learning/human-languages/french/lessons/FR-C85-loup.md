@@ -13,7 +13,8 @@ gloss: "a wolf"
 concept_tag: FR-ANIMAUX37-LOUP
 prerequisites: [FR-C85-oiseau, FR-C85-souris]
 sounds: []
-roots: []
+roots: [lupus-latin]
+etymology_hook: "loup ← Latin lupus 'wolf' — English lupine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C85-souris]
 <!-- hl-knowledge: introduces=[FR-LEX-C85-ANIMAUX37-05]; assesses=[] -->
 
 **le loup** — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loup** ← Latin *lupus*, "wolf" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

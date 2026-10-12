@@ -13,7 +13,8 @@ gloss: "certainly"
 concept_tag: FR-POURQUOI189-CERTAINEMENT
 prerequisites: [FR-C189-malheureusement, FR-C189-heureusement]
 sounds: []
-roots: []
+roots: [certus-latin]
+etymology_hook: "certainement — the word for 'certain', from Latin certus 'sure', + -ment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C189-heureusement]
 <!-- hl-knowledge: introduces=[FR-LEX-C189-POURQUOI189-04]; assesses=[] -->
 
 **certainement** — "certainly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**certainement** — the word for "certain", ← Vulgar Latin *\*certanus*, from Latin *certus*, "sure" (Lewis & Short), with *-ment*; Old French already had it (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

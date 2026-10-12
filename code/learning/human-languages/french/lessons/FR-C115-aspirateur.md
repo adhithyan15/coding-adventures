@@ -13,7 +13,8 @@ gloss: "a vacuum cleaner"
 concept_tag: FR-MAISON67-ASPIRATEUR
 prerequisites: [FR-C114-poubelle, FR-C114-balai]
 sounds: []
-roots: []
+roots: [spirare-latin]
+etymology_hook: "aspirateur — from the verb 'to suck in', from Latin aspirare — English aspirate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C114-balai]
 <!-- hl-knowledge: introduces=[FR-LEX-C115-MAISON67-01]; assesses=[] -->
 
 **l'aspirateur** — "a vacuum cleaner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aspirateur** — built from the verb for "to breathe in, to suck in", with *-ateur*, "a thing that does". The verb ← Latin *aspirare*, "to breathe upon", from *spirare*, "to breathe" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

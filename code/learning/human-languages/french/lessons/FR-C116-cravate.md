@@ -14,6 +14,7 @@ concept_tag: FR-HABITS68-CRAVATE
 prerequisites: [FR-C115-poche, FR-C116-veste]
 sounds: []
 roots: []
+etymology_hook: "cravate — 'Croat': Croatian soldiers' neck scarves started the fashion — English cravat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C116-veste]
 <!-- hl-knowledge: introduces=[FR-LEX-C116-HABITS68-02]; assesses=[] -->
 
 **la cravate** — "a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cravate** — an old French form of the word for "a Croat": Croatian soldiers in 17th-century France wore knotted neck scarves, and the fashion took their name. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a plain"
 concept_tag: FR-CHOSES171-PLAINE
 prerequisites: [FR-C170-fontaine, FR-C171-volcan]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "plaine ← Latin plana 'flat' — English plain and plane"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C171-volcan]
 <!-- hl-knowledge: introduces=[FR-LEX-C171-CHOSES171-02]; assesses=[] -->
 
 **la plaine** — "a plain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plaine** ← Latin *plana*, "flat", the feminine of *planus* (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

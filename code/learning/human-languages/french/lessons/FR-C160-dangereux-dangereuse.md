@@ -13,7 +13,8 @@ gloss: "dangerous"
 concept_tag: FR-QUAL160-DANGEREUX-DANGEREUSE
 prerequisites: [FR-C160-bas-basse, FR-C160-inconnu-inconnue]
 sounds: []
-roots: []
+roots: [dominus-latin]
+etymology_hook: "dangereux — danger + -eux; danger was a lord's power to harm, from Latin dominus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C160-inconnu-inconnue]
 <!-- hl-knowledge: introduces=[FR-LEX-C160-QUAL160-04]; assesses=[] -->
 
 **dangereux / dangereuse** — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dangereux** — built from the word for "danger", with *-eux* (EtymDB 2.1). That word was Old French *dangier*, "the power to harm", from Vulgar Latin *\*dominiarium*, built on *dominus*, "lord".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

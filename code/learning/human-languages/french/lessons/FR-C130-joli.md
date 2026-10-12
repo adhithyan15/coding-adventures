@@ -14,6 +14,7 @@ concept_tag: FR-COULEURS82-JOLI
 prerequisites: [FR-C130-marron, FR-C130-brun]
 sounds: []
 roots: []
+etymology_hook: "joli ← Old French jolif 'merry', perhaps from Old Norse jol, the Yule feast"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C130-brun]
 <!-- hl-knowledge: introduces=[FR-LEX-C130-COULEURS82-05]; assesses=[] -->
 
 **joli** — "pretty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**joli** ← Old French *jolif*, "merry, festive" (EtymDB 2.1), of uncertain origin; the usual guess is Old Norse *jol*, the midwinter feast.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

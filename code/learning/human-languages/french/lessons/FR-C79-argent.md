@@ -13,7 +13,8 @@ gloss: "money; silver"
 concept_tag: FR-CHOSES31-ARGENT
 prerequisites: [FR-C79-telephone, FR-C79-parapluie]
 sounds: []
-roots: []
+roots: [argentum-latin]
+etymology_hook: "argent ← Latin argentum 'silver' — Argentina, 'the silver land', shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C79-parapluie]
 <!-- hl-knowledge: introduces=[FR-LEX-C79-CHOSES31-03]; assesses=[] -->
 
 **l'argent** — "money; silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**argent** ← Latin *argentum*, "silver" — inherited. (EtymDB 2.1) Coins were silver, so the word came to mean money.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

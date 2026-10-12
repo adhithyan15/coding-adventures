@@ -13,7 +13,8 @@ gloss: "a nail (finger or toe)"
 concept_tag: FR-CORPS3-ONGLE
 prerequisites: [FR-C50-sang, FR-C51-peau]
 sounds: []
-roots: []
+roots: [ungula-latin]
+etymology_hook: "ongle ← Latin ungula 'claw, hoof', from unguis 'nail' — English ungulate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C51-peau]
 <!-- hl-knowledge: introduces=[FR-LEX-C51-CORPS3-02]; assesses=[] -->
 
 **l'ongle** — "a nail (finger or toe)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ongle** ← Latin *ungula*, "a claw, a hoof", from *unguis*, "nail" (Lewis & Short) — inherited. EtymDB 2.1 traces Italian *unghia* to the same *ungula*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

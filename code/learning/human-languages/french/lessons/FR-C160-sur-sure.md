@@ -13,7 +13,8 @@ gloss: "safe, sure"
 concept_tag: FR-QUAL160-SUR-SURE
 prerequisites: [FR-C160-inconnu-inconnue, FR-C160-dangereux-dangereuse]
 sounds: []
-roots: []
+roots: [securus-latin]
+etymology_hook: "sûr ← Latin securus 'free from care' — English sure and secure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C160-dangereux-dangereuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C160-QUAL160-05]; assesses=[] -->
 
 **sûr / sûre** — "safe, sure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sûr** ← Old French *seür* ← Latin *securus*, "free from care", from *se-*, "without", and *cura*, "care" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

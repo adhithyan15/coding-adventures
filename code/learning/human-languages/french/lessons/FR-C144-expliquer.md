@@ -13,7 +13,8 @@ gloss: "to explain"
 concept_tag: FR-VERB-EXPLIQUER
 prerequisites: [FR-C143-sourire, FR-C143-crier]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "expliquer ← Latin explicare 'to unfold' — English explicit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C143-crier]
 <!-- hl-knowledge: introduces=[FR-LEX-C144-VERBES144-01]; assesses=[] -->
 
 **expliquer** — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**expliquer** ← Latin *explicare*, "to unfold" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

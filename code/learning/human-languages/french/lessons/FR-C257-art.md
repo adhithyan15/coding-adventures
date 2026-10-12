@@ -14,6 +14,7 @@ concept_tag: FR-TRAV257-ART
 prerequisites: [FR-C257-geographie, FR-C257-mathematiques]
 sounds: []
 roots: []
+etymology_hook: "art ← Latin ars, artis 'skill, craft' — English art and artisan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C257-mathematiques]
 <!-- hl-knowledge: introduces=[FR-LEX-C257-TRAV257-03]; assesses=[] -->
 
 **l'art** — "art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**art** ← Latin *ars*, *artis*, "skill, craft" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

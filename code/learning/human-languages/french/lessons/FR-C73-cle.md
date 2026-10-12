@@ -13,7 +13,8 @@ gloss: "a key"
 concept_tag: FR-MAISON25-CLE
 prerequisites: [FR-C73-fenetre, FR-C73-chaise]
 sounds: []
-roots: []
+roots: [clavis-latin]
+etymology_hook: "clé ← Latin clavis 'key' — English clavicle and clef share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C73-chaise]
 <!-- hl-knowledge: introduces=[FR-LEX-C73-MAISON25-04]; assesses=[] -->
 
 **la clé** — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clé** ← Old French *clef* ← Latin *clavis*, "key" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

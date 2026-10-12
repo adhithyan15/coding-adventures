@@ -13,7 +13,8 @@ gloss: "to translate"
 concept_tag: FR-VERB-TRADUIRE
 prerequisites: [FR-C143-crier, FR-C144-expliquer]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "traduire ← Latin traducere 'to lead across' — the sense of translating came via Italian"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C144-expliquer]
 <!-- hl-knowledge: introduces=[FR-LEX-C144-VERBES144-02]; assesses=[] -->
 
 **traduire** — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**traduire** ← Latin *traducere*, "to lead across" — a learned borrowing of the 1500s. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

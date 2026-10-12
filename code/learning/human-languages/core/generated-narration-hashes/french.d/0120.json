@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 120,
-  "sourceHash": "fnv1a64:03885cb13fd518c6",
+  "sourceHash": "fnv1a64:3b2cde6a6838d454",
   "lessonIds": [
     "FR-C120-fraise",
     "FR-C120-cerise",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch120.txt",
   "json": "french/narration/ch120.json",
-  "textHash": "fnv1a64:293ccf42f0f3b66b",
-  "jsonHash": "fnv1a64:b8080e0a4222b677",
+  "textHash": "fnv1a64:aa5caa90dcd91a3b",
+  "jsonHash": "fnv1a64:907813e6919c9c5c",
   "findings": []
 }

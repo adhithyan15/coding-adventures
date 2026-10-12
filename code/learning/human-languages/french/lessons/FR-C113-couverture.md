@@ -13,7 +13,8 @@ gloss: "a blanket"
 concept_tag: FR-MAISON65-COUVERTURE
 prerequisites: [FR-C112-rideau, FR-C113-oreiller]
 sounds: []
-roots: []
+roots: [cooperire-latin]
+etymology_hook: "couverture ← Late Latin coopertura 'a covering' — English cover and coverture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C113-oreiller]
 <!-- hl-knowledge: introduces=[FR-LEX-C113-MAISON65-02]; assesses=[] -->
 
 **la couverture** — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**couverture** ← Late Latin *coopertura*, "a covering", from *coopertus*, "covered", the past participle of *cooperire* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

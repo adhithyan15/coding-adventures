@@ -13,7 +13,8 @@ gloss: "anyway"
 concept_tag: FR-POURQUOI158-DE-TOUTE-FACON
 prerequisites: [FR-C158-donc, FR-C158-pourtant]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "de toute façon — 'in every way'; façon ← Latin factio 'a making' — English fashion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C158-pourtant]
 <!-- hl-knowledge: introduces=[FR-LEX-C158-POURQUOI158-03]; assesses=[] -->
 
 **de toute façon** — "anyway".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**de toute façon** — *de*, "in, of", *toute*, "every", ← Latin *totus*, and *façon*, "a way", ← Latin *factio*, *factionis*, "a making" (EtymDB 2.1): in every way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

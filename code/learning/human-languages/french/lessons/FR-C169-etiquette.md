@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES169-ETIQUETTE
 prerequisites: [FR-C169-dossier, FR-C169-fiche-de-paie]
 sounds: []
 roots: []
+etymology_hook: "étiquette ← Old French estiquette 'a note stuck on' — English ticket and etiquette"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C169-fiche-de-paie]
 <!-- hl-knowledge: introduces=[FR-LEX-C169-CHOSES169-04]; assesses=[] -->
 
 **l'étiquette** — "a label".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étiquette** ← Old French *estiquette*, "a note stuck on", from *estechier*, "to stick, to attach", a Germanic word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

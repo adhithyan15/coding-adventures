@@ -13,7 +13,8 @@ gloss: "to feel; to smell"
 concept_tag: FR-VERB-SENTIR
 prerequisites: [FR-C65-envoyer, FR-C65-recevoir]
 sounds: []
-roots: []
+roots: [sentire-latin]
+etymology_hook: "sentir ← Latin sentire 'to feel, to perceive' — English sense and sentiment share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C65-recevoir]
 <!-- hl-knowledge: introduces=[FR-LEX-C65-VERBES17-05]; assesses=[] -->
 
 **sentir** — "to feel; to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sentir** ← Latin *sentire*, "to feel, to perceive" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

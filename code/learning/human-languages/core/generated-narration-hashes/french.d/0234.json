@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 234,
-  "sourceHash": "fnv1a64:0b92ba954e107843",
+  "sourceHash": "fnv1a64:e0adf669d162bee5",
   "lessonIds": [
     "FR-C234-remplir",
     "FR-C234-vider",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch234.txt",
   "json": "french/narration/ch234.json",
-  "textHash": "fnv1a64:b118612052e78a08",
-  "jsonHash": "fnv1a64:f69ca83075fd89cd",
+  "textHash": "fnv1a64:4d48623ff3818d48",
+  "jsonHash": "fnv1a64:907a9a30bdfcfca3",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a jacket"
 concept_tag: FR-HABITS68-VESTE
 prerequisites: [FR-C115-fer, FR-C115-poche]
 sounds: []
-roots: []
+roots: [vestire-latin]
+etymology_hook: "veste ← Italian veste 'a garment', from Latin vestis — English vest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C115-poche]
 <!-- hl-knowledge: introduces=[FR-LEX-C116-HABITS68-01]; assesses=[] -->
 
 **la veste** — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**veste** ← Italian *veste*, "a garment", from Latin *vestis*, "clothing" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

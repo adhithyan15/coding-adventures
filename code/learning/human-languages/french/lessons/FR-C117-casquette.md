@@ -14,6 +14,7 @@ concept_tag: FR-HABITS69-CASQUETTE
 prerequisites: [FR-C116-echarpe, FR-C117-bottes]
 sounds: []
 roots: []
+etymology_hook: "casquette — a little helmet; from Spanish casco 'skull, helmet'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C117-bottes]
 <!-- hl-knowledge: introduces=[FR-LEX-C117-HABITS69-02]; assesses=[] -->
 
 **la casquette** — "a cap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casquette** — a little form of the French word for "helmet", with *-ette*. That word came from Spanish *casco*, "skull, helmet" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

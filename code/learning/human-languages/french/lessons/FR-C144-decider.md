@@ -13,7 +13,8 @@ gloss: "to decide"
 concept_tag: FR-VERB-DECIDER
 prerequisites: [FR-C144-expliquer, FR-C144-traduire]
 sounds: []
-roots: []
+roots: [caedere-latin]
+etymology_hook: "décider ← Latin decidere 'to cut off, to settle' — English decide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C144-traduire]
 <!-- hl-knowledge: introduces=[FR-LEX-C144-VERBES144-03]; assesses=[] -->
 
 **décider** — "to decide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**décider** ← Latin *decidere*, "to cut off, to settle" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

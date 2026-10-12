@@ -13,7 +13,8 @@ gloss: "a dentist"
 concept_tag: FR-CHOSES166-DENTISTE
 prerequisites: [FR-C166-journaliste, FR-C166-architecte]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "dentiste — dent 'tooth' + -iste"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C166-architecte]
 <!-- hl-knowledge: introduces=[FR-LEX-C166-CHOSES166-04]; assesses=[] -->
 
 **le dentiste** — "a dentist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dentiste** — *dent*, "tooth", with *-iste*, "one who works with".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

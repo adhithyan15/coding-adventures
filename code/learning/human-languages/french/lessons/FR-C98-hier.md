@@ -13,7 +13,8 @@ gloss: "yesterday"
 concept_tag: FR-TEMPS50-HIER
 prerequisites: [FR-C97-dehors, FR-C97-hui]
 sounds: []
-roots: []
+roots: [heri]
+etymology_hook: "hier ← Latin heri 'yesterday' — Spanish ayer and Italian ieri share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C97-hui]
 <!-- hl-knowledge: introduces=[FR-LEX-C98-TEMPS50-01]; assesses=[] -->
 
 **hier** — "yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hier** ← Old French *ier* ← Latin *heri*, "yesterday" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

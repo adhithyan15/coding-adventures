@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS87-SECONDE
 prerequisites: [FR-C134-numero, FR-C134-adresse, FR-C08-moins]
 sounds: []
 roots: []
+etymology_hook: "seconde ← Medieval Latin secunda (minuta), 'the second small part' — English second"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C134-adresse]
 <!-- hl-knowledge: introduces=[FR-LEX-C135-TEMPS87-01]; assesses=[] -->
 
 **la seconde** — "a second".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seconde** ← Medieval Latin *secunda*, short for *secunda minuta*, "the second small part" of an hour — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

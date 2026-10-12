@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES253-CHANTIER
 prerequisites: [FR-C253-casque, FR-C253-tunnel]
 sounds: []
 roots: []
+etymology_hook: "chantier ← Latin cantherius 'a trestle' — a timber support, then a work yard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C253-tunnel]
 <!-- hl-knowledge: introduces=[FR-LEX-C253-CHOSES253-04]; assesses=[] -->
 
 **le chantier** — "a building site".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chantier** ← Latin *cantherius*, "a gelding; a rafter, a trestle" (EtymDB 2.1) — inherited: first a timber support, then a work yard.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

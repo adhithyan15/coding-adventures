@@ -14,6 +14,7 @@ concept_tag: FR-HABITS56-PANTALON
 prerequisites: [FR-C103-chemise, FR-C103-robe]
 sounds: []
 roots: []
+etymology_hook: "pantalon — named after Pantalone, a Venetian stage character in long trousers — English pants"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C103-robe]
 <!-- hl-knowledge: introduces=[FR-LEX-C104-HABITS56-01]; assesses=[] -->
 
 **le pantalon** — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pantalon** — named after *Pantalone*, the old Venetian of Italian comedy, who wore long trousers. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

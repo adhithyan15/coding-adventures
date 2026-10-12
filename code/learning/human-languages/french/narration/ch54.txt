@@ -12,6 +12,9 @@ Before the new one: say the French for a medicine, then the French for a doctor.
 You'll want to know: l'hôpital.
 l'hôpital — "a hospital".
 
+The word, taken apart.
+hôpital from Old French hospital from Medieval Latin hospitale, "a guest house", from Latin hospes, "guest" — a learned borrowing. (EtymDB 2.1) The circumflex marks the s that French later stopped writing. The same Latin word, worn down in everyday speech, also gave French its word for "hotel".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the French for a doctor, then the French for a hospital.
 
 You'll want to know: la maladie.
 la maladie — "an illness".
+
+The word, taken apart.
+maladie — built in Old French from the adjective for "sick", with the ending -ie. That adjective goes back to Latin male habitus, "in poor condition". (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the French for a hospital, then the French for an illnes
 You'll want to know: la soif.
 la soif — "thirst". j'ai soif: I am thirsty, with avoir.
 
+The word, taken apart.
+soif from Old French soif from Latin sitis, "thirst" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the French for an illness, then the French for thirst.
 You'll want to know: la fatigue.
 la fatigue — "tiredness".
 
+The word, taken apart.
+fatigue — formed from the verb for "to tire", a learned borrowing of Latin fatigare, "to weary". (EtymDB 2.1) The kept g shows the book word: in everyday speech it would have dropped out.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the French for thirst, then the French for tiredness.
 
 You'll want to know: malade.
 malade — "ill, sick".
+
+The word, taken apart.
+malade from Old French malade from Latin male habitus, "in poor condition" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

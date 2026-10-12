@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 252,
-  "sourceHash": "fnv1a64:33e3ee7c0be89a35",
+  "sourceHash": "fnv1a64:6744990c838350c9",
   "lessonIds": [
     "FR-C252-impot",
     "FR-C252-formulaire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch252.txt",
   "json": "french/narration/ch252.json",
-  "textHash": "fnv1a64:640ef7ed4ce39a91",
-  "jsonHash": "fnv1a64:8bf1054972d760c4",
+  "textHash": "fnv1a64:34a4c007696e254c",
+  "jsonHash": "fnv1a64:7063e76f2408f6e8",
   "findings": []
 }

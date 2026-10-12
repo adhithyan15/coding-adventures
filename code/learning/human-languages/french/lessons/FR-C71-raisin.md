@@ -13,7 +13,8 @@ gloss: "grapes"
 concept_tag: FR-CUISINE23-RAISIN
 prerequisites: [FR-C70-poire, FR-C71-citron]
 sounds: []
-roots: []
+roots: [racemus-latin]
+etymology_hook: "raisin ← Latin racemus 'a cluster of grapes' — English raisin, a dried grape"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C71-citron]
 <!-- hl-knowledge: introduces=[FR-LEX-C71-CUISINE23-02]; assesses=[] -->
 
 **le raisin** — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raisin** ← Vulgar Latin *\*racimus* ← Latin *racemus*, "a cluster of grapes" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

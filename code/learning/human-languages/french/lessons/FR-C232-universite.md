@@ -13,7 +13,8 @@ gloss: "a university"
 concept_tag: FR-TRAV232-UNIVERSITE
 prerequisites: [FR-C232-magazine, FR-C232-dictionnaire]
 sounds: []
-roots: []
+roots: [universus-latin]
+etymology_hook: "université ← Latin universitas 'the whole body' — English university"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C232-dictionnaire]
 <!-- hl-knowledge: introduces=[FR-LEX-C232-TRAV232-03]; assesses=[] -->
 
 **l'université** — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**université** ← Latin *universitas*, "the whole, a corporation", from *universus*, "all together" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

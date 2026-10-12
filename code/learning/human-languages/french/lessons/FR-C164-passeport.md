@@ -13,7 +13,8 @@ gloss: "a passport"
 concept_tag: FR-CHOSES164-PASSEPORT
 prerequisites: [FR-C163-serrure, FR-C163-sonnette]
 sounds: []
-roots: []
+roots: [portus-latin]
+etymology_hook: "passeport — 'pass the port': leave to pass through a harbour — English passport"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C163-sonnette]
 <!-- hl-knowledge: introduces=[FR-LEX-C164-CHOSES164-01]; assesses=[] -->
 
 **le passeport** — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passeport** — the verb for "to pass" and Old French *port*, "a harbour", ← Latin *portus*: leave to pass through a port. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES196-PLOMBIER
 prerequisites: [FR-C196-mecanicien, FR-C196-electricien]
 sounds: []
 roots: []
+etymology_hook: "plombier — from the word for 'lead', Latin plumbum: pipes were lead — English plumber"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C196-electricien]
 <!-- hl-knowledge: introduces=[FR-LEX-C196-CHOSES196-04]; assesses=[] -->
 
 **le plombier** — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plombier** — built from the word for "lead", ← Latin *plumbum* (Lewis & Short), with *-ier*: pipes were once lead.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

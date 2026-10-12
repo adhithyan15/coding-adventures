@@ -13,7 +13,8 @@ gloss: "a hill"
 concept_tag: FR-NATURE36-COLLINE
 prerequisites: [FR-C84-vent, FR-C84-feu]
 sounds: []
-roots: []
+roots: [collis-latin]
+etymology_hook: "colline ← Italian collina, from Latin collis 'hill'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C84-feu]
 <!-- hl-knowledge: introduces=[FR-LEX-C84-NATURE36-03]; assesses=[] -->
 
 **la colline** — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colline** ← Italian *collina*, from Latin *collis*, "hill" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

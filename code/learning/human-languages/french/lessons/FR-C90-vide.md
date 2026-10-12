@@ -13,7 +13,8 @@ gloss: "empty"
 concept_tag: FR-ADJ42-VIDE
 prerequisites: [FR-C90-haut, FR-C90-plein]
 sounds: []
-roots: []
+roots: [vacare-latin]
+etymology_hook: "vide ← Vulgar Latin *vocitus 'empty', akin to Latin vacuus — English void"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C90-plein]
 <!-- hl-knowledge: introduces=[FR-LEX-C90-ADJ42-05]; assesses=[] -->
 
 **vide** — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vide** ← Old French *vuit* ← Vulgar Latin *\*vocitus*, "empty" (EtymDB 2.1), related to Latin *vacuus*, "empty" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

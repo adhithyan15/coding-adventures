@@ -14,6 +14,7 @@ concept_tag: FR-VILLE52-EGLISE
 prerequisites: [FR-C100-pont, FR-C100-parc]
 sounds: []
 roots: []
+etymology_hook: "église ← Latin ecclesia, from Greek ekklesia 'an assembly' — English ecclesiastical"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C100-parc]
 <!-- hl-knowledge: introduces=[FR-LEX-C100-VILLE52-04]; assesses=[] -->
 
 **l'église** — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**église** ← Latin *ecclesia*, from Greek *ekklesia*, "an assembly" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

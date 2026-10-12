@@ -14,6 +14,7 @@ concept_tag: FR-ADJ46-AMER
 prerequisites: [FR-C93-sucre, FR-C94-sale]
 sounds: []
 roots: []
+etymology_hook: "amer ← Latin amarus 'bitter' — the stressed a became e, as in mer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C94-sale]
 <!-- hl-knowledge: introduces=[FR-LEX-C94-ADJ46-02]; assesses=[] -->
 
 **amer** — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amer** ← Latin *amarus*, "bitter" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

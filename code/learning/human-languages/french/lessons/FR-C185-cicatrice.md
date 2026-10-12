@@ -14,6 +14,7 @@ concept_tag: FR-SANTE185-CICATRICE
 prerequisites: [FR-C185-pouce, FR-C185-blessure]
 sounds: []
 roots: []
+etymology_hook: "cicatrice ← Latin cicatrix 'a scar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C185-blessure]
 <!-- hl-knowledge: introduces=[FR-LEX-C185-SANTE185-04]; assesses=[] -->
 
 **la cicatrice** — "a scar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cicatrice** ← Latin *cicatrix*, "a scar" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

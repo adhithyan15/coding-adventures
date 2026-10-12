@@ -13,7 +13,8 @@ gloss: "joy"
 concept_tag: FR-SENTIR7-JOIE
 prerequisites: [FR-C54-fatigue, FR-C54-malade]
 sounds: []
-roots: []
+roots: [gaudere-latin]
+etymology_hook: "joie ← Latin gaudia 'joys', plural of gaudium — English joy came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C54-malade]
 <!-- hl-knowledge: introduces=[FR-LEX-C55-SENTIR7-01]; assesses=[] -->
 
 **la joie** — "joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**joie** ← Latin *gaudia*, "joys", the plural of *gaudium* — inherited. (EtymDB 2.1) Latin *ga-* became French *jo-*, as in *jambe* from *gamba*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

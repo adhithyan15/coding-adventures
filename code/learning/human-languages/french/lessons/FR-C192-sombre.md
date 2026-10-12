@@ -14,6 +14,7 @@ concept_tag: FR-QUAL192-SOMBRE
 prerequisites: [FR-C192-cuit-cuite, FR-C192-mur-mure]
 sounds: []
 roots: []
+etymology_hook: "sombre — of uncertain origin, usually linked to Latin umbra 'shadow' — English sombre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C192-mur-mure]
 <!-- hl-knowledge: introduces=[FR-LEX-C192-QUAL192-03]; assesses=[] -->
 
 **sombre** — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sombre** ← Old French *sombre*, "dark" (EtymDB 2.1), of uncertain origin; it is usually linked to Late Latin *subumbrare*, "to shade", from *umbra*, "shadow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

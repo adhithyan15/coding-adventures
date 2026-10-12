@@ -13,7 +13,8 @@ gloss: "to know (a fact)"
 concept_tag: FR-VERB-SAVOIR
 prerequisites: [FR-C64-attendre, FR-C64-acheter]
 sounds: []
-roots: []
+roots: [sapere-latin]
+etymology_hook: "savoir ← Latin sapere 'to taste, to be wise' — English sapient and savvy share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C64-acheter]
 <!-- hl-knowledge: introduces=[FR-LEX-C64-VERBES16-05]; assesses=[] -->
 
 **savoir** — "to know (a fact)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**savoir** ← Latin *sapere*, "to taste, to be wise", through a Vulgar Latin *\*sapere* stressed on its middle syllable — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

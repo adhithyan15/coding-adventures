@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES30-PAPIER
 prerequisites: [FR-C77-tasse, FR-C78-stylo]
 sounds: []
 roots: []
+etymology_hook: "papier ← Latin papyrus, from Greek papyros — English paper"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C78-stylo]
 <!-- hl-knowledge: introduces=[FR-LEX-C78-CHOSES30-02]; assesses=[] -->
 
 **le papier** — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**papier** ← Latin *papyrus*, from Greek *papyros*, "papyrus" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

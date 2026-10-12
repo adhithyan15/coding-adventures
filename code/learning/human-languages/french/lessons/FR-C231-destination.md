@@ -13,7 +13,8 @@ gloss: "a destination"
 concept_tag: FR-CHOSES231-DESTINATION
 prerequisites: [FR-C231-arrivee, FR-C231-depart]
 sounds: []
-roots: []
+roots: [destinare-latin]
+etymology_hook: "destination ← Latin destinatio 'a purpose', from destinare 'to make fast'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C231-depart]
 <!-- hl-knowledge: introduces=[FR-LEX-C231-CHOSES231-04]; assesses=[] -->
 
 **la destination** — "a destination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**destination** ← Latin *destinatio*, "a fixing, a purpose", from *destinare*, "to make fast" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

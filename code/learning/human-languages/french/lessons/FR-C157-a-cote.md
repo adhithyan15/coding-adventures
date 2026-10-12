@@ -13,7 +13,8 @@ gloss: "beside"
 concept_tag: FR-LIEU157-A-COTE
 prerequisites: [FR-C157-devant, FR-C157-derriere]
 sounds: []
-roots: []
+roots: [costa-latin]
+etymology_hook: "à côté — à + côté 'side', from Latin costa 'rib' — English coast"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C157-derriere]
 <!-- hl-knowledge: introduces=[FR-LEX-C157-LIEU157-05]; assesses=[] -->
 
 **à côté** — "beside".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**à côté** — *à*, "at", and *côté*, "side", ← Latin *costatum*, from *costa*, "a rib" (EtymDB 2.1): at the side, by the ribs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

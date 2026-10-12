@@ -13,7 +13,8 @@ gloss: "toothpaste"
 concept_tag: FR-MAISON66-DENTIFRICE
 prerequisites: [FR-C113-savon, FR-C113-brosse-a-dents]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "dentifrice ← Latin dentifricium 'tooth powder', from dens 'tooth' + fricare 'to rub'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C113-brosse-a-dents]
 <!-- hl-knowledge: introduces=[FR-LEX-C114-MAISON66-01]; assesses=[] -->
 
 **le dentifrice** — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dentifrice** ← Latin *dentifricium*, "tooth powder", from *dens*, "tooth", and *fricare*, "to rub" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

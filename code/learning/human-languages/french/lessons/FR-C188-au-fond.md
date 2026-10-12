@@ -13,7 +13,8 @@ gloss: "at the bottom, at the back"
 concept_tag: FR-LIEU188-AU-FOND
 prerequisites: [FR-C188-pres-de, FR-C188-loin-de]
 sounds: []
-roots: []
+roots: [fundus-latin]
+etymology_hook: "au fond — 'at the bottom'; fond ← Latin fundus — English fund and foundation"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C188-loin-de]
 <!-- hl-knowledge: introduces=[FR-LEX-C188-LIEU188-03]; assesses=[] -->
 
 **au fond** — "at the bottom, at the back".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**au fond** — *au*, "at the", and *fond*, "bottom", ← Latin *fundus*, "bottom". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

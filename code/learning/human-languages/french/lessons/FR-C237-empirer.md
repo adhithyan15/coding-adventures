@@ -14,6 +14,7 @@ concept_tag: FR-VERB-EMPIRER
 prerequisites: [FR-C237-meriter, FR-C237-ameliorer]
 sounds: []
 roots: []
+etymology_hook: "empirer — em- + the word for 'worse', from Latin peior — English pejorative"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C237-ameliorer]
 <!-- hl-knowledge: introduces=[FR-LEX-C237-VERBES237-04]; assesses=[] -->
 
 **empirer** — "to get worse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**empirer** — built from *em-* and the word for "worse", ← Latin *peior*, "worse" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 223,
-  "sourceHash": "fnv1a64:233e37e20a5d551d",
+  "sourceHash": "fnv1a64:3f727adec67cc0ea",
   "lessonIds": [
     "FR-C223-batterie",
     "FR-C223-chargeur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch223.txt",
   "json": "french/narration/ch223.json",
-  "textHash": "fnv1a64:be9889b77a578663",
-  "jsonHash": "fnv1a64:c2ce048e77293c4c",
+  "textHash": "fnv1a64:f6ed978acc51f186",
+  "jsonHash": "fnv1a64:ad9841134c7d5fdd",
   "findings": []
 }

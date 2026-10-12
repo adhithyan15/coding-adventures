@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES31-TELEPHONE
 prerequisites: [FR-C78-crayon, FR-C78-sac]
 sounds: []
 roots: []
+etymology_hook: "téléphone — a 19th-century coinage from Greek tele 'far off' + phone 'voice'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C78-sac]
 <!-- hl-knowledge: introduces=[FR-LEX-C79-CHOSES31-01]; assesses=[] -->
 
 **le téléphone** — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**téléphone** — a 19th-century coinage from Greek *tele*, "far off", and *phone*, "voice, sound". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

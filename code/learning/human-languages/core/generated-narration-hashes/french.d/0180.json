@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 180,
-  "sourceHash": "fnv1a64:289148a27144282c",
+  "sourceHash": "fnv1a64:4cf01bc5169cc9d0",
   "lessonIds": [
     "FR-C180-preparer",
     "FR-C180-presenter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch180.txt",
   "json": "french/narration/ch180.json",
-  "textHash": "fnv1a64:9f945b0716855260",
-  "jsonHash": "fnv1a64:58521f8d6faf4901",
+  "textHash": "fnv1a64:9cebc33f153a9754",
+  "jsonHash": "fnv1a64:1eed98806a9305a5",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 18,
-  "sourceHash": "fnv1a64:b18c430ea9c701db",
+  "sourceHash": "fnv1a64:eb39d6b792793e5d",
   "lessonIds": [
     "FR-C15-participe-er",
     "FR-C15-jai-parle",
@@ -20,7 +20,7 @@
   "drivablePrefix": 12,
   "text": "french/narration/ch18.txt",
   "json": "french/narration/ch18.json",
-  "textHash": "fnv1a64:2c82456ce5c840a1",
-  "jsonHash": "fnv1a64:b96d8eaa4b38b8f3",
+  "textHash": "fnv1a64:4de7474c544c10e0",
+  "jsonHash": "fnv1a64:dfb6c5ed33bfe373",
   "findings": []
 }

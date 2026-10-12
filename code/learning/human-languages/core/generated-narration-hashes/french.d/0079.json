@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 79,
-  "sourceHash": "fnv1a64:4e6ef0418a88e98d",
+  "sourceHash": "fnv1a64:a2277a70190feefc",
   "lessonIds": [
     "FR-C79-telephone",
     "FR-C79-parapluie",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch79.txt",
   "json": "french/narration/ch79.json",
-  "textHash": "fnv1a64:4508a540499027df",
-  "jsonHash": "fnv1a64:fa2d985f1993e6be",
+  "textHash": "fnv1a64:841d8c564561ff17",
+  "jsonHash": "fnv1a64:4efabbaea08b107e",
   "findings": []
 }

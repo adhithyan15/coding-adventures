@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 227,
-  "sourceHash": "fnv1a64:70799bc1f611df8b",
+  "sourceHash": "fnv1a64:a510978116568ac8",
   "lessonIds": [
     "FR-C227-roue",
     "FR-C227-moteur",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch227.txt",
   "json": "french/narration/ch227.json",
-  "textHash": "fnv1a64:c465c85a53bdc65a",
-  "jsonHash": "fnv1a64:cb89d0441c98d33c",
+  "textHash": "fnv1a64:3e0a1b05f8589d3f",
+  "jsonHash": "fnv1a64:cd74cd05894b1da1",
   "findings": []
 }

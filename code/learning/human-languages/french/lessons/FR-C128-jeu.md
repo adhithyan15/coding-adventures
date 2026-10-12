@@ -13,7 +13,8 @@ gloss: "a game"
 concept_tag: FR-LOISIRS80-JEU
 prerequisites: [FR-C128-musique, FR-C128-sport]
 sounds: []
-roots: []
+roots: [iocus-latin]
+etymology_hook: "jeu ← Latin iocus 'a joke, a jest' — the noun beside jouer; English jocular"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C128-sport]
 <!-- hl-knowledge: introduces=[FR-LEX-C128-LOISIRS80-03]; assesses=[] -->
 
 **le jeu** — "a game". Plural **les jeux**, with an x.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jeu** ← Old French *geu* ← Latin *iocus*, "a joke, a jest" — inherited. It is the noun beside *jouer*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

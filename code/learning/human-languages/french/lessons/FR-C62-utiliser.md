@@ -13,7 +13,8 @@ gloss: "to use"
 concept_tag: FR-VERB-UTILISER
 prerequisites: [FR-C62-etudier, FR-C62-payer]
 sounds: []
-roots: []
+roots: [utilis-latin]
+etymology_hook: "utiliser — from the word for 'useful' ← Latin utilis, from uti 'to use' — English utility"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C62-payer]
 <!-- hl-knowledge: introduces=[FR-LEX-C62-VERBES14-04]; assesses=[] -->
 
 **utiliser** — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**utiliser** — formed in French in the 18th century from the word for "useful", a borrowing of Latin *utilis*, "useful", from *uti*, "to use" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

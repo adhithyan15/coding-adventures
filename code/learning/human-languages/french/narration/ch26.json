@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:444fb2484dce8714",
+  "sourceHash": "fnv1a64:4ee945c84c0a0a76",
   "lessons": [
     {
       "id": "FR-C22-chien-chat",
@@ -122,7 +122,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bb2448a33d7feb7",
+      "sourceHash": "fnv1a64:474f0e4d727132cf",
       "notice": null,
       "blocks": [
         {

@@ -13,7 +13,8 @@ gloss: "to prepare"
 concept_tag: FR-VERB-PREPARER
 prerequisites: [FR-C179-lancer, FR-C179-tourner]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "préparer ← Latin praeparare 'to make ready beforehand' — English prepare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C179-tourner]
 <!-- hl-knowledge: introduces=[FR-LEX-C180-VERBES180-01]; assesses=[] -->
 
 **préparer** — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**préparer** ← Latin *praeparare*, "to make ready beforehand" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

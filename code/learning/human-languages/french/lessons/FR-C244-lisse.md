@@ -14,6 +14,7 @@ concept_tag: FR-QUAL244-LISSE
 prerequisites: [FR-C244-propre, FR-C244-dur-dure]
 sounds: []
 roots: []
+etymology_hook: "lisse — from the verb 'to smooth', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C244-dur-dure]
 <!-- hl-knowledge: introduces=[FR-LEX-C244-QUAL244-04]; assesses=[] -->
 
 **lisse** — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lisse** — formed from the verb for "to smooth", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 257,
-  "sourceHash": "fnv1a64:4091ca3d7272d838",
+  "sourceHash": "fnv1a64:3cb354289c8e72a0",
   "lessonIds": [
     "FR-C257-geographie",
     "FR-C257-mathematiques",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch257.txt",
   "json": "french/narration/ch257.json",
-  "textHash": "fnv1a64:f2e89bb5c86c3909",
-  "jsonHash": "fnv1a64:2e971119cacf512a",
+  "textHash": "fnv1a64:89c93642d8133e37",
+  "jsonHash": "fnv1a64:726d823f5109f602",
   "findings": []
 }

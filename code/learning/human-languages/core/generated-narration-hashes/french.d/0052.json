@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 52,
-  "sourceHash": "fnv1a64:abdab1c4caf78ba9",
+  "sourceHash": "fnv1a64:d1db06d7b3ac4a14",
   "lessonIds": [
     "FR-C52-poitrine",
     "FR-C52-estomac",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch52.txt",
   "json": "french/narration/ch52.json",
-  "textHash": "fnv1a64:a029cb1367c324fd",
-  "jsonHash": "fnv1a64:5ff3d1c18b146c23",
+  "textHash": "fnv1a64:8eab2135e75e5c0c",
+  "jsonHash": "fnv1a64:330863e68b7e2608",
   "findings": []
 }

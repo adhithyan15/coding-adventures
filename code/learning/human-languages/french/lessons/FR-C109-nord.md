@@ -14,6 +14,7 @@ concept_tag: FR-LIEU61-NORD
 prerequisites: [FR-C108-feu-rouge, FR-C109-frontiere]
 sounds: []
 roots: []
+etymology_hook: "nord ← Old English north — French took its compass points from English sailors"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C109-frontiere]
 <!-- hl-knowledge: introduces=[FR-LEX-C109-LIEU61-02]; assesses=[] -->
 
 **le nord** — "the north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nord** ← Old English *north* — borrowed in the Middle Ages, like the other compass points. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

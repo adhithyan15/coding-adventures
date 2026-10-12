@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES164-FLEUVE
 prerequisites: [FR-C164-reservation, FR-C164-boucherie]
 sounds: []
 roots: []
+etymology_hook: "fleuve ← Latin fluvius 'a river' — English fluvial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C164-boucherie]
 <!-- hl-knowledge: introduces=[FR-LEX-C164-CHOSES164-05]; assesses=[] -->
 
 **le fleuve** — "a large river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fleuve** ← Middle French *fleuve* (EtymDB 2.1) ← Latin *fluvius*, "a river" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a notebook"
 concept_tag: FR-CHOSES30-CAHIER
 prerequisites: [FR-C78-stylo, FR-C78-papier]
 sounds: []
-roots: []
+roots: [quattuor-latin]
+etymology_hook: "cahier ← Latin quaterni 'four at a time', a booklet of four sheets — English quire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C78-papier]
 <!-- hl-knowledge: introduces=[FR-LEX-C78-CHOSES30-03]; assesses=[] -->
 
 **le cahier** — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cahier** ← Old French *quaer* ← Vulgar Latin *\*quaternum*, from Latin *quaterni*, "four at a time" (EtymDB 2.1) — inherited: a booklet made of four folded sheets.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

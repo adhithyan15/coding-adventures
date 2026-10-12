@@ -13,7 +13,8 @@ gloss: "to convince"
 concept_tag: FR-VERB-CONVAINCRE
 prerequisites: [FR-C147-comparer, FR-C147-conseiller]
 sounds: []
-roots: []
+roots: [vincere-latin]
+etymology_hook: "convaincre ← Latin convincere 'to overcome', from vincere 'to conquer' — English convince"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C147-conseiller]
 <!-- hl-knowledge: introduces=[FR-LEX-C147-VERBES147-03]; assesses=[] -->
 
 **convaincre** — "to convince".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**convaincre** ← Latin *convincere*, "to overcome, to prove wrong", from *vincere*, "to conquer" (Lewis & Short) — taken from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

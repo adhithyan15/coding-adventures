@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES224-PILOTE
 prerequisites: [FR-C223-spectacle, FR-C224-employe]
 sounds: []
 roots: []
+etymology_hook: "pilote ← Italian pilota, from Greek, built on pedon 'an oar' — English pilot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C224-employe]
 <!-- hl-knowledge: introduces=[FR-LEX-C224-CHOSES224-02]; assesses=[] -->
 
 **le pilote** — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pilote** ← Italian *pilota*, from a Medieval Greek word for "steersman", built on *pedon*, "an oar" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

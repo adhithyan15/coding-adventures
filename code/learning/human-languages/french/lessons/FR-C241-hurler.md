@@ -13,7 +13,8 @@ gloss: "to scream"
 concept_tag: FR-VERB-HURLER
 prerequisites: [FR-C241-tousser, FR-C241-trembler]
 sounds: []
-roots: []
+roots: [ululare-latin]
+etymology_hook: "hurler ← Latin ululare 'to howl' — English ululate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C241-trembler]
 <!-- hl-knowledge: introduces=[FR-LEX-C241-VERBES241-03]; assesses=[] -->
 
 **hurler** — "to scream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hurler** ← Latin *ululare*, "to howl" (Lewis & Short) — inherited, with its first *l* turned to *r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a fever"
 concept_tag: FR-SANTE5-FIEVRE
 prerequisites: [FR-C52-poignet, FR-C53-douleur]
 sounds: []
-roots: []
+roots: [febris-latin]
+etymology_hook: "fièvre ← Latin febris 'fever' — English fever and febrile share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C53-douleur]
 <!-- hl-knowledge: introduces=[FR-LEX-C53-SANTE5-02]; assesses=[] -->
 
 **la fièvre** — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fièvre** ← Latin *febris*, "fever" (EtymDB 2.1) — inherited: the stressed *e* broke into *ie*, and *b* became *v*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

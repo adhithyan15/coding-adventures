@@ -14,6 +14,7 @@ concept_tag: FR-HABITS69-BOTTES
 prerequisites: [FR-C116-gants, FR-C116-echarpe]
 sounds: []
 roots: []
+etymology_hook: "bottes — the word for 'boot', from Old French bote, of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C116-echarpe]
 <!-- hl-knowledge: introduces=[FR-LEX-C117-HABITS69-01]; assesses=[] -->
 
 **les bottes** — "boots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bottes** is the plural of the word for "boot", whose origin is uncertain. EtymDB 2.1 records Old French *bote*, "a high, thick shoe", and offers a Frankish source that is not secure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

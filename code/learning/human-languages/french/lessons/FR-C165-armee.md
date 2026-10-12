@@ -13,7 +13,8 @@ gloss: "an army"
 concept_tag: FR-CHOSES165-ARMEE
 prerequisites: [FR-C165-guerre, FR-C165-paix]
 sounds: []
-roots: []
+roots: [arma-latin]
+etymology_hook: "armée — 'armed', from the verb 'to arm': an armed force — English army"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C165-paix]
 <!-- hl-knowledge: introduces=[FR-LEX-C165-CHOSES165-03]; assesses=[] -->
 
 **l'armée** — "an army".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**armée** is the past participle of the verb for "to arm", used as a noun: a force that is armed. (EtymDB 2.1 links it to Medieval Latin *armata*, "an armed force".)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

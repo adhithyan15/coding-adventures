@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS49-DESSUS
 prerequisites: [FR-C96-loin, FR-C96-pres]
 sounds: []
 roots: []
+etymology_hook: "dessus — de + Old French sus 'above', from Latin sursum 'upward'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C96-pres]
 <!-- hl-knowledge: introduces=[FR-LEX-C97-TEMPS49-01]; assesses=[] -->
 
 **dessus** — "on top".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dessus** — built from *de*, "of, from", and Old French *sus*, "up, above", ← Latin *sursum*, "upward". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

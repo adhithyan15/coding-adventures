@@ -14,6 +14,7 @@ concept_tag: FR-VERB-AJOUTER
 prerequisites: [FR-C178-neiger, FR-C178-accompagner]
 sounds: []
 roots: []
+etymology_hook: "ajouter ← Vulgar Latin *adiuxtare 'to put beside' — English adjust and joust"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C178-accompagner]
 <!-- hl-knowledge: introduces=[FR-LEX-C178-VERBES178-03]; assesses=[] -->
 
 **ajouter** — "to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ajouter** ← Old French *ajouster* ← Vulgar Latin *\*adiuxtare*, "to put beside", from Latin *iuxta*, "next to" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

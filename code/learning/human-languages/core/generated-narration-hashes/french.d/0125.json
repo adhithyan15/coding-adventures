@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 125,
-  "sourceHash": "fnv1a64:b121ec656eda7d04",
+  "sourceHash": "fnv1a64:38eca8d21958c8f7",
   "lessonIds": [
     "FR-C125-pompier",
     "FR-C125-facteur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch125.txt",
   "json": "french/narration/ch125.json",
-  "textHash": "fnv1a64:a2b9a11e94831540",
-  "jsonHash": "fnv1a64:b6b99ea30c3d822d",
+  "textHash": "fnv1a64:6f34b43c606beec4",
+  "jsonHash": "fnv1a64:3461d9e74514f03c",
   "findings": []
 }

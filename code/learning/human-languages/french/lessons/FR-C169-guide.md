@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES169-GUIDE
 prerequisites: [FR-C169-fiche-de-paie, FR-C169-etiquette]
 sounds: []
 roots: []
+etymology_hook: "guide ← Old Provençal guida, from Frankish *witan 'to show the way' — English guide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C169-etiquette]
 <!-- hl-knowledge: introduces=[FR-LEX-C169-CHOSES169-05]; assesses=[] -->
 
 **le guide** — "a guide, a guidebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guide** ← Old Provençal *guida*, from *guidar*, "to guide", from Frankish *\*witan*, "to show the way" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

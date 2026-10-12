@@ -13,7 +13,8 @@ gloss: "to hide"
 concept_tag: FR-VERB-CACHER
 prerequisites: [FR-C66-compter, FR-C66-gagner]
 sounds: []
-roots: []
+roots: [cogere-latin]
+etymology_hook: "cacher ← Vulgar Latin *coacticare 'to press together' — English cache came from French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C66-gagner]
 <!-- hl-knowledge: introduces=[FR-LEX-C66-VERBES18-05]; assesses=[] -->
 
 **cacher** — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cacher** ← Old French *cachier* ← Vulgar Latin *\*coacticare*, "to press together" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

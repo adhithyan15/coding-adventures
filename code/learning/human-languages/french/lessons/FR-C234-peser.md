@@ -13,7 +13,8 @@ gloss: "to weigh"
 concept_tag: FR-VERB-PESER
 prerequisites: [FR-C234-vider, FR-C234-mesurer]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "peser ← Latin pensare 'to weigh, to ponder' — English pensive"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C234-mesurer]
 <!-- hl-knowledge: introduces=[FR-LEX-C234-VERBES234-04]; assesses=[] -->
 
 **peser** — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peser** ← Vulgar Latin *\*pesare* ← Latin *pensare*, "to weigh, to ponder" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

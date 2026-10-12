@@ -13,7 +13,8 @@ gloss: "safety"
 concept_tag: FR-CHOSES168-SECURITE
 prerequisites: [FR-C168-permission, FR-C168-interdiction]
 sounds: []
-roots: []
+roots: [securus-latin]
+etymology_hook: "sécurité ← Latin securitas, from securus — the learned twin of sûr"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C168-interdiction]
 <!-- hl-knowledge: introduces=[FR-LEX-C168-CHOSES168-04]; assesses=[] -->
 
 **la sécurité** — "safety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sécurité** ← Latin *securitas*, "freedom from care", from *securus* (EtymDB 2.1) — a learned borrowing; the same *securus* wore down into *sûr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

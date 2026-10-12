@@ -14,6 +14,7 @@ concept_tag: FR-TRAV257-GEOGRAPHIE
 prerequisites: [FR-C256-violon, FR-C256-tambour]
 sounds: []
 roots: []
+etymology_hook: "géographie ← Greek geographia 'a description of the earth' — English geography"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C256-tambour]
 <!-- hl-knowledge: introduces=[FR-LEX-C257-TRAV257-01]; assesses=[] -->
 
 **la géographie** — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**géographie** ← Latin *geographia*, from Greek *geographia*, "a description of the earth" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

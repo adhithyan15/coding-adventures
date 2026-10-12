@@ -13,7 +13,8 @@ gloss: "wool"
 concept_tag: FR-CHOSES172-LAINE
 prerequisites: [FR-C172-plastique, FR-C172-coton]
 sounds: []
-roots: []
+roots: [lana-latin]
+etymology_hook: "laine ← Latin lana 'wool' — English lanolin, wool fat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C172-coton]
 <!-- hl-knowledge: introduces=[FR-LEX-C172-CHOSES172-03]; assesses=[] -->
 
 **la laine** — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laine** ← Old French *lainne* (EtymDB 2.1) ← Latin *lana*, "wool" (Lewis & Short) — inherited: the stressed *a* became *ai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

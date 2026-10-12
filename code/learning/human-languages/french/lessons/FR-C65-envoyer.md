@@ -13,7 +13,8 @@ gloss: "to send"
 concept_tag: FR-VERB-ENVOYER
 prerequisites: [FR-C65-laisser, FR-C65-porter]
 sounds: []
-roots: []
+roots: [via-latin]
+etymology_hook: "envoyer ← Late Latin inviare 'to put on the way', from via 'road' — English envoy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C65-porter]
 <!-- hl-knowledge: introduces=[FR-LEX-C65-VERBES17-03]; assesses=[] -->
 
 **envoyer** — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**envoyer** ← Old French *envoier* ← Late Latin *inviare*, "to put on the way", from *via*, "a road" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

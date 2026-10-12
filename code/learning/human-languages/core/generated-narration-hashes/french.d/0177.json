@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 177,
-  "sourceHash": "fnv1a64:1f40aa40caba0b27",
+  "sourceHash": "fnv1a64:7a79450e6923230c",
   "lessonIds": [
     "FR-C177-promettre",
     "FR-C177-permettre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch177.txt",
   "json": "french/narration/ch177.json",
-  "textHash": "fnv1a64:dc73c31bbeae1208",
-  "jsonHash": "fnv1a64:afaa8cc98da9df03",
+  "textHash": "fnv1a64:3095242221f1431f",
+  "jsonHash": "fnv1a64:53585ac6090016d3",
   "findings": []
 }

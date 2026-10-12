@@ -12,6 +12,9 @@ Before the new one: say the French for a shop assistant, then the French for a f
 You'll want to know: le boulanger.
 le boulanger — "a baker". The person behind la boulangerie.
 
+The word, taken apart.
+boulanger from Picard boulenc, probably from Middle Dutch bolle, "a round loaf": a maker of round loaves. (EtymDB 2.1 has its Old French form.)
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the French for a farmer, then the French for a baker.
 
 You'll want to know: l'étudiant.
 l'étudiant — "a student".
+
+The word, taken apart.
+étudiant is the present participle of étudier, "to study", used as a noun: one who is studying.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the French for a baker, then the French for a student.
 You'll want to know: le chauffeur.
 le chauffeur — "a driver".
 
+The word, taken apart.
+chauffeur — built from the verb for "to heat", with -eur: first the stoker of a steam engine, then the driver. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the French for a student, then the French for a driver.
 You'll want to know: l'avocat.
 l'avocat — "a lawyer; an avocado".
 
+The word, taken apart.
+avocat — two words in one. The lawyer from Latin advocatus, "one called in to help" — a learned borrowing. The fruit from Spanish aguacate, from Nahuatl ahuacatl, reshaped to look like the lawyer word. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the French for a driver, then the French for a lawyer; a
 
 You'll want to know: l'ingénieur.
 l'ingénieur — "an engineer".
+
+The word, taken apart.
+ingénieur — built from Old French engin, "a clever device, a war machine", from Latin ingenium, "talent" (EtymDB 2.1), with -eur, later respelt after the Latin.
 
 What you've built.
 One more word for this chapter.

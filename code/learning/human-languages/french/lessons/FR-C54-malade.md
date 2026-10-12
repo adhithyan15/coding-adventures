@@ -13,7 +13,8 @@ gloss: "ill, sick"
 concept_tag: FR-SANTE6-MALADE
 prerequisites: [FR-C54-soif, FR-C54-fatigue]
 sounds: []
-roots: []
+roots: [habere-latin]
+etymology_hook: "malade ← Latin male habitus 'in poor condition' — English malady is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C54-fatigue]
 <!-- hl-knowledge: introduces=[FR-LEX-C54-SANTE6-05]; assesses=[] -->
 
 **malade** — "ill, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**malade** ← Old French *malade* ← Latin *male habitus*, "in poor condition" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

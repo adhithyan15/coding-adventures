@@ -13,7 +13,8 @@ gloss: "to recommend"
 concept_tag: FR-VERB-RECOMMANDER
 prerequisites: [FR-C151-heberger, FR-C151-prier]
 sounds: []
-roots: []
+roots: [mandare-latin]
+etymology_hook: "recommander — re- + the verb 'to entrust', from Latin commendare — English recommend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C151-prier]
 <!-- hl-knowledge: introduces=[FR-LEX-C151-VERBES151-03]; assesses=[] -->
 
 **recommander** — "to recommend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recommander** — built from *re-* and the verb for "to order, to entrust", ← Vulgar Latin *\*commandare* ← Latin *commendare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

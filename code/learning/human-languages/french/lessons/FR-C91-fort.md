@@ -13,7 +13,8 @@ gloss: "strong"
 concept_tag: FR-ADJ43-FORT
 prerequisites: [FR-C90-plein, FR-C90-vide]
 sounds: []
-roots: []
+roots: [fortis-latin]
+etymology_hook: "fort ← Latin fortis 'strong' — English fort, fortress and fortitude"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C90-vide]
 <!-- hl-knowledge: introduces=[FR-LEX-C91-ADJ43-01]; assesses=[] -->
 
 **fort** — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fort** ← Latin *fortis*, "strong" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES169-CARTE-POSTALE
 prerequisites: [FR-C168-securite, FR-C168-conseil]
 sounds: []
 roots: []
+etymology_hook: "carte postale — carte + the adjective of poste: a postal card"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C168-conseil]
 <!-- hl-knowledge: introduces=[FR-LEX-C169-CHOSES169-01]; assesses=[] -->
 
 **la carte postale** — "a postcard".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carte postale** — "postal card": *carte*, "card", and the adjective made from *poste*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

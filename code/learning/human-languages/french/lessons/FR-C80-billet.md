@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES32-BILLET
 prerequisites: [FR-C80-boite, FR-C80-valise]
 sounds: []
 roots: []
+etymology_hook: "billet ← Old French billette, from Medieval Latin bulla 'a sealed document' — English bill"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C80-valise]
 <!-- hl-knowledge: introduces=[FR-LEX-C80-CHOSES32-03]; assesses=[] -->
 
 **le billet** — "a ticket; a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**billet** ← Old French *billette*, a little form of *bille*, "a written note", from Medieval Latin *bulla*, "a seal, a sealed document". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

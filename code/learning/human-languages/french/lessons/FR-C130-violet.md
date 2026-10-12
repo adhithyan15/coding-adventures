@@ -13,7 +13,8 @@ gloss: "purple"
 concept_tag: FR-COULEURS82-VIOLET
 prerequisites: [FR-C129-prix, FR-C130-rose]
 sounds: []
-roots: []
+roots: [viola-latin]
+etymology_hook: "violet — the colour of the violet, from Latin viola 'a violet'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C130-rose]
 <!-- hl-knowledge: introduces=[FR-LEX-C130-COULEURS82-02]; assesses=[] -->
 
 **violet** — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**violet** — the colour named after the flower, the violet, a little form of Old French *viole*, ← Latin *viola*, "a violet" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

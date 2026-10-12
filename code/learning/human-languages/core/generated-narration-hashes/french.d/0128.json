@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 128,
-  "sourceHash": "fnv1a64:87d6c8dff0e7fa09",
+  "sourceHash": "fnv1a64:2374306e47625e42",
   "lessonIds": [
     "FR-C128-musique",
     "FR-C128-sport",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch128.txt",
   "json": "french/narration/ch128.json",
-  "textHash": "fnv1a64:c906f67caaea7268",
-  "jsonHash": "fnv1a64:db510a34fed76e24",
+  "textHash": "fnv1a64:7026cff51dfe18ba",
+  "jsonHash": "fnv1a64:d0329df1ddcc3659",
   "findings": []
 }

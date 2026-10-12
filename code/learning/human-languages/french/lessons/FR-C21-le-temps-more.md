@@ -11,6 +11,7 @@ concept_tag: FR-C21-LE-TEMPS-MORE
 prerequisites: [FR-C21-le-temps]
 sounds: []
 roots: []
+etymology_hook: "il pleut ← Latin pluit 'it rains', from pluere 'to rain' — French kept the pl- intact"
 duration:
   max_seconds: 150
 requires:

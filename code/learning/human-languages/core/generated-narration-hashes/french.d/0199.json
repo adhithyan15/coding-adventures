@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 199,
-  "sourceHash": "fnv1a64:7b2ce55e6daedf98",
+  "sourceHash": "fnv1a64:c351263872d6c2bd",
   "lessonIds": [
     "FR-C199-entree",
     "FR-C199-sortie",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch199.txt",
   "json": "french/narration/ch199.json",
-  "textHash": "fnv1a64:cdf2fcdf992a13ca",
-  "jsonHash": "fnv1a64:522ffd37fe0b0155",
+  "textHash": "fnv1a64:39e39aa5726fde4f",
+  "jsonHash": "fnv1a64:138023671a619d98",
   "findings": []
 }

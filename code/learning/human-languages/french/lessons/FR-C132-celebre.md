@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES84-CELEBRE
 prerequisites: [FR-C132-dernier, FR-C132-prochain]
 sounds: []
 roots: []
+etymology_hook: "célèbre ← Latin celeber 'crowded, much spoken of' — English celebrate and celebrity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C132-prochain]
 <!-- hl-knowledge: introduces=[FR-LEX-C132-QUALITES84-04]; assesses=[] -->
 
 **célèbre** — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**célèbre** ← Latin *celeber*, "crowded, much spoken of" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

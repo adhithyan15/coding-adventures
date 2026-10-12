@@ -13,7 +13,8 @@ gloss: "none, not a single"
 concept_tag: FR-NEG139-AUCUN
 prerequisites: [FR-C138-shabiller, FR-C139-rien]
 sounds: []
-roots: []
+roots: [unus-latin]
+etymology_hook: "aucun ← Vulgar Latin *alicunus, from aliquis 'someone' + unus 'one'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C139-rien]
 <!-- hl-knowledge: introduces=[FR-LEX-C139-NEG139-02]; assesses=[] -->
 
 **aucun / aucune** — "none, not a single". It agrees with its noun and also takes **ne**: **Il n'y a aucun train lundi.** — "There is no train at all on Monday."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aucun** ← Old French *alcun* (EtymDB 2.1) ← Vulgar Latin *\*alicunus*, from Latin *aliquis*, "someone", and *unus*, "one" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

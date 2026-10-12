@@ -14,6 +14,7 @@ concept_tag: FR-LIEU216-BANLIEUE
 prerequisites: [FR-C216-ailleurs, FR-C216-la-haut]
 sounds: []
 roots: []
+etymology_hook: "banlieue ← Medieval Latin banleuca: the land within a league under a town's rule"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C216-la-haut]
 <!-- hl-knowledge: introduces=[FR-LEX-C216-LIEU216-05]; assesses=[] -->
 
 **la banlieue** — "the suburbs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banlieue** ← Medieval Latin *banleuca*: *ban*, "a lord's rule", a Frankish word, and *leuca*, "a league", a Gaulish one — the land within a league of a town. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

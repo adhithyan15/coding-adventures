@@ -13,7 +13,8 @@ gloss: "a lesson"
 concept_tag: FR-ECOLE78-LECON
 prerequisites: [FR-C125-caisse, FR-C126-classe, FR-C45-instructions, FR-C45-premiere-lecture]
 sounds: []
-roots: []
+roots: [legere-latin]
+etymology_hook: "leçon ← Latin lectio 'a reading', from legere 'to read' — English lesson"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [FR-C126-classe]
 <!-- hl-knowledge: introduces=[FR-LEX-C126-ECOLE78-02]; assesses=[] -->
 
 **la leçon** — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leçon** ← Latin *lectio*, "a reading", from *legere*, "to read" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

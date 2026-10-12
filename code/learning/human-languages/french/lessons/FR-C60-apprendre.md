@@ -13,7 +13,8 @@ gloss: "to learn"
 concept_tag: FR-VERB-APPRENDRE
 prerequisites: [FR-C60-cuisiner, FR-C60-jouer]
 sounds: []
-roots: []
+roots: [prehendere-latin]
+etymology_hook: "apprendre ← Latin apprehendere 'to seize' — prendre with a- in front; English apprehend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C60-jouer]
 <!-- hl-knowledge: introduces=[FR-LEX-C60-VERBES12-05]; assesses=[] -->
 
 **apprendre** — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apprendre** ← Old French *aprendre* ← Latin *apprehendere*, "to seize, to grasp" — inherited: to learn is to grasp. (EtymDB 2.1) It is *prendre*, "to take", with *a-* in front.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

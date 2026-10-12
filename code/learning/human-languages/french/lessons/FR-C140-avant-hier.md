@@ -13,7 +13,8 @@ gloss: "the day before yesterday"
 concept_tag: FR-PAS140-AVANT-HIER
 prerequisites: [FR-C140-deja, FR-C140-recemment]
 sounds: []
-roots: []
+roots: [heri]
+etymology_hook: "avant-hier — avant 'before' + hier 'yesterday': the day before yesterday"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C140-recemment]
 <!-- hl-knowledge: introduces=[FR-LEX-C140-PAS140-03]; assesses=[] -->
 
 **avant-hier** — "the day before yesterday". One day further back than **hier**: **Avant-hier, j'ai écrit une lettre.** — "The day before yesterday I wrote a letter."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avant-hier** — *avant*, "before", ← Late Latin *abante*, and *hier*, "yesterday". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

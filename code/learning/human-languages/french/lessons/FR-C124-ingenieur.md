@@ -13,7 +13,8 @@ gloss: "an engineer"
 concept_tag: FR-METIERS76-INGENIEUR
 prerequisites: [FR-C124-chauffeur, FR-C124-avocat]
 sounds: []
-roots: []
+roots: [ingenium-latin]
+etymology_hook: "ingénieur — Old French engin 'a machine', from Latin ingenium 'talent' — English engineer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C124-avocat]
 <!-- hl-knowledge: introduces=[FR-LEX-C124-METIERS76-05]; assesses=[] -->
 
 **l'ingénieur** — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ingénieur** — built from Old French *engin*, "a clever device, a war machine", ← Latin *ingenium*, "talent" (EtymDB 2.1), with *-eur*, later respelt after the Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

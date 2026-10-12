@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS49-HUI
 prerequisites: [FR-C97-dedans, FR-C97-dehors]
 sounds: []
 roots: []
+etymology_hook: "aujourd'hui — 'on the day of today'; hui ← Latin hodie 'today', so 'today' is in it two times"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C97-dehors]
 <!-- hl-knowledge: introduces=[FR-LEX-C97-TEMPS49-05]; assesses=[] -->
 
 **aujourd'hui** — "today".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aujourd'hui** — "on the day of today": *au*, *jour*, and Old French *hui*, "today", ← Latin *hodie*, "today" (EtymDB 2.1 records the Latin word). The word holds "today" two times over.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

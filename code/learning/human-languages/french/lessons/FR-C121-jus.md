@@ -14,6 +14,7 @@ concept_tag: FR-REPAS73-JUS
 prerequisites: [FR-C120-farine, FR-C121-biere]
 sounds: []
 roots: []
+etymology_hook: "jus ← Latin ius 'broth, sauce' — English juice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C121-biere]
 <!-- hl-knowledge: introduces=[FR-LEX-C121-REPAS73-02]; assesses=[] -->
 
 **le jus** — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jus** ← Latin *ius*, "broth, sauce" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

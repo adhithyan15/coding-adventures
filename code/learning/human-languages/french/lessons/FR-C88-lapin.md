@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX40-LAPIN
 prerequisites: [FR-C88-fourmi, FR-C88-elephant]
 sounds: []
 roots: []
+etymology_hook: "lapin — origin uncertain; usually tied to a pre-Latin root of Spain and southern France"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C88-elephant]
 <!-- hl-knowledge: introduces=[FR-LEX-C88-ANIMAUX40-03]; assesses=[] -->
 
 **le lapin** — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lapin** — its origin is uncertain. The usual account ties it to Middle French *laperiau*, "a young rabbit" (EtymDB 2.1), from a pre-Latin root of Spain and southern France.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

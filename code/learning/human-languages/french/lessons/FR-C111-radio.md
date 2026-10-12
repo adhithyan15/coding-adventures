@@ -13,7 +13,8 @@ gloss: "a radio"
 concept_tag: FR-MAISON63-RADIO
 prerequisites: [FR-C111-ordinateur, FR-C111-refrigerateur]
 sounds: []
-roots: []
+roots: [radius-latin]
+etymology_hook: "radio — short for radiotélégraphie, built on Latin radius 'a ray'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C111-refrigerateur]
 <!-- hl-knowledge: introduces=[FR-LEX-C111-MAISON63-05]; assesses=[] -->
 
 **la radio** — "a radio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**radio** — short for *radiotélégraphie*, built on Latin *radius*, "a rod, a ray" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "thirty"
 concept_tag: FR-HABITS57-TRENTE
 prerequisites: [FR-C104-jupe, FR-C105-chaussettes]
 sounds: []
-roots: []
+roots: [triginta-latin]
+etymology_hook: "trente ← Latin triginta 'thirty' — the same tri- as trois"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C105-chaussettes]
 <!-- hl-knowledge: introduces=[FR-LEX-C105-HABITS57-02]; assesses=[] -->
 
 **trente** — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trente** ← Latin *triginta*, "thirty" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

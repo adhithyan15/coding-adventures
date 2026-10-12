@@ -14,6 +14,7 @@ concept_tag: FR-SANTE185-RHUME
 prerequisites: [FR-C185-blessure, FR-C185-cicatrice]
 sounds: []
 roots: []
+etymology_hook: "rhume ← Latin rheuma, from Greek rheuma 'a flow' — English rheum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C185-cicatrice]
 <!-- hl-knowledge: introduces=[FR-LEX-C185-SANTE185-05]; assesses=[] -->
 
 **le rhume** — "a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rhume** ← Latin *rheuma*, "a flow", from Greek *rheuma* (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

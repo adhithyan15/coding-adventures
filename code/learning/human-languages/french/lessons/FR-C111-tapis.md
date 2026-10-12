@@ -14,6 +14,7 @@ concept_tag: FR-MAISON63-TAPIS
 prerequisites: [FR-C110-voyage, FR-C110-vacances]
 sounds: []
 roots: []
+etymology_hook: "tapis ← Greek tapetion, from tapes 'a carpet' — English tapestry is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C110-vacances]
 <!-- hl-knowledge: introduces=[FR-LEX-C111-MAISON63-01]; assesses=[] -->
 
 **le tapis** — "a rug, a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tapis** ← Old French *tapiz* ← Byzantine Greek *tapetion*, from Greek *tapes*, "a carpet" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

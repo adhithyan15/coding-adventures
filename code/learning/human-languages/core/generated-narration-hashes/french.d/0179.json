@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 179,
-  "sourceHash": "fnv1a64:dc767b6cb881ef2d",
+  "sourceHash": "fnv1a64:083b85da9d671ee3",
   "lessonIds": [
     "FR-C179-dependre",
     "FR-C179-partager",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch179.txt",
   "json": "french/narration/ch179.json",
-  "textHash": "fnv1a64:201c37a3ba41b6a0",
-  "jsonHash": "fnv1a64:75cb2657ce489fa1",
+  "textHash": "fnv1a64:b16609fd2b49b1ea",
+  "jsonHash": "fnv1a64:4d4fb8e87f92cd65",
   "findings": []
 }

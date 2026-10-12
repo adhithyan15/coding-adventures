@@ -13,7 +13,8 @@ gloss: "a rule"
 concept_tag: FR-CHOSES168-REGLE
 prerequisites: [FR-C167-fiance, FR-C167-fiancee]
 sounds: []
-roots: []
+roots: [regula-latin]
+etymology_hook: "règle ← Latin regula 'a straight stick, a rule', from regere — English regulate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C167-fiancee]
 <!-- hl-knowledge: introduces=[FR-LEX-C168-CHOSES168-01]; assesses=[] -->
 
 **la règle** — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**règle** ← Latin *regula*, "a straight stick, a rule", from *regere*, "to guide" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

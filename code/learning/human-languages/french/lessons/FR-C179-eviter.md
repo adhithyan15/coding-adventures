@@ -14,6 +14,7 @@ concept_tag: FR-VERB-EVITER
 prerequisites: [FR-C179-dependre, FR-C179-partager]
 sounds: []
 roots: []
+etymology_hook: "éviter ← Latin evitare 'to shun' — English inevitable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C179-partager]
 <!-- hl-knowledge: introduces=[FR-LEX-C179-VERBES179-03]; assesses=[] -->
 
 **éviter** — "to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**éviter** ← Latin *evitare*, "to shun" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

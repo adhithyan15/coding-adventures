@@ -14,6 +14,7 @@ concept_tag: FR-METIERS76-BOULANGER
 prerequisites: [FR-C123-vendeur, FR-C123-agriculteur]
 sounds: []
 roots: []
+etymology_hook: "boulanger ← Picard boulenc, probably from Middle Dutch bolle 'a round loaf'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C123-agriculteur]
 <!-- hl-knowledge: introduces=[FR-LEX-C124-METIERS76-01]; assesses=[] -->
 
 **le boulanger** — "a baker". The person behind **la boulangerie**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**boulanger** ← Picard *boulenc*, probably from Middle Dutch *bolle*, "a round loaf": a maker of round loaves. (EtymDB 2.1 has its Old French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

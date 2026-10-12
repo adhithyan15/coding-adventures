@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE20-ORANGE
 prerequisites: [FR-C67-pomme, FR-C68-banane]
 sounds: []
 roots: []
+etymology_hook: "orange ← Old French pome orenge, ultimately from Arabic naranj and Persian narang"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C68-banane]
 <!-- hl-knowledge: introduces=[FR-LEX-C68-CUISINE20-02]; assesses=[] -->
 
 **l'orange** — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orange** ← Old French *pome orenge*, "orange apple" (EtymDB 2.1), which came through Italian from Arabic *naranj* and Persian *narang* — borrowed. The *n-* fell away on the journey.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

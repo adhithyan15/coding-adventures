@@ -13,7 +13,8 @@ gloss: "to reduce"
 concept_tag: FR-VERB-REDUIRE
 prerequisites: [FR-C237-empirer, FR-C237-offrir]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "réduire ← Latin reducere 'to lead back', like conduire — English reduce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C237-offrir]
 <!-- hl-knowledge: introduces=[FR-LEX-C238-VERBES238-01]; assesses=[] -->
 
 **réduire** — "to reduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réduire** ← Old French *reduire* (EtymDB 2.1) ← Latin *reducere*, "to lead back" (Lewis & Short) — inherited, like *conduire*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

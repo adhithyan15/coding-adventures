@@ -13,7 +13,8 @@ gloss: "a ladder"
 concept_tag: FR-CHOSES230-ECHELLE
 prerequisites: [FR-C230-clou, FR-C230-marteau]
 sounds: []
-roots: []
+roots: [scala-latin]
+etymology_hook: "échelle ← Latin scala 'a ladder' — escalier came later from a word built on scala"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C230-marteau]
 <!-- hl-knowledge: introduces=[FR-LEX-C230-CHOSES230-05]; assesses=[] -->
 
 **l'échelle** — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**échelle** ← Old French *eschale* (EtymDB 2.1) ← Latin *scala*, "a ladder" — inherited; *escalier* came later from a word built on the same *scala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

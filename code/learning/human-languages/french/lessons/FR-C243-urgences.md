@@ -14,6 +14,7 @@ concept_tag: FR-SANTE243-URGENCES
 prerequisites: [FR-C242-ranger, FR-C243-pansement]
 sounds: []
 roots: []
+etymology_hook: "urgences — plural of the word for 'emergency', Latin urgens 'pressing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C243-pansement]
 <!-- hl-knowledge: introduces=[FR-LEX-C243-SANTE243-02]; assesses=[] -->
 
 **les urgences** — "the emergency department".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urgences** is the plural of the word for "an emergency", ← Latin *urgens*, "pressing", from *urgere*, "to press" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

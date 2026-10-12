@@ -13,7 +13,8 @@ gloss: "a meeting"
 concept_tag: FR-TRAV174-REUNION
 prerequisites: [FR-C174-collegue, FR-C174-salaire]
 sounds: []
-roots: []
+roots: [unus-latin]
+etymology_hook: "réunion — from the verb 'to reunite', from Latin unire 'to make one' — English reunion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C174-salaire]
 <!-- hl-knowledge: introduces=[FR-LEX-C174-TRAV174-04]; assesses=[] -->
 
 **la réunion** — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réunion** — formed from the verb for "to reunite", built on the verb for "to unite", ← Latin *unire*, from *unus*, "one". (EtymDB 2.1 links it to the verb.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
