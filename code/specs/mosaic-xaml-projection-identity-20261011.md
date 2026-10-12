@@ -148,3 +148,51 @@ longer matched run to capture the intermittent outlier with the new breakdown.
 ## Apply-props attribution follow-up (2026-10-12)
 
 A matched ten-event Debug host probe recorded an A1 outlier of 143.3883 ms to the rendering callback, with 137.398 ms inside apply-props. Split that aggregate with fixed, data-free phase names: apply-props-convert around each JSON-to-property conversion, apply-props-set around each reflective assignment, and apply-props-notify around EndInit. Preserve assignment order, strict validation, and the finally-based EndInit on conversion/setter failure. Per-property samples intentionally omit names and values and share the existing 4096-sample cap; they are repeated samples, not one aggregate per event. Validate the compiled runtime with profiling enabled, including strict conversion failure and batch release. These measurements do not close performance acceptance or establish realization counts.
+
+
+### Apply-props phase validation
+
+44 library tests and the compiled C# effect driver pass, including enabled profiling through setter and strict conversion failures. Regenerated Debug WinUI builds with zero errors and two existing unused-event warnings. Security review passed. A real five-event probe selected W20, B2, A20, Right to B20, then A1 with correct labels/highlights and formulas. Next-render callbacks: 26.4698, 22.0757, 11.5576, 34.2529, 13.4628 ms. Raw data: `mosaic-xaml-apply-props-profile-20261012.jsonl` (424 records). The initial 176.4692 ms apply-props sample is startup, not an interaction. Subsequent apply-props totals are 9.7870, 16.7367, 6.3205, 5.2434, 7.4366 ms; notification completion ranges 1.2640-3.5260 ms. No earlier outlier reproduced in this small probe. The Rust DLL is the retained Oct 7 fixture binary; this is managed Debug, not a freshly matched Rust Debug build. Full percentile, realization-count, scroll/editor and release acceptance remain open.
+
+Per-apply conversion, setter and notification sums (first entry is startup):
+
+```json
+[
+  {
+    "total": 176.4692,
+    "apply-props-convert": 41.54019999999999,
+    "apply-props-set": 92.48989999999999,
+    "apply-props-notify": 0.3116
+  },
+  {
+    "total": 9.787,
+    "apply-props-convert": 0.17400000000000002,
+    "apply-props-set": 5.139899999999999,
+    "apply-props-notify": 3.526
+  },
+  {
+    "total": 16.7367,
+    "apply-props-convert": 0.18120000000000003,
+    "apply-props-set": 14.3362,
+    "apply-props-notify": 1.4192
+  },
+  {
+    "total": 6.3205,
+    "apply-props-convert": 0.0864,
+    "apply-props-set": 4.466700000000001,
+    "apply-props-notify": 1.264
+  },
+  {
+    "total": 5.2434,
+    "apply-props-convert": 0.10810000000000002,
+    "apply-props-set": 3.0841000000000003,
+    "apply-props-notify": 1.4872
+  },
+  {
+    "total": 7.4366,
+    "apply-props-convert": 0.10519999999999999,
+    "apply-props-set": 5.330999999999999,
+    "apply-props-notify": 1.4821
+  }
+]
+```

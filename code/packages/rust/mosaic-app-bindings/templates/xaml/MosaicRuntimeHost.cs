@@ -1255,7 +1255,11 @@ public static class MosaicRuntimeHost
                     {
                         if (!values.TryGetValue(normalized, out var value))
                             continue;
-                        var converted = ConvertValue(value, property.PropertyType);
+                        // Fixed phase names avoid leaking property names or values.
+                        // Repeated scopes separate conversion from synchronous setters.
+                        (bool converted, object? value) converted;
+                        using (BeginProfile("apply-props-convert"))
+                            converted = ConvertValue(value, property.PropertyType);
                         if (!converted.converted)
                         {
                             if (strict)
@@ -1263,10 +1267,17 @@ public static class MosaicRuntimeHost
                                     $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
                             continue;
                         }
-                        property.SetValue(component, converted.value);
+                        using (BeginProfile("apply-props-set"))
+                            property.SetValue(component, converted.value);
                     }
                 }
-                finally { initialization?.EndInit(); }
+                finally
+                {
+                    // EndInit releases deferred notifications and binding work even
+                    // when conversion or a setter throws. Keep it inside the scope.
+                    using (BeginProfile("apply-props-notify"))
+                        initialization?.EndInit();
+                }
                 appliedRevision = Revision(latestUpdate);
             }
         }
