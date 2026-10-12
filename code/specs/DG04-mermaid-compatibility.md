@@ -1002,7 +1002,8 @@ lane sizing. Borrow endpoint strings from the diagram, retain one maximum per
 distinct pair, and use that same index for lane sizing and node placement in all
 four directions. For E authored edges, Q distinct pairs and P adjacent lane
 pairs, constraint discovery visits E edges once and performs at most 2P indexed
-queries. A BTreeMap provides O((E + P) log(Q + 1)) comparisons, with identifier
+queries. A BTreeMap provides O((E + P) log(Q + 2)) comparisons, including the
+empty-index/default case, with identifier
 comparison costs explicit, and O(Q) extra storage without cloned endpoint IDs.
 Never rescan all E edges for each node gap. Existing node lookup costs and
 ordinary O(E) output-edge lowering remain separate; this is not a claim that

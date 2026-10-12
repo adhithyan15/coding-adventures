@@ -113,6 +113,10 @@ fn measure_railroad_expression(expr: &RailroadExpression) -> (f64, f64) {
 
 /// Lay out top-level Mermaid subgraphs as stable ownership lanes.
 pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
+    // Parallel edges remain separate drawing instructions, but spacing needs
+    // only their maximum constraint. Index once before either layout phase;
+    // otherwise a small flat document can force two full scans per node gap.
+    let link_gaps = SwimlaneLinkGaps::new(diagram);
     let title_height = if diagram.title.is_some() { 44.0 } else { 16.0 };
     let horizontal_flow = matches!(
         diagram.direction,
@@ -131,17 +135,17 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                     .map(|node| swimlane_node_width(&node.shape, &node.label))
             }).collect::<Vec<_>>();
             let gap_units = lane.node_ids.windows(2).map(|pair|
-                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
-            ).sum::<usize>();
-            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units as f64 + 40.0
+                link_gaps.units(&pair[0], &pair[1]) as f64
+            ).sum::<f64>();
+            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units + 40.0
         }).fold(0.0, f64::max)
     } else {
         diagram.lanes.iter().map(|lane| {
             let gap_units = lane.node_ids.windows(2).map(|pair|
-                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
-            ).sum::<usize>();
+                link_gaps.units(&pair[0], &pair[1]) as f64
+            ).sum::<f64>();
             lane_header + lane.node_ids.len().max(1) as f64 * node_height
-                + (gap_units + 1) as f64 * node_gap + 28.0
+                + (gap_units + 1.0) * node_gap + 28.0
         }).fold(0.0, f64::max)
     };
     let (width, height) = if horizontal_flow {
@@ -226,7 +230,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 height: resolved_node_height,
             });
             let gap_units = member_ids.get(node_index + 1).map(|next_id|
-                swimlane_link_gap_units(diagram, node_id, next_id)
+                link_gaps.units(node_id, next_id)
             ).unwrap_or(1);
             horizontal_cursor += resolved_node_width + node_gap * gap_units as f64;
             vertical_cursor += node_height + node_gap * gap_units as f64;
@@ -276,12 +280,33 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     }
 }
 
-fn swimlane_link_gap_units(diagram: &SwimlaneDiagram, first: &str, second: &str) -> usize {
-    #[cfg(test)]
-    SWIMLANE_GAP_QUERIES.with(|count| count.set(count.get() + 1));
-    swimlane_gap_edges(diagram).filter(|edge|
-        (edge.from == first && edge.to == second) || (edge.from == second && edge.to == first)
-    ).map(|edge| edge.min_length).max().unwrap_or(1).max(1)
+/// A spacing constraint is undirected even when its drawing edge has arrows.
+/// Borrow keys rather than cloning IDs for every duplicate. A deterministic
+/// tree gives logarithmic comparisons without assuming a hash distribution.
+struct SwimlaneLinkGaps<'a> {
+    by_pair: BTreeMap<(&'a str, &'a str), usize>,
+}
+
+fn swimlane_gap_pair<'a>(first: &'a str, second: &'a str) -> (&'a str, &'a str) {
+    if first <= second { (first, second) } else { (second, first) }
+}
+
+impl<'a> SwimlaneLinkGaps<'a> {
+    fn new(diagram: &'a SwimlaneDiagram) -> Self {
+        let mut by_pair = BTreeMap::<_, usize>::new();
+        for edge in swimlane_gap_edges(diagram) {
+            let pair = swimlane_gap_pair(&edge.from, &edge.to);
+            let units = edge.min_length.max(1);
+            by_pair.entry(pair).and_modify(|maximum| *maximum = (*maximum).max(units)).or_insert(units);
+        }
+        Self { by_pair }
+    }
+
+    fn units(&self, first: &str, second: &str) -> usize {
+        #[cfg(test)]
+        SWIMLANE_GAP_QUERIES.with(|count| count.set(count.get() + 1));
+        self.by_pair.get(&swimlane_gap_pair(first, second)).copied().unwrap_or(1)
+    }
 }
 
 // Count actual constraint-edge visits, separately from ordinary output lowering.
@@ -293,11 +318,10 @@ std::thread_local! {
 }
 
 fn swimlane_gap_edges(diagram: &SwimlaneDiagram) -> impl Iterator<Item = &diagram_ir::SwimlaneEdge> {
-    diagram.edges.iter().map(|edge| {
-        #[cfg(test)]
-        SWIMLANE_GAP_EDGE_VISITS.with(|count| count.set(count.get() + 1));
-        edge
-    })
+    #[cfg(not(test))]
+    { diagram.edges.iter() }
+    #[cfg(test)]
+    { diagram.edges.iter().inspect(|_| SWIMLANE_GAP_EDGE_VISITS.with(|count| count.set(count.get() + 1))) }
 }
 
 fn swimlane_edge_endpoints(
