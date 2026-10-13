@@ -3850,6 +3850,21 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
                 )), "mixed marker links must lower point endpoints");
             }
+            if fixture_name == "labeled-open-links" {
+                assert!(layout.edges.iter().all(|edge|
+                    edge.end_marker == diagram_ir::EdgeMarker::None));
+                assert_eq!(layout.edges.iter().map(|edge| edge.start_marker).collect::<Vec<_>>(), vec![
+                    diagram_ir::EdgeMarker::None,
+                    diagram_ir::EdgeMarker::Circle,
+                    diagram_ir::EdgeMarker::Cross,
+                    diagram_ir::EdgeMarker::Point,
+                    diagram_ir::EdgeMarker::None,
+                    diagram_ir::EdgeMarker::Circle,
+                ]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 2, "open links must retain authored start circles");
+            }
             if fixture_name == "edge-identifiers" {
                 assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
                     vec![Some("submit"), Some("release")]);
