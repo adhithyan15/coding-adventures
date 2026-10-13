@@ -28,7 +28,7 @@
 
 pub const VERSION: &str = "0.75.0";
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
     ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
@@ -867,6 +867,7 @@ where
             },
         ));
     }
+    let mut hop_crossings = SwimlaneHopCrossings::default();
     for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
@@ -975,13 +976,7 @@ where
         if let Some(line_hops) = diagram.line_hops.filter(|_| {
             matches!(edge.curve, None | Some(SwimlaneEdgeCurve::Linear))
         }) {
-            let mut crossings = diagram.edges[..edge_index].iter().filter(|other| {
-                other.kind != SwimlaneEdgeKind::Invisible
-                    && matches!(other.curve, None | Some(SwimlaneEdgeCurve::Linear))
-            }).filter_map(|other| swimlane_line_crossing(
-                &edge.from, &edge.to, &other.from, &other.to,
-            )).collect::<Vec<_>>();
-            crossings.sort_by(|left, right| left.0.total_cmp(&right.0));
+            let crossings = hop_crossings.prior_crossings(edge_index, &edge.from, &edge.to);
             apply_swimlane_line_hops(&mut path, &edge.from, &edge.to, &crossings, line_hops);
         }
         if let Some(stroke_dash) = &edge.style.stroke_dash {
@@ -1575,6 +1570,64 @@ fn swimlane_endpoint_marker(
                 )),
             ]
         }
+    }
+}
+
+struct SwimlaneHopGeometry<'a> {
+    from: &'a Point,
+    to: &'a Point,
+    occurrences: Vec<usize>,
+}
+
+/// Keep drawing occurrences intact while indexing exact directed geometry.
+/// Same-axis cohorts cannot produce interior crossings. Oblique candidates
+/// still require the original predicate; this is not a global sweep-line bound.
+#[derive(Default)]
+struct SwimlaneHopCrossings<'a> {
+    by_geometry: BTreeMap<[u64; 4], usize>,
+    geometries: Vec<SwimlaneHopGeometry<'a>>,
+    horizontal: Vec<usize>,
+    vertical: Vec<usize>,
+    oblique: Vec<usize>,
+}
+
+impl<'a> SwimlaneHopCrossings<'a> {
+    fn prior_crossings(&mut self, index: usize, from: &'a Point, to: &'a Point) -> Vec<(f64, Point)> {
+        if from.x == to.x && from.y == to.y {
+            return Vec::new();
+        }
+        let horizontal = from.y == to.y;
+        let vertical = from.x == to.x;
+        let horizontal_candidates: &[usize] = if horizontal { &[] } else { &self.horizontal };
+        let vertical_candidates: &[usize] = if vertical { &[] } else { &self.vertical };
+        let candidate_groups = horizontal_candidates.iter()
+            .chain(vertical_candidates.iter())
+            .chain(self.oblique.iter());
+        let mut crossings = Vec::new();
+        for &group_index in candidate_groups {
+            let other = &self.geometries[group_index];
+            if let Some((t, point)) = swimlane_line_crossing(from, to, other.from, other.to) {
+                // Every original occurrence contributes the same hop commands.
+                crossings.extend(other.occurrences.iter().map(|&order| (t, point.clone(), order)));
+            }
+        }
+        crossings.sort_by(|left, right| left.0.total_cmp(&right.0).then_with(|| left.2.cmp(&right.2)));
+        let key = [from.x.to_bits(), from.y.to_bits(), to.x.to_bits(), to.y.to_bits()];
+        if let Some(&group_index) = self.by_geometry.get(&key) {
+            self.geometries[group_index].occurrences.push(index);
+        } else {
+            let group_index = self.geometries.len();
+            self.by_geometry.insert(key, group_index);
+            self.geometries.push(SwimlaneHopGeometry { from, to, occurrences: vec![index] });
+            if horizontal {
+                self.horizontal.push(group_index);
+            } else if vertical {
+                self.vertical.push(group_index);
+            } else {
+                self.oblique.push(group_index);
+            }
+        }
+        crossings.into_iter().map(|(t, point, _)| (t, point)).collect()
     }
 }
 
@@ -9296,6 +9349,59 @@ mod tests {
                     assert_eq!(geometries.len(), size * size, "every Cartesian geometry is distinct");
                     assert_authored_parallel_hop_work(&source, size * size, direction);
                 }
+            }
+        }
+    }
+
+    #[test]
+    fn line_hop_work_oblique_duplicates_inspect_one_prior_geometry() {
+        let source = format!("---\nconfig:\n  swimlane:\n    lineHops: arc\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\n{}end\n", "a --> b\n".repeat(128));
+        let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+        let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+        for edge in &mut layout.edges {
+            edge.from = Point { x: 0.0, y: 0.0 };
+            edge.to = Point { x: 100.0, y: 100.0 };
+        }
+        SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(0));
+        let enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get), 127);
+        layout.line_hops = None;
+        let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(enabled.instructions, disabled.instructions);
+    }
+
+    #[test]
+    fn line_hop_work_duplicate_crossings_keep_exact_multiplicity_and_styles() {
+        for mode in ["arc", "gap"] {
+            let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\ne[E]\nf[F]\nend\na first@<--> b\nc second@<--> d\na duplicate@<--> b\ne last@<--> f\ne again@<--> f");
+            let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+            let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+            for (edge, (sx, sy, ex, ey)) in layout.edges.iter_mut().zip([
+                (20.0,-50.0,20.0,50.0), (60.0,-50.0,60.0,50.0),
+                (20.0,-50.0,20.0,50.0), (0.0,0.0,100.0,0.0), (0.0,0.0,100.0,0.0),
+            ]) {
+                edge.from = Point { x:sx, y:sy }; edge.to = Point { x:ex, y:ey };
+            }
+            layout.edges[2].style.stroke = Some("#ff0000".into());
+            SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(0));
+            let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+            assert_eq!(SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get), 4, "two unique vertical geometries for each horizontal occurrence");
+            let paths = scene.instructions.iter().filter_map(|instruction| if let PaintInstruction::Path(path)=instruction {Some(path)} else {None}).collect::<Vec<_>>();
+            assert_eq!(paths.len(),15, "all five routes and ten markers retained");
+            assert_eq!(paths[6].stroke.as_deref(),Some("#ff0000"));
+            assert_eq!(paths[7].fill.as_deref(),Some("#ff0000"));
+            assert_eq!(paths[8].fill.as_deref(),Some("#ff0000"));
+            let mut commands=vec![PathCommand::MoveTo {x:0.0,y:0.0}];
+            for x in [20.0,20.0,60.0] {
+                commands.push(PathCommand::LineTo {x:x-6.0,y:0.0});
+                commands.push(if mode=="arc" {PathCommand::QuadTo {cx:x,cy:12.0,x:x+6.0,y:0.0}} else {PathCommand::MoveTo {x:x+6.0,y:0.0}});
+            }
+            commands.push(PathCommand::LineTo {x:100.0,y:0.0});
+            assert_eq!(paths[9].commands,commands);
+            assert_eq!(paths[12].commands,commands);
+            let metadata=scene.metadata.as_ref().unwrap();
+            for (index,id) in ["first","second","duplicate","last","again"].iter().enumerate() {
+                assert_eq!(metadata.get(&format!("swimlane.edge.{index}.id")).map(String::as_str),Some(*id));
             }
         }
     }

@@ -91,3 +91,9 @@ Line-hop/Qt integration controls assert exact public-layout sorted arc/gap route
 and marker triangles, mode aliases/exclusions, and Qt native output equivalence
 with exact inset/unsupported shadow debt. Existing resource and geometry controls
 remain required. No general renderer/device acceptance is inferred.
+
+Swimlane hop discovery indexes exact directed geometry and keeps every drawing
+occurrence. Same-axis cohorts are excluded before candidate iteration; duplicate
+geometry expands crossings back into original order/multiplicity. Counted authored
+duplicate/Cartesian controls and golden repeated-crossing commands guard this
+contract. Arbitrary unique oblique candidate work has no global sweep-line bound.
