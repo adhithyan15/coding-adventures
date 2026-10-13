@@ -74,6 +74,7 @@
     "nested-subgraphs",
     "state-choice-note-shapes",
     "label-rect-shape",
+    "anchor-shape",
     "legacy-internal-shape-aliases",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
