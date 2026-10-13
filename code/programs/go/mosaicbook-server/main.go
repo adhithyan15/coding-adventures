@@ -28,10 +28,11 @@ func main() {
 	//         convention (evocative of "Storybook's 6006 + mosaic twist").
 	port := flag.Int("port", 7331, "Port to listen on")
 
-	// --root: Directory to scan recursively for .mosaic and .stories.json files.
+	// --root: Directory to scan recursively for components (.mil/.mll/.msl, or
+	//         legacy .mosaic) and their .stories.json files.
 	//         Defaults to the current working directory so you can run the binary
 	//         from your project root without any arguments.
-	root := flag.String("root", ".", "Root directory to scan for .mosaic files")
+	root := flag.String("root", ".", "Root directory to scan for components and stories")
 
 	// --compiler: Path (or name on PATH) of the mosaic-compile binary.
 	//             Defaults to "mosaic-compile" so it can be found on PATH after
@@ -86,12 +87,12 @@ func main() {
 
 	addr := listenAddress(*port)
 	log.Printf("MosaicBook server running at http://localhost:%d", *port)
-	log.Printf("Scanning for .mosaic files in: %s", absRoot)
+	log.Printf("Scanning for components in: %s", absRoot)
 	log.Printf("Using compiler: %s", *compiler)
 
 	// Start the file-system watcher in its own goroutine.  It polls every
 	// second and broadcasts a reload event to all connected SSE clients when
-	// any .mosaic or .stories.json file changes.
+	// any component source or .stories.json file changes.
 	go srv.watchFiles()
 
 	// Serve HTTP, wrapped in requireLocalOrigin (security.go, #13178) so a
