@@ -3936,6 +3936,19 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
                     Some(&"rounded".to_string()));
             }
+            if fixture_name == "nested-subgraphs" {
+                assert_eq!(layout.groups.len(), 2);
+                let platform = layout.groups.iter().find(|group| group.id == "Platform").unwrap();
+                let runtime = layout.groups.iter().find(|group| group.id == "Runtime").unwrap();
+                assert!(runtime.x >= platform.x && runtime.y >= platform.y);
+                assert!(runtime.x + runtime.width <= platform.x + platform.width);
+                assert!(runtime.y + runtime.height <= platform.y + platform.height);
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.stroke_dash.as_deref() == Some(&[6.0, 4.0][..])
+                )).count(), 2);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
+                    Some(&"Platform".to_string()));
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

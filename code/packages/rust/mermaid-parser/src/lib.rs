@@ -17,7 +17,7 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
+    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -6219,6 +6219,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         lanes: Vec::new(),
+        groups: Vec::new(),
         nodes: Vec::new(),
         edges: Vec::new(),
         links: Vec::new(),
@@ -6227,6 +6228,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         automatic_lane_ordering,
     };
     let mut current_lane: Option<usize> = None;
+    let mut group_stack = Vec::<usize>::new();
     let mut last_edge_targets: Option<Vec<String>> = None;
     let mut class_styles = HashMap::new();
     let mut pending_classes = Vec::new();
@@ -6259,28 +6261,33 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
-            if current_lane.is_some() {
+            let (id, label) = parse_swimlane_lane(
+                value, diagram.lanes.len() + diagram.groups.len() + 1, line_number,
+            )?;
+            if diagram.lanes.iter().any(|lane| lane.id == id)
+                || diagram.groups.iter().any(|group| group.id == id)
+            {
                 return Err(swimlane_error(
                     line_number,
-                    "nested subgraphs are not supported by the native Swimlane slice",
+                    format!("duplicate Swimlane subgraph id {id:?}"),
                 ));
             }
-            let (id, label) = parse_swimlane_lane(value, diagram.lanes.len() + 1, line_number)?;
-            if diagram.lanes.iter().any(|lane| lane.id == id) {
-                return Err(swimlane_error(
-                    line_number,
-                    format!("duplicate Swimlane id {id:?}"),
-                ));
+            if let Some(lane) = current_lane {
+                let parent_id = group_stack.last().map(|group| diagram.groups[*group].id.clone());
+                diagram.groups.push(SwimlaneGroup {
+                    id, label, lane_id: diagram.lanes[lane].id.clone(), parent_id, node_ids: Vec::new(),
+                });
+                group_stack.push(diagram.groups.len() - 1);
+            } else {
+                diagram.lanes.push(SwimlaneLane { id, label, node_ids: Vec::new() });
+                current_lane = Some(diagram.lanes.len() - 1);
             }
-            diagram.lanes.push(SwimlaneLane {
-                id,
-                label,
-                node_ids: Vec::new(),
-            });
-            current_lane = Some(diagram.lanes.len() - 1);
             continue;
         }
         if line.eq_ignore_ascii_case("end") {
+            if group_stack.pop().is_some() {
+                continue;
+            }
             if current_lane.take().is_none() {
                 return Err(swimlane_error(
                     line_number,
@@ -6335,6 +6342,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 line,
                 line_number,
                 current_lane,
+                group_stack.last().copied(),
                 last_edge_targets.as_deref(),
                 &mut diagram,
             )?);
@@ -6345,9 +6353,9 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             line_number,
             current_lane.map(|lane| diagram.lanes[lane].id.clone()),
         )?;
-        upsert_swimlane_node(&mut diagram, node, current_lane);
+        upsert_swimlane_node(&mut diagram, node, current_lane, group_stack.last().copied());
     }
-    if current_lane.is_some() {
+    if current_lane.is_some() || !group_stack.is_empty() {
         return Err(swimlane_error(
             prepared.lines().count(),
             "unterminated Swimlane subgraph",
@@ -6757,6 +6765,7 @@ fn parse_swimlane_edge_chain(
     line: &str,
     line_number: usize,
     lane: Option<usize>,
+    group: Option<usize>,
     continuation_from: Option<&[String]>,
     diagram: &mut SwimlaneDiagram,
 ) -> Result<Vec<String>, ParseError> {
@@ -6775,7 +6784,7 @@ fn parse_swimlane_edge_chain(
         )?;
         let previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
         for node in first {
-            upsert_swimlane_node(diagram, node, lane);
+            upsert_swimlane_node(diagram, node, lane, group);
         }
         previous
     };
@@ -6836,7 +6845,7 @@ fn parse_swimlane_edge_chain(
         }
         previous = next_ids;
         for node in nodes {
-            upsert_swimlane_node(diagram, node, lane);
+            upsert_swimlane_node(diagram, node, lane, group);
         }
         let Some(next_operator) = next else {
             break;
@@ -7230,7 +7239,9 @@ fn normalize_swimlane_label(value: &str) -> String {
     commonmark_parser::entities::decode_entities(&normalized)
 }
 
-fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>) {
+fn upsert_swimlane_node(
+    diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>, group: Option<usize>,
+) {
     if let Some(existing) = diagram
         .nodes
         .iter_mut()
@@ -7253,7 +7264,12 @@ fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane:
     }
     if let Some(lane) = lane {
         if !diagram.lanes[lane].node_ids.contains(&node.id) {
-            diagram.lanes[lane].node_ids.push(node.id);
+            diagram.lanes[lane].node_ids.push(node.id.clone());
+        }
+    }
+    if let Some(group) = group {
+        if !diagram.groups[group].node_ids.contains(&node.id) {
+            diagram.groups[group].node_ids.push(node.id);
         }
     }
 }

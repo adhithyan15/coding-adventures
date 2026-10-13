@@ -868,6 +868,17 @@ where
             },
         ));
     }
+    for group in &diagram.groups {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(), x: group.x, y: group.y, width: group.width, height: group.height,
+            fill: None, stroke: Some("#90a4ae".into()), stroke_width: Some(1.25),
+            corner_radius: Some(6.0), stroke_dash: Some(vec![6.0, 4.0]), stroke_dash_offset: None,
+        }));
+        text_children.push(text_node(
+            &group.label, group.x + 8.0, group.y + 4.0, group.width - 16.0, 22.0,
+            options.label_font.clone(), Color { r: 69, g: 90, b: 100, a: 255 },
+        ));
+    }
     for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
@@ -1484,6 +1495,13 @@ where
         metadata.insert("swimlane.automaticLaneOrdering".into(), "true".into());
         metadata.insert("swimlane.laneOrder".into(), diagram.lanes.iter()
             .map(|lane| lane.id.as_str()).collect::<Vec<_>>().join(","));
+    }
+    for (index, group) in diagram.groups.iter().enumerate() {
+        metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
+        metadata.insert(format!("swimlane.group.{index}.lane"), group.lane_id.clone());
+        if let Some(parent_id) = &group.parent_id {
+            metadata.insert(format!("swimlane.group.{index}.parent"), parent_id.clone());
+        }
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {

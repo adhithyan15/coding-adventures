@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
-    DiagramDirection, DiagramIconGlyph, DiagramShape, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneLane,
+    DiagramDirection, DiagramIconGlyph, DiagramShape, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneGroup, LayoutedSwimlaneLane,
     LayoutedSwimlaneNode, LayoutedTreeViewConnector, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
     LayoutedTreemapNode, Point, SwimlaneDiagram, TreeViewDiagram, TreemapDiagram,
     LayoutedRailroadDiagram, LayoutedRailroadElement, LayoutedRailroadPath, LayoutedRailroadRule,
@@ -123,7 +123,17 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let node_width = 132.0;
     let node_height = 54.0;
     let node_gap = 42.0;
-    let lane_cross = 150.0;
+    let max_group_depth = diagram.groups.iter().map(|group| {
+        let mut depth = 1usize;
+        let mut parent = group.parent_id.as_deref();
+        while let Some(parent_id) = parent {
+            depth += 1;
+            parent = diagram.groups.iter().find(|candidate| candidate.id == parent_id)
+                .and_then(|candidate| candidate.parent_id.as_deref());
+        }
+        depth
+    }).max().unwrap_or(0);
+    let lane_cross = 150.0 + 60.0 * max_group_depth as f64;
     let lane_along = if horizontal_flow {
         diagram.lanes.iter().map(|lane| {
             let widths = lane.node_ids.iter().filter_map(|node_id| {
@@ -237,6 +247,33 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             vertical_cursor += node_height + node_gap * gap_units as f64;
         }
     }
+    let mut groups = Vec::<LayoutedSwimlaneGroup>::new();
+    for group in diagram.groups.iter().rev() {
+        let lane = lanes.iter().find(|lane| lane.id == group.lane_id)
+            .expect("nested Swimlane group must belong to a lane");
+        let mut content = group.node_ids.iter().filter_map(|node_id|
+            nodes.iter().find(|node| &node.id == node_id)
+                .map(|node| (node.x, node.y, node.x + node.width, node.y + node.height))
+        ).collect::<Vec<_>>();
+        content.extend(groups.iter().filter(|child| child.parent_id.as_deref() == Some(group.id.as_str()))
+            .map(|child| (child.x, child.y, child.x + child.width, child.y + child.height)));
+        let (mut left, mut top, mut right, mut bottom) = content.first().copied().unwrap_or((
+            lane.x + 20.0, lane.y + 42.0, lane.x + 120.0, lane.y + 92.0,
+        ));
+        for (x1, y1, x2, y2) in content.into_iter().skip(1) {
+            left = left.min(x1); top = top.min(y1); right = right.max(x2); bottom = bottom.max(y2);
+        }
+        left = (left - 12.0).max(lane.x + 6.0);
+        top = (top - 30.0).max(lane.y + 32.0);
+        right = (right + 12.0).min(lane.x + lane.width - 6.0);
+        bottom = (bottom + 12.0).min(lane.y + lane.height - 6.0);
+        groups.push(LayoutedSwimlaneGroup {
+            id: group.id.clone(), label: group.label.clone(), lane_id: group.lane_id.clone(),
+            parent_id: group.parent_id.clone(), x: left, y: top,
+            width: (right - left).max(40.0), height: (bottom - top).max(40.0),
+        });
+    }
+    groups.reverse();
     let bounds = nodes
         .iter()
         .map(|node| {
@@ -280,6 +317,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         lanes,
+        groups,
         nodes,
         edges,
         links: diagram.links.clone(),
@@ -796,7 +834,7 @@ mod tests {
                 SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()] },
                 SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()] },
             ],
-            nodes: vec![
+            groups: vec![], nodes: vec![
                 SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "ship".into(), label: "Ship".into(), lane_id: Some("store".into()), shape: DiagramShape::RoundedRect, classes: Vec::new(), style: Default::default() },
             ],
@@ -829,7 +867,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()] }],
-            nodes: vec![SwimlaneNode { id: "long".into(),
+            groups: vec![], nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
@@ -847,7 +885,7 @@ mod tests {
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
                 node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into()] }],
-            nodes: vec![
+            groups: vec![], nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "alert".into(), label: "Alert".into(), lane_id: Some("runtime".into()),
