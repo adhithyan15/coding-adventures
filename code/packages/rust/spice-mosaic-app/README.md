@@ -49,7 +49,9 @@ selection, clear the redo branch after a fresh edit, and are intentionally not
 serialized in durable snapshots.
 
 Protocol-2 hosts can also open and save a versioned `spice-mosaic/schematic`
-JSON envelope through awaited `file.open` and `file.save` effects. Import
+JSON envelope through UI87's awaited `files.open` and `files.save` effects,
+with `accept: ["application/json"]`, so import and export work on native
+hosts as well as the browser. Import
 validates and migrates the document before replacing the current schematic;
 failed or cancelled file operations retain the existing document and no file
 handle enters the snapshot.

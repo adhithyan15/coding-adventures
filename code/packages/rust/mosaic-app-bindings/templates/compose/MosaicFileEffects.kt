@@ -77,6 +77,7 @@ const val MOSAIC_MAX_SAVE_BYTES: Int = 16 * 1024 * 1024
 // this table does not know is dropped rather than failing the request (UI59 §3).
 internal val MOSAIC_MIME_EXTENSIONS: Map<String, List<String>> = mapOf(
     "application/json" to listOf("json"),
+    "application/vnd.coding-adventures.visicalc+json" to listOf("visicalc"),
     "text/plain" to listOf("txt"),
     "text/markdown" to listOf("md", "markdown"),
     "text/csv" to listOf("csv"),

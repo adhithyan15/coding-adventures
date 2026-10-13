@@ -30,7 +30,8 @@ test('compiled SPICE workbench preserves its schematic lifecycle through the Mos
 
   const save = app.dispatch('onSaveSchematic');
   const effect = save.effects[0];
-  assert.equal(effect.kind, 'file.save');
+  assert.equal(effect.kind, 'files.save');
+  assert.deepEqual(effect.payload.accept, ['application/json']);
   assert.equal(effect.delivery, 'await');
   assert.equal(effect.payload.suggestedName, 'wasm-rc.spice-mosaic.json');
   assert.match(effect.payload.bytes, /^[A-Za-z0-9+/]+={0,2}$/);

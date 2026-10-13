@@ -124,6 +124,20 @@ The convention is UI59's `files.*`. The browser executor would answer
 migrates. It would also accept UI59's `accept` list alongside its current
 `mimeType` + `extension` pair.
 
+**Migrated (2026-10-13, #16927).** VisiCalc and SpiceWorkbench now send
+`files.open` / `files.save` with an `accept` list, so their Open and Save
+work on native hosts. VisiCalc needs an extension of its own, so the shared
+type table gains one vendor row on every host:
+`application/vnd.coding-adventures.visicalc+json` → `.visicalc`. Nothing in
+the repo sends `file.*` any more; the browser's aliases are retired in a
+follow-up.
+
+A curated table row works for a type this repository owns, but not for a
+third-party app's own document type. The general mechanism, still to be
+specified, is the one the web platform's `showSaveFilePicker` already uses:
+the app supplies the extensions with each type, and every host validates
+them against the executable-extension rules in §3.1.
+
 ### 3.3 Where the handler code lives: the open question
 
 - **(A) Built into the templates.** Each generated host ships a

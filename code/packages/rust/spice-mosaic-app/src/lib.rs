@@ -95,8 +95,11 @@ enum SchematicFileOperation {
 impl SchematicFileOperation {
     fn effect_kind(self) -> &'static str {
         match self {
-            Self::Open => "file.open",
-            Self::Save => "file.save",
+            // UI87's standard kinds, which every host answers. The retired
+            // singular `file.*` kinds were answered by the browser executor
+            // only, so import and export never worked natively.
+            Self::Open => "files.open",
+            Self::Save => "files.save",
         }
     }
 
@@ -1100,7 +1103,7 @@ impl SpiceMosaicApp {
     fn request_schematic_open(&mut self) -> Result<AppUpdate, SpiceMosaicError> {
         self.request_schematic_file(
             SchematicFileOperation::Open,
-            json!({"mimeType": "application/json", "extension": ".json"}),
+            json!({"accept": ["application/json"]}),
         )
     }
 
@@ -1113,8 +1116,7 @@ impl SpiceMosaicApp {
         self.request_schematic_file(
             SchematicFileOperation::Save,
             json!({
-                "mimeType": "application/json",
-                "extension": ".json",
+                "accept": ["application/json"],
                 "suggestedName": Self::suggested_schematic_file_name(document),
                 "bytes": BASE64.encode(bytes),
             }),
@@ -2354,9 +2356,9 @@ mod tests {
         let save = dispatch(&mut app, "onSaveSchematic", json!({}));
         let effect = save.effects.first().unwrap();
         assert_eq!(effect.delivery, Delivery::Await);
-        assert_eq!(effect.kind, "file.save");
-        assert_eq!(effect.payload["mimeType"], "application/json");
-        assert_eq!(effect.payload["extension"], ".json");
+        assert_eq!(effect.kind, "files.save");
+        assert_eq!(effect.payload["accept"], json!(["application/json"]));
+        assert!(effect.payload.get("mimeType").is_none());
         assert_eq!(
             effect.payload["suggestedName"],
             "current-rc.spice-mosaic.json"
@@ -2379,11 +2381,8 @@ mod tests {
         let open = dispatch(&mut app, "onOpenSchematic", json!({}));
         let effect = open.effects.first().unwrap();
         assert_eq!(effect.delivery, Delivery::Await);
-        assert_eq!(effect.kind, "file.open");
-        assert_eq!(
-            effect.payload,
-            json!({"mimeType":"application/json","extension":".json"})
-        );
+        assert_eq!(effect.kind, "files.open");
+        assert_eq!(effect.payload, json!({"accept": ["application/json"]}));
         let before = app.snapshot().unwrap();
         assert!(app
             .complete_effect(effect.id, EffectResult::Ok(json!({"bytes":"not base64"})))

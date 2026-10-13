@@ -219,6 +219,7 @@ final class MosaicHostEffects implements MosaicPlatformEffectHost {
 const List<(String, List<String>)> _mosaicMimeExtensions =
     <(String, List<String>)>[
       ('application/json', <String>['json']),
+      ('application/vnd.coding-adventures.visicalc+json', <String>['visicalc']),
       ('text/plain', <String>['txt']),
       ('text/markdown', <String>['md', 'markdown']),
       ('text/csv', <String>['csv']),
