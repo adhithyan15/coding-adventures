@@ -67,6 +67,7 @@
     "edge-spline-curves",
     "edge-rounded-curve",
     "line-hops-arc",
-    "line-hops-gap"
+    "line-hops-gap",
+    "automatic-lane-ordering"
   ]
 }

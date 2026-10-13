@@ -2282,6 +2282,18 @@ fn swimlane_line_hops_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_automatic_lane_ordering_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: true\n---\n{source}"))
+        .expect("automatic lane ordering should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: false\n---\n{source}"))
+        .expect("disabled automatic lane ordering should parse");
+
+    assert!(enabled.automatic_lane_ordering);
+    assert!(!disabled.automatic_lane_ordering);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
