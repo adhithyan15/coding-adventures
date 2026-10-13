@@ -4443,25 +4443,117 @@ fn tree_needs_path_canvas(node: &LayoutNode) -> bool {
     node.children.iter().any(tree_needs_path_canvas)
 }
 
-/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
-/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
-/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
-/// kernel-level capability); wiring it through to a real Compose
-/// `remember`/state binding is future work, the same not-yet-landed
-/// gap the XAML, Qt, and Flutter lowerings all note — a bound
-/// coordinate is therefore a clear compile error here, not a silent 0.
-fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+/// One `Path` geometry coordinate: a literal number, or a Kotlin `Float`
+/// expression for a bound one.
+///
+/// Bound coordinates are how a `For` draws data — SpiceWorkbench's waveform
+/// is `For ( each: slot: waveform-segments , as: segment ) { Path (kind:
+/// line, x1: ( segment[0] ), …) }` — so a literal-only `Path` cannot render
+/// any plot (#16926). A composable re-runs when its parameters change, so a
+/// bound coordinate is simply an expression where the literal would go:
+///
+/// | Authored            | Kotlin                     |
+/// |---------------------|----------------------------|
+/// | `x1: 28`            | `28f`                      |
+/// | `x1: slot: start-x` | `(startX).toFloat()`       |
+/// | `x1: ( seg[0] )`    | `(seg[0]).toFloat()`       |
+///
+/// `.toFloat()` is defined on every Kotlin `Number`, so a `Double` slot or
+/// list element and an `Int` index expression both convert. A value that is
+/// not finite (a diverged simulation's `NaN` or `Infinity`) becomes `0f`, the
+/// posture UI36 takes for live numbers, since an infinite `.dp` cannot be
+/// laid out. Literals are
+/// written as `Float` (`28f`) in bound contexts, because Kotlin's `maxOf`
+/// and arithmetic do not mix `Int` and `Float` arguments implicitly.
+#[derive(Debug, Clone)]
+enum PathCoord {
+    Literal(f64),
+    Bound(String),
+}
+
+impl PathCoord {
+    /// The value as a Kotlin `Float` expression.
+    fn kotlin_float(&self) -> String {
+        match self {
+            PathCoord::Literal(n) => format!("{n}f"),
+            PathCoord::Bound(expr) => expr.clone(),
+        }
+    }
+
+    /// Every coordinate's literal value, or `None` if any is bound.
+    fn all_literal(coords: &[PathCoord]) -> Option<Vec<f64>> {
+        coords
+            .iter()
+            .map(|c| match c {
+                PathCoord::Literal(n) => Some(*n),
+                PathCoord::Bound(_) => None,
+            })
+            .collect()
+    }
+}
+
+/// `(e).toFloat()` as Kotlin source, with a non-finite result replaced by `0f`.
+fn kotlin_finite_float(expression: &str) -> String {
+    format!("({expression}).toFloat().let {{ if (it.isFinite()) it else 0f }}")
+}
+
+/// A circle's radius: like [`required_path_coord`], but a bound radius is
+/// also floored at `0f`, since a negative size is not a shape.
+fn required_path_radius(
+    node: &LayoutNode,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<PathCoord, PipelineEmitError> {
+    Ok(match required_path_coord(node, "r", for_payload)? {
+        PathCoord::Bound(expr) => PathCoord::Bound(format!("({expr}).coerceAtLeast(0f)")),
+        literal => literal,
+    })
+}
+
+/// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
+/// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
+/// compile error, never a silent `0`.
+///
+/// An expression goes through [`compose_collection_index_expr`], the same
+/// route `Text` content takes, so `xs[i]` inside a `For` indexes with the
+/// loop's `Int` shadow rather than its `Double` binding.
+fn required_path_coord(
+    node: &LayoutNode,
+    prop_name: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<PathCoord, PipelineEmitError> {
     match find_prop_value(node, prop_name) {
-        Some(LayoutPropValue::Number(n)) => Ok(*n),
-        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
-            Err(PipelineEmitError::UnknownPrimitive(format!(
-                "Path prop '{prop_name}' is bound to a slot or expression, but the Compose emitter only supports a literal number for Path geometry props today"
-            )))
+        Some(LayoutPropValue::Number(n)) => Ok(PathCoord::Literal(*n)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(PathCoord::Bound(kotlin_finite_float(&field)))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            let lowered = compose_collection_index_expr(expression.trim(), for_payload);
+            Ok(PathCoord::Bound(kotlin_finite_float(&lowered)))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
         ))),
     }
+}
+
+/// The `Modifier.size(w.dp, h.dp)` arguments bounding the coordinates.
+///
+/// All-literal geometry keeps [`path_bounding_size`]'s numbers, so it lowers
+/// byte-identically to before bindings existed. A bound coordinate folds the
+/// extent at run time with `maxOf`, from `0f` as the literal helper folds
+/// from `0.0`.
+fn path_bounding_size_kotlin(xs: &[PathCoord], ys: &[PathCoord]) -> (String, String) {
+    if let (Some(xs), Some(ys)) = (PathCoord::all_literal(xs), PathCoord::all_literal(ys)) {
+        let (w, h) = path_bounding_size(&xs, &ys);
+        return (format!("{w}.dp"), format!("{h}.dp"));
+    }
+    let extent = |coords: &[PathCoord]| {
+        let parts: Vec<String> = coords.iter().map(PathCoord::kotlin_float).collect();
+        format!("maxOf(0f, {}).dp", parts.join(", "))
+    };
+    (extent(xs), extent(ys))
 }
 
 /// `Path [name] (kind: circle|line|curve, ...)` → a native Compose
@@ -4499,6 +4591,7 @@ fn emit_path(
     node: &LayoutNode,
     depth: usize,
     part_styles: &PartStyleMap,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ";
@@ -4509,13 +4602,24 @@ fn emit_path(
 
     match kind.as_str() {
         "circle" => {
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let r = required_path_number(node, "r")?;
-            let d = 2.0 * r;
-            let (left, top) = (cx - r, cy - r);
+            let cx = required_path_coord(node, "cx", for_payload)?;
+            let cy = required_path_coord(node, "cy", for_payload)?;
+            let r = required_path_radius(node, for_payload)?;
+            // All-literal geometry keeps its computed numbers; any binding
+            // writes the same arithmetic as a Kotlin `Float` expression.
+            let (left, top) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
+                Some(v) => (format!("{}.dp", v[0] - v[2]), format!("{}.dp", v[1] - v[2])),
+                None => (
+                    format!("({} - {}).dp", cx.kotlin_float(), r.kotlin_float()),
+                    format!("({} - {}).dp", cy.kotlin_float(), r.kotlin_float()),
+                ),
+            };
+            let d = match &r {
+                PathCoord::Literal(r) => format!("{}.dp", 2.0 * r),
+                PathCoord::Bound(_) => format!("(2f * {}).dp", r.kotlin_float()),
+            };
             let mut modifier = format!(
-                "Modifier\n{pad}{inner}.offset(x = {left}.dp, y = {top}.dp)\n{pad}{inner}.size({d}.dp)"
+                "Modifier\n{pad}{inner}.offset(x = {left}, y = {top})\n{pad}{inner}.size({d})"
             );
             if let Some(fill) = &paint.fill {
                 modifier.push_str(&format!("\n{pad}{inner}.background({fill}, CircleShape)"));
@@ -4529,16 +4633,23 @@ fn emit_path(
             Ok(format!("{pad}Box(modifier = {modifier})\n"))
         }
         "line" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
-            let (w, h) = path_bounding_size(&[x1, x2], &[y1, y2]);
+            let x1 = required_path_coord(node, "x1", for_payload)?;
+            let y1 = required_path_coord(node, "y1", for_payload)?;
+            let x2 = required_path_coord(node, "x2", for_payload)?;
+            let y2 = required_path_coord(node, "y2", for_payload)?;
+            let (w, h) =
+                path_bounding_size_kotlin(&[x1.clone(), x2.clone()], &[y1.clone(), y2.clone()]);
+            let (x1, y1, x2, y2) = (
+                x1.kotlin_float(),
+                y1.kotlin_float(),
+                x2.kotlin_float(),
+                y2.kotlin_float(),
+            );
             let mut out = format!(
-                "{pad}Canvas(modifier = Modifier.size({w}.dp, {h}.dp)) {{\n\
+                "{pad}Canvas(modifier = Modifier.size({w}, {h})) {{\n\
                  {pad}{inner}val path = Path().apply {{\n\
-                 {pad}{inner}{inner}moveTo({x1}f, {y1}f)\n\
-                 {pad}{inner}{inner}lineTo({x2}f, {y2}f)\n\
+                 {pad}{inner}{inner}moveTo({x1}, {y1})\n\
+                 {pad}{inner}{inner}lineTo({x2}, {y2})\n\
                  {pad}{inner}}}\n"
             );
             if let Some(fill) = &paint.fill {
@@ -4556,18 +4667,29 @@ fn emit_path(
             Ok(out)
         }
         "curve" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
-            let (w, h) = path_bounding_size(&[x1, cx, x2], &[y1, cy, y2]);
+            let x1 = required_path_coord(node, "x1", for_payload)?;
+            let y1 = required_path_coord(node, "y1", for_payload)?;
+            let cx = required_path_coord(node, "cx", for_payload)?;
+            let cy = required_path_coord(node, "cy", for_payload)?;
+            let x2 = required_path_coord(node, "x2", for_payload)?;
+            let y2 = required_path_coord(node, "y2", for_payload)?;
+            let (w, h) = path_bounding_size_kotlin(
+                &[x1.clone(), cx.clone(), x2.clone()],
+                &[y1.clone(), cy.clone(), y2.clone()],
+            );
+            let (x1, y1, cx, cy, x2, y2) = (
+                x1.kotlin_float(),
+                y1.kotlin_float(),
+                cx.kotlin_float(),
+                cy.kotlin_float(),
+                x2.kotlin_float(),
+                y2.kotlin_float(),
+            );
             let mut out = format!(
-                "{pad}Canvas(modifier = Modifier.size({w}.dp, {h}.dp)) {{\n\
+                "{pad}Canvas(modifier = Modifier.size({w}, {h})) {{\n\
                  {pad}{inner}val path = Path().apply {{\n\
-                 {pad}{inner}{inner}moveTo({x1}f, {y1}f)\n\
-                 {pad}{inner}{inner}quadraticBezierTo({cx}f, {cy}f, {x2}f, {y2}f)\n\
+                 {pad}{inner}{inner}moveTo({x1}, {y1})\n\
+                 {pad}{inner}{inner}quadraticBezierTo({cx}, {cy}, {x2}, {y2})\n\
                  {pad}{inner}}}\n"
             );
             if let Some(fill) = &paint.fill {
@@ -6122,7 +6244,7 @@ fn emit_compose_tree(
             emit_text(node, depth, Some(&text), for_payload, part_styles, box_chain)
         },
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
-        "Path" => emit_path(node, depth, part_styles),
+        "Path" => emit_path(node, depth, part_styles, for_payload),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
         // `Input` is the pre-UI29 spelling retained for capabilities such as
         // multiline editing that were not present on the first HostInput
@@ -14422,37 +14544,81 @@ mod tests {
     }
 
     #[test]
-    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+    fn path_slot_bound_circle_centre_becomes_a_float_expression() {
+        // #16926: a bound centre was a compile error, so no data-driven
+        // circle could render. The authored `cx - r` is now Kotlin source,
+        // with the literal radius written as a Float so the subtraction
+        // type-checks.
         let m = component("X", vec![], vec![]);
-        let l = layout(
-            "X",
-            node(
-                "Path",
-                vec![
-                    LayoutProp {
-                        name: "kind".to_string(),
-                        value: LayoutPropValue::Keyword("circle".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cx".to_string(),
-                        value: LayoutPropValue::SlotRef("radius".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cy".to_string(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
-                    LayoutProp {
-                        name: "r".to_string(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
-                ],
-                vec![],
-            ),
-        );
-        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        let mut circle = path_node("dot", "circle", &[("cy", 5.0), ("r", 5.0)]);
+        circle.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("dot-x".to_string()),
+        });
+        let out = from_pipeline(&m, &layout("X", circle), &empty_style("X"))
+            .expect("ok")
+            .output;
         assert!(
-            matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("bound to a slot"))
+            out.contains(".offset(x = ((dotX).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp, y = (5f - 5f).dp)"),
+            "{out}"
         );
+        assert!(out.contains(".size(10.dp)"), "a literal radius keeps a literal size: {out}");
+    }
+
+    #[test]
+    fn path_line_binds_for_item_coordinates_as_floats() {
+        // SpiceWorkbench's waveform shape: each segment is a list element.
+        let m = component("X", vec![], vec![]);
+        let mut line = path_node("segment", "line", &[("y2", 188.0)]);
+        for (name, expr) in [("x1", "segment[0]"), ("y1", "segment[1]"), ("x2", "segment[2]")] {
+            line.props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr(expr.to_string()),
+            });
+        }
+        let out = from_pipeline(&m, &layout("X", line), &empty_style("X"))
+            .expect("ok")
+            .output;
+        assert!(
+            out.contains("moveTo((segment[0]).toFloat().let { if (it.isFinite()) it else 0f }, (segment[1]).toFloat().let { if (it.isFinite()) it else 0f })"),
+            "{out}"
+        );
+        assert!(out.contains("lineTo((segment[2]).toFloat().let { if (it.isFinite()) it else 0f }, 188f)"), "{out}");
+        assert!(
+            out.contains(
+                "Canvas(modifier = Modifier.size(maxOf(0f, (segment[0]).toFloat().let { if (it.isFinite()) it else 0f }, (segment[2]).toFloat().let { if (it.isFinite()) it else 0f }).dp, maxOf(0f, (segment[1]).toFloat().let { if (it.isFinite()) it else 0f }, 188f).dp))"
+            ),
+            "{out}"
+        );
+    }
+
+    #[test]
+    fn path_bound_radius_is_floored_at_zero() {
+        // A negative size is not a shape; a diverged value must not reach
+        // `.size`.
+        let m = component("X", vec![], vec![]);
+        let mut circle = path_node("dot", "circle", &[("cx", 10.0), ("cy", 10.0)]);
+        circle.props.push(LayoutProp {
+            name: "r".to_string(),
+            value: LayoutPropValue::Expr("size".to_string()),
+        });
+        let out = from_pipeline(&m, &layout("X", circle), &empty_style("X"))
+            .expect("ok")
+            .output;
+        let r = "((size).toFloat().let { if (it.isFinite()) it else 0f }).coerceAtLeast(0f)";
+        assert!(out.contains(&format!(".size((2f * {r}).dp)")), "{out}");
+    }
+
+    #[test]
+    fn path_bound_coordinate_with_an_unsafe_slot_name_is_refused() {
+        let m = component("X", vec![], vec![]);
+        let mut circle = path_node("dot", "circle", &[("cy", 1.0), ("r", 1.0)]);
+        circle.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("x); evil(".to_string()),
+        });
+        let err = from_pipeline(&m, &layout("X", circle), &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "{err:?}");
     }
 
     #[test]
