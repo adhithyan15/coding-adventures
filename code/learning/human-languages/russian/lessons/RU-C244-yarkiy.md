@@ -14,7 +14,8 @@ romanization: "yárkiy"
 concept_tag: RU-KACH244-YARKIY
 prerequisites: [RU-C244-drevniy, RU-C244-gromkiy]
 sounds: []
-roots: []
+roots: [slavic-jaru]
+etymology_hook: "яркий goes with ярый 'fiery'; Greek zōros 'fiery' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C244-gromkiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C244-KACH244-03]; assesses=[] -->
 
 **яркий** (*yárkiy*) — "bright".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**яркий** goes with *ярый*, "fierce, fiery" (Vasmer), Proto-Slavic *\*jarŭ*, which Vasmer relates to Greek *zōrós*, "fiery, strong".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

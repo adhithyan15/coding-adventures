@@ -14,7 +14,8 @@ romanization: "blúzka"
 concept_tag: RU-VESHCH162-BLUZKA
 prerequisites: [RU-C161-otkrytka, RU-C161-posylka]
 sounds: []
-roots: []
+roots: [french-blouse]
+etymology_hook: "блузка is блуза 'a blouse' + -ка; блуза came from German Bluse or French blouse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C161-posylka]
 <!-- hl-knowledge: introduces=[RU-LEX-C162-VESHCH162-01]; assesses=[] -->
 
 **блузка** (*blúzka*) — "a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**блузка** is *блуза*, "a blouse", with *-ка*. *блуза* came from German *Bluse* or French *blouse*, which Vasmer, with Kluge, traces, probably, to Medieval Latin *pelusia*, cloth from the Egyptian town of Pelusium.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

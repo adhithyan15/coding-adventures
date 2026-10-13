@@ -14,7 +14,8 @@ romanization: "grust"
 concept_tag: RU-FEEL-SADNESS
 prerequisites: [RU-C34-fear, RU-C34-anger]
 sounds: []
-roots: []
+roots: [slavic-grust]
+etymology_hook: "грусть goes with грустить 'to be sad'; the usual link is with Lithuanian graudùs 'brittle; sad'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C34-anger]
 <!-- hl-knowledge: introduces=[RU-LEX-C34-FEEL-04]; assesses=[] -->
 
 **грусть** (*grust*) — "sadness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**грусть** goes with the verb *грустить*, "to be sad". Vasmer reports the usual link with *груда*, "a heap", and with Lithuanian *graudùs*, "brittle; sad, moving", from a root "to crush" (Lithuanian *grūsti*, "to pound").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

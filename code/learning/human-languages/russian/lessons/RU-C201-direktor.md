@@ -14,7 +14,8 @@ romanization: "diréktor"
 concept_tag: RU-RABOTA201-DIREKTOR
 prerequisites: [RU-C201-pokupka, RU-C201-kollega]
 sounds: []
-roots: []
+roots: [regere-latin]
+etymology_hook: "директор came through German Direktor or Polish dyrektor from Latin director 'one who guides'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C201-kollega]
 <!-- hl-knowledge: introduces=[RU-LEX-C201-RABOTA201-05]; assesses=[] -->
 
 **директор** (*diréktor*) — "a director, a head".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**директор** — from 1720; it came through German *Direktor* or Polish *dyrektor* from Latin *dīrēctor*, "one who directs", from *regere*, "to guide" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

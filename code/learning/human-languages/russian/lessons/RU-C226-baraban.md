@@ -14,7 +14,8 @@ romanization: "barabán"
 concept_tag: RU-VESHCH226-BARABAN
 prerequisites: [RU-C225-olen, RU-C226-skripka]
 sounds: []
-roots: []
+roots: [turkic-daraban]
+etymology_hook: "барабан is probably from Turkic, as Tatar daraban 'a drum'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C226-skripka]
 <!-- hl-knowledge: introduces=[RU-LEX-C226-VESHCH226-02]; assesses=[] -->
 
 **барабан** (*barabán*) — "a drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**барабан** — recorded by Kotoshikhin in the 1600s; probably from Turkic, compare Tatar *daraban*, "a drum"; Turkish *balaban*, "a big drum", has also been proposed (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

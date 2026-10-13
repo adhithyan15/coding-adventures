@@ -14,7 +14,8 @@ romanization: "vetchiná"
 concept_tag: RU-VESHCH249-VETCHINA
 prerequisites: [RU-C249-svinina, RU-C249-baranina]
 sounds: []
-roots: []
+roots: [slavic-vetkhu]
+etymology_hook: "ветчина is most likely from ветхий 'old': cured, kept meat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C249-baranina]
 <!-- hl-knowledge: introduces=[RU-LEX-C249-VESHCH249-05]; assesses=[] -->
 
 **ветчина** (*vetchiná*) — "ham".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ветчина** — Vasmer thinks it very likely comes from *ветхий*, "old", built like *свежина*, "fresh meat": ham is meat kept a long time. A link with Polish *wędzić*, "to smoke", he finds less convincing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

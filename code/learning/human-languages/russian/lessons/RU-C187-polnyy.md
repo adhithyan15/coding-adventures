@@ -14,7 +14,8 @@ romanization: "pólnyy"
 concept_tag: RU-KACH187-POLNYY
 prerequisites: [RU-C186-shchedryy, RU-C186-zhadnyy]
 sounds: []
-roots: []
+roots: [pie-pelh1]
+etymology_hook: "полный ← Proto-Slavic *pŭlnŭ; Latin plenus, Lithuanian pilnas and English full are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C186-zhadnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C187-KACH187-01]; assesses=[] -->
 
 **полный** (*pólnyy*) — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полный** ← Proto-Slavic *\*pŭlnŭ* — inherited. Vasmer lists Lithuanian *pìlnas*, Sanskrit *pūrṇá-*, Gothic *fulls*, Latin *plēnus* and Greek *plḗrēs*, all "full": English *full* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

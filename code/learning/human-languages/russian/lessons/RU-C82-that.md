@@ -14,7 +14,8 @@ romanization: "tot"
 concept_tag: RU-DEF82-THAT
 prerequisites: [RU-C82-this, RU-C82-this-2]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "тот ← Proto-Slavic *tŭ, *ta, *to; Lithuanian tas, Greek to and English that are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C82-this-2]
 <!-- hl-knowledge: introduces=[RU-LEX-C82-DEF82-03]; assesses=[] -->
 
 **тот** (*tot*) — "that (masculine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тот** ← Proto-Slavic *\*tŭ*, *\*ta*, *\*to*, "that" — inherited. Vasmer lists Lithuanian *tàs*, Sanskrit *ta-*, Greek *tó* and Gothic *þata*: English *that* and *the* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

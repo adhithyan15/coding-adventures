@@ -14,7 +14,8 @@ romanization: "koróbka"
 concept_tag: RU-VESHCH160-KOROBKA
 prerequisites: [RU-C160-bokal, RU-C160-paket]
 sounds: []
-roots: []
+roots: [slavic-korobu]
+etymology_hook: "коробка is короб 'a bark box' + -ка; Lithuanian karbas 'basket' is perhaps a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C160-paket]
 <!-- hl-knowledge: introduces=[RU-LEX-C160-VESHCH160-03]; assesses=[] -->
 
 **коробка** (*koróbka*) — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**коробка** is *короб*, "a box of bark", with *-ка*. Vasmer thinks *короб* is perhaps related to Latin *corbis*, "a basket", and Lithuanian *karbas*, "a basket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "izvinyátsya"
 concept_tag: RU-VERB-IZVINYATSYA
 prerequisites: [RU-C141-priglashat, RU-C141-blagodarit]
 sounds: []
-roots: []
+roots: [slavic-vina]
+etymology_hook: "извиняться is из- 'out of' + вина 'guilt' + -ся: to take oneself out of the blame"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C141-blagodarit]
 <!-- hl-knowledge: introduces=[RU-LEX-C141-ACT141-05]; assesses=[] -->
 
 **извиняться** (*izvinyátsya*) — "to apologise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**извиняться** is *из-*, "out of", with *вина*, "guilt", and *-ся*, "oneself": to get out of the blame. Vasmer relates *вина* to Lithuanian *vaina*, "a fault", and Latvian *vaĩna*, "guilt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "konvért"
 concept_tag: RU-VESHCH161-KONVERT
 prerequisites: [RU-C160-lampochka, RU-C161-anketa]
 sounds: []
-roots: []
+roots: [cooperire-latin]
+etymology_hook: "конверт came through German Kuvert or from French couvert, 'a cover', from Latin coopertum"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C161-anketa]
 <!-- hl-knowledge: introduces=[RU-LEX-C161-VESHCH161-02]; assesses=[] -->
 
 **конверт** (*konvért*) — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**конверт** — from Peter the Great's time; it came through German *Kuvert* or from French *couvert*, "a cover", from *couvrir*, "to cover", Latin *coopertum*, "covered" (Vasmer). Vasmer calls its *н* unexplained.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

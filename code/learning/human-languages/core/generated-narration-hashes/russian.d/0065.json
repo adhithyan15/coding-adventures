@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 65,
-  "sourceHash": "fnv1a64:a6b92f491aad8a84",
+  "sourceHash": "fnv1a64:760c9f8d53830912",
   "lessonIds": [
     "RU-C65-big",
     "RU-C65-small",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch65.txt",
   "json": "russian/narration/ch65.json",
-  "textHash": "fnv1a64:b98abf416a629631",
-  "jsonHash": "fnv1a64:603e8e6ca8ae2579",
+  "textHash": "fnv1a64:9be693220bf47435",
+  "jsonHash": "fnv1a64:f353a3d5d601c947",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 194,
-  "sourceHash": "fnv1a64:6700f455dffe6154",
+  "sourceHash": "fnv1a64:772975fe6e34363c",
   "lessonIds": [
     "RU-C194-pelmeni",
     "RU-C194-salat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch194.txt",
   "json": "russian/narration/ch194.json",
-  "textHash": "fnv1a64:a0c5a5d52171173f",
-  "jsonHash": "fnv1a64:18404a4907dce695",
+  "textHash": "fnv1a64:80180b5af7d2d028",
+  "jsonHash": "fnv1a64:9ccf70f9ddbd8d30",
   "findings": []
 }

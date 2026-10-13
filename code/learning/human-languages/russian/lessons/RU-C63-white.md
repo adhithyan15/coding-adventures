@@ -14,7 +14,8 @@ romanization: "bélyy"
 concept_tag: RU-COLOUR1-WHITE
 prerequisites: [RU-C62-duck, RU-C62-goat]
 sounds: []
-roots: []
+roots: [pie-bhel]
+etymology_hook: "белый ← Proto-Slavic *bělŭ; Lithuanian bãlas 'white' and Greek phalos 'bright' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C62-goat]
 <!-- hl-knowledge: introduces=[RU-LEX-C63-COLOUR1-01]; assesses=[] -->
 
 **белый** (*bélyy*) — "white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**белый** ← Proto-Slavic *\*bělŭ* — inherited. Vasmer relates it to Lithuanian *bãlas*, "white", Latvian *bãls*, "pale", Greek *phalós*, "white", and Sanskrit *bhāti*, "shines", from PIE *\*bʰel-*, "to shine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

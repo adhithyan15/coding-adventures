@@ -14,7 +14,8 @@ romanization: "peshchéra"
 concept_tag: RU-THINGS116-CAVE
 prerequisites: [RU-C116-desert, RU-C116-volcano]
 sounds: []
-roots: []
+roots: [slavic-peci]
+etymology_hook: "пещера is Church Slavonic, beside folk печора; both are tied to печь 'a stove'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C116-volcano]
 <!-- hl-knowledge: introduces=[RU-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **пещера** (*peshchéra*) — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пещера** — Church Slavonic, says Vasmer, beside the East Slavic *печора*; he notes the link with *печь*, "a stove, an oven". The *-щ-* against *-ч-* marks the church form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

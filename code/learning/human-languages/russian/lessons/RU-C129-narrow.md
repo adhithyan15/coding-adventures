@@ -14,7 +14,8 @@ romanization: "úzkiy"
 concept_tag: RU-QUAL129-NARROW
 prerequisites: [RU-C129-round, RU-C129-wide]
 sounds: []
-roots: []
+roots: [pie-h2emgh]
+etymology_hook: "узкий ← Proto-Slavic *ǫzŭkŭ; Latin angustus and Gothic aggwus 'narrow' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C129-wide]
 <!-- hl-knowledge: introduces=[RU-LEX-C129-QUAL129-05]; assesses=[] -->
 
 **узкий** (*úzkiy*) — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**узкий** ← Proto-Slavic *\*ǫzŭkŭ* — inherited. Vasmer lists Sanskrit *aṃhú-*, "narrow", Gothic *aggwus*, Lithuanian *añkštas* and Latin *angustus*, all "narrow", and Greek *ánchō*, "I squeeze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

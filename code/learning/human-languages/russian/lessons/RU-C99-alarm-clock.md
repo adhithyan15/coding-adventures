@@ -14,7 +14,8 @@ romanization: "budílnik"
 concept_tag: RU-THINGS99-ALARM-CLOCK
 prerequisites: [RU-C99-glue, RU-C99-scissors]
 sounds: []
-roots: []
+roots: [slavic-buditi]
+etymology_hook: "будильник is будить 'to wake someone' + -льник, 'a thing for'; Sanskrit bodhayati 'wakes' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C99-scissors]
 <!-- hl-knowledge: introduces=[RU-LEX-C99-THINGS99-03]; assesses=[] -->
 
 **будильник** (*budílnik*) — "an alarm clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**будильник** is *будить*, "to wake someone", with *-льник*, a suffix for a tool. *будить* makes *бдеть*, "to be awake", causative, and Vasmer relates it to Sanskrit *bodháyati*, "wakes, teaches", the root of *Buddha*, "the awakened".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

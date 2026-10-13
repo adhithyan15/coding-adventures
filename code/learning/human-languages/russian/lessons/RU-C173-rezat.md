@@ -14,7 +14,8 @@ romanization: "rézat"
 concept_tag: RU-VERB-REZAT
 prerequisites: [RU-C172-dogovor, RU-C173-shit]
 sounds: []
-roots: []
+roots: [slavic-rezati]
+etymology_hook: "резать ← Proto-Slavic *rězati; Lithuanian rėžti 'to cut' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C173-shit]
 <!-- hl-knowledge: introduces=[RU-LEX-C173-ACT173-02]; assesses=[] -->
 
 **резать** (*rézat*) — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**резать** ← Proto-Slavic *\*rězati* — inherited. Vasmer relates it to Lithuanian *rėžti*, "to cut, to scratch", and Greek *rhḗgnymi*, "I break".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

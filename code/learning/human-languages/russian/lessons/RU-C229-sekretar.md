@@ -14,7 +14,8 @@ romanization: "sekretár"
 concept_tag: RU-RABOTA229-SEKRETAR
 prerequisites: [RU-C228-znacheniye, RU-C228-imya]
 sounds: []
-roots: []
+roots: [secernere-latin]
+etymology_hook: "секретарь came through German Sekretär or Polish sekretarz from Latin secretarius 'a confidant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C228-imya]
 <!-- hl-knowledge: introduces=[RU-LEX-C229-RABOTA229-01]; assesses=[] -->
 
 **секретарь** (*sekretár*) — "a secretary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**секретарь** — known from 1614; it came through German *Sekretär* or Polish *sekretarz* from Latin *sēcrētārius*, "a keeper of secrets" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

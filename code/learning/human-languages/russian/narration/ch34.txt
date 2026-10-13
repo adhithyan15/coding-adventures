@@ -12,6 +12,9 @@ Before the new one: say the Russian for hunger, then the Russian for thirst.
 You'll want to know: радость.
 радость (rádost) — "joy".
 
+The word, taken apart.
+радость (rádost) is рад, "glad", with -ость, the suffix that makes nouns of quality. рад goes back to Proto-Slavic radŭ; Vasmer finds a link with Old English rōt, "cheerful", likely, but reports a rival account.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for thirst, then the Russian for joy.
 
 You'll want to know: страх.
 страх (strakh) — "fear".
+
+The word, taken apart.
+страх (strakh) from Proto-Slavic straxŭ — inherited. Its deeper origin is not settled: one account Vasmer reports gives it a first sense of "numbness" and compares Lithuanian stregti, "to freeze stiff".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for joy, then the Russian for fear.
 You'll want to know: гнев.
 гнев (gnev) — "anger".
 
+The word, taken apart.
+гнев (gnev) from Proto-Slavic gněvŭ — inherited. Vasmer thinks it probably belongs with гнить, "to rot", so the first sense would have been "rot, poison"; others start from a sense "to burn".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for fear, then the Russian for anger.
 You'll want to know: грусть.
 грусть (grust) — "sadness".
 
+The word, taken apart.
+грусть (grust) goes with the verb грустить, "to be sad". Vasmer reports the usual link with груда, "a heap", and with Lithuanian graudùs, "brittle; sad, moving", from a root "to crush" (Lithuanian grūsti, "to pound").
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for anger, then the Russian for sadness.
 
 You'll want to know: усталость.
 усталость (ustálost) — "tiredness".
+
+The word, taken apart.
+усталость (ustálost) is устать, "to get tired", with -ость, the suffix for nouns of quality. устать is у- with стать, "to stand, to become" (Vasmer); Old Church Slavonic уставати meant "to cease": a tired person has come to a stop.
 
 What you've built.
 One more word for this chapter.

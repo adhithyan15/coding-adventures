@@ -14,7 +14,8 @@ romanization: "luk"
 concept_tag: RU-VEG-ONION
 prerequisites: [RU-C45-potatoes, RU-C45-tomato]
 sounds: []
-roots: []
+roots: [germanic-laukaz]
+etymology_hook: "лук 'onion' ← Germanic *lauka-, the source of English leek; лук 'a bow' is a different word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C45-tomato]
 <!-- hl-knowledge: introduces=[RU-LEX-C45-VEG-03]; assesses=[] -->
 
 **лук** (*luk*) — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лук**, "onion", was borrowed from early Germanic *\*lauka-* (Vasmer): Old Norse *laukr*, Old English *lēac*, English *leek*. The *лук* that means "a bow" is a separate, native word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

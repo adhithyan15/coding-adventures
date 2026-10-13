@@ -14,7 +14,8 @@ romanization: "túfli"
 concept_tag: RU-THINGS102-SHOES
 prerequisites: [RU-C102-skirt, RU-C102-coat]
 sounds: []
-roots: []
+roots: [italian-pantofola]
+etymology_hook: "туфли ← Low German tuffel, from older pantuffel, Italian pantofola 'a slipper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C102-coat]
 <!-- hl-knowledge: introduces=[RU-LEX-C102-THINGS102-04]; assesses=[] -->
 
 **туфли** (*túfli*) — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**туфли** — recorded from 1714; it comes from Low German *tuffel*, "a shoe", from older *pantuffel*, from Italian *pantofola*, "a slipper" (Vasmer). Its earlier source is disputed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

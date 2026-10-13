@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 214,
-  "sourceHash": "fnv1a64:33b100c1ad239a30",
+  "sourceHash": "fnv1a64:b74a40293b82b9d2",
   "lessonIds": [
     "RU-C214-otsyuda",
     "RU-C214-nazad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch214.txt",
   "json": "russian/narration/ch214.json",
-  "textHash": "fnv1a64:d405b59de1c0b36c",
-  "jsonHash": "fnv1a64:35f531eee69a9ef3",
+  "textHash": "fnv1a64:629c99333e224752",
+  "jsonHash": "fnv1a64:902e81d4124abcaf",
   "findings": []
 }

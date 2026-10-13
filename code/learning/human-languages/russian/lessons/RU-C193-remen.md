@@ -14,7 +14,8 @@ romanization: "remén"
 concept_tag: RU-VESHCH193-REMEN
 prerequisites: [RU-C192-papka, RU-C193-shlyapa]
 sounds: []
-roots: []
+roots: [slavic-remy]
+etymology_hook: "ремень ← Proto-Slavic *remy; Vasmer finds a loan from German riumo impossible"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C193-shlyapa]
 <!-- hl-knowledge: introduces=[RU-LEX-C193-VESHCH193-02]; assesses=[] -->
 
 **ремень** (*remén*) — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ремень** ← Proto-Slavic *\*remy*, *\*remene* — inherited. Vasmer holds that a loan from Old High German *riumo*, "a strap", is impossible on the evidence of Old Church Slavonic and old word-building.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

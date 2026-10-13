@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 38,
-  "sourceHash": "fnv1a64:82a0eaa68fd1bbff",
+  "sourceHash": "fnv1a64:b1523a86dac0e49f",
   "lessonIds": [
     "RU-C38-rabotat",
     "RU-C38-pet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch38.txt",
   "json": "russian/narration/ch38.json",
-  "textHash": "fnv1a64:ed6e1ff307c53960",
-  "jsonHash": "fnv1a64:a91b12b9b3b47945",
+  "textHash": "fnv1a64:535146491b016192",
+  "jsonHash": "fnv1a64:ddcc6fcfa04e82f7",
   "findings": []
 }

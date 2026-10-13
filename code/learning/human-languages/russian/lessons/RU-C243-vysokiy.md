@@ -14,7 +14,8 @@ romanization: "vysókiy"
 concept_tag: RU-KACH243-VYSOKIY
 prerequisites: [RU-C243-molodoy, RU-C243-pozhiloy]
 sounds: []
-roots: []
+roots: [slavic-vysoku]
+etymology_hook: "высокий ← Proto-Slavic *vysokŭ; Greek hypsēlos 'high' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C243-pozhiloy]
 <!-- hl-knowledge: introduces=[RU-LEX-C243-KACH243-03]; assesses=[] -->
 
 **высокий** (*vysókiy*) — "tall, high".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**высокий** ← Proto-Slavic *\*vysokŭ* — inherited. Vasmer relates it to Greek *hypsēlós*, "high", Old Irish *uasal*, "high", and Gaulish *Uxello-*, "high", in place names.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

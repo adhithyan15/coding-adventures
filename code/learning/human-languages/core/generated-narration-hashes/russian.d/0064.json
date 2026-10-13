@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 64,
-  "sourceHash": "fnv1a64:da7b24f4dfd0cbea",
+  "sourceHash": "fnv1a64:15c2a38d116216de",
   "lessonIds": [
     "RU-C64-yellow",
     "RU-C64-beautiful",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch64.txt",
   "json": "russian/narration/ch64.json",
-  "textHash": "fnv1a64:5b4670c592e080a9",
-  "jsonHash": "fnv1a64:6ca5c63f1ca9de45",
+  "textHash": "fnv1a64:8a73555d4550dd5a",
+  "jsonHash": "fnv1a64:677cb66fe07cf093",
   "findings": []
 }

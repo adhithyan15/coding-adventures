@@ -14,7 +14,8 @@ romanization: "dalekó"
 concept_tag: RU-WHERE1-FAR
 prerequisites: [RU-C72-here, RU-C72-there]
 sounds: []
-roots: []
+roots: [slavic-dali]
+etymology_hook: "далеко is the adverb of далёкий 'far', from даль 'distance'; usually tied to долгий 'long'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C72-there]
 <!-- hl-knowledge: introduces=[RU-LEX-C72-WHERE1-03]; assesses=[] -->
 
 **далеко** (*dalekó*) — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**далеко** is *далёкий*, "distant", made into an adverb with *-о*; it is built on *даль*, "the distance", which Vasmer reports is usually linked with *долгий*, "long", and Greek *dolichós*, "long".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

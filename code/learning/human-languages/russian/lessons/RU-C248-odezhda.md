@@ -14,7 +14,8 @@ romanization: "odézhda"
 concept_tag: RU-VESHCH248-ODEZHDA
 prerequisites: [RU-C247-viza, RU-C247-dokument]
 sounds: []
-roots: []
+roots: [pie-dheh1-put]
+etymology_hook: "одежда is Church Slavonic in shape, from одеть 'to dress', on деть 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C247-dokument]
 <!-- hl-knowledge: introduces=[RU-LEX-C248-VESHCH248-01]; assesses=[] -->
 
 **одежда** (*odézhda*) — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**одежда** is built on *одеть*, "to dress", from *деть*, "to put"; its *-жд-* is the Church Slavonic sound, beside folk *одёжа*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "molotók"
 concept_tag: RU-THINGS98-HAMMER
 prerequisites: [RU-C98-rope, RU-C98-nail]
 sounds: []
-roots: []
+roots: [slavic-moloti]
+etymology_hook: "молоток is молот 'a hammer' + -ок; молот probably comes from молоть 'to grind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C98-nail]
 <!-- hl-knowledge: introduces=[RU-LEX-C98-THINGS98-05]; assesses=[] -->
 
 **молоток** (*molotók*) — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**молоток** is *молот*, "a sledgehammer", with the diminutive *-ок*. Vasmer thinks *молот* probably comes from *молоть*, "to grind", so "the crusher", and compares Latin *malleus*, "a hammer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

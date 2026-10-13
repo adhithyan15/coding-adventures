@@ -14,7 +14,8 @@ romanization: "úmnyy"
 concept_tag: RU-KACH155-UMNYY
 prerequisites: [RU-C154-inache, RU-C155-milyy]
 sounds: []
-roots: []
+roots: [slavic-umu]
+etymology_hook: "умный is ум 'mind' + -ный; Lithuanian aumuõ 'reason' is a cousin of ум"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C155-milyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C155-KACH155-02]; assesses=[] -->
 
 **умный** (*úmnyy*) — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**умный** is *ум*, "mind", with *-ный*. *ум* ← Proto-Slavic *\*umŭ*, which Vasmer relates to Lithuanian *aumuõ*, "reason", and East Lithuanian *aumenis*, "memory".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 239,
-  "sourceHash": "fnv1a64:9a8c99902d1bb73f",
+  "sourceHash": "fnv1a64:0350a2d562f42331",
   "lessonIds": [
     "RU-C239-ves",
     "RU-C239-rost",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch239.txt",
   "json": "russian/narration/ch239.json",
-  "textHash": "fnv1a64:56dd921cae1b047c",
-  "jsonHash": "fnv1a64:85744345eb9c56b5",
+  "textHash": "fnv1a64:e002e8be2f6c1e87",
+  "jsonHash": "fnv1a64:50a1f933b0ce3f8f",
   "findings": []
 }

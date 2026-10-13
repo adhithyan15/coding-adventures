@@ -14,7 +14,8 @@ romanization: "ténnis"
 concept_tag: RU-VESHCH252-TENNIS
 prerequisites: [RU-C251-vorobey, RU-C252-khokkey]
 sounds: []
-roots: []
+roots: [english-tennis]
+etymology_hook: "теннис ← English tennis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C252-khokkey]
 <!-- hl-knowledge: introduces=[RU-LEX-C252-VESHCH252-02]; assesses=[] -->
 
 **теннис** (*ténnis*) — "tennis".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**теннис** comes from English *tennis* (Vasmer), which goes back to French *tenez*, "hold!", called out by the server.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

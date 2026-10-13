@@ -14,7 +14,8 @@ romanization: "brítva"
 concept_tag: RU-VESHCH219-BRITVA
 prerequisites: [RU-C218-obychnyy, RU-C219-zubnaya-pasta]
 sounds: []
-roots: []
+roots: [slavic-briti]
+etymology_hook: "бритва is from брить 'to shave', Proto-Slavic *briti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C219-zubnaya-pasta]
 <!-- hl-knowledge: introduces=[RU-LEX-C219-VESHCH219-02]; assesses=[] -->
 
 **бритва** (*brítva*) — "a razor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бритва** comes from *брить*, "to shave", *брею*, "I shave" (Vasmer), with *-тва*, a suffix for a tool.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

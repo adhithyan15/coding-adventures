@@ -14,7 +14,8 @@ romanization: "grúbyy"
 concept_tag: RU-KACH186-GRUBYY
 prerequisites: [RU-C185-znachit, RU-C185-naprimer]
 sounds: []
-roots: []
+roots: [slavic-grobu]
+etymology_hook: "грубый ← Proto-Slavic *grǫbŭ; Vasmer thinks Lithuanian grubùs 'rough' possibly a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C185-naprimer]
 <!-- hl-knowledge: introduces=[RU-LEX-C186-KACH186-01]; assesses=[] -->
 
 **грубый** (*grúbyy*) — "rude".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**грубый** ← Proto-Slavic *\*grǫbŭ* — inherited. Vasmer thinks it possibly related to Lithuanian *grubùs*, "rough, uneven", and *grùpti*, "to grow rough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

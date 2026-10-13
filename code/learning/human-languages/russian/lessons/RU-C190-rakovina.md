@@ -14,7 +14,8 @@ romanization: "rákovina"
 concept_tag: RU-VESHCH190-RAKOVINA
 prerequisites: [RU-C189-russkiy, RU-C190-shtora]
 sounds: []
-roots: []
+roots: [arca-latin]
+etymology_hook: "раковина is from Old Slavic *raky 'a case', from Germanic *arkō, Latin arca 'a box'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C190-shtora]
 <!-- hl-knowledge: introduces=[RU-LEX-C190-VESHCH190-02]; assesses=[] -->
 
 **раковина** (*rákovina*) — "a sink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**раковина** ← Old Russian *раковина*, "mother-of-pearl", built on *\*raky*, "a case, a shell", which Vasmer traces through Germanic *\*arkō*, Gothic *arka*, to Latin *arca*, "a box". Jakobson tied it instead to *рак*, "a crayfish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

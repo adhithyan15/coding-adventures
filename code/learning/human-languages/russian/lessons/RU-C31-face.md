@@ -14,7 +14,8 @@ romanization: "litsó"
 concept_tag: RU-BODY3-FACE
 prerequisites: [RU-C31-tongue, RU-C31-lip]
 sounds: []
-roots: []
+roots: [slavic-liku]
+etymology_hook: "лицо ← Proto-Slavic *lice, built on *likŭ 'face' (лик); Old Irish lecco 'cheek' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C31-lip]
 <!-- hl-knowledge: introduces=[RU-LEX-C31-BODY3-04]; assesses=[] -->
 
 **лицо** (*litsó*) — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лицо** ← Proto-Slavic *\*lice*, built on *\*likŭ*, "face", the word Russian keeps as *лик*, "a face on an icon" (Vasmer). Vasmer compares Old Irish *lecco*, "cheek".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

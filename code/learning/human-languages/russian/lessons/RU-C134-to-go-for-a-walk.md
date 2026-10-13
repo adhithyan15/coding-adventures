@@ -14,7 +14,8 @@ romanization: "gulyát"
 concept_tag: RU-VERB-TO-GO-FOR-A-WALK
 prerequisites: [RU-C133-to-repair, RU-C134-to-tell]
 sounds: []
-roots: []
+roots: [slavic-gulati]
+etymology_hook: "гулять: Vasmer calls it a hard word; links with гул 'a hum' or a sense 'to drink' are disputed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C134-to-tell]
 <!-- hl-knowledge: introduces=[RU-LEX-C134-ACT134-02]; assesses=[] -->
 
 **гулять** (*gulyát*) — "to go for a walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гулять** — "a difficult word", says Vasmer. Berneker and Brückner tied it to *гул*, "a hum", Potebnya and Sobolevsky to a first sense "to drink"; each is disputed, and Trubachev's note traces the sense from "to play ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

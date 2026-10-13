@@ -14,7 +14,8 @@ romanization: "odevátsya"
 concept_tag: RU-VERB-TO-GET-DRESSED
 prerequisites: [RU-C131-to-believe, RU-C131-to-drive]
 sounds: []
-roots: []
+roots: [pie-dheh1-put]
+etymology_hook: "одеваться is о- 'around' + девать 'to put' + -ся 'oneself': to put clothes round oneself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C131-to-drive]
 <!-- hl-knowledge: introduces=[RU-LEX-C132-ACT132-01]; assesses=[] -->
 
 **одеваться** (*odevátsya*) — "to get dressed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**одеваться** is *о-*, "around", with *девать*, "to put", and *-ся*, "oneself": to put clothes around yourself. The root *де-*, "to put", is in *одеяло*, "blanket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

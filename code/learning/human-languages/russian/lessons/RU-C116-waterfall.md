@@ -14,7 +14,8 @@ romanization: "vodopád"
 concept_tag: RU-THINGS116-WATERFALL
 prerequisites: [RU-C116-volcano, RU-C116-cave]
 sounds: []
-roots: []
+roots: [pie-wodr, slavic-pad]
+etymology_hook: "водопад is вода 'water' + пад, from падать 'to fall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C116-cave]
 <!-- hl-knowledge: introduces=[RU-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **водопад** (*vodopád*) — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**водопад** is *вода*, "water", with *-о-* and *пад*, from *падать*, "to fall": falling water.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

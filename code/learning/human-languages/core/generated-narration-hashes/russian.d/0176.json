@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 176,
-  "sourceHash": "fnv1a64:de0955b95008c242",
+  "sourceHash": "fnv1a64:53da293e5c1bc47f",
   "lessonIds": [
     "RU-C176-vozvrashchatsya",
     "RU-C176-opazdyvat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch176.txt",
   "json": "russian/narration/ch176.json",
-  "textHash": "fnv1a64:bf283cc3904e1de5",
-  "jsonHash": "fnv1a64:123d8f443381c855",
+  "textHash": "fnv1a64:be3e24092994977c",
+  "jsonHash": "fnv1a64:b3cab0efbfd2cd72",
   "findings": []
 }

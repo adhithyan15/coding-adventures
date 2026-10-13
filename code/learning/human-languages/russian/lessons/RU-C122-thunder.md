@@ -14,7 +14,8 @@ romanization: "grom"
 concept_tag: RU-THINGS122-THUNDER
 prerequisites: [RU-C122-rainbow, RU-C122-lightning]
 sounds: []
-roots: []
+roots: [slavic-gromu]
+etymology_hook: "гром ← Proto-Slavic *gromŭ, with греметь 'to rumble'; Old Prussian grumins 'thunder' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C122-lightning]
 <!-- hl-knowledge: introduces=[RU-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **гром** (*grom*) — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гром** ← Proto-Slavic *\*gromŭ* — inherited, with *греметь*, "to rumble" (Vasmer). Vasmer relates it to Old Prussian *grumins*, "thunder", Lithuanian *gruménti*, "to rumble", and Greek *chrómos*, "a crash".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

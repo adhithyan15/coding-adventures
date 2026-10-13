@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Why, Because, When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:63bbab1f5a996a87",
+  "sourceHash": "fnv1a64:7b218c8e325b7c86",
   "lessons": [
     {
       "id": "RU-C19-pochemu",
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3109e62d04d040ee",
+      "sourceHash": "fnv1a64:5d0068e56cb1324c",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
             },
             {
               "kind": "speech",
-              "text": "Russian answers why by taking the same word, swapping the question-stem for the pointing-stem, and adding что to hang the reason on. почему (pachemú) asks; по тому points at the reason; что carries the sentence that names it."
+              "text": "Russian answers why by taking the same word, swapping the question-stem for the pointing-stem, and adding что to hang the reason on. почему (pachemú) asks; по тому points at the reason; что carries the sentence that names it. Both stems are inherited from Proto-Slavic: tŭ, \"that\", (zapyatáya) the stem of то, and kŭ-, (zapyatáya) the stem of кто, \"who\"."
             }
           ]
         },

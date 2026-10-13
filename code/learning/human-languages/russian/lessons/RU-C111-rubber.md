@@ -14,7 +14,8 @@ romanization: "lástik"
 concept_tag: RU-THINGS111-RUBBER
 prerequisites: [RU-C111-exam, RU-C111-board]
 sounds: []
-roots: []
+roots: [elasticus-latin]
+etymology_hook: "ластик is cut from Latin elasticus 'springy': a rubber eraser"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C111-board]
 <!-- hl-knowledge: introduces=[RU-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **ластик** (*lástik*) — "a rubber, an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ластик** — in the sense "an eraser", it comes from Latin *elasticus*, "springy" (Trubachev, in Vasmer, citing Ushakov); rubber is elastic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

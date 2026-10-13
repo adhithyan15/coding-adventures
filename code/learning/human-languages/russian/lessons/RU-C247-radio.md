@@ -14,7 +14,8 @@ romanization: "rádio"
 concept_tag: RU-VESHCH247-RADIO
 prerequisites: [RU-C246-blyudtse, RU-C246-kruzhka]
 sounds: []
-roots: []
+roots: [radius-latin]
+etymology_hook: "радио ← radio, an international word from Latin radius 'a ray'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C246-kruzhka]
 <!-- hl-knowledge: introduces=[RU-LEX-C247-VESHCH247-01]; assesses=[] -->
 
 **радио** (*rádio*) — "a radio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**радио** is an international word from Latin *radius*, "a ray, a spoke": signals sent in rays.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

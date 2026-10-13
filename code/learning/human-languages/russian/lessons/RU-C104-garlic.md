@@ -14,7 +14,8 @@ romanization: "chesnók"
 concept_tag: RU-THINGS104-GARLIC
 prerequisites: [RU-C104-strawberries, RU-C104-melon]
 sounds: []
-roots: []
+roots: [slavic-chesati]
+etymology_hook: "чеснок ← Proto-Slavic *česnŭ, linked with чесать 'to comb, split': its head splits into cloves"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C104-melon]
 <!-- hl-knowledge: introduces=[RU-LEX-C104-THINGS104-05]; assesses=[] -->
 
 **чеснок** (*chesnók*) — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чеснок** ← Proto-Slavic *\*česnŭ*, with *-ок* — inherited. Vasmer reports the link with *чесать*, "to comb, to split": a garlic head splits into cloves, as Old High German *chlobolouh*, "garlic", goes with *klieben*, "to split".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

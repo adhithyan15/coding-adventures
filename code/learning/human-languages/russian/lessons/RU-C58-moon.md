@@ -14,7 +14,8 @@ romanization: "luná"
 concept_tag: RU-SKY-MOON
 prerequisites: [RU-C58-sky, RU-C58-sun]
 sounds: []
-roots: []
+roots: [pie-lewk]
+etymology_hook: "луна ← Proto-Slavic *luna, from *louksnā 'the bright one'; Latin luna is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C58-sun]
 <!-- hl-knowledge: introduces=[RU-LEX-C58-SKY-03]; assesses=[] -->
 
 **луна** (*luná*) — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**луна** ← Proto-Slavic *\*luna*, from *\*louksnā*, "the bright one" — inherited. Vasmer lists Latin *lūna*, Old Prussian *lauxnos*, "stars", and Greek *lýchnos*, "a lamp", all from a root "to shine", with *луч*, "a ray".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tsvetók"
 concept_tag: RU-NATURE1-FLOWER
 prerequisites: [RU-C54-map, RU-C55-tree]
 sounds: []
-roots: []
+roots: [slavic-kvetu]
+etymology_hook: "цветок is цвет 'bloom, colour' + -ок; цвет ← Proto-Slavic *květŭ 'blossom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C55-tree]
 <!-- hl-knowledge: introduces=[RU-LEX-C55-NATURE1-02]; assesses=[] -->
 
 **цветок** (*tsvetók*) — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**цветок** is *цвет*, "bloom; colour", with the diminutive *-ок*. *цвет* ← Proto-Slavic *\*květŭ*, "blossom", which Vasmer relates to Latvian *kvitêt*, "to shimmer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

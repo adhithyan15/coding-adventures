@@ -14,7 +14,8 @@ romanization: "izvéstnyy"
 concept_tag: RU-QUAL126-FAMOUS
 prerequisites: [RU-C125-noisy, RU-C126-last]
 sounds: []
-roots: []
+roots: [pie-weid]
+etymology_hook: "известный is из- + весть 'news', from ведать 'to know': known to all"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C126-last]
 <!-- hl-knowledge: introduces=[RU-LEX-C126-QUAL126-02]; assesses=[] -->
 
 **известный** (*izvéstnyy*) — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**известный** is built on *известие*, "news", *из-* with *весть*, "a message", from *ведать*, "to know" (Vasmer): "known". Vasmer compares Sanskrit *vitti-*, "knowledge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

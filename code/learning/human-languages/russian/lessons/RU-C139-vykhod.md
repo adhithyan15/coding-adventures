@@ -14,7 +14,8 @@ romanization: "výkhod"
 concept_tag: RU-CHT139-VYKHOD
 prerequisites: [RU-C139-reklama, RU-C139-vkhod]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "выход is вы- 'out' + ход 'a going', from ходить 'to walk'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [RU-C139-vkhod]
 
 The sign says **ВЫХОД**: the way out. It is **вы-**, "out", with the same
 **ход** as **вход**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**выход** is *вы-*, "out", with *ход*, "a going": the way out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

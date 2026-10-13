@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 215,
-  "sourceHash": "fnv1a64:f6e15aafc5158e2b",
+  "sourceHash": "fnv1a64:773e13d620e08e9b",
   "lessonIds": [
     "RU-C215-konechno",
     "RU-C215-navernoye",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch215.txt",
   "json": "russian/narration/ch215.json",
-  "textHash": "fnv1a64:837b4585e82fac4d",
-  "jsonHash": "fnv1a64:39517e9006f9e48d",
+  "textHash": "fnv1a64:ac4ad0e911f1f29c",
+  "jsonHash": "fnv1a64:d75cc91b8e30d896",
   "findings": []
 }

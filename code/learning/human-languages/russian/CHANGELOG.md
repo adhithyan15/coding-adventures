@@ -1,5 +1,15 @@
 # Changelog — Russian track
 
+## Added — every word lesson says where its word comes from
+
+`ETYMOLOGY_GAP_PINS.russian` falls from 1135 lessons without an `etymology_hook` and 1148 without visible etymology to 0 and 0 (HL24 §9).
+
+- **Shape.** The 1,135 generated word lessons (chapters 29 onward) each gained a `## The word, taken apart` block after the section that introduces the word, a matching `etymology_hook` of 120 characters or fewer, and `roots:` slugs. Thirteen earlier hand-written lessons gained the half they lacked: RU-C12-papa, RU-C17-drugoy, RU-C21-pomogite, RU-C22-kakoy, RU-C25-dvadtsat and RU-C26-vtoroy-tretiy as a block; RU-C02-menya-zovut, RU-C19-potomu-chto, RU-C20-nado, RU-C21-prostite, RU-C21-povtorite, RU-C21-medlenno and RU-C22-skolko as one origin sentence in an existing section, paid for by trimming nearby prose.
+- **Source.** Max Vasmer's *Russisches etymologisches Wörterbuch* (Russian edition, with Trubachev's additions), paraphrased and cited "(Vasmer)" beside the fact; no sentence is copied. Vasmer's hedges ("probably", "doubtful", "disputed") are kept, and his older reconstruction notation is given in standard starred forms (Proto-Slavic yers as *ŭ*, *ĭ*). Old Russian and Old Church Slavonic forms that need a letter this track never teaches (*ъ*, *ѣ*) are given in scholarly transliteration (*sapogŭ*, *nadobě*).
+- **What they say.** Of the 1,135 generated blocks: 457 words built from parts the learner can see, 257 inherited Slavic words with their cousins, 63 inherited words whose deeper origin is unclear, 40 Church Slavonic shapes (most named by their sound change, such as *-ра-* for *-оро-* or *щ* for *ч*), 90 Germanic loans (Gothic, Old Norse, German, Dutch), 52 French, 28 Greek, 26 English, 15 Turkic, 84 from other donors (Latin, Polish, Italian, Persian, Arabic and more), and 23 whose origin Vasmer calls uncertain or disputed. 935 lessons cite Vasmer.
+- **Durations.** No lesson crossed its declared length because of this change. RU-C02-menya-zovut, which already estimated over its declared 240 s, had `duration.max_seconds` raised to its computed 275 s; it is the only raise.
+- **Roots.** 1,143 lessons gained `roots:` slugs (1,167 additions, 332 reusing a slug the corpus already had); `check:root-slug-splits` reports no new split.
+
 ## Fixed — lessons stop leaning on words a later lesson teaches
 
 A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 5 → 0.

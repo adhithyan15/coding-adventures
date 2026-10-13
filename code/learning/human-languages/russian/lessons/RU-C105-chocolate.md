@@ -14,7 +14,8 @@ romanization: "shokolád"
 concept_tag: RU-THINGS105-CHOCOLATE
 prerequisites: [RU-C104-garlic, RU-C105-flour]
 sounds: []
-roots: []
+roots: [xocolatl-nahuatl]
+etymology_hook: "шоколад came through German Schokolade, ultimately from Nahuatl, by way of Spanish chocolate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C105-flour]
 <!-- hl-knowledge: introduces=[RU-LEX-C105-THINGS105-02]; assesses=[] -->
 
 **шоколад** (*shokolád*) — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шоколад** — from Peter the Great's time. The *ш-* form came through German *Schokolade*, the old *ч-* form from Italian *cioccolata*; both go back to Spanish *chocolate*, from Nahuatl, the language of the Aztecs (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

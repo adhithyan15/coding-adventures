@@ -14,7 +14,8 @@ romanization: "skrípka"
 concept_tag: RU-VESHCH226-SKRIPKA
 prerequisites: [RU-C225-verblyud, RU-C225-olen]
 sounds: []
-roots: []
+roots: [slavic-skripeti]
+etymology_hook: "скрипка is from скрипеть 'to creak': the creaker"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C225-olen]
 <!-- hl-knowledge: introduces=[RU-LEX-C226-VESHCH226-01]; assesses=[] -->
 
 **скрипка** (*skrípka*) — "a violin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**скрипка** goes with *скрипеть*, "to creak, to squeak" (Vasmer): the violin as the squeaker.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pálets"
 concept_tag: RU-BODY2-FINGER
 prerequisites: [RU-C29-tooth, RU-C30-hair]
 sounds: []
-roots: []
+roots: [slavic-palici]
+etymology_hook: "палец ← Proto-Slavic *palĭcĭ, once 'thumb'; usually tied to Latin pollex 'thumb', though some doubt it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C30-hair]
 <!-- hl-knowledge: introduces=[RU-LEX-C30-BODY2-02]; assesses=[] -->
 
 **палец** (*pálets*) — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**палец** ← Proto-Slavic *\*palĭcĭ* — inherited; older Russian texts use it for "thumb" (Vasmer). It is usually tied to Latin *pollex*, "thumb", though Vasmer notes doubts about that link.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

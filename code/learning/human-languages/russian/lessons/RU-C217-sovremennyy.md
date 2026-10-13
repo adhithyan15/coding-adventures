@@ -14,7 +14,8 @@ romanization: "sovreménnyy"
 concept_tag: RU-KACH217-SOVREMENNYY
 prerequisites: [RU-C217-prokhladnyy, RU-C217-svezhiy]
 sounds: []
-roots: []
+roots: [pie-wert]
+etymology_hook: "современный is со- 'with' + время 'time': of the same time"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C217-svezhiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C217-KACH217-05]; assesses=[] -->
 
 **современный** (*sovreménnyy*) — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**современный** is *со-*, "together", with *времен-*, from *время*, "time", a Church Slavonic word (Vasmer): "of the same time", contemporary.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

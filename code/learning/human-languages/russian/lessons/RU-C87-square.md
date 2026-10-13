@@ -14,7 +14,8 @@ romanization: "plóshchad"
 concept_tag: RU-LOC87-SQUARE
 prerequisites: [RU-C87-airport, RU-C87-stop]
 sounds: []
-roots: []
+roots: [slavic-plosku]
+etymology_hook: "площадь is from *ploskědĭ, built on плоский 'flat': a flat place"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C87-stop]
 <!-- hl-knowledge: introduces=[RU-LEX-C87-LOC87-05]; assesses=[] -->
 
 **площадь** (*plóshchad*) — "a square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**площадь** — Old Russian and Church Slavonic *площадь*, from *\*ploskědĭ*, built on *плоский*, "flat" (Vasmer): a square is a flat open place. The *-щ-* is the Church Slavonic sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

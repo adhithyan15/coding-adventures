@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 196,
-  "sourceHash": "fnv1a64:d2fb3c6707887694",
+  "sourceHash": "fnv1a64:9888c6d98c6fc37a",
   "lessonIds": [
     "RU-C196-krysa",
     "RU-C196-pauk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch196.txt",
   "json": "russian/narration/ch196.json",
-  "textHash": "fnv1a64:bfbf3a33afae1241",
-  "jsonHash": "fnv1a64:6e462727b5297473",
+  "textHash": "fnv1a64:1d67de012e19e9fb",
+  "jsonHash": "fnv1a64:e7adf79044128162",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kárta"
 concept_tag: RU-WORDS-MAP
 prerequisites: [RU-C54-address, RU-C54-ticket]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "карта came through Polish karta or German Karte from Latin charta 'paper', from Greek chartēs"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C54-ticket]
 <!-- hl-knowledge: introduces=[RU-LEX-C54-WORDS-05]; assesses=[] -->
 
 **карта** (*kárta*) — "a map; a card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**карта** came in Peter the Great's time through Polish *karta* or German *Karte* from Italian *carta* and Latin *charta*, "paper", from Greek *chártēs* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

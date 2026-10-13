@@ -14,7 +14,8 @@ romanization: "yúbka"
 concept_tag: RU-THINGS102-SKIRT
 prerequisites: [RU-C101-scarf, RU-C102-boots]
 sounds: []
-roots: []
+roots: [arabic-jubba]
+etymology_hook: "юбка came through Polish jupa from German Joppe, French jupe, Italian giuppa, from Arabic jubba"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C102-boots]
 <!-- hl-knowledge: introduces=[RU-LEX-C102-THINGS102-02]; assesses=[] -->
 
 **юбка** (*yúbka*) — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**юбка** — older *юпка*, from 1701; it came through Polish *jupa*, "a jacket", from Middle High German *joppe*, which goes back through Old French *jupe* to Italian *giuppa* and Arabic *jubba*, "an undergarment" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

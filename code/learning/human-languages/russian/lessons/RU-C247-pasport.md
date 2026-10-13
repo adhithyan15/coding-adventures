@@ -14,7 +14,8 @@ romanization: "pásport"
 concept_tag: RU-VESHCH247-PASPORT
 prerequisites: [RU-C247-radio, RU-C247-naushniki]
 sounds: []
-roots: []
+roots: [portus-latin]
+etymology_hook: "паспорт came through German Passport, from French passeport 'pass the port'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C247-naushniki]
 <!-- hl-knowledge: introduces=[RU-LEX-C247-VESHCH247-03]; assesses=[] -->
 
 **паспорт** (*pásport*) — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**паспорт** — *пашпорт* in 1633, *паспорт* by 1710; it came through German *Passport* (Vasmer), from French *passeport*, "pass (through) the port".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

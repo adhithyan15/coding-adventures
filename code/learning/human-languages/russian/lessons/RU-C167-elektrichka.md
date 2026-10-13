@@ -14,7 +14,8 @@ romanization: "elektríchka"
 concept_tag: RU-VESHCH167-ELEKTRICHKA
 prerequisites: [RU-C166-match, RU-C166-trenirovka]
 sounds: []
-roots: []
+roots: [elektron-greek]
+etymology_hook: "электричка is электрический поезд 'electric train' in one word with -ка; Greek ēlektron 'amber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C166-trenirovka]
 <!-- hl-knowledge: introduces=[RU-LEX-C167-VESHCH167-01]; assesses=[] -->
 
 **электричка** (*elektríchka*) — "a suburban train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**электричка** is *электрический поезд*, "an electric train", folded into one word with *-ка*. *электрический*, "electric", goes back to Greek *ḗlektron*, "amber", which gives a spark when rubbed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

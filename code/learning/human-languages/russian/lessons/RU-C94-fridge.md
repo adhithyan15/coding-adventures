@@ -14,7 +14,8 @@ romanization: "kholodílnik"
 concept_tag: RU-THINGS94-FRIDGE
 prerequisites: [RU-C94-television, RU-C94-computer]
 sounds: []
-roots: []
+roots: [slavic-cholodu]
+etymology_hook: "холодильник is холодить 'to chill' + -льник, 'a thing for': a chiller"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C94-computer]
 <!-- hl-knowledge: introduces=[RU-LEX-C94-THINGS94-03]; assesses=[] -->
 
 **холодильник** (*kholodílnik*) — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**холодильник** is *холодить*, "to chill", from *холод*, "cold", with *-льник*, a suffix for a tool: "a chiller".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

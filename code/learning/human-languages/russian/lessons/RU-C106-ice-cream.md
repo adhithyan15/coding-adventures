@@ -14,7 +14,8 @@ romanization: "morózhenoye"
 concept_tag: RU-THINGS106-ICE-CREAM
 prerequisites: [RU-C106-dessert, RU-C106-yoghurt]
 sounds: []
-roots: []
+roots: [slavic-morzu]
+etymology_hook: "мороженое is 'frozen (food)', from мороз 'frost'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C106-yoghurt]
 <!-- hl-knowledge: introduces=[RU-LEX-C106-THINGS106-03]; assesses=[] -->
 
 **мороженое** (*morózhenoye*) — "ice cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мороженое** is an adjective standing alone: "frozen (food)", from *морозить*, "to freeze", and *мороз*, "frost", which Vasmer relates to Albanian *mardhem*, "I freeze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

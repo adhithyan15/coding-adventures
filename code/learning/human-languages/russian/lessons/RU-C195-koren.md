@@ -14,7 +14,8 @@ romanization: "kóren"
 concept_tag: RU-VESHCH195-KOREN
 prerequisites: [RU-C195-priroda, RU-C195-vetka]
 sounds: []
-roots: []
+roots: [slavic-korenu]
+etymology_hook: "корень ← Proto-Slavic *korenĭ; Lithuanian keras 'a bush, a root' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C195-vetka]
 <!-- hl-knowledge: introduces=[RU-LEX-C195-VESHCH195-03]; assesses=[] -->
 
 **корень** (*kóren*) — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**корень** ← Proto-Slavic *\*korenĭ* — inherited, a cousin of Lithuanian *kẽras*, "a bush, a root", and Latvian *cers*, "a bush" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

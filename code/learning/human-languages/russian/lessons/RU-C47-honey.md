@@ -14,7 +14,8 @@ romanization: "myod"
 concept_tag: RU-PANTRY-HONEY
 prerequisites: [RU-C46-pie, RU-C47-sugar]
 sounds: []
-roots: []
+roots: [pie-medhu]
+etymology_hook: "мёд ← Proto-Slavic *medŭ; Sanskrit madhu 'honey' and English mead are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C47-sugar]
 <!-- hl-knowledge: introduces=[RU-LEX-C47-PANTRY-02]; assesses=[] -->
 
 **мёд** (*myod*) — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мёд** ← Proto-Slavic *\*medŭ*, "honey; mead" — inherited. Vasmer lists Lithuanian *medùs*, "honey", Sanskrit *mádhu*, "honey, mead", and Greek *méthy*, "wine": English *mead* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

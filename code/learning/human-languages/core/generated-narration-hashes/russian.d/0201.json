@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 201,
-  "sourceHash": "fnv1a64:4681185b6e5a7e64",
+  "sourceHash": "fnv1a64:183a76341c673fdf",
   "lessonIds": [
     "RU-C201-sdacha",
     "RU-C201-skidka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch201.txt",
   "json": "russian/narration/ch201.json",
-  "textHash": "fnv1a64:646be071e6ca7d71",
-  "jsonHash": "fnv1a64:95620059c0774456",
+  "textHash": "fnv1a64:9077c806ed155c38",
+  "jsonHash": "fnv1a64:976652c24ec80fb6",
   "findings": []
 }

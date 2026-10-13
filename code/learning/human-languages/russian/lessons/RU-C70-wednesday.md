@@ -14,7 +14,8 @@ romanization: "sredá"
 concept_tag: RU-WEEK1-WEDNESDAY
 prerequisites: [RU-C69-time, RU-C70-monday]
 sounds: []
-roots: []
+roots: [slavic-serda]
+etymology_hook: "среда 'Wednesday' is Church Slavonic for 'the middle', beside the native середина 'middle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C70-monday]
 <!-- hl-knowledge: introduces=[RU-LEX-C70-WEEK1-02]; assesses=[] -->
 
 **среда** (*sredá*) — "Wednesday". "The middle" of the week.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**среда** — the Church Slavonic shape, says Vasmer, of native *середа*, "middle", the word in *середина*, "the middle": Wednesday is the middle of the week. It is the same root as *сердце*, "heart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

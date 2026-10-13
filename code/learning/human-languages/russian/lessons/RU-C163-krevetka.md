@@ -14,7 +14,8 @@ romanization: "krevétka"
 concept_tag: RU-VESHCH163-KREVETKA
 prerequisites: [RU-C162-tapochki, RU-C163-sosiska]
 sounds: []
-roots: []
+roots: [french-crevette]
+etymology_hook: "креветка is French crevette 'a prawn' + -ка"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C163-sosiska]
 <!-- hl-knowledge: introduces=[RU-LEX-C163-VESHCH163-02]; assesses=[] -->
 
 **креветка** (*krevétka*) — "a prawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**креветка** comes from French *crevette*, "a prawn", with *-ка*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

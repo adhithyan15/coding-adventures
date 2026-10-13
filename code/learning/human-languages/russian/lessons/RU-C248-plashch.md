@@ -14,7 +14,8 @@ romanization: "plashch"
 concept_tag: RU-VESHCH248-PLASHCH
 prerequisites: [RU-C247-dokument, RU-C248-odezhda]
 sounds: []
-roots: []
+roots: [slavic-platu]
+etymology_hook: "плащ ← Old Church Slavonic plaštĭ; usually tied to плат 'a cloth', with difficulties"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C248-odezhda]
 <!-- hl-knowledge: introduces=[RU-LEX-C248-VESHCH248-02]; assesses=[] -->
 
 **плащ** (*plashch*) — "a raincoat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плащ** ← Old Church Slavonic *plaštŭ*, "a cloak". It is usually linked with *плат*, "a cloth", which Vasmer says is not free of difficulties; others link it with *плоский*, "flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

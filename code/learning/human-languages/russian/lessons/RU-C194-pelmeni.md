@@ -14,7 +14,8 @@ romanization: "pelméni"
 concept_tag: RU-VESHCH194-PELMENI
 prerequisites: [RU-C193-pugovitsa, RU-C193-sergi]
 sounds: []
-roots: []
+roots: [komi-pelnyan]
+etymology_hook: "пельмени ← Komi and Udmurt peľńań 'ear-bread', for their ear-like shape"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C193-sergi]
 <!-- hl-knowledge: introduces=[RU-LEX-C194-VESHCH194-01]; assesses=[] -->
 
 **пельмени** (*pelméni*) — "dumplings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пельмени** comes from Komi and Udmurt *peľńań*, from *peľ*, "ear", with *ńań*, "bread", for their shape (Vasmer, after Kalima).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

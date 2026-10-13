@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 179,
-  "sourceHash": "fnv1a64:7f3b28e7578efa0e",
+  "sourceHash": "fnv1a64:30b51be145cac239",
   "lessonIds": [
     "RU-C179-retsept",
     "RU-C179-ukol",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch179.txt",
   "json": "russian/narration/ch179.json",
-  "textHash": "fnv1a64:24ef4d30ab1056c1",
-  "jsonHash": "fnv1a64:79aa9cb23e1e2efe",
+  "textHash": "fnv1a64:fcaccf525e63107e",
+  "jsonHash": "fnv1a64:b1ad45352592daf9",
   "findings": []
 }

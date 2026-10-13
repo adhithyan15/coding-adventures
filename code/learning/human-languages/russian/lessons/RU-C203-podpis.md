@@ -14,7 +14,8 @@ romanization: "pódpis"
 concept_tag: RU-RABOTA203-PODPIS
 prerequisites: [RU-C202-moryak, RU-C202-rybak]
 sounds: []
-roots: []
+roots: [pie-peyk]
+etymology_hook: "подпись is под- 'under' + пись, from писать 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C202-rybak]
 <!-- hl-knowledge: introduces=[RU-LEX-C203-RABOTA203-01]; assesses=[] -->
 
 **подпись** (*pódpis*) — "a signature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подпись** is *под-*, "under", with *-пись*, from *писать*, "to write": the name written at the foot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

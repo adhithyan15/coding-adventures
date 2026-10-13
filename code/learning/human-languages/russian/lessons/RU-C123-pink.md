@@ -14,7 +14,8 @@ romanization: "rózovyy"
 concept_tag: RU-THINGS123-PINK
 prerequisites: [RU-C123-mirror, RU-C123-stairs]
 sounds: []
-roots: []
+roots: [rosa-latin]
+etymology_hook: "розовый is from роза 'a rose', perhaps through Ukrainian and Polish różowy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C123-stairs]
 <!-- hl-knowledge: introduces=[RU-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **розовый** (*rózovyy*) — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**розовый** is built on *роза*, "a rose", perhaps through Ukrainian *рожевий* and Polish *różowy*, "pink" (Vasmer). *роза* goes back to Latin *rosa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tak kak"
 concept_tag: RU-PRICH154-TAK-KAK
 prerequisites: [RU-C153-fontan, RU-C154-poetomu]
 sounds: []
-roots: []
+roots: [pie-to, slavic-kako]
+etymology_hook: "так как is так 'so' + как 'as': 'so as'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C154-poetomu]
 <!-- hl-knowledge: introduces=[RU-LEX-C154-PRICH154-02]; assesses=[] -->
 
 **так как** (*tak kak*) — "since, as".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**так как** is *так*, "so", with *как*, "how, as": "so as, since". *так* comes from the pronoun *тот*, "that", and *как* from the question stem of *кто*, "who" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

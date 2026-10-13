@@ -14,7 +14,8 @@ romanization: "devyanósto"
 concept_tag: RU-NUM2-NINETY
 prerequisites: [RU-C76-forty, RU-C76-fifty]
 sounds: []
-roots: []
+roots: [proto-indo-european-hnewn]
+etymology_hook: "девяносто is East Slavic only; Vasmer thinks it probably comes from an old 'ninth ten'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C76-fifty]
 <!-- hl-knowledge: introduces=[RU-LEX-C76-NUM2-03]; assesses=[] -->
 
 **девяносто** (*devyanósto*) — "ninety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**девяносто** is found only in East Slavic, from 1398 on; other Slavic languages say "nine tens". Vasmer thinks it probably comes from an old *\*devęno-desętŭ*, "the ninth ten", like Latin *nōnāgintā*, "ninety".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

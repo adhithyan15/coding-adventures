@@ -14,7 +14,8 @@ romanization: "predmét"
 concept_tag: RU-VESHCH159-PREDMET
 prerequisites: [RU-C158-znakomyy, RU-C159-veshch]
 sounds: []
-roots: []
+roots: [iacere-latin]
+etymology_hook: "предмет is пред- 'before' + мет 'thrown': a copy of Latin obiectum, through Polish przedmiot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C159-veshch]
 <!-- hl-knowledge: introduces=[RU-LEX-C159-VESHCH159-02]; assesses=[] -->
 
 **предмет** (*predmét*) — "an object; a school subject".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**предмет** is *пред-*, "before", with *-мет*, "thrown", from *метать*, "to throw": it copies, through Polish *przedmiot*, Latin *obiectum*, "something thrown before" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

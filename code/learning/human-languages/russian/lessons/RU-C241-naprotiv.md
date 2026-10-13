@@ -14,7 +14,8 @@ romanization: "naprótiv"
 concept_tag: RU-MESTO241-NAPROTIV
 prerequisites: [RU-C241-balkon, RU-C241-dvor]
 sounds: []
-roots: []
+roots: [slavic-proti]
+etymology_hook: "напротив is на 'on' + против 'against'; Latvian pretī 'opposite' is a cousin of против"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C241-dvor]
 <!-- hl-knowledge: introduces=[RU-LEX-C241-MESTO241-04]; assesses=[] -->
 
 **напротив** (*naprótiv*) — "opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**напротив** is *на*, "on", with *против*, "against", Proto-Slavic *\*protivŭ*, from *\*proti*, which Vasmer relates to Latvian *pretī*, "towards, opposite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

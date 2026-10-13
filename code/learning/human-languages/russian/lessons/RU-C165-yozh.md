@@ -14,7 +14,8 @@ romanization: "yozh"
 concept_tag: RU-VESHCH165-YOZH
 prerequisites: [RU-C165-popugay, RU-C165-khomyak]
 sounds: []
-roots: []
+roots: [pie-heghi]
+etymology_hook: "ёж ← Proto-Slavic *ežĭ; Greek echinos and German Igel 'hedgehog' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C165-khomyak]
 <!-- hl-knowledge: introduces=[RU-LEX-C165-VESHCH165-05]; assesses=[] -->
 
 **ёж** (*yozh*) — "a hedgehog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ёж** ← Proto-Slavic *\*ežĭ* — inherited. Vasmer lists Lithuanian *ežỹs*, German *Igel* and Greek *echînos*, "hedgehog", and ties them to Greek *échis*, "snake": perhaps a taboo name, "the snake-eater".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

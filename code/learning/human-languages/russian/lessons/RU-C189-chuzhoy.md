@@ -14,7 +14,8 @@ romanization: "chuzhóy"
 concept_tag: RU-KACH189-CHUZHOY
 prerequisites: [RU-C188-vozmozhnyy, RU-C188-slozhnyy]
 sounds: []
-roots: []
+roots: [gothic-thiuda]
+etymology_hook: "чужой ← Proto-Slavic *tjudjĭ, usually from Gothic þiuda 'a people': 'of another people'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C188-slozhnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C189-KACH189-01]; assesses=[] -->
 
 **чужой** (*chuzhóy*) — "someone else's; unfamiliar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чужой** ← Proto-Slavic *\*tjudjĭ*, Old Church Slavonic *штуждь*. It is usually explained as built on a loan from Gothic *þiuda*, "a people": "belonging to another people" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

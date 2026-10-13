@@ -14,7 +14,8 @@ romanization: "pyátnitsa"
 concept_tag: RU-WEEK1-FRIDAY
 prerequisites: [RU-C70-wednesday, RU-C70-thursday]
 sounds: []
-roots: []
+roots: [pie-penkwe]
+etymology_hook: "пятница is built on пять 'five': the fifth day of a week that starts on Monday"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C70-thursday]
 <!-- hl-knowledge: introduces=[RU-LEX-C70-WEEK1-04]; assesses=[] -->
 
 **пятница** (*pyátnitsa*) — "Friday". "The fifth" day, from **пять**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пятница** is built on *пять*, "five": the fifth day of a week that begins on Monday (Vasmer); Old Russian said *pjatokŭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

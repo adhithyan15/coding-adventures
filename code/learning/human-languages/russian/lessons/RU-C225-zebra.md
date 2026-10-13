@@ -14,7 +14,8 @@ romanization: "zébra"
 concept_tag: RU-VESHCH225-ZEBRA
 prerequisites: [RU-C225-krokodil, RU-C225-zhiraf]
 sounds: []
-roots: []
+roots: [english-zebra]
+etymology_hook: "зебра more likely came through English or Dutch zebra than from French; the source is African"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C225-zhiraf]
 <!-- hl-knowledge: introduces=[RU-LEX-C225-VESHCH225-03]; assesses=[] -->
 
 **зебра** (*zébra*) — "a zebra".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зебра** more likely came through English or Dutch *zebra* than straight from French *zèbre*; Vasmer traces the word to an Angolan *zerba*, and others to Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

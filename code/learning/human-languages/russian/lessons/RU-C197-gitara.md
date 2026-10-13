@@ -14,7 +14,8 @@ romanization: "gitára"
 concept_tag: RU-VESHCH197-GITARA
 prerequisites: [RU-C197-vystavka, RU-C197-spektakl]
 sounds: []
-roots: []
+roots: [kithara-greek]
+etymology_hook: "гитара came through Polish gitara or German Gitarre from Latin cithara, Greek kithara"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C197-spektakl]
 <!-- hl-knowledge: introduces=[RU-LEX-C197-VESHCH197-04]; assesses=[] -->
 
 **гитара** (*gitára*) — "a guitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гитара** — first *китара*, in Peter the Great's time; it came through Polish *gitara* or German *Gitarre* from Latin *cithara*, Greek *kithára*, "a lyre" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lenívyy"
 concept_tag: RU-KACH155-LENIVYY
 prerequisites: [RU-C155-umnyy, RU-C155-glupyy]
 sounds: []
-roots: []
+roots: [slavic-leni]
+etymology_hook: "ленивый is лень 'laziness' + -ивый; Latin lenis 'gentle' is a cousin of лень"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C155-glupyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C155-KACH155-04]; assesses=[] -->
 
 **ленивый** (*lenívyy*) — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ленивый** comes from *лень*, "laziness" (Vasmer), with *-ивый*, "full of". Vasmer relates *лень* to Lithuanian *lėnas*, "slow, quiet", and Latin *lēnis*, "soft, gentle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

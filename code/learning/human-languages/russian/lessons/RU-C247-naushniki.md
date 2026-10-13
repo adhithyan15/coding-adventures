@@ -14,7 +14,8 @@ romanization: "naúshniki"
 concept_tag: RU-VESHCH247-NAUSHNIKI
 prerequisites: [RU-C246-kruzhka, RU-C247-radio]
 sounds: []
-roots: []
+roots: [pie-h2ous]
+etymology_hook: "наушники is на 'on' + уши 'ears' + -ники: things worn on the ears"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C247-radio]
 <!-- hl-knowledge: introduces=[RU-LEX-C247-VESHCH247-02]; assesses=[] -->
 
 **наушники** (*naúshniki*) — "headphones".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**наушники** is *на*, "on", with *уши*, "ears", and *-ники*: things on the ears. *ухо* is a cousin of Latin *auris*, "ear" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

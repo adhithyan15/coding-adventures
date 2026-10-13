@@ -14,7 +14,8 @@ romanization: "stuchát"
 concept_tag: RU-VERB-STUCHAT
 prerequisites: [RU-C236-zapolnyat, RU-C237-umirat]
 sounds: []
-roots: []
+roots: [slavic-stuku]
+etymology_hook: "стучать is from стук 'a knock', a sound-imitating word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C237-umirat]
 <!-- hl-knowledge: introduces=[RU-LEX-C237-ACT237-02]; assesses=[] -->
 
 **стучать** (*stuchát*) — "to knock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стучать** comes from *стук*, "a knock" (Vasmer), which he compares with sound words like Czech *ťukati*, "to tap", and French *toc*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ubirát"
 concept_tag: RU-VERB-TO-TIDY-UP
 prerequisites: [RU-C134-to-tell, RU-C134-to-go-for-a-walk]
 sounds: []
-roots: []
+roots: [pie-bher]
+etymology_hook: "убирать is у- 'away' + бирать, from брать 'to take': to take things away"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C134-to-go-for-a-walk]
 <!-- hl-knowledge: introduces=[RU-LEX-C134-ACT134-03]; assesses=[] -->
 
 **убирать** (*ubirát*) — "to tidy up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**убирать** is *у-*, "away", with *-бирать*, from *брать*, "to take": to take things away, to clear up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

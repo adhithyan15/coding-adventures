@@ -14,7 +14,8 @@ romanization: "odínnadtsat"
 concept_tag: RU-NUM1-ELEVEN
 prerequisites: [RU-C75-already, RU-C75-quickly]
 sounds: []
-roots: []
+roots: [pie-oynos, proto-indo-european-dekm]
+etymology_hook: "одиннадцать is один на десять, 'one on ten', worn down"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C75-quickly]
 <!-- hl-knowledge: introduces=[RU-LEX-C75-NUM1-03]; assesses=[] -->
 
 **одиннадцать** (*odínnadtsat*) — "eleven". "One on ten": **один** + **на** + **десять**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**одиннадцать** is *один на десять*, "one on ten", worn down: Old Russian *одинадесять*, from Proto-Slavic *\*jedinŭ na desęte* (Trubachev, in Vasmer). All the teens are built this way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

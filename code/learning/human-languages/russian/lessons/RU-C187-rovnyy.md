@@ -14,7 +14,8 @@ romanization: "róvnyy"
 concept_tag: RU-KACH187-ROVNYY
 prerequisites: [RU-C187-polnyy, RU-C187-glubokiy]
 sounds: []
-roots: []
+roots: [slavic-orvinu]
+etymology_hook: "ровный ← Proto-Slavic *orvĭnŭ; Avestan ravah- 'open space' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C187-glubokiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C187-KACH187-03]; assesses=[] -->
 
 **ровный** (*róvnyy*) — "even, level".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ровный** ← Proto-Slavic *\*orvĭnŭ* — inherited; East Slavic turned *or-* into *ро-*. Vasmer relates it to Old Prussian *arwis*, "true", Avestan *ravah-*, "open space", and Irish *róe*, "a level field".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

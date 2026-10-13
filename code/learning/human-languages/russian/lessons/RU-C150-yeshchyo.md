@@ -14,7 +14,8 @@ romanization: "yeshchyó"
 concept_tag: RU-VREMYA150-YESHCHYO
 prerequisites: [RU-C150-snachala, RU-C150-nakonets]
 sounds: []
-roots: []
+roots: [slavic-jeshche]
+etymology_hook: "ещё: Vasmer allows a link with Greek eti 'still' and Latin et 'and', with doubts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C150-nakonets]
 <!-- hl-knowledge: introduces=[RU-LEX-C150-VREMYA150-05]; assesses=[] -->
 
 **ещё** (*yeshchyó*) — "still; more".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ещё** ← Old Russian *още*, Old Church Slavonic *ješte*. Vasmer allows a link with Greek *éti*, "still", and Latin *et*, "and", plus an old *\*kʷe*, "and", but notes the sounds are hard to explain; Grappin traced it instead to *\*jest-je*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

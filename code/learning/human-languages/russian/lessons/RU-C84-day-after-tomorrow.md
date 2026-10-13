@@ -14,7 +14,8 @@ romanization: "poslezávtra"
 concept_tag: RU-TIME84-DAY-AFTER-TOMORROW
 prerequisites: [RU-C84-in-the-evening, RU-C84-at-night]
 sounds: []
-roots: []
+roots: [slavic-utro]
+etymology_hook: "послезавтра is после 'after' + завтра 'tomorrow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C84-at-night]
 <!-- hl-knowledge: introduces=[RU-LEX-C84-TIME84-04]; assesses=[] -->
 
 **послезавтра** (*poslezávtra*) — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**послезавтра** is *после*, "after", with *завтра*, "tomorrow", itself *за*, "after", with *утро*, "morning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

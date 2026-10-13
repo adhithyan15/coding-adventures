@@ -14,7 +14,8 @@ romanization: "smetána"
 concept_tag: RU-VESHCH249-SMETANA
 prerequisites: [RU-C248-dzhinsy, RU-C248-shorty]
 sounds: []
-roots: []
+roots: [slavic-metati]
+etymology_hook: "сметана is *sŭmetana, 'what is swept off', from сметать 'to sweep off': the skimmed cream"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C248-shorty]
 <!-- hl-knowledge: introduces=[RU-LEX-C249-VESHCH249-01]; assesses=[] -->
 
 **сметана** (*smetána*) — "sour cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сметана** ← Proto-Slavic *\*sŭmetana* — inherited, from *сметать*, "to sweep off, to skim" (Vasmer): sour cream is the layer skimmed off the milk.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

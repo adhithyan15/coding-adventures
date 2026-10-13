@@ -14,7 +14,8 @@ romanization: "ryukzák"
 concept_tag: RU-THINGS100-RUCKSACK
 prerequisites: [RU-C100-candle, RU-C100-calendar]
 sounds: []
-roots: []
+roots: [german-rucksack]
+etymology_hook: "рюкзак ← German Rucksack: Rücken 'back' + Sack 'bag'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C100-calendar]
 <!-- hl-knowledge: introduces=[RU-LEX-C100-THINGS100-05]; assesses=[] -->
 
 **рюкзак** (*ryukzák*) — "a rucksack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рюкзак** comes from German *Rucksack*: *Rücken*, "back", with *Sack*, "bag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

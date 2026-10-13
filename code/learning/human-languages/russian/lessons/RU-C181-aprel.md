@@ -14,7 +14,8 @@ romanization: "aprél"
 concept_tag: RU-VREMYA181-APREL
 prerequisites: [RU-C181-fevral, RU-C181-mart]
 sounds: []
-roots: []
+roots: [aprilis-latin]
+etymology_hook: "апрель came through Byzantine Greek aprilios from Latin aprilis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C181-mart]
 <!-- hl-knowledge: introduces=[RU-LEX-C181-VREMYA181-04]; assesses=[] -->
 
 **апрель** (*aprél*) — "April".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**апрель** — Old Russian *априль*; it came through Byzantine Greek *aprílios* from Latin *aprīlis*, "April" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

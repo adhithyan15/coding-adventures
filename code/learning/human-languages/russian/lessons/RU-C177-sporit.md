@@ -14,7 +14,8 @@ romanization: "spórit"
 concept_tag: RU-VERB-SPORIT
 prerequisites: [RU-C177-obnimat, RU-C177-tselovat]
 sounds: []
-roots: []
+roots: [slavic-sporu]
+etymology_hook: "спорить is from спор 'a dispute', which Vasmer links with переть 'to press'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C177-tselovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C177-ACT177-03]; assesses=[] -->
 
 **спорить** (*spórit*) — "to argue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спорить** comes from *спор*, "a dispute", which Vasmer links with *переть*, "to push, to press", and Sanskrit *pṛt-*, "a battle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

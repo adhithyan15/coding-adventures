@@ -14,7 +14,8 @@ romanization: "aeropórt"
 concept_tag: RU-LOC87-AIRPORT
 prerequisites: [RU-C87-straight-on, RU-C87-nearby]
 sounds: []
-roots: []
+roots: [aer-greek, portus-latin]
+etymology_hook: "аэропорт ← French aéroport: Greek aēr 'air' + port, Latin portus 'harbour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C87-nearby]
 <!-- hl-knowledge: introduces=[RU-LEX-C87-LOC87-03]; assesses=[] -->
 
 **аэропорт** (*aeropórt*) — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**аэропорт** comes from French *aéroport*: *aéro-*, from Greek *aḗr*, "air", with *port*, from Latin *portus*, "harbour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

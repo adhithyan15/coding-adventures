@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 251,
-  "sourceHash": "fnv1a64:2d9de0dcac4eafd6",
+  "sourceHash": "fnv1a64:aeba204d4a3a692e",
   "lessonIds": [
     "RU-C251-byk",
     "RU-C251-petukh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch251.txt",
   "json": "russian/narration/ch251.json",
-  "textHash": "fnv1a64:ff4635b2ba364a61",
-  "jsonHash": "fnv1a64:c78ddeb760bcbb38",
+  "textHash": "fnv1a64:57ff862882223fe8",
+  "jsonHash": "fnv1a64:98c3da27bdbc3ad3",
   "findings": []
 }

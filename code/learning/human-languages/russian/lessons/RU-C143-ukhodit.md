@@ -14,7 +14,8 @@ romanization: "ukhodít"
 concept_tag: RU-VERB-UKHODIT
 prerequisites: [RU-C143-khodit, RU-C143-prikhodit]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "уходить is у- 'away' + ходить 'to walk': to leave"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C143-prikhodit]
 <!-- hl-knowledge: introduces=[RU-LEX-C143-ACT143-05]; assesses=[] -->
 
 **уходить** (*ukhodít*) — "to leave, to go away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**уходить** is *у-*, "away", with *ходить*, "to walk": to go away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

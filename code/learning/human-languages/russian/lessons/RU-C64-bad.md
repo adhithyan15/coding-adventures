@@ -14,7 +14,8 @@ romanization: "plokhóy"
 concept_tag: RU-COLOUR2-BAD
 prerequisites: [RU-C64-beautiful, RU-C64-good]
 sounds: []
-roots: []
+roots: [slavic-plokhu]
+etymology_hook: "плохой ← Old Russian ploxŭ; Vasmer links it with переполох 'alarm', others with плоский 'flat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C64-good]
 <!-- hl-knowledge: introduces=[RU-LEX-C64-COLOUR2-04]; assesses=[] -->
 
 **плохой** (*plokhóy*) — "bad". The opposite of **хороший**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плохой** ← Old Russian *ploxŭ*, "bad"; Ukrainian *плохий* means "meek, quiet", and Polish *płochy*, "timid". Vasmer links it with *переполох*, "a fright", while others relate it to *плоский*, "flat", so the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

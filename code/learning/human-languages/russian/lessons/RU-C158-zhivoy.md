@@ -14,7 +14,8 @@ romanization: "zhivóy"
 concept_tag: RU-KACH158-ZHIVOY
 prerequisites: [RU-C157-vkusnyy, RU-C157-udobnyy]
 sounds: []
-roots: []
+roots: [pie-gweih]
+etymology_hook: "живой ← Proto-Slavic *živŭ; Latin vivus, Sanskrit jīva and English quick 'alive' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C157-udobnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C158-KACH158-01]; assesses=[] -->
 
 **живой** (*zhivóy*) — "alive, lively".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**живой** ← Proto-Slavic *\*živŭ* — inherited. Vasmer lists Lithuanian *gývas*, Sanskrit *jīvá-*, Latin *vīvus* and Gothic *qius*, all "alive": English *quick*, in its old sense "alive", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

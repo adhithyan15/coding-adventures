@@ -14,7 +14,8 @@ romanization: "múzyka"
 concept_tag: RU-THINGS112-MUSIC
 prerequisites: [RU-C112-sentence, RU-C112-page]
 sounds: []
-roots: []
+roots: [musica-latin]
+etymology_hook: "музыка came through Polish muzyka from Latin musica, Greek mousikē 'the art of the Muses'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C112-page]
 <!-- hl-knowledge: introduces=[RU-LEX-C112-THINGS112-04]; assesses=[] -->
 
 **музыка** (*múzyka*) — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**музыка** — Old Russian said *мусикия*; the form *музыка* came through Ukrainian and Polish *muzyka* from Latin *mūsica*, Greek *mousikḗ*, "the art of the Muses" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

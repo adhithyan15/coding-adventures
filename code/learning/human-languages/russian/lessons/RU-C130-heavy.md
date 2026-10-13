@@ -14,7 +14,8 @@ romanization: "tyazhyólyy"
 concept_tag: RU-QUAL130-HEAVY
 prerequisites: [RU-C130-bitter, RU-C130-salty]
 sounds: []
-roots: []
+roots: [slavic-tegu]
+etymology_hook: "тяжёлый ← Proto-Slavic *tęžĭlŭ; Old Norse þungr 'heavy' and Lithuanian tingùs 'lazy' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C130-salty]
 <!-- hl-knowledge: introduces=[RU-LEX-C130-QUAL130-03]; assesses=[] -->
 
 **тяжёлый** (*tyazhyólyy*) — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тяжёлый** ← Proto-Slavic *\*tęžĭlŭ* — inherited. Vasmer relates it to Lithuanian *tingùs*, "lazy", and Old Norse *þungr*, "heavy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

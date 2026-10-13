@@ -14,7 +14,8 @@ romanization: "pozhilóy"
 concept_tag: RU-KACH243-POZHILOY
 prerequisites: [RU-C242-tsirk, RU-C243-molodoy]
 sounds: []
-roots: []
+roots: [pie-gweih]
+etymology_hook: "пожилой is по- + жилой, from жить 'to live': one who has lived a while"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C243-molodoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C243-KACH243-02]; assesses=[] -->
 
 **пожилой** (*pozhilóy*) — "elderly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пожилой** is *по-* with *жилой*, from *жить*, "to live": one who has lived a good while.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

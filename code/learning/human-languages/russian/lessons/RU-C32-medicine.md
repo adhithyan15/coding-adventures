@@ -14,7 +14,8 @@ romanization: "lekárstvo"
 concept_tag: RU-HEALTH1-MEDICINE
 prerequisites: [RU-C32-pain, RU-C32-illness]
 sounds: []
-roots: []
+roots: [germanic-lek]
+etymology_hook: "лекарство is лекарь 'healer' + -ство; the root лек- came from Germanic, as in Gothic lekeis 'doctor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C32-illness]
 <!-- hl-knowledge: introduces=[RU-LEX-C32-HEALTH1-03]; assesses=[] -->
 
 **лекарство** (*lekárstvo*) — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лекарство** is *лекарь*, an old word for "doctor", with the noun suffix *-ство*. The root *лек-*, "cure", came into Slavic from Germanic; Vasmer calls the loan certain and compares Gothic *lēkeis*, "doctor". English *leech*, an old word for "physician", is from that Germanic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "butýlka"
 concept_tag: RU-THINGS123-BOTTLE
 prerequisites: [RU-C122-planet, RU-C123-space]
 sounds: []
-roots: []
+roots: [buttis-latin]
+etymology_hook: "бутылка came through Polish butelka or from French bouteille, Medieval Latin buticula 'a little cask'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C123-space]
 <!-- hl-knowledge: introduces=[RU-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **бутылка** (*butýlka*) — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бутылка** — from 1694; it came through Ukrainian and Polish *butelka* or straight from French *bouteille*, Medieval Latin *buticula*, from *buttis*, "a cask" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

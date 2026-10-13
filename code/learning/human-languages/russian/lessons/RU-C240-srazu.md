@@ -14,7 +14,8 @@ romanization: "srázu"
 concept_tag: RU-VREMYA240-SRAZU
 prerequisites: [RU-C240-dekabr, RU-C240-sezon]
 sounds: []
-roots: []
+roots: [slavic-rezati]
+etymology_hook: "сразу is с 'from' + разу, from раз 'one time', first 'a blow': at one stroke"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C240-sezon]
 <!-- hl-knowledge: introduces=[RU-LEX-C240-VREMYA240-04]; assesses=[] -->
 
 **сразу** (*srázu*) — "at once".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сразу** is *с*, "from", with *разу*, a form of *раз*, "one time", which first meant "a blow" and goes with *резать*, "to cut" (Vasmer): "at one stroke".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

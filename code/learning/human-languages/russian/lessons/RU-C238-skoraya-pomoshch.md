@@ -14,7 +14,8 @@ romanization: "skóraya pómoshch"
 concept_tag: RU-ZDOROV238-SKORAYA-POMOSHCH
 prerequisites: [RU-C238-termometr, RU-C238-poliklinika]
 sounds: []
-roots: []
+roots: [slavic-skoru, pie-magh]
+etymology_hook: "скорая помощь is 'quick help': скорый 'quick' + помощь 'help'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C238-poliklinika]
 <!-- hl-knowledge: introduces=[RU-LEX-C238-ZDOROV238-05]; assesses=[] -->
 
 **скорая помощь** (*skóraya pómoshch*) — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**скорая помощь** is "quick help": *скорая*, "quick", with *помощь*, "help", from *мочь*, "might".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

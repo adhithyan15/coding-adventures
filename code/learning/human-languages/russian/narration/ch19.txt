@@ -61,7 +61,7 @@ You'll want to know first — потому что.
 Set the two words side by side and the shape gives itself away:
 почему (pachemú) — after what — the question.
 потому — after that — the answer.
-Russian answers why by taking the same word, swapping the question-stem for the pointing-stem, and adding что to hang the reason on. почему (pachemú) asks; по тому points at the reason; что carries the sentence that names it.
+Russian answers why by taking the same word, swapping the question-stem for the pointing-stem, and adding что to hang the reason on. почему (pachemú) asks; по тому points at the reason; что carries the sentence that names it. Both stems are inherited from Proto-Slavic: tŭ, "that", (zapyatáya) the stem of то, and kŭ-, (zapyatáya) the stem of кто, "who".
 
 Grammar lens — where the halves go, and where the comma goes.
 The thing that happened comes first; the reason follows:

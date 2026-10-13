@@ -14,7 +14,8 @@ romanization: "skídka"
 concept_tag: RU-RABOTA201-SKIDKA
 prerequisites: [RU-C200-ulybka, RU-C201-sdacha]
 sounds: []
-roots: []
+roots: [slavic-kidati]
+etymology_hook: "скидка is from скинуть, скидывать 'to throw off': what is knocked off the price"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C201-sdacha]
 <!-- hl-knowledge: introduces=[RU-LEX-C201-RABOTA201-02]; assesses=[] -->
 
 **скидка** (*skídka*) — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**скидка** comes from *скидывать*, "to throw off", *с-*, "off", with *кидать*, "to throw": a discount is knocked off the price. Vasmer relates *кидать* to Sanskrit *códati*, "urges on".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

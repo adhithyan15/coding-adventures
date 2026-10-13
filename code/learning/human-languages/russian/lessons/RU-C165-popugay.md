@@ -14,7 +14,8 @@ romanization: "popugáy"
 concept_tag: RU-VESHCH165-POPUGAY
 prerequisites: [RU-C165-vorona, RU-C165-oryol]
 sounds: []
-roots: []
+roots: [arabic-babagha]
+etymology_hook: "попугай probably came through Dutch papegaai from Old French papegai, Spanish papagayo, Arabic babaghā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C165-oryol]
 <!-- hl-knowledge: introduces=[RU-LEX-C165-VESHCH165-03]; assesses=[] -->
 
 **попугай** (*popugáy*) — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**попугай** — recorded from 1589; it probably came through Dutch *papegaai* and Low German *papagoie* from Old French *papegai* and Spanish *papagayo*, from Arabic *babaghā*, "parrot" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

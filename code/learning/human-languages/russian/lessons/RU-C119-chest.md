@@ -14,7 +14,8 @@ romanization: "grud"
 concept_tag: RU-THINGS119-CHEST
 prerequisites: [RU-C119-cheek, RU-C119-lips]
 sounds: []
-roots: []
+roots: [slavic-grudi]
+etymology_hook: "грудь ← Proto-Slavic *grǫdĭ; Vasmer compares Latin grandis 'great', others differ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C119-lips]
 <!-- hl-knowledge: introduces=[RU-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **грудь** (*grud*) — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**грудь** ← Proto-Slavic *\*grǫdĭ* — inherited. Vasmer compares Latin *grandis*, "great", and Greek *brénthos*, "pride"; Vaillant, in a note, links it instead with *гряда*, "a beam, a bed", so the origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "fontán"
 concept_tag: RU-MESTO153-FONTAN
 prerequisites: [RU-C153-khram, RU-C153-pamyatnik]
 sounds: []
-roots: []
+roots: [fons-latin]
+etymology_hook: "фонтан came through Polish fontana or Italian fontana, from Latin fons 'a spring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C153-pamyatnik]
 <!-- hl-knowledge: introduces=[RU-LEX-C153-MESTO153-05]; assesses=[] -->
 
 **фонтан** (*fontán*) — "a fountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фонтан** — from Peter the Great's time; it came through Polish *fontana* or straight from Italian *fontana*, from Latin *fōns*, *fontis*, "a spring" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

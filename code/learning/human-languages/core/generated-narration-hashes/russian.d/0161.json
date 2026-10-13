@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 161,
-  "sourceHash": "fnv1a64:2ef01218cb7210a6",
+  "sourceHash": "fnv1a64:72cb10185029df28",
   "lessonIds": [
     "RU-C161-anketa",
     "RU-C161-konvert",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch161.txt",
   "json": "russian/narration/ch161.json",
-  "textHash": "fnv1a64:f04f12b45a3b73e3",
-  "jsonHash": "fnv1a64:1d5afab9c17055e0",
+  "textHash": "fnv1a64:5dbed05a6e408e24",
+  "jsonHash": "fnv1a64:fb06f67915deee2d",
   "findings": []
 }

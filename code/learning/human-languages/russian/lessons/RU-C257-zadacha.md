@@ -14,7 +14,8 @@ romanization: "zadácha"
 concept_tag: RU-RABOTA257-ZADACHA
 prerequisites: [RU-C257-firma, RU-C257-proyekt]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "задача is from задать 'to set (a task)', за- + дать 'to give'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C257-proyekt]
 <!-- hl-knowledge: introduces=[RU-LEX-C257-RABOTA257-04]; assesses=[] -->
 
 **задача** (*zadácha*) — "a task; a problem (to solve)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**задача** comes from *задать*, "to set, to assign", *за-* with *дать*, "to give": a task is what you are given.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

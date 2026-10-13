@@ -14,7 +14,8 @@ romanization: "iskát"
 concept_tag: RU-VERB-TO-LOOK-FOR
 prerequisites: [RU-C134-to-tidy-up, RU-C134-to-find]
 sounds: []
-roots: []
+roots: [pie-h2eys]
+etymology_hook: "искать ← Proto-Slavic *iskati; Sanskrit icchati 'seeks' and English ask are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C134-to-find]
 <!-- hl-knowledge: introduces=[RU-LEX-C134-ACT134-05]; assesses=[] -->
 
 **искать** (*iskát*) — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**искать** ← Proto-Slavic *\*iskati* — inherited. Vasmer relates it to Lithuanian *ieškóti*, "to seek", Sanskrit *iccháti*, "seeks, wishes", and Old English *āscian*, so English *ask* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

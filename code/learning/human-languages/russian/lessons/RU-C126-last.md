@@ -14,7 +14,8 @@ romanization: "poslédniy"
 concept_tag: RU-QUAL126-LAST
 prerequisites: [RU-C125-quiet, RU-C125-noisy]
 sounds: []
-roots: []
+roots: [slavic-sledu]
+etymology_hook: "последний is from Old Russian poslědĭ 'afterwards', with след 'a track'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C125-noisy]
 <!-- hl-knowledge: introduces=[RU-LEX-C126-QUAL126-01]; assesses=[] -->
 
 **последний** (*poslédniy*) — "last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**последний** comes from Old Russian *последь*, "afterwards", which goes with *след*, "a track" (Vasmer): the last is the one at the back of the track.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

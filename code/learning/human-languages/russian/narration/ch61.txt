@@ -12,6 +12,9 @@ Before the new one: say the Russian for a cow, then the Russian for a pig.
 You'll want to know: птица.
 птица (ptítsa) — "a bird".
 
+The word, taken apart.
+птица (ptítsa) from Proto-Slavic pŭtica, from pŭta, "bird" — inherited. Vasmer lists Latvian putns, "bird", Lithuanian putýtis, "little bird", and words for "child, young one": Latin putus, "boy", and Sanskrit putrá-, "son".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for a pig, then the Russian for a bird.
 
 You'll want to know: мышь.
 мышь (mysh) — "a mouse".
+
+The word, taken apart.
+мышь (mysh) from Proto-Slavic myšĭ — inherited from PIE muHs, "mouse". Vasmer lists Sanskrit mūṣ-, Greek mŷs, Latin mūs and Old High German mûs: English mouse is a cousin. Trubachev adds that it may first have meant "the grey one".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for a bird, then the Russian for a mouse.
 You'll want to know: волк.
 волк (volk) — "a wolf".
 
+The word, taken apart.
+волк (volk) from Proto-Slavic vĭlkŭ — inherited from PIE wḷkʷos, "wolf". Vasmer lists Lithuanian vilkas, Sanskrit vṛkas, Gothic wulfs and Greek lýkos: English wolf is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for a mouse, then the Russian for a wolf.
 You'll want to know: медведь.
 медведь (medvéd) — "a bear". Literally "honey-knower": the one who knows where the мёд is.
 
+The word, taken apart.
+медведь (medvéd) from Proto-Slavic medvědĭ, "honey-eater", from мёд, "honey", and the root of есть, "to eat" (Vasmer). It is a taboo name: hunters avoided the old word for "bear", the one kept in Latin ursus and Greek árktos.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for a wolf, then the Russian for a bear.
 
 You'll want to know: лиса.
 лиса (lisá) — "a fox".
+
+The word, taken apart.
+лиса (lisá) goes with лис, "a fox", Old Church Slavonic лиса (lisá). Vasmer calls the origin unclear: tracing it to the family of Latin vulpēs and Lithuanian lãpė, "fox", is guesswork, he says, and other links are doubtful.
 
 What you've built.
 One more word for this chapter.

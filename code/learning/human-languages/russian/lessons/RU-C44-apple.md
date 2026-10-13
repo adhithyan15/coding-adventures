@@ -14,7 +14,8 @@ romanization: "yábloko"
 concept_tag: RU-FRUIT-APPLE
 prerequisites: [RU-C43-salt, RU-C44-fruit]
 sounds: []
-roots: []
+roots: [slavic-abliko]
+etymology_hook: "яблоко ← Proto-Slavic *ablŭko; Lithuanian obuolys and English apple are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C44-fruit]
 <!-- hl-knowledge: introduces=[RU-LEX-C44-FRUIT-02]; assesses=[] -->
 
 **яблоко** (*yábloko*) — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**яблоко** ← Proto-Slavic *\*ablŭko* — inherited. Vasmer lists Lithuanian *obuolỹs*, Old High German *apful* and Old Irish *aball*, all "apple": English *apple* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

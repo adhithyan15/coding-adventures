@@ -14,7 +14,8 @@ romanization: "bataréya"
 concept_tag: RU-VESHCH191-BATAREYA
 prerequisites: [RU-C190-tualet, RU-C190-shampun]
 sounds: []
-roots: []
+roots: [battuere-latin]
+etymology_hook: "батарея came under Peter the Great from German Batterie or French batterie, from battre 'to beat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C190-shampun]
 <!-- hl-knowledge: introduces=[RU-LEX-C191-VESHCH191-01]; assesses=[] -->
 
 **батарея** (*bataréya*) — "a radiator; a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**батарея** — from 1697; it came from German *Batterie* or French *batterie*, from *battre*, "to beat" (Vasmer): first a group of guns, then a row of cells or heating pipes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

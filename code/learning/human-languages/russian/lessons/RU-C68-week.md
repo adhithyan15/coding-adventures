@@ -14,7 +14,8 @@ romanization: "nedélya"
 concept_tag: RU-TIME1-WEEK
 prerequisites: [RU-C67-badly, RU-C68-day]
 sounds: []
-roots: []
+roots: [slavic-dela]
+etymology_hook: "неделя is не 'not' + дело 'work': first 'the day without work', Sunday, then the week"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C68-day]
 <!-- hl-knowledge: introduces=[RU-LEX-C68-TIME1-02]; assesses=[] -->
 
 **неделя** (*nedélya*) — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**неделя** is *не*, "not", with *дело*, "work": first "the day of no work", Sunday, and then the week that runs from it (Vasmer). Vasmer thinks it most likely copies Latin *fēria*, "holiday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

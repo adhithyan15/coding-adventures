@@ -14,7 +14,8 @@ romanization: "chúvstvovat"
 concept_tag: RU-VERB-CHUVSTVOVAT
 prerequisites: [RU-C207-kashlyat, RU-C207-chikhat]
 sounds: []
-roots: []
+roots: [slavic-chuti]
+etymology_hook: "чувствовать is from чувство 'a feeling', on чуять 'to sense'; Latin cavere 'to beware' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C207-chikhat]
 <!-- hl-knowledge: introduces=[RU-LEX-C208-ACT208-01]; assesses=[] -->
 
 **чувствовать** (*chúvstvovat*) — "to feel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чувствовать** comes from *чувство*, "a feeling", which Vasmer puts with *чуять*, "to sense", and *чуть*, "barely". He relates *чуять* to Sanskrit *kaví-*, "a seer", Greek *koéō*, "I perceive", and Latin *caveō*, "I beware".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

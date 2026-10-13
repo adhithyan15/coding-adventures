@@ -14,7 +14,8 @@ romanization: "rúchka"
 concept_tag: RU-SCHOOL-PEN
 prerequisites: [RU-C51-fork, RU-C52-book]
 sounds: []
-roots: []
+roots: [slavic-roka]
+etymology_hook: "ручка is рука 'hand' + -ка 'little': a pen is a little thing for the hand"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C52-book]
 <!-- hl-knowledge: introduces=[RU-LEX-C52-SCHOOL-02]; assesses=[] -->
 
 **ручка** (*rúchka*) — "a pen". Literally "a little hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ручка** is *рука*, "hand", with *-ка*, "little"; *к* turns to *ч* before it. The word means "a little hand", then "a handle", then "a pen", the thing you hold.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

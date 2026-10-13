@@ -14,7 +14,8 @@ romanization: "rozétka"
 concept_tag: RU-VESHCH191-ROZETKA
 prerequisites: [RU-C190-shampun, RU-C191-batareya]
 sounds: []
-roots: []
+roots: [rosa-latin]
+etymology_hook: "розетка came through German Rosette or from French rosette 'a little rose'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C191-batareya]
 <!-- hl-knowledge: introduces=[RU-LEX-C191-VESHCH191-02]; assesses=[] -->
 
 **розетка** (*rozétka*) — "a socket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**розетка** came through German *Rosette* or straight from French *rosette*, "a little rose", from *rose*, "a rose" (Vasmer): an electric socket was a round rose-shaped fitting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

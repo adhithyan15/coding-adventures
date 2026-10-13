@@ -14,7 +14,8 @@ romanization: "dévochka"
 concept_tag: RU-VESHCH254-DEVOCHKA
 prerequisites: [RU-C253-transport, RU-C253-trolleybus]
 sounds: []
-roots: []
+roots: [slavic-deva]
+etymology_hook: "девочка is from дева 'a maiden', which Vasmer ties to a root 'to suckle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C253-trolleybus]
 <!-- hl-knowledge: introduces=[RU-LEX-C254-VESHCH254-01]; assesses=[] -->
 
 **девочка** (*dévochka*) — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**девочка** is a diminutive built on *дева*, "a maiden". Vasmer ties *дева* to *дитя*, "a child", and the PIE root *\*dʰeh₁(i)-*, "to suckle", with Latin *fēmina*, "woman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

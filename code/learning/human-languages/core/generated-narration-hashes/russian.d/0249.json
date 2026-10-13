@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 249,
-  "sourceHash": "fnv1a64:351359dcc5bfc0fb",
+  "sourceHash": "fnv1a64:63febc6d50c2c234",
   "lessonIds": [
     "RU-C249-smetana",
     "RU-C249-tvorog",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch249.txt",
   "json": "russian/narration/ch249.json",
-  "textHash": "fnv1a64:1ac6d7594edaf65b",
-  "jsonHash": "fnv1a64:3f42885c0ad81fbd",
+  "textHash": "fnv1a64:c83379661a04621b",
+  "jsonHash": "fnv1a64:3bb657b896471218",
   "findings": []
 }

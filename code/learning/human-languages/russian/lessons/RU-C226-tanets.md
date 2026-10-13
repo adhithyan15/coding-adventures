@@ -14,7 +14,8 @@ romanization: "tánets"
 concept_tag: RU-VESHCH226-TANETS
 prerequisites: [RU-C226-skripka, RU-C226-baraban]
 sounds: []
-roots: []
+roots: [german-tanz]
+etymology_hook: "танец came through Polish taniec from Middle High German tanz 'a dance'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C226-baraban]
 <!-- hl-knowledge: introduces=[RU-LEX-C226-VESHCH226-03]; assesses=[] -->
 
 **танец** (*tánets*) — "a dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**танец** — recorded by Kotoshikhin in the 1600s; it came through Polish *taniec* from Middle High German *tanz*, "a dance", with the Slavic ending *-ец* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

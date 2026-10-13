@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 119,
-  "sourceHash": "fnv1a64:9f86cf79912f5806",
+  "sourceHash": "fnv1a64:7de6d35d3af41f6e",
   "lessonIds": [
     "RU-C119-ankle",
     "RU-C119-wrist",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch119.txt",
   "json": "russian/narration/ch119.json",
-  "textHash": "fnv1a64:9ed71b79ce780551",
-  "jsonHash": "fnv1a64:a535d92113e17881",
+  "textHash": "fnv1a64:b1dac02387921634",
+  "jsonHash": "fnv1a64:dafbee2b8847c398",
   "findings": []
 }

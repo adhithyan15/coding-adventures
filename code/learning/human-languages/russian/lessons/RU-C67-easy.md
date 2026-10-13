@@ -14,7 +14,8 @@ romanization: "lyókhkiy"
 concept_tag: RU-WORTH-EASY
 prerequisites: [RU-C66-fast, RU-C66-slow]
 sounds: []
-roots: []
+roots: [pie-hlengwh]
+etymology_hook: "лёгкий ← Proto-Slavic *lĭgŭkŭ; Latin levis 'light' and English light are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C66-slow]
 <!-- hl-knowledge: introduces=[RU-LEX-C67-WORTH-01]; assesses=[] -->
 
 **лёгкий** (*lyókhkiy*) — "light; easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лёгкий** ← Proto-Slavic *\*lĭgŭkŭ* — inherited. Vasmer relates it to Latin *levis*, "light", Sanskrit *laghú-*, "light, quick", and Greek *elachýs*, "small", from PIE *\*h₁léngʷʰus*, "light in weight"; English *light* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

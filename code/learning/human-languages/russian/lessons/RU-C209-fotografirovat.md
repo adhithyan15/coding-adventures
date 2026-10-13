@@ -14,7 +14,8 @@ romanization: "fotografírovat"
 concept_tag: RU-VERB-FOTOGRAFIROVAT
 prerequisites: [RU-C208-nyukhat, RU-C208-trogat]
 sounds: []
-roots: []
+roots: [photos-greek, graphia-greek]
+etymology_hook: "фотографировать is фотограф- + -ировать: to make a photograph, Greek 'light-writing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C208-trogat]
 <!-- hl-knowledge: introduces=[RU-LEX-C209-ACT209-01]; assesses=[] -->
 
 **фотографировать** (*fotografírovat*) — "to photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фотографировать** is *фотография*, "a photograph", made a verb with *-ировать*: Greek *phōs*, "light", with *gráphein*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

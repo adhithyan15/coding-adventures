@@ -14,7 +14,8 @@ romanization: "podárok"
 concept_tag: RU-THINGS-GIFT
 prerequisites: [RU-C53-umbrella, RU-C53-money]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "подарок is по- + дар 'gift' + -ок; дар is a cousin of Greek dōron 'gift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C53-money]
 <!-- hl-knowledge: introduces=[RU-LEX-C53-THINGS-05]; assesses=[] -->
 
 **подарок** (*podárok*) — "a gift, a present".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подарок** is built on *дарить*, "to give as a gift", from *дар*, "a gift", with *по-* and the noun ending *-ок*. Vasmer relates *дар* to Greek *dōron*, "gift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

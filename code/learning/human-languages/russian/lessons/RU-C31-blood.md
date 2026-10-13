@@ -14,7 +14,8 @@ romanization: "krov"
 concept_tag: RU-BODY3-BLOOD
 prerequisites: [RU-C31-lip, RU-C31-face]
 sounds: []
-roots: []
+roots: [pie-krewh2]
+etymology_hook: "кровь ← Proto-Slavic *kry, stem *krŭv-; Latin cruor 'gore' and English raw are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C31-face]
 <!-- hl-knowledge: introduces=[RU-LEX-C31-BODY3-05]; assesses=[] -->
 
 **кровь** (*krov*) — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кровь** ← Proto-Slavic *\*kry*, with the stem *\*krŭv-* in its other forms — inherited. Vasmer lists Lithuanian *kraũjas*, "blood", Latin *cruor*, "gore", Greek *kréas*, "meat", and Old Norse *hrár*, "raw", so English *raw* is a cousin, from PIE *\*kréwh₂-*, "raw flesh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

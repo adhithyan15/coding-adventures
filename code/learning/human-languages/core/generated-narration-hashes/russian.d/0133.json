@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 133,
-  "sourceHash": "fnv1a64:3b877a0f0c65b0f6",
+  "sourceHash": "fnv1a64:42ff616da7c18724",
   "lessonIds": [
     "RU-C133-to-go-up",
     "RU-C133-to-go-down",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch133.txt",
   "json": "russian/narration/ch133.json",
-  "textHash": "fnv1a64:d1f9fb39770c6dee",
-  "jsonHash": "fnv1a64:63c08607db9a6f5c",
+  "textHash": "fnv1a64:6b6db669b050912a",
+  "jsonHash": "fnv1a64:c9a49b984072f36d",
   "findings": []
 }

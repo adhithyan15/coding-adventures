@@ -14,7 +14,8 @@ romanization: "nol"
 concept_tag: RU-NUM1-ZERO
 prerequisites: [RU-C75-eleven, RU-C75-twelve]
 sounds: []
-roots: []
+roots: [nullus-latin]
+etymology_hook: "ноль probably came through German Null from Italian nulla 'nothing', Latin nullus 'none'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C75-twelve]
 <!-- hl-knowledge: introduces=[RU-LEX-C75-NUM1-05]; assesses=[] -->
 
 **ноль** (*nol*) — "zero".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ноль**, also *нуль*, probably came through German *Null* from Italian *nulla*, "nothing", from Latin *nūllus*, "none" (Vasmer). The *о* may reflect the short German *u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

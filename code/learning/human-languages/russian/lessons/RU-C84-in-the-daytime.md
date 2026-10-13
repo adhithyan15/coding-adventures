@@ -14,7 +14,8 @@ romanization: "dnyom"
 concept_tag: RU-TIME84-IN-THE-DAYTIME
 prerequisites: [RU-C83-late, RU-C83-in-the-morning]
 sounds: []
-roots: []
+roots: [pie-dyew-shine]
+etymology_hook: "днём is a form of день 'day' meaning 'during the day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C83-in-the-morning]
 <!-- hl-knowledge: introduces=[RU-LEX-C84-TIME84-01]; assesses=[] -->
 
 **днём** (*dnyom*) — "in the daytime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**днём** is *день*, "day", in the form that says "by, during": "in the daytime". *день* is a cousin of Latin *diēs*, "day" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

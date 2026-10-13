@@ -14,7 +14,8 @@ romanization: "morkóv"
 concept_tag: RU-VEG-CARROT
 prerequisites: [RU-C45-onion, RU-C45-cucumber]
 sounds: []
-roots: []
+roots: [slavic-murky]
+etymology_hook: "морковь ← Proto-Slavic *mŭrky; Old High German moraha 'carrot' is a cousin, not the source (Vasmer)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C45-cucumber]
 <!-- hl-knowledge: introduces=[RU-LEX-C45-VEG-05]; assesses=[] -->
 
 **морковь** (*morkóv*) — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**морковь** ← Proto-Slavic *\*mŭrky* — inherited. Vasmer relates it to Old High German *moraha*, "carrot", and holds that a loan from Germanic cannot be proved.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

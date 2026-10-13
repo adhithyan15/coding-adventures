@@ -14,7 +14,8 @@ romanization: "brov"
 concept_tag: RU-ZDOROV239-BROV
 prerequisites: [RU-C239-ves, RU-C239-rost]
 sounds: []
-roots: []
+roots: [pie-h3bhruh]
+etymology_hook: "бровь ← Proto-Slavic *brŭvĭ; Sanskrit bhrū, Greek ophrys and English brow are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C239-rost]
 <!-- hl-knowledge: introduces=[RU-LEX-C239-ZDOROV239-03]; assesses=[] -->
 
 **бровь** (*brov*) — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бровь** ← Proto-Slavic *\*brŭvĭ* — inherited. Vasmer lists Lithuanian *bruvìs*, Sanskrit *bhrū-*, Greek *ophrŷs* and Old English *brū*: English *brow* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "les"
 concept_tag: RU-NATURE2-FOREST
 prerequisites: [RU-C55-village, RU-C56-mountain]
 sounds: []
-roots: []
+roots: [slavic-lesu]
+etymology_hook: "лес ← Proto-Slavic *lěsŭ; Vasmer compares Old English læs 'pasture', and others Lithuanian laiškas 'leaf'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C56-mountain]
 <!-- hl-knowledge: introduces=[RU-LEX-C56-NATURE2-02]; assesses=[] -->
 
 **лес** (*les*) — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лес** ← Proto-Slavic *\*lěsŭ* — inherited. Its deeper origin is not certain: Vasmer relates it to Old English *læs*, "pasture", and English dialect *leasow*, while a note by Moszyński finds a link with Lithuanian *laĩškas*, "leaf", more likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

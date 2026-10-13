@@ -14,7 +14,8 @@ romanization: "pylesós"
 concept_tag: RU-VESHCH219-PYLESOS
 prerequisites: [RU-C219-britva, RU-C219-utyug]
 sounds: []
-roots: []
+roots: [slavic-sosati]
+etymology_hook: "пылесос is пыль 'dust' + сос, from сосать 'to suck': a dust-sucker"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C219-utyug]
 <!-- hl-knowledge: introduces=[RU-LEX-C219-VESHCH219-04]; assesses=[] -->
 
 **пылесос** (*pylesós*) — "a vacuum cleaner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пылесос** is *пыль*, "dust", with *-о-* and *сос*, from *сосать*, "to suck": a dust-sucker. Vasmer traces *сосать* to a PIE sound-word *\*su-*, as in Latin *sūgō*, "I suck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

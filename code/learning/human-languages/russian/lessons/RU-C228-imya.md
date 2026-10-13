@@ -14,7 +14,8 @@ romanization: "ímya"
 concept_tag: RU-VESHCH228-IMYA
 prerequisites: [RU-C228-primer, RU-C228-znacheniye]
 sounds: []
-roots: []
+roots: [pie-h1nomn]
+etymology_hook: "имя ← Proto-Slavic *jĭmę; Latin nomen, Gothic namo and English name are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C228-znacheniye]
 <!-- hl-knowledge: introduces=[RU-LEX-C228-VESHCH228-05]; assesses=[] -->
 
 **имя** (*ímya*) — "a first name".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**имя** ← Proto-Slavic *\*jĭmę* — inherited. Vasmer lists Old Prussian *emmens*, Latin *nōmen*, Gothic *namō* and Old High German *-nuomen*: English *name* is a cousin, from PIE *\*h₁nómṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

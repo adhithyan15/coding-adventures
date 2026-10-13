@@ -14,7 +14,8 @@ romanization: "vozvrashchátsya"
 concept_tag: RU-VERB-VOZVRASHCHATSYA
 prerequisites: [RU-C175-vyklyuchat, RU-C175-zazhigat]
 sounds: []
-roots: []
+roots: [pie-wert]
+etymology_hook: "возвращаться is воз- 'back' + вращать 'to turn' + -ся; вращать is Church Slavonic for ворочать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C175-zazhigat]
 <!-- hl-knowledge: introduces=[RU-LEX-C176-ACT176-01]; assesses=[] -->
 
 **возвращаться** (*vozvrashchátsya*) — "to come back, to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**возвращаться** is *воз-*, "back", with *вращать*, "to turn", and *-ся*: to turn yourself back. *вращать* is the Church Slavonic shape of native *ворочать*, on the root of *вертеть*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

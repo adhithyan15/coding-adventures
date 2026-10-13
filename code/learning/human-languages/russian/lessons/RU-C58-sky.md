@@ -14,7 +14,8 @@ romanization: "nébo"
 concept_tag: RU-SKY-SKY
 prerequisites: [RU-C57-island, RU-C57-field]
 sounds: []
-roots: []
+roots: [pie-nebhos]
+etymology_hook: "небо came through Church Slavonic, beside the native нёбо 'palate'; Greek nephos 'cloud' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C57-field]
 <!-- hl-knowledge: introduces=[RU-LEX-C58-SKY-01]; assesses=[] -->
 
 **небо** (*nébo*) — "the sky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**небо** — borrowed from Church Slavonic, says Vasmer; the native East Slavic form is *нёбо*, now "the palate". Both go back to Proto-Slavic *\*nebo*, a cousin of Sanskrit *nábhas*, "mist, sky", Greek *néphos*, "cloud", and Latin *nebula*, "mist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

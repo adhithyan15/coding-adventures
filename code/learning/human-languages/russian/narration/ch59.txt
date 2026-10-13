@@ -12,6 +12,9 @@ Before the new one: say the Russian for a star, then the Russian for a cloud.
 You'll want to know: дождь.
 дождь (dozhd) — "rain".
 
+The word, taken apart.
+дождь (dozhd) from Proto-Slavic dŭždžĭ — inherited. Vasmer thinks it probably goes with Norwegian dusk-regn and Swedish regn-dusk, "drizzle"; he also reports a view that starts from dus-dius, "bad weather", so the origin is debated.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for a cloud, then the Russian for rain.
 
 You'll want to know: снег.
 снег (sneg) — "snow".
+
+The word, taken apart.
+снег (sneg) from Proto-Slavic sněgŭ — inherited. Vasmer lists Lithuanian sniẽgas, Gothic snaiws, Greek nípha and Latin nix, all "snow": English snow is a cousin, from PIE sneygʷʰ-, "to snow".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for rain, then the Russian for snow.
 You'll want to know: ветер.
 ветер (véter) — "the wind".
 
+The word, taken apart.
+ветер (véter) from Proto-Slavic větrŭ — inherited, from the root of веять, "to blow" (Vasmer). Vasmer lists Lithuanian vėjas, "wind", and Sanskrit vāta-, "wind"; English wind comes from the same PIE root h₂weh₁-, "to blow".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for snow, then the Russian for the wind.
 You'll want to know: погода.
 погода (pogóda) — "the weather".
 
+The word, taken apart.
+погода (pogóda) is по- with год, which in Old Russian meant "time, a fitting moment" (Vasmer); the same root is in годиться, "to be fit". Weather was first "fair, fitting time", as in непогода, "bad weather".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for the wind, then the Russian for the weath
 
 You'll want to know: мир.
 мир (mir) — "the world; peace". Both meanings in one word.
+
+The word, taken apart.
+мир (mir) from Proto-Slavic mirŭ, "peace" — inherited, related to Old Lithuanian mieras, "peace", and Latvian miêrs (Vasmer). The sense "village community" grew from "peaceful community", and from it "the world".
 
 What you've built.
 One more word for this chapter.

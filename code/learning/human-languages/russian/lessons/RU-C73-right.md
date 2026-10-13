@@ -14,7 +14,8 @@ romanization: "správa"
 concept_tag: RU-WHERE2-RIGHT
 prerequisites: [RU-C73-below, RU-C73-left]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "справа is с 'from' + права, from правый 'right', first 'straight'; Latin probus is probably a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C73-left]
 <!-- hl-knowledge: introduces=[RU-LEX-C73-WHERE2-03]; assesses=[] -->
 
 **справа** (*správa*) — "on the right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**справа** is *с*, "from", with *права*, a form of *правый*, "right", first "straight, righteous". Vasmer derives *правый*, probably, from *\*prō-vos*, "forward", related to Latin *probus*, "upright, good".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

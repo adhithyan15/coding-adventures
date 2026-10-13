@@ -14,7 +14,8 @@ romanization: "pékar"
 concept_tag: RU-THINGS108-BAKER
 prerequisites: [RU-C108-shop-assistant, RU-C108-farmer]
 sounds: []
-roots: []
+roots: [slavic-peci]
+etymology_hook: "пекарь is печь 'to bake' + -арь, on the model of German Bäcker"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C108-farmer]
 <!-- hl-knowledge: introduces=[RU-LEX-C108-THINGS108-04]; assesses=[] -->
 
 **пекарь** (*pékar*) — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пекарь** — from Peter the Great's time; built on *пеку*, "I bake", with *-арь*, on the model of German *Bäcker*, "baker" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

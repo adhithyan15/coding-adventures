@@ -14,7 +14,8 @@ romanization: "krichát"
 concept_tag: RU-VERB-KRICHAT
 prerequisites: [RU-C234-rasti, RU-C234-kormit]
 sounds: []
-roots: []
+roots: [slavic-kriku]
+etymology_hook: "кричать is from крик 'a cry'; Lithuanian krykti 'to shriek' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C234-kormit]
 <!-- hl-knowledge: introduces=[RU-LEX-C235-ACT235-01]; assesses=[] -->
 
 **кричать** (*krichát*) — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кричать** comes from *крик*, "a cry" (Vasmer), a cousin of Lithuanian *krỹkti*, "to shriek".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

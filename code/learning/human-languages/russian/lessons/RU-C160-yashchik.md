@@ -14,7 +14,8 @@ romanization: "yáshchik"
 concept_tag: RU-VESHCH160-YASHCHIK
 prerequisites: [RU-C160-paket, RU-C160-korobka]
 sounds: []
-roots: []
+roots: [norse-askr]
+etymology_hook: "ящик ← Old Russian jaskŭ 'a basket', from Old Norse askr 'a wooden vessel', from askr 'ash tree'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C160-korobka]
 <!-- hl-knowledge: introduces=[RU-LEX-C160-VESHCH160-04]; assesses=[] -->
 
 **ящик** (*yáshchik*) — "a drawer; a crate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ящик** ← Old Russian *askŭ*, *jaskŭ*, "a basket", borrowed from Old Norse *askr*, "a wooden vessel", from *askr*, "ash tree", or from Old Norse *eski*, "a box" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

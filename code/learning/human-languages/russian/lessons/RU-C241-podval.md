@@ -14,7 +14,8 @@ romanization: "podvál"
 concept_tag: RU-MESTO241-PODVAL
 prerequisites: [RU-C240-srazu, RU-C240-obychno]
 sounds: []
-roots: []
+roots: [slavic-valiti]
+etymology_hook: "подвал is под 'under' + вал, from валить 'to pile, to roll': a space dug under"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C240-obychno]
 <!-- hl-knowledge: introduces=[RU-LEX-C241-MESTO241-01]; assesses=[] -->
 
 **подвал** (*podvál*) — "a basement, a cellar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**подвал** is *под*, "under", with *вал*, "a rampart, an earth bank", from *валить*, "to topple, to pile up": a room under the house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

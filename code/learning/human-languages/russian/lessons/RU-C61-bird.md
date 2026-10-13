@@ -14,7 +14,8 @@ romanization: "ptítsa"
 concept_tag: RU-ANIMALS2-BIRD
 prerequisites: [RU-C60-cow, RU-C60-pig]
 sounds: []
-roots: []
+roots: [slavic-puta]
+etymology_hook: "птица ← Proto-Slavic *pŭtica; Latvian putns 'bird' and Latin putus 'boy' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C60-pig]
 <!-- hl-knowledge: introduces=[RU-LEX-C61-ANIMALS2-01]; assesses=[] -->
 
 **птица** (*ptítsa*) — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**птица** ← Proto-Slavic *\*pŭtica*, from *\*pŭta*, "bird" — inherited. Vasmer lists Latvian *putns*, "bird", Lithuanian *putýtis*, "little bird", and words for "child, young one": Latin *putus*, "boy", and Sanskrit *putrá-*, "son".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kliyént"
 concept_tag: RU-THINGS110-CUSTOMER
 prerequisites: [RU-C109-postman, RU-C109-waiter]
 sounds: []
-roots: []
+roots: [cliens-latin]
+etymology_hook: "клиент came through German Klient from Latin cliens 'a dependant, a protégé'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C109-waiter]
 <!-- hl-knowledge: introduces=[RU-LEX-C110-THINGS110-01]; assesses=[] -->
 
 **клиент** (*kliyént*) — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**клиент** came through German *Klient* from Latin *cliēns*, *clientis*, "a dependant, a protégé" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

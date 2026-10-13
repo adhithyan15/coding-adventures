@@ -14,7 +14,8 @@ romanization: "byk"
 concept_tag: RU-VESHCH251-BYK
 prerequisites: [RU-C250-tort, RU-C250-konfeta]
 sounds: []
-roots: []
+roots: [slavic-byku]
+etymology_hook: "бык is from a root for lowing; Latvian bucêt 'to boom' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C250-konfeta]
 <!-- hl-knowledge: introduces=[RU-LEX-C251-VESHCH251-01]; assesses=[] -->
 
 **бык** (*byk*) — "a bull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бык** ← Proto-Slavic *\*bykŭ* — inherited, from a root for a deep sound. Vasmer relates it to Latvian *bucêt*, "to boom", and Lithuanian *bukti*, "to low": the bull as the bellower.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

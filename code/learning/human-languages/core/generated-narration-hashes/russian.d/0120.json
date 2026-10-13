@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 120,
-  "sourceHash": "fnv1a64:821a8a1d55b96e24",
+  "sourceHash": "fnv1a64:eece061ae0ed996a",
   "lessonIds": [
     "RU-C120-lion",
     "RU-C120-monkey",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch120.txt",
   "json": "russian/narration/ch120.json",
-  "textHash": "fnv1a64:4cd1ab88f7861daa",
-  "jsonHash": "fnv1a64:712878a1ce9e6c77",
+  "textHash": "fnv1a64:dbd23bc830eabb45",
+  "jsonHash": "fnv1a64:13fae999650343de",
   "findings": []
 }

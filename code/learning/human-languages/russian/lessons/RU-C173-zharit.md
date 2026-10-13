@@ -14,7 +14,8 @@ romanization: "zhárit"
 concept_tag: RU-VERB-ZHARIT
 prerequisites: [RU-C173-rezat, RU-C173-varit]
 sounds: []
-roots: []
+roots: [slavic-gor]
+etymology_hook: "жарить is from жар 'heat'; Greek thermos 'warm' is a cousin of жар"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C173-varit]
 <!-- hl-knowledge: introduces=[RU-LEX-C173-ACT173-04]; assesses=[] -->
 
 **жарить** (*zhárit*) — "to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**жарить** comes from *жар*, "heat", Proto-Slavic *\*žarŭ*, which Vasmer relates to Greek *thermós*, "warm", and Sanskrit *háras*, "heat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

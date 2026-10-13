@@ -14,7 +14,8 @@ romanization: "rost"
 concept_tag: RU-ZDOROV239-ROST
 prerequisites: [RU-C238-skoraya-pomoshch, RU-C239-ves]
 sounds: []
-roots: []
+roots: [slavic-orsti]
+etymology_hook: "рост ← Proto-Slavic *orstŭ, most likely a cousin of Latin arduus 'tall, steep'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C239-ves]
 <!-- hl-knowledge: introduces=[RU-LEX-C239-ZDOROV239-02]; assesses=[] -->
 
 **рост** (*rost*) — "height".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рост** ← Proto-Slavic *\*orstŭ*, "growth" — inherited; Old Church Slavonic has *rastŭ*, "growth". Vasmer thinks it most likely comes from *\*ord-to-*, related to Latin *arduus*, "high, steep", and Irish *ard*, "high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

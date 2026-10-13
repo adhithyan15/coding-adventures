@@ -14,7 +14,8 @@ romanization: "vózdukh"
 concept_tag: RU-VESHCH164-VOZDUKH
 prerequisites: [RU-C164-vino, RU-C164-klimat]
 sounds: []
-roots: []
+roots: [slavic-dukhu]
+etymology_hook: "воздух is Church Slavonic: воз- 'up' + дух 'breath'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C164-klimat]
 <!-- hl-knowledge: introduces=[RU-LEX-C164-VESHCH164-04]; assesses=[] -->
 
 **воздух** (*vózdukh*) — "air".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**воздух** — taken from Church Slavonic, says Vasmer: *воз-*, "up", with *дух*, "breath, spirit". It copies Greek *aḗr*, "air".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "blyúdtse"
 concept_tag: RU-VESHCH246-BLYUDTSE
 prerequisites: [RU-C246-chaynik, RU-C246-miska]
 sounds: []
-roots: []
+roots: [gothic-biuths]
+etymology_hook: "блюдце is блюдо 'a dish' + -це 'little': a little dish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C246-miska]
 <!-- hl-knowledge: introduces=[RU-LEX-C246-VESHCH246-04]; assesses=[] -->
 
 **блюдце** (*blyúdtse*) — "a saucer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**блюдце** is *блюдо*, "a dish", with *-це*, "little". *блюдо* is an old loan from Gothic *biuþs*, "a table, a dish" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

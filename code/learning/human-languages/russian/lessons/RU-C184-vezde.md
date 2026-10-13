@@ -14,7 +14,8 @@ romanization: "vezdé"
 concept_tag: RU-MESTO184-VEZDE
 prerequisites: [RU-C183-port, RU-C184-vperedi]
 sounds: []
-roots: []
+roots: [slavic-visi]
+etymology_hook: "везде is весь 'all' + -де, the place ending of где 'where'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C184-vperedi]
 <!-- hl-knowledge: introduces=[RU-LEX-C184-MESTO184-02]; assesses=[] -->
 
 **везде** (*vezdé*) — "everywhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**везде** — Old Russian *вьсьде*: *весь*, "all", with *-де*, the place ending of *где*, "where" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

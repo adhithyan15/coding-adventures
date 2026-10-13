@@ -14,7 +14,8 @@ romanization: "obédat"
 concept_tag: RU-VERB-OBEDAT
 prerequisites: [RU-C139-vykhod, RU-C139-chek]
 sounds: []
-roots: []
+roots: [pie-ed]
+etymology_hook: "обедать is обед 'lunch' made into a verb with -ать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C139-chek]
 <!-- hl-knowledge: introduces=[RU-LEX-C140-ACT140-01]; assesses=[] -->
 
 **обедать** (*obédat*) — "to have lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**обедать** is *обед*, "lunch", made into a verb with *-ать*. *обед* is *об-* with the root of *есть*, "to eat" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

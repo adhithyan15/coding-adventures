@@ -11,7 +11,7 @@ concept_tag: CONNECTIVE-BECAUSE
 romanization: patamú shto
 prerequisites: [RU-C19-pochemu]
 sounds: []
-roots: [pie-kwo]
+roots: [pie-kwo, pie-to]
 etymology_hook: "потому что is по plus a form of то plus что — after-that-that, which is почему with the question word swapped for the pointing word"
 duration:
   max_seconds: 250
@@ -56,7 +56,7 @@ Set the two words side by side and the shape gives itself away:
 
 Russian answers *why* by taking the same word, swapping the question-stem for the
 pointing-stem, and adding **что** to hang the reason on. **почему** asks; **по
-тому** points at the reason; **что** carries the sentence that names it.
+тому** points at the reason; **что** carries the sentence that names it. Both stems are inherited from Proto-Slavic: *\*tŭ*, "that", the stem of *то*, and *\*kŭ-*, the stem of *кто*, "who".
 
 ## Grammar lens — where the halves go, and where the comma goes
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-POTOMU-CHTO-CLAUSE-01]; assesses=[RU-LEX-POTOMU-CHTO-01, RU-GRAMMAR-CHTO-COMPLEMENTISER-01] -->

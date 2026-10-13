@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 241,
-  "sourceHash": "fnv1a64:90cbd5fdcef73f48",
+  "sourceHash": "fnv1a64:6a747d2be2a01800",
   "lessonIds": [
     "RU-C241-podval",
     "RU-C241-balkon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch241.txt",
   "json": "russian/narration/ch241.json",
-  "textHash": "fnv1a64:51992b2686285f95",
-  "jsonHash": "fnv1a64:501ccc654cd1f247",
+  "textHash": "fnv1a64:77154a5c8ac70539",
+  "jsonHash": "fnv1a64:927a4952a170551d",
   "findings": []
 }

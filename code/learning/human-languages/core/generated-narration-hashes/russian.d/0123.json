@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 123,
-  "sourceHash": "fnv1a64:da9103e1363ba94e",
+  "sourceHash": "fnv1a64:42c10db8d17da0b3",
   "lessonIds": [
     "RU-C123-space",
     "RU-C123-bottle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch123.txt",
   "json": "russian/narration/ch123.json",
-  "textHash": "fnv1a64:8baa7b9c0e13d283",
-  "jsonHash": "fnv1a64:e84e4618772b2234",
+  "textHash": "fnv1a64:4a9900de9019dd81",
+  "jsonHash": "fnv1a64:0d1e873844db9269",
   "findings": []
 }

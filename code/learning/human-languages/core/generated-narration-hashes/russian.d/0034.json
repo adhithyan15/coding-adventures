@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 34,
-  "sourceHash": "fnv1a64:f92a15c2d8f04862",
+  "sourceHash": "fnv1a64:d5914c862f8938fc",
   "lessonIds": [
     "RU-C34-joy",
     "RU-C34-fear",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch34.txt",
   "json": "russian/narration/ch34.json",
-  "textHash": "fnv1a64:2178821fc3e75514",
-  "jsonHash": "fnv1a64:8137f0bf8717eb34",
+  "textHash": "fnv1a64:c64aec594b3e5f9f",
+  "jsonHash": "fnv1a64:713cb9fb3b1009a6",
   "findings": []
 }

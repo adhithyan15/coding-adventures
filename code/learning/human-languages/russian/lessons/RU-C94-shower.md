@@ -14,7 +14,8 @@ romanization: "dush"
 concept_tag: RU-THINGS94-SHOWER
 prerequisites: [RU-C94-fridge, RU-C94-cooker]
 sounds: []
-roots: []
+roots: [french-douche]
+etymology_hook: "душ ← French douche, from Italian doccia 'a water pipe'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C94-cooker]
 <!-- hl-knowledge: introduces=[RU-LEX-C94-THINGS94-05]; assesses=[] -->
 
 **душ** (*dush*) — "a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**душ** comes from French *douche*, from Italian *doccia*, "a pipe, a spout" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

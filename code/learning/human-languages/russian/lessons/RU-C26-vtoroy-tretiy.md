@@ -11,8 +11,8 @@ gloss: "second and third — where the numbers come back"
 concept_tag: RU-ORDINAL-SUFFIX
 prerequisites: [RU-C26-pervyy]
 sounds: [stress-unmarked]
-roots: []
-etymology_hook: "vtoroy holds the v of vtor-, second, and tretiy holds tri whole; from four upward the ordinal is the plain number with an adjective ending, so twelve numbers and one ending are twelve ordinals."
+roots: [pie-treyes, slavic-vutoru]
+etymology_hook: "третий ← Proto-Slavic *tretĭjĭ, a cousin of Latin tertius and English third; второй's origin is disputed"
 duration:
   max_seconds: 280
 requires:
@@ -59,6 +59,11 @@ adjective changes its ending to agree with what it describes, and this book has
 not taught an adjective yet. So the forms here are the ones a masculine noun
 takes, and agreeing them with anything else is an adjective chapter rather than
 a numeral one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**третий** ← Proto-Slavic *\*tretĭjĭ* — inherited, a cousin of Lithuanian *trẽčias*, Latin *tertius* and English *third* (Vasmer). **второй** is perhaps from *\*vŭtorŭ*, related to Sanskrit *vítaras*, "further"; others link it with Lithuanian *añtras*, "second, other" (Vasmer).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-VTOROY-01, RU-LEX-TRETIY-01, RU-MORPH-ORDINAL-ADJ-01, RU-LEX-CHETYRE-01, RU-LEX-DESYAT-01] -->

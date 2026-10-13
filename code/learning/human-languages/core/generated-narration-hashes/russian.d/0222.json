@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 222,
-  "sourceHash": "fnv1a64:87f6bb0034d39472",
+  "sourceHash": "fnv1a64:44b55e3dcbbbf54b",
   "lessonIds": [
     "RU-C222-yeda",
     "RU-C222-blyudo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch222.txt",
   "json": "russian/narration/ch222.json",
-  "textHash": "fnv1a64:ece5aa59edc36510",
-  "jsonHash": "fnv1a64:8e1bdcb7f77d0997",
+  "textHash": "fnv1a64:dd0ab0091114bc42",
+  "jsonHash": "fnv1a64:8b06df8c68b418d6",
   "findings": []
 }

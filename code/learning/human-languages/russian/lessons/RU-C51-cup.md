@@ -14,7 +14,8 @@ romanization: "cháshka"
 concept_tag: RU-TABLE-CUP
 prerequisites: [RU-C50-bathroom, RU-C50-clock]
 sounds: []
-roots: []
+roots: [slavic-chasha]
+etymology_hook: "чашка is чаша 'a bowl, a goblet' + the diminutive -ка; чаша is old Slavic, probably a cousin of Old Prussian kiosi 'cup'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C50-clock]
 <!-- hl-knowledge: introduces=[RU-LEX-C51-TABLE-01]; assesses=[] -->
 
 **чашка** (*cháshka*) — "a cup". For **чай** or **кофе**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чашка** is *чаша*, "a bowl, a goblet", with *-ка*, "little". *чаша* ← Proto-Slavic *\*čaša*, which Vasmer thinks is probably related to Old Prussian *kiosi*, "a goblet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tekst"
 concept_tag: RU-VESHCH199-TEKST
 prerequisites: [RU-C199-inostranets, RU-C199-turist]
 sounds: []
-roots: []
+roots: [texere-latin]
+etymology_hook: "текст came through German Text or from Latin textus 'a weave', from texere 'to weave'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C199-turist]
 <!-- hl-knowledge: introduces=[RU-LEX-C199-VESHCH199-05]; assesses=[] -->
 
 **текст** (*tekst*) — "a text".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**текст** came through German *Text* or straight from Latin *textus*, "a web, a weaving of words", from *texō*, "I weave" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "spuskátsya"
 concept_tag: RU-VERB-TO-GO-DOWN
 prerequisites: [RU-C132-to-fall, RU-C133-to-go-up]
 sounds: []
-roots: []
+roots: [slavic-pustu]
+etymology_hook: "спускаться is с- 'down' + пускать 'to let go' + -ся: to let oneself down"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C133-to-go-up]
 <!-- hl-knowledge: introduces=[RU-LEX-C133-ACT133-02]; assesses=[] -->
 
 **спускаться** (*spuskátsya*) — "to go down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спускаться** is *с-*, "down", with *пускать*, "to let go", and *-ся*, "oneself": to let yourself down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bolnóy"
 concept_tag: RU-ZDOROV147-BOLNOY
 prerequisites: [RU-C146-ostanavlivatsya, RU-C146-parkovat]
 sounds: []
-roots: []
+roots: [slavic-boli]
+etymology_hook: "больной is from боль 'pain', Proto-Slavic *bolĭ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C146-parkovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C147-ZDOROV147-01]; assesses=[] -->
 
 **больной** (*bolnóy*) — "ill; a patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**больной** is built on *боль*, "pain", and *болеть*, "to be ill" (Vasmer): "the one in pain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

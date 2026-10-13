@@ -14,7 +14,8 @@ romanization: "trógat"
 concept_tag: RU-VERB-TROGAT
 prerequisites: [RU-C208-slyshat, RU-C208-nyukhat]
 sounds: []
-roots: []
+roots: [slavic-trogati]
+etymology_hook: "трогать: Vasmer reports comparisons with Latvian treksne 'a push' and Latin trahere, unsettled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C208-nyukhat]
 <!-- hl-knowledge: introduces=[RU-LEX-C208-ACT208-05]; assesses=[] -->
 
 **трогать** (*trógat*) — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**трогать** — Ukrainian *трогати* means "to pull". It has been compared with Latvian *treksne*, "a push", and Old Norse *þreka*, "to press"; a link with Latin *trahō*, "I drag", Vasmer finds doubtful, so the origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

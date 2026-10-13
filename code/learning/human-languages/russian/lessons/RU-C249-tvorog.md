@@ -14,7 +14,8 @@ romanization: "tvoróg"
 concept_tag: RU-VESHCH249-TVOROG
 prerequisites: [RU-C248-shorty, RU-C249-smetana]
 sounds: []
-roots: []
+roots: [slavic-tvoriti]
+etymology_hook: "творог is usually linked with творить 'to form', as French fromage comes from 'form'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C249-smetana]
 <!-- hl-knowledge: introduces=[RU-LEX-C249-VESHCH249-02]; assesses=[] -->
 
 **творог** (*tvoróg*) — "cottage cheese".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**творог** — Vasmer reports the usual link of Proto-Slavic *\*tvarogŭ* with *творить*, "to shape, to make", as French *fromage*, "cheese", comes from Latin *fōrmāticum*, "formed (in a mould)"; Jakobson insists on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sílnyy"
 concept_tag: RU-ZDOROV148-SILNYY
 prerequisites: [RU-C148-zdorovyy, RU-C148-slabyy]
 sounds: []
-roots: []
+roots: [slavic-sila]
+etymology_hook: "сильный is сила 'strength' + -ный; Lithuanian siela 'soul' is a cousin of сила"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C148-slabyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C148-ZDOROV148-03]; assesses=[] -->
 
 **сильный** (*sílnyy*) — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сильный** is *сила*, "strength", with *-ный*. *сила* ← Proto-Slavic *\*sila*, which Vasmer relates to Lithuanian *síela*, "soul, spirit", and Old Prussian *seilin*, "diligence".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

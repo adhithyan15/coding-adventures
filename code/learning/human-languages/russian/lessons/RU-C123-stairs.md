@@ -14,7 +14,8 @@ romanization: "léstnitsa"
 concept_tag: RU-THINGS123-STAIRS
 prerequisites: [RU-C123-bottle, RU-C123-mirror]
 sounds: []
-roots: []
+roots: [slavic-lezti]
+etymology_hook: "лестница ← Old Church Slavonic lěstvica, from лезть 'to climb'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C123-mirror]
 <!-- hl-knowledge: introduces=[RU-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **лестница** (*léstnitsa*) — "stairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лестница** ← Old Church Slavonic *lěstvica*, built on *\*lěstva*, "a ladder", from the root of *лезть*, "to climb" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

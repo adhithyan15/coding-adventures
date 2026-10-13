@@ -14,7 +14,8 @@ romanization: "gubá"
 concept_tag: RU-BODY3-LIP
 prerequisites: [RU-C31-back, RU-C31-tongue]
 sounds: []
-roots: []
+roots: [slavic-goba]
+etymology_hook: "губа ← Proto-Slavic *gǫba; the deeper origin is unclear, and Vasmer weighs several links"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C31-tongue]
 <!-- hl-knowledge: introduces=[RU-LEX-C31-BODY3-03]; assesses=[] -->
 
 **губа** (*gubá*) — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**губа** ← Proto-Slavic *\*gǫba* — inherited; Ukrainian *губа* and Polish *gęba* mean "mouth" (Vasmer). The deeper origin is unclear: Vasmer weighs Greek *gamphai*, "jaws", and a link with the *губа* that means "sponge", without deciding.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

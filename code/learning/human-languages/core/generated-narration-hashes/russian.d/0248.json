@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 248,
-  "sourceHash": "fnv1a64:71c168f3484276fe",
+  "sourceHash": "fnv1a64:2bea276e15b73f58",
   "lessonIds": [
     "RU-C248-odezhda",
     "RU-C248-plashch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch248.txt",
   "json": "russian/narration/ch248.json",
-  "textHash": "fnv1a64:b35a865be941cfe8",
-  "jsonHash": "fnv1a64:66a53bb00c018c26",
+  "textHash": "fnv1a64:9b3eb1978d302cb9",
+  "jsonHash": "fnv1a64:dde6571f9c5680c4",
   "findings": []
 }

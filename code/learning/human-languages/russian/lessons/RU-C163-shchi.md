@@ -14,7 +14,8 @@ romanization: "shchi"
 concept_tag: RU-VESHCH163-SHCHI
 prerequisites: [RU-C163-krevetka, RU-C163-borshch]
 sounds: []
-roots: []
+roots: [slavic-shchavi]
+etymology_hook: "щи ← Old Russian шти; Jakobson linked it with щавель 'sorrel', but the origin is open"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C163-borshch]
 <!-- hl-knowledge: introduces=[RU-LEX-C163-VESHCH163-04]; assesses=[] -->
 
 **щи** (*shchi*) — "cabbage soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**щи** ← Old Russian *шти*, "a soup". Its origin is not settled: Jakobson, in a note to Vasmer, linked it with *щавель*, "sorrel", a soup green.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

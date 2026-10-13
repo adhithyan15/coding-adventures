@@ -14,7 +14,8 @@ romanization: "zhénshchina"
 concept_tag: RU-VESHCH227-ZHENSHCHINA
 prerequisites: [RU-C227-chelovek, RU-C227-muzhchina]
 sounds: []
-roots: []
+roots: [pie-gwenh2]
+etymology_hook: "женщина is built on жена 'woman, wife', with the suffix -щина"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C227-muzhchina]
 <!-- hl-knowledge: introduces=[RU-LEX-C227-VESHCH227-04]; assesses=[] -->
 
 **женщина** (*zhénshchina*) — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**женщина** is built on *жена*, "woman, wife", with *-щина*, a suffix for persons. *жена* is a cousin of Greek *gynḗ*, "woman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

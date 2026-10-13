@@ -14,7 +14,8 @@ romanization: "shchédryy"
 concept_tag: RU-KACH186-SHCHEDRYY
 prerequisites: [RU-C186-chestnyy, RU-C186-khrabryy]
 sounds: []
-roots: []
+roots: [slavic-shchedru]
+etymology_hook: "щедрый is Church Slavonic in its vowel; Vasmer links it, apparently, with Latvian šķedērns 'a chip'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C186-khrabryy]
 <!-- hl-knowledge: introduces=[RU-LEX-C186-KACH186-04]; assesses=[] -->
 
 **щедрый** (*shchédryy*) — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**щедрый** — its *е* shows it came through Church Slavonic, Vasmer says; Old Russian had *щедрый*. He thinks it apparently related to Latvian *šķedērns*, "a chip", and Greek *skedánnymi*, "I scatter": the generous man scatters his goods.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

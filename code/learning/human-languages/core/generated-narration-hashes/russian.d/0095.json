@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 95,
-  "sourceHash": "fnv1a64:05ed26929f11e1a4",
+  "sourceHash": "fnv1a64:2af6c0289e8e747e",
   "lessonIds": [
     "RU-C95-bathtub",
     "RU-C95-shelf",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch95.txt",
   "json": "russian/narration/ch95.json",
-  "textHash": "fnv1a64:7b2b683c1c967dcb",
-  "jsonHash": "fnv1a64:a0b0aedae59f00b5",
+  "textHash": "fnv1a64:84cdac5afd8c5851",
+  "jsonHash": "fnv1a64:7c6e9152dfed3057",
   "findings": []
 }

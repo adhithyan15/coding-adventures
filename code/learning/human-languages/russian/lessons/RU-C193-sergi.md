@@ -14,7 +14,8 @@ romanization: "sérgi"
 concept_tag: RU-VESHCH193-SERGI
 prerequisites: [RU-C193-karman, RU-C193-pugovitsa]
 sounds: []
-roots: []
+roots: [turkic-isirga]
+etymology_hook: "серьги: from Old Russian усерязь, or from Turkic isirga 'earrings'; both views are reported"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C193-pugovitsa]
 <!-- hl-knowledge: introduces=[RU-LEX-C193-VESHCH193-05]; assesses=[] -->
 
 **серьги** (*sérgi*) — "earrings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**серьги** is the plural of *серьга*, "an earring". One view reshapes Old Russian *усерязь*, "an earring", but Vasmer finds the *г* hard to explain; Räsänen, in Trubachev's note, derives it from Chagatai and other Turkic *isirga*, "ear pendants".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

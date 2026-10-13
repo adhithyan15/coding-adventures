@@ -14,7 +14,8 @@ romanization: "nigdé"
 concept_tag: RU-NEG136-NIGDE
 prerequisites: [RU-C136-nikto, RU-C136-nichego]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "нигде is ни 'not even' + где 'where'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C136-nichego]
 <!-- hl-knowledge: introduces=[RU-LEX-C136-NEG136-03]; assesses=[] -->
 
 **нигде** (*nigdé*) — "nowhere". It is **где** with **ни-**: **Нигде нет такси.** — *nigdé nyet taksí* — "There are no taxis anywhere."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**нигде** is *ни*, "not even", with *где*, "where": "not anywhere".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

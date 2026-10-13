@@ -14,7 +14,8 @@ romanization: "otpravlyát"
 concept_tag: RU-VERB-OTPRAVLYAT
 prerequisites: [RU-C232-zanimat, RU-C232-zvonit]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "отправлять is от- 'off' + править 'to set right, to steer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C232-zvonit]
 <!-- hl-knowledge: introduces=[RU-LEX-C232-ACT232-04]; assesses=[] -->
 
 **отправлять** (*otpravlyát*) — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**отправлять** is *от-*, "off, away", with *-правлять*, from *править*, "to direct, to steer", on *правый*, "straight": to send is to direct off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

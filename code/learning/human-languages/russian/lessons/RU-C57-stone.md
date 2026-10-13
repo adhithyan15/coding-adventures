@@ -14,7 +14,8 @@ romanization: "kámen"
 concept_tag: RU-NATURE3-STONE
 prerequisites: [RU-C56-lake, RU-C56-sea]
 sounds: []
-roots: []
+roots: [slavic-kamy]
+etymology_hook: "камень ← Proto-Slavic *kamy; Old Norse hamarr, English hammer, and Lithuanian akmuõ 'stone' are kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C56-sea]
 <!-- hl-knowledge: introduces=[RU-LEX-C57-NATURE3-01]; assesses=[] -->
 
 **камень** (*kámen*) — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**камень** ← Proto-Slavic *\*kamy*, with the stem *\*kamen-* — inherited. Vasmer relates it to Old Norse *hamarr*, "hammer", so English *hammer* is a cousin, beside Lithuanian *akmuõ* and Greek *ákmōn*, "anvil", from a related form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

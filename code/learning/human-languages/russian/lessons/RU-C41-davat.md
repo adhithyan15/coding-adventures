@@ -14,7 +14,8 @@ romanization: "davát"
 concept_tag: RU-VERB-DAVAT
 prerequisites: [RU-C41-otvechat, RU-C41-zhdat]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "давать is the ongoing partner of дать 'to give'; Latin dare and Greek didōmi are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C41-zhdat]
 <!-- hl-knowledge: introduces=[RU-LEX-C41-VERB4-05]; assesses=[] -->
 
 **давать** (*davát*) — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**давать** is the ongoing partner of *дать*, "to give", built on the same root (Vasmer). Vasmer relates *дать* to Lithuanian *dúoti*, Greek *didōmi* and Sanskrit *dadāti*, all "to give", from PIE *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "povoráchivat"
 concept_tag: RU-VERB-POVORACHIVAT
 prerequisites: [RU-C145-proigryvat, RU-C146-bronirovat]
 sounds: []
-roots: []
+roots: [pie-wert]
+etymology_hook: "поворачивать is по- + -ворачивать, from вернуть 'to turn back'; Latin vertere 'to turn' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C146-bronirovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C146-ACT146-02]; assesses=[] -->
 
 **поворачивать** (*povoráchivat*) — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поворачивать** is *по-* with *-ворачивать*, "to turn", on the root of *вертеть*, "to turn, to spin", which Vasmer relates to Lithuanian *versti*, "to turn", and Latin *vertō*, "I turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

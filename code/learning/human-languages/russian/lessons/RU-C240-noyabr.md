@@ -14,7 +14,8 @@ romanization: "noyábr"
 concept_tag: RU-VREMYA240-NOYABR
 prerequisites: [RU-C239-resnitsa, RU-C239-lob]
 sounds: []
-roots: []
+roots: [latin-november]
+etymology_hook: "ноябрь came through Byzantine Greek noembrios from Latin november 'the ninth (month)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C239-lob]
 <!-- hl-knowledge: introduces=[RU-LEX-C240-VREMYA240-01]; assesses=[] -->
 
 **ноябрь** (*noyábr*) — "November".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ноябрь** — Old Russian *ноябрь*; it came through Byzantine Greek *noémbrios* from Latin *november*, "the ninth month" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
