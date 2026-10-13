@@ -31,8 +31,8 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 19488,
-    "wordLessonsWithoutVisibleEtymology": 19031,
+    "wordLessonsWithoutEtymologyHook": 18440,
+    "wordLessonsWithoutVisibleEtymology": 17982,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341462,9 +341462,9 @@
       {
         "language": "french",
         "wordLessons": 1230,
-        "wordLessonsWithoutEtymologyHook": 1048,
-        "wordLessonsWithoutVisibleEtymology": 1049,
-        "wordLessonsWithoutAnyEtymology": 1045
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0
       },
       {
         "language": "german",
@@ -341602,11 +341602,11 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 19488,
-      "wordLessonsWithoutVisibleEtymology": 19031,
-      "wordLessonsWithoutAnyEtymology": 18470,
-      "hookPercent": 24,
-      "visiblePercent": 25
+      "wordLessonsWithoutEtymologyHook": 18440,
+      "wordLessonsWithoutVisibleEtymology": 17982,
+      "wordLessonsWithoutAnyEtymology": 17425,
+      "hookPercent": 28,
+      "visiblePercent": 29
     }
   },
   "writingStages": {
@@ -454012,19 +454012,19 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 6034,
-    "underspent": 5486,
-    "neverSpent": 3773,
+    "roots": 6428,
+    "underspent": 5847,
+    "neverSpent": 4010,
     "payoffDistribution": {
-      "0": 3773,
-      "1": 1100,
-      "2": 613,
-      "3": 291,
-      "4": 140,
-      "5": 58,
-      "6": 25,
-      "7": 19,
-      "8": 6,
+      "0": 4010,
+      "1": 1193,
+      "2": 644,
+      "3": 308,
+      "4": 148,
+      "5": 64,
+      "6": 24,
+      "7": 20,
+      "8": 8,
       "9": 4,
       "10": 3,
       "12": 1,
@@ -454055,33 +454055,33 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28636,
-    "usesBeforeIntroduction": 47743,
-    "technicalUsesBeforeIntroduction": 7118,
-    "technicalLessons": 4233,
+    "usesBeforeIntroduction": 48080,
+    "technicalUsesBeforeIntroduction": 7316,
+    "technicalLessons": 4385,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2465
+        "lessons": 2583
       },
       {
         "term": "noun",
-        "lessons": 1307
+        "lessons": 1332
       },
       {
         "term": "adjective",
-        "lessons": 381
+        "lessons": 391
+      },
+      {
+        "term": "participle",
+        "lessons": 293
       },
       {
         "term": "case",
-        "lessons": 280
+        "lessons": 282
       },
       {
         "term": "voice",
-        "lessons": 280
-      },
-      {
-        "term": "pronoun",
-        "lessons": 264
+        "lessons": 281
       }
     ]
   },

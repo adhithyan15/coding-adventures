@@ -15,7 +15,7 @@ exposure: 3 native-script headwords carry no romanization, so they are load-bear
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 1 of 29963 atoms never revisited (0%); missed windows R1 1553, R2 19839, R3 15983, R4 24355
 forward references: 788 uses of material a later lesson teaches
-etymology: 19488 of 25682 word-introducing lessons carry no etymology_hook; 19031 show the reader no origin in the body (per track below)
+etymology: 18440 of 25682 word-introducing lessons carry no etymology_hook; 17982 show the reader no origin in the body (per track below)
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 921 evidence blocks, 0 invalid; 139 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 71 named track/debt items
 writing ramp: 0 track(s) never practise writing; 0 start after lesson one
@@ -106,12 +106,12 @@ Chapters that cannot be started by ear (drivable prefix 0): 186
 Modality findings (report-only): 0
 
 Etymology coverage (HL24 §9) — every lesson that introduces a word says where it comes from:
-  25682 word-introducing lessons; 19488 carry no etymology_hook (24% covered), 19031 show the reader no origin in the body (25% covered), 18470 have neither
+  25682 word-introducing lessons; 18440 carry no etymology_hook (28% covered), 17982 show the reader no origin in the body (29% covered), 17425 have neither
   the hook is read by the app only; the book and narration print the body, so both are counted
   arabic: 1262 word lessons; 1187 no hook, 1195 no visible etymology, 1174 neither
   bengali: 1219 word lessons; 1136 no hook, 1144 no visible etymology, 1113 neither
   chinese: 108 word lessons; 0 no hook, 62 no visible etymology, 0 neither
-  french: 1230 word lessons; 1048 no hook, 1049 no visible etymology, 1045 neither
+  french: 1230 word lessons; 0 no hook, 0 no visible etymology, 0 neither
   german: 1227 word lessons; 0 no hook, 0 no visible etymology, 0 neither
   gujarati: 630 word lessons; 529 no hook, 543 no visible etymology, 503 neither
   hindi: 1200 word lessons; 1126 no hook, 967 no visible etymology, 952 neither
@@ -147,7 +147,7 @@ grammar cells (spanish): 18 of 231 regular cells taught (8%), against 231 univer
   ES-C07-vivir: teaches ES-CELL-IND-PRES-3SG-CONJ3 before ES-CELL-IND-PRES-2SG-CONJ3
   ES-C07-hablan: teaches ES-CELL-IND-PRES-3PL-CONJ1 before ES-CELL-IND-PRES-2PL-CONJ1
 
-root ledger: 6034 roots, 5486 spent fewer than 3 times (91%), 3773 never spent at all
+root ledger: 6428 roots, 5847 spent fewer than 3 times (91%), 4010 never spent at all
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: stare-latin with 15 payoffs
 
@@ -157,7 +157,7 @@ info dump (report-only): 120 of 29572 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25180 of 29572 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25180, senses 25181, culture claims 25180
 
-metalanguage: 54 of 54 grammar terms appear in 28636 lessons; 47743 uses come before introduction, of which 7118 are technical terms across 4233 lessons
-  most-used-before-introduction: verb (2465 lessons), noun (1307 lessons), adjective (381 lessons), case (280 lessons), voice (280 lessons), pronoun (264 lessons)
+metalanguage: 54 of 54 grammar terms appear in 28636 lessons; 48080 uses come before introduction, of which 7316 are technical terms across 4385 lessons
+  most-used-before-introduction: verb (2583 lessons), noun (1332 lessons), adjective (391 lessons), participle (293 lessons), case (282 lessons), voice (281 lessons)
 literal markup: none in 29572 lessons or any generated book
 glyph coverage: every character renders -- 139 main-font and 829 script characters across 5916 generated files
