@@ -12,8 +12,9 @@ value selectors may choose between proven runtime-real branches. Calling
 selectors may choose between selector-safe runtime-real expressions rooted in
 direct formatter-safe real procedure results or unaliased local runtime-real
 snapshots through unary signs, additive or multiplicative composition, and
-powers with finite static operands. Standard-function transforms, globals,
-captured locals, and other real-name branches remain conservative. A real name-formal result is also allowed
+powers with finite static operands and pure supported standard-function
+transforms. Globals, captured locals, and other real-name branches remain
+conservative. A real name-formal result is also allowed
 when its actual has the same proof. Unary signs, arithmetic composition with finite static operands,
 and real-valued standard functions preserve it, while a finite static real
 actual is safe directly. Variable-free exact `sign` and exact-range `entier`
