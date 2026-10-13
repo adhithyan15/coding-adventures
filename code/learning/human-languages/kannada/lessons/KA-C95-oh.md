@@ -11,7 +11,7 @@ romanization: "ōhō"
 concept_tag: KA-RESP-OH-I-SEE
 prerequisites: [KA-C95-notpossible, KA-C95-notlikethat]
 sounds: []
-roots: [kannada-interjection]
+roots: [interjection]
 etymology_hook: "ōhō: an exclamation, made from the sound itself"
 duration:
   max_seconds: 200

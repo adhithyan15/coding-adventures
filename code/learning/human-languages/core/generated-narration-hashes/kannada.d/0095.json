@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 95,
-  "sourceHash": "fnv1a64:8935d0dc371e8397",
+  "sourceHash": "fnv1a64:9ac0bf65cddff24d",
   "lessonIds": [
     "KA-C95-notpossible",
     "KA-C95-notlikethat",
@@ -14,6 +14,6 @@
   "text": "kannada/narration/ch95.txt",
   "json": "kannada/narration/ch95.json",
   "textHash": "fnv1a64:70f937363c20d602",
-  "jsonHash": "fnv1a64:a1e4b3c3fb96ba53",
+  "jsonHash": "fnv1a64:85bfd3e48b988b1b",
   "findings": []
 }
