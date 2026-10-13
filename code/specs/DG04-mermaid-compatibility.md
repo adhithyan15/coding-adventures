@@ -1074,6 +1074,10 @@ undirected weights, source order wins equal-cost ties, and the resolved order su
 `swimlane.ignoreCrossLaneEdges` defaults to `true`; setting it to `false` adds cross-lane links
 to deterministic, cycle-safe rank constraints while preserving authored order within each lane. The
 resolved non-default setting survives as scene metadata.
+When cross-lane ranking is active, `swimlane.optimizeRanksByCrossings` defaults to `true` and performs
+up to four deterministic local-search passes. Feasible rank delays propagate through downstream
+constraints and are retained only when the lane/rank segment crossing count strictly improves; the
+resolved setting survives as scene metadata.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
@@ -1085,6 +1089,5 @@ parent identities survive semantic IR, layout resolves bounds bottom-up around d
 clusters, and paint emits dashed labeled containers behind edge and node geometry.
 
 This is intentionally partial. The complete Flowchart shape
-and link catalog beyond the documented marker forms, `optimizeRanksByCrossings`,
-and exact upstream routing or typography remain
+and link catalog beyond the documented marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
