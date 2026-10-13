@@ -31,6 +31,17 @@ fn erl_available() -> bool {
         .unwrap_or(false)
 }
 
+#[test]
+fn long_string_constants_survive_heap_growth_on_real_beam() {
+    if !erl_available() {
+        eprintln!("erl absent — skipping native BEAM string heap test");
+        return;
+    }
+    let text = "A".repeat(2048);
+    let source = format!("begin string first, second; integer result; first := '{text}'; second := 'OK'; if first = '{text}' and second = 'OK' then result := 42 else result := 0 end");
+    assert_eq!(run(&source, "string_heap_growth"), "42", "long byte lists and separate live strings must survive real heap growth");
+}
+
 /// Compile ALGOL to `.beam`, run `module:main()` on a real `erl`, return its
 /// printout.
 fn run(src: &str, module: &str) -> String {

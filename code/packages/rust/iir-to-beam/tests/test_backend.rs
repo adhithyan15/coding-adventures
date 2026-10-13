@@ -34,6 +34,34 @@
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_beam::{lower_iir_to_beam, validate_for_beam, IIRBeamConfig};
 
+#[test]
+fn string_constants_reserve_exact_heap_before_list_construction() {
+    use ir_to_beam::encoder::BEAMOperand;
+    for length in [0, 1, 2048] {
+        let module = make_module_fn("main", vec![], "str", vec![
+            IIRInstr::new("const", Some("keep".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("str_const", Some("word".into()), vec![Operand::Str("A".repeat(length))], "str"),
+            IIRInstr::new("const", Some("future".into()), vec![Operand::Int(9)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("word".into())], "str"),
+        ]);
+        let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new("string_heap_shape")).unwrap();
+        let reservations = beam.instructions.iter().enumerate().filter(|(_, instruction)| instruction.opcode == 16).collect::<Vec<_>>();
+        let cells = beam.instructions.iter().enumerate().filter(|(_, instruction)| instruction.opcode == 69).collect::<Vec<_>>();
+        assert_eq!(cells.len(), length);
+        if length == 0 {
+            assert!(reservations.is_empty(), "nil needs no heap allocation");
+        } else {
+            assert_eq!(reservations.len(), 1, "string construction must reserve its heap");
+            let (index, reservation) = reservations[0];
+            assert_eq!(reservation.operands, vec![BEAMOperand::u((length * 2) as u64), BEAMOperand::u(3)], "exact words and initialized normal-X root prefix");
+            assert!(index < cells[0].0, "reservation precedes the first heap write");
+            for (_, cell) in cells {
+                assert_eq!(cell.operands, vec![BEAMOperand::i(b'A' as u64), BEAMOperand::x(1), BEAMOperand::x(1)]);
+            }
+        }
+    }
+}
+
 // ===========================================================================
 // Test helpers
 // ===========================================================================
