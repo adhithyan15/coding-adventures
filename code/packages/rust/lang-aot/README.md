@@ -17,8 +17,9 @@ transforms, plus the exact bounded `entier(sign(...))` transform. Unrestricted
 runtime `entier`, globals, captured locals, and other real-name branches remain
 conservative. A specialised real name formal may carry the same unaliased
 local-rooted proof through a selector, including unary signs around the exact
-bounded transform and additive composition with finite static terms. A real
-name-formal result is also allowed when its actual has the same proof. Unary
+bounded transform, additive composition with finite static terms, and
+multiplication or division of that additive form by finite static terms. A
+real name-formal result is also allowed when its actual has the same proof. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
