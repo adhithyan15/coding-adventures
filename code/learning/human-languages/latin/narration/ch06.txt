@@ -18,6 +18,9 @@ candidus = "white" with a shine, a gleam, a glow — bright white. English keeps
 Why it's said this way: Be honest about what happened to the distinction.
 Romance languages mostly dropped this shine-vs-matte split and kept only one word per color (niger survived for black; albus and candidus both survive, but neither became the plain everyday "white" in most daughter languages — Spanish and French instead borrowed a Germanic word, blanco/ blanc, for their everyday white, as you may already have seen). So Latin's four color-words shrank to cover just two basic ideas — brightness stopped being how Latin-descended languages sort black and white.
 
+The words, taken apart.
+niger has no agreed origin outside Latin. albus "white" is inherited, usually traced to Proto-Indo-European h2elbhos, "white" (EtymDB 2.1), with Umbrian alfu "white" as a close cousin (Lewis & Short). āter "dull black" may come from a root for "fire" (EtymDB 2.1), and candidus "shining white" was built on candeō "I shine" (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "niger" — gleaming black — then "āter," dull black]

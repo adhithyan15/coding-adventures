@@ -15,6 +15,9 @@ Bonum vesperum = "good evening." Like bonam noctem and bonum māne, this specifi
 Grammar Lens: A feminine alternate: bonam vesperam.
 Latin also has a separate feminine noun for evening, vespera (distinct from masculine vesper, though built from the same root — both headwords appeared together last lesson, though without their genders spelled out). Paired with bonus, its accusative gives bonam vesperam — agreeing the same way bonam noctem does: the adjective, bonam, matches bonam exactly. But watch the nouns carefully — they do not share an ending. Vespera is 1st declension (accusative -am, vesperam), while nox is 3rd declension (accusative -em, noctem — not -am). Same adjective agreement, genuinely different noun declensions underneath.
 
+The phrase, taken apart.
+bonum vesperum keeps vesper "evening", whose Greek cousin is hesperos "evening" (Lewis & Short).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bonum vesperum" — "good evening," masculine accusative]

@@ -13,7 +13,8 @@ gloss: "to remove"
 concept_tag: LA-VERB-REMOVEO
 prerequisites: [LA-C229-pergo, LA-C229-cesso]
 sounds: []
-roots: []
+roots: [removere-latin, movere-latin]
+etymology_hook: "removeō 'to remove' — re- 'away' + moveō 'to move'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C229-cesso]
 <!-- hl-knowledge: introduces=[LA-LEX-C229-ACT229-05]; assesses=[] -->
 
 **removeō, removēre** — "to remove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**removeō** is *re-*, "back, away", with *moveō*, "to move" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

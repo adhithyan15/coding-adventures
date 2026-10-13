@@ -13,7 +13,8 @@ gloss: "trust, faith"
 concept_tag: LA-VALE262-FIDES
 prerequisites: [LA-C261-lugeo, LA-C261-fodio]
 sounds: []
-roots: []
+roots: [fides-latin, fidere-latin]
+etymology_hook: "fidēs 'trust' — kin to fīdō 'to trust', from PIE *bheydh-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C261-fodio]
 <!-- hl-knowledge: introduces=[LA-LEX-C262-VALE262-01]; assesses=[] -->
 
 **fidēs, fideī** — "trust, faith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fidēs** belongs with *fīdō*, "to trust" (Lewis & Short), and is usually traced to Proto-Indo-European *\*bheydh-*, "to trust, to persuade" (EtymDB 2.1). It is a different word from *fidēs*, "a lyre string".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

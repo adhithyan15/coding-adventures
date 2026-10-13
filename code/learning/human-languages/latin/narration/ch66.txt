@@ -12,6 +12,9 @@ Before the new one: say the Latin for the forehead, then the Latin for a beard.
 You'll want to know: pectus, pectoris.
 pectus, pectoris — "the chest, the breast".
 
+The word, taken apart.
+pectus is probably inherited: EtymDB 2.1 traces it through Proto-Italic pektos, "chest", to a Proto-Indo-European peg-, "breast", a root with few other witnesses. English pectoral comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a beard, then the Latin for the chest.
 
 You'll want to know: crūs, crūris.
 crūs, crūris — "a leg, a shin".
+
+The word, taken apart.
+crūs, "leg, shin", has no sure origin; Lewis & Short call it doubtful, and no later proposal has won general agreement.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for the chest, then the Latin for a leg.
 You'll want to know: gena, genae.
 gena, genae — "a cheek".
 
+The word, taken apart.
+gena is inherited, usually traced to Proto-Indo-European genu-, "jaw, cheek" (EtymDB 2.1). Greek genys, "jaw" (Lewis & Short), and English chin are cousins.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a leg, then the Latin for a cheek.
 You'll want to know: unguis, unguis.
 unguis, unguis — "a fingernail, a claw".
 
+The word, taken apart.
+unguis is inherited, usually traced to Proto-Indo-European h3negh-, "nail, claw" (EtymDB 2.1). Greek onyx, "claw, nail" (Lewis & Short), and English nail are cousins.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a cheek, then the Latin for a fingernail.
 
 You'll want to know: sānus, sāna, sānum.
 sānus, sāna, sānum — "healthy, sound". English sane: sound in mind.
+
+The word, taken apart.
+sānus has no secure origin. Lewis & Short compare Greek sōs, "safe and sound", and EtymDB 2.1 records a proposed Proto-Indo-European swan-, "healthy", but neither link is settled.
 
 What you've built.
 One more word for this chapter.

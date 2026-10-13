@@ -13,7 +13,8 @@ gloss: "to kiss"
 concept_tag: LA-VERB-OSCULOR
 prerequisites: [LA-C196-nemus, LA-C196-lucus]
 sounds: []
-roots: []
+roots: [osculari-latin, os-latin]
+etymology_hook: "ōsculor 'to kiss' — built on ōsculum 'little mouth, kiss', from ōs 'mouth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C196-lucus]
 <!-- hl-knowledge: introduces=[LA-LEX-C197-ACT197-01]; assesses=[] -->
 
 **ōsculor, ōsculārī** — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōsculor** is built on *ōsculum*, "a kiss", a diminutive of *ōs*, "mouth" (EtymDB 2.1): a little mouth, then a kiss.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

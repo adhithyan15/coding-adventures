@@ -13,7 +13,8 @@ gloss: "a blood relative"
 concept_tag: LA-RES189-COGNATUS
 prerequisites: [LA-C188-vilicus, LA-C188-colonus]
 sounds: []
-roots: []
+roots: [cognatus-latin, nasci-latin]
+etymology_hook: "cognātus 'blood relative' — con- 'together' + nātus 'born'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C188-colonus]
 <!-- hl-knowledge: introduces=[LA-LEX-C189-RES189-01]; assesses=[] -->
 
 **cognātus, cognātī** — "a blood relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cognātus** is built on *nātus*, "born" (Lewis & Short), older *gnātus*, with *con-*, "together": born into the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

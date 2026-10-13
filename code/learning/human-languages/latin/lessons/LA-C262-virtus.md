@@ -13,7 +13,8 @@ gloss: "courage, virtue"
 concept_tag: LA-VALE262-VIRTUS
 prerequisites: [LA-C261-fodio, LA-C262-fides]
 sounds: []
-roots: []
+roots: [virtus-latin, vir-latin]
+etymology_hook: "virtūs 'courage, virtue' — built on vir 'man'; English virtue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C262-fides]
 <!-- hl-knowledge: introduces=[LA-LEX-C262-VALE262-02]; assesses=[] -->
 
 **virtūs, virtūtis** — "courage, virtue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**virtūs** is built on *vir*, "a man" (Lewis & Short), with *-tūs*, an ending for a quality: manliness, then courage and any excellence. English *virtue* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

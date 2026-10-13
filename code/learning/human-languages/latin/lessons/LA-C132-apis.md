@@ -13,7 +13,8 @@ gloss: "a bee"
 concept_tag: LA-THINGS132-APIS
 prerequisites: [LA-C131-anas, LA-C132-anser]
 sounds: []
-roots: []
+roots: [apis-latin]
+etymology_hook: "apis 'bee' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C132-anser]
 <!-- hl-knowledge: introduces=[LA-LEX-C132-THINGS132-02]; assesses=[] -->
 
 **apis, apis** — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apis** has no sure origin; it is often thought to be a loan from a lost language of Europe. It is a different word from *Āpis*, "the sacred bull of Egypt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

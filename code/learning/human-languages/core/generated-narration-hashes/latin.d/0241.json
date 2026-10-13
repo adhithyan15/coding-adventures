@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 241,
-  "sourceHash": "fnv1a64:d0e7a6ce5e3fedd4",
+  "sourceHash": "fnv1a64:90efda27b6962c95",
   "lessonIds": [
     "LA-C241-industrius",
     "LA-C241-loquax",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch241.txt",
   "json": "latin/narration/ch241.json",
-  "textHash": "fnv1a64:fab660d64772f746",
-  "jsonHash": "fnv1a64:b67dc187dcd8ffda",
+  "textHash": "fnv1a64:99c21c07744d6e9b",
+  "jsonHash": "fnv1a64:159ad720bf328e6a",
   "findings": []
 }

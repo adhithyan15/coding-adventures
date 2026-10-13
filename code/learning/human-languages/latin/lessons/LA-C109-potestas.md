@@ -13,7 +13,8 @@ gloss: "power, the ability to act"
 concept_tag: LA-CAN109-POTESTAS
 prerequisites: [LA-C109-debeo, LA-C109-soleo]
 sounds: []
-roots: []
+roots: [potestas-latin, posse-latin]
+etymology_hook: "potestās 'power' — built on pot-, the stem of possum 'to be able'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C109-soleo]
 <!-- hl-knowledge: introduces=[LA-LEX-C109-CAN109-05]; assesses=[] -->
 
 **potestās, potestātis** — "power, the ability to act".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**potestās** is built on *possum*, "to be able" (Lewis & Short), through its stem *pot-*, with *-tās*, an ending for a quality.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

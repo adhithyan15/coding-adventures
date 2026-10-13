@@ -13,7 +13,8 @@ gloss: "a grandson"
 concept_tag: LA-RES273-NEPOS
 prerequisites: [LA-C273-coniunx, LA-C273-parens]
 sounds: []
-roots: []
+roots: [nepos-latin]
+etymology_hook: "nepōs 'grandson' — inherited, usually traced to PIE *nepōts; English nephew comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C273-parens]
 <!-- hl-knowledge: introduces=[LA-LEX-C273-RES273-04]; assesses=[] -->
 
 **nepōs, nepōtis** — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nepōs** is inherited, usually traced to Proto-Indo-European *\*nepōts*, "grandson, nephew" (EtymDB 2.1); German *Neffe*, "nephew", is a cousin (Lewis & Short). English *nephew* comes from *nepōs* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 107,
-  "sourceHash": "fnv1a64:11928bbead286126",
+  "sourceHash": "fnv1a64:5d9dee4260aa732b",
   "lessonIds": [
     "LA-C107-urbs",
     "LA-C107-oppidum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch107.txt",
   "json": "latin/narration/ch107.json",
-  "textHash": "fnv1a64:f1a1bf03bf585b7e",
-  "jsonHash": "fnv1a64:0d94dfe8999143ac",
+  "textHash": "fnv1a64:f55a4d2612a387be",
+  "jsonHash": "fnv1a64:6e865d8cfe58ff1a",
   "findings": []
 }

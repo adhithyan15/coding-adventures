@@ -12,6 +12,9 @@ Before the new one: say the Latin for to swim, then the Latin for to call.
 You'll want to know: mittō, mittere.
 mittō, mittere — "to send". English mission.
 
+The word, taken apart.
+mittō has no secure origin; EtymDB 2.1 records a proposed Proto-Indo-European meyth2-, "to exchange, to remove", and Lewis & Short call it doubtful. English admit comes from it too.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to call, then the Latin for to send.
 
 You'll want to know: maneō, manēre.
 maneō, manēre — "to stay, to remain".
+
+The word, taken apart.
+maneō is inherited, usually traced to Proto-Indo-European men-, "to stay" (EtymDB 2.1); Greek menō, "to stay", is a cousin (Lewis & Short). English remain and mansion come from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to send, then the Latin for to stay.
 You'll want to know: cadō, cadere.
 cadō, cadere — "to fall".
 
+The word, taken apart.
+cadō is inherited, usually traced to Proto-Indo-European kad-, "to fall" (EtymDB 2.1). English cadence, case and accident come from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to stay, then the Latin for to fall.
 You'll want to know: pōnō, pōnere.
 pōnō, pōnere — "to put, to place". English position.
 
+The word, taken apart.
+pōnō is contracted from an older posinō (Lewis & Short), made of a prefix po-, "off, away", and sinō, "to let, to leave": to let something down in its place.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to fall, then the Latin for to put.
 
 You'll want to know: inveniō, invenīre.
 inveniō, invenīre — "to find, to come upon". English invent.
+
+The word, taken apart.
+inveniō is built from in, "on, upon", and veniō, "to come": to come upon a thing (Lewis & Short). English invent first meant "to find".
 
 What you've built.
 One more word for this chapter.

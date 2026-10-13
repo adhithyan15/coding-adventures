@@ -12,6 +12,9 @@ Before the new one: say the Latin for vegetables, then the Latin for an olive.
 You'll want to know: frūmentum, frūmentī.
 frūmentum, frūmentī — "grain, corn".
 
+The word, taken apart.
+frūmentum is built on the stem of fruor, "to enjoy, to have the use of" (Lewis & Short), with -mentum, an ending for a thing. fruor is usually traced to Proto-Indo-European bhrug-, "to make use of" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for an olive, then the Latin for grain.
 
 You'll want to know: farīna, farīnae.
 farīna, farīnae — "flour". English farinaceous.
+
+The word, taken apart.
+farīna is built on far, "spelt", a hardy wheat (Lewis & Short): flour is ground grain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for grain, then the Latin for flour.
 You'll want to know: pirum, pirī.
 pirum, pirī — "a pear".
 
+The word, taken apart.
+pirum, "pear", has no sure origin; it is often thought to be a loan from a lost Mediterranean language. English pear was borrowed from it early.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for flour, then the Latin for a pear.
 You'll want to know: fīcus, fīcī.
 fīcus, fīcī — "a fig, a fig tree".
 
+The word, taken apart.
+fīcus has no sure origin. Lewis & Short compare Greek sykon, "fig"; both are often taken as loans from an unknown Mediterranean language. English fig comes from fīcus through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a pear, then the Latin for a fig.
 
 You'll want to know: nux, nucis.
 nux, nucis — "a nut".
+
+The word, taken apart.
+nux may be inherited: EtymDB 2.1 traces it to Proto-Indo-European knew-, "nut", but Lewis & Short call its origin doubtful, and the link is not settled.
 
 What you've built.
 One more word for this chapter.

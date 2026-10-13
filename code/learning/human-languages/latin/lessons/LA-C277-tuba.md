@@ -13,7 +13,8 @@ gloss: "a trumpet"
 concept_tag: LA-RES277-TUBA
 prerequisites: [LA-C277-arcus, LA-C277-sagitta]
 sounds: []
-roots: []
+roots: [tuba-latin, tubus-latin]
+etymology_hook: "tuba 'trumpet' — kin to tubus 'pipe'; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C277-sagitta]
 <!-- hl-knowledge: introduces=[LA-LEX-C277-RES277-05]; assesses=[] -->
 
 **tuba, tubae** — "a trumpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tuba** belongs with *tubus*, "a pipe, a tube" (Lewis & Short); where the pair comes from is uncertain. English *tube* comes from *tubus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for an enemy, then the Latin for war.
 You'll want to know: lanius, laniī.
 lanius, laniī — "a butcher".
 
+The word, taken apart.
+lanius belongs with laniō, "to tear to pieces" (Lewis & Short), usually traced to Proto-Indo-European lek-, "to tear" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for war, then the Latin for a butcher.
 
 You'll want to know: caupō, caupōnis.
 caupō, caupōnis — "an innkeeper".
+
+The word, taken apart.
+caupō has no sure origin; Greek kapēlos, "a retail dealer", is often compared (Lewis & Short). German kaufen, "to buy", was probably borrowed from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a butcher, then the Latin for an innkeeper
 You'll want to know: argentārius, argentāriī.
 argentārius, argentāriī — "a banker".
 
+The word, taken apart.
+argentārius is built on argentum, "silver, money" (Lewis & Short), with -ārius, "one who deals in": a money-dealer.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for an innkeeper, then the Latin for a banker.
 You'll want to know: lēgātus, lēgātī.
 lēgātus, lēgātī — "an envoy".
 
+The word, taken apart.
+lēgātus is the past participle of lēgō, "to send as an envoy, to appoint" (Lewis & Short), built on lēx, lēgis, "a law": one sent with a charge.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a banker, then the Latin for an envoy.
 
 You'll want to know: scrība, scrībae.
 scrība, scrībae — "a clerk".
+
+The word, taken apart.
+scrība is built on scrībō, "to write" (Lewis & Short): one who writes. English scribe comes from it.
 
 What you've built.
 One more word for this chapter.

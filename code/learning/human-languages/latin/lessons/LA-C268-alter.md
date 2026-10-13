@@ -13,7 +13,8 @@ gloss: "the second of two, the other"
 concept_tag: LA-QUAL268-ALTER
 prerequisites: [LA-C267-pristinus, LA-C267-proximus]
 sounds: []
-roots: []
+roots: [alter-latin, alius-latin]
+etymology_hook: "alter 'the other of two' — usually traced to PIE *h2elteros 'the other of two'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C267-proximus]
 <!-- hl-knowledge: introduces=[LA-LEX-C268-QUAL268-01]; assesses=[] -->
 
 **alter, altera, alterum** — "the second of two, the other".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alter** is inherited, usually traced to Proto-Indo-European *\*h2elteros*, "the other of two" (EtymDB 2.1): the root of *alius*, "other", with *-ter*, an ending that sets one of two against the other.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an oak"
 concept_tag: LA-RES250-QUERCUS
 prerequisites: [LA-C249-linum, LA-C250-vitis]
 sounds: []
-roots: []
+roots: [quercus-latin]
+etymology_hook: "quercus 'oak' — inherited, usually traced to PIE *perkwus 'oak'; English fir is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C250-vitis]
 <!-- hl-knowledge: introduces=[LA-LEX-C250-RES250-02]; assesses=[] -->
 
 **quercus, quercūs** — "an oak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quercus** is inherited, probably from Proto-Italic *\*kwerkus*, "oak" (EtymDB 2.1). It is usually traced to Proto-Indo-European *\*perkwus*, "oak", with the first sound changed to match the second, as in *coquō*, "to cook". English *fir* is a distant cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

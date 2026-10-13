@@ -13,7 +13,8 @@ gloss: "to smile"
 concept_tag: LA-VERB-SUBRIDEO
 prerequisites: [LA-C165-exstinguo, LA-C165-salio]
 sounds: []
-roots: []
+roots: [subridere-latin, ridere-latin]
+etymology_hook: "subrīdeō 'to smile' — sub 'a little' + rīdeō 'to laugh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C165-salio]
 <!-- hl-knowledge: introduces=[LA-LEX-C165-ACT165-04]; assesses=[] -->
 
 **subrīdeō, subrīdēre** — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**subrīdeō** is *sub*, "under, a little", with *rīdeō*, "to laugh" (EtymDB 2.1): to laugh a little, to smile.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a vessel, a container"
 concept_tag: LA-THINGS123-VAS
 prerequisites: [LA-C122-securis, LA-C122-scalae]
 sounds: []
-roots: []
+roots: [vas-latin]
+etymology_hook: "vās 'vessel' — origin unknown; English vase comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C122-scalae]
 <!-- hl-knowledge: introduces=[LA-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **vās, vāsis** — "a vessel, a container".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vās** has no sure origin; no proposal is generally accepted. It is a different word from *vas*, *vadis*, "a guarantor, bail". English *vase* comes from *vās* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

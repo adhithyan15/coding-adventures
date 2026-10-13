@@ -13,7 +13,8 @@ gloss: "a wound"
 concept_tag: LA-VALE205-VULNUS
 prerequisites: [LA-C204-conicio, LA-C204-desino]
 sounds: []
-roots: []
+roots: [vulnus-latin]
+etymology_hook: "vulnus 'wound' — probably from PIE *wel- 'to tear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C204-desino]
 <!-- hl-knowledge: introduces=[LA-LEX-C205-VALE205-01]; assesses=[] -->
 
 **vulnus, vulneris** — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vulnus** is probably inherited, from a Proto-Indo-European root *\*wel-*, "to tear, to wound". Lewis & Short link it with *vellō*, "to pluck, to tear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

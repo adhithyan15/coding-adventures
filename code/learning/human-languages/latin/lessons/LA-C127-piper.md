@@ -13,7 +13,8 @@ gloss: "pepper"
 concept_tag: LA-THINGS127-PIPER
 prerequisites: [LA-C127-cucumis, LA-C127-pullus]
 sounds: []
-roots: []
+roots: [piper-latin]
+etymology_hook: "piper 'pepper' — from Greek peperi, from an Indian word like Sanskrit pippalī"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C127-pullus]
 <!-- hl-knowledge: introduces=[LA-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **piper, piperis** — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piper** was borrowed from Greek *peperi*, "pepper" (Lewis & Short), which came by trade from an Indian word like Sanskrit *pippalī*, "long pepper" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

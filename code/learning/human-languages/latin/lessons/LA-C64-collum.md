@@ -13,7 +13,8 @@ gloss: "the neck"
 concept_tag: LA-CORPUS2-COLLUM
 prerequisites: [LA-C63-lingua, LA-C63-nasus]
 sounds: []
-roots: []
+roots: [collum-latin]
+etymology_hook: "collum 'neck' — inherited, usually traced to PIE *kwolso- 'neck'; English collar comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C63-nasus]
 <!-- hl-knowledge: introduces=[LA-LEX-C64-CORPUS2-01]; assesses=[] -->
 
 **collum, collī** — "the neck". A *collar* goes round it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collum** is inherited, usually traced to Proto-Indo-European *\*kwolso-*, "neck" (EtymDB 2.1), perhaps from a root *\*kwel-*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

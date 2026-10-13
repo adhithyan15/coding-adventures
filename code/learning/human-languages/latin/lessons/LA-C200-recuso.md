@@ -13,7 +13,8 @@ gloss: "to refuse"
 concept_tag: LA-VERB-RECUSO
 prerequisites: [LA-C200-pervenio, LA-C200-agnosco]
 sounds: []
-roots: []
+roots: [recusare-latin, causa-latin]
+etymology_hook: "recūsō 'to refuse' — built on causa 'a case', with re- 'back': to plead against"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C200-agnosco]
 <!-- hl-knowledge: introduces=[LA-LEX-C200-ACT200-04]; assesses=[] -->
 
 **recūsō, recūsāre** — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recūsō** is built on *causa*, "a case, a reason" (Lewis & Short), with *re-*, "back": to plead against, to refuse.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

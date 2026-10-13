@@ -13,7 +13,8 @@ gloss: "a neighbour"
 concept_tag: LA-HOMINES1-VICINUS
 prerequisites: [LA-C71-patruus, LA-C72-amita]
 sounds: []
-roots: []
+roots: [vicinus-latin, vicus-latin]
+etymology_hook: "vīcīnus 'neighbour' — built on vīcus 'village, street'; English vicinity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C72-amita]
 <!-- hl-knowledge: introduces=[LA-LEX-C72-HOMINES1-02]; assesses=[] -->
 
 **vīcīnus, vīcīnī** — "a neighbour". English *vicinity*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vīcīnus** is built on *vīcus*, "a village, a street" (Lewis & Short): a neighbour lives in the same *vīcus*. *vīcus* is usually traced to Proto-Indo-European *\*weik-*, "settlement" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

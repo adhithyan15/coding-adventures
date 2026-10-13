@@ -13,7 +13,8 @@ gloss: "a year"
 concept_tag: LA-ANNUS-ANNUS
 prerequisites: [LA-C103-hodie, LA-C103-heri]
 sounds: []
-roots: []
+roots: [annus-latin]
+etymology_hook: "annus 'year' — inherited, through Proto-Italic *atnos, probably from PIE *h2et- 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C103-heri]
 <!-- hl-knowledge: introduces=[LA-LEX-C103-ANNUS-03]; assesses=[] -->
 
 **annus, annī** — "a year". English *annual*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**annus** is inherited, usually traced through Proto-Italic *\*atnos*, "year", to a Proto-Indo-European root *\*h2et-*, "to go" (EtymDB 2.1). Gothic *aþn*, "year", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

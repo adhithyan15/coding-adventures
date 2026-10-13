@@ -13,7 +13,8 @@ gloss: "to be able, can"
 concept_tag: LA-VERB-QUEO
 prerequisites: [LA-C108-tunica, LA-C108-calceus]
 sounds: []
-roots: []
+roots: [quire-latin]
+etymology_hook: "queō 'to be able' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C108-calceus]
 <!-- hl-knowledge: introduces=[LA-LEX-C109-CAN109-01]; assesses=[] -->
 
 **queō, quīre** — "to be able, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**queō** has no sure origin; Lewis & Short call it doubtful. It is the verb behind *nequeō*, "to be unable".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

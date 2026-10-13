@@ -13,7 +13,8 @@ gloss: "fierce"
 concept_tag: LA-QUAL145-FEROX
 prerequisites: [LA-C145-vivus, LA-C145-mitis]
 sounds: []
-roots: []
+roots: [ferox-latin, ferus-latin]
+etymology_hook: "ferōx 'fierce' — built on ferus 'wild'; Greek thēr 'wild beast' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C145-mitis]
 <!-- hl-knowledge: introduces=[LA-LEX-C145-QUAL145-04]; assesses=[] -->
 
 **ferōx, ferōcis** — "fierce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ferōx** is built on *ferus*, "wild" (Lewis & Short), with *-ōx*, an ending of strong character: wild-looking, fierce. *ferus* is a cousin of Greek *thēr*, "wild beast" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

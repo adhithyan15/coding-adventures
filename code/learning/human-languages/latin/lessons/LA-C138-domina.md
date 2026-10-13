@@ -13,7 +13,8 @@ gloss: "a mistress, the lady of the house"
 concept_tag: LA-THINGS138-DOMINA
 prerequisites: [LA-C138-piscator, LA-C138-servus]
 sounds: []
-roots: []
+roots: [domina-latin, dominus-latin, domus-latin]
+etymology_hook: "domina 'mistress' — the feminine of dominus 'master', from domus 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C138-servus]
 <!-- hl-knowledge: introduces=[LA-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **domina, dominae** — "a mistress, the lady of the house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**domina** is the feminine of *dominus*, "master of the house" (Lewis & Short), built on *domus*, "house", which is usually traced to Proto-Indo-European *\*dom-*, "house" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

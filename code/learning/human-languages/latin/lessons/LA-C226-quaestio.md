@@ -13,7 +13,8 @@ gloss: "a question, an inquiry"
 concept_tag: LA-RES226-QUAESTIO
 prerequisites: [LA-C226-philosophia, LA-C226-studium]
 sounds: []
-roots: []
+roots: [quaestio-latin, quaerere-latin]
+etymology_hook: "quaestiō 'question' — built on quaerō 'to seek, to ask'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C226-studium]
 <!-- hl-knowledge: introduces=[LA-LEX-C226-RES226-04]; assesses=[] -->
 
 **quaestiō, quaestiōnis** — "a question, an inquiry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quaestiō** is built on *quaerō*, "to seek, to ask" (Lewis & Short), with *-tiō*, an ending for an act: a seeking.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

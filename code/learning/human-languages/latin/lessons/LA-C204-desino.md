@@ -13,7 +13,8 @@ gloss: "to cease"
 concept_tag: LA-VERB-DESINO
 prerequisites: [LA-C204-orno, LA-C204-conicio]
 sounds: []
-roots: []
+roots: [desinere-latin, sinere-latin]
+etymology_hook: "dēsinō 'to cease' — dē 'off' + sinō 'to let': to leave off"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C204-conicio]
 <!-- hl-knowledge: introduces=[LA-LEX-C204-ACT204-05]; assesses=[] -->
 
 **dēsinō, dēsinere** — "to cease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēsinō** is *dē*, "off, away", with *sinō*, "to let, to leave": to leave off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

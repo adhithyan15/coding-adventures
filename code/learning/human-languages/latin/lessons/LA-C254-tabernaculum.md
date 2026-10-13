@@ -13,7 +13,8 @@ gloss: "a tent"
 concept_tag: LA-RES254-TABERNACULUM
 prerequisites: [LA-C254-pera, LA-C254-marsuppium]
 sounds: []
-roots: []
+roots: [tabernaculum-latin, taberna-latin]
+etymology_hook: "tabernāculum 'tent' — built on taberna 'booth'; English tabernacle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C254-marsuppium]
 <!-- hl-knowledge: introduces=[LA-LEX-C254-RES254-04]; assesses=[] -->
 
 **tabernāculum, tabernāculī** — "a tent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tabernāculum** is built on *taberna*, "a booth, a hut" (Lewis & Short), with *-culum*, an ending for a means: a small shelter, a tent. English *tabernacle* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a beard"
 concept_tag: LA-CORPUS3-BARBA
 prerequisites: [LA-C65-tergum, LA-C65-frons]
 sounds: []
-roots: []
+roots: [barba-latin]
+etymology_hook: "barba 'beard' — inherited, usually traced to PIE *bhardheh2; English beard is a cousin, barber a child"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C65-frons]
 <!-- hl-knowledge: introduces=[LA-LEX-C65-CORPUS3-05]; assesses=[] -->
 
 **barba, barbae** — "a beard". A *barber* trims it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**barba** is inherited, usually traced to Proto-Indo-European *\*bhardheh2*, "beard" (EtymDB 2.1); English *beard* is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

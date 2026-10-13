@@ -13,7 +13,8 @@ gloss: "perhaps"
 concept_tag: LA-CAUSA239-FORTASSE
 prerequisites: [LA-C238-qua, LA-C239-simul]
 sounds: []
-roots: []
+roots: [fortasse-latin, fors-latin]
+etymology_hook: "fortasse 'perhaps' — usually explained as forte 'by chance' + an 'whether'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C239-simul]
 <!-- hl-knowledge: introduces=[LA-LEX-C239-CAUSA239-02]; assesses=[] -->
 
 **fortasse** — "perhaps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fortasse** is usually explained as built on *forte*, "by chance", and *an*, "whether" (Lewis & Short): perhaps.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

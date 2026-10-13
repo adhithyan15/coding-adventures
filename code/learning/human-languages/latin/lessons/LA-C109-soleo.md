@@ -13,7 +13,8 @@ gloss: "to be used to, usually do"
 concept_tag: LA-VERB-SOLEO
 prerequisites: [LA-C109-audeo, LA-C109-debeo]
 sounds: []
-roots: []
+roots: [solere-latin]
+etymology_hook: "soleō 'to be used to' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C109-debeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C109-CAN109-04]; assesses=[] -->
 
 **soleō, solēre** — "to be used to, usually do".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soleō** has no sure origin; Lewis & Short compare *suēscō*, "to become used to", but the link is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

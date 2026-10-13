@@ -13,7 +13,8 @@ gloss: "fast, quick"
 concept_tag: LA-NOVUS-CELER
 prerequisites: [LA-C94-vetus, LA-C94-levis]
 sounds: []
-roots: []
+roots: [celer-latin]
+etymology_hook: "celer 'fast' — origin uncertain; Greek kelēs 'racehorse' is compared; English accelerate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C94-levis]
 <!-- hl-knowledge: introduces=[LA-LEX-C94-NOVUS-04]; assesses=[] -->
 
 **celer, celeris, celere** — "fast, quick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**celer** has no sure origin; Greek *kelēs*, "a racehorse", is often compared. English *accelerate* is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

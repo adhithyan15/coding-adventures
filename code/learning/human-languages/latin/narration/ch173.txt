@@ -12,6 +12,9 @@ Before the new one: say the Latin for to go fishing, then the Latin for to deny.
 You'll want to know: valētūdō, valētūdinis.
 valētūdō, valētūdinis — "health".
 
+The word, taken apart.
+valētūdō is built on valeō, "to be strong, to be well" (Lewis & Short), with -tūdō, an ending for a state: one's state of health, good or bad.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to deny, then the Latin for health.
 
 You'll want to know: cerebrum, cerebrī.
 cerebrum, cerebrī — "the brain".
+
+The word, taken apart.
+cerebrum is inherited from Proto-Italic kerazrom, "brain", usually traced to Proto-Indo-European kerh2s-, "head" (EtymDB 2.1); Greek karē, "head", is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for health, then the Latin for the brain.
 You'll want to know: pulmō, pulmōnis.
 pulmō, pulmōnis — "a lung".
 
+The word, taken apart.
+pulmō is usually traced to Proto-Indo-European plewmō, "lung" (EtymDB 2.1); Greek pleumōn, "lung", is a cousin (Lewis & Short), later reshaped as pneumōn, "lung", by a link with pneō, "to breathe".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for the brain, then the Latin for a lung.
 You'll want to know: iecur, iecoris.
 iecur, iecoris — "the liver".
 
+The word, taken apart.
+iecur is inherited, usually traced to Proto-Indo-European Hyekwr, "liver" (EtymDB 2.1); Greek hēpar, "liver", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a lung, then the Latin for the liver.
 
 You'll want to know: rēn, rēnis.
 rēn, rēnis — "a kidney".
+
+The word, taken apart.
+rēn is probably inherited from Proto-Italic hrēn, "kidney" (EtymDB 2.1), but its deeper origin is unknown. It is mostly used in the plural, rēnēs, "the kidneys".
 
 What you've built.
 One more word for this chapter.

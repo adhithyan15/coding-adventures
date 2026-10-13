@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 170,
-  "sourceHash": "fnv1a64:1d0540030820cd3b",
+  "sourceHash": "fnv1a64:6c166abbde875471",
   "lessonIds": [
     "LA-C170-labor",
     "LA-C170-levo",
@@ -9,11 +9,11 @@
     "LA-C170-suspicor",
     "LA-C170-premo"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
   "text": "latin/narration/ch170.txt",
   "json": "latin/narration/ch170.json",
-  "textHash": "fnv1a64:1c72fdcb800b533a",
-  "jsonHash": "fnv1a64:571dfca0f7cf9f09",
+  "textHash": "fnv1a64:1a29bebd45f67473",
+  "jsonHash": "fnv1a64:282fa070ea0f43a1",
   "findings": []
 }

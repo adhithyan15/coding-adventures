@@ -13,7 +13,8 @@ gloss: "a laugh"
 concept_tag: LA-VALE174-RISUS
 prerequisites: [LA-C174-patientia, LA-C174-lacrima]
 sounds: []
-roots: []
+roots: [risus-latin, ridere-latin]
+etymology_hook: "rīsus 'a laugh' — built on rīdeō 'to laugh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C174-lacrima]
 <!-- hl-knowledge: introduces=[LA-LEX-C174-VALE174-03]; assesses=[] -->
 
 **rīsus, rīsūs** — "a laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rīsus** is built on *rīdeō*, "to laugh", from its stem *rīs-*: a laughing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

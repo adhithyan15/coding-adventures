@@ -13,7 +13,8 @@ gloss: "a knucklebone; an ankle"
 concept_tag: LA-RES193-TALUS
 prerequisites: [LA-C192-pavo, LA-C193-tympanum]
 sounds: []
-roots: []
+roots: [talus-latin]
+etymology_hook: "tālus 'knucklebone' — from older *taxlus; deeper origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C193-tympanum]
 <!-- hl-knowledge: introduces=[LA-LEX-C193-RES193-02]; assesses=[] -->
 
 **tālus, tālī** — "a knucklebone; an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tālus** comes from an older *\*taxlus* (Lewis & Short), as its diminutive *taxillus*, "a small die", shows; EtymDB 2.1 gives Proto-Italic *\*tākslos*, "knucklebone", but the deeper origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

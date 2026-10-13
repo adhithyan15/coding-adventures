@@ -13,7 +13,8 @@ gloss: "over there"
 concept_tag: LA-LOC177-ILLIC
 prerequisites: [LA-C177-longe, LA-C177-alibi]
 sounds: []
-roots: []
+roots: [illic-latin, ille-latin]
+etymology_hook: "illīc 'over there' — ille 'that' + the pointing particle -ce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C177-alibi]
 <!-- hl-knowledge: introduces=[LA-LEX-C177-LOC177-03]; assesses=[] -->
 
 **illīc** — "over there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**illīc** is *ille*, "that", with the pointing particle *-ce*, "here" (Lewis & Short): there, at that place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

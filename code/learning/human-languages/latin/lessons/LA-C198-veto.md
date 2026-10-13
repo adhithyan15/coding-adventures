@@ -13,7 +13,8 @@ gloss: "to forbid"
 concept_tag: LA-VERB-VETO
 prerequisites: [LA-C197-explico, LA-C197-interpretor]
 sounds: []
-roots: []
+roots: [vetare-latin]
+etymology_hook: "vetō 'to forbid' — origin unknown; English veto is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C197-interpretor]
 <!-- hl-knowledge: introduces=[LA-LEX-C198-ACT198-01]; assesses=[] -->
 
 **vetō, vetāre** — "to forbid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vetō** has no sure origin; Lewis & Short call it doubtful. English *veto*, "I forbid", is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

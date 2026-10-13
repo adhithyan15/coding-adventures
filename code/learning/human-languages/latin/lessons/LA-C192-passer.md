@@ -13,7 +13,8 @@ gloss: "a sparrow"
 concept_tag: LA-RES192-PASSER
 prerequisites: [LA-C191-nimbus, LA-C192-cancer]
 sounds: []
-roots: []
+roots: [passer-latin]
+etymology_hook: "passer 'sparrow' — probably from PIE *peth2- 'to fly': the flier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C192-cancer]
 <!-- hl-knowledge: introduces=[LA-LEX-C192-RES192-02]; assesses=[] -->
 
 **passer, passeris** — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passer** is probably inherited, from a Proto-Indo-European *\*pettro-*, "flier, bird", from *\*peth2-*, "to fly" (EtymDB 2.1); the details are uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

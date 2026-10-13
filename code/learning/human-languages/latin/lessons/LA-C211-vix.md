@@ -13,7 +13,8 @@ gloss: "hardly"
 concept_tag: LA-CAUSA211-VIX
 prerequisites: [LA-C210-tantum, LA-C211-omnino]
 sounds: []
-roots: []
+roots: [vix-latin]
+etymology_hook: "vix 'hardly' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C211-omnino]
 <!-- hl-knowledge: introduces=[LA-LEX-C211-CAUSA211-02]; assesses=[] -->
 
 **vix** — "hardly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vix** has no sure origin; Lewis & Short suggest the root of *vincō*, "to win": won with effort. That is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

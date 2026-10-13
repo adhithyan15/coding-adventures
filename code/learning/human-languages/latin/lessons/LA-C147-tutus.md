@@ -13,7 +13,8 @@ gloss: "safe"
 concept_tag: LA-QUAL147-TUTUS
 prerequisites: [LA-C147-falsus, LA-C147-certus]
 sounds: []
-roots: []
+roots: [tutus-latin, tueri-latin]
+etymology_hook: "tūtus 'safe' — the participle of tueor 'to protect': protected"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C147-certus]
 <!-- hl-knowledge: introduces=[LA-LEX-C147-QUAL147-04]; assesses=[] -->
 
 **tūtus, tūta, tūtum** — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tūtus** is the past participle of *tueor*, "to watch over, to protect" (Lewis & Short): protected, so safe.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

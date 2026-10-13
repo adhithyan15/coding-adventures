@@ -13,7 +13,8 @@ gloss: "a shore, a beach"
 concept_tag: LA-CAELUM-LITUS
 prerequisites: [LA-C89-nix, LA-C89-campus]
 sounds: []
-roots: []
+roots: [litus-latin]
+etymology_hook: "lītus 'shore' — origin uncertain; not the same word as litus 'smeared'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C89-campus]
 <!-- hl-knowledge: introduces=[LA-LEX-C89-CAELUM-05]; assesses=[] -->
 
 **lītus, lītoris** — "a shore, a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lītus** has no sure origin; Lewis & Short compare Greek *limēn*, "harbour", but the link is uncertain. It is a different word from *litus*, "smeared", from *linō*, "to smear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

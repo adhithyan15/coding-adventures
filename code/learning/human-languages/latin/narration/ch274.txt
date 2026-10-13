@@ -12,6 +12,9 @@ Before the new one: say the Latin for a grandson, then the Latin for a granddaug
 You'll want to know: ōtium, ōtiī.
 ōtium, ōtiī — "leisure".
 
+The word, taken apart.
+ōtium has no sure origin; no proposal is generally accepted.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a granddaughter, then the Latin for leisur
 
 You'll want to know: negōtium, negōtiī.
 negōtium, negōtiī — "business".
+
+The word, taken apart.
+negōtium is nec, "not", with ōtium, "leisure" (Lewis & Short): no leisure, so business. Festus already took it apart this way.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for leisure, then the Latin for business.
 You'll want to know: lucrum, lucrī.
 lucrum, lucrī — "profit".
 
+The word, taken apart.
+lucrum is inherited, usually traced to Proto-Indo-European leh2w-, "to take as booty, to profit" (EtymDB 2.1), with an ending for a means; German Lohn, "wages", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for business, then the Latin for profit.
 You'll want to know: damnum, damnī.
 damnum, damnī — "loss, damage".
 
+The word, taken apart.
+damnum is usually traced to Proto-Indo-European dh2pnom, "an outlay, an expense" (EtymDB 2.1), the source also of Greek dapanē, "expense"; Lewis & Short still preferred a link with dare, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for profit, then the Latin for loss.
 
 You'll want to know: dēbitum, dēbitī.
 dēbitum, dēbitī — "a debt".
+
+The word, taken apart.
+dēbitum is the past participle of dēbeō, "to owe" (EtymDB 2.1), used as a noun: what is owed. English debt comes from it through French.
 
 What you've built.
 One more word for this chapter.

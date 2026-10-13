@@ -13,7 +13,8 @@ gloss: "to cross, to go over"
 concept_tag: LA-VERB-TRANSEO
 prerequisites: [LA-C255-metior, LA-C256-plaudo]
 sounds: []
-roots: []
+roots: [transire-latin, trans-latin, ire-latin]
+etymology_hook: "trānseō 'to cross' — trāns 'across' + eō 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C256-plaudo]
 <!-- hl-knowledge: introduces=[LA-LEX-C256-ACT256-02]; assesses=[] -->
 
 **trānseō, trānsīre** — "to cross, to go over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trānseō** is *trāns*, "across", with *eō*, "to go" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

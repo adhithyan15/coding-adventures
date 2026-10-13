@@ -13,7 +13,8 @@ gloss: "a fingernail, a claw"
 concept_tag: LA-CORPUS4-UNGUIS
 prerequisites: [LA-C66-crus, LA-C66-gena]
 sounds: []
-roots: []
+roots: [unguis-latin]
+etymology_hook: "unguis 'nail, claw' — inherited, usually traced to PIE *h3negh-; Greek onyx and English nail are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C66-gena]
 <!-- hl-knowledge: introduces=[LA-LEX-C66-CORPUS4-04]; assesses=[] -->
 
 **unguis, unguis** — "a fingernail, a claw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unguis** is inherited, usually traced to Proto-Indo-European *\*h3negh-*, "nail, claw" (EtymDB 2.1). Greek *onyx*, "claw, nail" (Lewis & Short), and English *nail* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

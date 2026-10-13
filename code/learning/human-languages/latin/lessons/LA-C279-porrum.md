@@ -13,7 +13,8 @@ gloss: "a leek"
 concept_tag: LA-RES279-PORRUM
 prerequisites: [LA-C279-prunum, LA-C279-brassica]
 sounds: []
-roots: []
+roots: [porrum-latin]
+etymology_hook: "porrum 'leek' — inherited, usually traced to PIE *prso- 'leek'; Greek prason is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C279-brassica]
 <!-- hl-knowledge: introduces=[LA-LEX-C279-RES279-04]; assesses=[] -->
 
 **porrum, porrī** — "a leek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**porrum** is inherited, usually traced to Proto-Indo-European *\*prso-*, "leek" (EtymDB 2.1); Greek *prason*, "leek", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

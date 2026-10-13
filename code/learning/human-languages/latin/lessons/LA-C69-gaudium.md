@@ -13,7 +13,8 @@ gloss: "joy"
 concept_tag: LA-AFFECTUS-GAUDIUM
 prerequisites: [LA-C68-sitis, LA-C68-cura]
 sounds: []
-roots: []
+roots: [gaudium-latin, gaudere-latin]
+etymology_hook: "gaudium 'joy' — built on gaudeō 'to rejoice'; English joy comes from it through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C68-cura]
 <!-- hl-knowledge: introduces=[LA-LEX-C69-AFFECTUS-01]; assesses=[] -->
 
 **gaudium, gaudiī** — "joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gaudium** is built on *gaudeō*, "to rejoice" (EtymDB 2.1). English *joy* comes from its plural through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

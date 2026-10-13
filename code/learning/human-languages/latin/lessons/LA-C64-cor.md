@@ -13,7 +13,8 @@ gloss: "the heart"
 concept_tag: LA-CORPUS2-COR
 prerequisites: [LA-C64-umerus, LA-C64-genu]
 sounds: []
-roots: []
+roots: [cor-latin]
+etymology_hook: "cor 'heart' — inherited, usually traced to PIE *ker, *krd- 'heart'; Greek kardia and English heart are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C64-genu]
 <!-- hl-knowledge: introduces=[LA-LEX-C64-CORPUS2-04]; assesses=[] -->
 
 **cor, cordis** — "the heart". English *cordial*, from the genitive **cordis**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cor** is inherited, usually traced to Proto-Indo-European *\*krd-*, "heart" (EtymDB 2.1). Greek *kardia*, "heart", and English *heart* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

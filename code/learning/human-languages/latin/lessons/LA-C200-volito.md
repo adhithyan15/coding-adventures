@@ -13,7 +13,8 @@ gloss: "to fly about"
 concept_tag: LA-VERB-VOLITO
 prerequisites: [LA-C200-agnosco, LA-C200-recuso]
 sounds: []
-roots: []
+roots: [volitare-latin, volare-latin]
+etymology_hook: "volitō 'to fly about' — a frequentative of volō 'to fly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C200-recuso]
 <!-- hl-knowledge: introduces=[LA-LEX-C200-ACT200-05]; assesses=[] -->
 
 **volitō, volitāre** — "to fly about".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volitō** is a frequentative of *volō*, "to fly" (Lewis & Short): to keep flying, to flit about. It is a different verb from *volō*, "to want".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

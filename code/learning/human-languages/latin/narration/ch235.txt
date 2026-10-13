@@ -12,6 +12,9 @@ Before the new one: say the Latin for to entrust, then the Latin for to hold bac
 You'll want to know: meminī, meminisse.
 meminī, meminisse — "to remember".
 
+The word, taken apart.
+meminī is inherited, usually traced to Proto-Indo-European memone, "has in mind", a doubled perfect of men-, "to think" (EtymDB 2.1). English mind is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to hold back, then the Latin for to rememb
 
 You'll want to know: loquor, loquī.
 loquor, loquī — "to speak".
+
+The word, taken apart.
+loquor is probably inherited from Proto-Italic tlokwōr, "to speak" (EtymDB 2.1); its deeper origin is uncertain. English eloquent comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to remember, then the Latin for to speak.
 You'll want to know: sequor, sequī.
 sequor, sequī — "to follow".
 
+The word, taken apart.
+sequor is inherited, usually traced to Proto-Indo-European sekw-, "to follow" (EtymDB 2.1); Greek hepomai, "to follow", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to speak, then the Latin for to follow.
 You'll want to know: proficīscor, proficīscī.
 proficīscor, proficīscī — "to set out".
 
+The word, taken apart.
+proficīscor is built on prōficiō, "to make headway" (EtymDB 2.1), from prō, "forward", and faciō, "to make", with -scor, the ending of verbs of becoming: to put oneself forward, to set out.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to follow, then the Latin for to set out.
 
 You'll want to know: ūtor, ūtī.
 ūtor, ūtī — "to use".
+
+The word, taken apart.
+ūtor is probably inherited from Proto-Italic oitōr, "to use" (EtymDB 2.1), but Lewis & Short call its deeper origin doubtful.
 
 What you've built.
 One more word for this chapter.

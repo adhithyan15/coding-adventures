@@ -13,7 +13,8 @@ gloss: "a wheel"
 concept_tag: LA-RES2-ROTA
 prerequisites: [LA-C84-speculum, LA-C85-pila]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "rota 'wheel' — inherited, usually traced to PIE *Hret- 'to run, to roll'; German Rad 'wheel' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C85-pila]
 <!-- hl-knowledge: introduces=[LA-LEX-C85-RES2-02]; assesses=[] -->
 
 **rota, rotae** — "a wheel". English *rotate*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rota** is inherited, usually traced to Proto-Indo-European *\*Hroth2-o-*, "wheel", from a root *\*Hret-*, "to run, to roll" (EtymDB 2.1). German *Rad*, "wheel", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

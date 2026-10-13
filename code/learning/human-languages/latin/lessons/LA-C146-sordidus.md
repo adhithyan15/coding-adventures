@@ -13,7 +13,8 @@ gloss: "dirty"
 concept_tag: LA-QUAL146-SORDIDUS
 prerequisites: [LA-C146-utilis, LA-C146-purus]
 sounds: []
-roots: []
+roots: [sordidus-latin, sordere-latin]
+etymology_hook: "sordidus 'dirty' — built on sordeō 'to be dirty'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C146-purus]
 <!-- hl-knowledge: introduces=[LA-LEX-C146-QUAL146-04]; assesses=[] -->
 
 **sordidus, sordida, sordidum** — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sordidus** is built on *sordeō*, "to be dirty" (Lewis & Short), with *-idus*, the ending of state adjectives.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

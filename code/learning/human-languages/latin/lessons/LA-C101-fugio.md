@@ -13,7 +13,8 @@ gloss: "to flee, to run away"
 concept_tag: LA-VERB-FUGIO
 prerequisites: [LA-C101-surgo, LA-C101-erro]
 sounds: []
-roots: []
+roots: [fugere-latin]
+etymology_hook: "fugiō 'to flee' — inherited, usually traced to PIE *bhewg- 'to flee'; Greek pheugō is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C101-erro]
 <!-- hl-knowledge: introduces=[LA-LEX-C101-VERBA7-03]; assesses=[] -->
 
 **fugiō, fugere** — "to flee, to run away". English *fugitive*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fugiō** is inherited, usually traced to Proto-Indo-European *\*bhewg-*, "to flee" (EtymDB 2.1); Greek *pheugō*, "to flee", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

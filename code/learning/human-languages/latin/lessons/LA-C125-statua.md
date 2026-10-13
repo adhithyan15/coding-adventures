@@ -13,7 +13,8 @@ gloss: "a statue"
 concept_tag: LA-THINGS125-STATUA
 prerequisites: [LA-C124-cera, LA-C124-pictura]
 sounds: []
-roots: []
+roots: [statua-latin, statuere-latin, stare-latin]
+etymology_hook: "statua 'statue' — built on statuō 'to set up': a thing set up"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C124-pictura]
 <!-- hl-knowledge: introduces=[LA-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **statua, statuae** — "a statue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**statua** is built on *statuō*, "to set up" (Lewis & Short): a thing set up. *statuō* comes from *status*, "a standing", from *stō*, "to stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

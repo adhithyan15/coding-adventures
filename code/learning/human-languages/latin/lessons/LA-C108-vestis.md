@@ -13,7 +13,8 @@ gloss: "clothing, a garment"
 concept_tag: LA-VESTIS-VESTIS
 prerequisites: [LA-C108-pons, LA-C108-villa]
 sounds: []
-roots: []
+roots: [vestis-latin]
+etymology_hook: "vestis 'clothing' — inherited, usually traced to PIE *wes- 'to be dressed'; English wear is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C108-villa]
 <!-- hl-knowledge: introduces=[LA-LEX-C108-VESTIS-03]; assesses=[] -->
 
 **vestis, vestis** — "clothing, a garment". English *vest*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vestis** is inherited, usually traced to Proto-Indo-European *\*westis*, "garment", from *\*wes-*, "to be dressed" (EtymDB 2.1). English *wear* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

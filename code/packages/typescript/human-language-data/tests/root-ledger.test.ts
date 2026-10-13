@@ -250,7 +250,14 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // uncertain after a search of both sources by form and by gloss, giving the usual account
   // as a hedge where there is one.
   kannada: { withoutHook: 0, withoutVisible: 0 },
-  latin: { withoutHook: 1095, withoutVisible: 1105 },
+  // latin: 1095 / 1105 -> 0 / 0. All 1,090 generated word lessons (LA-C63-bracchium through
+  // LA-C280-vallum) gained a taken-apart block and a matching hook; the five Chapter 1
+  // greetings gained the hook they lacked, and fifteen hand-written lessons a short taken-apart
+  // block. Sources: EtymDB 2.1 (Fourrier & Sagot 2020), CC BY-SA 4.0, checked row by row, and
+  // Lewis & Short, whose outdated comparisons are left out. PIE and Proto-Italic forms are
+  // starred and hedged; 183 say the origin is uncertain and give the usual account where
+  // one exists.
+  latin: { withoutHook: 0, withoutVisible: 0 },
   // malayalam: 1367 / 1275 -> 0 / 0. Every Malayalam word lesson now carries an etymology_hook
   // and says where its word comes from, almost always in a "taken apart" block. Native words
   // cite the Dravidian Etymological Dictionary (DEDR, Burrow & Emeneau 1984), naming only

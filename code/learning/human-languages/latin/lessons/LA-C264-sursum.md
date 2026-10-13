@@ -13,7 +13,8 @@ gloss: "upwards"
 concept_tag: LA-LOC264-SURSUM
 prerequisites: [LA-C264-undique, LA-C264-passim]
 sounds: []
-roots: []
+roots: [sursum-latin, vertere-latin]
+etymology_hook: "sūrsum 'upwards' — from subvorsum 'turned up from below'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C264-passim]
 <!-- hl-knowledge: introduces=[LA-LEX-C264-LOC264-04]; assesses=[] -->
 
 **sūrsum** — "upwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sūrsum** is contracted from *subvorsum*, "turned up from below" (Lewis & Short), from *sub*, "up from under", and *vertō*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

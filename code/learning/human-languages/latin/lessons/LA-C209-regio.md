@@ -13,7 +13,8 @@ gloss: "a region"
 concept_tag: LA-LOC209-REGIO
 prerequisites: [LA-C208-quondam, LA-C208-iamdudum]
 sounds: []
-roots: []
+roots: [regio-latin, regere-latin]
+etymology_hook: "regiō 'region' — built on regō 'to direct': first a line, then an area"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C208-iamdudum]
 <!-- hl-knowledge: introduces=[LA-LEX-C209-LOC209-01]; assesses=[] -->
 
 **regiō, regiōnis** — "a region".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regiō** is built on *regō*, "to direct, to draw straight" (Lewis & Short): first a straight line, a boundary, then the area it marks out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for a bath, then the Latin for a military camp
 You'll want to know: aedificium, aedificiī.
 aedificium, aedificiī — "a building".
 
+The word, taken apart.
+aedificium is built on aedificō, "to build" (Lewis & Short), from aedēs, "a building, a temple" (EtymDB 2.1), and faciō, "to make".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a military camp, then the Latin for a buil
 
 You'll want to know: carcer, carceris.
 carcer, carceris — "a prison".
+
+The word, taken apart.
+carcer is probably inherited from Proto-Italic karkros, "enclosure" (EtymDB 2.1); Lewis & Short note a Sicilian Greek karkaron, "prison", and call the origin doubtful.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a building, then the Latin for a prison.
 You'll want to know: ātrium, ātriī.
 ātrium, ātriī — "the main hall of a house".
 
+The word, taken apart.
+ātrium has no sure origin. Lewis & Short report the ancient guesses: a Greek aithrion, "open court", or the Etruscan town of Atria. A link with āter, "black", from the smoke of the hearth, is also old; none is certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Latin for a prison, then the Latin for the main hall
 
 You'll want to know: angulus, angulī.
 angulus, angulī — "a corner".
+
+The word, taken apart.
+angulus is inherited, usually traced to Proto-Indo-European h2engulos, "corner, angle" (EtymDB 2.1), from a root for bending; Greek ankylos, "crooked", is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Before the new one: say the Latin for the main hall of a house, then the Latin f
 
 You'll want to know: vīcus, vīcī.
 vīcus, vīcī — "a street, a village".
+
+The word, taken apart.
+vīcus is inherited, usually traced to Proto-Indo-European weik-, "settlement, household" (EtymDB 2.1); Greek oikos, "house", is a cousin (Lewis & Short). English place names in -wick and -wich, such as Norwich, come from vīcus, borrowed early.
 
 What you've built.
 One more word for this chapter.

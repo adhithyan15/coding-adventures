@@ -13,7 +13,8 @@ gloss: "a notice, a label; a title"
 concept_tag: LA-LEG164-TITULUS
 prerequisites: [LA-C163-constituo, LA-C163-provideo]
 sounds: []
-roots: []
+roots: [titulus-latin]
+etymology_hook: "titulus 'label, title' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C163-provideo]
 <!-- hl-knowledge: introduces=[LA-LEX-C164-LEG164-01]; assesses=[] -->
 
 **titulus, titulī** — "a notice, a label; a title". A shop or house could carry one by its door. The famous Pompeian doorway warning is a mosaic, but it reads like one: **Cavē canem.** — "Beware of the dog." English *title* comes from it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**titulus** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

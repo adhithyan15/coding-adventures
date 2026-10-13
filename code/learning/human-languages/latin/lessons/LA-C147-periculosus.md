@@ -13,7 +13,8 @@ gloss: "dangerous"
 concept_tag: LA-QUAL147-PERICULOSUS
 prerequisites: [LA-C147-certus, LA-C147-tutus]
 sounds: []
-roots: []
+roots: [periculosus-latin, periculum-latin]
+etymology_hook: "perīculōsus 'dangerous' — built on perīculum 'a trial, a danger'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C147-tutus]
 <!-- hl-knowledge: introduces=[LA-LEX-C147-QUAL147-05]; assesses=[] -->
 
 **perīculōsus, perīculōsa, perīculōsum** — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perīculōsus** is built on *perīculum*, "a trial, a danger" (Lewis & Short), with *-ōsus*, "full of". *perīculum* is built on the root of *experior*, "to try".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

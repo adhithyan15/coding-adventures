@@ -13,7 +13,8 @@ gloss: "the day before"
 concept_tag: LA-TEMP237-PRIDIE
 prerequisites: [LA-C237-interdum, LA-C237-cotidie]
 sounds: []
-roots: []
+roots: [pridie-latin, dies-latin]
+etymology_hook: "prīdiē 'the day before' — an old prī 'before' + diē 'on the day'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C237-cotidie]
 <!-- hl-knowledge: introduces=[LA-LEX-C237-TEMP237-05]; assesses=[] -->
 
 **prīdiē** — "the day before".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prīdiē** is usually explained as an old *\*prī*, "before", the root of *prior*, "earlier", with *diē*, "on the day" (Lewis & Short): on the day before.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

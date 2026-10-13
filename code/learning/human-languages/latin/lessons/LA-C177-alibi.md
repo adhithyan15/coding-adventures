@@ -13,7 +13,8 @@ gloss: "elsewhere"
 concept_tag: LA-LOC177-ALIBI
 prerequisites: [LA-C176-bis, LA-C177-longe]
 sounds: []
-roots: []
+roots: [alibi-latin, alius-latin, ibi-latin]
+etymology_hook: "alibī 'elsewhere' — alius 'other' + ibī 'there'; English alibi"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C177-longe]
 <!-- hl-knowledge: introduces=[LA-LEX-C177-LOC177-02]; assesses=[] -->
 
 **alibī** — "elsewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alibī** is contracted from *alius*, "other", and *ibī*, "there" (Lewis & Short): in another place. English *alibi* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

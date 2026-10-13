@@ -12,6 +12,9 @@ Three lessons in a row, you've met a modern phrase built on real (if sometimes i
 Why it's said this way: Be honest: no two-word phrase exists here.
 Bonam noctem, bonum māne, and bonum vesperum are all modern, pedagogical phrases — not classically attested — but each pairs bonus directly with a single noun in the accusative: noctem, māne, vesperum. "Good afternoon" can't take that same shape, because you already learned last lesson that Latin has no simplex noun for "afternoon" at all — there's no afternoonem for bonus to modify. Bonum post merīdiem doesn't work: post merīdiem ("after noon") is a whole prepositional phrase, not a noun, so bonus has nothing to agree with. A three-word workaround, bonum tempus pōmerīdiānum ("good afternoon time"), actually is grammatical — pōmerīdiānus ("of the afternoon") is a real word Cicero himself uses, and here bonus agrees with a genuine noun, tempus ("time"). But it's a periphrasis, not a direct two-word match for the other three phrases — and it isn't itself attested anywhere as something Romans actually said as a greeting.
 
+The phrase, taken apart.
+salvē you know from Chapter 1. The new word, pōmerīdiānus "of the afternoon", was built inside Latin from post "after" and merīdiānus "of midday" (Lewis & Short).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: why "bonum post merīdiem" doesn't work — no noun for bonus to agree with; why "bonum tempus pōmerīdiānum" DOES work, but isn't attested as a real greeting]

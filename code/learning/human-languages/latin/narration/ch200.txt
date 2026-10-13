@@ -12,6 +12,9 @@ Before the new one: say the Latin for to share, then the Latin for to avoid.
 You'll want to know: tollō, tollere.
 tollō, tollere — "to lift, to raise; to remove".
 
+The word, taken apart.
+tollō is inherited from Proto-Italic tolnō, "to lift up", usually traced to Proto-Indo-European tl-neh2-, "to lift, to bear" (EtymDB 2.1); Greek talanton, "a balance, a weight", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to avoid, then the Latin for to lift.
 
 You'll want to know: perveniō, pervenīre.
 perveniō, pervenīre — "to reach, to arrive at".
+
+The word, taken apart.
+perveniō is per, "through", with veniō, "to come" (EtymDB 2.1): to come all the way.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to lift, then the Latin for to reach.
 You'll want to know: agnōscō, agnōscere.
 agnōscō, agnōscere — "to recognise".
 
+The word, taken apart.
+agnōscō is ad, "to", with gnōscō, "to get to know", the older form of nōscō (Lewis & Short): the g of the old form survives here.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to reach, then the Latin for to recognise.
 You'll want to know: recūsō, recūsāre.
 recūsō, recūsāre — "to refuse".
 
+The word, taken apart.
+recūsō is built on causa, "a case, a reason" (Lewis & Short), with re-, "back": to plead against, to refuse.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to recognise, then the Latin for to refuse
 
 You'll want to know: volitō, volitāre.
 volitō, volitāre — "to fly about".
+
+The word, taken apart.
+volitō is a frequentative of volō, "to fly" (Lewis & Short): to keep flying, to flit about. It is a different verb from volō, "to want".
 
 What you've built.
 One more word for this chapter.

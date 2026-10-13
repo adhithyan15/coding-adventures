@@ -11,6 +11,7 @@ concept_tag: GREETING-FORMAL
 prerequisites: [LA-C01-salve]
 sounds: [v-as-w, macron-long-vowel]
 roots: [avere]
+etymology_hook: "avē 'hail' — Romans tied it to avēre 'to fare well'; it may first have been a Punic greeting"
 duration:
   max_seconds: 240
 requires:
@@ -50,6 +51,8 @@ eager." It survives in English essentially unchanged inside the prayer **"Ave
 Maria"** ("Hail, Mary"), and stands in Catullus's famous *avē atque valē* — "hail
 and farewell" — spoken at his brother's grave, pairing the word you say on
 arrival with the one you say on leaving (next lesson).
+Romans heard *avē* as a form of *avēre*; many scholars now think it began as a
+Punic greeting meaning "live!".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[LA-LEX-AVE-03]; assesses=[] -->

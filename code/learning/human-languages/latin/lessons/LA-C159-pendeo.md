@@ -13,7 +13,8 @@ gloss: "to hang"
 concept_tag: LA-VERB-PENDEO
 prerequisites: [LA-C158-gusto, LA-C159-sentio]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "pendeō 'to hang' — the partner of pendō 'to weigh, to hang up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C159-sentio]
 <!-- hl-knowledge: introduces=[LA-LEX-C159-ACT159-02]; assesses=[] -->
 
 **pendeō, pendēre** — "to hang".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pendeō** is the intransitive partner of *pendō*, "to weigh, to hang up" (Lewis & Short): to be hanging. The pair is usually traced to Proto-Indo-European *\*(s)pend-*, "to stretch, to pull" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

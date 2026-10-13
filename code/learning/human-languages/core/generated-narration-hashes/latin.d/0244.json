@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 244,
-  "sourceHash": "fnv1a64:526c3737536bea57",
+  "sourceHash": "fnv1a64:f33a2c910ec9f2c0",
   "lessonIds": [
     "LA-C244-raeda",
     "LA-C244-platea",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch244.txt",
   "json": "latin/narration/ch244.json",
-  "textHash": "fnv1a64:6679f13f9698132a",
-  "jsonHash": "fnv1a64:087f74a808b5aafc",
+  "textHash": "fnv1a64:97da6f58c5433075",
+  "jsonHash": "fnv1a64:39ea61dd87f40d3d",
   "findings": []
 }

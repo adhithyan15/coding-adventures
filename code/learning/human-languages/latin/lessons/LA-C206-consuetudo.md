@@ -13,7 +13,8 @@ gloss: "a habit, a custom"
 concept_tag: LA-VALE206-CONSUETUDO
 prerequisites: [LA-C206-sapientia, LA-C206-ingenium]
 sounds: []
-roots: []
+roots: [consuetudo-latin, consuescere-latin]
+etymology_hook: "cōnsuētūdō 'habit' — built on cōnsuēscō 'to get used to'; English custom"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C206-ingenium]
 <!-- hl-knowledge: introduces=[LA-LEX-C206-VALE206-05]; assesses=[] -->
 
 **cōnsuētūdō, cōnsuētūdinis** — "a habit, a custom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōnsuētūdō** is built on *cōnsuēscō*, "to get used to" (Lewis & Short), with *-tūdō*, an ending for a state. English *custom* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

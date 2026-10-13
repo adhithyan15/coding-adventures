@@ -13,7 +13,8 @@ gloss: "cloudy"
 concept_tag: LA-QUAL153-NUBILUS
 prerequisites: [LA-C152-gelidus, LA-C152-serenus]
 sounds: []
-roots: []
+roots: [nubilus-latin, nubes-latin]
+etymology_hook: "nūbilus 'cloudy' — built on nūbēs 'cloud'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C152-serenus]
 <!-- hl-knowledge: introduces=[LA-LEX-C153-QUAL153-01]; assesses=[] -->
 
 **nūbilus, nūbila, nūbilum** — "cloudy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūbilus** is built on *nūbēs*, "a cloud" (Lewis & Short), which is probably traced to Proto-Indo-European *\*(s)newdh-*, "to cover" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

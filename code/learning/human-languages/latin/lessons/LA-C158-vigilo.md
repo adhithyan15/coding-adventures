@@ -13,7 +13,8 @@ gloss: "to stay awake"
 concept_tag: LA-VERB-VIGILO
 prerequisites: [LA-C158-cresco, LA-C158-festino]
 sounds: []
-roots: []
+roots: [vigilare-latin, vigil-latin]
+etymology_hook: "vigilō 'to stay awake' — built on vigil 'awake'; English wake is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C158-festino]
 <!-- hl-knowledge: introduces=[LA-LEX-C158-ACT158-03]; assesses=[] -->
 
 **vigilō, vigilāre** — "to stay awake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vigilō** is built on *vigil*, "awake, watchful" (Lewis & Short), usually traced to Proto-Indo-European *\*weg-*, "to be lively, to be awake" (EtymDB 2.1). English *wake* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

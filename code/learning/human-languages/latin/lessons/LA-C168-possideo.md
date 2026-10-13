@@ -13,7 +13,8 @@ gloss: "to own, to possess"
 concept_tag: LA-VERB-POSSIDEO
 prerequisites: [LA-C167-pulso, LA-C168-plico]
 sounds: []
-roots: []
+roots: [possidere-latin, sedere-latin]
+etymology_hook: "possideō 'to own' — usually explained as potis 'master' + sedeō 'to sit'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C168-plico]
 <!-- hl-knowledge: introduces=[LA-LEX-C168-ACT168-02]; assesses=[] -->
 
 **possideō, possidēre** — "to own, to possess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**possideō** is usually explained as *potis*, "master, able", with *sedeō*, "to sit" (EtymDB 2.1): to sit as master of something, so to own.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

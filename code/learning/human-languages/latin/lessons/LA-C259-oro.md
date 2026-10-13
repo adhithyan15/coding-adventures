@@ -13,7 +13,8 @@ gloss: "to pray, to beg"
 concept_tag: LA-VERB-ORO
 prerequisites: [LA-C258-sileo, LA-C258-metuo]
 sounds: []
-roots: []
+roots: [orare-latin, os-latin]
+etymology_hook: "ōrō 'to pray' — often linked with ōs 'mouth'; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C258-metuo]
 <!-- hl-knowledge: introduces=[LA-LEX-C259-ACT259-01]; assesses=[] -->
 
 **ōrō, ōrāre** — "to pray, to beg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōrō** is often linked with *ōs*, *ōris*, "the mouth" (Lewis & Short), though the link is uncertain: to speak, then to plead and pray. *ōs* is usually traced to Proto-Indo-European *\*h1oh3s*, "mouth" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

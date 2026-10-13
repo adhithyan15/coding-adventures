@@ -13,7 +13,8 @@ gloss: "to swim"
 concept_tag: LA-VERB-NATO
 prerequisites: [LA-C76-coquo, LA-C76-vendo]
 sounds: []
-roots: []
+roots: [natare-latin, nare-latin]
+etymology_hook: "natō 'to swim' — a frequentative of the older nō 'to swim, to float'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C76-vendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C76-VERBA2-04]; assesses=[] -->
 
 **natō, natāre** — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**natō** is a frequentative of the older verb *nō*, "to swim, to float" (Lewis & Short): to keep swimming.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

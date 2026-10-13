@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 194,
-  "sourceHash": "fnv1a64:df65631751397a7d",
+  "sourceHash": "fnv1a64:707a37df619b934f",
   "lessonIds": [
     "LA-C194-sententia",
     "LA-C194-sermo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch194.txt",
   "json": "latin/narration/ch194.json",
-  "textHash": "fnv1a64:538e68dec205800d",
-  "jsonHash": "fnv1a64:a727198fc028b5ff",
+  "textHash": "fnv1a64:37fb8a38fd84b73a",
+  "jsonHash": "fnv1a64:7ce95b8cff13be0f",
   "findings": []
 }

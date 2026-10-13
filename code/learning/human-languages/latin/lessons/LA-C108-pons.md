@@ -13,7 +13,8 @@ gloss: "a bridge"
 concept_tag: LA-VESTIS-PONS
 prerequisites: [LA-C107-templum, LA-C107-taberna]
 sounds: []
-roots: []
+roots: [pons-latin]
+etymology_hook: "pōns 'bridge' — inherited, usually traced to PIE *ponteh1s 'path': a way across"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C107-taberna]
 <!-- hl-knowledge: introduces=[LA-LEX-C108-VESTIS-01]; assesses=[] -->
 
 **pōns, pontis** — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pōns** is inherited, usually traced to Proto-Indo-European *\*ponteh1s*, "path, road" (EtymDB 2.1): a bridge as a way across.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

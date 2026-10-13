@@ -13,7 +13,8 @@ gloss: "to foresee, to provide for"
 concept_tag: LA-VERB-PROVIDEO
 prerequisites: [LA-C163-consilium, LA-C163-constituo]
 sounds: []
-roots: []
+roots: [providere-latin, videre-latin]
+etymology_hook: "prōvideō 'to foresee' — prō 'ahead' + videō 'to see', from PIE *weyd-; English wit is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C163-constituo]
 <!-- hl-knowledge: introduces=[LA-LEX-C163-FUT163-05]; assesses=[] -->
 
 **prōvideō, prōvidēre** — "to foresee, to provide for". It is **videō** with **prō**, "ahead": seeing a thing before it comes. Its future follows **vidēbō**: **prōvidēbō**. English *provide* and *provident* come from it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prōvideō** is *prō*, "ahead", with *videō*, "to see" (EtymDB 2.1). *videō* is usually traced to Proto-Indo-European *\*weyd-*, "to see, to know" (EtymDB 2.1); English *wit* and *wise* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

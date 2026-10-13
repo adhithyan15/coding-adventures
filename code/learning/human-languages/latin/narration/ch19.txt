@@ -14,6 +14,9 @@ Quid agis? literally means “What are you doing?” In the comedies of Plautus 
 Say it in two pieces: quid … agis. Keep Latin qu as kw.
 That is the whole step. A second attested question comes next, after this one is comfortable.
 
+The phrase, taken apart.
+quid agis pairs two inherited words. quid "what" is usually traced to the Proto-Indo-European question stem kwis (EtymDB 2.1). agis "you do" is a form of agō "I drive, I do", usually traced to h2eg-, "to lead" (EtymDB 2.1); Greek agō "I lead" is its cousin (Lewis & Short).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: quid agis?]
@@ -38,6 +41,9 @@ You know quid agis? Add one alternative built from the farewell valē: ut valēs
 Why it's said this way: the valēre family.
 Ut valēs? literally asks “How do you fare?” Its verb is valēre, “to be strong or well,” the same family as valē, “be well.” Plautus and Terence use this question in ordinary dialogue.
 You may also meet a modern "how are you?" question in spoken-Latin courses (a later lesson shows it). It is grammatical, but it is not found in surviving classical texts. Ut valēs? is the one Romans can be heard asking.
+
+The phrase, taken apart.
+ut valēs opens on ut "how", also spelled utī, built on the same question stem as quid "what" (Lewis & Short). Its verb valēre "to be well" gets its own lesson next.
 
 Guided Practice.
 [pause 1 second]
@@ -67,6 +73,9 @@ ut valēs? — how do you fare?
 valeō — I fare well.
 valē! — be well!
 That last imperative became the Chapter 1 goodbye. Latin's farewell is therefore a wish for the other person to remain well.
+
+The word, taken apart.
+valeō is inherited, usually traced through Proto-Italic waleo, "I am worth", to Proto-Indo-European h2welh1-, "to rule, to be strong" (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

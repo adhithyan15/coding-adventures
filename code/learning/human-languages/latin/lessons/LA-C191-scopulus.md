@@ -13,7 +13,8 @@ gloss: "a crag, a cliff"
 concept_tag: LA-RES191-SCOPULUS
 prerequisites: [LA-C190-sestertius, LA-C191-carbo]
 sounds: []
-roots: []
+roots: [scopulus-latin]
+etymology_hook: "scopulus 'crag' — borrowed from Greek skopelos 'lookout rock'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C191-carbo]
 <!-- hl-knowledge: introduces=[LA-LEX-C191-RES191-02]; assesses=[] -->
 
 **scopulus, scopulī** — "a crag, a cliff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scopulus** was borrowed from Greek *skopelos*, "a lookout rock, a peak" (Lewis & Short), from *skopeō*, "to look out" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

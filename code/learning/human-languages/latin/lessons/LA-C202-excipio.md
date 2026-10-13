@@ -13,7 +13,8 @@ gloss: "to welcome, to receive"
 concept_tag: LA-VERB-EXCIPIO
 prerequisites: [LA-C202-suadeo, LA-C202-tremo]
 sounds: []
-roots: []
+roots: [excipere-latin, capere-latin]
+etymology_hook: "excipiō 'to receive' — ex 'out' + capiō 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C202-tremo]
 <!-- hl-knowledge: introduces=[LA-LEX-C202-ACT202-03]; assesses=[] -->
 
 **excipiō, excipere** — "to welcome, to receive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**excipiō** is *ex*, "out", with *capiō*, "to take" (EtymDB 2.1), its a weakened to i: to take out, to receive. *capiō* is usually traced to Proto-Indo-European *\*keh2p-*, "to grab" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

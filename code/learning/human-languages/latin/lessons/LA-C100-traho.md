@@ -13,7 +13,8 @@ gloss: "to pull, to drag"
 concept_tag: LA-VERB-TRAHO
 prerequisites: [LA-C100-paro, LA-C100-tango]
 sounds: []
-roots: []
+roots: [trahere-latin]
+etymology_hook: "trahō 'to pull' — inherited, usually traced to PIE *tragh- 'to draw, to drag'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C100-tango]
 <!-- hl-knowledge: introduces=[LA-LEX-C100-VERBA6-05]; assesses=[] -->
 
 **trahō, trahere** — "to pull, to drag". English *tractor*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trahō** is inherited, usually traced to Proto-Indo-European *\*tragh-*, "to draw, to drag" (EtymDB 2.1). English *attract* comes from it too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

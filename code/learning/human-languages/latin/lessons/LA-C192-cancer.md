@@ -13,7 +13,8 @@ gloss: "a crab"
 concept_tag: LA-RES192-CANCER
 prerequisites: [LA-C191-procella, LA-C191-nimbus]
 sounds: []
-roots: []
+roots: [cancer-latin]
+etymology_hook: "cancer 'crab' — probably a doubled root for 'hard'; Greek karkinos 'crab' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C191-nimbus]
 <!-- hl-knowledge: introduces=[LA-LEX-C192-RES192-01]; assesses=[] -->
 
 **cancer, cancrī** — "a crab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cancer** is probably inherited, from a doubled form of a root for "hard"; Greek *karkinos*, "crab", is a cousin (Lewis & Short), and the n came in by dissimilation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

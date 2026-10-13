@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 124,
-  "sourceHash": "fnv1a64:607bc904f30b1b75",
+  "sourceHash": "fnv1a64:d76030c39373156c",
   "lessonIds": [
     "LA-C124-codex",
     "LA-C124-atramentum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch124.txt",
   "json": "latin/narration/ch124.json",
-  "textHash": "fnv1a64:5312ce98d9241d7f",
-  "jsonHash": "fnv1a64:b86cac0d1d3f0c43",
+  "textHash": "fnv1a64:b9530d2cef522909",
+  "jsonHash": "fnv1a64:06432d69b5c54ded",
   "findings": []
 }

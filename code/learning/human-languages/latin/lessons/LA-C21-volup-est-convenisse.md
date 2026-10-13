@@ -57,6 +57,11 @@ literally "**you, [name], [it] is-a-pleasure to-have-met**," or naturally,
 Put together: "**to have met [you] is a pleasure.**" This is a genuine,
 attested line — not a modern reconstruction.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volup est convēnisse** is built from Latin parts. *volup* "pleasant" is shortened from an older *volupis* and tied to *voluptās* "pleasure" (Lewis & Short), probably from the root of *volō* "I want". *convēnisse* comes from *conveniō* "I meet", made of *con-* "together" and *veniō* "I come" (EtymDB 2.1); *veniō* is usually traced to Proto-Indo-European *\*gwem-*, "to step" (EtymDB 2.1).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01] -->
 

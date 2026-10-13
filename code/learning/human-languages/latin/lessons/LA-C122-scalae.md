@@ -13,7 +13,8 @@ gloss: "a ladder, stairs"
 concept_tag: LA-THINGS122-SCALAE
 prerequisites: [LA-C122-serra, LA-C122-securis]
 sounds: []
-roots: []
+roots: [scalae-latin, scandere-latin]
+etymology_hook: "scālae 'ladder, stairs' — usually derived from scandō 'to climb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C122-securis]
 <!-- hl-knowledge: introduces=[LA-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **scālae, scālārum** — "a ladder, stairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scālae** is usually derived from *scandō*, "to climb": the things one climbs. English *scale*, "to climb", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a torch"
 concept_tag: LA-THINGS139-FAX
 prerequisites: [LA-C139-scamnum, LA-C139-tapete]
 sounds: []
-roots: []
+roots: [fax-latin]
+etymology_hook: "fax 'torch' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C139-tapete]
 <!-- hl-knowledge: introduces=[LA-LEX-C139-THINGS139-04]; assesses=[] -->
 
 **fax, facis** — "a torch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fax** has no sure origin; EtymDB 2.1 records a proposed Proto-Indo-European *\*gwheh2k-*, "to shine", but the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

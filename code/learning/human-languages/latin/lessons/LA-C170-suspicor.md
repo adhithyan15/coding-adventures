@@ -13,7 +13,8 @@ gloss: "to suspect"
 concept_tag: LA-VERB-SUSPICOR
 prerequisites: [LA-C170-levo, LA-C170-admiror]
 sounds: []
-roots: []
+roots: [suspicari-latin, specere-latin]
+etymology_hook: "suspicor 'to suspect' — kin to suspiciō 'to look up at': sub + speciō 'to look'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C170-admiror]
 <!-- hl-knowledge: introduces=[LA-LEX-C170-ACT170-04]; assesses=[] -->
 
 **suspicor, suspicārī** — "to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suspicor** belongs with *suspiciō*, "to look up at, to suspect" (Lewis & Short), built from *sub*, "up from under", and *speciō*, "to look": to look at someone from below.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

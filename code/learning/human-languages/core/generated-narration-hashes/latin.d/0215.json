@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 215,
-  "sourceHash": "fnv1a64:493a0f37fe0cc744",
+  "sourceHash": "fnv1a64:c25dbd9bc4bcd091",
   "lessonIds": [
     "LA-C215-hodiernus",
     "LA-C215-hesternus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch215.txt",
   "json": "latin/narration/ch215.json",
-  "textHash": "fnv1a64:420942e1129e992f",
-  "jsonHash": "fnv1a64:47e3d1ae938213e7",
+  "textHash": "fnv1a64:77dc38755a11aab6",
+  "jsonHash": "fnv1a64:e0479ebd284be46a",
   "findings": []
 }

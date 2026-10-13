@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 130,
-  "sourceHash": "fnv1a64:b7786223704ddcae",
+  "sourceHash": "fnv1a64:2245c22c255b17f6",
   "lessonIds": [
     "LA-C130-unda",
     "LA-C130-glacies",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch130.txt",
   "json": "latin/narration/ch130.json",
-  "textHash": "fnv1a64:fbecd3c5f17d8807",
-  "jsonHash": "fnv1a64:07417f7e68ded354",
+  "textHash": "fnv1a64:d39400f39f020d37",
+  "jsonHash": "fnv1a64:686e1ebc018d55b3",
   "findings": []
 }

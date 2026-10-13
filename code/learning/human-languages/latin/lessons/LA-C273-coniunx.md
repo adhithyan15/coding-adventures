@@ -13,7 +13,8 @@ gloss: "a husband or wife, a spouse"
 concept_tag: LA-RES273-CONIUNX
 prerequisites: [LA-C272-scriba, LA-C273-nuptiae]
 sounds: []
-roots: []
+roots: [coniunx-latin, iungere-latin]
+etymology_hook: "coniūnx 'spouse' — built on coniungō 'to join together'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C273-nuptiae]
 <!-- hl-knowledge: introduces=[LA-LEX-C273-RES273-02]; assesses=[] -->
 
 **coniūnx, coniugis** — "a husband or wife, a spouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coniūnx** is built on *coniungō*, "to join together", from *con-*, "together", and *iungō*, "to join": one joined in marriage. Its root is the one in *iugum*, "a yoke".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

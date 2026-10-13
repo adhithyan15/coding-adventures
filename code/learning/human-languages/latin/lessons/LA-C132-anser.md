@@ -13,7 +13,8 @@ gloss: "a goose"
 concept_tag: LA-THINGS132-ANSER
 prerequisites: [LA-C131-corvus, LA-C131-anas]
 sounds: []
-roots: []
+roots: [anser-latin]
+etymology_hook: "ānser 'goose' — inherited, usually traced to PIE *ghh2ens 'goose'; English goose is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C131-anas]
 <!-- hl-knowledge: introduces=[LA-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **ānser, ānseris** — "a goose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ānser** is inherited, usually traced to Proto-Indo-European *\*ghh2ens*, "goose" (EtymDB 2.1); Latin lost the first sound. Greek *khēn*, "goose", and English *goose* and *gander* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

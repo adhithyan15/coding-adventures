@@ -13,7 +13,8 @@ gloss: "a mountain"
 concept_tag: LA-ARBOR-MONS
 prerequisites: [LA-C86-folium, LA-C86-silva]
 sounds: []
-roots: []
+roots: [mons-latin]
+etymology_hook: "mōns 'mountain' — probably from PIE *men- 'to stand out', like ēmineō 'to stand out'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C86-silva]
 <!-- hl-knowledge: introduces=[LA-LEX-C86-ARBOR-05]; assesses=[] -->
 
 **mōns, montis** — "a mountain". English *mount*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mōns** is probably inherited, from a Proto-Indo-European root *\*men-*, "to stand out" (EtymDB 2.1); *ēmineō*, "to stand out", and *mentum*, "chin", are often put in the same family (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

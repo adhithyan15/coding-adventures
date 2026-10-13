@@ -13,7 +13,8 @@ gloss: "to not want, to refuse"
 concept_tag: LA-VERB-NOLO
 prerequisites: [LA-C110-oportet, LA-C110-licet]
 sounds: []
-roots: []
+roots: [nolle-latin, velle-latin]
+etymology_hook: "nōlō 'to not want' — ne 'not' fused with volō 'to want'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C110-licet]
 <!-- hl-knowledge: introduces=[LA-LEX-C110-CAN110-05]; assesses=[] -->
 
 **nōlō, nōlle** — "to not want, to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nōlō** is *ne*, "not", fused with *volō*, "to want". Old forms such as *nevis*, "you do not want", show the join (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

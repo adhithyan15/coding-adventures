@@ -13,7 +13,8 @@ gloss: "to remember"
 concept_tag: LA-VERB-MEMINI
 prerequisites: [LA-C234-mando, LA-C234-retineo]
 sounds: []
-roots: []
+roots: [memini-latin]
+etymology_hook: "meminī 'to remember' — usually traced to PIE *memone, a perfect of *men- 'to think'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C234-retineo]
 <!-- hl-knowledge: introduces=[LA-LEX-C235-ACT235-01]; assesses=[] -->
 
 **meminī, meminisse** — "to remember".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**meminī** is inherited, usually traced to Proto-Indo-European *\*memone*, "has in mind", a doubled perfect of *\*men-*, "to think" (EtymDB 2.1). English *mind* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

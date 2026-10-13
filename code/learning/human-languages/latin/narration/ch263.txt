@@ -12,6 +12,9 @@ Before the new one: say the Latin for envy, then the Latin for boredom.
 You'll want to know: postrīdiē.
 postrīdiē — "the next day".
 
+The word, taken apart.
+postrīdiē is a locative of posterus, "coming after" (Lewis & Short), with diē, "on the day": on the day after.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for boredom, then the Latin for the next day.
 
 You'll want to know: intereā.
 intereā — "meanwhile".
+
+The word, taken apart.
+intereā is inter, "between, during", with eā, "that" (Lewis & Short): during that time.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for the next day, then the Latin for meanwhile
 You'll want to know: aliquandō.
 aliquandō — "at some time, once".
 
+The word, taken apart.
+aliquandō is built on quandō, "when" (EtymDB 2.1), with ali-, "some, other", the stem of alius, as in aliquis, "someone": at some time or other.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for meanwhile, then the Latin for at some time
 You'll want to know: diū.
 diū — "for a long time".
 
+The word, taken apart.
+diū is an old case form from the root of diēs, "day" (Lewis & Short), usually traced to Proto-Indo-European dyewi, "during the day" (EtymDB 2.1): first "by day", then "for a long time".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for at some time, then the Latin for for a lon
 
 You'll want to know: brevī.
 brevī — "shortly, soon".
+
+The word, taken apart.
+brevī is the ablative of brevis, "short", with tempore, "in a time", understood: in a short time.
 
 What you've built.
 One more word for this chapter.

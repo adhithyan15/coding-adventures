@@ -13,7 +13,8 @@ gloss: "gold"
 concept_tag: LA-RES222-AURUM
 prerequisites: [LA-C221-fortuna, LA-C221-casus]
 sounds: []
-roots: []
+roots: [aurum-latin]
+etymology_hook: "aurum 'gold' — Old Latin ausum, usually traced to PIE *h2eh2usom 'a glow'; kin to aurōra"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C221-casus]
 <!-- hl-knowledge: introduces=[LA-LEX-C222-RES222-01]; assesses=[] -->
 
 **aurum, aurī** — "gold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aurum** is inherited; Old Latin had *ausum*, "gold", usually traced to Proto-Indo-European *\*h2eh2usom*, "a glow", from *\*h2ews-*, "to dawn, to grow light" (EtymDB 2.1), the root of *aurōra*, "dawn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "face to face"
 concept_tag: LA-LOC238-CORAM
 prerequisites: [LA-C238-citra, LA-C238-apud]
 sounds: []
-roots: []
+roots: [coram-latin, os-latin]
+etymology_hook: "cōram 'face to face' — usually linked with ōs, ōris 'face' + con-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C238-apud]
 <!-- hl-knowledge: introduces=[LA-LEX-C238-LOC238-04]; assesses=[] -->
 
 **cōram** — "face to face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōram** is usually linked with *ōs*, *ōris*, "the face, the mouth" (Lewis & Short), with *con-*, "with": face to face.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

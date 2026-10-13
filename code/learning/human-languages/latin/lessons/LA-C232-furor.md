@@ -13,7 +13,8 @@ gloss: "to steal"
 concept_tag: LA-VERB-FUROR
 prerequisites: [LA-C231-queror, LA-C231-desum]
 sounds: []
-roots: []
+roots: [furari-latin, fur-latin]
+etymology_hook: "fūror 'to steal' — built on fūr 'thief'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C231-desum]
 <!-- hl-knowledge: introduces=[LA-LEX-C232-ACT232-01]; assesses=[] -->
 
 **fūror, fūrārī** — "to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fūror** is built on *fūr*, "a thief" (Lewis & Short), usually traced to Proto-Indo-European *\*bhōr*, "thief" (EtymDB 2.1), from the root of *ferō*, "to carry": one who carries off. It is a different word from *furor*, "rage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

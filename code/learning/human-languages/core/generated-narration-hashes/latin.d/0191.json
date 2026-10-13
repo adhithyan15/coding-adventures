@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 191,
-  "sourceHash": "fnv1a64:ca7e2f2a7ad37fc1",
+  "sourceHash": "fnv1a64:cbba3633312cc098",
   "lessonIds": [
     "LA-C191-carbo",
     "LA-C191-scopulus",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch191.txt",
   "json": "latin/narration/ch191.json",
-  "textHash": "fnv1a64:b9a1c0692bb55f09",
-  "jsonHash": "fnv1a64:a14864b471ae93fb",
+  "textHash": "fnv1a64:418e06a533f86d5b",
+  "jsonHash": "fnv1a64:5cfc1580c0b17b86",
   "findings": []
 }

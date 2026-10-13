@@ -13,7 +13,8 @@ gloss: "to hold"
 concept_tag: LA-VERB-TENEO
 prerequisites: [LA-C254-tabernaculum, LA-C254-vexillum]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "teneō 'to hold' — inherited, usually traced to PIE *ten- 'to stretch'; English tenant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C254-vexillum]
 <!-- hl-knowledge: introduces=[LA-LEX-C255-ACT255-01]; assesses=[] -->
 
 **teneō, tenēre** — "to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**teneō** is inherited from Proto-Italic *\*tenēō*, "to hold" (EtymDB 2.1), usually traced to Proto-Indo-European *\*ten-*, "to stretch" (Lewis & Short compare Greek *teinō*, "to stretch"). English *tenant* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

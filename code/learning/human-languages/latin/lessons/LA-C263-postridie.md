@@ -13,7 +13,8 @@ gloss: "the next day"
 concept_tag: LA-TEMP263-POSTRIDIE
 prerequisites: [LA-C262-invidia, LA-C262-taedium]
 sounds: []
-roots: []
+roots: [postridie-latin, posterus-latin, dies-latin]
+etymology_hook: "postrīdiē 'the next day' — posterus 'coming after' + diē 'on the day'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C262-taedium]
 <!-- hl-knowledge: introduces=[LA-LEX-C263-TEMP263-01]; assesses=[] -->
 
 **postrīdiē** — "the next day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**postrīdiē** is a locative of *posterus*, "coming after" (Lewis & Short), with *diē*, "on the day": on the day after.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

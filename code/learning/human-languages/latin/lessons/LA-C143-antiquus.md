@@ -13,7 +13,8 @@ gloss: "ancient, old-fashioned"
 concept_tag: LA-QUAL143-ANTIQUUS
 prerequisites: [LA-C143-mollis, LA-C143-tepidus]
 sounds: []
-roots: []
+roots: [antiquus-latin, ante-latin]
+etymology_hook: "antīquus 'ancient' — built on ante 'before': what stood before"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C143-tepidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C143-QUAL143-04]; assesses=[] -->
 
 **antīquus, antīqua, antīquum** — "ancient, old-fashioned".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**antīquus** is built on *ante*, "before" (Lewis & Short), and is usually traced to Proto-Indo-European *\*h2enti-h3kwos*, "having been before" (EtymDB 2.1): what stood before, so old.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

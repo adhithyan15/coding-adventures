@@ -12,6 +12,9 @@ Before the new one: say the Latin for a laurel, then the Latin for a violet.
 You'll want to know: catulus, catulī.
 catulus, catulī — "a puppy".
 
+The word, taken apart.
+catulus, "a young animal, a puppy", has no sure origin. Lewis & Short make it a diminutive of catus, "a cat", but catulus is far older than that word for cat, so the link is unlikely.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a violet, then the Latin for a puppy.
 
 You'll want to know: tigris, tigris.
 tigris, tigris — "a tiger".
+
+The word, taken apart.
+tigris was borrowed from Greek tigris, "tiger" (EtymDB 2.1), which probably came from an Iranian language.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a puppy, then the Latin for a tiger.
 You'll want to know: clāva, clāvae.
 clāva, clāvae — "a club".
 
+The word, taken apart.
+clāva is often traced to Proto-Indo-European kelh2-, "to beat, to break" (EtymDB 2.1), with percellō, "to strike down", in the same family (Lewis & Short); the link is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a tiger, then the Latin for a club.
 You'll want to know: catēna, catēnae.
 catēna, catēnae — "a chain".
 
+The word, taken apart.
+catēna has no sure origin; EtymDB 2.1 records a proposed Proto-Indo-European kat-, "to twist, to plait". English chain comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a club, then the Latin for a chain.
 
 You'll want to know: scūtum, scūtī.
 scūtum, scūtī — "a shield".
+
+The word, taken apart.
+scūtum is probably inherited, from a Proto-Indo-European root skei-, "to cut, to split" (EtymDB 2.1): a shield of split boards. Old Irish sciath, "shield", is a cousin; Lewis & Short's link with Greek skytos, "leather", is less likely.
 
 What you've built.
 One more word for this chapter.

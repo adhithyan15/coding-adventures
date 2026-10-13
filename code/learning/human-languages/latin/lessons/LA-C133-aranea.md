@@ -13,7 +13,8 @@ gloss: "a spider"
 concept_tag: LA-THINGS133-ARANEA
 prerequisites: [LA-C132-formica, LA-C132-papilio]
 sounds: []
-roots: []
+roots: [aranea-latin]
+etymology_hook: "arānea 'spider' — closely related to Greek arakhnē 'spider'; the exact link is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C132-papilio]
 <!-- hl-knowledge: introduces=[LA-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **arānea, arāneae** — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arānea** is closely related to Greek *arakhnē*, "spider" (Lewis & Short); whether Latin borrowed it or both took it from a third language is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

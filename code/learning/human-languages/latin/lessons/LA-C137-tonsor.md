@@ -13,7 +13,8 @@ gloss: "a barber"
 concept_tag: LA-THINGS137-TONSOR
 prerequisites: [LA-C137-pistor, LA-C137-sutor]
 sounds: []
-roots: []
+roots: [tonsor-latin, tondere-latin]
+etymology_hook: "tōnsor 'barber' — built on tondeō 'to shear'; English tonsure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C137-sutor]
 <!-- hl-knowledge: introduces=[LA-LEX-C137-THINGS137-04]; assesses=[] -->
 
 **tōnsor, tōnsōris** — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tōnsor** is built on *tondeō*, "to shear, to clip" (EtymDB 2.1), with *-tor*, "one who does it". English *tonsure* comes from the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

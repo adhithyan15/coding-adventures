@@ -13,7 +13,8 @@ gloss: "a duty"
 concept_tag: LA-RES248-OFFICIUM
 prerequisites: [LA-C248-periculum, LA-C248-beneficium]
 sounds: []
-roots: []
+roots: [officium-latin, opus-latin, facere-latin]
+etymology_hook: "officium 'duty' — from opificium: opus 'work' + faciō 'to do'; English office"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C248-beneficium]
 <!-- hl-knowledge: introduces=[LA-LEX-C248-RES248-04]; assesses=[] -->
 
 **officium, officiī** — "a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**officium** is contracted from older *opificium* (Lewis & Short), from *opus*, "work", and *faciō*, "to do": the work one must do. English *office* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

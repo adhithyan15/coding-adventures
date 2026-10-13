@@ -12,6 +12,9 @@ Before the new one: say the Latin for a word, then the Latin for a name.
 You'll want to know: cerasum, cerasī.
 cerasum, cerasī — "a cherry".
 
+The word, taken apart.
+cerasum was borrowed from Greek kerasos, "cherry tree", itself probably from a language of Asia Minor. English cherry comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a name, then the Latin for a cherry.
 
 You'll want to know: prūnum, prūnī.
 prūnum, prūnī — "a plum".
+
+The word, taken apart.
+prūnum was borrowed from Greek prounon, "plum" (EtymDB 2.1), a word probably from a language of Asia Minor. English prune and plum, an earlier borrowing, both come from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a cherry, then the Latin for a plum.
 You'll want to know: brassica, brassicae.
 brassica, brassicae — "cabbage".
 
+The word, taken apart.
+brassica has no sure origin; a Celtic source is sometimes suggested.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a plum, then the Latin for cabbage.
 You'll want to know: porrum, porrī.
 porrum, porrī — "a leek".
 
+The word, taken apart.
+porrum is inherited, usually traced to Proto-Indo-European prso-, "leek" (EtymDB 2.1); Greek prason, "leek", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for cabbage, then the Latin for a leek.
 
 You'll want to know: puls, pultis.
 puls, pultis — "porridge".
+
+The word, taken apart.
+puls is usually linked with Greek poltos, "porridge" (Lewis & Short), and may have been borrowed from it; both go back to a root for meal, pel-, "flour, dust" (EtymDB 2.1). English pulse, "beans and lentils", comes from it.
 
 What you've built.
 One more word for this chapter.

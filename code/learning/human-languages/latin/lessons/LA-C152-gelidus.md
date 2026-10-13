@@ -13,7 +13,8 @@ gloss: "icy"
 concept_tag: LA-QUAL152-GELIDUS
 prerequisites: [LA-C152-infirmus, LA-C152-solus]
 sounds: []
-roots: []
+roots: [gelidus-latin, gelu-latin]
+etymology_hook: "gelidus 'icy' — built on gelū 'frost', from PIE *gel- 'cold'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C152-solus]
 <!-- hl-knowledge: introduces=[LA-LEX-C152-QUAL152-04]; assesses=[] -->
 
 **gelidus, gelida, gelidum** — "icy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gelidus** is built on *gelū*, "frost" (Lewis & Short), usually traced to Proto-Indo-European *\*gel-*, "cold" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "narrow"
 concept_tag: LA-QUAL143-ANGUSTUS
 prerequisites: [LA-C143-tepidus, LA-C143-antiquus]
 sounds: []
-roots: []
+roots: [angustus-latin, angere-latin]
+etymology_hook: "angustus 'narrow' — built on angō 'to squeeze', from PIE *h2engh- 'narrow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C143-antiquus]
 <!-- hl-knowledge: introduces=[LA-LEX-C143-QUAL143-05]; assesses=[] -->
 
 **angustus, angusta, angustum** — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**angustus** is built on *angō*, "to squeeze, to choke" (Lewis & Short), usually traced to Proto-Indo-European *\*h2engh-*, "narrow, tight" (EtymDB 2.1). English *anguish* and *anxious* belong to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

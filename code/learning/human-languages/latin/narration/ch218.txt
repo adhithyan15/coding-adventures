@@ -12,6 +12,9 @@ Before the new one: say the Latin for a vehicle, then the Latin for a chariot.
 You'll want to know: passus, passūs.
 passus, passūs — "a pace".
 
+The word, taken apart.
+passus is built on pandō, "to spread out, to stretch" (EtymDB 2.1): a pace as the stretch of the legs. A Roman mile was mīlle passūs, "a thousand paces".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a chariot, then the Latin for a pace.
 
 You'll want to know: testis, testis.
 testis, testis — "a witness".
+
+The word, taken apart.
+testis is usually explained as an old compound, tri-stis, "the third who stands by", from the root of trēs, "three", and stō, "to stand": a witness as the third party.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a pace, then the Latin for a witness.
 You'll want to know: reus, reī.
 reus, reī — "a defendant".
 
+The word, taken apart.
+reus is built on rēs, "a thing, a matter, a lawsuit" (Lewis & Short): the one the case concerns.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a witness, then the Latin for a defendant.
 You'll want to know: poena, poenae.
 poena, poenae — "a punishment".
 
+The word, taken apart.
+poena was borrowed from Greek poinē, "a fine, blood-money" (Lewis & Short), which is usually traced to Proto-Indo-European kwoyneh2, "penalty" (EtymDB 2.1). English pain comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a defendant, then the Latin for a punishme
 
 You'll want to know: crīmen, crīminis.
 crīmen, crīminis — "a charge, a crime".
+
+The word, taken apart.
+crīmen belongs with cernō, "to sift, to decide" (Lewis & Short), and is usually traced to Proto-Indo-European kreymn, "a verdict, a sifting" (EtymDB 2.1): first a judgement, then a charge.
 
 What you've built.
 One more word for this chapter.

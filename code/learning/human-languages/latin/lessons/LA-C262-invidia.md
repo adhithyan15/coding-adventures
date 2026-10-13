@@ -13,7 +13,8 @@ gloss: "envy"
 concept_tag: LA-VALE262-INVIDIA
 prerequisites: [LA-C262-virtus, LA-C262-pudor]
 sounds: []
-roots: []
+roots: [invidia-latin, invidere-latin]
+etymology_hook: "invidia 'envy' — built on invidus 'envious'; English envy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C262-pudor]
 <!-- hl-knowledge: introduces=[LA-LEX-C262-VALE262-04]; assesses=[] -->
 
 **invidia, invidiae** — "envy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**invidia** is built on *invidus*, "envious" (Lewis & Short), from *invideō*, "to look askance at": the evil eye. English *envy* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

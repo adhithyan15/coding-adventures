@@ -13,7 +13,8 @@ gloss: "out of doors"
 concept_tag: LA-LOC177-FORIS
 prerequisites: [LA-C177-illic, LA-C177-intus]
 sounds: []
-roots: []
+roots: [foris-latin]
+etymology_hook: "forīs 'outdoors' — an old case form of foris 'door'; English door is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C177-intus]
 <!-- hl-knowledge: introduces=[LA-LEX-C177-LOC177-05]; assesses=[] -->
 
 **forīs** — "out of doors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forīs** is an old case form of *foris*, "a door" (Lewis & Short): at the doors, so outside. The word for door is usually traced to Proto-Indo-European *\*dhwer-*, "door" (EtymDB 2.1), and English *door* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

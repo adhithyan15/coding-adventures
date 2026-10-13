@@ -13,7 +13,8 @@ gloss: "to touch"
 concept_tag: LA-VERB-TANGO
 prerequisites: [LA-C100-navigo, LA-C100-paro]
 sounds: []
-roots: []
+roots: [tangere-latin]
+etymology_hook: "tangō 'to touch' — inherited, usually traced to PIE *tag- 'to touch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C100-paro]
 <!-- hl-knowledge: introduces=[LA-LEX-C100-VERBA6-04]; assesses=[] -->
 
 **tangō, tangere** — "to touch". English *tangible*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tangō** is inherited, usually traced to Proto-Indo-European *\*tag-*, "to touch" (EtymDB 2.1). The n inside the present stem is an old way of marking the verb and is missing from its perfect *tetigī*, "I touched".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to make haste"
 concept_tag: LA-VERB-PROPERO
 prerequisites: [LA-C169-interficio, LA-C169-consuesco]
 sounds: []
-roots: []
+roots: [properare-latin]
+etymology_hook: "properō 'to make haste' — built on properus 'quick'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C169-consuesco]
 <!-- hl-knowledge: introduces=[LA-LEX-C169-ACT169-03]; assesses=[] -->
 
 **properō, properāre** — "to make haste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**properō** is built on *properus*, "quick, hasty" (Lewis & Short), which is often explained as *pro-*, "forward", plus the root of *parō*, "to make ready".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

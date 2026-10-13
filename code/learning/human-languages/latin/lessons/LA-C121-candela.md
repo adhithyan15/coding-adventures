@@ -13,7 +13,8 @@ gloss: "a candle"
 concept_tag: LA-THINGS121-CANDELA
 prerequisites: [LA-C121-patina, LA-C121-catinus, LA-C57-practice, LA-C56-nonus]
 sounds: []
-roots: []
+roots: [candela-latin, candere-latin]
+etymology_hook: "candēla 'candle' — built on candeō 'to shine', from PIE *(s)kand-; English candle"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [LA-C121-catinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **candēla, candēlae** — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**candēla** is built on *candeō*, "to shine, to glow white" (Lewis & Short), with *-ēla*, an ending for a tool. *candeō* is usually traced to Proto-Indo-European *\*(s)kand-*, "to shine" (EtymDB 2.1). English *candle* comes from *candēla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

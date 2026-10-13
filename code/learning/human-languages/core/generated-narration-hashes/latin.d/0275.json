@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 275,
-  "sourceHash": "fnv1a64:065caf91edfa82a0",
+  "sourceHash": "fnv1a64:1a33f0938dbcd62f",
   "lessonIds": [
     "LA-C275-sericum",
     "LA-C275-lutum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch275.txt",
   "json": "latin/narration/ch275.json",
-  "textHash": "fnv1a64:74c58aff8eb9dd7f",
-  "jsonHash": "fnv1a64:db59bd356fb08ea6",
+  "textHash": "fnv1a64:1fe013b4824c182b",
+  "jsonHash": "fnv1a64:0f2c206d88182d27",
   "findings": []
 }

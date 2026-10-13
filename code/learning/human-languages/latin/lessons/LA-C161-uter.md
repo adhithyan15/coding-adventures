@@ -13,7 +13,8 @@ gloss: "which (of two)"
 concept_tag: LA-NEG161-UTER
 prerequisites: [LA-C161-nemo, LA-C161-nullus]
 sounds: []
-roots: []
+roots: [uter-latin, quis-latin]
+etymology_hook: "uter 'which of two' — from older *cuter, a comparative of quis 'who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C161-nullus]
 <!-- hl-knowledge: introduces=[LA-LEX-C161-NEG161-04]; assesses=[] -->
 
 **uter, utra, utrum** — "which (of two)". A question that picks one of two: **Uter liber?** — "Which of the two books?" **neuter**, "neither of the two", gave English *neuter* and *neutral*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uter** comes from an older *\*cuter*, a comparative form of the question word *quis*, "who" (Lewis & Short): which of two. It is a different word from *ūter*, "a leather bag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

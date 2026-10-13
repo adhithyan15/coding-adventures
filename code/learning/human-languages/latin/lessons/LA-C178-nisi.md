@@ -13,7 +13,8 @@ gloss: "unless, if not"
 concept_tag: LA-CAUSA178-NISI
 prerequisites: [LA-C178-quamquam, LA-C178-etsi]
 sounds: []
-roots: []
+roots: [nisi-latin, si-latin]
+etymology_hook: "nisi 'unless' — ne 'not' + sī 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C178-etsi]
 <!-- hl-knowledge: introduces=[LA-LEX-C178-CAUSA178-05]; assesses=[] -->
 
 **nisi** — "unless, if not".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nisi** is *sī*, "if" (EtymDB 2.1), with the negative *ne*, "not", in front: if not.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

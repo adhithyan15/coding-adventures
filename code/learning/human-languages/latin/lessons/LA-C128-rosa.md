@@ -13,7 +13,8 @@ gloss: "a rose"
 concept_tag: LA-THINGS128-ROSA
 prerequisites: [LA-C128-cervisia, LA-C128-sucus, LA-C39-amo]
 sounds: []
-roots: []
+roots: [rosa-latin]
+etymology_hook: "rosa 'rose' — related to Greek rhodon, probably through another language of Italy"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [LA-C128-sucus]
 <!-- hl-knowledge: introduces=[LA-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **rosa, rosae** — "a rose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rosa** is related to Greek *rhodon*, "rose" (Lewis & Short), but it is not a direct borrowing: it probably reached Latin through another language of Italy. The word is often traced further back to Iranian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

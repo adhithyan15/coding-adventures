@@ -13,7 +13,8 @@ gloss: "a long dress"
 concept_tag: LA-THINGS125-STOLA
 prerequisites: [LA-C125-velum, LA-C125-plaustrum]
 sounds: []
-roots: []
+roots: [stola-latin]
+etymology_hook: "stola 'long dress' — borrowed from Greek stolē 'garment', from stellō 'to equip'; English stole"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C125-plaustrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **stola, stolae** — "a long dress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stola** was borrowed from Greek *stolē*, "a garment, equipment" (Lewis & Short), from *stellō*, "to make ready, to equip" (EtymDB 2.1). English *stole* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

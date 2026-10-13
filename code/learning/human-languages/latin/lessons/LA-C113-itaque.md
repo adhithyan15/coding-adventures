@@ -13,7 +13,8 @@ gloss: "and so, therefore"
 concept_tag: LA-WHY113-ITAQUE
 prerequisites: [LA-C113-enim, LA-C113-ideo]
 sounds: []
-roots: []
+roots: [itaque-latin, ita]
+etymology_hook: "itaque 'and so' — ita 'so' + -que 'and'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C113-ideo]
 <!-- hl-knowledge: introduces=[LA-LEX-C113-WHY113-04]; assesses=[] -->
 
 **itaque** — "and so, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**itaque** is *ita*, "so, thus", with *-que*, "and" (EtymDB 2.1): and so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "sick, ill"
 concept_tag: LA-AEGER-AEGER
 prerequisites: [LA-C67-medicina, LA-C67-morbus]
 sounds: []
-roots: []
+roots: [aeger-latin]
+etymology_hook: "aeger 'sick' — origin unknown; no proposal is generally accepted"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C67-morbus]
 <!-- hl-knowledge: introduces=[LA-LEX-C68-AEGER-01]; assesses=[] -->
 
 **aeger, aegra, aegrum** — "sick, ill". The opposite of **sānus**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aeger**, "sick", has no sure origin; Lewis & Short list only tentative comparisons, and no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

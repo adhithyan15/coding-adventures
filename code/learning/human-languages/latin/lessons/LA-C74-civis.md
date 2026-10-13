@@ -13,7 +13,8 @@ gloss: "a citizen"
 concept_tag: LA-OPUS-CIVIS
 prerequisites: [LA-C73-nauta, LA-C73-poeta]
 sounds: []
-roots: []
+roots: [civis-latin]
+etymology_hook: "cīvis 'citizen' — inherited, usually traced to PIE *keywos 'intimate, friendly'; English civil, city"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C73-poeta]
 <!-- hl-knowledge: introduces=[LA-LEX-C74-OPUS-01]; assesses=[] -->
 
 **cīvis, cīvis** — "a citizen". English *civil* and *city*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cīvis** is inherited, usually traced to Proto-Indo-European *\*keywos*, "intimate, friendly" (EtymDB 2.1), from a root *\*kei-*, "to lie down, to settle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

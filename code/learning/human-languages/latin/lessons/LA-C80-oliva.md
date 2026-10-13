@@ -13,7 +13,8 @@ gloss: "an olive"
 concept_tag: LA-CIBUS2-OLIVA
 prerequisites: [LA-C80-uva, LA-C80-holus]
 sounds: []
-roots: []
+roots: [oliva-latin]
+etymology_hook: "olīva 'olive' — borrowed from Greek elaia 'olive'; English olive"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C80-holus]
 <!-- hl-knowledge: introduces=[LA-LEX-C80-CIBUS2-05]; assesses=[] -->
 
 **olīva, olīvae** — "an olive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**olīva** was borrowed from Greek *elaia*, "olive" (Lewis & Short), probably from an older Greek *\*elaiwa* (EtymDB 2.1). English *olive* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

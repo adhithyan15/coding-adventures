@@ -13,7 +13,8 @@ gloss: "a chair, a seat"
 concept_tag: LA-DOMUS1-SELLA
 prerequisites: [LA-C81-nux, LA-C82-mensa]
 sounds: []
-roots: []
+roots: [sella-latin, sedere-latin]
+etymology_hook: "sella 'chair' — from older *sedla, on PIE *sed- 'to sit'; English saddle is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C82-mensa]
 <!-- hl-knowledge: introduces=[LA-LEX-C82-DOMUS1-02]; assesses=[] -->
 
 **sella, sellae** — "a chair, a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sella** comes from an older *\*sedla* (Lewis & Short), built on Proto-Indo-European *\*sed-*, "to sit" (EtymDB 2.1), the root of *sedeō*, "to sit". English *saddle* is a cousin from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

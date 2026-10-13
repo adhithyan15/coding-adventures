@@ -12,6 +12,9 @@ Before the new one: say the Latin for wax; a wax tablet, then the Latin for a pi
 You'll want to know: statua, statuae.
 statua, statuae — "a statue".
 
+The word, taken apart.
+statua is built on statuō, "to set up" (Lewis & Short): a thing set up. statuō comes from status, "a standing", from stō, "to stand".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a picture, then the Latin for a statue.
 
 You'll want to know: signum, signī.
 signum, signī — "a sign, a signal".
+
+The word, taken apart.
+signum is often traced to Proto-Indo-European sek-, "to cut" (EtymDB 2.1), the root of secō, "to cut": a sign as a notch or mark. The link is likely but not certain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a statue, then the Latin for a sign.
 You'll want to know: vēlum, vēlī.
 vēlum, vēlī — "a sail; a curtain".
 
+The word, taken apart.
+vēlum is usually traced to Proto-Indo-European weg-, "to weave" (EtymDB 2.1), through an older wegslom; vexillum, "a banner", is its diminutive.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a sign, then the Latin for a sail; a curta
 You'll want to know: plaustrum, plaustrī.
 plaustrum, plaustrī — "a wagon, a cart".
 
+The word, taken apart.
+plaustrum has no sure origin; the links with words for floating that Lewis & Short and EtymDB 2.1 record are doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a sail; a curtain, then the Latin for a wa
 
 You'll want to know: stola, stolae.
 stola, stolae — "a long dress".
+
+The word, taken apart.
+stola was borrowed from Greek stolē, "a garment, equipment" (Lewis & Short), from stellō, "to make ready, to equip" (EtymDB 2.1). English stole comes from it.
 
 What you've built.
 One more word for this chapter.

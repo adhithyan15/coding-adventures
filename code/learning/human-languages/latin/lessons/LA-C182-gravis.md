@@ -13,7 +13,8 @@ gloss: "heavy, serious"
 concept_tag: LA-QUAL182-GRAVIS
 prerequisites: [LA-C182-communis, LA-C182-inanis]
 sounds: []
-roots: []
+roots: [gravis-latin]
+etymology_hook: "gravis 'heavy' — inherited, usually traced to PIE *gwreh2us 'heavy'; Greek barys is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C182-inanis]
 <!-- hl-knowledge: introduces=[LA-LEX-C182-QUAL182-05]; assesses=[] -->
 
 **gravis, grave** — "heavy, serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gravis** is inherited, usually traced to Proto-Indo-European *\*gwreh2us*, "heavy" (EtymDB 2.1); Greek *barys*, "heavy", is a cousin (Lewis & Short). English *gravity* and *grave*, "serious", come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

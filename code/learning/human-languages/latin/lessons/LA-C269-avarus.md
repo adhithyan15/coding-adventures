@@ -13,7 +13,8 @@ gloss: "greedy"
 concept_tag: LA-QUAL269-AVARUS
 prerequisites: [LA-C269-ebrius, LA-C269-sobrius]
 sounds: []
-roots: []
+roots: [avarus-latin, avere]
+etymology_hook: "avārus 'greedy' — built on aveō 'to crave'; English avarice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C269-sobrius]
 <!-- hl-knowledge: introduces=[LA-LEX-C269-QUAL269-04]; assesses=[] -->
 
 **avārus, avāra, avārum** — "greedy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avārus** is built on *aveō*, "to long for, to crave" (Lewis & Short): craving. English *avarice* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

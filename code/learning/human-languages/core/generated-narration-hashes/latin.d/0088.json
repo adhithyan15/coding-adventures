@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 88,
-  "sourceHash": "fnv1a64:693aa19d29fc8835",
+  "sourceHash": "fnv1a64:d4c0602f55e00bbb",
   "lessonIds": [
     "LA-C88-lapis",
     "LA-C88-harena",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch88.txt",
   "json": "latin/narration/ch88.json",
-  "textHash": "fnv1a64:82f20f00b872849d",
-  "jsonHash": "fnv1a64:9f07fcb18a148e9b",
+  "textHash": "fnv1a64:459ab8377a818390",
+  "jsonHash": "fnv1a64:96bf9c5481ab6bb7",
   "findings": []
 }

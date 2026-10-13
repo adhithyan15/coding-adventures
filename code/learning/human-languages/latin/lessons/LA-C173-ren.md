@@ -13,7 +13,8 @@ gloss: "a kidney"
 concept_tag: LA-VALE173-REN
 prerequisites: [LA-C173-pulmo, LA-C173-iecur]
 sounds: []
-roots: []
+roots: [ren-latin]
+etymology_hook: "rēn 'kidney' — inherited from Proto-Italic *hrēn; deeper origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C173-iecur]
 <!-- hl-knowledge: introduces=[LA-LEX-C173-VALE173-05]; assesses=[] -->
 
 **rēn, rēnis** — "a kidney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rēn** is probably inherited from Proto-Italic *\*hrēn*, "kidney" (EtymDB 2.1), but its deeper origin is unknown. It is mostly used in the plural, *rēnēs*, "the kidneys".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

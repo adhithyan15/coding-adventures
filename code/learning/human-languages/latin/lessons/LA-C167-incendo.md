@@ -13,7 +13,8 @@ gloss: "to set on fire"
 concept_tag: LA-VERB-INCENDO
 prerequisites: [LA-C166-permitto, LA-C167-ardeo]
 sounds: []
-roots: []
+roots: [incendere-latin, candere-latin]
+etymology_hook: "incendō 'to set on fire' — in 'on' + the verb of candeō 'to glow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C167-ardeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C167-ACT167-02]; assesses=[] -->
 
 **incendō, incendere** — "to set on fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**incendō** is *in*, "on, into", with the verb seen in *candeō*, "to glow white" (Lewis & Short): to set alight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

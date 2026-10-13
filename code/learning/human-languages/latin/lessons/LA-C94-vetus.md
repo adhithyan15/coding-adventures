@@ -13,7 +13,8 @@ gloss: "old"
 concept_tag: LA-NOVUS-VETUS
 prerequisites: [LA-C93-altus, LA-C94-novus]
 sounds: []
-roots: []
+roots: [vetus-latin]
+etymology_hook: "vetus 'old' — usually traced to PIE *wetos 'year': old as 'full of years'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C94-novus]
 <!-- hl-knowledge: introduces=[LA-LEX-C94-NOVUS-02]; assesses=[] -->
 
 **vetus, veteris** — "old". English *veteran*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vetus** is inherited, usually traced to Proto-Indo-European *\*wetos*, "year" (EtymDB 2.1): old meant "full of years". Greek *etos*, "year", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

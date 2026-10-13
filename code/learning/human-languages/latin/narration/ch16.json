@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f7fc51e3a0376e63",
+  "sourceHash": "fnv1a64:ce73b52876b92002",
   "lessons": [
     {
       "id": "LA-C16-undecim-viginti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6726067b99666914",
+      "sourceHash": "fnv1a64:43596c3720935660",
       "notice": null,
       "blocks": [
         {
@@ -109,6 +109,17 @@
         },
         {
           "index": 5,
+          "type": "etymology",
+          "title": "The numbers, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ūndecim was put together inside Latin from ūnus \"one\" and decem \"ten\" (Lewis & Short), and decem is inherited, usually traced to Proto-Indo-European dekm, \"ten\" (EtymDB 2.1). vīgintī \"twenty\" is inherited too, usually traced to h1wih1kmti, \"twenty\", read as \"two tens\" (EtymDB 2.1); Greek eikosi \"twenty\" is its cousin (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -148,7 +159,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

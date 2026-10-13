@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 150,
-  "sourceHash": "fnv1a64:48eacbfb5ecb5adc",
+  "sourceHash": "fnv1a64:a3561f60d13b72d0",
   "lessonIds": [
     "LA-C150-cautus",
     "LA-C150-piger",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch150.txt",
   "json": "latin/narration/ch150.json",
-  "textHash": "fnv1a64:80720a49ca9c72b1",
-  "jsonHash": "fnv1a64:65dc29b1c5615a4c",
+  "textHash": "fnv1a64:81299ad0e4c67629",
+  "jsonHash": "fnv1a64:117cf167073f8dc7",
   "findings": []
 }

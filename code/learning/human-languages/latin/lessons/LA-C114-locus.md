@@ -13,7 +13,8 @@ gloss: "a place"
 concept_tag: LA-WHY114-LOCUS
 prerequisites: [LA-C114-ratio, LA-C114-propterea]
 sounds: []
-roots: []
+roots: [locus-latin]
+etymology_hook: "locus 'place' — from Old Latin stlocus, usually traced to PIE *stel- 'to put, to place'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C114-propterea]
 <!-- hl-knowledge: introduces=[LA-LEX-C114-WHY114-03]; assesses=[] -->
 
 **locus, locī** — "a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**locus** comes from Old Latin *stlocus*, "place" (Lewis & Short), usually traced to Proto-Indo-European *\*stel-*, "to put, to place" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

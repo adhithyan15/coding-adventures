@@ -13,7 +13,8 @@ gloss: "a pig"
 concept_tag: LA-ANIMALIA1-PORCUS
 prerequisites: [LA-C90-ovis, LA-C90-capra]
 sounds: []
-roots: []
+roots: [porcus-latin]
+etymology_hook: "porcus 'pig' — inherited, usually traced to PIE *porkos 'young pig'; English farrow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C90-capra]
 <!-- hl-knowledge: introduces=[LA-LEX-C90-ANIMALIA1-05]; assesses=[] -->
 
 **porcus, porcī** — "a pig". English *pork*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**porcus** is inherited, usually traced to Proto-Indo-European *\*porkos*, "young pig" (EtymDB 2.1). English *farrow*, "a litter of pigs", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "shy, modest"
 concept_tag: LA-QUAL180-VERECUNDUS
 prerequisites: [LA-C180-rusticus, LA-C180-hilaris]
 sounds: []
-roots: []
+roots: [verecundus-latin, vereri-latin]
+etymology_hook: "verēcundus 'shy' — built on vereor 'to stand in awe of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C180-hilaris]
 <!-- hl-knowledge: introduces=[LA-LEX-C180-QUAL180-05]; assesses=[] -->
 
 **verēcundus, verēcunda, verēcundum** — "shy, modest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verēcundus** is built on *vereor*, "to stand in awe of, to fear" (Lewis & Short), with *-cundus*, an ending for a lasting disposition. *vereor* is usually traced to Proto-Indo-European *\*wer-*, "to guard, to protect" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

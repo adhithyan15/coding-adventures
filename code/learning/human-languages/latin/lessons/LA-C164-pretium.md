@@ -13,7 +13,8 @@ gloss: "a price"
 concept_tag: LA-LEG164-PRETIUM
 prerequisites: [LA-C164-titulus, LA-C164-inscriptio]
 sounds: []
-roots: []
+roots: [pretium-latin]
+etymology_hook: "pretium 'price' — probably built on PIE *per- 'in return'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C164-inscriptio]
 <!-- hl-knowledge: introduces=[LA-LEX-C164-LEG164-03]; assesses=[] -->
 
 **pretium, pretiī** — "a price". **Quantī cōnstat?** — "How much does it cost?" English *price* and *precious* come from it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pretium** is probably inherited, from a form built on Proto-Indo-European *\*per-*, "back, in return" (EtymDB 2.1): what one gives in return.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

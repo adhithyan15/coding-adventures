@@ -13,7 +13,8 @@ gloss: "foreign"
 concept_tag: LA-QUAL213-PEREGRINUS
 prerequisites: [LA-C212-placidus, LA-C212-tacitus]
 sounds: []
-roots: []
+roots: [peregrinus-latin, peregre-latin, ager-latin]
+etymology_hook: "peregrīnus 'foreign' — built on peregrē 'abroad': per + ager 'territory'; English pilgrim"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C212-tacitus]
 <!-- hl-knowledge: introduces=[LA-LEX-C213-QUAL213-01]; assesses=[] -->
 
 **peregrīnus, peregrīna, peregrīnum** — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peregrīnus** is built on *peregrē*, "abroad, from abroad" (Lewis & Short), from *per*, "through", and *ager*, "field, territory": beyond one's own lands. English *pilgrim* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

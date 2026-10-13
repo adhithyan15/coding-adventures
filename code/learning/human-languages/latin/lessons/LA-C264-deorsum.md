@@ -13,7 +13,8 @@ gloss: "downwards"
 concept_tag: LA-LOC264-DEORSUM
 prerequisites: [LA-C264-passim, LA-C264-sursum]
 sounds: []
-roots: []
+roots: [deorsum-latin, vertere-latin]
+etymology_hook: "deorsum 'downwards' — from dēvorsum 'turned down'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C264-sursum]
 <!-- hl-knowledge: introduces=[LA-LEX-C264-LOC264-05]; assesses=[] -->
 
 **deorsum** — "downwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**deorsum** is contracted from *dēvorsum*, "turned down" (Lewis & Short), from *dē*, "down", and *vertō*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

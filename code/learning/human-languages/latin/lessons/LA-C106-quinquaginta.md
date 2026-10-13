@@ -13,7 +13,8 @@ gloss: "fifty"
 concept_tag: LA-NUMERI-QUINQUAGINTA
 prerequisites: [LA-C106-triginta, LA-C106-quadraginta]
 sounds: []
-roots: []
+roots: [quinquaginta-latin, quinque-latin]
+etymology_hook: "quīnquāgintā 'fifty' — inherited, usually traced to PIE *penkwe-dkomt 'five tens'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C106-quadraginta]
 <!-- hl-knowledge: introduces=[LA-LEX-C106-NUMERI-03]; assesses=[] -->
 
 **quīnquāgintā** — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quīnquāgintā** is inherited, usually traced to Proto-Indo-European *\*penkwe-dkomt*, "five tens" (EtymDB 2.1), built on the word behind *quīnque*, "five".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "brave, strong"
 concept_tag: LA-FACILIS-FORTIS
 prerequisites: [LA-C97-difficilis, LA-C97-carus]
 sounds: []
-roots: []
+roots: [fortis-latin]
+etymology_hook: "fortis 'brave, strong' — Old Latin forctis; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C97-carus]
 <!-- hl-knowledge: introduces=[LA-LEX-C97-FACILIS-04]; assesses=[] -->
 
 **fortis, forte** — "brave, strong". English *fortitude*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fortis** had an Old Latin form *forctis* (EtymDB 2.1). Its origin is uncertain: one proposal, which EtymDB 2.1 records, traces it to Proto-Indo-European *\*bhergh-*, "high"; Lewis & Short link it with *firmus*, "firm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

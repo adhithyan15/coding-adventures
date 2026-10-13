@@ -13,7 +13,8 @@ gloss: "a dish, a pan"
 concept_tag: LA-THINGS121-PATINA
 prerequisites: [LA-C121-cochlear, LA-C121-olla]
 sounds: []
-roots: []
+roots: [patina-latin]
+etymology_hook: "patina 'dish, pan' — probably borrowed from Greek patanē 'a flat dish'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C121-olla]
 <!-- hl-knowledge: introduces=[LA-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **patina, patinae** — "a dish, a pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patina** was probably borrowed from Greek *patanē*, "a flat dish" (EtymDB 2.1); Lewis & Short's link with *pateō*, "to lie open", is less likely. English *patina* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

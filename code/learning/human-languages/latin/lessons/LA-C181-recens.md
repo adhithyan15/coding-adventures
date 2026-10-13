@@ -13,7 +13,8 @@ gloss: "fresh, recent"
 concept_tag: LA-QUAL181-RECENS
 prerequisites: [LA-C180-verecundus, LA-C181-gratuitus]
 sounds: []
-roots: []
+roots: [recens-latin]
+etymology_hook: "recēns 'fresh' — origin uncertain; Greek kainos 'new' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C181-gratuitus]
 <!-- hl-knowledge: introduces=[LA-LEX-C181-QUAL181-02]; assesses=[] -->
 
 **recēns, recentis** — "fresh, recent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recēns** has no sure origin; Greek *kainos*, "new", is often compared (Lewis & Short), but the details are uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

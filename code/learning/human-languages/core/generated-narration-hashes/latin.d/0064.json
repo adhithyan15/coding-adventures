@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 64,
-  "sourceHash": "fnv1a64:63ea974535011b29",
+  "sourceHash": "fnv1a64:2d1a438e6fad64d8",
   "lessonIds": [
     "LA-C64-collum",
     "LA-C64-umerus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch64.txt",
   "json": "latin/narration/ch64.json",
-  "textHash": "fnv1a64:2342115cf1ce35bd",
-  "jsonHash": "fnv1a64:0abd5be974b510a4",
+  "textHash": "fnv1a64:165b9101ad86ee04",
+  "jsonHash": "fnv1a64:613e102b9a64fb8b",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Latin for freedom, then the Latin for glory.
 You'll want to know: architectus, architectī.
 architectus, architectī — "an architect".
 
+The word, taken apart.
+architectus was borrowed from Greek arkhitektōn, "a master builder" (Lewis & Short), from arkhi-, "chief", and tektōn, "builder" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for glory, then the Latin for an architect.
 
 You'll want to know: textor, textōris.
 textor, textōris — "a weaver".
+
+The word, taken apart.
+textor is built on texō, "to weave" (Lewis & Short), with -tor, "one who does it". texō is usually traced to Proto-Indo-European teks-, "to weave, to fashion"; English text and textile come from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for an architect, then the Latin for a weaver.
 You'll want to know: figulus, figulī.
 figulus, figulī — "a potter".
 
+The word, taken apart.
+figulus is built on fingō, "to shape, to mould" (Lewis & Short), on its root without the n: the moulder of clay.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a weaver, then the Latin for a potter.
 You'll want to know: vīlicus, vīlicī.
 vīlicus, vīlicī — "a farm manager".
 
+The word, taken apart.
+vīlicus is built on vīlla, "a farmhouse" (Lewis & Short): the man in charge of the farm.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a potter, then the Latin for a farm manage
 
 You'll want to know: colōnus, colōnī.
 colōnus, colōnī — "a tenant farmer".
+
+The word, taken apart.
+colōnus is built on colō, "to till, to tend" (Lewis & Short): one who tills the land. colō is usually traced to Proto-Indo-European kwel-, "to turn, to move about" (EtymDB 2.1). English colony comes from the same family.
 
 What you've built.
 One more word for this chapter.

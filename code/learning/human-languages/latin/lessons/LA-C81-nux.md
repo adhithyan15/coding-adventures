@@ -13,7 +13,8 @@ gloss: "a nut"
 concept_tag: LA-CIBUS3-NUX
 prerequisites: [LA-C81-pirum, LA-C81-ficus]
 sounds: []
-roots: []
+roots: [nux-latin]
+etymology_hook: "nux 'nut' — origin uncertain; perhaps from PIE *knew- 'nut'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C81-ficus]
 <!-- hl-knowledge: introduces=[LA-LEX-C81-CIBUS3-05]; assesses=[] -->
 
 **nux, nucis** — "a nut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nux** may be inherited: EtymDB 2.1 traces it to Proto-Indo-European *\*knew-*, "nut", but Lewis & Short call its origin doubtful, and the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

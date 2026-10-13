@@ -13,7 +13,8 @@ gloss: "a grape"
 concept_tag: LA-CIBUS2-UVA
 prerequisites: [LA-C80-caseus, LA-C80-oleum]
 sounds: []
-roots: []
+roots: [uva-latin]
+etymology_hook: "ūva 'grape' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C80-oleum]
 <!-- hl-knowledge: introduces=[LA-LEX-C80-CIBUS2-03]; assesses=[] -->
 
 **ūva, ūvae** — "a grape". What **vīnum** is made from.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ūva**, "grape", has no sure origin; Lewis & Short call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

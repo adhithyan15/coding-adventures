@@ -13,7 +13,8 @@ gloss: "at once, immediately"
 concept_tag: LA-VERBA7-STATIM
 prerequisites: [LA-C101-erro, LA-C101-fugio]
 sounds: []
-roots: []
+roots: [statim-latin, stare-latin]
+etymology_hook: "statim 'at once' — built on stō 'to stand': 'on the spot'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C101-fugio]
 <!-- hl-knowledge: introduces=[LA-LEX-C101-VERBA7-04]; assesses=[] -->
 
 **statim** — "at once, immediately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**statim** is built on the root of *stō*, "to stand" (Lewis & Short): first "standing firm, on the spot", then "at once".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

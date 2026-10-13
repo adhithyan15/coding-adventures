@@ -13,7 +13,8 @@ gloss: "the forehead, the front"
 concept_tag: LA-CORPUS3-FRONS
 prerequisites: [LA-C65-venter, LA-C65-tergum]
 sounds: []
-roots: []
+roots: [frons-latin]
+etymology_hook: "frōns 'forehead' — usually traced to PIE *bhront- 'forehead'; English front comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C65-tergum]
 <!-- hl-knowledge: introduces=[LA-LEX-C65-CORPUS3-04]; assesses=[] -->
 
 **frōns, frontis** — "the forehead, the front". English *front* and *frontier*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frōns**, *frontis*, is usually traced to Proto-Indo-European *\*bhront-*, "forehead" (EtymDB 2.1). It is a different word from *frōns*, *frondis*, "leafy branches".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [macron-long-vowel, ae-diphthong]
 roots: [dies-latin, planet-gods]
 etymology_hook: "Latin's own week names are the FULL 'diēs [planet]' phrase that Spanish and French later wore down to lunes/lundi, martes/mardi…"
 duration:
-  max_seconds: 240
+  max_seconds: 278
 requires:
   knowledge: [LA-LEX-NUMBERS-6-10-01, LA-LEX-NUMBERS-6-10-02, LA-ETYMON-NUMBERS-6-10-03]
 introduces:
@@ -68,6 +68,11 @@ Hellenistic astrology, and only gradually displaced the older market cycle.
 So *diēs Lūnae* and its siblings are themselves a Roman **adoption**, not an
 ancient Roman invention — a system Rome picked up and then passed on, worn
 down, to Spanish and French centuries later.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diēs Lūnae** and its siblings all start from *diēs* "day", which is inherited, usually traced to Proto-Indo-European *\*dyew-*, "sky; to shine" (EtymDB 2.1). *Iovis* "of Jupiter" belongs to the same root: it stands for an older *Diovis*, kin to the name of the Greek sky god Zeus (Lewis & Short). *Lūna* "moon" was built on the root of *lūceō* "I shine" (Lewis & Short).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NUMBERS-6-10-01, LA-LEX-NUMBERS-6-10-02, LA-ETYMON-NUMBERS-6-10-03, LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02] -->

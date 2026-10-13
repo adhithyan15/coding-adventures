@@ -12,6 +12,9 @@ Before the new one: say the Latin for inside, then the Latin for outside.
 You'll want to know: hodiē.
 hodiē — "today". hōc diē, "on this day".
 
+The word, taken apart.
+hodiē is contracted from hōc diē, "on this day" (Lewis & Short); diē, "on the day", is a form of diēs, "day".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for outside, then the Latin for today.
 
 You'll want to know: herī.
 herī — "yesterday".
+
+The word, taken apart.
+herī is inherited, usually traced to Proto-Indo-European dhghyes-, "yesterday" (EtymDB 2.1). An older hesī shows in hesternus, "of yesterday", and English yesterday is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for today, then the Latin for yesterday.
 You'll want to know: annus, annī.
 annus, annī — "a year". English annual.
 
+The word, taken apart.
+annus is inherited, usually traced through Proto-Italic atnos, "year", to a Proto-Indo-European root h2et-, "to go" (EtymDB 2.1). Gothic aþn, "year", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for yesterday, then the Latin for a year.
 You'll want to know: mēnsis, mēnsis.
 mēnsis, mēnsis — "a month".
 
+The word, taken apart.
+mēnsis is inherited, usually traced to Proto-Indo-European meh1ns, "moon, month", from meh1-, "to measure" (EtymDB 2.1). English moon and month are cousins (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a year, then the Latin for a month.
 
 You'll want to know: aurōra, aurōrae.
 aurōra, aurōrae — "the dawn".
+
+The word, taken apart.
+aurōra is inherited, usually traced to Proto-Indo-European h2ewsōs, "dawn" (EtymDB 2.1); Greek ēōs, "dawn", is a cousin (Lewis & Short), and so is English east.
 
 What you've built.
 One more word for this chapter.

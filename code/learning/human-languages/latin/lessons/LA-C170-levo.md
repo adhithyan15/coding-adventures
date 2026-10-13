@@ -13,7 +13,8 @@ gloss: "to lighten, to lift"
 concept_tag: LA-VERB-LEVO
 prerequisites: [LA-C169-appropinquo, LA-C170-labor]
 sounds: []
-roots: []
+roots: [levare-latin, levis-latin]
+etymology_hook: "levō 'to lift' — built on levis 'light': to make light"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C170-labor]
 <!-- hl-knowledge: introduces=[LA-LEX-C170-ACT170-02]; assesses=[] -->
 
 **levō, levāre** — "to lighten, to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**levō** is built on *levis*, "light" (Lewis & Short): to make light, to lift. It is a different word from *lēvō*, "to make smooth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

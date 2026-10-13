@@ -13,7 +13,8 @@ gloss: "small"
 concept_tag: LA-MAGNUS-PARVUS
 prerequisites: [LA-C92-cervus, LA-C93-magnus]
 sounds: []
-roots: []
+roots: [parvus-latin]
+etymology_hook: "parvus 'small' — origin uncertain; perhaps kin to paucus 'few'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C93-magnus]
 <!-- hl-knowledge: introduces=[LA-LEX-C93-MAGNUS-02]; assesses=[] -->
 
 **parvus, parva, parvum** — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parvus** has no sure origin; it may belong with *paucus*, "few", and *paulum*, "a little", but the details are disputed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

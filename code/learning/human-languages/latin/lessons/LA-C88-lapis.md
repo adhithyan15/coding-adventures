@@ -13,7 +13,8 @@ gloss: "a stone"
 concept_tag: LA-TERRA-LAPIS
 prerequisites: [LA-C87-fons, LA-C87-ora]
 sounds: []
-roots: []
+roots: [lapis-latin]
+etymology_hook: "lapis 'stone' — origin unknown; Greek lepas 'bare rock' is sometimes compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C87-ora]
 <!-- hl-knowledge: introduces=[LA-LEX-C88-TERRA-01]; assesses=[] -->
 
 **lapis, lapidis** — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lapis** has no sure origin; Lewis & Short call it doubtful. Greek *lepas*, "bare rock", is sometimes compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

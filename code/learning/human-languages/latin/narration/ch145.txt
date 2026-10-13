@@ -12,6 +12,9 @@ Before the new one: say the Latin for blind, then the Latin for sharp.
 You'll want to know: acerbus, acerba, acerbum.
 acerbus, acerba, acerbum — "sour, unripe".
 
+The word, taken apart.
+acerbus is built on ācer, "sharp" (Lewis & Short), like superbus, "proud", on super, "above". ācer is usually traced to Proto-Indo-European h2kros, "sharp" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for sharp, then the Latin for sour.
 
 You'll want to know: vīvus, vīva, vīvum.
 vīvus, vīva, vīvum — "alive".
+
+The word, taken apart.
+vīvus is inherited, usually traced to Proto-Indo-European gwih3wos, "alive" (EtymDB 2.1), and belongs with vīvō, "to live" (Lewis & Short). English quick, once "alive", is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for sour, then the Latin for alive.
 You'll want to know: mītis, mīte.
 mītis, mīte — "gentle, mild".
 
+The word, taken apart.
+mītis is probably inherited, from a Proto-Indo-European meh1y-, "mild, soft" (EtymDB 2.1); Lewis & Short call it doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for alive, then the Latin for gentle.
 You'll want to know: ferōx, ferōcis.
 ferōx, ferōcis — "fierce".
 
+The word, taken apart.
+ferōx is built on ferus, "wild" (Lewis & Short), with -ōx, an ending of strong character: wild-looking, fierce. ferus is a cousin of Greek thēr, "wild beast" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for gentle, then the Latin for fierce.
 
 You'll want to know: iūcundus, iūcunda, iūcundum.
 iūcundus, iūcunda, iūcundum — "pleasant".
+
+The word, taken apart.
+iūcundus is usually derived from iuvō, "to help, to delight"; the link with iocus, "a joke", that Lewis & Short give is a later popular one.
 
 What you've built.
 One more word for this chapter.

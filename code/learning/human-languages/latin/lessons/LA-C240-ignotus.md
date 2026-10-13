@@ -13,7 +13,8 @@ gloss: "unknown"
 concept_tag: LA-QUAL240-IGNOTUS
 prerequisites: [LA-C240-asper, LA-C240-profundus]
 sounds: []
-roots: []
+roots: [ignotus-latin, noscere-latin]
+etymology_hook: "ignōtus 'unknown' — in- 'not' + gnōtus, the older form of nōtus 'known'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C240-profundus]
 <!-- hl-knowledge: introduces=[LA-LEX-C240-QUAL240-03]; assesses=[] -->
 
 **ignōtus, ignōta, ignōtum** — "unknown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ignōtus** is *in-*, "not", with *gnōtus*, "known", the older form of nōtus (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

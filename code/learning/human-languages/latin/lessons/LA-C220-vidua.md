@@ -13,7 +13,8 @@ gloss: "a widow"
 concept_tag: LA-RES220-VIDUA
 prerequisites: [LA-C220-advena, LA-C220-adulescens]
 sounds: []
-roots: []
+roots: [vidua-latin]
+etymology_hook: "vidua 'widow' — inherited, usually traced to PIE *h1widhewh2; English widow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C220-adulescens]
 <!-- hl-knowledge: introduces=[LA-LEX-C220-RES220-05]; assesses=[] -->
 
 **vidua, viduae** — "a widow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vidua** is inherited, usually traced to Proto-Indo-European *\*h1widhewh2*, "widow" (EtymDB 2.1); English *widow* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

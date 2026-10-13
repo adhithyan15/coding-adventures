@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 133,
-  "sourceHash": "fnv1a64:a088f172bc8f32c3",
+  "sourceHash": "fnv1a64:2526dcb8899fb952",
   "lessonIds": [
     "LA-C133-aranea",
     "LA-C133-rana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch133.txt",
   "json": "latin/narration/ch133.json",
-  "textHash": "fnv1a64:57b2c40398c64505",
-  "jsonHash": "fnv1a64:b75feb67577c2448",
+  "textHash": "fnv1a64:05987ed5532912e6",
+  "jsonHash": "fnv1a64:0f6c310db0dcb474",
   "findings": []
 }

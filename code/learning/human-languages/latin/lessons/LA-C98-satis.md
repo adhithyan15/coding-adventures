@@ -13,7 +13,8 @@ gloss: "enough"
 concept_tag: LA-DIVES-SATIS
 prerequisites: [LA-C98-pauper, LA-C98-stultus]
 sounds: []
-roots: []
+roots: [satis-latin]
+etymology_hook: "satis 'enough' — inherited, usually traced to PIE *seh2- 'to satisfy'; English sad first meant 'sated'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C98-stultus]
 <!-- hl-knowledge: introduces=[LA-LEX-C98-DIVES-04]; assesses=[] -->
 
 **satis** — "enough". English *satisfy*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**satis** is inherited, usually traced to Proto-Indo-European *\*sh2tis*, "fullness", from *\*seh2-*, "to satisfy, to fill" (EtymDB 2.1). English *sad* is a cousin: it first meant "having had enough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

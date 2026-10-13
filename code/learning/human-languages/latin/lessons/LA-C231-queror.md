@@ -13,7 +13,8 @@ gloss: "to complain"
 concept_tag: LA-VERB-QUEROR
 prerequisites: [LA-C231-fruor, LA-C231-fingo]
 sounds: []
-roots: []
+roots: [queri-latin]
+etymology_hook: "queror 'to complain' — inherited, usually traced to PIE *kwes- 'to sigh'; English wheeze is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C231-fingo]
 <!-- hl-knowledge: introduces=[LA-LEX-C231-ACT231-04]; assesses=[] -->
 
 **queror, querī** — "to complain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**queror** is inherited, usually traced to Proto-Indo-European *\*kwes-*, "to puff, to sigh" (EtymDB 2.1). English *wheeze* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

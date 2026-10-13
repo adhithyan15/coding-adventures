@@ -13,7 +13,8 @@ gloss: "to believe, to trust"
 concept_tag: LA-VERB-CREDO
 prerequisites: [LA-C171-condo, LA-C171-creo]
 sounds: []
-roots: []
+roots: [credere-latin]
+etymology_hook: "crēdō 'to believe' — usually traced to PIE *kred dheh1- 'to put one's heart'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C171-creo]
 <!-- hl-knowledge: introduces=[LA-LEX-C171-ACT171-05]; assesses=[] -->
 
 **crēdō, crēdere** — "to believe, to trust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crēdō** is inherited, usually traced to a Proto-Indo-European phrase *\*kred dheh1-*, "to put one's heart" (EtymDB 2.1), from *\*kerd-*, "heart", and *\*dheh1-*, "to put".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

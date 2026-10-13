@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 274,
-  "sourceHash": "fnv1a64:398e14eede68c90d",
+  "sourceHash": "fnv1a64:fe4a36fc8cc858c0",
   "lessonIds": [
     "LA-C274-otium",
     "LA-C274-negotium",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch274.txt",
   "json": "latin/narration/ch274.json",
-  "textHash": "fnv1a64:1099d6900300000a",
-  "jsonHash": "fnv1a64:ae3a65e767c9ab08",
+  "textHash": "fnv1a64:e4c4931462988df3",
+  "jsonHash": "fnv1a64:4e82c86d0d0f98b0",
   "findings": []
 }

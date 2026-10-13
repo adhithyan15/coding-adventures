@@ -13,7 +13,8 @@ gloss: "a craftsman, a smith"
 concept_tag: LA-THINGS137-FABER
 prerequisites: [LA-C136-os, LA-C136-stomachus]
 sounds: []
-roots: []
+roots: [faber-latin]
+etymology_hook: "faber 'craftsman' — inherited, usually traced to PIE *dhh2ebh- 'to fit'; English fabric"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C136-stomachus]
 <!-- hl-knowledge: introduces=[LA-LEX-C137-THINGS137-01]; assesses=[] -->
 
 **faber, fabrī** — "a craftsman, a smith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faber** is inherited, usually traced to Proto-Indo-European *\*dhh2ebh-*, "to fit, to fashion" (EtymDB 2.1). English *fabric* and *fabricate* come from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for to mix, then the Latin for to obey.
 You'll want to know: dēmittō, dēmittere.
 dēmittō, dēmittere — "to let down, to lower".
 
+The word, taken apart.
+dēmittō is dē, "down", with mittō, "to send, to let go" (EtymDB 2.1): to let down.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to obey, then the Latin for to let down.
 
 You'll want to know: colligō, colligere.
 colligō, colligere — "to gather, to collect".
+
+The word, taken apart.
+colligō is con-, "together", with legō, "to gather, to pick" (EtymDB 2.1): to gather together. legō is usually traced to Proto-Indo-European leg-, "to gather" (EtymDB 2.1). English collect comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to let down, then the Latin for to gather.
 You'll want to know: ēvanēscō, ēvanēscere.
 ēvanēscō, ēvanēscere — "to vanish".
 
+The word, taken apart.
+ēvanēscō is ex, "out", with vānēscō, "to become empty", from vānus, "empty" (EtymDB 2.1): to empty out, to vanish. English vanish comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to gather, then the Latin for to vanish.
 You'll want to know: mandō, mandāre.
 mandō, mandāre — "to entrust, to order".
 
+The word, taken apart.
+mandō is usually explained as manus, "hand", with dō, "to put" (Lewis & Short): to put into someone's hand. It is a different word from mandō, "to chew".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to vanish, then the Latin for to entrust.
 
 You'll want to know: retineō, retinēre.
 retineō, retinēre — "to hold back, to keep".
+
+The word, taken apart.
+retineō is re-, "back", with teneō, "to hold" (Lewis & Short), its e weakened to i: to hold back.
 
 What you've built.
 One more word for this chapter.

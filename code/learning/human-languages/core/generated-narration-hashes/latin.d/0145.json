@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 145,
-  "sourceHash": "fnv1a64:e4312fedd861348c",
+  "sourceHash": "fnv1a64:c839b431cf06087f",
   "lessonIds": [
     "LA-C145-acerbus",
     "LA-C145-vivus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch145.txt",
   "json": "latin/narration/ch145.json",
-  "textHash": "fnv1a64:cb45fc2d841f13e6",
-  "jsonHash": "fnv1a64:01f29e4b4965305f",
+  "textHash": "fnv1a64:002670cce7d14568",
+  "jsonHash": "fnv1a64:3409051b9b5520b5",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a raven"
 concept_tag: LA-THINGS131-CORVUS
 prerequisites: [LA-C131-aquila, LA-C131-columba]
 sounds: []
-roots: []
+roots: [corvus-latin]
+etymology_hook: "corvus 'raven' — inherited, usually traced to PIE *korh2wos; Greek korax is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C131-columba]
 <!-- hl-knowledge: introduces=[LA-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **corvus, corvī** — "a raven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corvus** is inherited, usually traced to Proto-Indo-European *\*korh2wos*, "raven" (EtymDB 2.1), perhaps imitating the bird's croak; Greek *korax*, "raven", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

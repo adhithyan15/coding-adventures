@@ -12,6 +12,9 @@ Before the new one: say the Latin for a corner, then the Latin for a street.
 You'll want to know: gradus, gradūs.
 gradus, gradūs — "a step, a stair".
 
+The word, taken apart.
+gradus belongs with gradior, "to step, to walk" (Lewis & Short), usually traced to Proto-Indo-European ghredh-, "to walk, to go" (EtymDB 2.1). English grade and degree come from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a street, then the Latin for a step.
 
 You'll want to know: bibliothēca, bibliothēcae.
 bibliothēca, bibliothēcae — "a library".
+
+The word, taken apart.
+bibliothēca was borrowed from Greek bibliothēkē, "a book-room, a library" (Lewis & Short), from biblion, "book", and thēkē, "a box, a storeplace" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ At a market you buy and sell: say emō, I buy, then vendō, I sell.
 You'll want to know: macellum, macellī.
 macellum, macellī — "a food market".
 
+The word, taken apart.
+macellum probably came into Latin from Greek makellon, "an enclosure, a meat market", which may itself be a Semitic loan; Lewis & Short's link with Greek makhomai, "to fight", is unlikely.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Latin for a library, then the Latin for a food marke
 You'll want to know: popīna, popīnae.
 popīna, popīnae — "an eating-house".
 
+The word, taken apart.
+popīna is usually taken as the Oscan or Umbrian twin of coquīna, "kitchen": those languages had p where Latin had qu. Both go back to the root of coquō, "to cook" (Lewis & Short compare Greek peptō, "to cook").
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Latin for a food market, then the Latin for an eatin
 
 You'll want to know: caupōna, caupōnae.
 caupōna, caupōnae — "an inn".
+
+The word, taken apart.
+caupōna is built on caupō, "an innkeeper, a shopkeeper" (Lewis & Short): first the woman who kept the shop, then the inn itself. Where caupō comes from is uncertain.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a river"
 concept_tag: LA-AQUA-FLUMEN
 prerequisites: [LA-C86-silva, LA-C86-mons]
 sounds: []
-roots: []
+roots: [flumen-latin, fluere-latin]
+etymology_hook: "flūmen 'river' — built on fluō 'to flow': the flowing; from PIE *bhlew-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C86-mons]
 <!-- hl-knowledge: introduces=[LA-LEX-C87-AQUA-01]; assesses=[] -->
 
 **flūmen, flūminis** — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**flūmen** is built on *fluō*, "to flow" (EtymDB 2.1), with *-men*, an ending for a thing or a result: the flowing. *fluō* is usually traced to Proto-Indo-European *\*bhlew-*, "to swell, to flow" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

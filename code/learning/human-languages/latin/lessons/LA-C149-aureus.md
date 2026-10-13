@@ -13,7 +13,8 @@ gloss: "golden"
 concept_tag: LA-QUAL149-AUREUS
 prerequisites: [LA-C149-fuscus, LA-C149-canus]
 sounds: []
-roots: []
+roots: [aureus-latin, aurum-latin]
+etymology_hook: "aureus 'golden' — built on aurum 'gold', older ausum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C149-canus]
 <!-- hl-knowledge: introduces=[LA-LEX-C149-QUAL149-03]; assesses=[] -->
 
 **aureus, aurea, aureum** — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aureus** is built on *aurum*, "gold", older *ausum*, usually traced to Proto-Indo-European *\*h2eh2us-*, "glow" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

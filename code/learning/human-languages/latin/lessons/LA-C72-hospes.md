@@ -13,7 +13,8 @@ gloss: "a guest; a host"
 concept_tag: LA-HOMINES1-HOSPES
 prerequisites: [LA-C72-amita, LA-C72-vicinus]
 sounds: []
-roots: []
+roots: [hospes-latin]
+etymology_hook: "hospes 'guest, host' — usually traced to PIE *ghostipotis 'master of guests'; English host, hospital"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C72-vicinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C72-HOMINES1-03]; assesses=[] -->
 
 **hospes, hospitis** — "a guest; a host". English *hospitality* and *hospital*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hospes** is inherited, usually traced to Proto-Indo-European *\*ghostipotis*, "master of guests" (EtymDB 2.1), a compound of words for "stranger, guest" and "master". English *host* comes from it too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

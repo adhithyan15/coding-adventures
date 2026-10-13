@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 136,
-  "sourceHash": "fnv1a64:90af7460e4b02232",
+  "sourceHash": "fnv1a64:9d7e1696adb3153b",
   "lessonIds": [
     "LA-C136-cubitum",
     "LA-C136-pollex",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch136.txt",
   "json": "latin/narration/ch136.json",
-  "textHash": "fnv1a64:50c1391f782c88d6",
-  "jsonHash": "fnv1a64:7d12cb7fc4fc5408",
+  "textHash": "fnv1a64:18c8f93fe120d748",
+  "jsonHash": "fnv1a64:fdc8b9a1d08d15d9",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Latin for for sale, then the Latin for goods.
 You'll want to know: accendō, accendere.
 accendō, accendere — "to light, to kindle".
 
+The word, taken apart.
+accendō is ad, "to", with a verb -cendō, "to set alight", related to candeō, "to glow white" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for goods, then the Latin for to light.
 
 You'll want to know: exstinguō, exstinguere.
 exstinguō, exstinguere — "to put out".
+
+The word, taken apart.
+exstinguō is ex, "out", with stinguō, "to quench, to put out": to put out entirely. English extinguish and extinct come from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to light, then the Latin for to put out.
 You'll want to know: saliō, salīre.
 saliō, salīre — "to jump".
 
+The word, taken apart.
+saliō is inherited, usually traced to Proto-Indo-European sel-, "to spring, to leap" (EtymDB 2.1); Greek hallomai, "to leap", is a cousin. It is a different word from saliō, "to salt", built on sāl, "salt".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to put out, then the Latin for to jump.
 You'll want to know: subrīdeō, subrīdēre.
 subrīdeō, subrīdēre — "to smile".
 
+The word, taken apart.
+subrīdeō is sub, "under, a little", with rīdeō, "to laugh" (EtymDB 2.1): to laugh a little, to smile.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to jump, then the Latin for to smile.
 
 You'll want to know: clāmō, clāmāre.
 clāmō, clāmāre — "to shout".
+
+The word, taken apart.
+clāmō is inherited, usually traced to Proto-Indo-European kelh1-, "to call, to shout" (EtymDB 2.1); Greek kaleō, "to call", and clārus, "clear, loud", are cousins (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

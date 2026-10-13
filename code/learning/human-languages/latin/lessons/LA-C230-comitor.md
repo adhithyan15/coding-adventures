@@ -13,7 +13,8 @@ gloss: "to accompany"
 concept_tag: LA-VERB-COMITOR
 prerequisites: [LA-C229-removeo, LA-C230-expergiscor]
 sounds: []
-roots: []
+roots: [comitari-latin, comes-latin, ire-latin]
+etymology_hook: "comitor 'to accompany' — built on comes 'companion': one who goes along"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C230-expergiscor]
 <!-- hl-knowledge: introduces=[LA-LEX-C230-ACT230-02]; assesses=[] -->
 
 **comitor, comitārī** — "to accompany".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comitor** is built on *comes*, *comitis*, "a companion" (Lewis & Short): to be someone's companion. *comes* is *con-*, "together", with the root of *eō*, "to go": one who goes along.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

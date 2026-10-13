@@ -12,6 +12,9 @@ Before the new one: say the Latin for icy, then the Latin for clear.
 You'll want to know: nūbilus, nūbila, nūbilum.
 nūbilus, nūbila, nūbilum — "cloudy".
 
+The word, taken apart.
+nūbilus is built on nūbēs, "a cloud" (Lewis & Short), which is probably traced to Proto-Indo-European (s)newdh-, "to cover" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for clear, then the Latin for cloudy.
 
 You'll want to know: ventōsus, ventōsa, ventōsum.
 ventōsus, ventōsa, ventōsum — "windy".
+
+The word, taken apart.
+ventōsus is built on ventus, "wind" (Lewis & Short), with -ōsus, "full of". ventus is usually traced to Proto-Indo-European h2weh1nts, "blowing, wind", from h2weh1-, "to blow" (EtymDB 2.1); English wind is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for cloudy, then the Latin for windy.
 You'll want to know: aedificō, aedificāre.
 aedificō, aedificāre — "to build".
 
+The word, taken apart.
+aedificō is built from aedēs, "a building, a temple", and faciō, "to make" (Lewis & Short), which takes the form -ficō in compounds: to make a building. English edifice comes from its family.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for windy, then the Latin for to build.
 You'll want to know: ascendō, ascendere.
 ascendō, ascendere — "to climb, to go up".
 
+The word, taken apart.
+ascendō is ad, "to, towards", with scandō, "to climb" (Lewis & Short); the a of the verb weakened to e in the compound.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to build, then the Latin for to climb.
 
 You'll want to know: dēscendō, dēscendere.
 dēscendō, dēscendere — "to go down".
+
+The word, taken apart.
+dēscendō is dē, "down from", with scandō, "to climb" (EtymDB 2.1): to climb down.
 
 What you've built.
 One more word for this chapter.

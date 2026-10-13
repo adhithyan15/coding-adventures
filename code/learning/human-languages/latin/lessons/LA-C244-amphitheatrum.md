@@ -13,7 +13,8 @@ gloss: "an amphitheatre"
 concept_tag: LA-RES244-AMPHITHEATRUM
 prerequisites: [LA-C244-aquaeductus, LA-C244-thermae]
 sounds: []
-roots: []
+roots: [amphitheatrum-latin]
+etymology_hook: "amphitheātrum 'amphitheatre' — from Greek amphitheatron: amphi 'around' + theatron"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C244-thermae]
 <!-- hl-knowledge: introduces=[LA-LEX-C244-RES244-05]; assesses=[] -->
 
 **amphitheātrum, amphitheātrī** — "an amphitheatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amphitheātrum** was borrowed from Greek *amphitheatron*, "a double theatre" (Lewis & Short), from *amphi*, "around, on both sides", and *theatron*, "a theatre" (EtymDB 2.1): seats all the way round.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

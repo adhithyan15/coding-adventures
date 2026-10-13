@@ -13,7 +13,8 @@ gloss: "a racecourse"
 concept_tag: LA-RES270-CIRCUS
 prerequisites: [LA-C269-avarus, LA-C269-parcus]
 sounds: []
-roots: []
+roots: [circus-latin]
+etymology_hook: "circus 'racecourse' — usually taken from Greek kirkos 'ring'; English circle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C269-parcus]
 <!-- hl-knowledge: introduces=[LA-LEX-C270-RES270-01]; assesses=[] -->
 
 **circus, circī** — "a racecourse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**circus** is usually taken from Greek *kirkos*, "a ring, a circle" (Lewis & Short), a form beside *krikos*, "ring". English *circle* comes from its diminutive *circulus*, "a small ring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

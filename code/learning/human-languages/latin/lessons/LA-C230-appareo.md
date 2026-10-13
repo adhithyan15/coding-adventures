@@ -13,7 +13,8 @@ gloss: "to appear"
 concept_tag: LA-VERB-APPAREO
 prerequisites: [LA-C230-addo, LA-C230-nuntio]
 sounds: []
-roots: []
+roots: [apparere-latin, parere]
+etymology_hook: "appāreō 'to appear' — ad + pāreō 'to come into view'; English appear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C230-nuntio]
 <!-- hl-knowledge: introduces=[LA-LEX-C230-ACT230-05]; assesses=[] -->
 
 **appāreō, appārēre** — "to appear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**appāreō** is *ad*, "to", with *pāreō*, "to come into view" (EtymDB 2.1). English *appear* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

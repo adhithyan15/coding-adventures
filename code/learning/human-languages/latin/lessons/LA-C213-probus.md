@@ -13,7 +13,8 @@ gloss: "honest, upright"
 concept_tag: LA-QUAL213-PROBUS
 prerequisites: [LA-C212-tacitus, LA-C213-peregrinus]
 sounds: []
-roots: []
+roots: [probus-latin]
+etymology_hook: "probus 'honest' — usually traced to PIE *pro-bhwo- 'being in front, outstanding'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C213-peregrinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C213-QUAL213-02]; assesses=[] -->
 
 **probus, proba, probum** — "honest, upright".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**probus** is inherited, usually traced to Proto-Indo-European *\*pro-bhwo-*, "being in front, outstanding" (EtymDB 2.1), from *\*pro*, "forward", and *\*bhu-*, "to be"; Sanskrit *prabhu-*, "mighty", is a close cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

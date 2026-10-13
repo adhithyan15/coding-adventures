@@ -13,7 +13,8 @@ gloss: "a woodland pass; a leap"
 concept_tag: LA-RES228-SALTUS
 prerequisites: [LA-C227-deversorium, LA-C227-viator]
 sounds: []
-roots: []
+roots: [saltus-latin, salire-latin]
+etymology_hook: "saltus 'pass; leap' — two words: the leap from saliō 'to jump'; the pass of unknown origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C227-viator]
 <!-- hl-knowledge: introduces=[LA-LEX-C228-RES228-01]; assesses=[] -->
 
 **saltus, saltūs** — "a woodland pass; a leap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saltus** is two words in one form. A leap is built on *saliō*, "to jump" (Lewis & Short); a woodland pass has no sure origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

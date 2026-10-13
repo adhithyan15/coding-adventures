@@ -13,7 +13,8 @@ gloss: "most, especially"
 concept_tag: LA-CAUSA179-MAXIME
 prerequisites: [LA-C179-praesertim, LA-C179-potius]
 sounds: []
-roots: []
+roots: [maxime-latin, magnus-latin]
+etymology_hook: "maximē 'most' — the adverb of maximus, superlative of magnus 'big'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C179-potius]
 <!-- hl-knowledge: introduces=[LA-LEX-C179-CAUSA179-03]; assesses=[] -->
 
 **maximē** — "most, especially".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maximē** is the adverb of the superlative of *magnus*, "big" (Lewis & Short): *maximus*, "greatest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

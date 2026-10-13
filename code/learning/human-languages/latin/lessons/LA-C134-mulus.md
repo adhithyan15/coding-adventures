@@ -13,7 +13,8 @@ gloss: "a mule"
 concept_tag: LA-THINGS134-MULUS
 prerequisites: [LA-C133-taurus, LA-C134-vacca]
 sounds: []
-roots: []
+roots: [mulus-latin]
+etymology_hook: "mūlus 'mule' — origin uncertain; Greek myklos 'donkey' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C134-vacca]
 <!-- hl-knowledge: introduces=[LA-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **mūlus, mūlī** — "a mule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mūlus** has no sure origin; Greek *myklos*, "a donkey" (Lewis & Short), is often compared, and both may come from a language of the Balkans or Asia Minor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

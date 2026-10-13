@@ -13,7 +13,8 @@ gloss: "to look for, to ask"
 concept_tag: LA-VERB-QUAERO
 prerequisites: [LA-C202-procedo, LA-C203-dubito]
 sounds: []
-roots: []
+roots: [quaerere-latin]
+etymology_hook: "quaerō 'to look for' — origin unknown; quaesō 'I beg' is an older form of it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C203-dubito]
 <!-- hl-knowledge: introduces=[LA-LEX-C203-ACT203-02]; assesses=[] -->
 
 **quaerō, quaerere** — "to look for, to ask".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quaerō** has no sure origin. Old Latin wrote it *quairō*, and *quaesō*, "I beg", is an older form of the same verb (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

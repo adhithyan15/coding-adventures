@@ -13,7 +13,8 @@ gloss: "victory"
 concept_tag: LA-RES187-VICTORIA
 prerequisites: [LA-C187-pax, LA-C187-dux]
 sounds: []
-roots: []
+roots: [victoria-latin, victor-latin, vincere-latin]
+etymology_hook: "victōria 'victory' — built on victor 'winner', from vincō 'to win'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C187-dux]
 <!-- hl-knowledge: introduces=[LA-LEX-C187-RES187-03]; assesses=[] -->
 
 **victōria, victōriae** — "victory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**victōria** is built on *victor*, "a winner" (Lewis & Short), from *vincō*, "to win".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

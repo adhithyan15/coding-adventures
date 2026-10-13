@@ -13,7 +13,8 @@ gloss: "a napkin, a cloth"
 concept_tag: LA-THINGS120-MAPPA
 prerequisites: [LA-C120-pulvinus, LA-C120-stragulum]
 sounds: []
-roots: []
+roots: [mappa-latin]
+etymology_hook: "mappa 'napkin, cloth' — a Punic word, said Quintilian; English map comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C120-stragulum]
 <!-- hl-knowledge: introduces=[LA-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **mappa, mappae** — "a napkin, a cloth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mappa** came from Punic, the language of Carthage: Quintilian already called *mappa* a Punic word (Lewis & Short). English *map* comes from it, through *mappa mundi*, "cloth of the world".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to wash"
 concept_tag: LA-VERB-LAVO
 prerequisites: [LA-C75-rideo, LA-C75-fleo]
 sounds: []
-roots: []
+roots: [lavare-latin]
+etymology_hook: "lavō 'to wash' — inherited, usually traced to PIE *lewh3-; Greek louō is a cousin; English lavatory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C75-fleo]
 <!-- hl-knowledge: introduces=[LA-LEX-C76-VERBA2-01]; assesses=[] -->
 
 **lavō, lavāre** — "to wash". English *lavatory*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lavō** is inherited, usually traced to Proto-Indo-European *\*lewh3-*, "to wash" (EtymDB 2.1); Greek *louō*, "to wash", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

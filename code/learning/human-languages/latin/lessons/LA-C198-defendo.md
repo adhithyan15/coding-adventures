@@ -13,7 +13,8 @@ gloss: "to defend"
 concept_tag: LA-VERB-DEFENDO
 prerequisites: [LA-C197-interpretor, LA-C198-veto]
 sounds: []
-roots: []
+roots: [defendere-latin]
+etymology_hook: "dēfendō 'to defend' — dē 'away' + old fendō 'to strike'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C198-veto]
 <!-- hl-knowledge: introduces=[LA-LEX-C198-ACT198-02]; assesses=[] -->
 
 **dēfendō, dēfendere** — "to defend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēfendō** is *dē*, "away", with an old verb *fendō*, "to strike" (Lewis & Short), usually traced to Proto-Indo-European *\*gwhen-*, "to strike, to ward off" (EtymDB 2.1): to strike away, to ward off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

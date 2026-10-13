@@ -13,7 +13,8 @@ gloss: "a lie"
 concept_tag: LA-RES189-MENDACIUM
 prerequisites: [LA-C189-matertera, LA-C189-veritas]
 sounds: []
-roots: []
+roots: [mendacium-latin, mendax-latin]
+etymology_hook: "mendācium 'a lie' — built on mendāx 'lying'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C189-veritas]
 <!-- hl-knowledge: introduces=[LA-LEX-C189-RES189-05]; assesses=[] -->
 
 **mendācium, mendāciī** — "a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mendācium** is built on *mendāx*, "lying, a liar" (Lewis & Short). Where *mendāx* comes from is uncertain; a link with *mendum*, "a fault", is often suggested.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a mother's sister, an aunt"
 concept_tag: LA-RES189-MATERTERA
 prerequisites: [LA-C189-cognatus, LA-C189-avunculus]
 sounds: []
-roots: []
+roots: [matertera-latin, mater-latin]
+etymology_hook: "mātertera 'mother's sister' — built on māter: a second mother"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C189-avunculus]
 <!-- hl-knowledge: introduces=[LA-LEX-C189-RES189-03]; assesses=[] -->
 
 **mātertera, māterterae** — "a mother's sister, an aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mātertera** is built on *māter*, "mother" (Lewis & Short), with an ending like the one in *altera*, "the other of two": a second mother.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

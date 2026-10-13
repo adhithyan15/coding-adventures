@@ -13,7 +13,8 @@ gloss: "to join"
 concept_tag: LA-VERB-IUNGO
 prerequisites: [LA-C153-ascendo, LA-C153-descendo]
 sounds: []
-roots: []
+roots: [iungere-latin]
+etymology_hook: "iungō 'to join' — inherited, usually traced to PIE *yewg- 'to yoke'; English yoke is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C153-descendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C154-ACT154-01]; assesses=[] -->
 
 **iungō, iungere** — "to join".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iungō** is inherited, usually traced to Proto-Indo-European *\*yewg-*, "to join, to yoke" (EtymDB 2.1); the n inside the present stem is an old mark of the verb. Greek *zeugnymi*, "to yoke", and English *yoke* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "juice"
 concept_tag: LA-THINGS128-SUCUS
 prerequisites: [LA-C128-placenta, LA-C128-cervisia]
 sounds: []
-roots: []
+roots: [sucus-latin]
+etymology_hook: "sūcus 'juice' — kin to sūgō 'to suck', from PIE *sug-; English suck is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C128-cervisia]
 <!-- hl-knowledge: introduces=[LA-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **sūcus, sūcī** — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sūcus** belongs with *sūgō*, "to suck" (Lewis & Short), and both are usually traced to Proto-Indo-European *\*sug-*, "to suck" (EtymDB 2.1). English *suck* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

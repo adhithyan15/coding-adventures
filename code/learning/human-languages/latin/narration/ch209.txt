@@ -12,6 +12,9 @@ Before the new one: say the Latin for formerly, then the Latin for long since.
 You'll want to know: regiō, regiōnis.
 regiō, regiōnis — "a region".
 
+The word, taken apart.
+regiō is built on regō, "to direct, to draw straight" (Lewis & Short): first a straight line, a boundary, then the area it marks out.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for long since, then the Latin for a region.
 
 You'll want to know: prōvincia, prōvinciae.
 prōvincia, prōvinciae — "a province".
+
+The word, taken apart.
+prōvincia has no sure origin; Lewis & Short call it doubtful. A link with vincō, "to conquer", is popular but not proven.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a region, then the Latin for a province.
 You'll want to know: inde.
 inde — "from there; then".
 
+The word, taken apart.
+inde is usually explained as built on the pronoun stem of is, "he, that", with an ending -de, "from" (Lewis & Short): from there.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a province, then the Latin for from there;
 You'll want to know: obviam.
 obviam — "in the way, to meet".
 
+The word, taken apart.
+obviam is ob, "towards, in front of", with viam, "the way" (Lewis & Short): in the way, so to meet someone.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for from there; then, then the Latin for in th
 
 You'll want to know: usque.
 usque — "all the way, continuously".
+
+The word, taken apart.
+usque is usually traced to Proto-Indo-European uds-kwe, "and up to" (EtymDB 2.1); its ending is the -que, "and", of Latin.
 
 What you've built.
 One more word for this chapter.

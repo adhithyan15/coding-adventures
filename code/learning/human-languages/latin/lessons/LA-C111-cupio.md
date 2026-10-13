@@ -13,7 +13,8 @@ gloss: "to desire, to long for"
 concept_tag: LA-VERB-CUPIO
 prerequisites: [LA-C110-nolo, LA-C111-malo]
 sounds: []
-roots: []
+roots: [cupere-latin]
+etymology_hook: "cupiō 'to desire' — probably inherited; Sanskrit kup- 'to be stirred' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C111-malo]
 <!-- hl-knowledge: introduces=[LA-LEX-C111-WANT111-02]; assesses=[] -->
 
 **cupiō, cupere** — "to desire, to long for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cupiō** is probably inherited; Lewis & Short compare Sanskrit *kup-*, "to be stirred, to be angry", a link still often made. English *covet* comes from its family through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "savage, cruel"
 concept_tag: LA-QUAL214-SAEVUS
 prerequisites: [LA-C213-liberalis, LA-C213-ignavus]
 sounds: []
-roots: []
+roots: [saevus-latin]
+etymology_hook: "saevus 'savage' — probably from PIE *seh2y-wo- 'fierce'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C213-ignavus]
 <!-- hl-knowledge: introduces=[LA-LEX-C214-QUAL214-01]; assesses=[] -->
 
 **saevus, saeva, saevum** — "savage, cruel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saevus** is probably inherited, from a Proto-Indo-European *\*seh2y-wo-*, "fierce, afflicting" (EtymDB 2.1); Lewis & Short call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

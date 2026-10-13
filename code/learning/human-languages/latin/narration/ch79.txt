@@ -12,6 +12,9 @@ Before the new one: say the Latin for to fear, then the Latin for to rejoice.
 You'll want to know: cibus, cibī.
 cibus, cibī — "food".
 
+The word, taken apart.
+cibus, "food", has no sure origin; no proposal is generally accepted.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to rejoice, then the Latin for food.
 
 You'll want to know: cēna, cēnae.
 cēna, cēnae — "dinner, the main meal".
+
+The word, taken apart.
+cēna is inherited. An older spelling was caesna (Lewis & Short), and it is usually traced through Proto-Italic kertsnā, "a portion", to Proto-Indo-European (s)ker-, "to cut" (EtymDB 2.1): the meal as one's share.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for food, then the Latin for dinner.
 You'll want to know: prandium, prandiī.
 prandium, prandiī — "lunch".
 
+The word, taken apart.
+prandium probably began as "the early meal". Its first part is an old word for "early", which Lewis & Short compare with Doric Greek prān, "early". The second part is often taken as the root of edō, "to eat", but that is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for dinner, then the Latin for lunch.
 You'll want to know: ientāculum, ientāculī.
 ientāculum, ientāculī — "breakfast".
 
+The word, taken apart.
+ientāculum is built on ientō, "to have breakfast" (Lewis & Short), with -culum, an ending for a thing. Where ientō comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for lunch, then the Latin for breakfast.
 
 You'll want to know: carō, carnis.
 carō, carnis — "meat". English carnivore.
+
+The word, taken apart.
+carō is inherited, usually traced to Proto-Indo-European (s)ker-, "to cut" (EtymDB 2.1): meat as a cut piece.
 
 What you've built.
 One more word for this chapter.

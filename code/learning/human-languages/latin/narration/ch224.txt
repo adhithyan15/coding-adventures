@@ -12,6 +12,9 @@ Before the new one: say the Latin for a thorn, then the Latin for a crop, a corn
 You'll want to know: lacerta, lacertae.
 lacerta, lacertae — "a lizard".
 
+The word, taken apart.
+lacerta has no sure origin; it may be linked with lacertus, "the upper arm, a muscle", but that is uncertain. English lizard comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a crop, a cornfield, then the Latin for a 
 
 You'll want to know: aper, aprī.
 aper, aprī — "a wild boar".
+
+The word, taken apart.
+aper is inherited, usually traced to Proto-Indo-European h1epr-, "boar" (EtymDB 2.1); German Eber, "boar", is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a lizard, then the Latin for a wild boar.
 You'll want to know: caper, caprī.
 caper, caprī — "a billy goat".
 
+The word, taken apart.
+caper is inherited, usually traced to Proto-Indo-European kapros, "buck, he-goat" (EtymDB 2.1); Greek kapros, "wild boar", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a wild boar, then the Latin for a billy go
 You'll want to know: agnus, agnī.
 agnus, agnī — "a lamb".
 
+The word, taken apart.
+agnus is inherited, usually traced to Proto-Indo-European h2egwnos, "lamb" (EtymDB 2.1); Greek amnos, "lamb", is a cousin (Lewis & Short), and so is English yean, "to give birth to lambs".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a billy goat, then the Latin for a lamb.
 
 You'll want to know: vitulus, vitulī.
 vitulus, vitulī — "a calf".
+
+The word, taken apart.
+vitulus is usually traced to Proto-Indo-European wetelo-, "yearling", from wet-, "year" (EtymDB 2.1): a calf as a one-year-old. The name Italia, "Italy", is often explained as "land of calves" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

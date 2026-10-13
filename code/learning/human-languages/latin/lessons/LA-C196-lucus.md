@@ -13,7 +13,8 @@ gloss: "a sacred grove"
 concept_tag: LA-RES196-LUCUS
 prerequisites: [LA-C196-pratum, LA-C196-nemus]
 sounds: []
-roots: []
+roots: [lucus-latin]
+etymology_hook: "lūcus 'sacred grove' — Old Latin loucos, from PIE *lowkos 'a clearing'; English lea is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C196-nemus]
 <!-- hl-knowledge: introduces=[LA-LEX-C196-RES196-05]; assesses=[] -->
 
 **lūcus, lūcī** — "a sacred grove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lūcus** is inherited; Old Latin wrote *loucos*, usually traced to Proto-Indo-European *\*lowkos*, "a clearing", from the root for light (EtymDB 2.1). Lewis & Short explain *lūcus* as the shining, open place in a wood. English *lea*, "a meadow", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

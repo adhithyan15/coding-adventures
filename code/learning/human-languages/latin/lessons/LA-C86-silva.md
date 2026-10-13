@@ -13,7 +13,8 @@ gloss: "a forest, a wood"
 concept_tag: LA-ARBOR-SILVA
 prerequisites: [LA-C86-flos, LA-C86-folium]
 sounds: []
-roots: []
+roots: [silva-latin]
+etymology_hook: "silva 'forest' — origin uncertain; English sylvan comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C86-folium]
 <!-- hl-knowledge: introduces=[LA-LEX-C86-ARBOR-04]; assesses=[] -->
 
 **silva, silvae** — "a forest, a wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**silva** has no sure origin. Lewis & Short compare Greek *hylē*, "wood, forest", and EtymDB 2.1 records a proposed Proto-Indo-European *\*swel-*, "forest", but neither link is settled. English *sylvan* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

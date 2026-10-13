@@ -13,7 +13,8 @@ gloss: "a homeland"
 concept_tag: LA-RES271-PATRIA
 prerequisites: [LA-C271-populus, LA-C271-civitas]
 sounds: []
-roots: []
+roots: [patria-latin, pater-latin]
+etymology_hook: "patria 'homeland' — from patrius 'of a father': the fathers' land"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C271-civitas]
 <!-- hl-knowledge: introduces=[LA-LEX-C271-RES271-03]; assesses=[] -->
 
 **patria, patriae** — "a homeland".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patria** is the feminine of *patrius*, "of a father" (Lewis & Short), with *terra*, "land", understood: the land of one's fathers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

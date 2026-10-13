@@ -13,7 +13,8 @@ gloss: "to use"
 concept_tag: LA-VERB-UTOR
 prerequisites: [LA-C235-sequor, LA-C235-proficiscor]
 sounds: []
-roots: []
+roots: [uti-latin]
+etymology_hook: "ūtor 'to use' — probably from Proto-Italic *oitōr; deeper origin doubtful"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C235-proficiscor]
 <!-- hl-knowledge: introduces=[LA-LEX-C235-ACT235-05]; assesses=[] -->
 
 **ūtor, ūtī** — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ūtor** is probably inherited from Proto-Italic *\*oitōr*, "to use" (EtymDB 2.1), but Lewis & Short call its deeper origin doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

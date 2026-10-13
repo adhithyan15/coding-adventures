@@ -13,7 +13,8 @@ gloss: "a gnat, a mosquito"
 concept_tag: LA-RES276-CULEX
 prerequisites: [LA-C275-cinis, LA-C276-vespa]
 sounds: []
-roots: []
+roots: [culex-latin]
+etymology_hook: "culex 'gnat' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C276-vespa]
 <!-- hl-knowledge: introduces=[LA-LEX-C276-RES276-02]; assesses=[] -->
 
 **culex, culicis** — "a gnat, a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**culex** has no sure origin; EtymDB 2.1 records a proposed Proto-Indo-European source, but the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 193,
-  "sourceHash": "fnv1a64:9c586aba19714475",
+  "sourceHash": "fnv1a64:9e773094b3cc0f6f",
   "lessonIds": [
     "LA-C193-tympanum",
     "LA-C193-talus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch193.txt",
   "json": "latin/narration/ch193.json",
-  "textHash": "fnv1a64:6fbdb29693fbf46d",
-  "jsonHash": "fnv1a64:e7f846d995c38e73",
+  "textHash": "fnv1a64:a3cbab0cd9b9ca9e",
+  "jsonHash": "fnv1a64:31ad0b4d1a07520f",
   "findings": []
 }

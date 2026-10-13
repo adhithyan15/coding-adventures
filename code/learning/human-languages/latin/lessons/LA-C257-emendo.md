@@ -13,7 +13,8 @@ gloss: "to correct (a fault)"
 concept_tag: LA-VERB-EMENDO
 prerequisites: [LA-C256-moneo, LA-C257-mereor]
 sounds: []
-roots: []
+roots: [emendare-latin, mendum-latin]
+etymology_hook: "ēmendō 'to correct' — ex 'out' + mendum 'a fault'; English amend, mend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C257-mereor]
 <!-- hl-knowledge: introduces=[LA-LEX-C257-ACT257-02]; assesses=[] -->
 
 **ēmendō, ēmendāre** — "to correct (a fault)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ēmendō** is built on *mendum*, "a fault, a blemish" (Lewis & Short), with *ex*, "out": to take the faults out. English *amend* and *mend* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "beautiful"
 concept_tag: LA-QUAL151-FORMOSUS
 prerequisites: [LA-C151-crudelis, LA-C151-turpis]
 sounds: []
-roots: []
+roots: [formosus-latin, forma-latin]
+etymology_hook: "fōrmōsus 'beautiful' — built on fōrma 'shape, beauty': well-shaped"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C151-turpis]
 <!-- hl-knowledge: introduces=[LA-LEX-C151-QUAL151-05]; assesses=[] -->
 
 **fōrmōsus, fōrmōsa, fōrmōsum** — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fōrmōsus** is built on *fōrma*, "shape, beauty" (Lewis & Short), with *-ōsus*, "full of": well-shaped. Where *fōrma* comes from is uncertain; a link with Greek *morphē*, "shape", is often suggested (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

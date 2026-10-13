@@ -12,6 +12,9 @@ Before the new one: say the Latin for now, then the Latin for soon.
 You'll want to know: rārō.
 rārō — "rarely". English rare.
 
+The word, taken apart.
+rārō is the adverb of rārus, "thin, scattered, rare" (Lewis & Short). Where rārus comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for soon, then the Latin for rarely.
 
 You'll want to know: iam.
 iam — "already, now".
+
+The word, taken apart.
+iam is probably inherited, from a Proto-Indo-European adverb Hyām, "already, then" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for rarely, then the Latin for already.
 You'll want to know: tum.
 tum — "then, at that time".
 
+The word, taken apart.
+tum is inherited, usually traced to Proto-Indo-European tom, "that" (EtymDB 2.1), a form of the pointing stem that also gave tam, "so" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for already, then the Latin for then.
 You'll want to know: multum.
 multum — "much, a lot". English multitude.
 
+The word, taken apart.
+multum is the neuter of multus, "much, many" (Lewis & Short), used as an adverb. Where multus comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for then, then the Latin for much.
 
 You'll want to know: parum.
 parum — "too little, not enough".
+
+The word, taken apart.
+parum is related to parvus, "small" (Lewis & Short), though how the two forms fit together is uncertain.
 
 What you've built.
 One more word for this chapter.

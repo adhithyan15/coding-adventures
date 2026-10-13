@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 212,
-  "sourceHash": "fnv1a64:0d1416a1606247bc",
+  "sourceHash": "fnv1a64:e2dbac5651b433f7",
   "lessonIds": [
     "LA-C212-curiosus",
     "LA-C212-invidus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch212.txt",
   "json": "latin/narration/ch212.json",
-  "textHash": "fnv1a64:23654e2cc2a802b4",
-  "jsonHash": "fnv1a64:79bea5cc92168833",
+  "textHash": "fnv1a64:078c437764206d7e",
+  "jsonHash": "fnv1a64:fde95397edadc7a8",
   "findings": []
 }

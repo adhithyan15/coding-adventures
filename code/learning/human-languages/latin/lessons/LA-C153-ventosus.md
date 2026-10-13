@@ -13,7 +13,8 @@ gloss: "windy"
 concept_tag: LA-QUAL153-VENTOSUS
 prerequisites: [LA-C152-serenus, LA-C153-nubilus]
 sounds: []
-roots: []
+roots: [ventosus-latin, ventus-latin]
+etymology_hook: "ventōsus 'windy' — built on ventus 'wind', from PIE *h2weh1- 'to blow'; English wind is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C153-nubilus]
 <!-- hl-knowledge: introduces=[LA-LEX-C153-QUAL153-02]; assesses=[] -->
 
 **ventōsus, ventōsa, ventōsum** — "windy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ventōsus** is built on *ventus*, "wind" (Lewis & Short), with *-ōsus*, "full of". *ventus* is usually traced to Proto-Indo-European *\*h2weh1nts*, "blowing, wind", from *\*h2weh1-*, "to blow" (EtymDB 2.1); English *wind* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

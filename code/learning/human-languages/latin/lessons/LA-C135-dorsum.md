@@ -13,7 +13,8 @@ gloss: "the back"
 concept_tag: LA-THINGS135-DORSUM
 prerequisites: [LA-C135-labrum, LA-C135-mentum]
 sounds: []
-roots: []
+roots: [dorsum-latin]
+etymology_hook: "dorsum 'back' — origin unknown; English dorsal and endorse come from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C135-mentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **dorsum, dorsī** — "the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dorsum** has no sure origin; no proposal is generally accepted. English *dorsal* and *endorse*, "to write on the back", come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

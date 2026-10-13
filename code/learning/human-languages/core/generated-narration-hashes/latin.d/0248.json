@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 248,
-  "sourceHash": "fnv1a64:977d6482353ddc1b",
+  "sourceHash": "fnv1a64:2cc691857b2155c9",
   "lessonIds": [
     "LA-C248-occasio",
     "LA-C248-periculum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch248.txt",
   "json": "latin/narration/ch248.json",
-  "textHash": "fnv1a64:ccb0f43d19d5d9c4",
-  "jsonHash": "fnv1a64:25bc3eec8088d6b4",
+  "textHash": "fnv1a64:8a6523cbe344c2fe",
+  "jsonHash": "fnv1a64:37a55e9df7ed3052",
   "findings": []
 }

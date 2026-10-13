@@ -13,7 +13,8 @@ gloss: "to order, to tell (someone to)"
 concept_tag: LA-VERB-IUBEO
 prerequisites: [LA-C260-erubesco, LA-C261-gigno]
 sounds: []
-roots: []
+roots: [iubere-latin]
+etymology_hook: "iubeō 'to order' — Old Latin ioubeō, usually traced to PIE *Hyowdheye- 'to set in motion'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C261-gigno]
 <!-- hl-knowledge: introduces=[LA-LEX-C261-ACT261-02]; assesses=[] -->
 
 **iubeō, iubēre** — "to order, to tell (someone to)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iubeō** is inherited; Old Latin wrote *ioubeō*, and it is usually traced to Proto-Indo-European *\*Hyowdheye-*, "to set in motion", from *\*Hyewdh-*, "to move" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

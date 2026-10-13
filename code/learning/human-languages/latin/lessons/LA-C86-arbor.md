@@ -13,7 +13,8 @@ gloss: "a tree"
 concept_tag: LA-ARBOR-ARBOR
 prerequisites: [LA-C85-corona, LA-C85-anulus]
 sounds: []
-roots: []
+roots: [arbor-latin]
+etymology_hook: "arbor 'tree' — older arbōs; deeper origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C85-anulus]
 <!-- hl-knowledge: introduces=[LA-LEX-C86-ARBOR-01]; assesses=[] -->
 
 **arbor, arboris** — "a tree". English *arboretum*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arbor** had an older form *arbōs* (Lewis & Short). Its deeper origin is uncertain; EtymDB 2.1 records a proposed link with Proto-Indo-European *\*h3erdh-*, "high, to grow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

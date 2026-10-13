@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 162,
-  "sourceHash": "fnv1a64:99d24414c61cc397",
+  "sourceHash": "fnv1a64:8dc92e8713f9744f",
   "lessonIds": [
     "LA-C162-nuper",
     "LA-C162-nudiustertius",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch162.txt",
   "json": "latin/narration/ch162.json",
-  "textHash": "fnv1a64:b2fc982437b17eec",
-  "jsonHash": "fnv1a64:875daae88b7266a9",
+  "textHash": "fnv1a64:bd5e0bb063b48c53",
+  "jsonHash": "fnv1a64:dce9ae8caa13e4a3",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to straighten, to correct"
 concept_tag: LA-VERB-CORRIGO
 prerequisites: [LA-C201-colloquor, LA-C201-trado]
 sounds: []
-roots: []
+roots: [corrigere-latin, regere-latin]
+etymology_hook: "corrigō 'to correct' — con- 'thoroughly' + regō 'to keep straight'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C201-trado]
 <!-- hl-knowledge: introduces=[LA-LEX-C201-ACT201-03]; assesses=[] -->
 
 **corrigō, corrigere** — "to straighten, to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corrigō** is *regō*, "to keep straight" (Lewis & Short), with *con-*, "thoroughly": to make fully straight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

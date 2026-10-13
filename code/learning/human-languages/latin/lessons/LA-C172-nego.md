@@ -13,7 +13,8 @@ gloss: "to deny, to say no"
 concept_tag: LA-VERB-NEGO
 prerequisites: [LA-C172-venor, LA-C172-piscor]
 sounds: []
-roots: []
+roots: [negare-latin]
+etymology_hook: "negō 'to deny' — built on ne 'not'; its formation is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C172-piscor]
 <!-- hl-knowledge: introduces=[LA-LEX-C172-ACT172-05]; assesses=[] -->
 
 **negō, negāre** — "to deny, to say no".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**negō** is built on the negative *ne*, "not", perhaps through *nec*, "and not"; how the verb was formed is uncertain. English *negative* and *deny* come from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "blind"
 concept_tag: LA-QUAL144-CAECUS
 prerequisites: [LA-C144-crassus, LA-C144-tenuis]
 sounds: []
-roots: []
+roots: [caecus-latin]
+etymology_hook: "caecus 'blind' — inherited, usually traced to PIE *kaykos 'one-eyed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C144-tenuis]
 <!-- hl-knowledge: introduces=[LA-LEX-C144-QUAL144-04]; assesses=[] -->
 
 **caecus, caeca, caecum** — "blind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caecus** is inherited, usually traced to Proto-Indo-European *\*kaykos*, "one-eyed, blind" (EtymDB 2.1). Gothic *haihs*, "one-eyed", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

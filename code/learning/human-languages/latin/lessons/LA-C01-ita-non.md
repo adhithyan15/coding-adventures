@@ -11,6 +11,7 @@ concept_tag: RESPONSE-YESNO
 prerequisites: [LA-C01-gratias]
 sounds: [macron-long-vowel]
 roots: [ita, sic, non, ne-negative]
+etymology_hook: "ita 'thus' and nōn 'not', from old ne-oenum 'not one'; sīc 'so' became Romance sí and sì"
 duration:
   max_seconds: 240
 requires:

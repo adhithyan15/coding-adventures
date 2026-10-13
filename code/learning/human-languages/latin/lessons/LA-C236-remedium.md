@@ -13,7 +13,8 @@ gloss: "a remedy"
 concept_tag: LA-VALE236-REMEDIUM
 prerequisites: [LA-C235-utor, LA-C236-emplastrum]
 sounds: []
-roots: []
+roots: [remedium-latin, mederi-latin]
+etymology_hook: "remedium 'remedy' — re- 'back' + medeor 'to heal'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C236-emplastrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C236-VALE236-02]; assesses=[] -->
 
 **remedium, remediī** — "a remedy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**remedium** is *re-*, "back", with *medeor*, "to heal" (Lewis & Short): what brings back health.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

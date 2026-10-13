@@ -11,6 +11,7 @@ concept_tag: FAREWELL
 prerequisites: [LA-C01-ave]
 sounds: [v-as-w, macron-long-vowel]
 roots: [valere]
+etymology_hook: "valē 'be strong' — the imperative of valēre 'to be strong, to be well'; English value and valid"
 duration:
   max_seconds: 240
 requires:
