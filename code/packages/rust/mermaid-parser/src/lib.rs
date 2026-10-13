@@ -7005,6 +7005,12 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     }))
     .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
     let labeled = [
+        labeled_swimlane_operator(value, "o--", '-', 2, "o", SwimlaneEdgeKind::Directed),
+        labeled_swimlane_operator(value, "x--", '-', 2, "x", SwimlaneEdgeKind::Directed),
+        labeled_swimlane_operator(value, "o==", '=', 2, "o", SwimlaneEdgeKind::Thick),
+        labeled_swimlane_operator(value, "x==", '=', 2, "x", SwimlaneEdgeKind::Thick),
+        labeled_swimlane_operator(value, "o-.", '.', 1, "-o", SwimlaneEdgeKind::Dotted),
+        labeled_swimlane_operator(value, "x-.", '.', 1, "-x", SwimlaneEdgeKind::Dotted),
         labeled_swimlane_operator(value, "<--", '-', 2, ">", SwimlaneEdgeKind::Directed),
         labeled_swimlane_operator(value, "<==", '=', 2, ">", SwimlaneEdgeKind::Thick),
         labeled_swimlane_operator(value, "<-.", '.', 1, "->", SwimlaneEdgeKind::Dotted),
@@ -7061,8 +7067,17 @@ fn labeled_swimlane_operator(
             at,
             len: start.len() + end_at + run + suffix.len(),
             kind,
-            start_marker: if start.starts_with('<') { EdgeMarker::Point } else { EdgeMarker::None },
-            end_marker: EdgeMarker::Point,
+            start_marker: match start.chars().next() {
+                Some('<') => EdgeMarker::Point,
+                Some('o') => EdgeMarker::Circle,
+                Some('x') => EdgeMarker::Cross,
+                _ => EdgeMarker::None,
+            },
+            end_marker: match suffix.chars().last() {
+                Some('o') => EdgeMarker::Circle,
+                Some('x') => EdgeMarker::Cross,
+                _ => EdgeMarker::Point,
+            },
             label: Some(label.to_string()),
             min_length: run - minimum_run + 1,
             id: None,

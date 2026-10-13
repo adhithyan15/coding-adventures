@@ -3816,6 +3816,22 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.fill.is_some() && path.commands.len() == 4
                 )).count() >= 6, "both endpoints of each labeled link must lower to arrowheads");
             }
+            if fixture_name == "labeled-circle-cross-links" {
+                assert_eq!(layout.edges.iter().filter(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Circle
+                        && edge.end_marker == diagram_ir::EdgeMarker::Circle
+                ).count(), 3);
+                assert_eq!(layout.edges.iter().filter(|edge|
+                    edge.start_marker == diagram_ir::EdgeMarker::Cross
+                        && edge.end_marker == diagram_ir::EdgeMarker::Cross
+                ).count(), 3);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 6, "both endpoints of circle links must lower to ellipses");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )).count() >= 12, "both endpoints of cross links must lower to paired paths");
+            }
             if fixture_name == "edge-identifiers" {
                 assert_eq!(layout.edges.iter().map(|edge| edge.id.as_deref()).collect::<Vec<_>>(),
                     vec![Some("submit"), Some("release")]);

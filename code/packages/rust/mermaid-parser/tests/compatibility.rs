@@ -2172,6 +2172,26 @@ fn swimlane_labeled_bidirectional_links_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_labeled_circle_and_cross_links_lower_to_semantic_ir() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- solid circle --o b\nb x-- solid cross --x c\nc o== thick circle ==o d\nd x== thick cross ==x e\ne o-. dotted circle .-o f\nf x-. dotted cross .-x g",
+    ).expect("labeled circle and cross Flowchart links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Directed,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    for (index, edge) in diagram.edges.iter().enumerate() {
+        let marker = if index % 2 == 0 { EdgeMarker::Circle } else { EdgeMarker::Cross };
+        assert_eq!((edge.start_marker, edge.end_marker), (marker, marker));
+        assert!(edge.label.is_some());
+    }
+}
+
+#[test]
 fn swimlane_edge_ids_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done",
