@@ -216,7 +216,9 @@ may also widen through a real name formal. Selector calls may also choose
 unaliased local runtime-real snapshots through unary signs, additive or
 multiplicative composition, powers with finite static operands, and pure
 supported standard-function transforms. Globals, captured locals, and other
-real-name branches remain conservative.
+real-name branches remain conservative. The exact bounded
+`entier(sign(local-runtime-real))` transform is also safe across such a
+selector; unrestricted runtime `entier` remains conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
