@@ -31,8 +31,8 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 12056,
-    "wordLessonsWithoutVisibleEtymology": 11997,
+    "wordLessonsWithoutEtymologyHook": 10961,
+    "wordLessonsWithoutVisibleEtymology": 10892,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -43,7 +43,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 139,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27758,
+    "drivableLessons": 27756,
     "drivablePercent": 94,
     "chaptersWithoutDrivablePrefix": 186,
     "chaptersWithoutDrivablePrefixByType": 179,
@@ -341511,9 +341511,9 @@
       {
         "language": "latin",
         "wordLessons": 1238,
-        "wordLessonsWithoutEtymologyHook": 1095,
-        "wordLessonsWithoutVisibleEtymology": 1105,
-        "wordLessonsWithoutAnyEtymology": 1090
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0
       },
       {
         "language": "malayalam",
@@ -341602,11 +341602,11 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 12056,
-      "wordLessonsWithoutVisibleEtymology": 11997,
-      "wordLessonsWithoutAnyEtymology": 11511,
-      "hookPercent": 53,
-      "visiblePercent": 53
+      "wordLessonsWithoutEtymologyHook": 10961,
+      "wordLessonsWithoutVisibleEtymology": 10892,
+      "wordLessonsWithoutAnyEtymology": 10421,
+      "hookPercent": 57,
+      "visiblePercent": 57
     }
   },
   "writingStages": {
@@ -364511,10 +364511,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 29572,
-    "voice": 27188,
-    "sight": 894,
+    "voice": 27186,
+    "sight": 896,
     "pen": 1490,
-    "coreVoice": 27758,
+    "coreVoice": 27756,
     "lessonsWithWritingSegments": 957,
     "drivablePercent": 94,
     "tracks": [
@@ -398176,12 +398176,12 @@
       {
         "language": "latin",
         "lessonCount": 1307,
-        "voice": 1288,
-        "sight": 12,
+        "voice": 1286,
+        "sight": 14,
         "pen": 7,
-        "coreVoice": 1289,
-        "drivablePercent": 99,
-        "drivablePrefixTotal": 1280,
+        "coreVoice": 1287,
+        "drivablePercent": 98,
+        "drivablePrefixTotal": 1274,
         "chapters": [
           {
             "language": "latin",
@@ -400730,15 +400730,16 @@
             "language": "latin",
             "chapter": 170,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null,
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "LA-C170-suspicor",
             "unstartable": null
           },
           {
@@ -402350,15 +402351,16 @@
             "language": "latin",
             "chapter": 278,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null,
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "LA-C278-pagina",
             "unstartable": null
           },
           {
@@ -454013,24 +454015,24 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 11507,
-    "underspent": 10717,
-    "neverSpent": 8107,
+    "roots": 12815,
+    "underspent": 11994,
+    "neverSpent": 9181,
     "payoffDistribution": {
-      "0": 8107,
-      "1": 1816,
-      "2": 794,
-      "3": 390,
-      "4": 190,
-      "5": 93,
-      "6": 36,
+      "0": 9181,
+      "1": 1977,
+      "2": 836,
+      "3": 404,
+      "4": 199,
+      "5": 95,
+      "6": 39,
       "7": 30,
       "8": 10,
-      "9": 6,
+      "9": 7,
       "10": 7,
       "11": 3,
       "12": 5,
-      "13": 2,
+      "13": 4,
       "15": 3,
       "16": 3,
       "18": 1,
@@ -454044,7 +454046,7 @@
       "35": 1,
       "43": 1
     },
-    "underspentPercent": 93
+    "underspentPercent": 94
   },
   "infoDump": {
     "lessons": 29572,
@@ -454068,34 +454070,34 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29045,
-    "usesBeforeIntroduction": 50565,
-    "technicalUsesBeforeIntroduction": 8069,
-    "technicalLessons": 5059,
+    "lessonsUsingTerms": 29046,
+    "usesBeforeIntroduction": 50871,
+    "technicalUsesBeforeIntroduction": 8193,
+    "technicalLessons": 5170,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2960
+        "lessons": 2994
       },
       {
         "term": "noun",
-        "lessons": 1669
+        "lessons": 1678
       },
       {
         "term": "adjective",
-        "lessons": 392
+        "lessons": 401
       },
       {
         "term": "participle",
-        "lessons": 295
+        "lessons": 346
       },
       {
         "term": "case",
-        "lessons": 288
+        "lessons": 299
       },
       {
         "term": "voice",
-        "lessons": 282
+        "lessons": 283
       }
     ]
   },
