@@ -13,7 +13,8 @@ gloss: "difficult"
 concept_tag: LA-FACILIS-DIFFICILIS
 prerequisites: [LA-C96-obscurus, LA-C97-facilis]
 sounds: []
-roots: []
+roots: [difficilis-latin, facilis-latin, facere-latin]
+etymology_hook: "difficilis 'difficult' — dis- 'not' + facilis 'easy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C97-facilis]
 <!-- hl-knowledge: introduces=[LA-LEX-C97-FACILIS-02]; assesses=[] -->
 
 **difficilis, difficile** — "difficult". **dis-**, not, with **facilis**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**difficilis** is *facilis*, "easy" (Lewis & Short), with the prefix *dis-*, "not"; the prefix's s became f before the f.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

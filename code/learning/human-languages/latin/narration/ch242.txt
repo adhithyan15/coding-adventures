@@ -12,6 +12,9 @@ Before the new one: say the Latin for unmarried, then the Latin for rainy.
 You'll want to know: paucī, paucae, pauca.
 paucī, paucae, pauca — "few".
 
+The word, taken apart.
+paucī is the plural of paucus, "few" (Lewis & Short), usually traced to Proto-Indo-European peh2w-, "few, small" (EtymDB 2.1); English few is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for rainy, then the Latin for few.
 
 You'll want to know: omnis, omne.
 omnis, omne — "all, every".
+
+The word, taken apart.
+omnis has no sure origin; Lewis & Short call it doubtful, and EtymDB 2.1 records a proposed Proto-Indo-European h3ep-ni-, "working". Neither account is settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for few, then the Latin for all.
 You'll want to know: tōtus, tōta, tōtum.
 tōtus, tōta, tōtum — "whole".
 
+The word, taken apart.
+tōtus has no sure origin; Lewis & Short link it with tot, "so many", but that is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for all, then the Latin for whole.
 You'll want to know: cēterī, cēterae, cētera.
 cēterī, cēterae, cētera — "the others, the remaining".
 
+The word, taken apart.
+cēterī has no sure origin; it is often explained as a pointing element ce-, "here", with a word like Greek heteros, "the other", but this is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for whole, then the Latin for the others.
 
 You'll want to know: alius, alia, aliud.
 alius, alia, aliud — "other, another".
+
+The word, taken apart.
+alius is inherited, usually traced to Proto-Indo-European h2elyos, "other" (EtymDB 2.1); Greek allos, "other", and English else are cousins.
 
 What you've built.
 One more word for this chapter.

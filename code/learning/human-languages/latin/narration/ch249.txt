@@ -12,6 +12,9 @@ Before the new one: say the Latin for a duty, then the Latin for work.
 You'll want to know: lignum, lignī.
 lignum, lignī — "wood, timber".
 
+The word, taken apart.
+lignum is usually traced to the root of legō, "to gather" (Lewis & Short): what is gathered for the fire, firewood. EtymDB 2.1 gives a reconstructed Proto-Indo-European leg-no-, "that which is collected".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for work, then the Latin for wood.
 
 You'll want to know: marmor, marmoris.
 marmor, marmoris — "marble".
+
+The word, taken apart.
+marmor was borrowed from Greek marmaros, "a gleaming stone, marble" (Lewis & Short). English marble comes from it through French.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for wood, then the Latin for marble.
 You'll want to know: vitrum, vitrī.
 vitrum, vitrī — "glass".
 
+The word, taken apart.
+vitrum is often traced to Proto-Italic wedrom, "glass", from Proto-Indo-European wed-, "water" (EtymDB 2.1): glass as the water-like stuff. The link is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for marble, then the Latin for glass.
 You'll want to know: corium, coriī.
 corium, coriī — "hide, leather".
 
+The word, taken apart.
+corium is inherited, usually traced to Proto-Indo-European (s)ker-, "to cut" (EtymDB 2.1): a hide as what is cut off. Its family includes scortum, "a skin, a hide" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for glass, then the Latin for hide.
 
 You'll want to know: līnum, līnī.
 līnum, līnī — "linen, flax".
+
+The word, taken apart.
+līnum belongs with Greek linon, "flax" (Lewis & Short), and Gothic lein, "linen". EtymDB 2.1 gives a reconstructed Proto-Indo-European līno-, "flax", but many think it is an old loan shared across Europe. English linen and line belong to its family.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a shield"
 concept_tag: LA-RES251-SCUTUM
 prerequisites: [LA-C251-clava, LA-C251-catena]
 sounds: []
-roots: []
+roots: [scutum-latin]
+etymology_hook: "scūtum 'shield' — probably from PIE *skei- 'to split'; Old Irish sciath is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C251-catena]
 <!-- hl-knowledge: introduces=[LA-LEX-C251-RES251-05]; assesses=[] -->
 
 **scūtum, scūtī** — "a shield".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scūtum** is probably inherited, from a Proto-Indo-European root *\*skei-*, "to cut, to split" (EtymDB 2.1): a shield of split boards. Old Irish *sciath*, "shield", is a cousin; Lewis & Short's link with Greek *skytos*, "leather", is less likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

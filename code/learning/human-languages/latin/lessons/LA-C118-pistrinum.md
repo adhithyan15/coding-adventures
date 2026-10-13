@@ -13,7 +13,8 @@ gloss: "a bakery, a mill"
 concept_tag: LA-LOC118-PISTRINUM
 prerequisites: [LA-C118-pavimentum, LA-C118-puteus]
 sounds: []
-roots: []
+roots: [pistrinum-latin, pistor-latin]
+etymology_hook: "pistrīnum 'bakery, mill' — built on pistor 'miller, baker', from pīnsō 'to pound'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C118-puteus]
 <!-- hl-knowledge: introduces=[LA-LEX-C118-LOC118-03]; assesses=[] -->
 
 **pistrīnum, pistrīnī** — "a bakery, a mill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pistrīnum** is built on *pistor*, "a miller, a baker" (Lewis & Short), from *pīnsō*, "to pound, to crush": grain was pounded before it was ground.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

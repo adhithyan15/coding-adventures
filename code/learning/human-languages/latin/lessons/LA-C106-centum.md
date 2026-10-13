@@ -13,7 +13,8 @@ gloss: "a hundred"
 concept_tag: LA-NUMERI-CENTUM
 prerequisites: [LA-C106-quadraginta, LA-C106-quinquaginta]
 sounds: []
-roots: []
+roots: [centum-latin]
+etymology_hook: "centum 'hundred' — inherited, usually traced to PIE *kmtom 'hundred'; English hundred is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C106-quinquaginta]
 <!-- hl-knowledge: introduces=[LA-LEX-C106-NUMERI-04]; assesses=[] -->
 
 **centum** — "a hundred". English *century* and *cent*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**centum** is inherited, usually traced to Proto-Indo-European *\*kmtom*, "hundred" (EtymDB 2.1); Greek *hekaton*, "hundred", and English *hundred* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

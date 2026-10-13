@@ -13,7 +13,8 @@ gloss: "a lamb"
 concept_tag: LA-RES224-AGNUS
 prerequisites: [LA-C224-aper, LA-C224-caper]
 sounds: []
-roots: []
+roots: [agnus-latin]
+etymology_hook: "agnus 'lamb' — inherited, usually traced to PIE *h2egwnos 'lamb'; Greek amnos is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C224-caper]
 <!-- hl-knowledge: introduces=[LA-LEX-C224-RES224-04]; assesses=[] -->
 
 **agnus, agnī** — "a lamb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agnus** is inherited, usually traced to Proto-Indo-European *\*h2egwnos*, "lamb" (EtymDB 2.1); Greek *amnos*, "lamb", is a cousin (Lewis & Short), and so is English *yean*, "to give birth to lambs".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

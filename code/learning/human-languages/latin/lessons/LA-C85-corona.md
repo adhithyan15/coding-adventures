@@ -13,7 +13,8 @@ gloss: "a crown, a garland"
 concept_tag: LA-RES2-CORONA
 prerequisites: [LA-C85-rota, LA-C85-gladius]
 sounds: []
-roots: []
+roots: [corona-latin]
+etymology_hook: "corōna 'crown' — borrowed from Greek korōnē 'a curved thing, a wreath'; English crown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C85-gladius]
 <!-- hl-knowledge: introduces=[LA-LEX-C85-RES2-04]; assesses=[] -->
 
 **corōna, corōnae** — "a crown, a garland".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corōna** was borrowed from Greek *korōnē*, "a curved thing, a wreath" (Lewis & Short), probably from *korōnos*, "curved" (EtymDB 2.1). English *crown* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

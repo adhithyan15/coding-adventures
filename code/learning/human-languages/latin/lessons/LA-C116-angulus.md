@@ -13,7 +13,8 @@ gloss: "a corner"
 concept_tag: LA-LOC116-ANGULUS
 prerequisites: [LA-C116-carcer, LA-C116-atrium]
 sounds: []
-roots: []
+roots: [angulus-latin]
+etymology_hook: "angulus 'corner' — inherited, usually traced to PIE *h2engulos; Greek ankylos 'crooked' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C116-atrium]
 <!-- hl-knowledge: introduces=[LA-LEX-C116-LOC116-04]; assesses=[] -->
 
 **angulus, angulī** — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**angulus** is inherited, usually traced to Proto-Indo-European *\*h2engulos*, "corner, angle" (EtymDB 2.1), from a root for bending; Greek *ankylos*, "crooked", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

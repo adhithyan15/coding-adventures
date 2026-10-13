@@ -13,7 +13,8 @@ gloss: "of the country, boorish"
 concept_tag: LA-QUAL180-RUSTICUS
 prerequisites: [LA-C180-commodus, LA-C180-urbanus]
 sounds: []
-roots: []
+roots: [rusticus-latin, rus-latin]
+etymology_hook: "rūsticus 'of the country' — built on rūs 'countryside'; English room is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C180-urbanus]
 <!-- hl-knowledge: introduces=[LA-LEX-C180-QUAL180-03]; assesses=[] -->
 
 **rūsticus, rūstica, rūsticum** — "of the country, boorish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rūsticus** is built on *rūs*, "the countryside" (Lewis & Short), which is usually traced to Proto-Indo-European *\*Hrewos*, "open space, field" (EtymDB 2.1). English *room* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

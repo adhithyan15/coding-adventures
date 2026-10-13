@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 101,
-  "sourceHash": "fnv1a64:5bec22d2372e5b5e",
+  "sourceHash": "fnv1a64:2537d92cc73ea7bb",
   "lessonIds": [
     "LA-C101-surgo",
     "LA-C101-erro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch101.txt",
   "json": "latin/narration/ch101.json",
-  "textHash": "fnv1a64:5855975a5186e47f",
-  "jsonHash": "fnv1a64:b694d921538bd6c6",
+  "textHash": "fnv1a64:e797062140a66c28",
+  "jsonHash": "fnv1a64:80be037c44e89691",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "if only"
 concept_tag: LA-CAUSA265-UTINAM
 prerequisites: [LA-C265-sicut, LA-C265-velut]
 sounds: []
-roots: []
+roots: [utinam-latin, ut-latin, latin-nam-for]
+etymology_hook: "utinam 'if only' — ut 'how' + nam 'indeed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C265-velut]
 <!-- hl-knowledge: introduces=[LA-LEX-C265-CAUSA265-03]; assesses=[] -->
 
 **utinam** — "if only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**utinam** is *ut*, "how, that", with the particle *nam*, "for, indeed" (EtymDB 2.1): oh that, if only.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

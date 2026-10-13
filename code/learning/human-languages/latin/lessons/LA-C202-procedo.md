@@ -13,7 +13,8 @@ gloss: "to go forward, to advance"
 concept_tag: LA-VERB-PROCEDO
 prerequisites: [LA-C202-excipio, LA-C202-ago]
 sounds: []
-roots: []
+roots: [procedere-latin, cedere-latin]
+etymology_hook: "prōcēdō 'to advance' — prō 'forward' + cēdō 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C202-ago]
 <!-- hl-knowledge: introduces=[LA-LEX-C202-ACT202-05]; assesses=[] -->
 
 **prōcēdō, prōcēdere** — "to go forward, to advance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prōcēdō** is *prō*, "forward", with *cēdō*, "to go" (EtymDB 2.1). English *proceed* and *process* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

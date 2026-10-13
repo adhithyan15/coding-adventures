@@ -13,7 +13,8 @@ gloss: "a tomb"
 concept_tag: LA-LOC118-SEPULCRUM
 prerequisites: [LA-C118-pistrinum, LA-C118-officina]
 sounds: []
-roots: []
+roots: [sepulcrum-latin, sepelire-latin]
+etymology_hook: "sepulcrum 'tomb' — built on sepeliō 'to bury'; English sepulchre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C118-officina]
 <!-- hl-knowledge: introduces=[LA-LEX-C118-LOC118-05]; assesses=[] -->
 
 **sepulcrum, sepulcrī** — "a tomb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sepulcrum** is built on *sepeliō*, "to bury" (Lewis & Short), with *-crum*, an ending for a place or tool, as in *fulcrum*, "a support". English *sepulchre* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

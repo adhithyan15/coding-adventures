@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 112,
-  "sourceHash": "fnv1a64:924f12a827ac94f4",
+  "sourceHash": "fnv1a64:594a9c2c1bb3c38c",
   "lessonIds": [
     "LA-C112-cupiditas",
     "LA-C112-spes",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch112.txt",
   "json": "latin/narration/ch112.json",
-  "textHash": "fnv1a64:b8ffa8f50df720c9",
-  "jsonHash": "fnv1a64:c5734b11ba3d99e2",
+  "textHash": "fnv1a64:c6c0e91a0f93b4fa",
+  "jsonHash": "fnv1a64:2861d2f95be7dcfa",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to carry"
 concept_tag: LA-VERB-PORTO
 prerequisites: [LA-C156-iacio, LA-C156-veho]
 sounds: []
-roots: []
+roots: [portare-latin]
+etymology_hook: "portō 'to carry' — probably from PIE *per- 'to bring over'; kin to porta 'gate' and portus 'harbour'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C156-veho]
 <!-- hl-knowledge: introduces=[LA-LEX-C156-ACT156-04]; assesses=[] -->
 
 **portō, portāre** — "to carry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**portō** is probably inherited, from a Proto-Indo-European root *\*per-*, "to go across, to bring over" (EtymDB 2.1); *porta*, "a gate", and *portus*, "a harbour", belong to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

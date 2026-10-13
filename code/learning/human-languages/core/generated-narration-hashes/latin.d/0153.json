@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 153,
-  "sourceHash": "fnv1a64:3770a9fe31dc3460",
+  "sourceHash": "fnv1a64:55e9c140a896d7a1",
   "lessonIds": [
     "LA-C153-nubilus",
     "LA-C153-ventosus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch153.txt",
   "json": "latin/narration/ch153.json",
-  "textHash": "fnv1a64:2f287a2a7260ead6",
-  "jsonHash": "fnv1a64:bbaa3fb83346995f",
+  "textHash": "fnv1a64:0e556983b320635f",
+  "jsonHash": "fnv1a64:fa3c0ae313350673",
   "findings": []
 }

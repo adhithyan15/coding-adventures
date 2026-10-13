@@ -13,7 +13,8 @@ gloss: "to add"
 concept_tag: LA-VERB-ADDO
 prerequisites: [LA-C230-expergiscor, LA-C230-comitor]
 sounds: []
-roots: []
+roots: [addere-latin, dare-latin]
+etymology_hook: "addō 'to add' — ad 'to' + dō 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C230-comitor]
 <!-- hl-knowledge: introduces=[LA-LEX-C230-ACT230-03]; assesses=[] -->
 
 **addō, addere** — "to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**addō** is *ad*, "to", with *dō*, "to put, to give" (Lewis & Short): to put to.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

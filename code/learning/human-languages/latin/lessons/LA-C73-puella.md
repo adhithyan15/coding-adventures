@@ -13,7 +13,8 @@ gloss: "a girl"
 concept_tag: LA-HOMINES2-PUELLA
 prerequisites: [LA-C72-vir, LA-C72-femina]
 sounds: []
-roots: []
+roots: [puella-latin, puer-latin]
+etymology_hook: "puella 'girl' — a diminutive feminine beside puer 'boy, child'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C72-femina]
 <!-- hl-knowledge: introduces=[LA-LEX-C73-HOMINES2-01]; assesses=[] -->
 
 **puella, puellae** — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**puella** is the feminine of *puellus*, "a little boy" (Lewis & Short), a diminutive of *puer*, "a boy, a child": so "a little girl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

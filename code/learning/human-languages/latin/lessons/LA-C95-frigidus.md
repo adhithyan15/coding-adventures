@@ -13,7 +13,8 @@ gloss: "cold"
 concept_tag: LA-CALIDUS-FRIGIDUS
 prerequisites: [LA-C94-lentus, LA-C95-calidus]
 sounds: []
-roots: []
+roots: [frigidus-latin, frigus-latin]
+etymology_hook: "frīgidus 'cold' — built on frīgeō 'to be cold', from frīgus 'cold'; Greek rhigos 'frost' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C95-calidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C95-CALIDUS-02]; assesses=[] -->
 
 **frīgidus, frīgida, frīgidum** — "cold". English *frigid*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frīgidus** is built on *frīgeō*, "to be cold" (Lewis & Short), from *frīgus*, "cold", usually traced to Proto-Indo-European *\*sriHgos-*, "cold" (EtymDB 2.1). Greek *rhigos*, "frost", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

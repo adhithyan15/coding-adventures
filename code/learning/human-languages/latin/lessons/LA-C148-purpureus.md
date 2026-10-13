@@ -13,7 +13,8 @@ gloss: "purple"
 concept_tag: LA-QUAL148-PURPUREUS
 prerequisites: [LA-C148-iratus, LA-C148-quietus]
 sounds: []
-roots: []
+roots: [purpureus-latin, purpura-latin]
+etymology_hook: "purpureus 'purple' — built on purpura 'purple dye', from Greek porphyra"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C148-quietus]
 <!-- hl-knowledge: introduces=[LA-LEX-C148-QUAL148-05]; assesses=[] -->
 
 **purpureus, purpurea, purpureum** — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**purpureus** is built on *purpura*, "purple dye, the purple-fish" (Lewis & Short), a word Latin took from Greek *porphyra*, "purple-fish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a reed pen"
 concept_tag: LA-THINGS124-CALAMUS
 prerequisites: [LA-C124-codex, LA-C124-atramentum]
 sounds: []
-roots: []
+roots: [calamus-latin]
+etymology_hook: "calamus 'reed pen' — borrowed from Greek kalamos 'reed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C124-atramentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **calamus, calamī** — "a reed pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calamus** was borrowed from Greek *kalamos*, "a reed, a reed pen" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

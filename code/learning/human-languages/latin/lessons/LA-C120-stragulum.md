@@ -13,7 +13,8 @@ gloss: "a blanket, a bedspread"
 concept_tag: LA-THINGS120-STRAGULUM
 prerequisites: [LA-C120-cista, LA-C120-pulvinus]
 sounds: []
-roots: []
+roots: [stragulum-latin, sternere-latin]
+etymology_hook: "strāgulum 'blanket' — from strāgulus 'for spreading', on the root of sternō 'to spread'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C120-pulvinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **strāgulum, strāgulī** — "a blanket, a bedspread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**strāgulum** is the neuter of *strāgulus*, "for spreading out" (Lewis & Short), built on the root of *sternō*, "to spread, to lay out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

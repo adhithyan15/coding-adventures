@@ -13,7 +13,8 @@ gloss: "a butcher"
 concept_tag: LA-RES272-LANIUS
 prerequisites: [LA-C271-hostis, LA-C271-bellum]
 sounds: []
-roots: []
+roots: [lanius-latin]
+etymology_hook: "lanius 'butcher' — kin to laniō 'to tear to pieces'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C271-bellum]
 <!-- hl-knowledge: introduces=[LA-LEX-C272-RES272-01]; assesses=[] -->
 
 **lanius, laniī** — "a butcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lanius** belongs with *laniō*, "to tear to pieces" (Lewis & Short), usually traced to Proto-Indo-European *\*lek-*, "to tear" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

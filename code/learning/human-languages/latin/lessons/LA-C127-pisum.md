@@ -13,7 +13,8 @@ gloss: "a pea"
 concept_tag: LA-THINGS127-PISUM
 prerequisites: [LA-C126-alium, LA-C127-faba]
 sounds: []
-roots: []
+roots: [pisum-latin]
+etymology_hook: "pīsum 'pea' — borrowed from Greek pison 'pea'; English pea comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C127-faba]
 <!-- hl-knowledge: introduces=[LA-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **pīsum, pīsī** — "a pea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pīsum** was borrowed from Greek *pison*, "pea" (Lewis & Short). English *pea* comes from it: older English *pease* was heard as a plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

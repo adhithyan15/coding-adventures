@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 147,
-  "sourceHash": "fnv1a64:25448b78e29629f8",
+  "sourceHash": "fnv1a64:30554cd385033569",
   "lessonIds": [
     "LA-C147-surdus",
     "LA-C147-falsus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch147.txt",
   "json": "latin/narration/ch147.json",
-  "textHash": "fnv1a64:2e93d298f9b00371",
-  "jsonHash": "fnv1a64:bfd40adc23eed7a3",
+  "textHash": "fnv1a64:a89adabebf117280",
+  "jsonHash": "fnv1a64:a19ea3a901088c37",
   "findings": []
 }

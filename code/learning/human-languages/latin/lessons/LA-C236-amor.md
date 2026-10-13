@@ -13,7 +13,8 @@ gloss: "love"
 concept_tag: LA-VALE236-AMOR
 prerequisites: [LA-C236-remedium, LA-C236-somnium]
 sounds: []
-roots: []
+roots: [amor-latin, amare-latin]
+etymology_hook: "amor 'love' — built on amō 'to love'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C236-somnium]
 <!-- hl-knowledge: introduces=[LA-LEX-C236-VALE236-04]; assesses=[] -->
 
 **amor, amōris** — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amor** is built on *amō*, "to love" (Lewis & Short), with *-or*, "a state". Where *amō* comes from is uncertain; it may be a nursery word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

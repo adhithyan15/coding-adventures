@@ -13,7 +13,8 @@ gloss: "to speak"
 concept_tag: LA-VERB-LOQUOR
 prerequisites: [LA-C234-retineo, LA-C235-memini]
 sounds: []
-roots: []
+roots: [loqui-latin]
+etymology_hook: "loquor 'to speak' — probably from Proto-Italic *tlokwōr; deeper origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C235-memini]
 <!-- hl-knowledge: introduces=[LA-LEX-C235-ACT235-02]; assesses=[] -->
 
 **loquor, loquī** — "to speak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loquor** is probably inherited from Proto-Italic *\*tlokwōr*, "to speak" (EtymDB 2.1); its deeper origin is uncertain. English *eloquent* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

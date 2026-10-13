@@ -13,7 +13,8 @@ gloss: "a husband"
 concept_tag: LA-FAMILIA2-MARITUS
 prerequisites: [LA-C70-avia, LA-C70-familia]
 sounds: []
-roots: []
+roots: [maritus-latin]
+etymology_hook: "marītus 'husband' — probably from PIE *meryo- 'young man'; English marry and marital"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C70-familia]
 <!-- hl-knowledge: introduces=[LA-LEX-C71-FAMILIA2-01]; assesses=[] -->
 
 **marītus, marītī** — "a husband". English *marital*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marītus** is probably inherited, from a Proto-Indo-European word for a young man of an age to marry, *\*meryo-*, "young man" (EtymDB 2.1). English *marry* comes from its family through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

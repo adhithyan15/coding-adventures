@@ -13,7 +13,8 @@ gloss: "to make no sound"
 concept_tag: LA-VERB-SILEO
 prerequisites: [LA-C258-pello, LA-C258-praetereo]
 sounds: []
-roots: []
+roots: [silere-latin]
+etymology_hook: "sileō 'to be silent' — inherited, usually traced to PIE *seyl- 'still, quiet'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C258-praetereo]
 <!-- hl-knowledge: introduces=[LA-LEX-C258-ACT258-04]; assesses=[] -->
 
 **sileō, silēre** — "to make no sound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sileō** is inherited, usually traced to Proto-Indo-European *\*seyl-*, "still, quiet" (EtymDB 2.1); Gothic *anasilan*, "to grow quiet", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

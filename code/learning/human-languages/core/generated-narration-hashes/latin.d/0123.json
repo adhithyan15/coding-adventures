@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 123,
-  "sourceHash": "fnv1a64:d4b98c1e736d4370",
+  "sourceHash": "fnv1a64:a16111c9915b32b0",
   "lessonIds": [
     "LA-C123-vas",
     "LA-C123-amphora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch123.txt",
   "json": "latin/narration/ch123.json",
-  "textHash": "fnv1a64:72177bd1bdea5de7",
-  "jsonHash": "fnv1a64:709c4b28b41a2e5a",
+  "textHash": "fnv1a64:b1daabcda077deb1",
+  "jsonHash": "fnv1a64:5bc7ca7a0cba47a6",
   "findings": []
 }

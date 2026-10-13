@@ -13,7 +13,8 @@ gloss: "a bed, a couch"
 concept_tag: LA-DOMUS1-LECTUS
 prerequisites: [LA-C82-mensa, LA-C82-sella]
 sounds: []
-roots: []
+roots: [lectus-latin]
+etymology_hook: "lectus 'bed' — inherited, usually traced to PIE *legh- 'to lie'; Greek lekhos 'bed' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C82-sella]
 <!-- hl-knowledge: introduces=[LA-LEX-C82-DOMUS1-03]; assesses=[] -->
 
 **lectus, lectī** — "a bed, a couch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lectus** is inherited, usually traced to Proto-Indo-European *\*legh-*, "to lie" (EtymDB 2.1); Greek *lekhos*, "bed", is a cousin (Lewis & Short), and so is English *lie*. It is a different word from *lēctus*, "chosen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "sharp"
 concept_tag: LA-QUAL144-ACUTUS
 prerequisites: [LA-C144-tenuis, LA-C144-caecus]
 sounds: []
-roots: []
+roots: [acutus-latin, acuere-latin]
+etymology_hook: "acūtus 'sharp' — the participle of acuō 'to sharpen': sharpened"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C144-caecus]
 <!-- hl-knowledge: introduces=[LA-LEX-C144-QUAL144-05]; assesses=[] -->
 
 **acūtus, acūta, acūtum** — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acūtus** is the past participle of *acuō*, "to sharpen" (Lewis & Short): sharpened. *acuō* belongs with *acus*, "a needle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to visit"
 concept_tag: LA-VERB-VISITO
 prerequisites: [LA-C153-descendo, LA-C154-iungo]
 sounds: []
-roots: []
+roots: [visitare-latin, visere-latin, videre-latin]
+etymology_hook: "vīsitō 'to visit' — a frequentative of vīsō 'to go and see', from videō 'to see'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C154-iungo]
 <!-- hl-knowledge: introduces=[LA-LEX-C154-ACT154-02]; assesses=[] -->
 
 **vīsitō, vīsitāre** — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vīsitō** is a frequentative of *vīsō*, "to go and see" (Lewis & Short), itself built on *videō*, "to see": to keep going to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to decree, to settle"
 concept_tag: LA-VERB-DECERNO
 prerequisites: [LA-C228-vertex, LA-C228-ordo]
 sounds: []
-roots: []
+roots: [decernere-latin, cernere-latin]
+etymology_hook: "dēcernō 'to decree' — dē + cernō 'to sift, to decide'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C228-ordo]
 <!-- hl-knowledge: introduces=[LA-LEX-C229-ACT229-01]; assesses=[] -->
 
 **dēcernō, dēcernere** — "to decree, to settle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēcernō** is *dē*, "down, off", with *cernō*, "to sift, to decide" (EtymDB 2.1): to decide finally. *cernō* is usually traced to Proto-Indo-European *\*krey-*, "to sift" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

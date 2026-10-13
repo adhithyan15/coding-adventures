@@ -13,7 +13,8 @@ gloss: "ready"
 concept_tag: LA-QUAL268-PARATUS
 prerequisites: [LA-C268-idoneus, LA-C268-aptus]
 sounds: []
-roots: []
+roots: [paratus-latin, parare-latin]
+etymology_hook: "parātus 'ready' — the participle of parō 'to prepare'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C268-aptus]
 <!-- hl-knowledge: introduces=[LA-LEX-C268-QUAL268-04]; assesses=[] -->
 
 **parātus, parāta, parātum** — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parātus** is the past participle of *parō*, "to prepare" (Lewis & Short): prepared, ready.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

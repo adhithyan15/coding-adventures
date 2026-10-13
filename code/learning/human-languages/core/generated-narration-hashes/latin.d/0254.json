@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 254,
-  "sourceHash": "fnv1a64:7cf088d1300c416c",
+  "sourceHash": "fnv1a64:ec21607c18bf273a",
   "lessonIds": [
     "LA-C254-sarcina",
     "LA-C254-pera",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch254.txt",
   "json": "latin/narration/ch254.json",
-  "textHash": "fnv1a64:97870669bb6281f5",
-  "jsonHash": "fnv1a64:cbd29c351ba1bae1",
+  "textHash": "fnv1a64:2dd1a8b6a14ea148",
+  "jsonHash": "fnv1a64:6d8dd1041a22370b",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to sow, to plant"
 concept_tag: LA-VERB-SERO
 prerequisites: [LA-C171-creo, LA-C171-credo]
 sounds: []
-roots: []
+roots: [serere-latin]
+etymology_hook: "serō 'to sow' — inherited, from a doubled form of PIE *seh1- 'to sow'; kin to sēmen 'seed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C171-credo]
 <!-- hl-knowledge: introduces=[LA-LEX-C172-ACT172-01]; assesses=[] -->
 
 **serō, serere** — "to sow, to plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serō**, "to sow", is inherited from Proto-Italic *\*sizō*, "I sow", usually traced to Proto-Indo-European *\*si-sh1-*, "to sow", a doubled form of the root (EtymDB 2.1); *sēmen*, "seed", has the same root. It is a different word from *serō*, "to join, to bind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "hail"
 concept_tag: LA-THINGS130-GRANDO
 prerequisites: [LA-C130-unda, LA-C130-glacies]
 sounds: []
-roots: []
+roots: [grando-latin]
+etymology_hook: "grandō 'hail' — inherited, usually traced to PIE *greh3d- 'hail'; Greek khalaza is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C130-glacies]
 <!-- hl-knowledge: introduces=[LA-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **grandō, grandinis** — "hail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grandō** is inherited, usually traced to Proto-Indo-European *\*greh3d-*, "hail" (EtymDB 2.1); Greek *khalaza*, "hail", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

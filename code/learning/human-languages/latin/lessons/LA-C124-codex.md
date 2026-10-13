@@ -13,7 +13,8 @@ gloss: "a book (of bound pages)"
 concept_tag: LA-THINGS124-CODEX
 prerequisites: [LA-C123-crumena, LA-C123-nummus, LA-C59-dies-meus]
 sounds: []
-roots: []
+roots: [codex-latin, caudex-latin]
+etymology_hook: "cōdex 'book' — another form of caudex 'block of wood': tablets fastened together"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [LA-C123-nummus]
 <!-- hl-knowledge: introduces=[LA-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **cōdex, cōdicis** — "a book (of bound pages)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōdex** is another form of *caudex*, "a tree trunk, a block of wood" (Lewis & Short): the first such books were wooden tablets fastened together. Where *caudex* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

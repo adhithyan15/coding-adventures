@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 159,
-  "sourceHash": "fnv1a64:3f4700046a7d4a1f",
+  "sourceHash": "fnv1a64:d9d3b8d6d7766835",
   "lessonIds": [
     "LA-C159-sentio",
     "LA-C159-pendeo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch159.txt",
   "json": "latin/narration/ch159.json",
-  "textHash": "fnv1a64:f235e7a647e3a208",
-  "jsonHash": "fnv1a64:5839629f78518b6b",
+  "textHash": "fnv1a64:61ea4a3a9bfae60d",
+  "jsonHash": "fnv1a64:809246236f985feb",
   "findings": []
 }

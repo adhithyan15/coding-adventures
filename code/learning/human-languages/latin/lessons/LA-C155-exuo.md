@@ -13,7 +13,8 @@ gloss: "to take off (clothes)"
 concept_tag: LA-VERB-EXUO
 prerequisites: [LA-C155-gero, LA-C155-induo]
 sounds: []
-roots: []
+roots: [exuere-latin]
+etymology_hook: "exuō 'to take off' — ex 'out of' + -uō 'to put on', as in induō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C155-induo]
 <!-- hl-knowledge: introduces=[LA-LEX-C155-ACT155-04]; assesses=[] -->
 
 **exuō, exuere** — "to take off (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exuō** is *ex*, "out of", with the verb *-uō*, "to put on", found also in *induō*, "to put on clothes" (Lewis & Short): to get out of one's clothes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

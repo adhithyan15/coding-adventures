@@ -13,7 +13,8 @@ gloss: "to wander; to be wrong"
 concept_tag: LA-VERB-ERRO
 prerequisites: [LA-C100-traho, LA-C101-surgo]
 sounds: []
-roots: []
+roots: [errare-latin]
+etymology_hook: "errō 'to wander, to be wrong' — usually traced to PIE *h1ers- 'to be in motion'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C101-surgo]
 <!-- hl-knowledge: introduces=[LA-LEX-C101-VERBA7-02]; assesses=[] -->
 
 **errō, errāre** — "to wander; to be wrong". English *err* and *error*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**errō** is inherited, usually traced to Proto-Indo-European *\*h1ers-*, "to be in motion, to wander" (EtymDB 2.1); German *irren*, "to err", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

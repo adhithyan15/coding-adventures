@@ -13,7 +13,8 @@ gloss: "now and then"
 concept_tag: LA-TEMP176-NONNUMQUAM
 prerequisites: [LA-C176-prius, LA-C176-quotannis]
 sounds: []
-roots: []
+roots: [nonnumquam-latin, numquam-latin]
+etymology_hook: "nōnnumquam 'now and then' — nōn 'not' + numquam 'never'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C176-quotannis]
 <!-- hl-knowledge: introduces=[LA-LEX-C176-TEMP176-03]; assesses=[] -->
 
 **nōnnumquam** — "now and then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nōnnumquam** is *nōn*, "not", with *numquam*, "never" (Lewis & Short): not never, so sometimes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

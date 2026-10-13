@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Exchanging Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:aa95185aabcff891",
+  "sourceHash": "fnv1a64:62c45961f1cfcb82",
   "lessons": [
     {
       "id": "LA-C20-quid-tibi-nomen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4545a13a924ca00",
+      "sourceHash": "fnv1a64:774f7aeb3537c468",
       "notice": null,
       "blocks": [
         {
@@ -63,6 +63,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quid tibi nōmen est rests on inherited words. nōmen \"name\" is usually traced to Proto-Indo-European h1nomn, \"name\" (EtymDB 2.1), a cousin of English name. tibi \"to you\" is an old dative, usually traced to tebhye, \"to you\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

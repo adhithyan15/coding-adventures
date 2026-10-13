@@ -13,7 +13,8 @@ gloss: "to weep"
 concept_tag: LA-VERB-FLEO
 prerequisites: [LA-C75-salto, LA-C75-rideo]
 sounds: []
-roots: []
+roots: [flere-latin]
+etymology_hook: "fleō 'to weep' — inherited through Proto-Italic *flēō, probably from PIE *bhleh1-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C75-rideo]
 <!-- hl-knowledge: introduces=[LA-LEX-C75-VERBA1-05]; assesses=[] -->
 
 **fleō, flēre** — "to weep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fleō** is inherited through Proto-Italic *\*flēō*, "to weep", and probably goes back to Proto-Indo-European *\*bhleh1-*, "to cry out, to howl" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

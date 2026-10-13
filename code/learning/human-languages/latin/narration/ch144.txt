@@ -12,6 +12,9 @@ Before the new one: say the Latin for ancient, then the Latin for narrow.
 You'll want to know: humilis, humile.
 humilis, humile — "low".
 
+The word, taken apart.
+humilis is built on humus, "earth, ground" (Lewis & Short): low, near the ground. humus is usually traced to Proto-Indo-European dhéghōm, "earth" (EtymDB 2.1). English humble comes from humilis through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for narrow, then the Latin for low.
 
 You'll want to know: crassus, crassa, crassum.
 crassus, crassa, crassum — "thick, fat".
+
+The word, taken apart.
+crassus is probably inherited, from a Proto-Indo-European krtsus, "woven thick", from kert-, "to twist together" (EtymDB 2.1). English crass comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for low, then the Latin for thick.
 You'll want to know: tenuis, tenue.
 tenuis, tenue — "thin".
 
+The word, taken apart.
+tenuis is inherited, usually traced to Proto-Indo-European tenh2us, "thin", from ten-, "to stretch" (EtymDB 2.1): thin as stretched out. English thin is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for thick, then the Latin for thin.
 You'll want to know: caecus, caeca, caecum.
 caecus, caeca, caecum — "blind".
 
+The word, taken apart.
+caecus is inherited, usually traced to Proto-Indo-European kaykos, "one-eyed, blind" (EtymDB 2.1). Gothic haihs, "one-eyed", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for thin, then the Latin for blind.
 
 You'll want to know: acūtus, acūta, acūtum.
 acūtus, acūta, acūtum — "sharp".
+
+The word, taken apart.
+acūtus is the past participle of acuō, "to sharpen" (Lewis & Short): sharpened. acuō belongs with acus, "a needle".
 
 What you've built.
 One more word for this chapter.

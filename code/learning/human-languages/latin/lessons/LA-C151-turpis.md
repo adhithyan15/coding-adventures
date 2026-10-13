@@ -13,7 +13,8 @@ gloss: "ugly, shameful"
 concept_tag: LA-QUAL151-TURPIS
 prerequisites: [LA-C151-benignus, LA-C151-crudelis]
 sounds: []
-roots: []
+roots: [turpis-latin]
+etymology_hook: "turpis 'ugly, shameful' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C151-crudelis]
 <!-- hl-knowledge: introduces=[LA-LEX-C151-QUAL151-04]; assesses=[] -->
 
 **turpis, turpe** — "ugly, shameful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**turpis** has no sure origin; neither Lewis & Short's comparison nor the root that EtymDB 2.1 records is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a pace"
 concept_tag: LA-RES218-PASSUS
 prerequisites: [LA-C217-vehiculum, LA-C217-currus]
 sounds: []
-roots: []
+roots: [latin-passus, pandere-latin]
+etymology_hook: "passus 'pace' — built on pandō 'to stretch': the stretch of the legs"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C217-currus]
 <!-- hl-knowledge: introduces=[LA-LEX-C218-RES218-01]; assesses=[] -->
 
 **passus, passūs** — "a pace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**passus** is built on *pandō*, "to spread out, to stretch" (EtymDB 2.1): a pace as the stretch of the legs. A Roman mile was *mīlle passūs*, "a thousand paces".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

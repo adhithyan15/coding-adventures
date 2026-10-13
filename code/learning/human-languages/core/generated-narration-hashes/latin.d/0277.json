@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 277,
-  "sourceHash": "fnv1a64:c5af2db5ed24ead8",
+  "sourceHash": "fnv1a64:6b54e95a94181ff2",
   "lessonIds": [
     "LA-C277-galea",
     "LA-C277-hasta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch277.txt",
   "json": "latin/narration/ch277.json",
-  "textHash": "fnv1a64:45890f042dc10176",
-  "jsonHash": "fnv1a64:39d54d086dec393b",
+  "textHash": "fnv1a64:7029327c5e00575f",
+  "jsonHash": "fnv1a64:64d76dc25b580de6",
   "findings": []
 }

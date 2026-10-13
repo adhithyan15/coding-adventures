@@ -13,7 +13,8 @@ gloss: "also, too"
 concept_tag: LA-CAUSA239-QUOQUE
 prerequisites: [LA-C239-simul, LA-C239-fortasse]
 sounds: []
-roots: []
+roots: [quoque-latin]
+etymology_hook: "quoque 'also' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C239-fortasse]
 <!-- hl-knowledge: introduces=[LA-LEX-C239-CAUSA239-03]; assesses=[] -->
 
 **quoque** — "also, too".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quoque** has no sure origin; Lewis & Short call it doubtful. It is a different word from *quōque*, "and by which".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

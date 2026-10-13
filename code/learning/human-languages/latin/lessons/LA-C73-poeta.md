@@ -13,7 +13,8 @@ gloss: "a poet"
 concept_tag: LA-HOMINES2-POETA
 prerequisites: [LA-C73-regina, LA-C73-nauta]
 sounds: []
-roots: []
+roots: [poeta-latin]
+etymology_hook: "poēta 'poet' — borrowed from Greek poiētēs 'maker', from poieō 'to make'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C73-nauta]
 <!-- hl-knowledge: introduces=[LA-LEX-C73-HOMINES2-05]; assesses=[] -->
 
 **poēta, poētae** — "a poet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poēta** was borrowed from Greek *poiētēs*, "a maker, a poet" (Lewis & Short), from *poieō*, "to make" (EtymDB 2.1): a poet was a maker of verses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

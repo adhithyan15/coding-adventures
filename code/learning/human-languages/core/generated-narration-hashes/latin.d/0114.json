@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 114,
-  "sourceHash": "fnv1a64:8667f2067cba7c49",
+  "sourceHash": "fnv1a64:eadbfea550026b0c",
   "lessonIds": [
     "LA-C114-ratio",
     "LA-C114-propterea",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch114.txt",
   "json": "latin/narration/ch114.json",
-  "textHash": "fnv1a64:d736a30e1542cd51",
-  "jsonHash": "fnv1a64:8e9e182e62f69d33",
+  "textHash": "fnv1a64:e57169cc22d7de7a",
+  "jsonHash": "fnv1a64:d13e7ab2e3d34680",
   "findings": []
 }

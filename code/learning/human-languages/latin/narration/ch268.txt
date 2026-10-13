@@ -12,6 +12,9 @@ Before the new one: say the Latin for former, then the Latin for nearest.
 You'll want to know: alter, altera, alterum.
 alter, altera, alterum — "the second of two, the other".
 
+The word, taken apart.
+alter is inherited, usually traced to Proto-Indo-European h2elteros, "the other of two" (EtymDB 2.1): the root of alius, "other", with -ter, an ending that sets one of two against the other.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for nearest, then the Latin for the second of 
 
 You'll want to know: idōneus, idōnea, idōneum.
 idōneus, idōnea, idōneum — "suitable".
+
+The word, taken apart.
+idōneus has no sure origin; no proposal is generally accepted.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for the second of two, then the Latin for suit
 You'll want to know: aptus, apta, aptum.
 aptus, apta, aptum — "fit, suited".
 
+The word, taken apart.
+aptus is the old participle of apō, "to fasten, to attach" (Lewis & Short): fastened on, so fitted.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for suitable, then the Latin for fit.
 You'll want to know: parātus, parāta, parātum.
 parātus, parāta, parātum — "ready".
 
+The word, taken apart.
+parātus is the past participle of parō, "to prepare" (Lewis & Short): prepared, ready.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for fit, then the Latin for ready.
 
 You'll want to know: adversus, adversa, adversum.
 adversus, adversa, adversum — "facing, unfavourable".
+
+The word, taken apart.
+adversus is the past participle of advertō, "to turn towards" (Lewis & Short): turned towards, facing, and so against. English adverse comes from it.
 
 What you've built.
 One more word for this chapter.

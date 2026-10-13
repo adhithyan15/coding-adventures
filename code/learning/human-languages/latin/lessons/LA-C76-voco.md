@@ -13,7 +13,8 @@ gloss: "to call"
 concept_tag: LA-VERB-VOCO
 prerequisites: [LA-C76-vendo, LA-C76-nato]
 sounds: []
-roots: []
+roots: [vocare-latin, vox-latin]
+etymology_hook: "vocō 'to call' — kin to vōx 'voice', from PIE *wekw- 'to speak'; English vocal, invoke"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C76-nato]
 <!-- hl-knowledge: introduces=[LA-LEX-C76-VERBA2-05]; assesses=[] -->
 
 **vocō, vocāre** — "to call". English *vocal*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vocō** belongs with *vōx*, "voice", and the pair is usually traced to Proto-Indo-European *\*wekw-*, "to speak" (EtymDB 2.1). English *invoke* comes from this family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

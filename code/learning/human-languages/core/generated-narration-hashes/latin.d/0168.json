@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 168,
-  "sourceHash": "fnv1a64:3b83b427d798780d",
+  "sourceHash": "fnv1a64:4f7288c2eb975981",
   "lessonIds": [
     "LA-C168-plico",
     "LA-C168-possideo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch168.txt",
   "json": "latin/narration/ch168.json",
-  "textHash": "fnv1a64:05df77db67399c12",
-  "jsonHash": "fnv1a64:5d4db94e97a086fe",
+  "textHash": "fnv1a64:00cedde29c2a286f",
+  "jsonHash": "fnv1a64:c8fc2561c9698048",
   "findings": []
 }

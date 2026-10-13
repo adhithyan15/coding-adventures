@@ -13,7 +13,8 @@ gloss: "music"
 concept_tag: LA-RES246-MUSICA
 prerequisites: [LA-C246-scriptor, LA-C246-pictor]
 sounds: []
-roots: []
+roots: [musica-latin]
+etymology_hook: "mūsica 'music' — from Greek mousikē 'the art of the Muses'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C246-pictor]
 <!-- hl-knowledge: introduces=[LA-LEX-C246-RES246-05]; assesses=[] -->
 
 **mūsica, mūsicae** — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mūsica** was borrowed from Greek *mousikē*, "the art of the Muses" (Lewis & Short), from *Mousa*, "a Muse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

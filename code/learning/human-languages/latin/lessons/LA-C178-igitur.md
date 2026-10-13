@@ -13,7 +13,8 @@ gloss: "therefore"
 concept_tag: LA-CAUSA178-IGITUR
 prerequisites: [LA-C177-intus, LA-C177-foris]
 sounds: []
-roots: []
+roots: [igitur-latin]
+etymology_hook: "igitur 'therefore' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C177-foris]
 <!-- hl-knowledge: introduces=[LA-LEX-C178-CAUSA178-01]; assesses=[] -->
 
 **igitur** — "therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**igitur** has no sure origin; Lewis & Short build it from the pronoun stem of *is*, "he, that", with old adverb endings, but this is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

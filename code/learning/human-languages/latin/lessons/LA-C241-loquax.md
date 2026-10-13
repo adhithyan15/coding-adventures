@@ -13,7 +13,8 @@ gloss: "talkative"
 concept_tag: LA-QUAL241-LOQUAX
 prerequisites: [LA-C240-inutilis, LA-C241-industrius]
 sounds: []
-roots: []
+roots: [loquax-latin, loqui-latin]
+etymology_hook: "loquāx 'talkative' — built on loquor 'to speak'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C241-industrius]
 <!-- hl-knowledge: introduces=[LA-LEX-C241-QUAL241-02]; assesses=[] -->
 
 **loquāx, loquācis** — "talkative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loquāx** is built on *loquor*, "to speak" (Lewis & Short), with *-āx*, an ending for a strong tendency: much given to talking.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

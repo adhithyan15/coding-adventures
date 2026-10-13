@@ -13,7 +13,8 @@ gloss: "a robber"
 concept_tag: LA-RES245-LATRO
 prerequisites: [LA-C244-amphitheatrum, LA-C245-fur]
 sounds: []
-roots: []
+roots: [latro-latin]
+etymology_hook: "latrō 'robber' — probably from Greek latron 'pay': first a hired soldier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C245-fur]
 <!-- hl-knowledge: introduces=[LA-LEX-C245-RES245-02]; assesses=[] -->
 
 **latrō, latrōnis** — "a robber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**latrō** was probably borrowed from Greek: *latron*, "pay, hire" (EtymDB 2.1), and *latris*, "a hired servant" (Lewis & Short). A *latrō* was first a hired soldier, then a robber.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

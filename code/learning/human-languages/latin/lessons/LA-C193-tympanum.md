@@ -13,7 +13,8 @@ gloss: "a drum"
 concept_tag: LA-RES193-TYMPANUM
 prerequisites: [LA-C192-noctua, LA-C192-pavo]
 sounds: []
-roots: []
+roots: [tympanum-latin]
+etymology_hook: "tympanum 'drum' — borrowed from Greek tympanon, from typtō 'to strike'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C192-pavo]
 <!-- hl-knowledge: introduces=[LA-LEX-C193-RES193-01]; assesses=[] -->
 
 **tympanum, tympanī** — "a drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tympanum** was borrowed from Greek *tympanon*, "a drum" (Lewis & Short), from *typtō*, "to strike, to beat" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

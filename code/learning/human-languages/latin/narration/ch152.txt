@@ -12,6 +12,9 @@ Before the new one: say the Latin for ugly, then the Latin for beautiful.
 You'll want to know: validus, valida, validum.
 validus, valida, validum — "strong".
 
+The word, taken apart.
+validus is built on valeō, "to be strong" (Lewis & Short), with -idus, the ending of state adjectives. valeō is usually traced to Proto-Indo-European h2welh1-, "to be strong, to rule" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for beautiful, then the Latin for strong.
 
 You'll want to know: īnfirmus, īnfirma, īnfirmum.
 īnfirmus, īnfirma, īnfirmum — "weak".
+
+The word, taken apart.
+īnfirmus is in-, "not", with firmus, "firm, strong" (Lewis & Short). firmus is usually traced to Proto-Indo-European dher-, "to hold, to support" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for strong, then the Latin for weak.
 You'll want to know: sōlus, sōla, sōlum.
 sōlus, sōla, sōlum — "alone, only".
 
+The word, taken apart.
+sōlus has no sure origin. It may belong with the reflexive sē, "oneself" (EtymDB 2.1 records Proto-Indo-European swe, "self, alone"); Lewis & Short link it with sollus, "whole".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for weak, then the Latin for alone.
 You'll want to know: gelidus, gelida, gelidum.
 gelidus, gelida, gelidum — "icy".
 
+The word, taken apart.
+gelidus is built on gelū, "frost" (Lewis & Short), usually traced to Proto-Indo-European gel-, "cold" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for alone, then the Latin for icy.
 
 You'll want to know: serēnus, serēna, serēnum.
 serēnus, serēna, serēnum — "clear, fine (of weather)".
+
+The word, taken apart.
+serēnus has no sure origin; no proposal is generally accepted.
 
 What you've built.
 One more word for this chapter.

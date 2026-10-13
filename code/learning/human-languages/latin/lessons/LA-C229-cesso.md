@@ -13,7 +13,8 @@ gloss: "to hold off, to be idle"
 concept_tag: LA-VERB-CESSO
 prerequisites: [LA-C229-tempto, LA-C229-pergo]
 sounds: []
-roots: []
+roots: [cessare-latin, cedere-latin]
+etymology_hook: "cessō 'to be idle' — a frequentative of cēdō 'to give way'; English cease"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C229-pergo]
 <!-- hl-knowledge: introduces=[LA-LEX-C229-ACT229-04]; assesses=[] -->
 
 **cessō, cessāre** — "to hold off, to be idle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cessō** is a frequentative of *cēdō*, "to go, to give way" (Lewis & Short): to keep giving way, so to hang back. English *cease* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

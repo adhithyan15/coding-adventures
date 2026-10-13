@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 135,
-  "sourceHash": "fnv1a64:45a67759dd4d93c5",
+  "sourceHash": "fnv1a64:8b4522e5021ac32f",
   "lessonIds": [
     "LA-C135-balaena",
     "LA-C135-gallus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch135.txt",
   "json": "latin/narration/ch135.json",
-  "textHash": "fnv1a64:d0907200b30ac8a5",
-  "jsonHash": "fnv1a64:0fa246a413fa5050",
+  "textHash": "fnv1a64:706148b9998c1e0c",
+  "jsonHash": "fnv1a64:43fdd8d017ed68ab",
   "findings": []
 }

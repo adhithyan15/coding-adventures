@@ -13,7 +13,8 @@ gloss: "a kitchen"
 concept_tag: LA-DOMUS2-CULINA
 prerequisites: [LA-C82-fenestra, LA-C82-cubiculum]
 sounds: []
-roots: []
+roots: [culina-latin]
+etymology_hook: "culīna 'kitchen' — origin uncertain; a link with coquō 'to cook' is suggested but not proven"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C82-cubiculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C83-DOMUS2-01]; assesses=[] -->
 
 **culīna, culīnae** — "a kitchen". English *culinary*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**culīna** has no sure origin; a link with *coquō*, "to cook", is often suggested but not proven.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

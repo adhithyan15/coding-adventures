@@ -13,7 +13,8 @@ gloss: "back again, once more"
 concept_tag: LA-CAUSA211-RURSUS
 prerequisites: [LA-C211-sponte, LA-C211-frustra]
 sounds: []
-roots: []
+roots: [rursus-latin, vertere-latin]
+etymology_hook: "rūrsus 'back again' — contracted from revorsus 'turned back'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C211-frustra]
 <!-- hl-knowledge: introduces=[LA-LEX-C211-CAUSA211-05]; assesses=[] -->
 
 **rūrsus** — "back again, once more".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rūrsus** is contracted from *revorsus*, "turned back" (Lewis & Short), the participle of *revertō*, "to turn back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

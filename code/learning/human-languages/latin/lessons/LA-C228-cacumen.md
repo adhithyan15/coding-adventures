@@ -13,7 +13,8 @@ gloss: "a peak, a tip"
 concept_tag: LA-RES228-CACUMEN
 prerequisites: [LA-C227-viator, LA-C228-saltus]
 sounds: []
-roots: []
+roots: [cacumen-latin]
+etymology_hook: "cacūmen 'peak' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C228-saltus]
 <!-- hl-knowledge: introduces=[LA-LEX-C228-RES228-02]; assesses=[] -->
 
 **cacūmen, cacūminis** — "a peak, a tip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cacūmen** has no sure origin; Lewis & Short call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

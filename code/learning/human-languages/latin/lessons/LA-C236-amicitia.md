@@ -13,7 +13,8 @@ gloss: "friendship"
 concept_tag: LA-VALE236-AMICITIA
 prerequisites: [LA-C236-somnium, LA-C236-amor]
 sounds: []
-roots: []
+roots: [amicitia-latin, amicus-latin]
+etymology_hook: "amīcitia 'friendship' — built on amīcus 'friend'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C236-amor]
 <!-- hl-knowledge: introduces=[LA-LEX-C236-VALE236-05]; assesses=[] -->
 
 **amīcitia, amīcitiae** — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amīcitia** is built on *amīcus*, "a friend" (Lewis & Short), with *-itia*, an ending for a state: being friends.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

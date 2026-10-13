@@ -13,7 +13,8 @@ gloss: "a tortoise"
 concept_tag: LA-RES276-TESTUDO
 prerequisites: [LA-C276-pulex, LA-C276-vermis]
 sounds: []
-roots: []
+roots: [testudo-latin, latin-testa]
+etymology_hook: "testūdō 'tortoise' — built on testa 'shell': the shelled creature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C276-vermis]
 <!-- hl-knowledge: introduces=[LA-LEX-C276-RES276-05]; assesses=[] -->
 
 **testūdō, testūdinis** — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**testūdō** is built on *testa*, "a piece of baked clay, a shell" (Lewis & Short), with *-ūdō*, an ending for a quality: the shelled creature.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

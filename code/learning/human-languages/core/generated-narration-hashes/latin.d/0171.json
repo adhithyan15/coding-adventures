@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 171,
-  "sourceHash": "fnv1a64:b7bd3bf62af63f7d",
+  "sourceHash": "fnv1a64:df9d9e193583b805",
   "lessonIds": [
     "LA-C171-fallo",
     "LA-C171-tolero",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch171.txt",
   "json": "latin/narration/ch171.json",
-  "textHash": "fnv1a64:ed82e740a7053cde",
-  "jsonHash": "fnv1a64:08bd2fe7b14d84e9",
+  "textHash": "fnv1a64:c5560638620df455",
+  "jsonHash": "fnv1a64:8942a2082e9142a5",
   "findings": []
 }

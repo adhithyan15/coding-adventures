@@ -12,6 +12,9 @@ Before the new one: say the Latin for a man, then the Latin for a woman.
 You'll want to know: puella, puellae.
 puella, puellae — "a girl".
 
+The word, taken apart.
+puella is the feminine of puellus, "a little boy" (Lewis & Short), a diminutive of puer, "a boy, a child": so "a little girl".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a woman, then the Latin for a girl.
 
 You'll want to know: senex, senis.
 senex, senis — "an old man". English senior and senate.
+
+The word, taken apart.
+senex is inherited, usually traced to Proto-Indo-European senos, "old" (EtymDB 2.1). senātus, "the senate", was first the council of elders.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a girl, then the Latin for an old man.
 You'll want to know: rēgīna, rēgīnae.
 rēgīna, rēgīnae — "a queen".
 
+The word, taken apart.
+rēgīna is built on rēx, rēgis, "a king" (Lewis & Short), which is usually traced to Proto-Indo-European h3reg-, "to rule, a chief" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for an old man, then the Latin for a queen.
 You'll want to know: nauta, nautae.
 nauta, nautae — "a sailor". English nautical.
 
+The word, taken apart.
+nauta was borrowed from Greek nautēs, "a sailor" (EtymDB 2.1). Latin also had a home-grown nāvita, "sailor", built on nāvis, "a ship" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a queen, then the Latin for a sailor.
 
 You'll want to know: poēta, poētae.
 poēta, poētae — "a poet".
+
+The word, taken apart.
+poēta was borrowed from Greek poiētēs, "a maker, a poet" (Lewis & Short), from poieō, "to make" (EtymDB 2.1): a poet was a maker of verses.
 
 What you've built.
 One more word for this chapter.

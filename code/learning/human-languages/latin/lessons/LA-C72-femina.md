@@ -13,7 +13,8 @@ gloss: "a woman"
 concept_tag: LA-HOMINES1-FEMINA
 prerequisites: [LA-C72-hospes, LA-C72-vir]
 sounds: []
-roots: []
+roots: [femina-latin]
+etymology_hook: "fēmina 'woman' — usually traced to PIE *dheh1- 'to suckle': 'the one who nurses'; English feminine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C72-vir]
 <!-- hl-knowledge: introduces=[LA-LEX-C72-HOMINES1-05]; assesses=[] -->
 
 **fēmina, fēminae** — "a woman". English *feminine*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fēmina** is inherited, usually traced to a Proto-Indo-European form of *\*dheh1-*, "to suckle", *\*dheh1mh1neh2*, "the one who nurses" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

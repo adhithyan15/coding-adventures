@@ -12,6 +12,9 @@ Before the new one: say the Latin for the chin, then the Latin for the back.
 You'll want to know: cubitum, cubitī.
 cubitum, cubitī — "an elbow".
 
+The word, taken apart.
+cubitum is built on cubō, "to lie down, to recline" (EtymDB 2.1): the elbow is what one leans on at table. English cubit, the length from elbow to fingertip, comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for the back, then the Latin for an elbow.
 
 You'll want to know: pollex, pollicis.
 pollex, pollicis — "a thumb".
+
+The word, taken apart.
+pollex was linked by the Romans with polleō, "to be strong" (Lewis & Short): the strongest finger. Modern scholars are less sure.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for an elbow, then the Latin for a thumb.
 You'll want to know: cutis, cutis.
 cutis, cutis — "the skin".
 
+The word, taken apart.
+cutis is inherited, usually traced to Proto-Indo-European kuHt-, "skin, hide" (EtymDB 2.1); Greek kytos, "a hollow, a skin", is compared (Lewis & Short), and English hide may be a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a thumb, then the Latin for the skin.
 You'll want to know: os, ossis.
 os, ossis — "a bone".
 
+The word, taken apart.
+os, ossis, is inherited, usually traced to Proto-Indo-European h3esth1, "bone" (EtymDB 2.1); Greek osteon, "bone", is a cousin (Lewis & Short). It is a different word from ōs, ōris, "mouth".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for the skin, then the Latin for a bone.
 
 You'll want to know: stomachus, stomachī.
 stomachus, stomachī — "the stomach".
+
+The word, taken apart.
+stomachus was borrowed from Greek stomakhos, "throat, gullet" (Lewis & Short), from stoma, "mouth" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

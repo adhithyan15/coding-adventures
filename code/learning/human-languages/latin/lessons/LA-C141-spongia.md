@@ -13,7 +13,8 @@ gloss: "a sponge"
 concept_tag: LA-THINGS141-SPONGIA
 prerequisites: [LA-C141-linteum, LA-C141-sapo]
 sounds: []
-roots: []
+roots: [spongia-latin]
+etymology_hook: "spongia 'sponge' — borrowed from Greek spongia 'sponge'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C141-sapo]
 <!-- hl-knowledge: introduces=[LA-LEX-C141-THINGS141-03]; assesses=[] -->
 
 **spongia, spongiae** — "a sponge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spongia** was borrowed from Greek *spongia*, "sponge" (Lewis & Short), from *spongos*, "sponge" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

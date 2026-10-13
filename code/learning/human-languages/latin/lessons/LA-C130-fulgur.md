@@ -13,7 +13,8 @@ gloss: "lightning"
 concept_tag: LA-THINGS130-FULGUR
 prerequisites: [LA-C130-grando, LA-C130-tonitrus]
 sounds: []
-roots: []
+roots: [fulgur-latin, fulgere-latin]
+etymology_hook: "fulgur 'lightning' — built on fulgeō 'to flash'; fulmen 'thunderbolt' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C130-tonitrus]
 <!-- hl-knowledge: introduces=[LA-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **fulgur, fulguris** — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fulgur** is built on *fulgeō*, "to flash, to lighten" (Lewis & Short), which is usually traced to Proto-Indo-European *\*bhleg-*, "to shine, to burn". *fulmen*, "a thunderbolt", is from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

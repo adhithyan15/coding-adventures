@@ -13,7 +13,8 @@ gloss: "children"
 concept_tag: LA-FAMILIA2-LIBERI
 prerequisites: [LA-C71-maritus, LA-C71-uxor]
 sounds: []
-roots: []
+roots: [liberi-latin, liber-latin]
+etymology_hook: "līberī 'children' — the plural of līber 'free': the free-born of a household"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C71-uxor]
 <!-- hl-knowledge: introduces=[LA-LEX-C71-FAMILIA2-03]; assesses=[] -->
 
 **līberī, līberōrum** — "children". Only in the plural.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**līberī**, "children", is the plural of *līber*, "free" (EtymDB 2.1): the free-born members of a household, as against its slaves. *līber* is usually traced to Proto-Indo-European *\*h1lewdheros*, "free" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

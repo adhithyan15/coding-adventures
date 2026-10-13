@@ -13,7 +13,8 @@ gloss: "wisdom"
 concept_tag: LA-VALE206-SAPIENTIA
 prerequisites: [LA-C206-anima, LA-C206-memoria]
 sounds: []
-roots: []
+roots: [sapientia-latin, sapere-latin]
+etymology_hook: "sapientia 'wisdom' — built on sapiēns 'wise'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C206-memoria]
 <!-- hl-knowledge: introduces=[LA-LEX-C206-VALE206-03]; assesses=[] -->
 
 **sapientia, sapientiae** — "wisdom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sapientia** is built on *sapiēns*, "wise" (Lewis & Short), from *sapiō*, "to taste, to be wise", with *-ia*, an ending for a quality.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

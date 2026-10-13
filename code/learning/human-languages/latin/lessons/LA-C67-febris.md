@@ -13,7 +13,8 @@ gloss: "a fever"
 concept_tag: LA-MORBUS-FEBRIS
 prerequisites: [LA-C66-unguis, LA-C66-sanus]
 sounds: []
-roots: []
+roots: [febris-latin]
+etymology_hook: "febris 'fever' — probably from PIE *dhegwh- 'to burn': a fever as a burning; English fever"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C66-sanus]
 <!-- hl-knowledge: introduces=[LA-LEX-C67-MORBUS-01]; assesses=[] -->
 
 **febris, febris** — "a fever". English *fever* and *febrile*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**febris** is probably inherited, from a Proto-Indo-European root *\*dhegwh-*, "to burn" (EtymDB 2.1): a fever as a burning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

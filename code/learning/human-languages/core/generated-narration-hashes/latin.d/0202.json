@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 202,
-  "sourceHash": "fnv1a64:e9eb9144188ab44e",
+  "sourceHash": "fnv1a64:6e214113397be033",
   "lessonIds": [
     "LA-C202-suadeo",
     "LA-C202-tremo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch202.txt",
   "json": "latin/narration/ch202.json",
-  "textHash": "fnv1a64:ce4570f5a77f7d73",
-  "jsonHash": "fnv1a64:5e38bcfeb946b936",
+  "textHash": "fnv1a64:131dc4227b77da4e",
+  "jsonHash": "fnv1a64:b6989d3b0e76719c",
   "findings": []
 }

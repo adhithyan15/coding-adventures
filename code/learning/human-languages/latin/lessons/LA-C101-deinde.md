@@ -13,7 +13,8 @@ gloss: "then, next"
 concept_tag: LA-VERBA7-DEINDE
 prerequisites: [LA-C101-fugio, LA-C101-statim]
 sounds: []
-roots: []
+roots: [deinde-latin, inde-latin]
+etymology_hook: "deinde 'then, next' — dē 'from' + inde 'from there'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C101-statim]
 <!-- hl-knowledge: introduces=[LA-LEX-C101-VERBA7-05]; assesses=[] -->
 
 **deinde** — "then, next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**deinde** is built from *dē*, "from", and *inde*, "from there, thence" (Lewis & Short): from that point on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "frequent, crowded"
 concept_tag: LA-QUAL214-CREBER
 prerequisites: [LA-C214-domesticus, LA-C214-rarus]
 sounds: []
-roots: []
+roots: [creber-latin, crescere-latin]
+etymology_hook: "crēber 'frequent' — often linked with crēscō 'to grow': thick-growing"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C214-rarus]
 <!-- hl-knowledge: introduces=[LA-LEX-C214-QUAL214-05]; assesses=[] -->
 
 **crēber, crēbra, crēbrum** — "frequent, crowded".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crēber** is often linked with *crēscō*, "to grow" (Lewis & Short), and traced to Proto-Indo-European *\*ker-*, "to grow" (EtymDB 2.1): thick-growing, so crowded.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

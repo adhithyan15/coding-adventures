@@ -13,7 +13,8 @@ gloss: "to untie, to pay"
 concept_tag: LA-VERB-SOLVO
 prerequisites: [LA-C156-veho, LA-C156-porto]
 sounds: []
-roots: []
+roots: [solvere-latin, luere-latin]
+etymology_hook: "solvō 'to untie' — se- 'apart' + luō 'to loosen'; English solve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C156-porto]
 <!-- hl-knowledge: introduces=[LA-LEX-C156-ACT156-05]; assesses=[] -->
 
 **solvō, solvere** — "to untie, to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**solvō** is contracted from *se-*, "apart", and *luō*, "to loosen, to release" (Lewis & Short): to loosen apart. English *solve* and *dissolve* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

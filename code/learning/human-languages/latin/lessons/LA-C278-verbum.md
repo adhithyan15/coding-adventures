@@ -13,7 +13,8 @@ gloss: "a word"
 concept_tag: LA-RES278-VERBUM
 prerequisites: [LA-C278-pagina, LA-C278-littera]
 sounds: []
-roots: []
+roots: [verbum-latin]
+etymology_hook: "verbum 'word' — inherited, usually traced to PIE *werdhom 'word'; English word is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C278-littera]
 <!-- hl-knowledge: introduces=[LA-LEX-C278-RES278-04]; assesses=[] -->
 
 **verbum, verbī** — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verbum** is inherited, usually traced to Proto-Indo-European *\*werdhom*, "word" (EtymDB 2.1); English *word* is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

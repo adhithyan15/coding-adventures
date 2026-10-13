@@ -12,6 +12,9 @@ Before the new one: say the Latin for a denarius, then the Latin for a sesterce.
 You'll want to know: carbō, carbōnis.
 carbō, carbōnis — "charcoal".
 
+The word, taken apart.
+carbō is probably inherited, from a Proto-Indo-European root ker-, "to burn" (EtymDB 2.1), though the details are uncertain. English carbon comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a sesterce, then the Latin for charcoal.
 
 You'll want to know: scopulus, scopulī.
 scopulus, scopulī — "a crag, a cliff".
+
+The word, taken apart.
+scopulus was borrowed from Greek skopelos, "a lookout rock, a peak" (Lewis & Short), from skopeō, "to look out" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for charcoal, then the Latin for a crag.
 You'll want to know: sīdus, sīderis.
 sīdus, sīderis — "a constellation, a star".
 
+The word, taken apart.
+sīdus has no sure origin; no proposal is generally accepted. cōnsīderō, "to examine", and dēsīderō, "to miss", are often linked with it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a crag, then the Latin for a constellation
 You'll want to know: procella, procellae.
 procella, procellae — "a storm, a gale".
 
+The word, taken apart.
+procella is built on procellō, "to hurl forward, to dash down" (EtymDB 2.1), from prō-, "forward": the gale that throws things down.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a constellation, then the Latin for a stor
 
 You'll want to know: nimbus, nimbī.
 nimbus, nimbī — "a rain cloud".
+
+The word, taken apart.
+nimbus is inherited, usually traced to Proto-Indo-European nebhos, "cloud" (EtymDB 2.1), in a form with an n inside; Greek nephos, "cloud", is a cousin (Lewis & Short), and so is nebula, "mist".
 
 What you've built.
 One more word for this chapter.

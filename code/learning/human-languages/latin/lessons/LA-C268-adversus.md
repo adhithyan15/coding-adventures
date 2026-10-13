@@ -13,7 +13,8 @@ gloss: "facing, unfavourable"
 concept_tag: LA-QUAL268-ADVERSUS
 prerequisites: [LA-C268-aptus, LA-C268-paratus]
 sounds: []
-roots: []
+roots: [adversus-latin, vertere-latin]
+etymology_hook: "adversus 'facing, unfavourable' — the participle of advertō 'to turn towards'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C268-paratus]
 <!-- hl-knowledge: introduces=[LA-LEX-C268-QUAL268-05]; assesses=[] -->
 
 **adversus, adversa, adversum** — "facing, unfavourable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adversus** is the past participle of *advertō*, "to turn towards" (Lewis & Short): turned towards, facing, and so against. English *adverse* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to make, to do"
 concept_tag: LA-VERB-FACIO
 prerequisites: [LA-C154-pingo, LA-C154-duco]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "faciō 'to make, to do' — usually traced to PIE *dheh1- 'to put, to set'; English do is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C154-duco]
 <!-- hl-knowledge: introduces=[LA-LEX-C155-ACT155-01]; assesses=[] -->
 
 **faciō, facere** — "to make, to do".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faciō** is inherited, usually traced to Proto-Indo-European *\*dheh1-*, "to put, to place, to set" (EtymDB 2.1), with a k added to the root. English *do* is a cousin from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

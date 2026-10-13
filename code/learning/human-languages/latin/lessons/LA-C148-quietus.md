@@ -13,7 +13,8 @@ gloss: "quiet, calm"
 concept_tag: LA-QUAL148-QUIETUS
 prerequisites: [LA-C148-miser, LA-C148-iratus]
 sounds: []
-roots: []
+roots: [quietus-latin, quies-latin]
+etymology_hook: "quiētus 'calm' — the participle of quiēscō 'to rest', from quiēs 'rest'; English quiet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C148-iratus]
 <!-- hl-knowledge: introduces=[LA-LEX-C148-QUAL148-04]; assesses=[] -->
 
 **quiētus, quiēta, quiētum** — "quiet, calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quiētus** is the participle of *quiēscō*, "to rest" (Lewis & Short), from *quiēs*, "rest", usually traced to Proto-Indo-European *\*kwyeh1-*, "to rest" (EtymDB 2.1). English *quiet* and *quit* come from this family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a chest, a box"
 concept_tag: LA-RES1-ARCA
 prerequisites: [LA-C83-poculum, LA-C83-culter]
 sounds: []
-roots: []
+roots: [arca-latin, arcere-latin]
+etymology_hook: "arca 'chest' — usually linked with arceō 'to shut in'; English ark comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C83-culter]
 <!-- hl-knowledge: introduces=[LA-LEX-C84-RES1-01]; assesses=[] -->
 
 **arca, arcae** — "a chest, a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arca** is usually linked with *arceō*, "to shut in, to keep off" (Lewis & Short): a chest keeps things shut away. English *ark* comes from *arca*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

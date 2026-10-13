@@ -13,7 +13,8 @@ gloss: "a billy goat"
 concept_tag: LA-RES224-CAPER
 prerequisites: [LA-C224-lacerta, LA-C224-aper]
 sounds: []
-roots: []
+roots: [caper-latin]
+etymology_hook: "caper 'billy goat' — inherited, usually traced to PIE *kapros 'buck'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C224-aper]
 <!-- hl-knowledge: introduces=[LA-LEX-C224-RES224-03]; assesses=[] -->
 
 **caper, caprī** — "a billy goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caper** is inherited, usually traced to Proto-Indo-European *\*kapros*, "buck, he-goat" (EtymDB 2.1); Greek *kapros*, "wild boar", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

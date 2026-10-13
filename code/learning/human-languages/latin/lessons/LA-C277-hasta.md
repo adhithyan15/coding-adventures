@@ -13,7 +13,8 @@ gloss: "a spear"
 concept_tag: LA-RES277-HASTA
 prerequisites: [LA-C276-testudo, LA-C277-galea]
 sounds: []
-roots: []
+roots: [hasta-latin]
+etymology_hook: "hasta 'spear' — inherited, usually traced to PIE *ghast- 'a rod'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C277-galea]
 <!-- hl-knowledge: introduces=[LA-LEX-C277-RES277-02]; assesses=[] -->
 
 **hasta, hastae** — "a spear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hasta** is inherited, usually traced to Proto-Indo-European *\*ghast-*, "a rod, a branch" (EtymDB 2.1). Gothic *gazds*, "a goad", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

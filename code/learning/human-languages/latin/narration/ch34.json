@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2e75419bba220ab4",
+  "sourceHash": "fnv1a64:906a62dc66e2a6da",
   "lessons": [
     {
       "id": "LA-C34-bonum-vesperum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4cc8c62ed3d21426",
+      "sourceHash": "fnv1a64:c4ee69ad2a10b919",
       "notice": null,
       "blocks": [
         {
@@ -63,6 +63,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bonum vesperum keeps vesper \"evening\", whose Greek cousin is hesperos \"evening\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

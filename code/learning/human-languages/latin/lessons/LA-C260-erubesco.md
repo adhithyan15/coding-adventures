@@ -13,7 +13,8 @@ gloss: "to blush"
 concept_tag: LA-VERB-ERUBESCO
 prerequisites: [LA-C260-compono, LA-C260-animadverto]
 sounds: []
-roots: []
+roots: [erubescere-latin, ruber-latin]
+etymology_hook: "ērubēscō 'to blush' — ex + rubēscō 'to grow red'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C260-animadverto]
 <!-- hl-knowledge: introduces=[LA-LEX-C260-ACT260-05]; assesses=[] -->
 
 **ērubēscō, ērubēscere** — "to blush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ērubēscō** is *ex*, "out", with *rubēscō*, "to grow red" (EtymDB 2.1), from *ruber*, "red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

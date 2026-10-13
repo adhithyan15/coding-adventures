@@ -13,7 +13,8 @@ gloss: "a small tablet, a note"
 concept_tag: LA-RES252-TABELLA
 prerequisites: [LA-C252-furnus, LA-C252-candelabrum]
 sounds: []
-roots: []
+roots: [tabella-latin, tabula-latin]
+etymology_hook: "tabella 'small tablet' — a diminutive of tabula"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C252-candelabrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C252-RES252-05]; assesses=[] -->
 
 **tabella, tabellae** — "a small tablet, a note".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tabella** is a diminutive of *tabula*, "a board, a writing tablet" (Lewis & Short): a small tablet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

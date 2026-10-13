@@ -13,7 +13,8 @@ gloss: "a son"
 concept_tag: LA-FAMILIA1-FILIUS
 prerequisites: [LA-C69-laetus, LA-C69-tristis]
 sounds: []
-roots: []
+roots: [filius]
+etymology_hook: "fīlius 'son' — inherited, usually traced to PIE *dheh1ylios 'a suckling'; English filial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C69-tristis]
 <!-- hl-knowledge: introduces=[LA-LEX-C70-FAMILIA1-01]; assesses=[] -->
 
 **fīlius, fīliī** — "a son". English *filial*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fīlius** is inherited. Old Latin had *fīlios*, "son", and the word is usually traced to Proto-Indo-European *\*dheh1ylios*, "a suckling" (EtymDB 2.1), from a root for nursing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "rare, thin"
 concept_tag: LA-QUAL214-RARUS
 prerequisites: [LA-C214-ferus, LA-C214-domesticus]
 sounds: []
-roots: []
+roots: [rarus-latin]
+etymology_hook: "rārus 'rare, thin' — probably from PIE *er(e)- 'loose, spaced apart'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C214-domesticus]
 <!-- hl-knowledge: introduces=[LA-LEX-C214-QUAL214-04]; assesses=[] -->
 
 **rārus, rāra, rārum** — "rare, thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rārus** is probably inherited, from a Proto-Indo-European root *\*er(e)-*, "loose, spaced apart" (EtymDB 2.1); Lewis & Short call it doubtful. Its first sense is "thin, with gaps".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

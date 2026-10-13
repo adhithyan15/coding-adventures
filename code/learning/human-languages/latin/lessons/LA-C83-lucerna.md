@@ -13,7 +13,8 @@ gloss: "a lamp"
 concept_tag: LA-DOMUS2-LUCERNA
 prerequisites: [LA-C83-culina, LA-C83-tectum]
 sounds: []
-roots: []
+roots: [lucerna-latin, lucere-latin, lux-latin]
+etymology_hook: "lucerna 'lamp' — built on lūceō 'to shine', kin to lūx 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C83-tectum]
 <!-- hl-knowledge: introduces=[LA-LEX-C83-DOMUS2-03]; assesses=[] -->
 
 **lucerna, lucernae** — "a lamp". It gives **lūx**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lucerna** is built on *lūceō*, "to shine" (Lewis & Short), with *-erna*, a suffix also seen in *caverna*, "a hollow". *lūceō* belongs with *lūx*, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

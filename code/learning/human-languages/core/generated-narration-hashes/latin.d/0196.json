@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 196,
-  "sourceHash": "fnv1a64:603d5076ed20e1d7",
+  "sourceHash": "fnv1a64:f4acc0eb1efc452f",
   "lessonIds": [
     "LA-C196-fluvius",
     "LA-C196-palus",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch196.txt",
   "json": "latin/narration/ch196.json",
-  "textHash": "fnv1a64:0461ec08c0b10d97",
-  "jsonHash": "fnv1a64:a77325466adacd8a",
+  "textHash": "fnv1a64:4c39cf12aaf544dc",
+  "jsonHash": "fnv1a64:49017464cf47bb21",
   "findings": []
 }

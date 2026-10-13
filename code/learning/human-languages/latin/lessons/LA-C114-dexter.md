@@ -13,7 +13,8 @@ gloss: "right (not left)"
 concept_tag: LA-WHY114-DEXTER
 prerequisites: [LA-C114-propterea, LA-C114-locus]
 sounds: []
-roots: []
+roots: [dexter-latin]
+etymology_hook: "dexter 'right' — inherited, usually traced to PIE *deks- 'right'; Greek dexios is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C114-locus]
 <!-- hl-knowledge: introduces=[LA-LEX-C114-WHY114-04]; assesses=[] -->
 
 **dexter, dextra, dextrum** — "right (not left)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dexter** is inherited, usually traced to Proto-Indo-European *\*deks-*, "right side" (EtymDB 2.1), with *-ter*, an ending that sets one of two sides against the other; Greek *dexios*, "on the right", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a cook"
 concept_tag: LA-OPUS-COQUUS
 prerequisites: [LA-C73-poeta, LA-C74-civis]
 sounds: []
-roots: []
+roots: [coquus-latin, coquere-latin]
+etymology_hook: "coquus 'cook' — built on coquō 'to cook', from PIE *pekw-; English cook came from it early"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C74-civis]
 <!-- hl-knowledge: introduces=[LA-LEX-C74-OPUS-02]; assesses=[] -->
 
 **coquus, coquī** — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coquus** is built on *coquō*, "to cook", which is usually traced to Proto-Indo-European *\*pekw-*, "to cook, to ripen" (EtymDB 2.1). English *cook* came from *coquus* very early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

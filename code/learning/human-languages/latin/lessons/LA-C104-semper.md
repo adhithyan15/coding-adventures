@@ -13,7 +13,8 @@ gloss: "always"
 concept_tag: LA-SEMPER-SEMPER
 prerequisites: [LA-C103-aurora, LA-C104-saepe]
 sounds: []
-roots: []
+roots: [semper-latin, semel-latin]
+etymology_hook: "semper 'always' — usually linked with semel 'once' + -per 'all along'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C104-saepe]
 <!-- hl-knowledge: introduces=[LA-LEX-C104-SEMPER-02]; assesses=[] -->
 
 **semper** — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semper** is usually linked with *semel*, "once", and the particle *-per*, "through, all along" (Lewis & Short): all in one stretch, so always.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

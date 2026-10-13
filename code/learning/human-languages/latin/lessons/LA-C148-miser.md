@@ -13,7 +13,8 @@ gloss: "wretched, unhappy"
 concept_tag: LA-QUAL148-MISER
 prerequisites: [LA-C147-periculosus, LA-C148-felix]
 sounds: []
-roots: []
+roots: [miser-latin]
+etymology_hook: "miser 'wretched' — origin unknown; English misery comes from its family"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C148-felix]
 <!-- hl-knowledge: introduces=[LA-LEX-C148-QUAL148-02]; assesses=[] -->
 
 **miser, misera, miserum** — "wretched, unhappy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**miser** has no sure origin; Lewis & Short's comparisons are uncertain. English *misery* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

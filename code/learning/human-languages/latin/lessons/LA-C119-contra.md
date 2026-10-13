@@ -13,7 +13,8 @@ gloss: "opposite, against"
 concept_tag: LA-LOC119-CONTRA
 prerequisites: [LA-C119-circa, LA-C119-iuxta]
 sounds: []
-roots: []
+roots: [contra-latin, cum-latin]
+etymology_hook: "contrā 'against' — built on cum 'with' (old com-) with a comparative ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C119-iuxta]
 <!-- hl-knowledge: introduces=[LA-LEX-C119-LOC119-05]; assesses=[] -->
 
 **contrā** — "opposite, against".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contrā** is built on *cum*, "with", in its old form com-, through a comparative form like the one in *intrā*, "inside" (Lewis & Short): "on the facing side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

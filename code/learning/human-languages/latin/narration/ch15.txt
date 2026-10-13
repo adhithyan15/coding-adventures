@@ -13,6 +13,9 @@ You'll want to know: tempestās — a derivative of tempus, specialized for weat
 tempestās = "weather, storm" — grammatically a derivative noun built on tempus ("time"), and by Classical Latin it had already specialized: tempus stayed strictly "time," while tempestās carried the weather/storm sense on its own. (English kept this split too: tempestās gives tempest, "a violent storm," while tempus gives temporal, tempo.)
 Be careful with what happened next, though: Spanish's single tiempo is not these two words merging back together. Later — still within Latin's own history, before Spanish, French, or Italian existed as separate languages — tempus itself re-widened to also cover "weather" (that's why French temps and Italian tempo carry the exact same double sense; this happened at the shared Latin stage, not as a Spanish-only development). Meanwhile tempestās kept going too, narrowing further to mean specifically "storm" — and it's still alive in Spanish today as its own separate word, tempestad ("storm, tempest"), sitting right alongside tiempo. So it's one word (tempus) widening back out, not two words fusing into one.
 
+The word, taken apart.
+tempestās was built inside Latin on tempus "time" (EtymDB 2.1). tempus itself has no sure origin: one proposal traces it to Proto-Indo-European tempos, "stretch", time seen as a stretch (EtymDB 2.1), and Lewis & Short call it doubtful.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "tempestās" — weather/storm, a derivative of tempus, "time," narrowed today to Spanish's "tempestad"]
@@ -42,6 +45,9 @@ This verb pattern resembles English "it rains" more closely than Spanish hace ca
 
 You'll want to know: calor and sol — carried straight through.
 Latin calor ("heat") and sol ("sun") are also Spanish calor and sol. These words needed no visible sound change at all.
+
+The words, taken apart.
+pluit is a form of pluō "I rain", usually traced to Proto-Indo-European pleweti (EtymDB 2.1), from a root plew-, "to flow, to float". calor "heat" was built inside Latin on caleō "I am warm" (Lewis & Short). sōl "sun" is inherited, usually traced to soh2wl, "sun" (EtymDB 2.1), a cousin of English sun.
 
 Guided Practice.
 [pause 1 second]

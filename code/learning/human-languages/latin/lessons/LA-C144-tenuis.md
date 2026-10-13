@@ -13,7 +13,8 @@ gloss: "thin"
 concept_tag: LA-QUAL144-TENUIS
 prerequisites: [LA-C144-humilis, LA-C144-crassus]
 sounds: []
-roots: []
+roots: [tenuis-latin]
+etymology_hook: "tenuis 'thin' — inherited, usually traced to PIE *tenh2us 'thin'; English thin is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C144-crassus]
 <!-- hl-knowledge: introduces=[LA-LEX-C144-QUAL144-03]; assesses=[] -->
 
 **tenuis, tenue** — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tenuis** is inherited, usually traced to Proto-Indo-European *\*tenh2us*, "thin", from *\*ten-*, "to stretch" (EtymDB 2.1): thin as stretched out. English *thin* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

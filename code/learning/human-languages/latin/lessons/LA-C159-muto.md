@@ -13,7 +13,8 @@ gloss: "to change"
 concept_tag: LA-VERB-MUTO
 prerequisites: [LA-C159-taceo, LA-C159-servo]
 sounds: []
-roots: []
+roots: [mutare-latin]
+etymology_hook: "mūtō 'to change' — usually traced to PIE *mey- 'to exchange'; kin to mūtuus 'mutual'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C159-servo]
 <!-- hl-knowledge: introduces=[LA-LEX-C159-ACT159-05]; assesses=[] -->
 
 **mūtō, mūtāre** — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mūtō** is usually traced to Proto-Indo-European *\*mey-*, "to change, to exchange", the root of *mūtuus*, "borrowed, mutual"; Lewis & Short's link with *moveō*, "to move", is less likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

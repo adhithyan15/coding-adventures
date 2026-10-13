@@ -13,7 +13,8 @@ gloss: "to feel"
 concept_tag: LA-VERB-SENTIO
 prerequisites: [LA-C158-ceno, LA-C158-gusto]
 sounds: []
-roots: []
+roots: [sentire-latin]
+etymology_hook: "sentiō 'to feel' — inherited, usually traced to PIE *sent- 'to head for'; English send is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C158-gusto]
 <!-- hl-knowledge: introduces=[LA-LEX-C159-ACT159-01]; assesses=[] -->
 
 **sentiō, sentīre** — "to feel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sentiō** is inherited, usually traced to Proto-Indo-European *\*sent-*, "to head for, to go" (EtymDB 2.1). English *send* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

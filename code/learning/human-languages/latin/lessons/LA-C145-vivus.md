@@ -13,7 +13,8 @@ gloss: "alive"
 concept_tag: LA-QUAL145-VIVUS
 prerequisites: [LA-C144-acutus, LA-C145-acerbus]
 sounds: []
-roots: []
+roots: [vivus-latin, vivere-latin]
+etymology_hook: "vīvus 'alive' — inherited, usually traced to PIE *gwih3wos 'alive'; English quick is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C145-acerbus]
 <!-- hl-knowledge: introduces=[LA-LEX-C145-QUAL145-02]; assesses=[] -->
 
 **vīvus, vīva, vīvum** — "alive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vīvus** is inherited, usually traced to Proto-Indo-European *\*gwih3wos*, "alive" (EtymDB 2.1), and belongs with *vīvō*, "to live" (Lewis & Short). English *quick*, once "alive", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

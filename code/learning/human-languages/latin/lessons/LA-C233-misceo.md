@@ -13,7 +13,8 @@ gloss: "to mix"
 concept_tag: LA-VERB-MISCEO
 prerequisites: [LA-C233-interrumpo, LA-C233-ligo]
 sounds: []
-roots: []
+roots: [miscere-latin]
+etymology_hook: "misceō 'to mix' — inherited, usually traced to PIE *meyk- 'to mix'; Greek mignymi is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C233-ligo]
 <!-- hl-knowledge: introduces=[LA-LEX-C233-ACT233-04]; assesses=[] -->
 
 **misceō, miscēre** — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**misceō** is inherited, usually traced to Proto-Indo-European *\*meyk-*, "to mix" (EtymDB 2.1); Greek *mignymi*, "to mix", is a cousin (Lewis & Short). English *mix* comes from its participle *mixtus*, "mixed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

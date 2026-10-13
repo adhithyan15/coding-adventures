@@ -13,7 +13,8 @@ gloss: "sweet"
 concept_tag: LA-CALIDUS-DULCIS
 prerequisites: [LA-C95-siccus, LA-C95-umidus]
 sounds: []
-roots: []
+roots: [dulcis-latin]
+etymology_hook: "dulcis 'sweet' — inherited, usually traced to PIE *dlku- 'sweet'; Greek glykys is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C95-umidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C95-CALIDUS-05]; assesses=[] -->
 
 **dulcis, dulce** — "sweet". Honey, **mel**, is the sweetest thing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dulcis** is inherited, usually traced to Proto-Indo-European *\*dlku-*, "sweet" (EtymDB 2.1); Greek *glykys*, "sweet", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

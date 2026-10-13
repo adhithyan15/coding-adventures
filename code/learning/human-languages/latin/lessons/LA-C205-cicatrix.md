@@ -13,7 +13,8 @@ gloss: "a scar"
 concept_tag: LA-VALE205-CICATRIX
 prerequisites: [LA-C204-desino, LA-C205-vulnus]
 sounds: []
-roots: []
+roots: [cicatrix-latin]
+etymology_hook: "cicātrīx 'scar' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C205-vulnus]
 <!-- hl-knowledge: introduces=[LA-LEX-C205-VALE205-02]; assesses=[] -->
 
 **cicātrīx, cicātrīcis** — "a scar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cicātrīx** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

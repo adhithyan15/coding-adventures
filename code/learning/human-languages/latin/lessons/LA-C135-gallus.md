@@ -13,7 +13,8 @@ gloss: "a cockerel"
 concept_tag: LA-THINGS135-GALLUS
 prerequisites: [LA-C134-delphinus, LA-C135-balaena]
 sounds: []
-roots: []
+roots: [gallus-latin]
+etymology_hook: "gallus 'cockerel' — perhaps 'the crier', from Proto-Italic *galso-; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C135-balaena]
 <!-- hl-knowledge: introduces=[LA-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **gallus, gallī** — "a cockerel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gallus** is often traced to Proto-Italic *\*galso-*, "the crier" (EtymDB 2.1), after the bird's call, but this is uncertain. It is a different word from *Gallus*, "a Gaul".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

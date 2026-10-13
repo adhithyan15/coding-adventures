@@ -13,7 +13,8 @@ gloss: "a kingdom"
 concept_tag: LA-RES245-REGNUM
 prerequisites: [LA-C245-consul, LA-C245-imperator]
 sounds: []
-roots: []
+roots: [regnum-latin, rex-latin]
+etymology_hook: "rēgnum 'kingdom' — built on rēx, rēgis 'king'; English reign"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C245-imperator]
 <!-- hl-knowledge: introduces=[LA-LEX-C245-RES245-05]; assesses=[] -->
 
 **rēgnum, rēgnī** — "a kingdom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rēgnum** is built on *rēx*, *rēgis*, "a king" (Lewis & Short): what a king rules. English *reign* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "former, of old"
 concept_tag: LA-QUAL267-PRISTINUS
 prerequisites: [LA-C267-callidus, LA-C267-praecipuus]
 sounds: []
-roots: []
+roots: [pristinus-latin, priscus-latin]
+etymology_hook: "prīstinus 'former' — kin to prīscus 'ancient' and prior 'earlier'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C267-praecipuus]
 <!-- hl-knowledge: introduces=[LA-LEX-C267-QUAL267-04]; assesses=[] -->
 
 **prīstinus, prīstina, prīstinum** — "former, of old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prīstinus** belongs with *prīscus*, "ancient" (Lewis & Short), and with *prior*, "earlier", all built on what is usually reconstructed as *\*pri-*, "before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

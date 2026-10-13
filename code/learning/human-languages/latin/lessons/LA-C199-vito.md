@@ -13,7 +13,8 @@ gloss: "to avoid"
 concept_tag: LA-VERB-VITO
 prerequisites: [LA-C199-reprehendo, LA-C199-partior]
 sounds: []
-roots: []
+roots: [vitare-latin]
+etymology_hook: "vītō 'to avoid' — origin unknown; English inevitable comes from its family"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C199-partior]
 <!-- hl-knowledge: introduces=[LA-LEX-C199-ACT199-05]; assesses=[] -->
 
 **vītō, vītāre** — "to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vītō** has no sure origin; Lewis & Short's proposal is uncertain, and no other is generally accepted. English *inevitable* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

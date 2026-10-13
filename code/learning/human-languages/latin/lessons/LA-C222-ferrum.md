@@ -13,7 +13,8 @@ gloss: "iron"
 concept_tag: LA-RES222-FERRUM
 prerequisites: [LA-C222-argentum, LA-C222-aes]
 sounds: []
-roots: []
+roots: [ferrum-latin]
+etymology_hook: "ferrum 'iron' — origin unknown; perhaps an eastern loan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C222-aes]
 <!-- hl-knowledge: introduces=[LA-LEX-C222-RES222-04]; assesses=[] -->
 
 **ferrum, ferrī** — "iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ferrum** has no sure origin; it is often thought to be a loan from a language of the eastern Mediterranean, perhaps through Etruscan, but the source is unknown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

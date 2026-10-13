@@ -13,7 +13,7 @@ sounds: [macron-long-vowel, prefix-un-duo]
 roots: [latin-decim-ten, latin-viginti-twenty]
 etymology_hook: "ūndecim through quīndecim (11-15) are simple 'X-ten' compounds, the direct source of Spanish's fused once-quince; but 18 and 19 are the genuinely odd ones — duodēvīgintī ('two FROM twenty') and ūndēvīgintī ('one FROM twenty'), SUBTRACTIVE counting that Spanish did NOT inherit, replacing it with plain addition instead"
 duration:
-  max_seconds: 240
+  max_seconds: 252
 requires:
   knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02]
 introduces:
@@ -82,6 +82,11 @@ something genuinely odd in Latin's own counting.
 <!-- hl-knowledge: introduces=[LA-LEX-UNDECIM-VIGINTI-04]; assesses=[] -->
 
 **vīgintī** ("twenty") — the direct, unchanged source of Spanish's *veinte*.
+
+## The numbers, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ūndecim** was put together inside Latin from *ūnus* "one" and *decem* "ten" (Lewis & Short), and *decem* is inherited, usually traced to Proto-Indo-European *\*dekm*, "ten" (EtymDB 2.1). *vīgintī* "twenty" is inherited too, usually traced to *\*h1wih1kmti*, "twenty", read as "two tens" (EtymDB 2.1); Greek *eikosi* "twenty" is its cousin (Lewis & Short).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->

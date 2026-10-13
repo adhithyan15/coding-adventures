@@ -13,7 +13,8 @@ gloss: "charcoal"
 concept_tag: LA-RES191-CARBO
 prerequisites: [LA-C190-denarius, LA-C190-sestertius]
 sounds: []
-roots: []
+roots: [carbo-latin]
+etymology_hook: "carbō 'charcoal' — probably from PIE *ker- 'to burn'; English carbon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C190-sestertius]
 <!-- hl-knowledge: introduces=[LA-LEX-C191-RES191-01]; assesses=[] -->
 
 **carbō, carbōnis** — "charcoal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carbō** is probably inherited, from a Proto-Indo-European root *\*ker-*, "to burn" (EtymDB 2.1), though the details are uncertain. English *carbon* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

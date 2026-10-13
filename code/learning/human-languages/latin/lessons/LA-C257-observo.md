@@ -13,7 +13,8 @@ gloss: "to watch, to observe"
 concept_tag: LA-VERB-OBSERVO
 prerequisites: [LA-C257-emendo, LA-C257-offero]
 sounds: []
-roots: []
+roots: [observare-latin, servare-latin]
+etymology_hook: "observō 'to observe' — ob + servō 'to watch over'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C257-offero]
 <!-- hl-knowledge: introduces=[LA-LEX-C257-ACT257-04]; assesses=[] -->
 
 **observō, observāre** — "to watch, to observe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**observō** is *ob*, "towards, before", with *servō*, "to watch over" (EtymDB 2.1): to keep watch on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

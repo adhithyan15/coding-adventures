@@ -13,7 +13,8 @@ gloss: "to grow"
 concept_tag: LA-VERB-CRESCO
 prerequisites: [LA-C157-perdo, LA-C157-vinco]
 sounds: []
-roots: []
+roots: [crescere-latin, creare-latin]
+etymology_hook: "crēscō 'to grow' — usually traced to PIE *ker- 'to grow'; partner of creō 'to create'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C157-vinco]
 <!-- hl-knowledge: introduces=[LA-LEX-C158-ACT158-01]; assesses=[] -->
 
 **crēscō, crēscere** — "to grow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crēscō** is inherited, usually traced to Proto-Indo-European *\*ker-*, "to grow" (EtymDB 2.1), with *-scō*, the ending of verbs of becoming. *creō*, "to create, to make grow", is its partner (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

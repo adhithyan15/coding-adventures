@@ -13,7 +13,8 @@ gloss: "a painter"
 concept_tag: LA-RES246-PICTOR
 prerequisites: [LA-C246-versus, LA-C246-scriptor]
 sounds: []
-roots: []
+roots: [pictor-latin, pingere-latin]
+etymology_hook: "pictor 'painter' — built on pingō 'to paint'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C246-scriptor]
 <!-- hl-knowledge: introduces=[LA-LEX-C246-RES246-04]; assesses=[] -->
 
 **pictor, pictōris** — "a painter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pictor** is built on *pingō*, "to paint" (Lewis & Short), with *-tor*, "one who does it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

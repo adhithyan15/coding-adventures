@@ -13,7 +13,8 @@ gloss: "a people, a nation"
 concept_tag: LA-RES271-POPULUS
 prerequisites: [LA-C270-ancora, LA-C270-remus]
 sounds: []
-roots: []
+roots: [populus-latin]
+etymology_hook: "populus 'a people' — origin uncertain; first 'army'; English people"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C270-remus]
 <!-- hl-knowledge: introduces=[LA-LEX-C271-RES271-01]; assesses=[] -->
 
 **populus, populī** — "a people, a nation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**populus** has no sure origin; EtymDB 2.1 gives Proto-Italic *\*poplos*, "army", for its oldest sense, a body of armed men. It may be a loan, perhaps from Etruscan. English *people* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

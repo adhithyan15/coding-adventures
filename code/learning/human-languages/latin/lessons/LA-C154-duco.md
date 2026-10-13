@@ -13,7 +13,8 @@ gloss: "to lead"
 concept_tag: LA-VERB-DUCO
 prerequisites: [LA-C154-canto, LA-C154-pingo]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "dūcō 'to lead' — inherited, usually traced to PIE *dewk- 'to lead'; English tug and tow are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C154-pingo]
 <!-- hl-knowledge: introduces=[LA-LEX-C154-ACT154-05]; assesses=[] -->
 
 **dūcō, dūcere** — "to lead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dūcō** is inherited, usually traced to Proto-Indo-European *\*dewk-*, "to lead, to pull" (EtymDB 2.1); Gothic *tiuhan*, "to lead, to draw", is a cousin (Lewis & Short), and so are English *tug* and *tow*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to hand over"
 concept_tag: LA-VERB-TRADO
 prerequisites: [LA-C200-volito, LA-C201-colloquor]
 sounds: []
-roots: []
+roots: [tradere-latin, trans-latin, dare-latin]
+etymology_hook: "trādō 'to hand over' — trāns 'across' + dō 'to give'; English tradition, traitor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C201-colloquor]
 <!-- hl-knowledge: introduces=[LA-LEX-C201-ACT201-02]; assesses=[] -->
 
 **trādō, trādere** — "to hand over".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trādō** is contracted from *trāns*, "across", and *dō*, "to give" (Lewis & Short): to hand across. English *tradition* and *traitor* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 83,
-  "sourceHash": "fnv1a64:af824ac03eb6493d",
+  "sourceHash": "fnv1a64:a7db06e101182936",
   "lessonIds": [
     "LA-C83-culina",
     "LA-C83-tectum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch83.txt",
   "json": "latin/narration/ch83.json",
-  "textHash": "fnv1a64:fc203b3bd3ec0425",
-  "jsonHash": "fnv1a64:1d0b61f1576d8bc0",
+  "textHash": "fnv1a64:881412bd2fbc8e98",
+  "jsonHash": "fnv1a64:50687a9dc4dd834a",
   "findings": []
 }

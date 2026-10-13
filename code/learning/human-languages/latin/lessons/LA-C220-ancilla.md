@@ -13,7 +13,8 @@ gloss: "a maidservant"
 concept_tag: LA-RES220-ANCILLA
 prerequisites: [LA-C219-histrio, LA-C219-fabula]
 sounds: []
-roots: []
+roots: [ancilla-latin]
+etymology_hook: "ancilla 'maidservant' — a diminutive of old ancula"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C219-fabula]
 <!-- hl-knowledge: introduces=[LA-LEX-C220-RES220-01]; assesses=[] -->
 
 **ancilla, ancillae** — "a maidservant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ancilla** is a diminutive of *ancula*, "a maidservant" (Lewis & Short), an old word whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

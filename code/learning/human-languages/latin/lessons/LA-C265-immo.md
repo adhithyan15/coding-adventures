@@ -13,7 +13,8 @@ gloss: "on the contrary"
 concept_tag: LA-CAUSA265-IMMO
 prerequisites: [LA-C265-velut, LA-C265-utinam]
 sounds: []
-roots: []
+roots: [immo-latin]
+etymology_hook: "immō 'on the contrary' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C265-utinam]
 <!-- hl-knowledge: introduces=[LA-LEX-C265-CAUSA265-04]; assesses=[] -->
 
 **immō** — "on the contrary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**immō** has no sure origin; Lewis & Short suggest a superlative form built on *in*, "in", like *summus*, "highest", but that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

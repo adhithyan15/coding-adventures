@@ -13,7 +13,8 @@ gloss: "a storm, a gale"
 concept_tag: LA-RES191-PROCELLA
 prerequisites: [LA-C191-scopulus, LA-C191-sidus]
 sounds: []
-roots: []
+roots: [procella-latin]
+etymology_hook: "procella 'storm' — built on procellō 'to hurl forward'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C191-sidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C191-RES191-04]; assesses=[] -->
 
 **procella, procellae** — "a storm, a gale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**procella** is built on *procellō*, "to hurl forward, to dash down" (EtymDB 2.1), from *prō-*, "forward": the gale that throws things down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

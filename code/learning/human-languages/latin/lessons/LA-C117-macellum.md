@@ -13,7 +13,8 @@ gloss: "a food market"
 concept_tag: LA-LOC117-MACELLUM
 prerequisites: [LA-C117-gradus, LA-C117-bibliotheca, LA-C43-emo]
 sounds: []
-roots: []
+roots: [macellum-latin]
+etymology_hook: "macellum 'food market' — probably from Greek makellon 'enclosure, meat market'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [LA-C117-bibliotheca]
 <!-- hl-knowledge: introduces=[LA-LEX-C117-LOC117-03]; assesses=[] -->
 
 **macellum, macellī** — "a food market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**macellum** probably came into Latin from Greek *makellon*, "an enclosure, a meat market", which may itself be a Semitic loan; Lewis & Short's link with Greek *makhomai*, "to fight", is unlikely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

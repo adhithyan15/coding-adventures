@@ -13,7 +13,8 @@ gloss: "mind, spirit"
 concept_tag: LA-VALE174-ANIMUS
 prerequisites: [LA-C174-risus, LA-C174-vox]
 sounds: []
-roots: []
+roots: [animus-latin, anima-latin]
+etymology_hook: "animus 'mind' — inherited, usually traced to PIE *h2enh1mos 'breath'; Greek anemos 'wind' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C174-vox]
 <!-- hl-knowledge: introduces=[LA-LEX-C174-VALE174-05]; assesses=[] -->
 
 **animus, animī** — "mind, spirit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**animus** is inherited, usually traced to Proto-Indo-European *\*h2enh1mos*, "breath", from *\*h2enh1-*, "to breathe" (EtymDB 2.1); Greek *anemos*, "wind", is a cousin (Lewis & Short). *anima*, "breath, soul", is its partner.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

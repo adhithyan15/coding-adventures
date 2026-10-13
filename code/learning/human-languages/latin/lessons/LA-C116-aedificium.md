@@ -13,7 +13,8 @@ gloss: "a building"
 concept_tag: LA-LOC116-AEDIFICIUM
 prerequisites: [LA-C115-balneum, LA-C115-castra]
 sounds: []
-roots: []
+roots: [aedificium-latin, aedes-latin, facere-latin]
+etymology_hook: "aedificium 'building' — from aedificō 'to build': aedēs 'building' + faciō 'to make'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C115-castra]
 <!-- hl-knowledge: introduces=[LA-LEX-C116-LOC116-01]; assesses=[] -->
 
 **aedificium, aedificiī** — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aedificium** is built on *aedificō*, "to build" (Lewis & Short), from *aedēs*, "a building, a temple" (EtymDB 2.1), and *faciō*, "to make".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

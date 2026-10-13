@@ -13,7 +13,8 @@ gloss: "a tax, a toll"
 concept_tag: LA-RES190-VECTIGAL
 prerequisites: [LA-C189-veritas, LA-C189-mendacium]
 sounds: []
-roots: []
+roots: [vectigal-latin, vehere-latin]
+etymology_hook: "vectīgal 'tax, toll' — built on vectus 'carried', from vehō: a toll on goods"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C189-mendacium]
 <!-- hl-knowledge: introduces=[LA-LEX-C190-RES190-01]; assesses=[] -->
 
 **vectīgal, vectīgālis** — "a tax, a toll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vectīgal** is built on *vectus*, "carried", the participle of *vehō*, "to carry" (Lewis & Short): first a toll on goods carried in, then any tax.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

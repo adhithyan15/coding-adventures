@@ -13,7 +13,8 @@ gloss: "a meadow"
 concept_tag: LA-RES196-PRATUM
 prerequisites: [LA-C196-fluvius, LA-C196-palus]
 sounds: []
-roots: []
+roots: [pratum-latin]
+etymology_hook: "prātum 'meadow' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C196-palus]
 <!-- hl-knowledge: introduces=[LA-LEX-C196-RES196-03]; assesses=[] -->
 
 **prātum, prātī** — "a meadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prātum** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

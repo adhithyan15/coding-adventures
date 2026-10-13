@@ -13,7 +13,8 @@ gloss: "a water jar"
 concept_tag: LA-THINGS141-URNA
 prerequisites: [LA-C141-sapo, LA-C141-spongia]
 sounds: []
-roots: []
+roots: [urna-latin]
+etymology_hook: "urna 'water jar' — origin uncertain; perhaps from ūrō 'to burn': fired clay"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C141-spongia]
 <!-- hl-knowledge: introduces=[LA-LEX-C141-THINGS141-04]; assesses=[] -->
 
 **urna, urnae** — "a water jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urna** is linked by Lewis & Short with *ūrō*, "to burn", as a vessel of fired clay, but that account is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

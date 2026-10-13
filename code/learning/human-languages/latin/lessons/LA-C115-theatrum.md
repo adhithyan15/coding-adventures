@@ -13,7 +13,8 @@ gloss: "a theatre"
 concept_tag: LA-LOC115-THEATRUM
 prerequisites: [LA-C115-huc, LA-C115-illuc, LA-C59-social-exchange]
 sounds: []
-roots: []
+roots: [theatrum-latin]
+etymology_hook: "theātrum 'theatre' — borrowed from Greek theatron 'a place for viewing'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [LA-C115-illuc]
 <!-- hl-knowledge: introduces=[LA-LEX-C115-LOC115-03]; assesses=[] -->
 
 **theātrum, theātrī** — "a theatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**theātrum** was borrowed from Greek *theatron*, "a place for viewing" (Lewis & Short), from *theaomai*, "to watch" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

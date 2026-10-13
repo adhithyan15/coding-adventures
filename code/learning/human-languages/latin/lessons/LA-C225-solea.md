@@ -13,7 +13,8 @@ gloss: "a sandal"
 concept_tag: LA-RES225-SOLEA
 prerequisites: [LA-C225-gemma, LA-C225-vestimentum]
 sounds: []
-roots: []
+roots: [solea-latin, solum-latin]
+etymology_hook: "solea 'sandal' — built on solum 'ground, sole'; English sole"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C225-vestimentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C225-RES225-03]; assesses=[] -->
 
 **solea, soleae** — "a sandal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**solea** is built on *solum*, "the ground, the sole of the foot" (Lewis & Short): what goes under the sole. English *sole*, of a shoe, comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

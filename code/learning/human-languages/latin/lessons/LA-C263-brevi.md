@@ -13,7 +13,8 @@ gloss: "shortly, soon"
 concept_tag: LA-TEMP263-BREVI
 prerequisites: [LA-C263-aliquando, LA-C263-diu]
 sounds: []
-roots: []
+roots: [brevi-latin, brevis-latin]
+etymology_hook: "brevī 'shortly' — the ablative of brevis 'short': in a short time"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C263-diu]
 <!-- hl-knowledge: introduces=[LA-LEX-C263-TEMP263-05]; assesses=[] -->
 
 **brevī** — "shortly, soon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brevī** is the ablative of *brevis*, "short", with *tempore*, "in a time", understood: in a short time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "hollow, vain"
 concept_tag: LA-QUAL182-INANIS
 prerequisites: [LA-C182-privatus, LA-C182-communis]
 sounds: []
-roots: []
+roots: [inanis-latin]
+etymology_hook: "inānis 'hollow' — origin unknown; English inane comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C182-communis]
 <!-- hl-knowledge: introduces=[LA-LEX-C182-QUAL182-04]; assesses=[] -->
 
 **inānis, ināne** — "hollow, vain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inānis** has no sure origin; Lewis & Short call it doubtful. English *inane* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

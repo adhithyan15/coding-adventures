@@ -13,7 +13,8 @@ gloss: "a yoke; a ridge"
 concept_tag: LA-RES228-IUGUM
 prerequisites: [LA-C228-saltus, LA-C228-cacumen]
 sounds: []
-roots: []
+roots: [iugum-latin, iungere-latin]
+etymology_hook: "iugum 'yoke' — inherited, usually traced to PIE *yugom 'yoke'; English yoke is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C228-cacumen]
 <!-- hl-knowledge: introduces=[LA-LEX-C228-RES228-03]; assesses=[] -->
 
 **iugum, iugī** — "a yoke; a ridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iugum** is inherited, usually traced to Proto-Indo-European *\*yugom*, "yoke", from *\*yewg-*, "to join" (EtymDB 2.1); Greek *zygon*, "yoke", and English *yoke* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

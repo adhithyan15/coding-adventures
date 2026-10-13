@@ -13,7 +13,8 @@ gloss: "yesterday"
 concept_tag: LA-ANNUS-HERI
 prerequisites: [LA-C102-extra, LA-C103-hodie]
 sounds: []
-roots: []
+roots: [heri]
+etymology_hook: "herī 'yesterday' — inherited, usually traced to PIE *dhghyes-; English yesterday is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C103-hodie]
 <!-- hl-knowledge: introduces=[LA-LEX-C103-ANNUS-02]; assesses=[] -->
 
 **herī** — "yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**herī** is inherited, usually traced to Proto-Indo-European *\*dhghyes-*, "yesterday" (EtymDB 2.1). An older *\*hesī* shows in *hesternus*, "of yesterday", and English *yesterday* is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

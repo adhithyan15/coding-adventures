@@ -13,7 +13,8 @@ gloss: "never"
 concept_tag: LA-SEMPER-NUMQUAM
 prerequisites: [LA-C104-saepe, LA-C104-semper]
 sounds: []
-roots: []
+roots: [numquam-latin, umquam-latin]
+etymology_hook: "numquam 'never' — ne 'not' + umquam 'ever'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C104-semper]
 <!-- hl-knowledge: introduces=[LA-LEX-C104-SEMPER-03]; assesses=[] -->
 
 **numquam** — "never".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**numquam** is *ne*, "not", fused with *umquam*, "ever" (Lewis & Short): not ever.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "suddenly"
 concept_tag: LA-TEMP175-SUBITO
 prerequisites: [LA-C175-posthac, LA-C175-adhuc]
 sounds: []
-roots: []
+roots: [subito-latin, subitus-latin, subire-latin]
+etymology_hook: "subitō 'suddenly' — from subitus 'sudden', the participle of subeō 'to come up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C175-adhuc]
 <!-- hl-knowledge: introduces=[LA-LEX-C175-TEMP175-04]; assesses=[] -->
 
 **subitō** — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**subitō** comes from the participle of *subeō*, "to come up from under" (Lewis & Short), *subitus*, "sudden": coming up unseen.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

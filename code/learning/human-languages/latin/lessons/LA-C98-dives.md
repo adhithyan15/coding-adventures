@@ -13,7 +13,8 @@ gloss: "rich"
 concept_tag: LA-DIVES-DIVES
 prerequisites: [LA-C97-fortis, LA-C97-sapiens]
 sounds: []
-roots: []
+roots: [dives-latin]
+etymology_hook: "dīves 'rich' — often derived from dīvus 'divine': favoured by the gods; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C97-sapiens]
 <!-- hl-knowledge: introduces=[LA-LEX-C98-DIVES-01]; assesses=[] -->
 
 **dīves, dīvitis** — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dīves** is often derived from *dīvus*, "godlike, divine" (Lewis & Short): the rich as those the gods favour. That account is old and still uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

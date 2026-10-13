@@ -13,7 +13,8 @@ gloss: "to dread"
 concept_tag: LA-VERB-METUO
 prerequisites: [LA-C258-praetereo, LA-C258-sileo]
 sounds: []
-roots: []
+roots: [metuere-latin, metus-latin]
+etymology_hook: "metuō 'to dread' — the verb made from metus 'fear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C258-sileo]
 <!-- hl-knowledge: introduces=[LA-LEX-C258-ACT258-05]; assesses=[] -->
 
 **metuō, metuere** — "to dread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**metuō** is the verb made from *metus*, "fear" (Lewis & Short), whose origin is unknown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

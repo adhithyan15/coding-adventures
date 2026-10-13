@@ -13,7 +13,8 @@ gloss: "an oar"
 concept_tag: LA-RES270-REMUS
 prerequisites: [LA-C270-curia, LA-C270-ancora]
 sounds: []
-roots: []
+roots: [remus-latin]
+etymology_hook: "rēmus 'oar' — usually traced to PIE *h1reh1- 'to row'; English row and rudder are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C270-ancora]
 <!-- hl-knowledge: introduces=[LA-LEX-C270-RES270-05]; assesses=[] -->
 
 **rēmus, rēmī** — "an oar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rēmus** is inherited, usually traced to Proto-Indo-European *\*h1reh1-*, "to row". Greek *eretmos*, "oar", is a cousin (Lewis & Short), and so are English *row* and *rudder*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

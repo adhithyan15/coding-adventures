@@ -12,6 +12,9 @@ Before the new one: say the Latin for a question, then the Latin for an answer.
 You'll want to know: fātum, fātī.
 fātum, fātī — "fate".
 
+The word, taken apart.
+fātum is the past participle of fārī, "to speak" (EtymDB 2.1), used as a noun: what has been spoken, the word of the gods.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for an answer, then the Latin for fate.
 
 You'll want to know: cubīle, cubīlis.
 cubīle, cubīlis — "a lair, a resting place".
+
+The word, taken apart.
+cubīle is built on cubō, "to lie down" (Lewis & Short), with -īle, an ending for a place: a place to lie.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for fate, then the Latin for a lair.
 You'll want to know: hospitium, hospitiī.
 hospitium, hospitiī — "hospitality; lodging".
 
+The word, taken apart.
+hospitium is built on hospes, hospitis, "a guest, a host" (Lewis & Short), with -ium, an ending for a state or place.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a lair, then the Latin for hospitality; lo
 You'll want to know: dēversōrium, dēversōriī.
 dēversōrium, dēversōriī — "a lodging house".
 
+The word, taken apart.
+dēversōrium is built on dēvertō, "to turn aside" (EtymDB 2.1), from dē, "away", and vertō, "to turn": a place where travellers turn aside for the night.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for hospitality; lodging, then the Latin for a
 
 You'll want to know: viātor, viātōris.
 viātor, viātōris — "a traveller".
+
+The word, taken apart.
+viātor is built on viō, "to travel" (Lewis & Short), from via, "a road", with -tor, "one who does it". via is usually traced to Proto-Indo-European wegh-, "to go, to carry" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

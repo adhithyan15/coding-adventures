@@ -13,7 +13,8 @@ gloss: "a tear"
 concept_tag: LA-VALE174-LACRIMA
 prerequisites: [LA-C173-ren, LA-C174-patientia]
 sounds: []
-roots: []
+roots: [lacrima-latin]
+etymology_hook: "lacrima 'tear' — inherited, usually traced to PIE *dakru-; Old Latin dacruma; English tear is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C174-patientia]
 <!-- hl-knowledge: introduces=[LA-LEX-C174-VALE174-02]; assesses=[] -->
 
 **lacrima, lacrimae** — "a tear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lacrima** is inherited, usually traced to Proto-Indo-European *\*dakru-*, "tear" (EtymDB 2.1). Old Latin had *dacruma* with d (Lewis & Short); Greek *dakry*, "tear", and English *tear* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

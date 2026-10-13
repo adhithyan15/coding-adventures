@@ -13,7 +13,8 @@ gloss: "envious"
 concept_tag: LA-QUAL212-INVIDUS
 prerequisites: [LA-C211-rursus, LA-C212-curiosus]
 sounds: []
-roots: []
+roots: [invidus-latin, invidere-latin, videre-latin]
+etymology_hook: "invidus 'envious' — built on invideō 'to envy', from in + videō 'to see'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C212-curiosus]
 <!-- hl-knowledge: introduces=[LA-LEX-C212-QUAL212-02]; assesses=[] -->
 
 **invidus, invida, invidum** — "envious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**invidus** is built on *invideō*, "to look askance at, to envy" (Lewis & Short), from *in*, "against", and *videō*, "to see". English *envy* comes from the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

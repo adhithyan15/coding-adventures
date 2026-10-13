@@ -13,7 +13,8 @@ gloss: "a fruit, an apple"
 concept_tag: LA-THINGS126-POMUM
 prerequisites: [LA-C126-pallium, LA-C126-zona]
 sounds: []
-roots: []
+roots: [pomum-latin]
+etymology_hook: "pōmum 'fruit' — usually traced to *po-emom 'what is picked', from PIE *h2epo + *h1em-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C126-zona]
 <!-- hl-knowledge: introduces=[LA-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **pōmum, pōmī** — "a fruit, an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pōmum** is usually traced to Proto-Indo-European *\*h2epo*, "off, away", and *\*h1em-*, "to take" (EtymDB 2.1), through an older *\*po-emom*, "what is taken off, picked". English *pomegranate* is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

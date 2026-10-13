@@ -13,7 +13,8 @@ gloss: "angry"
 concept_tag: LA-QUAL148-IRATUS
 prerequisites: [LA-C148-felix, LA-C148-miser]
 sounds: []
-roots: []
+roots: [iratus-latin, ira-latin]
+etymology_hook: "īrātus 'angry' — the participle of īrāscor 'to grow angry', from īra 'anger'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C148-miser]
 <!-- hl-knowledge: introduces=[LA-LEX-C148-QUAL148-03]; assesses=[] -->
 
 **īrātus, īrāta, īrātum** — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īrātus** is the participle of *īrāscor*, "to grow angry" (Lewis & Short), from *īra*, "anger" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

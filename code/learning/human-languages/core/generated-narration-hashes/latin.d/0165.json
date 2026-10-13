@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 165,
-  "sourceHash": "fnv1a64:8033f54eef576234",
+  "sourceHash": "fnv1a64:80923a0609fe9555",
   "lessonIds": [
     "LA-C165-accendo",
     "LA-C165-exstinguo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch165.txt",
   "json": "latin/narration/ch165.json",
-  "textHash": "fnv1a64:d98757396cd50269",
-  "jsonHash": "fnv1a64:9a6f2b4b3856a1ba",
+  "textHash": "fnv1a64:d77cb19c82a6e0f1",
+  "jsonHash": "fnv1a64:a2531578f55f91a1",
   "findings": []
 }

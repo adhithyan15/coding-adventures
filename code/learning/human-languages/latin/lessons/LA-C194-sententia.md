@@ -13,7 +13,8 @@ gloss: "an opinion; a sentence"
 concept_tag: LA-RES194-SENTENTIA
 prerequisites: [LA-C193-armilla, LA-C193-monile]
 sounds: []
-roots: []
+roots: [sententia-latin, sentire-latin]
+etymology_hook: "sententia 'opinion' — from an older *sentientia, built on sentiō 'to feel, to think'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C193-monile]
 <!-- hl-knowledge: introduces=[LA-LEX-C194-RES194-01]; assesses=[] -->
 
 **sententia, sententiae** — "an opinion; a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sententia** is shortened from an older *\*sentientia*, "a feeling" (Lewis & Short), built on *sentiō*, "to feel, to think": what one thinks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

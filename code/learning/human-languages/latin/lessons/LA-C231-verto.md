@@ -13,7 +13,8 @@ gloss: "to turn"
 concept_tag: LA-VERB-VERTO
 prerequisites: [LA-C230-nuntio, LA-C230-appareo]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "vertō 'to turn' — inherited, usually traced to PIE *wert- 'to turn'; English -ward is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C230-appareo]
 <!-- hl-knowledge: introduces=[LA-LEX-C231-ACT231-01]; assesses=[] -->
 
 **vertō, vertere** — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vertō** is inherited, usually traced to Proto-Indo-European *\*wert-*, "to turn" (EtymDB 2.1); Sanskrit *vart-*, "to turn", is a cousin (Lewis & Short), and so is English *-ward* in words like toward.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

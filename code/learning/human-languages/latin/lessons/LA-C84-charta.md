@@ -13,7 +13,8 @@ gloss: "paper, a sheet"
 concept_tag: LA-RES1-CHARTA
 prerequisites: [LA-C83-culter, LA-C84-arca]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "charta 'paper' — borrowed from Greek khartēs 'a sheet of papyrus'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C84-arca]
 <!-- hl-knowledge: introduces=[LA-LEX-C84-RES1-02]; assesses=[] -->
 
 **charta, chartae** — "paper, a sheet". English *chart* and *card*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**charta** was borrowed from Greek *khartēs*, "a sheet of papyrus" (Lewis & Short), which may come from *kharassō*, "to scratch, to engrave" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

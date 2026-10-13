@@ -13,7 +13,8 @@ gloss: "a farmer"
 concept_tag: LA-OPUS-AGRICOLA
 prerequisites: [LA-C74-coquus, LA-C74-mercator]
 sounds: []
-roots: []
+roots: [agricola-latin, ager-latin, colere-latin]
+etymology_hook: "agricola 'farmer' — ager 'field' + colō 'to till': a field-tiller; English agriculture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C74-mercator]
 <!-- hl-knowledge: introduces=[LA-LEX-C74-OPUS-04]; assesses=[] -->
 
 **agricola, agricolae** — "a farmer". English *agriculture*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agricola** is a compound of *ager*, "a field", and *colō*, "to till, to tend" (Lewis & Short): a field-tiller.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

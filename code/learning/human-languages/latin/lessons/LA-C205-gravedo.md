@@ -13,7 +13,8 @@ gloss: "a head cold"
 concept_tag: LA-VALE205-GRAVEDO
 prerequisites: [LA-C205-vulnus, LA-C205-cicatrix]
 sounds: []
-roots: []
+roots: [gravedo-latin, gravis-latin]
+etymology_hook: "gravēdō 'head cold' — built on gravis 'heavy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C205-cicatrix]
 <!-- hl-knowledge: introduces=[LA-LEX-C205-VALE205-03]; assesses=[] -->
 
 **gravēdō, gravēdinis** — "a head cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gravēdō** is built on *gravis*, "heavy" (Lewis & Short): the heaviness of a head cold.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

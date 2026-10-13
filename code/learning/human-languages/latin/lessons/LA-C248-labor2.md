@@ -13,7 +13,8 @@ gloss: "work, toil"
 concept_tag: LA-RES248-LABOR2
 prerequisites: [LA-C248-beneficium, LA-C248-officium]
 sounds: []
-roots: []
+roots: [labor-latin]
+etymology_hook: "labor 'work' — origin uncertain; perhaps the root of lābor 'to slip'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C248-officium]
 <!-- hl-knowledge: introduces=[LA-LEX-C248-RES248-05]; assesses=[] -->
 
 **labor, labōris** — "work, toil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**labor**, "work", has no sure origin. EtymDB 2.1 tentatively ties it to the same root as *lābor*, "to slip", *\*(s)leh2b-*, "to hang loosely, to be weak": toil as staggering under a load. The link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

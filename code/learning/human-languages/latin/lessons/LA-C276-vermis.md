@@ -13,7 +13,8 @@ gloss: "a worm"
 concept_tag: LA-RES276-VERMIS
 prerequisites: [LA-C276-culex, LA-C276-pulex]
 sounds: []
-roots: []
+roots: [vermis-latin]
+etymology_hook: "vermis 'worm' — inherited, usually traced to PIE *wrmis 'worm'; English worm is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C276-pulex]
 <!-- hl-knowledge: introduces=[LA-LEX-C276-RES276-04]; assesses=[] -->
 
 **vermis, vermis** — "a worm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vermis** is inherited, usually traced to Proto-Indo-European *\*wrmis*, "worm" (EtymDB 2.1); Gothic *waurms*, "serpent", and English *worm* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

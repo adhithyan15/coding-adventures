@@ -13,7 +13,8 @@ gloss: "raw"
 concept_tag: LA-QUAL181-CRUDUS
 prerequisites: [LA-C181-gratuitus, LA-C181-recens]
 sounds: []
-roots: []
+roots: [crudus-latin]
+etymology_hook: "crūdus 'raw' — inherited, usually traced to PIE *krewh2- 'raw flesh'; English raw is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C181-recens]
 <!-- hl-knowledge: introduces=[LA-LEX-C181-QUAL181-03]; assesses=[] -->
 
 **crūdus, crūda, crūdum** — "raw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crūdus** is inherited, usually traced to Proto-Indo-European *\*krewh2-*, "raw flesh, blood" (EtymDB 2.1); *cruor*, "blood", is its cousin in Latin (Lewis & Short), and English *raw* is a cousin too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

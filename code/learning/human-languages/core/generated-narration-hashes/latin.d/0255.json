@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 255,
-  "sourceHash": "fnv1a64:0400583cc9be54a0",
+  "sourceHash": "fnv1a64:794eb564f7c2b018",
   "lessonIds": [
     "LA-C255-teneo",
     "LA-C255-rumpo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch255.txt",
   "json": "latin/narration/ch255.json",
-  "textHash": "fnv1a64:7b97514a65e9271e",
-  "jsonHash": "fnv1a64:51798f8b7b668088",
+  "textHash": "fnv1a64:6cfcd36582e7bfe1",
+  "jsonHash": "fnv1a64:6e77999093dd3887",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 271,
-  "sourceHash": "fnv1a64:c34df0cba6eea404",
+  "sourceHash": "fnv1a64:061105b09f158c08",
   "lessonIds": [
     "LA-C271-populus",
     "LA-C271-civitas",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch271.txt",
   "json": "latin/narration/ch271.json",
-  "textHash": "fnv1a64:271b0c849af25012",
-  "jsonHash": "fnv1a64:a1e896c96fd8ac80",
+  "textHash": "fnv1a64:3bca0657eff8286b",
+  "jsonHash": "fnv1a64:aa9d811deea74c92",
   "findings": []
 }

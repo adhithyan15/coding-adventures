@@ -13,7 +13,8 @@ gloss: "a lion"
 concept_tag: LA-ANIMALIA2-LEO
 prerequisites: [LA-C91-avis, LA-C91-lupus]
 sounds: []
-roots: []
+roots: [leo-latin]
+etymology_hook: "leō 'lion' — borrowed from Greek leōn 'lion'; English lion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C91-lupus]
 <!-- hl-knowledge: introduces=[LA-LEX-C91-ANIMALIA2-03]; assesses=[] -->
 
 **leō, leōnis** — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leō** was borrowed from Greek *leōn*, "lion" (Lewis & Short); where Greek got the word is uncertain. English *lion* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

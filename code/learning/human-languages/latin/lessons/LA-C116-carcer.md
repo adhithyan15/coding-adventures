@@ -13,7 +13,8 @@ gloss: "a prison"
 concept_tag: LA-LOC116-CARCER
 prerequisites: [LA-C115-castra, LA-C116-aedificium]
 sounds: []
-roots: []
+roots: [carcer-latin]
+etymology_hook: "carcer 'prison' — probably from Proto-Italic *karkros 'enclosure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C116-aedificium]
 <!-- hl-knowledge: introduces=[LA-LEX-C116-LOC116-02]; assesses=[] -->
 
 **carcer, carceris** — "a prison".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carcer** is probably inherited from Proto-Italic *\*karkros*, "enclosure" (EtymDB 2.1); Lewis & Short note a Sicilian Greek *karkaron*, "prison", and call the origin doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

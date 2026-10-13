@@ -13,7 +13,8 @@ gloss: "a dream"
 concept_tag: LA-VALE236-SOMNIUM
 prerequisites: [LA-C236-emplastrum, LA-C236-remedium]
 sounds: []
-roots: []
+roots: [somnium-latin, somnus-latin]
+etymology_hook: "somnium 'dream' — built on somnus 'sleep'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C236-remedium]
 <!-- hl-knowledge: introduces=[LA-LEX-C236-VALE236-03]; assesses=[] -->
 
 **somnium, somniī** — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**somnium** is built on *somnus*, "sleep": what one sees in sleep. *somnus* is usually traced to Proto-Indo-European *\*swepnos*, "sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

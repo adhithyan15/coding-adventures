@@ -12,6 +12,9 @@ Before the new one: say the Latin for to smile, then the Latin for to shout.
 You'll want to know: probō, probāre.
 probō, probāre — "to approve, to prove".
 
+The word, taken apart.
+probō is built on probus, "good, honest" (Lewis & Short): to find something good, to test and approve. probus is usually traced to Proto-Indo-European pro-bhwo-, "being in front, outstanding" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to shout, then the Latin for to approve.
 
 You'll want to know: signō, signāre.
 signō, signāre — "to mark, to seal".
+
+The word, taken apart.
+signō is the verb made from signum, "a sign, a mark" (Lewis & Short): to put a mark on. English sign comes from both.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to approve, then the Latin for to mark.
 You'll want to know: disputō, disputāre.
 disputō, disputāre — "to discuss, to argue".
 
+The word, taken apart.
+disputō is dis-, "apart", with putō, "to reckon" (EtymDB 2.1). Lewis & Short note that disputō was first a word of accounts: to go over a reckoning item by item.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to mark, then the Latin for to discuss.
 You'll want to know: prōmittō, prōmittere.
 prōmittō, prōmittere — "to promise".
 
+The word, taken apart.
+prōmittō is prō, "forward", with mittō, "to send" (EtymDB 2.1): to send one's word ahead.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to discuss, then the Latin for to promise.
 
 You'll want to know: permittō, permittere.
 permittō, permittere — "to allow".
+
+The word, taken apart.
+permittō is per, "through", with mittō, "to send, to let go" (EtymDB 2.1). Lewis & Short give permittō first as "to let go through", hence to allow.
 
 What you've built.
 One more word for this chapter.

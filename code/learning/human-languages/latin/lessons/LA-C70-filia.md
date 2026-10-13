@@ -13,7 +13,8 @@ gloss: "a daughter"
 concept_tag: LA-FAMILIA1-FILIA
 prerequisites: [LA-C69-tristis, LA-C70-filius]
 sounds: []
-roots: []
+roots: [filia-latin, filius]
+etymology_hook: "fīlia 'daughter' — the feminine of fīlius 'son', usually traced to PIE *dheh1ylios 'a suckling'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C70-filius]
 <!-- hl-knowledge: introduces=[LA-LEX-C70-FAMILIA1-02]; assesses=[] -->
 
 **fīlia, fīliae** — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fīlia** is the feminine of *fīlius*, "a son" (Lewis & Short); the pair is usually traced to Proto-Indo-European *\*dheh1ylios*, "a suckling" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

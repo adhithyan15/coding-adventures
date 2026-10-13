@@ -13,7 +13,8 @@ gloss: "bold"
 concept_tag: LA-QUAL150-AUDAX
 prerequisites: [LA-C150-diligens, LA-C150-timidus]
 sounds: []
-roots: []
+roots: [audax-latin, audere-latin]
+etymology_hook: "audāx 'bold' — built on audeō 'to dare'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C150-timidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C150-QUAL150-05]; assesses=[] -->
 
 **audāx, audācis** — "bold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**audāx** is built on *audeō*, "to dare" (Lewis & Short), with *-āx*, an ending for a strong tendency, as *capāx*, "roomy", is built on *capiō*, "to take".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a butterfly"
 concept_tag: LA-THINGS132-PAPILIO
 prerequisites: [LA-C132-musca, LA-C132-formica]
 sounds: []
-roots: []
+roots: [papilio-latin]
+etymology_hook: "pāpiliō 'butterfly' — origin unknown; English pavilion, a tent, comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C132-formica]
 <!-- hl-knowledge: introduces=[LA-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **pāpiliō, pāpiliōnis** — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pāpiliō** has no sure origin; it looks like a doubled, playful form, and Lewis & Short compare *palpitāre*, "to flutter". English *pavilion*, a tent spread like wings, comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

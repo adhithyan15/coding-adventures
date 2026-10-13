@@ -13,7 +13,8 @@ gloss: "to fold"
 concept_tag: LA-VERB-PLICO
 prerequisites: [LA-C167-computo, LA-C167-pulso]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "plicō 'to fold' — inherited, usually traced to PIE *plek- 'to fold'; Greek plekō is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C167-pulso]
 <!-- hl-knowledge: introduces=[LA-LEX-C168-ACT168-01]; assesses=[] -->
 
 **plicō, plicāre** — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plicō** is inherited, usually traced to Proto-Indo-European *\*plek-*, "to fold, to plait" (EtymDB 2.1); Greek *plekō*, "to plait", is a cousin (Lewis & Short). English *ply* and *complicate* come from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

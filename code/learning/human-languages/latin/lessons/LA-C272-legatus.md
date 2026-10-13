@@ -13,7 +13,8 @@ gloss: "an envoy"
 concept_tag: LA-RES272-LEGATUS
 prerequisites: [LA-C272-caupo, LA-C272-argentarius]
 sounds: []
-roots: []
+roots: [legatus-latin, lex-latin]
+etymology_hook: "lēgātus 'envoy' — the participle of lēgō 'to send as an envoy', from lēx 'law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C272-argentarius]
 <!-- hl-knowledge: introduces=[LA-LEX-C272-RES272-04]; assesses=[] -->
 
 **lēgātus, lēgātī** — "an envoy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lēgātus** is the past participle of *lēgō*, "to send as an envoy, to appoint" (Lewis & Short), built on *lēx*, *lēgis*, "a law": one sent with a charge.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

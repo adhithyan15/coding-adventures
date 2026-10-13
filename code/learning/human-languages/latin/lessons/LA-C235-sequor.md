@@ -13,7 +13,8 @@ gloss: "to follow"
 concept_tag: LA-VERB-SEQUOR
 prerequisites: [LA-C235-memini, LA-C235-loquor]
 sounds: []
-roots: []
+roots: [sequi-latin]
+etymology_hook: "sequor 'to follow' — inherited, usually traced to PIE *sekw- 'to follow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C235-loquor]
 <!-- hl-knowledge: introduces=[LA-LEX-C235-ACT235-03]; assesses=[] -->
 
 **sequor, sequī** — "to follow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sequor** is inherited, usually traced to Proto-Indo-European *\*sekw-*, "to follow" (EtymDB 2.1); Greek *hepomai*, "to follow", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

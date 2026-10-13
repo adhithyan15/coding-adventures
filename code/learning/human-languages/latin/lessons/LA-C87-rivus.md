@@ -13,7 +13,8 @@ gloss: "a stream"
 concept_tag: LA-AQUA-RIVUS
 prerequisites: [LA-C87-flumen, LA-C87-lacus]
 sounds: []
-roots: []
+roots: [rivus-latin]
+etymology_hook: "rīvus 'stream' — inherited, usually traced to PIE *h3rih2wos 'brook'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C87-lacus]
 <!-- hl-knowledge: introduces=[LA-LEX-C87-AQUA-03]; assesses=[] -->
 
 **rīvus, rīvī** — "a stream". English *rival*: people who share a stream.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rīvus** is inherited, usually traced to Proto-Indo-European *\*h3rih2wos*, "brook, small stream" (EtymDB 2.1), from a root for flowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

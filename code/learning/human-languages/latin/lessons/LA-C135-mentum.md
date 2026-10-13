@@ -13,7 +13,8 @@ gloss: "the chin"
 concept_tag: LA-THINGS135-MENTUM
 prerequisites: [LA-C135-gallus, LA-C135-labrum]
 sounds: []
-roots: []
+roots: [mentum-latin]
+etymology_hook: "mentum 'chin' — usually traced to PIE *men- 'to stick out': the part that juts"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C135-labrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **mentum, mentī** — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mentum** is inherited, usually traced to Proto-Indo-European *\*men-*, "to project, to stick out" (EtymDB 2.1): the chin as the part that juts. *minae*, "overhanging points, threats", is often put in the same family (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

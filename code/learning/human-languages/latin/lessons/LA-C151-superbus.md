@@ -13,7 +13,8 @@ gloss: "proud"
 concept_tag: LA-QUAL151-SUPERBUS
 prerequisites: [LA-C150-timidus, LA-C150-audax]
 sounds: []
-roots: []
+roots: [superbus-latin, super-latin]
+etymology_hook: "superbus 'proud' — built on super 'above': setting oneself above"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C150-audax]
 <!-- hl-knowledge: introduces=[LA-LEX-C151-QUAL151-01]; assesses=[] -->
 
 **superbus, superba, superbum** — "proud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**superbus** is built on *super*, "above" (Lewis & Short): one who sets himself above others. Greek *hyperbios*, "overbearing", is a close parallel (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

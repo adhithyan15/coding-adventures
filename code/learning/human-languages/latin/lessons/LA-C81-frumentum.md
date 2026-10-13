@@ -13,7 +13,8 @@ gloss: "grain, corn"
 concept_tag: LA-CIBUS3-FRUMENTUM
 prerequisites: [LA-C80-holus, LA-C80-oliva]
 sounds: []
-roots: []
+roots: [frumentum-latin, frui-latin]
+etymology_hook: "frūmentum 'grain' — built on fruor 'to enjoy, to use', from PIE *bhrug-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C80-oliva]
 <!-- hl-knowledge: introduces=[LA-LEX-C81-CIBUS3-01]; assesses=[] -->
 
 **frūmentum, frūmentī** — "grain, corn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frūmentum** is built on the stem of *fruor*, "to enjoy, to have the use of" (Lewis & Short), with *-mentum*, an ending for a thing. *fruor* is usually traced to Proto-Indo-European *\*bhrug-*, "to make use of" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

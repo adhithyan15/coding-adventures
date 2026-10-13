@@ -13,7 +13,8 @@ gloss: "a flat cake"
 concept_tag: LA-THINGS128-PLACENTA
 prerequisites: [LA-C127-pullus, LA-C127-piper]
 sounds: []
-roots: []
+roots: [placenta-latin]
+etymology_hook: "placenta 'flat cake' — borrowed from Greek plakous, plakountos 'a flat cake'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C127-piper]
 <!-- hl-knowledge: introduces=[LA-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **placenta, placentae** — "a flat cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**placenta** was borrowed from Greek *plakous*, *plakountos*, "a flat cake" (Lewis & Short). Anatomists later gave the name to a flat organ of the womb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

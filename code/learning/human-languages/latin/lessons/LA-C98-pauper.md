@@ -13,7 +13,8 @@ gloss: "poor"
 concept_tag: LA-DIVES-PAUPER
 prerequisites: [LA-C97-sapiens, LA-C98-dives]
 sounds: []
-roots: []
+roots: [pauper-latin, paucus-latin, parere-bear-latin]
+etymology_hook: "pauper 'poor' — usually explained as pau- 'little' + the root of pariō: producing little"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C98-dives]
 <!-- hl-knowledge: introduces=[LA-LEX-C98-DIVES-02]; assesses=[] -->
 
 **pauper, pauperis** — "poor". English *pauper* and *poverty*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pauper** is usually explained as *pau-*, "little", as in *paucus*, "few", plus the root of *pariō*, "to produce" (Lewis & Short): one who gets or produces little.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

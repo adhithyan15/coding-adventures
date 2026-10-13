@@ -13,7 +13,8 @@ gloss: "profit"
 concept_tag: LA-RES274-LUCRUM
 prerequisites: [LA-C274-otium, LA-C274-negotium]
 sounds: []
-roots: []
+roots: [lucrum-latin]
+etymology_hook: "lucrum 'profit' — usually traced to PIE *leh2w- 'booty, profit'; German Lohn 'wages' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C274-negotium]
 <!-- hl-knowledge: introduces=[LA-LEX-C274-RES274-03]; assesses=[] -->
 
 **lucrum, lucrī** — "profit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lucrum** is inherited, usually traced to Proto-Indo-European *\*leh2w-*, "to take as booty, to profit" (EtymDB 2.1), with an ending for a means; German *Lohn*, "wages", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
