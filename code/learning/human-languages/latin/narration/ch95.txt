@@ -12,6 +12,9 @@ Before the new one: say the Latin for fast, then the Latin for slow.
 You'll want to know: calidus, calida, calidum.
 calidus, calida, calidum — "hot, warm".
 
+The word, taken apart.
+calidus is built on caleō, "to be warm" (EtymDB 2.1), with -idus, the ending of state adjectives. caleō is usually traced to Proto-Indo-European kelh1-, "warm" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for slow, then the Latin for hot.
 
 You'll want to know: frīgidus, frīgida, frīgidum.
 frīgidus, frīgida, frīgidum — "cold". English frigid.
+
+The word, taken apart.
+frīgidus is built on frīgeō, "to be cold" (Lewis & Short), from frīgus, "cold", usually traced to Proto-Indo-European sriHgos-, "cold" (EtymDB 2.1). Greek rhigos, "frost", is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for hot, then the Latin for cold.
 You'll want to know: siccus, sicca, siccum.
 siccus, sicca, siccum — "dry".
 
+The word, taken apart.
+siccus is probably inherited, from a Proto-Indo-European root seyk-, "dry" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for cold, then the Latin for dry.
 You'll want to know: ūmidus, ūmida, ūmidum.
 ūmidus, ūmida, ūmidum — "wet, damp". English humid.
 
+The word, taken apart.
+ūmidus is built on ūmeō, "to be moist" (Lewis & Short), with -idus, the ending of state adjectives. The spelling with h came later.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for dry, then the Latin for wet.
 
 You'll want to know: dulcis, dulce.
 dulcis, dulce — "sweet". Honey, mel, is the sweetest thing.
+
+The word, taken apart.
+dulcis is inherited, usually traced to Proto-Indo-European dlku-, "sweet" (EtymDB 2.1); Greek glykys, "sweet", is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

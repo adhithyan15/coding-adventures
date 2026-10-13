@@ -13,7 +13,8 @@ gloss: "an inscription"
 concept_tag: LA-LEG164-INSCRIPTIO
 prerequisites: [LA-C163-provideo, LA-C164-titulus]
 sounds: []
-roots: []
+roots: [inscriptio-latin, inscribere-latin, scribere-latin]
+etymology_hook: "īnscrīptiō 'inscription' — built on īnscrībō 'to write on'"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [LA-C164-titulus]
 
 The stone says **SPQR**, which is **Senātus Populusque Rōmānus**, "the Senate
 and People of Rome". It is **in** + **scrībō**: writing cut into something.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īnscrīptiō** is built on *īnscrībō*, "to write on" (Lewis & Short), with *-tiō*, an ending for an act or its result. *scrībō*, "to write", is probably related to Greek *skariphos*, "a scratch, a sketch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

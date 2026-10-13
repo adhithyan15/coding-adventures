@@ -13,7 +13,8 @@ gloss: "a plaster, a dressing"
 concept_tag: LA-VALE236-EMPLASTRUM
 prerequisites: [LA-C235-proficiscor, LA-C235-utor]
 sounds: []
-roots: []
+roots: [emplastrum-latin]
+etymology_hook: "emplastrum 'a plaster' — borrowed from Greek emplastron; English plaster"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C235-utor]
 <!-- hl-knowledge: introduces=[LA-LEX-C236-VALE236-01]; assesses=[] -->
 
 **emplastrum, emplastrī** — "a plaster, a dressing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**emplastrum** was borrowed from Greek *emplastron*, "a plaster" (Lewis & Short), from *en*, "on", and *plassō*, "to mould" (EtymDB 2.1). English *plaster* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

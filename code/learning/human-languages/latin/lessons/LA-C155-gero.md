@@ -13,7 +13,8 @@ gloss: "to carry, to wear"
 concept_tag: LA-VERB-GERO
 prerequisites: [LA-C154-duco, LA-C155-facio]
 sounds: []
-roots: []
+roots: [gerere-latin]
+etymology_hook: "gerō 'to carry, to wear' — origin unknown; English gesture and digest come from its family"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C155-facio]
 <!-- hl-knowledge: introduces=[LA-LEX-C155-ACT155-02]; assesses=[] -->
 
 **gerō, gerere** — "to carry, to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gerō** has no sure origin; no proposal is generally accepted. English *gesture* and *digest* come from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "clean, pure"
 concept_tag: LA-QUAL146-PURUS
 prerequisites: [LA-C146-molestus, LA-C146-utilis]
 sounds: []
-roots: []
+roots: [purus-latin]
+etymology_hook: "pūrus 'pure' — inherited, usually traced to PIE *pewH- 'to cleanse'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C146-utilis]
 <!-- hl-knowledge: introduces=[LA-LEX-C146-QUAL146-03]; assesses=[] -->
 
 **pūrus, pūra, pūrum** — "clean, pure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pūrus** is inherited, usually traced to Proto-Indo-European *\*pewH-*, "to cleanse, to purify" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "once, a single time"
 concept_tag: LA-TEMP176-SEMEL
 prerequisites: [LA-C176-quotannis, LA-C176-nonnumquam]
 sounds: []
-roots: []
+roots: [semel-latin]
+etymology_hook: "semel 'once' — inherited, usually traced to PIE *sm-meh1lom 'one time'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C176-nonnumquam]
 <!-- hl-knowledge: introduces=[LA-LEX-C176-TEMP176-04]; assesses=[] -->
 
 **semel** — "once, a single time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semel** is inherited, usually traced to Proto-Indo-European *\*sm-meh1lom*, "one time" (EtymDB 2.1), built on the root for "one"; *simplex*, "simple", and *singulus*, "single", share the root (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

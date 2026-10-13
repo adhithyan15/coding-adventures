@@ -12,6 +12,9 @@ Before the new one: say the Latin for to suspect, then the Latin for to press.
 You'll want to know: fallō, fallere.
 fallō, fallere — "to deceive".
 
+The word, taken apart.
+fallō has no sure origin; Greek sphallō, "to trip up" (Lewis & Short), is often compared, and EtymDB 2.1 records a proposed root ghwel-, "to deceive".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to press, then the Latin for to deceive.
 
 You'll want to know: tolerō, tolerāre.
 tolerō, tolerāre — "to endure, to put up with".
+
+The word, taken apart.
+tolerō is inherited, usually traced to Proto-Indo-European telh2-, "to bear, to endure" (EtymDB 2.1); tollō, "to lift", comes from the same root.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to deceive, then the Latin for to endure.
 You'll want to know: condō, condere.
 condō, condere — "to found; to hide away".
 
+The word, taken apart.
+condō is con-, "together", with -dō, "to put" (Lewis & Short): to put together, to found, or to put away. This -dō is usually traced to Proto-Indo-European dheh1-, "to put, to place" (EtymDB 2.1), and merged in form with dō, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to endure, then the Latin for to found; to
 You'll want to know: creō, creāre.
 creō, creāre — "to create, to elect".
 
+The word, taken apart.
+creō is inherited from Proto-Italic krēāō, "to make grow", usually traced to Proto-Indo-European ker-, "to grow" (EtymDB 2.1); crēscō, "to grow", is its partner. English create comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to found; to hide away, then the Latin for
 
 You'll want to know: crēdō, crēdere.
 crēdō, crēdere — "to believe, to trust".
+
+The word, taken apart.
+crēdō is inherited, usually traced to a Proto-Indo-European phrase kred dheh1-, "to put one's heart" (EtymDB 2.1), from kerd-, "heart", and dheh1-, "to put".
 
 What you've built.
 One more word for this chapter.

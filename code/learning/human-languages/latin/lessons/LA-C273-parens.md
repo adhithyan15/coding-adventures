@@ -13,7 +13,8 @@ gloss: "a parent"
 concept_tag: LA-RES273-PARENS
 prerequisites: [LA-C273-nuptiae, LA-C273-coniunx]
 sounds: []
-roots: []
+roots: [parens-latin, parere-bear-latin]
+etymology_hook: "parēns 'parent' — the participle of pariō 'to give birth to'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C273-coniunx]
 <!-- hl-knowledge: introduces=[LA-LEX-C273-RES273-03]; assesses=[] -->
 
 **parēns, parentis** — "a parent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parēns** is the present participle of *pariō*, "to bring forth, to give birth to" (EtymDB 2.1): the one who brings forth. It is a different word from *pārēns*, "obeying", from *pāreō*, "to obey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

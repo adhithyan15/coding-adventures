@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 228,
-  "sourceHash": "fnv1a64:ed1b2950946cd980",
+  "sourceHash": "fnv1a64:27de83fe71eaa494",
   "lessonIds": [
     "LA-C228-saltus",
     "LA-C228-cacumen",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch228.txt",
   "json": "latin/narration/ch228.json",
-  "textHash": "fnv1a64:492f4c429037276f",
-  "jsonHash": "fnv1a64:00aad0b6577f0b36",
+  "textHash": "fnv1a64:5ea2777458812b24",
+  "jsonHash": "fnv1a64:80f5f5f6ad8b241f",
   "findings": []
 }

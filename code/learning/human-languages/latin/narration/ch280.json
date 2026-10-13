@@ -4,7 +4,7 @@
   "chapter": 280,
   "title": "Tower, Column, City walls, Ditch, Rampart",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6d5496d3206dfa8d",
+  "sourceHash": "fnv1a64:1ccbf838ee059d56",
   "lessons": [
     {
       "id": "LA-C280-turris",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:330a02bcdc2a6ca9",
+      "sourceHash": "fnv1a64:60341f9421309960",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "turris was borrowed from Greek tyrris, \"a tower\" (Lewis & Short), a word perhaps from Asia Minor. English tower comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c01ced0d21c2041f",
+      "sourceHash": "fnv1a64:7aa98d56e9cd7323",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -182,6 +193,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "columna is a form beside columen, \"a top, a pillar\" (Lewis & Short), usually traced to Proto-Indo-European kelH-, \"to rise\" (EtymDB 2.1), the root of collis, \"a hill\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -192,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -241,7 +263,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -272,7 +294,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:af2800a29756614e",
+      "sourceHash": "fnv1a64:7e401d982f3ba559",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -312,6 +334,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "moenia belongs with mūniō, \"to fortify, to wall in\" (Lewis & Short); the deeper origin is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -322,7 +355,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -371,7 +404,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -402,7 +435,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:238c2f5e7a91e3e3",
+      "sourceHash": "fnv1a64:31f9927f2bf1acbd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -442,6 +475,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fossa is the feminine past participle of fodiō, \"to dig\" (Lewis & Short), with terra, \"earth\", understood: dug earth, a ditch."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -452,7 +496,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -501,7 +545,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -532,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0f9e8adf1ba550b",
+      "sourceHash": "fnv1a64:4360a7e7572276c4",
       "notice": null,
       "blocks": [
         {
@@ -565,6 +609,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vallum is built on vallus, \"a stake\" (Lewis & Short): a line of stakes, a palisade. vallus is usually traced to Proto-Indo-European welH-, \"to turn, to twist\" (EtymDB 2.1). English wall was borrowed from it early."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -575,7 +630,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -624,7 +679,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

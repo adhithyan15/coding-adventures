@@ -13,7 +13,8 @@ gloss: "to explain, to unfold"
 concept_tag: LA-VERB-EXPLICO
 prerequisites: [LA-C197-saluto, LA-C197-invito]
 sounds: []
-roots: []
+roots: [explicare-latin, plicare-latin]
+etymology_hook: "explicō 'to explain' — ex 'out' + plicō 'to fold': to unfold"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C197-invito]
 <!-- hl-knowledge: introduces=[LA-LEX-C197-ACT197-04]; assesses=[] -->
 
 **explicō, explicāre** — "to explain, to unfold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**explicō** is *ex*, "out", with *plicō*, "to fold" (EtymDB 2.1): to unfold, so to explain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

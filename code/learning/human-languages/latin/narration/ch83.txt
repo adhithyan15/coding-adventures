@@ -12,6 +12,9 @@ Before the new one: say the Latin for a window, then the Latin for a bedroom.
 You'll want to know: culīna, culīnae.
 culīna, culīnae — "a kitchen". English culinary.
 
+The word, taken apart.
+culīna has no sure origin; a link with coquō, "to cook", is often suggested but not proven.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a bedroom, then the Latin for a kitchen.
 
 You'll want to know: tēctum, tēctī.
 tēctum, tēctī — "a roof".
+
+The word, taken apart.
+tēctum is the past participle of tegō, "to cover", used as a noun: "what covers" (Lewis & Short). tegō is usually traced to Proto-Indo-European (s)teg-, "to cover with a roof" (EtymDB 2.1); English thatch is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a kitchen, then the Latin for a roof.
 You'll want to know: lucerna, lucernae.
 lucerna, lucernae — "a lamp". It gives lūx.
 
+The word, taken apart.
+lucerna is built on lūceō, "to shine" (Lewis & Short), with -erna, a suffix also seen in caverna, "a hollow". lūceō belongs with lūx, "light".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a roof, then the Latin for a lamp.
 You'll want to know: pōculum, pōculī.
 pōculum, pōculī — "a cup".
 
+The word, taken apart.
+pōculum is inherited, usually traced through Proto-Italic pōtlom, "drinking cup", to Proto-Indo-European peh3tlom, "a thing to drink from" (EtymDB 2.1). pōtō, "to drink", belongs to the same family.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a lamp, then the Latin for a cup.
 
 You'll want to know: culter, cultrī.
 culter, cultrī — "a knife".
+
+The word, taken apart.
+culter is probably inherited, from a Proto-Indo-European kelHtro-, "knife", built on (s)kelH-, "to split, to cut" (EtymDB 2.1). English coulter, the blade in front of a ploughshare, comes from culter.
 
 What you've built.
 One more word for this chapter.

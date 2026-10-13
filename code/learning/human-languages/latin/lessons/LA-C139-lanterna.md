@@ -13,7 +13,8 @@ gloss: "a lantern"
 concept_tag: LA-THINGS139-LANTERNA
 prerequisites: [LA-C139-tapete, LA-C139-fax, LA-C57-practice, LA-C56-nonus, LA-C56-decimus]
 sounds: []
-roots: []
+roots: [lanterna-latin]
+etymology_hook: "lanterna 'lantern' — from Greek lamptēr 'torch', reshaped like lucerna 'lamp'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [LA-C139-fax]
 <!-- hl-knowledge: introduces=[LA-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **lanterna, lanternae** — "a lantern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lanterna** comes from Greek *lamptēr*, "a torch, a lamp" (Lewis & Short), from *lampō*, "to shine", reshaped with the ending of *lucerna*, "lamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

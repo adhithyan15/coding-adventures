@@ -12,6 +12,9 @@ Before the new one: say the Latin for truth, then the Latin for a lie.
 You'll want to know: vectīgal, vectīgālis.
 vectīgal, vectīgālis — "a tax, a toll".
 
+The word, taken apart.
+vectīgal is built on vectus, "carried", the participle of vehō, "to carry" (Lewis & Short): first a toll on goods carried in, then any tax.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a lie, then the Latin for a tax.
 
 You'll want to know: tribūtum, tribūtī.
 tribūtum, tribūtī — "a tribute, a tax".
+
+The word, taken apart.
+tribūtum is the past participle of tribuō, "to assign, to pay out" (Lewis & Short), used as a noun: what is paid. tribuō is built on tribus, "a tribe": first to share out among the tribes.
 
 What you've built.
 One more word for this chapter.
@@ -71,6 +77,9 @@ You'll want to know: mercēs, mercēdis.
 mercēs, mercēdis — "wages, pay".
 It is not the same word as merx, mercis, "goods", even though the plural of merx is spelled mercēs too. The second form tells them apart: mercēdis here, mercis there.
 
+The word, taken apart.
+mercēs is usually linked with mereō, "to earn" (Lewis & Short): what one has earned. It may share a root with merx, "goods" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -100,6 +109,9 @@ Before the new one: say the Latin for a tribute, then the Latin for wages.
 You'll want to know: dēnārius, dēnāriī.
 dēnārius, dēnāriī — "a denarius (silver coin)".
 
+The word, taken apart.
+dēnārius is built on dēnī, "ten each" (Lewis & Short): the coin was first worth ten bronze coins. dēnī comes from decem, "ten".
+
 What you've built.
 One more word for this chapter.
 
@@ -128,6 +140,9 @@ Before the new one: say the Latin for wages, then the Latin for a denarius.
 
 You'll want to know: sēstertius, sēstertiī.
 sēstertius, sēstertiī — "a sesterce (coin)".
+
+The word, taken apart.
+sēstertius is contracted from sēmis "half" and tertius "third" (Lewis & Short): two whole units and half of the third, the coin's first value.
 
 What you've built.
 One more word for this chapter.

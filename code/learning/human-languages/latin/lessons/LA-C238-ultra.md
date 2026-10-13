@@ -13,7 +13,8 @@ gloss: "beyond"
 concept_tag: LA-LOC238-ULTRA
 prerequisites: [LA-C237-cotidie, LA-C237-pridie]
 sounds: []
-roots: []
+roots: [ultra-latin, ulter-latin]
+etymology_hook: "ultrā 'beyond' — a case form of ulter 'lying beyond': on the far side"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C237-pridie]
 <!-- hl-knowledge: introduces=[LA-LEX-C238-LOC238-01]; assesses=[] -->
 
 **ultrā** — "beyond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ultrā** is an old case form of *ulter*, "lying beyond" (Lewis & Short), built on *uls*, "beyond", with *parte*, "side", understood: on the far side. English *ultra-* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

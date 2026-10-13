@@ -13,7 +13,8 @@ gloss: "a freedman"
 concept_tag: LA-RES220-LIBERTUS
 prerequisites: [LA-C219-fabula, LA-C220-ancilla]
 sounds: []
-roots: []
+roots: [libertus-latin, liber-latin]
+etymology_hook: "lībertus 'freedman' — built on līberō 'to set free'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C220-ancilla]
 <!-- hl-knowledge: introduces=[LA-LEX-C220-RES220-02]; assesses=[] -->
 
 **lībertus, lībertī** — "a freedman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lībertus** is built on *līberō*, "to set free" (Lewis & Short), from *līber*, "free": one who has been freed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

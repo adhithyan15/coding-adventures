@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 198,
-  "sourceHash": "fnv1a64:1c389f4a6aef676b",
+  "sourceHash": "fnv1a64:c5f4c19ac75c5ee2",
   "lessonIds": [
     "LA-C198-veto",
     "LA-C198-defendo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch198.txt",
   "json": "latin/narration/ch198.json",
-  "textHash": "fnv1a64:00c69fbf1afead90",
-  "jsonHash": "fnv1a64:a8a489289c8944d9",
+  "textHash": "fnv1a64:d8bddceb6c9f3145",
+  "jsonHash": "fnv1a64:696aedc6d29c30ff",
   "findings": []
 }

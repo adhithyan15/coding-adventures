@@ -12,6 +12,9 @@ Before the new one: say the Latin for a valley, then the Latin for a cave.
 You'll want to know: nūbēs, nūbis.
 nūbēs, nūbis — "a cloud".
 
+The word, taken apart.
+nūbēs is probably inherited, from a Proto-Indo-European root (s)newdh-, "to cover, to veil" (EtymDB 2.1): a cloud covers the sky.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a cave, then the Latin for a cloud.
 
 You'll want to know: pluvia, pluviae.
 pluvia, pluviae — "rain". The noun beside pluit, it rains.
+
+The word, taken apart.
+pluvia is the feminine of pluvius, "rainy", used as a noun with aqua, "water", understood (Lewis & Short): rainy water. pluvius is built on pluit, "it rains" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a cloud, then the Latin for rain.
 You'll want to know: nix, nivis.
 nix, nivis — "snow".
 
+The word, taken apart.
+nix, nivis, is inherited, usually traced to Proto-Indo-European snigwhs, "snow" (EtymDB 2.1); Latin lost the first s. English snow and Greek nipha, "snow" (Lewis & Short), are cousins.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for rain, then the Latin for snow.
 You'll want to know: campus, campī.
 campus, campī — "a plain, an open field". English campus.
 
+The word, taken apart.
+campus has no sure origin. EtymDB 2.1 tentatively links it to a Proto-Indo-European root kamp-, "to bend", and Lewis & Short compare Greek kēpos, "garden"; neither link is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for snow, then the Latin for a plain.
 
 You'll want to know: lītus, lītoris.
 lītus, lītoris — "a shore, a beach".
+
+The word, taken apart.
+lītus has no sure origin; Lewis & Short compare Greek limēn, "harbour", but the link is uncertain. It is a different word from litus, "smeared", from linō, "to smear".
 
 What you've built.
 One more word for this chapter.

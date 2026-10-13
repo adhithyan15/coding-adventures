@@ -13,7 +13,8 @@ gloss: "worried"
 concept_tag: LA-QUAL241-SOLLICITUS
 prerequisites: [LA-C241-industrius, LA-C241-loquax]
 sounds: []
-roots: []
+roots: [sollicitus-latin, ciere-latin]
+etymology_hook: "sollicitus 'worried' — sollus 'whole' + cieō 'to stir': stirred through and through"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C241-loquax]
 <!-- hl-knowledge: introduces=[LA-LEX-C241-QUAL241-03]; assesses=[] -->
 
 **sollicitus, sollicita, sollicitum** — "worried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sollicitus** is built from *sollus*, "whole", and *cieō*, "to stir up" (Lewis & Short): stirred up through and through. English *solicitous* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

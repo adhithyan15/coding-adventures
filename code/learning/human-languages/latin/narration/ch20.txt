@@ -15,6 +15,9 @@ Quid tibi nōmen est? ("what's your name?") is, word for word, "what [is] the-na
 You'll want to know: mihi nōmen est... — the same construction, in reply.
 The reply follows the identical pattern: mihi nōmen est [name] — "[the-name] [is] to-me [name]." This is Latin's genuine "dative of possession": instead of a possessive verb, the possessor simply sits in the dative case, and the thing possessed — here, nōmen, "name" — stays in the nominative, as the sentence's real subject.
 
+The phrase, taken apart.
+quid tibi nōmen est rests on inherited words. nōmen "name" is usually traced to Proto-Indo-European h1nomn, "name" (EtymDB 2.1), a cousin of English name. tibi "to you" is an old dative, usually traced to tebhye, "to you" (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "quid tibi nōmen est?" — literally "what's the name to you?"]

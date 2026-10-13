@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 258,
-  "sourceHash": "fnv1a64:0e913fa647d34fbd",
+  "sourceHash": "fnv1a64:218582329173cf39",
   "lessonIds": [
     "LA-C258-somnio",
     "LA-C258-pello",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch258.txt",
   "json": "latin/narration/ch258.json",
-  "textHash": "fnv1a64:1c987905e096c219",
-  "jsonHash": "fnv1a64:7d922bf5992307e2",
+  "textHash": "fnv1a64:1d501f94b33b17b3",
+  "jsonHash": "fnv1a64:f7b60a97817a1b6c",
   "findings": []
 }

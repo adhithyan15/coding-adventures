@@ -13,7 +13,8 @@ gloss: "a drug, a medicine"
 concept_tag: LA-VALE205-MEDICAMENTUM
 prerequisites: [LA-C205-cicatrix, LA-C205-gravedo]
 sounds: []
-roots: []
+roots: [medicamentum-latin, medicus-latin]
+etymology_hook: "medicāmentum 'medicine' — built on medicor 'to heal'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C205-gravedo]
 <!-- hl-knowledge: introduces=[LA-LEX-C205-VALE205-04]; assesses=[] -->
 
 **medicāmentum, medicāmentī** — "a drug, a medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medicāmentum** is built on *medicor*, "to heal, to treat" (Lewis & Short), with *-mentum*, an ending for a means: the means of healing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

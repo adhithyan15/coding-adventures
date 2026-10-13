@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 141,
-  "sourceHash": "fnv1a64:674d569a2cbd49dc",
+  "sourceHash": "fnv1a64:c737b4fe396e8049",
   "lessonIds": [
     "LA-C141-linteum",
     "LA-C141-sapo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch141.txt",
   "json": "latin/narration/ch141.json",
-  "textHash": "fnv1a64:ede33526dfa21f87",
-  "jsonHash": "fnv1a64:3faafdcea0c1152a",
+  "textHash": "fnv1a64:10b5d8b3877bcff7",
+  "jsonHash": "fnv1a64:2e56973087c74e7c",
   "findings": []
 }

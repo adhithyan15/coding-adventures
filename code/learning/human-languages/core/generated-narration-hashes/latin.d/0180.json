@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 180,
-  "sourceHash": "fnv1a64:e0bcdf470eb715c8",
+  "sourceHash": "fnv1a64:a473ff2c1cb449cb",
   "lessonIds": [
     "LA-C180-commodus",
     "LA-C180-urbanus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch180.txt",
   "json": "latin/narration/ch180.json",
-  "textHash": "fnv1a64:78cf0f955ecc8b2f",
-  "jsonHash": "fnv1a64:7f606f458033e9a3",
+  "textHash": "fnv1a64:719de42e5d4fcc6e",
+  "jsonHash": "fnv1a64:b0989c3389191592",
   "findings": []
 }

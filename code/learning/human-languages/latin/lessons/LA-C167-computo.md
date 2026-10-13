@@ -13,7 +13,8 @@ gloss: "to calculate"
 concept_tag: LA-VERB-COMPUTO
 prerequisites: [LA-C167-incendo, LA-C167-abicio]
 sounds: []
-roots: []
+roots: [computare-latin, putare-latin]
+etymology_hook: "computō 'to calculate' — com- 'together' + putō 'to reckon'; English count and compute"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C167-abicio]
 <!-- hl-knowledge: introduces=[LA-LEX-C167-ACT167-04]; assesses=[] -->
 
 **computō, computāre** — "to calculate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**computō** is *com-*, "together", with *putō*, "to reckon" (EtymDB 2.1): to reckon up. English *count* and *compute* both come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

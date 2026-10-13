@@ -12,6 +12,9 @@ Before the new one: say the Latin for quiet, then the Latin for purple.
 You'll want to know: fuscus, fusca, fuscum.
 fuscus, fusca, fuscum — "dark, dusky".
 
+The word, taken apart.
+fuscus is probably inherited, from a Proto-Indo-European root dhewh2-, "smoke, dust" (EtymDB 2.1): smoky, so dark.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for purple, then the Latin for dark.
 
 You'll want to know: cānus, cāna, cānum.
 cānus, cāna, cānum — "grey".
+
+The word, taken apart.
+cānus is inherited from Proto-Italic kaznos, "grey", usually traced to Proto-Indo-European kas-, "grey, white" (EtymDB 2.1). English hare, the grey animal, is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for dark, then the Latin for grey.
 You'll want to know: aureus, aurea, aureum.
 aureus, aurea, aureum — "golden".
 
+The word, taken apart.
+aureus is built on aurum, "gold" (Sabine ausum), usually traced to Proto-Indo-European h2eh2us-, "glow" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for grey, then the Latin for golden.
 You'll want to know: argenteus, argentea, argenteum.
 argenteus, argentea, argenteum — "silver".
 
+The word, taken apart.
+argenteus is built on argentum, "silver" (Lewis & Short), usually traced to Proto-Indo-European h2rgntom, "silver", from h2erg-, "white, shining" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for golden, then the Latin for silver.
 
 You'll want to know: prūdēns, prūdentis.
 prūdēns, prūdentis — "wise, sensible".
+
+The word, taken apart.
+prūdēns is contracted from prōvidēns, "foreseeing" (Lewis & Short), from prōvideō, "to see ahead".
 
 What you've built.
 One more word for this chapter.

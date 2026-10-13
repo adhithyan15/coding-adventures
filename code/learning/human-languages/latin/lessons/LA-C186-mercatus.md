@@ -13,7 +13,8 @@ gloss: "a market, a fair"
 concept_tag: LA-RES186-MERCATUS
 prerequisites: [LA-C185-fundamentum, LA-C186-gubernator]
 sounds: []
-roots: []
+roots: [mercatus-latin, merx-latin]
+etymology_hook: "mercātus 'market' — built on mercor 'to trade'; English market"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C186-gubernator]
 <!-- hl-knowledge: introduces=[LA-LEX-C186-RES186-02]; assesses=[] -->
 
 **mercātus, mercātūs** — "a market, a fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mercātus** is built on *mercor*, "to trade" (EtymDB 2.1), from *merx*, "goods". English *market* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a chariot"
 concept_tag: LA-RES217-CURRUS
 prerequisites: [LA-C217-lectica, LA-C217-vehiculum]
 sounds: []
-roots: []
+roots: [currus-latin, currere-latin]
+etymology_hook: "currus 'chariot' — built on currō 'to run'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C217-vehiculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C217-RES217-05]; assesses=[] -->
 
 **currus, currūs** — "a chariot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**currus** is built on *currō*, "to run" (Lewis & Short), usually traced to Proto-Indo-European *\*kers-*, "to run" (EtymDB 2.1). English *car* comes from a Celtic cousin of the same root, through Latin *carrus*, "a wagon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

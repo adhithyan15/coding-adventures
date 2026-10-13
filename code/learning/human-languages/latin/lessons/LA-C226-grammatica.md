@@ -13,7 +13,8 @@ gloss: "grammar"
 concept_tag: LA-RES226-GRAMMATICA
 prerequisites: [LA-C225-sinus, LA-C225-culcita]
 sounds: []
-roots: []
+roots: [grammatica-latin]
+etymology_hook: "grammatica 'grammar' — from Greek grammatikē 'the art of letters'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C225-culcita]
 <!-- hl-knowledge: introduces=[LA-LEX-C226-RES226-01]; assesses=[] -->
 
 **grammatica, grammaticae** — "grammar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grammatica** was borrowed from Greek *grammatikē*, "the art of letters" (EtymDB 2.1), from *gramma*, "a letter", and *graphō*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

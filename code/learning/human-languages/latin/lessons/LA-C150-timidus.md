@@ -13,7 +13,8 @@ gloss: "timid, shy"
 concept_tag: LA-QUAL150-TIMIDUS
 prerequisites: [LA-C150-piger, LA-C150-diligens]
 sounds: []
-roots: []
+roots: [timidus-latin, timere-latin]
+etymology_hook: "timidus 'timid' — built on timeō 'to fear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C150-diligens]
 <!-- hl-knowledge: introduces=[LA-LEX-C150-QUAL150-04]; assesses=[] -->
 
 **timidus, timida, timidum** — "timid, shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**timidus** is built on *timeō*, "to fear" (Lewis & Short), with *-idus*, the ending of state adjectives.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a measure"
 concept_tag: LA-RES186-MENSURA
 prerequisites: [LA-C186-mercatus, LA-C186-pondus]
 sounds: []
-roots: []
+roots: [mensura-latin, metiri-latin]
+etymology_hook: "mēnsūra 'measure' — built on mēnsus 'measured', from mētior 'to measure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C186-pondus]
 <!-- hl-knowledge: introduces=[LA-LEX-C186-RES186-04]; assesses=[] -->
 
 **mēnsūra, mēnsūrae** — "a measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mēnsūra** is built on *mēnsus*, "measured", the participle of *mētior*, "to measure" (EtymDB 2.1), with *-ūra*, an ending for an act or result.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

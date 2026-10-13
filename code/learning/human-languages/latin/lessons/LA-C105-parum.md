@@ -13,7 +13,8 @@ gloss: "too little, not enough"
 concept_tag: LA-QUANTUM-PARUM
 prerequisites: [LA-C105-tum, LA-C105-multum]
 sounds: []
-roots: []
+roots: [parum-latin, parvus-latin]
+etymology_hook: "parum 'too little' — related to parvus 'small'; the details are uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C105-multum]
 <!-- hl-knowledge: introduces=[LA-LEX-C105-QUANTUM-05]; assesses=[] -->
 
 **parum** — "too little, not enough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parum** is related to *parvus*, "small" (Lewis & Short), though how the two forms fit together is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

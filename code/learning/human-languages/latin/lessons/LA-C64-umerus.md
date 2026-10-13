@@ -13,7 +13,8 @@ gloss: "the shoulder"
 concept_tag: LA-CORPUS2-UMERUS
 prerequisites: [LA-C63-nasus, LA-C64-collum]
 sounds: []
-roots: []
+roots: [umerus-latin]
+etymology_hook: "umerus 'shoulder' — inherited, usually traced to PIE *h3emsos; Greek ōmos 'shoulder' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C64-collum]
 <!-- hl-knowledge: introduces=[LA-LEX-C64-CORPUS2-02]; assesses=[] -->
 
 **umerus, umerī** — "the shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**umerus** is inherited, usually traced to Proto-Indo-European *\*h3emsos*, "shoulder" (EtymDB 2.1); Greek *ōmos*, "shoulder", is a cousin (Lewis & Short). English *humerus*, the upper-arm bone, is the same word with a later *h*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

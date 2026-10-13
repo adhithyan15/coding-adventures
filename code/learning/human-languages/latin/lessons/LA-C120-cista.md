@@ -13,7 +13,8 @@ gloss: "a box, a chest"
 concept_tag: LA-THINGS120-CISTA
 prerequisites: [LA-C119-contra, LA-C120-saccus]
 sounds: []
-roots: []
+roots: [cista-latin]
+etymology_hook: "cista 'box' — borrowed from Greek kistē 'box, basket'; English chest came from it early"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C120-saccus]
 <!-- hl-knowledge: introduces=[LA-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **cista, cistae** — "a box, a chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cista** was borrowed from Greek *kistē*, "a box, a basket" (Lewis & Short). English *chest* was borrowed from it very early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

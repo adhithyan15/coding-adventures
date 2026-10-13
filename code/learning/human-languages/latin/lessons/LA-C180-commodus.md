@@ -13,7 +13,8 @@ gloss: "convenient, comfortable"
 concept_tag: LA-QUAL180-COMMODUS
 prerequisites: [LA-C179-valde, LA-C179-admodum]
 sounds: []
-roots: []
+roots: [commodus-latin, modus-latin]
+etymology_hook: "commodus 'convenient' — com- 'with' + modus 'measure': of due measure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C179-admodum]
 <!-- hl-knowledge: introduces=[LA-LEX-C180-QUAL180-01]; assesses=[] -->
 
 **commodus, commoda, commodum** — "convenient, comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commodus** is *com-*, "with", and *modus*, "measure" (Lewis & Short): having its due measure, so fitting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

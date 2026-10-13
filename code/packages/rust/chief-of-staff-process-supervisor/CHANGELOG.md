@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Breaking:** `ChannelBrokers::new` takes an `Arc<BrokerProgram>` (D18S
+  P2.7b). That is the broker, plus the Seatbelt shim on macOS, in place of
+  the broker's `Arc<VerifiedExecutable>` alone.
 - **`refusing_unbrokered_channels()`** (D18S P2.6d-2c). With it set, a host
   whose launch bindings name any channel fails to launch, with the new
   `ChannelsNeedBroker`, unless channel brokers are configured, so it never

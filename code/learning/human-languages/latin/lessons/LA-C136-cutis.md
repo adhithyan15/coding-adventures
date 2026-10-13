@@ -13,7 +13,8 @@ gloss: "the skin"
 concept_tag: LA-THINGS136-CUTIS
 prerequisites: [LA-C136-cubitum, LA-C136-pollex]
 sounds: []
-roots: []
+roots: [cutis-latin]
+etymology_hook: "cutis 'skin' — inherited, usually traced to PIE *kuHt- 'skin'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C136-pollex]
 <!-- hl-knowledge: introduces=[LA-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **cutis, cutis** — "the skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cutis** is inherited, usually traced to Proto-Indo-European *\*kuHt-*, "skin, hide" (EtymDB 2.1); Greek *kytos*, "a hollow, a skin", is compared (Lewis & Short), and English *hide* may be a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

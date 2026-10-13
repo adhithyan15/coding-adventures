@@ -13,7 +13,8 @@ gloss: "few"
 concept_tag: LA-QUAL242-PAUCI
 prerequisites: [LA-C241-caelebs, LA-C241-pluvius]
 sounds: []
-roots: []
+roots: [paucus-latin]
+etymology_hook: "paucī 'few' — plural of paucus, from PIE *peh2w- 'few'; English few is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C241-pluvius]
 <!-- hl-knowledge: introduces=[LA-LEX-C242-QUAL242-01]; assesses=[] -->
 
 **paucī, paucae, pauca** — "few".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paucī** is the plural of *paucus*, "few" (Lewis & Short), usually traced to Proto-Indo-European *\*peh2w-*, "few, small" (EtymDB 2.1); English *few* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

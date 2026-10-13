@@ -12,6 +12,9 @@ Before the new one: say the Latin for a tent, then the Latin for a flag, a banne
 You'll want to know: teneō, tenēre.
 teneō, tenēre — "to hold".
 
+The word, taken apart.
+teneō is inherited from Proto-Italic tenēō, "to hold" (EtymDB 2.1), usually traced to Proto-Indo-European ten-, "to stretch" (Lewis & Short compare Greek teinō, "to stretch"). English tenant comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a flag, a banner, then the Latin for to ho
 
 You'll want to know: rumpō, rumpere.
 rumpō, rumpere — "to burst, to break apart".
+
+The word, taken apart.
+rumpō is inherited, usually traced to a Proto-Indo-European present Hrunepti, "breaks" (EtymDB 2.1), with an n inside the root. English rupture comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to hold, then the Latin for to burst.
 You'll want to know: calefaciō, calefacere.
 calefaciō, calefacere — "to warm, to heat".
 
+The word, taken apart.
+calefaciō is built from faciō, "to make" (EtymDB 2.1), with the stem of caleō, "to be warm": to make warm.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to burst, then the Latin for to warm.
 You'll want to know: impleō, implēre.
 impleō, implēre — "to fill".
 
+The word, taken apart.
+impleō is in, "in", with pleō, "to fill" (EtymDB 2.1), a verb found only in compounds. pleō is usually traced to Proto-Indo-European pleh1-, "to fill"; English full is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to warm, then the Latin for to fill.
 
 You'll want to know: mētior, mētīrī.
 mētior, mētīrī — "to measure".
+
+The word, taken apart.
+mētior is inherited, usually traced to Proto-Indo-European meh1-, "to measure" (EtymDB 2.1); Greek metron, "a measure", is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

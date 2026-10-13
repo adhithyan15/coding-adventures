@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 137,
-  "sourceHash": "fnv1a64:227a3eecc4ce9f12",
+  "sourceHash": "fnv1a64:a061df9a07503e23",
   "lessonIds": [
     "LA-C137-faber",
     "LA-C137-pistor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch137.txt",
   "json": "latin/narration/ch137.json",
-  "textHash": "fnv1a64:08fa39b791bf9e17",
-  "jsonHash": "fnv1a64:8eb87a6936f4fe26",
+  "textHash": "fnv1a64:196b3faaab2c6aac",
+  "jsonHash": "fnv1a64:a9e176531416233d",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Latin for at once, then the Latin for then.
 You'll want to know: procul.
 procul — "far away".
 
+The word, taken apart.
+procul probably begins with prō, "forward, forth", but the rest is unclear; Lewis & Short's link with procellō, "to throw down", is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for then, then the Latin for far away.
 
 You'll want to know: suprā.
 suprā — "above". English supra and super-.
+
+The word, taken apart.
+suprā comes from superus, "upper" (Lewis & Short), as if "on the upper side". Old Latin wrote suprād (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for far away, then the Latin for above.
 You'll want to know: īnfrā.
 īnfrā — "below".
 
+The word, taken apart.
+īnfrā comes from īnferus, "lower" (Lewis & Short), as if "on the lower side". English inferior belongs to the same family.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for above, then the Latin for below.
 You'll want to know: intrā.
 intrā — "inside, within".
 
+The word, taken apart.
+intrā is contracted from interā, "on the inner side", with parte, "side", understood (Lewis & Short); it belongs with inter, "between".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for below, then the Latin for inside.
 
 You'll want to know: extrā.
 extrā — "outside, beyond". English extra.
+
+The word, taken apart.
+extrā is contracted from exterā, "on the outer side" (Lewis & Short), from exter, "being on the outside" (EtymDB 2.1). Old Latin wrote extrād (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

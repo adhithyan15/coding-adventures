@@ -13,7 +13,8 @@ gloss: "a tribute, a tax"
 concept_tag: LA-RES190-TRIBUTUM
 prerequisites: [LA-C189-mendacium, LA-C190-vectigal]
 sounds: []
-roots: []
+roots: [tributum-latin, tribuere-latin, tribus-latin]
+etymology_hook: "tribūtum 'tribute' — what is paid, from tribuō 'to assign', from tribus 'tribe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C190-vectigal]
 <!-- hl-knowledge: introduces=[LA-LEX-C190-RES190-02]; assesses=[] -->
 
 **tribūtum, tribūtī** — "a tribute, a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tribūtum** is the past participle of *tribuō*, "to assign, to pay out" (Lewis & Short), used as a noun: what is paid. *tribuō* is built on *tribus*, "a tribe": first to share out among the tribes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

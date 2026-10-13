@@ -13,7 +13,8 @@ gloss: "a mirror"
 concept_tag: LA-RES1-SPECULUM
 prerequisites: [LA-C84-stilus, LA-C84-tabula]
 sounds: []
-roots: []
+roots: [speculum-latin, specere-latin]
+etymology_hook: "speculum 'mirror' — built on speciō 'to look at': the thing one looks into; from PIE *spek-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C84-tabula]
 <!-- hl-knowledge: introduces=[LA-LEX-C84-RES1-05]; assesses=[] -->
 
 **speculum, speculī** — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**speculum** is built on *speciō*, "to look at" (Lewis & Short), with *-ulum*, an ending for a tool: the thing one looks into. *speciō* is usually traced to Proto-Indo-European *\*spek-*, "to look" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

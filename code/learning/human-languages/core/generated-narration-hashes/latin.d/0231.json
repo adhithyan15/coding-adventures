@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 231,
-  "sourceHash": "fnv1a64:6f8e3b0a23105d89",
+  "sourceHash": "fnv1a64:e150e5a467d7a6bd",
   "lessonIds": [
     "LA-C231-verto",
     "LA-C231-fruor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch231.txt",
   "json": "latin/narration/ch231.json",
-  "textHash": "fnv1a64:8f687c9b392194a3",
-  "jsonHash": "fnv1a64:9b38bc550280ab1a",
+  "textHash": "fnv1a64:f07155c69276ae63",
+  "jsonHash": "fnv1a64:21ca9331be95c435",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a city"
 concept_tag: LA-URBS-URBS
 prerequisites: [LA-C106-centum, LA-C106-mille]
 sounds: []
-roots: []
+roots: [urbs-latin]
+etymology_hook: "urbs 'city' — origin unknown; no proposal is generally accepted"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C106-mille]
 <!-- hl-knowledge: introduces=[LA-LEX-C107-URBS-01]; assesses=[] -->
 
 **urbs, urbis** — "a city". English *urban*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urbs** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

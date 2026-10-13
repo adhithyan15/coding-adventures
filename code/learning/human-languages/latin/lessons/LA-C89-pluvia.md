@@ -13,7 +13,8 @@ gloss: "rain"
 concept_tag: LA-CAELUM-PLUVIA
 prerequisites: [LA-C88-spelunca, LA-C89-nubes]
 sounds: []
-roots: []
+roots: [pluvia-latin, pluere-latin]
+etymology_hook: "pluvia 'rain' — 'rainy (water)', from pluvius 'rainy', built on pluit 'it rains'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C89-nubes]
 <!-- hl-knowledge: introduces=[LA-LEX-C89-CAELUM-02]; assesses=[] -->
 
 **pluvia, pluviae** — "rain". The noun beside **pluit**, it rains.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pluvia** is the feminine of *pluvius*, "rainy", used as a noun with *aqua*, "water", understood (Lewis & Short): rainy water. *pluvius* is built on *pluit*, "it rains" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

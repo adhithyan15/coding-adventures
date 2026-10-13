@@ -13,7 +13,8 @@ gloss: "a thorn"
 concept_tag: LA-RES223-SPINA
 prerequisites: [LA-C223-aura, LA-C223-radix]
 sounds: []
-roots: []
+roots: [spina-latin]
+etymology_hook: "spīna 'thorn' — inherited, usually traced to PIE *spey- 'sharp point'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C223-radix]
 <!-- hl-knowledge: introduces=[LA-LEX-C223-RES223-04]; assesses=[] -->
 
 **spīna, spīnae** — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spīna** is inherited, usually traced to Proto-Indo-European *\*spey-*, "a sharp point" (EtymDB 2.1); *spīca*, "an ear of grain", has the same root (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

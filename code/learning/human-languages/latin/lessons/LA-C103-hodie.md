@@ -13,7 +13,8 @@ gloss: "today"
 concept_tag: LA-ANNUS-HODIE
 prerequisites: [LA-C102-intra, LA-C102-extra]
 sounds: []
-roots: []
+roots: [hodie-latin, hic-latin, dies-latin]
+etymology_hook: "hodiē 'today' — contracted from hōc diē 'on this day'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C102-extra]
 <!-- hl-knowledge: introduces=[LA-LEX-C103-ANNUS-01]; assesses=[] -->
 
 **hodiē** — "today". **hōc diē**, "on this day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hodiē** is contracted from *hōc diē*, "on this day" (Lewis & Short); *diē*, "on the day", is a form of *diēs*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

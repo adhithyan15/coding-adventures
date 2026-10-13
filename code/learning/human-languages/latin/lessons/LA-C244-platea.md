@@ -13,7 +13,8 @@ gloss: "a broad street, a square"
 concept_tag: LA-RES244-PLATEA
 prerequisites: [LA-C243-beatus, LA-C244-raeda]
 sounds: []
-roots: []
+roots: [platea-latin]
+etymology_hook: "platēa 'broad street' — borrowed from Greek plateia, from platys 'broad'; English place"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C244-raeda]
 <!-- hl-knowledge: introduces=[LA-LEX-C244-RES244-02]; assesses=[] -->
 
 **platēa, platēae** — "a broad street, a square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**platēa** was borrowed from Greek *plateia*, "a broad street" (Lewis & Short), from *platys*, "broad". English *place* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

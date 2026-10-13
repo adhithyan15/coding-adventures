@@ -12,6 +12,9 @@ Before the new one: say the Latin for a torch, then the Latin for a lantern.
 You'll want to know: pecten, pectinis.
 pecten, pectinis — "a comb".
 
+The word, taken apart.
+pecten is built on pectō, "to comb" (Lewis & Short), and is usually traced to Proto-Indo-European pek-, "to pluck wool or hair" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a lantern, then the Latin for a comb.
 
 You'll want to know: forfex, forficis.
 forfex, forficis — "scissors".
+
+The word, taken apart.
+forfex has no sure origin; it is often linked with forceps, "tongs", but the link is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a comb, then the Latin for scissors.
 You'll want to know: acus, acūs.
 acus, acūs — "a needle".
 
+The word, taken apart.
+acus is inherited, usually traced to Proto-Indo-European h2ek-, "sharp" (EtymDB 2.1), the root of ācer, "sharp" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for scissors, then the Latin for a needle.
 You'll want to know: fīlum, fīlī.
 fīlum, fīlī — "a thread".
 
+The word, taken apart.
+fīlum is inherited, usually traced to Proto-Indo-European gwhiHslo-, "thread" (EtymDB 2.1). English filament and file, a row, come from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a needle, then the Latin for a thread.
 
 You'll want to know: lāna, lānae.
 lāna, lānae — "wool".
+
+The word, taken apart.
+lāna is inherited, usually traced to Proto-Indo-European h2wlh1neh2, "wool" (EtymDB 2.1); Latin lost the first w. English wool is a cousin.
 
 What you've built.
 One more word for this chapter.

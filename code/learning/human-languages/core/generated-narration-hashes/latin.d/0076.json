@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 76,
-  "sourceHash": "fnv1a64:7295ced3bcd02dd8",
+  "sourceHash": "fnv1a64:78eacccb2620486f",
   "lessonIds": [
     "LA-C76-lavo",
     "LA-C76-coquo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch76.txt",
   "json": "latin/narration/ch76.json",
-  "textHash": "fnv1a64:360b714510bd829a",
-  "jsonHash": "fnv1a64:472392c126eb23ef",
+  "textHash": "fnv1a64:b8048b4f172d3fc1",
+  "jsonHash": "fnv1a64:8867fd6e33445c6f",
   "findings": []
 }

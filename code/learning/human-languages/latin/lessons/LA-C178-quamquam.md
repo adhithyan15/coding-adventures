@@ -13,7 +13,8 @@ gloss: "although"
 concept_tag: LA-CAUSA178-QUAMQUAM
 prerequisites: [LA-C178-igitur, LA-C178-tamen]
 sounds: []
-roots: []
+roots: [quamquam-latin, quam-latin]
+etymology_hook: "quamquam 'although' — quam 'how' doubled: however much"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C178-tamen]
 <!-- hl-knowledge: introduces=[LA-LEX-C178-CAUSA178-03]; assesses=[] -->
 
 **quamquam** — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quamquam** is *quam*, "how, as", doubled (Lewis & Short): however much, so although.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

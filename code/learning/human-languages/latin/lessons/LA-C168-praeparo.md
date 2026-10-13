@@ -13,7 +13,8 @@ gloss: "to make ready in advance"
 concept_tag: LA-VERB-PRAEPARO
 prerequisites: [LA-C168-plico, LA-C168-possideo]
 sounds: []
-roots: []
+roots: [praeparare-latin, parare-latin]
+etymology_hook: "praeparō 'to make ready in advance' — prae 'before' + parō 'to make ready'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C168-possideo]
 <!-- hl-knowledge: introduces=[LA-LEX-C168-ACT168-03]; assesses=[] -->
 
 **praeparō, praeparāre** — "to make ready in advance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**praeparō** is *prae*, "before", with *parō*, "to make ready" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

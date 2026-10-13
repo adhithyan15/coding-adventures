@@ -13,7 +13,8 @@ gloss: "a bear"
 concept_tag: LA-ANIMALIA2-URSUS
 prerequisites: [LA-C91-lupus, LA-C91-leo]
 sounds: []
-roots: []
+roots: [ursus-latin]
+etymology_hook: "ursus 'bear' — inherited, usually traced to PIE *h2rtkos 'bear'; Greek arktos is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C91-leo]
 <!-- hl-knowledge: introduces=[LA-LEX-C91-ANIMALIA2-04]; assesses=[] -->
 
 **ursus, ursī** — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ursus** is inherited, usually traced to Proto-Indo-European *\*h2rtkos*, "bear" (EtymDB 2.1); Greek *arktos*, "bear", is a cousin (Lewis & Short). English *Arctic*, the region under the stars of the Bear, comes from the Greek.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

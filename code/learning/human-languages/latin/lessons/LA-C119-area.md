@@ -13,7 +13,8 @@ gloss: "an open space, a courtyard"
 concept_tag: LA-LOC119-AREA
 prerequisites: [LA-C118-officina, LA-C118-sepulcrum]
 sounds: []
-roots: []
+roots: [area-latin]
+etymology_hook: "ārea 'open space' — origin uncertain; Varro tied it to āreō 'to be dry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C118-sepulcrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C119-LOC119-01]; assesses=[] -->
 
 **ārea, āreae** — "an open space, a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ārea** has no sure origin. Varro tied it to *āreō*, "to be dry" (Lewis & Short), as a dry, level space, but that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

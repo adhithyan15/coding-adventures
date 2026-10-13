@@ -13,7 +13,8 @@ gloss: "vegetables, greens"
 concept_tag: LA-CIBUS2-HOLUS
 prerequisites: [LA-C80-oleum, LA-C80-uva]
 sounds: []
-roots: []
+roots: [holus-latin]
+etymology_hook: "holus 'greens' — Old Latin helus, usually traced to PIE *ghelh3- 'green, yellow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C80-uva]
 <!-- hl-knowledge: introduces=[LA-LEX-C80-CIBUS2-04]; assesses=[] -->
 
 **holus, holeris** — "vegetables, greens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**holus** is inherited. Old Latin had *helus*, "greens", usually traced to Proto-Indo-European *\*ghelh3-*, "green, yellow" (EtymDB 2.1). English *yellow* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

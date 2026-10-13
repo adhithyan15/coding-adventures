@@ -13,7 +13,8 @@ gloss: "to build"
 concept_tag: LA-VERB-AEDIFICO
 prerequisites: [LA-C153-nubilus, LA-C153-ventosus]
 sounds: []
-roots: []
+roots: [aedificare-latin, aedes-latin, facere-latin]
+etymology_hook: "aedificō 'to build' — aedēs 'building' + faciō 'to make'; English edifice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C153-ventosus]
 <!-- hl-knowledge: introduces=[LA-LEX-C153-QUAL153-03]; assesses=[] -->
 
 **aedificō, aedificāre** — "to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aedificō** is built from *aedēs*, "a building, a temple", and *faciō*, "to make" (Lewis & Short), which takes the form -ficō in compounds: to make a building. English *edifice* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

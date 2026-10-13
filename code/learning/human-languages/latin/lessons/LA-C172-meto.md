@@ -13,7 +13,8 @@ gloss: "to reap, to harvest"
 concept_tag: LA-VERB-METO
 prerequisites: [LA-C171-credo, LA-C172-sero]
 sounds: []
-roots: []
+roots: [metere-latin]
+etymology_hook: "metō 'to reap' — inherited, usually traced to PIE *h2meh1- 'to mow'; English mow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C172-sero]
 <!-- hl-knowledge: introduces=[LA-LEX-C172-ACT172-02]; assesses=[] -->
 
 **metō, metere** — "to reap, to harvest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**metō** is inherited, usually traced to Proto-Indo-European *\*h2meh1-*, "to mow, to reap" (EtymDB 2.1); Greek *amaō*, "to reap", and English *mow* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

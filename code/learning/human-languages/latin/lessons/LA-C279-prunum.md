@@ -13,7 +13,8 @@ gloss: "a plum"
 concept_tag: LA-RES279-PRUNUM
 prerequisites: [LA-C278-nomen, LA-C279-cerasum]
 sounds: []
-roots: []
+roots: [prunum-latin]
+etymology_hook: "prūnum 'plum' — borrowed from Greek prounon; English prune and plum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C279-cerasum]
 <!-- hl-knowledge: introduces=[LA-LEX-C279-RES279-02]; assesses=[] -->
 
 **prūnum, prūnī** — "a plum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prūnum** was borrowed from Greek *prounon*, "plum" (EtymDB 2.1), a word probably from a language of Asia Minor. English *prune* and *plum*, an earlier borrowing, both come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

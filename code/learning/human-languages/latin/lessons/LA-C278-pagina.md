@@ -13,7 +13,8 @@ gloss: "a page"
 concept_tag: LA-RES278-PAGINA
 prerequisites: [LA-C277-tuba, LA-C278-volumen]
 sounds: []
-roots: []
+roots: [pagina-latin, pangere-latin]
+etymology_hook: "pāgina 'page' — built on the root of pangō 'to fasten'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C278-volumen]
 <!-- hl-knowledge: introduces=[LA-LEX-C278-RES278-02]; assesses=[] -->
 
 **pāgina, pāginae** — "a page".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pāgina** is built on the root of *pangō*, "to fasten, to fix" (Lewis & Short): first a row of vines fastened together, then a column of writing. The root is usually traced to Proto-Indo-European *\*peh2g-*, "to fasten" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

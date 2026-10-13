@@ -13,7 +13,8 @@ gloss: "to lift, to raise; to remove"
 concept_tag: LA-VERB-TOLLO
 prerequisites: [LA-C199-partior, LA-C199-vito]
 sounds: []
-roots: []
+roots: [tollere-latin]
+etymology_hook: "tollō 'to lift' — inherited, usually traced to PIE *tl-neh2- 'to lift'; Greek talanton is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C199-vito]
 <!-- hl-knowledge: introduces=[LA-LEX-C200-ACT200-01]; assesses=[] -->
 
 **tollō, tollere** — "to lift, to raise; to remove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tollō** is inherited from Proto-Italic *\*tolnō*, "to lift up", usually traced to Proto-Indo-European *\*tl-neh2-*, "to lift, to bear" (EtymDB 2.1); Greek *talanton*, "a balance, a weight", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

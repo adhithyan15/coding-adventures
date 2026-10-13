@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 184,
-  "sourceHash": "fnv1a64:aa27013f92d0ed0e",
+  "sourceHash": "fnv1a64:e7aaee29c7bffecd",
   "lessonIds": [
     "LA-C184-prodigus",
     "LA-C184-modestus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch184.txt",
   "json": "latin/narration/ch184.json",
-  "textHash": "fnv1a64:ca4083ee61fd7d24",
-  "jsonHash": "fnv1a64:b608fd6c1432b050",
+  "textHash": "fnv1a64:fb5a622888f92fbc",
+  "jsonHash": "fnv1a64:823631cced36088b",
   "findings": []
 }

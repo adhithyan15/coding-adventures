@@ -13,7 +13,8 @@ gloss: "a cucumber"
 concept_tag: LA-THINGS127-CUCUMIS
 prerequisites: [LA-C127-faba, LA-C127-pisum]
 sounds: []
-roots: []
+roots: [cucumis-latin]
+etymology_hook: "cucumis 'cucumber' — origin unknown, probably a Mediterranean loan; English cucumber"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C127-pisum]
 <!-- hl-knowledge: introduces=[LA-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **cucumis, cucumeris** — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cucumis** has no sure origin; it is probably a loan from a lost Mediterranean language. English *cucumber* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

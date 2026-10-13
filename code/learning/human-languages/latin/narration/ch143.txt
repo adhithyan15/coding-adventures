@@ -12,6 +12,9 @@ Before the new one: say the Latin for a flute, then the Latin for a lyre.
 You'll want to know: dūrus, dūra, dūrum.
 dūrus, dūra, dūrum — "hard".
 
+The word, taken apart.
+dūrus has no sure origin; Lewis & Short call it doubtful. A link with Proto-Indo-European deru-, "firm, solid", the root of words for tree, is often proposed (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a lyre, then the Latin for hard.
 
 You'll want to know: mollis, molle.
 mollis, molle — "soft".
+
+The word, taken apart.
+mollis is inherited, usually traced to Proto-Indo-European moldus, "soft, weak", from mel-, "soft" (EtymDB 2.1); the ld became ll. Greek amalos, "weak", is compared (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for hard, then the Latin for soft.
 You'll want to know: tepidus, tepida, tepidum.
 tepidus, tepida, tepidum — "lukewarm".
 
+The word, taken apart.
+tepidus is built on tepeō, "to be warm" (Lewis & Short), with -idus, the ending of state adjectives. tepeō is usually traced to Proto-Indo-European tep-, "warm".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for soft, then the Latin for lukewarm.
 You'll want to know: antīquus, antīqua, antīquum.
 antīquus, antīqua, antīquum — "ancient, old-fashioned".
 
+The word, taken apart.
+antīquus is built on ante, "before" (Lewis & Short), and is usually traced to Proto-Indo-European h2enti-h3kwos, "having been before" (EtymDB 2.1): what stood before, so old.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for lukewarm, then the Latin for ancient.
 
 You'll want to know: angustus, angusta, angustum.
 angustus, angusta, angustum — "narrow".
+
+The word, taken apart.
+angustus is built on angō, "to squeeze, to choke" (Lewis & Short), usually traced to Proto-Indo-European h2engh-, "narrow, tight" (EtymDB 2.1). English anguish and anxious belong to the same family.
 
 What you've built.
 One more word for this chapter.

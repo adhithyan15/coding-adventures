@@ -13,7 +13,8 @@ gloss: "a mattress"
 concept_tag: LA-RES225-CULCITA
 prerequisites: [LA-C225-solea, LA-C225-sinus]
 sounds: []
-roots: []
+roots: [culcita-latin]
+etymology_hook: "culcita 'mattress' — origin uncertain; English quilt comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C225-sinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C225-RES225-05]; assesses=[] -->
 
 **culcita, culcitae** — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**culcita** has no sure origin. Varro tied it to *calcō*, "to tread, to press down", but Lewis & Short call that doubtful. English *quilt* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 127,
-  "sourceHash": "fnv1a64:bf1b94488aec957c",
+  "sourceHash": "fnv1a64:ddf03c9f032afcaa",
   "lessonIds": [
     "LA-C127-faba",
     "LA-C127-pisum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch127.txt",
   "json": "latin/narration/ch127.json",
-  "textHash": "fnv1a64:e6326f5c5e83c902",
-  "jsonHash": "fnv1a64:1ff58ef78de0573c",
+  "textHash": "fnv1a64:bafbf14aca58adb6",
+  "jsonHash": "fnv1a64:6af6674090b77fca",
   "findings": []
 }

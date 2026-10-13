@@ -13,7 +13,8 @@ gloss: "to get to know, to learn"
 concept_tag: LA-VERB-COGNOSCO
 prerequisites: [LA-C98-satis, LA-C98-nimis]
 sounds: []
-roots: []
+roots: [cognoscere-latin, noscere-latin]
+etymology_hook: "cognōscō 'to get to know' — con- + nōscō 'to come to know', from PIE *gneh3-; English know is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C98-nimis]
 <!-- hl-knowledge: introduces=[LA-LEX-C99-VERBA5-01]; assesses=[] -->
 
 **cognōscō, cognōscere** — "to get to know, to learn". English *recognise*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cognōscō** is built on *nōscō*, "to come to know" (Lewis & Short), older *gnōscō*, with *con-*, a prefix that strengthens it. The root is usually traced to Proto-Indo-European *\*gneh3-*, "to know" (EtymDB 2.1); English *know* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

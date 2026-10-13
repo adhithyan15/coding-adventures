@@ -13,7 +13,8 @@ gloss: "a pound; a pair of scales"
 concept_tag: LA-RES186-LIBRA
 prerequisites: [LA-C186-pondus, LA-C186-mensura]
 sounds: []
-roots: []
+roots: [libra-latin]
+etymology_hook: "lībra 'pound, scales' — origin uncertain; Greek litra is compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C186-mensura]
 <!-- hl-knowledge: introduces=[LA-LEX-C186-RES186-05]; assesses=[] -->
 
 **lībra, lībrae** — "a pound; a pair of scales".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lībra** has no sure origin; Greek *litra*, "a pound", is often compared (Lewis & Short), and both may come from a common Mediterranean word. The abbreviation lb for the pound comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

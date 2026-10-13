@@ -13,7 +13,8 @@ gloss: "to live"
 concept_tag: LA-VERB-VIVO
 prerequisites: [LA-C77-pono, LA-C77-invenio]
 sounds: []
-roots: []
+roots: [vivere-latin]
+etymology_hook: "vīvō 'to live' — inherited, usually traced to PIE *gweih3w-; Greek bios and English quick are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C77-invenio]
 <!-- hl-knowledge: introduces=[LA-LEX-C78-VERBA4-01]; assesses=[] -->
 
 **vīvō, vīvere** — "to live". English *vivid*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vīvō** is inherited, usually traced to Proto-Indo-European *\*gweih3w-*, "to live" (EtymDB 2.1). Greek *bios*, "life", and English *quick*, which once meant "alive", are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

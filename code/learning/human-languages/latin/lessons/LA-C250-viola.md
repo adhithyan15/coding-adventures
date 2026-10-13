@@ -13,7 +13,8 @@ gloss: "a violet"
 concept_tag: LA-RES250-VIOLA
 prerequisites: [LA-C250-pinus, LA-C250-laurus]
 sounds: []
-roots: []
+roots: [viola-latin]
+etymology_hook: "viola 'violet' — related to Greek ion; both probably Mediterranean loans"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C250-laurus]
 <!-- hl-knowledge: introduces=[LA-LEX-C250-RES250-05]; assesses=[] -->
 
 **viola, violae** — "a violet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**viola** is related to Greek *ion*, "violet" (Lewis & Short), which once began with a w sound; both are probably loans from a lost Mediterranean language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

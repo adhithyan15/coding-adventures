@@ -13,7 +13,8 @@ gloss: "charming"
 concept_tag: LA-QUAL216-VENUSTUS
 prerequisites: [LA-C216-calvus, LA-C216-barbatus]
 sounds: []
-roots: []
+roots: [venustus-latin, venus-latin]
+etymology_hook: "venustus 'charming' — built on venus 'charm', the goddess's name"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C216-barbatus]
 <!-- hl-knowledge: introduces=[LA-LEX-C216-QUAL216-03]; assesses=[] -->
 
 **venustus, venusta, venustum** — "charming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**venustus** is built on *venus*, "charm, loveliness", the word that is also the goddess's name, *Venus* (Lewis & Short). It is usually traced to Proto-Indo-European *\*wenh1-*, "to desire, to love".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

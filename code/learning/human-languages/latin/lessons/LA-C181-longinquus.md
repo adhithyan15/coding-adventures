@@ -13,7 +13,8 @@ gloss: "distant"
 concept_tag: LA-QUAL181-LONGINQUUS
 prerequisites: [LA-C181-crudus, LA-C181-coctus]
 sounds: []
-roots: []
+roots: [longinquus-latin, longus-latin]
+etymology_hook: "longinquus 'distant' — built on longus 'long'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C181-coctus]
 <!-- hl-knowledge: introduces=[LA-LEX-C181-QUAL181-05]; assesses=[] -->
 
 **longinquus, longinqua, longinquum** — "distant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**longinquus** is built on *longus*, "long" (Lewis & Short), with an ending also found in *propinquus*, "near": far off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

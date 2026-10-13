@@ -13,7 +13,8 @@ gloss: "round"
 concept_tag: LA-PULCHER-ROTUNDUS
 prerequisites: [LA-C95-dulcis, LA-C96-pulcher]
 sounds: []
-roots: []
+roots: [rotundus-latin, rota-latin]
+etymology_hook: "rotundus 'round' — built on rota 'wheel': wheel-shaped; English round"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C96-pulcher]
 <!-- hl-knowledge: introduces=[LA-LEX-C96-PULCHER-02]; assesses=[] -->
 
 **rotundus, rotunda, rotundum** — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rotundus** is built on *rota*, "a wheel" (Lewis & Short): wheel-shaped. English *round* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

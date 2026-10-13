@@ -13,7 +13,8 @@ gloss: "now"
 concept_tag: LA-SEMPER-NUNC
 prerequisites: [LA-C104-semper, LA-C104-numquam]
 sounds: []
-roots: []
+roots: [nunc-latin]
+etymology_hook: "nunc 'now' — old num 'now' + -ce 'here', from PIE *nu 'now'; English now is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C104-numquam]
 <!-- hl-knowledge: introduces=[LA-LEX-C104-SEMPER-04]; assesses=[] -->
 
 **nunc** — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nunc** is an old *num*, "now", with the pointing particle *-ce*, "here" (Lewis & Short). *num* is usually traced to Proto-Indo-European *\*nu*, "now" (EtymDB 2.1); English *now* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

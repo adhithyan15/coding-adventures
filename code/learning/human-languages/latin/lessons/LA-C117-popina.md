@@ -13,7 +13,8 @@ gloss: "an eating-house"
 concept_tag: LA-LOC117-POPINA
 prerequisites: [LA-C117-bibliotheca, LA-C117-macellum]
 sounds: []
-roots: []
+roots: [popina-latin, coquere-latin]
+etymology_hook: "popīna 'eating-house' — usually taken as the Oscan-Umbrian twin of coquīna 'kitchen'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C117-macellum]
 <!-- hl-knowledge: introduces=[LA-LEX-C117-LOC117-04]; assesses=[] -->
 
 **popīna, popīnae** — "an eating-house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**popīna** is usually taken as the Oscan or Umbrian twin of *coquīna*, "kitchen": those languages had p where Latin had qu. Both go back to the root of *coquō*, "to cook" (Lewis & Short compare Greek *peptō*, "to cook").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

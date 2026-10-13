@@ -13,7 +13,8 @@ gloss: "every year"
 concept_tag: LA-TEMP176-QUOTANNIS
 prerequisites: [LA-C175-donec, LA-C176-prius]
 sounds: []
-roots: []
+roots: [quotannis-latin, annus-latin]
+etymology_hook: "quotannīs 'every year' — quot 'as many as' + annīs 'years'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C176-prius]
 <!-- hl-knowledge: introduces=[LA-LEX-C176-TEMP176-02]; assesses=[] -->
 
 **quotannīs** — "every year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quotannīs** is *quot*, "as many as", with *annīs*, "years" (EtymDB 2.1): in as many years as there are.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

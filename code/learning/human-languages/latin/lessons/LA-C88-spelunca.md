@@ -13,7 +13,8 @@ gloss: "a cave"
 concept_tag: LA-TERRA-SPELUNCA
 prerequisites: [LA-C88-collis, LA-C88-vallis]
 sounds: []
-roots: []
+roots: [spelunca-latin]
+etymology_hook: "spēlunca 'cave' — borrowed from Greek spēlynx 'cave', from speos 'cave'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C88-vallis]
 <!-- hl-knowledge: introduces=[LA-LEX-C88-TERRA-05]; assesses=[] -->
 
 **spēlunca, spēluncae** — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spēlunca** was borrowed from Greek *spēlynx*, "cave, grotto" (Lewis & Short), from *speos*, "cave" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

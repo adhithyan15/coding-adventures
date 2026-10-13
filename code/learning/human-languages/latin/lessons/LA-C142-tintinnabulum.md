@@ -13,7 +13,8 @@ gloss: "a bell"
 concept_tag: LA-THINGS142-TINTINNABULUM
 prerequisites: [LA-C142-furca, LA-C142-aratrum]
 sounds: []
-roots: []
+roots: [tintinnabulum-latin]
+etymology_hook: "tintinnābulum 'bell' — built on tintinnō 'to jingle', an imitation of the sound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C142-aratrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C142-THINGS142-03]; assesses=[] -->
 
 **tintinnābulum, tintinnābulī** — "a bell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tintinnābulum** is built on *tintinnō*, "to ring, to jingle" (Lewis & Short), an imitation of the sound, with *-bulum*, an ending for a tool.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

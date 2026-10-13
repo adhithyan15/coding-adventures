@@ -13,7 +13,8 @@ gloss: "first light, daybreak"
 concept_tag: LA-TEMP207-DILUCULUM
 prerequisites: [LA-C207-occasus, LA-C207-ortus]
 sounds: []
-roots: []
+roots: [diluculum-latin, lux-latin]
+etymology_hook: "dīlūculum 'daybreak' — built on dīlūceō 'to grow light', from lūx 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C207-ortus]
 <!-- hl-knowledge: introduces=[LA-LEX-C207-TEMP207-05]; assesses=[] -->
 
 **dīlūculum, dīlūculī** — "first light, daybreak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dīlūculum** is built on *dīlūceō*, "to grow light" (Lewis & Short), from *lūx*, "light", with *-culum*, a diminutive ending: the first glimmer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

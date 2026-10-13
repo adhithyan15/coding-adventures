@@ -13,7 +13,8 @@ gloss: "to fill"
 concept_tag: LA-VERB-IMPLEO
 prerequisites: [LA-C255-rumpo, LA-C255-calefacio]
 sounds: []
-roots: []
+roots: [implere-latin]
+etymology_hook: "impleō 'to fill' — in + pleō 'to fill'; English full is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C255-calefacio]
 <!-- hl-knowledge: introduces=[LA-LEX-C255-ACT255-04]; assesses=[] -->
 
 **impleō, implēre** — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impleō** is *in*, "in", with *pleō*, "to fill" (EtymDB 2.1), a verb found only in compounds. *pleō* is usually traced to Proto-Indo-European *\*pleh1-*, "to fill"; English *full* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

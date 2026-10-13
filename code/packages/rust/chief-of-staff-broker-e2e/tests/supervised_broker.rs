@@ -1,8 +1,11 @@
 //! The supervisor with per-agent brokers (D18S P2.6d-2b), end to end: a real
 //! broker binary, verified by digest and holding only its agent's keys, a
 //! scripted host, and the daemon's callback server over shared storage.
+//!
+//! On Linux the broker is confined by the Linux applier (P2.6d-3); on macOS
+//! by the Seatbelt shim, pinned by digest like the broker (P2.7b).
 
-#![cfg(target_os = "linux")]
+#![cfg(any(target_os = "linux", target_os = "macos"))]
 
 use std::collections::VecDeque;
 use std::fs;
@@ -14,7 +17,7 @@ use std::thread;
 use std::time::{Duration, Instant};
 
 use chief_of_staff_broker_launcher::{
-    BrokerKeyFiles, KeyFileDeclaration, RelayConfig, VerifiedExecutable,
+    BrokerKeyFiles, BrokerProgram, KeyFileDeclaration, RelayConfig, VerifiedExecutable,
 };
 use chief_of_staff_broker_protocol::KeyKind;
 use chief_of_staff_channel_crypto::{
@@ -44,6 +47,8 @@ use storage_core::{InMemoryStorageBackend, StorageBackend};
 
 const HOST: &str = env!("CARGO_BIN_EXE_broker-e2e-host");
 const BROKER: &str = env!("CARGO_BIN_EXE_broker-e2e-broker");
+#[cfg(target_os = "macos")]
+const SHIM: &str = env!("CARGO_BIN_EXE_broker-e2e-seatbelt-shim");
 const PACKAGE_SEED: [u8; 32] = [42; 32];
 const KEY_ID: &str = "e2e-test";
 const SEED: [u8; 32] = [0x31; 32];
@@ -67,6 +72,22 @@ fn agent(name: &str) -> AgentId {
 
 fn pipeline() -> PipelineId {
     PipelineId::new(uuid_v7(1)).unwrap()
+}
+
+/// A binary, pinned to the digest of what is there now.
+fn pinned(path: &str) -> VerifiedExecutable {
+    let digest = coding_adventures_sha256::sha256(&fs::read(path).unwrap());
+    VerifiedExecutable::open(Path::new(path), digest).unwrap()
+}
+
+#[cfg(target_os = "linux")]
+fn broker_program() -> BrokerProgram {
+    BrokerProgram::new(pinned(BROKER))
+}
+
+#[cfg(target_os = "macos")]
+fn broker_program() -> BrokerProgram {
+    BrokerProgram::new(pinned(BROKER), pinned(SHIM)).unwrap()
 }
 
 // ---- a scratch area: the package, the key files, results -----------------
@@ -270,8 +291,7 @@ impl World {
             declare(KeyKind::ChannelMasterKey, self.scratch.key("cmk", &CMK)),
         ])
         .unwrap();
-        let digest = coding_adventures_sha256::sha256(&fs::read(BROKER).unwrap());
-        let program = Arc::new(VerifiedExecutable::open(Path::new(BROKER), digest).unwrap());
+        let program = Arc::new(broker_program());
         let metadata = Arc::new(Metadata(Mutex::new(
             (1..=10)
                 .map(|n| MessageMetadata {

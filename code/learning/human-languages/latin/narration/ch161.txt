@@ -12,6 +12,9 @@ Before the new one: say the Latin for to arrive, then the Latin for to live (som
 You'll want to know: nihil.
 nihil — "nothing". Nihil videō. — "I see nothing." Latin needs no second negative: nihil already means "not anything". English keeps it in nil and annihilate.
 
+The word, taken apart.
+nihil is ne, "not", fused with hīlum, "a trifle, the least thing" (Lewis & Short): not the least thing. Its short form is nīl, "nothing".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to live (somewhere), then the Latin for no
 
 You'll want to know: nēmō, nēminis.
 nēmō, nēminis — "nobody, no one". Nēmō venit. — "Nobody is coming." It is ne-, "not", with an old form of homō, "a person": "not a person".
+
+The word, taken apart.
+nēmō comes from ne hemō, "not a person" (EtymDB 2.1): hemō is an older form of homō, "a human being". Festus already took nēmō apart this way (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for nothing, then the Latin for nobody.
 You'll want to know: nūllus, nūlla, nūllum.
 nūllus, nūlla, nūllum — "no, not any". It agrees with its noun: nūlla epistula — "no letter at all". English null and annul come from it.
 
+The word, taken apart.
+nūllus is ne, "not", fused with ūllus, "any" (Lewis & Short): not any. ūllus itself is a diminutive of ūnus, "one".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for nobody, then the Latin for no.
 You'll want to know: uter, utra, utrum.
 uter, utra, utrum — "which (of two)". A question that picks one of two: Uter liber? — "Which of the two books?" neuter, "neither of the two", gave English neuter and neutral.
 
+The word, taken apart.
+uter comes from an older cuter, a comparative form of the question word quis, "who" (Lewis & Short): which of two. It is a different word from ūter, "a leather bag".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for no, then the Latin for which.
 
 You'll want to know: neque.
 neque — "and not, nor". neque... neque is "neither... nor": Neque aquam neque vīnum bibō. — "I drink neither water nor wine." It is often shortened to nec.
+
+The word, taken apart.
+neque is ne, "not", with -que, "and" (Lewis & Short), and is usually traced to Proto-Indo-European nekwe, "and not, nor" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

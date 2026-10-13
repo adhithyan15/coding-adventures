@@ -13,7 +13,8 @@ gloss: "to rejoice, to be glad"
 concept_tag: LA-VERB-GAUDEO
 prerequisites: [LA-C78-redeo, LA-C78-timeo]
 sounds: []
-roots: []
+roots: [gaudere-latin]
+etymology_hook: "gaudeō 'to rejoice' — inherited, usually traced to PIE *geh2w- 'to rejoice'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C78-timeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C78-VERBA4-05]; assesses=[] -->
 
 **gaudeō, gaudēre** — "to rejoice, to be glad". The verb of **gaudium**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gaudeō** is inherited, usually traced to Proto-Indo-European *\*geh2w-*, "to rejoice" (EtymDB 2.1); Greek *gētheō*, "to rejoice", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

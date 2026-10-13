@@ -13,7 +13,8 @@ gloss: "far away"
 concept_tag: LA-LOCUS-PROCUL
 prerequisites: [LA-C101-statim, LA-C101-deinde]
 sounds: []
-roots: []
+roots: [procul-latin]
+etymology_hook: "procul 'far away' — probably prō 'forth' + an unclear ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C101-deinde]
 <!-- hl-knowledge: introduces=[LA-LEX-C102-LOCUS-01]; assesses=[] -->
 
 **procul** — "far away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**procul** probably begins with *prō*, "forward, forth", but the rest is unclear; Lewis & Short's link with *procellō*, "to throw down", is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

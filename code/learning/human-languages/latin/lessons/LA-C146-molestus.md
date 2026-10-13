@@ -13,7 +13,8 @@ gloss: "annoying"
 concept_tag: LA-QUAL146-MOLESTUS
 prerequisites: [LA-C145-ferox, LA-C145-iucundus]
 sounds: []
-roots: []
+roots: [molestus-latin, moles-latin]
+etymology_hook: "molestus 'annoying' — built on mōlēs 'a burden': burdensome; English molest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C145-iucundus]
 <!-- hl-knowledge: introduces=[LA-LEX-C146-QUAL146-01]; assesses=[] -->
 
 **molestus, molesta, molestum** — "annoying".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**molestus** is built on *mōlēs*, "a heavy mass, a burden" (Lewis & Short): burdensome. English *molest* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

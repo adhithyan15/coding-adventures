@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `[hosts.broker]` takes `seatbelt_shim` and `seatbelt_shim_sha256` (D18S
+  P2.7b), read through `HostBrokerConfig::seatbelt_shim` as a
+  `PinnedExecutable`. The two keys are a pair, so one without the other is
+  refused (`Missing`) on every platform. The digest takes the same form as
+  the broker's.
 - Add an optional `[hosts.broker]` table: `executable` and `sha256`, both
   required when the table is present (D18S P2.6d-2b). The digest is
   64 lowercase hex digits; anything else is refused.

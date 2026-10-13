@@ -13,7 +13,8 @@ gloss: "a camel"
 concept_tag: LA-THINGS134-CAMELUS
 prerequisites: [LA-C134-vacca, LA-C134-mulus]
 sounds: []
-roots: []
+roots: [camelus-latin]
+etymology_hook: "camēlus 'camel' — from Greek kamēlos, from a Semitic word like Hebrew gāmāl"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C134-mulus]
 <!-- hl-knowledge: introduces=[LA-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **camēlus, camēlī** — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**camēlus** was borrowed from Greek *kamēlos*, "camel" (Lewis & Short), which Greek took from a Semitic word like Hebrew *gāmāl*, "camel" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added
+
+- The end-to-end tests run on macOS too (D18S P2.7b), through
+  `broker-e2e-seatbelt-shim`. That is a shim fixture whose body is the
+  production shim's, pinned by digest like the broker.
+
 ### Changed
 
 - The test broker binary is `chief_of_staff_agent_broker::process::run_inherited`,

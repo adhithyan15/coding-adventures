@@ -12,6 +12,9 @@ Before the new one: say the Latin for to create, then the Latin for to believe.
 You'll want to know: serō, serere.
 serō, serere — "to sow, to plant".
 
+The word, taken apart.
+serō, "to sow", is inherited from Proto-Italic sizō, "I sow", usually traced to Proto-Indo-European si-sh1-, "to sow", a doubled form of the root (EtymDB 2.1); sēmen, "seed", has the same root. It is a different word from serō, "to join, to bind".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to believe, then the Latin for to sow.
 
 You'll want to know: metō, metere.
 metō, metere — "to reap, to harvest".
+
+The word, taken apart.
+metō is inherited, usually traced to Proto-Indo-European h2meh1-, "to mow, to reap" (EtymDB 2.1); Greek amaō, "to reap", and English mow are cousins (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to sow, then the Latin for to reap.
 You'll want to know: vēnor, vēnārī.
 vēnor, vēnārī — "to hunt".
 
+The word, taken apart.
+vēnor has no sure origin; EtymDB 2.1 records proposed links with Proto-Indo-European wenh1-, "to strive for, to desire", and weyh1-, "to pursue". English venison, "hunted meat", comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to reap, then the Latin for to hunt.
 You'll want to know: piscor, piscārī.
 piscor, piscārī — "to go fishing".
 
+The word, taken apart.
+piscor is the verb made from piscis, "a fish" (Lewis & Short), which is usually traced to Proto-Indo-European pisk-, "fish" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to hunt, then the Latin for to go fishing.
 
 You'll want to know: negō, negāre.
 negō, negāre — "to deny, to say no".
+
+The word, taken apart.
+negō is built on the negative ne, "not", perhaps through nec, "and not"; how the verb was formed is uncertain. English negative and deny come from its family.
 
 What you've built.
 One more word for this chapter.

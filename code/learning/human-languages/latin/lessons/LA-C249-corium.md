@@ -13,7 +13,8 @@ gloss: "hide, leather"
 concept_tag: LA-RES249-CORIUM
 prerequisites: [LA-C249-marmor, LA-C249-vitrum]
 sounds: []
-roots: []
+roots: [corium-latin]
+etymology_hook: "corium 'hide' — usually traced to PIE *(s)ker- 'to cut': what is cut off"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C249-vitrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C249-RES249-04]; assesses=[] -->
 
 **corium, coriī** — "hide, leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**corium** is inherited, usually traced to Proto-Indo-European *\*(s)ker-*, "to cut" (EtymDB 2.1): a hide as what is cut off. Its family includes *scortum*, "a skin, a hide" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

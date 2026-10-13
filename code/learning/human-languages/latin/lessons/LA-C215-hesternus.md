@@ -13,7 +13,8 @@ gloss: "yesterday's"
 concept_tag: LA-QUAL215-HESTERNUS
 prerequisites: [LA-C214-creber, LA-C215-hodiernus]
 sounds: []
-roots: []
+roots: [hesternus-latin, heri]
+etymology_hook: "hesternus 'yesterday's' — built on hes-, the old stem behind herī 'yesterday'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C215-hodiernus]
 <!-- hl-knowledge: introduces=[LA-LEX-C215-QUAL215-02]; assesses=[] -->
 
 **hesternus, hesterna, hesternum** — "yesterday's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hesternus** is built on the old stem *hes-*, "yesterday", the stem behind *herī*, "yesterday" (Lewis & Short), with *-ternus*, an ending for time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

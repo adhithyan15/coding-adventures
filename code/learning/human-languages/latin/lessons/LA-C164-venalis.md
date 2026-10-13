@@ -13,7 +13,8 @@ gloss: "for sale"
 concept_tag: LA-LEG164-VENALIS
 prerequisites: [LA-C164-inscriptio, LA-C164-pretium]
 sounds: []
-roots: []
+roots: [venalis-latin, venum-latin]
+etymology_hook: "vēnālis 'for sale' — built on vēnum 'sale'; English venal"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [LA-C164-pretium]
 
 The sign says **Domus vēnālis.** — "House for sale." It comes from **vēnum**,
 "sale", like **vendō**, "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vēnālis** is built on *vēnum*, "sale" (EtymDB 2.1), with *-ālis*, "belonging to": for sale. *vēnum* is usually traced to Proto-Indo-European *\*wesno-*, "price"; English *venal*, "bribable", comes from *vēnālis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

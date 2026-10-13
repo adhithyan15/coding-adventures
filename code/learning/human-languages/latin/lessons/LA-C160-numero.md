@@ -13,7 +13,8 @@ gloss: "to count"
 concept_tag: LA-VERB-NUMERO
 prerequisites: [LA-C159-servo, LA-C159-muto]
 sounds: []
-roots: []
+roots: [numerare-latin, numerus-latin]
+etymology_hook: "numerō 'to count' — built on numerus 'number', from PIE *nem- 'to allot'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C159-muto]
 <!-- hl-knowledge: introduces=[LA-LEX-C160-ACT160-01]; assesses=[] -->
 
 **numerō, numerāre** — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**numerō** is built on *numerus*, "a number" (Lewis & Short), usually traced to Proto-Indo-European *\*nem-*, "to allot, to distribute" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

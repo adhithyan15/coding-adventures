@@ -13,7 +13,8 @@ gloss: "to seem"
 concept_tag: LA-VERB-VIDEOR
 prerequisites: [LA-C232-furor, LA-C232-detego]
 sounds: []
-roots: []
+roots: [videri-latin, videre-latin]
+etymology_hook: "videor 'to seem' — the passive of videō 'to see': to be seen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C232-detego]
 <!-- hl-knowledge: introduces=[LA-LEX-C232-ACT232-03]; assesses=[] -->
 
 **videor, vidērī** — "to seem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**videor** is the passive of *videō*, "to see": to be seen, so to seem.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

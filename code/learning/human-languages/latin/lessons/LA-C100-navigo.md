@@ -13,7 +13,8 @@ gloss: "to sail"
 concept_tag: LA-VERB-NAVIGO
 prerequisites: [LA-C99-moveo, LA-C100-pugno]
 sounds: []
-roots: []
+roots: [navigare-latin, navis-latin, agere-latin]
+etymology_hook: "nāvigō 'to sail' — nāvis 'ship' + agō 'to drive': to drive a ship"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C100-pugno]
 <!-- hl-knowledge: introduces=[LA-LEX-C100-VERBA6-02]; assesses=[] -->
 
 **nāvigō, nāvigāre** — "to sail". English *navigate*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nāvigō** is built from *nāvis*, "a ship", and *agō*, "to drive" (Lewis & Short): to drive a ship. *nāvis* is usually traced to Proto-Indo-European *\*neh2us*, "boat" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

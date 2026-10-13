@@ -13,7 +13,8 @@ gloss: "tomorrow's"
 concept_tag: LA-QUAL215-CRASTINUS
 prerequisites: [LA-C215-hodiernus, LA-C215-hesternus]
 sounds: []
-roots: []
+roots: [crastinus-latin, cras-latin]
+etymology_hook: "crāstinus 'tomorrow's' — built on crās 'tomorrow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C215-hesternus]
 <!-- hl-knowledge: introduces=[LA-LEX-C215-QUAL215-03]; assesses=[] -->
 
 **crāstinus, crāstina, crāstinum** — "tomorrow's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crāstinus** is built on *crās*, "tomorrow" (Lewis & Short), with *-tinus*, an ending for time. Where *crās* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

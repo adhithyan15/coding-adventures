@@ -13,7 +13,8 @@ gloss: "the back"
 concept_tag: LA-CORPUS3-TERGUM
 prerequisites: [LA-C65-capillus, LA-C65-venter]
 sounds: []
-roots: []
+roots: [tergum-latin]
+etymology_hook: "tergum 'the back' — origin unknown; English tergiversation, 'turning one's back', is built on it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C65-venter]
 <!-- hl-knowledge: introduces=[LA-LEX-C65-CORPUS3-03]; assesses=[] -->
 
 **tergum, tergī** — "the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tergum**, "the back", has no sure origin; no proposal is generally accepted. English *tergiversation*, "turning one's back, evasion", is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

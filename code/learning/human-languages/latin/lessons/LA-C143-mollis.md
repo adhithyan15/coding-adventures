@@ -13,7 +13,8 @@ gloss: "soft"
 concept_tag: LA-QUAL143-MOLLIS
 prerequisites: [LA-C142-lyra, LA-C143-durus]
 sounds: []
-roots: []
+roots: [mollis-latin]
+etymology_hook: "mollis 'soft' — inherited, usually traced to PIE *moldus 'soft, weak'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C143-durus]
 <!-- hl-knowledge: introduces=[LA-LEX-C143-QUAL143-02]; assesses=[] -->
 
 **mollis, molle** — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mollis** is inherited, usually traced to Proto-Indo-European *\*moldus*, "soft, weak", from *\*mel-*, "soft" (EtymDB 2.1); the ld became ll. Greek *amalos*, "weak", is compared (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

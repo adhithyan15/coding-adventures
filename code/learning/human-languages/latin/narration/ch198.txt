@@ -12,6 +12,9 @@ Before the new one: say the Latin for to explain, then the Latin for to interpre
 You'll want to know: vetō, vetāre.
 vetō, vetāre — "to forbid".
 
+The word, taken apart.
+vetō has no sure origin; Lewis & Short call it doubtful. English veto, "I forbid", is the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to interpret, then the Latin for to forbid
 
 You'll want to know: dēfendō, dēfendere.
 dēfendō, dēfendere — "to defend".
+
+The word, taken apart.
+dēfendō is dē, "away", with an old verb fendō, "to strike" (Lewis & Short), usually traced to Proto-Indo-European gwhen-, "to strike, to ward off" (EtymDB 2.1): to strike away, to ward off.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to forbid, then the Latin for to defend.
 You'll want to know: morior, morī.
 morior, morī — "to die".
 
+The word, taken apart.
+morior is inherited, usually traced to Proto-Indo-European mer-, "to die" (EtymDB 2.1). English murder is a distant cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to defend, then the Latin for to die.
 You'll want to know: nūbō, nūbere.
 nūbō, nūbere — "to marry (of a bride)".
 
+The word, taken apart.
+nūbō is inherited, usually traced to Proto-Indo-European snewbh-, "to marry, to wed" (EtymDB 2.1). English nuptial comes from its participle nūptus, "married".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to die, then the Latin for to marry.
 
 You'll want to know: quiēscō, quiēscere.
 quiēscō, quiēscere — "to rest".
+
+The word, taken apart.
+quiēscō is built on quiēs, "rest" (Lewis & Short), with -scō, the ending of verbs of becoming: to come to rest. quiēs is usually traced to Proto-Indo-European kwyeh1-, "to rest" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

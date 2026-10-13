@@ -13,7 +13,8 @@ gloss: "to move back, to withdraw"
 concept_tag: LA-VERB-RECEDO
 prerequisites: [LA-C169-consuesco, LA-C169-propero]
 sounds: []
-roots: []
+roots: [recedere-latin, cedere-latin]
+etymology_hook: "recēdō 'to withdraw' — re- 'back' + cēdō 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C169-propero]
 <!-- hl-knowledge: introduces=[LA-LEX-C169-ACT169-04]; assesses=[] -->
 
 **recēdō, recēdere** — "to move back, to withdraw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recēdō** is *re-*, "back", with *cēdō*, "to go" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

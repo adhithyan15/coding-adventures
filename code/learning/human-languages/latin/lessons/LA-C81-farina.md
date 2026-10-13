@@ -13,7 +13,8 @@ gloss: "flour"
 concept_tag: LA-CIBUS3-FARINA
 prerequisites: [LA-C80-oliva, LA-C81-frumentum]
 sounds: []
-roots: []
+roots: [farina-latin, far-latin]
+etymology_hook: "farīna 'flour' — built on far 'spelt', a hardy wheat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C81-frumentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C81-CIBUS3-02]; assesses=[] -->
 
 **farīna, farīnae** — "flour". English *farinaceous*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farīna** is built on *far*, "spelt", a hardy wheat (Lewis & Short): flour is ground grain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

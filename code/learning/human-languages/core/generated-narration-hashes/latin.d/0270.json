@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 270,
-  "sourceHash": "fnv1a64:b95ab07dcb7f574f",
+  "sourceHash": "fnv1a64:bcb0059029296165",
   "lessonIds": [
     "LA-C270-circus",
     "LA-C270-basilica",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch270.txt",
   "json": "latin/narration/ch270.json",
-  "textHash": "fnv1a64:1c1b25e18af5a4bb",
-  "jsonHash": "fnv1a64:3cef03824de11d16",
+  "textHash": "fnv1a64:2fc5ca1c30bbeeb4",
+  "jsonHash": "fnv1a64:b5c55a38bb944281",
   "findings": []
 }

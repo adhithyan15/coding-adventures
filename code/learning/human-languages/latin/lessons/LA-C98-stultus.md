@@ -13,7 +13,8 @@ gloss: "foolish"
 concept_tag: LA-DIVES-STULTUS
 prerequisites: [LA-C98-dives, LA-C98-pauper]
 sounds: []
-roots: []
+roots: [stultus-latin]
+etymology_hook: "stultus 'foolish' — probably kin to stolidus 'dull'; often traced to PIE *ster- 'stiff'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C98-pauper]
 <!-- hl-knowledge: introduces=[LA-LEX-C98-DIVES-03]; assesses=[] -->
 
 **stultus, stulta, stultum** — "foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stultus** is probably related to *stolidus*, "dull, stupid" (Lewis & Short), and both are often traced to Proto-Indo-European *\*ster-*, "stiff" (EtymDB 2.1): a fool as one stiff of mind.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

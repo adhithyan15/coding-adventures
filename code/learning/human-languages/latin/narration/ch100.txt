@@ -12,6 +12,9 @@ Before the new one: say the Latin for to praise, then the Latin for to move.
 You'll want to know: pugnō, pugnāre.
 pugnō, pugnāre — "to fight".
 
+The word, taken apart.
+pugnō is built on pugnus, "a fist" (EtymDB 2.1), so it probably first meant to fight with fists. pugnus is usually traced to Proto-Indo-European peug-, "to prick, to punch" (EtymDB 2.1), the root of pungō, "to prick" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to move, then the Latin for to fight.
 
 You'll want to know: nāvigō, nāvigāre.
 nāvigō, nāvigāre — "to sail". English navigate.
+
+The word, taken apart.
+nāvigō is built from nāvis, "a ship", and agō, "to drive" (Lewis & Short): to drive a ship. nāvis is usually traced to Proto-Indo-European neh2us, "boat" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to fight, then the Latin for to sail.
 You'll want to know: parō, parāre.
 parō, parāre — "to prepare". English prepare.
 
+The word, taken apart.
+parō is probably related to pariō, "to bring forth, to procure", and is traced to a Proto-Indo-European root per-, "to produce, to procure" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to sail, then the Latin for to prepare.
 You'll want to know: tangō, tangere.
 tangō, tangere — "to touch". English tangible.
 
+The word, taken apart.
+tangō is inherited, usually traced to Proto-Indo-European tag-, "to touch" (EtymDB 2.1). The n inside the present stem is an old way of marking the verb and is missing from its perfect tetigī, "I touched".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to prepare, then the Latin for to touch.
 
 You'll want to know: trahō, trahere.
 trahō, trahere — "to pull, to drag". English tractor.
+
+The word, taken apart.
+trahō is inherited, usually traced to Proto-Indo-European tragh-, "to draw, to drag" (EtymDB 2.1). English attract comes from it too.
 
 What you've built.
 One more word for this chapter.

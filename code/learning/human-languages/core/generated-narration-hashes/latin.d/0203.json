@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 203,
-  "sourceHash": "fnv1a64:d4de66fee1eac67b",
+  "sourceHash": "fnv1a64:b69e9d4fd56564a0",
   "lessonIds": [
     "LA-C203-dubito",
     "LA-C203-quaero",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch203.txt",
   "json": "latin/narration/ch203.json",
-  "textHash": "fnv1a64:d4ffc5b4cb7adc4d",
-  "jsonHash": "fnv1a64:8469fd6c29cb74d1",
+  "textHash": "fnv1a64:647bc7ff941afcd0",
+  "jsonHash": "fnv1a64:70157147ae46b27a",
   "findings": []
 }

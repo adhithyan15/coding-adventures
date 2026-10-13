@@ -1645,6 +1645,16 @@ fn swimlane_internal_anchor_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_rect_with_title_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph State\n  item@{ shape: rectWithTitle, label: \"Details\" }\nend",
+    ).expect("Mermaid 11.16.1 rectWithTitle should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TitledRect);
+    assert_eq!(diagram.nodes[0].label, "Details");
+}
+
+#[test]
 fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 

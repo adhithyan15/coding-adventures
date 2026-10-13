@@ -13,7 +13,8 @@ gloss: "new"
 concept_tag: LA-NOVUS-NOVUS
 prerequisites: [LA-C93-brevis, LA-C93-altus]
 sounds: []
-roots: []
+roots: [novus-latin]
+etymology_hook: "novus 'new' — inherited, usually traced to PIE *newos 'new'; English new is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C93-altus]
 <!-- hl-knowledge: introduces=[LA-LEX-C94-NOVUS-01]; assesses=[] -->
 
 **novus, nova, novum** — "new". English *novel*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**novus** is inherited, usually traced to Proto-Indo-European *\*newos*, "new" (EtymDB 2.1); Greek *neos*, "new", and English *new* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

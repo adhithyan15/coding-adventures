@@ -13,7 +13,8 @@ gloss: "to give birth to, to produce"
 concept_tag: LA-VERB-GIGNO
 prerequisites: [LA-C260-animadverto, LA-C260-erubesco]
 sounds: []
-roots: []
+roots: [gignere-latin]
+etymology_hook: "gignō 'to give birth to' — inherited, a doubled form of PIE *genh1- 'to beget'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C260-erubesco]
 <!-- hl-knowledge: introduces=[LA-LEX-C261-ACT261-01]; assesses=[] -->
 
 **gignō, gignere** — "to give birth to, to produce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gignō** is inherited, usually traced to Proto-Indo-European *\*gi-gnh1-*, "to beget", a doubled form of the root (EtymDB 2.1); Greek *gignomai*, "to be born", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

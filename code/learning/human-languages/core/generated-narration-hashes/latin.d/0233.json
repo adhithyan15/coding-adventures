@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 233,
-  "sourceHash": "fnv1a64:24121e0c305fb5d5",
+  "sourceHash": "fnv1a64:34f1903c7f7377fa",
   "lessonIds": [
     "LA-C233-insto",
     "LA-C233-interrumpo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch233.txt",
   "json": "latin/narration/ch233.json",
-  "textHash": "fnv1a64:050d0449653ecb48",
-  "jsonHash": "fnv1a64:54bea81bb3ed2fbc",
+  "textHash": "fnv1a64:1202e6c60977198b",
+  "jsonHash": "fnv1a64:ffdfa3aa9050177e",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to rest"
 concept_tag: LA-VERB-QUIESCO
 prerequisites: [LA-C198-morior, LA-C198-nubo]
 sounds: []
-roots: []
+roots: [quiescere-latin, quies-latin]
+etymology_hook: "quiēscō 'to rest' — built on quiēs 'rest': to come to rest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C198-nubo]
 <!-- hl-knowledge: introduces=[LA-LEX-C198-ACT198-05]; assesses=[] -->
 
 **quiēscō, quiēscere** — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quiēscō** is built on *quiēs*, "rest" (Lewis & Short), with *-scō*, the ending of verbs of becoming: to come to rest. *quiēs* is usually traced to Proto-Indo-European *\*kwyeh1-*, "to rest" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

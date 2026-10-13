@@ -13,7 +13,8 @@ gloss: "to fight"
 concept_tag: LA-VERB-PUGNO
 prerequisites: [LA-C99-laudo, LA-C99-moveo]
 sounds: []
-roots: []
+roots: [pugnare-latin, pugnus-latin]
+etymology_hook: "pugnō 'to fight' — built on pugnus 'fist', from PIE *peug- 'to punch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C99-moveo]
 <!-- hl-knowledge: introduces=[LA-LEX-C100-VERBA6-01]; assesses=[] -->
 
 **pugnō, pugnāre** — "to fight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pugnō** is built on *pugnus*, "a fist" (EtymDB 2.1), so it probably first meant to fight with fists. *pugnus* is usually traced to Proto-Indo-European *\*peug-*, "to prick, to punch" (EtymDB 2.1), the root of *pungō*, "to prick" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "all the way, continuously"
 concept_tag: LA-LOC209-USQUE
 prerequisites: [LA-C209-inde, LA-C209-obviam]
 sounds: []
-roots: []
+roots: [usque-latin]
+etymology_hook: "usque 'all the way' — usually traced to PIE *uds-kwe; its ending is -que 'and'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C209-obviam]
 <!-- hl-knowledge: introduces=[LA-LEX-C209-LOC209-05]; assesses=[] -->
 
 **usque** — "all the way, continuously".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**usque** is usually traced to Proto-Indo-European *\*uds-kwe*, "and up to" (EtymDB 2.1); its ending is the *-que*, "and", of Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

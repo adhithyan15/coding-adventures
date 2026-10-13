@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 243,
-  "sourceHash": "fnv1a64:f0434ccc051d4205",
+  "sourceHash": "fnv1a64:04597bd5dc20e44a",
   "lessonIds": [
     "LA-C243-dubius",
     "LA-C243-fidus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch243.txt",
   "json": "latin/narration/ch243.json",
-  "textHash": "fnv1a64:ed495682d35d2dd5",
-  "jsonHash": "fnv1a64:596eccbecd814a32",
+  "textHash": "fnv1a64:bdc790319c3701b8",
+  "jsonHash": "fnv1a64:8f48e3c979638679",
   "findings": []
 }

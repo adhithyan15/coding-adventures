@@ -13,7 +13,8 @@ gloss: "a lake"
 concept_tag: LA-AQUA-LACUS
 prerequisites: [LA-C86-mons, LA-C87-flumen]
 sounds: []
-roots: []
+roots: [lacus-latin]
+etymology_hook: "lacus 'lake' — inherited, usually traced to PIE *lokus 'pond, pool'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C87-flumen]
 <!-- hl-knowledge: introduces=[LA-LEX-C87-AQUA-02]; assesses=[] -->
 
 **lacus, lacūs** — "a lake". English *lake*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lacus** is inherited, usually traced to Proto-Indo-European *\*lokus*, "pond, pool" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

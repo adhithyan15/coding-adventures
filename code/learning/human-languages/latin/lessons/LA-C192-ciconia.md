@@ -13,7 +13,8 @@ gloss: "a stork"
 concept_tag: LA-RES192-CICONIA
 prerequisites: [LA-C192-cancer, LA-C192-passer]
 sounds: []
-roots: []
+roots: [ciconia-latin]
+etymology_hook: "cicōnia 'stork' — probably a doubled form of PIE *keh2n- 'to sing, to cry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C192-passer]
 <!-- hl-knowledge: introduces=[LA-LEX-C192-RES192-03]; assesses=[] -->
 
 **cicōnia, cicōniae** — "a stork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cicōnia** is probably a doubled form of the root *\*keh2n-*, "to sing, to cry" (EtymDB 2.1). At Praeneste the bird was called *cōnia*, "stork" (Lewis & Short), and *canō*, "to sing", has the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

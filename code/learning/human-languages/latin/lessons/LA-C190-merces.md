@@ -13,7 +13,8 @@ gloss: "wages, pay"
 concept_tag: LA-RES190-MERCES
 prerequisites: [LA-C190-vectigal, LA-C190-tributum]
 sounds: []
-roots: []
+roots: [merces-latin, merere-latin]
+etymology_hook: "mercēs 'wages' — usually linked with mereō 'to earn'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [LA-C190-tributum]
 **mercēs, mercēdis** — "wages, pay".
 
 It is not the same word as **merx, mercis**, "goods", even though the plural of *merx* is spelled *mercēs* too. The second form tells them apart: *mercēdis* here, *mercis* there.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mercēs** is usually linked with *mereō*, "to earn" (Lewis & Short): what one has earned. It may share a root with *merx*, "goods" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

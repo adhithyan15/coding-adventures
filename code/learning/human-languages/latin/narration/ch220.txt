@@ -12,6 +12,9 @@ Before the new one: say the Latin for an actor, then the Latin for a story.
 You'll want to know: ancilla, ancillae.
 ancilla, ancillae — "a maidservant".
 
+The word, taken apart.
+ancilla is a diminutive of ancula, "a maidservant" (Lewis & Short), an old word whose origin is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a story, then the Latin for a maidservant.
 
 You'll want to know: lībertus, lībertī.
 lībertus, lībertī — "a freedman".
+
+The word, taken apart.
+lībertus is built on līberō, "to set free" (Lewis & Short), from līber, "free": one who has been freed.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a maidservant, then the Latin for a freedm
 You'll want to know: advena, advenae.
 advena, advenae — "a newcomer".
 
+The word, taken apart.
+advena is built on adveniō, "to arrive" (Lewis & Short), from ad, "to", and veniō, "to come": one who has come.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a freedman, then the Latin for a newcomer.
 You'll want to know: adulēscēns, adulēscentis.
 adulēscēns, adulēscentis — "a young person".
 
+The word, taken apart.
+adulēscēns is the present participle of adolēscō, "to grow up": growing up. adolēscō is built on alō, "to nourish". English adolescent comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a newcomer, then the Latin for a young per
 
 You'll want to know: vidua, viduae.
 vidua, viduae — "a widow".
+
+The word, taken apart.
+vidua is inherited, usually traced to Proto-Indo-European h1widhewh2, "widow" (EtymDB 2.1); English widow is a cousin.
 
 What you've built.
 One more word for this chapter.

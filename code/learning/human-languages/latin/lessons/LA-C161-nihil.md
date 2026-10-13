@@ -13,7 +13,8 @@ gloss: "nothing"
 concept_tag: LA-NEG161-NIHIL
 prerequisites: [LA-C160-advenio, LA-C160-habito]
 sounds: []
-roots: []
+roots: [nihil-latin]
+etymology_hook: "nihil 'nothing' — ne 'not' + hīlum 'a trifle': not the least thing"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C160-habito]
 <!-- hl-knowledge: introduces=[LA-LEX-C161-NEG161-01]; assesses=[] -->
 
 **nihil** — "nothing". **Nihil videō.** — "I see nothing." Latin needs no second negative: **nihil** already means "not anything". English keeps it in *nil* and *annihilate*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nihil** is *ne*, "not", fused with *hīlum*, "a trifle, the least thing" (Lewis & Short): not the least thing. Its short form is *nīl*, "nothing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

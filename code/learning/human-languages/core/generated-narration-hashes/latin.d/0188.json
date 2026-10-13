@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 188,
-  "sourceHash": "fnv1a64:ccecb31878050c1b",
+  "sourceHash": "fnv1a64:9547235063718f62",
   "lessonIds": [
     "LA-C188-architectus",
     "LA-C188-textor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch188.txt",
   "json": "latin/narration/ch188.json",
-  "textHash": "fnv1a64:084813b0510971a7",
-  "jsonHash": "fnv1a64:91735ee29bdb8099",
+  "textHash": "fnv1a64:09595d9da643c2a1",
+  "jsonHash": "fnv1a64:7b7f28e89f9dc999",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "in the way, to meet"
 concept_tag: LA-LOC209-OBVIAM
 prerequisites: [LA-C209-provincia, LA-C209-inde]
 sounds: []
-roots: []
+roots: [obviam-latin, via-latin]
+etymology_hook: "obviam 'to meet' — ob 'in front of' + viam 'the way'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C209-inde]
 <!-- hl-knowledge: introduces=[LA-LEX-C209-LOC209-04]; assesses=[] -->
 
 **obviam** — "in the way, to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**obviam** is *ob*, "towards, in front of", with *viam*, "the way" (Lewis & Short): in the way, so to meet someone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

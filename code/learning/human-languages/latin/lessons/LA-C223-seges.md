@@ -13,7 +13,8 @@ gloss: "a crop, a cornfield"
 concept_tag: LA-RES223-SEGES
 prerequisites: [LA-C223-radix, LA-C223-spina]
 sounds: []
-roots: []
+roots: [seges-latin]
+etymology_hook: "seges 'crop' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C223-spina]
 <!-- hl-knowledge: introduces=[LA-LEX-C223-RES223-05]; assesses=[] -->
 
 **seges, segetis** — "a crop, a cornfield".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seges** has no sure origin; Lewis & Short call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

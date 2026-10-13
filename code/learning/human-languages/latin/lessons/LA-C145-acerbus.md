@@ -13,7 +13,8 @@ gloss: "sour, unripe"
 concept_tag: LA-QUAL145-ACERBUS
 prerequisites: [LA-C144-caecus, LA-C144-acutus]
 sounds: []
-roots: []
+roots: [acerbus-latin, acer-latin]
+etymology_hook: "acerbus 'sour' — built on ācer 'sharp', from PIE *h2kros"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C144-acutus]
 <!-- hl-knowledge: introduces=[LA-LEX-C145-QUAL145-01]; assesses=[] -->
 
 **acerbus, acerba, acerbum** — "sour, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acerbus** is built on *ācer*, "sharp" (Lewis & Short), like *superbus*, "proud", on *super*, "above". *ācer* is usually traced to Proto-Indo-European *\*h2kros*, "sharp" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

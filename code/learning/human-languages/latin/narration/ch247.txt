@@ -12,6 +12,9 @@ Before the new one: say the Latin for a painter, then the Latin for music.
 You'll want to know: geminus, geminī.
 geminus, geminī — "a twin".
 
+The word, taken apart.
+geminus has no sure origin; Lewis & Short's link with gignō, "to beget", is uncertain. English Gemini, "the Twins", is its plural.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for music, then the Latin for a twin.
 
 You'll want to know: socer, socerī.
 socer, socerī — "a father-in-law".
+
+The word, taken apart.
+socer is inherited, usually traced to Proto-Indo-European swekuros, "father-in-law" (EtymDB 2.1); Greek hekyros, "father-in-law", is a cousin (Lewis & Short), and so is German Schwager, "brother-in-law".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a twin, then the Latin for a father-in-law
 You'll want to know: socrus, socrūs.
 socrus, socrūs — "a mother-in-law".
 
+The word, taken apart.
+socrus is usually traced to Proto-Italic swekrus, "mother-in-law" (EtymDB 2.1), the partner of socer, "father-in-law" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a father-in-law, then the Latin for a moth
 You'll want to know: gener, generī.
 gener, generī — "a son-in-law".
 
+The word, taken apart.
+gener is inherited, usually traced to Proto-Indo-European gmros, "son-in-law" (EtymDB 2.1); Greek gambros, "son-in-law", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a mother-in-law, then the Latin for a son-
 
 You'll want to know: nurus, nurūs.
 nurus, nurūs — "a daughter-in-law".
+
+The word, taken apart.
+nurus is inherited, usually traced to Proto-Indo-European snusos, "daughter-in-law" (EtymDB 2.1); Latin lost the first s, and Old High German snur, "daughter-in-law", is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

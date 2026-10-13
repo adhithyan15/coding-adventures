@@ -13,7 +13,8 @@ gloss: "earlier, sooner"
 concept_tag: LA-TEMP176-PRIUS
 prerequisites: [LA-C175-subito, LA-C175-donec]
 sounds: []
-roots: []
+roots: [prius-latin, prior-latin]
+etymology_hook: "prius 'earlier' — the neuter of prior 'earlier', used as an adverb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C175-donec]
 <!-- hl-knowledge: introduces=[LA-LEX-C176-TEMP176-01]; assesses=[] -->
 
 **prius** — "earlier, sooner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prius** is the neuter of *prior*, "former, earlier" (Lewis & Short), used as an adverb. *prior* is a comparative built on the root of *prō*, "before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "wakeful, watchful"
 concept_tag: LA-QUAL216-VIGIL
 prerequisites: [LA-C216-venustus, LA-C216-defessus]
 sounds: []
-roots: []
+roots: [vigil-latin, vigere-latin]
+etymology_hook: "vigil 'watchful' — built on vigeō 'to be lively'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C216-defessus]
 <!-- hl-knowledge: introduces=[LA-LEX-C216-QUAL216-05]; assesses=[] -->
 
 **vigil, vigilis** — "wakeful, watchful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vigil** is built on *vigeō*, "to be lively, to thrive" (Lewis & Short), usually traced to Proto-Indo-European *\*weg-*, "to be fresh, to be awake" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

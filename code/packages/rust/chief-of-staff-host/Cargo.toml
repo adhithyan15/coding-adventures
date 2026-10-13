@@ -51,13 +51,20 @@ test = false
 # Builds the test-fixture broker the end-to-end tests launch. Off by default,
 # so neither `cargo install` nor a release build of the host produces it, and
 # the host does not link the broker library. BUILD enables it.
-test-broker = ["dep:chief-of-staff-agent-broker"]
+test-broker = ["dep:chief-of-staff-agent-broker", "dep:chief-of-staff-macos-sandbox"]
 
 # A test fixture, not part of the host: the end-to-end tests launch it as
 # the agent's channel broker. Its body is the production broker's.
 [[bin]]
 name = "chief-of-staff-host-test-broker"
 path = "src/bin/test_broker.rs"
+test = false
+required-features = ["test-broker"]
+
+# A test fixture: on macOS, the shim that confines the test broker (P2.7b).
+[[bin]]
+name = "chief-of-staff-host-test-seatbelt-shim"
+path = "src/bin/test_seatbelt_shim.rs"
 test = false
 required-features = ["test-broker"]
 
@@ -68,3 +75,6 @@ required-features = ["test-broker"]
 [[test]]
 name = "weather_reference_agent"
 required-features = ["test-broker"]
+
+[target.'cfg(target_os = "macos")'.dependencies]
+chief-of-staff-macos-sandbox = { path = "../chief-of-staff-macos-sandbox", optional = true }

@@ -13,7 +13,8 @@ gloss: "a flask, a bottle"
 concept_tag: LA-THINGS123-LAGOENA
 prerequisites: [LA-C123-vas, LA-C123-amphora]
 sounds: []
-roots: []
+roots: [lagoena-latin]
+etymology_hook: "lagoena 'flask' — another spelling of lagēna, from Greek lagynos 'flask'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C123-amphora]
 <!-- hl-knowledge: introduces=[LA-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **lagoena, lagoenae** — "a flask, a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lagoena** is another spelling of *lagēna*, "a flask" (Lewis & Short), a word borrowed from Greek *lagynos*, "a flask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to praise"
 concept_tag: LA-VERB-LAUDO
 prerequisites: [LA-C99-curo, LA-C99-narro]
 sounds: []
-roots: []
+roots: [laudare-latin, laus-latin]
+etymology_hook: "laudō 'to praise' — built on laus, laudis 'praise'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C99-narro]
 <!-- hl-knowledge: introduces=[LA-LEX-C99-VERBA5-04]; assesses=[] -->
 
 **laudō, laudāre** — "to praise". English *laud*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laudō** is built on *laus*, *laudis*, "praise" (Lewis & Short). Where *laus* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

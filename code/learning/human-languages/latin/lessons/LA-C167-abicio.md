@@ -13,7 +13,8 @@ gloss: "to throw away"
 concept_tag: LA-VERB-ABICIO
 prerequisites: [LA-C167-ardeo, LA-C167-incendo]
 sounds: []
-roots: []
+roots: [abicere-latin, iacere-latin]
+etymology_hook: "abiciō 'to throw away' — ab 'away' + iaciō 'to throw'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C167-incendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C167-ACT167-03]; assesses=[] -->
 
 **abiciō, abicere** — "to throw away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abiciō** is *ab*, "away", with *iaciō*, "to throw" (Lewis & Short), its a weakened to i.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4044,6 +4044,16 @@ line "Target" [35, 50, 68, 82]"##,
                         if ellipse.rx == 1.0 && ellipse.ry == 1.0 && ellipse.stroke.is_none()
                 )), "anchor must lower to a filled two-pixel circle");
             }
+            if fixture_name == "rect-with-title-shape" {
+                let item = layout.nodes.iter().find(|node| node.id == "item").unwrap();
+                assert_eq!(item.shape, diagram_ir::DiagramShape::TitledRect);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path)
+                        if path.commands.iter().filter(|command|
+                            matches!(command, PathCommand::QuadTo { .. })).count() == 4
+                            && path.commands.len() == 12
+                )), "rectWithTitle must lower to a rounded container and title divider");
+            }
             if fixture_name == "legacy-internal-shape-aliases" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
                     &diagram_ir::DiagramShape::Rect,

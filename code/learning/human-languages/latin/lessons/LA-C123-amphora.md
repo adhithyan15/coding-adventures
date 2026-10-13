@@ -13,7 +13,8 @@ gloss: "a two-handled jar"
 concept_tag: LA-THINGS123-AMPHORA
 prerequisites: [LA-C122-scalae, LA-C123-vas]
 sounds: []
-roots: []
+roots: [amphora-latin]
+etymology_hook: "amphora 'jar' — from Greek amphoreus: amphi 'on both sides' + pherō 'to carry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C123-vas]
 <!-- hl-knowledge: introduces=[LA-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **amphora, amphorae** — "a two-handled jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amphora** was borrowed from Greek *amphoreus*, "a two-handled jar" (Lewis & Short), from *amphi*, "on both sides", and *pherō*, "to carry": a jar carried by both handles.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

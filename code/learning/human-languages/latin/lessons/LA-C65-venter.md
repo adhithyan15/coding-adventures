@@ -13,7 +13,8 @@ gloss: "the belly"
 concept_tag: LA-CORPUS3-VENTER
 prerequisites: [LA-C64-sanguis, LA-C65-capillus]
 sounds: []
-roots: []
+roots: [latin-venter]
+etymology_hook: "venter 'belly' — perhaps inherited, from PIE *wendtri- 'belly'; English ventriloquist, 'belly-speaker'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C65-capillus]
 <!-- hl-knowledge: introduces=[LA-LEX-C65-CORPUS3-02]; assesses=[] -->
 
 **venter, ventris** — "the belly". A *ventriloquist* speaks from the belly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**venter** may be inherited, from a Proto-Indo-European *\*wendtri-*, "belly" (EtymDB 2.1), though its relatives in other languages are few and uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

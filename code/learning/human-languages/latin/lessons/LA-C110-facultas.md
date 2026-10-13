@@ -13,7 +13,8 @@ gloss: "a chance, the means to do something"
 concept_tag: LA-CAN110-FACULTAS
 prerequisites: [LA-C109-soleo, LA-C109-potestas]
 sounds: []
-roots: []
+roots: [facultas-latin, facilis-latin, facere-latin]
+etymology_hook: "facultās 'means, chance' — built on facul, an old form of facilis 'easy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C109-potestas]
 <!-- hl-knowledge: introduces=[LA-LEX-C110-CAN110-01]; assesses=[] -->
 
 **facultās, facultātis** — "a chance, the means to do something".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**facultās** is built on *facul*, "easily", an old form of *facilis*, "easy" (Lewis & Short): ease, and so the means to do something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

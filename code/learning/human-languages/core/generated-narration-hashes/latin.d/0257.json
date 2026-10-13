@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 257,
-  "sourceHash": "fnv1a64:25dd28a741f9d393",
+  "sourceHash": "fnv1a64:9ab12be06c278d5d",
   "lessonIds": [
     "LA-C257-mereor",
     "LA-C257-emendo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch257.txt",
   "json": "latin/narration/ch257.json",
-  "textHash": "fnv1a64:3df3fc04ddacba07",
-  "jsonHash": "fnv1a64:3890491856e3c786",
+  "textHash": "fnv1a64:348eeb53665cf068",
+  "jsonHash": "fnv1a64:ff04e41805f20a8f",
   "findings": []
 }

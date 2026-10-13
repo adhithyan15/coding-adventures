@@ -13,7 +13,8 @@ gloss: "cruel"
 concept_tag: LA-QUAL151-CRUDELIS
 prerequisites: [LA-C151-superbus, LA-C151-benignus]
 sounds: []
-roots: []
+roots: [crudelis-latin, crudus-latin]
+etymology_hook: "crūdēlis 'cruel' — built on crūdus 'raw, bloody'; English raw is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C151-benignus]
 <!-- hl-knowledge: introduces=[LA-LEX-C151-QUAL151-03]; assesses=[] -->
 
 **crūdēlis, crūdēle** — "cruel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crūdēlis** is built on *crūdus*, "raw, bloody" (Lewis & Short), usually traced to Proto-Indo-European *\*krewh2-*, "raw flesh, blood" (EtymDB 2.1). English *raw* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

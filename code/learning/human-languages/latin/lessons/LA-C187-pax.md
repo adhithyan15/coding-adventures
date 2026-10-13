@@ -13,7 +13,8 @@ gloss: "peace"
 concept_tag: LA-RES187-PAX
 prerequisites: [LA-C186-mensura, LA-C186-libra]
 sounds: []
-roots: []
+roots: [pax-latin]
+etymology_hook: "pāx 'peace' — usually traced to PIE *peh2k- 'to fasten': a pact fixed between sides"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C186-libra]
 <!-- hl-knowledge: introduces=[LA-LEX-C187-RES187-01]; assesses=[] -->
 
 **pāx, pācis** — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pāx** is inherited, usually traced to Proto-Indo-European *\*peh2k-*, "to fasten, to fix" (EtymDB 2.1): peace as a pact fixed between two sides. *pacīscō*, "to make a bargain", is from the same root (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

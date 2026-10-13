@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Days of the Week",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:687e34991125263e",
+  "sourceHash": "fnv1a64:2e271db29cc9dd8f",
   "lessons": [
     {
       "id": "LA-C05-dies-lunae-veneris",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca59cfac9a363477",
+      "sourceHash": "fnv1a64:677af3acbc9002bf",
       "notice": null,
       "blocks": [
         {
@@ -84,6 +84,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diēs Lūnae and its siblings all start from diēs \"day\", which is inherited, usually traced to Proto-Indo-European dyew-, \"sky; to shine\" (EtymDB 2.1). Iovis \"of Jupiter\" belongs to the same root: it stands for an older Diovis, kin to the name of the Greek sky god Zeus (Lewis & Short). Lūna \"moon\" was built on the root of lūceō \"I shine\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

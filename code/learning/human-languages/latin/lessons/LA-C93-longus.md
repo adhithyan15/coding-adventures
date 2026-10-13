@@ -13,7 +13,8 @@ gloss: "long"
 concept_tag: LA-MAGNUS-LONGUS
 prerequisites: [LA-C93-magnus, LA-C93-parvus]
 sounds: []
-roots: []
+roots: [longus-latin]
+etymology_hook: "longus 'long' — inherited, usually traced to PIE *dlongh- 'long'; English long is probably a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C93-parvus]
 <!-- hl-knowledge: introduces=[LA-LEX-C93-MAGNUS-03]; assesses=[] -->
 
 **longus, longa, longum** — "long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**longus** is inherited, usually traced to Proto-Indo-European *\*dlongh-*, "long" (EtymDB 2.1), with the first d lost. English *long* is probably a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

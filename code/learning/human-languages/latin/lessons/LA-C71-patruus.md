@@ -13,7 +13,8 @@ gloss: "an uncle (father's brother)"
 concept_tag: LA-FAMILIA2-PATRUUS
 prerequisites: [LA-C71-liberi, LA-C71-infans]
 sounds: []
-roots: []
+roots: [patruus-latin, pater-latin]
+etymology_hook: "patruus 'father's brother' — built on pater 'father', from PIE *ph2ter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C71-infans]
 <!-- hl-knowledge: introduces=[LA-LEX-C71-FAMILIA2-05]; assesses=[] -->
 
 **patruus, patruī** — "an uncle (father's brother)". Built on **pater**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patruus** is built on *pater*, "father" (Lewis & Short): the uncle on the father's side. *pater* is usually traced to Proto-Indo-European *\*ph2ter*, "father" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

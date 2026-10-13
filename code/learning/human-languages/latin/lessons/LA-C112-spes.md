@@ -13,7 +13,8 @@ gloss: "hope"
 concept_tag: LA-WANT112-SPES
 prerequisites: [LA-C111-voluntas, LA-C112-cupiditas, LA-C36-practice, LA-C34-bonum-vesperum]
 sounds: []
-roots: []
+roots: [spes-latin]
+etymology_hook: "spēs 'hope' — inherited, usually traced to PIE *speh1- 'to prosper'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [LA-C112-cupiditas]
 <!-- hl-knowledge: introduces=[LA-LEX-C112-WANT112-02]; assesses=[] -->
 
 **spēs, speī** — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spēs** is inherited, usually traced to Proto-Indo-European *\*speh1-*, "to prosper, to turn out well" (EtymDB 2.1). *prosperus*, "favourable", and English *speed*, which once meant "success", are often given as cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

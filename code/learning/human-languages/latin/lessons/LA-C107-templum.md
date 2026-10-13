@@ -13,7 +13,8 @@ gloss: "a temple"
 concept_tag: LA-URBS-TEMPLUM
 prerequisites: [LA-C107-oppidum, LA-C107-forum]
 sounds: []
-roots: []
+roots: [templum-latin]
+etymology_hook: "templum 'temple' — first a marked-out space; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C107-forum]
 <!-- hl-knowledge: introduces=[LA-LEX-C107-URBS-04]; assesses=[] -->
 
 **templum, templī** — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**templum** first meant a space marked out for watching the sky. Its origin is uncertain: Lewis & Short link it with Greek *temnō*, "to cut", and *temenos*, "a sacred precinct"; EtymDB 2.1 traces it to a root *\*temp-*, "to stretch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

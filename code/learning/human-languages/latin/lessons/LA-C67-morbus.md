@@ -13,7 +13,8 @@ gloss: "an illness, a disease"
 concept_tag: LA-MORBUS-MORBUS
 prerequisites: [LA-C67-dolor, LA-C67-medicina]
 sounds: []
-roots: []
+roots: [morbus-latin]
+etymology_hook: "morbus 'illness' — origin uncertain; often linked to PIE *mer- 'to die'; English morbid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C67-medicina]
 <!-- hl-knowledge: introduces=[LA-LEX-C67-MORBUS-05]; assesses=[] -->
 
 **morbus, morbī** — "an illness, a disease". English *morbid*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**morbus** has no certain origin. It is often linked with *morior*, "to die" (Lewis & Short), and EtymDB 2.1 traces it to Proto-Indo-European *\*mer-*, "to die", but the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

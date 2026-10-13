@@ -13,7 +13,8 @@ gloss: "a thumb"
 concept_tag: LA-THINGS136-POLLEX
 prerequisites: [LA-C135-dorsum, LA-C136-cubitum]
 sounds: []
-roots: []
+roots: [pollex-latin]
+etymology_hook: "pollex 'thumb' — Romans linked it with polleō 'to be strong'; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C136-cubitum]
 <!-- hl-knowledge: introduces=[LA-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **pollex, pollicis** — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pollex** was linked by the Romans with *polleō*, "to be strong" (Lewis & Short): the strongest finger. Modern scholars are less sure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

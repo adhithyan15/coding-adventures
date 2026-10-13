@@ -4,6 +4,8 @@
 
 ### Changed
 
+- `tests/launched.rs` launches a `BrokerProgram`, the launcher's new
+  program type (D18S P2.7b).
 - The process entry point moved from the binary into the library as
   `process::run_inherited` (D18S P2.6d-2c). Every binary that runs a broker,
   the production one and each test fixture, is now one call to it, instead

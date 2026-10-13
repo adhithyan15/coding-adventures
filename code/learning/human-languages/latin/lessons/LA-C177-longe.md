@@ -13,7 +13,8 @@ gloss: "far, by far"
 concept_tag: LA-LOC177-LONGE
 prerequisites: [LA-C176-semel, LA-C176-bis]
 sounds: []
-roots: []
+roots: [longe-latin, longus-latin]
+etymology_hook: "longē 'far, by far' — the adverb of longus 'long'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C176-bis]
 <!-- hl-knowledge: introduces=[LA-LEX-C177-LOC177-01]; assesses=[] -->
 
 **longē** — "far, by far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**longē** is the adverb of *longus*, "long" (Lewis & Short), with *-ē*, the adverb ending: at length, far off, and so by far.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

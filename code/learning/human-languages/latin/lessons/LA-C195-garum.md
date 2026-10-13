@@ -13,7 +13,8 @@ gloss: "fish sauce"
 concept_tag: LA-RES195-GARUM
 prerequisites: [LA-C195-libum, LA-C195-acetum]
 sounds: []
-roots: []
+roots: [garum-latin]
+etymology_hook: "garum 'fish sauce' — borrowed from Greek garon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C195-acetum]
 <!-- hl-knowledge: introduces=[LA-LEX-C195-RES195-03]; assesses=[] -->
 
 **garum, garī** — "fish sauce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**garum** was borrowed from Greek *garon*, "fish sauce" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

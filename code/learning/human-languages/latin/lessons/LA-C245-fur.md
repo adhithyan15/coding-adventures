@@ -13,7 +13,8 @@ gloss: "a thief"
 concept_tag: LA-RES245-FUR
 prerequisites: [LA-C244-thermae, LA-C244-amphitheatrum]
 sounds: []
-roots: []
+roots: [fur-latin]
+etymology_hook: "fūr 'thief' — usually traced to PIE *bhōr 'thief'; Greek phōr is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C244-amphitheatrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C245-RES245-01]; assesses=[] -->
 
 **fūr, fūris** — "a thief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fūr** is inherited, usually traced to Proto-Indo-European *\*bhōr*, "thief" (EtymDB 2.1), from the root of *ferō*, "to carry"; Greek *phōr*, "thief", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

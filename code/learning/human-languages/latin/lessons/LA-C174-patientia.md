@@ -13,7 +13,8 @@ gloss: "patience"
 concept_tag: LA-VALE174-PATIENTIA
 prerequisites: [LA-C173-iecur, LA-C173-ren]
 sounds: []
-roots: []
+roots: [patientia-latin, pati-latin]
+etymology_hook: "patientia 'patience' — built on patior 'to suffer', through patiēns 'enduring'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C173-ren]
 <!-- hl-knowledge: introduces=[LA-LEX-C174-VALE174-01]; assesses=[] -->
 
 **patientia, patientiae** — "patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patientia** is built on *patior*, "to suffer" (Lewis & Short), through *patiēns*, "enduring", with *-ia*, an ending for a quality.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

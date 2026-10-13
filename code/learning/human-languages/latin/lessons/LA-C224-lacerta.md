@@ -13,7 +13,8 @@ gloss: "a lizard"
 concept_tag: LA-RES224-LACERTA
 prerequisites: [LA-C223-spina, LA-C223-seges]
 sounds: []
-roots: []
+roots: [lacerta-latin]
+etymology_hook: "lacerta 'lizard' — origin uncertain; English lizard comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C223-seges]
 <!-- hl-knowledge: introduces=[LA-LEX-C224-RES224-01]; assesses=[] -->
 
 **lacerta, lacertae** — "a lizard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lacerta** has no sure origin; it may be linked with *lacertus*, "the upper arm, a muscle", but that is uncertain. English *lizard* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

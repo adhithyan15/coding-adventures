@@ -13,7 +13,8 @@ gloss: "sometimes"
 concept_tag: LA-TEMP237-INTERDUM
 prerequisites: [LA-C237-finis, LA-C237-mora]
 sounds: []
-roots: []
+roots: [interdum-latin, inter-latin]
+etymology_hook: "interdum 'sometimes' — inter 'between' + dum 'while'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C237-mora]
 <!-- hl-knowledge: introduces=[LA-LEX-C237-TEMP237-03]; assesses=[] -->
 
 **interdum** — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interdum** is *inter*, "between", with *dum*, "while" (Lewis & Short): at times in between.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

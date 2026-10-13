@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 144,
-  "sourceHash": "fnv1a64:458cd0bd4843cf75",
+  "sourceHash": "fnv1a64:1563338353043281",
   "lessonIds": [
     "LA-C144-humilis",
     "LA-C144-crassus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch144.txt",
   "json": "latin/narration/ch144.json",
-  "textHash": "fnv1a64:9eadd5fec4dbc999",
-  "jsonHash": "fnv1a64:3f9f6bd60ba0e4fa",
+  "textHash": "fnv1a64:f273e066bca29cab",
+  "jsonHash": "fnv1a64:1aa888b701224577",
   "findings": []
 }

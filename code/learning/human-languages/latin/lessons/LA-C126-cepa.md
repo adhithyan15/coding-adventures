@@ -13,7 +13,8 @@ gloss: "an onion"
 concept_tag: LA-THINGS126-CEPA
 prerequisites: [LA-C126-zona, LA-C126-pomum]
 sounds: []
-roots: []
+roots: [cepa-latin]
+etymology_hook: "cēpa 'onion' — also caepa; origin unknown; English chive comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C126-pomum]
 <!-- hl-knowledge: introduces=[LA-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **cēpa, cēpae** — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cēpa**, also spelled *caepa* (Lewis & Short), has no sure origin. English *chive* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

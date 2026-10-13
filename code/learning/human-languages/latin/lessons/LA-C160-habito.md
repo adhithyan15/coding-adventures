@@ -13,7 +13,8 @@ gloss: "to live (somewhere)"
 concept_tag: LA-VERB-HABITO
 prerequisites: [LA-C160-discedo, LA-C160-advenio, LA-C59-dies-meus]
 sounds: []
-roots: []
+roots: [habitare-latin, habere-latin]
+etymology_hook: "habitō 'to live somewhere' — a frequentative of habeō 'to have, to hold'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [LA-C160-advenio]
 <!-- hl-knowledge: introduces=[LA-LEX-C160-ACT160-05]; assesses=[] -->
 
 **habitō, habitāre** — "to live (somewhere)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**habitō** is a frequentative of *habeō*, "to have, to hold" (Lewis & Short): to keep holding a place, so to dwell.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

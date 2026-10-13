@@ -13,7 +13,8 @@ gloss: "a tunic"
 concept_tag: LA-VESTIS-TUNICA
 prerequisites: [LA-C108-villa, LA-C108-vestis]
 sounds: []
-roots: []
+roots: [tunica-latin]
+etymology_hook: "tunica 'tunic' — probably an eastern Mediterranean loan, like Greek khitōn"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C108-vestis]
 <!-- hl-knowledge: introduces=[LA-LEX-C108-VESTIS-04]; assesses=[] -->
 
 **tunica, tunicae** — "a tunic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tunica** is probably a loan from the eastern Mediterranean: it is often compared with Greek *khitōn*, "tunic", and with Semitic words for a linen garment.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

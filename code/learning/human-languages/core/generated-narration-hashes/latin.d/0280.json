@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 280,
-  "sourceHash": "fnv1a64:6d5496d3206dfa8d",
+  "sourceHash": "fnv1a64:1ccbf838ee059d56",
   "lessonIds": [
     "LA-C280-turris",
     "LA-C280-columna",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch280.txt",
   "json": "latin/narration/ch280.json",
-  "textHash": "fnv1a64:b06a70e8b535744a",
-  "jsonHash": "fnv1a64:a6ebd4dddb28e1b3",
+  "textHash": "fnv1a64:87e7ef4ffce7dca0",
+  "jsonHash": "fnv1a64:72d302ffb0024daa",
   "findings": []
 }

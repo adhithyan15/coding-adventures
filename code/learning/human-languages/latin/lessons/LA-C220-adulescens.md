@@ -13,7 +13,8 @@ gloss: "a young person"
 concept_tag: LA-RES220-ADULESCENS
 prerequisites: [LA-C220-libertus, LA-C220-advena]
 sounds: []
-roots: []
+roots: [adulescens-latin, adolescere-latin, alere-latin]
+etymology_hook: "adulēscēns 'young person' — the participle of adolēscō 'to grow up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C220-advena]
 <!-- hl-knowledge: introduces=[LA-LEX-C220-RES220-04]; assesses=[] -->
 
 **adulēscēns, adulēscentis** — "a young person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adulēscēns** is the present participle of *adolēscō*, "to grow up": growing up. *adolēscō* is built on *alō*, "to nourish". English *adolescent* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a gaming die; a token"
 concept_tag: LA-RES193-TESSERA
 prerequisites: [LA-C193-tympanum, LA-C193-talus]
 sounds: []
-roots: []
+roots: [tessera-latin]
+etymology_hook: "tessera 'die, token' — from Greek tesseres 'four': a square piece"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C193-talus]
 <!-- hl-knowledge: introduces=[LA-LEX-C193-RES193-03]; assesses=[] -->
 
 **tessera, tesserae** — "a gaming die; a token".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tessera** comes from Greek *tesseres*, "four" (Lewis & Short): a square piece, with four corners. English *tessellated*, "made of small square tiles", comes from its diminutive.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

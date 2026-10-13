@@ -212,18 +212,22 @@ key and serves no channel operation, so:
   startup (`ChannelKeysNeedBroker`);
 - a host bound to a channel never launches without a broker
   (`ChannelsNeedBroker` from the supervisor);
-- off Linux, where `[hosts.broker]` is refused, `channel_keys` cannot be
-  configured yet.
+- on macOS the table must also pin the Seatbelt shim that confines the
+  broker (`seatbelt_shim`, `seatbelt_shim_sha256`; D18S P2.7b), or startup
+  stops (`BrokerShimMissing`);
+- elsewhere, off Linux and macOS, `[hosts.broker]` is refused, so
+  `channel_keys` cannot be configured yet.
 
 ```text
 [data_plane] channel_keys ─▶ broker_key_files    (read: 1 slot, write: 2)
-[hosts.broker] sha256     ─▶ VerifiedExecutable  (startup: wrong bytes stop the daemon)
+[hosts.broker] sha256     ─▶ BrokerProgram       (startup: wrong bytes stop the daemon;
+  (+ seatbelt_shim on macOS)                      on macOS the shim is verified too)
                           ─▶ ChannelBrokers ─▶ ProcessHostSupervisor
 ```
 
 The daemon opens no key file here. The launcher opens an agent's files,
 owner-only or refused, when it launches that agent's broker, and passes
-them by descriptor. Off Linux the table is refused at startup
+them by descriptor. Off Linux and macOS the table is refused at startup
 (`BrokerUnsupported`), because there is no verified launch there yet.
 
 Each broker runs confined (P2.6d-3): it can open no file by path, and has

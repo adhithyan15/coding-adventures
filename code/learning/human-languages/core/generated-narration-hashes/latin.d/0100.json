@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 100,
-  "sourceHash": "fnv1a64:84f17bc144690e2f",
+  "sourceHash": "fnv1a64:c8a04c67a280c345",
   "lessonIds": [
     "LA-C100-pugno",
     "LA-C100-navigo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch100.txt",
   "json": "latin/narration/ch100.json",
-  "textHash": "fnv1a64:1bde7568b26e011d",
-  "jsonHash": "fnv1a64:8dde09cacdc418f6",
+  "textHash": "fnv1a64:da31fb9ebae85be2",
+  "jsonHash": "fnv1a64:f402c30b101bb98c",
   "findings": []
 }

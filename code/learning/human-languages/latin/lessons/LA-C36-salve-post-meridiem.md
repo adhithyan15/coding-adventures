@@ -13,7 +13,7 @@ sounds: [macron-long-vowel, v-as-w]
 roots: [medius-latin, dies-latin]
 etymology_hook: "bonum post merīdiem cannot work like bonam noctem because post merīdiem is a prepositional phrase, not a noun; bonum tempus pōmerīdiānum is grammatical but is not attested as a greeting"
 duration:
-  max_seconds: 240
+  max_seconds: 249
 requires:
   knowledge: [LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
 introduces:
@@ -58,6 +58,11 @@ agree with. A three-word workaround, **bonum tempus pōmerīdiānum**
 **periphrasis**, not a direct two-word match for the other three
 phrases — and it isn't itself attested anywhere as something Romans
 actually said as a greeting.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pōmerīdiānus** "of the afternoon" was built inside Latin from *post* "after" and *merīdiānus* "of midday" (Lewis & Short).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-SALVE-POST-MERIDIEM-01] -->

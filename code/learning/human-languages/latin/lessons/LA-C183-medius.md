@@ -13,7 +13,8 @@ gloss: "middle, the middle of"
 concept_tag: LA-QUAL183-MEDIUS
 prerequisites: [LA-C183-celeber, LA-C183-honestus]
 sounds: []
-roots: []
+roots: [medius-latin]
+etymology_hook: "medius 'middle' — inherited, usually traced to PIE *medhyos 'middle'; English mid is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C183-honestus]
 <!-- hl-knowledge: introduces=[LA-LEX-C183-QUAL183-04]; assesses=[] -->
 
 **medius, media, medium** — "middle, the middle of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medius** is inherited, usually traced to Proto-Indo-European *\*medhyos*, "middle" (EtymDB 2.1); Greek *mesos*, "middle", and English *mid* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a comb"
 concept_tag: LA-THINGS140-PECTEN
 prerequisites: [LA-C139-fax, LA-C139-lanterna]
 sounds: []
-roots: []
+roots: [pecten-latin, pectere-latin]
+etymology_hook: "pecten 'comb' — built on pectō 'to comb', from PIE *pek- 'to pluck'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C139-lanterna]
 <!-- hl-knowledge: introduces=[LA-LEX-C140-THINGS140-01]; assesses=[] -->
 
 **pecten, pectinis** — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pecten** is built on *pectō*, "to comb" (Lewis & Short), and is usually traced to Proto-Indo-European *\*pek-*, "to pluck wool or hair" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

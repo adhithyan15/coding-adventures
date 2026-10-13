@@ -13,7 +13,8 @@ gloss: "meat"
 concept_tag: LA-CIBUS1-CARO
 prerequisites: [LA-C79-prandium, LA-C79-ientaculum]
 sounds: []
-roots: []
+roots: [caro-latin]
+etymology_hook: "carō 'meat' — inherited, usually traced to PIE *(s)ker- 'to cut'; English carnivore"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C79-ientaculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C79-CIBUS1-05]; assesses=[] -->
 
 **carō, carnis** — "meat". English *carnivore*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carō** is inherited, usually traced to Proto-Indo-European *\*(s)ker-*, "to cut" (EtymDB 2.1): meat as a cut piece.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a fold of a garment; a bay"
 concept_tag: LA-RES225-SINUS
 prerequisites: [LA-C225-vestimentum, LA-C225-solea]
 sounds: []
-roots: []
+roots: [sinus-latin]
+etymology_hook: "sinus 'fold, bay' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C225-solea]
 <!-- hl-knowledge: introduces=[LA-LEX-C225-RES225-04]; assesses=[] -->
 
 **sinus, sinūs** — "a fold of a garment; a bay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sinus** has no sure origin; no proposal is generally accepted. English *sinus*, a hollow in a bone, is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

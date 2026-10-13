@@ -84,6 +84,25 @@ const TEST_SEED: [u8; 32] = [73; 32];
 /// The per-agent channel broker (D18S P2.6d), built in this crate.
 #[cfg(unix)]
 const BROKER: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-broker");
+/// On macOS, the shim that confines it (D18S P2.7b), pinned the same way.
+#[cfg(target_os = "macos")]
+const SHIM: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-seatbelt-shim");
+
+/// The `[hosts.broker]` lines that pin the Seatbelt shim: required on
+/// macOS, and absent elsewhere.
+#[cfg(unix)]
+fn seatbelt_shim_lines() -> String {
+    #[cfg(target_os = "macos")]
+    {
+        let digest: String = coding_adventures_sha256::sha256(&fs::read(SHIM).unwrap())
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect();
+        format!("seatbelt_shim = \"{SHIM}\"\nseatbelt_shim_sha256 = \"{digest}\"\n")
+    }
+    #[cfg(not(target_os = "macos"))]
+    String::new()
+}
 const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports a forecast for a requested city.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n\n## Tool capabilities needed\n- none\n";
 
 fn uuid_v7(last: u8) -> [u8; 16] {
@@ -737,6 +756,7 @@ fn production_composition_runs_tool_turn_through_d23_and_home_assistant_readback
         .iter()
         .map(|byte| format!("{byte:02x}"))
         .collect();
+    let shim = seatbelt_shim_lines();
 
     let config = parse_config(&format!(
         r#"
@@ -760,7 +780,7 @@ graceful_stop_timeout = 3000
 [hosts.broker]
 executable = "{broker}"
 sha256 = "{broker_digest}"
-
+{shim}
 [vault]
 storage_path = "~/vault"
 default_lease_ttl = 30
@@ -789,8 +809,13 @@ ollama_models = [
         match compose_channel_brokers(&config, &home.0, Arc::clone(&backend), Arc::clone(&clock)) {
             Ok(brokers) => brokers.expect("a broker for the channel keys"),
             // No verified broker launch here yet: the daemon would not start,
-            // so there is no turn to run (D18S P2.6d-2c).
-            Err(ChiefDaemonError::BrokerUnsupported) if !cfg!(target_os = "linux") => return,
+            // so there is no turn to run (D18S P2.6d-2c). Linux and macOS
+            // (P2.7b) both have one.
+            Err(ChiefDaemonError::BrokerUnsupported)
+                if !cfg!(any(target_os = "linux", target_os = "macos")) =>
+            {
+                return
+            }
             Err(error) => panic!("broker composition failed: {error}"),
         };
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));

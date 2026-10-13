@@ -13,7 +13,8 @@ gloss: "a writer"
 concept_tag: LA-RES246-SCRIPTOR
 prerequisites: [LA-C246-carmen, LA-C246-versus]
 sounds: []
-roots: []
+roots: [scriptor-latin, scribere-latin]
+etymology_hook: "scrīptor 'writer' — built on scrībō 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C246-versus]
 <!-- hl-knowledge: introduces=[LA-LEX-C246-RES246-03]; assesses=[] -->
 
 **scrīptor, scrīptōris** — "a writer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scrīptor** is built on *scrībō*, "to write" (Lewis & Short), with *-tor*, "one who does it". *scrībō* is usually traced to Proto-Indo-European *\*(s)kreybh-*, "to scratch, to cut" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to work"
 concept_tag: LA-VERB-LABORO
 prerequisites: [LA-C74-agricola, LA-C74-ager]
 sounds: []
-roots: []
+roots: [laborare-latin, labor-latin]
+etymology_hook: "labōrō 'to work' — built on labor 'toil', whose own origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C74-ager]
 <!-- hl-knowledge: introduces=[LA-LEX-C75-VERBA1-01]; assesses=[] -->
 
 **labōrō, labōrāre** — "to work". English *labour*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**labōrō** is built on *labor*, "toil, effort" (Lewis & Short): to work is to put in *labor*. Where *labor* itself comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

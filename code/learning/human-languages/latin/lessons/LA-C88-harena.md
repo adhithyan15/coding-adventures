@@ -13,7 +13,8 @@ gloss: "sand"
 concept_tag: LA-TERRA-HARENA
 prerequisites: [LA-C87-ora, LA-C88-lapis]
 sounds: []
-roots: []
+roots: [harena-latin]
+etymology_hook: "harēna 'sand' — origin uncertain; a Sabine form fasēna is recorded"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C88-lapis]
 <!-- hl-knowledge: introduces=[LA-LEX-C88-TERRA-02]; assesses=[] -->
 
 **harēna, harēnae** — "sand". An *arena* was floored with it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**harēna** has no sure origin. Lewis & Short record a Sabine form *fasēna*, "sand", and the word may have reached Latin from a neighbouring language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

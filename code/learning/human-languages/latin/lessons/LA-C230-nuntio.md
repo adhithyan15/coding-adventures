@@ -13,7 +13,8 @@ gloss: "to announce"
 concept_tag: LA-VERB-NUNTIO
 prerequisites: [LA-C230-comitor, LA-C230-addo]
 sounds: []
-roots: []
+roots: [nuntiare-latin, nuntius-latin]
+etymology_hook: "nūntiō 'to announce' — the verb made from nūntius 'messenger'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C230-addo]
 <!-- hl-knowledge: introduces=[LA-LEX-C230-ACT230-04]; assesses=[] -->
 
 **nūntiō, nūntiāre** — "to announce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūntiō** is the verb made from *nūntius*, "a messenger, news" (Lewis & Short), whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

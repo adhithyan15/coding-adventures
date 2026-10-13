@@ -13,7 +13,8 @@ gloss: "a mouse"
 concept_tag: LA-ANIMALIA3-MUS
 prerequisites: [LA-C91-ursus, LA-C91-serpens]
 sounds: []
-roots: []
+roots: [mus-latin]
+etymology_hook: "mūs 'mouse' — inherited, usually traced to PIE *muh2s 'mouse'; English mouse is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C91-serpens]
 <!-- hl-knowledge: introduces=[LA-LEX-C92-ANIMALIA3-01]; assesses=[] -->
 
 **mūs, mūris** — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mūs** is inherited, usually traced to Proto-Indo-European *\*muh2s*, "mouse" (EtymDB 2.1). Greek *mys*, "mouse" (Lewis & Short), and English *mouse* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

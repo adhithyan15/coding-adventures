@@ -12,6 +12,9 @@ Before the new one: say the Latin for a whirlpool; the top, then the Latin for o
 You'll want to know: dēcernō, dēcernere.
 dēcernō, dēcernere — "to decree, to settle".
 
+The word, taken apart.
+dēcernō is dē, "down, off", with cernō, "to sift, to decide" (EtymDB 2.1): to decide finally. cernō is usually traced to Proto-Indo-European krey-, "to sift" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for order, a row, then the Latin for to decree
 
 You'll want to know: temptō, temptāre.
 temptō, temptāre — "to try, to test".
+
+The word, taken apart.
+temptō, also spelled tentō (EtymDB 2.1), is often taken as a frequentative of teneō, "to hold", but its origin is uncertain. English tempt and attempt come from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to decree, then the Latin for to try.
 You'll want to know: pergō, pergere.
 pergō, pergere — "to go on, to continue".
 
+The word, taken apart.
+pergō is contracted from per, "through", and regō, "to direct" (Lewis & Short): to keep on one's course.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to try, then the Latin for to go on.
 You'll want to know: cessō, cessāre.
 cessō, cessāre — "to hold off, to be idle".
 
+The word, taken apart.
+cessō is a frequentative of cēdō, "to go, to give way" (Lewis & Short): to keep giving way, so to hang back. English cease comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to go on, then the Latin for to hold off.
 
 You'll want to know: removeō, removēre.
 removeō, removēre — "to remove".
+
+The word, taken apart.
+removeō is re-, "back, away", with moveō, "to move" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

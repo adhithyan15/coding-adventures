@@ -13,7 +13,8 @@ gloss: "lame"
 concept_tag: LA-QUAL184-CLAUDUS
 prerequisites: [LA-C184-facundus, LA-C184-mutus]
 sounds: []
-roots: []
+roots: [claudus-latin]
+etymology_hook: "claudus 'lame' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C184-mutus]
 <!-- hl-knowledge: introduces=[LA-LEX-C184-QUAL184-05]; assesses=[] -->
 
 **claudus, clauda, claudum** — "lame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**claudus** has no sure origin; Lewis & Short link it with *claudō*, "to shut, to hem in", but that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

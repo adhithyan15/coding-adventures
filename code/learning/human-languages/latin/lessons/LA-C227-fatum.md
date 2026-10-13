@@ -13,7 +13,8 @@ gloss: "fate"
 concept_tag: LA-RES227-FATUM
 prerequisites: [LA-C226-quaestio, LA-C226-responsum]
 sounds: []
-roots: []
+roots: [fatum-latin, fari-latin]
+etymology_hook: "fātum 'fate' — from fārī 'to speak': what has been spoken"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C226-responsum]
 <!-- hl-knowledge: introduces=[LA-LEX-C227-RES227-01]; assesses=[] -->
 
 **fātum, fātī** — "fate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fātum** is the past participle of *fārī*, "to speak" (EtymDB 2.1), used as a noun: what has been spoken, the word of the gods.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "fear"
 concept_tag: LA-AFFECTUS-TIMOR
 prerequisites: [LA-C69-gaudium, LA-C69-ira]
 sounds: []
-roots: []
+roots: [timor-latin, timere-latin]
+etymology_hook: "timor 'fear' — built on timeō 'to fear', whose own origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C69-ira]
 <!-- hl-knowledge: introduces=[LA-LEX-C69-AFFECTUS-03]; assesses=[] -->
 
 **timor, timōris** — "fear". English *timid*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**timor** is built on *timeō*, "to fear" (EtymDB 2.1), with the ending *-or*, "a state". Where *timeō* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

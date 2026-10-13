@@ -13,7 +13,8 @@ gloss: "other, another"
 concept_tag: LA-QUAL242-ALIUS
 prerequisites: [LA-C242-totus, LA-C242-ceteri]
 sounds: []
-roots: []
+roots: [alius-latin]
+etymology_hook: "alius 'other' — inherited, usually traced to PIE *h2elyos 'other'; English else is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C242-ceteri]
 <!-- hl-knowledge: introduces=[LA-LEX-C242-QUAL242-05]; assesses=[] -->
 
 **alius, alia, aliud** — "other, another".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alius** is inherited, usually traced to Proto-Indo-European *\*h2elyos*, "other" (EtymDB 2.1); Greek *allos*, "other", and English *else* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

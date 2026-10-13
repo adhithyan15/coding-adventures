@@ -13,7 +13,8 @@ gloss: "a kindness, a favour"
 concept_tag: LA-RES248-BENEFICIUM
 prerequisites: [LA-C248-occasio, LA-C248-periculum]
 sounds: []
-roots: []
+roots: [beneficium-latin, bene-latin, facere-latin]
+etymology_hook: "beneficium 'kindness' — from beneficus 'doing good': bene + faciō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C248-periculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C248-RES248-03]; assesses=[] -->
 
 **beneficium, beneficiī** — "a kindness, a favour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beneficium** is built on *beneficus*, "doing good" (Lewis & Short), from *bene*, "well", and *faciō*, "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a slave, a servant"
 concept_tag: LA-THINGS138-SERVUS
 prerequisites: [LA-C137-pastor, LA-C138-piscator]
 sounds: []
-roots: []
+roots: [servus-latin]
+etymology_hook: "servus 'slave' — origin uncertain; Romans tied it to servō 'to keep'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C138-piscator]
 <!-- hl-knowledge: introduces=[LA-LEX-C138-THINGS138-02]; assesses=[] -->
 
 **servus, servī** — "a slave, a servant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**servus** has no sure origin. Romans tied it to *servō*, "to keep, to save" (Lewis & Short), and an Etruscan source has also been suggested; neither is proven.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

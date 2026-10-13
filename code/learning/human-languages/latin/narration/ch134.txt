@@ -12,6 +12,9 @@ Before the new one: say the Latin for a fox, then the Latin for a bull.
 You'll want to know: vacca, vaccae.
 vacca, vaccae — "a cow".
 
+The word, taken apart.
+vacca is probably inherited, traced to Proto-Indo-European wokeh2, "cow" (EtymDB 2.1); Lewis & Short compare Sanskrit vacā, "cow".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a bull, then the Latin for a cow.
 
 You'll want to know: mūlus, mūlī.
 mūlus, mūlī — "a mule".
+
+The word, taken apart.
+mūlus has no sure origin; Greek myklos, "a donkey" (Lewis & Short), is often compared, and both may come from a language of the Balkans or Asia Minor.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a cow, then the Latin for a mule.
 You'll want to know: camēlus, camēlī.
 camēlus, camēlī — "a camel".
 
+The word, taken apart.
+camēlus was borrowed from Greek kamēlos, "camel" (Lewis & Short), which Greek took from a Semitic word like Hebrew gāmāl, "camel" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a mule, then the Latin for a camel.
 You'll want to know: sīmia, sīmiae.
 sīmia, sīmiae — "a monkey".
 
+The word, taken apart.
+sīmia is built on sīmus, "snub-nosed" (EtymDB 2.1), a word Latin took from Greek simos, "snub-nosed": the monkey as the flat-nosed one.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a camel, then the Latin for a monkey.
 
 You'll want to know: delphīnus, delphīnī.
 delphīnus, delphīnī — "a dolphin".
+
+The word, taken apart.
+delphīnus was borrowed from Greek delphis, delphinos, "dolphin" (Lewis & Short), which may be related to delphys, "womb" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

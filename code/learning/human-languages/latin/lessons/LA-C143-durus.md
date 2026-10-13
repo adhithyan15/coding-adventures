@@ -13,7 +13,8 @@ gloss: "hard"
 concept_tag: LA-QUAL143-DURUS
 prerequisites: [LA-C142-tibia, LA-C142-lyra]
 sounds: []
-roots: []
+roots: [durus-latin]
+etymology_hook: "dūrus 'hard' — origin uncertain; a link with PIE *deru- 'firm' is often proposed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C142-lyra]
 <!-- hl-knowledge: introduces=[LA-LEX-C143-QUAL143-01]; assesses=[] -->
 
 **dūrus, dūra, dūrum** — "hard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dūrus** has no sure origin; Lewis & Short call it doubtful. A link with Proto-Indo-European *\*deru-*, "firm, solid", the root of words for tree, is often proposed (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

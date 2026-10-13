@@ -13,7 +13,8 @@ gloss: "lunch"
 concept_tag: LA-CIBUS1-PRANDIUM
 prerequisites: [LA-C79-cibus, LA-C79-cena]
 sounds: []
-roots: []
+roots: [prandium-latin]
+etymology_hook: "prandium 'lunch' — probably 'the early meal', from an old word for 'early'; the rest is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C79-cena]
 <!-- hl-knowledge: introduces=[LA-LEX-C79-CIBUS1-03]; assesses=[] -->
 
 **prandium, prandiī** — "lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prandium** probably began as "the early meal". Its first part is an old word for "early", which Lewis & Short compare with Doric Greek *prān*, "early". The second part is often taken as the root of *edō*, "to eat", but that is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

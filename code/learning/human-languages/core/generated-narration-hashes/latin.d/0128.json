@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 128,
-  "sourceHash": "fnv1a64:7d96adf3de2a0f76",
+  "sourceHash": "fnv1a64:babe7ea1e5560ae0",
   "lessonIds": [
     "LA-C128-placenta",
     "LA-C128-cervisia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch128.txt",
   "json": "latin/narration/ch128.json",
-  "textHash": "fnv1a64:d4326f60af854d14",
-  "jsonHash": "fnv1a64:5d3e192ad37d156d",
+  "textHash": "fnv1a64:a0c3706b09367293",
+  "jsonHash": "fnv1a64:04d29e1adcf5d533",
   "findings": []
 }

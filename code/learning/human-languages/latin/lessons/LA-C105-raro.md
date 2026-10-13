@@ -13,7 +13,8 @@ gloss: "rarely"
 concept_tag: LA-QUANTUM-RARO
 prerequisites: [LA-C104-nunc, LA-C104-mox]
 sounds: []
-roots: []
+roots: [raro-latin, rarus-latin]
+etymology_hook: "rārō 'rarely' — the adverb of rārus 'thin, scattered, rare'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C104-mox]
 <!-- hl-knowledge: introduces=[LA-LEX-C105-QUANTUM-01]; assesses=[] -->
 
 **rārō** — "rarely". English *rare*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rārō** is the adverb of *rārus*, "thin, scattered, rare" (Lewis & Short). Where *rārus* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

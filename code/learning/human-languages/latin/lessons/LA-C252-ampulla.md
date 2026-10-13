@@ -13,7 +13,8 @@ gloss: "a small flask, a phial"
 concept_tag: LA-RES252-AMPULLA
 prerequisites: [LA-C251-catena, LA-C251-scutum]
 sounds: []
-roots: []
+roots: [ampulla-latin, amphora-latin]
+etymology_hook: "ampulla 'flask' — usually taken as a diminutive of amphora 'jar'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C251-scutum]
 <!-- hl-knowledge: introduces=[LA-LEX-C252-RES252-01]; assesses=[] -->
 
 **ampulla, ampullae** — "a small flask, a phial".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ampulla** is usually taken as a diminutive of *amphora*, "a two-handled jar" (EtymDB 2.1): a little jar. English *ampoule* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

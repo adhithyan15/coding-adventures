@@ -13,7 +13,8 @@ gloss: "an oven"
 concept_tag: LA-RES252-FURNUS
 prerequisites: [LA-C252-ampulla, LA-C252-sartago]
 sounds: []
-roots: []
+roots: [furnus-latin]
+etymology_hook: "furnus 'oven' — usually traced to PIE *gwher- 'warm'; English warm is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C252-sartago]
 <!-- hl-knowledge: introduces=[LA-LEX-C252-RES252-03]; assesses=[] -->
 
 **furnus, furnī** — "an oven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**furnus** is inherited, usually traced to Proto-Indo-European *\*gwhrnos*, "warm, an oven", from *\*gwher-*, "warm, hot" (EtymDB 2.1); English *warm* is a cousin. *fornāx*, "a furnace", is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

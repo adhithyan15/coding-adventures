@@ -13,7 +13,8 @@ gloss: "a fig, a fig tree"
 concept_tag: LA-CIBUS3-FICUS
 prerequisites: [LA-C81-farina, LA-C81-pirum]
 sounds: []
-roots: []
+roots: [ficus-latin]
+etymology_hook: "fīcus 'fig' — origin unknown, perhaps a Mediterranean loan like Greek sykon; English fig"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C81-pirum]
 <!-- hl-knowledge: introduces=[LA-LEX-C81-CIBUS3-04]; assesses=[] -->
 
 **fīcus, fīcī** — "a fig, a fig tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fīcus** has no sure origin. Lewis & Short compare Greek *sykon*, "fig"; both are often taken as loans from an unknown Mediterranean language. English *fig* comes from *fīcus* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

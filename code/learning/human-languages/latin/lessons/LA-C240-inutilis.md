@@ -13,7 +13,8 @@ gloss: "useless"
 concept_tag: LA-QUAL240-INUTILIS
 prerequisites: [LA-C240-ignotus, LA-C240-necessarius]
 sounds: []
-roots: []
+roots: [inutilis-latin, utilis-latin]
+etymology_hook: "inūtilis 'useless' — in- 'not' + ūtilis 'useful'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C240-necessarius]
 <!-- hl-knowledge: introduces=[LA-LEX-C240-QUAL240-05]; assesses=[] -->
 
 **inūtilis, inūtile** — "useless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inūtilis** is *in-*, "not", with *ūtilis*, "useful" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

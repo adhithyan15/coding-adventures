@@ -13,7 +13,8 @@ gloss: "to admire"
 concept_tag: LA-VERB-ADMIROR
 prerequisites: [LA-C170-labor, LA-C170-levo]
 sounds: []
-roots: []
+roots: [admirari-latin, mirari]
+etymology_hook: "admīror 'to admire' — ad 'at' + mīror 'to wonder'; English smile is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C170-levo]
 <!-- hl-knowledge: introduces=[LA-LEX-C170-ACT170-03]; assesses=[] -->
 
 **admīror, admīrārī** — "to admire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**admīror** is *ad*, "at", with *mīror*, "to wonder" (EtymDB 2.1), from *mīrus*, "wonderful", usually traced to Proto-Indo-European *\*(s)meyh2-*, "to smile, to be astonished" (EtymDB 2.1). English *smile* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

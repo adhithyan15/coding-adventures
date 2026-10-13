@@ -12,6 +12,9 @@ Before the new one: say the Latin for a rumour, then the Latin for history.
 You'll want to know: lībum, lībī.
 lībum, lībī — "a cake".
 
+The word, taken apart.
+lībum has no sure origin; Varro tied it to lībō, "to pour out an offering" (Lewis & Short), since such cakes were offered to the gods.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for history, then the Latin for a cake.
 
 You'll want to know: acētum, acētī.
 acētum, acētī — "vinegar".
+
+The word, taken apart.
+acētum is the participle of aceō, "to be sour" (Lewis & Short), with vīnum, "wine", understood: soured wine. aceō belongs with ācer, "sharp".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a cake, then the Latin for vinegar.
 You'll want to know: garum, garī.
 garum, garī — "fish sauce".
 
+The word, taken apart.
+garum was borrowed from Greek garon, "fish sauce" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for vinegar, then the Latin for fish sauce.
 You'll want to know: perna, pernae.
 perna, pernae — "a ham".
 
+The word, taken apart.
+perna is inherited, usually traced to Proto-Indo-European persneh2, "heel" (EtymDB 2.1): first the leg of meat with the heel, then the ham. Gothic fairzna, "heel", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for fish sauce, then the Latin for a ham.
 
 You'll want to know: diēs nātālis, diēī nātālis.
 diēs nātālis, diēī nātālis — "a birthday".
+
+The phrase, taken apart.
+diēs nātālis is diēs, "day", with nātālis, "of one's birth", built on nātus, "born", from nāscor, "to be born". English natal comes from the second word.
 
 What you've built.
 One more word for this chapter.

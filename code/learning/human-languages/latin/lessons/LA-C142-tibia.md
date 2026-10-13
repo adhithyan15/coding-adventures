@@ -13,7 +13,8 @@ gloss: "a flute, a pipe"
 concept_tag: LA-THINGS142-TIBIA
 prerequisites: [LA-C142-aratrum, LA-C142-tintinnabulum]
 sounds: []
-roots: []
+roots: [tibia-latin]
+etymology_hook: "tībia 'pipe' — first 'shin-bone'; origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C142-tintinnabulum]
 <!-- hl-knowledge: introduces=[LA-LEX-C142-THINGS142-04]; assesses=[] -->
 
 **tībia, tībiae** — "a flute, a pipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tībia** first meant the shin-bone: Lewis & Short give *tībia* that sense first. The pipe may have taken its name from pipes made of bone. Where the word comes from is unknown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

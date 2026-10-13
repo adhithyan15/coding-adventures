@@ -13,7 +13,8 @@ gloss: "clear, fine (of weather)"
 concept_tag: LA-QUAL152-SERENUS
 prerequisites: [LA-C152-solus, LA-C152-gelidus]
 sounds: []
-roots: []
+roots: [serenus-latin]
+etymology_hook: "serēnus 'clear' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C152-gelidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C152-QUAL152-05]; assesses=[] -->
 
 **serēnus, serēna, serēnum** — "clear, fine (of weather)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serēnus** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

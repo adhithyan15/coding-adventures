@@ -12,6 +12,9 @@ Before the new one: say the Latin for timid, shy, then the Latin for bold.
 You'll want to know: superbus, superba, superbum.
 superbus, superba, superbum — "proud".
 
+The word, taken apart.
+superbus is built on super, "above" (Lewis & Short): one who sets himself above others. Greek hyperbios, "overbearing", is a close parallel (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for bold, then the Latin for proud.
 
 You'll want to know: benignus, benigna, benignum.
 benignus, benigna, benignum — "kind".
+
+The word, taken apart.
+benignus is usually explained as bene, "well", plus the root of genus, "birth, kind" (Lewis & Short), on the model of malignus, "ill-natured": kindly by nature.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for proud, then the Latin for kind.
 You'll want to know: crūdēlis, crūdēle.
 crūdēlis, crūdēle — "cruel".
 
+The word, taken apart.
+crūdēlis is built on crūdus, "raw, bloody" (Lewis & Short), usually traced to Proto-Indo-European krewh2-, "raw flesh, blood" (EtymDB 2.1). English raw is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for kind, then the Latin for cruel.
 You'll want to know: turpis, turpe.
 turpis, turpe — "ugly, shameful".
 
+The word, taken apart.
+turpis has no sure origin; neither Lewis & Short's comparison nor the root that EtymDB 2.1 records is generally accepted.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for cruel, then the Latin for ugly.
 
 You'll want to know: fōrmōsus, fōrmōsa, fōrmōsum.
 fōrmōsus, fōrmōsa, fōrmōsum — "beautiful".
+
+The word, taken apart.
+fōrmōsus is built on fōrma, "shape, beauty" (Lewis & Short), with -ōsus, "full of": well-shaped. Where fōrma comes from is uncertain; a link with Greek morphē, "shape", is often suggested (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

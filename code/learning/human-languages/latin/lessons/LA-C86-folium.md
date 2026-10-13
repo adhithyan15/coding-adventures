@@ -13,7 +13,8 @@ gloss: "a leaf"
 concept_tag: LA-ARBOR-FOLIUM
 prerequisites: [LA-C86-arbor, LA-C86-flos]
 sounds: []
-roots: []
+roots: [folium-latin]
+etymology_hook: "folium 'leaf' — inherited, usually traced to PIE *bholh3yom 'leaf'; Greek phyllon is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C86-flos]
 <!-- hl-knowledge: introduces=[LA-LEX-C86-ARBOR-03]; assesses=[] -->
 
 **folium, foliī** — "a leaf". English *foliage*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**folium** is inherited, usually traced to Proto-Indo-European *\*bholh3yom*, "leaf" (EtymDB 2.1); Greek *phyllon*, "leaf", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

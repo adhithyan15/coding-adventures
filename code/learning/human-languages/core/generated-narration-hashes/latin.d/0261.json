@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 261,
-  "sourceHash": "fnv1a64:3800a893b9e081da",
+  "sourceHash": "fnv1a64:e04ffd73d2bd1760",
   "lessonIds": [
     "LA-C261-gigno",
     "LA-C261-iubeo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch261.txt",
   "json": "latin/narration/ch261.json",
-  "textHash": "fnv1a64:87ec841ff38ab56b",
-  "jsonHash": "fnv1a64:19faf32307fcd316",
+  "textHash": "fnv1a64:ae1ad76624d2f0a6",
+  "jsonHash": "fnv1a64:71af65153db06829",
   "findings": []
 }

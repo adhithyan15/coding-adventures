@@ -13,7 +13,8 @@ gloss: "a general, an emperor"
 concept_tag: LA-RES245-IMPERATOR
 prerequisites: [LA-C245-latro, LA-C245-consul]
 sounds: []
-roots: []
+roots: [imperator-latin, imperare-latin, parare-latin]
+etymology_hook: "imperātor 'general, emperor' — built on imperō 'to command'; English emperor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C245-consul]
 <!-- hl-knowledge: introduces=[LA-LEX-C245-RES245-04]; assesses=[] -->
 
 **imperātor, imperātōris** — "a general, an emperor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**imperātor** is built on *imperō*, "to command" (EtymDB 2.1), itself *in*, "in, upon", with *parō*, "to prepare, to order", with *-tor*, "one who does it". English *emperor* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

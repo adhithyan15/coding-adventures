@@ -13,7 +13,8 @@ gloss: "a necklace"
 concept_tag: LA-RES193-MONILE
 prerequisites: [LA-C193-tessera, LA-C193-armilla]
 sounds: []
-roots: []
+roots: [monile-latin]
+etymology_hook: "monīle 'necklace' — usually linked with PIE *mon- 'neck'; English mane is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C193-armilla]
 <!-- hl-knowledge: introduces=[LA-LEX-C193-RES193-05]; assesses=[] -->
 
 **monīle, monīlis** — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**monīle** is usually linked with a Proto-Indo-European word *\*mon-*, "neck", seen in Old Irish *muin*, "neck"; English *mane* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

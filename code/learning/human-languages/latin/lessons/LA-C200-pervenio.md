@@ -13,7 +13,8 @@ gloss: "to reach, to arrive at"
 concept_tag: LA-VERB-PERVENIO
 prerequisites: [LA-C199-vito, LA-C200-tollo]
 sounds: []
-roots: []
+roots: [pervenire-latin, venire-latin]
+etymology_hook: "perveniō 'to reach' — per 'through' + veniō 'to come'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C200-tollo]
 <!-- hl-knowledge: introduces=[LA-LEX-C200-ACT200-02]; assesses=[] -->
 
 **perveniō, pervenīre** — "to reach, to arrive at".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perveniō** is *per*, "through", with *veniō*, "to come" (EtymDB 2.1): to come all the way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

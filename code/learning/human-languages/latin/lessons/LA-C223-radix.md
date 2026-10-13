@@ -13,7 +13,8 @@ gloss: "a root"
 concept_tag: LA-RES223-RADIX
 prerequisites: [LA-C223-caligo, LA-C223-aura]
 sounds: []
-roots: []
+roots: [radix-latin]
+etymology_hook: "rādīx 'root' — inherited, usually traced to PIE *wreh2ds 'root'; English radish comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C223-aura]
 <!-- hl-knowledge: introduces=[LA-LEX-C223-RES223-03]; assesses=[] -->
 
 **rādīx, rādīcis** — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rādīx** is inherited, usually traced to Proto-Indo-European *\*wreh2ds*, "root" (EtymDB 2.1); Greek *rhiza*, "root", is a cousin (Lewis & Short), and so is English *wort*, "a plant". English *radish* comes from *rādīx*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

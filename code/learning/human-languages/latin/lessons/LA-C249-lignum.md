@@ -13,7 +13,8 @@ gloss: "wood, timber"
 concept_tag: LA-RES249-LIGNUM
 prerequisites: [LA-C248-officium, LA-C248-labor2]
 sounds: []
-roots: []
+roots: [lignum-latin, legere-latin]
+etymology_hook: "lignum 'wood' — usually traced to legō 'to gather': firewood"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C248-labor2]
 <!-- hl-knowledge: introduces=[LA-LEX-C249-RES249-01]; assesses=[] -->
 
 **lignum, lignī** — "wood, timber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lignum** is usually traced to the root of *legō*, "to gather" (Lewis & Short): what is gathered for the fire, firewood. EtymDB 2.1 gives a reconstructed Proto-Indo-European *\*leg-no-*, "that which is collected".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

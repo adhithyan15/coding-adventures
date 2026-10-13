@@ -13,7 +13,8 @@ gloss: "to deserve, to earn"
 concept_tag: LA-VERB-MEREOR
 prerequisites: [LA-C256-minuo, LA-C256-moneo]
 sounds: []
-roots: []
+roots: [mereri-latin, merere-latin]
+etymology_hook: "mereor 'to deserve' — twin of mereō 'to earn'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C256-moneo]
 <!-- hl-knowledge: introduces=[LA-LEX-C257-ACT257-01]; assesses=[] -->
 
 **mereor, merērī** — "to deserve, to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mereor** is the deponent twin of *mereō*, "to earn, to deserve" (Lewis & Short). It is usually traced to Proto-Indo-European *\*smer-*, "to get a share"; Greek *meiromai*, "to receive one's share", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

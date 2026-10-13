@@ -13,7 +13,8 @@ gloss: "the brain"
 concept_tag: LA-VALE173-CEREBRUM
 prerequisites: [LA-C172-nego, LA-C173-valetudo]
 sounds: []
-roots: []
+roots: [cerebrum-latin]
+etymology_hook: "cerebrum 'brain' — inherited, usually traced to PIE *kerh2s- 'head'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C173-valetudo]
 <!-- hl-knowledge: introduces=[LA-LEX-C173-VALE173-02]; assesses=[] -->
 
 **cerebrum, cerebrī** — "the brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cerebrum** is inherited from Proto-Italic *\*kerazrom*, "brain", usually traced to Proto-Indo-European *\*kerh2s-*, "head" (EtymDB 2.1); Greek *karē*, "head", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

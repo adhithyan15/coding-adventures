@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 205,
-  "sourceHash": "fnv1a64:51b2add66f093b69",
+  "sourceHash": "fnv1a64:d435977d998f0094",
   "lessonIds": [
     "LA-C205-vulnus",
     "LA-C205-cicatrix",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch205.txt",
   "json": "latin/narration/ch205.json",
-  "textHash": "fnv1a64:065f9ec8d3ca4939",
-  "jsonHash": "fnv1a64:de65d6c82372a792",
+  "textHash": "fnv1a64:b0ebd7042998f413",
+  "jsonHash": "fnv1a64:ecc842adb3a92038",
   "findings": []
 }

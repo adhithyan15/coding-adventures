@@ -13,7 +13,8 @@ gloss: "light (not heavy)"
 concept_tag: LA-NOVUS-LEVIS
 prerequisites: [LA-C94-novus, LA-C94-vetus]
 sounds: []
-roots: []
+roots: [levis-latin]
+etymology_hook: "levis 'light' — inherited, usually traced to PIE *h1lengwh- 'light'; English light is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C94-vetus]
 <!-- hl-knowledge: introduces=[LA-LEX-C94-NOVUS-03]; assesses=[] -->
 
 **levis, leve** — "light (not heavy)". English *levity*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**levis** is inherited, usually traced to Proto-Indo-European *\*h1lengwh-*, "light in weight" (EtymDB 2.1); Greek *elakhys*, "small", and English *light* are cousins (Lewis & Short). It is a different word from *lēvis*, "smooth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a seed"
 concept_tag: LA-THINGS129-SEMEN
 prerequisites: [LA-C129-ramus, LA-C129-truncus]
 sounds: []
-roots: []
+roots: [semen-latin]
+etymology_hook: "sēmen 'seed' — inherited, usually traced to PIE *seh1- 'to sow'; English seed is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C129-truncus]
 <!-- hl-knowledge: introduces=[LA-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **sēmen, sēminis** — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sēmen** is inherited, usually traced to Proto-Indo-European *\*seh1mn*, "seed", from *\*seh1-*, "to sow" (EtymDB 2.1); *serō*, "to sow", belongs to the same family (Lewis & Short), and English *seed* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

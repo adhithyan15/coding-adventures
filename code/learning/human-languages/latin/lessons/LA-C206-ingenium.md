@@ -13,7 +13,8 @@ gloss: "talent, character"
 concept_tag: LA-VALE206-INGENIUM
 prerequisites: [LA-C206-memoria, LA-C206-sapientia]
 sounds: []
-roots: []
+roots: [ingenium-latin, gignere-latin]
+etymology_hook: "ingenium 'talent' — in + the root of gignō 'to beget': one's inborn nature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C206-sapientia]
 <!-- hl-knowledge: introduces=[LA-LEX-C206-VALE206-04]; assesses=[] -->
 
 **ingenium, ingeniī** — "talent, character".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ingenium** is *in*, "in", with the root of *gignō*, "to beget, to give birth to" (Lewis & Short): what is born in a person, one's nature. English *engine* and *ingenious* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

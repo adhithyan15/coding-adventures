@@ -13,7 +13,8 @@ gloss: "a chicken, a young animal"
 concept_tag: LA-THINGS127-PULLUS
 prerequisites: [LA-C127-pisum, LA-C127-cucumis]
 sounds: []
-roots: []
+roots: [pullus-latin]
+etymology_hook: "pullus 'chick' — inherited, usually traced to PIE *polH- 'young animal'; English foal is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C127-cucumis]
 <!-- hl-knowledge: introduces=[LA-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **pullus, pullī** — "a chicken, a young animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pullus** is inherited, usually traced to Proto-Indo-European *\*polH-*, "young animal" (EtymDB 2.1); Greek *pōlos*, "foal", and English *foal* are cousins (Lewis & Short). English *pullet* comes from *pullus* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

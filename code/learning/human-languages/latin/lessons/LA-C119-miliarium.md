@@ -13,7 +13,8 @@ gloss: "a milestone"
 concept_tag: LA-LOC119-MILIARIUM
 prerequisites: [LA-C118-sepulcrum, LA-C119-area, LA-C58-labels]
 sounds: []
-roots: []
+roots: [miliarium-latin, mille-latin]
+etymology_hook: "mīliārium 'milestone' — built on mīlia 'thousands': a mile was a thousand paces"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [LA-C119-area]
 <!-- hl-knowledge: introduces=[LA-LEX-C119-LOC119-02]; assesses=[] -->
 
 **mīliārium, mīliāriī** — "a milestone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mīliārium** is built on *mīlia*, "thousands", the plural of *mīlle*, "a thousand": a Roman mile was a thousand paces, and a stone marked each one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

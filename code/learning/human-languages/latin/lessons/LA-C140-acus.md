@@ -13,7 +13,8 @@ gloss: "a needle"
 concept_tag: LA-THINGS140-ACUS
 prerequisites: [LA-C140-pecten, LA-C140-forfex]
 sounds: []
-roots: []
+roots: [acus-latin]
+etymology_hook: "acus 'needle' — inherited, usually traced to PIE *h2ek- 'sharp'; kin to ācer 'sharp'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C140-forfex]
 <!-- hl-knowledge: introduces=[LA-LEX-C140-THINGS140-03]; assesses=[] -->
 
 **acus, acūs** — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acus** is inherited, usually traced to Proto-Indo-European *\*h2ek-*, "sharp" (EtymDB 2.1), the root of *ācer*, "sharp" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

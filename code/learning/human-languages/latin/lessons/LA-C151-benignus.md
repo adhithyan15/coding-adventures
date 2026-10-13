@@ -13,7 +13,8 @@ gloss: "kind"
 concept_tag: LA-QUAL151-BENIGNUS
 prerequisites: [LA-C150-audax, LA-C151-superbus]
 sounds: []
-roots: []
+roots: [benignus-latin, bene-latin, genus]
+etymology_hook: "benignus 'kind' — usually explained as bene 'well' + the root of genus 'birth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C151-superbus]
 <!-- hl-knowledge: introduces=[LA-LEX-C151-QUAL151-02]; assesses=[] -->
 
 **benignus, benigna, benignum** — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**benignus** is usually explained as *bene*, "well", plus the root of *genus*, "birth, kind" (Lewis & Short), on the model of *malignus*, "ill-natured": kindly by nature.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for to annoy, then the Latin for to forget.
 You'll want to know: affirmō, affirmāre.
 affirmō, affirmāre — "to state firmly".
 
+The word, taken apart.
+affirmō is ad, "to", with firmō, "to make firm" (EtymDB 2.1), from firmus, "firm": to make a statement firm.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to forget, then the Latin for to state fir
 
 You'll want to know: doleō, dolēre.
 doleō, dolēre — "to hurt, to grieve".
+
+The word, taken apart.
+doleō is inherited, usually traced to Proto-Indo-European delh1-, "to split, to cut" (EtymDB 2.1): pain as a cutting.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to state firmly, then the Latin for to hur
 You'll want to know: ōrnō, ōrnāre.
 ōrnō, ōrnāre — "to decorate".
 
+The word, taken apart.
+ōrnō is often explained as a shortened ordināre, "to put in order", from ōrdō, "a row, an order", but this is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to hurt, then the Latin for to decorate.
 You'll want to know: coniciō, conicere.
 coniciō, conicere — "to throw together; to guess".
 
+The word, taken apart.
+coniciō is con-, "together", with iaciō, "to throw" (EtymDB 2.1): to throw together, then to put facts together, to guess. English conjecture comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to decorate, then the Latin for to throw t
 
 You'll want to know: dēsinō, dēsinere.
 dēsinō, dēsinere — "to cease".
+
+The word, taken apart.
+dēsinō is dē, "off, away", with sinō, "to let, to leave": to leave off.
 
 What you've built.
 One more word for this chapter.

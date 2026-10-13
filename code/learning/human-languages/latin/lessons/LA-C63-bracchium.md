@@ -13,7 +13,8 @@ gloss: "an arm"
 concept_tag: LA-CORPUS1-BRACCHIUM
 prerequisites: [LA-C57-ante, LA-C57-post]
 sounds: []
-roots: []
+roots: [bracchium-latin]
+etymology_hook: "bracchium 'arm' — usually taken as a loan from Greek brakhiōn 'arm'; English bracelet comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C57-post]
 <!-- hl-knowledge: introduces=[LA-LEX-C63-CORPUS1-01]; assesses=[] -->
 
 **bracchium, bracchiī** — "an arm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bracchium** is usually taken as a loan from Greek *brakhiōn*, "arm" (EtymDB 2.1). Lewis & Short only call the two words kindred. English *bracelet* comes from *bracchium* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

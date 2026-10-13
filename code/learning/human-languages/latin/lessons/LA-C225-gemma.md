@@ -13,7 +13,8 @@ gloss: "a gem; a bud"
 concept_tag: LA-RES225-GEMMA
 prerequisites: [LA-C224-agnus, LA-C224-vitulus]
 sounds: []
-roots: []
+roots: [gemma-latin]
+etymology_hook: "gemma 'gem, bud' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C224-vitulus]
 <!-- hl-knowledge: introduces=[LA-LEX-C225-RES225-01]; assesses=[] -->
 
 **gemma, gemmae** — "a gem; a bud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gemma** has no sure origin. It meant both a bud and a precious stone; Lewis & Short note that ancient writers took the stone as the first sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

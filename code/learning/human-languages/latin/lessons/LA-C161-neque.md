@@ -13,7 +13,8 @@ gloss: "and not, nor"
 concept_tag: LA-NEG161-NEQUE
 prerequisites: [LA-C161-nullus, LA-C161-uter]
 sounds: []
-roots: []
+roots: [neque-latin]
+etymology_hook: "neque 'and not' — ne 'not' + -que 'and', from PIE *nekwe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C161-uter]
 <!-- hl-knowledge: introduces=[LA-LEX-C161-NEG161-05]; assesses=[] -->
 
 **neque** — "and not, nor". **neque ... neque** is "neither ... nor": **Neque aquam neque vīnum bibō.** — "I drink neither water nor wine." It is often shortened to **nec**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neque** is *ne*, "not", with *-que*, "and" (Lewis & Short), and is usually traced to Proto-Indo-European *\*nekwe*, "and not, nor" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

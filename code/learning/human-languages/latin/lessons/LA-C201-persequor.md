@@ -13,7 +13,8 @@ gloss: "to pursue"
 concept_tag: LA-VERB-PERSEQUOR
 prerequisites: [LA-C201-corrigo, LA-C201-celebro]
 sounds: []
-roots: []
+roots: [persequi-latin, sequi-latin]
+etymology_hook: "persequor 'to pursue' — per 'through' + sequor 'to follow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C201-celebro]
 <!-- hl-knowledge: introduces=[LA-LEX-C201-ACT201-05]; assesses=[] -->
 
 **persequor, persequī** — "to pursue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**persequor** is *per*, "through", with *sequor*, "to follow" (EtymDB 2.1). *sequor* is usually traced to Proto-Indo-European *\*sekw-*, "to follow" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

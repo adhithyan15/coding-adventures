@@ -13,7 +13,8 @@ gloss: "clever, cunning"
 concept_tag: LA-QUAL267-CALLIDUS
 prerequisites: [LA-C266-iniustus, LA-C267-pinguis]
 sounds: []
-roots: []
+roots: [callidus-latin, callum-latin]
+etymology_hook: "callidus 'clever' — built on calleō 'to be thick-skinned': hardened by experience"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C267-pinguis]
 <!-- hl-knowledge: introduces=[LA-LEX-C267-QUAL267-02]; assesses=[] -->
 
 **callidus, callida, callidum** — "clever, cunning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**callidus** is built on *calleō*, "to be thick-skinned, to be practised" (Lewis & Short), from *callum*, "hard skin": hardened by experience, so shrewd. English *callous* comes from the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

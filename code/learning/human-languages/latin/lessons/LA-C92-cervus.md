@@ -13,7 +13,8 @@ gloss: "a deer, a stag"
 concept_tag: LA-ANIMALIA3-CERVUS
 prerequisites: [LA-C92-asinus, LA-C92-elephantus]
 sounds: []
-roots: []
+roots: [cervus-latin]
+etymology_hook: "cervus 'stag' — inherited, from PIE *kerh2- 'horn': the horned one; English hart is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C92-elephantus]
 <!-- hl-knowledge: introduces=[LA-LEX-C92-ANIMALIA3-05]; assesses=[] -->
 
 **cervus, cervī** — "a deer, a stag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cervus** is inherited, usually traced to Proto-Indo-European *\*krh2wos*, "deer, stag", from *\*kerh2-*, "horn" (EtymDB 2.1): the horned one. *cornū*, "horn", comes from the same root (Lewis & Short), and English *hart* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

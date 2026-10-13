@@ -13,7 +13,8 @@ gloss: "a tree trunk"
 concept_tag: LA-THINGS129-TRUNCUS
 prerequisites: [LA-C128-lilium, LA-C129-ramus]
 sounds: []
-roots: []
+roots: [truncus-latin]
+etymology_hook: "truncus 'trunk' — the adjective truncus 'cut off', used as a noun; English trunk"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C129-ramus]
 <!-- hl-knowledge: introduces=[LA-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **truncus, truncī** — "a tree trunk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**truncus** is the adjective *truncus*, "cut off, maimed" (Lewis & Short), used as a noun: the stem of a tree, without its branches. English *trunk* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

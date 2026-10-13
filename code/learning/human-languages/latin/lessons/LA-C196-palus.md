@@ -13,7 +13,8 @@ gloss: "a marsh"
 concept_tag: LA-RES196-PALUS
 prerequisites: [LA-C195-dies-natalis, LA-C196-fluvius]
 sounds: []
-roots: []
+roots: [palus-latin]
+etymology_hook: "palūs 'marsh' — origin uncertain; not the same word as pālus 'stake'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C196-fluvius]
 <!-- hl-knowledge: introduces=[LA-LEX-C196-RES196-02]; assesses=[] -->
 
 **palūs, palūdis** — "a marsh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**palūs**, *palūdis*, has no sure origin; Lewis & Short compare Greek *pēlos*, "mud". It is a different word from *pālus*, "a stake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

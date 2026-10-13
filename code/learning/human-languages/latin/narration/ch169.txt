@@ -12,6 +12,9 @@ Before the new one: say the Latin for to lend, then the Latin for to propose.
 You'll want to know: interficiō, interficere.
 interficiō, interficere — "to kill".
 
+The word, taken apart.
+interficiō is inter, "between", with faciō, "to make" (Lewis & Short): first to put out of the way, then to kill.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to propose, then the Latin for to kill.
 
 You'll want to know: cōnsuēscō, cōnsuēscere.
 cōnsuēscō, cōnsuēscere — "to get used to".
+
+The word, taken apart.
+cōnsuēscō is con-, "thoroughly", with suēscō, "to become used to" (EtymDB 2.1). suēscō is usually traced to the reflexive swe-, "one's own": to make something one's own.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to kill, then the Latin for to get used to
 You'll want to know: properō, properāre.
 properō, properāre — "to make haste".
 
+The word, taken apart.
+properō is built on properus, "quick, hasty" (Lewis & Short), which is often explained as pro-, "forward", plus the root of parō, "to make ready".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to get used to, then the Latin for to make
 You'll want to know: recēdō, recēdere.
 recēdō, recēdere — "to move back, to withdraw".
 
+The word, taken apart.
+recēdō is re-, "back", with cēdō, "to go" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to make haste, then the Latin for to move 
 
 You'll want to know: appropinquō, appropinquāre.
 appropinquō, appropinquāre — "to approach".
+
+The word, taken apart.
+appropinquō is ad, "to", with propinquō, "to come near" (EtymDB 2.1), from propinquus, "near", built on prope, "near".
 
 What you've built.
 One more word for this chapter.

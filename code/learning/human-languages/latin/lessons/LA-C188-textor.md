@@ -13,7 +13,8 @@ gloss: "a weaver"
 concept_tag: LA-RES188-TEXTOR
 prerequisites: [LA-C187-gloria, LA-C188-architectus]
 sounds: []
-roots: []
+roots: [textor-latin, texere-latin]
+etymology_hook: "textor 'weaver' — built on texō 'to weave'; English text, textile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C188-architectus]
 <!-- hl-knowledge: introduces=[LA-LEX-C188-RES188-02]; assesses=[] -->
 
 **textor, textōris** — "a weaver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**textor** is built on *texō*, "to weave" (Lewis & Short), with *-tor*, "one who does it". *texō* is usually traced to Proto-Indo-European *\*teks-*, "to weave, to fashion"; English *text* and *textile* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

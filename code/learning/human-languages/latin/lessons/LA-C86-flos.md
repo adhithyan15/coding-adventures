@@ -13,7 +13,8 @@ gloss: "a flower"
 concept_tag: LA-ARBOR-FLOS
 prerequisites: [LA-C85-anulus, LA-C86-arbor]
 sounds: []
-roots: []
+roots: [flos-latin]
+etymology_hook: "flōs 'flower' — inherited, usually traced to PIE *bhleh3- 'to bloom'; English bloom is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C86-arbor]
 <!-- hl-knowledge: introduces=[LA-LEX-C86-ARBOR-02]; assesses=[] -->
 
 **flōs, flōris** — "a flower". English *floral*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**flōs** is inherited, usually traced to Proto-Indo-European *\*bhleh3-*, "to thrive, to bloom" (EtymDB 2.1). English *bloom* and *blossom* are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

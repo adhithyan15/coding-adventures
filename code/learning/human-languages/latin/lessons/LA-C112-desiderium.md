@@ -13,7 +13,8 @@ gloss: "a longing"
 concept_tag: LA-WANT112-DESIDERIUM
 prerequisites: [LA-C112-cupiditas, LA-C112-spes]
 sounds: []
-roots: []
+roots: [desiderium-latin, desiderare-latin]
+etymology_hook: "dēsīderium 'longing' — built on dēsīderō 'to miss, to long for'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C112-spes]
 <!-- hl-knowledge: introduces=[LA-LEX-C112-WANT112-03]; assesses=[] -->
 
 **dēsīderium, dēsīderiī** — "a longing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēsīderium** is built on *dēsīderō*, "to miss, to long for" (Lewis & Short), whose own origin is unclear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

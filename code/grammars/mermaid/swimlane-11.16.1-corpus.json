@@ -327,6 +327,10 @@
       "source": "swimlane-beta LR\nsubgraph Routing\n  before[Before]\n  pin@{ shape: anchor }\n  after[After]\nend\nbefore --> pin --> after"
     },
     {
+      "name": "rect-with-title-shape",
+      "source": "swimlane-beta LR\nsubgraph State\n  before[Before]\n  item@{ shape: rectWithTitle, label: \"Details\" }\n  after[After]\nend\nbefore --> item --> after"
+    },
+    {
       "name": "legacy-internal-shape-aliases",
       "source": "swimlane-beta LR\nsubgraph Legacy\n  process@{ shape: squareRect, label: \"Process\" }\n  event@{ shape: roundedRect, label: \"Event\" }\n  start@{ shape: stateStart }\n  stop@{ shape: stateEnd }\n  branch@{ shape: forkJoin }\n  manual@{ shape: inv_trapezoid, label: \"Manual\" }\n  final@{ shape: doublecircle, label: \"Final\" }\n  odd@{ shape: rect_left_inv_arrow, label: \"Odd\" }\nend\nstart --> process --> event --> branch --> manual --> final --> stop\nbranch --> odd --> final"
     },
