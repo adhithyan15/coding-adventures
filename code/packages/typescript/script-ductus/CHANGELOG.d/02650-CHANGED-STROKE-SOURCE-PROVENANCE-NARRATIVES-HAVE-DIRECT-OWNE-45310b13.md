@@ -10,3 +10,6 @@
 - Added a filesystem-level regression gate for strict filenames, regular files,
   one level-1 heading, absence of an index, a stable shared README, and two
   independently discoverable parallel owner additions.
+- Made the existing uppercase pin-name rejection fixture portable to
+  case-insensitive filesystems by removing its lowercase twin before writing
+  the deliberately invalid spelling.
