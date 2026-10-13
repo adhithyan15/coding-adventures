@@ -15,7 +15,7 @@ concept_tag: KA-VERB-KAYDIRISU
 prerequisites: [KA-C161-tilisu, KA-C161-bheti-madu]
 sounds: []
 roots: [dravidian-kaa-guard, dravidian-idu-put]
-etymology_hook: "kāydirisu: native kāy 'to guard, keep' (DEDR 1416) + iḍu 'to put' (DEDR 442)"
+etymology_hook: "kāydirisu: native kāy 'to guard, keep' (DEDR 1416) + irisu 'to place' (DEDR 480)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C161-bheti-madu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಕಾಯ್ದಿರಿಸು** (*kāydirisu*) is native Dravidian: *kāy*, "to guard, keep" (DEDR 1416), and *iḍu*, "to put, place" (DEDR 442), with *-isu*: "to put aside and keep".
+**ಕಾಯ್ದಿರಿಸು** (*kāydirisu*) is native Dravidian: *kāy*, "to guard, keep" (DEDR 1416), and *irisu*, "to cause to stay, place", from *iru*, "to stay" (DEDR 480): "to put aside and keep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

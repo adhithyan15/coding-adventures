@@ -47,7 +47,7 @@ reviews_of: [KA-C213-kote]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಕಲ್ಯಾಣ ಮಂಟಪ** (*kalyāṇa maṇṭapa*) is Sanskrit *kalyāṇa*, "beautiful, lucky", the word for a wedding (CDIAL 2952), and *maṇṭapa*, "open pavilion" (CDIAL 9740): the pavilion for the wedding.
+**ಕಲ್ಯಾಣ ಮಂಟಪ** (*kalyāṇa maṇṭapa*) is Sanskrit *kalyāṇa*, "beautiful, lucky", the word for a wedding (CDIAL 2952), and *maṇṭapa*, "open pavilion" (CDIAL 9740): the pavilion for the wedding. CDIAL notes that *maṇḍapa* may be of non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

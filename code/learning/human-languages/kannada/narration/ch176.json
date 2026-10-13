@@ -4,7 +4,7 @@
   "chapter": 176,
   "title": "For the sake of, Otherwise, Even so, In case, Instead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5de3dca6e038ff71",
+  "sourceHash": "fnv1a64:ae3c60f9f93ba295",
   "lessons": [
     {
       "id": "KA-C176-saluvagi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b11469e4283c4ed",
+      "sourceHash": "fnv1a64:c443d26c1c0781ce",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಸಲುವಾಗಿ (saluvāgi) is saluva, \"for, on behalf of\", with the adverb ending -āgi. The origin of saluva is uncertain; neither DEDR nor CDIAL records it."
+              "text": "ಸಲುವಾಗಿ (saluvāgi) is saluva, \"for, on behalf of\", with the adverb ending -āgi. The origin of saluva is uncertain; neither DEDR nor CDIAL records it. It may belong with sal, \"to pass, be given, be due\", which DEDR 2781 lists."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cdd211f74119543",
+      "sourceHash": "fnv1a64:a6ba14756ab71939",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಒಂದು ವೇಳೆ (ondu vēḷe) is ondu, \"one\" (DEDR 990), native, and vēḷe, \"time\", from Sanskrit velā, \"limit, time\" (CDIAL 12115): \"at one time\", if it so happens."
+              "text": "ಒಂದು ವೇಳೆ (ondu vēḷe) is ondu, \"one\" (DEDR 990), native, and vēḷe, \"time\", from Sanskrit velā, \"limit, time\" (CDIAL 12115): \"at one time\", if it so happens. CDIAL thinks velā probably came into Sanskrit from Dravidian."
             }
           ]
         },

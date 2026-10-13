@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Quick Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3eb5ec068c286675",
+  "sourceHash": "fnv1a64:09c2c4b3c50c3231",
   "lessons": [
     {
       "id": "KA-C87-really",
@@ -291,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b24dab0eb631f4ae",
+      "sourceHash": "fnv1a64:6619e68b5e7731bc",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅಯ್ಯೋ (ayyō) is native Dravidian (DEDR 196). DEDR lists ayyō, an interjection of grief, under ayya, \"father, master\". DEDR 196 compares, with a query, Sanskrit ārya and aye."
+              "text": "ಅಯ್ಯೋ (ayyō) is native Dravidian (DEDR 196). DEDR lists ayyō, a cry of grief, wonder or pity, in the part of that entry that holds the cries, beside Tamil aiyō and Telugu ayyō. It compares Sanskrit aye, a cry of surprise."
             }
           ]
         },

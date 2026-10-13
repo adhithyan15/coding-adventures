@@ -47,7 +47,7 @@ reviews_of: [KA-C150-gudisu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಕಟ್ಟು** (*kaṭṭu*) is native Dravidian, one word with Tamil *kaṭṭu* and Telugu *kaṭṭu* (DEDR 1147). DEDR lists *kaṭṭu* itself, "to bind, tie, build". DEDR 1147 compares Sanskrit *ghaṭṭa*.
+**ಕಟ್ಟು** (*kaṭṭu*) is native Dravidian, one word with Tamil *kaṭṭu* and Telugu *kaṭṭu* (DEDR 1147). DEDR lists *kaṭṭu* itself, "to bind, tie, build". DEDR 1147 compares Sanskrit *ghaṭṭa*, "landing-place", only with the Kannada and Telugu *gaṭṭu*, "embankment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

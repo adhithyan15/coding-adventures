@@ -4,7 +4,7 @@
   "chapter": 280,
   "title": "To whisper, To clap, To shake hands, To deliver, To overtake",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6a027adfb6002c20",
+  "sourceHash": "fnv1a64:ad7d2955e4c76294",
   "lessons": [
     {
       "id": "KA-C280-pisuguttu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b4dfe40c70bc9bf",
+      "sourceHash": "fnv1a64:d256177a53250a55",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಚಪ್ಪಾಳೆ ತಟ್ಟು (cappāḷe taṭṭu) is native Dravidian: cappāḷe, \"clapping the hands\", which DEDR 2335 lists as cappaḷe, and taṭṭu, \"to tap, pat, clap\" (DEDR 3039). DEDR 2335 compares Sanskrit capeṭā, \"a slap\"."
+              "text": "ಚಪ್ಪಾಳೆ ತಟ್ಟು (cappāḷe taṭṭu) is native Dravidian: cappāḷe, \"clapping the hands\", which DEDR 2335 lists as cappaḷe, and taṭṭu, \"to tap, pat, clap\" (DEDR 3039). DEDR 2335 compares Sanskrit capeṭā, \"a slap\", and DEDR 3039 a reconstructed Indo-Aryan ṭhaṭṭh-, \"to strike\" (CDIAL 5490)."
             }
           ]
         },

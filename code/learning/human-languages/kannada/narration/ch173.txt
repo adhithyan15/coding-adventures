@@ -141,7 +141,7 @@ You'll want to know: ಅಂಗಳ.
 ಅಂಗಳ — aṅgaḷa — "a courtyard, a front yard".
 
 The word, taken apart.
-ಅಂಗಳ (aṅgaḷa) is native Dravidian (DEDR 33). DEDR lists Kannada aṅgaḷa, aṅgaḷu.
+ಅಂಗಳ (aṅgaḷa) is generally taken as a tadbhava of Sanskrit aṅgaṇa, "courtyard" (CDIAL 118), with ḷ for ṇ. DEDR 33 lists a Kannada aṅgaḷa too, but that one means "palate": a different word.
 
 What you've built.
 One more word for this chapter.

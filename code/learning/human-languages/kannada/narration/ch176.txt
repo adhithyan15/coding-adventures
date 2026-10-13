@@ -13,7 +13,7 @@ You'll want to know: ಸಲುವಾಗಿ.
 ಸಲುವಾಗಿ — saluvāgi — "for the sake of, for".
 
 The word, taken apart.
-ಸಲುವಾಗಿ (saluvāgi) is saluva, "for, on behalf of", with the adverb ending -āgi. The origin of saluva is uncertain; neither DEDR nor CDIAL records it.
+ಸಲುವಾಗಿ (saluvāgi) is saluva, "for, on behalf of", with the adverb ending -āgi. The origin of saluva is uncertain; neither DEDR nor CDIAL records it. It may belong with sal, "to pass, be given, be due", which DEDR 2781 lists.
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: ಒಂದು ವೇಳೆ.
 ಒಂದು ವೇಳೆ — ondu vēḷe — "in case, if by chance".
 
 The word, taken apart.
-ಒಂದು ವೇಳೆ (ondu vēḷe) is ondu, "one" (DEDR 990), native, and vēḷe, "time", from Sanskrit velā, "limit, time" (CDIAL 12115): "at one time", if it so happens.
+ಒಂದು ವೇಳೆ (ondu vēḷe) is ondu, "one" (DEDR 990), native, and vēḷe, "time", from Sanskrit velā, "limit, time" (CDIAL 12115): "at one time", if it so happens. CDIAL thinks velā probably came into Sanskrit from Dravidian.
 
 What you've built.
 One more word for this chapter.

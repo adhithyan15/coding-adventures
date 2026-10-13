@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 242,
-  "sourceHash": "fnv1a64:3f8f11dd52038ef6",
+  "sourceHash": "fnv1a64:72230eff191bb17b",
   "lessonIds": [
     "KA-C242-oggarane-haku",
     "KA-C242-nenesu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch242.txt",
   "json": "kannada/narration/ch242.json",
-  "textHash": "fnv1a64:477100fd01ee0349",
-  "jsonHash": "fnv1a64:77897a50222d5a46",
+  "textHash": "fnv1a64:c2887b471d0a7101",
+  "jsonHash": "fnv1a64:b2e312c2084eb827",
   "findings": []
 }

@@ -12,7 +12,7 @@ concept_tag: KA-MOOD-BORED
 prerequisites: [KA-C97-dontforget, KA-C97-kindness]
 sounds: []
 roots: [dravidian-vecaru-weary]
-etymology_hook: "bēsara: native Dravidian, one word with Tamil vēcāṭai and Malayalam vēcāṟu (DEDR 5524)"
+etymology_hook: "bēsara: native Dravidian, one word with Tamil vēcāṭai (DEDR 5524); some forms may be Persian bē-zār"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C97-kindness]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಬೇಸರ** (*bēsara*) is native Dravidian, one word with Tamil *vēcāṭai* and Malayalam *vēcāṟu* (DEDR 5524). DEDR gives Kannada *bēsaṟ(u)*, "weariness, disgust".
+**ಬೇಸರ** (*bēsara*) is native Dravidian, one word with Tamil *vēcāṭai* and Malayalam *vēcāṟu* (DEDR 5524). DEDR gives Kannada *bēsaṟ(u)*, "weariness, disgust", and adds that some Kannada forms may instead come from Hindi *bē-zār*, "weary", a Persian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

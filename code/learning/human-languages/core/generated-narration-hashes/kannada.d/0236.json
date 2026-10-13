@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 236,
-  "sourceHash": "fnv1a64:22565c4478d41f21",
+  "sourceHash": "fnv1a64:6df3f2dfe81a4ef0",
   "lessonIds": [
     "KA-C236-biccu",
     "KA-C236-ebbisu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch236.txt",
   "json": "kannada/narration/ch236.json",
-  "textHash": "fnv1a64:0a96575d2fed09be",
-  "jsonHash": "fnv1a64:63fe74df27e8ac71",
+  "textHash": "fnv1a64:6c37fb45a7429d89",
+  "jsonHash": "fnv1a64:cc99c1d377648280",
   "findings": []
 }

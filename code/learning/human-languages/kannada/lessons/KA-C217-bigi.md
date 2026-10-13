@@ -15,7 +15,7 @@ concept_tag: KA-GUNA217-BIGI
 prerequisites: [KA-C217-agga, KA-C217-khali]
 sounds: []
 roots: [dravidian-bigi-tighten]
-etymology_hook: "bigi: native Dravidian, one word with Tamil viku and Telugu bigi (DEDR 5282)"
+etymology_hook: "bigi: native Dravidian, one word with Tamil viku and Telugu bigi (DEDR 5382)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C217-khali]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಬಿಗಿ** (*bigi*) is native Dravidian, one word with Tamil *viku* and Telugu *bigi* (DEDR 5282). DEDR lists *bigi* itself, "to tighten, bind; tightness".
+**ಬಿಗಿ** (*bigi*) is native Dravidian, one word with Tamil *viku* and Telugu *bigi* (DEDR 5382). DEDR lists *bigi* itself, "to tighten, bind; tightness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

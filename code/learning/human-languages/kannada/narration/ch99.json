@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "The Body Again",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6833d026c0f520bb",
+  "sourceHash": "fnv1a64:aba12a3d82738273",
   "lessons": [
     {
       "id": "KA-C99-breath",
@@ -425,7 +425,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5da0d5595f809799",
+      "sourceHash": "fnv1a64:87cd85c376fe5349",
       "notice": null,
       "blocks": [
         {
@@ -463,7 +463,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹೊಟ್ಟೆನೋವು (hoṭṭenōvu) is hoṭṭe, \"belly\" (DEDR 4494, older Kannada poṭṭe), and nōvu, \"pain\", native Dravidian (DEDR 3793)."
+              "text": "ಹೊಟ್ಟೆನೋವು (hoṭṭenōvu) is hoṭṭe, \"belly\" (DEDR 4494, older Kannada poṭṭe), and nōvu, \"pain\", native Dravidian (DEDR 3793). DEDR 4494 compares Prakrit poṭṭa, \"belly\"."
             }
           ]
         },

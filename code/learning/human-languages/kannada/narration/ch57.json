@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:01809d17bc3bff2b",
+  "sourceHash": "fnv1a64:8d885386ee3be8e1",
   "lessons": [
     {
       "id": "KA-C57-neck",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83229ae1341e7426",
+      "sourceHash": "fnv1a64:d999ee1c26b774ee",
       "notice": null,
       "blocks": [
         {
@@ -361,7 +361,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ತುಟಿ (tuṭi) is native Dravidian, one word with Tamil tuṭi (DEDR 3296)."
+              "text": "ತುಟಿ (tuṭi) is native Dravidian, one word with Tamil tuṭi (DEDR 3296). DEDR points to related Indo-Aryan words in CDIAL 5853."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 201,
-  "sourceHash": "fnv1a64:f37d36eb9bddc264",
+  "sourceHash": "fnv1a64:77140e92c303b532",
   "lessonIds": [
     "KA-C201-mundudu",
     "KA-C201-vivarisu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch201.txt",
   "json": "kannada/narration/ch201.json",
-  "textHash": "fnv1a64:7c01046d1e20baee",
-  "jsonHash": "fnv1a64:8da56a5e730cf3b2",
+  "textHash": "fnv1a64:5585f3d41c754385",
+  "jsonHash": "fnv1a64:aa63d126ba205f1b",
   "findings": []
 }

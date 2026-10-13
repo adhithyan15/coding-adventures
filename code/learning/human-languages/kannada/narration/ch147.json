@@ -4,7 +4,7 @@
   "chapter": 147,
   "title": "To drink, To run, To sleep, To cut, To break",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d6b8abcb3789ee60",
+  "sourceHash": "fnv1a64:e225e0430a2530da",
   "lessons": [
     {
       "id": "KA-C147-kudi",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f217411acea175c8",
+      "sourceHash": "fnv1a64:1b846d6f76dd39fd",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಮಲಗು (malagu) is native Dravidian, one word with Tamil malar (DEDR 4735). DEDR lists malagu itself, \"to recline, lie down\"."
+              "text": "ಮಲಗು (malagu) is native Dravidian, one word with Tulu malaguni, \"to lie down\" (DEDR 4735). DEDR lists malagu itself, \"to recline, lie down\", and points to Tamil malar, \"to lie on the back\" (DEDR 4740)."
             }
           ]
         },

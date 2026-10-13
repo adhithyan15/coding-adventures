@@ -12,7 +12,7 @@ concept_tag: KA-NOUN-FAREWELL
 prerequisites: [KA-C50-set-out, KA-C48-guest]
 sounds: []
 roots: [dravidian-vidu-let-go, dravidian-kodu-give]
-etymology_hook: "bīḷkoḍuge: native, 'a giving of leave': bīḷ-, from biḍu 'to let go' (DEDR 5393), + koḍuge 'a gift' (DEDR 2053)"
+etymology_hook: "bīḷkoḍuge: native, 'a giving of leave': bīḷ-, usually taken with biḍu 'let go' (DEDR 5393), + koḍuge 'gift' (DEDR 2053)"
 duration:
   max_seconds: 210
 requires:
@@ -50,7 +50,7 @@ Five words for going: now, the day after tomorrow, a journey, to set out, and th
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಬೀಳ್ಕೊಡುಗೆ** (*bīḷkoḍuge*) is native Dravidian, "a giving of leave": *bīḷ-* belongs with *biḍu*, "to let go, quit" (DEDR 5393), and *koḍuge*, "a gift", is from *koḍu*, "to give" (DEDR 2053). DEDR 5393 compares Sanskrit *avamocana*.
+**ಬೀಳ್ಕೊಡುಗೆ** (*bīḷkoḍuge*) is native Dravidian, "a giving of leave": *bīḷ-* is usually taken with *biḍu*, "to let go, quit" (DEDR 5393), and *koḍuge*, "a gift", is from *koḍu*, "to give" (DEDR 2053). DEDR 5393 notes that Sanskrit *avamocana*, "inn", is a calque of Tamil *viṭuti*, "lodging place", from this root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 116,
   "title": "Pillow, Blanket, Curtain, Lock, Nail",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0d01c447b0096c2c",
+  "sourceHash": "fnv1a64:b7ca6f9933f43576",
   "lessons": [
     {
       "id": "KA-C116-dimbu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8fe0b1454399b69",
+      "sourceHash": "fnv1a64:66473ad418981035",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಂಬಳಿ (kambaḷi) comes from Sanskrit kambala, \"woollen blanket\", reshaped to Kannada sounds: a tadbhava (CDIAL 2771). The final -a became -i, and the l became ḷ."
+              "text": "ಕಂಬಳಿ (kambaḷi) comes from Sanskrit kambala, \"woollen blanket\", reshaped to Kannada sounds: a tadbhava (CDIAL 2771). The final -a became -i, and the l became ḷ. CDIAL notes that kambala may be from an Austroasiatic language."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1c9a459100a72e1f",
+  "sourceHash": "fnv1a64:dfbcd4eee7f0d62e",
   "lessons": [
     {
       "id": "KA-C16-tingalugalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d233f89566400b2",
+      "sourceHash": "fnv1a64:94e465717b31e4fe",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "All twelve names are Sanskrit, kept whole. Most are named for a lunar asterism: caitra is the month whose full moon is in the asterism Sanskrit calls citrā (CDIAL 4915, 4812). CDIAL also lists vaiśākha (12149), jyaiṣṭha (5293), āṣāḍha (1473), bhādrapada (9447), Sanskrit kārttika (3070), mārgaśiras (10076), puṣya (8307), māgha (9993) and phālguna (9075)."
+              "text": "All twelve names are Sanskrit, most kept whole and a few lightly reshaped (kārtīka for Sanskrit kārttika, phālguṇa for phālguna). Most are named for a lunar asterism: caitra is the month whose full moon is in the asterism Sanskrit calls citrā (CDIAL 4915, 4812). CDIAL also lists vaiśākha (12149), jyaiṣṭha (5293), āṣāḍha (1473), bhādrapada (9447), Sanskrit kārttika (3070), mārgaśiras (10076), puṣya (8307), māgha (9993) and phālguna (9075)."
             }
           ]
         },

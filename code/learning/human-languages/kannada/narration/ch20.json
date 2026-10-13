@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6ac5eecbe5f3c983",
+  "sourceHash": "fnv1a64:fd7ea493d4c5b16a",
   "lessons": [
     {
       "id": "KA-C20-hannondu-ippattu",
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed225a8dc4d2c5aa",
+      "sourceHash": "fnv1a64:36718edc68cf0ea5",
       "notice": null,
       "blocks": [
         {
@@ -457,7 +457,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಝರಿ (jhari) is Sanskrit jharī, \"waterfall\", taken over whole as a learned loan, a tatsama, with the final -ī shortened (CDIAL 5343). In Kannada it names any stream that runs down a slope."
+              "text": "ಝರಿ (jhari) is Sanskrit jharī, \"river\" (the masculine jhara is \"waterfall\"), taken over whole as a learned loan, a tatsama, with the final -ī shortened (CDIAL 5343). In Kannada it names any stream that runs down a slope."
             }
           ]
         },

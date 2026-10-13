@@ -47,7 +47,7 @@ reviews_of: [KA-C176-adaru]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಒಂದು ವೇಳೆ** (*ondu vēḷe*) is *ondu*, "one" (DEDR 990), native, and *vēḷe*, "time", from Sanskrit *velā*, "limit, time" (CDIAL 12115): "at one time", if it so happens.
+**ಒಂದು ವೇಳೆ** (*ondu vēḷe*) is *ondu*, "one" (DEDR 990), native, and *vēḷe*, "time", from Sanskrit *velā*, "limit, time" (CDIAL 12115): "at one time", if it so happens. CDIAL thinks *velā* probably came into Sanskrit from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

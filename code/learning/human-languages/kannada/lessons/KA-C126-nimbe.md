@@ -47,7 +47,7 @@ reviews_of: [KA-C125-ragi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ನಿಂಬೆ** (*nimbe*) comes from Sanskrit *nimbū*, "the lime", reshaped to Kannada sounds: a tadbhava (CDIAL 7247). Kannada's *-e* replaced the final *-ū*.
+**ನಿಂಬೆ** (*nimbe*) comes from Sanskrit *nimbū*, "the lime", reshaped to Kannada sounds: a tadbhava (CDIAL 7247). Kannada's *-e* replaced the final *-ū*. CDIAL takes *nimbū* itself from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

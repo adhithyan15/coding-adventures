@@ -47,7 +47,7 @@ reviews_of: [KA-C271-pincani]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ದಂಡ** (*daṇḍa*) is Sanskrit *daṇḍa*, "stick, club; punishment", taken over whole as a learned loan, a tatsama (CDIAL 6128).
+**ದಂಡ** (*daṇḍa*) is Sanskrit *daṇḍa*, "stick, club; punishment", taken over whole as a learned loan, a tatsama (CDIAL 6128). CDIAL thinks *daṇḍa* is probably non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

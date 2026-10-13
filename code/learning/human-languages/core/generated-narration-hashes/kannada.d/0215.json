@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 215,
-  "sourceHash": "fnv1a64:086d8fde0015c7cf",
+  "sourceHash": "fnv1a64:dbe417a137ebd4ad",
   "lessonIds": [
     "KA-C215-mulaka",
     "KA-C215-prakara",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch215.txt",
   "json": "kannada/narration/ch215.json",
-  "textHash": "fnv1a64:994857bb77523864",
-  "jsonHash": "fnv1a64:a40de68ae74ee957",
+  "textHash": "fnv1a64:58054204ce372232",
+  "jsonHash": "fnv1a64:f523426da11bc7c8",
   "findings": []
 }

@@ -45,7 +45,7 @@ You'll want to know: ಅತ್ತೆ.
 ಅತ್ತೆ — atte — "aunt (father's sister); mother-in-law".
 
 The word, taken apart.
-ಅತ್ತೆ (atte) is native Dravidian, one word with Tamil attaṉ, Telugu atta and Malayalam atta (DEDR 142). DEDR lists atte, "mother-in-law", and sōdar-atte, "father's sister". DEDR 142 compares Sanskrit attā.
+ಅತ್ತೆ (atte) is native Dravidian, one word with Tamil attai, Telugu atta and Malayalam atta (DEDR 142). DEDR lists atte, "mother-in-law", and sōdar-atte, "father's sister". DEDR 142 compares Sanskrit attā.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: ಸೊಸೆ.
 ಸೊಸೆ — sose — "daughter-in-law".
 
 The word, taken apart.
-The origin of ಸೊಸೆ (sose) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+The origin of ಸೊಸೆ (sose) is uncertain. Neither DEDR nor CDIAL records it. It may come from Prakrit susā, Sanskrit snuṣā, "son's wife" (CDIAL 13801), but no source settles this.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: ಅತ್ತಿಗೆ.
 ಅತ್ತಿಗೆ — attige — "sister-in-law (elder brother's wife)".
 
 The word, taken apart.
-ಅತ್ತಿಗೆ (attige) is native Dravidian, of the family of atte, "mother-in-law", and DEDR 142 lists attige, "elder brother's wife", itself; the entry also has Tamil attaṉ, Telugu atta and Malayalam atta. DEDR 142 compares Sanskrit attā.
+ಅತ್ತಿಗೆ (attige) is native Dravidian, of the family of atte, "mother-in-law", and DEDR 142 lists attige, "elder brother's wife", itself; the entry also has Tamil attai, Telugu atta and Malayalam atta. DEDR 142 compares Sanskrit attā.
 
 What you've built.
 One more word for this chapter.

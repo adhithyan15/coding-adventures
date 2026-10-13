@@ -4,7 +4,7 @@
   "chapter": 215,
   "title": "Through, According to, About, Tradition, Culture",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:086d8fde0015c7cf",
+  "sourceHash": "fnv1a64:dbe417a137ebd4ad",
   "lessons": [
     {
       "id": "KA-C215-mulaka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea2bad7734410648",
+      "sourceHash": "fnv1a64:24f9b9863d2bb7e4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಮೂಲಕ (mūlaka) is Sanskrit mūla, \"root\" (CDIAL 10250), with -ka. In Kannada \"from the root of\" came to mean \"by means of\"."
+              "text": "ಮೂಲಕ (mūlaka) is Sanskrit mūla, \"root\" (CDIAL 10250), with -ka. In Kannada \"from the root of\" came to mean \"by means of\". CDIAL suggests mūla may be non-Aryan, perhaps Dravidian."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "To stick, To inform, To meet, To reserve, To cancel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e2611431c293972a",
+  "sourceHash": "fnv1a64:f00c2889f60a3330",
   "lessons": [
     {
       "id": "KA-C161-antisu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eccb423c7bce910d",
+      "sourceHash": "fnv1a64:d7f111355eb747db",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಾಯ್ದಿರಿಸು (kāydirisu) is native Dravidian: kāy, \"to guard, keep\" (DEDR 1416), and iḍu, \"to put, place\" (DEDR 442), with -isu: \"to put aside and keep\"."
+              "text": "ಕಾಯ್ದಿರಿಸು (kāydirisu) is native Dravidian: kāy, \"to guard, keep\" (DEDR 1416), and irisu, \"to cause to stay, place\", from iru, \"to stay\" (DEDR 480): \"to put aside and keep\"."
             }
           ]
         },

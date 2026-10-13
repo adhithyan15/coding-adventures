@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 139,
-  "sourceHash": "fnv1a64:74061ba9549f95bf",
+  "sourceHash": "fnv1a64:ec2a81489ae1f26b",
   "lessonIds": [
     "KA-C139-kamala",
     "KA-C139-godhi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch139.txt",
   "json": "kannada/narration/ch139.json",
-  "textHash": "fnv1a64:23023e3ba26d04e9",
-  "jsonHash": "fnv1a64:53cccdd170b9ad84",
+  "textHash": "fnv1a64:ebad257e424f45bc",
+  "jsonHash": "fnv1a64:b34e0d5d02f62267",
   "findings": []
 }

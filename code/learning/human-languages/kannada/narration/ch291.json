@@ -4,7 +4,7 @@
   "chapter": 291,
   "title": "Cool, Warm, Strange, Wonderful, Interesting",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:16da48746de0622f",
+  "sourceHash": "fnv1a64:aa74503d43ad6e7a",
   "lessons": [
     {
       "id": "KA-C291-tannage",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b5312a1b15a81ba",
+      "sourceHash": "fnv1a64:a5eb04b421d6a35e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ತಣ್ಣಗೆ (taṇṇage) is native Dravidian, from taṇ, \"coolness, cold\", which DEDR 3045 lists, with the adverb ending -age; the entry also has Tamil taṇ, Telugu taniyu and Malayalam taṇ."
+              "text": "ತಣ್ಣಗೆ (taṇṇage) is native Dravidian, from taṇ, \"coolness, cold\", which DEDR 3045 lists, with the adverb ending -age; the entry also has Tamil taṇ, Telugu taniyu and Malayalam taṇ. DEDR 3045 compares Prakrit taṇṇāya, \"damp\", and a reconstructed Indo-Aryan ṭhaṇḍha, \"cold\" (CDIAL 13676)."
             }
           ]
         },

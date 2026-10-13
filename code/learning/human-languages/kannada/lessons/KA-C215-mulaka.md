@@ -47,7 +47,7 @@ reviews_of: [KA-C214-kavalu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಮೂಲಕ** (*mūlaka*) is Sanskrit *mūla*, "root" (CDIAL 10250), with *-ka*. In Kannada "from the root of" came to mean "by means of".
+**ಮೂಲಕ** (*mūlaka*) is Sanskrit *mūla*, "root" (CDIAL 10250), with *-ka*. In Kannada "from the root of" came to mean "by means of". CDIAL suggests *mūla* may be non-Aryan, perhaps Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

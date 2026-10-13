@@ -15,7 +15,7 @@ concept_tag: KA-VASTU226-SOSE
 prerequisites: [KA-C226-kale, KA-C226-atte]
 sounds: []
 roots: [kannada-sose]
-etymology_hook: "sose: origin uncertain; not recorded in DEDR or CDIAL"
+etymology_hook: "sose: origin uncertain; perhaps from Prakrit susā, Sanskrit snuṣā 'son's wife' (CDIAL 13801)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C226-atte]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **ಸೊಸೆ** (*sose*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+The origin of **ಸೊಸೆ** (*sose*) is uncertain. Neither DEDR nor CDIAL records it. It may come from Prakrit *susā*, Sanskrit *snuṣā*, "son's wife" (CDIAL 13801), but no source settles this.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

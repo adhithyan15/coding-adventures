@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Light, Soft, Hard, Dirty, Speed",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:35cf457f7ee33659",
+  "sourceHash": "fnv1a64:ce0f8045188d63de",
   "lessons": [
     {
       "id": "KA-C141-hagura",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a36083e0aa239fd",
+      "sourceHash": "fnv1a64:d30c71b4b6e09c0d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಗಟ್ಟಿ (gaṭṭi) is native Dravidian, one word with Tamil kaṭṭu, Telugu kaṭṭu and Malayalam kaṭṭa (DEDR 1148). DEDR lists gaṭṭi itself, \"firmness, hardness\"."
+              "text": "ಗಟ್ಟಿ (gaṭṭi) is native Dravidian, one word with Tamil kaṭṭu, Telugu kaṭṭu and Malayalam kaṭṭa (DEDR 1148). DEDR lists gaṭṭi itself, \"firmness, hardness\", and compares Sanskrit kaṭhina, \"hard, firm\" (CDIAL 2650)."
             }
           ]
         },

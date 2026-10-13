@@ -47,7 +47,7 @@ reviews_of: [KA-C285-madhyantara]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಕಟ್ಟಡ** (*kaṭṭaḍa*) is native Dravidian, from *kaṭṭu*, "to bind, build", which DEDR 1147 lists: a building is "what is built"; the entry also has Tamil *kaṭṭu*, Telugu *kaṭṭu* and Malayalam *keṭṭuka*. DEDR 1147 compares Sanskrit *ghaṭṭa*.
+**ಕಟ್ಟಡ** (*kaṭṭaḍa*) is native Dravidian, from *kaṭṭu*, "to bind, build", which DEDR 1147 lists: a building is "what is built"; the entry also has Tamil *kaṭṭu*, Telugu *kaṭṭu* and Malayalam *keṭṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

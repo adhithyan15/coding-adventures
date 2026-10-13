@@ -47,7 +47,7 @@ reviews_of: [KA-C201-nenapidu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಮುದ್ರಿಸು** (*mudrisu*) is Sanskrit *mudrā*, "seal, stamp" (CDIAL 10203), made into a Kannada verb with *-isu*: to print is to stamp.
+**ಮುದ್ರಿಸು** (*mudrisu*) is Sanskrit *mudrā*, "seal, stamp" (CDIAL 10203), made into a Kannada verb with *-isu*: to print is to stamp. CDIAL thinks *mudrā* probably came into Sanskrit from Iranian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

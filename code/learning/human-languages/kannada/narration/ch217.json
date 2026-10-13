@@ -4,7 +4,7 @@
   "chapter": 217,
   "title": "Cheap, Empty, Tight, Loose, Thick",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b47c26ea9244e1b8",
+  "sourceHash": "fnv1a64:58a99c20344fee95",
   "lessons": [
     {
       "id": "KA-C217-agga",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:021fbe0acf1d9f4f",
+      "sourceHash": "fnv1a64:40ae90784659e266",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬಿಗಿ (bigi) is native Dravidian, one word with Tamil viku and Telugu bigi (DEDR 5282). DEDR lists bigi itself, \"to tighten, bind; tightness\"."
+              "text": "ಬಿಗಿ (bigi) is native Dravidian, one word with Tamil viku and Telugu bigi (DEDR 5382). DEDR lists bigi itself, \"to tighten, bind; tightness\"."
             }
           ]
         },

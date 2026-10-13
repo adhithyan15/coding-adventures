@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 122,
-  "sourceHash": "fnv1a64:a2af15de57df5260",
+  "sourceHash": "fnv1a64:ac22db9b47a0df7a",
   "lessonIds": [
     "KA-C122-palya",
     "KA-C122-uppinakayi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch122.txt",
   "json": "kannada/narration/ch122.json",
-  "textHash": "fnv1a64:ba918578c0a99819",
-  "jsonHash": "fnv1a64:39f839128936d1b2",
+  "textHash": "fnv1a64:f0f419472e518d55",
+  "jsonHash": "fnv1a64:88e365d9145fd945",
   "findings": []
 }

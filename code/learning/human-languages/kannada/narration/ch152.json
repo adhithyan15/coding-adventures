@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "To put out, To play, To sing, To sell, To walk",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dfd4bf3487166c80",
+  "sourceHash": "fnv1a64:4a48655493fe9e96",
   "lessons": [
     {
       "id": "KA-C152-arisu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dcaf573715d1513",
+      "sourceHash": "fnv1a64:7666bd15800b5d8f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಆರಿಸು (ārisu) is native Dravidian, and it is two verbs that sound alike. \"To put out\" is the causative of āru, \"to go out, cool\": DEDR 404 lists āṟisu, \"to cause to go out\". \"To choose\" is usually linked to āray, \"to search, look for\" (DEDR 377)."
+              "text": "ಆರಿಸು (ārisu) is native Dravidian, and it is two verbs that sound alike. \"To put out\" is the causative of āru, \"to go out, cool\": DEDR 404 lists āṟisu, \"to cause to go out\". \"To choose\" is listed, with a query, under āray, \"to search, look for\": DEDR 377 has ārisu, \"to pick out, select\", marked as doubtful."
             }
           ]
         },

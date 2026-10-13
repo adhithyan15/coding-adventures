@@ -12,7 +12,7 @@ concept_tag: KA-PHRASE-REPEAT
 prerequisites: [KA-C71-another, KA-C70-say, KA-C08-dayavittu, KA-C55-tank, KA-C36-magu, KA-C35-snehita, KA-C35-kutumba]
 sounds: []
 roots: [pesu-speak-dravidian]
-etymology_hook: "innondu sala hēḷi: native innondu 'one more' (DEDR 410, 990), hēḷu 'say' (DEDR 4430); sala 'time' is uncertain"
+etymology_hook: "innondu sala hēḷi: native innondu 'one more' (DEDR 410, 990), sala 'a time' (DEDR 2781), hēḷu 'say' (DEDR 4430)"
 duration:
   max_seconds: 226
 requires:
@@ -57,7 +57,7 @@ second go.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ** (*innondu sala hēḷi*) is *innondu*, "one more" (DEDR 410, 990), *sala*, "time, turn", whose origin is uncertain, and *hēḷi*, the polite form of *hēḷu*, "to say" (DEDR 4430).
+**ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ** (*innondu sala hēḷi*) is *innondu*, "one more" (DEDR 410, 990), *sala*, "time, turn", native (DEDR 2781), and *hēḷi*, the polite form of *hēḷu*, "to say" (DEDR 4430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

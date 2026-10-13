@@ -15,7 +15,7 @@ concept_tag: KA-THINGS120-SIRE
 prerequisites: [KA-C120-galipata, KA-C120-angi]
 sounds: []
 roots: [dravidian-ciirai-cloth]
-etymology_hook: "sīre: native Dravidian, one word with Tamil cīrai and Telugu cīra (DEDR 2629)"
+etymology_hook: "sīre: native Dravidian, one word with Tamil cīrai (DEDR 2629), probably mixed with Sanskrit cīra, cela"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C120-angi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಸೀರೆ** (*sīre*) is native Dravidian, one word with Tamil *cīrai* and Telugu *cīra* (DEDR 2629). DEDR lists *sīre* itself, "cloth, a woman's garment".
+**ಸೀರೆ** (*sīre*) is native Dravidian, one word with Tamil *cīrai* and Telugu *cīra* (DEDR 2629). DEDR lists *sīre* itself, "cloth, a woman's garment". It adds that *sīre* is said to come from Sanskrit *cīra*, though its sense is rather that of Sanskrit *cela*, "clothes"; the two have probably mixed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

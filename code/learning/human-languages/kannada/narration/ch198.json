@@ -4,7 +4,7 @@
   "chapter": 198,
   "title": "To scrub, To bring, To carry away, To hold, To let go",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ebfbe765153ad060",
+  "sourceHash": "fnv1a64:b41c7f146a0b4b7f",
   "lessons": [
     {
       "id": "KA-C198-ujju",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62bbba9cbbee9834",
+      "sourceHash": "fnv1a64:b2b8074f24931c8a",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಒಯ್ಯು (oyyu) is native Dravidian, one word with Tamil oy and Malayalam Ko.) (DEDR 984). DEDR lists oy, uy, \"to carry off, conduct, carry\"."
+              "text": "ಒಯ್ಯು (oyyu) is native Dravidian, one word with Tamil oy and uy, \"to carry, take away\" (DEDR 984). DEDR lists Kannada oy, uy, \"to carry off, conduct, carry\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1747c40736d2947e",
+      "sourceHash": "fnv1a64:c3fb8b06a890dc82",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬಿಡು (biḍu) is native Dravidian, one word with Tamil viṭu (DEDR 5393). DEDR lists biḍu itself, \"to let loose, leave\": the old v- has become b-. DEDR 5393 compares Sanskrit avamocana."
+              "text": "ಬಿಡು (biḍu) is native Dravidian, one word with Tamil viṭu (DEDR 5393). DEDR lists biḍu itself, \"to let loose, leave\": the old v- has become b-. DEDR 5393 notes that Sanskrit avamocana, \"inn\", is a calque of Tamil viṭuti, \"lodging place\", from this root."
             }
           ]
         },

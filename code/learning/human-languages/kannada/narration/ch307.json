@@ -4,7 +4,7 @@
   "chapter": 307,
   "title": "Warehouse, Signboard, Ink, Chalk, Ruler",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3cca5cc294848888",
+  "sourceHash": "fnv1a64:720867fb9bdb9571",
   "lessons": [
     {
       "id": "KA-C307-godamu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a961cbc935392db7",
+      "sourceHash": "fnv1a64:db3c977d1fc8801b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಗೋದಾಮು (gōdāmu) is English godown, \"a warehouse\", in the shape Hindustani gives it, godām. English took the word from Malay."
+              "text": "ಗೋದಾಮು (gōdāmu) is English godown, \"a warehouse\", in the shape Hindustani gives it, godām. English took the word from Malay gudang, \"storehouse\". That word may itself be South Indian: DEDR 1525 lists Kannada gaḍaṅga, giḍḍaṅgi, \"storeroom\", with Telugu giḍḍaṅgi and Tamil kiṭaṅku, and points to godown."
             }
           ]
         },

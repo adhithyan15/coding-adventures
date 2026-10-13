@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 99,
-  "sourceHash": "fnv1a64:6833d026c0f520bb",
+  "sourceHash": "fnv1a64:aba12a3d82738273",
   "lessonIds": [
     "KA-C99-breath",
     "KA-C99-skin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch99.txt",
   "json": "kannada/narration/ch99.json",
-  "textHash": "fnv1a64:9083876ed13eab80",
-  "jsonHash": "fnv1a64:02bcf99125267e3e",
+  "textHash": "fnv1a64:fc74cb19d0759759",
+  "jsonHash": "fnv1a64:feb06ecb51b3fe38",
   "findings": []
 }

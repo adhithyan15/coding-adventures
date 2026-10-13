@@ -15,7 +15,7 @@ concept_tag: KA-KALA248-GADUVU
 prerequisites: [KA-C248-dasaka, KA-C248-varsikotsava]
 sounds: []
 roots: [kannada-gaduvu]
-etymology_hook: "gaḍuvu: origin uncertain; not recorded in DEDR or CDIAL"
+etymology_hook: "gaḍuvu: native Dravidian, 'limit, set time', listed with kaḍe 'to pass; end' (DEDR 1109)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C248-varsikotsava]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **ಗಡುವು** (*gaḍuvu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+**ಗಡುವು** (*gaḍuvu*) is native Dravidian. DEDR 1109 lists *gaḍuvu*, with *gaḍa* and *gaḍi*, "limit, limited time, period", under *kaḍe*, "to pass over; end"; the entry also has Tamil *kaṭa*, "to cross".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

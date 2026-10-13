@@ -4,7 +4,7 @@
   "chapter": 258,
   "title": "Buttermilk, Butter, Sweet milk pudding, Biscuit, Bread",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5deb9bd0463ab96f",
+  "sourceHash": "fnv1a64:202c85d29cbc4541",
   "lessons": [
     {
       "id": "KA-C258-majjige",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb2a5486972ac24b",
+      "sourceHash": "fnv1a64:ce89c3a95ca792ab",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬೆಣ್ಣೆ (beṇṇe) is native Dravidian, one word with Tamil veṇṇai, \"butter\", which DEDR 5496 files under the root for \"white, bright\"; the entry also has Tamil veṇṇai."
+              "text": "ಬೆಣ್ಣೆ (beṇṇe) is native Dravidian, one word with Tamil veṇṇai, \"butter\", which DEDR 5496 files under the root for \"white, bright\"; Telugu has venna."
             }
           ]
         },

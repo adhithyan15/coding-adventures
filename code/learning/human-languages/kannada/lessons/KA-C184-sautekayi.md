@@ -47,7 +47,7 @@ reviews_of: [KA-C183-baket]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಸೌತೆಕಾಯಿ** (*sautekāyi*) is native Dravidian: *saute*, "cucumber", which DEDR 2399 lists, and *kāyi*, "unripe fruit" (DEDR 1459).
+**ಸೌತೆಕಾಯಿ** (*sautekāyi*) is native Dravidian: *saute*, "cucumber", which DEDR 2399 lists, and *kāyi*, "unripe fruit" (DEDR 1459). DEDR 1459 compares a reconstructed Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

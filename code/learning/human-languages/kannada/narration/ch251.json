@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "Frontier, Canal, Tunnel, Downward slope, Backyard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f43ba08eacd5452a",
+  "sourceHash": "fnv1a64:f6a05fba4de5fba3",
   "lessons": [
     {
       "id": "KA-C251-gadi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e93cbed5dfad134",
+      "sourceHash": "fnv1a64:b8bf7e753e288764",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ಗಡಿ (gaḍi) is uncertain. DEDR has no entry for it in the sense \"boundary\", CDIAL does not record it, and no source for it is settled."
+              "text": "ಗಡಿ (gaḍi) is native Dravidian. DEDR 1109 lists gaḍi, with gaḍa and gaḍu, \"limit\", under kaḍe, \"to pass over; end\"; the entry also has Tamil kaṭa, \"to cross\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0200d42bf299daf",
+      "sourceHash": "fnv1a64:54fa04402bf99761",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹಿತ್ತಿಲು (hittilu) is native Dravidian, built on the root for \"behind\", which DEDR 4205 lists as older Kannada pin, pindu: the yard behind the house. DEDR does not list hittilu itself."
+              "text": "ಹಿತ್ತಿಲು (hittilu) is native Dravidian, built on the root for \"behind\", which DEDR 4205 lists as older Kannada pin, pindu: the yard behind the house. DEDR lists hittilu itself, with older pittil, \"a backyard\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Moods",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd5973b5f0ecfd0c",
+  "sourceHash": "fnv1a64:8ae58e268240901c",
   "lessons": [
     {
       "id": "KA-C98-boredom",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d044aeb3fb170e4",
+      "sourceHash": "fnv1a64:52e38f67dce290e0",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬೇಸರ (bēsara) is native Dravidian, one word with Tamil vēcāṭai and Malayalam vēcāṟu (DEDR 5524). DEDR gives Kannada bēsaṟ(u), \"weariness, disgust\"."
+              "text": "ಬೇಸರ (bēsara) is native Dravidian, one word with Tamil vēcāṭai and Malayalam vēcāṟu (DEDR 5524). DEDR gives Kannada bēsaṟ(u), \"weariness, disgust\", and adds that some Kannada forms may instead come from Hindi bē-zār, \"weary\", a Persian word."
             }
           ]
         },

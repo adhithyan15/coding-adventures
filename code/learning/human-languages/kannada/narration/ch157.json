@@ -4,7 +4,7 @@
   "chapter": 157,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8861e8297bd14871",
+  "sourceHash": "fnv1a64:dadf69761c373080",
   "lessons": [
     {
       "id": "KA-C157-velapatti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15a8b3a1b1d5ea79",
+      "sourceHash": "fnv1a64:2110ca6db4beb035",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ವೇಳಾಪಟ್ಟಿ (vēḷāpaṭṭi) is vēḷā, \"time\", from Sanskrit velā, \"limit, time\" (CDIAL 12115), and paṭṭi, \"list\", from Sanskrit paṭṭikā, \"slab, tablet\" (CDIAL 7699): a table of times."
+              "text": "ವೇಳಾಪಟ್ಟಿ (vēḷāpaṭṭi) is vēḷā, \"time\", from Sanskrit velā, \"limit, time\" (CDIAL 12115), and paṭṭi, \"list\", from Sanskrit paṭṭikā, \"slab, tablet\" (CDIAL 7699): a table of times. CDIAL thinks velā probably came into Sanskrit from Dravidian."
             }
           ]
         },

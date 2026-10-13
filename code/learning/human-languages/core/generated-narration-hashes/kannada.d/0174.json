@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 174,
-  "sourceHash": "fnv1a64:e82adca2342e5a7a",
+  "sourceHash": "fnv1a64:6a4deb55418687c4",
   "lessonIds": [
     "KA-C174-pravasi",
     "KA-C174-sarovara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch174.txt",
   "json": "kannada/narration/ch174.json",
-  "textHash": "fnv1a64:1ad18a90840c0db3",
-  "jsonHash": "fnv1a64:48f68f8dbb0be86c",
+  "textHash": "fnv1a64:4cdc6e2670150048",
+  "jsonHash": "fnv1a64:9b9b693490cf1230",
   "findings": []
 }

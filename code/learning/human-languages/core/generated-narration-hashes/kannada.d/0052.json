@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 52,
-  "sourceHash": "fnv1a64:e35ae9305dcfd7f8",
+  "sourceHash": "fnv1a64:16e753a3395d52ed",
   "lessonIds": [
     "KA-C52-door",
     "KA-C52-chair",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch52.txt",
   "json": "kannada/narration/ch52.json",
-  "textHash": "fnv1a64:63cce9941b17d5bd",
-  "jsonHash": "fnv1a64:f799c607f6c0c7ed",
+  "textHash": "fnv1a64:81ae36de4c55ce9f",
+  "jsonHash": "fnv1a64:9da4b2f68196546c",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Kite, Shirt, Sari, Dhoti, Sandals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:de37216dd073b9c5",
+  "sourceHash": "fnv1a64:3cb6de4c2e5c9ef5",
   "lessons": [
     {
       "id": "KA-C120-galipata",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eb4f0876d6c709e",
+      "sourceHash": "fnv1a64:d5a1ac1bcc07eb56",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಗಾಳಿಪಟ (gāḷipaṭa) is gāḷi, \"wind\", native Dravidian (DEDR 1499), and paṭa, \"cloth\", from Sanskrit paṭa, \"woven cloth\" (CDIAL 7692). A kite is a cloth for the wind."
+              "text": "ಗಾಳಿಪಟ (gāḷipaṭa) is gāḷi, \"wind\", native Dravidian (DEDR 1499), and paṭa, \"cloth\", from Sanskrit paṭa, \"woven cloth\" (CDIAL 7692). A kite is a cloth for the wind. CDIAL thinks paṭa probably came into Sanskrit from an Austroasiatic language."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82f6f18c160279ae",
+      "sourceHash": "fnv1a64:7a1a2a860fc93627",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಸೀರೆ (sīre) is native Dravidian, one word with Tamil cīrai and Telugu cīra (DEDR 2629). DEDR lists sīre itself, \"cloth, a woman's garment\"."
+              "text": "ಸೀರೆ (sīre) is native Dravidian, one word with Tamil cīrai and Telugu cīra (DEDR 2629). DEDR lists sīre itself, \"cloth, a woman's garment\". It adds that sīre is said to come from Sanskrit cīra, though its sense is rather that of Sanskrit cela, \"clothes\"; the two have probably mixed."
             }
           ]
         },

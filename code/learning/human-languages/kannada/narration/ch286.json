@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "Building, Floor, Entrance, Platform, Abroad",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e7d2a1323f58d7a0",
+  "sourceHash": "fnv1a64:9adaa5a149c74f8f",
   "lessons": [
     {
       "id": "KA-C286-kattada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d871f23d3a1ea7c",
+      "sourceHash": "fnv1a64:e416bc233892d8d4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಟ್ಟಡ (kaṭṭaḍa) is native Dravidian, from kaṭṭu, \"to bind, build\", which DEDR 1147 lists: a building is \"what is built\"; the entry also has Tamil kaṭṭu, Telugu kaṭṭu and Malayalam keṭṭuka. DEDR 1147 compares Sanskrit ghaṭṭa."
+              "text": "ಕಟ್ಟಡ (kaṭṭaḍa) is native Dravidian, from kaṭṭu, \"to bind, build\", which DEDR 1147 lists: a building is \"what is built\"; the entry also has Tamil kaṭṭu, Telugu kaṭṭu and Malayalam keṭṭuka."
             }
           ]
         },

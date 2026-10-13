@@ -47,7 +47,7 @@ reviews_of: [KA-C280-pisuguttu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಚಪ್ಪಾಳೆ ತಟ್ಟು** (*cappāḷe taṭṭu*) is native Dravidian: *cappāḷe*, "clapping the hands", which DEDR 2335 lists as *cappaḷe*, and *taṭṭu*, "to tap, pat, clap" (DEDR 3039). DEDR 2335 compares Sanskrit *capeṭā*, "a slap".
+**ಚಪ್ಪಾಳೆ ತಟ್ಟು** (*cappāḷe taṭṭu*) is native Dravidian: *cappāḷe*, "clapping the hands", which DEDR 2335 lists as *cappaḷe*, and *taṭṭu*, "to tap, pat, clap" (DEDR 3039). DEDR 2335 compares Sanskrit *capeṭā*, "a slap", and DEDR 3039 a reconstructed Indo-Aryan *\*ṭhaṭṭh-*, "to strike" (CDIAL 5490).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

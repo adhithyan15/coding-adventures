@@ -4,7 +4,7 @@
   "chapter": 243,
   "title": "To recognise, To pronounce, To add up, To manage, To shake",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f9e59769cbebad68",
+  "sourceHash": "fnv1a64:0ce6fe60d972afc0",
   "lessons": [
     {
       "id": "KA-C243-gurutisu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33edf99d707a7578",
+      "sourceHash": "fnv1a64:b2a70bf4624422f7",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನಿಭಾಯಿಸು (nibhāyisu) is usually traced to Sanskrit nirvāha, \"carrying through, accomplishing\", through a Middle Indo-Aryan form (CDIAL 7397), made into a verb with -isu: a tadbhava."
+              "text": "ನಿಭಾಯಿಸು (nibhāyisu) is probably a northern loan made into a verb with -isu. CDIAL 7397 traces Punjabi nibhāuṇā and Hindi nibāhnā, \"to accomplish, carry through\", to Sanskrit nirvāha, \"accomplishing\"; Kannada took a form like these, not one handed down within the south."
             }
           ]
         },

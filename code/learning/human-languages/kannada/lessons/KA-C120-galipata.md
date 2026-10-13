@@ -47,7 +47,7 @@ reviews_of: [KA-C119-cendu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಗಾಳಿಪಟ** (*gāḷipaṭa*) is *gāḷi*, "wind", native Dravidian (DEDR 1499), and *paṭa*, "cloth", from Sanskrit *paṭa*, "woven cloth" (CDIAL 7692). A kite is a cloth for the wind.
+**ಗಾಳಿಪಟ** (*gāḷipaṭa*) is *gāḷi*, "wind", native Dravidian (DEDR 1499), and *paṭa*, "cloth", from Sanskrit *paṭa*, "woven cloth" (CDIAL 7692). A kite is a cloth for the wind. CDIAL thinks *paṭa* probably came into Sanskrit from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

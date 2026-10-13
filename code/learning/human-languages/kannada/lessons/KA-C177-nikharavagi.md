@@ -15,7 +15,7 @@ concept_tag: KA-KARANA177-NIKHARAVAGI
 prerequisites: [KA-C176-ondu-vele, KA-C176-badalu]
 sounds: []
 roots: [kannada-nikhara]
-etymology_hook: "nikharavāgi: nikhara 'exact' + the adverb ending -āgi; the origin of nikhara is uncertain"
+etymology_hook: "nikharavāgi: nikhara 'exact' + -āgi; nikhara is uncertain, perhaps Hindi nikharnā 'become clear' (CDIAL 7095)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C176-badalu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ನಿಖರವಾಗಿ** (*nikharavāgi*) is *nikhara*, "exact, precise", with the adverb ending *-āgi*. The origin of *nikhara* is uncertain; no source for it is settled.
+**ನಿಖರವಾಗಿ** (*nikharavāgi*) is *nikhara*, "exact, precise", with the adverb ending *-āgi*. The origin of *nikhara* is uncertain. It may be a northern word: CDIAL 7095 has Hindi *nikharnā*, "to become clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

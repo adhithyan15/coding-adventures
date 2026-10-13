@@ -4,7 +4,7 @@
   "chapter": 145,
   "title": "Bitter, Sour, Sweet, Lazy, Clever",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:00b493073179e25c",
+  "sourceHash": "fnv1a64:5f2117d3874fce94",
   "lessons": [
     {
       "id": "KA-C145-kahi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6354b20abe21a8c8",
+      "sourceHash": "fnv1a64:ff965ce84ec628b1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಹಿ (kahi) is native Dravidian, one word with Tamil kaya and Telugu kasu (DEDR 1249). DEDR lists the older Kannada kayi, kaypu, \"bitterness\". DEDR 1249 compares Sanskrit kaṣāya."
+              "text": "ಕಹಿ (kahi) is native Dravidian, one word with Tamil kaya, \"to be bitter\" (DEDR 1249). DEDR lists the older Kannada kayi, kaypu, \"bitterness\". DEDR 1249 compares Sanskrit kaṣāya."
             }
           ]
         },

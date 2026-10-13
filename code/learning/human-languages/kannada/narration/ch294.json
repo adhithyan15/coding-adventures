@@ -4,7 +4,7 @@
   "chapter": 294,
   "title": "Peanut, Spices, Chutney, Money, Small change",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a009e452e6ca8151",
+  "sourceHash": "fnv1a64:4b1b0e13b645d25a",
   "lessons": [
     {
       "id": "KA-C294-kadalekayi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59f6620faf332c21",
+      "sourceHash": "fnv1a64:bc325e36ead45419",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಡಲೆಕಾಯಿ (kaḍalekāyi) is native Dravidian: kaḍale, \"Bengal gram\", one word with Tamil kaṭalai (DEDR 1120), and kāyi, \"unripe fruit, nut, pod\" (DEDR 1459)."
+              "text": "ಕಡಲೆಕಾಯಿ (kaḍalekāyi) is native Dravidian: kaḍale, \"Bengal gram\", one word with Tamil kaṭalai (DEDR 1120), and kāyi, \"unripe fruit, nut, pod\" (DEDR 1459). DEDR 1459 compares a reconstructed Indo-Aryan kacca, \"raw, unripe\" (CDIAL 2613)."
             }
           ]
         },

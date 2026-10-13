@@ -45,7 +45,7 @@ reviews_of: [KA-C99-blood]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಹೊಟ್ಟೆನೋವು** (*hoṭṭenōvu*) is *hoṭṭe*, "belly" (DEDR 4494, older Kannada *poṭṭe*), and *nōvu*, "pain", native Dravidian (DEDR 3793).
+**ಹೊಟ್ಟೆನೋವು** (*hoṭṭenōvu*) is *hoṭṭe*, "belly" (DEDR 4494, older Kannada *poṭṭe*), and *nōvu*, "pain", native Dravidian (DEDR 3793). DEDR 4494 compares Prakrit *poṭṭa*, "belly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

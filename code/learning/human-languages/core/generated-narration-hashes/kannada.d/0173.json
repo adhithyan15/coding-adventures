@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 173,
-  "sourceHash": "fnv1a64:b55228d6996ae26f",
+  "sourceHash": "fnv1a64:9020654d943349d8",
   "lessonIds": [
     "KA-C173-adugemane",
     "KA-C173-snanada-mane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch173.txt",
   "json": "kannada/narration/ch173.json",
-  "textHash": "fnv1a64:e0391824e06a0086",
-  "jsonHash": "fnv1a64:bb0af252669adf77",
+  "textHash": "fnv1a64:c35cde3c602f6c71",
+  "jsonHash": "fnv1a64:203293b73ce282f9",
   "findings": []
 }

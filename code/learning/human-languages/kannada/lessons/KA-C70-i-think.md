@@ -52,7 +52,7 @@ Read it in Kannada order: **ಅದು ನಿಜ** (the thought) — **ಅಂತ*
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಅದು ನಿಜ ಅಂತ ಯೋಚಿಸುತ್ತೇನೆ** (*adu nija anta yōcisuttēne*) is built from *adu*, "that" (DEDR 1), *nija*, "true", from Sanskrit *nija* (CDIAL 7181), *anta*, "saying" (DEDR 868), and *yōcisu*, "to think", whose origin is uncertain.
+**ಅದು ನಿಜ ಅಂತ ಯೋಚಿಸುತ್ತೇನೆ** (*adu nija anta yōcisuttēne*) is built from *adu*, "that" (DEDR 1), *nija*, "true", from Sanskrit *nija* (CDIAL 7181), *anta*, "saying" (DEDR 868), and *yōcisu*, "to think", from Sanskrit *yojanā*.
 
 ## Grammar Lens: one frame, and the slot you change
 <!-- hl-knowledge: introduces=[KA-PRAGMATICS-C70-TELL-07]; assesses=[] -->

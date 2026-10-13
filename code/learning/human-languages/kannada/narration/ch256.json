@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Hollow, Flat, Crooked, Blurred, Crowded",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fef3647b9f81458e",
+  "sourceHash": "fnv1a64:2b69f17dbeaf8972",
   "lessons": [
     {
       "id": "KA-C256-tollu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:805dbe45f60be85a",
+      "sourceHash": "fnv1a64:c4b69bd2a38c703c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಿಕ್ಕಿರಿದ (kikkirida) is native Dravidian, one word with Tamil ceṟi and Telugu krikkiṟincu (DEDR 1509). DEDR lists kikkaṟisu, \"to be closely united or crowded\". DEDR 1509 compares, with a query, Sanskrit kiṣkindha-.."
+              "text": "ಕಿಕ್ಕಿರಿದ (kikkirida) is native Dravidian, one word with Telugu krikkiṟincu, \"to be crowded\" (DEDR 1509). DEDR lists kikkaṟisu, \"to be closely united or crowded\", and points to Tamil ceṟi, \"to be thick, crowded\" (DEDR 1980). DEDR 1509 compares, with a query, Sanskrit kiṣkindha."
             }
           ]
         },

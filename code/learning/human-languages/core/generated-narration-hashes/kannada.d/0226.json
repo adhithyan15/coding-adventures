@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 226,
-  "sourceHash": "fnv1a64:0c879528ee55a11b",
+  "sourceHash": "fnv1a64:e5aecbf7fc3d52c0",
   "lessonIds": [
     "KA-C226-kale",
     "KA-C226-atte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch226.txt",
   "json": "kannada/narration/ch226.json",
-  "textHash": "fnv1a64:9ed21061725def03",
-  "jsonHash": "fnv1a64:023c190b1b051b88",
+  "textHash": "fnv1a64:e9243c238694dbe4",
+  "jsonHash": "fnv1a64:a70d1a806d6c1d4f",
   "findings": []
 }

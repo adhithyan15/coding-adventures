@@ -15,7 +15,7 @@ concept_tag: KA-VERB-MALAGU
 prerequisites: [KA-C147-kudi, KA-C147-odu]
 sounds: []
 roots: [dravidian-malar-recline]
-etymology_hook: "malagu: native Dravidian, one word with Tamil malar (DEDR 4735)"
+etymology_hook: "malagu: native Dravidian, one word with Tulu malaguni 'to lie down' (DEDR 4735)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C147-odu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಮಲಗು** (*malagu*) is native Dravidian, one word with Tamil *malar* (DEDR 4735). DEDR lists *malagu* itself, "to recline, lie down".
+**ಮಲಗು** (*malagu*) is native Dravidian, one word with Tulu *malaguni*, "to lie down" (DEDR 4735). DEDR lists *malagu* itself, "to recline, lie down", and points to Tamil *malar*, "to lie on the back" (DEDR 4740).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

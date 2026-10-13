@@ -15,7 +15,7 @@ concept_tag: KA-VERB-ETTU
 prerequisites: [KA-C235-hindirugu, KA-C235-muttu]
 sounds: []
 roots: [dravidian-ettu-lift]
-etymology_hook: "ettu: native Dravidian, one word with Tamil eḻu and Telugu ettu (DEDR 796)"
+etymology_hook: "ettu: native Dravidian, one word with Telugu ettu 'to lift up' (DEDR 796)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C235-muttu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಎತ್ತು** (*ettu*) is native Dravidian, one word with Tamil *eḻu*, Telugu *ettu* and Malayalam *S* (DEDR 796). DEDR lists *ettu* itself, "to lift, raise".
+**ಎತ್ತು** (*ettu*) is native Dravidian, one word with Telugu *ettu*, "to lift up" (DEDR 796). DEDR lists *ettu* itself, "to lift, raise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

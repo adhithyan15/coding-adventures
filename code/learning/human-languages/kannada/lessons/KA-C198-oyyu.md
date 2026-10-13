@@ -15,7 +15,7 @@ concept_tag: KA-VERB-OYYU
 prerequisites: [KA-C198-ujju, KA-C198-taru]
 sounds: []
 roots: [dravidian-oy-carry]
-etymology_hook: "oyyu: native Dravidian, one word with Tamil oy and Malayalam Ko.) (DEDR 984)"
+etymology_hook: "oyyu: native Dravidian, one word with Tamil oy, uy 'to carry, take away' (DEDR 984)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C198-taru]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಒಯ್ಯು** (*oyyu*) is native Dravidian, one word with Tamil *oy* and Malayalam *Ko.)* (DEDR 984). DEDR lists *oy*, *uy*, "to carry off, conduct, carry".
+**ಒಯ್ಯು** (*oyyu*) is native Dravidian, one word with Tamil *oy* and *uy*, "to carry, take away" (DEDR 984). DEDR lists Kannada *oy*, *uy*, "to carry off, conduct, carry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

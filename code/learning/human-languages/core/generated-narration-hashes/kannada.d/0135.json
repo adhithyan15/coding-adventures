@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 135,
-  "sourceHash": "fnv1a64:0ce1b779e04fdccc",
+  "sourceHash": "fnv1a64:c54f7fe339511091",
   "lessonIds": [
     "KA-C135-galla",
     "KA-C135-kenne",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch135.txt",
   "json": "kannada/narration/ch135.json",
-  "textHash": "fnv1a64:e7d77aefe39f9f79",
-  "jsonHash": "fnv1a64:cd0e8118c45f0425",
+  "textHash": "fnv1a64:91f2626e45f1e1f0",
+  "jsonHash": "fnv1a64:02c615c77bc10e15",
   "findings": []
 }

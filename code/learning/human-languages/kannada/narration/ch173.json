@@ -4,7 +4,7 @@
   "chapter": 173,
   "title": "Kitchen, Bathroom, Toilet, Room, Courtyard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b55228d6996ae26f",
+  "sourceHash": "fnv1a64:9020654d943349d8",
   "lessons": [
     {
       "id": "KA-C173-adugemane",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a53ff0a4c8165e1",
+      "sourceHash": "fnv1a64:c1add828a8fb87eb",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅಂಗಳ (aṅgaḷa) is native Dravidian (DEDR 33). DEDR lists Kannada aṅgaḷa, aṅgaḷu."
+              "text": "ಅಂಗಳ (aṅgaḷa) is generally taken as a tadbhava of Sanskrit aṅgaṇa, \"courtyard\" (CDIAL 118), with ḷ for ṇ. DEDR 33 lists a Kannada aṅgaḷa too, but that one means \"palate\": a different word."
             }
           ]
         },

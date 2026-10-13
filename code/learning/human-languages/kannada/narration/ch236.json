@@ -4,7 +4,7 @@
   "chapter": 236,
   "title": "To untie, To wake, To wake up, To bargain, To climb",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:22565c4478d41f21",
+  "sourceHash": "fnv1a64:6df3f2dfe81a4ef0",
   "lessons": [
     {
       "id": "KA-C236-biccu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c22dbc71ec637ff",
+      "sourceHash": "fnv1a64:b40c7281fb5001b9",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ಬಿಚ್ಚು (biccu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled."
+              "text": "ಬಿಚ್ಚು (biccu) is native Dravidian, one word with Tamil viri, \"to open, be loosened, untie\" (DEDR 5411). DEDR lists bircu, biccu, \"to become loose; loosen, untie\": the old v- has become b-."
             }
           ]
         },

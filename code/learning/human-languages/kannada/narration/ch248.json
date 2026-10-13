@@ -4,7 +4,7 @@
   "chapter": 248,
   "title": "Decade, Anniversary, Deadline, Auspicious time, One and a half",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5f4cfec525b60b3f",
+  "sourceHash": "fnv1a64:e176a48e03d23cef",
   "lessons": [
     {
       "id": "KA-C248-dasaka",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a4f7dee34975894",
+      "sourceHash": "fnv1a64:f9426bad18e64d7d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ಗಡುವು (gaḍuvu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled."
+              "text": "ಗಡುವು (gaḍuvu) is native Dravidian. DEDR 1109 lists gaḍuvu, with gaḍa and gaḍi, \"limit, limited time, period\", under kaḍe, \"to pass over; end\"; the entry also has Tamil kaṭa, \"to cross\"."
             }
           ]
         },

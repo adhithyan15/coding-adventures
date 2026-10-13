@@ -4,7 +4,7 @@
   "chapter": 170,
   "title": "Childbirth, Eyesight, Infection, Blister, Nutritious",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9fb665b44ef01ba8",
+  "sourceHash": "fnv1a64:feb9d72a17e338eb",
   "lessons": [
     {
       "id": "KA-C170-herige",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eed7912a7aa81297",
+      "sourceHash": "fnv1a64:8fe680d1daad49bf",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬೊಕ್ಕೆ (bokke) is native Dravidian, one word with Telugu pokku and Malayalam pokkuḷa (DEDR 4455). DEDR lists bokke, \"blister\"."
+              "text": "ಬೊಕ್ಕೆ (bokke) is native Dravidian, one word with Telugu pokku and Malayalam pokkuḷa (DEDR 4455). DEDR lists bokke, \"blister\", and compares Nepali phoko, \"blister, boil\" (CDIAL 8391)."
             }
           ]
         },

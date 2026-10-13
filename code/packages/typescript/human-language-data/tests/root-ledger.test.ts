@@ -238,7 +238,7 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // where their word comes from in a taken-apart block or an origin sentence, with a matching
   // hook. Native words cite DEDR (Burrow & Emeneau 1984), checked against the full article
   // text with every "?", "Cf. Skt." and "< IA" kept; Sanskrit tatsamas and tadbhavas cite
-  // CDIAL (Turner); English and Perso-Arabic loans name the donor. 68 say the origin is
+  // CDIAL (Turner); English and Perso-Arabic loans name the donor. About 63 say the origin is
   // uncertain after a search of both sources by form and by gloss, giving the usual account
   // as a hedge where there is one.
   kannada: { withoutHook: 0, withoutVisible: 0 },

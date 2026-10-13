@@ -4,7 +4,7 @@
   "chapter": 226,
   "title": "Art, Aunt, Daughter-in-law, Son-in-law, Sister-in-law",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0c879528ee55a11b",
+  "sourceHash": "fnv1a64:e5aecbf7fc3d52c0",
   "lessons": [
     {
       "id": "KA-C226-kale",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3214698fc176d59",
+      "sourceHash": "fnv1a64:5416b8b8749cd0ff",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅತ್ತೆ (atte) is native Dravidian, one word with Tamil attaṉ, Telugu atta and Malayalam atta (DEDR 142). DEDR lists atte, \"mother-in-law\", and sōdar-atte, \"father's sister\". DEDR 142 compares Sanskrit attā."
+              "text": "ಅತ್ತೆ (atte) is native Dravidian, one word with Tamil attai, Telugu atta and Malayalam atta (DEDR 142). DEDR lists atte, \"mother-in-law\", and sōdar-atte, \"father's sister\". DEDR 142 compares Sanskrit attā."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e60fdf1d2861ddcf",
+      "sourceHash": "fnv1a64:5d19d17af6be7e31",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ಸೊಸೆ (sose) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled."
+              "text": "The origin of ಸೊಸೆ (sose) is uncertain. Neither DEDR nor CDIAL records it. It may come from Prakrit susā, Sanskrit snuṣā, \"son's wife\" (CDIAL 13801), but no source settles this."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c74986060f6816c",
+      "sourceHash": "fnv1a64:28a9262eb5340094",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅತ್ತಿಗೆ (attige) is native Dravidian, of the family of atte, \"mother-in-law\", and DEDR 142 lists attige, \"elder brother's wife\", itself; the entry also has Tamil attaṉ, Telugu atta and Malayalam atta. DEDR 142 compares Sanskrit attā."
+              "text": "ಅತ್ತಿಗೆ (attige) is native Dravidian, of the family of atte, \"mother-in-law\", and DEDR 142 lists attige, \"elder brother's wife\", itself; the entry also has Tamil attai, Telugu atta and Malayalam atta. DEDR 142 compares Sanskrit attā."
             }
           ]
         },

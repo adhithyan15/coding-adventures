@@ -50,7 +50,7 @@ And it is the piece of the face that Kannada uses for keeping quiet. To say noth
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ತುಟಿ** (*tuṭi*) is native Dravidian, one word with Tamil *tuṭi* (DEDR 3296).
+**ತುಟಿ** (*tuṭi*) is native Dravidian, one word with Tamil *tuṭi* (DEDR 3296). DEDR points to related Indo-Aryan words in CDIAL 5853.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

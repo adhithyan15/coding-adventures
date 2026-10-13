@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "Nest, Creeper, Bud, Thorn, Holy basil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ce5acbdd4824f654",
+  "sourceHash": "fnv1a64:1150ecbb708baa3c",
   "lessons": [
     {
       "id": "KA-C188-gudu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b0411b415b19230",
+      "sourceHash": "fnv1a64:7d60294798694eb0",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಮೊಗ್ಗು (moggu) is native Dravidian, one word with Telugu moguḍu (DEDR 4893). DEDR lists moggu, mogge, \"a bud\", under mugi, \"to close (as a flower)\". DEDR 4893 compares Sanskrit mukula."
+              "text": "ಮೊಗ್ಗು (moggu) is native Dravidian, one word with Telugu mogga, \"a bud\" (DEDR 4893). DEDR lists moggu, mogge, \"a bud\", under mugi, \"to close (as a flower)\". DEDR 4893 compares Sanskrit mukula."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 177,
   "title": "Exactly, Naturally, Result, Effect, Difference",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d7b9333cc2d36507",
+  "sourceHash": "fnv1a64:bcb1155829364da6",
   "lessons": [
     {
       "id": "KA-C177-nikharavagi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d61dc7e0bc9687af",
+      "sourceHash": "fnv1a64:10fdd17a0b4d8553",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನಿಖರವಾಗಿ (nikharavāgi) is nikhara, \"exact, precise\", with the adverb ending -āgi. The origin of nikhara is uncertain; no source for it is settled."
+              "text": "ನಿಖರವಾಗಿ (nikharavāgi) is nikhara, \"exact, precise\", with the adverb ending -āgi. The origin of nikhara is uncertain. It may be a northern word: CDIAL 7095 has Hindi nikharnā, \"to become clear\"."
             }
           ]
         },

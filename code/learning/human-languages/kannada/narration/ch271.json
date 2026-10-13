@@ -4,7 +4,7 @@
   "chapter": 271,
   "title": "Pension, Fine, Strike, Organisation, Government department",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f67483d0f6b30836",
+  "sourceHash": "fnv1a64:848638b3e12c697e",
   "lessons": [
     {
       "id": "KA-C271-pincani",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53689b3c8a476773",
+      "sourceHash": "fnv1a64:a733901e0348a5db",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ದಂಡ (daṇḍa) is Sanskrit daṇḍa, \"stick, club; punishment\", taken over whole as a learned loan, a tatsama (CDIAL 6128)."
+              "text": "ದಂಡ (daṇḍa) is Sanskrit daṇḍa, \"stick, club; punishment\", taken over whole as a learned loan, a tatsama (CDIAL 6128). CDIAL thinks daṇḍa is probably non-Aryan."
             }
           ]
         },

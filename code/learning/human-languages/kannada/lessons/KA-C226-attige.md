@@ -47,7 +47,7 @@ reviews_of: [KA-C226-aliya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಅತ್ತಿಗೆ** (*attige*) is native Dravidian, of the family of *atte*, "mother-in-law", and DEDR 142 lists *attige*, "elder brother's wife", itself; the entry also has Tamil *attaṉ*, Telugu *atta* and Malayalam *atta*. DEDR 142 compares Sanskrit *attā*.
+**ಅತ್ತಿಗೆ** (*attige*) is native Dravidian, of the family of *atte*, "mother-in-law", and DEDR 142 lists *attige*, "elder brother's wife", itself; the entry also has Tamil *attai*, Telugu *atta* and Malayalam *atta*. DEDR 142 compares Sanskrit *attā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

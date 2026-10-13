@@ -4,7 +4,7 @@
   "chapter": 214,
   "title": "Edge, Tip, Bottom, Cross street, Fork",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fbe5cec0d356bbfb",
+  "sourceHash": "fnv1a64:ccb673662400875a",
   "lessons": [
     {
       "id": "KA-C214-ancu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa5f09b3aca1b264",
+      "sourceHash": "fnv1a64:56bc99b6397ec8bd",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅಂಚು (añcu) is native Dravidian, one word with Tamil aṉsu and Telugu ancu (DEDR 57). DEDR lists añcu itself, \"edge, border, selvage\". DEDR 57 compares Sanskrit añcala."
+              "text": "ಅಂಚು (añcu) is native Dravidian, one word with Telugu ancu, \"border, edge\" (DEDR 57); Tamil aṉsu is a loan from Telugu. DEDR lists añcu itself, \"edge, border, selvage\". DEDR 57 compares Sanskrit añcala."
             }
           ]
         },

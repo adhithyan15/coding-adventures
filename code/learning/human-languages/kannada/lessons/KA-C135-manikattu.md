@@ -47,7 +47,7 @@ reviews_of: [KA-C135-monakai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಮಣಿಕಟ್ಟು** (*maṇikaṭṭu*) is native Dravidian, one word with Tamil *maṇikkaṭṭu* and Telugu *maṇikaṭṭu* (DEDR 4673). DEDR lists *maṇikaṭṭu* itself, "wrist". DEDR 4673 compares Sanskrit *maṇibandha*.
+**ಮಣಿಕಟ್ಟು** (*maṇikaṭṭu*) is native Dravidian, one word with Tamil *maṇikkaṭṭu* and Telugu *maṇikaṭṭu* (DEDR 4673). DEDR lists *maṇikaṭṭu* itself, "wrist". DEDR 4673 notes that Sanskrit *maṇibandha*, "wrist", translates it: *bandha* renders *kaṭṭu*, "binding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

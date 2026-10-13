@@ -47,7 +47,7 @@ reviews_of: [KA-C251-ilijaru]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಹಿತ್ತಿಲು** (*hittilu*) is native Dravidian, built on the root for "behind", which DEDR 4205 lists as older Kannada *pin*, *pindu*: the yard behind the house. DEDR does not list *hittilu* itself.
+**ಹಿತ್ತಿಲು** (*hittilu*) is native Dravidian, built on the root for "behind", which DEDR 4205 lists as older Kannada *pin*, *pindu*: the yard behind the house. DEDR lists *hittilu* itself, with older *pittil*, "a backyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

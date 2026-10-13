@@ -48,7 +48,7 @@ Phālguṇa*).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-All twelve names are Sanskrit, kept whole. Most are named for a lunar asterism: *caitra* is the month whose full moon is in the asterism Sanskrit calls *citrā* (CDIAL 4915, 4812). CDIAL also lists *vaiśākha* (12149), *jyaiṣṭha* (5293), *āṣāḍha* (1473), *bhādrapada* (9447), Sanskrit *kārttika* (3070), *mārgaśiras* (10076), *puṣya* (8307), *māgha* (9993) and *phālguna* (9075).
+All twelve names are Sanskrit, most kept whole and a few lightly reshaped (*kārtīka* for Sanskrit *kārttika*, *phālguṇa* for *phālguna*). Most are named for a lunar asterism: *caitra* is the month whose full moon is in the asterism Sanskrit calls *citrā* (CDIAL 4915, 4812). CDIAL also lists *vaiśākha* (12149), *jyaiṣṭha* (5293), *āṣāḍha* (1473), *bhādrapada* (9447), Sanskrit *kārttika* (3070), *mārgaśiras* (10076), *puṣya* (8307), *māgha* (9993) and *phālguna* (9075).
 
 ## Why it's said this way: this is Hindi's calendar too, not a Dravidian one
 <!-- hl-knowledge: introduces=[KA-PRAGMATICS-C16-TINGALUGALU-02]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 184,
   "title": "Cucumber, Okra, Green beans, Leafy greens, Tender coconut water",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3c73115e147f32b8",
+  "sourceHash": "fnv1a64:49ff5c080cec252f",
   "lessons": [
     {
       "id": "KA-C184-sautekayi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:528eb030ec3a3efc",
+      "sourceHash": "fnv1a64:e938f8cf38fd2984",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಸೌತೆಕಾಯಿ (sautekāyi) is native Dravidian: saute, \"cucumber\", which DEDR 2399 lists, and kāyi, \"unripe fruit\" (DEDR 1459)."
+              "text": "ಸೌತೆಕಾಯಿ (sautekāyi) is native Dravidian: saute, \"cucumber\", which DEDR 2399 lists, and kāyi, \"unripe fruit\" (DEDR 1459). DEDR 1459 compares a reconstructed Indo-Aryan kacca, \"raw, unripe\" (CDIAL 2613)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e90b3d776a122d7",
+      "sourceHash": "fnv1a64:646379f415002ea7",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹುರುಳಿಕಾಯಿ (huruḷikāyi) is huruḷi, \"horse gram\", whose origin is uncertain, and native kāyi, \"unripe fruit, pod\" (DEDR 1459): green bean pods."
+              "text": "ಹುರುಳಿಕಾಯಿ (huruḷikāyi) is huruḷi, \"horse gram\", whose origin is uncertain, and native kāyi, \"unripe fruit, pod\" (DEDR 1459): green bean pods. DEDR 1459 compares a reconstructed Indo-Aryan kacca, \"raw, unripe\" (CDIAL 2613)."
             }
           ]
         },

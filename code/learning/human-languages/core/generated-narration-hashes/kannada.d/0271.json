@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 271,
-  "sourceHash": "fnv1a64:f67483d0f6b30836",
+  "sourceHash": "fnv1a64:848638b3e12c697e",
   "lessonIds": [
     "KA-C271-pincani",
     "KA-C271-danda",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch271.txt",
   "json": "kannada/narration/ch271.json",
-  "textHash": "fnv1a64:c52252140859c5fa",
-  "jsonHash": "fnv1a64:9bb1586d7f48240a",
+  "textHash": "fnv1a64:f8859a3442420dc7",
+  "jsonHash": "fnv1a64:2d34b6740f54770d",
   "findings": []
 }

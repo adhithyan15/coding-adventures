@@ -12,7 +12,7 @@ concept_tag: KA-RESP-OH-NO
 prerequisites: [KA-C87-really, KA-C87-nothing]
 sounds: []
 roots: [dravidian-ayya-father]
-etymology_hook: "ayyō: native Dravidian (DEDR 196)"
+etymology_hook: "ayyō: native Dravidian cry, one word with Tamil aiyō and Telugu ayyō (DEDR 196)"
 duration:
   max_seconds: 200
 requires:
@@ -45,7 +45,7 @@ when something goes wrong.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಅಯ್ಯೋ** (*ayyō*) is native Dravidian (DEDR 196). DEDR lists *ayyō*, an interjection of grief, under *ayya*, "father, master". DEDR 196 compares, with a query, Sanskrit *ārya* and *aye*.
+**ಅಯ್ಯೋ** (*ayyō*) is native Dravidian (DEDR 196). DEDR lists *ayyō*, a cry of grief, wonder or pity, in the part of that entry that holds the cries, beside Tamil *aiyō* and Telugu *ayyō*. It compares Sanskrit *aye*, a cry of surprise.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

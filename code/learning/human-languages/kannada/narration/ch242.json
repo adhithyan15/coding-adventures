@@ -4,7 +4,7 @@
   "chapter": 242,
   "title": "To temper, To soak, To wring, To dip, To tear",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f8f11dd52038ef6",
+  "sourceHash": "fnv1a64:72230eff191bb17b",
   "lessons": [
     {
       "id": "KA-C242-oggarane-haku",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e34420f4874cd6ba",
+      "sourceHash": "fnv1a64:485f25d30d4eadf9",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹರಿ (hari) is native Dravidian, one word with Tamil pari and Malayalam pari (DEDR 3963). DEDR lists pari, hari, \"to run, flow, go away\": the p- has become h-."
+              "text": "ಹರಿ (hari) is native Dravidian, one word with Tamil paṟi, \"to pluck, be torn apart\", and Malayalam paṟiyuka, \"to tear, come off\" (DEDR 4027). DEDR gives older Kannada paṟi, \"to tear, rend\": the p- has become h-. DEDR adds that this word has partly merged with pari, \"to separate\" (DEDR 3962)."
             }
           ]
         },

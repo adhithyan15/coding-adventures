@@ -15,7 +15,7 @@ concept_tag: KA-QUAL145-KAHI
 prerequisites: [KA-C144-budu, KA-C144-khara]
 sounds: []
 roots: [dravidian-kaypu-bitter]
-etymology_hook: "kahi: native Dravidian, one word with Tamil kaya and Telugu kasu (DEDR 1249)"
+etymology_hook: "kahi: native Dravidian, one word with Tamil kaya 'to be bitter' (DEDR 1249)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C144-khara]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಕಹಿ** (*kahi*) is native Dravidian, one word with Tamil *kaya* and Telugu *kasu* (DEDR 1249). DEDR lists the older Kannada *kayi*, *kaypu*, "bitterness". DEDR 1249 compares Sanskrit *kaṣāya*.
+**ಕಹಿ** (*kahi*) is native Dravidian, one word with Tamil *kaya*, "to be bitter" (DEDR 1249). DEDR lists the older Kannada *kayi*, *kaypu*, "bitterness". DEDR 1249 compares Sanskrit *kaṣāya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

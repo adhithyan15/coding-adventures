@@ -47,7 +47,7 @@ reviews_of: [KA-C134-nalige]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಗಲ್ಲ** (*galla*) is Sanskrit *galla*, "cheek", taken over whole as a learned loan, a tatsama (CDIAL 4089). In Kannada it names the chin.
+**ಗಲ್ಲ** (*galla*) is Sanskrit *galla*, "cheek", taken over whole as a learned loan, a tatsama (CDIAL 4089). In Kannada it names the chin. CDIAL compares Sanskrit *gaṇḍa*, "cheek", and points to a Dravidian source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

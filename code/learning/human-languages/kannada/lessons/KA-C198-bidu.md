@@ -47,7 +47,7 @@ reviews_of: [KA-C198-hidi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಬಿಡು** (*biḍu*) is native Dravidian, one word with Tamil *viṭu* (DEDR 5393). DEDR lists *biḍu* itself, "to let loose, leave": the old *v-* has become *b-*. DEDR 5393 compares Sanskrit *avamocana*.
+**ಬಿಡು** (*biḍu*) is native Dravidian, one word with Tamil *viṭu* (DEDR 5393). DEDR lists *biḍu* itself, "to let loose, leave": the old *v-* has become *b-*. DEDR 5393 notes that Sanskrit *avamocana*, "inn", is a calque of Tamil *viṭuti*, "lodging place", from this root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

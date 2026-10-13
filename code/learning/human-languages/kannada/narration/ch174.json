@@ -4,7 +4,7 @@
   "chapter": 174,
   "title": "Tourist, Lake, Cave, Zoo, Palace",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e82adca2342e5a7a",
+  "sourceHash": "fnv1a64:6a4deb55418687c4",
   "lessons": [
     {
       "id": "KA-C174-pravasi",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d94a945457d08be",
+      "sourceHash": "fnv1a64:27301b7e4bc12440",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅರಮನೆ (aramane) is \"the king's house\". DEDR 201 lists ara-mane, \"royal dwelling, palace\", itself. Its first part is arasu, \"king\", which DEDR derives from Sanskrit rājan, \"king\", through an early southern form; the second is native mane, \"house\" (DEDR 4776)."
+              "text": "ಅರಮನೆ (aramane) is \"the king's house\". DEDR 201 lists ara-mane, \"royal dwelling, palace\", itself. Its first part is arasu, \"king\", which DEDR derives from Sanskrit rājan, \"king\"; the second is native mane, \"house\" (DEDR 4776)."
             }
           ]
         },

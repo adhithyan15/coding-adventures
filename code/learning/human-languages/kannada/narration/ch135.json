@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Chin, Cheek, Knee, Elbow, Wrist",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0ce1b779e04fdccc",
+  "sourceHash": "fnv1a64:c54f7fe339511091",
   "lessons": [
     {
       "id": "KA-C135-galla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3859d7e8eed8d6f",
+      "sourceHash": "fnv1a64:2c5e542f2077502b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಗಲ್ಲ (galla) is Sanskrit galla, \"cheek\", taken over whole as a learned loan, a tatsama (CDIAL 4089). In Kannada it names the chin."
+              "text": "ಗಲ್ಲ (galla) is Sanskrit galla, \"cheek\", taken over whole as a learned loan, a tatsama (CDIAL 4089). In Kannada it names the chin. CDIAL compares Sanskrit gaṇḍa, \"cheek\", and points to a Dravidian source."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f199bb2e0b31919f",
+      "sourceHash": "fnv1a64:f78e442c821d15e5",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಮಣಿಕಟ್ಟು (maṇikaṭṭu) is native Dravidian, one word with Tamil maṇikkaṭṭu and Telugu maṇikaṭṭu (DEDR 4673). DEDR lists maṇikaṭṭu itself, \"wrist\". DEDR 4673 compares Sanskrit maṇibandha."
+              "text": "ಮಣಿಕಟ್ಟು (maṇikaṭṭu) is native Dravidian, one word with Tamil maṇikkaṭṭu and Telugu maṇikaṭṭu (DEDR 4673). DEDR lists maṇikaṭṭu itself, \"wrist\". DEDR 4673 notes that Sanskrit maṇibandha, \"wrist\", translates it: bandha renders kaṭṭu, \"binding\"."
             }
           ]
         },

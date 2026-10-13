@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Lemon, Grapes, Jackfruit, Pepper, Cumin",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a619817a56f6e69a",
+  "sourceHash": "fnv1a64:2f2af063fdec3ec6",
   "lessons": [
     {
       "id": "KA-C126-nimbe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0025007a128903d",
+      "sourceHash": "fnv1a64:f271556240108141",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನಿಂಬೆ (nimbe) comes from Sanskrit nimbū, \"the lime\", reshaped to Kannada sounds: a tadbhava (CDIAL 7247). Kannada's -e replaced the final -ū."
+              "text": "ನಿಂಬೆ (nimbe) comes from Sanskrit nimbū, \"the lime\", reshaped to Kannada sounds: a tadbhava (CDIAL 7247). Kannada's -e replaced the final -ū. CDIAL takes nimbū itself from an Austroasiatic language."
             }
           ]
         },

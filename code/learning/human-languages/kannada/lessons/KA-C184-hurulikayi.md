@@ -47,7 +47,7 @@ reviews_of: [KA-C184-bendekayi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಹುರುಳಿಕಾಯಿ** (*huruḷikāyi*) is *huruḷi*, "horse gram", whose origin is uncertain, and native *kāyi*, "unripe fruit, pod" (DEDR 1459): green bean pods.
+**ಹುರುಳಿಕಾಯಿ** (*huruḷikāyi*) is *huruḷi*, "horse gram", whose origin is uncertain, and native *kāyi*, "unripe fruit, pod" (DEDR 1459): green bean pods. DEDR 1459 compares a reconstructed Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

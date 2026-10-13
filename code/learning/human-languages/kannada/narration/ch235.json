@@ -4,7 +4,7 @@
   "chapter": 235,
   "title": "To fall, To return, To touch, To lift, To throw",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d1e58cfe1d11d4de",
+  "sourceHash": "fnv1a64:b161328e4239e0fb",
   "lessons": [
     {
       "id": "KA-C235-bilu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b0341bc0ad5be06",
+      "sourceHash": "fnv1a64:6af523affcb0f82f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಎತ್ತು (ettu) is native Dravidian, one word with Tamil eḻu, Telugu ettu and Malayalam S (DEDR 796). DEDR lists ettu itself, \"to lift, raise\"."
+              "text": "ಎತ್ತು (ettu) is native Dravidian, one word with Telugu ettu, \"to lift up\" (DEDR 796). DEDR lists ettu itself, \"to lift, raise\"."
             }
           ]
         },

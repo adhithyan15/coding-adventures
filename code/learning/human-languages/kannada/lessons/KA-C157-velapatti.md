@@ -52,7 +52,7 @@ leaves at eight, so be there before eight.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ವೇಳಾಪಟ್ಟಿ** (*vēḷāpaṭṭi*) is *vēḷā*, "time", from Sanskrit *velā*, "limit, time" (CDIAL 12115), and *paṭṭi*, "list", from Sanskrit *paṭṭikā*, "slab, tablet" (CDIAL 7699): a table of times.
+**ವೇಳಾಪಟ್ಟಿ** (*vēḷāpaṭṭi*) is *vēḷā*, "time", from Sanskrit *velā*, "limit, time" (CDIAL 12115), and *paṭṭi*, "list", from Sanskrit *paṭṭikā*, "slab, tablet" (CDIAL 7699): a table of times. CDIAL thinks *velā* probably came into Sanskrit from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

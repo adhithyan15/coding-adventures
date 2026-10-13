@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:305aa43e3fe08398",
+  "sourceHash": "fnv1a64:04b6b9888296b6f1",
   "lessons": [
     {
       "id": "KA-C50-now",
@@ -580,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ee4dfdb272707c4",
+      "sourceHash": "fnv1a64:dde468a0b5d14616",
       "notice": null,
       "blocks": [
         {
@@ -630,7 +630,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge) is native Dravidian, \"a giving of leave\": bīḷ- belongs with biḍu, \"to let go, quit\" (DEDR 5393), and koḍuge, \"a gift\", is from koḍu, \"to give\" (DEDR 2053). DEDR 5393 compares Sanskrit avamocana."
+              "text": "ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge) is native Dravidian, \"a giving of leave\": bīḷ- is usually taken with biḍu, \"to let go, quit\" (DEDR 5393), and koḍuge, \"a gift\", is from koḍu, \"to give\" (DEDR 2053). DEDR 5393 notes that Sanskrit avamocana, \"inn\", is a calque of Tamil viṭuti, \"lodging place\", from this root."
             }
           ]
         },

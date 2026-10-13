@@ -4,7 +4,7 @@
   "chapter": 122,
   "title": "Dry vegetable dish, Pickle, Egg, Fish, Meat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2af15de57df5260",
+  "sourceHash": "fnv1a64:ac22db9b47a0df7a",
   "lessons": [
     {
       "id": "KA-C122-palya",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:712769a79d46b20c",
+      "sourceHash": "fnv1a64:0c2a6ce5200eaad4",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಉಪ್ಪಿನಕಾಯಿ (uppinakāyi) is native Dravidian: uppina, \"of salt\", from uppu, \"salt\" (DEDR 2674), and kāyi, \"unripe fruit\" (DEDR 1459): fruit kept in salt."
+              "text": "ಉಪ್ಪಿನಕಾಯಿ (uppinakāyi) is native Dravidian: uppina, \"of salt\", from uppu, \"salt\" (DEDR 2674), and kāyi, \"unripe fruit\" (DEDR 1459): fruit kept in salt. DEDR 1459 compares a reconstructed Indo-Aryan kacca, \"raw, unripe\" (CDIAL 2613)."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [KA-C166-ulu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಚಿಮುಕಿಸು** (*cimukisu*) is native Dravidian, of the root *cimmu*, "to flick with the fingers, squirt", which DEDR 2548 lists; the entry also has Telugu *cimmu*.
+**ಚಿಮುಕಿಸು** (*cimukisu*) is native Dravidian, of the root *cimmu*, "to flick with the fingers, squirt", which DEDR 2548 lists; the entry also has Telugu *cimmu*. DEDR 2548 compares Prakrit *simpaï*, "sprinkles".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

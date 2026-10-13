@@ -4,7 +4,7 @@
   "chapter": 213,
   "title": "Fort, Wedding hall, Gym, Stadium, Museum",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2a43b1af7acb3e1a",
+  "sourceHash": "fnv1a64:c04286cdb5196605",
   "lessons": [
     {
       "id": "KA-C213-kote",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd2ba2ec6fdb825e",
+      "sourceHash": "fnv1a64:992eb63995b4988c",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಲ್ಯಾಣ ಮಂಟಪ (kalyāṇa maṇṭapa) is Sanskrit kalyāṇa, \"beautiful, lucky\", the word for a wedding (CDIAL 2952), and maṇṭapa, \"open pavilion\" (CDIAL 9740): the pavilion for the wedding."
+              "text": "ಕಲ್ಯಾಣ ಮಂಟಪ (kalyāṇa maṇṭapa) is Sanskrit kalyāṇa, \"beautiful, lucky\", the word for a wedding (CDIAL 2952), and maṇṭapa, \"open pavilion\" (CDIAL 9740): the pavilion for the wedding. CDIAL notes that maṇḍapa may be of non-Aryan origin."
             }
           ]
         },

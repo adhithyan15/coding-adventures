@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 287,
-  "sourceHash": "fnv1a64:e6557f6a2f19b763",
+  "sourceHash": "fnv1a64:f84f406276a91188",
   "lessonIds": [
     "KA-C287-dada",
     "KA-C287-bara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch287.txt",
   "json": "kannada/narration/ch287.json",
-  "textHash": "fnv1a64:b1592199a0192152",
-  "jsonHash": "fnv1a64:b8d1500ce96676f1",
+  "textHash": "fnv1a64:582d21f4d489c908",
+  "jsonHash": "fnv1a64:13e1a44d6ca60bac",
   "findings": []
 }

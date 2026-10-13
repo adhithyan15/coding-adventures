@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 152,
-  "sourceHash": "fnv1a64:dfd4bf3487166c80",
+  "sourceHash": "fnv1a64:4a48655493fe9e96",
   "lessonIds": [
     "KA-C152-arisu",
     "KA-C152-adu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch152.txt",
   "json": "kannada/narration/ch152.json",
-  "textHash": "fnv1a64:5b452510c40590d5",
-  "jsonHash": "fnv1a64:c8d3cd89e148b58e",
+  "textHash": "fnv1a64:ad076e43493602b0",
+  "jsonHash": "fnv1a64:bf002b82735331d8",
   "findings": []
 }

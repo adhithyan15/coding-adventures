@@ -15,7 +15,7 @@ concept_tag: KA-VASTU225-KABBU
 prerequisites: [KA-C225-mallige, KA-C225-suryakanti]
 sounds: []
 roots: [kannada-kabbu-sugarcane]
-etymology_hook: "kabbu: origin uncertain; not recorded in DEDR or CDIAL"
+etymology_hook: "kabbu: native Dravidian, one word with Tamil karumpu 'sugar-cane' (DEDR 1288)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C225-suryakanti]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **ಕಬ್ಬು** (*kabbu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+**ಕಬ್ಬು** (*kabbu*) is native Dravidian, one word with Tamil *karumpu* and Malayalam *karimpu*, "sugar-cane" (DEDR 1288). DEDR lists older Kannada *karvu*, *karbu* beside *kabbu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

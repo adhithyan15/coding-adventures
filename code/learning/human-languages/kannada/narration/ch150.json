@@ -4,7 +4,7 @@
   "chapter": 150,
   "title": "To wash, To wipe, To sweep, To tie, To sew",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e7eee701838bf1d",
+  "sourceHash": "fnv1a64:f66c57d4dda92eb5",
   "lessons": [
     {
       "id": "KA-C150-tole",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f04657d383b5db1d",
+      "sourceHash": "fnv1a64:1b82710a92c81335",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಟ್ಟು (kaṭṭu) is native Dravidian, one word with Tamil kaṭṭu and Telugu kaṭṭu (DEDR 1147). DEDR lists kaṭṭu itself, \"to bind, tie, build\". DEDR 1147 compares Sanskrit ghaṭṭa."
+              "text": "ಕಟ್ಟು (kaṭṭu) is native Dravidian, one word with Tamil kaṭṭu and Telugu kaṭṭu (DEDR 1147). DEDR lists kaṭṭu itself, \"to bind, tie, build\". DEDR 1147 compares Sanskrit ghaṭṭa, \"landing-place\", only with the Kannada and Telugu gaṭṭu, \"embankment\"."
             }
           ]
         },

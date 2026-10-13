@@ -47,7 +47,7 @@ reviews_of: [KA-C141-mrdu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಗಟ್ಟಿ** (*gaṭṭi*) is native Dravidian, one word with Tamil *kaṭṭu*, Telugu *kaṭṭu* and Malayalam *kaṭṭa* (DEDR 1148). DEDR lists *gaṭṭi* itself, "firmness, hardness".
+**ಗಟ್ಟಿ** (*gaṭṭi*) is native Dravidian, one word with Tamil *kaṭṭu*, Telugu *kaṭṭu* and Malayalam *kaṭṭa* (DEDR 1148). DEDR lists *gaṭṭi* itself, "firmness, hardness", and compares Sanskrit *kaṭhina*, "hard, firm" (CDIAL 2650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

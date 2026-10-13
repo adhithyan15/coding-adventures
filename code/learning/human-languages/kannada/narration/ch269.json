@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "Report, Problem, News, Information, Mark",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:51b753d0f61019a1",
+  "sourceHash": "fnv1a64:4f0ced595e7bc81a",
   "lessons": [
     {
       "id": "KA-C269-varadi",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21f003eca8c733d3",
+      "sourceHash": "fnv1a64:207acfd7ddc813e3",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where ಮಾಹಿತಿ (māhiti) comes from is uncertain: DEDR and CDIAL do not list it. It is usually traced to Arabic māhiyat, \"nature, state of affairs\", through Persian and the languages to the north."
+              "text": "Where ಮಾಹಿತಿ (māhiti) comes from is uncertain: DEDR and CDIAL do not list it. It is often traced, through Marathi māhitī, to Arabic māhiyat, \"nature, particulars\", by way of Persian."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 201,
   "title": "To postpone, To explain, To pass, To remember, To print",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f37d36eb9bddc264",
+  "sourceHash": "fnv1a64:77140e92c303b532",
   "lessons": [
     {
       "id": "KA-C201-mundudu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83078461cf57167b",
+      "sourceHash": "fnv1a64:1d93cb00e97e50b3",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಮುದ್ರಿಸು (mudrisu) is Sanskrit mudrā, \"seal, stamp\" (CDIAL 10203), made into a Kannada verb with -isu: to print is to stamp."
+              "text": "ಮುದ್ರಿಸು (mudrisu) is Sanskrit mudrā, \"seal, stamp\" (CDIAL 10203), made into a Kannada verb with -isu: to print is to stamp. CDIAL thinks mudrā probably came into Sanskrit from Iranian."
             }
           ]
         },

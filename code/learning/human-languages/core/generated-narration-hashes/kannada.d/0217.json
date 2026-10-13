@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 217,
-  "sourceHash": "fnv1a64:b47c26ea9244e1b8",
+  "sourceHash": "fnv1a64:58a99c20344fee95",
   "lessonIds": [
     "KA-C217-agga",
     "KA-C217-khali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch217.txt",
   "json": "kannada/narration/ch217.json",
-  "textHash": "fnv1a64:2d66fa97395930e9",
-  "jsonHash": "fnv1a64:d499971b8a5b0e5b",
+  "textHash": "fnv1a64:afbc09137b203f86",
+  "jsonHash": "fnv1a64:a52370a4d91e13e6",
   "findings": []
 }

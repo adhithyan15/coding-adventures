@@ -15,7 +15,7 @@ concept_tag: KA-VERB-BICCU
 prerequisites: [KA-C235-ettu, KA-C235-ese]
 sounds: []
 roots: [kannada-biccu]
-etymology_hook: "biccu: origin uncertain; not recorded in DEDR or CDIAL"
+etymology_hook: "biccu: native Dravidian, one word with Tamil viri 'to open, untie' (DEDR 5411)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C235-ese]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **ಬಿಚ್ಚು** (*biccu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+**ಬಿಚ್ಚು** (*biccu*) is native Dravidian, one word with Tamil *viri*, "to open, be loosened, untie" (DEDR 5411). DEDR lists *bircu*, *biccu*, "to become loose; loosen, untie": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "To plough, To sprinkle, To drip, To leak, To float",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8b1aac6a28fcee30",
+  "sourceHash": "fnv1a64:3769f99850b223da",
   "lessons": [
     {
       "id": "KA-C166-ulu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb71faae12ac1657",
+      "sourceHash": "fnv1a64:e79fcf60113209b7",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಚಿಮುಕಿಸು (cimukisu) is native Dravidian, of the root cimmu, \"to flick with the fingers, squirt\", which DEDR 2548 lists; the entry also has Telugu cimmu."
+              "text": "ಚಿಮುಕಿಸು (cimukisu) is native Dravidian, of the root cimmu, \"to flick with the fingers, squirt\", which DEDR 2548 lists; the entry also has Telugu cimmu. DEDR 2548 compares Prakrit simpaï, \"sprinkles\"."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb3bb35fcf48dd8f",
+      "sourceHash": "fnv1a64:c5320dd1f2d95c02",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ತೊಟ್ಟಿಕ್ಕು (toṭṭikku) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled."
+              "text": "ತೊಟ್ಟಿಕ್ಕು (toṭṭikku) is probably native Dravidian: toṭṭu, \"to drip; a drop\", which DEDR 2835 lists with Tamil coṭṭu, \"to fall in drops\", and ikku, \"to put\" (DEDR 492). DEDR does not list toṭṭikku itself."
             }
           ]
         },

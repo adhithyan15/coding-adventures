@@ -47,7 +47,7 @@ reviews_of: [KA-C258-majjige]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಬೆಣ್ಣೆ** (*beṇṇe*) is native Dravidian, one word with Tamil *veṇṇai*, "butter", which DEDR 5496 files under the root for "white, bright"; the entry also has Tamil *veṇṇai*.
+**ಬೆಣ್ಣೆ** (*beṇṇe*) is native Dravidian, one word with Tamil *veṇṇai*, "butter", which DEDR 5496 files under the root for "white, bright"; Telugu has *venna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [KA-C170-sonku]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಬೊಕ್ಕೆ** (*bokke*) is native Dravidian, one word with Telugu *pokku* and Malayalam *pokkuḷa* (DEDR 4455). DEDR lists *bokke*, "blister".
+**ಬೊಕ್ಕೆ** (*bokke*) is native Dravidian, one word with Telugu *pokku* and Malayalam *pokkuḷa* (DEDR 4455). DEDR lists *bokke*, "blister", and compares Nepali *phoko*, "blister, boil" (CDIAL 8391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

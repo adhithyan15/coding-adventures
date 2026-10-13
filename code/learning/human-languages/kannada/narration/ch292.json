@@ -4,7 +4,7 @@
   "chapter": 292,
   "title": "Deserted, Crisp, Tidy, Messy, Convenient",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3aedc03983d1dce",
+  "sourceHash": "fnv1a64:5fefaa2e2dfe84f7",
   "lessons": [
     {
       "id": "KA-C292-nirjana",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22d2b864b597a9a5",
+      "sourceHash": "fnv1a64:c0027d298d3a6355",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅಚ್ಚುಕಟ್ಟಾದ (accukaṭṭāda) is accu, \"a mould, a stamp\" (DEDR 47), kaṭṭu, \"to bind, build\" (DEDR 1147), and āda, \"that has become\": \"made to a mould\". DEDR 47 compares, with a query, Sanskrit sañcaka, \"a mould\". DEDR 1147 compares Sanskrit ghaṭṭa."
+              "text": "ಅಚ್ಚುಕಟ್ಟಾದ (accukaṭṭāda) is accu, \"a mould, a stamp\" (DEDR 47), kaṭṭu, \"to bind, build\" (DEDR 1147), and āda, \"that has become\": \"made to a mould\". DEDR 47 compares, with a query, Sanskrit sañcaka, \"a mould\"."
             }
           ]
         },

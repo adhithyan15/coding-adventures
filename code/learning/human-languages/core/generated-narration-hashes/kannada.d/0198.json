@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 198,
-  "sourceHash": "fnv1a64:ebfbe765153ad060",
+  "sourceHash": "fnv1a64:b41c7f146a0b4b7f",
   "lessonIds": [
     "KA-C198-ujju",
     "KA-C198-taru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch198.txt",
   "json": "kannada/narration/ch198.json",
-  "textHash": "fnv1a64:c3c0fa2154cbe425",
-  "jsonHash": "fnv1a64:d9657a7b04b64822",
+  "textHash": "fnv1a64:d9a8a7d288fb60aa",
+  "jsonHash": "fnv1a64:69a574258d518782",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 225,
   "title": "Neem, Jasmine, Sunflower, Sugarcane, Firecracker",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:116de8df06580de6",
+  "sourceHash": "fnv1a64:895668e1c964055d",
   "lessons": [
     {
       "id": "KA-C225-bevu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b5f9c94cf165f81",
+      "sourceHash": "fnv1a64:53d125ec1d6356c0",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of ಕಬ್ಬು (kabbu) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled."
+              "text": "ಕಬ್ಬು (kabbu) is native Dravidian, one word with Tamil karumpu and Malayalam karimpu, \"sugar-cane\" (DEDR 1288). DEDR lists older Kannada karvu, karbu beside kabbu."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: KA-VASTU226-ATTE
 prerequisites: [KA-C225-pataki, KA-C226-kale]
 sounds: []
 roots: [dravidian-attai-aunt]
-etymology_hook: "atte: native Dravidian, one word with Tamil attaṉ and Telugu atta (DEDR 142)"
+etymology_hook: "atte: native Dravidian, one word with Tamil attai and Telugu atta (DEDR 142)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [KA-C226-kale]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಅತ್ತೆ** (*atte*) is native Dravidian, one word with Tamil *attaṉ*, Telugu *atta* and Malayalam *atta* (DEDR 142). DEDR lists *atte*, "mother-in-law", and *sōdar-atte*, "father's sister". DEDR 142 compares Sanskrit *attā*.
+**ಅತ್ತೆ** (*atte*) is native Dravidian, one word with Tamil *attai*, Telugu *atta* and Malayalam *atta* (DEDR 142). DEDR lists *atte*, "mother-in-law", and *sōdar-atte*, "father's sister". DEDR 142 compares Sanskrit *attā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

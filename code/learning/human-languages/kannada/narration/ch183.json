@@ -4,7 +4,7 @@
   "chapter": 183,
   "title": "Frying pan, Pressure cooker, Bowl, Ladle, Bucket",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f191069f0ded1675",
+  "sourceHash": "fnv1a64:40621d50c10543fe",
   "lessons": [
     {
       "id": "KA-C183-banale",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6e5ccee7be8a540",
+      "sourceHash": "fnv1a64:778ff12c3c1a6399",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬಾಣಲೆ (bāṇale) is native Dravidian, one word with Tamil pāṇali (DEDR 4069). DEDR lists bāṇale itself, \"frying pan\"."
+              "text": "ಬಾಣಲೆ (bāṇale) is native Dravidian, one word with Telugu bāṇali and Tulu baṇalè (DEDR 4069); Tamil pāṇali is a loan from Telugu. DEDR lists bāṇale itself, \"frying pan\"."
             }
           ]
         },

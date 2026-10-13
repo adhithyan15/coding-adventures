@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e35ae9305dcfd7f8",
+  "sourceHash": "fnv1a64:16e753a3395d52ed",
   "lessons": [
     {
       "id": "KA-C52-door",
@@ -569,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb6b139a62d1b432",
+      "sourceHash": "fnv1a64:afe3fa0df0f86edb",
       "notice": null,
       "blocks": [
         {
@@ -612,7 +612,7 @@
             },
             {
               "kind": "speech",
-              "text": "DEDR 4345 lists the flower word; CDIAL 10092 lists Sanskrit mālā, \"wreath, garland\". DEDR 4345 compares, with a query, Sanskrit puṣpa."
+              "text": "DEDR 4345 lists the flower word; CDIAL 10092 lists Sanskrit mālā, \"wreath, garland\". DEDR 4345 compares, with a query, Sanskrit puṣpa. CDIAL takes mālā itself from Dravidian (Tamil mālai), and DEDR 4827 counts māle among the tatsamas."
             }
           ]
         },

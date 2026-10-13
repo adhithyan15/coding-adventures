@@ -47,7 +47,7 @@ reviews_of: [KA-C290-mukhya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ತಣ್ಣಗೆ** (*taṇṇage*) is native Dravidian, from *taṇ*, "coolness, cold", which DEDR 3045 lists, with the adverb ending *-age*; the entry also has Tamil *taṇ*, Telugu *taniyu* and Malayalam *taṇ*.
+**ತಣ್ಣಗೆ** (*taṇṇage*) is native Dravidian, from *taṇ*, "coolness, cold", which DEDR 3045 lists, with the adverb ending *-age*; the entry also has Tamil *taṇ*, Telugu *taniyu* and Malayalam *taṇ*. DEDR 3045 compares Prakrit *taṇṇāya*, "damp", and a reconstructed Indo-Aryan *\*ṭhaṇḍha*, "cold" (CDIAL 13676).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

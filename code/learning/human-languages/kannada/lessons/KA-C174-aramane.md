@@ -47,7 +47,7 @@ reviews_of: [KA-C174-mrgalaya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಅರಮನೆ** (*aramane*) is "the king's house". DEDR 201 lists *ara-mane*, "royal dwelling, palace", itself. Its first part is *arasu*, "king", which DEDR derives from Sanskrit *rājan*, "king", through an early southern form; the second is native *mane*, "house" (DEDR 4776).
+**ಅರಮನೆ** (*aramane*) is "the king's house". DEDR 201 lists *ara-mane*, "royal dwelling, palace", itself. Its first part is *arasu*, "king", which DEDR derives from Sanskrit *rājan*, "king"; the second is native *mane*, "house" (DEDR 4776).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

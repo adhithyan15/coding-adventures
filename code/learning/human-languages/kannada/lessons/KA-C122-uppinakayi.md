@@ -47,7 +47,7 @@ reviews_of: [KA-C122-palya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಉಪ್ಪಿನಕಾಯಿ** (*uppinakāyi*) is native Dravidian: *uppina*, "of salt", from *uppu*, "salt" (DEDR 2674), and *kāyi*, "unripe fruit" (DEDR 1459): fruit kept in salt.
+**ಉಪ್ಪಿನಕಾಯಿ** (*uppinakāyi*) is native Dravidian: *uppina*, "of salt", from *uppu*, "salt" (DEDR 2674), and *kāyi*, "unripe fruit" (DEDR 1459): fruit kept in salt. DEDR 1459 compares a reconstructed Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

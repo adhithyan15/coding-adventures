@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "Riverbank, Drought, Earthquake, World, Wall",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e6557f6a2f19b763",
+  "sourceHash": "fnv1a64:f84f406276a91188",
   "lessons": [
     {
       "id": "KA-C287-dada",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca4297833713d587",
+      "sourceHash": "fnv1a64:25495ea15c6859d0",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಗೋಡೆ (gōḍe) is native Dravidian, one word with Telugu kōṭa (DEDR 2207). DEDR lists gōḍe beside kōṭe, \"fort, rampart\". DEDR 2207 compares Sanskrit koṭṭa."
+              "text": "ಗೋಡೆ (gōḍe) is native Dravidian, one word with Telugu gōḍa and Tulu gōḍè, \"wall\" (DEDR 2207). DEDR keeps it in a part of its own, apart from kōṭe, \"fort, rampart\"."
             }
           ]
         },

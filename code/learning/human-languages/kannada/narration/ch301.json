@@ -4,7 +4,7 @@
   "chapter": 301,
   "title": "Glass, Plastic, Brick, List, Griddle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fee3783d1f69c2a4",
+  "sourceHash": "fnv1a64:911661ddb9e44a96",
   "lessons": [
     {
       "id": "KA-C301-gaju",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:903e17710ad648c6",
+      "sourceHash": "fnv1a64:699d472934938d62",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಾವಲಿ (kāvali) is native Dravidian, one word with Tamil kāy (DEDR 1488). DEDR lists kāvali, \"a pan for frying or baking\"."
+              "text": "ಕಾವಲಿ (kāvali) is native Dravidian, one word with Tulu kāvali (DEDR 1488). DEDR lists kāvali, \"a pan for frying or baking\", and points to Tamil kāy, \"to grow hot\" (DEDR 1458)."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: KA-ANCHOR-JHARI
 prerequisites: [KA-S127-letter-uu]
 sounds: []
 roots: [sanskrit-jhara]
-etymology_hook: "jhari ← Sanskrit jharī 'waterfall', a tatsama (CDIAL 5343)"
+etymology_hook: "jhari ← Sanskrit jharī 'river' (jhara 'waterfall'), a tatsama (CDIAL 5343)"
 duration:
   max_seconds: 120
 requires:
@@ -49,7 +49,7 @@ piece of it, **ಝ**, and writes it on its own.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಝರಿ** (*jhari*) is Sanskrit *jharī*, "waterfall", taken over whole as a learned loan, a tatsama, with the final *-ī* shortened (CDIAL 5343). In Kannada it names any stream that runs down a slope.
+**ಝರಿ** (*jhari*) is Sanskrit *jharī*, "river" (the masculine *jhara* is "waterfall"), taken over whole as a learned loan, a tatsama, with the final *-ī* shortened (CDIAL 5343). In Kannada it names any stream that runs down a slope.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-JHARI] -->

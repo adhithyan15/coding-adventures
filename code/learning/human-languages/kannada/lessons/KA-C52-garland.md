@@ -12,7 +12,7 @@ concept_tag: KA-NOUN-GARLAND
 prerequisites: [KA-C52-flower, KA-C50-farewell]
 sounds: []
 roots: [dravidian-puu-flower, sanskrit-mala]
-etymology_hook: "hūmāle: native hū 'flower' (DEDR 4345) + māle ← Sanskrit mālā 'garland' (CDIAL 10092)"
+etymology_hook: "hūmāle: native hū 'flower' (DEDR 4345) + māle ← Sanskrit mālā, which CDIAL 10092 takes from Dravidian"
 duration:
   max_seconds: 210
 requires:
@@ -47,7 +47,7 @@ So the last word of the run carries both halves of Kannada in it: a Dravidian sy
 
 Five things a Kannada welcome puts between the street and the guest: the door, the chair, the pattern on the ground, the flower, the garland.
 
-DEDR 4345 lists the flower word; CDIAL 10092 lists Sanskrit *mālā*, "wreath, garland". DEDR 4345 compares, with a query, Sanskrit *puṣpa*.
+DEDR 4345 lists the flower word; CDIAL 10092 lists Sanskrit *mālā*, "wreath, garland". DEDR 4345 compares, with a query, Sanskrit *puṣpa*. CDIAL takes *mālā* itself from Dravidian (Tamil *mālai*), and DEDR 4827 counts *māle* among the tatsamas.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

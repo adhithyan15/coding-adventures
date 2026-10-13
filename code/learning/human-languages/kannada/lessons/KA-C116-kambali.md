@@ -47,7 +47,7 @@ reviews_of: [KA-C116-dimbu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಕಂಬಳಿ** (*kambaḷi*) comes from Sanskrit *kambala*, "woollen blanket", reshaped to Kannada sounds: a tadbhava (CDIAL 2771). The final *-a* became *-i*, and the *l* became *ḷ*.
+**ಕಂಬಳಿ** (*kambaḷi*) comes from Sanskrit *kambala*, "woollen blanket", reshaped to Kannada sounds: a tadbhava (CDIAL 2771). The final *-a* became *-i*, and the *l* became *ḷ*. CDIAL notes that *kambala* may be from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

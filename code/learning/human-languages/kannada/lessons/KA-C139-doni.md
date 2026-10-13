@@ -47,7 +47,7 @@ reviews_of: [KA-C139-godhi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ದೋಣಿ** (*dōṇi*) comes from Sanskrit *droṇī*, "wooden trough" (CDIAL 6641), through Prakrit *dōṇī*: a tadbhava. A hollowed log carried water and people alike.
+**ದೋಣಿ** (*dōṇi*) comes from Sanskrit *droṇī*, "wooden trough" (CDIAL 6641), through Prakrit *dōṇī*: a tadbhava. A hollowed log carried water and people alike. CDIAL suggests the sense "boat" may have mixed with a separate non-Aryan word, *\*ḍōṅga*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

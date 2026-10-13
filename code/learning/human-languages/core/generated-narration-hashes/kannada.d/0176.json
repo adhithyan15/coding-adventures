@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 176,
-  "sourceHash": "fnv1a64:5de3dca6e038ff71",
+  "sourceHash": "fnv1a64:ae3c60f9f93ba295",
   "lessonIds": [
     "KA-C176-saluvagi",
     "KA-C176-illadiddare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch176.txt",
   "json": "kannada/narration/ch176.json",
-  "textHash": "fnv1a64:5f3523a432d898ca",
-  "jsonHash": "fnv1a64:1ae4b0c0b1d09039",
+  "textHash": "fnv1a64:078433ed59b03c69",
+  "jsonHash": "fnv1a64:08608dd01b030e2d",
   "findings": []
 }

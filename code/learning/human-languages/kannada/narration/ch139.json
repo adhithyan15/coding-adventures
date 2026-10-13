@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Lotus, Wheat, Boat, Tears, Moustache",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:74061ba9549f95bf",
+  "sourceHash": "fnv1a64:ec2a81489ae1f26b",
   "lessons": [
     {
       "id": "KA-C139-kamala",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7c8a73608fb9b33",
+      "sourceHash": "fnv1a64:327b871a5dd9e0b9",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ದೋಣಿ (dōṇi) comes from Sanskrit droṇī, \"wooden trough\" (CDIAL 6641), through Prakrit dōṇī: a tadbhava. A hollowed log carried water and people alike."
+              "text": "ದೋಣಿ (dōṇi) comes from Sanskrit droṇī, \"wooden trough\" (CDIAL 6641), through Prakrit dōṇī: a tadbhava. A hollowed log carried water and people alike. CDIAL suggests the sense \"boat\" may have mixed with a separate non-Aryan word, ḍōṅga."
             }
           ]
         },

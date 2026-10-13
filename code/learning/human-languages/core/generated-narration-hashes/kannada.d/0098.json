@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 98,
-  "sourceHash": "fnv1a64:cd5973b5f0ecfd0c",
+  "sourceHash": "fnv1a64:8ae58e268240901c",
   "lessonIds": [
     "KA-C98-boredom",
     "KA-C98-enthusiasm",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch98.txt",
   "json": "kannada/narration/ch98.json",
-  "textHash": "fnv1a64:6d1962e138750310",
-  "jsonHash": "fnv1a64:c88389872a1a702f",
+  "textHash": "fnv1a64:a66528daff0f57f6",
+  "jsonHash": "fnv1a64:5181822c6afa5ad7",
   "findings": []
 }
