@@ -51,7 +51,7 @@ fn spice_workbench_waveform_segments_lower_to_bound_compose_lines() {
 #[test]
 fn spice_workbench_terminals_lower_to_bound_compose_circles() {
     let out = emit_workbench();
-    for needle in [".offset(x = ((( point [ 0 ] )).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp, y = ((( point [ 1 ] )).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp)"] {
+    for needle in [".offset(x = ((( point [ 0 ] )).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp, y = ((( point [ 1 ] )).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp)", ".size(10.dp)"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }

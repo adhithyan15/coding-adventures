@@ -51,7 +51,7 @@ fn spice_workbench_waveform_segments_lower_to_bound_flutter_lines() {
 #[test]
 fn spice_workbench_terminals_lower_to_bound_flutter_circles() {
     let out = emit_workbench();
-    for needle in ["Positioned(left: ((double v) => v.isFinite ? v : 0.0)((( point [ 0 ] )).toDouble()) - 5, top: ((double v) => v.isFinite ? v : 0.0)((( point [ 1 ] )).toDouble()) - 5,"] {
+    for needle in ["Positioned(left: ((double v) => v.isFinite ? v : 0.0)((( point [ 0 ] )).toDouble()) - 5, top: ((double v) => v.isFinite ? v : 0.0)((( point [ 1 ] )).toDouble()) - 5,", "Container(width: 10, height: 10,"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }
