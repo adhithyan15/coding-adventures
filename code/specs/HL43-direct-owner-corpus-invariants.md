@@ -84,4 +84,3 @@ The implementation must run:
 - the complete Punjabi corpus suite;
 - the human-language-data TypeScript build and full test suite;
 - the HL42 report after merge, recording the new priority on #13193.
-
