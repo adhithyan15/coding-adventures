@@ -95,8 +95,11 @@ enum SchematicFileOperation {
 impl SchematicFileOperation {
     fn effect_kind(self) -> &'static str {
         match self {
-            Self::Open => "file.open",
-            Self::Save => "file.save",
+            // UI87's standard kinds, which every host answers. The retired
+            // singular `file.*` kinds were answered by the browser executor
+            // only, so import and export never worked natively.
+            Self::Open => "files.open",
+            Self::Save => "files.save",
         }
     }
 
@@ -1100,7 +1103,7 @@ impl SpiceMosaicApp {
     fn request_schematic_open(&mut self) -> Result<AppUpdate, SpiceMosaicError> {
         self.request_schematic_file(
             SchematicFileOperation::Open,
-            json!({"mimeType": "application/json", "extension": ".json"}),
+            json!({"accept": ["application/json"]}),
         )
     }
 
@@ -1113,8 +1116,7 @@ impl SpiceMosaicApp {
         self.request_schematic_file(
             SchematicFileOperation::Save,
             json!({
-                "mimeType": "application/json",
-                "extension": ".json",
+                "accept": ["application/json"],
                 "suggestedName": Self::suggested_schematic_file_name(document),
                 "bytes": BASE64.encode(bytes),
             }),
@@ -1147,6 +1149,13 @@ impl SpiceMosaicApp {
                 let encoded = payload["bytes"]
                     .as_str()
                     .ok_or_else(|| invalid("schematic import result is missing base64 bytes"))?;
+                // Refuse an oversized file before decoding it, as VisiCalc
+                // does. Native hosts read files up to 50 MiB, so decoding
+                // first would hold the encoded and decoded copies of an
+                // oversized file in memory before refusing it.
+                if encoded.len() > MAX_SCHEMATIC_FILE_BYTES.div_ceil(3) * 4 {
+                    return Err(invalid("schematic import exceeds 16 MiB"));
+                }
                 let bytes = BASE64.decode(encoded).map_err(|error| {
                     invalid(format!("schematic import bytes are invalid: {error}"))
                 })?;
@@ -2354,9 +2363,9 @@ mod tests {
         let save = dispatch(&mut app, "onSaveSchematic", json!({}));
         let effect = save.effects.first().unwrap();
         assert_eq!(effect.delivery, Delivery::Await);
-        assert_eq!(effect.kind, "file.save");
-        assert_eq!(effect.payload["mimeType"], "application/json");
-        assert_eq!(effect.payload["extension"], ".json");
+        assert_eq!(effect.kind, "files.save");
+        assert_eq!(effect.payload["accept"], json!(["application/json"]));
+        assert!(effect.payload.get("mimeType").is_none());
         assert_eq!(
             effect.payload["suggestedName"],
             "current-rc.spice-mosaic.json"
@@ -2379,15 +2388,20 @@ mod tests {
         let open = dispatch(&mut app, "onOpenSchematic", json!({}));
         let effect = open.effects.first().unwrap();
         assert_eq!(effect.delivery, Delivery::Await);
-        assert_eq!(effect.kind, "file.open");
-        assert_eq!(
-            effect.payload,
-            json!({"mimeType":"application/json","extension":".json"})
-        );
+        assert_eq!(effect.kind, "files.open");
+        assert_eq!(effect.payload, json!({"accept": ["application/json"]}));
         let before = app.snapshot().unwrap();
         assert!(app
             .complete_effect(effect.id, EffectResult::Ok(json!({"bytes":"not base64"})))
             .is_err());
+        assert_eq!(app.snapshot().unwrap(), before);
+        // An oversized file is refused from its encoded length, before any
+        // decoding: native hosts read files up to 50 MiB.
+        let oversized = "A".repeat(MAX_SCHEMATIC_FILE_BYTES.div_ceil(3) * 4 + 4);
+        let error = app
+            .complete_effect(effect.id, EffectResult::Ok(json!({"bytes": oversized})))
+            .unwrap_err();
+        assert!(format!("{error:?}").contains("exceeds 16 MiB"), "{error:?}");
         assert_eq!(app.snapshot().unwrap(), before);
 
         let file = SchematicFile {

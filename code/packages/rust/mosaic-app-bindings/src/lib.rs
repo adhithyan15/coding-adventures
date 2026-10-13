@@ -899,7 +899,7 @@ mod tests {
                 Some((mime.to_string(), rest.trim_end_matches("]),").to_string()))
             })
             .collect();
-        assert_eq!(kotlin_rows.len(), 13, "{kotlin_rows:?}");
+        assert_eq!(kotlin_rows.len(), 14, "{kotlin_rows:?}");
         assert_eq!(swift_rows, kotlin_rows);
     }
 
@@ -1079,7 +1079,7 @@ mod tests {
                 Some((mime.to_string(), rest.trim_end_matches(" }),").to_string()))
             })
             .collect();
-        assert_eq!(kotlin_rows.len(), 13, "{kotlin_rows:?}");
+        assert_eq!(kotlin_rows.len(), 14, "{kotlin_rows:?}");
         assert_eq!(xaml_rows, kotlin_rows);
         // The executable-extension denylist is one set.
         fn listed(source: &str, start: &str, end: &str) -> std::collections::BTreeSet<String> {
@@ -1762,7 +1762,7 @@ mod tests {
                 ))
             })
             .collect();
-        assert_eq!(kotlin_rows.len(), 13, "{kotlin_rows:?}");
+        assert_eq!(kotlin_rows.len(), 14, "{kotlin_rows:?}");
         assert_eq!(dart_rows, kotlin_rows);
         // The executable-extension denylist is one set.
         fn listed(source: &str, start: &str, end: &str) -> std::collections::BTreeSet<String> {

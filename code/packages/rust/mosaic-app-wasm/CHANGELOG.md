@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — the VisiCalc workbook type (#16927)
+
+- The browser executor maps `application/vnd.coding-adventures.visicalc+json`
+  to `.visicalc`, matching every native platform library. VisiCalc and
+  SpiceWorkbench now send `files.*`. The `file.*` aliases stay until a
+  follow-up retires them; nothing in the repo sends them any more.
+
 ### Changed — the executable-list parity test reads the shared Compose file (UI89 §3.8)
 
 - The Compose platform library's rules moved into `MosaicFileEffects.kt`,

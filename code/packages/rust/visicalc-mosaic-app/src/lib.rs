@@ -17,6 +17,11 @@ const COLS: u32 = 26;
 const SNAPSHOT_SCHEMA: &str = "visicalc-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
 const MAX_FILE_BYTES: usize = 16 * 1024 * 1024;
+/// The file type VisiCalc workbooks are saved and opened as. A vendor type,
+/// so that every host's `accept` table maps it to the `.visicalc`
+/// extension; `application/json` would map to `.json` and refuse the
+/// suggested `Workbook.visicalc`.
+const VISICALC_MIME_TYPE: &str = "application/vnd.coding-adventures.visicalc+json";
 const SEED: &str = include_str!("../../../../programs/mosaic/visicalc/fixtures/budget-v1.json");
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -261,7 +266,12 @@ impl VisiCalcMosaicApp {
         if saving && self.edit.is_some() {
             return Ok(self.file_message("Press Enter to apply this edit before saving."));
         }
-        let mut payload = json!({"mimeType": "application/json", "extension": ".visicalc"});
+        // UI87's standard kinds (`files.open` / `files.save`) name their type
+        // through UI59's `accept` list. Every host maps this vendor type to
+        // the `.visicalc` extension (#16927). The retired singular kinds,
+        // with their `mimeType` + `extension` pair, were answered by the
+        // browser executor only, so Open and Save never worked natively.
+        let mut payload = json!({"accept": [VISICALC_MIME_TYPE]});
         if saving {
             // Capture the settled checkpoint before registering Await. The host
             // never needs to call standalone snapshot while a write is pending.
@@ -290,7 +300,7 @@ impl VisiCalcMosaicApp {
         update.effects.push(Effect {
             id,
             delivery: Delivery::Await,
-            kind: if saving { "file.save" } else { "file.open" }.into(),
+            kind: if saving { "files.save" } else { "files.open" }.into(),
             payload,
         });
         Ok(update)
@@ -673,7 +683,13 @@ mod tests {
             .contains("Press Enter"));
         send(&mut original, "commit", json!({}));
         let saving = send(&mut original, "saveWorkbook", json!({}));
-        assert_eq!(saving.effects[0].kind, "file.save");
+        assert_eq!(saving.effects[0].kind, "files.save");
+        assert_eq!(
+            saving.effects[0].payload["accept"],
+            json!(["application/vnd.coding-adventures.visicalc+json"])
+        );
+        assert_eq!(saving.effects[0].payload["suggestedName"], "Workbook.visicalc");
+        assert!(saving.effects[0].payload.get("mimeType").is_none());
         assert!(original.snapshot().is_err());
         send(&mut original, "newWorkbook", json!({}));
         let saved = original
@@ -687,6 +703,11 @@ mod tests {
         let mut fresh = file_app();
         send(&mut fresh, "newWorkbook", json!({}));
         let opening = send(&mut fresh, "openWorkbook", json!({}));
+        assert_eq!(opening.effects[0].kind, "files.open");
+        assert_eq!(
+            opening.effects[0].payload,
+            json!({"accept": ["application/vnd.coding-adventures.visicalc+json"]})
+        );
         let opened = fresh
             .complete_effect(
                 opening.effects[0].id,

@@ -151,6 +151,7 @@ let mosaicPlatformHasFileDialogs: Bool = {
 // §3). The same table as the Compose library, so both hosts agree.
 private let mosaicMimeExtensions: [(mime: String, extensions: [String])] = [
   ("application/json", ["json"]),
+  ("application/vnd.coding-adventures.visicalc+json", ["visicalc"]),
   ("text/plain", ["txt"]),
   ("text/markdown", ["md", "markdown"]),
   ("text/csv", ["csv"]),
