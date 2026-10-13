@@ -357,6 +357,13 @@ pub fn seatbelt_profile(agent: &str, grants: &[FileGrant]) -> Result<String, Con
             seatbelt_literal(&grant.path)?
         ));
     }
+    // Explicit, and last so that they win: on macOS 26 neither another
+    // process's path (`proc_pidpath`) nor its argv and environment
+    // (`kern.procargs2`) was refused by the default deny alone. The second
+    // would hand an agent every secret in the environment of any process of
+    // this user, the supervisor's included.
+    profile.push_str("(deny process-info* (target others))\n");
+    profile.push_str("(deny sysctl-read (sysctl-name-prefix \"kern.proc\"))\n");
     Ok(profile)
 }
 
@@ -872,7 +879,12 @@ mod tests {
         // sysctl reads are a list of names, never all of them.
         assert!(!profile.contains("(allow sysctl-read)"));
         assert!(profile.contains("(sysctl-name \"hw.ncpu\")"));
-        assert!(!profile.contains("kern.proc"));
+        // Nothing of kern.proc* is allowed, and all of it is explicitly
+        // denied, last.
+        assert!(!profile.contains("(sysctl-name \"kern.proc"));
+        assert!(profile.ends_with(
+            "(deny process-info* (target others))\n(deny sysctl-read (sysctl-name-prefix \"kern.proc\"))\n"
+        ));
         // The root directory itself is readable, never anything beneath it.
         assert!(profile.contains("(allow file-read-data (literal \"/\"))"));
         assert!(!profile.contains("(subpath \"/\")"));

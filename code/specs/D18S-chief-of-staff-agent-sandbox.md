@@ -2108,7 +2108,12 @@ through S-I3 before two weeks are spent on Windows.
    `iokit-open` and every other path. Every other sysctl is denied too:
    `kern.proc.*` lists every process, and `kern.procargs2` reads the argv
    and environment of any process of the same user, the supervisor's
-   among them (review round 1).
+   among them (review round 1). On macOS 26 the default deny alone did
+   not refuse `kern.procargs2` or `proc_pidpath` on another process (CI,
+   P2.7a), so the profile ends with explicit denials of both,
+   `(deny process-info* (target others))` and
+   `(deny sysctl-read (sysctl-name-prefix "kern.proc"))`, last so that
+   they win.
 
    **Grants.** A Direct grant must name an existing regular file through
    no symlink, as on Linux. It must not be the agent or the shim, and a
