@@ -21,6 +21,7 @@ const SAVE_KINDS = new Set(['files.save', 'file.save']);
 // as the Compose library, so every backend filters alike.
 const MIME_EXTENSIONS = {
   'application/json': ['.json'],
+  'application/vnd.coding-adventures.visicalc+json': ['.visicalc'],
   'text/plain': ['.txt'],
   'text/markdown': ['.md', '.markdown'],
   'text/csv': ['.csv'],

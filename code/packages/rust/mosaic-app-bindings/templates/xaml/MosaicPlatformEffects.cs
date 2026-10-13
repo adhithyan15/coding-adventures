@@ -165,6 +165,7 @@ public static class MosaicPlatformEffects
     private static readonly (string Mime, string[] Extensions)[] MimeExtensions =
     {
         ("application/json", new[] { "json" }),
+        ("application/vnd.coding-adventures.visicalc+json", new[] { "visicalc" }),
         ("text/plain", new[] { "txt" }),
         ("text/markdown", new[] { "md", "markdown" }),
         ("text/csv", new[] { "csv" }),

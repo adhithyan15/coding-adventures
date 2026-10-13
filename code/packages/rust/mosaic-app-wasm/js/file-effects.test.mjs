@@ -323,3 +323,22 @@ test('Windows device names are never plain names, and active content counts as e
     assert.equal(hasExecutableExtension(name), false, name);
   }
 });
+
+test('a VisiCalc workbook saves and opens through files.* with its vendor type (#16927)', async () => {
+  // VisiCalc moved from the retired `file.*` kinds to UI87's `files.*`. Its
+  // type maps to `.visicalc` here and on every native host, so the suggested
+  // `Workbook.visicalc` is accepted rather than refused for a `.json` mismatch.
+  const visicalc = 'application/vnd.coding-adventures.visicalc+json';
+  const { files, calls, completions } = fixture();
+  await files.run(effect(1, 'files.save', { suggestedName: 'Workbook.visicalc', accept: [visicalc], bytes: 'AA==' }));
+  assert.deepEqual(calls[0], ['save', { suggestedName: 'Workbook.visicalc', types: [{ accept: { [visicalc]: ['.visicalc'] } }] }]);
+  assert.deepEqual(completions[0], [1, { ok: { name: 'Workbook.visicalc' } }]);
+
+  const opening = fixture();
+  await opening.files.run(effect(2, 'files.open', { accept: [visicalc] }));
+  assert.deepEqual(opening.calls[0][1].types, [{ accept: { [visicalc]: ['.visicalc'] } }]);
+
+  const mismatched = fixture();
+  await mismatched.files.run(effect(3, 'files.save', { suggestedName: 'Workbook.json', accept: [visicalc], bytes: 'AA==' }));
+  assert.match(mismatched.completions[0][1].failed.message, /accepted type/);
+});
