@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 253,
-  "sourceHash": "fnv1a64:7d135ef2409d9191",
+  "sourceHash": "fnv1a64:411949e445608997",
   "lessonIds": [
     "FR-C253-permis-de-conduire",
     "FR-C253-casque",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch253.txt",
   "json": "french/narration/ch253.json",
-  "textHash": "fnv1a64:7fc37e99bef7dcd2",
-  "jsonHash": "fnv1a64:0e8db4a74c53ae63",
+  "textHash": "fnv1a64:c05d27e2432fa1af",
+  "jsonHash": "fnv1a64:1a6a078455f7a05a",
   "findings": []
 }

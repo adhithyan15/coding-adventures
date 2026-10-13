@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 51,
-  "sourceHash": "fnv1a64:694df3f0322d6713",
+  "sourceHash": "fnv1a64:2f359669e416bc4d",
   "lessonIds": [
     "FR-C51-peau",
     "FR-C51-ongle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch51.txt",
   "json": "french/narration/ch51.json",
-  "textHash": "fnv1a64:bf94fdc041eefc16",
-  "jsonHash": "fnv1a64:d02cf83c2c7955cd",
+  "textHash": "fnv1a64:40700c18e5b25eba",
+  "jsonHash": "fnv1a64:66e7dc722f13febf",
   "findings": []
 }

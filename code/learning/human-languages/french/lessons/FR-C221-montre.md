@@ -13,7 +13,8 @@ gloss: "a watch"
 concept_tag: FR-CHOSES221-MONTRE
 prerequisites: [FR-C220-patient-patiente, FR-C221-ciseaux]
 sounds: []
-roots: []
+roots: [monstrare-latin]
+etymology_hook: "montre — from montrer 'to show': the thing that shows the time"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C221-ciseaux]
 <!-- hl-knowledge: introduces=[FR-LEX-C221-CHOSES221-02]; assesses=[] -->
 
 **la montre** — "a watch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**montre** — formed from *montrer*, "to show": the thing that shows the time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

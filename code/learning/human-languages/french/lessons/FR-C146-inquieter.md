@@ -14,6 +14,7 @@ concept_tag: FR-VERB-INQUIETER
 prerequisites: [FR-C146-amuser, FR-C146-facher]
 sounds: []
 roots: []
+etymology_hook: "s'inquiéter ← Latin inquietare 'to disturb', from inquietus 'restless' — English disquiet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C146-facher]
 <!-- hl-knowledge: introduces=[FR-LEX-C146-VERBES146-04]; assesses=[] -->
 
 **s'inquiéter** — "to worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**s'inquiéter** ← Latin *inquietare*, "to disturb", from *inquietus*, "restless" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

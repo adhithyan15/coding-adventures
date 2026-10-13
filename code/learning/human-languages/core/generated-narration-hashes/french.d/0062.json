@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 62,
-  "sourceHash": "fnv1a64:548574f992c5867d",
+  "sourceHash": "fnv1a64:a76c7a5d7b81ba19",
   "lessonIds": [
     "FR-C62-revenir",
     "FR-C62-etudier",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch62.txt",
   "json": "french/narration/ch62.json",
-  "textHash": "fnv1a64:80607c5691dafd1e",
-  "jsonHash": "fnv1a64:50fe378092168175",
+  "textHash": "fnv1a64:9e0386df205293be",
+  "jsonHash": "fnv1a64:d89fcafb22082ca5",
   "findings": []
 }

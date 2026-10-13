@@ -13,7 +13,8 @@ gloss: "to clean"
 concept_tag: FR-VERB-NETTOYER
 prerequisites: [FR-C62-utiliser, FR-C62-montrer]
 sounds: []
-roots: []
+roots: [nitidus-latin]
+etymology_hook: "nettoyer — from the adjective for 'clean, neat', from Latin nitidus 'shining' — English neat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C62-montrer]
 <!-- hl-knowledge: introduces=[FR-LEX-C63-VERBES15-01]; assesses=[] -->
 
 **nettoyer** — "to clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nettoyer** ← Old French *nettoier*, built on the adjective for "clean, neat", which goes back to Latin *nitidus*, "shining". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

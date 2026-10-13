@@ -13,7 +13,8 @@ gloss: "to take off, to remove"
 concept_tag: FR-VERB-ENLEVER
 prerequisites: [FR-C176-changer, FR-C176-deplacer]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "enlever — en + lever 'to lift': to lift away"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C176-deplacer]
 <!-- hl-knowledge: introduces=[FR-LEX-C176-VERBES176-04]; assesses=[] -->
 
 **enlever** — "to take off, to remove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enlever** — built from *en*, "away", and *lever*, "to lift", ← Latin *levare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-RENCONTRER
 prerequisites: [FR-C153-remarquer, FR-C153-remplacer]
 sounds: []
 roots: []
+etymology_hook: "rencontrer — re- + Old French encontrer 'to meet', from in contra 'against' — English encounter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C153-remplacer]
 <!-- hl-knowledge: introduces=[FR-LEX-C153-VERBES153-03]; assesses=[] -->
 
 **rencontrer** — "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rencontrer** — built from *re-* and Old French *encontrer*, "to meet", from *encontre*, "against", ← Latin *in contra* (Lewis & Short for *contra*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

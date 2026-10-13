@@ -13,7 +13,8 @@ gloss: "a prescription"
 concept_tag: FR-SANTE215-ORDONNANCE
 prerequisites: [FR-C214-grossir, FR-C215-grippe]
 sounds: []
-roots: []
+roots: [ordo-latin]
+etymology_hook: "ordonnance — from the verb 'to order', Latin ordinare — English ordinance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C215-grippe]
 <!-- hl-knowledge: introduces=[FR-LEX-C215-SANTE215-02]; assesses=[] -->
 
 **l'ordonnance** — "a prescription".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ordonnance** — built from the verb for "to arrange, to order", ← Latin *ordinare*, from *ordo*, "order" (Lewis & Short), with *-ance*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

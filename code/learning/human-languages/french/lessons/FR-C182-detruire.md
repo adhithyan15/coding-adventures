@@ -13,7 +13,8 @@ gloss: "to destroy"
 concept_tag: FR-VERB-DETRUIRE
 prerequisites: [FR-C182-corriger, FR-C182-diriger]
 sounds: []
-roots: []
+roots: [struere-latin]
+etymology_hook: "détruire ← Latin destruere 'to pull down' — English destroy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C182-diriger]
 <!-- hl-knowledge: introduces=[FR-LEX-C182-VERBES182-03]; assesses=[] -->
 
 **détruire** — "to destroy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**détruire** ← Old French *destruire* ← Vulgar Latin *\*destrugere* ← Latin *destruere*, "to pull down" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

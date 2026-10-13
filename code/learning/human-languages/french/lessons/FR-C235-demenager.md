@@ -14,6 +14,7 @@ concept_tag: FR-VERB-DEMENAGER
 prerequisites: [FR-C234-peser, FR-C234-verifier]
 sounds: []
 roots: []
+etymology_hook: "déménager — dé- 'out' + the word for 'household', from Latin mansio 'a dwelling'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C234-verifier]
 <!-- hl-knowledge: introduces=[FR-LEX-C235-VERBES235-01]; assesses=[] -->
 
 **déménager** — "to move house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**déménager** — built from *dé-*, "out", and the word for "a household", from Old French *maisnie*, "a household", ← Vulgar Latin *\*mansionata*, from *mansio*, "a dwelling": to take the household out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

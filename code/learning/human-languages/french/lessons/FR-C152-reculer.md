@@ -14,6 +14,7 @@ concept_tag: FR-VERB-RECULER
 prerequisites: [FR-C152-agir, FR-C152-avancer]
 sounds: []
 roots: []
+etymology_hook: "reculer — re- 'back' + the word for 'backside', Latin culus: to back away"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C152-avancer]
 <!-- hl-knowledge: introduces=[FR-LEX-C152-VERBES152-04]; assesses=[] -->
 
 **reculer** — "to move back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reculer** — built from *re-*, "back", and the word for "backside", ← Latin *culus* (Lewis & Short): to go back rear first.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-MAISON66-BALAI
 prerequisites: [FR-C114-peigne, FR-C114-poubelle]
 sounds: []
 roots: []
+etymology_hook: "balai ← Breton balan 'broom', the shrub brooms were made of"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C114-poubelle]
 <!-- hl-knowledge: introduces=[FR-LEX-C114-MAISON66-05]; assesses=[] -->
 
 **le balai** — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**balai** ← Old French *balain*, from Breton *balan*, "broom", the shrub that brooms were made of — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

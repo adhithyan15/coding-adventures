@@ -13,7 +13,8 @@ gloss: "to brake"
 concept_tag: FR-VERB-FREINER
 prerequisites: [FR-C211-tuer, FR-C212-fixer]
 sounds: []
-roots: []
+roots: [frenum-latin]
+etymology_hook: "freiner — from the word for 'brake', Latin frenum 'a bridle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C212-fixer]
 <!-- hl-knowledge: introduces=[FR-LEX-C212-VERBES212-02]; assesses=[] -->
 
 **freiner** — "to brake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**freiner** — built from the word for "a bit, a brake", ← Latin *frenum*, "a bridle" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

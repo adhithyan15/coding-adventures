@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES199-SORTIE
 prerequisites: [FR-C198-billet-de-banque, FR-C199-entree]
 sounds: []
 roots: []
+etymology_hook: "sortie — from the verb 'to go out', of uncertain origin — English sortie"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C199-entree]
 <!-- hl-knowledge: introduces=[FR-LEX-C199-CHOSES199-02]; assesses=[] -->
 
 **la sortie** — "an exit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sortie** is the past participle of the verb for "to go out", used as a noun: the way out. The verb's origin is uncertain; the usual guess is Latin *sortiri*, "to draw lots".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

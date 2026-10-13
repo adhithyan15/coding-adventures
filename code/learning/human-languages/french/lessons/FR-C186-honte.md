@@ -14,6 +14,7 @@ concept_tag: FR-SANTE186-HONTE
 prerequisites: [FR-C186-confiance, FR-C186-courage]
 sounds: []
 roots: []
+etymology_hook: "honte ← Frankish *haunitha 'scorn' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C186-courage]
 <!-- hl-knowledge: introduces=[FR-LEX-C186-SANTE186-05]; assesses=[] -->
 
 **la honte** — "shame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**honte** ← Frankish *\*haunitha*, "scorn" — borrowed from the Franks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

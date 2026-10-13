@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES198-BILLET-DE-BANQUE
 prerequisites: [FR-C198-soldes, FR-C198-piece]
 sounds: []
 roots: []
+etymology_hook: "billet de banque — billet + de + banque: a note of the bank"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C198-piece]
 <!-- hl-knowledge: introduces=[FR-LEX-C198-CHOSES198-05]; assesses=[] -->
 
 **le billet de banque** — "a banknote".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**billet de banque** — *billet*, "a note", *de*, "of", and *banque*, "bank".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "temperature"
 concept_tag: FR-CHOSES194-TEMPERATURE
 prerequisites: [FR-C193-poele, FR-C194-vallee]
 sounds: []
-roots: []
+roots: [temperare-latin]
+etymology_hook: "température ← Latin temperatura 'due measure' — English temperature and temper"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C194-vallee]
 <!-- hl-knowledge: introduces=[FR-LEX-C194-CHOSES194-02]; assesses=[] -->
 
 **la température** — "temperature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**température** ← Latin *temperatura*, "due measure, a mixing", from *temperare*, "to mix in proportion" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

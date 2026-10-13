@@ -13,7 +13,8 @@ gloss: "a widower"
 concept_tag: FR-CHOSES197-VEUF
 prerequisites: [FR-C197-marie, FR-C197-mariee]
 sounds: []
-roots: []
+roots: [viduus-latin]
+etymology_hook: "veuf ← Latin viduus 'bereaved' — English widow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C197-mariee]
 <!-- hl-knowledge: introduces=[FR-LEX-C197-CHOSES197-03]; assesses=[] -->
 
 **le veuf** — "a widower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**veuf** ← Latin *viduus*, "bereaved" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

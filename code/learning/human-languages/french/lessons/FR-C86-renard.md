@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX38-RENARD
 prerequisites: [FR-C85-loup, FR-C86-ours]
 sounds: []
 roots: []
+etymology_hook: "renard — named after Renart, the fox of medieval tales; a Germanic name, Reginhard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C86-ours]
 <!-- hl-knowledge: introduces=[FR-LEX-C86-ANIMAUX38-02]; assesses=[] -->
 
 **le renard** — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**renard** — named after *Renart*, the cunning fox of the medieval *Roman de Renart*; his name is the Germanic personal name *Reginhard*. It replaced the Old French word *goupil*, from Latin *vulpecula*, "little fox".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

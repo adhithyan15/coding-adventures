@@ -13,7 +13,8 @@ gloss: "a neighbour"
 concept_tag: FR-FAMILLE10-VOISIN
 prerequisites: [FR-C57-tante, FR-C57-cousine]
 sounds: []
-roots: []
+roots: [vicinus-latin]
+etymology_hook: "voisin ← Latin vicinus 'neighbour', from vicus 'village' — English vicinity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C57-cousine]
 <!-- hl-knowledge: introduces=[FR-LEX-C58-FAMILLE10-01]; assesses=[] -->
 
 **le voisin** — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voisin** ← Latin *vicinus*, "neighbour", from *vicus*, "a village" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

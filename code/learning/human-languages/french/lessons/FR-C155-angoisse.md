@@ -14,6 +14,7 @@ concept_tag: FR-SANTE155-ANGOISSE
 prerequisites: [FR-C155-sommeil, FR-C155-reve]
 sounds: []
 roots: []
+etymology_hook: "angoisse ← Latin angustia 'narrowness, distress' — English anguish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C155-reve]
 <!-- hl-knowledge: introduces=[FR-LEX-C155-SANTE155-04]; assesses=[] -->
 
 **l'angoisse** — "anxiety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**angoisse** ← Latin *angustia*, "narrowness, distress", from *angustus*, "narrow" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

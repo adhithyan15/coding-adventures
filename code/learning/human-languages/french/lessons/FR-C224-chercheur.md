@@ -13,7 +13,8 @@ gloss: "a researcher"
 concept_tag: FR-CHOSES224-CHERCHEUR
 prerequisites: [FR-C224-comptable, FR-C224-scientifique]
 sounds: []
-roots: []
+roots: [circare-latin]
+etymology_hook: "chercheur — chercher + -eur: one who searches"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C224-scientifique]
 <!-- hl-knowledge: introduces=[FR-LEX-C224-CHOSES224-05]; assesses=[] -->
 
 **le chercheur** — "a researcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chercheur** — *chercher*, "to look for", with *-eur*: one who searches.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

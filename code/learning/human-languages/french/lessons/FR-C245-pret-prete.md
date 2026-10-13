@@ -14,6 +14,7 @@ concept_tag: FR-QUAL245-PRET-PRETE
 prerequisites: [FR-C245-juste, FR-C245-faux-fausse]
 sounds: []
 roots: []
+etymology_hook: "prêt ← Late Latin praestus 'at hand' — not the same word as prêt 'a loan'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C245-faux-fausse]
 <!-- hl-knowledge: introduces=[FR-LEX-C245-QUAL245-04]; assesses=[] -->
 
 **prêt / prête** — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prêt** ← Late Latin *praestus*, "at hand", from *praesto*, "ready" (Lewis & Short) — inherited. It is a different word from *prêt*, "a loan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

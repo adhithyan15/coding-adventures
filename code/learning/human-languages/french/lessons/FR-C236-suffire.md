@@ -13,7 +13,8 @@ gloss: "to be enough"
 concept_tag: FR-VERB-SUFFIRE
 prerequisites: [FR-C235-reveiller, FR-C235-coiffer]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "suffire ← Latin sufficere 'to be enough' — English suffice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C235-coiffer]
 <!-- hl-knowledge: introduces=[FR-LEX-C236-VERBES236-01]; assesses=[] -->
 
 **suffire** — "to be enough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suffire** ← Latin *sufficere*, "to be enough" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

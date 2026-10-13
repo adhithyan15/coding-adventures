@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 49,
-  "sourceHash": "fnv1a64:7d64861c5043d9ed",
+  "sourceHash": "fnv1a64:2ae246f8faca7996",
   "lessonIds": [
     "FR-C49-bras",
     "FR-C49-jambe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch49.txt",
   "json": "french/narration/ch49.json",
-  "textHash": "fnv1a64:e8e68050af85cffd",
-  "jsonHash": "fnv1a64:517eab4c6b701f78",
+  "textHash": "fnv1a64:cc3c7eebd2086fbe",
+  "jsonHash": "fnv1a64:a994d11e5a2bff74",
   "findings": []
 }

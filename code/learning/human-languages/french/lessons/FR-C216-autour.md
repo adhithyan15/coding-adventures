@@ -13,7 +13,8 @@ gloss: "around"
 concept_tag: FR-LIEU216-AUTOUR
 prerequisites: [FR-C215-sirop, FR-C215-pommade]
 sounds: []
-roots: []
+roots: [tornus-latin]
+etymology_hook: "autour — au + the word for 'a turn', from Latin tornus: round about"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C215-pommade]
 <!-- hl-knowledge: introduces=[FR-LEX-C216-LIEU216-01]; assesses=[] -->
 
 **autour** — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autour** — *au* and the word for "a turn", ← Latin *tornus*, "a lathe": round about. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

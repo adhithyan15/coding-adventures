@@ -14,6 +14,7 @@ concept_tag: FR-SANTE243-PANSEMENT
 prerequisites: [FR-C242-plaisanter, FR-C242-ranger]
 sounds: []
 roots: []
+etymology_hook: "pansement — from the verb 'to dress a wound', once the same verb as penser"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C242-ranger]
 <!-- hl-knowledge: introduces=[FR-LEX-C243-SANTE243-01]; assesses=[] -->
 
 **le pansement** — "a plaster, a dressing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pansement** — built from the verb for "to dress a wound", once the same verb as *penser*, "to think": to tend is to think of. (EtymDB 2.1 links it to the verb.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

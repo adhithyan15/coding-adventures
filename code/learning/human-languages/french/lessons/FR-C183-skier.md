@@ -14,6 +14,7 @@ concept_tag: FR-VERB-SKIER
 prerequisites: [FR-C183-echanger, FR-C183-telecharger]
 sounds: []
 roots: []
+etymology_hook: "skier — from ski, Norwegian ski, Old Norse 'a stick of wood'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C183-telecharger]
 <!-- hl-knowledge: introduces=[FR-LEX-C183-VERBES183-04]; assesses=[] -->
 
 **skier** — "to ski".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**skier** — formed from the word for "ski", ← Norwegian *ski*, from Old Norse *skid*, "a stick of wood, a snowshoe". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

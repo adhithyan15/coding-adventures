@@ -13,7 +13,8 @@ gloss: "to laugh"
 concept_tag: FR-VERB-RIRE
 prerequisites: [FR-C59-eleve, FR-C59-professeur]
 sounds: []
-roots: []
+roots: [ridere-latin]
+etymology_hook: "rire ← Latin ridere 'to laugh' — English ridiculous and deride share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C59-professeur]
 <!-- hl-knowledge: introduces=[FR-LEX-C59-FAMILLE11-05]; assesses=[] -->
 
 **rire** — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rire** ← Latin *ridere*, "to laugh" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

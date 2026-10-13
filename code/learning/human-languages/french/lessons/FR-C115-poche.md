@@ -14,6 +14,7 @@ concept_tag: FR-MAISON67-POCHE
 prerequisites: [FR-C115-lessive, FR-C115-fer]
 sounds: []
 roots: []
+etymology_hook: "poche ← Frankish *pokka 'a bag' — English pouch and poke are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C115-fer]
 <!-- hl-knowledge: introduces=[FR-LEX-C115-MAISON67-05]; assesses=[] -->
 
 **la poche** — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poche** ← Frankish *\*pokka*, "a bag" — borrowed from the Franks. (EtymDB 2.1 has Old French *poche*, "a bag".)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

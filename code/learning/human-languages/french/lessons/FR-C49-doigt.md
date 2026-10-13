@@ -13,7 +13,8 @@ gloss: "a finger"
 concept_tag: FR-CORPS1-DOIGT
 prerequisites: [FR-C49-jambe, FR-C49-pied]
 sounds: []
-roots: []
+roots: [digitus-latin]
+etymology_hook: "doigt ← Latin digitus 'finger' — English digit is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C49-pied]
 <!-- hl-knowledge: introduces=[FR-LEX-C49-CORPS1-04]; assesses=[] -->
 
 **le doigt** — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**doigt** ← Old French *doit* ← Latin *digitus*, "finger" — inherited. (EtymDB 2.1) The silent *g* was put back into the spelling later, to recall the Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

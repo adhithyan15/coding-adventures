@@ -13,7 +13,8 @@ gloss: "to cross"
 concept_tag: FR-VERB-TRAVERSER
 prerequisites: [FR-C207-divorcer, FR-C208-applaudir]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "traverser ← Vulgar Latin *transversare, from transversus 'turned across' — English traverse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C208-applaudir]
 <!-- hl-knowledge: introduces=[FR-LEX-C208-VERBES208-02]; assesses=[] -->
 
 **traverser** — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**traverser** ← Vulgar Latin *\*transversare*, from Latin *transversus*, "turned across" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

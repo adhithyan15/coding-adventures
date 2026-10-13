@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES226-CARTE-BANCAIRE
 prerequisites: [FR-C225-possibilite, FR-C225-raison]
 sounds: []
 roots: []
+etymology_hook: "carte bancaire — carte + the adjective of banque"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C225-raison]
 <!-- hl-knowledge: introduces=[FR-LEX-C226-CHOSES226-01]; assesses=[] -->
 
 **la carte bancaire** — "a bank card".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carte bancaire** — *carte*, "card", and the adjective made from *banque*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to carry; to wear"
 concept_tag: FR-VERB-PORTER
 prerequisites: [FR-C64-savoir, FR-C65-laisser]
 sounds: []
-roots: []
+roots: [portare-latin]
+etymology_hook: "porter ← Latin portare 'to carry' — English porter, portable and import share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C65-laisser]
 <!-- hl-knowledge: introduces=[FR-LEX-C65-VERBES17-02]; assesses=[] -->
 
 **porter** — "to carry; to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**porter** ← Latin *portare*, "to carry" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

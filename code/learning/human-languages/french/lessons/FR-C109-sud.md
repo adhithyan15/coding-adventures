@@ -14,6 +14,7 @@ concept_tag: FR-LIEU61-SUD
 prerequisites: [FR-C109-frontiere, FR-C109-nord]
 sounds: []
 roots: []
+etymology_hook: "sud ← Old English suth 'south' — borrowed with nord"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C109-nord]
 <!-- hl-knowledge: introduces=[FR-LEX-C109-LIEU61-03]; assesses=[] -->
 
 **le sud** — "the south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sud** ← Old French *su* ← Old English *suth*, "south" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

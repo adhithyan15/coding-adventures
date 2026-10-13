@@ -13,7 +13,8 @@ gloss: "a toll"
 concept_tag: FR-CHOSES227-PEAGE
 prerequisites: [FR-C227-roue, FR-C227-moteur]
 sounds: []
-roots: []
+roots: [pes-latin]
+etymology_hook: "péage ← Medieval Latin pedaticum 'the right to set foot', from pes — the Latin of pied"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C227-moteur]
 <!-- hl-knowledge: introduces=[FR-LEX-C227-CHOSES227-03]; assesses=[] -->
 
 **le péage** — "a toll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**péage** ← Medieval Latin *pedaticum*, "the right to set foot", from *pes*, *pedis*, the Latin of *pied* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

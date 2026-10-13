@@ -14,6 +14,7 @@ concept_tag: FR-QUAL246-PARESSEUX-PARESSEUSE
 prerequisites: [FR-C245-gratuit-gratuite, FR-C246-genereux-genereuse]
 sounds: []
 roots: []
+etymology_hook: "paresseux — from the word for 'laziness', Latin pigritia 'sloth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C246-genereux-genereuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C246-QUAL246-02]; assesses=[] -->
 
 **paresseux / paresseuse** — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paresseux** — built from the word for "laziness", ← Latin *pigritia*, "sloth" (Lewis & Short), with *-eux*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

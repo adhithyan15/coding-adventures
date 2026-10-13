@@ -13,7 +13,8 @@ gloss: "about, approximately"
 concept_tag: FR-POURQUOI217-ENVIRON
 prerequisites: [FR-C216-banlieue, FR-C217-presque]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "environ — en + Old French viron 'a circuit': round about — English environment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C217-presque]
 <!-- hl-knowledge: introduces=[FR-LEX-C217-POURQUOI217-02]; assesses=[] -->
 
 **environ** — "about, approximately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**environ** — *en*, "in", and Old French *viron*, "a circuit", from the verb for "to turn": in the round of.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

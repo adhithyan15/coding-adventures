@@ -13,7 +13,8 @@ gloss: "nevertheless, however"
 concept_tag: FR-POURQUOI217-CEPENDANT
 prerequisites: [FR-C217-seulement, FR-C217-ensemble]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "cependant — ce 'this' + the word for 'during': during this"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C217-ensemble]
 <!-- hl-knowledge: introduces=[FR-LEX-C217-POURQUOI217-05]; assesses=[] -->
 
 **cependant** — "nevertheless, however".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cependant** — *ce*, "this", and the word for "during", from the verb for "to hang", ← Latin *pendere* (EtymDB 2.1): "during this".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

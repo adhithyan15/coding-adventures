@@ -14,6 +14,7 @@ concept_tag: FR-VERB-MANQUER
 prerequisites: [FR-C236-calculer, FR-C236-frapper]
 sounds: []
 roots: []
+etymology_hook: "manquer ← Italian mancare 'to be lacking', from Latin mancus 'maimed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C236-frapper]
 <!-- hl-knowledge: introduces=[FR-LEX-C237-VERBES237-01]; assesses=[] -->
 
 **manquer** — "to miss, to be missing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manquer** ← Italian *mancare*, "to be lacking", from *manco*, "maimed", ← Latin *mancus* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

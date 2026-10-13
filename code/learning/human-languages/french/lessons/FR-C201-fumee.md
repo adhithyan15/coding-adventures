@@ -13,7 +13,8 @@ gloss: "smoke"
 concept_tag: FR-CHOSES201-FUMEE
 prerequisites: [FR-C201-boue, FR-C201-poussiere]
 sounds: []
-roots: []
+roots: [fumus-latin]
+etymology_hook: "fumée — from fumer 'to smoke' — English fume"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C201-poussiere]
 <!-- hl-knowledge: introduces=[FR-LEX-C201-CHOSES201-04]; assesses=[] -->
 
 **la fumée** — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fumée** is the past participle of *fumer*, "to smoke", used as a noun: what is smoked out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

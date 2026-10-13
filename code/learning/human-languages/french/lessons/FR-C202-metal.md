@@ -13,7 +13,8 @@ gloss: "metal"
 concept_tag: FR-CHOSES202-METAL
 prerequisites: [FR-C201-flamme, FR-C202-caoutchouc]
 sounds: []
-roots: []
+roots: [metallum-latin]
+etymology_hook: "métal ← Latin metallum, from Greek metallon 'a mine' — English metal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C202-caoutchouc]
 <!-- hl-knowledge: introduces=[FR-LEX-C202-CHOSES202-02]; assesses=[] -->
 
 **le métal** — "metal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**métal** ← Latin *metallum*, "a mine, a metal", from Greek *metallon* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

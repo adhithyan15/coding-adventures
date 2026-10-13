@@ -13,7 +13,8 @@ gloss: "a fountain"
 concept_tag: FR-CHOSES170-FONTAINE
 prerequisites: [FR-C170-monument, FR-C170-statue]
 sounds: []
-roots: []
+roots: [fons-latin]
+etymology_hook: "fontaine ← Late Latin fontana, from fons 'a spring' — English fountain and font"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C170-statue]
 <!-- hl-knowledge: introduces=[FR-LEX-C170-CHOSES170-05]; assesses=[] -->
 
 **la fontaine** — "a fountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fontaine** ← Late Latin *fontana*, from *fons*, *fontis*, "a spring" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

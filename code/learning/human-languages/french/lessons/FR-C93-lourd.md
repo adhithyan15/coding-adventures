@@ -14,6 +14,7 @@ concept_tag: FR-ADJ45-LOURD
 prerequisites: [FR-C93-mince, FR-C93-gros]
 sounds: []
 roots: []
+etymology_hook: "lourd ← Old French lourt 'dull', usually traced to Latin luridus — English lurid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C93-gros]
 <!-- hl-knowledge: introduces=[FR-LEX-C93-ADJ45-03]; assesses=[] -->
 
 **lourd** — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lourd** ← Old French *lourt*, "dull, stupid", usually traced to Latin *luridus*, "sallow, ghastly" — inherited. (EtymDB 2.1) The sense moved from dull to heavy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

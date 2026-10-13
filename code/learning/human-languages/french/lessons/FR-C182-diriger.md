@@ -13,7 +13,8 @@ gloss: "to direct"
 concept_tag: FR-VERB-DIRIGER
 prerequisites: [FR-C181-depasser, FR-C182-corriger]
 sounds: []
-roots: []
+roots: [dirigere-latin]
+etymology_hook: "diriger ← Latin dirigere 'to direct' — English direct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C182-corriger]
 <!-- hl-knowledge: introduces=[FR-LEX-C182-VERBES182-02]; assesses=[] -->
 
 **diriger** — "to direct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diriger** ← Latin *dirigere*, "to set straight, to direct" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

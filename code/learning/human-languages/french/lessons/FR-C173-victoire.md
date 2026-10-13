@@ -13,7 +13,8 @@ gloss: "a victory"
 concept_tag: FR-CHOSES173-VICTOIRE
 prerequisites: [FR-C173-salle-de-sport, FR-C173-natation]
 sounds: []
-roots: []
+roots: [vincere-latin]
+etymology_hook: "victoire ← Latin victoria, from vincere 'to conquer' — English victory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C173-natation]
 <!-- hl-knowledge: introduces=[FR-LEX-C173-CHOSES173-05]; assesses=[] -->
 
 **la victoire** — "a victory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**victoire** ← Latin *victoria*, "victory", from *vincere*, "to conquer" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

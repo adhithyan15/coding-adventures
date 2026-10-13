@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 167,
-  "sourceHash": "fnv1a64:fb818a5c32091097",
+  "sourceHash": "fnv1a64:d4988cc320c43b49",
   "lessonIds": [
     "FR-C167-belle-mere",
     "FR-C167-gendre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch167.txt",
   "json": "french/narration/ch167.json",
-  "textHash": "fnv1a64:246dc8ef15d13aa6",
-  "jsonHash": "fnv1a64:4349ec95fae46f69",
+  "textHash": "fnv1a64:d9d5f0fcb80fe851",
+  "jsonHash": "fnv1a64:4af3a56997d4b1c5",
   "findings": []
 }

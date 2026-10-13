@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES200-POTAGER
 prerequisites: [FR-C200-cave, FR-C200-grenier]
 sounds: []
 roots: []
+etymology_hook: "potager — the garden that fills the soup pot — English pottage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C200-grenier]
 <!-- hl-knowledge: introduces=[FR-LEX-C200-CHOSES200-05]; assesses=[] -->
 
 **le potager** — "a vegetable garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**potager** — built from the word for "soup", Old French *potage*, "what goes in the pot", from *pot*, ← Vulgar Latin *\*pottum* (EtymDB 2.1), with *-er*: the garden that fills the pot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

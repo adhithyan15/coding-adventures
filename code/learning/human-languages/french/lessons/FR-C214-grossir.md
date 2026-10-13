@@ -13,7 +13,8 @@ gloss: "to put on weight"
 concept_tag: FR-VERB-GROSSIR
 prerequisites: [FR-C214-exister, FR-C214-exprimer]
 sounds: []
-roots: []
+roots: [grossus-latin]
+etymology_hook: "grossir — gros 'fat' + -ir: to grow fat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C214-exprimer]
 <!-- hl-knowledge: introduces=[FR-LEX-C214-VERBES214-05]; assesses=[] -->
 
 **grossir** — "to put on weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grossir** — *gros*, "fat", with the verb ending *-ir*: to grow fat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

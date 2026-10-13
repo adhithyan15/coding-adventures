@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 172,
-  "sourceHash": "fnv1a64:a9a6600f3f1a0e30",
+  "sourceHash": "fnv1a64:ae5e6039e06ea470",
   "lessonIds": [
     "FR-C172-plastique",
     "FR-C172-coton",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch172.txt",
   "json": "french/narration/ch172.json",
-  "textHash": "fnv1a64:437820fc976e4b33",
-  "jsonHash": "fnv1a64:ab2d53006a2a97cf",
+  "textHash": "fnv1a64:02643b5890303993",
+  "jsonHash": "fnv1a64:c89566b3ae2346aa",
   "findings": []
 }

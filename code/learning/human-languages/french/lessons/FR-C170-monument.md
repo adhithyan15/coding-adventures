@@ -13,7 +13,8 @@ gloss: "a monument"
 concept_tag: FR-CHOSES170-MONUMENT
 prerequisites: [FR-C170-chateau, FR-C170-tour]
 sounds: []
-roots: []
+roots: [monere-latin]
+etymology_hook: "monument ← Latin monumentum 'a memorial', from monere 'to remind'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C170-tour]
 <!-- hl-knowledge: introduces=[FR-LEX-C170-CHOSES170-03]; assesses=[] -->
 
 **le monument** — "a monument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**monument** ← Latin *monumentum*, "a memorial", from *monere*, "to remind" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

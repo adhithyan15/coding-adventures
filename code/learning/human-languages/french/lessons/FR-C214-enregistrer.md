@@ -14,6 +14,7 @@ concept_tag: FR-VERB-ENREGISTRER
 prerequisites: [FR-C213-serrer, FR-C213-suggerer]
 sounds: []
 roots: []
+etymology_hook: "enregistrer — en- + the word for 'register', Medieval Latin registrum — English register"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C213-suggerer]
 <!-- hl-knowledge: introduces=[FR-LEX-C214-VERBES214-01]; assesses=[] -->
 
 **enregistrer** — "to record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enregistrer** — built from *en-*, the word for "a register", ← Medieval Latin *registrum* (EtymDB 2.1), and *-er*: to put in the register.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-TRAV257-MATHEMATIQUES
 prerequisites: [FR-C256-tambour, FR-C257-geographie]
 sounds: []
 roots: []
+etymology_hook: "mathématiques ← Latin mathematicus, from Greek mathema 'a thing learned' — English maths"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C257-geographie]
 <!-- hl-knowledge: introduces=[FR-LEX-C257-TRAV257-02]; assesses=[] -->
 
 **les mathématiques** — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mathématiques** ← Latin *mathematicus*, "of mathematics" (Lewis & Short), from Greek *mathematikos*, built on *mathema*, "a thing learned" — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

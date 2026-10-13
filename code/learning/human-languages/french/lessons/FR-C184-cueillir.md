@@ -13,7 +13,8 @@ gloss: "to pick (flowers, fruit)"
 concept_tag: FR-VERB-CUEILLIR
 prerequisites: [FR-C183-glisser, FR-C184-bouger]
 sounds: []
-roots: []
+roots: [legere-latin]
+etymology_hook: "cueillir ← Latin colligere 'to gather together' — English collect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C184-bouger]
 <!-- hl-knowledge: introduces=[FR-LEX-C184-VERBES184-02]; assesses=[] -->
 
 **cueillir** — "to pick (flowers, fruit)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cueillir** ← Old French *coillir* (EtymDB 2.1) ← Latin *colligere*, "to gather together" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

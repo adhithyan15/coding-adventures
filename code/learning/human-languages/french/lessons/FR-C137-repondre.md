@@ -13,7 +13,8 @@ gloss: "to answer"
 concept_tag: FR-VERB-REPONDRE
 prerequisites: [FR-C137-commencer, FR-C137-visiter]
 sounds: []
-roots: []
+roots: [latin-respondere]
+etymology_hook: "répondre ← Latin respondere 'to answer' — English respond"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C137-visiter]
 <!-- hl-knowledge: introduces=[FR-LEX-C137-VERBES89-03]; assesses=[] -->
 
 **répondre** — "to answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**répondre** ← Old French *respondre* ← Latin *respondere*, "to answer, to pledge back" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

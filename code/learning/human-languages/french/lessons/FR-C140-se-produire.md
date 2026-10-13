@@ -13,7 +13,8 @@ gloss: "to happen, to occur"
 concept_tag: FR-VERB-SE-PRODUIRE
 prerequisites: [FR-C140-avant-hier, FR-C140-autrefois]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "se produire — 'to produce itself', from Latin producere 'to lead forward' — English produce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C140-autrefois]
 <!-- hl-knowledge: introduces=[FR-LEX-C140-PAS140-05]; assesses=[] -->
 
 **se produire** — "to happen, to occur". Its past takes **être**, like **aller**: **Qu'est-ce qui s'est produit ?** — "What happened?"
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se produire** — "to produce itself": *produire* ← Latin *producere*, "to lead forward" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

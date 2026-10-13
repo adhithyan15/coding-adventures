@@ -13,7 +13,8 @@ gloss: "to cough"
 concept_tag: FR-VERB-TOUSSER
 prerequisites: [FR-C240-melanger, FR-C240-obeir]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "tousser ← Latin tussire 'to cough' — the verb beside toux"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C240-obeir]
 <!-- hl-knowledge: introduces=[FR-LEX-C241-VERBES241-01]; assesses=[] -->
 
 **tousser** — "to cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tousser** ← Latin *tussire*, "to cough" (EtymDB 2.1) — inherited: the verb beside *toux*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

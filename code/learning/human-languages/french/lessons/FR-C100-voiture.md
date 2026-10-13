@@ -13,7 +13,8 @@ gloss: "a car"
 concept_tag: FR-VILLE52-VOITURE
 prerequisites: [FR-C99-train, FR-C99-avion]
 sounds: []
-roots: []
+roots: [vehere-latin]
+etymology_hook: "voiture ← Latin vectura 'transport', from vehere 'to carry' — English vehicle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C99-avion]
 <!-- hl-knowledge: introduces=[FR-LEX-C100-VILLE52-01]; assesses=[] -->
 
 **la voiture** — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voiture** ← Old French *veiture* ← Latin *vectura*, "a carrying, transport", from *vehere*, "to carry" (EtymDB 2.1) — inherited: *-ct-* became *-it-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

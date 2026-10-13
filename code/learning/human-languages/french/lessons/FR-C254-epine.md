@@ -13,7 +13,8 @@ gloss: "a thorn"
 concept_tag: FR-CHOSES254-EPINE
 prerequisites: [FR-C253-immeuble, FR-C254-tronc]
 sounds: []
-roots: []
+roots: [spina-latin]
+etymology_hook: "épine ← Latin spina 'a thorn' — English spine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C254-tronc]
 <!-- hl-knowledge: introduces=[FR-LEX-C254-CHOSES254-02]; assesses=[] -->
 
 **l'épine** — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**épine** ← Old French *espine* ← Latin *spina*, "a thorn" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

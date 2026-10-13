@@ -14,6 +14,7 @@ concept_tag: FR-OBJETS70-BAGUE
 prerequisites: [FR-C117-portefeuille, FR-C118-bijou]
 sounds: []
 roots: []
+etymology_hook: "bague — origin uncertain, perhaps Middle Dutch bagge 'a ring'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C118-bijou]
 <!-- hl-knowledge: introduces=[FR-LEX-C118-OBJETS70-02]; assesses=[] -->
 
 **la bague** — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bague** — its origin is uncertain; Middle Dutch *bagge*, "a ring", is the usual guess. (EtymDB 2.1 has its Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

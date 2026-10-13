@@ -14,6 +14,7 @@ concept_tag: FR-TRAJET58-TAXI
 prerequisites: [FR-C106-velo, FR-C106-metro, FR-C24-demander]
 sounds: []
 roots: []
+etymology_hook: "taxi — short for taximètre, the fare meter, from Latin taxa 'charge' + Greek metron"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C106-metro]
 <!-- hl-knowledge: introduces=[FR-LEX-C106-TRAJET58-03]; assesses=[] -->
 
 **le taxi** — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taxi** — short for *taximètre*, the fare meter, built from Medieval Latin *taxa*, "a charge", and Greek *metron*, "measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

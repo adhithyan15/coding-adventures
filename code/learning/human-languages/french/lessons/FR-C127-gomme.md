@@ -14,6 +14,7 @@ concept_tag: FR-ECOLE79-GOMME
 prerequisites: [FR-C126-mot, FR-C126-tableau]
 sounds: []
 roots: []
+etymology_hook: "gomme ← Latin gummi, from Greek kommi, from Egyptian — English gum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C126-tableau]
 <!-- hl-knowledge: introduces=[FR-LEX-C127-ECOLE79-01]; assesses=[] -->
 
 **la gomme** — "a rubber, an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gomme** ← Late Latin *gumma* ← Latin *gummi*, from Greek *kommi*, a word from Egyptian — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

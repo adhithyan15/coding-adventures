@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX37-SOURIS
 prerequisites: [FR-C85-cochon, FR-C85-oiseau]
 sounds: []
 roots: []
+etymology_hook: "souris ← Latin sorex, soricis 'shrew' — a shrew became a mouse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C85-oiseau]
 <!-- hl-knowledge: introduces=[FR-LEX-C85-ANIMAUX37-04]; assesses=[] -->
 
 **la souris** — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**souris** ← Latin *sorex*, *soricis*, "a shrew", through Vulgar Latin *soricem* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to recognise"
 concept_tag: FR-VERB-RECONNAITRE
 prerequisites: [FR-C210-offrir-un-cadeau, FR-C210-rendre]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "reconnaître ← Latin recognoscere — connaître with re-; English recognise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C210-rendre]
 <!-- hl-knowledge: introduces=[FR-LEX-C210-VERBES210-05]; assesses=[] -->
 
 **reconnaître** — "to recognise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reconnaître** ← Old French *reconoistre* ← Latin *recognoscere*, "to know anew" (EtymDB 2.1) — inherited: *connaître* with *re-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to maintain"
 concept_tag: FR-VERB-ENTRETENIR
 prerequisites: [FR-C213-suggerer, FR-C214-enregistrer]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "entretenir — entre- 'between' + tenir 'to hold' — English entertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C214-enregistrer]
 <!-- hl-knowledge: introduces=[FR-LEX-C214-VERBES214-02]; assesses=[] -->
 
 **entretenir** — "to maintain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entretenir** ← Old French *entretenir*: *entre-*, "between", and *tenir*, "to hold". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

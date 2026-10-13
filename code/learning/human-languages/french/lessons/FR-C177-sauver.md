@@ -13,7 +13,8 @@ gloss: "to rescue"
 concept_tag: FR-VERB-SAUVER
 prerequisites: [FR-C177-interdire, FR-C177-proteger]
 sounds: []
-roots: []
+roots: [salvare-latin]
+etymology_hook: "sauver ← Late Latin salvare 'to save', from salvus 'safe' — English save"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C177-proteger]
 <!-- hl-knowledge: introduces=[FR-LEX-C177-VERBES177-05]; assesses=[] -->
 
 **sauver** — "to rescue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sauver** ← Late Latin *salvare*, "to save", from *salvus*, "safe" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

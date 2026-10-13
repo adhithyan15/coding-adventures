@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 235,
-  "sourceHash": "fnv1a64:7bcc92f39efa1160",
+  "sourceHash": "fnv1a64:18d9d92508caca11",
   "lessonIds": [
     "FR-C235-demenager",
     "FR-C235-louer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch235.txt",
   "json": "french/narration/ch235.json",
-  "textHash": "fnv1a64:47fcb36eb639b66f",
-  "jsonHash": "fnv1a64:776952575f8293b6",
+  "textHash": "fnv1a64:cd882cc56504b2a5",
+  "jsonHash": "fnv1a64:1e515eab916b401a",
   "findings": []
 }

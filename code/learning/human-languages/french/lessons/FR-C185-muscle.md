@@ -13,7 +13,8 @@ gloss: "a muscle"
 concept_tag: FR-SANTE185-MUSCLE
 prerequisites: [FR-C184-disparaitre, FR-C184-emprunter]
 sounds: []
-roots: []
+roots: [musculus-latin]
+etymology_hook: "muscle ← Latin musculus 'a little mouse' — a flexing muscle looked like one"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C184-emprunter]
 <!-- hl-knowledge: introduces=[FR-LEX-C185-SANTE185-01]; assesses=[] -->
 
 **le muscle** — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**muscle** ← Latin *musculus*, "a little mouse", from *mus*, "mouse" (EtymDB 2.1) — a learned borrowing: a flexing muscle looked like a mouse under the skin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

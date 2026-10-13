@@ -212,7 +212,12 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   arabic: { withoutHook: 1187, withoutVisible: 1195 },
   bengali: { withoutHook: 1136, withoutVisible: 1144 },
   chinese: { withoutHook: 0, withoutVisible: 62 },
-  french: { withoutHook: 1048, withoutVisible: 1049 },
+  // french: 1048 / 1049 -> 0 / 0. All 1,045 generated word lessons (FR-C49-bras through
+  // FR-C257-anniversaire) gained a taken-apart block and a matching hook, and seven earlier
+  // hand-written lessons the measure missed gained the half they lacked. Sources: EtymDB 2.1
+  // (Fourrier & Sagot 2020), CC BY-SA 4.0, cross-checked row by row, with Lewis & Short for
+  // textbook Latin forms EtymDB lacks; 18 say the origin is uncertain and give the usual account.
+  french: { withoutHook: 0, withoutVisible: 0 },
   // german: 988 / 1071 -> 0 / 0. Every German word lesson now carries an etymology_hook
   // and a learner-visible "taken apart" block, sourced from EtymDB 2.1 (Fourrier &
   // Sagot 2020), CC BY-SA 4.0, where a row supports the line; well-established origins

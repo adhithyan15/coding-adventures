@@ -13,7 +13,8 @@ gloss: "late"
 concept_tag: FR-TEMPS187-TARD
 prerequisites: [FR-C186-honte, FR-C187-alors]
 sounds: []
-roots: []
+roots: [tardus]
+etymology_hook: "tard ← Latin tarde 'slowly', from tardus — English tardy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C187-alors]
 <!-- hl-knowledge: introduces=[FR-LEX-C187-TEMPS187-02]; assesses=[] -->
 
 **tard** — "late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tard** ← Latin *tarde*, "slowly", from *tardus*, "slow" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

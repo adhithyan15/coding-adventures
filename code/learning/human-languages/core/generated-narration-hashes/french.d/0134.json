@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 134,
-  "sourceHash": "fnv1a64:909d63b851cb05a2",
+  "sourceHash": "fnv1a64:8e30ddb490842683",
   "lessonIds": [
     "FR-C134-herbe",
     "FR-C134-oreille",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch134.txt",
   "json": "french/narration/ch134.json",
-  "textHash": "fnv1a64:08b1c26fde034b8b",
-  "jsonHash": "fnv1a64:f4469215da3b112e",
+  "textHash": "fnv1a64:db2d50e9252d5572",
+  "jsonHash": "fnv1a64:c10447659a048995",
   "findings": []
 }

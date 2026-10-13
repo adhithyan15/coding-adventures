@@ -13,7 +13,8 @@ gloss: "grass"
 concept_tag: FR-NATURE86-HERBE
 prerequisites: [FR-C133-orage, FR-C133-brouillard]
 sounds: []
-roots: []
+roots: [herba-latin]
+etymology_hook: "herbe ← Latin herba 'grass, a plant' — English herb and herbal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C133-brouillard]
 <!-- hl-knowledge: introduces=[FR-LEX-C134-NATURE86-01]; assesses=[] -->
 
 **l'herbe** — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**herbe** ← Old French *erbe* ← Latin *herba*, "grass, a plant" — inherited. (EtymDB 2.1) The *h* was put back later, from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

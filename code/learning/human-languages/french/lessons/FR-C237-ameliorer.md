@@ -14,6 +14,7 @@ concept_tag: FR-VERB-AMELIORER
 prerequisites: [FR-C237-manquer, FR-C237-meriter]
 sounds: []
 roots: []
+etymology_hook: "améliorer — built on the word for 'better', Latin melior — English ameliorate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C237-meriter]
 <!-- hl-knowledge: introduces=[FR-LEX-C237-VERBES237-03]; assesses=[] -->
 
 **améliorer** — "to improve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**améliorer** — built on the word for "better", ← Latin *melior*, "better". (EtymDB 2.1 records the Old French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-COULEURS82-BRUN
 prerequisites: [FR-C130-violet, FR-C130-marron]
 sounds: []
 roots: []
+etymology_hook: "brun ← Frankish *brun 'brown' — English brown and brunette are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C130-marron]
 <!-- hl-knowledge: introduces=[FR-LEX-C130-COULEURS82-04]; assesses=[] -->
 
 **brun** — "brown (of hair, skin)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brun** ← Old French *brun*, "brown, shiny" ← Frankish *\*brun*, "brown" — borrowed from the Franks. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

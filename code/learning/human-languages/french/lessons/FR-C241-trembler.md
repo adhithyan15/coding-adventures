@@ -13,7 +13,8 @@ gloss: "to tremble"
 concept_tag: FR-VERB-TREMBLER
 prerequisites: [FR-C240-obeir, FR-C241-tousser]
 sounds: []
-roots: []
+roots: [tremere-latin]
+etymology_hook: "trembler ← Vulgar Latin *tremulare, from tremulus 'trembling' — English tremble"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C241-tousser]
 <!-- hl-knowledge: introduces=[FR-LEX-C241-VERBES241-02]; assesses=[] -->
 
 **trembler** — "to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trembler** ← Old French *trembler* ← Vulgar Latin *\*tremulare*, from Latin *tremulus*, "trembling" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

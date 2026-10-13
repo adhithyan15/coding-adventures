@@ -13,7 +13,8 @@ gloss: "round"
 concept_tag: FR-ADJ46-ROND
 prerequisites: [FR-C94-sale, FR-C94-amer]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "rond ← Latin rotundus 'round' — English round and rotund share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C94-amer]
 <!-- hl-knowledge: introduces=[FR-LEX-C94-ADJ46-03]; assesses=[] -->
 
 **rond** — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rond** ← Old French *reont* ← Vulgar Latin *\*retundus* ← Latin *rotundus*, "round", from *rota*, "a wheel" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

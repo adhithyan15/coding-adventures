@@ -14,6 +14,7 @@ concept_tag: FR-NATURE34-SABLE
 prerequisites: [FR-C82-mer, FR-C82-pierre]
 sounds: []
 roots: []
+etymology_hook: "sable ← Latin sabulum 'coarse sand' — English sabulous, 'sandy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C82-pierre]
 <!-- hl-knowledge: introduces=[FR-LEX-C82-NATURE34-03]; assesses=[] -->
 
 **le sable** — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sable** ← Latin *sabulum*, "coarse sand" (EtymDB 2.1 records the Latin word) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

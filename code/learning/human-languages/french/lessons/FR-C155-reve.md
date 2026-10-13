@@ -14,6 +14,7 @@ concept_tag: FR-SANTE155-REVE
 prerequisites: [FR-C155-repos, FR-C155-sommeil]
 sounds: []
 roots: []
+etymology_hook: "rêve — formed from rêver 'to dream'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C155-sommeil]
 <!-- hl-knowledge: introduces=[FR-LEX-C155-SANTE155-03]; assesses=[] -->
 
 **le rêve** — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rêve** — formed from *rêver*, "to dream".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

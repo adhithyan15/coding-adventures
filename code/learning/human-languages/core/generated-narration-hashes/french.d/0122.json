@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 122,
-  "sourceHash": "fnv1a64:e3d2dc96e9a03a9e",
+  "sourceHash": "fnv1a64:a263dec04faa60ef",
   "lessonIds": [
     "FR-C122-sandwich",
     "FR-C122-sauce",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch122.txt",
   "json": "french/narration/ch122.json",
-  "textHash": "fnv1a64:8e31227a01dd4e2c",
-  "jsonHash": "fnv1a64:7eadc9e2c07f9708",
+  "textHash": "fnv1a64:e4ffa5a2386bf7fa",
+  "jsonHash": "fnv1a64:bc5a62154408d20c",
   "findings": []
 }

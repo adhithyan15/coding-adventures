@@ -12,6 +12,9 @@ Before the new one: say the French for to drive, then the French for to get dres
 You'll want to know: rien.
 rien — "nothing". With a verb it takes ne in front: Je ne comprends rien. — "I understand nothing." On its own it answers a question: Rien.
 
+The word, taken apart.
+rien from Latin rem, "a thing", the accusative of res (Lewis & Short) — inherited: "a thing" became "anything", then, in negative sentences, "nothing".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the French for to get dressed, then the French for nothi
 
 You'll want to know: aucun / aucune.
 aucun / aucune — "none, not a single". It agrees with its noun and also takes ne: Il n'y a aucun train lundi. — "There is no train at all on Monday."
+
+The word, taken apart.
+aucun from Old French alcun (EtymDB 2.1) from Vulgar Latin alicunus, from Latin aliquis, "someone", and unus, "one" — inherited.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the French for nothing, then the French for none.
 You'll want to know: non plus.
 non plus — "neither, not either". The answer to a negative: Je ne travaille pas samedi. — Moi non plus. — "Me neither." After a yes, French says moi aussi instead.
 
+The phrase, taken apart.
+non plus — non, "no, not", and plus, "more", from Latin plus (EtymDB 2.1): "not more", that is, not either.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the French for none, then the French for neither.
 You'll want to know: lequel / laquelle.
 lequel / laquelle — "which one". A question that picks from a set, and it agrees with what is picked: Lequel? for a train, Laquelle? for a chambre.
 
+The word, taken apart.
+lequel — le and quel, "which", from Latin qualis, "of what kind" (Lewis & Short): "the which".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the French for neither, then the French for which one.
 
 You'll want to know: n'importe quoi.
 n'importe quoi — "anything at all". Je lis n'importe quoi. — "I read anything at all." Said of what someone claims, it means "nonsense".
+
+The phrase, taken apart.
+n'importe quoi — "it does not matter what": n', "not", the verb for "to matter", from Italian importare, and quoi, "what".
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "quiet, peaceful"
 concept_tag: FR-QUAL218-TRANQUILLE
 prerequisites: [FR-C218-fier-fiere, FR-C218-nerveux-nerveuse]
 sounds: []
-roots: []
+roots: [tranquillus]
+etymology_hook: "tranquille ← Latin tranquillus 'calm' — English tranquil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C218-nerveux-nerveuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C218-QUAL218-05]; assesses=[] -->
 
 **tranquille** — "quiet, peaceful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tranquille** ← Latin *tranquillus*, "calm" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

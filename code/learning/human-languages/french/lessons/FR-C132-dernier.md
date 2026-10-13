@@ -13,7 +13,8 @@ gloss: "last"
 concept_tag: FR-QUALITES84-DERNIER
 prerequisites: [FR-C131-calme, FR-C132-bruyant]
 sounds: []
-roots: []
+roots: [retro-latin]
+etymology_hook: "dernier — from Old French derrain 'last', built on Latin retro 'behind'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C132-bruyant]
 <!-- hl-knowledge: introduces=[FR-LEX-C132-QUALITES84-02]; assesses=[] -->
 
 **dernier** — "last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dernier** — built in Old French on *derrain*, "last", from Vulgar Latin *\*deretranus*, built on Latin *retro*, "behind" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

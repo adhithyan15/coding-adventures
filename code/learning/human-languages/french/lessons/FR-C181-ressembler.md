@@ -13,7 +13,8 @@ gloss: "to look like"
 concept_tag: FR-VERB-RESSEMBLER
 prerequisites: [FR-C180-proposer, FR-C180-ramasser]
 sounds: []
-roots: []
+roots: [similis-latin]
+etymology_hook: "ressembler — re- + sembler 'to seem' — English resemble"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C180-ramasser]
 <!-- hl-knowledge: introduces=[FR-LEX-C181-VERBES181-01]; assesses=[] -->
 
 **ressembler** — "to look like".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ressembler** — built from *re-* and *sembler*, "to seem": to seem like.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

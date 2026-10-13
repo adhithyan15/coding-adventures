@@ -13,7 +13,8 @@ gloss: "courage"
 concept_tag: FR-SANTE186-COURAGE
 prerequisites: [FR-C186-espoir, FR-C186-confiance]
 sounds: []
-roots: []
+roots: [cor-latin]
+etymology_hook: "courage — Old French cuer 'heart', from Latin cor, + -age — English courage and cordial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C186-confiance]
 <!-- hl-knowledge: introduces=[FR-LEX-C186-SANTE186-04]; assesses=[] -->
 
 **le courage** — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**courage** — built in Old French from *cuer*, "heart", ← Latin *cor* (EtymDB 2.1), with *-age*: heart in action.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "false, wrong"
 concept_tag: FR-QUAL245-FAUX-FAUSSE
 prerequisites: [FR-C245-semblable, FR-C245-juste]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "faux ← Latin falsus 'false', from fallere 'to deceive' — English false"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C245-juste]
 <!-- hl-knowledge: introduces=[FR-LEX-C245-QUAL245-03]; assesses=[] -->
 
 **faux / fausse** — "false, wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faux** ← Old French *faus* ← Latin *falsus*, "deceived, false", from *fallere*, "to deceive" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

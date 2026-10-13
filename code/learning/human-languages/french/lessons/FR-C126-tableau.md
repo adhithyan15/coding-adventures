@@ -13,7 +13,8 @@ gloss: "a board; a painting"
 concept_tag: FR-ECOLE78-TABLEAU
 prerequisites: [FR-C126-examen, FR-C126-mot]
 sounds: []
-roots: []
+roots: [tabula-latin]
+etymology_hook: "tableau ← Old French tablel 'a little board', from Latin tabula — English table and tablet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C126-mot]
 <!-- hl-knowledge: introduces=[FR-LEX-C126-ECOLE78-05]; assesses=[] -->
 
 **le tableau** — "a board; a painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tableau** ← Old French *tablel*, a little form of the word for "table", ← Latin *tabula*, "a board, a plank". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

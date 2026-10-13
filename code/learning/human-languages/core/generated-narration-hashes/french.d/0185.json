@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 185,
-  "sourceHash": "fnv1a64:1d1d58af3074fa46",
+  "sourceHash": "fnv1a64:b2e5297022a98079",
   "lessonIds": [
     "FR-C185-muscle",
     "FR-C185-pouce",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch185.txt",
   "json": "french/narration/ch185.json",
-  "textHash": "fnv1a64:7a7cf27c51b2ff56",
-  "jsonHash": "fnv1a64:e0b2e9f701238588",
+  "textHash": "fnv1a64:f659b75e74d5b6d8",
+  "jsonHash": "fnv1a64:f1f124524099ce01",
   "findings": []
 }

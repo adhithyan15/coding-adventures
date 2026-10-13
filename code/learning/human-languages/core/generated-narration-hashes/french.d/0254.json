@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 254,
-  "sourceHash": "fnv1a64:fdfc5ab14f82a390",
+  "sourceHash": "fnv1a64:f35e650cfd30fb1a",
   "lessonIds": [
     "FR-C254-tronc",
     "FR-C254-epine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch254.txt",
   "json": "french/narration/ch254.json",
-  "textHash": "fnv1a64:5c09ae0cbe82e473",
-  "jsonHash": "fnv1a64:f1fc78d3c6f76ff3",
+  "textHash": "fnv1a64:0bf52d1a5782320b",
+  "jsonHash": "fnv1a64:0b278e387a865dab",
   "findings": []
 }

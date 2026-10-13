@@ -13,7 +13,8 @@ gloss: "a fridge"
 concept_tag: FR-MAISON63-REFRIGERATEUR
 prerequisites: [FR-C111-television, FR-C111-ordinateur]
 sounds: []
-roots: []
+roots: [frigus-latin]
+etymology_hook: "réfrigérateur — from Latin refrigerare 'to make cool', from frigus 'cold' — English refrigerator"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C111-ordinateur]
 <!-- hl-knowledge: introduces=[FR-LEX-C111-MAISON63-04]; assesses=[] -->
 
 **le réfrigérateur** — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réfrigérateur** — formed from the verb for "to chill", a learned borrowing of Latin *refrigerare*, "to make cool", from *frigus*, "cold" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

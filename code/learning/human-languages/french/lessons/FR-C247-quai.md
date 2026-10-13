@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES247-QUAI
 prerequisites: [FR-C247-arret, FR-C247-moto]
 sounds: []
 roots: []
+etymology_hook: "quai ← Old French cai, from Gaulish *caio- 'an enclosure' — English quay"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C247-moto]
 <!-- hl-knowledge: introduces=[FR-LEX-C247-CHOSES247-05]; assesses=[] -->
 
 **le quai** — "a platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quai** ← Old French *cai* ← Gaulish *\*caio-*, "an enclosure" — a Celtic word that came into French through the northern dialects. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

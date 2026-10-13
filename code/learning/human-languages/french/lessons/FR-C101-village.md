@@ -13,7 +13,8 @@ gloss: "a village"
 concept_tag: FR-VILLE53-VILLAGE
 prerequisites: [FR-C101-hotel, FR-C101-pharmacie]
 sounds: []
-roots: []
+roots: [villa-latin]
+etymology_hook: "village — ville, then 'a farm, an estate', + -age; Latin villa — English village"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C101-pharmacie]
 <!-- hl-knowledge: introduces=[FR-LEX-C101-VILLE53-04]; assesses=[] -->
 
 **le village** — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**village** — built from *ville*, which then meant "a farm, an estate", with *-age*: the cluster of houses around it. (EtymDB 2.1 traces it to Latin *villa*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

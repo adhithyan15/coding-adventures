@@ -13,7 +13,8 @@ gloss: "a bridge"
 concept_tag: FR-VILLE52-PONT
 prerequisites: [FR-C99-avion, FR-C100-voiture]
 sounds: []
-roots: []
+roots: [pons-latin]
+etymology_hook: "pont ← Latin pons, pontis 'bridge' — English pontoon shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C100-voiture]
 <!-- hl-knowledge: introduces=[FR-LEX-C100-VILLE52-02]; assesses=[] -->
 
 **le pont** — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pont** ← Latin *pons*, *pontis*, "bridge" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

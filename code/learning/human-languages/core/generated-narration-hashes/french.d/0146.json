@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 146,
-  "sourceHash": "fnv1a64:29da85b44aa7ae30",
+  "sourceHash": "fnv1a64:92a73d06de81c310",
   "lessonIds": [
     "FR-C146-ennuyer",
     "FR-C146-amuser",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch146.txt",
   "json": "french/narration/ch146.json",
-  "textHash": "fnv1a64:38313da29d1a561a",
-  "jsonHash": "fnv1a64:04f78b526cf60b11",
+  "textHash": "fnv1a64:c92a0daf3ff019e0",
+  "jsonHash": "fnv1a64:b1cb469d9322364c",
   "findings": []
 }

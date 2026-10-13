@@ -13,7 +13,8 @@ gloss: "to go with"
 concept_tag: FR-VERB-ACCOMPAGNER
 prerequisites: [FR-C177-sauver, FR-C178-neiger]
 sounds: []
-roots: []
+roots: [panis-latin]
+etymology_hook: "accompagner — from Old French compaing 'companion', one who shares bread (pain)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C178-neiger]
 <!-- hl-knowledge: introduces=[FR-LEX-C178-VERBES178-02]; assesses=[] -->
 
 **accompagner** — "to go with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accompagner** ← Old French *acompagner*, built on *compaing*, "a companion" (EtymDB 2.1), from Late Latin *companio*, "one who shares bread", from *panis*, the Latin of *pain*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

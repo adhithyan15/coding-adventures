@@ -13,7 +13,8 @@ gloss: "only"
 concept_tag: FR-POURQUOI217-SEULEMENT
 prerequisites: [FR-C217-presque, FR-C217-environ]
 sounds: []
-roots: []
+roots: [solus-latin]
+etymology_hook: "seulement — the word for 'alone', from Latin solus, + -ment — English sole"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C217-environ]
 <!-- hl-knowledge: introduces=[FR-LEX-C217-POURQUOI217-03]; assesses=[] -->
 
 **seulement** — "only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**seulement** — the word for "alone", ← Latin *solus* (Lewis & Short), with *-ment*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

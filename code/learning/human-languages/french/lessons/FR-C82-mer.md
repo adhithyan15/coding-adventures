@@ -13,7 +13,8 @@ gloss: "the sea"
 concept_tag: FR-NATURE34-MER
 prerequisites: [FR-C81-montagne, FR-C81-riviere]
 sounds: []
-roots: []
+roots: [mare-latin]
+etymology_hook: "mer ← Latin mare 'sea' — English marine and maritime share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C81-riviere]
 <!-- hl-knowledge: introduces=[FR-LEX-C82-NATURE34-01]; assesses=[] -->
 
 **la mer** — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mer** ← Latin *mare*, "sea" (EtymDB 2.1) — inherited: Latin's stressed *a* became *e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

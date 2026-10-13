@@ -13,7 +13,8 @@ gloss: "afterwards, next"
 concept_tag: FR-TEMPS156-ENSUITE
 prerequisites: [FR-C155-amour, FR-C156-rarement]
 sounds: []
-roots: []
+roots: [sequi-latin]
+etymology_hook: "ensuite — 'in what follows', from Latin sequi 'to follow' — English suite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C156-rarement]
 <!-- hl-knowledge: introduces=[FR-LEX-C156-TEMPS156-02]; assesses=[] -->
 
 **ensuite** — "afterwards, next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ensuite** — *en*, "in", and the word for "what follows", ← Vulgar Latin *\*sequita*, from Latin *sequi*, "to follow" (Lewis & Short): in what follows.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

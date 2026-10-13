@@ -13,7 +13,8 @@ gloss: "a snake"
 concept_tag: FR-ANIMAUX38-SERPENT
 prerequisites: [FR-C86-ours, FR-C86-renard]
 sounds: []
-roots: []
+roots: [serpens-latin]
+etymology_hook: "serpent ← Latin serpens 'snake', from serpere 'to creep' — English serpent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C86-renard]
 <!-- hl-knowledge: introduces=[FR-LEX-C86-ANIMAUX38-03]; assesses=[] -->
 
 **le serpent** — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serpent** ← Latin *serpens*, *serpentis*, "snake", from *serpere*, "to creep" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

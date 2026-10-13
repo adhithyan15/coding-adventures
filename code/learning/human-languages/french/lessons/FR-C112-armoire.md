@@ -13,7 +13,8 @@ gloss: "a wardrobe"
 concept_tag: FR-MAISON64-ARMOIRE
 prerequisites: [FR-C112-douche, FR-C112-baignoire]
 sounds: []
-roots: []
+roots: [armarium-latin]
+etymology_hook: "armoire ← Latin armarium 'a cupboard', from arma 'tools, arms' — English armoire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C112-baignoire]
 <!-- hl-knowledge: introduces=[FR-LEX-C112-MAISON64-03]; assesses=[] -->
 
 **l'armoire** — "a wardrobe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**armoire** ← Old French *armaire* (EtymDB 2.1) ← Latin *armarium*, "a cupboard, a chest", from *arma*, "tools, arms" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

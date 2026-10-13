@@ -14,6 +14,7 @@ concept_tag: FR-REPAS71-HARICOTS
 prerequisites: [FR-C119-legumes, FR-C119-champignon]
 sounds: []
 roots: []
+etymology_hook: "haricots — origin uncertain: first a stew, perhaps reshaped by Nahuatl ayacotli 'bean'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C119-champignon]
 <!-- hl-knowledge: introduces=[FR-LEX-C119-REPAS71-04]; assesses=[] -->
 
 **les haricots** — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**haricots** is the plural of the word for "bean", whose origin is uncertain. It first named a meat stew, from an Old French verb meaning "to chop up"; the bean sense may owe something to Nahuatl *ayacotli*, "bean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a colour"
 concept_tag: FR-LOISIRS81-COULEUR
 prerequisites: [FR-C129-vie, FR-C129-fois, FR-C32-quel]
 sounds: []
-roots: []
+roots: [color-latin]
+etymology_hook: "couleur ← Latin color 'colour' — English colour came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C129-fois]
 <!-- hl-knowledge: introduces=[FR-LEX-C129-LOISIRS81-04]; assesses=[] -->
 
 **la couleur** — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**couleur** ← Latin *color*, *coloris*, "colour" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

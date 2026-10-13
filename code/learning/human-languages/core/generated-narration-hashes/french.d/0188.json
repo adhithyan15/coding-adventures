@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 188,
-  "sourceHash": "fnv1a64:022250896f538e3d",
+  "sourceHash": "fnv1a64:384f0a645ee1df56",
   "lessonIds": [
     "FR-C188-pres-de",
     "FR-C188-loin-de",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch188.txt",
   "json": "french/narration/ch188.json",
-  "textHash": "fnv1a64:045bf67208963f3d",
-  "jsonHash": "fnv1a64:1a2aacc157789502",
+  "textHash": "fnv1a64:08281404f4c4e676",
+  "jsonHash": "fnv1a64:2904d98475f3773e",
   "findings": []
 }

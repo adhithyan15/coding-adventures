@@ -13,7 +13,8 @@ gloss: "really"
 concept_tag: FR-POURQUOI189-VRAIMENT
 prerequisites: [FR-C189-heureusement, FR-C189-certainement]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "vraiment — the word for 'true', from Latin verus, + -ment — English very"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C189-certainement]
 <!-- hl-knowledge: introduces=[FR-LEX-C189-POURQUOI189-05]; assesses=[] -->
 
 **vraiment** — "really".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vraiment** ← Old French *veraiement* (EtymDB 2.1), from the word for "true", ← Vulgar Latin *\*veracus*, from Latin *verus*, "true", with *-ment*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

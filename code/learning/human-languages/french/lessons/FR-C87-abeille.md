@@ -13,7 +13,8 @@ gloss: "a bee"
 concept_tag: FR-ANIMAUX39-ABEILLE
 prerequisites: [FR-C87-lion, FR-C87-singe]
 sounds: []
-roots: []
+roots: [apis-latin]
+etymology_hook: "abeille ← Old Provençal abelha, from Latin apicula 'little bee' — English apiary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C87-singe]
 <!-- hl-knowledge: introduces=[FR-LEX-C87-ANIMAUX39-05]; assesses=[] -->
 
 **l'abeille** — "a bee". It makes **le miel**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abeille** ← Old Provençal *abelha* ← Latin *apicula*, "a little bee", from *apis*, "bee" — borrowed from the south. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

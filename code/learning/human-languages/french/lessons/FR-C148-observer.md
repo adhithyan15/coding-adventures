@@ -14,6 +14,7 @@ concept_tag: FR-VERB-OBSERVER
 prerequisites: [FR-C147-critiquer, FR-C147-demontrer]
 sounds: []
 roots: []
+etymology_hook: "observer ← Latin observare 'to watch, to heed' — English observe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C147-demontrer]
 <!-- hl-knowledge: introduces=[FR-LEX-C148-VERBES148-01]; assesses=[] -->
 
 **observer** — "to observe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**observer** ← Latin *observare*, "to watch, to heed" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

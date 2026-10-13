@@ -13,7 +13,8 @@ gloss: "a dictionary"
 concept_tag: FR-TRAV232-DICTIONNAIRE
 prerequisites: [FR-C231-paysage, FR-C232-magazine]
 sounds: []
-roots: []
+roots: [dicere-latin]
+etymology_hook: "dictionnaire ← Medieval Latin dictionarium, from dictio 'a word' — English dictionary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C232-magazine]
 <!-- hl-knowledge: introduces=[FR-LEX-C232-TRAV232-02]; assesses=[] -->
 
 **le dictionnaire** — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dictionnaire** ← Medieval Latin *dictionarium*, from *dictio*, "a saying, a word" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

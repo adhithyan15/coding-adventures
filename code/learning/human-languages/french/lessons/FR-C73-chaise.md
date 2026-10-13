@@ -13,7 +13,8 @@ gloss: "a chair"
 concept_tag: FR-MAISON25-CHAISE
 prerequisites: [FR-C73-cuisine, FR-C73-fenetre]
 sounds: []
-roots: []
+roots: [cathedra-latin]
+etymology_hook: "chaise ← Old French chaiere, from Latin cathedra 'a seat' — English cathedral"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C73-fenetre]
 <!-- hl-knowledge: introduces=[FR-LEX-C73-MAISON25-03]; assesses=[] -->
 
 **la chaise** — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chaise** ← Latin *cathedra*, "a seat", from Greek *kathedra* (Lewis & Short) — inherited. Old French said *chaiere*, which EtymDB 2.1 traces to *cathedra*; Paris speech turned its *r* into a *z*. The older form lives on in the French word for a pulpit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "although"
 concept_tag: FR-POURQUOI158-BIEN-QUE
 prerequisites: [FR-C158-de-toute-facon, FR-C158-au-contraire]
 sounds: []
-roots: []
+roots: [bene]
+etymology_hook: "bien que — bien + que: 'well that', granted that"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C158-au-contraire]
 <!-- hl-knowledge: introduces=[FR-LEX-C158-POURQUOI158-05]; assesses=[] -->
 
 **bien que** — "although".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bien que** — *bien*, "well", ← Latin *bene*, and *que*, "that" (EtymDB 2.1): "well that", granted that.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

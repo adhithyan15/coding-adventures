@@ -13,7 +13,8 @@ gloss: "an arm"
 concept_tag: FR-CORPS1-BRAS
 prerequisites: [FR-C40-assez, FR-C40-monsieur]
 sounds: []
-roots: []
+roots: [bracchium-latin]
+etymology_hook: "bras ← Latin bracchium 'arm' — English brace is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C40-monsieur]
 <!-- hl-knowledge: introduces=[FR-LEX-C49-CORPS1-01]; assesses=[] -->
 
 **le bras** — "an arm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bras** ← Old French *bras* ← Latin *bracchium*, "arm" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 108,
-  "sourceHash": "fnv1a64:49142a16886dca2b",
+  "sourceHash": "fnv1a64:5626a0e474958a6c",
   "lessonIds": [
     "FR-C108-bureau",
     "FR-C108-usine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch108.txt",
   "json": "french/narration/ch108.json",
-  "textHash": "fnv1a64:bc36ff9ed444d5d8",
-  "jsonHash": "fnv1a64:67c09f8972ae4a68",
+  "textHash": "fnv1a64:f6840d246020715f",
+  "jsonHash": "fnv1a64:a74c509cac9f6bf7",
   "findings": []
 }

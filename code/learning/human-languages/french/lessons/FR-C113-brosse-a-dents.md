@@ -13,7 +13,8 @@ gloss: "a toothbrush"
 concept_tag: FR-MAISON65-BROSSE-A-DENTS
 prerequisites: [FR-C113-serviette, FR-C113-savon]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "brosse à dents — 'brush for teeth'; dent ← Latin dens, dentis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C113-savon]
 <!-- hl-knowledge: introduces=[FR-LEX-C113-MAISON65-05]; assesses=[] -->
 
 **la brosse à dents** — "a toothbrush".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brosse à dents** — "brush for teeth": *brosse*, "brush", first "brushwood" in Old French (EtymDB 2.1), of uncertain origin; *à*, "for"; and *dents*, "teeth", ← Latin *dens*, *dentis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

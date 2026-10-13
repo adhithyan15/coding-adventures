@@ -13,7 +13,8 @@ gloss: "a seat"
 concept_tag: FR-CHOSES199-SIEGE
 prerequisites: [FR-C199-sortie, FR-C199-bagages]
 sounds: []
-roots: []
+roots: [sedere-latin]
+etymology_hook: "siège ← Vulgar Latin *sedicum, from sedes 'a seat' — English siege"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C199-bagages]
 <!-- hl-knowledge: introduces=[FR-LEX-C199-CHOSES199-04]; assesses=[] -->
 
 **le siège** — "a seat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**siège** ← Old French *siege* ← Vulgar Latin *\*sedicum*, from Latin *sedes*, "a seat" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

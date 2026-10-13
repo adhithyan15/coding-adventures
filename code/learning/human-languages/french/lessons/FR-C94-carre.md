@@ -13,7 +13,8 @@ gloss: "square"
 concept_tag: FR-ADJ46-CARRE
 prerequisites: [FR-C94-amer, FR-C94-rond]
 sounds: []
-roots: []
+roots: [quattuor-latin]
+etymology_hook: "carré ← Latin quadratus 'squared' — English quadrant and square are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C94-rond]
 <!-- hl-knowledge: introduces=[FR-LEX-C94-ADJ46-04]; assesses=[] -->
 
 **carré** — "square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carré** ← Old French *quarré* ← Latin *quadratus*, "squared" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

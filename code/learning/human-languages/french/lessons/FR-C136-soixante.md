@@ -13,7 +13,8 @@ gloss: "sixty"
 concept_tag: FR-NOMBRES88-SOIXANTE
 prerequisites: [FR-C135-courriel, FR-C136-zero]
 sounds: []
-roots: []
+roots: [sexaginta-latin]
+etymology_hook: "soixante ← Latin sexaginta 'sixty', six tens — English sexagenarian"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C136-zero]
 <!-- hl-knowledge: introduces=[FR-LEX-C136-NOMBRES88-02]; assesses=[] -->
 
 **soixante** — "sixty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soixante** ← Old French *soissante* ← Latin *sexaginta*, "sixty" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a shower"
 concept_tag: FR-MAISON64-DOUCHE
 prerequisites: [FR-C111-refrigerateur, FR-C111-radio]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "douche ← Italian doccia 'a water pipe', from Latin ductus 'a conduit' — English duct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C111-radio]
 <!-- hl-knowledge: introduces=[FR-LEX-C112-MAISON64-01]; assesses=[] -->
 
 **la douche** — "a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**douche** ← Italian *doccia*, "a water pipe", from Latin *ductus*, "a leading, a conduit", from *ducere*, "to lead" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

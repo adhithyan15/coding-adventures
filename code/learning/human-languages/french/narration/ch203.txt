@@ -12,6 +12,9 @@ Before the new one: say the French for a small bag, then the French for a rope.
 You'll want to know: la défaite.
 la défaite — "a defeat".
 
+The word, taken apart.
+défaite is the past participle of the verb for "to undo", used as a noun: an undoing. Old French had desfait, "undone" (EtymDB 2.1); the verb is built on Latin facere, "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the French for a rope, then the French for a defeat.
 
 You'll want to know: le championnat.
 le championnat — "a championship".
+
+The word, taken apart.
+championnat — built from the word for "champion", from Medieval Latin campio, "a fighter in a duel", which EtymDB 2.1 takes from Frankish kampjo, "a fighter", with -at.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the French for a defeat, then the French for a champions
 You'll want to know: le joueur.
 le joueur — "a player".
 
+The word, taken apart.
+joueur — jouer, "to play", with -eur, "one who".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the French for a championship, then the French for a pla
 You'll want to know: l'entraîneur.
 l'entraîneur — "a coach".
 
+The word, taken apart.
+entraîneur — built from the verb for "to train, to draw along", from en- and the verb for "to drag", from Vulgar Latin traginare, from Latin trahere, "to draw" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the French for a player, then the French for a coach.
 
 You'll want to know: la correspondance.
 la correspondance — "a connection".
+
+The word, taken apart.
+correspondance — built from the verb for "to correspond", from Medieval Latin correspondere, from com- and respondere, "to answer".
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 245,
-  "sourceHash": "fnv1a64:7816ed62b9673d2e",
+  "sourceHash": "fnv1a64:a0fa57c41e065a19",
   "lessonIds": [
     "FR-C245-semblable",
     "FR-C245-juste",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch245.txt",
   "json": "french/narration/ch245.json",
-  "textHash": "fnv1a64:9b3bbce463314253",
-  "jsonHash": "fnv1a64:17607f52caedfecb",
+  "textHash": "fnv1a64:522cbd3efc8b904d",
+  "jsonHash": "fnv1a64:eb7c176f42c46251",
   "findings": []
 }

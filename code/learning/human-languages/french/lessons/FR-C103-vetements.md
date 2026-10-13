@@ -13,7 +13,8 @@ gloss: "clothes"
 concept_tag: FR-VILLE55-VETEMENTS
 prerequisites: [FR-C103-quartier, FR-C103-aeroport]
 sounds: []
-roots: []
+roots: [vestire-latin]
+etymology_hook: "vêtements ← Latin vestimentum 'clothing', from vestire — English vestment and vest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C103-aeroport]
 <!-- hl-knowledge: introduces=[FR-LEX-C103-VILLE55-03]; assesses=[] -->
 
 **les vêtements** — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vêtements** is the plural of the word for "a garment" ← Old French *vestement* ← Latin *vestimentum*, "clothing", from *vestire*, "to clothe" (Lewis & Short) — inherited. The circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to cry"
 concept_tag: FR-VERB-PLEURER
 prerequisites: [FR-C59-professeur, FR-C59-rire]
 sounds: []
-roots: []
+roots: [plorare-latin]
+etymology_hook: "pleurer ← Latin plorare 'to wail, to weep aloud' — English implore and deplore share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C59-rire]
 <!-- hl-knowledge: introduces=[FR-LEX-C60-VERBES12-01]; assesses=[] -->
 
 **pleurer** — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pleurer** ← Old French *plorer* ← Latin *plorare*, "to wail, to weep aloud" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a time, an occasion"
 concept_tag: FR-LOISIRS81-FOIS
 prerequisites: [FR-C129-dessin, FR-C129-vie]
 sounds: []
-roots: []
+roots: [vicis-latin]
+etymology_hook: "fois ← Latin vices 'turns' — English vice-versa, 'the turn reversed'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C129-vie]
 <!-- hl-knowledge: introduces=[FR-LEX-C129-LOISIRS81-03]; assesses=[] -->
 
 **la fois** — "a time, an occasion". **une fois**: once; **deux fois**: twice.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fois** ← Old French *foiz* (EtymDB 2.1) ← Latin *vices*, "turns, changes" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

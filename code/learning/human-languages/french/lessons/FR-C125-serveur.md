@@ -13,7 +13,8 @@ gloss: "a waiter"
 concept_tag: FR-METIERS77-SERVEUR
 prerequisites: [FR-C125-pompier, FR-C125-facteur]
 sounds: []
-roots: []
+roots: [servire-latin]
+etymology_hook: "serveur — from the verb 'to serve', from Latin servire — English server"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C125-facteur]
 <!-- hl-knowledge: introduces=[FR-LEX-C125-METIERS77-03]; assesses=[] -->
 
 **le serveur** — "a waiter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serveur** — built from the verb for "to serve", ← Latin *servire*, with *-eur*, "one who". (EtymDB 2.1 records the verb.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

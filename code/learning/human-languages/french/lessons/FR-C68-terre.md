@@ -13,7 +13,8 @@ gloss: "a potato"
 concept_tag: FR-CUISINE20-TERRE
 prerequisites: [FR-C68-banane, FR-C68-orange]
 sounds: []
-roots: []
+roots: [terra-latin]
+etymology_hook: "pomme de terre — 'apple of the earth'; terre ← Latin terra — English terrain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C68-orange]
 <!-- hl-knowledge: introduces=[FR-LEX-C68-CUISINE20-03]; assesses=[] -->
 
 **la pomme de terre** — "a potato". Literally "apple of the earth".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pomme de terre** — "apple of the earth": *pomme*, "apple", *de*, "of", and *terre*, "earth", ← Latin *terra*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

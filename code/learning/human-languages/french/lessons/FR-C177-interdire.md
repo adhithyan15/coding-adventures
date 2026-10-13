@@ -13,7 +13,8 @@ gloss: "to forbid"
 concept_tag: FR-VERB-INTERDIRE
 prerequisites: [FR-C177-promettre, FR-C177-permettre]
 sounds: []
-roots: []
+roots: [dicere-latin]
+etymology_hook: "interdire ← Latin interdicere 'to forbid' — English interdict"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C177-permettre]
 <!-- hl-knowledge: introduces=[FR-LEX-C177-VERBES177-03]; assesses=[] -->
 
 **interdire** — "to forbid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interdire** ← Latin *interdicere*, "to forbid", from *inter*, "between", and *dicere*, "to say" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

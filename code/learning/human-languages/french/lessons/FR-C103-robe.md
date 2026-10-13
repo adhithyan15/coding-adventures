@@ -14,6 +14,7 @@ concept_tag: FR-VILLE55-ROBE
 prerequisites: [FR-C103-vetements, FR-C103-chemise]
 sounds: []
 roots: []
+etymology_hook: "robe ← Frankish *rauba 'plunder' — clothes as spoils; English rob and robe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C103-chemise]
 <!-- hl-knowledge: introduces=[FR-LEX-C103-VILLE55-05]; assesses=[] -->
 
 **la robe** — "a dress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**robe** ← Old French *robe*, "booty, a garment", from Frankish *\*rauba*, "plunder" (EtymDB 2.1) — borrowed: clothes were the first spoils of a raid.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

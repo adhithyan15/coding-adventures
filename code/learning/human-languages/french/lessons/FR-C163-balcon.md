@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES163-BALCON
 prerequisites: [FR-C163-appartement, FR-C163-salle-a-manger]
 sounds: []
 roots: []
+etymology_hook: "balcon ← Italian balcone, from Lombardic *balko 'a beam' — English balcony"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C163-salle-a-manger]
 <!-- hl-knowledge: introduces=[FR-LEX-C163-CHOSES163-03]; assesses=[] -->
 
 **le balcon** — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**balcon** ← Italian *balcone*, from Lombardic *\*balko*, "a beam" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

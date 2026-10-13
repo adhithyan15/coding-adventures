@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 160,
-  "sourceHash": "fnv1a64:b6566efd05d8d5b7",
+  "sourceHash": "fnv1a64:b91cce65ef7d7fdb",
   "lessonIds": [
     "FR-C160-profond-profonde",
     "FR-C160-bas-basse",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch160.txt",
   "json": "french/narration/ch160.json",
-  "textHash": "fnv1a64:b8b6d52460bc198f",
-  "jsonHash": "fnv1a64:0be251d1bf666096",
+  "textHash": "fnv1a64:61b66eaab56d0607",
+  "jsonHash": "fnv1a64:95b7db55a11e2a9f",
   "findings": []
 }

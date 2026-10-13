@@ -13,7 +13,8 @@ gloss: "a lung"
 concept_tag: FR-SANTE154-POUMON
 prerequisites: [FR-C154-sante, FR-C154-cerveau]
 sounds: []
-roots: []
+roots: [pulmo-latin]
+etymology_hook: "poumon ← Latin pulmo, pulmonis 'lung' — English pulmonary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C154-cerveau]
 <!-- hl-knowledge: introduces=[FR-LEX-C154-SANTE154-03]; assesses=[] -->
 
 **le poumon** — "a lung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poumon** ← Latin *pulmo*, *pulmonis*, "lung" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

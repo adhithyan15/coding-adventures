@@ -14,6 +14,7 @@ concept_tag: FR-VERB-RANGER
 prerequisites: [FR-C242-partir-en-vacances, FR-C242-plaisanter]
 sounds: []
 roots: []
+etymology_hook: "ranger — from the word for 'a row', Frankish *hring 'a ring' — English range and rank"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C242-plaisanter]
 <!-- hl-knowledge: introduces=[FR-LEX-C242-VERBES242-05]; assesses=[] -->
 
 **ranger** — "to tidy up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ranger** — built from the word for "a row, a rank", ← Frankish *\*hring*, "a ring". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

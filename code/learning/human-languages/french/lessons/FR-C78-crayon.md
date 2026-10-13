@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES30-CRAYON
 prerequisites: [FR-C78-papier, FR-C78-cahier]
 sounds: []
 roots: []
+etymology_hook: "crayon — the word for 'chalk' + -on; chalk ← Latin creta — English crayon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C78-cahier]
 <!-- hl-knowledge: introduces=[FR-LEX-C78-CHOSES30-04]; assesses=[] -->
 
 **le crayon** — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crayon** — built from the French word for "chalk", with *-on*. The chalk word ← Latin *creta*, "chalk, clay". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

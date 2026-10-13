@@ -13,7 +13,8 @@ gloss: "an island"
 concept_tag: FR-NATURE34-ILE
 prerequisites: [FR-C82-sable, FR-C82-plage]
 sounds: []
-roots: []
+roots: [insula-latin]
+etymology_hook: "île ← Old French isle, from Latin insula — English isle and insular"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C82-plage]
 <!-- hl-knowledge: introduces=[FR-LEX-C82-NATURE34-05]; assesses=[] -->
 
 **l'île** — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**île** ← Old French *isle* ← Latin *insula*, "island" (EtymDB 2.1 records the Latin word) — inherited. The circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

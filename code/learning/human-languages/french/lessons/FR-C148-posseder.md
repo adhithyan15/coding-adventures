@@ -13,7 +13,8 @@ gloss: "to own"
 concept_tag: FR-VERB-POSSEDER
 prerequisites: [FR-C148-promener, FR-C148-plier]
 sounds: []
-roots: []
+roots: [sedere-latin]
+etymology_hook: "posséder ← Latin possidere 'to own' — English possess"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C148-plier]
 <!-- hl-knowledge: introduces=[FR-LEX-C148-VERBES148-05]; assesses=[] -->
 
 **posséder** — "to own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**posséder** ← Latin *possidere*, "to hold, to own" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

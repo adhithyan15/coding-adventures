@@ -13,7 +13,8 @@ gloss: "an ant"
 concept_tag: FR-ANIMAUX40-FOURMI
 prerequisites: [FR-C87-singe, FR-C87-abeille]
 sounds: []
-roots: []
+roots: [formica-latin]
+etymology_hook: "fourmi ← Latin formica 'ant' — English formic acid, first got from ants"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C87-abeille]
 <!-- hl-knowledge: introduces=[FR-LEX-C88-ANIMAUX40-01]; assesses=[] -->
 
 **la fourmi** — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fourmi** ← Old French *furmi* ← Vulgar Latin *\*formicus* ← Latin *formica*, "ant" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-TRAV232-MAGAZINE
 prerequisites: [FR-C231-destination, FR-C231-paysage]
 sounds: []
 roots: []
+etymology_hook: "magazine ← English magazine, which English had taken from magasin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C231-paysage]
 <!-- hl-knowledge: introduces=[FR-LEX-C232-TRAV232-01]; assesses=[] -->
 
 **le magazine** — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**magazine** ← English *magazine*, a storehouse of writings (EtymDB 2.1) — borrowed back: English had taken it from *magasin*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

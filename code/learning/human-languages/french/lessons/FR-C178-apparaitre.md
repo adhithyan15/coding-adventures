@@ -13,7 +13,8 @@ gloss: "to appear"
 concept_tag: FR-VERB-APPARAITRE
 prerequisites: [FR-C178-ajouter, FR-C178-annoncer]
 sounds: []
-roots: []
+roots: [parere]
+etymology_hook: "apparaître ← Late Latin apparescere, from apparere 'to appear' — English appear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C178-annoncer]
 <!-- hl-knowledge: introduces=[FR-LEX-C178-VERBES178-05]; assesses=[] -->
 
 **apparaître** — "to appear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apparaître** ← Old French *aparoistre* ← Late Latin *apparescere*, from Latin *apparere*, "to appear" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

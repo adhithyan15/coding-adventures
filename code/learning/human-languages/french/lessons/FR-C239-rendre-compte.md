@@ -14,6 +14,7 @@ concept_tag: FR-VERB-RENDRE-COMPTE
 prerequisites: [FR-C239-valoir, FR-C239-habituer]
 sounds: []
 roots: []
+etymology_hook: "se rendre compte — 'to render oneself an account': rendre + compte"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C239-habituer]
 <!-- hl-knowledge: introduces=[FR-LEX-C239-VERBES239-04]; assesses=[] -->
 
 **se rendre compte** — "to realise".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se rendre compte** — "to render oneself an account": *rendre*, "to give back", and *compte*, "an account".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

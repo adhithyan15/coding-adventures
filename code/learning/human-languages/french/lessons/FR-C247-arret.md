@@ -13,7 +13,8 @@ gloss: "a stop"
 concept_tag: FR-CHOSES247-ARRET
 prerequisites: [FR-C247-addition, FR-C247-pourboire]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "arrêt — from arrêter 'to stop' — English arrest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C247-pourboire]
 <!-- hl-knowledge: introduces=[FR-LEX-C247-CHOSES247-03]; assesses=[] -->
 
 **l'arrêt** — "a stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrêt** — formed from *arrêter*, "to stop": a stop. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

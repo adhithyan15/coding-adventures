@@ -13,7 +13,8 @@ gloss: "to throw away"
 concept_tag: FR-VERB-JETER
 prerequisites: [FR-C236-suffire, FR-C236-bruler]
 sounds: []
-roots: []
+roots: [iactare-latin]
+etymology_hook: "jeter ← Latin iactare 'to throw about' — English jet and eject"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C236-bruler]
 <!-- hl-knowledge: introduces=[FR-LEX-C236-VERBES236-03]; assesses=[] -->
 
 **jeter** — "to throw away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jeter** ← Old French *jeter* (EtymDB 2.1) ← Vulgar Latin *\*iectare* ← Latin *iactare*, "to throw about" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

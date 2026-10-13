@@ -13,7 +13,7 @@ sounds: [liaison-t, silent-final-t]
 roots: []
 etymology_hook: "il est deux heures is literally 'it is two hours'; English o'clock is a worn-down 'of the clock', which counted them too"
 duration:
-  max_seconds: 200
+  max_seconds: 215
 requires:
   knowledge: [FR-LEX-HEURE-01, FR-LEX-DEUX-03]
 introduces:
@@ -63,6 +63,11 @@ particular — and you will meet the verb inside it properly later.
 - But before **heures**, with its silent *h*, that **t** wakes up and links:
   **il est une heure** = *eel eh-**t**-ün-eur*. Another liaison, the same
   instinct as *deux heures*.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**il est … heures** — *il* ← Latin *ille*, "that"; *est* is Latin *est*, "is"; *heure* ← Latin *hora*, "hour". All three are inherited. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-IL-EST-HEURES-03, FR-LEX-HEURE-01, FR-LEX-DEUX-03] -->

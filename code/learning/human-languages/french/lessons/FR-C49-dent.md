@@ -13,7 +13,8 @@ gloss: "a tooth"
 concept_tag: FR-CORPS1-DENT
 prerequisites: [FR-C49-pied, FR-C49-doigt]
 sounds: []
-roots: []
+roots: [dens-latin]
+etymology_hook: "dent ← Latin dens, dentis 'tooth' — English dental and dentist share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C49-doigt]
 <!-- hl-knowledge: introduces=[FR-LEX-C49-CORPS1-05]; assesses=[] -->
 
 **la dent** — "a tooth". English *dentist* shares the root.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dent** ← Latin *dens*, *dentis*, "tooth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-HABITS68-GANTS
 prerequisites: [FR-C116-cravate, FR-C116-ceinture]
 sounds: []
 roots: []
+etymology_hook: "gants ← Old French guant, from Frankish *want 'glove' — English gauntlet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C116-ceinture]
 <!-- hl-knowledge: introduces=[FR-LEX-C116-HABITS68-04]; assesses=[] -->
 
 **les gants** — "gloves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gants** is the plural of the word for "glove" ← Old French *guant* ← Frankish *\*want*, "glove" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

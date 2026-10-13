@@ -13,7 +13,8 @@ gloss: "the same"
 concept_tag: FR-QUAL219-PAREIL-PAREILLE
 prerequisites: [FR-C219-etrange, FR-C219-different-differente]
 sounds: []
-roots: []
+roots: [par]
+etymology_hook: "pareil ← Vulgar Latin *pariculus, from Latin par 'equal' — English par and peer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C219-different-differente]
 <!-- hl-knowledge: introduces=[FR-LEX-C219-QUAL219-05]; assesses=[] -->
 
 **pareil / pareille** — "the same".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pareil** ← Middle French *pareil* (EtymDB 2.1) ← Vulgar Latin *\*pariculus*, from Latin *par*, "equal" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

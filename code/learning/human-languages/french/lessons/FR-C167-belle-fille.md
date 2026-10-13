@@ -13,7 +13,8 @@ gloss: "a daughter-in-law"
 concept_tag: FR-CHOSES167-BELLE-FILLE
 prerequisites: [FR-C167-belle-mere, FR-C167-gendre]
 sounds: []
-roots: []
+roots: [bellus-latin, filius]
+etymology_hook: "belle-fille — 'fair daughter', a courtesy title; from Latin bella + fille"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C167-gendre]
 <!-- hl-knowledge: introduces=[FR-LEX-C167-CHOSES167-03]; assesses=[] -->
 
 **la belle-fille** — "a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**belle-fille** — the feminine of the word for "beautiful", ← Latin *bella*, used as a courtesy, and *fille*, "daughter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

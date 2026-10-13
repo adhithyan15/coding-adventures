@@ -13,7 +13,8 @@ gloss: "to download"
 concept_tag: FR-VERB-TELECHARGER
 prerequisites: [FR-C183-renoncer, FR-C183-echanger]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "télécharger — télé- 'far' + the verb 'to load', from Latin carrus 'wagon' — English charge"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C183-echanger]
 <!-- hl-knowledge: introduces=[FR-LEX-C183-VERBES183-03]; assesses=[] -->
 
 **télécharger** — "to download".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**télécharger** — *télé-*, "far off", from Greek *tele*, and the verb for "to load", ← Late Latin *carricare* (EtymDB 2.1), from *carrus*, "a wagon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

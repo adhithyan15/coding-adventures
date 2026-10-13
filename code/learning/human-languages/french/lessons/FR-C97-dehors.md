@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS49-DEHORS
 prerequisites: [FR-C97-dessous, FR-C97-dedans]
 sounds: []
 roots: []
+etymology_hook: "dehors ← Late Latin deforis 'from outside' — English foreign and forest are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C97-dedans]
 <!-- hl-knowledge: introduces=[FR-LEX-C97-TEMPS49-04]; assesses=[] -->
 
 **dehors** — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dehors** ← Old French *defors* ← Late Latin *deforis*, "from outside", from *foris*, "outside" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

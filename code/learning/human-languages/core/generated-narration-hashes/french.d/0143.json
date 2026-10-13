@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 143,
-  "sourceHash": "fnv1a64:d17d9f915a906515",
+  "sourceHash": "fnv1a64:8a26344373d71c46",
   "lessonIds": [
     "FR-C143-allumer",
     "FR-C143-eteindre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch143.txt",
   "json": "french/narration/ch143.json",
-  "textHash": "fnv1a64:f12b317d9c92eb26",
-  "jsonHash": "fnv1a64:2fa853925303523c",
+  "textHash": "fnv1a64:f2851f1b917e4811",
+  "jsonHash": "fnv1a64:e95240d9163d3050",
   "findings": []
 }
