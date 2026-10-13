@@ -23,3 +23,10 @@
   raw loader. It now registers `boundedRawMarkdownPlugin` too. The failure
   reproduces under `ulimit -n 1024` without the plugin, and all 41 test files
   (485 tests) pass with it.
+- **Changed:** `vitest.config.ts` raises `hookTimeout` from 60 s to 180 s.
+  Once the corpus files loaded on Windows instead of crashing, the suite went
+  from 240 s to 352 s. The `beforeAll` in `tests/curriculum.test.ts`
+  (`loadCurriculumPlans()`) then went past 60 s and skipped all 7 of its tests.
+  On an idle Linux box that hook takes ~9 s with or without the read limiter.
+  The measurements are in the comment next to the budget. `testTimeout` stays
+  at 60 s.

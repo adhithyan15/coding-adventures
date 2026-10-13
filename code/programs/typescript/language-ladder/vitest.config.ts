@@ -57,8 +57,24 @@ export default defineConfig({
     // Promise.all over dynamic imports of build-time virtual modules, with no
     // network call and no retry loop -- and each CI job carries its own
     // timeout-minutes, so the worst case is bounded regardless.
+    //
+    // Windows needs more for the hook. Once the lesson corpus could load there
+    // at all (the bounded raw reader above ended the EMFILE crashes), the three
+    // test files that load every lesson finished instead of failing fast. On
+    // the windows-2025 lane, with the whole-repo build running alongside, they
+    // compete with the curriculum hook for the one Vite server:
+    //
+    //   condition                          curriculum.test.ts   whole suite
+    //   ---------------------------------  -------------------  -----------
+    //   Linux, idle 4-core box                   ~9 s              ~85 s
+    //   Windows CI, corpus files crashing        18 s              240 s
+    //   Windows CI, corpus files loading      >60 s (TIMEOUT)      352 s
+    //
+    // The hook budget is 180 s: about 3x that last row's 60 s, and still a
+    // small slice of the job's timeout-minutes. Per-test work is unchanged, so
+    // the test budget stays at 60 s.
     testTimeout: 60_000,
-    hookTimeout: 60_000,
+    hookTimeout: 180_000,
     coverage: {
       provider: "v8",
       // The pure logic is what we hold to a high bar; main.ts is the thin DOM
