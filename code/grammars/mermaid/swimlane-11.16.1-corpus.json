@@ -243,6 +243,10 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft <-- submit --> review\nreview <== approve ==> approve\napprove <-. release .-> publish"
     },
     {
+      "name": "labeled-circle-cross-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- solid circle --o b\nb x-- solid cross --x c\nc o== thick circle ==o d\nd x== thick cross ==x e\ne o-. dotted circle .-o f\nf x-. dotted cross .-x g"
+    },
+    {
       "name": "edge-identifiers",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done"
     },
