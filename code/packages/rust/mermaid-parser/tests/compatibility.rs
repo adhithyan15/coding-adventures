@@ -2308,6 +2308,20 @@ fn swimlane_ignore_cross_lane_edges_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_optimize_ranks_by_crossings_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let defaulted = parse_swimlane(source).expect("default rank optimization should parse");
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: true\n---\n{source}"))
+        .expect("rank crossing optimization should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: false\n---\n{source}"))
+        .expect("disabled rank crossing optimization should parse");
+
+    assert!(defaulted.optimize_ranks_by_crossings);
+    assert!(enabled.optimize_ranks_by_crossings);
+    assert!(!disabled.optimize_ranks_by_crossings);
+}
+
+#[test]
 fn swimlane_nested_subgraphs_reach_semantic_ir() {
     let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
         .expect("nested Swimlane subgraphs should parse");
@@ -2331,6 +2345,24 @@ fn swimlane_state_choice_and_note_attributes_reach_semantic_ir() {
     assert_eq!(diagram.nodes[0].shape, DiagramShape::RoundedRect);
     assert_eq!(diagram.nodes[1].shape, DiagramShape::Diamond);
     assert_eq!(diagram.nodes[2].shape, DiagramShape::Note);
+}
+
+#[test]
+fn swimlane_legacy_internal_shape_aliases_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Legacy\n  process@{ shape: squareRect, label: \"Process\" }\n  event@{ shape: roundedRect, label: \"Event\" }\n  start@{ shape: stateStart }\n  stop@{ shape: stateEnd }\n  branch@{ shape: forkJoin }\n  manual@{ shape: inv_trapezoid, label: \"Manual\" }\n  final@{ shape: doublecircle, label: \"Final\" }\n  odd@{ shape: rect_left_inv_arrow, label: \"Odd\" }\nend\nstart --> process --> event --> branch --> manual --> final --> stop\nbranch --> odd --> final")
+        .expect("legacy internal ShapeIDs accepted by Mermaid 11.16.1 should parse");
+
+    assert_eq!(diagram.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+        &DiagramShape::Rect,
+        &DiagramShape::RoundedRect,
+        &DiagramShape::SmallCircle,
+        &DiagramShape::FramedCircle,
+        &DiagramShape::ForkJoin,
+        &DiagramShape::InvertedTrapezoid,
+        &DiagramShape::DoubleCircle,
+        &DiagramShape::Asymmetric,
+    ]);
 }
 
 #[test]

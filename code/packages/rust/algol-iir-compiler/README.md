@@ -219,7 +219,8 @@ supported standard-function transforms. Globals, captured locals, and other
 real-name branches remain conservative. The exact bounded
 `entier(sign(local-runtime-real))` transform is also safe across such a
 selector, including when a specialised real name formal carries the exact
-local-rooted transform. Unrestricted runtime `entier` remains conservative.
+local-rooted transform. Unary signs may wrap that exact name actual without
+losing the proof. Unrestricted runtime `entier` remains conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is

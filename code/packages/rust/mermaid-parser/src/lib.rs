@@ -6197,6 +6197,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let line_hops = parse_swimlane_line_hops(source)?;
     let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
     let ignore_cross_lane_edges = parse_swimlane_ignore_cross_lane_edges(source)?;
+    let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6228,6 +6229,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         line_hops,
         automatic_lane_ordering,
         ignore_cross_lane_edges,
+        optimize_ranks_by_crossings,
     };
     let mut current_lane: Option<usize> = None;
     let mut group_stack = Vec::<usize>::new();
@@ -6519,6 +6521,24 @@ fn parse_swimlane_ignore_cross_lane_edges(source: &str) -> Result<bool, ParseErr
         "true" => Ok(true),
         "false" => Ok(false),
         _ => Err(swimlane_error(1, "Swimlane ignoreCrossLaneEdges must be true or false")),
+    }
+}
+
+fn parse_swimlane_optimize_ranks_by_crossings(source: &str) -> Result<bool, ParseError> {
+    let Some(section) = mermaid_front_matter_section(source, &["config", "swimlane"]) else {
+        return Ok(true);
+    };
+    let Some(value) = section.lines().find_map(|line| {
+        let (key, value) = line.split_once(':')?;
+        key.trim().eq_ignore_ascii_case("optimizeRanksByCrossings").then(||
+            value.trim().trim_matches(['\'', '"']).to_ascii_lowercase())
+    }) else {
+        return Ok(true);
+    };
+    match value.as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
+        _ => Err(swimlane_error(1, "Swimlane optimizeRanksByCrossings must be true or false")),
     }
 }
 
@@ -7173,8 +7193,8 @@ fn parse_swimlane_shape_attributes(
             "label" => label = Some(value),
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
-                    "rect" | "proc" | "process" | "rectangle" => DiagramShape::Rect,
-                    "rounded" | "event" | "state" => DiagramShape::RoundedRect,
+                    "rect" | "proc" | "process" | "rectangle" | "squarerect" => DiagramShape::Rect,
+                    "rounded" | "event" | "state" | "roundedrect" => DiagramShape::RoundedRect,
                     "circle" | "circ" => DiagramShape::Ellipse,
                     "choice" | "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
                     "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
@@ -7184,9 +7204,9 @@ fn parse_swimlane_shape_attributes(
                     "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
                     "lin-rect" | "lined-rectangle" | "lined-process" | "lin-proc" | "shaded-process" => DiagramShape::LinedRect,
                     "text" => DiagramShape::TextBlock,
-                    "sm-circ" | "start" | "small-circle" => DiagramShape::SmallCircle,
-                    "fr-circ" | "stop" | "framed-circle" => DiagramShape::FramedCircle,
-                    "fork" | "join" => DiagramShape::ForkJoin,
+                    "sm-circ" | "start" | "small-circle" | "statestart" => DiagramShape::SmallCircle,
+                    "fr-circ" | "stop" | "framed-circle" | "stateend" => DiagramShape::FramedCircle,
+                    "fork" | "join" | "forkjoin" => DiagramShape::ForkJoin,
                     "bolt" | "com-link" | "lightning-bolt" => DiagramShape::LightningBolt,
                     "brace" | "comment" | "brace-l" => DiagramShape::CurlyBraceLeft,
                     "brace-r" => DiagramShape::CurlyBraceRight,
@@ -7216,11 +7236,11 @@ fn parse_swimlane_shape_attributes(
                     "lean-r" | "in-out" | "lean-right" => DiagramShape::ParallelogramRight,
                     "lean-l" | "lean-left" | "out-in" => DiagramShape::ParallelogramLeft,
                     "trap-b" | "priority" | "trapezoid" | "trapezoid-bottom" => DiagramShape::Trapezoid,
-                    "trap-t" | "inv-trapezoid" | "manual" | "trapezoid-top" => DiagramShape::InvertedTrapezoid,
+                    "trap-t" | "inv-trapezoid" | "inv_trapezoid" | "manual" | "trapezoid-top" => DiagramShape::InvertedTrapezoid,
                     "fr-rect" | "framed-rectangle" | "subproc" | "subprocess" | "subroutine" => DiagramShape::Subroutine,
                     "cyl" | "cylinder" | "database" | "db" => DiagramShape::Cylinder,
-                    "dbl-circ" | "double-circle" => DiagramShape::DoubleCircle,
-                    "odd" => DiagramShape::Asymmetric,
+                    "dbl-circ" | "double-circle" | "doublecircle" => DiagramShape::DoubleCircle,
+                    "odd" | "rect_left_inv_arrow" => DiagramShape::Asymmetric,
                     "note" => DiagramShape::Note,
                     other => return Err(swimlane_error(line, format!("unsupported Swimlane attribute shape {other:?}"))),
                 });

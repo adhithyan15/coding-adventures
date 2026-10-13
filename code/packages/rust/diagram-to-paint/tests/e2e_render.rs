@@ -3971,6 +3971,24 @@ line "Target" [35, 50, 68, 82]"##,
                         matches!(child, PaintInstruction::Path(_))).count() == 2
                 )), "the note must lower to an outline and interior fold path");
             }
+            if fixture_name == "legacy-internal-shape-aliases" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::Rect,
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::SmallCircle,
+                    &diagram_ir::DiagramShape::FramedCircle,
+                    &diagram_ir::DiagramShape::ForkJoin,
+                    &diagram_ir::DiagramShape::InvertedTrapezoid,
+                    &diagram_ir::DiagramShape::DoubleCircle,
+                    &diagram_ir::DiagramShape::Asymmetric,
+                ]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 4, "legacy control aliases must retain their circle geometry");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                )), "the legacy inverted-trapezoid alias must retain polygon geometry");
+            }
             if fixture_name == "cross-lane-rank-constraints" {
                 let validate = layout.nodes.iter().find(|node| node.id == "validate").unwrap();
                 let build = layout.nodes.iter().find(|node| node.id == "build").unwrap();
@@ -3978,6 +3996,16 @@ line "Target" [35, 50, 68, 82]"##,
                     "cross-lane rank constraints must place the destination after the source");
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.ignoreCrossLaneEdges")), Some(&"false".to_string()));
+            }
+            if fixture_name == "rank-crossing-optimization" {
+                let a = layout.nodes.iter().find(|node| node.id == "a").unwrap();
+                let b = layout.nodes.iter().find(|node| node.id == "b").unwrap();
+                let c = layout.nodes.iter().find(|node| node.id == "c").unwrap();
+                let d = layout.nodes.iter().find(|node| node.id == "d").unwrap();
+                assert!(a.x > c.x && d.x > b.x,
+                    "crossing optimization must separate the independent edge rank intervals");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.optimizeRanksByCrossings")), Some(&"true".to_string()));
             }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
