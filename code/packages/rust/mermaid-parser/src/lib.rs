@@ -7203,7 +7203,7 @@ fn parse_swimlane_shape_attributes(
                     "flip-tri" | "flipped-triangle" | "manual-file" => DiagramShape::InvertedTriangle,
                     "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
                     "lin-rect" | "lined-rectangle" | "lined-process" | "lin-proc" | "shaded-process" => DiagramShape::LinedRect,
-                    "text" => DiagramShape::TextBlock,
+                    "text" | "labelrect" => DiagramShape::TextBlock,
                     "sm-circ" | "start" | "small-circle" | "statestart" => DiagramShape::SmallCircle,
                     "fr-circ" | "stop" | "framed-circle" | "stateend" => DiagramShape::FramedCircle,
                     "fork" | "join" | "forkjoin" => DiagramShape::ForkJoin,
