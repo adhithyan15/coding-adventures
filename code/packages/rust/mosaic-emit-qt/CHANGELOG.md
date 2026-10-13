@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-12 (elevation shadows leave the degradation report)
+
+- A non-inset CSS `box-shadow` paired with a supported Mosaic `elevation`
+  token now counts as consumed when Qt emits the equivalent native
+  `MultiEffect` depth (#17386).
+- Standalone shadows, inset shadows, and unsupported elevation values remain
+  explicit degradation debt. Emitted QML is unchanged.
+
 ## 2026-10-12 (controls preserve fill widths)
 
 - Exact `width: 100%` declarations on `Input`, `HostInput`, and `HostButton`

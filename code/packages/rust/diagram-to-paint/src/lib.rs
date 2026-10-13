@@ -42,6 +42,7 @@ use diagram_ir::{
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
     GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind,
+    SwimlaneLineHops,
     TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
@@ -866,7 +867,7 @@ where
             },
         ));
     }
-    for edge in &diagram.edges {
+    for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
         }
@@ -971,6 +972,18 @@ where
         } else {
             (edge.to.clone(), edge.from.clone())
         };
+        if let Some(line_hops) = diagram.line_hops.filter(|_| {
+            matches!(edge.curve, None | Some(SwimlaneEdgeCurve::Linear))
+        }) {
+            let mut crossings = diagram.edges[..edge_index].iter().filter(|other| {
+                other.kind != SwimlaneEdgeKind::Invisible
+                    && matches!(other.curve, None | Some(SwimlaneEdgeCurve::Linear))
+            }).filter_map(|other| swimlane_line_crossing(
+                &edge.from, &edge.to, &other.from, &other.to,
+            )).collect::<Vec<_>>();
+            crossings.sort_by(|left, right| left.0.total_cmp(&right.0));
+            apply_swimlane_line_hops(&mut path, &edge.from, &edge.to, &crossings, line_hops);
+        }
         if let Some(stroke_dash) = &edge.style.stroke_dash {
             path.stroke_dash = Some(stroke_dash.clone());
         } else if edge.kind == SwimlaneEdgeKind::Dotted {
@@ -1453,6 +1466,12 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    if let Some(line_hops) = diagram.line_hops {
+        metadata.insert("swimlane.lineHops".into(), match line_hops {
+            SwimlaneLineHops::Arc => "arc",
+            SwimlaneLineHops::Gap => "gap",
+        }.into());
+    }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
             metadata.insert(format!("swimlane.edge.{index}.id"), id.clone());
@@ -1557,6 +1576,64 @@ fn swimlane_endpoint_marker(
             ]
         }
     }
+}
+
+fn swimlane_line_crossing(
+    from: &Point, to: &Point, other_from: &Point, other_to: &Point,
+) -> Option<(f64, Point)> {
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    let other_dx = other_to.x - other_from.x;
+    let other_dy = other_to.y - other_from.y;
+    let denominator = dx * other_dy - dy * other_dx;
+    if denominator.abs() <= f64::EPSILON {
+        return None;
+    }
+    let offset_x = other_from.x - from.x;
+    let offset_y = other_from.y - from.y;
+    let t = (offset_x * other_dy - offset_y * other_dx) / denominator;
+    let u = (offset_x * dy - offset_y * dx) / denominator;
+    let endpoint_epsilon = 1e-6;
+    if !(endpoint_epsilon..1.0 - endpoint_epsilon).contains(&t)
+        || !(endpoint_epsilon..1.0 - endpoint_epsilon).contains(&u)
+    {
+        return None;
+    }
+    Some((t, Point { x: from.x + dx * t, y: from.y + dy * t }))
+}
+
+fn apply_swimlane_line_hops(
+    path: &mut PaintPath, from: &Point, to: &Point, crossings: &[(f64, Point)],
+    line_hops: SwimlaneLineHops,
+) {
+    if crossings.is_empty() {
+        return;
+    }
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    let length = dx.hypot(dy);
+    if length <= f64::EPSILON {
+        return;
+    }
+    let radius = 6.0;
+    let unit_x = dx / length;
+    let unit_y = dy / length;
+    path.commands = vec![PathCommand::MoveTo { x: from.x, y: from.y }];
+    for (_, crossing) in crossings {
+        let before = Point { x: crossing.x - unit_x * radius, y: crossing.y - unit_y * radius };
+        let after = Point { x: crossing.x + unit_x * radius, y: crossing.y + unit_y * radius };
+        path.commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+        match line_hops {
+            SwimlaneLineHops::Arc => path.commands.push(PathCommand::QuadTo {
+                cx: crossing.x - unit_y * radius * 2.0,
+                cy: crossing.y + unit_x * radius * 2.0,
+                x: after.x,
+                y: after.y,
+            }),
+            SwimlaneLineHops::Gap => path.commands.push(PathCommand::MoveTo { x: after.x, y: after.y }),
+        }
+    }
+    path.commands.push(PathCommand::LineTo { x: to.x, y: to.y });
 }
 
 fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Point, Point) {

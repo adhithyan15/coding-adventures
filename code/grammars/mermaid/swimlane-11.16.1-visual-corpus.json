@@ -65,6 +65,8 @@
     "edge-bump-curves",
     "edge-monotone-curves",
     "edge-spline-curves",
-    "edge-rounded-curve"
+    "edge-rounded-curve",
+    "line-hops-arc",
+    "line-hops-gap"
   ]
 }

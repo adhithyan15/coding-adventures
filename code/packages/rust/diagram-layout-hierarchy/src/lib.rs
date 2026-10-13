@@ -283,6 +283,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         edges,
         links: diagram.links.clone(),
         callbacks: diagram.callbacks.clone(),
+        line_hops: diagram.line_hops,
     }
 }
 
@@ -832,7 +833,7 @@ mod tests {
                 animate: false, animation: None,
                 curve: None,
             }],
-            links: Vec::new(), callbacks: Vec::new(),
+            links: Vec::new(), callbacks: Vec::new(), line_hops: None,
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -855,7 +856,7 @@ mod tests {
             nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
-            edges: vec![], links: Vec::new(), callbacks: Vec::new(),
+            edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None,
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
@@ -940,7 +941,7 @@ mod tests {
                 SwimlaneNode { id: "data-store".into(), label: "Data store".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::DataStore, classes: Vec::new(), style: Default::default() },
             ],
-            edges: vec![], links: Vec::new(), callbacks: Vec::new(),
+            edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None,
         };
         let layout = layout_swimlane(&diagram);
         assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);
