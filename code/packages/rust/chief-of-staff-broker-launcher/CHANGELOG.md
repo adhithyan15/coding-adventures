@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed
+
+- `the_deadline_does_not_charge_the_broker_for_the_daemon_s_time` lets
+  its slow broker answer 1.5 s late against the 300 ms deadline, where it
+  used to be 400 ms. The 100 ms margin lost the race on macOS CI, where the
+  relay's timed wait can wake late.
+
 ### Added
 
 - The broker runs confined (D18S P2.6d-3): `launch` starts it through

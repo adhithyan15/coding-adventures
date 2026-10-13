@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Changed
+
+- The process entry point moved from the binary into the library as
+  `process::run_inherited` (D18S P2.6d-2c). Every binary that runs a broker,
+  the production one and each test fixture, is now one call to it, instead
+  of each carrying its own copy of the descriptor checks. The library is
+  `deny(unsafe_code)`, with `process` its single exception, which a unit
+  test enforces. The test also requires the `deny` to stay in `lib.rs`, and
+  it recognises every way of lowering the lint, whatever the spacing:
+  `allow`, `warn` or `expect`, alone or in a list. `run_inherited` documents that it may only be the whole
+  of `main` in a process the broker launcher exec'd.
+
 ### Added
 
 - `tests/launched.rs` (P2.6d-3):
