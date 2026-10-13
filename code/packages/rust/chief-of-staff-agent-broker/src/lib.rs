@@ -939,10 +939,67 @@ pub fn callbacks_for(request: &DataPlaneRequest) -> &'static [CallbackOp] {
 }
 
 /// The library is `deny(unsafe_code)`, not `forbid`, so that `process` can
-/// allow it. That makes an `allow` anywhere else compile silently; this
-/// keeps it to `process.rs`.
+/// allow it. That makes a lower lint level anywhere else compile silently;
+/// this keeps it to `process.rs`, and keeps the `deny` itself, without
+/// which `unsafe` is allowed by default and no attribute is needed at all.
 #[cfg(test)]
 mod unsafe_scope {
+    /// Whether `text` lowers the `unsafe_code` lint anywhere: `allow`,
+    /// `warn` or `expect`, alone or in a list, however it is spaced.
+    ///
+    /// With `L` standing for the lint (spelled out, this table would
+    /// match itself):
+    ///
+    /// ```text
+    ///   allow(L)                yes
+    ///   allow( dead_code , L)   yes   (whitespace is removed first)
+    ///   expect(L)               yes
+    ///   disallow(L)             no    (not the whole word)
+    ///   deny(L)                 no
+    /// ```
+    fn lowers_unsafe_code(text: &str) -> bool {
+        let compact: String = text.chars().filter(|c| !c.is_whitespace()).collect();
+        ["allow", "warn", "expect"].iter().any(|level| {
+            let opening = format!("{level}(");
+            compact.match_indices(&opening).any(|(at, _)| {
+                let whole_word = compact[..at]
+                    .chars()
+                    .next_back()
+                    .is_none_or(|before| !(before.is_alphanumeric() || before == '_'));
+                let list = &compact[at + opening.len()..];
+                let list = &list[..list.find(')').unwrap_or(list.len())];
+                whole_word && list.split(',').any(|lint| lint == "unsafe_code")
+            })
+        })
+    }
+
+    #[test]
+    fn the_lint_level_scan_sees_every_spelling() {
+        // Spelled in pieces, so this file does not match itself.
+        let lint = concat!("unsafe", "_code");
+        assert!(lowers_unsafe_code(&format!("#![allow({lint})]")));
+        assert!(lowers_unsafe_code(&format!("#[warn({lint})]")));
+        assert!(lowers_unsafe_code(&format!("#[expect({lint})]")));
+        assert!(lowers_unsafe_code(&format!(
+            "#[allow( dead_code , {lint} )]"
+        )));
+        assert!(lowers_unsafe_code(&format!("#[allow({lint}, dead_code)]")));
+        assert!(!lowers_unsafe_code(&format!("#![deny({lint})]")));
+        assert!(!lowers_unsafe_code(&format!("disallow({lint})")));
+        assert!(!lowers_unsafe_code(&format!("#[allow({lint}_extra)]")));
+    }
+
+    #[test]
+    fn the_library_denies_unsafe_code() {
+        let lib = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src/lib.rs");
+        let text = std::fs::read_to_string(lib).unwrap();
+        assert!(
+            text.lines()
+                .any(|line| line.trim() == concat!("#![deny(unsafe", "_code)]")),
+            "lib.rs must keep #![deny(unsafe_code)]"
+        );
+    }
+
     #[test]
     fn only_the_process_module_allows_unsafe_code() {
         let source = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
@@ -958,8 +1015,7 @@ mod unsafe_scope {
                     continue;
                 }
                 let text = std::fs::read_to_string(&path).unwrap();
-                // Spelled in two halves, so this file does not match itself.
-                let allows = text.contains(concat!("allow", "(unsafe_code)"));
+                let allows = lowers_unsafe_code(&text);
                 let relative = path.strip_prefix(&source).unwrap();
                 if relative == std::path::Path::new("process.rs") {
                     assert!(allows, "process.rs is the module that allows unsafe code");
