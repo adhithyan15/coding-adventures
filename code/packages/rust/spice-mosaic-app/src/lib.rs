@@ -1149,6 +1149,13 @@ impl SpiceMosaicApp {
                 let encoded = payload["bytes"]
                     .as_str()
                     .ok_or_else(|| invalid("schematic import result is missing base64 bytes"))?;
+                // Refuse an oversized file before decoding it, as VisiCalc
+                // does. Native hosts read files up to 50 MiB, so decoding
+                // first would hold the encoded and decoded copies of an
+                // oversized file in memory before refusing it.
+                if encoded.len() > MAX_SCHEMATIC_FILE_BYTES.div_ceil(3) * 4 {
+                    return Err(invalid("schematic import exceeds 16 MiB"));
+                }
                 let bytes = BASE64.decode(encoded).map_err(|error| {
                     invalid(format!("schematic import bytes are invalid: {error}"))
                 })?;
@@ -2387,6 +2394,14 @@ mod tests {
         assert!(app
             .complete_effect(effect.id, EffectResult::Ok(json!({"bytes":"not base64"})))
             .is_err());
+        assert_eq!(app.snapshot().unwrap(), before);
+        // An oversized file is refused from its encoded length, before any
+        // decoding: native hosts read files up to 50 MiB.
+        let oversized = "A".repeat(MAX_SCHEMATIC_FILE_BYTES.div_ceil(3) * 4 + 4);
+        let error = app
+            .complete_effect(effect.id, EffectResult::Ok(json!({"bytes": oversized})))
+            .unwrap_err();
+        assert!(format!("{error:?}").contains("exceeds 16 MiB"), "{error:?}");
         assert_eq!(app.snapshot().unwrap(), before);
 
         let file = SchematicFile {
