@@ -7219,6 +7219,7 @@ fn parse_swimlane_shape_attributes(
                     "div-rect" | "div-proc" | "divided-rectangle" | "divided-process" => DiagramShape::DividedRect,
                     "win-pane" | "internal-storage" | "window-pane" => DiagramShape::WindowPane,
                     "f-circ" | "junction" | "filled-circle" => DiagramShape::FilledCircle,
+                    "anchor" => DiagramShape::Anchor,
                     "notch-pent" | "loop-limit" | "notched-pentagon" => DiagramShape::LoopLimit,
                     "sl-rect" | "manual-input" | "sloped-rectangle" => DiagramShape::ManualInput,
                     "docs" | "documents" | "st-doc" | "stacked-document" => DiagramShape::MultiDocument,

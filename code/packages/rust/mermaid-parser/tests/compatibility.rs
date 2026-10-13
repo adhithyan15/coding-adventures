@@ -1636,6 +1636,15 @@ fn swimlane_internal_label_rect_reaches_label_only_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_anchor_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Routing\n  pin@{ shape: anchor }\nend",
+    ).expect("Mermaid 11.16.1 anchor should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::Anchor);
+}
+
+#[test]
 fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 

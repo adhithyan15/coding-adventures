@@ -1068,6 +1068,18 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + 1.0,
+                cy: node.y + 1.0,
+                rx: 1.0,
+                ry: 1.0,
+                fill: Some("#000000".into()),
+                stroke: None,
+                stroke_width: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
             DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: node.x,
@@ -1427,7 +1439,8 @@ where
         }
         if !matches!(node.shape,
             DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
-            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Summary
+            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Anchor
+            | DiagramShape::Summary
         ) {
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
@@ -2403,6 +2416,18 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::SmallCircle | DiagramShape::FilledCircle => {
             node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone()))
         }
+        DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: node.x + 1.0,
+            cy: node.y + 1.0,
+            rx: 1.0,
+            ry: 1.0,
+            fill: Some("#000000".into()),
+            stroke: None,
+            stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
         DiagramShape::FramedCircle => {
             let inner_inset = node.width.min(node.height) * 9.0 / 28.0;
             PaintInstruction::Group(PaintGroup {

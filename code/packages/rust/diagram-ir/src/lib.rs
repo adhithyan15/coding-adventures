@@ -49,6 +49,7 @@ pub enum DiagramShape {
     DividedRect,
     WindowPane,
     FilledCircle,
+    Anchor,
     LoopLimit,
     ManualInput,
     MultiDocument,
