@@ -47,6 +47,7 @@ pub enum DiagramShape {
     LinedCylinder,
     Display,
     DividedRect,
+    TitledRect,
     WindowPane,
     FilledCircle,
     Anchor,
