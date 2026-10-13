@@ -47,7 +47,7 @@ reviews_of: [ML-C235-uppurri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**നട്ടെല്ല്** (*naṭṭellŭ*) is native Dravidian, "the middle bone": *naṭu*, "middle" (DEDR 3584, with Tamil *naṭu*), and *ellŭ*, "bone" (DEDR 839). DEDR 839 compares Sanskrit *eḍū˘ka*.
+**നട്ടെല്ല്** (*naṭṭellŭ*) is native Dravidian, "the middle bone": *naṭu*, "middle" (DEDR 3584, with Tamil *naṭu*), and *ellŭ*, "bone" (DEDR 839). DEDR 839 compares Sanskrit *eḍūka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

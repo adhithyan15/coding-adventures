@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Welcome and Good Wishes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f22a4e944d2c8ed4",
+  "sourceHash": "fnv1a64:ab710808cf396ca9",
   "lessons": [
     {
       "id": "ML-C124-congratulations",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:231ceb286b2c132d",
+      "sourceHash": "fnv1a64:ad0477a49aa9f709",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "അഭിനന്ദനങ്ങൾ (abhinandanaṅṅaḷ) from Sanskrit abhinandana, \"rejoicing, congratulation\", taken over whole as a tatsama, with the feminine ending -ḷ. Malayalam uses it in the plural, many congratulations."
+              "text": "അഭിനന്ദനങ്ങൾ (abhinandanaṅṅaḷ) from Sanskrit abhinandana, \"rejoicing, congratulation\", taken over whole as a tatsama, with the plural ending -ṅṅaḷ. Malayalam uses it in the plural, many congratulations."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2b31f354c6aa57f",
+      "sourceHash": "fnv1a64:e92f06accc2f9641",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ആശംസകൾ (āśaṁsakaḷ) from Sanskrit āśaṁsā, \"hope, wish\", taken over whole as a tatsama, with the feminine ending -ḷ. Malayalam uses it in the plural."
+              "text": "ആശംസകൾ (āśaṁsakaḷ) from Sanskrit āśaṁsā, \"hope, wish\", taken over whole as a tatsama, with the plural ending -kaḷ. Malayalam uses it in the plural."
             }
           ]
         },

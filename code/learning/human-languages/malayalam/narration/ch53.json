@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Overhead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e84fb93cbfcf2708",
+  "sourceHash": "fnv1a64:ae6a676698bb924f",
   "lessons": [
     {
       "id": "ML-C53-sky",
@@ -603,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4082fe565d24c4a2",
+      "sourceHash": "fnv1a64:e08dc7b119b5905a",
       "notice": null,
       "blocks": [
         {
@@ -653,7 +653,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വെയിൽ (veyil) is native Dravidian, built on the verb \"to be hot, to burn\"; DEDR 5517 lists the root with Tamil vē, Kannada bē and Telugu vē̃gu."
+              "text": "വെയിൽ (veyil) is native Dravidian, built on the verb \"to be hot, to burn\"; DEDR 5517 lists the root with Tamil vē, Kannada bē and Telugu vēgu."
             }
           ]
         },

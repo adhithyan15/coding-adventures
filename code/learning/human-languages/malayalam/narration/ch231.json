@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "To lean, To knock, To bend down, To pluck, To milk",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0effcc97ccc999a1",
+  "sourceHash": "fnv1a64:64b8ccc426b25393",
   "lessons": [
     {
       "id": "ML-C231-caruka",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acab177fbefadce3",
+      "sourceHash": "fnv1a64:7cdce3e0ef43cfa3",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കറക്കുക (kaṟakkuka) is native Dravidian, one word with Tamil kaṟa and Kannada kaṟe (DEDR 1385). DEDR 1385 marks the entry with a query."
+              "text": "കറക്കുക (kaṟakkuka) is native Dravidian, one word with Tamil kaṟa and Kannada kaṟe (DEDR 1385). DEDR 1385 compares, with a query, Sanskrit kara, \"tax\"."
             }
           ]
         },

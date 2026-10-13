@@ -61,7 +61,7 @@ verb:
 **വായിക്കുക**, **ചോദിക്കുക**, **കുടിക്കുക** — so this one arrives asking
 nothing new of you. The only new part is the two syllables at the front.
 
-**Where the word comes from.** It is native Dravidian, the verb belonging to *kaḷi* (DEDR 1374, with Tamil *kaḷi*, "to rejoice", and Kodagu *kaḷi*, "to play"). DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
+**Where the word comes from.** It is native Dravidian, the verb belonging to *kaḷi* (DEDR 1374, with Tamil *kaḷi*, "to rejoice", and Kodagu *kaḷi*, "to play").
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-PLAY-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-LEX-NJAAN-01] -->

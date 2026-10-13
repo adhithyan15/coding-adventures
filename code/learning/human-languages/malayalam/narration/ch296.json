@@ -4,7 +4,7 @@
   "chapter": 296,
   "title": "Door frame, Cowshed, Light bulb, Carpet, Bedsheet",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1e9e064b5404a0e3",
+  "sourceHash": "fnv1a64:16933b3d1c35699b",
   "lessons": [
     {
       "id": "ML-C296-kattila",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3a985482954d499",
+      "sourceHash": "fnv1a64:0ef20a9bf1296619",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കട്ടിള (kaṭṭiḷa) is native Dravidian: DEDR 1146 lists it, \"door frame\", but marks the entry with a query."
+              "text": "കട്ടിള (kaṭṭiḷa) is native Dravidian: DEDR 1146 lists it, \"door frame\", with Kodagu kaṭṭoḷe."
             }
           ]
         },

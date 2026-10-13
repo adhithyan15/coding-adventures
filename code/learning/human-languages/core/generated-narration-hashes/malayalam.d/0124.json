@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 124,
-  "sourceHash": "fnv1a64:f22a4e944d2c8ed4",
+  "sourceHash": "fnv1a64:ab710808cf396ca9",
   "lessonIds": [
     "ML-C124-congratulations",
     "ML-C124-invitation",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch124.txt",
   "json": "malayalam/narration/ch124.json",
-  "textHash": "fnv1a64:685d70b2adbb2c42",
-  "jsonHash": "fnv1a64:d43235d1bf093497",
+  "textHash": "fnv1a64:a7ede6386463df37",
+  "jsonHash": "fnv1a64:5f2b56cf61877033",
   "findings": []
 }

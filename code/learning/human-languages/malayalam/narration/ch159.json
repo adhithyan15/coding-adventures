@@ -4,7 +4,7 @@
   "chapter": 159,
   "title": "Scissors, Hammer, Nail, Fence, Gate",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:980354694c2768cd",
+  "sourceHash": "fnv1a64:b0bf9860a522780c",
   "lessons": [
     {
       "id": "ML-C159-katrika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3799e8712417e27",
+      "sourceHash": "fnv1a64:c53f1a6d834a7a8d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കത്രിക (katrika) from Sanskrit kartarī, \"scissors, knife\", taken over whole as a tatsama (CDIAL 2858). Malayalam lets the r before the t drop away."
+              "text": "കത്രിക (katrika) from Sanskrit kartarikā, \"scissors, knife\" (CDIAL 2858), reshaped as a tadbhava: Malayalam lets the r before the t drop away."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36a5a511d9096913",
+      "sourceHash": "fnv1a64:7a317301c77288bd",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ചുറ്റിക (cuṟṟika) is of uncertain origin; DEDR does not list it."
+              "text": "ചുറ്റിക (cuṟṟika) is probably native Dravidian: DEDR 2668 lists Malayalam cuttika, \"hammer\", with Tamil cutti and Kannada suttige, though not this spelling."
             }
           ]
         },

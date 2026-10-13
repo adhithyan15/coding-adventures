@@ -14,7 +14,7 @@ You'll want to know: മുത്തച്ഛൻ.
 Two pieces, both audible: mutta-, 'elder, senior', and acchan, the 'father' from the family lesson. Literally, an elder father. Where Sanskrit would reach for a compound of its own, Malayalam assembles this one out of words the learner already owns.
 
 The word, taken apart.
-മുത്തച്ഛൻ (muttacchan) is native Dravidian, "the old father": the word for "old" (DEDR 4954, with Tamil mutu and Kannada muttu) joined to the word for "father" (DEDR 50, with Tamil accaṉ).
+മുത്തച്ഛൻ (muttacchan) is "the old father": the native word for "old" (DEDR 4954, with Tamil mutu and Kannada muttu) joined to accan, "father". DEDR 50 lists accan with Tamil accaṉ but takes the set as probably Indo-Aryan, Prakrit ajja, Sanskrit ārya, "noble" (CDIAL 1347).
 
 What you've built.
 The first of four family words. Three follow, and each reuses the ones before.
@@ -47,7 +47,7 @@ You'll want to know: മുത്തശ്ശി.
 The same mutta- opens it, so half the word is already yours. The second half is not as transparent as the grandfather word's: -aśśi is an old term of address for an elder woman rather than the everyday amma you already know, and dictionaries stop short of a confident breakdown. Better to flag that than to pretend the two halves match.
 
 The word, taken apart.
-മുത്തശ്ശി (muttaśśi) is native Dravidian, "the old mother": the word for "old" (DEDR 4954, with Tamil mutu) joined to an old word for "mother" that DEDR 50 lists beside the word for "father", with Kannada acci, "mother".
+മുത്തശ്ശി (muttaśśi) is "the old mother": the native word for "old" (DEDR 4954, with Tamil mutu) joined to acci, "mother", which DEDR 50 lists with Kannada acci but takes as probably Indo-Aryan, Prakrit ajja, Sanskrit ārya, "noble" (CDIAL 1347).
 
 What you've built.
 Two of four, and one honest gap in the analysis.

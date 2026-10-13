@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 252,
-  "sourceHash": "fnv1a64:324c37259932321e",
+  "sourceHash": "fnv1a64:271160316845a589",
   "lessonIds": [
     "ML-C252-tamasa",
     "ML-C252-vallamkali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch252.txt",
   "json": "malayalam/narration/ch252.json",
-  "textHash": "fnv1a64:a2229dfe46019bb6",
-  "jsonHash": "fnv1a64:44198ad337e2c795",
+  "textHash": "fnv1a64:134b15207b8c7d7c",
+  "jsonHash": "fnv1a64:fef891c8e2796ff0",
   "findings": []
 }

@@ -44,7 +44,7 @@ reviews_of: [ML-C128-room]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**അടുക്കള** (*aṭukkaḷa*) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam *aṭukkaḷa* itself, beside Tamil *aṭu* and Kannada *aḍu*.
+**അടുക്കള** (*aṭukkaḷa*) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam *aṭukkaḷa* itself, beside Tamil *aṭu* and Kannada *aḍu*. DEDR 76 compares Sanskrit *aṭṭa*, "dried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

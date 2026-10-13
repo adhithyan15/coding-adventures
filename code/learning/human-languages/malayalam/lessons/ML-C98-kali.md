@@ -59,7 +59,7 @@ been taking the same **യ** since **ഇത് എന്റെ കുട്ട�
 reason: it ends in **ഇ** too, **ആണ്** begins with a vowel, and something has to
 stand between them.
 
-**Where the word comes from.** It is native Dravidian: DEDR 1374 lists Malayalam *kaḷi*, "play, game", with Tamil *kaḷi*, "to exult, rejoice", and Kodagu *kaḷi*, "play", in an entry that also holds the words for toddy and intoxication. DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
+**Where the word comes from.** It is native Dravidian: DEDR 1374 lists Malayalam *kaḷi*, "play, game", with Tamil *kaḷi*, "to exult, rejoice", and Kodagu *kaḷi*, "play", in an entry that also holds the words for toddy and intoxication; its comparison with Sanskrit *kalyā*, "liquor", belongs to those.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01] -->

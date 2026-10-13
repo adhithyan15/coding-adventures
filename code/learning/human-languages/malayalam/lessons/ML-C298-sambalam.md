@@ -15,7 +15,7 @@ concept_tag: ML-JOLI298-SAMBALAM
 prerequisites: [ML-C298-palacarakku, ML-C298-pakkarru]
 sounds: []
 roots: [sanskrit-shambala]
-etymology_hook: "śambaḷaṁ ← Sanskrit śambala 'provisions for a journey', a tatsama (CDIAL 12315)"
+etymology_hook: "śambaḷaṁ ← Sanskrit śambala 'provisions for a journey', a tadbhava (CDIAL 12315)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C298-pakkarru]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ശമ്പളം** (*śambaḷaṁ*) ← Sanskrit *śambala*, "provisions for a journey", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12315). Provisions for the road became regular pay.
+**ശമ്പളം** (*śambaḷaṁ*) ← Sanskrit *śambala*, "provisions for a journey", reshaped as a tadbhava (its *l* became *ḷ*), with Malayalam's noun ending *-ṁ* (CDIAL 12315). Provisions for the road became regular pay.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

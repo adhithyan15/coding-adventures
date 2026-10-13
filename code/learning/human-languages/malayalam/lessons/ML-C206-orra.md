@@ -15,7 +15,7 @@ concept_tag: ML-GUNAM206-ORRA
 prerequisites: [ML-C206-svartthamaya, ML-C206-sthiramaya]
 sounds: []
 roots: [malayalam-orra]
-etymology_hook: "oṟṟa 'single': of uncertain origin; DEDR has no entry for it"
+etymology_hook: "oṟṟa 'single': native Dravidian; DEDR 990 lists it, 'one, single, odd', with Tamil oṟṟai"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C206-sthiramaya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ഒറ്റ** (*oṟṟa*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
+**ഒറ്റ** (*oṟṟa*) is native Dravidian: DEDR 990 lists it, "one, single, odd", under the word for "one", with Tamil *oṟṟai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

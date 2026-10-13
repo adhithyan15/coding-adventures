@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 53,
-  "sourceHash": "fnv1a64:e84fb93cbfcf2708",
+  "sourceHash": "fnv1a64:ae6a676698bb924f",
   "lessonIds": [
     "ML-C53-sky",
     "ML-C53-sun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch53.txt",
   "json": "malayalam/narration/ch53.json",
-  "textHash": "fnv1a64:aa52a404ade8877e",
-  "jsonHash": "fnv1a64:1b4d2f0764295513",
+  "textHash": "fnv1a64:499ff4fc52c02b29",
+  "jsonHash": "fnv1a64:3b3c3cb1dc3ed571",
   "findings": []
 }

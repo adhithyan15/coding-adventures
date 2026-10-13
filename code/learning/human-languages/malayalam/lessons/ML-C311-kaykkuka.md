@@ -47,7 +47,7 @@ reviews_of: [ML-C311-polikkuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കായ്ക്കുക** (*kāykkuka*) is native Dravidian, one word with Tamil *kāy*, Kannada *kāy* and Telugu *kācu* (DEDR 1459). It is the verb of *kāy*, "unripe fruit".
+**കായ്ക്കുക** (*kāykkuka*) is native Dravidian, one word with Tamil *kāy*, Kannada *kāy* and Telugu *kācu* (DEDR 1459). It is the verb of *kāy*, "unripe fruit". DEDR 1459 compares Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

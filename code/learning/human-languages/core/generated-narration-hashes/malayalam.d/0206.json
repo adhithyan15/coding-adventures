@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 206,
-  "sourceHash": "fnv1a64:8d53f1576e52e1cd",
+  "sourceHash": "fnv1a64:3274e3d2f8fea4c4",
   "lessonIds": [
     "ML-C206-kusrtiyulla",
     "ML-C206-anusaranayulla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch206.txt",
   "json": "malayalam/narration/ch206.json",
-  "textHash": "fnv1a64:7126d0b602e04f84",
-  "jsonHash": "fnv1a64:b405094ac0c5fbea",
+  "textHash": "fnv1a64:b221bd44df6ab40d",
+  "jsonHash": "fnv1a64:3fa5906ade06a24f",
   "findings": []
 }

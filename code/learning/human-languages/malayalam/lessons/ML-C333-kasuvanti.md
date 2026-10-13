@@ -47,7 +47,7 @@ reviews_of: [ML-C332-tai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കശുവണ്ടി** (*kaśuvaṇṭi*) joins *kaśu*, from Portuguese *caju*, "cashew", a word from the Tupi of Brazil, to native *aṇṭi*, "kernel, nut" (DEDR 126, with Tamil *aṇṭi-kkoṭṭai*).
+**കശുവണ്ടി** (*kaśuvaṇṭi*) joins *kaśu*, from Portuguese *caju*, "cashew", a word from the Tupi of Brazil, to native *aṇṭi*, "kernel, nut" (DEDR 126, with Tamil *aṇṭi-kkoṭṭai*). DEDR 126 notes a possible link with Sanskrit *aṣṭi*, "kernel" (CDIAL 955).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

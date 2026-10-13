@@ -4,7 +4,7 @@
   "chapter": 235,
   "title": "Wrist, Heel, Spine, Liver, Kidney",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0417093547a78d7",
+  "sourceHash": "fnv1a64:d41dfaa8ad3d51d8",
   "lessons": [
     {
       "id": "ML-C235-kanankai",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74c8b8348ff475d7",
+      "sourceHash": "fnv1a64:fbc1538e07114c71",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നട്ടെല്ല് (naṭṭellŭ) is native Dravidian, \"the middle bone\": naṭu, \"middle\" (DEDR 3584, with Tamil naṭu), and ellŭ, \"bone\" (DEDR 839). DEDR 839 compares Sanskrit eḍū˘ka."
+              "text": "നട്ടെല്ല് (naṭṭellŭ) is native Dravidian, \"the middle bone\": naṭu, \"middle\" (DEDR 3584, with Tamil naṭu), and ellŭ, \"bone\" (DEDR 839). DEDR 839 compares Sanskrit eḍūka."
             }
           ]
         },

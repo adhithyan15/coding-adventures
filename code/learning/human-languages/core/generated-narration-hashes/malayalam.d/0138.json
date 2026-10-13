@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 138,
-  "sourceHash": "fnv1a64:d45ed38fb25a8c17",
+  "sourceHash": "fnv1a64:b96d17f0fa3ab9f4",
   "lessonIds": [
     "ML-C138-bird",
     "ML-C138-snake",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch138.txt",
   "json": "malayalam/narration/ch138.json",
-  "textHash": "fnv1a64:f5ed5b62bd1e6e04",
-  "jsonHash": "fnv1a64:d4716c5c0ccce2cb",
+  "textHash": "fnv1a64:d426d132d7410ba9",
+  "jsonHash": "fnv1a64:83e9293ebb6cef40",
   "findings": []
 }

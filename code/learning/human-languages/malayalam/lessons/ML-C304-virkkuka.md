@@ -47,7 +47,7 @@ reviews_of: [ML-C304-viraykkuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വീർക്കുക** (*vīrkkuka*) is native Dravidian, one word with Tamil *vīṅku*, Kannada *bīgu* and Telugu *vī˜gu* (DEDR 5448).
+**വീർക്കുക** (*vīrkkuka*) is native Dravidian, one word with Tamil *vīṅku*, Kannada *bīgu* and Telugu *vīgu* (DEDR 5448).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

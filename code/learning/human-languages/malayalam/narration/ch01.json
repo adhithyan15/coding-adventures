@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d3f8adf8479a6c46",
+  "sourceHash": "fnv1a64:fec8628070f877ba",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -887,7 +887,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:06ac18bdfb9846e8",
+      "sourceHash": "fnv1a64:8f5eefa95e0271e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -980,7 +980,7 @@
             },
             {
               "kind": "speech",
-              "text": "DEDR 3610 lists Malayalam nanni, \"goodness\", under the root nal with Tamil naṉṟi. DEDR 3610 compares Sanskrit Nala."
+              "text": "DEDR 3610 lists Malayalam nanni, \"goodness\", under the root nal with Tamil naṉṟi. DEDR 3610 compares the Sanskrit name Nala."
             }
           ]
         },

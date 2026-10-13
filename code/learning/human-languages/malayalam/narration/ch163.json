@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "Eyebrow, Palm, Rice gruel, Beans, Dal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3469f7996c5c8bdb",
+  "sourceHash": "fnv1a64:0302dda1027caafd",
   "lessons": [
     {
       "id": "ML-C163-purikam",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:933bacc99d76dd7b",
+      "sourceHash": "fnv1a64:7bab6e05d80477a3",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കഞ്ഞി (kañji) is native Dravidian, one word with Tamil kañci, Kannada gañji and Telugu ganji (DEDR 1107). English congee comes from this word. DEDR 1107 compares Sanskrit kāñjī̆ka."
+              "text": "കഞ്ഞി (kañji) is native Dravidian, one word with Tamil kañci, Kannada gañji and Telugu ganji (DEDR 1107). English congee comes from this word. DEDR 1107 compares Sanskrit kāñjīka."
             }
           ]
         },

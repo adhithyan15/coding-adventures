@@ -63,7 +63,7 @@ than by the Malayalam word, the way the counting lessons were.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ēḻāṁ** is native Dravidian: "seven" (DEDR 910, with Tamil *ēḻu* and Kannada *ēḻu*) with the ordinal ending *-āṁ*.
+**ഏഴാം** (*ēḻāṁ*) is native Dravidian: "seven" (DEDR 910, with Tamil *ēḻu* and Kannada *ēḻu*) with the ordinal ending *-āṁ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-02, ML-LEX-C68-ORDINAL-01] -->

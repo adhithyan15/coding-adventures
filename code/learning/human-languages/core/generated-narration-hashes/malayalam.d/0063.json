@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 63,
-  "sourceHash": "fnv1a64:8bddde21032f9299",
+  "sourceHash": "fnv1a64:9d7d7aecb005395b",
   "lessonIds": [
     "ML-C63-hunger",
     "ML-C63-tiredness",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch63.txt",
   "json": "malayalam/narration/ch63.json",
-  "textHash": "fnv1a64:7f9bf9f260a89e0e",
-  "jsonHash": "fnv1a64:5f96ee37dc6b603a",
+  "textHash": "fnv1a64:7d4fea6eb04928a7",
+  "jsonHash": "fnv1a64:a5743285c61b33a3",
   "findings": []
 }

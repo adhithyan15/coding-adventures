@@ -15,7 +15,7 @@ concept_tag: ML-GUNAM203-KALIYAYA
 prerequisites: [ML-C203-ayanna, ML-C203-irukiya]
 sounds: []
 roots: [persian-khali, aaka-dravidian]
-etymology_hook: "kāliyāya: kāli 'empty', from Persian khālī through Hindustani, + native āya 'having become' (DEDR 333)"
+etymology_hook: "kāliyāya: kāli 'empty', Arabic khālī through Persian and Hindustani, + native āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C203-irukiya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കാലിയായ** (*kāliyāya*) joins *kāli*, "empty", from Persian *khālī* by way of Hindustani, to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
+**കാലിയായ** (*kāliyāya*) joins *kāli*, "empty", from Arabic *khālī* by way of Persian and Hindustani, to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

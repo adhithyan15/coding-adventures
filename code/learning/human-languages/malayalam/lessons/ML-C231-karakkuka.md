@@ -47,7 +47,7 @@ reviews_of: [ML-C231-parikkuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കറക്കുക** (*kaṟakkuka*) is native Dravidian, one word with Tamil *kaṟa* and Kannada *kaṟe* (DEDR 1385). DEDR 1385 marks the entry with a query.
+**കറക്കുക** (*kaṟakkuka*) is native Dravidian, one word with Tamil *kaṟa* and Kannada *kaṟe* (DEDR 1385). DEDR 1385 compares, with a query, Sanskrit *kara*, "tax".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

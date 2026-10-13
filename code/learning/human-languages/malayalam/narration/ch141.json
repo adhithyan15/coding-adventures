@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Festival Days",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:df2e9ba752c9f685",
+  "sourceHash": "fnv1a64:ba50c2bfde9c3052",
   "lessons": [
     {
       "id": "ML-C141-onam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29bc6306664aa16b",
+      "sourceHash": "fnv1a64:90f0c725d50ecebc",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഓണം (ōṇaṁ) is a tadbhava of Sanskrit śravaṇa, the name of the lunar asterism under which the festival falls, worn down through Prakrit."
+              "text": "ഓണം (ōṇaṁ) is usually explained as a tadbhava of Sanskrit śravaṇa, the name of the lunar asterism under which the festival falls, worn down through Prakrit."
             }
           ]
         },

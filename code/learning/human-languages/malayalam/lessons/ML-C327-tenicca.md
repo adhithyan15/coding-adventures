@@ -47,7 +47,7 @@ reviews_of: [ML-C327-palli]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**തേനീച്ച** (*tēnīcca*) is native Dravidian, "the honey fly": *tēn*, "honey" (DEDR 3268), and *īcca*, "fly" (DEDR 533, with Tamil *ī*). DEDR 3268 marks the entry with a query.
+**തേനീച്ച** (*tēnīcca*) is native Dravidian, "the honey fly": *tēn*, "honey" (DEDR 3268), and *īcca*, "fly" (DEDR 533, with Tamil *ī*). DEDR 3268 compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

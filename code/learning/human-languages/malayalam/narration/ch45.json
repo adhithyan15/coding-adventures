@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Grandparents, and the Married Pair",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:840185f46c8d9249",
+  "sourceHash": "fnv1a64:39f59c0ce51a10c7",
   "lessons": [
     {
       "id": "ML-C45-grandfather",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:040468afba33a52d",
+      "sourceHash": "fnv1a64:be1802ec94a7be1c",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മുത്തച്ഛൻ (muttacchan) is native Dravidian, \"the old father\": the word for \"old\" (DEDR 4954, with Tamil mutu and Kannada muttu) joined to the word for \"father\" (DEDR 50, with Tamil accaṉ)."
+              "text": "മുത്തച്ഛൻ (muttacchan) is \"the old father\": the native word for \"old\" (DEDR 4954, with Tamil mutu and Kannada muttu) joined to accan, \"father\". DEDR 50 lists accan with Tamil accaṉ but takes the set as probably Indo-Aryan, Prakrit ajja, Sanskrit ārya, \"noble\" (CDIAL 1347)."
             }
           ]
         },
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d14b14cb784d7ee",
+      "sourceHash": "fnv1a64:69189a96ee10cc61",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മുത്തശ്ശി (muttaśśi) is native Dravidian, \"the old mother\": the word for \"old\" (DEDR 4954, with Tamil mutu) joined to an old word for \"mother\" that DEDR 50 lists beside the word for \"father\", with Kannada acci, \"mother\"."
+              "text": "മുത്തശ്ശി (muttaśśi) is \"the old mother\": the native word for \"old\" (DEDR 4954, with Tamil mutu) joined to acci, \"mother\", which DEDR 50 lists with Kannada acci but takes as probably Indo-Aryan, Prakrit ajja, Sanskrit ārya, \"noble\" (CDIAL 1347)."
             }
           ]
         },

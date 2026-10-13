@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 272,
-  "sourceHash": "fnv1a64:009a24cb526e412a",
+  "sourceHash": "fnv1a64:edfa3686bf86eba9",
   "lessonIds": [
     "ML-C272-tirruka",
     "ML-C272-meyuka",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch272.txt",
   "json": "malayalam/narration/ch272.json",
-  "textHash": "fnv1a64:f2245802237462c5",
-  "jsonHash": "fnv1a64:9d3d459efbfce3df",
+  "textHash": "fnv1a64:45a4bc8fd4542e03",
+  "jsonHash": "fnv1a64:aefe4bb363046493",
   "findings": []
 }

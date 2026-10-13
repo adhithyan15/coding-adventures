@@ -4,7 +4,7 @@
   "chapter": 206,
   "title": "Naughty, Obedient, Selfish, Permanent, Single",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8d53f1576e52e1cd",
+  "sourceHash": "fnv1a64:3274e3d2f8fea4c4",
   "lessons": [
     {
       "id": "ML-C206-kusrtiyulla",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8acbca4777edd5c9",
+      "sourceHash": "fnv1a64:bbc40f7ab8b2a042",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഒറ്റ (oṟṟa) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it."
+              "text": "ഒറ്റ (oṟṟa) is native Dravidian: DEDR 990 lists it, \"one, single, odd\", under the word for \"one\", with Tamil oṟṟai."
             }
           ]
         },

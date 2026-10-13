@@ -4,7 +4,7 @@
   "chapter": 157,
   "title": "Pot, Stove, Hand fan, Electric fan, Bicycle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:978bf44c24ca0a1c",
+  "sourceHash": "fnv1a64:a4d76fa5cd303666",
   "lessons": [
     {
       "id": "ML-C157-kalam",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1078cba527c6b1ee",
+      "sourceHash": "fnv1a64:027750373eb8aaa4",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "അടുപ്പ് (aṭuppŭ) is native Dravidian, built on the verb \"to cook\"; DEDR 76 lists Malayalam aṭuppu, \"hearth\", itself, beside Tamil aṭu and Kannada aḍu."
+              "text": "അടുപ്പ് (aṭuppŭ) is native Dravidian, built on the verb \"to cook\"; DEDR 76 lists Malayalam aṭuppu, \"hearth\", itself, beside Tamil aṭu and Kannada aḍu. DEDR 76 compares Sanskrit aṭṭa, \"dried\"."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 146,
-  "sourceHash": "fnv1a64:d21ecb61afe04433",
+  "sourceHash": "fnv1a64:44a66e6033491070",
   "lessonIds": [
     "ML-C146-avasyam",
     "ML-C146-tirumanam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch146.txt",
   "json": "malayalam/narration/ch146.json",
-  "textHash": "fnv1a64:9013a2d8d0dcde1b",
-  "jsonHash": "fnv1a64:59238fd55ed247ad",
+  "textHash": "fnv1a64:06d2f2acebdc453c",
+  "jsonHash": "fnv1a64:7a3cca51440ad3e4",
   "findings": []
 }

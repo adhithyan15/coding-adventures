@@ -47,7 +47,7 @@ reviews_of: [ML-C186-pinannuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കളിയാക്കുക** (*kaḷiyākkuka*) is native Dravidian, "make into a game": *kaḷi*, "play, jest" (DEDR 1374), and *ākkuka*, "to make" (DEDR 333). DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*. DEDR 333 compares Sanskrit *ām*.
+**കളിയാക്കുക** (*kaḷiyākkuka*) is native Dravidian, "make into a game": *kaḷi*, "play, jest" (DEDR 1374), and *ākkuka*, "to make" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

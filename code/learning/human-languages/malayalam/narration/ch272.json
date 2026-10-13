@@ -4,7 +4,7 @@
   "chapter": 272,
   "title": "To feed, To graze, To weave, To drill, To leak",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:009a24cb526e412a",
+  "sourceHash": "fnv1a64:edfa3686bf86eba9",
   "lessons": [
     {
       "id": "ML-C272-tirruka",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59487cbceb3cc3f7",
+      "sourceHash": "fnv1a64:0ca43ec70dc93d29",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നെയ്യുക (neyyuka) is native Dravidian, one word with Tamil ney, Kannada nē̆y and Telugu nēyu (DEDR 3745)."
+              "text": "നെയ്യുക (neyyuka) is native Dravidian, one word with Tamil ney, Kannada nēy and Telugu nēyu (DEDR 3745)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "Poor, Dirty, Smooth, Rough, Round",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d1ef5ac28dea3a1",
+  "sourceHash": "fnv1a64:5fa0aaa941a9be74",
   "lessons": [
     {
       "id": "ML-C204-pavam",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e7e241e1b113fab",
+      "sourceHash": "fnv1a64:a7b272dbb95933e0",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മിനുസമുള്ള (minusamuḷḷa) is \"having gloss\": minusam, \"smoothness\", most likely from the verb \"to glitter, be polished\"; DEDR 4876 lists Malayalam minukkam, \"shining, polish\", with Tamil miṉ, though not minusam itself. Then comes -uḷḷa, \"that has\" (DEDR 697)."
+              "text": "മിനുസമുള്ള (minusamuḷḷa) is \"having gloss\": minusam, \"smoothness\", perhaps from the verb \"to glitter, be polished\"; DEDR 4876 lists Malayalam minukkam, \"shining, polish\", with Tamil miṉ, though not minusam itself. Then comes -uḷḷa, \"that has\" (DEDR 697)."
             }
           ]
         },

@@ -44,7 +44,7 @@ reviews_of: [ML-C124-welcome]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ആശംസകൾ** (*āśaṁsakaḷ*) ← Sanskrit *āśaṁsā*, "hope, wish", taken over whole as a tatsama, with the feminine ending *-ḷ*. Malayalam uses it in the plural.
+**ആശംസകൾ** (*āśaṁsakaḷ*) ← Sanskrit *āśaṁsā*, "hope, wish", taken over whole as a tatsama, with the plural ending *-kaḷ*. Malayalam uses it in the plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

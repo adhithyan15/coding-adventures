@@ -12,7 +12,7 @@ concept_tag: ML-FRUIT-LEMON
 prerequisites: [ML-C133-mango, ML-C133-jackfruit]
 sounds: []
 roots: [sanskrit-naranga]
-etymology_hook: "nāraṅṅa ← Sanskrit nāraṅga 'orange tree', a tatsama (CDIAL 7073)"
+etymology_hook: "nāraṅṅa ← Sanskrit nāraṅga 'orange tree', a tadbhava (CDIAL 7073); DEDR 3653 compares Tamil nāram"
 duration:
   max_seconds: 200
 requires:
@@ -44,7 +44,7 @@ reviews_of: [ML-C133-jackfruit]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**നാരങ്ങ** (*nāraṅṅa*) ← Sanskrit *nāraṅga*, "orange tree", taken over whole as a tatsama (CDIAL 7073). The same word travelled west through Persian and Arabic and became English *orange*.
+**നാരങ്ങ** (*nāraṅṅa*) ← Sanskrit *nāraṅga*, "orange tree" (CDIAL 7073), reshaped as a tadbhava: *ṅg* became *ṅṅ*. DEDR 3653 compares it with Tamil *nāram*, "orange". The same word travelled west through Persian and Arabic and became English *orange*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

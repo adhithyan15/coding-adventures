@@ -47,7 +47,7 @@ reviews_of: [ML-C288-phom]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ആൺകുട്ടി** (*āṇkuṭṭi*) is native Dravidian, "male child": *āṇ*, "male" (DEDR 399, with Tamil *āḷ*), and *kuṭṭi*, "child" (DEDR 1670).
+**ആൺകുട്ടി** (*āṇkuṭṭi*) is native Dravidian, "male child": *āṇ*, "male" (DEDR 399, with Tamil *āṇ*), and *kuṭṭi*, "child" (DEDR 1670).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

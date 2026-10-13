@@ -15,7 +15,7 @@ concept_tag: ML-VASTU218-CENA
 prerequisites: [ML-C218-canakam, ML-C218-kala2]
 sounds: []
 roots: [malayalam-cena]
-etymology_hook: "cēna 'elephant-foot yam': of uncertain origin; DEDR does not list it"
+etymology_hook: "cēna: probably native; DEDR 2022 lists Tamil cēṉai, the same yam, with Kannada kēne"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C218-kala2]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ചേന** (*cēna*) is of uncertain origin; DEDR does not list it.
+**ചേന** (*cēna*) is probably native Dravidian: DEDR 2022 lists Tamil *cēṉai*, the same yam, with Kannada *kēne*, though not the Malayalam word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

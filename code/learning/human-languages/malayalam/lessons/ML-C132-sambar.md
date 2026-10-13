@@ -12,7 +12,7 @@ concept_tag: ML-DISH-SAMBAR
 prerequisites: [ML-C131-onion, ML-C132-dosa]
 sounds: []
 roots: [malayalam-sambar]
-etymology_hook: "sāmpār: of uncertain origin; it came into Kerala cooking from the Tamil country"
+etymology_hook: "sāmpār: of uncertain origin; no dictionary source settles where the word comes from"
 duration:
   max_seconds: 200
 requires:

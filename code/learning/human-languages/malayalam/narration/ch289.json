@@ -4,7 +4,7 @@
   "chapter": 289,
   "title": "Boy, Aunt, Niece, Mother-in-law, Father-in-law",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:61db22ef13f1d159",
+  "sourceHash": "fnv1a64:7f04c22d44abbaff",
   "lessons": [
     {
       "id": "ML-C289-ankutti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a768d2e150730f1",
+      "sourceHash": "fnv1a64:d42a56241668ac2d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ആൺകുട്ടി (āṇkuṭṭi) is native Dravidian, \"male child\": āṇ, \"male\" (DEDR 399, with Tamil āḷ), and kuṭṭi, \"child\" (DEDR 1670)."
+              "text": "ആൺകുട്ടി (āṇkuṭṭi) is native Dravidian, \"male child\": āṇ, \"male\" (DEDR 399, with Tamil āṇ), and kuṭṭi, \"child\" (DEDR 1670)."
             }
           ]
         },

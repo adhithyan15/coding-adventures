@@ -50,7 +50,7 @@ Malayalam also says *granthaṁ* for a book of weight and age, another Sanskrit 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**പുസ്തകം** (*pustakaṁ*) ← Sanskrit *pustaka*, "book, manuscript", a tatsama with Malayalam's noun ending *-ṁ*. Sanskrit itself probably took the word from Iranian, where Persian *pōst* means "skin, hide".
+**പുസ്തകം** (*pustakaṁ*) ← Sanskrit *pustaka*, "book, manuscript", a tatsama with Malayalam's noun ending *-ṁ*. Sanskrit itself probably took the word from Iranian, where Persian *pōst* means "skin, hide" (CDIAL 8413).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

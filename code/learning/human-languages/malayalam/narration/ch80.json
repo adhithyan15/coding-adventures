@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Where You Are From",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:de2211b7e577a513",
+  "sourceHash": "fnv1a64:6926586a18bafd6b",
   "lessons": [
     {
       "id": "ML-C80-uuru",
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d48dd8c8c18c6e30",
+      "sourceHash": "fnv1a64:7df41d7d71bf24e0",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -47,7 +47,7 @@ reviews_of: [ML-C290-onakkoti]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കഥകളി** (*kathakaḷi*) is "story play": Sanskrit *kathā*, "story" (CDIAL 2704), and native *kaḷi*, "play" (DEDR 1374). DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
+**കഥകളി** (*kathakaḷi*) is "story play": Sanskrit *kathā*, "story" (CDIAL 2704), and native *kaḷi*, "play" (DEDR 1374).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: ML-SPAN-HOUR
 prerequisites: [ML-C139-time, ML-C139-minute]
 sounds: []
 roots: [sanskrit-mani-gem-bell, dravidian-kuru-part]
-etymology_hook: "maṇikkūr: maṇi 'hour', from Sanskrit maṇi (CDIAL 9731), + native kūr 'part, share' (DEDR 1924)"
+etymology_hook: "maṇikkūr: maṇi 'bell, hour' (DEDR 4672, perhaps Sanskrit maṇi) + native kūr 'part, share' (DEDR 1924)"
 duration:
   max_seconds: 200
 requires:
@@ -45,7 +45,7 @@ reviews_of: [ML-C139-minute]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**മണിക്കൂർ** (*maṇikkūr*) joins *maṇi*, "hour, bell", from Sanskrit *maṇi*, "jewel" (CDIAL 9731), to native *kūr*, "part, share, a division of time" (DEDR 1924, with Tamil *kūṟu*).
+**മണിക്കൂർ** (*maṇikkūr*) joins *maṇi*, "hour, bell" (DEDR 4672, with Tamil *maṇi*; DEDR asks whether it is Sanskrit *maṇi*, "jewel", CDIAL 9731), to native *kūr*, "part, share, a division of time" (DEDR 1924, with Tamil *kūṟu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

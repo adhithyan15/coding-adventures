@@ -4,7 +4,7 @@
   "chapter": 215,
   "title": "Ball, Player, Team, Draw, Hobby",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:492d054394bcc8ee",
+  "sourceHash": "fnv1a64:1dc7b388b8c3c161",
   "lessons": [
     {
       "id": "ML-C215-pantu",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c77462622383247",
+      "sourceHash": "fnv1a64:35c8eaf85ab7b8ef",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കളിക്കാരൻ (kaḷikkāran) is kaḷi, \"play\" (DEDR 1374), with -kkāran, the ending for a person who does something: \"one who plays\". DEDR 1374 compares Sanskrit kalyā and kaḍ."
+              "text": "കളിക്കാരൻ (kaḷikkāran) is kaḷi, \"play\" (DEDR 1374), with -kkāran, the ending for a person who does something: \"one who plays\"."
             }
           ]
         },

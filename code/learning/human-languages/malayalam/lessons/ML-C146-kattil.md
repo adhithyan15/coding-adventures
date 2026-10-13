@@ -49,7 +49,7 @@ reviews_of: [ML-C146-tirumanam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കട്ടിൽ** (*kaṭṭil*) is native Dravidian, one word with Tamil *kaṭṭil* and Telugu *kaṭli* (DEDR 1145).
+**കട്ടിൽ** (*kaṭṭil*) is native Dravidian, one word with Tamil *kaṭṭil* and Telugu *kaṭli* (DEDR 1145). DEDR 1145 compares Sanskrit *khaṭvā*, "cot" (CDIAL 3781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

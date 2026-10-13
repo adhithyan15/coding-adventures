@@ -4,7 +4,7 @@
   "chapter": 290,
   "title": "New clothes given for Onam, Kathakali, Tiger dance of Onam, Chenda drum, Pooram",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ae7caa1d6b36f791",
+  "sourceHash": "fnv1a64:fb4ba22c40fe950c",
   "lessons": [
     {
       "id": "ML-C290-onakkoti",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66b61b5b139bd91c",
+      "sourceHash": "fnv1a64:2bb0de197d547c18",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കഥകളി (kathakaḷi) is \"story play\": Sanskrit kathā, \"story\" (CDIAL 2704), and native kaḷi, \"play\" (DEDR 1374). DEDR 1374 compares Sanskrit kalyā and kaḍ."
+              "text": "കഥകളി (kathakaḷi) is \"story play\": Sanskrit kathā, \"story\" (CDIAL 2704), and native kaḷi, \"play\" (DEDR 1374)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6b5c9efec3c9ac9",
+      "sourceHash": "fnv1a64:fc82e49ff3c3ba4d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പുലികളി (pulikaḷi) is native Dravidian, \"tiger play\": puli, \"tiger\" (DEDR 4307), and kaḷi, \"play\" (DEDR 1374). DEDR 1374 compares Sanskrit kalyā and kaḍ."
+              "text": "പുലികളി (pulikaḷi) is native Dravidian, \"tiger play\": puli, \"tiger\" (DEDR 4307), and kaḷi, \"play\" (DEDR 1374)."
             }
           ]
         },

@@ -13,7 +13,7 @@ You'll want to know: ചെമ്പ്.
 ചെമ്പ് — cempŭ — "copper".
 
 The word, taken apart.
-ചെമ്പ് (cempŭ) is native Dravidian, one word with Tamil cempu, Kannada cambu and Telugu cembu (DEDR 2775). The root is the word for "red".
+ചെമ്പ് (cempŭ) is native Dravidian, one word with Tamil cempu, Kannada cambu and Telugu cembu (DEDR 2775). DEDR 2775 asks whether Sanskrit tāmra, "copper", has influenced these words.
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: പലക.
 പലക — palaka — "a plank, a board".
 
 The word, taken apart.
-പലക (palaka) from Sanskrit phalaka, "board, plank; shield", taken over whole as a tatsama (CDIAL 9054). Malayalam softened the ph to p.
+പലക (palaka) from Sanskrit phalaka, "board, plank" (CDIAL 9053), reshaped as a tadbhava: Malayalam softened the ph to p.
 
 What you've built.
 One more word for this chapter.

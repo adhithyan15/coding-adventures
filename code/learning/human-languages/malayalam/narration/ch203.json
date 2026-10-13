@@ -4,7 +4,7 @@
   "chapter": 203,
   "title": "Tasty, Rotten, Loose, Tight, Empty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7e8a5e6795ba85a1",
+  "sourceHash": "fnv1a64:a0fbc8dee40fedb2",
   "lessons": [
     {
       "id": "ML-C203-ruciyulla",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47869c2559f216f6",
+      "sourceHash": "fnv1a64:ed7c2b7d04018713",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കാലിയായ (kāliyāya) joins kāli, \"empty\", from Persian khālī by way of Hindustani, to native āya, \"having become\" (DEDR 333). DEDR 333 compares Sanskrit ām."
+              "text": "കാലിയായ (kāliyāya) joins kāli, \"empty\", from Arabic khālī by way of Persian and Hindustani, to native āya, \"having become\" (DEDR 333). DEDR 333 compares Sanskrit ām."
             }
           ]
         },

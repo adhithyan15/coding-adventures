@@ -47,7 +47,7 @@ reviews_of: [ML-C215-pantu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കളിക്കാരൻ** (*kaḷikkāran*) is *kaḷi*, "play" (DEDR 1374), with *-kkāran*, the ending for a person who does something: "one who plays". DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
+**കളിക്കാരൻ** (*kaḷikkāran*) is *kaḷi*, "play" (DEDR 1374), with *-kkāran*, the ending for a person who does something: "one who plays".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [ML-C297-maida]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**അവൽ** (*aval*) is native Dravidian, one word with Tamil *aval* and Kannada *aval* (DEDR 2391).
+**അവൽ** (*aval*) is native Dravidian, one word with Tamil *aval* and Kannada *aval* (DEDR 2391). DEDR 2391 compares Indo-Aryan *\*cāvala*, "husked rice" (CDIAL 4749).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

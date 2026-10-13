@@ -15,7 +15,7 @@ concept_tag: ML-VERB-VILUKA
 prerequisites: [ML-C176-nintuka, ML-C176-catuka]
 sounds: []
 roots: [dravidian-vizhu-fall]
-etymology_hook: "vīḻuka: native Dravidian, one word with Tamil viḻu and Kannada bī̆ḻ (DEDR 5430)"
+etymology_hook: "vīḻuka: native Dravidian, one word with Tamil viḻu and Kannada bīḻ (DEDR 5430)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C176-catuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വീഴുക** (*vīḻuka*) is native Dravidian, one word with Tamil *viḻu* and Kannada *bī̆ḻ* (DEDR 5430).
+**വീഴുക** (*vīḻuka*) is native Dravidian, one word with Tamil *viḻu* and Kannada *bīḻ* (DEDR 5430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

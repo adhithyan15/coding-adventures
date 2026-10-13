@@ -47,7 +47,7 @@ reviews_of: [ML-C208-venna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**തേൻ** (*tēn*) is native Dravidian, one word with Tamil *tēṉ* and Kannada *jēnu*, "honey" (DEDR 3268). DEDR 3268 marks the entry with a query.
+**തേൻ** (*tēn*) is native Dravidian, one word with Tamil *tēṉ* and Kannada *jēnu*, "honey" (DEDR 3268). DEDR 3268 compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

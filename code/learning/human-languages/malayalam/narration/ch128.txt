@@ -14,7 +14,7 @@ You'll want to know: വീട്.
 എന്റെ വീട് (enṟe vīṭŭ) — "my house", with എന്റെ, "my", which you already know.
 
 The word, taken apart.
-വീട് (vīṭŭ) is native Dravidian: DEDR 5393 lists it, "house", under the verb "to let go, leave off", with Tamil viṭu. DEDR 5393 compares Sanskrit avamocana.
+വീട് (vīṭŭ) is native Dravidian: DEDR 5393 lists it, "house", under the verb "to let go, leave off", with Tamil viṭu. DEDR 5393 notes Sanskrit avamocana, "inn", as a translation of Tamil viṭuti.
 
 What you've built.
 The place every visit starts.
@@ -78,7 +78,7 @@ You'll want to know: അടുക്കള.
 അടുക്കള (aṭukkaḷa) — "the kitchen", where the ചോറ് is cooked.
 
 The word, taken apart.
-അടുക്കള (aṭukkaḷa) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam aṭukkaḷa itself, beside Tamil aṭu and Kannada aḍu.
+അടുക്കള (aṭukkaḷa) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam aṭukkaḷa itself, beside Tamil aṭu and Kannada aḍu. DEDR 76 compares Sanskrit aṭṭa, "dried".
 
 What you've built.
 The room with the fire.

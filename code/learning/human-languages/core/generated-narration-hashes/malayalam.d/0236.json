@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 236,
-  "sourceHash": "fnv1a64:db7af76195e7d353",
+  "sourceHash": "fnv1a64:6f19e297bff660dd",
   "lessonIds": [
     "ML-C236-kuttikkalam",
     "ML-C236-attam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch236.txt",
   "json": "malayalam/narration/ch236.json",
-  "textHash": "fnv1a64:53f5be544eb73597",
-  "jsonHash": "fnv1a64:dc3f6b0e500a6b8b",
+  "textHash": "fnv1a64:c0f21d195bd753a8",
+  "jsonHash": "fnv1a64:85db0931806727d2",
   "findings": []
 }

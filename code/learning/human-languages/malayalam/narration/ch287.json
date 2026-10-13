@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "Snack, Banana fritter, Papaya, Orange, Apple",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ddd38f89be5c3ef",
+  "sourceHash": "fnv1a64:4484008bc664182e",
   "lessons": [
     {
       "id": "ML-C287-palaharam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c94b8d1df790cc0",
+      "sourceHash": "fnv1a64:3533e4307f4c20ea",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പലഹാരം (palahāraṁ) from Sanskrit phalāhāra, \"eating fruit\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 9060). Its parts are phala, \"fruit\", and āhāra, \"food\"; Malayalam softened the ph and widened the sense to any light snack."
+              "text": "പലഹാരം (palahāraṁ) from Sanskrit phalāhāra, \"eating fruit\", reshaped as a tadbhava, with Malayalam's noun ending -ṁ (CDIAL 9060). Its parts are phala, \"fruit\", and āhāra, \"food\"; Malayalam softened the ph and widened the sense to any light snack."
             }
           ]
         },

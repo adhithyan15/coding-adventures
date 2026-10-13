@@ -12,7 +12,7 @@ concept_tag: ML-NOUN-COUGH
 prerequisites: [ML-C63-pain, ML-C61-jaggery]
 sounds: []
 roots: [dravidian-cumu-cough]
-etymology_hook: "cuma: native Dravidian; DEDR 1964 sets it beside Tamil cerumu 'to cough', with a query"
+etymology_hook: "cuma: probably native; DEDR 1964 sets it beside Tamil cerumu 'to cough', with a query"
 duration:
   max_seconds: 210
 requires:
@@ -50,7 +50,7 @@ It covers the single cough and the standing complaint alike, so a speaker adds a
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ചുമ** (*cuma*) is native Dravidian. DEDR 1964 sets it beside Tamil *cerumu*, "to clear the throat, cough", and Kannada *kemmu*, but puts a query against the Malayalam word.
+**ചുമ** (*cuma*) is probably native Dravidian. DEDR 1964 sets it beside Tamil *cerumu*, "to clear the throat, cough", and Kannada *kemmu*, but puts a query against the Malayalam word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

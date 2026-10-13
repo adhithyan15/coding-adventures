@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "To erase, To switch on, To switch off, To publish, To repair",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5d077226bbf0e98a",
+  "sourceHash": "fnv1a64:1fd3aeb42ca17328",
   "lessons": [
     {
       "id": "ML-C188-maykkuka",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90e3b5648ef9cc6c",
+      "sourceHash": "fnv1a64:a03460bcb6034c66",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നന്നാക്കുക (nannākkuka) is native Dravidian, \"make good\": nannu, \"good\" (DEDR 3610, with Tamil nal), and ākkuka, \"to make\" (DEDR 333). DEDR 3610 compares Sanskrit Nala. DEDR 333 compares Sanskrit ām."
+              "text": "നന്നാക്കുക (nannākkuka) is native Dravidian, \"make good\": nannu, \"good\" (DEDR 3610, with Tamil nal), and ākkuka, \"to make\" (DEDR 333). DEDR 3610 compares the Sanskrit name Nala. DEDR 333 compares Sanskrit ām."
             }
           ]
         },

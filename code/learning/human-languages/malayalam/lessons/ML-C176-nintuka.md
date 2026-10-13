@@ -47,7 +47,7 @@ reviews_of: [ML-C176-irannuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**നീന്തുക** (*nīntuka*) is native Dravidian, one word with Tamil *nīntu*, Kannada *īsu* and Telugu *ī˜du* (DEDR 3687).
+**നീന്തുക** (*nīntuka*) is native Dravidian, one word with Tamil *nīntu*, Kannada *īsu* and Telugu *īdu* (DEDR 3687).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

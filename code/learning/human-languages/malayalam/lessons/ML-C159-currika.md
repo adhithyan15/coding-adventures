@@ -15,7 +15,7 @@ concept_tag: ML-THINGS159-CURRIKA
 prerequisites: [ML-C158-bakkarru, ML-C159-katrika, ML-C10-azhcha]
 sounds: []
 roots: [malayalam-cuttika]
-etymology_hook: "cuṟṟika 'hammer': of uncertain origin; DEDR does not list it"
+etymology_hook: "cuṟṟika: probably native; DEDR 2668 lists Malayalam cuttika 'hammer' with Tamil cutti and Kannada suttige"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [ML-C159-katrika]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ചുറ്റിക** (*cuṟṟika*) is of uncertain origin; DEDR does not list it.
+**ചുറ്റിക** (*cuṟṟika*) is probably native Dravidian: DEDR 2668 lists Malayalam *cuttika*, "hammer", with Tamil *cutti* and Kannada *suttige*, though not this spelling.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 304,
   "title": "To breathe, To sneeze, To shiver, To swell, To itch",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3bdcdc29af8ea496",
+  "sourceHash": "fnv1a64:0d3c17acd143681e",
   "lessons": [
     {
       "id": "ML-C304-svasikkuka",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f714f902ab6acff",
+      "sourceHash": "fnv1a64:31437f410ee62753",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വീർക്കുക (vīrkkuka) is native Dravidian, one word with Tamil vīṅku, Kannada bīgu and Telugu vī˜gu (DEDR 5448)."
+              "text": "വീർക്കുക (vīrkkuka) is native Dravidian, one word with Tamil vīṅku, Kannada bīgu and Telugu vīgu (DEDR 5448)."
             }
           ]
         },

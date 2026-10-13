@@ -53,7 +53,7 @@ nālŭ, añcŭ*. [REPEAT x2]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-All five are native Dravidian, and Tamil keeps the same five: *onnŭ* with Tamil *oru* (DEDR 990), *raṇṭŭ* with Tamil *iraṇṭu* (DEDR 474), *mūnnŭ* with Tamil *mūṉṟu* (DEDR 5052), *nālŭ* with Tamil *nālu* (DEDR 3655) and *añcŭ* with Tamil *añcu* (DEDR 2826).
+All five are native Dravidian, and Tamil keeps the same five: *onnŭ* with Tamil *oṉṟu* (DEDR 990), *raṇṭŭ* with Tamil *iraṇṭu* (DEDR 474), *mūnnŭ* with Tamil *mūṉṟu* (DEDR 5052), *nālŭ* with Tamil *nālu* (DEDR 3655) and *añcŭ* with Tamil *añcu* (DEDR 2826).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-1-5-02]; assesses=[] -->

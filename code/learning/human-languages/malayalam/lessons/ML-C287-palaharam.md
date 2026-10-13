@@ -15,7 +15,7 @@ concept_tag: ML-VASTU287-PALAHARAM
 prerequisites: [ML-C286-pelsu, ML-C286-pokkarru]
 sounds: []
 roots: [sanskrit-phala]
-etymology_hook: "palahāraṁ ← Sanskrit phalāhāra 'eating fruit', a tatsama (CDIAL 9060)"
+etymology_hook: "palahāraṁ ← Sanskrit phalāhāra 'eating fruit', a tadbhava (CDIAL 9060)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C286-pokkarru]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**പലഹാരം** (*palahāraṁ*) ← Sanskrit *phalāhāra*, "eating fruit", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 9060). Its parts are *phala*, "fruit", and *āhāra*, "food"; Malayalam softened the *ph* and widened the sense to any light snack.
+**പലഹാരം** (*palahāraṁ*) ← Sanskrit *phalāhāra*, "eating fruit", reshaped as a tadbhava, with Malayalam's noun ending *-ṁ* (CDIAL 9060). Its parts are *phala*, "fruit", and *āhāra*, "food"; Malayalam softened the *ph* and widened the sense to any light snack.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

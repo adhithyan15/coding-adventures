@@ -47,7 +47,7 @@ reviews_of: [ML-C253-almaram]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**പ്ലാവ്** (*plāvŭ*) is native Dravidian, one word with Tamil *palavu* (DEDR 3988). Kannada and Telugu use *panasa*, the Sanskrit word for the same tree. DEDR 3988 compares Sanskrit *panasa*.
+**പ്ലാവ്** (*plāvŭ*) is native Dravidian, one word with Tamil *palavu* (DEDR 3988). Telugu uses *panasa*, the Sanskrit word for the same tree; Kannada has *panasa* beside *palasu*. DEDR 3988 compares Sanskrit *panasa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

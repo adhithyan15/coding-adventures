@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a162306d3c0641b0",
+  "sourceHash": "fnv1a64:95ddeeb1eff81b4c",
   "lessons": [
     {
       "id": "ML-C46-fruit",
@@ -603,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1939941f7e4c8d6",
+      "sourceHash": "fnv1a64:b5423415443586aa",
       "notice": null,
       "blocks": [
         {
@@ -653,7 +653,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പുസ്തകം (pustakaṁ) from Sanskrit pustaka, \"book, manuscript\", a tatsama with Malayalam's noun ending -ṁ. Sanskrit itself probably took the word from Iranian, where Persian pōst means \"skin, hide\"."
+              "text": "പുസ്തകം (pustakaṁ) from Sanskrit pustaka, \"book, manuscript\", a tatsama with Malayalam's noun ending -ṁ. Sanskrit itself probably took the word from Iranian, where Persian pōst means \"skin, hide\" (CDIAL 8413)."
             }
           ]
         },

@@ -49,7 +49,7 @@ reviews_of: [ML-C171-kalukuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വേവിക്കുക** (*vēvikkuka*) is native Dravidian, the causative of the verb "to be hot, to boil": "make boil"; DEDR 5517 lists the root with Tamil *vē*, Kannada *bē* and Telugu *vē̃gu*.
+**വേവിക്കുക** (*vēvikkuka*) is native Dravidian, the causative of the verb "to be hot, to boil": "make boil"; DEDR 5517 lists the root with Tamil *vē*, Kannada *bē* and Telugu *vēgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -248,7 +248,7 @@ Language: Tamil. "Thanks": naṉṟi (நன்றி). Note: the same native ro
 Language: Kannada. "Thanks": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit.
 Language: Telugu. "Thanks": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit.
 Language: Hindi. "Thanks": dhanyavād / shukriyā. Note: Sanskrit / Perso-Arabic.
-DEDR 3610 lists Malayalam nanni, "goodness", under the root nal with Tamil naṉṟi. DEDR 3610 compares Sanskrit Nala.
+DEDR 3610 lists Malayalam nanni, "goodness", under the root nal with Tamil naṉṟi. DEDR 3610 compares the Sanskrit name Nala.
 
 Why it's said this way.
 Like naṉṟi in Tamil, nandi is a touch formal — among close family it can feel oddly stiff, as if you were thanking a stranger; warmth is usually assumed and shown in tone. The explicit word is for when you want to mark the gratitude. (In casual speech you'll also hear the English thanks.)

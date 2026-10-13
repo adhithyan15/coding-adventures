@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2981cfec8e5f490a",
+  "sourceHash": "fnv1a64:5556e138b8dfa8d3",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ee4f9ebf352a619",
+      "sourceHash": "fnv1a64:6abb7d7f2548a4a5",
       "notice": null,
       "blocks": [
         {
@@ -82,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where the word comes from. It is native Dravidian: DEDR 1374 lists Malayalam kaḷi, \"play, game\", with Tamil kaḷi, \"to exult, rejoice\", and Kodagu kaḷi, \"play\", in an entry that also holds the words for toddy and intoxication. DEDR 1374 compares Sanskrit kalyā and kaḍ."
+              "text": "Where the word comes from. It is native Dravidian: DEDR 1374 lists Malayalam kaḷi, \"play, game\", with Tamil kaḷi, \"to exult, rejoice\", and Kodagu kaḷi, \"play\", in an entry that also holds the words for toddy and intoxication; its comparison with Sanskrit kalyā, \"liquor\", belongs to those."
             }
           ]
         },
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:596fc359159f6e76",
+      "sourceHash": "fnv1a64:8a09cebd875daf72",
       "notice": null,
       "blocks": [
         {
@@ -240,7 +240,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where the word comes from. It is native Dravidian, the verb belonging to kaḷi (DEDR 1374, with Tamil kaḷi, \"to rejoice\", and Kodagu kaḷi, \"to play\"). DEDR 1374 compares Sanskrit kalyā and kaḍ."
+              "text": "Where the word comes from. It is native Dravidian, the verb belonging to kaḷi (DEDR 1374, with Tamil kaḷi, \"to rejoice\", and Kodagu kaḷi, \"to play\")."
             }
           ]
         },

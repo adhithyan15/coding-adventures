@@ -47,7 +47,7 @@ reviews_of: [ML-C188-prasiddhikarikkuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**നന്നാക്കുക** (*nannākkuka*) is native Dravidian, "make good": *nannu*, "good" (DEDR 3610, with Tamil *nal*), and *ākkuka*, "to make" (DEDR 333). DEDR 3610 compares Sanskrit *Nala*. DEDR 333 compares Sanskrit *ām*.
+**നന്നാക്കുക** (*nannākkuka*) is native Dravidian, "make good": *nannu*, "good" (DEDR 3610, with Tamil *nal*), and *ākkuka*, "to make" (DEDR 333). DEDR 3610 compares the Sanskrit name *Nala*. DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

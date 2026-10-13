@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "Kerala on a Plate",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:470e5b3c5503f6b9",
+  "sourceHash": "fnv1a64:def3b861dbe2870d",
   "lessons": [
     {
       "id": "ML-C132-dosa",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc541d2d3a5406ef",
+      "sourceHash": "fnv1a64:cac30c541ace7d57",
       "notice": null,
       "blocks": [
         {

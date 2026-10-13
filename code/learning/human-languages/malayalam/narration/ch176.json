@@ -4,7 +4,7 @@
   "chapter": 176,
   "title": "Get down, Swim, Jump, Fall, Live",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6789a069ef72344a",
+  "sourceHash": "fnv1a64:4efba7911759a69d",
   "lessons": [
     {
       "id": "ML-C176-irannuka",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:774afc3727fa1fe6",
+      "sourceHash": "fnv1a64:6bce8181fd49e670",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നീന്തുക (nīntuka) is native Dravidian, one word with Tamil nīntu, Kannada īsu and Telugu ī˜du (DEDR 3687)."
+              "text": "നീന്തുക (nīntuka) is native Dravidian, one word with Tamil nīntu, Kannada īsu and Telugu īdu (DEDR 3687)."
             }
           ]
         },
@@ -446,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54d79996f6d76757",
+      "sourceHash": "fnv1a64:2a5f80dad3f6d7e5",
       "notice": null,
       "blocks": [
         {
@@ -484,7 +484,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വീഴുക (vīḻuka) is native Dravidian, one word with Tamil viḻu and Kannada bī̆ḻ (DEDR 5430)."
+              "text": "വീഴുക (vīḻuka) is native Dravidian, one word with Tamil viḻu and Kannada bīḻ (DEDR 5430)."
             }
           ]
         },

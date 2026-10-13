@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Which One in the Line",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1b4f447af5888f88",
+  "sourceHash": "fnv1a64:8cbb3630f5c7060c",
   "lessons": [
     {
       "id": "ML-C67-first",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f425351089607761",
+      "sourceHash": "fnv1a64:6bff3dd0b92609ed",
       "notice": null,
       "blocks": [
         {
@@ -101,7 +101,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഒന്നാം (onnāṁ) is native Dravidian: the number \"one\" (DEDR 990, with Tamil oru and Kannada ondu) with the ordinal ending -āṁ. Tamil builds its ordinals with a matching ending, as in iraṇṭām, \"second\" (DEDR 474)."
+              "text": "ഒന്നാം (onnāṁ) is native Dravidian: the number \"one\" (DEDR 990, with Tamil oṉṟu and Kannada ondu) with the ordinal ending -āṁ. Tamil builds its ordinals with a matching ending, as in iraṇṭām, \"second\" (DEDR 474)."
             }
           ]
         },

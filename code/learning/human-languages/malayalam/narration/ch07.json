@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:21d9bf091f5abf34",
+  "sourceHash": "fnv1a64:a6cd6bdf34c96fbc",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c9c20f6aab8f191",
+      "sourceHash": "fnv1a64:7421101b44b135ff",
       "notice": null,
       "blocks": [
         {
@@ -78,7 +78,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "All five are native Dravidian, and Tamil keeps the same five: onnŭ with Tamil oru (DEDR 990), raṇṭŭ with Tamil iraṇṭu (DEDR 474), mūnnŭ with Tamil mūṉṟu (DEDR 5052), nālŭ with Tamil nālu (DEDR 3655) and añcŭ with Tamil añcu (DEDR 2826)."
+              "text": "All five are native Dravidian, and Tamil keeps the same five: onnŭ with Tamil oṉṟu (DEDR 990), raṇṭŭ with Tamil iraṇṭu (DEDR 474), mūnnŭ with Tamil mūṉṟu (DEDR 5052), nālŭ with Tamil nālu (DEDR 3655) and añcŭ with Tamil añcu (DEDR 2826)."
             }
           ]
         },

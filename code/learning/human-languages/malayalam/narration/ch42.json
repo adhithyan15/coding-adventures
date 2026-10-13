@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a9f2ff5bee208f81",
+  "sourceHash": "fnv1a64:41c196a74e38743d",
   "lessons": [
     {
       "id": "ML-C42-big",
@@ -258,7 +258,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d76a836f5590d47",
+      "sourceHash": "fnv1a64:61ef069ffa459cf3",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നല്ല (nalla) is native Dravidian, one word with Tamil nalla, Kannada nal and Telugu naluvu (DEDR 3610). The same root gives the Malayalam word for \"thanks\". DEDR 3610 compares Sanskrit Nala."
+              "text": "നല്ല (nalla) is native Dravidian, one word with Tamil nalla, Kannada nal and Telugu naluvu (DEDR 3610). The same root gives the Malayalam word for \"thanks\". DEDR 3610 compares the Sanskrit name Nala."
             }
           ]
         },

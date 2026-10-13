@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 204,
-  "sourceHash": "fnv1a64:6d1ef5ac28dea3a1",
+  "sourceHash": "fnv1a64:5fa0aaa941a9be74",
   "lessonIds": [
     "ML-C204-pavam",
     "ML-C204-alukkulla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch204.txt",
   "json": "malayalam/narration/ch204.json",
-  "textHash": "fnv1a64:7af612abf8861fa4",
-  "jsonHash": "fnv1a64:d5d376d245b629fb",
+  "textHash": "fnv1a64:4f29a044d782eb44",
+  "jsonHash": "fnv1a64:1714b46b5b979c53",
   "findings": []
 }

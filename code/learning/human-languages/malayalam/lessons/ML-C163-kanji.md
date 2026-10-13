@@ -47,7 +47,7 @@ reviews_of: [ML-C163-kaivella]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കഞ്ഞി** (*kañji*) is native Dravidian, one word with Tamil *kañci*, Kannada *gañji* and Telugu *ganji* (DEDR 1107). English *congee* comes from this word. DEDR 1107 compares Sanskrit *kāñjī̆ka*.
+**കഞ്ഞി** (*kañji*) is native Dravidian, one word with Tamil *kañci*, Kannada *gañji* and Telugu *ganji* (DEDR 1107). English *congee* comes from this word. DEDR 1107 compares Sanskrit *kāñjīka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -45,7 +45,7 @@ many good wishes.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**അഭിനന്ദനങ്ങൾ** (*abhinandanaṅṅaḷ*) ← Sanskrit *abhinandana*, "rejoicing, congratulation", taken over whole as a tatsama, with the feminine ending *-ḷ*. Malayalam uses it in the plural, many congratulations.
+**അഭിനന്ദനങ്ങൾ** (*abhinandanaṅṅaḷ*) ← Sanskrit *abhinandana*, "rejoicing, congratulation", taken over whole as a tatsama, with the plural ending *-ṅṅaḷ*. Malayalam uses it in the plural, many congratulations.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

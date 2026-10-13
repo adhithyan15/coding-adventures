@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "On the Kitchen Shelf",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5013b58b564e91cb",
+  "sourceHash": "fnv1a64:3cbb9d45995a8c0e",
   "lessons": [
     {
       "id": "ML-C61-coconut",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a74a9bd27311bdc",
+      "sourceHash": "fnv1a64:a5717ab66d3e7579",
       "notice": null,
       "blocks": [
         {
@@ -361,7 +361,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "തൈര് (tairŭ) is native Dravidian, one word with Tamil tayir (DEDR 3088). DEDR 3088 notes a possible source in Sanskrit takra, with a query."
+              "text": "തൈര് (tairŭ) is probably native Dravidian, one word with Tamil tayir (DEDR 3088). DEDR 3088 notes a possible source in Sanskrit takra, with a query."
             }
           ]
         },

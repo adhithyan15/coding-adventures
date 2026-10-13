@@ -15,7 +15,7 @@ concept_tag: ML-GUNAM204-MINUSAMULLA
 prerequisites: [ML-C204-pavam, ML-C204-alukkulla]
 sounds: []
 roots: [dravidian-min-flash, dravidian-ul-be]
-etymology_hook: "minusamuḷḷa: minusam 'smoothness, gloss', likely from the verb 'to glitter' (DEDR 4876), + uḷḷa (DEDR 697)"
+etymology_hook: "minusamuḷḷa: minusam 'smoothness, gloss', perhaps from the verb 'to glitter' (DEDR 4876), + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C204-alukkulla]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**മിനുസമുള്ള** (*minusamuḷḷa*) is "having gloss": *minusam*, "smoothness", most likely from the verb "to glitter, be polished"; DEDR 4876 lists Malayalam *minukkam*, "shining, polish", with Tamil *miṉ*, though not *minusam* itself. Then comes *-uḷḷa*, "that has" (DEDR 697).
+**മിനുസമുള്ള** (*minusamuḷḷa*) is "having gloss": *minusam*, "smoothness", perhaps from the verb "to glitter, be polished"; DEDR 4876 lists Malayalam *minukkam*, "shining, polish", with Tamil *miṉ*, though not *minusam* itself. Then comes *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

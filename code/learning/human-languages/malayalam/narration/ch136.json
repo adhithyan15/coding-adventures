@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "By the Water",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aea562b8764dce8c",
+  "sourceHash": "fnv1a64:540153ef780787e5",
   "lessons": [
     {
       "id": "ML-C136-sea",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3c16ede722f3014",
+      "sourceHash": "fnv1a64:c090a3a1c2906960",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കിണർ (kiṇar) is native Dravidian, one word with Tamil kēṇi and Kannada kēṇi (DEDR 1998)."
+              "text": "കിണർ (kiṇar) is native Dravidian, one word with Tamil kiṇaṟu, kēṇi and Kannada kēṇi (DEDR 1998)."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [ML-C157-kalam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**അടുപ്പ്** (*aṭuppŭ*) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam *aṭuppu*, "hearth", itself, beside Tamil *aṭu* and Kannada *aḍu*.
+**അടുപ്പ്** (*aṭuppŭ*) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam *aṭuppu*, "hearth", itself, beside Tamil *aṭu* and Kannada *aḍu*. DEDR 76 compares Sanskrit *aṭṭa*, "dried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

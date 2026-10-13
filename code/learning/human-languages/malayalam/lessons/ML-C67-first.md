@@ -57,7 +57,7 @@ pustakaṁ*), the first book.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ഒന്നാം** (*onnāṁ*) is native Dravidian: the number "one" (DEDR 990, with Tamil *oru* and Kannada *ondu*) with the ordinal ending *-āṁ*. Tamil builds its ordinals with a matching ending, as in *iraṇṭām*, "second" (DEDR 474).
+**ഒന്നാം** (*onnāṁ*) is native Dravidian: the number "one" (DEDR 990, with Tamil *oṉṟu* and Kannada *ondu*) with the ordinal ending *-āṁ*. Tamil builds its ordinals with a matching ending, as in *iraṇṭām*, "second" (DEDR 474).
 
 ## Grammar Lens: one ending, and no exceptions to it
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C67-ORDINAL-02]; assesses=[ML-LEX-C67-ORDINAL-01] -->

@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "How the Body Reports",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8bddde21032f9299",
+  "sourceHash": "fnv1a64:9d7d7aecb005395b",
   "lessons": [
     {
       "id": "ML-C63-hunger",
@@ -457,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:444cec9546c6336d",
+      "sourceHash": "fnv1a64:8bf2bdad80b9f27c",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ചുമ (cuma) is native Dravidian. DEDR 1964 sets it beside Tamil cerumu, \"to clear the throat, cough\", and Kannada kemmu, but puts a query against the Malayalam word."
+              "text": "ചുമ (cuma) is probably native Dravidian. DEDR 1964 sets it beside Tamil cerumu, \"to clear the throat, cough\", and Kannada kemmu, but puts a query against the Malayalam word."
             }
           ]
         },

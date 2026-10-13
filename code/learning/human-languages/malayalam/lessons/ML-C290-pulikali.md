@@ -47,7 +47,7 @@ reviews_of: [ML-C290-kathakali]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**പുലികളി** (*pulikaḷi*) is native Dravidian, "tiger play": *puli*, "tiger" (DEDR 4307), and *kaḷi*, "play" (DEDR 1374). DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
+**പുലികളി** (*pulikaḷi*) is native Dravidian, "tiger play": *puli*, "tiger" (DEDR 4307), and *kaḷi*, "play" (DEDR 1374).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ concept_tag: ML-JOLI335-BIRUDAM
 prerequisites: [ML-C334-kampani, ML-C334-yogam]
 sounds: []
 roots: [sanskrit-biruda]
-etymology_hook: "birudaṁ: from Sanskrit biruda 'a title of honour'"
+etymology_hook: "birudaṁ: from Sanskrit biruda 'a title', which DEDR 5414 compares with Tamil virutu, Kannada biruda"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C334-yogam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ബിരുദം** (*birudaṁ*) comes from Sanskrit *biruda*, "a title, a mark of honour".
+**ബിരുദം** (*birudaṁ*) comes from Sanskrit *biruda*, "a title, a panegyric". DEDR 5414 compares that Sanskrit word with Dravidian ones, Tamil *virutu* and Kannada *biruda*, "badge of honour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

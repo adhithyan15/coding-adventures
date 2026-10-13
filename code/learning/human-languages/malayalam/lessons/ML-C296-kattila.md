@@ -15,7 +15,7 @@ concept_tag: ML-VASTU296-KATTILA
 prerequisites: [ML-C295-ural, ML-C295-ulakka]
 sounds: []
 roots: [dravidian-kattu-bind]
-etymology_hook: "kaṭṭiḷa: native Dravidian; DEDR 1146 lists Malayalam kaṭṭiḷa 'door frame', with a query"
+etymology_hook: "kaṭṭiḷa: native Dravidian; DEDR 1146 lists Malayalam kaṭṭiḷa 'door frame' with Kodagu kaṭṭoḷe"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C295-ulakka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കട്ടിള** (*kaṭṭiḷa*) is native Dravidian: DEDR 1146 lists it, "door frame", but marks the entry with a query.
+**കട്ടിള** (*kaṭṭiḷa*) is native Dravidian: DEDR 1146 lists it, "door frame", with Kodagu *kaṭṭoḷe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

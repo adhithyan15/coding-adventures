@@ -4,7 +4,7 @@
   "chapter": 291,
   "title": "Creeper, Animal, Deer, Bull, Wolf",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b69468ebb2c599eb",
+  "sourceHash": "fnv1a64:e152f15ab763fb10",
   "lessons": [
     {
       "id": "ML-C291-valli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c68d9405ab100347",
+      "sourceHash": "fnv1a64:08e862b8bac8c39f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വള്ളി (vaḷḷi) is native Dravidian, one word with Tamil vaḷḷi, Kannada baḷḷi and Telugu valli (DEDR 5316). DEDR 5316 compares Sanskrit vallī̆."
+              "text": "വള്ളി (vaḷḷi) is native Dravidian, one word with Tamil vaḷḷi, Kannada baḷḷi and Telugu valli (DEDR 5316). DEDR 5316 compares Sanskrit vallī."
             }
           ]
         },

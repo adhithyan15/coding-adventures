@@ -4,7 +4,7 @@
   "chapter": 253,
   "title": "Banyan tree, Jackfruit tree, Rose, Hibiscus, Holy basil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cdc3c973c9246ea6",
+  "sourceHash": "fnv1a64:316233f37c36f396",
   "lessons": [
     {
       "id": "ML-C253-almaram",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:173859cca7e9c4f3",
+      "sourceHash": "fnv1a64:1003c1afa24d1615",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പ്ലാവ് (plāvŭ) is native Dravidian, one word with Tamil palavu (DEDR 3988). Kannada and Telugu use panasa, the Sanskrit word for the same tree. DEDR 3988 compares Sanskrit panasa."
+              "text": "പ്ലാവ് (plāvŭ) is native Dravidian, one word with Tamil palavu (DEDR 3988). Telugu uses panasa, the Sanskrit word for the same tree; Kannada has panasa beside palasu. DEDR 3988 compares Sanskrit panasa."
             }
           ]
         },

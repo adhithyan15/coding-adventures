@@ -4,7 +4,7 @@
   "chapter": 335,
   "title": "Degree, Subject, Mathematics, Homework, Letter",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4836ca90ce58c8ef",
+  "sourceHash": "fnv1a64:ab42448bc6c0a75d",
   "lessons": [
     {
       "id": "ML-C335-birudam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0428109fc7fa317",
+      "sourceHash": "fnv1a64:4a9ccf33b10dce3c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ബിരുദം (birudaṁ) comes from Sanskrit biruda, \"a title, a mark of honour\"."
+              "text": "ബിരുദം (birudaṁ) comes from Sanskrit biruda, \"a title, a panegyric\". DEDR 5414 compares that Sanskrit word with Dravidian ones, Tamil virutu and Kannada biruda, \"badge of honour\"."
             }
           ]
         },

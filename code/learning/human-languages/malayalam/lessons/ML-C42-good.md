@@ -52,7 +52,7 @@ adjective you will ever meet here.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**നല്ല** (*nalla*) is native Dravidian, one word with Tamil *nalla*, Kannada *nal* and Telugu *naluvu* (DEDR 3610). The same root gives the Malayalam word for "thanks". DEDR 3610 compares Sanskrit *Nala*.
+**നല്ല** (*nalla*) is native Dravidian, one word with Tamil *nalla*, Kannada *nal* and Telugu *naluvu* (DEDR 3610). The same root gives the Malayalam word for "thanks". DEDR 3610 compares the Sanskrit name *Nala*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03] -->

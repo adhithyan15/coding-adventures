@@ -4,7 +4,7 @@
   "chapter": 236,
   "title": "Childhood, Atham, Thiruvonam, Dusk, Moment",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:db7af76195e7d353",
+  "sourceHash": "fnv1a64:6f19e297bff660dd",
   "lessons": [
     {
       "id": "ML-C236-kuttikkalam",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12a5dff19b6505a1",
+      "sourceHash": "fnv1a64:c91f5f08109e9f0e",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "തിരുവോണം (tiruvōṇaṁ) is the honorific tiru, \"holy, auspicious\", usually traced to Sanskrit śrī (CDIAL 12708), joined to ōṇaṁ, itself from the asterism śravaṇa."
+              "text": "തിരുവോണം (tiruvōṇaṁ) is the honorific tiru, \"holy, auspicious\", usually traced to Sanskrit śrī (CDIAL 12708), joined to ōṇaṁ, itself usually traced to the asterism śravaṇa."
             }
           ]
         },

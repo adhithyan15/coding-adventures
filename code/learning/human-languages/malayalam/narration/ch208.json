@@ -4,7 +4,7 @@
   "chapter": 208,
   "title": "Pickle, Buttermilk, Ghee, Butter, Honey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:94fe975d3d09dce2",
+  "sourceHash": "fnv1a64:83d260eece8519ad",
   "lessons": [
     {
       "id": "ML-C208-accar",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aefc9f3eb517486",
+      "sourceHash": "fnv1a64:7301c98ff240283c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "തേൻ (tēn) is native Dravidian, one word with Tamil tēṉ and Kannada jēnu, \"honey\" (DEDR 3268). DEDR 3268 marks the entry with a query."
+              "text": "തേൻ (tēn) is native Dravidian, one word with Tamil tēṉ and Kannada jēnu, \"honey\" (DEDR 3268). DEDR 3268 compares, with a query, Prakrit tiṇisa, \"honeycomb\"."
             }
           ]
         },

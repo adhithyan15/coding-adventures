@@ -12,7 +12,7 @@ concept_tag: ML-FEST-ONAM
 prerequisites: [ML-C140-class, ML-C140-answer]
 sounds: []
 roots: [sanskrit-shravana]
-etymology_hook: "ōṇaṁ: a tadbhava of Sanskrit śravaṇa, the lunar asterism the festival falls under"
+etymology_hook: "ōṇaṁ: usually explained as a tadbhava of Sanskrit śravaṇa, the asterism the festival falls under"
 duration:
   max_seconds: 200
 requires:
@@ -45,7 +45,7 @@ flower **കോലം**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ഓണം** (*ōṇaṁ*) is a tadbhava of Sanskrit *śravaṇa*, the name of the lunar asterism under which the festival falls, worn down through Prakrit.
+**ഓണം** (*ōṇaṁ*) is usually explained as a tadbhava of Sanskrit *śravaṇa*, the name of the lunar asterism under which the festival falls, worn down through Prakrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

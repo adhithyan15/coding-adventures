@@ -32,3 +32,4 @@ word comes from (HL24 §9).
   length, all under 300 s; the Malayalam changelog lists them.
 - **No code changed.** The measure in `src/etymology-coverage.ts` already counts
   a "taken apart" block as visible etymology.
+- **Review corrections.** A second reading against the full DEDR and CDIAL text corrected 79 lessons before merge. The changes are listed in the Malayalam changelog. The pins stay at 0 and 0.

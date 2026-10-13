@@ -12,7 +12,7 @@ concept_tag: ML-NOUN-GENTILIC
 prerequisites: [ML-C80-keralam, ML-C05-njaan-malayalam-samsaarikkunnu, ML-C42-adjective-system]
 sounds: []
 roots: [mala-mountain-dravidian]
-etymology_hook: "malayāḷi: built on mala 'mountain', cognate with Tamil malai (DEDR 4742)"
+etymology_hook: "malayāḷi: built on mala 'mountain' (cognate with Tamil malai, DEDR 4742)"
 duration:
   max_seconds: 297
 requires:

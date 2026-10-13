@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "Come In, This Is Home",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cc14d86efeaac9e7",
+  "sourceHash": "fnv1a64:8a5e7902ad90406e",
   "lessons": [
     {
       "id": "ML-C128-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01a4a56fd3ee7764",
+      "sourceHash": "fnv1a64:e39a9d4684a13f40",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വീട് (vīṭŭ) is native Dravidian: DEDR 5393 lists it, \"house\", under the verb \"to let go, leave off\", with Tamil viṭu. DEDR 5393 compares Sanskrit avamocana."
+              "text": "വീട് (vīṭŭ) is native Dravidian: DEDR 5393 lists it, \"house\", under the verb \"to let go, leave off\", with Tamil viṭu. DEDR 5393 notes Sanskrit avamocana, \"inn\", as a translation of Tamil viṭuti."
             }
           ]
         },
@@ -291,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:623e21559d43e625",
+      "sourceHash": "fnv1a64:661b8aef1c7a16f9",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "അടുക്കള (aṭukkaḷa) is native Dravidian, built on the verb \"to cook\"; DEDR 76 lists Malayalam aṭukkaḷa itself, beside Tamil aṭu and Kannada aḍu."
+              "text": "അടുക്കള (aṭukkaḷa) is native Dravidian, built on the verb \"to cook\"; DEDR 76 lists Malayalam aṭukkaḷa itself, beside Tamil aṭu and Kannada aḍu. DEDR 76 compares Sanskrit aṭṭa, \"dried\"."
             }
           ]
         },

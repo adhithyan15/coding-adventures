@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 253,
-  "sourceHash": "fnv1a64:cdc3c973c9246ea6",
+  "sourceHash": "fnv1a64:316233f37c36f396",
   "lessonIds": [
     "ML-C253-almaram",
     "ML-C253-plavu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch253.txt",
   "json": "malayalam/narration/ch253.json",
-  "textHash": "fnv1a64:a85613f2102ac1ff",
-  "jsonHash": "fnv1a64:9988f3356ec54ef0",
+  "textHash": "fnv1a64:955cee7f6d62e102",
+  "jsonHash": "fnv1a64:356d1fa294a62874",
   "findings": []
 }

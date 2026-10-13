@@ -15,7 +15,7 @@ concept_tag: ML-VASTU259-KATALA
 prerequisites: [ML-C259-murinnakka, ML-C259-colam]
 sounds: []
 roots: [dravidian-katalai-gram]
-etymology_hook: "kaṭala: DEDR 1120 sets it beside Tamil kaṭalai and Kannada kaḍale, with a query"
+etymology_hook: "kaṭala: native Dravidian, one word with Tamil kaṭalai and Kannada kaḍale (DEDR 1120)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C259-colam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കടല** (*kaṭala*) is set by DEDR 1120 beside Tamil *kaṭalai* and Kannada *kaḍale*, but DEDR marks the Malayalam word with a query.
+**കടല** (*kaṭala*) is native Dravidian, one word with Tamil *kaṭalai* and Kannada *kaḍale* (DEDR 1120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

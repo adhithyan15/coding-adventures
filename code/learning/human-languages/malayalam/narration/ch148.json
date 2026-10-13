@@ -4,7 +4,7 @@
   "chapter": 148,
   "title": "Step, Well, Lake, Island, Shore",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:04836ff482d695a6",
+  "sourceHash": "fnv1a64:a77f42a0f7b277d9",
   "lessons": [
     {
       "id": "ML-C148-pati",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8a1d961371318c2",
+      "sourceHash": "fnv1a64:22b4d3d156ff931e",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കിണറ് (kiṇaṟŭ) is native Dravidian, one word with Tamil kēṇi and Kannada kēṇi (DEDR 1998)."
+              "text": "കിണറ് (kiṇaṟŭ) is native Dravidian, one word with Tamil kiṇaṟu, kēṇi and Kannada kēṇi (DEDR 1998)."
             }
           ]
         },

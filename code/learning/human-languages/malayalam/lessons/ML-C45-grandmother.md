@@ -12,7 +12,7 @@ concept_tag: ML-NOUN-GRANDMOTHER
 prerequisites: [ML-C45-grandfather]
 sounds: []
 roots: [dravidian-mutu-old, dravidian-accan-father]
-etymology_hook: "muttaśśi: native Dravidian, 'old' + 'mother'; Tamil mutu 'old' (DEDR 4954, 50)"
+etymology_hook: "muttaśśi: native mutt- 'old' (DEDR 4954) + acci 'mother', probably Prakrit ajja (DEDR 50, CDIAL 1347)"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +46,7 @@ The same *mutta-* opens it, so half the word is already yours. The second half i
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**മുത്തശ്ശി** (*muttaśśi*) is native Dravidian, "the old mother": the word for "old" (DEDR 4954, with Tamil *mutu*) joined to an old word for "mother" that DEDR 50 lists beside the word for "father", with Kannada *acci*, "mother".
+**മുത്തശ്ശി** (*muttaśśi*) is "the old mother": the native word for "old" (DEDR 4954, with Tamil *mutu*) joined to *acci*, "mother", which DEDR 50 lists with Kannada *acci* but takes as probably Indo-Aryan, Prakrit *ajja*, Sanskrit *ārya*, "noble" (CDIAL 1347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

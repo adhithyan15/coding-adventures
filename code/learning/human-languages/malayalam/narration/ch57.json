@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Five More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:215e8116ee47be33",
+  "sourceHash": "fnv1a64:8cf14df0d411d93f",
   "lessons": [
     {
       "id": "ML-C57-neck",
@@ -603,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40d92018ba9d520d",
+      "sourceHash": "fnv1a64:6f9318ae1bca5a7f",
       "notice": null,
       "blocks": [
         {
@@ -653,7 +653,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എല്ല് (ellŭ) is native Dravidian, one word with Kannada elu and Telugu emmu (DEDR 839). DEDR 839 compares Sanskrit eḍū˘ka."
+              "text": "എല്ല് (ellŭ) is native Dravidian, one word with Kannada elu and Telugu emmu (DEDR 839). DEDR 839 compares Sanskrit eḍūka."
             }
           ]
         },

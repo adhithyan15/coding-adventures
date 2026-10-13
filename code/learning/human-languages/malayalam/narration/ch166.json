@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "Heavy, Fast, Thick, Soft, Hard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5a1284fa0dead2ef",
+  "sourceHash": "fnv1a64:5dda4d593ed21b38",
   "lessons": [
     {
       "id": "ML-C166-bharamulla",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6e1927ad9f5f0da",
+      "sourceHash": "fnv1a64:fa86ac3f1140ee96",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കട്ടിയുള്ള (kaṭṭiyuḷḷa) is native Dravidian, \"having solidity\": kaṭṭi, \"what is condensed, solid\" (DEDR 1148, with Tamil kaṭṭu), with -uḷḷa, \"that has\" (DEDR 697)."
+              "text": "കട്ടിയുള്ള (kaṭṭiyuḷḷa) is native Dravidian, \"having solidity\": kaṭṭi, \"what is condensed, solid\" (DEDR 1148, with Tamil kaṭṭu), with -uḷḷa, \"that has\" (DEDR 697). DEDR 1148 compares Sanskrit kaṭhina, \"hard\" (CDIAL 2650)."
             }
           ]
         },

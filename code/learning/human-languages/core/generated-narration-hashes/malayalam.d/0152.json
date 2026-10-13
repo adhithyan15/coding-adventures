@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 152,
-  "sourceHash": "fnv1a64:730ae498800a3efc",
+  "sourceHash": "fnv1a64:7f1df18a754c26f7",
   "lessonIds": [
     "ML-C152-eli",
     "ML-C152-tavala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch152.txt",
   "json": "malayalam/narration/ch152.json",
-  "textHash": "fnv1a64:26835adcc046e96d",
-  "jsonHash": "fnv1a64:96336687eed9689d",
+  "textHash": "fnv1a64:a0c88a7f009528c7",
+  "jsonHash": "fnv1a64:a8851cc09eabd12f",
   "findings": []
 }

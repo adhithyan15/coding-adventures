@@ -12,7 +12,7 @@ concept_tag: ML-NOUN-CURD
 prerequisites: [ML-C61-oil, ML-C59-mud]
 sounds: []
 roots: [dravidian-tayir-curd]
-etymology_hook: "tairŭ: native Dravidian, one word with Tamil tayir (DEDR 3088)"
+etymology_hook: "tairŭ: probably native, one word with Tamil tayir; DEDR 3088 asks if it is Sanskrit takra"
 duration:
   max_seconds: 210
 requires:
@@ -50,7 +50,7 @@ On a Kerala plate it is the last course, spooned over rice to cool everything th
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**തൈര്** (*tairŭ*) is native Dravidian, one word with Tamil *tayir* (DEDR 3088). DEDR 3088 notes a possible source in Sanskrit *takra*, with a query.
+**തൈര്** (*tairŭ*) is probably native Dravidian, one word with Tamil *tayir* (DEDR 3088). DEDR 3088 notes a possible source in Sanskrit *takra*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

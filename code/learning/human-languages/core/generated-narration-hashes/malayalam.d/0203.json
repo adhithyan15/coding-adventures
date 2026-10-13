@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 203,
-  "sourceHash": "fnv1a64:7e8a5e6795ba85a1",
+  "sourceHash": "fnv1a64:a0fbc8dee40fedb2",
   "lessonIds": [
     "ML-C203-ruciyulla",
     "ML-C203-cinna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch203.txt",
   "json": "malayalam/narration/ch203.json",
-  "textHash": "fnv1a64:61520cc037ac1d80",
-  "jsonHash": "fnv1a64:31d6281a48ad8cf3",
+  "textHash": "fnv1a64:b67a807398c14ed5",
+  "jsonHash": "fnv1a64:517473751866606c",
   "findings": []
 }

@@ -44,7 +44,7 @@ reviews_of: [ML-C138-snake]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കുരങ്ങ്** (*kuraṅṅŭ*) is native Dravidian, one word with Tamil *kuraṅku*, Kannada *koraṅgi* and Telugu *k(r)ō̃ti* (DEDR 1769).
+**കുരങ്ങ്** (*kuraṅṅŭ*) is native Dravidian, one word with Tamil *kuraṅku*, Kannada *koraṅgi* and Telugu *k(r)ōti* (DEDR 1769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

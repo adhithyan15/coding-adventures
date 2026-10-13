@@ -15,7 +15,7 @@ concept_tag: ML-SAMAYAM195-VARANTYAM
 prerequisites: [ML-C195-ennum, ML-C195-tiyati]
 sounds: []
 roots: [vara-sanskrit, sanskrit-anta]
-etymology_hook: "vārāntyaṁ: Sanskrit vāra 'day of the week' (CDIAL 11547) + anta 'end' (CDIAL 347)"
+etymology_hook: "vārāntyaṁ: Sanskrit vāra 'day of the week' (CDIAL 11547) + antya 'last', from anta 'end' (CDIAL 347)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C195-tiyati]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വാരാന്ത്യം** (*vārāntyaṁ*) is built from Sanskrit parts: *vāra*, "day of the week" (CDIAL 11547), and *anta*, "end" (CDIAL 347): the week's end.
+**വാരാന്ത്യം** (*vārāntyaṁ*) is built from Sanskrit parts: *vāra*, "day of the week" (CDIAL 11547), and *antya*, "last", from *anta*, "end" (CDIAL 347): the week's end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [ML-C215-hobi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ചെമ്പ്** (*cempŭ*) is native Dravidian, one word with Tamil *cempu*, Kannada *cambu* and Telugu *cembu* (DEDR 2775). The root is the word for "red".
+**ചെമ്പ്** (*cempŭ*) is native Dravidian, one word with Tamil *cempu*, Kannada *cambu* and Telugu *cembu* (DEDR 2775). DEDR 2775 asks whether Sanskrit *tāmra*, "copper", has influenced these words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

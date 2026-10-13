@@ -23,7 +23,7 @@ You'll want to know: ഒന്നാം.
 It goes straight in front of what it counts, and nothing on the noun changes: ഒന്നാം വഴി (onnāṁ vaḻi), the first way; ഒന്നാം പുസ്തകം (onnāṁ pustakaṁ), the first book.
 
 The word, taken apart.
-ഒന്നാം (onnāṁ) is native Dravidian: the number "one" (DEDR 990, with Tamil oru and Kannada ondu) with the ordinal ending -āṁ. Tamil builds its ordinals with a matching ending, as in iraṇṭām, "second" (DEDR 474).
+ഒന്നാം (onnāṁ) is native Dravidian: the number "one" (DEDR 990, with Tamil oṉṟu and Kannada ondu) with the ordinal ending -āṁ. Tamil builds its ordinals with a matching ending, as in iraṇṭām, "second" (DEDR 474).
 
 Grammar Lens: one ending, and no exceptions to it.
 Put the word beside the number it comes from:

@@ -45,7 +45,7 @@ difference. It is also in **പള്ളിക്കൂടം**, "school".
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**പള്ളി** (*paḷḷi*) is native Dravidian, one word with Tamil *paḷḷi*, Kannada *paḷḷi* and Telugu *palli* (DEDR 4018). Its first senses are "hamlet, a public building"; it came to name the house of worship of more than one faith. DEDR 4018 compares Sanskrit *pallī̆*.
+**പള്ളി** (*paḷḷi*) is native Dravidian, one word with Tamil *paḷḷi*, Kannada *paḷḷi* and Telugu *palli* (DEDR 4018). Its first senses are "hamlet, a public building"; it came to name the house of worship of more than one faith. DEDR 4018 compares Sanskrit *pallī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

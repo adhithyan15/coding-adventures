@@ -77,7 +77,7 @@ You'll want to know: മണിക്കൂർ.
 മണിക്കൂർ (maṇikkūr) — "an hour". It begins with മണി, the word in ഒരു മണി, "one o'clock".
 
 The word, taken apart.
-മണിക്കൂർ (maṇikkūr) joins maṇi, "hour, bell", from Sanskrit maṇi, "jewel" (CDIAL 9731), to native kūr, "part, share, a division of time" (DEDR 1924, with Tamil kūṟu).
+മണിക്കൂർ (maṇikkūr) joins maṇi, "hour, bell" (DEDR 4672, with Tamil maṇi; DEDR asks whether it is Sanskrit maṇi, "jewel", CDIAL 9731), to native kūr, "part, share, a division of time" (DEDR 1924, with Tamil kūṟu).
 
 What you've built.
 Sixty minutes.

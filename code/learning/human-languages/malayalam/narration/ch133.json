@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Sweet and Sour",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca2240ae0312c46e",
+  "sourceHash": "fnv1a64:986ff2779776ce18",
   "lessons": [
     {
       "id": "ML-C133-mango",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6523e7bd99349312",
+      "sourceHash": "fnv1a64:25e7e987d1ad3c6d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നാരങ്ങ (nāraṅṅa) from Sanskrit nāraṅga, \"orange tree\", taken over whole as a tatsama (CDIAL 7073). The same word travelled west through Persian and Arabic and became English orange."
+              "text": "നാരങ്ങ (nāraṅṅa) from Sanskrit nāraṅga, \"orange tree\" (CDIAL 7073), reshaped as a tadbhava: ṅg became ṅṅ. DEDR 3653 compares it with Tamil nāram, \"orange\". The same word travelled west through Persian and Arabic and became English orange."
             }
           ]
         },

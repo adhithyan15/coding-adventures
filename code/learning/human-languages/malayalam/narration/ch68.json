@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "All the Way Up, and First in Time",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:85abb5074da5d6f9",
+  "sourceHash": "fnv1a64:53a3aa5c9bcd25ce",
   "lessons": [
     {
       "id": "ML-C68-sixth",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b8ae8e62dca72c7",
+      "sourceHash": "fnv1a64:4217d7fa74db4663",
       "notice": null,
       "blocks": [
         {
@@ -272,7 +272,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ēḻāṁ is native Dravidian: \"seven\" (DEDR 910, with Tamil ēḻu and Kannada ēḻu) with the ordinal ending -āṁ."
+              "text": "ഏഴാം (ēḻāṁ) is native Dravidian: \"seven\" (DEDR 910, with Tamil ēḻu and Kannada ēḻu) with the ordinal ending -āṁ."
             }
           ]
         },
@@ -975,7 +975,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15a6dd38fe5e1ef9",
+      "sourceHash": "fnv1a64:93063c499450e03f",
       "notice": null,
       "blocks": [
         {

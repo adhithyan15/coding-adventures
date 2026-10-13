@@ -4,7 +4,7 @@
   "chapter": 172,
   "title": "Cook, Give, Bring, Call, Cry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e0307ac7b3f81944",
+  "sourceHash": "fnv1a64:6aa0d0356dcab570",
   "lessons": [
     {
       "id": "ML-C172-vevikkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:995714269e2bbea9",
+      "sourceHash": "fnv1a64:e4a81b780d601887",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വേവിക്കുക (vēvikkuka) is native Dravidian, the causative of the verb \"to be hot, to boil\": \"make boil\"; DEDR 5517 lists the root with Tamil vē, Kannada bē and Telugu vē̃gu."
+              "text": "വേവിക്കുക (vēvikkuka) is native Dravidian, the causative of the verb \"to be hot, to boil\": \"make boil\"; DEDR 5517 lists the root with Tamil vē, Kannada bē and Telugu vēgu."
             }
           ]
         },

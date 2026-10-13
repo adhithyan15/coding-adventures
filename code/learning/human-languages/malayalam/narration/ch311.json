@@ -4,7 +4,7 @@
   "chapter": 311,
   "title": "To stroke, To tidy away, To pull down, To bear fruit, To spread",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:808ae4ccf5538964",
+  "sourceHash": "fnv1a64:af238c0c4218827d",
   "lessons": [
     {
       "id": "ML-C311-talotuka",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1bba9ee74877079",
+      "sourceHash": "fnv1a64:47ba70885f023ba3",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഒതുക്കുക (otukkuka) is a native Malayalam verb; DEDR has no clear entry for it, so its root is left open here."
+              "text": "ഒതുക്കുക (otukkuka) is native Dravidian: DEDR 973 lists it, \"to subdue, settle\", with Tamil otukku, \"to put on one side, settle\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc503ddcb477f300",
+      "sourceHash": "fnv1a64:d81cc5b3729cbb90",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കായ്ക്കുക (kāykkuka) is native Dravidian, one word with Tamil kāy, Kannada kāy and Telugu kācu (DEDR 1459). It is the verb of kāy, \"unripe fruit\"."
+              "text": "കായ്ക്കുക (kāykkuka) is native Dravidian, one word with Tamil kāy, Kannada kāy and Telugu kācu (DEDR 1459). It is the verb of kāy, \"unripe fruit\". DEDR 1459 compares Indo-Aryan kacca, \"raw, unripe\" (CDIAL 2613)."
             }
           ]
         },

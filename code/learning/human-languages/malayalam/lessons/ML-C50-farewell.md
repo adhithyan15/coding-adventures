@@ -50,7 +50,7 @@ Kannada's word here, ಬೀಳ್ಕೊಡುಗೆ (*bīḷkoḍuge*), is longe
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വിട** (*viṭa*) is native Dravidian, the noun of the verb "to let go, to release"; DEDR 5393 lists the root with Tamil *viṭu*, Kannada *biḍu* and Telugu *viḍu*. DEDR 5393 compares Sanskrit *avamocana*.
+**വിട** (*viṭa*) is native Dravidian, the noun of the verb "to let go, to release"; DEDR 5393 lists the root with Tamil *viṭu*, Kannada *biḍu* and Telugu *viḍu*. DEDR 5393 notes Sanskrit *avamocana*, "inn", as a translation of Tamil *viṭuti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

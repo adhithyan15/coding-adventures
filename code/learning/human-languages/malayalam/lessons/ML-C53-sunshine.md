@@ -50,7 +50,7 @@ Beside it sits its opposite, തണൽ (*taṇal*), the shade — and between th
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വെയിൽ** (*veyil*) is native Dravidian, built on the verb "to be hot, to burn"; DEDR 5517 lists the root with Tamil *vē*, Kannada *bē* and Telugu *vē̃gu*.
+**വെയിൽ** (*veyil*) is native Dravidian, built on the verb "to be hot, to burn"; DEDR 5517 lists the root with Tamil *vē*, Kannada *bē* and Telugu *vēgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

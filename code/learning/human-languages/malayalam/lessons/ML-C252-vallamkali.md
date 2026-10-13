@@ -47,7 +47,7 @@ reviews_of: [ML-C252-tamasa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വള്ളംകളി** (*vaḷḷaṁkaḷi*) is native Dravidian, "boat play": *vaḷḷam*, "canoe, boat" (DEDR 5315, with Tamil *vaḷḷam*), and *kaḷi*, "play, game" (DEDR 1374). DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
+**വള്ളംകളി** (*vaḷḷaṁkaḷi*) is native Dravidian, "boat play": *vaḷḷam*, "canoe, boat" (DEDR 5315, with Tamil *vaḷḷam*), and *kaḷi*, "play, game" (DEDR 1374).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

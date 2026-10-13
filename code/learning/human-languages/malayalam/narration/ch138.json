@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "Animals of Kerala",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d45ed38fb25a8c17",
+  "sourceHash": "fnv1a64:b96d17f0fa3ab9f4",
   "lessons": [
     {
       "id": "ML-C138-bird",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b66548835812f16f",
+      "sourceHash": "fnv1a64:c0d40a243cac53dd",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കുരങ്ങ് (kuraṅṅŭ) is native Dravidian, one word with Tamil kuraṅku, Kannada koraṅgi and Telugu k(r)ō̃ti (DEDR 1769)."
+              "text": "കുരങ്ങ് (kuraṅṅŭ) is native Dravidian, one word with Tamil kuraṅku, Kannada koraṅgi and Telugu k(r)ōti (DEDR 1769)."
             }
           ]
         },

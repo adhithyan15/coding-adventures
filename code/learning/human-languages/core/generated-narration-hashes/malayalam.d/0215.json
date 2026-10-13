@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 215,
-  "sourceHash": "fnv1a64:492d054394bcc8ee",
+  "sourceHash": "fnv1a64:1dc7b388b8c3c161",
   "lessonIds": [
     "ML-C215-pantu",
     "ML-C215-kalikkaran",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch215.txt",
   "json": "malayalam/narration/ch215.json",
-  "textHash": "fnv1a64:4db079e98eb96645",
-  "jsonHash": "fnv1a64:47bdd651435a2957",
+  "textHash": "fnv1a64:5698f4db4ae86a7f",
+  "jsonHash": "fnv1a64:c5490254c90f50f9",
   "findings": []
 }

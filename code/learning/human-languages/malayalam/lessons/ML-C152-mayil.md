@@ -15,7 +15,7 @@ concept_tag: ML-THINGS152-MAYIL
 prerequisites: [ML-C152-tavala, ML-C152-ama, ML-C30-shubha-sayaahnam]
 sounds: []
 roots: [dravidian-mayil-peacock]
-etymology_hook: "mayil: native Dravidian, one word with Tamil maññai and Kannada mayla (DEDR 4642)"
+etymology_hook: "mayil: native Dravidian, one word with Tamil mayil, maññai and Kannada mayla (DEDR 4642)"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [ML-C152-ama]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**മയിൽ** (*mayil*) is native Dravidian, one word with Tamil *maññai* and Kannada *mayla* (DEDR 4642). DEDR 4642 compares Sanskrit *mayūra*.
+**മയിൽ** (*mayil*) is native Dravidian, one word with Tamil *mayil*, *maññai* and Kannada *mayla* (DEDR 4642). DEDR 4642 compares Sanskrit *mayūra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

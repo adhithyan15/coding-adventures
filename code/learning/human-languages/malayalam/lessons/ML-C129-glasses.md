@@ -44,7 +44,7 @@ reviews_of: [ML-C129-umbrella]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കണ്ണട** (*kaṇṇaṭa*) is native Dravidian, built on *kaṇṇŭ*, "eye"; DEDR 1182 lists Malayalam *kaṇṇaṭa*, "spectacles", itself, beside Tamil *kaṇṇāṭi*.
+**കണ്ണട** (*kaṇṇaṭa*) is native Dravidian, built on *kaṇṇŭ*, "eye"; DEDR 1182 lists Malayalam *kaṇṇaṭa*, "spectacles", itself, beside Tamil *kaṇṇāṭi*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

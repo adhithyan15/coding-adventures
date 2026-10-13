@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 217,
-  "sourceHash": "fnv1a64:3c12b2b0ed9a8c9a",
+  "sourceHash": "fnv1a64:9b1c6ceb24a1a63c",
   "lessonIds": [
     "ML-C217-parutti",
     "ML-C217-pattu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch217.txt",
   "json": "malayalam/narration/ch217.json",
-  "textHash": "fnv1a64:4fab5e73ded8f79b",
-  "jsonHash": "fnv1a64:5e6fdd9216487b83",
+  "textHash": "fnv1a64:8a0e8b6b717bc9ae",
+  "jsonHash": "fnv1a64:f47f0210ab85346f",
   "findings": []
 }

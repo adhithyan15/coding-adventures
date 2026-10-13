@@ -46,7 +46,7 @@ reviews_of: [ML-C127-illcall]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വീട്** (*vīṭŭ*) is native Dravidian: DEDR 5393 lists it, "house", under the verb "to let go, leave off", with Tamil *viṭu*. DEDR 5393 compares Sanskrit *avamocana*.
+**വീട്** (*vīṭŭ*) is native Dravidian: DEDR 5393 lists it, "house", under the verb "to let go, leave off", with Tamil *viṭu*. DEDR 5393 notes Sanskrit *avamocana*, "inn", as a translation of Tamil *viṭuti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

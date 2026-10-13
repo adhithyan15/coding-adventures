@@ -4,7 +4,7 @@
   "chapter": 217,
   "title": "Cotton, Silk, Leather, Brass, Lime",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3c12b2b0ed9a8c9a",
+  "sourceHash": "fnv1a64:9b1c6ceb24a1a63c",
   "lessons": [
     {
       "id": "ML-C217-parutti",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dddf7d02b619f3d0",
+      "sourceHash": "fnv1a64:5f376ec7fcd917f8",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പിച്ചള (piccaḷa) is of uncertain origin; neither DEDR nor CDIAL lists it."
+              "text": "പിച്ചള (piccaḷa) is usually traced to Sanskrit pittala, \"brass\" (CDIAL 8184), reshaped; CDIAL does not record the Malayalam form."
             }
           ]
         },

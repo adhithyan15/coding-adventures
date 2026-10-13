@@ -12,7 +12,7 @@ concept_tag: ML-NOUN-GRANDFATHER
 prerequisites: [ML-C44-write, ML-C42-old]
 sounds: []
 roots: [dravidian-mutu-old, dravidian-accan-father]
-etymology_hook: "muttacchan: native Dravidian, 'old' + 'father'; Tamil mutu 'old' and accaṉ 'father' (DEDR 4954, 50)"
+etymology_hook: "muttacchan: native mutt- 'old' (DEDR 4954) + accan 'father', probably Prakrit ajja (DEDR 50, CDIAL 1347)"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +46,7 @@ Two pieces, both audible: *mutta-*, 'elder, senior', and *acchan*, the 'father' 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**മുത്തച്ഛൻ** (*muttacchan*) is native Dravidian, "the old father": the word for "old" (DEDR 4954, with Tamil *mutu* and Kannada *muttu*) joined to the word for "father" (DEDR 50, with Tamil *accaṉ*).
+**മുത്തച്ഛൻ** (*muttacchan*) is "the old father": the native word for "old" (DEDR 4954, with Tamil *mutu* and Kannada *muttu*) joined to *accan*, "father". DEDR 50 lists *accan* with Tamil *accaṉ* but takes the set as probably Indo-Aryan, Prakrit *ajja*, Sanskrit *ārya*, "noble" (CDIAL 1347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -50,7 +50,7 @@ The doubled *ll* is held, and the ŭ closes it, so the whole word is over in abo
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**എല്ല്** (*ellŭ*) is native Dravidian, one word with Kannada *elu* and Telugu *emmu* (DEDR 839). DEDR 839 compares Sanskrit *eḍū˘ka*.
+**എല്ല്** (*ellŭ*) is native Dravidian, one word with Kannada *elu* and Telugu *emmu* (DEDR 839). DEDR 839 compares Sanskrit *eḍūka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

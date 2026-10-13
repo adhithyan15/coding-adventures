@@ -47,7 +47,7 @@ reviews_of: [ML-C256-vinodam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കളിപ്പാട്ടം** (*kaḷippāṭṭaṁ*) begins with native *kaḷi*, "play" (DEDR 1374); the second part's origin is uncertain. DEDR 1374 compares Sanskrit *kalyā* and *kaḍ*.
+**കളിപ്പാട്ടം** (*kaḷippāṭṭaṁ*) begins with native *kaḷi*, "play" (DEDR 1374); the second part's origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

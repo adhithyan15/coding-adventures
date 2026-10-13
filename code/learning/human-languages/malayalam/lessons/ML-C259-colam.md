@@ -47,7 +47,7 @@ reviews_of: [ML-C259-murinnakka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ചോളം** (*cōḷaṁ*) is native Dravidian, one word with Tamil *cōḷam*, Kannada *jōḷa* and Telugu *jonna* (DEDR 2896). It first named sorghum and millet; maize took the name later.
+**ചോളം** (*cōḷaṁ*) is native Dravidian, one word with Tamil *cōḷam*, Kannada *jōḷa* and Telugu *jonna* (DEDR 2896). It first named sorghum and millet; maize took the name later. DEDR 2896 notes similar words in Indo-Aryan (CDIAL 10434).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

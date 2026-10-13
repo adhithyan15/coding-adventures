@@ -47,7 +47,7 @@ reviews_of: [ML-C290-puram]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**വള്ളി** (*vaḷḷi*) is native Dravidian, one word with Tamil *vaḷḷi*, Kannada *baḷḷi* and Telugu *valli* (DEDR 5316). DEDR 5316 compares Sanskrit *vallī̆*.
+**വള്ളി** (*vaḷḷi*) is native Dravidian, one word with Tamil *vaḷḷi*, Kannada *baḷḷi* and Telugu *valli* (DEDR 5316). DEDR 5316 compares Sanskrit *vallī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

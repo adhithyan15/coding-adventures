@@ -4,7 +4,7 @@
   "chapter": 186,
   "title": "To share, To hug, To quarrel, To sulk, To tease",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b112f47083f2a089",
+  "sourceHash": "fnv1a64:cf0718fcd4d130ef",
   "lessons": [
     {
       "id": "ML-C186-pankuvekkuka",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efe083b5168f7930",
+      "sourceHash": "fnv1a64:dbbf2e27c41b4fd0",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കളിയാക്കുക (kaḷiyākkuka) is native Dravidian, \"make into a game\": kaḷi, \"play, jest\" (DEDR 1374), and ākkuka, \"to make\" (DEDR 333). DEDR 1374 compares Sanskrit kalyā and kaḍ. DEDR 333 compares Sanskrit ām."
+              "text": "കളിയാക്കുക (kaḷiyākkuka) is native Dravidian, \"make into a game\": kaḷi, \"play, jest\" (DEDR 1374), and ākkuka, \"to make\" (DEDR 333). DEDR 333 compares Sanskrit ām."
             }
           ]
         },

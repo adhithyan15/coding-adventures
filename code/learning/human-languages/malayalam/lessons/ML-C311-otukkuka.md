@@ -15,7 +15,7 @@ concept_tag: ML-VERB-OTUKKUKA
 prerequisites: [ML-C310-avarttikkuka, ML-C311-talotuka]
 sounds: []
 roots: [malayalam-otukku]
-etymology_hook: "otukkuka 'to tidy away': a native verb whose root DEDR does not clearly record"
+etymology_hook: "otukkuka: native Dravidian; DEDR 973 lists it, 'to settle', with Tamil otukku 'to put on one side'"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C311-talotuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ഒതുക്കുക** (*otukkuka*) is a native Malayalam verb; DEDR has no clear entry for it, so its root is left open here.
+**ഒതുക്കുക** (*otukkuka*) is native Dravidian: DEDR 973 lists it, "to subdue, settle", with Tamil *otukku*, "to put on one side, settle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

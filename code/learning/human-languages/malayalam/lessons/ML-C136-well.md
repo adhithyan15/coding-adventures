@@ -12,7 +12,7 @@ concept_tag: ML-WATER-WELL
 prerequisites: [ML-C136-beach, ML-C136-pond]
 sounds: []
 roots: [dravidian-kinaru-well]
-etymology_hook: "kiṇar: native Dravidian, one word with Tamil kēṇi and Kannada kēṇi (DEDR 1998)"
+etymology_hook: "kiṇar: native Dravidian, one word with Tamil kiṇaṟu, kēṇi and Kannada kēṇi (DEDR 1998)"
 duration:
   max_seconds: 200
 requires:
@@ -44,7 +44,7 @@ reviews_of: [ML-C136-pond]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കിണർ** (*kiṇar*) is native Dravidian, one word with Tamil *kēṇi* and Kannada *kēṇi* (DEDR 1998).
+**കിണർ** (*kiṇar*) is native Dravidian, one word with Tamil *kiṇaṟu*, *kēṇi* and Kannada *kēṇi* (DEDR 1998).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

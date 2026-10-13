@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "How Long?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6db5b42be06cb586",
+  "sourceHash": "fnv1a64:1946c120986b6e69",
   "lessons": [
     {
       "id": "ML-C139-time",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daa4fbee6ae3836b",
+      "sourceHash": "fnv1a64:9768a3b321b85268",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മണിക്കൂർ (maṇikkūr) joins maṇi, \"hour, bell\", from Sanskrit maṇi, \"jewel\" (CDIAL 9731), to native kūr, \"part, share, a division of time\" (DEDR 1924, with Tamil kūṟu)."
+              "text": "മണിക്കൂർ (maṇikkūr) joins maṇi, \"hour, bell\" (DEDR 4672, with Tamil maṇi; DEDR asks whether it is Sanskrit maṇi, \"jewel\", CDIAL 9731), to native kūr, \"part, share, a division of time\" (DEDR 1924, with Tamil kūṟu)."
             }
           ]
         },

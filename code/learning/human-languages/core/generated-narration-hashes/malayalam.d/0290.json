@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 290,
-  "sourceHash": "fnv1a64:ae7caa1d6b36f791",
+  "sourceHash": "fnv1a64:fb4ba22c40fe950c",
   "lessonIds": [
     "ML-C290-onakkoti",
     "ML-C290-kathakali",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch290.txt",
   "json": "malayalam/narration/ch290.json",
-  "textHash": "fnv1a64:8abaccfdd5e8aab7",
-  "jsonHash": "fnv1a64:bb6461d91ecd9571",
+  "textHash": "fnv1a64:1bd01aaaa4f531cb",
+  "jsonHash": "fnv1a64:181d5b2c951538f9",
   "findings": []
 }

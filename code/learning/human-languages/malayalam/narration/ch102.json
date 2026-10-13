@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Saying When",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:626121272d9b8377",
+  "sourceHash": "fnv1a64:e6009ffeb359d02c",
   "lessons": [
     {
       "id": "ML-C102-manikku",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0edc03332bfc0e0d",
+      "sourceHash": "fnv1a64:f7e3276c5d74dac1",
       "notice": null,
       "blocks": [
         {
@@ -396,7 +396,7 @@
             },
             {
               "kind": "speech",
-              "text": "maṇi, \"bell, hour\", from Sanskrit maṇi, \"jewel\" (CDIAL 9731); etra is native (DEDR 5151)."
+              "text": "maṇi, \"bell, hour\", is listed as Dravidian (DEDR 4672), perhaps from Sanskrit maṇi, \"jewel\"; etra is native (DEDR 5151)."
             }
           ]
         },

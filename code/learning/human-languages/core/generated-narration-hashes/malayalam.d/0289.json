@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 289,
-  "sourceHash": "fnv1a64:61db22ef13f1d159",
+  "sourceHash": "fnv1a64:7f04c22d44abbaff",
   "lessonIds": [
     "ML-C289-ankutti",
     "ML-C289-ammayi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch289.txt",
   "json": "malayalam/narration/ch289.json",
-  "textHash": "fnv1a64:56a6740c91d370f9",
-  "jsonHash": "fnv1a64:98f673ae52bd2695",
+  "textHash": "fnv1a64:a05d3a16cd62c12a",
+  "jsonHash": "fnv1a64:4d9d321236735a4a",
   "findings": []
 }

@@ -47,7 +47,7 @@ reviews_of: [ML-C166-vegamulla]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**കട്ടിയുള്ള** (*kaṭṭiyuḷḷa*) is native Dravidian, "having solidity": *kaṭṭi*, "what is condensed, solid" (DEDR 1148, with Tamil *kaṭṭu*), with *-uḷḷa*, "that has" (DEDR 697).
+**കട്ടിയുള്ള** (*kaṭṭiyuḷḷa*) is native Dravidian, "having solidity": *kaṭṭi*, "what is condensed, solid" (DEDR 1148, with Tamil *kaṭṭu*), with *-uḷḷa*, "that has" (DEDR 697). DEDR 1148 compares Sanskrit *kaṭhina*, "hard" (CDIAL 2650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

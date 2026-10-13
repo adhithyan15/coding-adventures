@@ -4,7 +4,7 @@
   "chapter": 252,
   "title": "Joke, Snake-boat race, Vishu kani, Vishu gift of money, Firecracker",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:324c37259932321e",
+  "sourceHash": "fnv1a64:271160316845a589",
   "lessons": [
     {
       "id": "ML-C252-tamasa",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c82c553548d9536b",
+      "sourceHash": "fnv1a64:ab0e1457bbdc406f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വള്ളംകളി (vaḷḷaṁkaḷi) is native Dravidian, \"boat play\": vaḷḷam, \"canoe, boat\" (DEDR 5315, with Tamil vaḷḷam), and kaḷi, \"play, game\" (DEDR 1374). DEDR 1374 compares Sanskrit kalyā and kaḍ."
+              "text": "വള്ളംകളി (vaḷḷaṁkaḷi) is native Dravidian, \"boat play\": vaḷḷam, \"canoe, boat\" (DEDR 5315, with Tamil vaḷḷam), and kaḷi, \"play, game\" (DEDR 1374)."
             }
           ]
         },

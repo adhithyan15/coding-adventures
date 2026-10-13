@@ -4,7 +4,7 @@
   "chapter": 218,
   "title": "Manure, Cow dung, Weed, Elephant-foot yam, Pumpkin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a252a77edbd0838d",
+  "sourceHash": "fnv1a64:fb5daf00fc83d6d0",
   "lessons": [
     {
       "id": "ML-C218-valam",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07e3e753a075586c",
+      "sourceHash": "fnv1a64:49b17fa2895d387e",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ചേന (cēna) is of uncertain origin; DEDR does not list it."
+              "text": "ചേന (cēna) is probably native Dravidian: DEDR 2022 lists Tamil cēṉai, the same yam, with Kannada kēne, though not the Malayalam word."
             }
           ]
         },

@@ -12,7 +12,7 @@ concept_tag: ML-ORDER-AT-FIRST
 prerequisites: [ML-C68-eleventh, ML-C68-seventh, ML-C67-first, ML-C65-permission, ML-C53-sun, ML-C64-then]
 sounds: []
 roots: [sanskrit-adya-first]
-etymology_hook: "Malayalam's ordinal machine is native and exceptionless, but for 'at first' as an adverb it borrowed Sanskrit adya"
+etymology_hook: "Malayalam's ordinal machine is native and exceptionless, but for 'at first' as an adverb it borrowed Sanskrit ādya"
 duration:
   max_seconds: 240
 requires:

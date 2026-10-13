@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Things You Carry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:694fb9eb2f7c8f73",
+  "sourceHash": "fnv1a64:00389052a7d121d9",
   "lessons": [
     {
       "id": "ML-C129-bed",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11cedf391f293e48",
+      "sourceHash": "fnv1a64:477b1c6897587a56",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കണ്ണട (kaṇṇaṭa) is native Dravidian, built on kaṇṇŭ, \"eye\"; DEDR 1182 lists Malayalam kaṇṇaṭa, \"spectacles\", itself, beside Tamil kaṇṇāṭi."
+              "text": "കണ്ണട (kaṇṇaṭa) is native Dravidian, built on kaṇṇŭ, \"eye\"; DEDR 1182 lists Malayalam kaṇṇaṭa, \"spectacles\", itself, beside Tamil kaṇṇāṭi, \"mirror\"."
             }
           ]
         },

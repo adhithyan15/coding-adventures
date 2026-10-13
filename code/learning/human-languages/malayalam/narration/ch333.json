@@ -4,7 +4,7 @@
   "chapter": 333,
   "title": "Cashew nut, Sugarcane, Sickle, Bindi, Helmet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1df63e55704a4656",
+  "sourceHash": "fnv1a64:8d1c2064378b1ad8",
   "lessons": [
     {
       "id": "ML-C333-kasuvanti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3973af8eb5be009d",
+      "sourceHash": "fnv1a64:0276f2aa25aa2e2d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കശുവണ്ടി (kaśuvaṇṭi) joins kaśu, from Portuguese caju, \"cashew\", a word from the Tupi of Brazil, to native aṇṭi, \"kernel, nut\" (DEDR 126, with Tamil aṇṭi-kkoṭṭai)."
+              "text": "കശുവണ്ടി (kaśuvaṇṭi) joins kaśu, from Portuguese caju, \"cashew\", a word from the Tupi of Brazil, to native aṇṭi, \"kernel, nut\" (DEDR 126, with Tamil aṇṭi-kkoṭṭai). DEDR 126 notes a possible link with Sanskrit aṣṭi, \"kernel\" (CDIAL 955)."
             }
           ]
         },

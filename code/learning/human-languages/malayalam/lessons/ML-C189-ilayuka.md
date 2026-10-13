@@ -15,7 +15,7 @@ concept_tag: ML-VERB-ILAYUKA
 prerequisites: [ML-C189-kulukkuka, ML-C189-uruttuka]
 sounds: []
 roots: [dravidian-izhai-crawl]
-etymology_hook: "iḻayuka: native Dravidian, one word with Telugu dē̃ku (DEDR 508)"
+etymology_hook: "iḻayuka: native Dravidian, one word with Telugu dēku (DEDR 508)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [ML-C189-uruttuka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ഇഴയുക** (*iḻayuka*) is native Dravidian, one word with Telugu *dē̃ku* (DEDR 508).
+**ഇഴയുക** (*iḻayuka*) is native Dravidian, one word with Telugu *dēku* (DEDR 508).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

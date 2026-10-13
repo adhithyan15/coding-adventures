@@ -4,7 +4,7 @@
   "chapter": 298,
   "title": "Groceries, Packet, Salary, Wages, Worker",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d1b8ad3d54d5b011",
+  "sourceHash": "fnv1a64:8ad148dc85bef4a2",
   "lessons": [
     {
       "id": "ML-C298-palacarakku",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ab4ca3b0ea5c4c8",
+      "sourceHash": "fnv1a64:714c16db138429c6",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ശമ്പളം (śambaḷaṁ) from Sanskrit śambala, \"provisions for a journey\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 12315). Provisions for the road became regular pay."
+              "text": "ശമ്പളം (śambaḷaṁ) from Sanskrit śambala, \"provisions for a journey\", reshaped as a tadbhava (its l became ḷ), with Malayalam's noun ending -ṁ (CDIAL 12315). Provisions for the road became regular pay."
             }
           ]
         },

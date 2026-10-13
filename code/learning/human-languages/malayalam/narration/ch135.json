@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Around Town",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1bdb4319ebbed971",
+  "sourceHash": "fnv1a64:8a98a763bbb60a88",
   "lessons": [
     {
       "id": "ML-C135-market",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02d676979ae62e7a",
+      "sourceHash": "fnv1a64:8d98278a105b9cda",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പള്ളി (paḷḷi) is native Dravidian, one word with Tamil paḷḷi, Kannada paḷḷi and Telugu palli (DEDR 4018). Its first senses are \"hamlet, a public building\"; it came to name the house of worship of more than one faith. DEDR 4018 compares Sanskrit pallī̆."
+              "text": "പള്ളി (paḷḷi) is native Dravidian, one word with Tamil paḷḷi, Kannada paḷḷi and Telugu palli (DEDR 4018). Its first senses are \"hamlet, a public building\"; it came to name the house of worship of more than one faith. DEDR 4018 compares Sanskrit pallī."
             }
           ]
         },

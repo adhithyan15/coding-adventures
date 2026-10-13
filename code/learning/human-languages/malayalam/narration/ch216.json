@@ -4,7 +4,7 @@
   "chapter": 216,
   "title": "Copper, Plastic, Plank, Brick, Cement",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:86a60c98af43f38a",
+  "sourceHash": "fnv1a64:0dd270e6814c20b3",
   "lessons": [
     {
       "id": "ML-C216-cempu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9d62aa0382ce677",
+      "sourceHash": "fnv1a64:5e7a83724bd267a3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ചെമ്പ് (cempŭ) is native Dravidian, one word with Tamil cempu, Kannada cambu and Telugu cembu (DEDR 2775). The root is the word for \"red\"."
+              "text": "ചെമ്പ് (cempŭ) is native Dravidian, one word with Tamil cempu, Kannada cambu and Telugu cembu (DEDR 2775). DEDR 2775 asks whether Sanskrit tāmra, \"copper\", has influenced these words."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50d10bbdd7a7dce3",
+      "sourceHash": "fnv1a64:05a4ebc520d2edec",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പലക (palaka) from Sanskrit phalaka, \"board, plank; shield\", taken over whole as a tatsama (CDIAL 9054). Malayalam softened the ph to p."
+              "text": "പലക (palaka) from Sanskrit phalaka, \"board, plank\" (CDIAL 9053), reshaped as a tadbhava: Malayalam softened the ph to p."
             }
           ]
         },

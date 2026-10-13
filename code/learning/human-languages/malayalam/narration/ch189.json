@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "To spit, To wring, To shake, To roll, To crawl",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f62806acc5520a91",
+  "sourceHash": "fnv1a64:5a2965358d6e7a19",
   "lessons": [
     {
       "id": "ML-C189-tuppuka",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21da8167d5a87cfa",
+      "sourceHash": "fnv1a64:69e1a1a8633c1d7d",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇഴയുക (iḻayuka) is native Dravidian, one word with Telugu dē̃ku (DEDR 508)."
+              "text": "ഇഴയുക (iḻayuka) is native Dravidian, one word with Telugu dēku (DEDR 508)."
             }
           ]
         },

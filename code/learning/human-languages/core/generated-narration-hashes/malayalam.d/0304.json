@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 304,
-  "sourceHash": "fnv1a64:3bdcdc29af8ea496",
+  "sourceHash": "fnv1a64:0d3c17acd143681e",
   "lessonIds": [
     "ML-C304-svasikkuka",
     "ML-C304-tummuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch304.txt",
   "json": "malayalam/narration/ch304.json",
-  "textHash": "fnv1a64:52b12e73dc9be46e",
-  "jsonHash": "fnv1a64:3e85735004dc5d5b",
+  "textHash": "fnv1a64:9b933437ce10f71d",
+  "jsonHash": "fnv1a64:7572cea5cb92f544",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Leave",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:f14e9ae694536488",
+  "sourceHash": "fnv1a64:0e962d1f018fd68f",
   "lessons": [
     {
       "id": "ML-C50-now",
@@ -764,7 +764,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f50281b6ef7c911d",
+      "sourceHash": "fnv1a64:57c94284ca047675",
       "notice": null,
       "blocks": [
         {
@@ -814,7 +814,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വിട (viṭa) is native Dravidian, the noun of the verb \"to let go, to release\"; DEDR 5393 lists the root with Tamil viṭu, Kannada biḍu and Telugu viḍu. DEDR 5393 compares Sanskrit avamocana."
+              "text": "വിട (viṭa) is native Dravidian, the noun of the verb \"to let go, to release\"; DEDR 5393 lists the root with Tamil viṭu, Kannada biḍu and Telugu viḍu. DEDR 5393 notes Sanskrit avamocana, \"inn\", as a translation of Tamil viṭuti."
             }
           ]
         },

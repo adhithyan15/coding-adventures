@@ -4,7 +4,7 @@
   "chapter": 327,
   "title": "Sheep, Crocodile, House lizard, Bee, Spider",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1068cf48d49164a0",
+  "sourceHash": "fnv1a64:20700ea40274e7c2",
   "lessons": [
     {
       "id": "ML-C327-cemmariyatu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e71723e7c331bc9f",
+      "sourceHash": "fnv1a64:bda2de33bcc084eb",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "തേനീച്ച (tēnīcca) is native Dravidian, \"the honey fly\": tēn, \"honey\" (DEDR 3268), and īcca, \"fly\" (DEDR 533, with Tamil ī). DEDR 3268 marks the entry with a query."
+              "text": "തേനീച്ച (tēnīcca) is native Dravidian, \"the honey fly\": tēn, \"honey\" (DEDR 3268), and īcca, \"fly\" (DEDR 533, with Tamil ī). DEDR 3268 compares, with a query, Prakrit tiṇisa, \"honeycomb\"."
             }
           ]
         },

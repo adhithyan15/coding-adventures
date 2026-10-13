@@ -4,7 +4,7 @@
   "chapter": 146,
   "title": "Need, Decision, Bed, Mirror, Comb",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d21ecb61afe04433",
+  "sourceHash": "fnv1a64:44a66e6033491070",
   "lessons": [
     {
       "id": "ML-C146-avasyam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88f8ef7ff8049a1d",
+      "sourceHash": "fnv1a64:793fc23d908dca5e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ആവശ്യം (āvaśyaṁ) from Sanskrit āvaśyaka, \"necessary\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ."
+              "text": "ആവശ്യം (āvaśyaṁ) from Sanskrit āvaśyaka, \"necessary\", reshaped: Malayalam drops the -ka and adds its noun ending -ṁ."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01637884bf44f086",
+      "sourceHash": "fnv1a64:b1ee8a9e85171c66",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കട്ടിൽ (kaṭṭil) is native Dravidian, one word with Tamil kaṭṭil and Telugu kaṭli (DEDR 1145)."
+              "text": "കട്ടിൽ (kaṭṭil) is native Dravidian, one word with Tamil kaṭṭil and Telugu kaṭli (DEDR 1145). DEDR 1145 compares Sanskrit khaṭvā, \"cot\" (CDIAL 3781)."
             }
           ]
         },

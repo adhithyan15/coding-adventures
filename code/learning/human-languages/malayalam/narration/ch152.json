@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Rat, Frog, Tortoise, Peacock, Parrot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:730ae498800a3efc",
+  "sourceHash": "fnv1a64:7f1df18a754c26f7",
   "lessons": [
     {
       "id": "ML-C152-eli",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:108f3de05adcae06",
+      "sourceHash": "fnv1a64:2f5e21d790cff33a",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +479,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മയിൽ (mayil) is native Dravidian, one word with Tamil maññai and Kannada mayla (DEDR 4642). DEDR 4642 compares Sanskrit mayūra."
+              "text": "മയിൽ (mayil) is native Dravidian, one word with Tamil mayil, maññai and Kannada mayla (DEDR 4642). DEDR 4642 compares Sanskrit mayūra."
             }
           ]
         },
