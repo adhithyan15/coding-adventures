@@ -3,6 +3,16 @@
 All notable changes to this package will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Removed a `# rubocop:disable Style/HashLiteralBraces` comment from
+  `encode_and_layout`. No cop has that name, and current rubocop rejects it
+  (`Lint/CopDirectiveSyntax`), which failed `standardrb` on every main CI
+  run (X-7). The comment never disabled anything. The hash literal already
+  matches Standard's no-space style.
+
 ## [0.1.0] — 2026-04-26
 
 ### Added

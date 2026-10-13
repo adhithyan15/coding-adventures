@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed — 1 stale style-drop pin removed (X-7)
+
+The emitters now lower this, so the gate's inverse ratchet
+(`no_pinned_style_drop_has_silently_been_fixed`) failed on every main CI run.
+Removed from `ALLOWED_STYLE_DROPS`: `(Flutter, "font-weight")`. Comments that only explained
+removed pins went with them.
+
 ### Added — a native-complete gate for this package
 
 `package_compiles.rs` proves the sources round-trip through the three IR

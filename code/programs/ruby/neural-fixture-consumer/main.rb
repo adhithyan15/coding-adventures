@@ -45,7 +45,9 @@ module NeuralFixtureConsumer
       File.binread(path, MAXIMUM_BYTES + 1),
       object_class: StrictHash,
       array_class: Array,
-      create_additions: false,
+      # No `create_additions:` here. `JSON.parse` never creates additions by
+      # default, and json 3.1 removed the keyword altogether, so naming it
+      # now raises "unknown keyword: create_additions" (X-7).
       allow_nan: false,
       # Say this explicitly rather than leaning on StrictHash below. json 2.21
       # detects duplicate keys inside the parser and, by default, only WARNS --
