@@ -213,8 +213,8 @@ unary signs, arithmetic composition with finite static operands, and
 real-valued standard functions preserve it, while a finite static real actual
 is safe directly. Variable-free exact `sign` and exact-range `entier` results
 may also widen through a real name formal. Selector calls may also choose
-unaliased local runtime-real snapshots through unary signs and additive
-composition with finite static operands; multiplicative and standard-function
+unaliased local runtime-real snapshots through unary signs and additive or
+multiplicative composition with finite static operands; standard-function
 transforms, globals, captured locals, and other real-name branches remain conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
