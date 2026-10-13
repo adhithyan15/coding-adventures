@@ -1,4 +1,4 @@
-### Fixed
+### Fixed — bounded percentage rows and wrapping repeaters (#17394)
 
 - Complete direct-child Row width-percentage groups now lower to proportional Grid star
   definitions, and a wrapping Row with one repeated equal-fraction child lowers
