@@ -524,7 +524,9 @@ impl Display for ChiefDaemonError {
                 "chief daemon: [hosts.broker] needs seatbelt_shim and seatbelt_shim_sha256 on macOS"
             }
             #[cfg(target_os = "macos")]
-            Self::BrokerShim(_) => "chief daemon: the Seatbelt shim failed verification",
+            Self::BrokerShim(_) => {
+                "chief daemon: the Seatbelt shim failed verification, is the broker, or a broker or shim path is unsafe"
+            }
             Self::BrokerUnsupported => {
                 "chief daemon: [hosts.broker] is not supported on this platform"
             }
