@@ -16,8 +16,25 @@ function between(text: string, start: string, end?: string): string {
 
 const numbered = (text: string) => text.match(/^\d+\./gmu)?.length ?? 0;
 const devanagariWords = (text: string) => text.match(/[\u0900-\u097F]+/gu)?.length ?? 0;
-const spokenDevanagariWords = (text: string) => devanagariWords(text
-  .replace(/<!--[\s\S]*?-->/gu, "")
+const speakerMetadata = [
+  "<!-- speaker: Arjuna -->",
+  "<!-- speaker: Devayani -->",
+  "<!-- speaker: Director -->",
+  "<!-- speaker: Gauri -->",
+  "<!-- speaker: IndustryRepresentative -->",
+  "<!-- speaker: Interviewer -->",
+  "<!-- speaker: Journalist -->",
+  "<!-- speaker: Lecturer -->",
+  "<!-- speaker: Malavika -->",
+  "<!-- speaker: Mayura -->",
+  "<!-- speaker: Moderator -->",
+  "<!-- speaker: Narrator -->",
+  "<!-- speaker: Sarala -->",
+  "<!-- speaker: Vinoda -->",
+] as const;
+const spokenText = (text: string) => speakerMetadata
+  .reduce((spoken, metadata) => spoken.replaceAll(metadata, ""), text);
+const spokenDevanagariWords = (text: string) => devanagariWords(spokenText(text)
   .replace(/^\*\*[^*\n]+:\*\*\s*/gmu, ""));
 const normalized = (text: string) => text.replace(/\s+/gu, " ");
 const renderedLearnerProse = (text: string) => text.split("\n")
@@ -97,6 +114,7 @@ describe("Sanskrit C1 timed mock source pair", () => {
       for (const [heading, next, minimum, maximum] of listeningParts) {
         const part = between(recording, heading, next);
         const script = between(part, "#### Scored spoken script");
+        expect(spokenText(script), `${heading} speaker metadata`).not.toContain("<!-- speaker:");
         expect(script).not.toMatch(/^\*\*[\u0900-\u097F][^*\n]*:\*\*/gmu);
         if (heading.includes("discussion") || heading.includes("interview")) {
           expect(script).toContain("<!-- speaker:");
