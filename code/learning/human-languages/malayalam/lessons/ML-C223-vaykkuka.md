@@ -14,7 +14,8 @@ romanization: "vaykkuka"
 concept_tag: ML-VERB-VAYKKUKA
 prerequisites: [ML-C222-tayyalkkaran, ML-C223-cumakkuka]
 sounds: []
-roots: []
+roots: [dravidian-vai-place]
+etymology_hook: "vaykkuka: native Dravidian, one word with Tamil vai and Kannada bay (DEDR 5549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C223-cumakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C223-KRIYA223-02]; assesses=[] -->
 
 **വയ്ക്കുക** — *vaykkuka* — "to put, to place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വയ്ക്കുക** (*vaykkuka*) is native Dravidian, one word with Tamil *vai*, Kannada *bay* and Telugu *vaicu* (DEDR 5549).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

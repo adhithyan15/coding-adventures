@@ -14,7 +14,8 @@ romanization: "pratidina"
 concept_tag: KA-KALA172-PRATIDINA
 prerequisites: [KA-C171-munce, KA-C172-aparupakke]
 sounds: []
-roots: []
+roots: [sanskrit-prati, sanskrit-dina]
+etymology_hook: "pratidina: Sanskrit prati 'towards, each' (CDIAL 8540) + dina 'day' (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C172-aparupakke]
 <!-- hl-knowledge: introduces=[KA-LEX-C172-KALA172-02]; assesses=[] -->
 
 **ಪ್ರತಿದಿನ** — *pratidina* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರತಿದಿನ** (*pratidina*) is Sanskrit *prati*, "towards; each" (CDIAL 8540), and *dina*, "day" (CDIAL 6328): "each day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

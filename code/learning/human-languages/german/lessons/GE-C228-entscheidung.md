@@ -13,7 +13,8 @@ gloss: "a decision"
 concept_tag: GE-THING228-ENTSCHEIDUNG
 prerequisites: [GE-C227-eintritt, GE-C227-eintrittskarte]
 sounds: []
-roots: []
+roots: [germanic-skaithana]
+etymology_hook: "Entscheidung — entscheiden 'to decide' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C227-eintrittskarte]
 <!-- hl-knowledge: introduces=[GE-LEX-C228-THING228-01]; assesses=[] -->
 
 **die Entscheidung** — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Entscheidung** is *entscheiden*, "to decide", + *-ung*. The verb is *ent-* + Old High German *sceidan*, "to separate". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

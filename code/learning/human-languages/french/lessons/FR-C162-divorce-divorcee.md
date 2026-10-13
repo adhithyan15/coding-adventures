@@ -13,7 +13,8 @@ gloss: "divorced"
 concept_tag: FR-QUAL162-DIVORCE-DIVORCEE
 prerequisites: [FR-C162-celibataire, FR-C162-marie-mariee]
 sounds: []
-roots: []
+roots: [divortium-latin]
+etymology_hook: "divorcé — 'divorced', from Latin divortium 'a separation'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C162-marie-mariee]
 <!-- hl-knowledge: introduces=[FR-LEX-C162-QUAL162-05]; assesses=[] -->
 
 **divorcé / divorcée** — "divorced".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divorcé** is the past participle of the verb for "to divorce", from the noun, ← Latin *divortium*, "a separation" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

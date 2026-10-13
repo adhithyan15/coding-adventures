@@ -13,6 +13,9 @@ You'll want to know: ಬೇಸರ.
 ಬೇಸರ (bēsara) — "boredom", and the low mood that comes with it.
 ನನಗೆ ಬೇಸರ ಆಗಿದೆ (nanage bēsara āgide) — "I'm bored", with the person in ನನಗೆ once more.
 
+The word, taken apart.
+ಬೇಸರ (bēsara) is native Dravidian, one word with Tamil vēcāṭai and Malayalam vēcāṟu (DEDR 5524). DEDR gives Kannada bēsaṟ(u), "weariness, disgust", and adds that some Kannada forms may instead come from Hindi bē-zār, "weary", a Persian word.
+
 What you've built.
 A mood, said like hunger and tiredness.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for kindness, then the Kannada for boredom.
 
 You'll want to know: ಉತ್ಸಾಹ.
 ಉತ್ಸಾಹ (utsāha) — "enthusiasm, eagerness", the opposite of ಬೇಸರ (bēsara).
+
+The word, taken apart.
+ಉತ್ಸಾಹ (utsāha) is Sanskrit utsāha, "power, firmness; joy", taken over whole as a learned loan, a tatsama (CDIAL 1882).
 
 What you've built.
 The mood that gets things started.
@@ -72,6 +78,9 @@ You'll want to know: ನಾಚಿಕೆ.
 ನಾಚಿಕೆ (nācike) — "shyness, embarrassment".
 ನಾಚಿಕೆ ಬೇಡ (nācike bēḍa) — "don't be shy", a kind thing to say to a new learner.
 
+The word, taken apart.
+ನಾಚಿಕೆ (nācike) is native Dravidian, from nāṇ, "shame, modesty", and DEDR 3639 lists the verb nācu, "to become abashed"; the entry also has Tamil nāṇ, Telugu nāna and Malayalam nāṇam.
+
 What you've built.
 A feeling every learner knows.
 
@@ -102,6 +111,9 @@ You'll want to know: ಗಾಬರಿ.
 ಗಾಬರಿ (gābari) — "alarm, panic, fright".
 ಗಾಬರಿ ಆಗಬೇಡಿ (gābari āgabēḍi) — "don't panic".
 
+The word, taken apart.
+ಗಾಬರಿ (gābari) came from Hindustani ghabrā-, "to be agitated, to panic". Its deeper origin is not settled.
+
 What you've built.
 A sudden fright, and how to calm it.
 
@@ -130,6 +142,9 @@ Before the new one: say the Kannada for shyness, then the Kannada for alarm.
 
 You'll want to know: ನೆಮ್ಮದಿ.
 ನೆಮ್ಮದಿ (nemmadi) — "peace of mind, contentment", the calm after worry.
+
+The word, taken apart.
+The origin of ನೆಮ್ಮದಿ (nemmadi) is uncertain. It is often linked to nemmu, "to trust, rely on", which DEDR 3600 lists as a form of nambu, "to trust", but DEDR does not list nemmadi itself.
 
 What you've built.
 The quiet end of the chapter.

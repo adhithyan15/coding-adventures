@@ -14,6 +14,7 @@ concept_tag: GE-EIGEN135-TROCKEN
 prerequisites: [GE-C135-gefaehrlich, GE-C135-nass]
 sounds: []
 roots: []
+etymology_hook: "trocken ← Middle High German trucken — inherited; Old English drycnan, 'to dry up', is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C135-nass]
 <!-- hl-knowledge: introduces=[GE-LEX-C135-EIGEN135-03]; assesses=[] -->
 
 **trocken** — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trocken** ← Middle High German *trucken* — inherited. EtymDB 2.1 lists Old English *ġedrycnan*, "to dry up", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

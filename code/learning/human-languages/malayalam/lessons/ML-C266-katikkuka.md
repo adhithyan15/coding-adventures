@@ -14,7 +14,8 @@ romanization: "kaṭikkuka"
 concept_tag: ML-VERB-KATIKKUKA
 prerequisites: [ML-C265-alakkuka, ML-C266-totuka]
 sounds: []
-roots: []
+roots: [dravidian-kadi-bite]
+etymology_hook: "kaṭikkuka: native Dravidian, one word with Tamil kaṭi and Kannada kaḍi (DEDR 1124)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C266-totuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C266-KRIYA266-02]; assesses=[] -->
 
 **കടിക്കുക** — *kaṭikkuka* — "to bite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടിക്കുക** (*kaṭikkuka*) is native Dravidian, one word with Tamil *kaṭi* and Kannada *kaḍi* (DEDR 1124).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

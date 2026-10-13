@@ -13,7 +13,8 @@ gloss: "beer"
 concept_tag: GE-ESSEN7-BIER
 prerequisites: [GE-C75-pfeffer, GE-C75-nuss]
 sounds: []
-roots: []
+roots: [germanic-beuza]
+etymology_hook: "Bier ← Old High German bior ← Proto-Germanic *beuzą — the same word as English beer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C75-nuss]
 <!-- hl-knowledge: introduces=[GE-LEX-C75-ESSEN7-04]; assesses=[] -->
 
 **das Bier** — "beer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bier** ← Old High German *bior* ← Proto-Germanic *\*beuzą* — inherited, the same word as English *beer*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

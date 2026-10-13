@@ -13,7 +13,8 @@ gloss: "a driving licence"
 concept_tag: FR-CHOSES253-PERMIS-DE-CONDUIRE
 prerequisites: [FR-C252-timbre, FR-C252-colis]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "permis de conduire — permis, from permettre + de + conduire: leave to drive"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C252-colis]
 <!-- hl-knowledge: introduces=[FR-LEX-C253-CHOSES253-01]; assesses=[] -->
 
 **le permis de conduire** — "a driving licence".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permis de conduire** — *permis*, "permitted", from *permettre*, *de*, "of", and *conduire*, "to drive": leave to drive.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

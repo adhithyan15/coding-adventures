@@ -13,7 +13,8 @@ gloss: "arrival"
 concept_tag: FR-CHOSES231-ARRIVEE
 prerequisites: [FR-C230-echelle, FR-C231-retour]
 sounds: []
-roots: []
+roots: [ripa-latin]
+etymology_hook: "arrivée — from Vulgar Latin *arripare 'to reach the shore' — the ripa of rivière"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C231-retour]
 <!-- hl-knowledge: introduces=[FR-LEX-C231-CHOSES231-02]; assesses=[] -->
 
 **l'arrivée** — "arrival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrivée** is the past participle of the verb for "to arrive", ← Vulgar Latin *\*arripare*, "to reach the shore", from *ripa*, "a bank", the Latin of *rivière*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

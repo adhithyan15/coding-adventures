@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 138,
-  "sourceHash": "fnv1a64:e3263b23247fdba8",
+  "sourceHash": "fnv1a64:8d75429dca441579",
   "lessonIds": [
     "GE-C138-sechzig",
     "GE-C138-siebzig",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch138.txt",
   "json": "german/narration/ch138.json",
-  "textHash": "fnv1a64:4a90658df8c46384",
-  "jsonHash": "fnv1a64:d21451d2ade6e053",
+  "textHash": "fnv1a64:3dc24f31122dca23",
+  "jsonHash": "fnv1a64:c8b5b8df928208b9",
   "findings": []
 }

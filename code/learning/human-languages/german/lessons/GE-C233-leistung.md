@@ -14,6 +14,7 @@ concept_tag: GE-THING233-LEISTUNG
 prerequisites: [GE-C233-laune, GE-C233-lebenslauf]
 sounds: []
 roots: []
+etymology_hook: "Leistung — the verb 'to achieve' + -ung; it first meant 'to follow a track'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C233-lebenslauf]
 <!-- hl-knowledge: introduces=[GE-LEX-C233-THING233-04]; assesses=[] -->
 
 **die Leistung** — "an achievement, performance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Leistung** is the verb "to carry out, to achieve", Old High German *leisten* (EtymDB 2.1), + *-ung*. The verb first meant "to follow a track", like the shoemaker's *last*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

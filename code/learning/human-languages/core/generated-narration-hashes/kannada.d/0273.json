@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 273,
-  "sourceHash": "fnv1a64:0ac66b0ae5b2cad5",
+  "sourceHash": "fnv1a64:ab86992e8e6d7c2e",
   "lessonIds": [
     "KA-C273-haru",
     "KA-C273-suttadu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch273.txt",
   "json": "kannada/narration/ch273.json",
-  "textHash": "fnv1a64:15ea7db871c492e6",
-  "jsonHash": "fnv1a64:6f11d5ac41403463",
+  "textHash": "fnv1a64:f7c6afa6ada50f4c",
+  "jsonHash": "fnv1a64:e3254e1aab661809",
   "findings": []
 }

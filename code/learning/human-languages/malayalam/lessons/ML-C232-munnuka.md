@@ -14,7 +14,8 @@ romanization: "muṅṅuka"
 concept_tag: ML-VERB-MUNNUKA
 prerequisites: [ML-C232-kutirkkuka, ML-C232-mukkuka]
 sounds: []
-roots: []
+roots: [dravidian-muzhuku-sink]
+etymology_hook: "muṅṅuka: native Dravidian, one word with Tamil muḻuku and Kannada muḻugu (DEDR 4993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C232-mukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C232-KRIYA232-03]; assesses=[] -->
 
 **മുങ്ങുക** — *muṅṅuka* — "to sink, to dive under".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുങ്ങുക** (*muṅṅuka*) is native Dravidian, one word with Tamil *muḻuku*, Kannada *muḻugu* and Telugu *munũgu* (DEDR 4993).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

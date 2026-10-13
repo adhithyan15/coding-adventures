@@ -13,7 +13,8 @@ gloss: "a restaurant"
 concept_tag: GE-ORT105-RESTAURANT
 prerequisites: [GE-C104-hotel, GE-C104-post, GE-C01-guten-abend, GE-C01-abend]
 sounds: []
-roots: []
+roots: [restaurare-latin]
+etymology_hook: "Restaurant ← French restaurant 'restoring', from restaurer 'to restore' — a place that restores you"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C104-post]
 <!-- hl-knowledge: introduces=[GE-LEX-C105-ORT105-01]; assesses=[] -->
 
 **das Restaurant** — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Restaurant** ← French *restaurant*, "restoring", from *restaurer*, "to restore" ← Latin *restaurāre* (EtymDB 2.1) — borrowed: a place that restores you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

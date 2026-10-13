@@ -11,7 +11,8 @@ romanization: "aṟuvaṭai"
 concept_tag: TA-NOUN-HARVEST
 prerequisites: [TA-C64-threshing-floor, TA-C62-first-of-all, TA-C63-humility]
 sounds: []
-roots: []
+roots: [dravidian-aru-cut]
+etymology_hook: "அறுவடை — native Dravidian (DEDR 315); Malayalam aṟukka 'to cut'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C64-threshing-floor]
 The cutting and the gathering together, and the stretch of the year named after them. Kannada ಸುಗ್ಗಿ (*suggi*) and Telugu పంట (*paṇṭa*) each named the same weeks their own way.
 
 The front of it is the reaping, not the ஆறு you counted with: this one opens short on அ and takes the hard ற straight away, where six opens long on ஆ. Close together on the page, far apart in the mouth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அறுவடை** (*aṟuvaṭai*) is native Dravidian. DEDR 315 lists Malayalam *aṟukka*, "to cut". The entry lists *aṟuvaṭai* under *aṟu*, "to cut": the harvest is the cutting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

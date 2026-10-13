@@ -13,7 +13,8 @@ gloss: "to receive"
 concept_tag: FR-VERB-RECEVOIR
 prerequisites: [FR-C65-porter, FR-C65-envoyer]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "recevoir ← Latin recipere 'to take back, to receive' — English receive and recipe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C65-envoyer]
 <!-- hl-knowledge: introduces=[FR-LEX-C65-VERBES17-04]; assesses=[] -->
 
 **recevoir** — "to receive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recevoir** ← Latin *recipere*, "to take back, to receive" (EtymDB 2.1) — inherited, through a Vulgar Latin form *\*recipere* stressed on its middle syllable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

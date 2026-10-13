@@ -12,8 +12,9 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [ML-C01-athe]
 sounds: [sha-letter, ri-vowel-sign]
 roots: [sari]
+etymology_hook: "śari: shared with Tamil and Kannada; origin uncertain, often traced to Sanskrit sadṛśa 'alike' (CDIAL 13120)"
 duration:
-  max_seconds: 210
+  max_seconds: 219
 requires:
   knowledge: [ML-LEX-ATHE-01]
 introduces:
@@ -54,10 +55,12 @@ Left to right: **ശ · രി** = *śa-ri* →
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-LEX-SARI-01]; assesses=[] -->
 
-**ശരി** (*śari*) is the pan-Dravidian **"correct, right → okay, agreed,"** the
+**ശരി** (*śari*) is the south's shared **"correct, right → okay, agreed,"** the
 verbal nod of Malayalam. It is the same family word carried by Tamil and
 Kannada as *sari* and Telugu as *sarē*; Malayalam simply spells its opening
 sound with **ശ** (*ś*). Doubled, *śari śari*, it means "yes yes, fine."
+
+Its deeper origin is uncertain. The usual account traces it through Prakrit *sarisa*, "like", to Sanskrit *sadṛśa*, "alike, equal" (CDIAL 13120): what is like the thing is right.
 
 ## Grammar Lens: one word, four scripts
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C01-ONE-WORD-FOUR-SCRIPTS-01]; assesses=[ML-LEX-SARI-01] -->

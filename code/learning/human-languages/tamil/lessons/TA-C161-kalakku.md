@@ -14,7 +14,8 @@ romanization: "kalakku"
 concept_tag: TA-VERB-KALAKKU
 prerequisites: [TA-C161-varu, TA-C161-arai]
 sounds: []
-roots: []
+roots: [dravidian-kalanku-stir]
+etymology_hook: "கலக்கு — native Dravidian (DEDR 1303); Malayalam kalaṅṅuka 'to be mixed, agitated'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C161-arai]
 <!-- hl-knowledge: introduces=[TA-LEX-C161-ACT161-05]; assesses=[] -->
 
 **கலக்கு** — *kalakku* — "to mix, to stir".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கலக்கு** (*kalakku*) is native Dravidian. DEDR 1303 lists Malayalam *kalaṅṅuka*, "to be mixed, agitated". It is the causative of *kalaṅku*, "to be stirred up". The entry compares Sanskrit *kaluṣa*, "turbid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

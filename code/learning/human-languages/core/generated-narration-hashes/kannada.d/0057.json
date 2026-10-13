@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 57,
-  "sourceHash": "fnv1a64:7841c36c452d6a9d",
+  "sourceHash": "fnv1a64:8d885386ee3be8e1",
   "lessonIds": [
     "KA-C57-neck",
     "KA-C57-back",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch57.txt",
   "json": "kannada/narration/ch57.json",
-  "textHash": "fnv1a64:fbffc327a67d89cc",
-  "jsonHash": "fnv1a64:ccb6fa6d1669a5e4",
+  "textHash": "fnv1a64:5bac4ecc7c235579",
+  "jsonHash": "fnv1a64:c41bfb9453c69886",
   "findings": []
 }

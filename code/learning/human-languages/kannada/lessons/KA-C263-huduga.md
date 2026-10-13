@@ -14,7 +14,8 @@ romanization: "huḍuga"
 concept_tag: KA-VASTU263-HUDUGA
 prerequisites: [KA-C262-prasada, KA-C262-abharana]
 sounds: []
-roots: []
+roots: [dravidian-putta-small]
+etymology_hook: "huḍuga: native Dravidian (DEDR 4259)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C262-abharana]
 <!-- hl-knowledge: introduces=[KA-LEX-C263-VASTU263-01]; assesses=[] -->
 
 **ಹುಡುಗ** — *huḍuga* — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಡುಗ** (*huḍuga*) is native Dravidian (DEDR 4259). DEDR lists *huḍuga*, "boy, child", beside *puṭṭa*, "small". DEDR 4259 compares Sanskrit *puṭṭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

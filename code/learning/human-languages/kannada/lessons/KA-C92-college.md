@@ -11,7 +11,8 @@ romanization: "kālēju"
 concept_tag: KA-WORK-COLLEGE
 prerequisites: [KA-C91-language, KA-C92-school]
 sounds: []
-roots: []
+roots: [english-college]
+etymology_hook: "kālēju ← English college, with Kannada's final -u"
 duration:
   max_seconds: 200
 requires:

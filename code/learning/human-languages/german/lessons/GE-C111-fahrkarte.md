@@ -13,7 +13,8 @@ gloss: "a ticket"
 concept_tag: GE-FAHRT111-FAHRKARTE
 prerequisites: [GE-C110-strassenbahn, GE-C111-taxi]
 sounds: []
-roots: []
+roots: [farana-germanic, charta-latin]
+etymology_hook: "Fahrkarte — fahren 'to travel' + Karte 'card': a travel card"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C111-taxi]
 <!-- hl-knowledge: introduces=[GE-LEX-C111-FAHRT111-02]; assesses=[] -->
 
 **die Fahrkarte** — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fahrkarte** is *fahren*, "to travel", + *Karte*, "card": a card for the journey. *Karte* ← Latin *charta*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

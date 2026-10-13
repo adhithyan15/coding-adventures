@@ -14,7 +14,8 @@ romanization: "aḷavu"
 concept_tag: TA-GUNAM238-ALAVU
 prerequisites: [TA-C237-kavanamaka, TA-C238-niram]
 sounds: []
-roots: []
+roots: [dravidian-alavu-measure]
+etymology_hook: "அளவு — native Dravidian (DEDR 295); Telugu alavi 'measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C238-niram]
 <!-- hl-knowledge: introduces=[TA-LEX-C238-GUNAM238-02]; assesses=[] -->
 
 **அளவு** — *aḷavu* — "a size, an amount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அளவு** (*aḷavu*) is native Dravidian. DEDR 295 lists Telugu *alavi*, "measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

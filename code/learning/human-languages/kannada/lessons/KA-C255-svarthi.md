@@ -14,7 +14,8 @@ romanization: "svārthi"
 concept_tag: KA-GUNA255-SVARTHI
 prerequisites: [KA-C255-tunta, KA-C255-santa]
 sounds: []
-roots: []
+roots: [sanskrit-svartha]
+etymology_hook: "svārthi ← Sanskrit svārthin 'seeking one's own interest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C255-santa]
 <!-- hl-knowledge: introduces=[KA-LEX-C255-GUNA255-03]; assesses=[] -->
 
 **ಸ್ವಾರ್ಥಿ** — *svārthi* — "selfish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ವಾರ್ಥಿ** (*svārthi*) is Sanskrit *svārthin*, "one who seeks his own interest": *sva*, "own", and *artha*, "aim, interest". Kannada drops the final *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

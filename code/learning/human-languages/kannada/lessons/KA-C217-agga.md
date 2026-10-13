@@ -14,7 +14,8 @@ romanization: "agga"
 concept_tag: KA-GUNA217-AGGA
 prerequisites: [KA-C216-javabdari, KA-C216-kartavya]
 sounds: []
-roots: []
+roots: [kannada-agga-cheap]
+etymology_hook: "agga: origin uncertain; DEDR has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C216-kartavya]
 <!-- hl-knowledge: introduces=[KA-LEX-C217-GUNA217-01]; assesses=[] -->
 
 **ಅಗ್ಗ** — *agga* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಅಗ್ಗ** (*agga*) is uncertain. DEDR has no entry for it in the sense "cheap", CDIAL does not record it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

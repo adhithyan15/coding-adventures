@@ -14,7 +14,8 @@ romanization: "bēkādare"
 concept_tag: KA-KARANA178-BEKADARE
 prerequisites: [KA-C178-bekantale, KA-C178-akasmat]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want, tamil-aaku-become]
+etymology_hook: "bēkādare: native bēku 'wanted' (DEDR 5528) + ādare 'if it becomes' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C178-akasmat]
 <!-- hl-knowledge: introduces=[KA-LEX-C178-KARANA178-03]; assesses=[] -->
 
 **ಬೇಕಾದರೆ** — *bēkādare* — "if you want, if necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇಕಾದರೆ** (*bēkādare*) is native Dravidian: *bēku*, "it is wanted" (DEDR 5528), and *ādare*, "if it becomes", from *āgu*, "to become" (DEDR 333): "if it becomes wanted". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

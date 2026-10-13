@@ -14,7 +14,8 @@ romanization: "iraṭṭaiyar"
 concept_tag: TA-PORUL273-IRATTAIYAR
 prerequisites: [TA-C273-perror, TA-C273-utanpirantavar]
 sounds: []
-roots: []
+roots: [dravidian-iru-two]
+etymology_hook: "இரட்டையர் — native Dravidian (DEDR 474); Malayalam raṇṭu 'two', Telugu reṇḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C273-utanpirantavar]
 <!-- hl-knowledge: introduces=[TA-LEX-C273-PORUL273-04]; assesses=[] -->
 
 **இரட்டையர்** — *iraṭṭaiyar* — "twins".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இரட்டையர்** (*iraṭṭaiyar*) is native Dravidian. DEDR 474 lists Malayalam *raṇṭu*, "two" and Telugu *reṇḍu*. The entry lists *iraṭṭai*, "pair", and *iraṭṭaiyar*, "twins", under the word for "two".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

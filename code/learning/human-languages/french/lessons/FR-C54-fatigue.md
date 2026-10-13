@@ -13,7 +13,8 @@ gloss: "tiredness"
 concept_tag: FR-SANTE6-FATIGUE
 prerequisites: [FR-C54-maladie, FR-C54-soif]
 sounds: []
-roots: []
+roots: [fatigare-latin]
+etymology_hook: "fatigue — from the verb 'to tire' ← Latin fatigare 'to weary' — English fatigue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C54-soif]
 <!-- hl-knowledge: introduces=[FR-LEX-C54-SANTE6-04]; assesses=[] -->
 
 **la fatigue** — "tiredness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fatigue** — formed from the verb for "to tire", a learned borrowing of Latin *fatigare*, "to weary". (EtymDB 2.1) The kept *g* shows the book word: in everyday speech it would have dropped out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

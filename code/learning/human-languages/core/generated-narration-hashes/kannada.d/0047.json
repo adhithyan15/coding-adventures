@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 47,
-  "sourceHash": "fnv1a64:fd07a10db433a109",
+  "sourceHash": "fnv1a64:573ca7018021ecf7",
   "lessonIds": [
     "KA-C47-leg",
     "KA-C47-tooth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch47.txt",
   "json": "kannada/narration/ch47.json",
-  "textHash": "fnv1a64:30f3dc06aee0db19",
-  "jsonHash": "fnv1a64:e30f21f8abaa4ffb",
+  "textHash": "fnv1a64:acfd235290360763",
+  "jsonHash": "fnv1a64:d6c97dd07213b6fd",
   "findings": []
 }

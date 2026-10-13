@@ -14,6 +14,9 @@ You'll want to know: ಬಾಗಿಲು.
 ಬಾಗಿಲು (bāgilu) is the door and the doorway at once — the opening quite as much as the plank that shuts it.
 Beside it sits Tamil வாயில் (vāyil), a gateway, and that word is transparently built on வாய், 'mouth', which is ಬಾಯಿ here with the b standing in for the v. Whether ಬಾಗಿಲು (bāgilu) is that same word with a consonant grown in its middle, or a separate formation on ಬಾಗು, 'to bend', is not settled. What is beyond doubt is that a Dravidian house has been known to name its opening after a face.
 
+The word, taken apart.
+ಬಾಗಿಲು (bāgilu) is native Dravidian, one word with Tamil vāyil and Telugu vākili (DEDR 5354). DEDR gives Kannada bāgil and an inscription form vākkil: the old v- has become b-.
+
 What you've built.
 The first of the five things a welcome puts in a guest's way.
 
@@ -75,6 +78,9 @@ You'll want to know: ರಂಗೋಲಿ.
 White rice-flour, drawn freehand on swept ground in front of the door, at first light, before anyone has arrived.
 The name is raṅga, 'colour', and āvalī, 'a row': a row of colour. That āvalī is the same one behind the festival of lamps whose name came apart a few chapters back — a row of lamps there, a row of colour here. Kannada also calls the thing ರಂಗವಲ್ಲಿ (raṅgavalli), which is the same compound less worn down.
 
+The word, taken apart.
+ರಂಗೋಲಿ (raṅgōli) is usually explained as a compound of two Sanskrit words, raṅga, "dye, colour" (CDIAL 10560), and āvali, "row, line" (CDIAL 1423): a row of colour. The explanation is the usual one rather than a recorded history.
+
 What you've built.
 Three: a door, a chair, and the pattern on the ground before both.
 
@@ -105,6 +111,7 @@ You'll want to know: ಹೂವು.
 ಹೂವು (hūvu) — "a flower".
 Proto-Dravidian pū, one syllable, and one syllable is what it stayed nearly everywhere: Tamil பூ, Malayalam പൂവ്, Telugu పువ్వు.
 Kannada's ಹೂವು (hūvu) shows the law at its very clearest. There is almost nothing else in the word — no root to hide behind, no ending to distract you — only the one sound, p across the family and h here.
+DEDR 4345 lists the older Kannada pūvu with Tamil pū. DEDR 4345 compares, with a query, Sanskrit puṣpa.
 
 What you've built.
 Four. A door, a chair, the pattern, a flower.
@@ -136,6 +143,7 @@ You'll want to know: ಹೂಮಾಲೆ.
 ಹೂ, the flower from the lesson before, and ಮಾಲೆ (māle), from Sanskrit mālā, a garland or any row of strung things.
 So the last word of the run carries both halves of Kannada in it: a Dravidian syllable some thousands of years old, and a Sanskrit one that arrived later and settled in. Nearly every page here has turned on one of those two layers. This word declines to choose.
 Five things a Kannada welcome puts between the street and the guest: the door, the chair, the pattern on the ground, the flower, the garland.
+DEDR 4345 lists the flower word; CDIAL 10092 lists Sanskrit mālā, "wreath, garland". DEDR 4345 compares, with a query, Sanskrit puṣpa. CDIAL takes mālā itself from Dravidian (Tamil mālai), and DEDR 4827 counts māle among the tatsamas.
 
 What you've built.
 Five, and the last of them is half inherited and half borrowed.

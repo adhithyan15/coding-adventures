@@ -11,7 +11,8 @@ romanization: "nidhānavāgi"
 concept_tag: KA-REP-SLOWLY
 prerequisites: [KA-C84-hospital, KA-C84-tablet]
 sounds: []
-roots: []
+roots: [sanskrit-nidhana]
+etymology_hook: "nidhānavāgi: Sanskrit nidhāna 'a place of deposit, a store' (CDIAL 7205) + the adverb ending -āgi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C84-tablet]
 word into a manner, "in a slow way", like **ಚೆನ್ನಾಗಿ** (*cennāgi*), "well".
 
 **ನಿಧಾನವಾಗಿ ಮಾತಾಡಿ** (*nidhānavāgi mātāḍi*) — "please speak slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಧಾನವಾಗಿ** (*nidhānavāgi*) is *nidhāna*, "steadiness, slowness", with the adverb ending *-āgi*, "in a … way". *Nidhāna* is Sanskrit, where it meant "a place for depositing, a store" (CDIAL 7205); in Kannada it has come to mean steadiness and slowness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

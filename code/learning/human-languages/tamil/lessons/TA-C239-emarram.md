@@ -14,7 +14,8 @@ romanization: "ēmāṟṟam"
 concept_tag: TA-GUNAM239-EMARRAM
 prerequisites: [TA-C238-arokkiyamana, TA-C238-olliyana]
 sounds: []
-roots: []
+roots: [dravidian-emaru-deceive]
+etymology_hook: "ஏமாற்றம் — native Dravidian (DEDR 898); Telugu ēmāṟu 'to be deceived'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C238-olliyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C239-GUNAM239-01]; assesses=[] -->
 
 **ஏமாற்றம்** — *ēmāṟṟam* — "disappointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏமாற்றம்** (*ēmāṟṟam*) is native Dravidian. DEDR 898 lists Telugu *ēmāṟu*, "to be deceived". It is the noun of *ēmāṟu*, "to be let down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

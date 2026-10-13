@@ -14,7 +14,8 @@ romanization: "cīṭṭu"
 concept_tag: TA-PORUL216-CITTU
 prerequisites: [TA-C216-katavuccol, TA-C216-nalital]
 sounds: []
-roots: []
+roots: [tamil-ciittu-slip]
+etymology_hook: "சீட்டு — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C216-nalital]
 <!-- hl-knowledge: introduces=[TA-LEX-C216-PORUL216-04]; assesses=[] -->
 
 **சீட்டு** — *cīṭṭu* — "a ticket; a slip of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **சீட்டு** (*cīṭṭu*) is uncertain. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

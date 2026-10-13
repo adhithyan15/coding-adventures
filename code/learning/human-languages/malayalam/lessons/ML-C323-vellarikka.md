@@ -14,7 +14,8 @@ romanization: "veḷḷarikka"
 concept_tag: ML-VASTU323-VELLARIKKA
 prerequisites: [ML-C323-cira, ML-C323-kararru]
 sounds: []
-roots: []
+roots: [dravidian-vellari-cucumber]
+etymology_hook: "veḷḷarikka: native Dravidian; DEDR 5504 lists Malayalam veḷḷari 'cucumber', + kāy 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C323-kararru]
 <!-- hl-knowledge: introduces=[ML-LEX-C323-VASTU323-04]; assesses=[] -->
 
 **വെള്ളരിക്ക** — *veḷḷarikka* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെള്ളരിക്ക** (*veḷḷarikka*) is native Dravidian: *veḷḷari*, "cucumber" (DEDR 5504, with Tamil *veḷḷari*), which DEDR relates to the word for "white", with the ending for an unripe fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

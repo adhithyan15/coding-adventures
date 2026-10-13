@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES32-VALISE
 prerequisites: [FR-C79-lunettes, FR-C80-boite]
 sounds: []
 roots: []
+etymology_hook: "valise ← Italian valigia, of uncertain origin — English valise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C80-boite]
 <!-- hl-knowledge: introduces=[FR-LEX-C80-CHOSES32-02]; assesses=[] -->
 
 **la valise** — "a suitcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valise** ← Italian *valigia* — borrowed in the 1500s. Where the Italian word came from is uncertain. (EtymDB 2.1 records Medieval Latin *valisia*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

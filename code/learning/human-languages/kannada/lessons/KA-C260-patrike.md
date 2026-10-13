@@ -14,7 +14,8 @@ romanization: "patrike"
 concept_tag: KA-VASTU260-PATRIKE
 prerequisites: [KA-C260-samanu, KA-C260-kili]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patrike ← Sanskrit patrikā 'leaf, letter' (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C260-kili]
 <!-- hl-knowledge: introduces=[KA-LEX-C260-VASTU260-03]; assesses=[] -->
 
 **ಪತ್ರಿಕೆ** — *patrike* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪತ್ರಿಕೆ** (*patrike*) is Sanskrit *patrikā*, "a leaf, a letter", which CDIAL 7733 spells *pattrikā*, with the Kannada *-e* for final *-ā*: a newspaper is "a sheet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

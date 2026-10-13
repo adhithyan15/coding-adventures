@@ -14,7 +14,8 @@ romanization: "eḍavu"
 concept_tag: KA-VERB-EDAVU
 prerequisites: [KA-C205-nadu, KA-C205-lattisu]
 sounds: []
-roots: []
+roots: [dravidian-idaru-stumble]
+etymology_hook: "eḍavu: native Dravidian (DEDR 437)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C205-lattisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C206-KRIYE206-01]; assesses=[] -->
 
 **ಎಡವು** — *eḍavu* — "to trip, to stumble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಡವು** (*eḍavu*) is native Dravidian (DEDR 437). DEDR lists *eḍavu* itself, "to strike the foot so as to fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "suḍu"
 concept_tag: KA-VERB-SUDU
 prerequisites: [KA-C151-baccidu, KA-C151-kapadu]
 sounds: []
-roots: []
+roots: [dravidian-cutu-burn]
+etymology_hook: "suḍu: native Dravidian, one word with Tamil cuṭu (DEDR 2654)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C151-kapadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C151-ACT151-05]; assesses=[] -->
 
 **ಸುಡು** — *suḍu* — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಡು** (*suḍu*) is native Dravidian, one word with Tamil *cuṭu* (DEDR 2654). DEDR lists *suḍu* itself, "to burn, roast". DEDR 2654 compares Sanskrit *cūḍ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

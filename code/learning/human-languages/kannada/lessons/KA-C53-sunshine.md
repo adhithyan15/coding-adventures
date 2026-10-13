@@ -11,7 +11,8 @@ romanization: "bisilu"
 concept_tag: KA-NOUN-SUNSHINE
 prerequisites: [KA-C53-sky, KA-C51-favour]
 sounds: []
-roots: []
+roots: [dravidian-vee-burn]
+etymology_hook: "bisilu: native Dravidian; DEDR 5517 lists bisil 'sunshine' under bē 'to burn'; Tamil vē"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Under it sits ಬಿಸಿ (*bisi*), "hot" — the word on a cup of ಚಹಾ th
 That is worth pausing on. English talks about the weather by naming the sun; Kannada reaches first for what the sun does to you standing in it. A Bengaluru sentence about the afternoon is far more likely to be about ಬಿಸಿಲು than about any sun-word at all.
 
 Kannada has two sun-words even so. ನೇಸರು (*nēsaru*) is its own, kept alive mostly in verse and in names; the borrowed one you have already had a piece of, inside the sunrise word the good-morning lesson took apart.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಿಸಿಲು** (*bisilu*) is native Dravidian, of the root *bē*, "to burn, be scorched", and DEDR 5517 lists *bisil* itself, "heat and glare of the sun, sunshine"; the entry also has Tamil *vē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

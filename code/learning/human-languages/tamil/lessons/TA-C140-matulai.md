@@ -14,7 +14,8 @@ romanization: "mātuḷai"
 concept_tag: TA-THINGS140-MATULAI
 prerequisites: [TA-C139-elumiccai, TA-C140-tiratcai]
 sounds: []
-roots: []
+roots: [dravidian-matulai-pomegranate]
+etymology_hook: "மாதுளை — native Dravidian (DEDR 4809); Malayalam mātaḷam"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C140-tiratcai]
 <!-- hl-knowledge: introduces=[TA-LEX-C140-THINGS140-02]; assesses=[] -->
 
 **மாதுளை** — *mātuḷai* — "a pomegranate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாதுளை** (*mātuḷai*) is native Dravidian. DEDR 4809 lists Malayalam *mātaḷam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

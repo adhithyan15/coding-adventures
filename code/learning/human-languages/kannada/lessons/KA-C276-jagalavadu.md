@@ -14,7 +14,8 @@ romanization: "jagaḷavāḍu"
 concept_tag: KA-VERB-JAGALAVADU
 prerequisites: [KA-C276-bai, KA-C276-regisu]
 sounds: []
-roots: []
+roots: [prakrit-jhagada, dravidian-aadu-move]
+etymology_hook: "jagaḷavāḍu: probably jhagaḍa 'quarrel' (CDIAL 5321) + native āḍu (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C276-regisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C276-KRIYE276-03]; assesses=[] -->
 
 **ಜಗಳವಾಡು** — *jagaḷavāḍu* — "to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಗಳವಾಡು** (*jagaḷavāḍu*) is *jagaḷa*, "quarrel", with native *āḍu*, "to play, act" (DEDR 347). *Jagaḷa* probably belongs with Prakrit *jhagaḍa*, "quarrel", from a reconstructed *\*jhagaḍ*, "quarrel" (CDIAL 5321), though CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

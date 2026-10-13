@@ -13,7 +13,8 @@ gloss: "from now on"
 concept_tag: FR-TEMPS156-DESORMAIS
 prerequisites: [FR-C156-ensuite, FR-C156-enfin]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "désormais — 'from now on more', from Latin hora 'hour' + magis 'more'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C156-enfin]
 <!-- hl-knowledge: introduces=[FR-LEX-C156-TEMPS156-04]; assesses=[] -->
 
 **désormais** — "from now on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**désormais** — "from now on more": Old French *des*, "from", *ore*, "now", ← Latin *hora*, "hour", and *mais*, "more", ← Latin *magis* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

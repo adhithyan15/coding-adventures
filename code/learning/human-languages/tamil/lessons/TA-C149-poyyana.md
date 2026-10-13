@@ -14,7 +14,8 @@ romanization: "poyyāṉa"
 concept_tag: TA-QUAL149-POYYANA
 prerequisites: [TA-C149-patukappana, TA-C149-unmaiyana]
 sounds: []
-roots: []
+roots: [dravidian-poy-lie]
+etymology_hook: "பொய்யான — native Dravidian (DEDR 4531); Malayalam poy 'a lie'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C149-unmaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C149-QUAL149-05]; assesses=[] -->
 
 **பொய்யான** — *poyyāṉa* — "false".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொய்யான** (*poyyāṉa*) is native Dravidian. DEDR 4531 lists Malayalam *poy*, "a lie". It is the native word for "a lie" with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

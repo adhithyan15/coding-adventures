@@ -13,7 +13,8 @@ gloss: "despite"
 concept_tag: FR-POURQUOI189-MALGRE
 prerequisites: [FR-C188-a-droite, FR-C188-a-gauche]
 sounds: []
-roots: []
+roots: [gratus]
+etymology_hook: "malgré — 'bad liking': Middle French maugré, against one's will — English maugre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C188-a-gauche]
 <!-- hl-knowledge: introduces=[FR-LEX-C189-POURQUOI189-01]; assesses=[] -->
 
 **malgré** — "despite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**malgré** ← Middle French *maugré*, from Old French *mal*, "bad", and *gré*, "liking", ← Latin *gratum*, "pleasing" (EtymDB 2.1): against one's liking.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

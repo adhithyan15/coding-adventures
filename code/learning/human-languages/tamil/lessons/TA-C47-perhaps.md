@@ -11,7 +11,8 @@ romanization: "oruvēḷai"
 concept_tag: TA-REPLY-PERHAPS
 prerequisites: [TA-C47-certainly, TA-C45-tooth, TA-C46-farmer]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-vela]
+etymology_hook: "ஒருவேளை — native oru 'one' (DEDR 990) + vēḷai ← Sanskrit velā 'time' (CDIAL 12115, itself prob. from Dravidian)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C47-certainly]
 Two pieces welded together: *oru*, 'one', which you have, and *vēḷai*, 'an occasion, a time', which you have not. One occasion out of the several that could happen — which is exactly the claim "perhaps" makes.
 
 Tamil builds its hedge out of counting. English does the same trick with "maybe", which is a "may" and a "be" pushed against each other until they stuck.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒருவேளை** (*oruvēḷai*) is "one time, at one moment": *oru*, "one", native (DEDR 990), and *vēḷai*, "time", a loan from Sanskrit *velā*, "limit, time" (CDIAL 12115). CDIAL adds that *velā* itself probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

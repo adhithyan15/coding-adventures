@@ -11,7 +11,8 @@ romanization: "kīḻē"
 concept_tag: TA-ADVERB-KIZHE
 prerequisites: [TA-C66-up, TA-C64-grass, TA-C65-walk]
 sounds: [zha-retroflex-glide]
-roots: []
+roots: [dravidian-kizh-below]
+etymology_hook: "கீழே — native Dravidian (DEDR 1619); Malayalam kīḻ 'place below'"
 duration:
   max_seconds: 225
 requires:
@@ -44,6 +45,11 @@ lesson ago.
 
 **கீழே பார்** (*kīḻē pār*) — "look down". Same slot, same verb, opposite
 direction.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கீழே** (*kīḻē*) is native Dravidian. DEDR 1619 lists Malayalam *kīḻ*, "place below".
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-02] -->

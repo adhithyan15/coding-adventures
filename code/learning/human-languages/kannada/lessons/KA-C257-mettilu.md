@@ -14,7 +14,8 @@ romanization: "meṭṭilu"
 concept_tag: KA-VASTU257-METTILU
 prerequisites: [KA-C256-kikkirida, KA-C257-nalli]
 sounds: []
-roots: []
+roots: [dravidian-mettu-step]
+etymology_hook: "meṭṭilu: native Dravidian, from meṭṭu 'to step, tread' (DEDR 5057)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C257-nalli]
 <!-- hl-knowledge: introduces=[KA-LEX-C257-VASTU257-02]; assesses=[] -->
 
 **ಮೆಟ್ಟಿಲು** — *meṭṭilu* — "stairs, a step".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೆಟ್ಟಿಲು** (*meṭṭilu*) is native Dravidian, from *meṭṭu*, "to step, tread", and DEDR 5057 lists *meṭṭige*, *meṭla*, "a step, a stair", beside it; the entry also has Tamil *meṭṭu* and Telugu *meṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

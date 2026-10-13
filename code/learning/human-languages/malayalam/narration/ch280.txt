@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a valley, then the Malayalam for a des
 You'll want to know: പ്രദേശം.
 പ്രദേശം — pradēśaṁ — "a region, an area".
 
+The word, taken apart.
+പ്രദേശം (pradēśaṁ) from Sanskrit pradēśa, "region, country", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 8668).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a desert, then the Malayalam for a reg
 
 You'll want to know: പറമ്പ്.
 പറമ്പ് — paṟampŭ — "the land around a house, a plot".
+
+The word, taken apart.
+പറമ്പ് (paṟampŭ) is native Dravidian, one word with Tamil paṟampu and Kannada padavu (DEDR 4026). DEDR's sense is higher, dry ground, as against the wet rice fields.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a region, then the Malayalam for the l
 You'll want to know: ചരിവ്.
 ചരിവ് — carivŭ — "a slope".
 
+The word, taken apart.
+ചരിവ് (carivŭ) is native Dravidian, the noun of the verb "to slide, lean"; DEDR 2360 lists the root with Tamil cari, Kannada sari and Telugu jaragu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for the land around a house, then the Mala
 You'll want to know: കാവ്.
 കാവ് — kāvŭ — "a sacred grove".
 
+The word, taken apart.
+കാവ് (kāvŭ) is native Dravidian: DEDR 1416 lists it, "enclosure, garden, holy enclosure", under the verb "to guard, keep", with Tamil kā.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a slope, then the Malayalam for a sacr
 
 You'll want to know: ഇടവഴി.
 ഇടവഴി — iṭavaḻi — "a lane, an alley".
+
+The word, taken apart.
+ഇടവഴി (iṭavaḻi) is native Dravidian, "the in-between way": iṭa, "the place between" (DEDR 448), and vaḻi, "way" (DEDR 5297).
 
 What you've built.
 One more word for this chapter.

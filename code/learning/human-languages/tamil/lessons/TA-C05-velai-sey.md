@@ -12,6 +12,7 @@ concept_tag: TA-VERB-SEY
 prerequisites: [TA-C05-pesu]
 sounds: [long-e]
 roots: [sey-do-dravidian, velai-work-dravidian]
+etymology_hook: "வேலை செய் — native vēlai 'work' (DEDR 5540; Malayalam vēla) + sey 'do' (DEDR 1957; Kannada gey)"
 reviews_of: [TA-C05-pesu, TA-C05-vaazh]
 duration:
   max_seconds: 240

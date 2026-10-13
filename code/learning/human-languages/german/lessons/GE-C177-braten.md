@@ -14,6 +14,7 @@ concept_tag: GE-VERB-BRATEN
 prerequisites: [GE-C177-bewerben, GE-C177-biegen]
 sounds: []
 roots: []
+etymology_hook: "braten ← Old High German brātan 'to roast' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C177-biegen]
 <!-- hl-knowledge: introduces=[GE-LEX-C177-VERB177-03]; assesses=[] -->
 
 **braten** — "to fry, to roast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**braten** ← Middle High German *brāten* ← Old High German *brātan*, "to roast" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

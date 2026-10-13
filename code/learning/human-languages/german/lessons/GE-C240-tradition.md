@@ -13,7 +13,8 @@ gloss: "a tradition"
 concept_tag: GE-THING240-TRADITION
 prerequisites: [GE-C239-tatsache, GE-C240-thema]
 sounds: []
-roots: []
+roots: [traditio-latin]
+etymology_hook: "Tradition ← Latin trāditiō 'a handing over' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C240-thema]
 <!-- hl-knowledge: introduces=[GE-LEX-C240-THING240-02]; assesses=[] -->
 
 **die Tradition** — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tradition** ← Latin *trāditiō*, "a handing over" (EtymDB 2.1 has the Latin word) — borrowed: what is handed down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

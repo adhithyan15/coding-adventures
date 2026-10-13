@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 210,
-  "sourceHash": "fnv1a64:a176bca9b7c522ff",
+  "sourceHash": "fnv1a64:9506af4b976aa379",
   "lessonIds": [
     "ML-C210-lageju",
     "ML-C210-sirru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch210.txt",
   "json": "malayalam/narration/ch210.json",
-  "textHash": "fnv1a64:e4222aa7fcb9df24",
-  "jsonHash": "fnv1a64:4fd3196901e49290",
+  "textHash": "fnv1a64:680cd15099634cd2",
+  "jsonHash": "fnv1a64:49df894e4687918e",
   "findings": []
 }

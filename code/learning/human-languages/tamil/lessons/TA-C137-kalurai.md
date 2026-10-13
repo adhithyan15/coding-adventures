@@ -14,7 +14,8 @@ romanization: "kāluṟai"
 concept_tag: TA-THINGS137-KALURAI
 prerequisites: [TA-C137-motiram, TA-C137-valaiyal]
 sounds: []
-roots: []
+roots: [dravidian-kaal-leg, dravidian-urai-sheath]
+etymology_hook: "காலுறை — native: kāl 'leg, foot' (DEDR 1479) + uṟai 'sheath, case' (DEDR 723)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C137-valaiyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C137-THINGS137-03]; assesses=[] -->
 
 **காலுறை** — *kāluṟai* — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காலுறை** (*kāluṟai*) is native: *kāl*, "leg, foot" (DEDR 1479), and *uṟai*, "sheath, case" (DEDR 723): "the foot-cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

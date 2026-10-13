@@ -11,7 +11,8 @@ romanization: "kōpa"
 concept_tag: KA-FEEL-ANGER
 prerequisites: [KA-C83-worry, KA-C83-fear]
 sounds: []
-roots: []
+roots: [sanskrit-kopa]
+etymology_hook: "kōpa ← Sanskrit kōpa 'anger', a tatsama (CDIAL 3516)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C83-fear]
 **ಕೋಪ** (*kōpa*) — "anger".
 
 **ಕೋಪ ಬೇಡ** (*kōpa bēḍa*) — "no anger", a gentle "please don't be angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೋಪ** (*kōpa*) is Sanskrit *kōpa*, "anger", taken over whole as a learned loan, a tatsama (CDIAL 3516).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

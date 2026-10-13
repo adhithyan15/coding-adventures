@@ -11,7 +11,8 @@ romanization: "kuḷimuṟi"
 concept_tag: ML-HOME-BATHROOM
 prerequisites: [ML-C128-room, ML-C128-kitchen]
 sounds: []
-roots: []
+roots: [dravidian-kuli-bathe, dravidian-muri-break]
+etymology_hook: "kuḷimuṟi: native Dravidian, kuḷi 'bath' (DEDR 1832) + muṟi 'room' (DEDR 5008)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C128-kitchen]
 
 **കുളിമുറി** (*kuḷimuṟi*) — "the bathroom": **കുളി** (*kuḷi*), "a bath", with **മുറി**,
 "room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുളിമുറി** (*kuḷimuṟi*) is native Dravidian: *kuḷi*, "bathing" (DEDR 1832, with Tamil *kuḷi*), with *muṟi*, "room" (DEDR 5008).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

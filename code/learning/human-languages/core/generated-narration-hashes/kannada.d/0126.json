@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 126,
-  "sourceHash": "fnv1a64:edfce7e70f4f9108",
+  "sourceHash": "fnv1a64:2f2af063fdec3ec6",
   "lessonIds": [
     "KA-C126-nimbe",
     "KA-C126-draksi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch126.txt",
   "json": "kannada/narration/ch126.json",
-  "textHash": "fnv1a64:f89166d22285de7c",
-  "jsonHash": "fnv1a64:d188e509076c66cb",
+  "textHash": "fnv1a64:79bce4e134bb7f5f",
+  "jsonHash": "fnv1a64:1509079490cc926c",
   "findings": []
 }

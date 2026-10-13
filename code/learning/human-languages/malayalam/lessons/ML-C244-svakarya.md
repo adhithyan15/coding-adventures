@@ -14,7 +14,8 @@ romanization: "svakārya"
 concept_tag: ML-GUNAM244-SVAKARYA
 prerequisites: [ML-C244-kiriya, ML-C244-murccayulla]
 sounds: []
-roots: []
+roots: [sanskrit-karya]
+etymology_hook: "svakārya: Sanskrit sva 'own' + kārya 'affair' (CDIAL 3078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C244-murccayulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C244-GUNAM244-04]; assesses=[] -->
 
 **സ്വകാര്യ** — *svakārya* — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്വകാര്യ** (*svakārya*) is Sanskrit: *sva*, "own", and *kārya*, "business, affair" (CDIAL 3078): "one's own affair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

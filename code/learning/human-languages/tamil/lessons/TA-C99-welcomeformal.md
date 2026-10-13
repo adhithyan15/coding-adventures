@@ -11,7 +11,8 @@ romanization: "nalvaravu"
 concept_tag: TA-HOST-WELCOME
 prerequisites: [TA-C99-drink, TA-C99-present]
 sounds: []
-roots: []
+roots: [nal-good-dravidian, dravidian-vaa-come]
+etymology_hook: "நல்வரவு — native: nal 'good' (DEDR 3610) + varavu 'coming' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C99-present]
 **நல்வரவு** (*nalvaravu*) — "welcome", the formal word, literally "good arrival".
 
 You will see it on banners and doorways; **வாருங்கள்** is what you say aloud.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நல்வரவு** (*nalvaravu*) is native: *nal*, "good" (DEDR 3610), and *varavu*, "coming" (DEDR 5270): "a good coming".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

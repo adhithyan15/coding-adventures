@@ -14,7 +14,8 @@ romanization: "taṭṭu"
 concept_tag: TA-THINGS118-TATTU
 prerequisites: [TA-C118-atuppu, TA-C118-pattiram, TA-C07-numbers-1-5-family, TA-C07-numbers-6-10, TA-C20-pathinondru-irupathu, TA-C20-pathinondru-irupathu]
 sounds: []
-roots: []
+roots: [dravidian-tattam-plate]
+etymology_hook: "தட்டு — native Dravidian (DEDR 3035); Malayalam taṭṭu 'a flat plate'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C118-pattiram]
 <!-- hl-knowledge: introduces=[TA-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **தட்டு** — *taṭṭu* — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தட்டு** (*taṭṭu*) is native Dravidian. DEDR 3035 lists Malayalam *taṭṭu*, "a flat plate". The entry compares Pali *taṭṭaka*, "a flat bowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

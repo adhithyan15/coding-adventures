@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 178,
-  "sourceHash": "fnv1a64:a2d25de490a208d2",
+  "sourceHash": "fnv1a64:52ea7fe42b8ae22d",
   "lessonIds": [
     "FR-C178-neiger",
     "FR-C178-accompagner",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch178.txt",
   "json": "french/narration/ch178.json",
-  "textHash": "fnv1a64:2e64e531473c3a7b",
-  "jsonHash": "fnv1a64:bde78457b2acb6be",
+  "textHash": "fnv1a64:56dfb4ed45805a0a",
+  "jsonHash": "fnv1a64:e5d823e47d71d7c3",
   "findings": []
 }

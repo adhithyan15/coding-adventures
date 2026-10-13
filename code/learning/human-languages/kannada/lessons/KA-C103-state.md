@@ -11,7 +11,8 @@ romanization: "rājya"
 concept_tag: KA-HOME-STATE
 prerequisites: [KA-C103-city, KA-C103-country]
 sounds: []
-roots: []
+roots: [sanskrit-rajya]
+etymology_hook: "rājya ← Sanskrit rājya 'kingship, kingdom', a tatsama (CDIAL 10694)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C103-country]
 
 **ರಾಜ್ಯ** (*rājya*) — "state". **ಕರ್ನಾಟಕ ರಾಜ್ಯ** (*karnāṭaka rājya*) is the state
 where Kannada is spoken.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಾಜ್ಯ** (*rājya*) is Sanskrit *rājya*, "kingship, kingdom", taken over whole as a learned loan, a tatsama (CDIAL 10694).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

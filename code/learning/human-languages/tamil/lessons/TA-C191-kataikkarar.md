@@ -14,7 +14,8 @@ romanization: "kaṭaikkārar"
 concept_tag: TA-VELAI191-KATAIKKARAR
 prerequisites: [TA-C190-ammi, TA-C190-totti]
 sounds: []
-roots: []
+roots: [dravidian-kadai-shop]
+etymology_hook: "கடைக்காரர் — native kaṭai 'shop' (DEDR 1142) + -kārar 'the one in charge of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C190-totti]
 <!-- hl-knowledge: introduces=[TA-LEX-C191-VELAI191-01]; assesses=[] -->
 
 **கடைக்காரர்** — *kaṭaikkārar* — "a shopkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடைக்காரர்** (*kaṭaikkārar*) is *kaṭai*, "shop", native (DEDR 1142), with *-kārar*, "the one in charge of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

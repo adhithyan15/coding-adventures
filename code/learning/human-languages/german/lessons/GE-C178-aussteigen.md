@@ -13,7 +13,8 @@ gloss: "to get off (a vehicle)"
 concept_tag: GE-VERB-AUSSTEIGEN
 prerequisites: [GE-C178-einschlafen, GE-C178-einsteigen]
 sounds: []
-roots: []
+roots: [germanic-stigana]
+etymology_hook: "aussteigen — aus- 'out' + the verb 'to climb': to climb out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C178-einsteigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C178-VERB178-04]; assesses=[] -->
 
 **aussteigen** — "to get off (a vehicle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aussteigen** is *aus-*, "out", + the verb "to climb", Old High German *stīgan* (EtymDB 2.1): to climb out of a vehicle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to eat"
 concept_tag: FR-VERB-MANGER
 prerequisites: [FR-C61-enseigner, FR-C61-boire]
 sounds: []
-roots: []
+roots: [manducare-latin]
+etymology_hook: "manger ← Latin manducare 'to chew' — English manger, a feeding trough, is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C61-boire]
 <!-- hl-knowledge: introduces=[FR-LEX-C61-VERBES13-03]; assesses=[] -->
 
 **manger** — "to eat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manger** ← Old French *mengier* ← Latin *manducare*, "to chew" — inherited. (EtymDB 2.1) It replaced the older Latin verb for "to eat" in everyday speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

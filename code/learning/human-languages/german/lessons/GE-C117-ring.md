@@ -13,7 +13,8 @@ gloss: "a ring"
 concept_tag: GE-DINGE117-RING
 prerequisites: [GE-C116-regenschirm, GE-C117-geldboerse]
 sounds: []
-roots: []
+roots: [germanic-hringaz]
+etymology_hook: "Ring ← Old High German ring ← Proto-Germanic *hringaz — the same word as English ring"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C117-geldboerse]
 <!-- hl-knowledge: introduces=[GE-LEX-C117-DINGE117-02]; assesses=[] -->
 
 **der Ring** — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ring** ← Old High German *ring* — inherited. EtymDB 2.1 traces English *ring*, Old English *hring*, to Proto-Germanic *\*hringaz*, "something bent": the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

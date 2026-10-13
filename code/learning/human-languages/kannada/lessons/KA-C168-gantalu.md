@@ -14,7 +14,8 @@ romanization: "gaṇṭalu"
 concept_tag: KA-AROGYA168-GANTALU
 prerequisites: [KA-C167-gorake-hode, KA-C168-hane]
 sounds: []
-roots: []
+roots: [dravidian-kazhuttu-neck]
+etymology_hook: "gaṇṭalu: native Dravidian, one word with Tamil kaḻuttu (DEDR 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C168-hane]
 <!-- hl-knowledge: introduces=[KA-LEX-C168-AROGYA168-02]; assesses=[] -->
 
 **ಗಂಟಲು** — *gaṇṭalu* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಂಟಲು** (*gaṇṭalu*) is native Dravidian, one word with Tamil *kaḻuttu* (DEDR 1366). DEDR lists *gaṇṭalu*, "throat", beside *kattu*, "neck". DEDR 1366 compares Sanskrit *kaṇṭha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

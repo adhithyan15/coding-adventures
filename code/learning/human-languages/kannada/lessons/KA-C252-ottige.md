@@ -14,7 +14,8 @@ romanization: "oṭṭige"
 concept_tag: KA-KARANA252-OTTIGE
 prerequisites: [KA-C252-sumaru, KA-C252-jotege]
 sounds: []
-roots: []
+roots: [dravidian-ottu-join]
+etymology_hook: "oṭṭige: native Dravidian, from oṭṭu 'to come together' (DEDR 958)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C252-jotege]
 <!-- hl-knowledge: introduces=[KA-LEX-C252-KARANA252-05]; assesses=[] -->
 
 **ಒಟ್ಟಿಗೆ** — *oṭṭige* — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಟ್ಟಿಗೆ** (*oṭṭige*) is native Dravidian, of *oṭṭu*, "to join, come together", which DEDR 958 lists; the entry also has Tamil *oṭṭu*, Telugu *oṭṭu* and Malayalam *oṭṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

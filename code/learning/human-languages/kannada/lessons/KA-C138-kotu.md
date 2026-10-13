@@ -14,7 +14,8 @@ romanization: "kōṭu"
 concept_tag: KA-THINGS138-KOTU
 prerequisites: [KA-C138-jebu, KA-C138-saks]
 sounds: []
-roots: []
+roots: [english-coat]
+etymology_hook: "kōṭu ← English coat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C138-saks]
 <!-- hl-knowledge: introduces=[KA-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **ಕೋಟು** — *kōṭu* — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೋಟು** (*kōṭu*) is a loan from English *coat*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

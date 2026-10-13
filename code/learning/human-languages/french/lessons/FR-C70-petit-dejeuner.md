@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE22-PETIT-DEJEUNER
 prerequisites: [FR-C70-dejeuner, FR-C70-diner]
 sounds: []
 roots: []
+etymology_hook: "petit-déjeuner — 'little' + déjeuner, a small breaking of the fast, like English breakfast"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C70-diner]
 <!-- hl-knowledge: introduces=[FR-LEX-C70-CUISINE22-03]; assesses=[] -->
 
 **le petit-déjeuner** — "breakfast". Literally "little lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**petit-déjeuner** — built from the French word for "little" and *déjeuner*: the small first breaking of the fast, as English *breakfast* is.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

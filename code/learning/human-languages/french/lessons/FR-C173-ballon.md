@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES173-BALLON
 prerequisites: [FR-C172-soie, FR-C172-cuir]
 sounds: []
 roots: []
+etymology_hook: "ballon ← Italian pallone 'a big ball' — English balloon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C172-cuir]
 <!-- hl-knowledge: introduces=[FR-LEX-C173-CHOSES173-01]; assesses=[] -->
 
 **le ballon** — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ballon** ← Italian *pallone*, "a big ball", reshaped after the French word for "ball" — borrowed in the 1500s. (EtymDB 2.1 has its Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

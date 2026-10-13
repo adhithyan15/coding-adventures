@@ -13,7 +13,8 @@ gloss: "an uncle"
 concept_tag: FR-FAMILLE9-ONCLE
 prerequisites: [FR-C57-mari, FR-C57-femme]
 sounds: []
-roots: []
+roots: [avunculus-latin]
+etymology_hook: "oncle ← Latin avunculus 'mother's brother' — English uncle came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C57-femme]
 <!-- hl-knowledge: introduces=[FR-LEX-C57-FAMILLE9-03]; assesses=[] -->
 
 **l'oncle** — "an uncle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oncle** ← Vulgar Latin *\*aunculus* ← Latin *avunculus*, "mother's brother" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

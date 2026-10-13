@@ -14,7 +14,8 @@ romanization: "udāra"
 concept_tag: KA-GUNA218-UDARA
 prerequisites: [KA-C218-spasta, KA-C218-pramanika]
 sounds: []
-roots: []
+roots: [sanskrit-udara]
+etymology_hook: "udāra ← Sanskrit udāra 'lofty, noble', a tatsama (CDIAL 1935)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C218-pramanika]
 <!-- hl-knowledge: introduces=[KA-LEX-C218-GUNA218-05]; assesses=[] -->
 
 **ಉದಾರ** — *udāra* — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದಾರ** (*udāra*) is Sanskrit *udāra*, "lofty, noble", taken over whole as a learned loan, a tatsama (CDIAL 1935). Nobility of mind became generosity.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

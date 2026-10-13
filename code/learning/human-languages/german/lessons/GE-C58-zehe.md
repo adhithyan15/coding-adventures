@@ -13,7 +13,8 @@ gloss: "a toe"
 concept_tag: GE-KOERPER3-ZEHE
 prerequisites: [GE-C58-zunge, GE-C58-lippe]
 sounds: []
-roots: []
+roots: [germanic-taihwo]
+etymology_hook: "Zehe ← Old High German zēha ← Proto-Germanic *taihwōn — the same word as English toe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C58-lippe]
 <!-- hl-knowledge: introduces=[GE-LEX-C58-KOERPER3-04]; assesses=[] -->
 
 **die Zehe** — "a toe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zehe** ← Old High German *zēha* ← Proto-Germanic *\*taihwōn*, "toe" — inherited, the same word as English *toe*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

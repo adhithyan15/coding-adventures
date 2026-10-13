@@ -14,6 +14,7 @@ concept_tag: FR-VERB-CRIER
 prerequisites: [FR-C143-sauter, FR-C143-sourire]
 sounds: []
 roots: []
+etymology_hook: "crier ← Old French crier, usually traced to Latin quiritare — English cry"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C143-sourire]
 <!-- hl-knowledge: introduces=[FR-LEX-C143-VERBES143-05]; assesses=[] -->
 
 **crier** — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crier** ← Old French *crier* (EtymDB 2.1), usually traced to Latin *quiritare*, "to call for help" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

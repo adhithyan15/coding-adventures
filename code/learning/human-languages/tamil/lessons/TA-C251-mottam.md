@@ -14,7 +14,8 @@ romanization: "mottam"
 concept_tag: TA-VELAI251-MOTTAM
 prerequisites: [TA-C250-taracu, TA-C250-vaikkol]
 sounds: []
-roots: []
+roots: [dravidian-mottam-total]
+etymology_hook: "மொத்தம் — native Dravidian (DEDR 5119); Malayalam mottam 'whole, total', Telugu mottamu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C250-vaikkol]
 <!-- hl-knowledge: introduces=[TA-LEX-C251-VELAI251-01]; assesses=[] -->
 
 **மொத்தம்** — *mottam* — "the total".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மொத்தம்** (*mottam*) is native Dravidian. DEDR 5119 lists Malayalam *mottam*, "whole, total" and Telugu *mottamu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

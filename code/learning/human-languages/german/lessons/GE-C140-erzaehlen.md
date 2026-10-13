@@ -13,7 +13,8 @@ gloss: "to tell (a story)"
 concept_tag: GE-VERB-ERZAEHLEN
 prerequisites: [GE-C140-liegen, GE-C140-sich-anziehen]
 sounds: []
-roots: []
+roots: [germanic-taljana]
+etymology_hook: "erzählen — er- + the old verb 'to count, to tell'; English tell once meant 'count' too"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C140-sich-anziehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C140-VERB140-03]; assesses=[] -->
 
 **erzählen** — "to tell (a story)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erzählen** is *er-* + *zählen*, "to count" ← Old High German *zellen* ← Proto-Germanic *\*taljaną* (EtymDB 2.1). A story is told out, item by item — English *tell* has both senses too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

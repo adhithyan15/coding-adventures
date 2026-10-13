@@ -13,7 +13,8 @@ gloss: "a century"
 concept_tag: GE-ZEIT137-JAHRHUNDERT
 prerequisites: [GE-C137-wochenende, GE-C137-datum]
 sounds: []
-roots: []
+roots: [germanic-jera, germanic-hundarada]
+etymology_hook: "Jahrhundert — Jahr 'year' + hundert 'hundred': a hundred years"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C137-datum]
 <!-- hl-knowledge: introduces=[GE-LEX-C137-ZEIT137-03]; assesses=[] -->
 
 **das Jahrhundert** — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Jahrhundert** is *Jahr*, "year", + *hundert*, "hundred": a hundred years. Both are inherited; *Jahr* ← Proto-Germanic *\*jērą*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

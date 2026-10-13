@@ -11,7 +11,8 @@ romanization: "nambike"
 concept_tag: KA-NOUN-TRUST
 prerequisites: [KA-C65-hesitancy, KA-C63-pain]
 sounds: []
-roots: []
+roots: [dravidian-nampu-trust]
+etymology_hook: "nambike: native Dravidian, from nambu 'to trust'; DEDR 3600 lists nambike; Tamil nampu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C65-hesitancy]
 ನಂಬಿಕೆ is native, made out of the everyday word for believing, and it covers both trust in a person and belief in a thing being so.
 
 Set it beside ಗೌರವ from the courtesy chapter. ಗೌರವ can be given to a stranger at once, because it is owed to a position. ನಂಬಿಕೆ has to be collected slowly, and no amount of the first turns into the second.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಂಬಿಕೆ** (*nambike*) is native Dravidian, from *nambu*, "to trust, believe", and DEDR 3600 lists *nambike*, "confidence", itself; the entry also has Tamil *nampu*, Telugu *nammu* and Malayalam *nampuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

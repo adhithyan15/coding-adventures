@@ -13,7 +13,8 @@ gloss: "a salary"
 concept_tag: FR-TRAV174-SALAIRE
 prerequisites: [FR-C174-entreprise, FR-C174-collegue]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "salaire ← Latin salarium 'salt money', from sal 'salt' — English salary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C174-collegue]
 <!-- hl-knowledge: introduces=[FR-LEX-C174-TRAV174-03]; assesses=[] -->
 
 **le salaire** — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salaire** ← Latin *salarium*, "wages", first "salt money", from *sal*, "salt" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

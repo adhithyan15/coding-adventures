@@ -14,6 +14,9 @@ You'll want to know: ಮೊಸರು.
 ಮೊಸರು (mosaru) is what ಹಾಲು becomes when it is left overnight with a spoonful of yesterday's ಮೊಸರು (mosaru) in it. The ಹಸು from the last chapter is the front of that chain and this is the end of it.
 It closes a meal rather than opening one. ಮೊಸರು (mosaru) over ಅನ್ನ is the last thing on the plate, and a Kannada speaker will tell you the meal is not finished without it.
 
+The word, taken apart.
+ಮೊಸರು (mosaru) is native Dravidian, one word with Tamil mucar (DEDR 4902). DEDR gives Kannada mosar(u). DEDR 4902 compares Sanskrit moraṭa.
+
 What you've built.
 The first of five things in a Kannada kitchen.
 
@@ -45,6 +48,9 @@ You'll want to know: ತುಪ್ಪ.
 ತುಪ್ಪ (tuppa) is the other thing ಹಾಲು turns into, further along the same road: cream taken off, churned, then cooked until only the fat is left. Inherited, and shared with the sisters.
 A spoonful goes on hot ಅನ್ನ, and a ದೀಪ will burn on it as readily as on any oil. It is the one item in this chapter that is food and light at once.
 
+The word, taken apart.
+The origin of ತುಪ್ಪ (tuppa) is disputed. DEDR 3282 files it as native Dravidian, beside Tamil tu, "to eat", but Turner's CDIAL (5864) thinks it is rather a loan from Middle Indo-Aryan, related to a word for "grease".
+
 What you've built.
 Two.
 
@@ -74,6 +80,9 @@ You'll want to know: ಎಣ್ಣೆ.
 ಎಣ್ಣೆ (eṇṇe) — "oil".
 ಎಣ್ಣೆ (eṇṇe) is Kannada's own oil-word, and it owes ತುಪ್ಪ (tuppa) nothing at all. ತುಪ್ಪ (tuppa) comes out of an animal; ಎಣ್ಣೆ (eṇṇe) is pressed out of a ಬೀಜ, and the two sit in different jars on the same shelf.
 There is a small joke in this for you. The friend-word ಸ್ನೇಹಿತ was built on a Sanskrit word whose first sense was oil — smoothness, the thing that makes two surfaces run easily on each other. That is the borrowed, figurative oil. This is the one in the jar.
+
+The word, taken apart.
+ಎಣ್ಣೆ (eṇṇe) is native Dravidian. DEDR 854 lists it under eḷ, "sesame", with Tamil eṇ ṇey, "sesame oil": the first oil was pressed from sesame.
 
 What you've built.
 Three.
@@ -106,6 +115,9 @@ You'll want to know: ಬೆಲ್ಲ.
 ಬೆಲ್ಲ (bella) is cane juice boiled down and set in a lump, brown and sticky and sold by weight rather than by the spoon. Kannada's own word, and the older of the two sweet things in this chapter.
 South Karnataka cooking puts a piece of it into food that is not a sweet at all — into the same dish as the uppu you already have, deliberately, so that neither taste wins. A cook who leaves it out is making somebody else's version of the dish.
 
+The word, taken apart.
+ಬೆಲ್ಲ (bella) is native Dravidian, one word with Tamil vellam and Telugu bellamu (DEDR 5494).
+
 What you've built.
 Four.
 
@@ -135,6 +147,9 @@ You'll want to know: ಸಕ್ಕರೆ.
 ಸಕ್ಕರೆ (sakkare) — "sugar".
 ಸಕ್ಕರೆ (sakkare) is the refined one, white and loose, and it is the traveller of this chapter. It goes back to a Sanskrit word meaning gravel or grit — a fair description of what sugar looks like beside a lump of ಬೆಲ್ಲ (bella).
 The coffee-word and the tea-word each reached Kannada after a long journey inward. This word went the other way. It left India, crossed Arabic and Latin, turned into the English sugar, and Kannada kept the original at home the whole time.
+
+The word, taken apart.
+ಸಕ್ಕರೆ (sakkare) comes from Sanskrit śarkarā, "candied sugar", reshaped to Kannada sounds: a tadbhava (CDIAL 12338). Prakrit sakkarā shows the middle step.
 
 What you've built.
 Five: ಮೊಸರು (mosaru), ತುಪ್ಪ (tuppa), ಎಣ್ಣೆ (eṇṇe), ಬೆಲ್ಲ (bella), ಸಕ್ಕರೆ (sakkare). Enough to say what is in the food you are given.

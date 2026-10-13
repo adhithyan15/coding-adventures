@@ -14,7 +14,8 @@ gloss: "swimming; to swim"
 concept_tag: KA-ANCHOR-IIJU
 prerequisites: [KA-S129-letter-tha]
 sounds: []
-roots: []
+roots: [dravidian-niintu-swim]
+etymology_hook: "īju: native Dravidian, one word with Tamil nīntu (DEDR 3687)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *īju*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಈ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಈಜು** (*īju*) is native Dravidian, one word with Tamil *nīntu* (DEDR 3687). The entry gives Kannada *īju* beside *īsu* and *hīju*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-IIJU] -->

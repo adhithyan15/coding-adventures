@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Things You Ask For",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:24efee3173f33a44",
+  "sourceHash": "fnv1a64:df63786bec891e99",
   "lessons": [
     {
       "id": "KA-C46-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b964d837966b0cbb",
+      "sourceHash": "fnv1a64:85f181635ece9f65",
       "notice": null,
       "blocks": [
         {
@@ -55,6 +55,10 @@
             {
               "kind": "speech",
               "text": "Proto-Dravidian paḻ, 'to ripen, to grow old', is the source, and the sound law this book keeps returning to is at work in the very first letter. Tamil kept பழம் (paḻam); Telugu has పండు (paṇḍu); Kannada turned that p- into h- and arrived at ಹಣ್ಣು (haṇṇu). It is the same law that made milk ಹಾಲು here and left it pāl next door."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4004 lists the older Kannada paṇṇu, \"ripe fruit\", with Tamil paḻu, \"to ripen\", and Telugu paṇḍu. DEDR 4004 compares Sanskrit phala, \"fruit\"."
             }
           ]
         },
@@ -150,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b86a5c2743cacbc1",
+      "sourceHash": "fnv1a64:873f8aa4ecf1b3b0",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +199,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of ಬಟ್ಟೆ (baṭṭe) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -205,7 +220,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,7 +269,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73362d05cf3e8518",
+      "sourceHash": "fnv1a64:e07cdee5a5550f49",
       "notice": null,
       "blocks": [
         {
@@ -325,6 +340,10 @@
             {
               "kind": "speech",
               "text": "Kannada has a word of its own as well, ಹಣತೆ (haṇate), and it means something narrower: the small clay saucer with a wick lying in it. The borrowed word covers every lamp; the native one names a particular thing you can hold in one hand."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 6348 lists Sanskrit dīpa, \"lamp\"."
             }
           ]
         },
@@ -420,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08a67fb79eab9069",
+      "sourceHash": "fnv1a64:4ae540cae1ac8594",
       "notice": null,
       "blocks": [
         {
@@ -456,6 +475,10 @@
             {
               "kind": "speech",
               "text": "There is a p sitting in the middle of this word, and it did not become h. That is worth stopping over, because the law that made ಹಣ್ಣು (haṇṇu) out of an older p-word only ever reached the FIRST sound of a word. Inside one, the p stays where it was put."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 2674 lists Kannada uppu with Tamil, Malayalam and Telugu uppu."
             }
           ]
         },
@@ -551,7 +574,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:99b42bf5ba1ef44f",
+      "sourceHash": "fnv1a64:8215e6e9d616eccf",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -14,7 +14,8 @@ romanization: "vayiṟṟuppōkku"
 concept_tag: TA-NALAM170-VAYIRRUPPOKKU
 prerequisites: [TA-C170-torru, TA-C170-talumpu]
 sounds: []
-roots: []
+roots: [dravidian-vayiru-belly, po-go-dravidian]
+etymology_hook: "வயிற்றுப்போக்கு — native: vayiṟu 'belly' (DEDR 5259) + pōkku 'going', from pō (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C170-talumpu]
 <!-- hl-knowledge: introduces=[TA-LEX-C170-NALAM170-04]; assesses=[] -->
 
 **வயிற்றுப்போக்கு** — *vayiṟṟuppōkku* — "diarrhoea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வயிற்றுப்போக்கு** (*vayiṟṟuppōkku*) is native: *vayiṟu*, "belly" (DEDR 5259), and *pōkku*, "going, a flow", from *pō*, "to go" (DEDR 4572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

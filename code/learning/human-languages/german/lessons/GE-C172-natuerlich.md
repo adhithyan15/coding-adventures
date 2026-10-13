@@ -13,7 +13,8 @@ gloss: "of course"
 concept_tag: GE-ADV172-NATUERLICH
 prerequisites: [GE-C172-vielleicht, GE-C172-wahrscheinlich]
 sounds: []
-roots: []
+roots: [natura-latin]
+etymology_hook: "natürlich ← Old High German natūrlīh: the word for 'nature' (Latin nātūra) + -lich"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C172-wahrscheinlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C172-ADV172-04]; assesses=[] -->
 
 **natürlich** — "of course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**natürlich** ← Middle High German *natiurlich* ← Old High German *natūrlīh* (EtymDB 2.1): the word for "nature", from Latin *nātūra*, + *-lich*. Of course is "as nature goes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

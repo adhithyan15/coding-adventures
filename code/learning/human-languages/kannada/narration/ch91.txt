@@ -13,6 +13,9 @@ You'll want to know: ವಿಳಾಸ.
 ವಿಳಾಸ (viḷāsa) — "address".
 ನಿಮ್ಮ ವಿಳಾಸ ಏನು? (nimma viḷāsa ēnu?) — "what is your address?", built like ನಿಮ್ಮ ಹೆಸರು ಏನು? from the start of the book.
 
+The word, taken apart.
+ವಿಳಾಸ (viḷāsa) is usually traced to Sanskrit vilāsa, glossed "sport, coquetry" in CDIAL 11900. How it came to mean a postal address is not recorded.
+
 What you've built.
 The name question, asked about a place.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for uncle, then the Kannada for address.
 
 You'll want to know: ಹುಟ್ಟುಹಬ್ಬ.
 ಹುಟ್ಟುಹಬ್ಬ (huṭṭuhabba) — "birthday", literally "birth festival": ಹುಟ್ಟು (huṭṭu), "birth", and habba, "festival", which gets a lesson of its own later.
+
+The word, taken apart.
+ಹುಟ್ಟುಹಬ್ಬ (huṭṭuhabba) is huṭṭu, "birth", native Dravidian (DEDR 4264, older Kannada puṭṭu), and habba, "festival", usually traced to Sanskrit parvan, "a joint" (CDIAL 7947), which also named the joints of the lunar month and the feasts held on them.
 
 What you've built.
 A festival of one's own.
@@ -72,6 +78,9 @@ You'll want to know: ಮದುವೆ.
 ಮದುವೆ (maduve) — "wedding, marriage".
 ಮದುವೆಗೆ ಆಹ್ವಾನ (maduvege āhvāna) — "an invitation to a wedding", with ಆಹ್ವಾನ, "invitation", from the last tranche.
 
+The word, taken apart.
+ಮದುವೆ (maduve) is native Dravidian, one word with Tamil vatuvai (DEDR 4694). DEDR lists maduve itself, with mada, "joining, wedding".
+
 What you've built.
 The biggest invitation of all.
 
@@ -102,6 +111,9 @@ You'll want to know: ಊರು.
 ಊರು (ūru) — "town", and in particular one's home town. It is the -ur at the end of place names across the south: Bengaluru, Mysuru.
 ನಿಮ್ಮ ಊರು ಯಾವುದು? (nimma ūru yāvudu?) — "where is your home town?"
 
+The word, taken apart.
+ಊರು (ūru) is native Dravidian, one word with Tamil ūr and Telugu ūru (DEDR 752). DEDR 752 notes a Prakrit ūra, "village".
+
 What you've built.
 The word hiding in every -uru city name.
 
@@ -131,6 +143,9 @@ Before the new one: say the Kannada for a wedding, then the Kannada for home tow
 You'll want to know: ಭಾಷೆ.
 ಭಾಷೆ (bhāṣe) — "language".
 ಕನ್ನಡ ಭಾಷೆ (kannaḍa bhāṣe) — "the Kannada language".
+
+The word, taken apart.
+ಭಾಷೆ (bhāṣe) is Sanskrit bhāṣā, "speech", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 9479).
 
 What you've built.
 The word for what you are learning.

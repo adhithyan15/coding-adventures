@@ -11,6 +11,7 @@ concept_tag: FR-C23-VERT-JAUNE-MORE
 prerequisites: [FR-C23-vert-jaune]
 sounds: []
 roots: []
+etymology_hook: "jaune ← Latin galbinus 'yellow-green', from galbus — the origin of galbus is uncertain"
 duration:
   max_seconds: 150
 requires:

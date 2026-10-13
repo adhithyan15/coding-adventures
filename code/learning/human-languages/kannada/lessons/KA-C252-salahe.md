@@ -14,7 +14,8 @@ romanization: "salahe"
 concept_tag: KA-KARANA252-SALAHE
 prerequisites: [KA-C251-hittilu, KA-C252-adrsta]
 sounds: []
-roots: []
+roots: [arabic-salah]
+etymology_hook: "salahe ← Hindustani salāh 'advice', from Arabic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C252-adrsta]
 <!-- hl-knowledge: introduces=[KA-LEX-C252-KARANA252-02]; assesses=[] -->
 
 **ಸಲಹೆ** — *salahe* — "advice, a suggestion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಲಹೆ** (*salahe*) came through Hindustani *salāh*, "advice, counsel", an Arabic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

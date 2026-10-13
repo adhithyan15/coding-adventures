@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for English, then the Malayalam for office
 You'll want to know: സൂക്ഷിക്കണേ.
 സൂക്ഷിക്കണേ (sūkṣikkaṇē) — "take care", a warm word at the door.
 
+The word, taken apart.
+സൂക്ഷിക്കണേ (sūkṣikkaṇē) is built on Sanskrit sūkṣma, "fine, minute" (CDIAL 13546): to take care is to watch closely. The ending -aṇē makes it a warm request.
+
 What you've built.
 A caring goodbye.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for office, then the Malayalam for take ca
 
 You'll want to know: വൈകി.
 വൈകി (vaiki) — "(it got) late". നേരം വൈകി (nēraṁ vaiki) — "it's getting late".
+
+The word, taken apart.
+വൈകി (vaiki) is native Dravidian, a form of the verb "to stay the night, delay"; DEDR 5554 lists the root with Tamil vaiku.
 
 What you've built.
 The reason people stand up to leave.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for take care, then the Malayalam for it's
 You'll want to know: പോകാം.
 പോകാം (pōkāṁ) — "let's go", with the ‑ആം ending of പോയി വരാം and കാണാം: "let's".
 
+The word, taken apart.
+പോകാം (pōkāṁ) is native Dravidian: the verb "to go" (DEDR 4572, with Tamil pō) with the ending -āṁ, "let us".
+
 What you've built.
 A known ending on go.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for it's late, then the Malayalam for let'
 You'll want to know: അവധി.
 അവധി (avadhi) — "a holiday, time off". നാളെ അവധിയാണ് — "tomorrow is a holiday".
 
+The word, taken apart.
+അവധി (avadhi) from Sanskrit avadhi, "limit, a fixed term", taken over whole as a tatsama. A set limit of time became time off.
+
 What you've built.
 A cheerful reason for goodbye.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for let's go, then the Malayalam for a hol
 
 You'll want to know: വിളിക്കാം.
 വിളിക്കാം (viḷikkāṁ) — "I'll call (you)", the ‑ആം ending on വിളിക്കൂ's verb.
+
+The word, taken apart.
+വിളിക്കാം (viḷikkāṁ) is native Dravidian: the calling verb (DEDR 5433, with Tamil viḷ) with the ending -āṁ.
 
 What you've built.
 A promise to stay in touch.

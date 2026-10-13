@@ -14,6 +14,7 @@ concept_tag: GE-FAHRT111-KOFFER
 prerequisites: [GE-C111-taxi, GE-C111-fahrkarte]
 sounds: []
 roots: []
+etymology_hook: "Koffer ← French coffre 'chest' ← Latin cophinus 'basket' — borrowed; English coffer and coffin share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C111-fahrkarte]
 <!-- hl-knowledge: introduces=[GE-LEX-C111-FAHRT111-03]; assesses=[] -->
 
 **der Koffer** — "a suitcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Koffer** ← French *coffre*, "chest" ← Latin *cophinus*, "basket" ← Greek *kóphinos* (EtymDB 2.1) — borrowed. English *coffer* and *coffin* come from the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

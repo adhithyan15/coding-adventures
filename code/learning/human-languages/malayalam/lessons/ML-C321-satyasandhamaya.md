@@ -14,7 +14,8 @@ romanization: "satyasandhamāya"
 concept_tag: ML-GUNAM321-SATYASANDHAMAYA
 prerequisites: [ML-C321-narunna, ML-C321-bahalamulla]
 sounds: []
-roots: []
+roots: [satya, aaka-dravidian]
+etymology_hook: "satyasandhamāya: Sanskrit satyasandha 'true to one's promise' (satya, CDIAL 13112) + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C321-bahalamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C321-GUNAM321-05]; assesses=[] -->
 
 **സത്യസന്ധമായ** — *satyasandhamāya* — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സത്യസന്ധമായ** (*satyasandhamāya*) is Sanskrit *satyasandha*, "true to one's promise": *satya*, "truth" (CDIAL 13112), and *sandhā*, "a promise", with native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

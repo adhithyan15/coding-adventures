@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-SHOULDER
 prerequisites: [KA-C57-lip, KA-C55-village]
 sounds: []
 roots: []
+etymology_hook: "bhuja ← Sanskrit bhuja 'arm' (CDIAL 9525)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *bhuja*, and behind it *bhuj-*, "to bend". The shoulder is named for be
 Kannada's own word here is ಹೆಗಲು (*hegalu*), and the division between the two is worth having. ಹೆಗಲು is the shoulder you carry a load on, the flat top of it; ಭುಜ leans toward the joint and toward strength — the arm-and-shoulder of somebody who can lift things.
 
 That opening ಭ is a letter Kannada mostly uses in borrowed words. Meeting one is a fair hint that the word came from Sanskrit before you know anything else about it.
+
+CDIAL 9525 lists Sanskrit *bhuja*, "arm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

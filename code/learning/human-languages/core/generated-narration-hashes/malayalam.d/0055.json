@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 55,
-  "sourceHash": "fnv1a64:e7d30f0214e59f19",
+  "sourceHash": "fnv1a64:908790328bbca674",
   "lessonIds": [
     "ML-C55-river",
     "ML-C55-rock",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch55.txt",
   "json": "malayalam/narration/ch55.json",
-  "textHash": "fnv1a64:9bce5380682835e0",
-  "jsonHash": "fnv1a64:f16bbdb39e807e23",
+  "textHash": "fnv1a64:71087ed99b613d19",
+  "jsonHash": "fnv1a64:8c53ec3d8a4e3ac2",
   "findings": []
 }

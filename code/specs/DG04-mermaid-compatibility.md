@@ -1031,6 +1031,13 @@ Tagged processes recognize `tag-rect`, `tagged-rectangle`, `tag-proc`, and
 Paper tape recognizes `flag` and `paper-tape` aliases.
 Lined documents recognize `lin-doc` and `lined-document` aliases.
 Data stores recognize `datastore` and `data-store` aliases.
+The Flowchart registry's accepted `state`, `choice`, and `note` attribute shapes lower to rounded-state,
+diamond-decision, and folded-corner note geometry respectively; notes include an explicit interior crease.
+The registry's legacy internal ShapeIDs `squareRect`, `roundedRect`, `stateStart`, `stateEnd`,
+`forkJoin`, `inv_trapezoid`, `doublecircle`, and `rect_left_inv_arrow` remain accepted and lower
+through their corresponding shared semantic, layout, and backend-neutral paint shapes.
+The internal `labelRect` ShapeID lowers through label-only semantic geometry and emits no visible
+container fill or stroke.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick
@@ -1058,14 +1065,34 @@ The `bumpX` and `bumpY` curve modes lower to portable cubic paths with horizonta
 midpoint tangents and preserve their authored mode in scene metadata.
 The `monotoneX` and `monotoneY` curve modes preserve their axis constraint in semantic and layout
 IR and lower their two-point routes to the equivalent monotonic cubic Hermite segment.
+The `cardinal`, `catmullRom`, and `natural` spline modes also survive semantic and layout IR; their
+two-point routes lower to pixel-equivalent collinear cubic segments while preserving mode metadata.
+The `rounded` curve mode lowers direction-aware orthogonal routing to line and quadratic Bézier
+commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
+Explicit `swimlane.lineHops` front-matter configuration supports `arc`, `gap`, and `false` modes.
+Crossings on linear, rounded, `step`, `stepBefore`, and `stepAfter` routes lower the later edge to
+portable quadratic arc or split-subpath paint commands. As in Mermaid 11.16.1, a rewritten rounded
+route trades its corner smoothing for unambiguous crossing hops; true smoothing curves remain untouched.
+Explicit `swimlane.automaticLaneOrdering` front-matter configuration enables Mermaid's deterministic
+weighted-linear-arrangement heuristic for top-level lanes. Visible inter-lane edges contribute
+undirected weights, source order wins equal-cost ties, and the resolved order survives as scene metadata.
+`swimlane.ignoreCrossLaneEdges` defaults to `true`; setting it to `false` adds cross-lane links
+to deterministic, cycle-safe rank constraints while preserving authored order within each lane. The
+resolved non-default setting survives as scene metadata.
+When cross-lane ranking is active, `swimlane.optimizeRanksByCrossings` defaults to `true` and performs
+up to four deterministic local-search passes. Feasible rank delays propagate through downstream
+constraints and are retained only when the lane/rank segment crossing count strictly improves; the
+resolved setting survives as scene metadata.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
 visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
+Nested subgraphs remain ordinary child clusters inside their top-level ownership lane. Their lane and
+parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
+clusters, and paint emits dashed labeled containers behind edge and node geometry.
 
-This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog beyond the documented marker forms, configuration-driven lane
-ordering and line hops, and exact upstream routing or typography remain
+This is intentionally partial. The complete Flowchart shape
+and link catalog beyond the documented marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

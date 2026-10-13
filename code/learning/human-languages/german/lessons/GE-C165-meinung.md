@@ -13,7 +13,8 @@ gloss: "an opinion"
 concept_tag: GE-THING165-MEINUNG
 prerequisites: [GE-C165-spass, GE-C165-lust]
 sounds: []
-roots: []
+roots: [germanic-mainijana]
+etymology_hook: "Meinung — the verb 'to mean, to think' + -ung; the verb is the same as English mean"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C165-lust]
 <!-- hl-knowledge: introduces=[GE-LEX-C165-THING165-05]; assesses=[] -->
 
 **die Meinung** — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Meinung** is the verb "to think, to mean", Old High German *meinen* ← Proto-Germanic *\*mainijaną*, + *-ung* (EtymDB 2.1). The verb is the same as English *mean*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "old-fashioned"
 concept_tag: GE-QUAL168-ALTMODISCH
 prerequisites: [GE-C168-dunkel, GE-C168-voll]
 sounds: []
-roots: []
+roots: [germanic-aldaz, modus-latin]
+etymology_hook: "altmodisch — alt 'old' + the word for 'fashion' (from French mode ← Latin modus) + -isch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C168-voll]
 <!-- hl-knowledge: introduces=[GE-LEX-C168-QUAL168-05]; assesses=[] -->
 
 **altmodisch** — "old-fashioned".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**altmodisch** is *alt*, "old", + the word for "fashion", from French *mode* ← Latin *modus*, "manner", + *-isch*: in the old manner.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

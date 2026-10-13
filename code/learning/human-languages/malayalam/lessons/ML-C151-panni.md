@@ -14,7 +14,8 @@ romanization: "panni"
 concept_tag: ML-THINGS151-PANNI
 prerequisites: [ML-C151-kaluta, ML-C151-pottu, ML-C29-suprabhaatham]
 sounds: []
-roots: []
+roots: [dravidian-panri-pig]
+etymology_hook: "panni: native Dravidian, one word with Tamil paṉṟi and Kannada pandi (DEDR 4039)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C151-pottu]
 <!-- hl-knowledge: introduces=[ML-LEX-C151-THINGS151-04]; assesses=[] -->
 
 **പന്നി** — *panni* — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പന്നി** (*panni*) is native Dravidian, one word with Tamil *paṉṟi*, Kannada *pandi* and Telugu *pandi* (DEDR 4039).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

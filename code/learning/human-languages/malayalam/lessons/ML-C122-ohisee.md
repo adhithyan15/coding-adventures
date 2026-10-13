@@ -11,7 +11,8 @@ romanization: "ōhō"
 concept_tag: ML-RESP-OH-I-SEE
 prerequisites: [ML-C122-ohno, ML-C122-thesame]
 sounds: []
-roots: []
+roots: [interjection]
+etymology_hook: "ōhō: an exclamation of understanding, made of sound rather than a root"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C122-thesame]
 <!-- hl-knowledge: introduces=[ML-LEX-C122-REPLIES-05]; assesses=[] -->
 
 **ഓഹോ** (*ōhō*) — "oh, I see!", the sound of understanding arriving.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓഹോ** (*ōhō*) is an exclamation, the sound of understanding arriving. It is made of sound rather than built from a root, so no dictionary entry lies behind it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāyal"
 concept_tag: ML-STHALAM239-KAYAL
 prerequisites: [ML-C239-mula2, ML-C239-kunnu]
 sounds: []
-roots: []
+roots: [dravidian-kayal-backwater]
+etymology_hook: "kāyal: native Dravidian, one word with Tamil kāyal (DEDR 1463)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C239-kunnu]
 <!-- hl-knowledge: introduces=[ML-LEX-C239-STHALAM239-03]; assesses=[] -->
 
 **കായൽ** — *kāyal* — "the backwaters, a lagoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കായൽ** (*kāyal*) is native Dravidian, one word with Tamil *kāyal* (DEDR 1463).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

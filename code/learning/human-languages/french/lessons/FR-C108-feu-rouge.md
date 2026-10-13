@@ -13,7 +13,8 @@ gloss: "a red light"
 concept_tag: FR-VILLE60-FEU-ROUGE
 prerequisites: [FR-C108-trottoir, FR-C108-carrefour]
 sounds: []
-roots: []
+roots: [focus-latin, rubeus-latin]
+etymology_hook: "feu rouge — 'red fire': feu ← Latin focus, rouge ← Latin rubeus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C108-carrefour]
 <!-- hl-knowledge: introduces=[FR-LEX-C108-VILLE60-05]; assesses=[] -->
 
 **le feu rouge** — "a red light". **le feu** is a fire; at a crossing it is the traffic light.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feu rouge** — "red fire": *feu*, "fire", ← Latin *focus*, and *rouge*, "red", ← Latin *rubeus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

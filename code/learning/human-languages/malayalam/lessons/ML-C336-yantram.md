@@ -14,7 +14,8 @@ romanization: "yantraṁ"
 concept_tag: ML-JOLI336-YANTRAM
 prerequisites: [ML-C335-aksaram, ML-C336-vilppana]
 sounds: []
-roots: []
+roots: [sanskrit-yantra]
+etymology_hook: "yantraṁ ← Sanskrit yantra 'controlling device; any implement', a tatsama (CDIAL 10412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C336-vilppana]
 <!-- hl-knowledge: introduces=[ML-LEX-C336-JOLI336-02]; assesses=[] -->
 
 **യന്ത്രം** — *yantraṁ* — "a machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**യന്ത്രം** (*yantraṁ*) ← Sanskrit *yantra*, "controlling device; any implement", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 10412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

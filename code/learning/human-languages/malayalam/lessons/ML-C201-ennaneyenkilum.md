@@ -14,7 +14,8 @@ romanization: "eṅṅaneyeṅkiluṁ"
 concept_tag: ML-KARANAM201-ENNANEYENKILUM
 prerequisites: [ML-C201-bhagyavasal, ML-C201-nirbhagyavasal]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-en-say]
+etymology_hook: "eṅṅaneyeṅkiluṁ: native Dravidian, eṅṅane 'how' (DEDR 5151) + a form of 'to say' meaning 'if' (DEDR 868) + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C201-nirbhagyavasal]
 <!-- hl-knowledge: introduces=[ML-LEX-C201-KARANAM201-05]; assesses=[] -->
 
 **എങ്ങനെയെങ്കിലും** — *eṅṅaneyeṅkiluṁ* — "somehow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എങ്ങനെയെങ്കിലും** (*eṅṅaneyeṅkiluṁ*) is native Dravidian: *eṅṅane*, "how" (DEDR 5151), then a conditional form meaning "if", from the verb "to say" (DEDR 868), and *-uṁ*: "however it may be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

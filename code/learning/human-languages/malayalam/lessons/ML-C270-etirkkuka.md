@@ -14,7 +14,8 @@ romanization: "etirkkuka"
 concept_tag: ML-VERB-ETIRKKUKA
 prerequisites: [ML-C269-janikkuka, ML-C269-marikkuka]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite]
+etymology_hook: "etirkkuka: native Dravidian, one word with Tamil etir and Kannada idir (DEDR 795)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C269-marikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C270-KRIYA270-01]; assesses=[] -->
 
 **എതിർക്കുക** — *etirkkuka* — "to oppose, to object".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എതിർക്കുക** (*etirkkuka*) is native Dravidian, one word with Tamil *etir*, Kannada *idir* and Telugu *eduru* (DEDR 795). It is the verb of *etire*, "opposite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

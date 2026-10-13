@@ -14,7 +14,8 @@ romanization: "kallu"
 concept_tag: KA-THINGS127-KALLU
 prerequisites: [KA-C127-kadu, KA-C127-mannu]
 sounds: []
-roots: []
+roots: [dravidian-kal-stone]
+etymology_hook: "kallu: native Dravidian, one word with Tamil kal and Telugu kallu (DEDR 1298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C127-mannu]
 <!-- hl-knowledge: introduces=[KA-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **ಕಲ್ಲು** — *kallu* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲ್ಲು** (*kallu*) is native Dravidian, one word with Tamil *kal* and Telugu *kallu* (DEDR 1298).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

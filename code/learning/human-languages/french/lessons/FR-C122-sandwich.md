@@ -14,6 +14,7 @@ concept_tag: FR-REPAS74-SANDWICH
 prerequisites: [FR-C121-chocolat, FR-C121-biscuit]
 sounds: []
 roots: []
+etymology_hook: "sandwich ← English sandwich, named after the Earl of Sandwich"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C121-biscuit]
 <!-- hl-knowledge: introduces=[FR-LEX-C122-REPAS74-01]; assesses=[] -->
 
 **le sandwich** — "a sandwich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sandwich** ← English *sandwich*, named after the Earl of Sandwich — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

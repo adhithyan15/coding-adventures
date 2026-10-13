@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 81,
-  "sourceHash": "fnv1a64:1977fa94e3a1f1fc",
+  "sourceHash": "fnv1a64:d8021b68f66c68ce",
   "lessonIds": [
     "ML-C81-aduthu",
     "ML-C81-akale",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch81.txt",
   "json": "malayalam/narration/ch81.json",
-  "textHash": "fnv1a64:e0a699b3af4e234b",
-  "jsonHash": "fnv1a64:a5885901ac46564e",
+  "textHash": "fnv1a64:29bb26d575b60201",
+  "jsonHash": "fnv1a64:1ae8963336c1a1c8",
   "findings": []
 }

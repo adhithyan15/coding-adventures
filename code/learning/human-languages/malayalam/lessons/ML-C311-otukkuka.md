@@ -14,7 +14,8 @@ romanization: "otukkuka"
 concept_tag: ML-VERB-OTUKKUKA
 prerequisites: [ML-C310-avarttikkuka, ML-C311-talotuka]
 sounds: []
-roots: []
+roots: [malayalam-otukku]
+etymology_hook: "otukkuka: native Dravidian; DEDR 973 lists it, 'to settle', with Tamil otukku 'to put on one side'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C311-talotuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C311-KRIYA311-02]; assesses=[] -->
 
 **ഒതുക്കുക** — *otukkuka* — "to tidy away, to put in order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒതുക്കുക** (*otukkuka*) is native Dravidian: DEDR 973 lists it, "to subdue, settle", with Tamil *otukku*, "to put on one side, settle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

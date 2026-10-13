@@ -12,6 +12,9 @@ Before the new one: say the Kannada for Ganesha Chaturthi, then the Kannada for 
 You'll want to know: ದಶಕ.
 ದಶಕ — daśaka — "a decade".
 
+The word, taken apart.
+ದಶಕ (daśaka) is Sanskrit daśaka, "consisting of ten; decad", taken over whole as a learned loan, a tatsama (CDIAL 6228).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for Rajyotsava, then the Kannada for a decad
 
 You'll want to know: ವಾರ್ಷಿಕೋತ್ಸವ.
 ವಾರ್ಷಿಕೋತ್ಸವ — vārṣikōtsava — "an anniversary; an annual day".
+
+The word, taken apart.
+ವಾರ್ಷಿಕೋತ್ಸವ (vārṣikōtsava) is Sanskrit vārṣika, "annual" (CDIAL 11571), and utsava, "festival" (CDIAL 1876): "the yearly festival".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a decade, then the Kannada for an annive
 You'll want to know: ಗಡುವು.
 ಗಡುವು — gaḍuvu — "a deadline".
 
+The word, taken apart.
+ಗಡುವು (gaḍuvu) is native Dravidian. DEDR 1109 lists gaḍuvu, with gaḍa and gaḍi, "limit, limited time, period", under kaḍe, "to pass over; end"; the entry also has Tamil kaṭa, "to cross".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for an anniversary, then the Kannada for a d
 You'll want to know: ಮುಹೂರ್ತ.
 ಮುಹೂರ್ತ — muhūrta — "an auspicious time".
 
+The word, taken apart.
+ಮುಹೂರ್ತ (muhūrta) is Sanskrit muhūrta, "moment", taken over whole as a learned loan, a tatsama (CDIAL 10229). The moment came to mean the auspicious moment.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a deadline, then the Kannada for an ausp
 
 You'll want to know: ಒಂದೂವರೆ.
 ಒಂದೂವರೆ — ondūvare — "one and a half".
+
+The word, taken apart.
+ಒಂದೂವರೆ (ondūvare) is native Dravidian: ondu, "one" (DEDR 990), -ū, "and", and are, "half", which DEDR 229 lists: "one and a half".
 
 What you've built.
 One more word for this chapter.

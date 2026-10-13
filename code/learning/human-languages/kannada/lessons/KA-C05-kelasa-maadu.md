@@ -12,6 +12,7 @@ concept_tag: KA-VERB-MAADU
 prerequisites: [KA-C05-maatanaadu]
 sounds: [long-aa]
 roots: [maadu-do-dravidian, kelasa-work-dravidian]
+etymology_hook: "kelasa 'work' (DEDR 1970; Telugu kelasamu) and māḍu 'to do' (DEDR 4797) are both native Dravidian"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,8 @@ compound verbs by putting a noun in front of it:
 So "I work" is **ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ** (*nānu kelasa māḍuttēne*). Notice *sahāya
 māḍu* ("to help") pairs a **Sanskrit** noun with the **native** *māḍu* — Kannada's
 two vocabularies working together in one verb.
+
+DEDR 1970 lists *kelasa* with Telugu *kelasamu*, "work"; DEDR 4797 lists *māḍu* with Malayalam *māṭuka*, "to build".
 
 ## Grammar Lens: noun + ಮಾಡು = a new verb
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C05-MAADU-02]; assesses=[] -->

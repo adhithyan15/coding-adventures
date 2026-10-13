@@ -14,7 +14,8 @@ romanization: "cāmpal"
 concept_tag: TA-QUAL150-CAMPAL
 prerequisites: [TA-C149-poyyana, TA-C150-uta, TA-C22-paccai-manjal, TA-C11-nirangal]
 sounds: []
-roots: []
+roots: [dravidian-caampu-wither]
+etymology_hook: "சாம்பல் — native Dravidian (DEDR 2453)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C150-uta]
 <!-- hl-knowledge: introduces=[TA-LEX-C150-QUAL150-02]; assesses=[] -->
 
 **சாம்பல்** — *cāmpal* — "grey; ash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சாம்பல்** (*cāmpal*) is native Dravidian (DEDR 2453). The entry lists *cāmpal*, "ashes, withered flower", under *cāmpu*, "to wither, to grow dim".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

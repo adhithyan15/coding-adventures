@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for on this side, then the Malayalam for a
 You'll want to know: വേണ്ടി.
 വേണ്ടി — vēṇṭi — "for the sake of, on behalf of".
 
+The word, taken apart.
+വേണ്ടി (vēṇṭi) is native Dravidian, a form of the wanting verb: "having been wanted"; DEDR 5528 lists the root with Tamil vēṇṭu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for at the foot of, then the Malayalam for
 
 You'll want to know: പകരം.
 പകരം — pakaraṁ — "instead".
+
+The word, taken apart.
+പകരം (pakaraṁ) is native Dravidian, from the verb "to change, be exchanged"; DEDR 3803 lists the root with Tamil pakar.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for for the sake of, then the Malayalam fo
 You'll want to know: പ്രശ്നം.
 പ്രശ്നം — praśnaṁ — "a problem".
 
+The word, taken apart.
+പ്രശ്നം (praśnaṁ) from Sanskrit praśna, "question", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 8818). A question became a problem.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for instead, then the Malayalam for a prob
 You'll want to know: പരിഹാരം.
 പരിഹാരം — parihāraṁ — "a solution".
 
+The word, taken apart.
+പരിഹാരം (parihāraṁ) from Sanskrit parihāra, "a leading round, avoiding", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 7901). A way round a difficulty became its solution.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a problem, then the Malayalam for a so
 
 You'll want to know: അനുസരിച്ച്.
 അനുസരിച്ച് — anusariccŭ — "according to".
+
+The word, taken apart.
+അനുസരിച്ച് (anusariccŭ) is a Malayalam verb form, "having followed", built on Sanskrit anusaraṇa, "following, going after".
 
 What you've built.
 One more word for this chapter.

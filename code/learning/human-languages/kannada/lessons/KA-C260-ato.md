@@ -14,7 +14,8 @@ romanization: "āṭō"
 concept_tag: KA-VASTU260-ATO
 prerequisites: [KA-C260-patrike, KA-C260-vahana]
 sounds: []
-roots: []
+roots: [english-auto]
+etymology_hook: "āṭō ← English auto"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C260-vahana]
 <!-- hl-knowledge: introduces=[KA-LEX-C260-VASTU260-05]; assesses=[] -->
 
 **ಆಟೋ** — *āṭō* — "an autorickshaw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಟೋ** (*āṭō*) is a loan from English *auto*. It is short for "autorickshaw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

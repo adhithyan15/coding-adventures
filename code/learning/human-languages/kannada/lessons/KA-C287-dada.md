@@ -14,7 +14,8 @@ romanization: "daḍa"
 concept_tag: KA-STHALA287-DADA
 prerequisites: [KA-C286-vedike, KA-C286-videsa]
 sounds: []
-roots: []
+roots: [sanskrit-tata-shore]
+etymology_hook: "daḍa: probably a tadbhava of Sanskrit taṭa 'slope, shore' (CDIAL 5629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C286-videsa]
 <!-- hl-knowledge: introduces=[KA-LEX-C287-STHALA287-01]; assesses=[] -->
 
 **ದಡ** — *daḍa* — "a riverbank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಡ** (*daḍa*) is probably a tadbhava of Sanskrit *taṭa*, "slope, shore" (CDIAL 5629), through Prakrit *taḍa*; CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

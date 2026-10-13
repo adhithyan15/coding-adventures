@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 222,
-  "sourceHash": "fnv1a64:5975107fffb5907e",
+  "sourceHash": "fnv1a64:1696f9cbbc8d2751",
   "lessonIds": [
     "KA-C222-pyant",
     "KA-C222-langa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch222.txt",
   "json": "kannada/narration/ch222.json",
-  "textHash": "fnv1a64:d3cd77ed8638b87f",
-  "jsonHash": "fnv1a64:d24877d843b92703",
+  "textHash": "fnv1a64:ee21c9b447c47070",
+  "jsonHash": "fnv1a64:ea7468e0c55e99fe",
   "findings": []
 }

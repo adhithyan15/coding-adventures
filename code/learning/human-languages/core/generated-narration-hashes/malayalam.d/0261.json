@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 261,
-  "sourceHash": "fnv1a64:856958c1cf3ad7b1",
+  "sourceHash": "fnv1a64:3a995b891a9cd468",
   "lessonIds": [
     "ML-C261-posrrman",
     "ML-C261-abhimukham",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch261.txt",
   "json": "malayalam/narration/ch261.json",
-  "textHash": "fnv1a64:eeb784a9cabb3d25",
-  "jsonHash": "fnv1a64:7a30ff4cde2595c4",
+  "textHash": "fnv1a64:5c44fd0924290ab5",
+  "jsonHash": "fnv1a64:3439419be91506b6",
   "findings": []
 }

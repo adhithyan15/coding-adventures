@@ -11,7 +11,8 @@ romanization: "idu"
 concept_tag: KA-DEIXIS-THIS
 prerequisites: [KA-C37-kannu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "idu: native Dravidian, the near-pointing base i- + a 'thing' ending; Tamil itu (DEDR 410)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇದು** (*idu*) is native Dravidian: the near-pointing base *i-* with an ending meaning "thing". DEDR 410 lists Kannada *idu* with Tamil *itu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-01, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02] -->

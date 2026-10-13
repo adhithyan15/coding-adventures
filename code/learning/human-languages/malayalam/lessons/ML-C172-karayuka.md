@@ -14,7 +14,8 @@ romanization: "karayuka"
 concept_tag: ML-VERB-KARAYUKA
 prerequisites: [ML-C172-kontuvaruka, ML-C172-vilikkuka]
 sounds: []
-roots: []
+roots: [dravidian-karai-cry]
+etymology_hook: "karayuka: native Dravidian, one word with Tamil karai and Kannada kare (DEDR 1291)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C172-vilikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C172-ACT172-05]; assesses=[] -->
 
 **കരയുക** — *karayuka* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കരയുക** (*karayuka*) is native Dravidian, one word with Tamil *karai* and Kannada *kare* (DEDR 1291).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

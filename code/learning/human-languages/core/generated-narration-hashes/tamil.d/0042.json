@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 42,
-  "sourceHash": "fnv1a64:e0a207a64d525bf3",
+  "sourceHash": "fnv1a64:6a506ac5f4418392",
   "lessonIds": [
     "TA-C42-come",
     "TA-C42-sit",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "tamil/narration/ch42.txt",
   "json": "tamil/narration/ch42.json",
-  "textHash": "fnv1a64:f8c00d4d450b196d",
-  "jsonHash": "fnv1a64:0c00a1f77eb2eecb",
+  "textHash": "fnv1a64:055628fa91f4469f",
+  "jsonHash": "fnv1a64:d2db96dee261efc1",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "badalu"
 concept_tag: KA-KARANA176-BADALU
 prerequisites: [KA-C176-adaru, KA-C176-ondu-vele]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badalu ← Arabic badal 'substitute, exchange', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C176-ondu-vele]
 <!-- hl-knowledge: introduces=[KA-LEX-C176-KARANA176-05]; assesses=[] -->
 
 **ಬದಲು** — *badalu* — "instead (of)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬದಲು** (*badalu*) is a loan from Arabic *badal*, "substitute, exchange", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

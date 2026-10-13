@@ -14,7 +14,8 @@ romanization: "paṅkeṭukkuka"
 concept_tag: ML-VERB-PANKETUKKUKA
 prerequisites: [ML-C227-kuriccetukkuka, ML-C227-hajarakuka]
 sounds: []
-roots: []
+roots: [dravidian-paku-share, dravidian-ezhu-rise]
+etymology_hook: "paṅkeṭukkuka: native Dravidian, 'take a share': paṅku (DEDR 3808) + eṭukkuka (DEDR 851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C227-hajarakuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C227-KRIYA227-03]; assesses=[] -->
 
 **പങ്കെടുക്കുക** — *paṅkeṭukkuka* — "to take part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പങ്കെടുക്കുക** (*paṅkeṭukkuka*) is native Dravidian, "take a share": *paṅku*, "part, share" (DEDR 3808), and the verb "to take up" (DEDR 851).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

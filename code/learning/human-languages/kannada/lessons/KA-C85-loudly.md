@@ -11,7 +11,8 @@ romanization: "jōrāgi"
 concept_tag: KA-REP-LOUDLY
 prerequisites: [KA-C85-slowly, KA-C85-oncemore]
 sounds: []
-roots: []
+roots: [persian-zor]
+etymology_hook: "jōrāgi: jōr 'force' ← Persian zōr through Hindustani + the adverb ending -āgi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C85-oncemore]
 **ನಿಧಾನವಾಗಿ**.
 
 **ಸ್ವಲ್ಪ ಜೋರಾಗಿ** (*svalpa jōrāgi*) — "a little louder", with **ಸ್ವಲ್ಪ**, "a little".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೋರಾಗಿ** (*jōrāgi*) is *jōr*, "force, loudness", with the adverb ending *-āgi*, "in a … way". *Jōr* is a loan from Persian *zōr*, "strength, force", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

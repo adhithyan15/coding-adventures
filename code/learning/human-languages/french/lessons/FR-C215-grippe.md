@@ -14,6 +14,7 @@ concept_tag: FR-SANTE215-GRIPPE
 prerequisites: [FR-C214-exprimer, FR-C214-grossir]
 sounds: []
 roots: []
+etymology_hook: "grippe — from the verb 'to seize', Frankish *gripan: the illness that grabs you — English grip"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C214-grossir]
 <!-- hl-knowledge: introduces=[FR-LEX-C215-SANTE215-01]; assesses=[] -->
 
 **la grippe** — "flu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grippe** — formed from the verb for "to seize", from Frankish *\*gripan*, "to grab" (EtymDB 2.1): the illness that grabs you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

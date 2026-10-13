@@ -13,7 +13,8 @@ gloss: "fantastic"
 concept_tag: GE-QUAL213-FANTASTISCH
 prerequisites: [GE-C213-erfolgreich, GE-C213-erkaeltet]
 sounds: []
-roots: []
+roots: [phantasticus-latin]
+etymology_hook: "fantastisch ← Latin phantasticus ← Greek phantastikós 'imaginary' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C213-erkaeltet]
 <!-- hl-knowledge: introduces=[GE-LEX-C213-QUAL213-04]; assesses=[] -->
 
 **fantastisch** — "fantastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fantastisch** ← Latin *phantasticus* ← Greek *phantastikós*, "able to imagine, imaginary" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

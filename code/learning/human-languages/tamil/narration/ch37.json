@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6ff650eabda73f9b",
+  "sourceHash": "fnv1a64:f692067a40f6d81f",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -590,7 +590,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:084921272a578543",
+      "sourceHash": "fnv1a64:0944f885e2c808f7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -649,7 +649,7 @@
             },
             {
               "kind": "speech",
-              "text": "A word this short is almost all arc, which is the moment to recall the usual explanation for that roundness: Tamil was scratched into palm leaf, and a straight stroke along the grain can split the leaf. Hold it as the writing lesson asked — the standard account, not a settled fact, since the earliest Tamil writing was cut into stone and is angular. What survives is the useful part: the tool leaves fingerprints on the letters."
+              "text": "A word this short is almost all arc. Recall the usual explanation for that roundness: Tamil was scratched into palm leaf, and a straight stroke along the grain can split the leaf. Hold it as the writing lesson asked — the standard account, not a settled fact, since the earliest Tamil writing was cut into stone and is angular. What survives is the useful part: the tool leaves fingerprints on the letters."
             }
           ]
         },
@@ -660,7 +660,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "இவர் (ivar) is one cell of a system, and the system is a single letter at the front:"
+              "text": "இவர் (ivar) is one cell of a system inherited from Dravidian (DEDR 410), and the system is a single letter at the front:"
             },
             {
               "kind": "table",
@@ -767,7 +767,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:902ac97b3b54a543",
+      "sourceHash": "fnv1a64:77af81c7102b651e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -835,6 +835,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவர் (avar) is native Dravidian: the far base a- with the respectful -ar (DEDR 1). Malayalam and Kannada have avar too."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the column that was empty",
           "segments": [
@@ -866,7 +877,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -915,7 +926,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -946,7 +957,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:30fc8c871f6986df",
+      "sourceHash": "fnv1a64:3e128f4ebebed382",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -986,7 +997,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three words, and not one of them is a verb. Tamil links two nouns by setting them beside each other, as in என் பெயர் … and என் தவறு."
+              "text": "Three words, all inherited from Dravidian, and not one of them is a verb. Tamil links two nouns by setting them beside each other, as in என் பெயர் … and என் தவறு."
             },
             {
               "kind": "speech",
@@ -999,10 +1010,6 @@
             {
               "kind": "speech",
               "text": "— வணக்கம். இவர் என் நண்பர் (ivar eṉ naṇbar). — வணக்கம். உங்கள் ஊர் (ūr) என்ன."
-            },
-            {
-              "kind": "speech",
-              "text": "Every word in it is yours."
             }
           ]
         },

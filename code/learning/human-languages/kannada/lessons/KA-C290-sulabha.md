@@ -14,7 +14,8 @@ romanization: "sulabha"
 concept_tag: KA-GUNA290-SULABHA
 prerequisites: [KA-C290-purti, KA-C290-kasta]
 sounds: []
-roots: []
+roots: [sanskrit-sulabha]
+etymology_hook: "sulabha ← Sanskrit sulabha 'easy', a tatsama (CDIAL 13512)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C290-kasta]
 <!-- hl-knowledge: introduces=[KA-LEX-C290-GUNA290-04]; assesses=[] -->
 
 **ಸುಲಭ** — *sulabha* — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಲಭ** (*sulabha*) is Sanskrit *sulabha*, "easy", taken over whole as a learned loan, a tatsama (CDIAL 13512).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

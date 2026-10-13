@@ -11,7 +11,8 @@ romanization: "sālai"
 concept_tag: TA-NOUN-ROAD
 prerequisites: [TA-C69-train, TA-C67-sandal, TA-C68-buy]
 sounds: []
-roots: []
+roots: [dravidian-caal-track]
+etymology_hook: "சாலை — native Dravidian (DEDR 2471); Malayalam cāl 'track, furrow'"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ Set it beside பாதை (*pātai*), the path you already have. A பாதை
 The difference is not size so much as what it was made for.
 
 Both end in the same **ை**, which by now you have read four times.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சாலை** (*sālai*) is native Dravidian. DEDR 2471 lists Malayalam *cāl*, "track, furrow". The entry lists *cālai*, "street, road", beside *cāl*, "furrow, track".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

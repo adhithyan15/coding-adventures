@@ -14,7 +14,8 @@ romanization: "anisu"
 concept_tag: KA-VERB-ANISU
 prerequisites: [KA-C276-hemmepadu, KA-C277-uhisu]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "anisu: native Dravidian, 'make say', from an 'to say' (DEDR 868)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C277-uhisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C277-KRIYE277-02]; assesses=[] -->
 
 **ಅನಿಸು** — *anisu* — "to seem, to feel (that)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅನಿಸು** (*anisu*) is native Dravidian, from *an*, "to say", and DEDR 868 lists *anisu*, "to cause to say", itself: "it makes me say" became "it seems"; the entry also has Tamil *eṉ* and Telugu *anu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

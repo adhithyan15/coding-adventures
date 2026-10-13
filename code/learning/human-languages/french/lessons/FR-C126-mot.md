@@ -14,6 +14,7 @@ concept_tag: FR-ECOLE78-MOT
 prerequisites: [FR-C126-lecon, FR-C126-examen]
 sounds: []
 roots: []
+etymology_hook: "mot ← Late Latin muttum 'a grunt', from muttire 'to mutter' — English motto"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C126-examen]
 <!-- hl-knowledge: introduces=[FR-LEX-C126-ECOLE78-04]; assesses=[] -->
 
 **le mot** — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mot** ← Late Latin *muttum*, "a grunt, a sound", from *muttire*, "to mutter" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

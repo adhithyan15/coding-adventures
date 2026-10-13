@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 107,
-  "sourceHash": "fnv1a64:d87c3c74e9d91ed7",
+  "sourceHash": "fnv1a64:679d0be8d6e70fad",
   "lessonIds": [
     "KA-C107-bala",
     "KA-C107-eda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch107.txt",
   "json": "kannada/narration/ch107.json",
-  "textHash": "fnv1a64:57580c5ba3112d92",
-  "jsonHash": "fnv1a64:dc65baecf51f585b",
+  "textHash": "fnv1a64:dfaf5a4f1f807f80",
+  "jsonHash": "fnv1a64:e6bb7c1c837ccf4f",
   "findings": []
 }

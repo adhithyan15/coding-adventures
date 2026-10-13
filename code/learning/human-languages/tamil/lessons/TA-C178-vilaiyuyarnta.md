@@ -14,7 +14,8 @@ romanization: "vilaiyuyarnta"
 concept_tag: TA-GUNAM178-VILAIYUYARNTA
 prerequisites: [TA-C178-cuvaiyana, TA-C178-malivana]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell, dravidian-uyar-rise]
+etymology_hook: "விலையுயர்ந்த — native: vilai 'price' (DEDR 5421) + uyarnta 'high', from uyar 'to rise' (DEDR 646)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C178-malivana]
 <!-- hl-knowledge: introduces=[TA-LEX-C178-GUNAM178-03]; assesses=[] -->
 
 **விலையுயர்ந்த** — *vilaiyuyarnta* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விலையுயர்ந்த** (*vilaiyuyarnta*) is native: *vilai*, "price" (DEDR 5421), and *uyarnta*, "risen, high", from *uyar*, "to rise" (DEDR 646).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

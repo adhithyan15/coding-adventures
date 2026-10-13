@@ -14,7 +14,8 @@ romanization: "nanavuḷḷa"
 concept_tag: ML-QUAL167-NANAVULLA
 prerequisites: [ML-C166-mrduvaya, ML-C166-kathinamaya]
 sounds: []
-roots: []
+roots: [dravidian-nanai-wet, dravidian-ul-be]
+etymology_hook: "nanavuḷḷa: native Dravidian, 'having wetness': nanavŭ (DEDR 3630) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C166-kathinamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C167-QUAL167-01]; assesses=[] -->
 
 **നനവുള്ള** — *nanavuḷḷa* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നനവുള്ള** (*nanavuḷḷa*) is native Dravidian, "having wetness": *nanavŭ*, "wetness" (DEDR 3630, with Tamil *naṉai*), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

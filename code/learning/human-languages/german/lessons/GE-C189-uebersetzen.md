@@ -13,7 +13,8 @@ gloss: "to translate"
 concept_tag: GE-VERB-UEBERSETZEN
 prerequisites: [GE-C188-trennen, GE-C188-ueberqueren]
 sounds: []
-roots: []
+roots: [germanic-satjana]
+etymology_hook: "übersetzen — 'over' + the verb 'to set': to set words over into another language"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C188-ueberqueren]
 <!-- hl-knowledge: introduces=[GE-LEX-C189-VERB189-01]; assesses=[] -->
 
 **übersetzen** — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**übersetzen** is the word for "over" + the verb "to set", Old High German *sezzen*, English *set* (EtymDB 2.1): to set words over into another language, a copy of Latin *trādūcere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

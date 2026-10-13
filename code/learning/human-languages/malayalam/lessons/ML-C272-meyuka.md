@@ -14,7 +14,8 @@ romanization: "mēyuka"
 concept_tag: ML-VERB-MEYUKA
 prerequisites: [ML-C271-tutaruka, ML-C272-tirruka]
 sounds: []
-roots: []
+roots: [dravidian-mey-graze]
+etymology_hook: "mēyuka: native Dravidian, one word with Tamil mēy and Kannada mē (DEDR 5093)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C272-tirruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C272-KRIYA272-02]; assesses=[] -->
 
 **മേയുക** — *mēyuka* — "to graze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മേയുക** (*mēyuka*) is native Dravidian, one word with Tamil *mēy*, Kannada *mē* and Telugu *mēyu* (DEDR 5093).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

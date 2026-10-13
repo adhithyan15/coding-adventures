@@ -11,7 +11,8 @@ romanization: "ōṭṭō"
 concept_tag: ML-RIDE-AUTO
 prerequisites: [ML-C137-train, ML-C137-plane]
 sounds: []
-roots: []
+roots: [english-auto]
+etymology_hook: "ōṭṭō ← English auto, short for autorickshaw"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C137-plane]
 <!-- hl-knowledge: introduces=[ML-LEX-C137-RIDE-05]; assesses=[] -->
 
 **ഓട്ടോ** (*ōṭṭō*) — "an autorickshaw", the three-wheeled taxi.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓട്ടോ** (*ōṭṭō*) ← English *auto*, short for *autorickshaw*; *auto-* is Greek for "self", and *rickshaw* is from Japanese *jinrikisha*, "man-power vehicle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

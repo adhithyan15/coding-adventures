@@ -13,7 +13,8 @@ gloss: "a number (on a door, a phone)"
 concept_tag: FR-NATURE86-NUMERO
 prerequisites: [FR-C134-oreille, FR-C134-levre]
 sounds: []
-roots: []
+roots: [numerus-latin]
+etymology_hook: "numéro ← Italian numero, from Latin numerus 'number' — English number"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C134-levre]
 <!-- hl-knowledge: introduces=[FR-LEX-C134-NATURE86-04]; assesses=[] -->
 
 **le numéro** — "a number (on a door, a phone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**numéro** ← Italian *numero* ← Latin *numerus*, "a number" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

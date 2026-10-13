@@ -14,7 +14,8 @@ romanization: "tavaḷa"
 concept_tag: ML-THINGS152-TAVALA
 prerequisites: [ML-C151-simham, ML-C152-eli]
 sounds: []
-roots: []
+roots: [dravidian-tavalai-frog]
+etymology_hook: "tavaḷa: native Dravidian, one word with Tamil tavaḷai (DEDR 3110)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C152-eli]
 <!-- hl-knowledge: introduces=[ML-LEX-C152-THINGS152-02]; assesses=[] -->
 
 **തവള** — *tavaḷa* — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തവള** (*tavaḷa*) is native Dravidian, one word with Tamil *tavaḷai* (DEDR 3110).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

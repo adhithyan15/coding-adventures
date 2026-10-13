@@ -14,6 +14,7 @@ concept_tag: FR-VERB-DEPASSER
 prerequisites: [FR-C181-tirer, FR-C181-gaspiller]
 sounds: []
 roots: []
+etymology_hook: "dépasser — dé- 'beyond' + the verb 'to pass'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C181-gaspiller]
 <!-- hl-knowledge: introduces=[FR-LEX-C181-VERBES181-05]; assesses=[] -->
 
 **dépasser** — "to overtake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dépasser** — built from *dé-*, "beyond", and the verb for "to pass", ← Vulgar Latin *\*passare*, from Latin *passus*, "a step" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vacatiyāṉa"
 concept_tag: TA-GUNAM269-VACATIYANA
 prerequisites: [TA-C269-calippana, TA-C269-eliya]
 sounds: []
-roots: []
+roots: [sanskrit-vasati]
+etymology_hook: "வசதியான — vacati 'comfort', usually traced to Sanskrit vasati 'dwelling', + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C269-eliya]
 <!-- hl-knowledge: introduces=[TA-LEX-C269-GUNAM269-05]; assesses=[] -->
 
 **வசதியான** — *vacatiyāṉa* — "comfortable, convenient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வசதியான** (*vacatiyāṉa*) is *vacati*, "comfort, means", usually traced to Sanskrit *vasati*, "dwelling, abode", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

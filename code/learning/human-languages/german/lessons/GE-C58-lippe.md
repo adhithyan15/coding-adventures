@@ -13,7 +13,8 @@ gloss: "a lip"
 concept_tag: GE-KOERPER3-LIPPE
 prerequisites: [GE-C58-ruecken, GE-C58-zunge]
 sounds: []
-roots: []
+roots: [germanic-lipjo]
+etymology_hook: "Lippe — Proto-Germanic *lipjô, the same word as English lip; standard German borrowed this form from Low German"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C58-zunge]
 <!-- hl-knowledge: introduces=[GE-LEX-C58-KOERPER3-03]; assesses=[] -->
 
 **die Lippe** — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lippe** is the Germanic word for "lip", Proto-Germanic *\*lipjô*. EtymDB 2.1 traces English *lip* to *\*lipjô* and lists *Lippe* beside it. Standard German borrowed this form from Low German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

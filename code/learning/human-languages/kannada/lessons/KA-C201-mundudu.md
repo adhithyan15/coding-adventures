@@ -14,7 +14,8 @@ romanization: "mundūḍu"
 concept_tag: KA-VERB-MUNDUDU
 prerequisites: [KA-C200-mugisu, KA-C200-suru-madu]
 sounds: []
-roots: []
+roots: [dravidian-mun-front, dravidian-tuudu-push]
+etymology_hook: "mundūḍu: native mundu 'ahead' (DEDR 5020) + dūḍu 'to push' (DEDR 3380): 'to push ahead'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C200-suru-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C201-KRIYE201-01]; assesses=[] -->
 
 **ಮುಂದೂಡು** — *mundūḍu* — "to postpone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಂದೂಡು** (*mundūḍu*) is native Dravidian: *mundu*, "ahead, in front" (DEDR 5020), and *dūḍu*, "to push, shove" (DEDR 3380): "to push ahead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

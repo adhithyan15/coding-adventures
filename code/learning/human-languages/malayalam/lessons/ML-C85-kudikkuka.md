@@ -11,7 +11,8 @@ romanization: "kuṭikkuka"
 concept_tag: ML-VERB-DRINK
 prerequisites: [ML-R84-place-recall, ML-C34-edukkuka, ML-C39-chaaya, ML-C15-vellam-ari]
 sounds: []
-roots: []
+roots: [dravidian-kudi-drink]
+etymology_hook: "kuṭikkuka: native Dravidian, one word with Tamil kuṭi and Kannada kuḍi (DEDR 1654)"
 duration:
   max_seconds: 250
 requires:
@@ -61,6 +62,11 @@ Say **കുടി** — *kuṭi* — on its own: two syllables, written as two 
 they are the whole of what makes this verb *drinking* rather than *taking*. **The next lesson
 is about those two letters**, because one small change to them produces a word
 you have known since the family chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുടിക്കുക** (*kuṭikkuka*) is native Dravidian, one word with Tamil *kuṭi* and Kannada *kuḍi* (DEDR 1654). DEDR 1654 compares Sanskrit *kuṭī*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C85-DRINK-01, ML-CONCEPT-C34-EDUKKUKA-01, ML-CONCEPT-C39-CHAAYA-01] -->

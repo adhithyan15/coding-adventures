@@ -14,6 +14,7 @@ concept_tag: FR-ADJ44-SALE
 prerequisites: [FR-C91-gris, FR-C92-doux]
 sounds: []
 roots: []
+etymology_hook: "sale ← Frankish *salo 'dull, dirty grey' — English sallow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C92-doux]
 <!-- hl-knowledge: introduces=[FR-LEX-C92-ADJ44-02]; assesses=[] -->
 
 **sale** — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sale** ← Frankish *\*salo*, "dull, dirty grey" — borrowed from the Franks. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

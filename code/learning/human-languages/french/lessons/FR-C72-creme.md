@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE24-CREME
 prerequisites: [FR-C72-salade, FR-C72-pates]
 sounds: []
 roots: []
+etymology_hook: "crème ← Late Latin crama 'cream', probably Gaulish — English cream came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C72-pates]
 <!-- hl-knowledge: introduces=[FR-LEX-C72-CUISINE24-03]; assesses=[] -->
 
 **la crème** — "cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crème** ← Old French *cresme* ← Late Latin *crama*, "cream", probably a Gaulish word (EtymDB 2.1); its spelling was later pulled toward Church Latin *chrisma*, "anointing oil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

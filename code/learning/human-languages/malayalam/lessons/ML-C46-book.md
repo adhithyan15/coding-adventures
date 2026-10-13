@@ -11,7 +11,8 @@ romanization: "pustakaṁ"
 concept_tag: ML-NOUN-BOOK
 prerequisites: [ML-C46-salt, ML-C44-speak]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka]
+etymology_hook: "pustakaṁ ← Sanskrit pustaka 'book', which Sanskrit probably took from an Iranian word for 'skin'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *pustaka*, taken whole. Tamil புத்தகம், Telugu పు�
 Sanskrit itself seems to have taken it from further west. The usual trail runs to Persian *post*, a hide or a skin — the material a book was, before it was paper. A word for the animal became a word for the page.
 
 Malayalam also says *granthaṁ* for a book of weight and age, another Sanskrit word, and that one is built on a root about knotting: palm leaves tied into a bundle. Two borrowings, two different pictures of what a book physically was.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുസ്തകം** (*pustakaṁ*) ← Sanskrit *pustaka*, "book, manuscript", a tatsama with Malayalam's noun ending *-ṁ*. Sanskrit itself probably took the word from Iranian, where Persian *pōst* means "skin, hide" (CDIAL 8413).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

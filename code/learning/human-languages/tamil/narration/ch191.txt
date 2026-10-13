@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a grinding stone, then the Tamil for a tan
 You'll want to know: கடைக்காரர்.
 கடைக்காரர் — kaṭaikkārar — "a shopkeeper".
 
+The word, taken apart.
+கடைக்காரர் (kaṭaikkārar) is kaṭai, "shop", native (DEDR 1142), with -kārar, "the one in charge of".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a tank, then the Tamil for a shopkeeper.
 
 You'll want to know: வாடிக்கையாளர்.
 வாடிக்கையாளர் — vāṭikkaiyāḷar — "a customer".
+
+The word, taken apart.
+வாடிக்கையாளர் (vāṭikkaiyāḷar) is native Dravidian. DEDR 5341 lists Kannada vāḍike, "custom". It is vāṭikkai, "habit, custom", with -āḷar, "persons": "the regulars".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a shopkeeper, then the Tamil for a custome
 You'll want to know: காசாளர்.
 காசாளர் — kācāḷar — "a cashier".
 
+The word, taken apart.
+காசாளர் (kācāḷar) is native Dravidian. DEDR 1431 lists Malayalam kāśu, "money" and Kannada kāsu, "coin". It is kācu, "coin, money", with -āḷar, "the one who handles". DEDR compares kācu, with a query, to Sanskrit karṣa, a weight.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a customer, then the Tamil for a cashier.
 You'll want to know: தையல்காரர்.
 தையல்காரர் — taiyalkārar — "a tailor".
 
+The word, taken apart.
+தையல்காரர் (taiyalkārar) is native Dravidian (DEDR 3473). It is taiyal, "sewing", from tai, "to sew", with -kārar.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a cashier, then the Tamil for a tailor.
 
 You'll want to know: சில்லறை.
 சில்லறை — cillaṟai — "small change".
+
+The word, taken apart.
+சில்லறை (cillaṟai) is native Dravidian. DEDR 2574 lists Kannada cillaṟe, "fractional quantities".
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "the brain"
 concept_tag: FR-SANTE154-CERVEAU
 prerequisites: [FR-C153-saigner, FR-C154-sante]
 sounds: []
-roots: []
+roots: [cerebrum-latin]
+etymology_hook: "cerveau ← Latin cerebellum 'a little brain', from cerebrum — English cerebral"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C154-sante]
 <!-- hl-knowledge: introduces=[FR-LEX-C154-SANTE154-02]; assesses=[] -->
 
 **le cerveau** — "the brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cerveau** ← Old French *cervel* ← Latin *cerebellum*, "a little brain", from *cerebrum*, "brain" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

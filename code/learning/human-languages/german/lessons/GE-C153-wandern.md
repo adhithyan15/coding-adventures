@@ -13,7 +13,8 @@ gloss: "to hike"
 concept_tag: GE-VERB-WANDERN
 prerequisites: [GE-C152-versprechen, GE-C152-vorstellen]
 sounds: []
-roots: []
+roots: [germanic-wandrona]
+etymology_hook: "wandern ← Old High German wantarōn ← Proto-Germanic *wandrōną — the same verb as English wander"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C152-vorstellen]
 <!-- hl-knowledge: introduces=[GE-LEX-C153-VERB153-01]; assesses=[] -->
 
 **wandern** — "to hike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wandern** ← Old High German *wantarōn* ← Proto-Germanic *\*wandrōną* — inherited, the same verb as English *wander*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

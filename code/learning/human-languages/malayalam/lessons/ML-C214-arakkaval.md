@@ -14,7 +14,8 @@ romanization: "aṟakkavāḷ"
 concept_tag: ML-VASTU214-ARAKKAVAL
 prerequisites: [ML-C214-pasa, ML-C214-sviccu]
 sounds: []
-roots: []
+roots: [dravidian-val-saw]
+etymology_hook: "aṟakkavāḷ: native aṟakka 'to saw' + vāḷ 'sword, saw' (DEDR 5376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C214-sviccu]
 <!-- hl-knowledge: introduces=[ML-LEX-C214-VASTU214-05]; assesses=[] -->
 
 **അറക്കവാൾ** — *aṟakkavāḷ* — "a saw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അറക്കവാൾ** (*aṟakkavāḷ*) joins a native verb "to saw" to *vāḷ*, "sword, saw" (DEDR 5376, with Tamil *vāḷ*). DEDR 5376 compares Sanskrit *karavāla*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

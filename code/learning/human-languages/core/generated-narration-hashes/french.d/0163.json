@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 163,
-  "sourceHash": "fnv1a64:f5a811cafca047fd",
+  "sourceHash": "fnv1a64:f3221a7721bfe4dc",
   "lessonIds": [
     "FR-C163-appartement",
     "FR-C163-salle-a-manger",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch163.txt",
   "json": "french/narration/ch163.json",
-  "textHash": "fnv1a64:4b508704539a288a",
-  "jsonHash": "fnv1a64:47178aa481d03a7d",
+  "textHash": "fnv1a64:976f64a78b44a7c3",
+  "jsonHash": "fnv1a64:3eaaa571b97ddf67",
   "findings": []
 }

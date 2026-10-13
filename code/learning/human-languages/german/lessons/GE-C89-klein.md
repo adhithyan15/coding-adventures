@@ -13,7 +13,8 @@ gloss: "small"
 concept_tag: GE-ADJ1-KLEIN
 prerequisites: [GE-C88-holen, GE-C88-wuenschen]
 sounds: []
-roots: []
+roots: [germanic-klainiz]
+etymology_hook: "klein ← Old High German kleini 'fine, delicate' ← Proto-Germanic *klainiz — the same word as English clean"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C88-wuenschen]
 <!-- hl-knowledge: introduces=[GE-LEX-C89-ADJ1-01]; assesses=[] -->
 
 **klein** — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**klein** ← Old High German *kleini*, "fine, delicate" ← Proto-Germanic *\*klainiz*, "shining, fine" — inherited, the same word as English *clean*. (EtymDB 2.1) German moved from "fine" to "small".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

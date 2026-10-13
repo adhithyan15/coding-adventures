@@ -14,7 +14,8 @@ romanization: "jiṅke"
 concept_tag: KA-THINGS130-JINKE
 prerequisites: [KA-C130-koti, KA-C130-mola]
 sounds: []
-roots: []
+roots: [dravidian-jinke-deer]
+etymology_hook: "jiṅke: native Dravidian, one word with Telugu jiṅka (DEDR 2504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C130-mola]
 <!-- hl-knowledge: introduces=[KA-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **ಜಿಂಕೆ** — *jiṅke* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಿಂಕೆ** (*jiṅke*) is native Dravidian, one word with Telugu *jiṅka* (DEDR 2504).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aḻai"
 concept_tag: TA-VERB-ALAI2
 prerequisites: [TA-C153-kuli, TA-C154-ani2]
 sounds: []
-roots: []
+roots: [dravidian-azhai-call]
+etymology_hook: "அழை — native Dravidian (DEDR 282)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C154-ani2]
 <!-- hl-knowledge: introduces=[TA-LEX-C154-ACT154-02]; assesses=[] -->
 
 **அழை** — *aḻai* — "to call, to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழை** (*aḻai*) is native Dravidian (DEDR 282). The entry lists *aḻai*, "to call", beside *aḻu*, "to cry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

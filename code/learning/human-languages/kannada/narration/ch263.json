@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "Boy, Girl, Man, Woman, Old man",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c6289fc4da59f588",
+  "sourceHash": "fnv1a64:7d02c76af8392a8d",
   "lessons": [
     {
       "id": "KA-C263-huduga",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81a75c88f4216201",
+      "sourceHash": "fnv1a64:ea6503aee770634d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುಡುಗ (huḍuga) is native Dravidian (DEDR 4259). DEDR lists huḍuga, \"boy, child\", beside puṭṭa, \"small\". DEDR 4259 compares Sanskrit puṭṭ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c70be816766806e5",
+      "sourceHash": "fnv1a64:b895c1f45e35c8cb",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುಡುಗಿ (huḍugi) is native Dravidian (DEDR 4259). DEDR lists huḍugi, \"girl\", beside puṭṭa, \"small\". DEDR 4259 compares Sanskrit puṭṭ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb1fcec383c040d7",
+      "sourceHash": "fnv1a64:a5db10cdb65ffa21",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಂಡಸು (gaṇḍasu) is native Dravidian, one word with Tamil kaṇṭaṉ, Telugu gaṇḍu and Malayalam kaṇṭan (DEDR 1173). DEDR lists gaṇḍasu, \"male person\", beside gaṇḍu, \"a male, a man\". DEDR 1173 compares Sanskrit gaṇḍa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12fc7908f9bb88ef",
+      "sourceHash": "fnv1a64:9a86a05f953822aa",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಂಗಸು (heṅgasu) is native Dravidian, one word with Tamil peṇ, Telugu peṇṭi and Malayalam peṇ (DEDR 4395). DEDR lists heṅgasu, \"female\", beside peṇ, \"woman\". DEDR 4395 compares Sanskrit paṇḍa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e6d90f55975bb61",
+      "sourceHash": "fnv1a64:4025016f72c101ac",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುದುಕ (muduka) is native Dravidian, one word with Tamil mutu, Telugu mudara and Malayalam mutu (DEDR 4954). DEDR lists mudaka, muduku, \"old man\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

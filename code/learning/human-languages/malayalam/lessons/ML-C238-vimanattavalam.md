@@ -14,7 +14,8 @@ romanization: "vimānattāvaḷaṁ"
 concept_tag: ML-STHALAM238-VIMANATTAVALAM
 prerequisites: [ML-C237-mininnannu, ML-C238-natuvil]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "vimānattāvaḷaṁ: Sanskrit vimāna 'aircraft' (CDIAL 11823) + tāvaḷam 'a halting place'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C238-natuvil]
 <!-- hl-knowledge: introduces=[ML-LEX-C238-STHALAM238-02]; assesses=[] -->
 
 **വിമാനത്താവളം** — *vimānattāvaḷaṁ* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിമാനത്താവളം** (*vimānattāvaḷaṁ*) joins Sanskrit *vimāna*, "a car of the gods", now "aircraft" (CDIAL 11823), to *tāvaḷam*, "a halting place, a station".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

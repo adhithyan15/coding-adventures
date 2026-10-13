@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 119,
-  "sourceHash": "fnv1a64:eb4a2645e3a62ff8",
+  "sourceHash": "fnv1a64:35231e7ce8791e82",
   "lessonIds": [
     "KA-C119-ole",
     "KA-C119-menabatti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch119.txt",
   "json": "kannada/narration/ch119.json",
-  "textHash": "fnv1a64:5949ffe992008d47",
-  "jsonHash": "fnv1a64:35dea073dd382cc4",
+  "textHash": "fnv1a64:bd00df77cdda5c87",
+  "jsonHash": "fnv1a64:6d0cc4b1a05f46cf",
   "findings": []
 }

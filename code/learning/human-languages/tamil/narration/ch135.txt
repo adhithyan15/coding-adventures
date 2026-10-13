@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a mobile phone, then the Tamil for a compu
 You'll want to know: மின்விசிறி.
 மின்விசிறி — miṉviciṟi — "an electric fan".
 
+The word, taken apart.
+மின்விசிறி (miṉviciṟi) is a modern coinage from native parts: miṉ, "lightning, electricity" (DEDR 4876), and viciṟi, "fan" (DEDR 5450, which compares Sanskrit vīj-, "to fan").
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a computer, then the Tamil for an electric
 
 You'll want to know: கத்தரிக்கோல்.
 கத்தரிக்கோல் — kattarikkōl — "scissors".
+
+The word, taken apart.
+கத்தரிக்கோல் (kattarikkōl) is kattari, "scissors", from Sanskrit kartari, "scissors, knife" (CDIAL 2858), with native kōl, "stick, rod" (DEDR 2237).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for an electric fan, then the Tamil for scisso
 You'll want to know: சுத்தியல்.
 சுத்தியல் — cuttiyal — "a hammer".
 
+The word, taken apart.
+சுத்தியல் (cuttiyal) is native Dravidian. DEDR 2668 lists Malayalam cutti and Kannada suttige.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for scissors, then the Tamil for a hammer.
 You'll want to know: ஆணி.
 ஆணி — āṇi — "a nail (to hammer)".
 
+The word, taken apart.
+ஆணி (āṇi) is filed in DEDR's appendix of Indo-Aryan loans (DEDR App. 10), beside Malayalam āṇi, "peg", and Kannada āṇi, "nail". The source is Sanskrit āṇi, "linch-pin".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a hammer, then the Tamil for a nail.
 
 You'll want to know: ஏணி.
 ஏணி — ēṇi — "a ladder".
+
+The word, taken apart.
+The origin of ஏணி (ēṇi) is uncertain. DEDR has an ēṇi, "boundary, edge" (DEDR 886), but not this word for a ladder.
 
 What you've built.
 One more word for this chapter.

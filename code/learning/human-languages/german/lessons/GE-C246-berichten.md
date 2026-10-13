@@ -13,7 +13,8 @@ gloss: "to report"
 concept_tag: GE-VERB-BERICHTEN
 prerequisites: [GE-C246-bemerken, GE-C246-beraten]
 sounds: []
-roots: []
+roots: [germanic-rihtijana]
+etymology_hook: "berichten ← Middle High German berihten 'to set in order, to instruct' — to report"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C246-beraten]
 <!-- hl-knowledge: introduces=[GE-LEX-C246-VERB246-04]; assesses=[] -->
 
 **berichten** — "to report".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**berichten** ← Middle High German *berihten*, "to set in order, to instruct" (EtymDB 2.1): *be-* + the verb "to set right". A report sets the facts in order.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

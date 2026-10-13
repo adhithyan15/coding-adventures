@@ -14,7 +14,8 @@ romanization: "kannaḍi"
 concept_tag: KA-THINGS137-KANNADI
 prerequisites: [KA-C137-meju, KA-C137-kitaki]
 sounds: []
-roots: []
+roots: [dravidian-kannadi-mirror]
+etymology_hook: "kannaḍi: native Dravidian, one word with Tamil kaṇṇāṭi (DEDR 1182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C137-kitaki]
 <!-- hl-knowledge: introduces=[KA-LEX-C137-THINGS137-03]; assesses=[] -->
 
 **ಕನ್ನಡಿ** — *kannaḍi* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕನ್ನಡಿ** (*kannaḍi*) is native Dravidian, one word with Tamil *kaṇṇāṭi* (DEDR 1182). The entry explains the Tamil word as *kaṇ*, "eye", with *āṭi*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "śāle"
 concept_tag: KA-WORK-SCHOOL
 prerequisites: [KA-C91-hometown, KA-C91-language]
 sounds: []
-roots: []
+roots: [sanskrit-shala]
+etymology_hook: "śāle ← Sanskrit śālā 'shed, stable, house', a tatsama (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C91-language]
 **ಶಾಲೆ** (*śāle*) — "school".
 
 A **ಶಿಕ್ಷಕ** (*śikṣaka*), "teacher", works in one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶಾಲೆ** (*śāle*) is Sanskrit *śālā*, "shed, stable, house", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 12414). A house for learning became the school.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

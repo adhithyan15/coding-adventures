@@ -14,7 +14,8 @@ romanization: "āṇi"
 concept_tag: ML-THINGS159-ANI
 prerequisites: [ML-C159-katrika, ML-C159-currika]
 sounds: []
-roots: []
+roots: [sanskrit-ani]
+etymology_hook: "āṇi ← Sanskrit āṇi 'axle-pin, peg' (CDIAL 1110); DEDR appendix 10 lists it among Indo-Aryan loans"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C159-currika]
 <!-- hl-knowledge: introduces=[ML-LEX-C159-THINGS159-03]; assesses=[] -->
 
 **ആണി** — *āṇi* — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആണി** (*āṇi*) ← Sanskrit *āṇi*, "axle-pin, peg" (CDIAL 1110), an old Indo-Aryan word. DEDR appendix 10, which gathers Dravidian words taken from Indo-Aryan, lists it with Tamil *āṇi* and Kannada *āṇi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

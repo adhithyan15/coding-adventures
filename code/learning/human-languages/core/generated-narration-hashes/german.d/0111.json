@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 111,
-  "sourceHash": "fnv1a64:c7c2ddb501f6c047",
+  "sourceHash": "fnv1a64:99dd82bb8ce3ad2e",
   "lessonIds": [
     "GE-C111-taxi",
     "GE-C111-fahrkarte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch111.txt",
   "json": "german/narration/ch111.json",
-  "textHash": "fnv1a64:4a6e65046857dcfc",
-  "jsonHash": "fnv1a64:c8b9e1f214d882ed",
+  "textHash": "fnv1a64:e41ebe869a9e50f1",
+  "jsonHash": "fnv1a64:20042fa9e3a5cbfe",
   "findings": []
 }

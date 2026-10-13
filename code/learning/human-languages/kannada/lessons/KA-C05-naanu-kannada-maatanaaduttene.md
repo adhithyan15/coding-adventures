@@ -12,6 +12,7 @@ concept_tag: KA-WORD-KANNADA
 prerequisites: [KA-C05-maatanaadu, KA-C03-naanu]
 sounds: [double-nn]
 roots: [kannada]
+etymology_hook: "nānu (DEDR 5160), kannaḍa (DEDR 1284) and mātanāḍu (DEDR 4834, 347) are all native words"
 duration:
   max_seconds: 240
 requires:
@@ -50,6 +51,8 @@ verb last as always. The name **ಕನ್ನಡ** (*kannaḍa*) is native (often
 *kar-nāḍu*, "the black/high land," whence *Karnataka*). Kannada has a literature
 over a thousand years old and holds the second-most Jnanpith literary awards of
 any Indian language — a classical tongue, spoken by some fifty million.
+
+DEDR 1284 lists *kannaḍa* and *karṇāṭa* for the Kannada country and its language, with Tamil *kaṉṉaṭam*.
 
 ## Grammar Lens: no gender on "I speak"
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C05-KANNADA-02]; assesses=[] -->

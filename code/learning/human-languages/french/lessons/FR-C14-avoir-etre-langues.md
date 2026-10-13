@@ -13,7 +13,7 @@ sounds: []
 roots: []
 etymology_hook: "French, Spanish, Italian and Portuguese all HAVE their years; German and English ARE theirs — the line falls exactly along Romance and Germanic"
 duration:
-  max_seconds: 200
+  max_seconds: 250
 requires:
   knowledge: [FR-GRAM-AVOIR-AGE-11, FR-LEX-QUEL-AGE-10]
 introduces:
@@ -64,6 +64,11 @@ Neither is more logical. What matters is that the choice is inherited rather tha
 reasoned: French did not decide this, it received it, along with the rest of what
 Latin left behind. And it means the mistake you are most likely to make — *je
 suis vingt ans* — is you importing your own family's habit into another one.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**j'ai vingt ans** — *ai* ← Latin *habeo*, "I have"; *vingt* ← Latin *viginti*; *an* ← Latin *annus*, "year". All three are inherited. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-AVOIR-AGE-11, FR-LEX-QUEL-AGE-10, FR-VERB-AVOIR-JAI-01] -->

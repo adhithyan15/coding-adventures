@@ -14,6 +14,7 @@ concept_tag: FR-VERB-TUER
 prerequisites: [FR-C211-tenter, FR-C211-transporter]
 sounds: []
 roots: []
+etymology_hook: "tuer ← Vulgar Latin *tutare 'to put out (a fire)', from tutari 'to guard'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C211-transporter]
 <!-- hl-knowledge: introduces=[FR-LEX-C211-VERBES211-05]; assesses=[] -->
 
 **tuer** — "to kill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tuer** ← Old French *tuer* ← Vulgar Latin *\*tutare*, "to put out (a fire)", from Latin *tutari*, "to guard" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

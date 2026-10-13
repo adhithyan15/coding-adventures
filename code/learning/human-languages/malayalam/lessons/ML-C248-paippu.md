@@ -14,7 +14,8 @@ romanization: "paippŭ"
 concept_tag: ML-VASTU248-PAIPPU
 prerequisites: [ML-C247-cittayulla, ML-C248-gyas]
 sounds: []
-roots: []
+roots: [english-pipe]
+etymology_hook: "paippŭ ← English pipe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C248-gyas]
 <!-- hl-knowledge: introduces=[ML-LEX-C248-VASTU248-02]; assesses=[] -->
 
 **പൈപ്പ്** — *paippŭ* — "a tap, a pipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൈപ്പ്** (*paippŭ*) ← English *pipe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

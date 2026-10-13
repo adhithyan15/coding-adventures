@@ -14,7 +14,8 @@ romanization: "śīlaṁ"
 concept_tag: ML-CAN143-SILAM
 prerequisites: [ML-C143-utamastan, ML-C143-paricayam, ML-C23-naal]
 sounds: []
-roots: []
+roots: [sanskrit-shila]
+etymology_hook: "śīlaṁ ← Sanskrit śīla 'habit, nature', a tatsama (CDIAL 12501)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C143-paricayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C143-CAN143-04]; assesses=[] -->
 
 **ശീലം** — *śīlaṁ* — "a habit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശീലം** (*śīlaṁ*) ← Sanskrit *śīla*, "habit, nature", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12501).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

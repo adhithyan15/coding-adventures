@@ -77,23 +77,22 @@ for its secure-context and user-activation requirements.
 |---|---|---|
 | `files.open` | `{accept?: [MIME]}` | `{name, mimeType, bytes}` |
 | `files.save` | `{suggestedName, accept?: [MIME], bytes}` | `{name}`, or `{name, download: true}` (below) |
-| `file.open` | `{}` | `{name, bytes}` |
-| `file.save` | `{suggestedName, bytes}` | `{name}` |
 
 `files.*` are the kinds every Mosaic backend answers (UI59, UI87 §7): this
-executor is the web's platform library. `file.*` are the original names, kept
-as aliases with their original results until VisiCalc migrates. A suggested
+executor is the web's platform library. The original `file.*` names were
+retired once VisiCalc and SpiceWorkbench migrated (UI87 §3.2, #16927), and
+are now refused like any unknown kind. A suggested
 name must be a plain file name (no separators, `:`, control or format
 characters, trailing dot or space), and with `accept` it must end in an
 extension of an accepted type.
 
 `bytes` is base64, with a 16 MiB decoded limit (below the WASM JSON request limit).
-Both payloads may include `mimeType` and `extension` together, for example
-`"application/json"` and `".json"`. File content remains opaque; Rust validates
+A payload that still carries the retired `mimeType` + `extension` pair is
+refused; name the type in `accept` instead. File content remains opaque; Rust validates
 and applies its own versioned format. The selected save destination is written
 and closed before success is reported. Picker dismissal returns cancellation;
 denial, unsupported capabilities, concurrent dialogs and I/O errors return failure.
-Browsers without these picker APIs explicitly degrade for `file.*`. For
+Browsers without these picker APIs fail `files.open` explicitly. For
 `files.save` they fall back to a download of the same bytes, narrowly, because
 the person never sees or confirms the name:
 

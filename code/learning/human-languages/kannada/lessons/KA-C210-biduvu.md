@@ -14,7 +14,8 @@ romanization: "biḍuvu"
 concept_tag: KA-KALA210-BIDUVU
 prerequisites: [KA-C210-samanyavagi, KA-C210-taksana]
 sounds: []
-roots: []
+roots: [dravidian-vidu-let-go]
+etymology_hook: "biḍuvu: native Dravidian, the noun of biḍu 'to let go' (DEDR 5393)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C210-taksana]
 <!-- hl-knowledge: introduces=[KA-LEX-C210-KALA210-04]; assesses=[] -->
 
 **ಬಿಡುವು** — *biḍuvu* — "free time, leisure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಿಡುವು** (*biḍuvu*) is native Dravidian, from *biḍu*, "to let go, leave", which DEDR 5393 lists; free time is time let loose; the entry also has Tamil *viṭu*. DEDR 5393 notes that Sanskrit *avamocana*, "inn", is a calque of Tamil *viṭuti*, "lodging place", from this root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

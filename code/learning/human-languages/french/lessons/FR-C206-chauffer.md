@@ -14,6 +14,7 @@ concept_tag: FR-VERB-CHAUFFER
 prerequisites: [FR-C206-toucher, FR-C206-gouter]
 sounds: []
 roots: []
+etymology_hook: "chauffer ← Latin calefacere 'to make warm' — English chafe and chauffeur"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C206-gouter]
 <!-- hl-knowledge: introduces=[FR-LEX-C206-VERBES206-04]; assesses=[] -->
 
 **chauffer** — "to heat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chauffer** ← Old French *chauffer* (EtymDB 2.1) ← Vulgar Latin *\*calefare*, from Latin *calefacere*, "to make warm" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

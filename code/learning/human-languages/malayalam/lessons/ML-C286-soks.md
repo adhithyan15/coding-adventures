@@ -14,7 +14,8 @@ romanization: "sōks"
 concept_tag: ML-VASTU286-SOKS
 prerequisites: [ML-C285-pollayaya, ML-C285-manniya]
 sounds: []
-roots: []
+roots: [english-socks]
+etymology_hook: "sōks ← English socks"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C285-manniya]
 <!-- hl-knowledge: introduces=[ML-LEX-C286-VASTU286-01]; assesses=[] -->
 
 **സോക്സ്** — *sōks* — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സോക്സ്** (*sōks*) ← English *socks*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

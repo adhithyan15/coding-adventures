@@ -14,7 +14,8 @@ romanization: "sādhāraṇa"
 concept_tag: ML-GUNAM320-SADHARANA
 prerequisites: [ML-C319-karsanamaya, ML-C320-prasastamaya]
 sounds: []
-roots: []
+roots: [sanskrit-sadharana]
+etymology_hook: "sādhāraṇa ← Sanskrit sādhāraṇa 'common, general', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C320-prasastamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C320-GUNAM320-02]; assesses=[] -->
 
 **സാധാരണ** — *sādhāraṇa* — "ordinary, usual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സാധാരണ** (*sādhāraṇa*) ← Sanskrit *sādhāraṇa*, "common, general", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

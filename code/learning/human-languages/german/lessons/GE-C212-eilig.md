@@ -13,7 +13,8 @@ gloss: "urgent, in a hurry"
 concept_tag: GE-QUAL212-EILIG
 prerequisites: [GE-C212-blond, GE-C212-ehrlich]
 sounds: []
-roots: []
+roots: [germanic-ilo]
+etymology_hook: "eilig — the word for 'haste' + -ig; haste ← Old High German īla"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C212-ehrlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C212-QUAL212-04]; assesses=[] -->
 
 **eilig** — "urgent, in a hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**eilig** is the word for "haste", Old High German *īla* ← Proto-Germanic *\*īlō* (EtymDB 2.1), + *-ig*: in haste.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

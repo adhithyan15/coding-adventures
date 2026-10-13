@@ -14,7 +14,8 @@ romanization: "baḍāvaṇe"
 concept_tag: KA-STHALA250-BADAVANE
 prerequisites: [KA-C250-sutta, KA-C250-gudisalu]
 sounds: []
-roots: []
+roots: [kannada-badavane]
+etymology_hook: "baḍāvaṇe: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C250-gudisalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C250-STHALA250-03]; assesses=[] -->
 
 **ಬಡಾವಣೆ** — *baḍāvaṇe* — "a residential area, a neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಬಡಾವಣೆ** (*baḍāvaṇe*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

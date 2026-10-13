@@ -14,7 +14,8 @@ romanization: "kūrmaiyāṉa"
 concept_tag: TA-GUNAM240-KURMAIYANA
 prerequisites: [TA-C240-vattamana, TA-C240-caturamana]
 sounds: []
-roots: []
+roots: [dravidian-kuur-sharp]
+etymology_hook: "கூர்மையான — native Dravidian (DEDR 1898); Malayalam kūr 'sharpness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C240-caturamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C240-GUNAM240-04]; assesses=[] -->
 
 **கூர்மையான** — *kūrmaiyāṉa* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கூர்மையான** (*kūrmaiyāṉa*) is native Dravidian. DEDR 1898 lists Malayalam *kūr*, "sharpness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

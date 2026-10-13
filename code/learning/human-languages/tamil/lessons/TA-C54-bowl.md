@@ -11,7 +11,8 @@ romanization: "kiṇṇam"
 concept_tag: TA-NOUN-BOWL
 prerequisites: [TA-C54-knife, TA-C52-root, TA-C53-path]
 sounds: []
-roots: []
+roots: [dravidian-kinnam-cup]
+etymology_hook: "கிண்ணம் — native Dravidian (DEDR 1543); Malayalam kiṇṇam, Telugu ginne"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C54-knife]
 The small round one that holds a helping, rather than the pot the food was cooked in. Telugu's గిన్నె (*ginne*) is close enough to hear the same word underneath.
 
 Malayalam reaches past both and takes the Sanskrit പാത്രം (*pātraṁ*), a vessel of any sort. Tamil has that one as well and keeps it general; கிண்ணம் stays small.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிண்ணம்** (*kiṇṇam*) is native Dravidian. DEDR 1543 lists Malayalam *kiṇṇam* and Telugu *ginne*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

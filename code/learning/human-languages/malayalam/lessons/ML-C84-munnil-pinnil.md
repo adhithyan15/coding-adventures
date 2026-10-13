@@ -11,7 +11,8 @@ romanization: "munnil pinnil"
 concept_tag: ML-PLACE-FRONT-BACK
 prerequisites: [ML-C84-thaazhe]
 sounds: []
-roots: []
+roots: [dravidian-mun-front, dravidian-pin-behind]
+etymology_hook: "munnil, pinnil: native Dravidian, mun 'front' (DEDR 5020) and pin 'back' (DEDR 4205) + the place ending -il"
 duration:
   max_seconds: 250
 requires:
@@ -60,6 +61,11 @@ The two new ones are a near-pair on the page as well as in meaning: *munnil* and
 *pinnil* differ in their **first** sound and agree in everything after it. Say
 them one after the other until the opening is what you hear, because that
 opening is the only thing carrying the difference.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുന്നിൽ പിന്നിൽ** (*munnil pinnil*) are native Dravidian: *mun*, "front, before" (DEDR 5020, with Tamil *muṉ* and Kannada *mun*), and *pin*, "back, after" (DEDR 4205, with Tamil *piṉ*), each with the place ending *-il*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C84-PLACE-03, ML-LEX-C84-PLACE-04, ML-GRAMMAR-C84-POSTPOSITION-01, ML-LEX-C52-WELCOME-02] -->

@@ -14,7 +14,8 @@ romanization: "taṭimaṉāṉa"
 concept_tag: TA-GUNAM181-TATIMANANA
 prerequisites: [TA-C181-pala, TA-C181-ellam]
 sounds: []
-roots: []
+roots: [dravidian-tadi-stick]
+etymology_hook: "தடிமனான — taṭimaṉ 'thickness', probably built on native taṭi 'club, a thick piece' (DEDR 3030)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C181-ellam]
 <!-- hl-knowledge: introduces=[TA-LEX-C181-GUNAM181-05]; assesses=[] -->
 
 **தடிமனான** — *taṭimaṉāṉa* — "thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தடிமனான** (*taṭimaṉāṉa*) is *taṭimaṉ*, "thickness", which is probably built on *taṭi*, "stick, club, a thick piece" (DEDR 3030). DEDR does not list *taṭimaṉ* itself, so the link is likely rather than proven.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

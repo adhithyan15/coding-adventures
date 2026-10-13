@@ -14,7 +14,8 @@ romanization: "eṅkil"
 concept_tag: ML-KARANAM241-ENKIL
 prerequisites: [ML-C241-ennittum, ML-C241-ennirunnalum]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "eṅkil: native Dravidian, a conditional form of the verb 'to say' (DEDR 868): 'if one says so'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C241-ennirunnalum]
 <!-- hl-knowledge: introduces=[ML-LEX-C241-KARANAM241-05]; assesses=[] -->
 
 **എങ്കിൽ** — *eṅkil* — "if so, in that case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എങ്കിൽ** (*eṅkil*) is native Dravidian, a conditional form of the verb "to say, to sound" (DEDR 868, with Tamil *eṉ*): "if (that is) said".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

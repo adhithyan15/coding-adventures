@@ -14,7 +14,8 @@ romanization: "kaṉṟu"
 concept_tag: TA-PORUL187-KANRU
 prerequisites: [TA-C187-cellappirani, TA-C187-kalai]
 sounds: []
-roots: []
+roots: [dravidian-kanru-calf]
+etymology_hook: "கன்று — native Dravidian (DEDR 1411); Malayalam kannu 'young of cattle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C187-kalai]
 <!-- hl-knowledge: introduces=[TA-LEX-C187-PORUL187-03]; assesses=[] -->
 
 **கன்று** — *kaṉṟu* — "a calf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கன்று** (*kaṉṟu*) is native Dravidian. DEDR 1411 lists Malayalam *kannu*, "young of cattle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mūla"
 concept_tag: ML-STHALAM239-MULA2
 prerequisites: [ML-C238-yatrakkaran, ML-C238-kavala]
 sounds: []
-roots: []
+roots: [dravidian-mulai-corner]
+etymology_hook: "mūla: native Dravidian, one word with Tamil mūlai and Kannada mūle (DEDR 5044)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C238-kavala]
 <!-- hl-knowledge: introduces=[ML-LEX-C239-STHALAM239-01]; assesses=[] -->
 
 **മൂല** — *mūla* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൂല** (*mūla*) is native Dravidian, one word with Tamil *mūlai*, Kannada *mūle* and Telugu *mūla* (DEDR 5044).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maṟa"
 concept_tag: TA-VERB-MARA
 prerequisites: [TA-C151-tetu, TA-C151-karpi]
 sounds: []
-roots: []
+roots: [dravidian-mara-forget]
+etymology_hook: "மற — native Dravidian (DEDR 4760); Kannada maṟe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C151-karpi]
 <!-- hl-knowledge: introduces=[TA-LEX-C152-ACT152-01]; assesses=[] -->
 
 **மற** — *maṟa* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மற** (*maṟa*) is native Dravidian. DEDR 4760 lists Kannada *maṟe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

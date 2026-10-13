@@ -14,7 +14,8 @@ romanization: "koṇṭāṭṭam"
 concept_tag: TA-PORUL246-KONTATTAM
 prerequisites: [TA-C245-an, TA-C245-pen]
 sounds: []
-roots: []
+roots: [dravidian-kol-take, dravidian-aadu-move]
+etymology_hook: "கொண்டாட்டம் — native: from koṇṭāṭu 'celebrate', koṇṭu 'having taken' (DEDR 2151) + āṭu 'dance' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C245-pen]
 <!-- hl-knowledge: introduces=[TA-LEX-C246-PORUL246-01]; assesses=[] -->
 
 **கொண்டாட்டம்** — *koṇṭāṭṭam* — "celebration, festivities".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொண்டாட்டம்** (*koṇṭāṭṭam*) is the noun of *koṇṭāṭu*, "to celebrate", usually analysed as native *koṇṭu*, "having taken", from *koḷ* (DEDR 2151), and *āṭu*, "to dance, to play" (DEDR 347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

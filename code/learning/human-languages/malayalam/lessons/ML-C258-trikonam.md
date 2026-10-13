@@ -14,7 +14,8 @@ romanization: "trikōṇaṁ"
 concept_tag: ML-VASTU258-TRIKONAM
 prerequisites: [ML-C258-vrttam, ML-C258-caturam]
 sounds: []
-roots: []
+roots: [sanskrit-kona]
+etymology_hook: "trikōṇaṁ: Sanskrit tri 'three' + kōṇa 'corner, angle' (CDIAL 3504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C258-caturam]
 <!-- hl-knowledge: introduces=[ML-LEX-C258-VASTU258-05]; assesses=[] -->
 
 **ത്രികോണം** — *trikōṇaṁ* — "a triangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ത്രികോണം** (*trikōṇaṁ*) is Sanskrit: *tri*, "three", and *kōṇa*, "corner, angle" (CDIAL 3504). CDIAL notes that *kōṇa* itself may come from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

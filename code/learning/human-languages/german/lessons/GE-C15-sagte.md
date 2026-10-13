@@ -10,10 +10,10 @@ gloss: I said, in one word — the Präteritum of sagen, beside the Perfekt that
 concept_tag: GE-PRAETERITUM-SAGTE
 prerequisites: [GE-C15-praeteritum, GE-C15-wir-haben-gesagt]
 sounds: [final-te, long-a]
-roots: []
+roots: [germanic-sagjana]
 etymology_hook: "ich sagte and ich habe gesagt are two ways of saying one thing, and German is unusual in having kept both alive rather than letting one bury the other"
 duration:
-  max_seconds: 150
+  max_seconds: 182
 requires:
   knowledge: [GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-SAGEN-01, GE-GRAMMAR-PERFEKT-ICH-01, GE-LEX-ICH-02, GE-GRAMMAR-PERFEKT-WIR-01]
 introduces:
@@ -53,6 +53,11 @@ took three words to say the same thing:
 Both are "I said." Neither is more past than the other, neither is more polite,
 and neither is wrong. Hold that in mind while the differences that do exist
 arrive.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sagte** is the stem of *sagen* + the past ending *-te*. *sagen* ← Old High German *sagēn* ← Proto-Germanic *\*sagjaną*, the same verb as English *say*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SAGTE-01] -->

@@ -11,7 +11,8 @@ romanization: "kavalai"
 concept_tag: TA-FEEL-WORRY
 prerequisites: [TA-C88-sweat, TA-C89-sadness]
 sounds: []
-roots: []
+roots: [dravidian-kaval-care]
+etymology_hook: "கவலை — native Dravidian (DEDR 1328)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C89-sadness]
 **கவலை** (*kavalai*) — "worry".
 
 **கவலை வேண்டாம்** — "no need to worry", literally "worry is not wanted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கவலை** (*kavalai*) is native Dravidian (DEDR 1328). The entry glosses *kavalai* "care, anxiety, distress".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

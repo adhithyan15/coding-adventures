@@ -11,7 +11,8 @@ romanization: "nōvu"
 concept_tag: KA-NOUN-PAIN
 prerequisites: [KA-C63-fever, KA-C61-jaggery]
 sounds: []
-roots: []
+roots: [dravidian-noo-pain]
+etymology_hook: "nōvu: native Dravidian, one word with Tamil nō (DEDR 3793)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C63-fever]
 ನೋವು is inherited, and it is the most useful word here because it attaches to everything you already have. ತಲೆ ನೋವು, ಹೊಟ್ಟೆ ನೋವು, ಹಲ್ಲು ನೋವು, ಬೆನ್ನು ನೋವು — the body part goes in front and the whole thing is one compound.
 
 Every part of the body this book has taught you can be put in that slot. That is a sentence for every body part this book has given you, out of one new word, which is the best trade in the chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೋವು** (*nōvu*) is native Dravidian, one word with Tamil *nō* (DEDR 3793). DEDR lists *nōvu* itself, "affliction", under *nō*, "to suffer, ache".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

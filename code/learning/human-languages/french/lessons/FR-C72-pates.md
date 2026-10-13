@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE24-PATES
 prerequisites: [FR-C71-jambon, FR-C72-salade]
 sounds: []
 roots: []
+etymology_hook: "pâtes — plural of the word for 'dough', from Late Latin pasta — English paste and pasta"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C72-salade]
 <!-- hl-knowledge: introduces=[FR-LEX-C72-CUISINE24-02]; assesses=[] -->
 
 **les pâtes** — "pasta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pâtes** is the plural of the French word for "dough, paste", which ← Old French *paste* ← Late Latin *pasta*, "dough", from Greek *pasta*, "barley porridge" — inherited. (EtymDB 2.1) The circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

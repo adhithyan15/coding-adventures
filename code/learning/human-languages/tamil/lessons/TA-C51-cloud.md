@@ -11,7 +11,8 @@ romanization: "mēkam"
 concept_tag: TA-NOUN-CLOUD
 prerequisites: [TA-C51-star, TA-C49-many-thanks, TA-C50-welcome]
 sounds: []
-roots: []
+roots: [sanskrit-megha]
+etymology_hook: "மேகம் ← Sanskrit megha 'cloud, rain' (CDIAL 10302)"
 duration:
   max_seconds: 210
 requires:

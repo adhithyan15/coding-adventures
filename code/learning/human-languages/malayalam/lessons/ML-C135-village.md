@@ -11,7 +11,8 @@ romanization: "grāmaṁ"
 concept_tag: ML-TOWN-VILLAGE
 prerequisites: [ML-C135-church, ML-C135-bridge]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "grāmaṁ ← Sanskrit grāma 'troop, village', a tatsama (CDIAL 4368)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C135-bridge]
 <!-- hl-knowledge: introduces=[ML-LEX-C135-TOWN-05]; assesses=[] -->
 
 **ഗ്രാമം** (*grāmaṁ*) — "a village", the other side of a **നഗരം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗ്രാമം** (*grāmaṁ*) ← Sanskrit *grāma*, "troop, village", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 4368).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

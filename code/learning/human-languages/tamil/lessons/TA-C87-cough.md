@@ -11,7 +11,8 @@ romanization: "irumal"
 concept_tag: TA-UNWELL-COUGH
 prerequisites: [TA-C87-tiredness, TA-C87-cold]
 sounds: []
-roots: []
+roots: [tamil-irumal-cough]
+etymology_hook: "இருமல் — native Dravidian (DEDR 489); Malayalam irumal 'a cough'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C87-cold]
 **இருமல்** (*irumal*) — "a cough".
 
 **இருமல் இருக்கிறது** — "there is a cough", the plain way to tell a doctor.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இருமல்** (*irumal*) is native Dravidian. DEDR 489 lists Malayalam *irumal*, "a cough". The entry also lists the verb *irumu*, "to cough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

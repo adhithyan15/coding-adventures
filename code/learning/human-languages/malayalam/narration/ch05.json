@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:25d76c98ce49bf54",
+  "sourceHash": "fnv1a64:5f151499aca57806",
   "lessons": [
     {
       "id": "ML-C05-samsaarikkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c6714895b99b0867",
+      "sourceHash": "fnv1a64:e83a3767cdb79f58",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -75,6 +75,10 @@
             {
               "kind": "speech",
               "text": "saṁsārikk- (speak) + -unnu (present) becomes സംസാരിക്കുന്നു (saṁsārikkunnu), \"speak / am speaking.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit saṁsāra, \"the world, secular life\", is CDIAL 13036; speaking is what people do in the world."
             }
           ]
         },
@@ -675,7 +679,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4bb448cc7c200969",
+      "sourceHash": "fnv1a64:942cdb56fc88fe30",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -723,6 +727,10 @@
             {
               "kind": "speech",
               "text": "ഞാൻ മലയാളം സംസാരിക്കുന്നു (ñān malayāḷaṁ saṁsārikkunnu) = ഞാൻ (ñān, \"I\") + മലയാളം (malayāḷaṁ, the object) + സംസാരിക്കുന്നു (saṁsārikkunnu, \"speak\") — \"I Malayalam speak,\" the verb last. The name മലയാളം (malayāḷaṁ) is native Dravidian: മല (mala, \"mountain\") + ആളം (āḷaṁ, \"place, region\") — \"the mountain land,\" named for the Western Ghats along the coast where it is spoken. Its signature retroflex ള (ḷ) sits right in the middle of the word."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4742 lists mala with Tamil malai, Kannada male and Telugu mala. DEDR 4742 compares Sanskrit malaya."
             }
           ]
         },
@@ -809,7 +817,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f2c61a15dc6921f",
+      "sourceHash": "fnv1a64:4494ba3e2e16263a",
       "notice": null,
       "blocks": [
         {
@@ -859,6 +867,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊടി (koṭi) is native Dravidian, one word with Tamil koṭi, Kannada kuḍi and Telugu koḍi (DEDR 2049). The same word means the top or tip of a thing, and a flag flies at the top."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -889,7 +908,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1234,7 +1253,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d935b1c8e8e9e853",
+      "sourceHash": "fnv1a64:e0354448abe60912",
       "notice": null,
       "blocks": [
         {
@@ -1284,6 +1303,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൂവൽ (tūval) is native Dravidian, one word with Tamil tūval (DEDR 3393). DEDR 3393 compares Sanskrit tūla."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1314,7 +1344,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1506,7 +1536,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8c92f1e0316b912d",
+      "sourceHash": "fnv1a64:44c0f4e28eadaf41",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1553,7 +1583,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "താമസിക്കുക (tāmasikkuka, \"to live, to reside, to stay, to delay\") is Sanskrit-derived (from tāmasa / tamas, \"dwelling, tarrying\"). Malayalam often prefers such Sanskrit-built verbs where Tamil uses a native word (vāḻ). \"I live in Kochi\" is ഞാൻ കൊച്ചിയിൽ താമസിക്കുന്നു (ñān kocciyil tāmasikkunnu) — again the same -unnu present, the same for every person."
+              "text": "താമസിക്കുക (tāmasikkuka, \"to live, to reside, to stay, to delay\") is Sanskrit-derived (from tāmasa, \"dark, sluggish\", the quality of tamas, \"darkness\": in Malayalam a slowness became a delay, and a delay became a stay). Malayalam often prefers such Sanskrit-built verbs where Tamil uses a native word (vāḻ). \"I live in Kochi\" is ഞാൻ കൊച്ചിയിൽ താമസിക്കുന്നു (ñān kocciyil tāmasikkunnu) — again the same -unnu present, the same for every person."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit tāmasa is CDIAL 5775, from tamas, \"darkness\" (CDIAL 5689)."
             }
           ]
         },
@@ -1640,7 +1674,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:484e687d8c00c2b2",
+      "sourceHash": "fnv1a64:520c414ffa4f3863",
       "notice": null,
       "blocks": [
         {
@@ -1690,6 +1724,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹംസം (haṃsam) from Sanskrit haṁsa, \"goose, swan\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13937)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1720,7 +1765,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1912,7 +1957,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f3042454e052d11",
+      "sourceHash": "fnv1a64:0ea3059deeedd940",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1972,6 +2017,10 @@
             {
               "kind": "speech",
               "text": "So \"I work\" is ഞാൻ ജോലി ചെയ്യുന്നു (ñān jōli ceyyunnu) — same -unnu present, pronoun kept. Ceyyuka and Tamil's sey are, at root, one word — the Dravidian \"do\" that these languages all lean on."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 1957 lists Malayalam ceyka with Tamil cey and Telugu cēyu. jōli, \"work\", is of uncertain origin; it has no entry in DEDR."
             }
           ]
         },

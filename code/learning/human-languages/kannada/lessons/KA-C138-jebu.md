@@ -14,7 +14,8 @@ romanization: "jēbu"
 concept_tag: KA-THINGS138-JEBU
 prerequisites: [KA-C138-rupayi, KA-C138-batali]
 sounds: []
-roots: []
+roots: [arabic-jayb]
+etymology_hook: "jēbu ← Persian jēb 'pocket', from Arabic jayb, through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C138-batali]
 <!-- hl-knowledge: introduces=[KA-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **ಜೇಬು** — *jēbu* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೇಬು** (*jēbu*) is a loan from Persian *jēb*, "pocket", from Arabic *jayb*, which came through Hindustani. Kannada adds *-u* at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

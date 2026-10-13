@@ -13,7 +13,8 @@ gloss: "to hang"
 concept_tag: GE-VERB-HAENGEN
 prerequisites: [GE-C146-gefallen, GE-C147-gewinnen]
 sounds: []
-roots: []
+roots: [germanic-hangijana]
+etymology_hook: "hängen ← Old High German hengen ← Proto-Germanic *hangijaną — the same verb as English hang"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C147-gewinnen]
 <!-- hl-knowledge: introduces=[GE-LEX-C147-VERB147-02]; assesses=[] -->
 
 **hängen** — "to hang".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hängen** ← Old High German *hengen* ← Proto-Germanic *\*hangijaną*, "to make hang" — inherited, the same verb as English *hang*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

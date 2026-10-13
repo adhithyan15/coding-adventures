@@ -14,7 +14,8 @@ romanization: "kadi"
 concept_tag: KA-VERB-KADI
 prerequisites: [KA-C164-an-madu, KA-C164-aph-madu]
 sounds: []
-roots: []
+roots: [dravidian-katuvu-seize]
+etymology_hook: "kadi: native Dravidian, one word with Telugu kadumu (DEDR 1200)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C164-aph-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C165-KRIYE165-01]; assesses=[] -->
 
 **ಕದಿ** — *kadi* — "to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕದಿ** (*kadi*) is native Dravidian, one word with Telugu *kadumu* (DEDR 1200). DEDR lists *kadi* itself, "to steal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

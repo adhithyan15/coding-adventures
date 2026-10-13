@@ -13,7 +13,7 @@ sounds: [w-as-v, vowel-a-german]
 roots: [hwat-germanic]
 etymology_hook: "was is English what by the same t-to-s swap that makes das out of that and es out of it"
 duration:
-  max_seconds: 180
+  max_seconds: 232
 requires:
   knowledge: [GE-LEX-WO-01, GE-LEX-MACHEN-01, GE-ETYMON-ES-02, GE-GRAMMAR-WEAK-SINGULAR-02, GE-ETYMON-WO-WHERE-02]
 introduces:
@@ -54,6 +54,11 @@ an **s**.
 | i**t** | e**s** |
 
 Third time you have seen this pair, and the last new word it gives you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**was** ← Old High German *waz* ← Proto-Germanic *\*hwat* — inherited, the same word as English *what*, with German *s* where English kept *t*. (EtymDB 2.1)
 
 ## You'll want to know: Was machst du?
 <!-- hl-knowledge: introduces=[GE-LEX-WAS-MACHST-DU-02]; assesses=[GE-LEX-WAS-01, GE-LEX-MACHEN-01, GE-GRAMMAR-WEAK-SINGULAR-02] -->

@@ -11,7 +11,8 @@ romanization: "naṉṟāka"
 concept_tag: TA-WEATHER-WELL
 prerequisites: [TA-C91-heat, TA-C91-sleepy]
 sounds: []
-roots: []
+roots: [nal-good-dravidian]
+etymology_hook: "நன்றாக — native Dravidian (DEDR 3610)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C91-sleepy]
 **நன்றாக** (*naṉṟāka*) — "well, fine".
 
 **நான் நன்றாக இருக்கிறேன்** — "I am well", the everyday answer to how are you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நன்றாக** (*naṉṟāka*) is native Dravidian (DEDR 3610). It is *naṉṟu*, "that which is good", with *-āka*, "in the manner of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

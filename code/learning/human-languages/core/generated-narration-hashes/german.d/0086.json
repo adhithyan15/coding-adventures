@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 86,
-  "sourceHash": "fnv1a64:52f423c8e32995f6",
+  "sourceHash": "fnv1a64:0c03d7a4341bfa6c",
   "lessonIds": [
     "GE-C86-schwein",
     "GE-C86-vogel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch86.txt",
   "json": "german/narration/ch86.json",
-  "textHash": "fnv1a64:d730202ade8c03e7",
-  "jsonHash": "fnv1a64:e0045ab129231a75",
+  "textHash": "fnv1a64:c090590947b28970",
+  "jsonHash": "fnv1a64:d741a9df8538c821",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "viḷakku"
 concept_tag: TA-NOUN-LAMP
 prerequisites: [TA-C44-cloth, TA-C42-read, TA-C43-son]
 sounds: []
-roots: []
+roots: [dravidian-vel-white-bright]
+etymology_hook: "விளக்கு — native: 'the thing that makes clear' (DEDR 5496); Malayalam viḷakku 'lamp', veḷiccam 'light'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ It stands on *viḷaṅgu*, 'to shine, to be clear', so the lamp is named for wh
 The same stem gives *viḷakkam*, 'clarity', and *viḷakku* on its own can mean 'to make something plain'. A lamp and an explanation are the same word in Tamil, which is a better picture of teaching than most languages get for free.
 
 A Tamil house lights one at dusk, at the doorway, and the word turns up wherever that habit does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விளக்கு** (*viḷakku*) is native Dravidian, from the verb *viḷakku*, "to make clear, to brighten". DEDR 5496 files it among words for white and shining, with Malayalam *viḷakku*, "lamp", and *veḷiccam*, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

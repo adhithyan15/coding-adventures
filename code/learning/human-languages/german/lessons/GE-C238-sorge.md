@@ -13,7 +13,8 @@ gloss: "a worry"
 concept_tag: GE-THING238-SORGE
 prerequisites: [GE-C238-sicherheit, GE-C238-sinn]
 sounds: []
-roots: []
+roots: [germanic-surgo]
+etymology_hook: "Sorge ← Old High German sorga 'care, worry' — the same word as English sorrow"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C238-sinn]
 <!-- hl-knowledge: introduces=[GE-LEX-C238-THING238-04]; assesses=[] -->
 
 **die Sorge** — "a worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sorge** ← Middle High German *sorge* ← Old High German *sorga*, "care, worry" — inherited, the same word as English *sorrow*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

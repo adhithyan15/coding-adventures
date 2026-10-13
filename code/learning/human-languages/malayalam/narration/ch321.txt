@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for terrible, then the Malayalam for aweso
 You'll want to know: പുള്ളിയുള്ള.
 പുള്ളിയുള്ള — puḷḷiyuḷḷa — "spotted".
 
+The word, taken apart.
+പുള്ളിയുള്ള (puḷḷiyuḷḷa) is native Dravidian, "having spots": puḷḷi, "dot, spot" (DEDR 4327, with Tamil puḷḷi), and -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for awesome, then the Malayalam for spotte
 
 You'll want to know: സുഗന്ധമുള്ള.
 സുഗന്ധമുള്ള — sugandhamuḷḷa — "fragrant".
+
+The word, taken apart.
+സുഗന്ധമുള്ള (sugandhamuḷḷa) joins Sanskrit sugandha, "fragrant, perfume" (CDIAL 13454): su, "good", and gandha, "smell", to native -uḷḷa, "that has" (DEDR 697).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for spotted, then the Malayalam for fragra
 You'll want to know: നാറുന്ന.
 നാറുന്ന — nāṟunna — "smelly, stinking".
 
+The word, taken apart.
+നാറുന്ന (nāṟunna) is native Dravidian, a form of the verb "to give off a smell, stink"; DEDR 2918 lists the root with Tamil ñāṟu and Kannada nāṟu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for fragrant, then the Malayalam for smell
 You'll want to know: ബഹളമുള്ള.
 ബഹളമുള്ള — bahaḷamuḷḷa — "noisy".
 
+The word, taken apart.
+ബഹളമുള്ള (bahaḷamuḷḷa) is "having noise": bahaḷaṁ, "uproar", a word of uncertain origin, with native -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for smelly, then the Malayalam for noisy.
 
 You'll want to know: സത്യസന്ധമായ.
 സത്യസന്ധമായ — satyasandhamāya — "honest".
+
+The word, taken apart.
+സത്യസന്ധമായ (satyasandhamāya) is Sanskrit satyasandha, "true to one's promise": satya, "truth" (CDIAL 13112), and sandhā, "a promise", with native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

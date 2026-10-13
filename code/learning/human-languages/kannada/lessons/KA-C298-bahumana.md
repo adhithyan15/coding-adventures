@@ -14,7 +14,8 @@ romanization: "bahumāna"
 concept_tag: KA-VASTU298-BAHUMANA
 prerequisites: [KA-C298-sangita, KA-C298-spardhe]
 sounds: []
-roots: []
+roots: [sanskrit-bahumana]
+etymology_hook: "bahumāna ← Sanskrit bahumāna 'high esteem', a tatsama (CDIAL 9192)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C298-spardhe]
 <!-- hl-knowledge: introduces=[KA-LEX-C298-VASTU298-05]; assesses=[] -->
 
 **ಬಹುಮಾನ** — *bahumāna* — "a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಹುಮಾನ** (*bahumāna*) is Sanskrit *bahumāna*, "high esteem", taken over whole as a learned loan, a tatsama (CDIAL 9192).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: FAREWELL-TOMORROW
 prerequisites: [TA-C04-poy-varugiren]
 sounds: [long-aa, retroflex-l]
 roots: [naal-day-dravidian]
+etymology_hook: "நாளை — native, from nāḷ 'day' (DEDR 3656): Malayalam nāḷa, Kannada nāḷe; pār 'see' is native too (DEDR 4091)"
 reviews_of: [TA-C04-poy-varugiren]
 duration:
   max_seconds: 240

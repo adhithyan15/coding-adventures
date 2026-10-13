@@ -11,7 +11,8 @@ romanization: "sūryan"
 concept_tag: ML-NOUN-SUN
 prerequisites: [ML-C53-sky, ML-C51-favour]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "sūryan ← Sanskrit sūrya 'the sun', with the masculine ending -n (CDIAL 13574)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *sūrya*, wearing the Malayalam chillu ൻ on the end — the same tail
 The Sanskrit word has cousins a long way west. It shares an ancestor with Latin *sol* and with the Greek piece behind *helios*, which is why English *solar* and *heliotrope* are distant relatives of the word a Malayali newsreader says.
 
 Malayalam's own sun-word is ഞായർ (*ñāyaṟ*), and it survives mostly inside the name of Sunday, ഞായറാഴ്ച (*ñāyaṟāḻca*) — the sun's day, arrived at independently of the English one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സൂര്യൻ** (*sūryan*) ← Sanskrit *sūrya*, "the sun", taken over with the masculine ending *-n* (CDIAL 13574, under *sūra*, "sun").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

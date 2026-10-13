@@ -13,7 +13,8 @@ gloss: "a boss"
 concept_tag: GE-BERUF126-CHEF
 prerequisites: [GE-C126-kunde, GE-C126-kasse]
 sounds: []
-roots: []
+roots: [caput-latin]
+etymology_hook: "Chef ← French chef 'head' ← Latin caput — borrowed; English chief and chef share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C126-kasse]
 <!-- hl-knowledge: introduces=[GE-LEX-C126-BERUF126-05]; assesses=[] -->
 
 **der Chef** — "a boss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Chef** ← French *chef*, "head" ← Latin *caput* (EtymDB 2.1) — borrowed. English *chief* is the same word; English *chef* kept only the kitchen sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

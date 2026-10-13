@@ -13,7 +13,8 @@ gloss: "a ceiling"
 concept_tag: FR-MAISON28-PLAFOND
 prerequisites: [FR-C75-canape, FR-C76-placard]
 sounds: []
-roots: []
+roots: [fundus-latin]
+etymology_hook: "plafond — 'flat bottom', the underside of the floor above; the bottom word ← Latin fundus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C76-placard]
 <!-- hl-knowledge: introduces=[FR-LEX-C76-MAISON28-02]; assesses=[] -->
 
 **le plafond** — "a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plafond** — built from the French words for "flat" and "bottom": the flat underside of the floor above. The second ← Latin *fundus*, "bottom". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

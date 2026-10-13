@@ -14,7 +14,8 @@ romanization: "kāryaṁ"
 concept_tag: ML-KARANAM242-KARYAM
 prerequisites: [ML-C242-onnukil, ML-C242-vyatyasam]
 sounds: []
-roots: []
+roots: [sanskrit-karya]
+etymology_hook: "kāryaṁ ← Sanskrit kārya 'to be done; business', a tatsama (CDIAL 3078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C242-vyatyasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C242-KARANAM242-04]; assesses=[] -->
 
 **കാര്യം** — *kāryaṁ* — "a matter, an affair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാര്യം** (*kāryaṁ*) ← Sanskrit *kārya*, "to be done; business", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 3078). It is built on the root *kṛ*, "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

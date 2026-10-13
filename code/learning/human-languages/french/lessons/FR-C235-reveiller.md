@@ -13,7 +13,8 @@ gloss: "to wake up"
 concept_tag: FR-VERB-REVEILLER
 prerequisites: [FR-C235-louer, FR-C235-reposer]
 sounds: []
-roots: []
+roots: [vigilare-latin]
+etymology_hook: "se réveiller — re- + the verb 'to wake', from Latin vigilare 'to keep watch' — English vigil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C235-reposer]
 <!-- hl-knowledge: introduces=[FR-LEX-C235-VERBES235-04]; assesses=[] -->
 
 **se réveiller** — "to wake up".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se réveiller** — *re-* and the verb for "to wake", ← Vulgar Latin *\*exvigilare*, from Latin *vigilare*, "to keep watch" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

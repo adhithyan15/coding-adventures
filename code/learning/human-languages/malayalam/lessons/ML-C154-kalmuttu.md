@@ -14,7 +14,8 @@ romanization: "kālmuṭṭŭ"
 concept_tag: ML-THINGS154-KALMUTTU
 prerequisites: [ML-C153-tol, ML-C154-kaimuttu]
 sounds: []
-roots: []
+roots: [dravidian-kal-leg, dravidian-muttu-joint]
+etymology_hook: "kālmuṭṭŭ: native Dravidian, 'leg joint': kāl (DEDR 1479) + muṭṭŭ 'joint, knee' (DEDR 4935)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C154-kaimuttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C154-THINGS154-02]; assesses=[] -->
 
 **കാൽമുട്ട്** — *kālmuṭṭŭ* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാൽമുട്ട്** (*kālmuṭṭŭ*) is native Dravidian, "the leg's joint": *kāl*, "leg" (DEDR 1479), and *muṭṭŭ*, "joint, knee" (DEDR 4935, with Tamil *muṭṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

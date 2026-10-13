@@ -13,7 +13,8 @@ gloss: "to smoke"
 concept_tag: FR-VERB-FUMER
 prerequisites: [FR-C146-facher, FR-C146-inquieter]
 sounds: []
-roots: []
+roots: [fumus-latin]
+etymology_hook: "fumer ← Latin fumare 'to smoke' — English fume"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C146-inquieter]
 <!-- hl-knowledge: introduces=[FR-LEX-C146-VERBES146-05]; assesses=[] -->
 
 **fumer** — "to smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fumer** ← Latin *fumare*, "to smoke" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for jaundice, then the Malayalam for blood
 You'll want to know: എപ്പോഴും.
 എപ്പോഴും — eppōḻuṁ — "always".
 
+The word, taken apart.
+എപ്പോഴും (eppōḻuṁ) is native Dravidian: eppōḷ, "when", which DEDR 5151 lists, built on the word for "time" (DEDR 4559), with -uṁ: "at any time".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for blood pressure, then the Malayalam for
 
 You'll want to know: പതിവായി.
 പതിവായി — pativāyi — "regularly".
+
+The word, taken apart.
+പതിവായി (pativāyi) is native Dravidian: pativu, "settlement, custom" (DEDR 3911, with Tamil pati), and āyi, "as, having become" (DEDR 333): "as a custom". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for always, then the Malayalam for regular
 You'll want to know: പലപ്പോഴും.
 പലപ്പോഴും — palappōḻuṁ — "often".
 
+The word, taken apart.
+പലപ്പോഴും (palappōḻuṁ) is native Dravidian, "many times": pala, "many" (DEDR 3987, with Tamil pala), the word for "time" (DEDR 4559), and -uṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for regularly, then the Malayalam for ofte
 You'll want to know: മിക്കപ്പോഴും.
 മിക്കപ്പോഴും — mikkappōḻuṁ — "usually, most of the time".
 
+The word, taken apart.
+മിക്കപ്പോഴും (mikkappōḻuṁ) is native Dravidian, "most times": mikka, "the greater part" (DEDR 4838, with Tamil miku), the word for "time" (DEDR 4559), and -uṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for often, then the Malayalam for usually.
 
 You'll want to know: അപൂർവമായി.
 അപൂർവമായി — apūrvamāyi — "rarely".
+
+The word, taken apart.
+അപൂർവമായി (apūrvamāyi) joins Sanskrit apūrva, "unprecedented, rare" (CDIAL 494), to native āyi, "as" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

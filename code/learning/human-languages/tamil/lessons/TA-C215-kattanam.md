@@ -14,7 +14,8 @@ romanization: "kaṭṭaṇam"
 concept_tag: TA-PORUL215-KATTANAM
 prerequisites: [TA-C215-pencil, TA-C215-akarati]
 sounds: []
-roots: []
+roots: [dravidian-kattu-pay]
+etymology_hook: "கட்டணம் — native Dravidian (DEDR 1149)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C215-akarati]
 <!-- hl-knowledge: introduces=[TA-LEX-C215-PORUL215-03]; assesses=[] -->
 
 **கட்டணம்** — *kaṭṭaṇam* — "a fee, a charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கட்டணம்** (*kaṭṭaṇam*) is native Dravidian (DEDR 1149). The entry lists *kaṭṭaṇam*, "fees, dues", under *kaṭṭu*, "to pay up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

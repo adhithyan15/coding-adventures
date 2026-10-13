@@ -14,7 +14,8 @@ romanization: "vārantōṟum"
 concept_tag: TA-NERAM262-VARANTORUM
 prerequisites: [TA-C261-talaiccurral, TA-C262-avvappotu]
 sounds: []
-roots: []
+roots: [sanskrit-vara-turn]
+etymology_hook: "வாரந்தோறும் — vāram ← Sanskrit vāra (CDIAL 11547) + native tōṟum 'each, every' (DEDR 3566)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C262-avvappotu]
 <!-- hl-knowledge: introduces=[TA-LEX-C262-NERAM262-02]; assesses=[] -->
 
 **வாரந்தோறும்** — *vārantōṟum* — "every week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாரந்தோறும்** (*vārantōṟum*) is *vāram*, "week", from Sanskrit *vāra*, "day of the week" (CDIAL 11547), and native *tōṟum*, "each, every" (DEDR 3566).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "toṭṭi"
 concept_tag: KA-VASTU229-TOTTI
 prerequisites: [KA-C228-vicara, KA-C229-hande]
 sounds: []
-roots: []
+roots: [dravidian-totti-trough]
+etymology_hook: "toṭṭi: native Dravidian, one word with Tamil toṭṭi and Telugu toṭṭi (DEDR 3484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C229-hande]
 <!-- hl-knowledge: introduces=[KA-LEX-C229-VASTU229-02]; assesses=[] -->
 
 **ತೊಟ್ಟಿ** — *toṭṭi* — "a water tank, a trough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೊಟ್ಟಿ** (*toṭṭi*) is native Dravidian, one word with Tamil *toṭṭi* and Telugu *toṭṭi* (DEDR 3484). DEDR lists *toṭṭi* itself, "trough, tub".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

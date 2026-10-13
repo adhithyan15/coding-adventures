@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "The One It Is Done To",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6ef03117dbe6957a",
+  "sourceHash": "fnv1a64:c389457ef2c3f55d",
   "lessons": [
     {
       "id": "TA-C86-ai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5708b81f518e4f1d",
+      "sourceHash": "fnv1a64:ada523367f8e25e8",
       "notice": null,
       "blocks": [
         {
@@ -78,6 +78,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ஐ (-ai) is the native Dravidian accusative ending. It is a suffix, not a word, so the etymological dictionary gives it no entry of its own; Malayalam marks the same case with -e."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: where the two endings sit",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -151,7 +162,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -183,7 +194,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:267027b79ef27c49",
+      "sourceHash": "fnv1a64:f1a73c9fefad6e2f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -266,6 +277,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என்னை / உன்னை (eṉṉai / uṉṉai) are the native pronouns with the accusative -ai: eṉ-, the joining form of \"I\" (DEDR 5160), and uṉ-, the joining form of \"you\" (DEDR 3684)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -314,7 +336,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -345,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7041609a55ad5e92",
+      "sourceHash": "fnv1a64:f01d099c850b42ab",
       "notice": null,
       "blocks": [
         {
@@ -410,6 +432,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேநீர் / தேநீரை (tēnīr / tēnīrai) is tēnīr, \"tea\", with the accusative -ai. Tēnīr is the travelling word tē, \"tea\", and native nīr, \"water\" (DEDR 3690; it compares Sanskrit nīra)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "cognates",
           "title": "Across the family: the same line, drawn at the other end",
           "segments": [
@@ -424,7 +457,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -473,7 +506,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

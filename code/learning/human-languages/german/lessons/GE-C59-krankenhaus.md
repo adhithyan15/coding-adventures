@@ -13,7 +13,8 @@ gloss: "a hospital"
 concept_tag: GE-GESUNDHEIT-KRANKENHAUS
 prerequisites: [GE-C59-arzt, GE-C59-aerztin]
 sounds: []
-roots: []
+roots: [germanic-krangaz]
+etymology_hook: "Krankenhaus — 'house of the sick': the word for 'ill' + the word for 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C59-aerztin]
 <!-- hl-knowledge: introduces=[GE-LEX-C59-GESUNDHEIT-04]; assesses=[] -->
 
 **das Krankenhaus** — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Krankenhaus** is built from the word for "ill" and the word for "house": a house of the sick. The "ill" word ← Old High German *krank* ← Proto-Germanic *\*krangaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

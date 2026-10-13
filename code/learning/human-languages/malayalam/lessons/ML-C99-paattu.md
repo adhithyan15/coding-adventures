@@ -11,7 +11,8 @@ romanization: "pāṭṭŭ"
 concept_tag: ML-SONG
 prerequisites: [ML-R98-leisure-recall, ML-C41-this, ML-C89-nallathu]
 sounds: []
-roots: []
+roots: [dravidian-padu-sing]
+etymology_hook: "pāṭṭŭ: native Dravidian, the noun of pāṭuka 'to sing'; Tamil pāṭṭu (DEDR 4065)"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,8 @@ ending comes: they step aside and let it land.
 **You have done this before without a new word to do it on.** **നല്ലതാണ്** has
 been in the book since the opinion chapter. **പാട്ടാണ്** is the same event on a
 word you met a moment ago — no **യ**, no **വ**, nothing inserted.
+
+**Where the word comes from.** It is native Dravidian: DEDR 4065 lists *pāṭṭu*, "song", with Tamil *pāṭu*, "to sing", and Kannada *pāḍu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-SONG-01, ML-LEX-C41-DEIXIS-01] -->

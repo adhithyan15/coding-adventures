@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 190,
-  "sourceHash": "fnv1a64:0c4715caf2f3de7b",
+  "sourceHash": "fnv1a64:9ce8efd7edb56336",
   "lessonIds": [
     "KA-C190-sopha",
     "KA-C190-bencu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch190.txt",
   "json": "kannada/narration/ch190.json",
-  "textHash": "fnv1a64:a79abf42b6c63960",
-  "jsonHash": "fnv1a64:fe894cbae9c37c09",
+  "textHash": "fnv1a64:0041c3a660c3588e",
+  "jsonHash": "fnv1a64:4b4541687826bbe9",
   "findings": []
 }

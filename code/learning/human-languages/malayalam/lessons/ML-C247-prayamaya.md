@@ -14,7 +14,8 @@ romanization: "prāyamāya"
 concept_tag: ML-GUNAM247-PRAYAMAYA
 prerequisites: [ML-C246-ketaya, ML-C247-iratta]
 sounds: []
-roots: []
+roots: [sanskrit-prayas, aaka-dravidian]
+etymology_hook: "prāyamāya: prāyaṁ 'age', of Sanskrit shape, + native āya 'having become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C247-iratta]
 <!-- hl-knowledge: introduces=[ML-LEX-C247-GUNAM247-02]; assesses=[] -->
 
 **പ്രായമായ** — *prāyamāya* — "elderly, aged".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രായമായ** (*prāyamāya*) joins *prāyaṁ*, "age", a word of Sanskrit shape whose exact source is uncertain, to native *āya*, "having become" (DEDR 333): "having become of age". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

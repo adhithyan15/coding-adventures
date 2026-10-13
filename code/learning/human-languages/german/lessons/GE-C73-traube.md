@@ -13,7 +13,8 @@ gloss: "a grape"
 concept_tag: GE-ESSEN5-TRAUBE
 prerequisites: [GE-C72-birne, GE-C72-zitrone]
 sounds: []
-roots: []
+roots: [germanic-thrubo]
+etymology_hook: "Traube ← Old High German drūbo ← Proto-Germanic *þrūbô 'grape' — Dutch druif is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C72-zitrone]
 <!-- hl-knowledge: introduces=[GE-LEX-C73-ESSEN5-01]; assesses=[] -->
 
 **die Traube** — "a grape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Traube** ← Old High German *drūbo* ← Proto-Germanic *\*þrūbô*, "grape" — inherited; Dutch *druif* is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "arumaiyāṉa"
 concept_tag: TA-GUNAM240-ARUMAIYANA
 prerequisites: [TA-C240-caturamana, TA-C240-kurmaiyana]
 sounds: []
-roots: []
+roots: [dravidian-aru-rare]
+etymology_hook: "அருமையான — native Dravidian (DEDR 221); Malayalam aruma 'rarity'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C240-kurmaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C240-GUNAM240-05]; assesses=[] -->
 
 **அருமையான** — *arumaiyāṉa* — "wonderful, excellent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அருமையான** (*arumaiyāṉa*) is native Dravidian. DEDR 221 lists Malayalam *aruma*, "rarity". It is *arumai*, "rareness, excellence", with *-āṉa*: what is rare is precious.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

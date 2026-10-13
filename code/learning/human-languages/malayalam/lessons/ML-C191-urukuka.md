@@ -14,7 +14,8 @@ romanization: "urukuka"
 concept_tag: ML-VERB-URUKUKA
 prerequisites: [ML-C191-citaruka, ML-C191-tulayuka]
 sounds: []
-roots: []
+roots: [dravidian-uruku-melt]
+etymology_hook: "urukuka: native Dravidian, one word with Tamil uruku and Kannada urku (DEDR 661)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C191-tulayuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C191-KRIYA191-03]; assesses=[] -->
 
 **ഉരുകുക** — *urukuka* — "to melt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉരുകുക** (*urukuka*) is native Dravidian, one word with Tamil *uruku*, Kannada *urku* and Telugu *ukku* (DEDR 661).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

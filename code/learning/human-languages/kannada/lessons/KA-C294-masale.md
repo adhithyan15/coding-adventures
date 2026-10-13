@@ -14,7 +14,8 @@ romanization: "masāle"
 concept_tag: KA-VASTU294-MASALE
 prerequisites: [KA-C293-kyaret, KA-C294-kadalekayi]
 sounds: []
-roots: []
+roots: [arabic-masalih]
+etymology_hook: "masāle ← Hindustani masālā, from Arabic maṣāliḥ 'things needed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C294-kadalekayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C294-VASTU294-02]; assesses=[] -->
 
 **ಮಸಾಲೆ** — *masāle* — "spices, a spice mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಸಾಲೆ** (*masāle*) is Hindustani *masālā*, "spices", from Arabic *maṣāliḥ*, "things needed, ingredients", with the Kannada *-e* for final *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

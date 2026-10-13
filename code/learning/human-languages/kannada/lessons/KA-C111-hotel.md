@@ -14,7 +14,8 @@ romanization: "hōṭel"
 concept_tag: KA-LOC111-HOTEL
 prerequisites: [KA-C110-mule, KA-C110-tiruvu]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hōṭel ← English hotel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C110-tiruvu]
 <!-- hl-knowledge: introduces=[KA-LEX-C111-LOC111-01]; assesses=[] -->
 
 **ಹೋಟೆಲ್** — *hōṭel* — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೋಟೆಲ್** (*hōṭel*) is a loan from English *hotel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

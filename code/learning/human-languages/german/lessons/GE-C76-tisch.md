@@ -13,7 +13,8 @@ gloss: "a table"
 concept_tag: GE-HAUS1-TISCH
 prerequisites: [GE-C76-fenster, GE-C76-stuhl]
 sounds: []
-roots: []
+roots: [discus-latin]
+etymology_hook: "Tisch ← Old High German tisc 'plate' ← Latin discus — borrowed; English dish and desk share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C76-stuhl]
 <!-- hl-knowledge: introduces=[GE-LEX-C76-HAUS1-03]; assesses=[] -->
 
 **der Tisch** — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tisch** ← Old High German *tisc*, "plate" ← Latin *discus* (EtymDB 2.1) — an early loan; English *dish* and *desk* come from the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

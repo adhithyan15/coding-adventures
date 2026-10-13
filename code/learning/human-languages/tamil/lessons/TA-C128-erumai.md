@@ -14,7 +14,8 @@ romanization: "erumai"
 concept_tag: TA-THINGS128-ERUMAI
 prerequisites: [TA-C127-puyal, TA-C128-alai]
 sounds: []
-roots: []
+roots: [dravidian-erumai-buffalo]
+etymology_hook: "எருமை — native Dravidian (DEDR 816); Kannada emme, Telugu enumu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C128-alai]
 <!-- hl-knowledge: introduces=[TA-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **எருமை** — *erumai* — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எருமை** (*erumai*) is native Dravidian. DEDR 816 lists Kannada *emme* and Telugu *enumu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

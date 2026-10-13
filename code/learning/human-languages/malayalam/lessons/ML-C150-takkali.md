@@ -14,7 +14,8 @@ romanization: "takkāḷi"
 concept_tag: ML-THINGS150-TAKKALI
 prerequisites: [ML-C149-muntiri, ML-C150-urulakkilannu]
 sounds: []
-roots: []
+roots: [dravidian-takkali-berry]
+etymology_hook: "takkāḷi: native Dravidian, one word with Tamil takkāḷi and Kannada takkāḷi (DEDR 3009)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C150-urulakkilannu]
 <!-- hl-knowledge: introduces=[ML-LEX-C150-THINGS150-02]; assesses=[] -->
 
 **തക്കാളി** — *takkāḷi* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തക്കാളി** (*takkāḷi*) is native Dravidian, one word with Tamil *takkāḷi* and Kannada *takkāḷi* (DEDR 3009). It first named a native hill-berry, and passed to the tomato when that arrived from the Americas.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

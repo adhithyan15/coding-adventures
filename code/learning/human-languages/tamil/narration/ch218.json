@@ -4,7 +4,7 @@
   "chapter": 218,
   "title": "Giraffe, Zebra, Crocodile, Butterfly, Bee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3cab0a35255e9911",
+  "sourceHash": "fnv1a64:3e0374b007f965b2",
   "lessons": [
     {
       "id": "TA-C218-ottakaccivinki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:652e9b49854033e4",
+      "sourceHash": "fnv1a64:cf8918845346fe3a",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒட்டகச்சிவிங்கி (oṭṭakacciviṅki) is \"the camel-leopard\": oṭṭakam, \"camel\", from Sanskrit uṣṭra (CDIAL 2387), and native civiṅki, \"hunting leopard\" (DEDR 2579; Malayalam civiṅṅi). Greek named the giraffe the same way, camelopardalis."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adf649a84621d1be",
+      "sourceHash": "fnv1a64:3f4e812aec9f927b",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வரிக்குதிரை (varikkutirai) is native: vari, \"stripe, line\" (DEDR 5263), and kutirai, \"horse\" (DEDR 1711): \"the striped horse\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02dbd609a0ed9594",
+      "sourceHash": "fnv1a64:db2c38f267c9ff65",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதலை (mutalai) is native Dravidian. DEDR 4952 lists Malayalam mutala, Kannada mosaḷe and Telugu mosali. The entry compares Sanskrit (lexicons) mācala, \"crocodile\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28cec888dc53c570",
+      "sourceHash": "fnv1a64:2914a723271b4aa8",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பட்டாம்பூச்சி (paṭṭāmpūcci) is paṭṭu, \"silk\", from Sanskrit paṭṭa, \"woven silk\" (CDIAL 7700), and native pūcci, \"insect\" (DEDR 4353): \"the silk insect\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19eb0e1b9bec19f0",
+      "sourceHash": "fnv1a64:bdc334c60f99b39b",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேனீ (tēṉī) is native: tēṉ, \"honey\" (DEDR 3268), and ī, \"fly, bee\" (DEDR 533), which lists tēṉ-ī, \"honey bee\", itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

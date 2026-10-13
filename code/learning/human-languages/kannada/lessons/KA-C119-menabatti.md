@@ -14,7 +14,8 @@ romanization: "mēṇabatti"
 concept_tag: KA-THINGS119-MENABATTI
 prerequisites: [KA-C118-kagada, KA-C119-ole, KA-C28-aparahna, KA-C29-shubhodaya, KA-C30-shubha-sanje, KA-C31-shubha-madhyahna]
 sounds: []
-roots: []
+roots: [dravidian-app-52-mena, sanskrit-varti]
+etymology_hook: "mēṇabatti: mēṇa 'wax' (DEDR App. 52) + batti 'wick' ← Sanskrit varti (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [KA-C119-ole]
 <!-- hl-knowledge: introduces=[KA-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **ಮೇಣಬತ್ತಿ** — *mēṇabatti* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೇಣಬತ್ತಿ** (*mēṇabatti*) is *mēṇa*, "wax", which DEDR lists among Indo-Aryan loans (DEDR App. 52), and *batti*, "wick", from Sanskrit *varti*, "wick, lamp" (CDIAL 11359). A candle is a wax wick.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

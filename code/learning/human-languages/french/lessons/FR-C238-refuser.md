@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REFUSER
 prerequisites: [FR-C237-offrir, FR-C238-reduire]
 sounds: []
 roots: []
+etymology_hook: "refuser — usually traced to a blend of Latin refutare and recusare — English refuse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C238-reduire]
 <!-- hl-knowledge: introduces=[FR-LEX-C238-VERBES238-02]; assesses=[] -->
 
 **refuser** — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**refuser** — usually traced to Vulgar Latin *\*refusare*, a blend of Latin *refutare*, "to rebut", and *recusare*, "to decline" — the account is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

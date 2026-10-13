@@ -13,7 +13,8 @@ gloss: "a course"
 concept_tag: GE-THING160-KURS
 prerequisites: [GE-C159-nachricht, GE-C160-universitaet]
 sounds: []
-roots: []
+roots: [cursus-latin]
+etymology_hook: "Kurs ← Latin cursus 'a running, a course', from currere 'to run' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C160-universitaet]
 <!-- hl-knowledge: introduces=[GE-LEX-C160-THING160-02]; assesses=[] -->
 
 **der Kurs** — "a course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kurs** ← Latin *cursus*, "a running, a course", from *currere*, "to run" (EtymDB 2.1) — borrowed, like English *course*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

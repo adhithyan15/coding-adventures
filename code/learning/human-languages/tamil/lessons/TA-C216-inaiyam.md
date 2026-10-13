@@ -14,7 +14,8 @@ romanization: "iṇaiyam"
 concept_tag: TA-PORUL216-INAIYAM
 prerequisites: [TA-C215-katitam, TA-C215-urai]
 sounds: []
-roots: []
+roots: [dravidian-inai-join]
+etymology_hook: "இணையம் — native Dravidian (DEDR 457)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C215-urai]
 <!-- hl-knowledge: introduces=[TA-LEX-C216-PORUL216-01]; assesses=[] -->
 
 **இணையம்** — *iṇaiyam* — "the internet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இணையம்** (*iṇaiyam*) is native Dravidian (DEDR 457). It is a modern coinage on *iṇai*, "to join, to link": "the linked thing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

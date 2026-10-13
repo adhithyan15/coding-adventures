@@ -13,7 +13,8 @@ gloss: "a lemon"
 concept_tag: FR-CUISINE23-CITRON
 prerequisites: [FR-C70-riz, FR-C70-poire]
 sounds: []
-roots: []
+roots: [citrus-latin]
+etymology_hook: "citron — from Latin citrus 'the citron tree' — English citrus and citron"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C70-poire]
 <!-- hl-knowledge: introduces=[FR-LEX-C71-CUISINE23-01]; assesses=[] -->
 
 **le citron** — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**citron** — formed from Latin *citrus*, "the citron tree" (EtymDB 2.1), with the ending *-on*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

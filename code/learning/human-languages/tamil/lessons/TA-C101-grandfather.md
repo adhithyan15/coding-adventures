@@ -11,7 +11,8 @@ romanization: "tāttā"
 concept_tag: TA-GRAND-GRANDFATHER
 prerequisites: [TA-C100-wife, TA-C100-relative]
 sounds: []
-roots: []
+roots: [dravidian-taata-grandfather]
+etymology_hook: "தாத்தா — native Dravidian (DEDR 3160); Malayalam tātan 'father', Kannada tāta, Telugu tāta"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C100-relative]
 **தாத்தா** (*tāttā*) — "grandfather".
 
 **என் தாத்தா** — "my grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தாத்தா** (*tāttā*) is native Dravidian. DEDR 3160 lists Malayalam *tātan*, "father", Kannada *tāta* and Telugu *tāta*. The entry compares Sanskrit *tāta*, "father".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "cāppiṭṭīrkaḷā?"
 concept_tag: TA-GREET-EATEN
 prerequisites: [TA-C107-goodjourney, TA-C107-comeagain]
 sounds: []
-roots: []
+roots: [dravidian-idu-put]
+etymology_hook: "சாப்பிட்டீர்களா — the past of sāppiḍu: sāppu 'food' + iḍu 'to put' (DEDR 442), + -ā?"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C107-comeagain]
 **சாப்பிட்டீர்களா?** (*cāppiṭṭīrkaḷā?*) — "have you eaten?".
 
 Around a mealtime it is a greeting and a kindness, built on **சாப்பிடு**, "eat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சாப்பிட்டீர்களா?** (*cāppiṭṭīrkaḷā?*) is the past of *sāppiḍu*, "to eat" (*sāppu*, "food", with *iḍu*, "to put", DEDR 442), with the question ending *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

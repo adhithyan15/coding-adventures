@@ -14,7 +14,8 @@ romanization: "nenesu"
 concept_tag: KA-VERB-NENESU
 prerequisites: [KA-C241-sala-pade, KA-C242-oggarane-haku]
 sounds: []
-roots: []
+roots: [dravidian-nanai-wet]
+etymology_hook: "nenesu: native Dravidian; DEDR 3630 lists nenasu 'to make wet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C242-oggarane-haku]
 <!-- hl-knowledge: introduces=[KA-LEX-C242-KRIYE242-02]; assesses=[] -->
 
 **ನೆನೆಸು** — *nenesu* — "to soak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆನೆಸು** (*nenesu*) is native Dravidian, from *nene*, "to become wet", and DEDR 3630 lists *nenasu*, "to make wet, moisten", itself; the entry also has Tamil *naṉai*, Telugu *nānu* and Malayalam *nana*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

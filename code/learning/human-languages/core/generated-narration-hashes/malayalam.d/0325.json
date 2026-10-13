@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 325,
-  "sourceHash": "fnv1a64:fca9054c140d236a",
+  "sourceHash": "fnv1a64:efef6a5a97c4b0b8",
   "lessonIds": [
     "ML-C325-kunnu2",
     "ML-C325-al",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch325.txt",
   "json": "malayalam/narration/ch325.json",
-  "textHash": "fnv1a64:2796de79fec5a96b",
-  "jsonHash": "fnv1a64:932ac3b21f4691b0",
+  "textHash": "fnv1a64:f7cb32fb0ddcbbce",
+  "jsonHash": "fnv1a64:8d5f3fcc3f2f12f8",
   "findings": []
 }

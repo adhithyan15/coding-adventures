@@ -14,7 +14,8 @@ romanization: "kṣaṇa"
 concept_tag: KA-KALA172-KSANA
 prerequisites: [KA-C172-arambha, KA-C172-satamana]
 sounds: []
-roots: []
+roots: [sanskrit-kshana]
+etymology_hook: "kṣaṇa ← Sanskrit kṣaṇa 'the twinkling of an eye, moment', a tatsama (CDIAL 3642)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C172-satamana]
 <!-- hl-knowledge: introduces=[KA-LEX-C172-KALA172-05]; assesses=[] -->
 
 **ಕ್ಷಣ** — *kṣaṇa* — "a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ಷಣ** (*kṣaṇa*) is Sanskrit *kṣaṇa*, "the twinkling of an eye, moment", taken over whole as a learned loan, a tatsama (CDIAL 3642).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

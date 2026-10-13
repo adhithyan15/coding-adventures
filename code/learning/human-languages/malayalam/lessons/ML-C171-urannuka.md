@@ -14,7 +14,8 @@ romanization: "uṟaṅṅuka"
 concept_tag: ML-VERB-URANNUKA
 prerequisites: [ML-C170-natakkuka, ML-C171-elunnelkkuka, ML-C112-aashupathri]
 sounds: []
-roots: []
+roots: [dravidian-urangu-sleep]
+etymology_hook: "uṟaṅṅuka: native Dravidian, one word with Tamil uṟaṅku (DEDR 707)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C171-elunnelkkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C171-ACT171-02]; assesses=[] -->
 
 **ഉറങ്ങുക** — *uṟaṅṅuka* — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉറങ്ങുക** (*uṟaṅṅuka*) is native Dravidian, one word with Tamil *uṟaṅku* (DEDR 707).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

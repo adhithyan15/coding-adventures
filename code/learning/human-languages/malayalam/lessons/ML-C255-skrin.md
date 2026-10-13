@@ -14,7 +14,8 @@ romanization: "skrīn"
 concept_tag: ML-VASTU255-SKRIN
 prerequisites: [ML-C254-ciraku, ML-C255-laptoppu]
 sounds: []
-roots: []
+roots: [english-screen]
+etymology_hook: "skrīn ← English screen"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C255-laptoppu]
 <!-- hl-knowledge: introduces=[ML-LEX-C255-VASTU255-02]; assesses=[] -->
 
 **സ്ക്രീൻ** — *skrīn* — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്ക്രീൻ** (*skrīn*) ← English *screen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

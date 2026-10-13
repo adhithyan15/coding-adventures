@@ -13,7 +13,8 @@ gloss: "a wedding"
 concept_tag: GE-THING163-HOCHZEIT
 prerequisites: [GE-C163-temperatur, GE-C163-geburtstag]
 sounds: []
-roots: []
+roots: [germanic-hauhaz, germanic-tidiz]
+etymology_hook: "Hochzeit ← Middle High German hōchzīt 'high time, festival' — hoch + Zeit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C163-geburtstag]
 <!-- hl-knowledge: introduces=[GE-LEX-C163-THING163-03]; assesses=[] -->
 
 **die Hochzeit** — "a wedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hochzeit** ← Middle High German *hōchzīt*, "high time, festival" (EtymDB 2.1): *hoch* + *Zeit*. The great feast of a life became the wedding.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

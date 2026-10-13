@@ -14,6 +14,9 @@ You'll want to know: மட்டும்.
 This and nothing beside it. Where English puts only in front of the thing it limits, Tamil hangs மட்டும் (maṭṭum) on the end of it: தண்ணீர் மட்டும் (maṭṭum) — water, and nothing else.
 Telugu does the same job with మాత్రమే (mātramē). The doubled ட்ட in the middle is the one held twice, as in ஆகட்டும்.
 
+The word, taken apart.
+மட்டும் (maṭṭum) is native, from the family of maṭṭam, "measure, limit, extent" (DEDR 4660): "only" is "up to the limit". DEDR does not list maṭṭum itself, so the link is the usual reading rather than a recorded one.
+
 What you've built.
 The first of five.
 
@@ -45,6 +48,9 @@ You'll want to know: இன்னும்.
 இன்னும் (iṉṉum) — "still, yet".
 For something that has not finished, and for a bit more of it: இன்னும் (iṉṉum) சிறிது, a little more still. Kannada ಇನ್ನೂ (innū) is the same word; Telugu says ఇంకా (iṅkā).
 The ன் doubled in the middle is the soft one — the alveolar ன, not the curled ண you have in கிண்ணம். Tamil keeps three of these apart and this word wants the middle one twice.
+
+The word, taken apart.
+இன்னும் (iṉṉum) is native Dravidian (DEDR 410). The entry lists iṉṉum, "still, yet, more", among the words built on the near base i-.
 
 What you've built.
 Two.
@@ -78,6 +84,9 @@ You'll want to know: சீக்கிரம்.
 Soon, and quickly — Tamil lets one word carry nearness in நேரம் and speed of doing together, and which one is meant comes out of the sentence around it.
 Set it against பிறகு and the pair covers the whole span: சீக்கிரம் (sīkkiram) is the near end, பிறகு the loose one that promises nothing. Kannada says ಬೇಗ (bēga).
 
+The word, taken apart.
+சீக்கிரம் (sīkkiram) is a loan from Sanskrit śīghra, "quick" (CDIAL 12484).
+
 What you've built.
 Three.
 
@@ -110,6 +119,9 @@ You'll want to know: உடனே.
 Tighter than சீக்கிரம் (sīkkiram): not soon but now, with nothing allowed in between. It is the word that answers an instruction you intend to obey.
 Say it ending long, on the ே. That final length is doing the work — it is what makes the word press rather than merely inform.
 
+The word, taken apart.
+உடனே (uṭaṉē) is native Dravidian. DEDR 945 lists Malayalam uṭan, "at once". The entry glosses uṭaṉ "together with, immediately after, at once", and -ē stresses it.
+
 What you've built.
 Four, and the fourth pushes harder than the third.
 
@@ -141,6 +153,9 @@ You'll want to know: முதலில்.
 முதலில் (mutalil) — "first of all".
 Before anything else. It puts an order on things that had none: முதலில் (mutalil) தண்ணீர், பிறகு சாதம் — water to begin with, and the rice after.
 With this one you can lay out a sequence end to end: முதலில் (mutalil), then உடனே (uṭaṉē) or சீக்கிரம் (sīkkiram) for what follows fast, then பிறகு for what can wait.
+
+The word, taken apart.
+முதலில் (mutalil) is native: mutal, "beginning, first" (DEDR 4950), with the locative -il, "in": "in the first place".
 
 What you've built.
 Five, and the run is closed: only, still, soon, at once, and first of all.

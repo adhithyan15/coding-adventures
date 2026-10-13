@@ -13,7 +13,8 @@ gloss: "to look (like)"
 concept_tag: GE-VERB-AUSSEHEN
 prerequisites: [GE-C144-aufhoeren, GE-C144-ausgehen]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "aussehen ← Middle High German ūzsehen: aus- 'out' + sehen 'to see' — how a thing shows outward"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C144-ausgehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C144-VERB144-05]; assesses=[] -->
 
 **aussehen** — "to look (like)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aussehen** ← Middle High German *ūzsehen* (EtymDB 2.1): *aus-*, "out", + *sehen*, "to see". How a thing looks is how it shows outward.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

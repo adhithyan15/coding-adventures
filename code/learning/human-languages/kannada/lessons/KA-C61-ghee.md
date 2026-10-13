@@ -11,7 +11,8 @@ romanization: "tuppa"
 concept_tag: KA-NOUN-GHEE
 prerequisites: [KA-C61-curd, KA-C59-mist]
 sounds: []
-roots: []
+roots: [dravidian-tuppa-ghee]
+etymology_hook: "tuppa: disputed; DEDR 3282 files it as native, CDIAL 5864 calls it rather a Middle Indo-Aryan loan"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C61-curd]
 ತುಪ್ಪ is the other thing ಹಾಲು turns into, further along the same road: cream taken off, churned, then cooked until only the fat is left. Inherited, and shared with the sisters.
 
 A spoonful goes on hot ಅನ್ನ, and a ದೀಪ will burn on it as readily as on any oil. It is the one item in this chapter that is food and light at once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ತುಪ್ಪ** (*tuppa*) is disputed. DEDR 3282 files it as native Dravidian, beside Tamil *tu*, "to eat", but Turner's CDIAL (5864) thinks it is rather a loan from Middle Indo-Aryan, related to a word for "grease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

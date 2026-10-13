@@ -14,7 +14,8 @@ romanization: "kavil"
 concept_tag: ML-THINGS155-KAVIL
 prerequisites: [ML-C154-toli, ML-C154-nerri]
 sounds: []
-roots: []
+roots: [dravidian-kavul-cheek]
+etymology_hook: "kavil: native Dravidian, one word with Tamil kavuḷ (DEDR 1337)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C154-nerri]
 <!-- hl-knowledge: introduces=[ML-LEX-C155-THINGS155-01]; assesses=[] -->
 
 **കവിൾ** — *kavil* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കവിൾ** (*kavil*) is native Dravidian, one word with Tamil *kavuḷ* (DEDR 1337). DEDR 1337 compares Sanskrit *kapola*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

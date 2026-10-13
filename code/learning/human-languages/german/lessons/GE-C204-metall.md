@@ -13,7 +13,8 @@ gloss: "metal"
 concept_tag: GE-THING204-METALL
 prerequisites: [GE-C204-leder, GE-C204-holz]
 sounds: []
-roots: []
+roots: [metallum-latin]
+etymology_hook: "Metall ← Latin metallum ← Greek métallon 'mine, metal' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C204-holz]
 <!-- hl-knowledge: introduces=[GE-LEX-C204-THING204-03]; assesses=[] -->
 
 **das Metall** — "metal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Metall** ← Latin *metallum* ← Greek *métallon*, "mine, metal" — borrowed, like English *metal*. EtymDB 2.1 has the German word but not its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

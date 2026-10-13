@@ -14,6 +14,7 @@ concept_tag: FR-TABLE29-TASSE
 prerequisites: [FR-C77-fourchette, FR-C77-bouteille]
 sounds: []
 roots: []
+etymology_hook: "tasse ← Arabic tas 'a bowl, a cup', from Persian — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C77-bouteille]
 <!-- hl-knowledge: introduces=[FR-LEX-C77-TABLE29-05]; assesses=[] -->
 
 **la tasse** — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tasse** ← Arabic *tas*, "a bowl, a cup", itself from Persian — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

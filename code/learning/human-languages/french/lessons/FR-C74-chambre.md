@@ -13,7 +13,8 @@ gloss: "a bedroom"
 concept_tag: FR-MAISON26-CHAMBRE
 prerequisites: [FR-C74-lampe, FR-C74-bain]
 sounds: []
-roots: []
+roots: [latin-camera]
+etymology_hook: "chambre ← Latin camera 'a vaulted room' — English chamber and camera"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C74-bain]
 <!-- hl-knowledge: introduces=[FR-LEX-C74-MAISON26-05]; assesses=[] -->
 
 **la chambre** — "a bedroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chambre** ← Latin *camera*, "a vaulted room", from Greek *kamara* (EtymDB 2.1) — inherited: Latin *ca-* became French *cha-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

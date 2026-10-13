@@ -11,7 +11,8 @@ romanization: "kāṟṟŭ"
 concept_tag: ML-NOUN-WIND
 prerequisites: [ML-C58-that-will-do, ML-C57-neck]
 sounds: []
-roots: []
+roots: [dravidian-kal-wind]
+etymology_hook: "kāṟṟŭ: native Dravidian, one word with Tamil kāṟṟu (DEDR 1481)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *kāṟṟu*. The doubled റ്റ in the middle is o
 In Kerala the word is bound up with the monsoon, and the wind that brings it off the Arabian Sea has its own name in the local calendar. A fisherman's day is decided by കാറ്റ് before it is decided by anything else.
 
 It also does the work English gives to *air*, so a room with no കാറ്റ് is a stuffy room rather than a still one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാറ്റ്** (*kāṟṟŭ*) is native Dravidian, one word with Tamil *kāṟṟu* (DEDR 1481).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

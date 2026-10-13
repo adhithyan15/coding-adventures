@@ -11,7 +11,8 @@ gloss: a letter — the written kind, built from a doubling you have read since 
 concept_tag: ML-NOUN-LETTER-WRITTEN
 prerequisites: [ML-C110-phon]
 sounds: [malayalam-geminate-tta]
-roots: []
+roots: [arabic-khatt]
+etymology_hook: "kattŭ 'a letter' came through Hindustani khat from Arabic khaṭṭ 'writing'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [ML-C110-phon]
 **Every piece of this word is one you can already read.** The doubled **ത്ത**
 in the middle is the cluster you took apart in the school words, and the half-*u*
 at the end is the one you close dozens of words with.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കത്ത്** (*kattŭ*) came into Malayalam through Hindustani *khat*, "a letter", from Arabic *khaṭṭ*, "line, writing".
 
 ## Grammar Lens: a shape that hides inside a word you know
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-LETTER-01] -->

@@ -14,7 +14,8 @@ romanization: "ennuṁ"
 concept_tag: ML-SAMAYAM195-ENNUM
 prerequisites: [ML-C194-arogyam, ML-C194-kanpola]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "ennuṁ 'always': native Dravidian; DEDR 5151 lists Malayalam ennum 'always' under the question stem"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C194-kanpola]
 <!-- hl-knowledge: introduces=[ML-LEX-C195-SAMAYAM195-01]; assesses=[] -->
 
 **എന്നും** — *ennuṁ* — "every day, always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്നും** (*ennuṁ*) is native Dravidian: DEDR 5151 lists it, "always", under the old question stem, with Tamil *yā*: "on whatever day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

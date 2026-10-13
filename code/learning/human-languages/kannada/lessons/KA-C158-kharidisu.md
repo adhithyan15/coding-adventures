@@ -14,7 +14,8 @@ romanization: "kharīdisu"
 concept_tag: KA-VERB-KHARIDISU
 prerequisites: [KA-C158-beyisu, KA-C158-aduge-madu]
 sounds: []
-roots: []
+roots: [persian-kharid]
+etymology_hook: "kharīdisu: Persian kharīd 'purchase', through Hindustani, + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C158-aduge-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C158-KRIYE158-03]; assesses=[] -->
 
 **ಖರೀದಿಸು** — *kharīdisu* — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಖರೀದಿಸು** (*kharīdisu*) is Persian *kharīd*, "purchase", which came through Hindustani, made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

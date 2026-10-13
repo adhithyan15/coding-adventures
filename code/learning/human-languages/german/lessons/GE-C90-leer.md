@@ -14,6 +14,7 @@ concept_tag: GE-ADJ2-LEER
 prerequisites: [GE-C90-hoch, GE-C90-niedrig]
 sounds: []
 roots: []
+etymology_hook: "leer ← Middle High German lære 'empty' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C90-niedrig]
 <!-- hl-knowledge: introduces=[GE-LEX-C90-ADJ2-05]; assesses=[] -->
 
 **leer** — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leer** ← Middle High German *lære*, "empty" (EtymDB 2.1) — inherited, from Old High German *lāri*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

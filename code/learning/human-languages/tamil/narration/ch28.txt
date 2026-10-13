@@ -12,6 +12,9 @@ You already met a sandhi-driven surface change in Chapter 17 — நள் resur
 You'll want to know: பிற்பகல் — பின் (after) + பகல் (daytime), a similar sandhi story.
 பிற்பகல் (piṟpakal) — "afternoon" — is a transparent compound: பின் (piṉ, "after") plus பகல் (pakal, "daytime," already met inside நண்பகல், TA-C17 — though be aware the பிற்பகல் Wiktionary page itself glosses பகல் as "noon" in its own etymology line, a small inconsistency across Wiktionary's own entries, not something this lesson introduces). Here's the familiar pattern: பின் doesn't stay பின் in this compound — it surfaces as பிற்- before the following ப — a similar kind of consonant sandhi to the one already taught in Chapter 17, where நள் became நண் before its own following ப. Be honest, though: Wiktionary's own etymology for பிற்பகல் doesn't discuss this mechanism at all, and the two changes move in different phonetic directions (nasal becomes stop here, lateral becomes nasal there) — this is the lesson's own observation, not a sourced equivalence. Wiktionary labels this word formal register.
 
+The word, taken apart.
+பிற்பகல் (piṟpakal) is a native compound of piṉ, "after, behind" (DEDR 4205; Malayalam pin, Kannada pin), and pakal, "daytime" (DEDR 3805; Malayalam pakal).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "piṟpakal" — "afternoon," piṉ ("after") + pakal ("daytime")]

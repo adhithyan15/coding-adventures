@@ -14,7 +14,8 @@ romanization: "māṟṟivaykkuka"
 concept_tag: ML-VERB-MARRIVAYKKUKA
 prerequisites: [ML-C306-vivarttanam-ceyyuka, ML-C306-raddakkuka]
 sounds: []
-roots: []
+roots: [dravidian-maru-change, dravidian-vai-place]
+etymology_hook: "māṟṟivaykkuka: native Dravidian, 'move and set aside': māṟṟi (DEDR 4834) + vaykkuka (DEDR 5549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C306-raddakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C306-KRIYA306-04]; assesses=[] -->
 
 **മാറ്റിവയ്ക്കുക** — *māṟṟivaykkuka* — "to postpone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാറ്റിവയ്ക്കുക** (*māṟṟivaykkuka*) is native Dravidian, "set down elsewhere": a form of the verb "to change, move" (DEDR 4834, with Tamil *māṟu*), and the verb "to put, place" (DEDR 5549, with Tamil *vai*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

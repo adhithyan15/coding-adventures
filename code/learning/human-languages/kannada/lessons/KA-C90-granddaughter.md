@@ -11,7 +11,8 @@ romanization: "mommagaḷu"
 concept_tag: KA-KIN-GRANDDAUGHTER
 prerequisites: [KA-C89-holiday, KA-C90-grandson]
 sounds: []
-roots: []
+roots: [proto-dravidian-maka-child]
+etymology_hook: "mommagaḷu: native Dravidian; DEDR 4715 lists mom-magaḷu 'granddaughter'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C90-grandson]
 
 **ಮೊಮ್ಮಗಳು** (*mommagaḷu*) — "granddaughter", built the same way on **ಮಗಳು**
 (*magaḷu*), "daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಮ್ಮಗಳು** (*mommagaḷu*) is native Dravidian, built on *magaḷu*, "daughter", and DEDR 4715 lists *mom-magaḷu* itself, "granddaughter"; the entry also has Tamil *marumakaṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

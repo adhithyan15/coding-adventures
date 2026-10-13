@@ -13,7 +13,8 @@ gloss: "ham"
 concept_tag: FR-CUISINE23-JAMBON
 prerequisites: [FR-C71-confiture, FR-C71-yaourt]
 sounds: []
-roots: []
+roots: [gamba-latin]
+etymology_hook: "jambon — jambe 'leg' + -on; jambe ← Late Latin gamba — English gammon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C71-yaourt]
 <!-- hl-knowledge: introduces=[FR-LEX-C71-CUISINE23-05]; assesses=[] -->
 
 **le jambon** — "ham".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jambon** — built from *jambe*, "leg", with *-on*: the leg of the pig. *jambe* ← Late Latin *gamba*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

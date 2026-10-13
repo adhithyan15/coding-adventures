@@ -13,7 +13,8 @@ gloss: "lazy"
 concept_tag: GE-EIGEN132-FAUL
 prerequisites: [GE-C131-eng, GE-C132-fleissig]
 sounds: []
-roots: []
+roots: [germanic-fulaz]
+etymology_hook: "faul ← Old High German fūl 'rotten' ← Proto-Germanic *fūlaz — the same word as English foul"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C132-fleissig]
 <!-- hl-knowledge: introduces=[GE-LEX-C132-EIGEN132-02]; assesses=[] -->
 
 **faul** — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faul** ← Old High German *fūl*, "rotten" ← Proto-Germanic *\*fūlaz* — inherited, the same word as English *foul*. (EtymDB 2.1) "Lazy" grew out of "rotten, sluggish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

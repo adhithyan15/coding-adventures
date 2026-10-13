@@ -13,7 +13,8 @@ gloss: "a till, a checkout"
 concept_tag: FR-METIERS77-CAISSE
 prerequisites: [FR-C125-serveur, FR-C125-client]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "caisse ← Provençal caissa, from Latin capsa 'a box' — English case and cash"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C125-client]
 <!-- hl-knowledge: introduces=[FR-LEX-C125-METIERS77-05]; assesses=[] -->
 
 **la caisse** — "a till, a checkout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caisse** ← Old Provençal *caissa* ← Latin *capsa*, "a box" — borrowed from the south: an inherited form would begin with *ch-*. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

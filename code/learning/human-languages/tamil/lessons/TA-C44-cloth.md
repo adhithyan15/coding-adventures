@@ -11,7 +11,8 @@ romanization: "tuṇi"
 concept_tag: TA-NOUN-CLOTH
 prerequisites: [TA-C44-fruit, TA-C42-sit, TA-C43-child]
 sounds: []
-roots: []
+roots: [dravidian-tuni-cloth]
+etymology_hook: "துணி — native Dravidian (DEDR 3307); Malayalam tuṇi"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C44-fruit]
 One shape, two jobs. *tuṇi* is the cloth you wear or wipe your hands on, and *tuṇi* is also 'to dare, to resolve'. Nothing joins them but sound, and the sentence around them settles which is meant — the ordinary way a language carries two words in one skin.
 
 Malayalam keeps തുണി unchanged. Telugu and Kannada reach for something else here, so this is one of the places where the two closest sisters agree and the other two go their own way.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**துணி** (*tuṇi*) is native Dravidian. DEDR 3307 lists Malayalam *tuṇi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a guided tour, leadership"
 concept_tag: GE-THING229-FUEHRUNG
 prerequisites: [GE-C228-erklaerung, GE-C229-erlebnis]
 sounds: []
-roots: []
+roots: [farana-germanic]
+etymology_hook: "Führung — the verb 'to lead' + -ung; that verb first meant 'to make go', from fahren"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C229-erlebnis]
 <!-- hl-knowledge: introduces=[GE-LEX-C229-THING229-02]; assesses=[] -->
 
 **die Führung** — "a guided tour, leadership".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Führung** is the verb "to lead" + *-ung*. That verb first meant "to make go", built on *fahren*: a guide makes you travel. EtymDB 2.1 has the verb but not its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

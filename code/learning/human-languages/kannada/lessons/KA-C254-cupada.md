@@ -14,7 +14,8 @@ romanization: "cūpāda"
 concept_tag: KA-GUNA254-CUPADA
 prerequisites: [KA-C254-telu2, KA-C254-asvastha]
 sounds: []
-roots: []
+roots: [kannada-cupu]
+etymology_hook: "cūpāda: cūpu 'point, sharpness' + āda 'having become'; the origin of cūpu is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C254-asvastha]
 <!-- hl-knowledge: introduces=[KA-LEX-C254-GUNA254-03]; assesses=[] -->
 
 **ಚೂಪಾದ** — *cūpāda* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚೂಪಾದ** (*cūpāda*) is *cūpu*, "a point", with *āda*, "having become": "pointed". Where that word for "point" comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

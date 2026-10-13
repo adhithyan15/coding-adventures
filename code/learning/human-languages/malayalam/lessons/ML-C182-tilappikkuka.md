@@ -14,7 +14,8 @@ romanization: "tiḷappikkuka"
 concept_tag: ML-VERB-TILAPPIKKUKA
 prerequisites: [ML-C182-ilakkuka, ML-C182-porikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tilai-boil]
+etymology_hook: "tiḷappikkuka: native Dravidian, 'make bubble', from the verb to boil up; Tamil tiḷai (DEDR 3257)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C182-porikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C182-KRIYA182-03]; assesses=[] -->
 
 **തിളപ്പിക്കുക** — *tiḷappikkuka* — "to boil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിളപ്പിക്കുക** (*tiḷappikkuka*) is native Dravidian, the causative of the verb "to bubble up, boil": "make boil"; DEDR 3257 lists the root with Tamil *tiḷai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

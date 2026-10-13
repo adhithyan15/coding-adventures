@@ -13,7 +13,8 @@ gloss: "a church"
 concept_tag: GE-STADT2-KIRCHE
 prerequisites: [GE-C96-auto, GE-C97-bruecke]
 sounds: []
-roots: []
+roots: [kyriakon-greek]
+etymology_hook: "Kirche ← Old High German chirihha, an early loan from Greek kyriakón '(house) of the Lord'; English church shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C97-bruecke]
 <!-- hl-knowledge: introduces=[GE-LEX-C97-STADT2-02]; assesses=[] -->
 
 **die Kirche** — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kirche** is an early West Germanic loan (Old High German *chirihha*, Old English *cirice*) from Greek *kyriakón*, "(the house) of the Lord" (EtymDB 2.1). English *church* and Scots *kirk* are the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

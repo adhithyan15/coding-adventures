@@ -11,7 +11,8 @@ romanization: "tuṟakkuka"
 concept_tag: ML-VERB-OPEN
 prerequisites: [ML-R94-day-recall, ML-C52-door, ML-C32-varuka]
 sounds: []
-roots: []
+roots: [dravidian-tira-open]
+etymology_hook: "tuṟakkuka: native Dravidian, one word with Tamil tiṟa and Kannada teṟa (DEDR 3259)"
 duration:
   max_seconds: 250
 requires:
@@ -46,6 +47,11 @@ never been able to do anything to it.
 Look at what the sentence asked of you. **Nothing new but the verb.** The doer
 in front, the thing in the middle, the verb at the end — and **വാതിൽ** takes no
 ending, because it is a thing and not a person.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുറക്കുക** (*tuṟakkuka*) is native Dravidian, one word with Tamil *tiṟa*, Kannada *teṟa* and Telugu *teṟa* (DEDR 3259).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-OPEN-01, ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-02] -->

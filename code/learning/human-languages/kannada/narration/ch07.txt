@@ -12,8 +12,11 @@ Six chapters of letters have gone by. Every shape in the word below is one you h
 You'll want to know: ಒಂದು.
 ಒಂದು (ondu) — "one."
 Tamil says oṉṟu. Both come down from an older oṉ-, and the family resemblance is easy to hear once you know to listen for it.
-Telugu will not join in: its "one" is okaṭi, from somewhere else entirely. Of the ten numbers you are about to learn, this is the one that wanders.
+Telugu's "one", okaṭi, looks like a stranger beside them. Of the ten numbers you are about to learn, this is the one that wanders furthest.
 The small circle ಂ sitting on ಒ is the anusvara — a nasal with no fixed sound of its own. Here it borrows n from the ದ that follows.
+
+The word, taken apart.
+ಒಂದು (ondu) is native Dravidian (DEDR 990). The entry gathers Tamil oṉṟu and Telugu oṇḍu, "one thing", and also Telugu oka, "one": the Telugu word that looks least alike is filed in the same family.
 
 Guided Practice.
 [pause 1 second]
@@ -27,7 +30,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "one" in Kannada? (Ondu.) Which sister language leaves the family here? (Telugu — okaṭi.) What sound is the ಂ carrying in ಒಂದು (ondu)? (An n, borrowed from the ದ after it.)
+What is "one" in Kannada? (Ondu.) Which sister language's "one" looks least like it? (Telugu — okaṭi.) What sound is the ಂ carrying in ಒಂದು (ondu)? (An n, borrowed from the ದ after it.)
 
 
 Lesson 2 of 12.
@@ -67,6 +70,9 @@ You'll want to know: ಮೂರು.
 ಮೂರು (mūru) — "three."
 Tamil mūṉṟu, Kannada mūru, Telugu mūḍu. The endings drift, but the long ū at the front holds firm in all three. Three is the number the family never quarrelled over, and it is a useful anchor: when you meet a Dravidian language you have never studied, look for a word that starts mū-.
 The long vowel is written with the sign ೂ hanging under ಮ.
+
+The word, taken apart.
+ಮೂರು (mūru) is native Dravidian, one word with Tamil mūṉṟu and Telugu mūḍu (DEDR 5052). The entry gives the older Kannada spelling mūṟu.
 
 Guided Practice.
 [pause 1 second]
@@ -139,6 +145,9 @@ The word breaks into ನಾ (nā), ಲ್ (l, with your virama stripping the vow
 [once you have stopped driving — read: the word slowly]
 Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them.
 
+The word, taken apart.
+ನಾಲ್ಕು (nālku) is native Dravidian, one word with Tamil nālku and Telugu nālugu (DEDR 3655). The entry gives Kannada nāl(u)ku and nāku.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "nālku"]
@@ -166,6 +175,9 @@ Tamil says aintu. Kannada says aidu. The hard nt in the middle has worn down to 
 Twice is enough to call it a pattern rather than a coincidence. When a Tamil word you know has a hard cluster in the middle, guess that Kannada softened it, and you will be right more often than not.
 ಐ is an independent vowel: the shape ai takes when it opens a word.
 
+The word, taken apart.
+ಐದು (aidu) is native Dravidian, one word with Tamil aintu and Telugu ayidu (DEDR 2826). The entry spells the Kannada word ay(i)du.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "aidu"]
@@ -190,6 +202,9 @@ You'll want to know: ಆರು.
 ಆರು (āru) — "six."
 Tamil says āṟu, with a rare trilled ṟ that Tamil keeps and almost nobody else does. Kannada flattened it into an ordinary r — the one you learned as the letter ರ (ra) a few lessons back.
 So the two words are the same word, and the only difference is a consonant Kannada stopped distinguishing.
+
+The word, taken apart.
+ಆರು (āru) is native Dravidian, one word with Tamil āṟu and Telugu āṟu (DEDR 2485). The entry gives the older Kannada spelling āṟu.
 
 Guided Practice.
 [pause 1 second]
@@ -260,6 +275,9 @@ Tamil's word is ēḻu, and that ḻ is the sound Tamil is famous for: a curled,
 Kannada let it go. Where Tamil curls, Kannada uses the plain retroflex ḷ — which is exactly the letter ಳ you have already been reading.
 That trade happened across the whole vocabulary, not only in "seven". A Tamil word with ḻ will usually turn up in Kannada with ಳ.
 
+The word, taken apart.
+ಏಳು (ēḷu) is native Dravidian, one word with Tamil ēḻu and Telugu ēḍu (DEDR 910). The entry gives the older Kannada spelling ēḻu.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "ēḷu" — tongue curled back for the ḷ]
@@ -282,9 +300,12 @@ Seven was ēḷu, with the letter ಳ. Say one to seven.
 
 You'll want to know: ಎಂಟು.
 ಎಂಟು (eṇṭu) — "eight."
-Kannada eṇṭu and Tamil eṭṭu are still relatives — near enough to guess at. But Telugu walks away here: its "eight" is enimidi, and its "nine" will be tommidi. Neither is recognisable from the other two.
+Kannada eṇṭu and Tamil eṭṭu are still relatives — near enough to guess at. But Telugu drifts furthest here: its "eight" is enimidi, and its "nine" will be tommidi. Neither is easy to recognise from the other two.
 So eight and nine are the loose cells. Everywhere else in this chapter, knowing one Dravidian language hands you the next; at eight and nine it stops doing that, and you have to learn each language on its own terms.
 Here the anusvara ಂ borrows an ṇ from the retroflex ಟ after it — the same borrowing you saw in ondu, taking a different sound.
+
+The word, taken apart.
+ಎಂಟು (eṇṭu) is native Dravidian, one word with Tamil eṭṭu and Telugu enimidi (DEDR 784): the Telugu word has drifted far, but it is filed in the same entry.
 
 Guided Practice.
 [pause 1 second]
@@ -296,7 +317,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which two numbers should you trust least as family cousins? (Eight and nine — Telugu leaves with enimidi and tommidi.) What nasal is the ಂ carrying in ಎಂಟು (eṇṭu)? (An ṇ, taken from the ಟ.)
+Which two numbers should you trust least as family cousins? (Eight and nine — Telugu drifts furthest, to enimidi and tommidi.) What nasal is the ಂ carrying in ಎಂಟು (eṇṭu)? (An ṇ, taken from the ಟ.)
 
 
 Lesson 11 of 12.
@@ -312,6 +333,9 @@ You'll want to know: ಒಂಬತ್ತು.
 ಒಂಬತ್ತು (ombattu) — "nine." Tamil's oṉpatu is the same word underneath.
 Now the ಂ sits in front of ಬ, and a nasal made with the lips is what a b wants next to it — so it says m. One written mark, three sounds so far, each one decided by the letter after it and never by the mark itself.
 That is the whole rule, and it holds everywhere in Kannada: read the ಂ forwards.
+
+The word, taken apart.
+ಒಂಬತ್ತು (ombattu) is native Dravidian, one word with Tamil oṉpatu and Malayalam ompatu (DEDR 1025).
 
 Sounds you'll need: a doubled letter stacks.
 Now look at the end of the word: ತ್ತು — a doubled t. The first ತ್ is ta silenced by the virama (its vowel cut), and it tucks under the next letter as an ottu (a subscript form) before ತು tu. Kannada writes a double consonant by stacking, not by repeating side by side — the Roman alphabet just writes "tt".
@@ -345,6 +369,9 @@ You'll want to know: ಹತ್ತು.
 Kannada softened an old word-initial p- into h-, and did it right across the language: pāl became hālu ("milk"), pal became hallu ("tooth").
 Once you know the rule it runs backwards for you. Meet a Kannada word starting h-, take the h off, put a p on, and you often have its Tamil cousin.
 Every letter in ಹತ್ತು (hattu) is one you have learned: ಹ, ತ, the virama ್, and ು.
+
+The word, taken apart.
+ಹತ್ತು (hattu) is native Dravidian, one word with Tamil pattu (DEDR 3918). The entry gives the older Kannada form pattu, with the p- that modern Kannada turns into h-.
 
 Guided Practice.
 [pause 1 second]

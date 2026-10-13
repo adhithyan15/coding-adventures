@@ -11,7 +11,8 @@ romanization: "onnukūṭi"
 concept_tag: ML-REP-AGAIN
 prerequisites: [ML-C118-thunder, ML-C119-slowly]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, dravidian-kudu-join]
+etymology_hook: "onnukūṭi: native Dravidian, 'one' (DEDR 990) + kūṭi 'joined, also' (DEDR 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C119-slowly]
 
 **ഒന്നുകൂടി** (*onnukūṭi*) — "once more", **ഒന്ന്** (*onnŭ*), "one", with **കൂടി**,
 "also, more". **ഒന്നുകൂടി പറയൂ** — "say it once more".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒന്നുകൂടി** (*onnukūṭi*) is native Dravidian: *onnŭ*, "one" (DEDR 990), with *kūṭi*, "joined, also", from the verb "to come together" (DEDR 1882, with Tamil *kūṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

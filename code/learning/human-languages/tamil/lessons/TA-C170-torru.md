@@ -14,7 +14,8 @@ romanization: "toṟṟu"
 concept_tag: TA-NALAM170-TORRU
 prerequisites: [TA-C169-irattam, TA-C170-ovvamai]
 sounds: []
-roots: []
+roots: [tamil-torru-infection]
+etymology_hook: "தொற்று — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C170-ovvamai]
 <!-- hl-knowledge: introduces=[TA-LEX-C170-NALAM170-02]; assesses=[] -->
 
 **தொற்று** — *toṟṟu* — "an infection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **தொற்று** (*toṟṟu*) is uncertain. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

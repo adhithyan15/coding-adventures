@@ -13,7 +13,8 @@ gloss: "a kidney"
 concept_tag: FR-SANTE154-REIN
 prerequisites: [FR-C154-poumon, FR-C154-foie]
 sounds: []
-roots: []
+roots: [ren-latin]
+etymology_hook: "rein ← Latin renes 'the kidneys' — English renal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C154-foie]
 <!-- hl-knowledge: introduces=[FR-LEX-C154-SANTE154-05]; assesses=[] -->
 
 **le rein** — "a kidney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rein** ← Old French *rein* (EtymDB 2.1) ← Latin *renes*, "the kidneys" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES221-BOUTON
 prerequisites: [FR-C221-montre, FR-C221-pyjama]
 sounds: []
 roots: []
+etymology_hook: "bouton ← Old French boton, from boter 'to push, to sprout': a bud — English button"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C221-pyjama]
 <!-- hl-knowledge: introduces=[FR-LEX-C221-CHOSES221-04]; assesses=[] -->
 
 **le bouton** — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bouton** ← Old French *boton*, built from *boter*, "to push, to sprout" (EtymDB 2.1): a bud, then a button.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

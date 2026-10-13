@@ -11,7 +11,8 @@ romanization: "karṣakan"
 concept_tag: ML-NOUN-FARMER
 prerequisites: [ML-C48-doctor, ML-C46-salt]
 sounds: []
-roots: []
+roots: [sanskrit-karshaka]
+etymology_hook: "karṣakan ← Sanskrit karṣaka 'cultivator, ploughman', a tatsama (CDIAL 2906)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *karṣaka*, from a root about dragging or drawing — the plough pulle
 The ending is the chillu ൻ once more, the third of these role-words to take it, and the ർ near the front is the same chillu as in the student-word. Two of them in one short word.
 
 Kannada went elsewhere again and says ರೈತ (*raita*), a word that came into the language along a different road entirely.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കർഷകൻ** (*karṣakan*) ← Sanskrit *karṣaka*, "cultivator, ploughman", taken over whole as a tatsama, with the masculine ending *-n* (CDIAL 2906).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

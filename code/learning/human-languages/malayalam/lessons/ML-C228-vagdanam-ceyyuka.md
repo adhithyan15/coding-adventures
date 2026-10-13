@@ -14,7 +14,8 @@ romanization: "vāgdānaṁ ceyyuka"
 concept_tag: ML-VERB-VAGDANAM-CEYYUKA
 prerequisites: [ML-C228-paratippetuka, ML-C228-nuna-parayuka]
 sounds: []
-roots: []
+roots: [sanskrit-vac-speech, cey-do-dravidian]
+etymology_hook: "vāgdānaṁ ceyyuka: Sanskrit vāgdāna 'giving one's word' + native ceyyuka 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C228-nuna-parayuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C228-KRIYA228-03]; assesses=[] -->
 
 **വാഗ്ദാനം ചെയ്യുക** — *vāgdānaṁ ceyyuka* — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാഗ്ദാനം ചെയ്യുക** (*vāgdānaṁ ceyyuka*) joins Sanskrit *vāgdāna*, "the giving of one's word": *vāk*, "word", and *dāna*, "giving", to native *ceyyuka*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

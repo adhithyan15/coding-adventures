@@ -13,7 +13,8 @@ gloss: "cool"
 concept_tag: GE-EIGEN135-KUEHL
 prerequisites: [GE-C135-nass, GE-C135-trocken]
 sounds: []
-roots: []
+roots: [germanic-kolijaz]
+etymology_hook: "kühl ← Old High German kuoli — the same word as English cool"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C135-trocken]
 <!-- hl-knowledge: introduces=[GE-LEX-C135-EIGEN135-04]; assesses=[] -->
 
 **kühl** — "cool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kühl** ← Old High German *kuoli* — inherited; EtymDB 2.1 lists it beside English *cool* and Dutch *koel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

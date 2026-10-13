@@ -14,6 +14,7 @@ concept_tag: GE-VERB-BEMERKEN
 prerequisites: [GE-C245-beenden, GE-C246-begleiten]
 sounds: []
 roots: []
+etymology_hook: "bemerken — be- + merken 'to mark, to notice', a cousin of English mark"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C246-begleiten]
 <!-- hl-knowledge: introduces=[GE-LEX-C246-VERB246-02]; assesses=[] -->
 
 **bemerken** — "to notice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bemerken** is *be-* + the verb "to mark, to notice", Old High German *merchen* (EtymDB 2.1), a cousin of English *mark*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

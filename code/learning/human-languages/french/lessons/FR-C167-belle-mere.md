@@ -13,7 +13,8 @@ gloss: "a mother-in-law"
 concept_tag: FR-CHOSES167-BELLE-MERE
 prerequisites: [FR-C166-dentiste, FR-C166-pharmacien]
 sounds: []
-roots: []
+roots: [bellus-latin, mater-latin]
+etymology_hook: "belle-mère — 'fair mother', a courtesy title; from Latin bella + mère"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C166-pharmacien]
 <!-- hl-knowledge: introduces=[FR-LEX-C167-CHOSES167-01]; assesses=[] -->
 
 **la belle-mère** — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**belle-mère** — the feminine of the word for "beautiful", ← Latin *bella*, used as a courtesy, and *mère*, "mother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

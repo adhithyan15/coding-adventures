@@ -13,7 +13,8 @@ gloss: "to cut"
 concept_tag: FR-VERB-COUPER
 prerequisites: [FR-C62-montrer, FR-C63-nettoyer]
 sounds: []
-roots: []
+roots: [latin-colaphus]
+etymology_hook: "couper — from the word for 'a blow' ← Latin colaphus, from Greek kolaphos 'a punch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C63-nettoyer]
 <!-- hl-knowledge: introduces=[FR-LEX-C63-VERBES15-02]; assesses=[] -->
 
 **couper** — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**couper** — built on the French word for "a blow", which ← Late Latin *colpus*, from Latin *colaphus*, "a punch", from Greek *kolaphos*: to cut was first to strike. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āḷ"
 concept_tag: ML-VASTU325-AL
 prerequisites: [ML-C324-insuransu, ML-C325-kunnu2]
 sounds: []
-roots: []
+roots: [dravidian-al-male]
+etymology_hook: "āḷ: native Dravidian, one word with Tamil āḷ and Kannada āḷ (DEDR 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C325-kunnu2]
 <!-- hl-knowledge: introduces=[ML-LEX-C325-VASTU325-02]; assesses=[] -->
 
 **ആൾ** — *āḷ* — "a person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആൾ** (*āḷ*) is native Dravidian, one word with Tamil *āḷ* and Kannada *āḷ* (DEDR 399).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

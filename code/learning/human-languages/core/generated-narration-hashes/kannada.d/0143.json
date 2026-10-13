@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 143,
-  "sourceHash": "fnv1a64:9ae4bf9353c2570a",
+  "sourceHash": "fnv1a64:756a3dcc5073b44f",
   "lessonIds": [
     "KA-C143-ona",
     "KA-C143-bada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch143.txt",
   "json": "kannada/narration/ch143.json",
-  "textHash": "fnv1a64:c058ab4bae2d7553",
-  "jsonHash": "fnv1a64:95d385bdba69c764",
+  "textHash": "fnv1a64:757f81eb068f242f",
+  "jsonHash": "fnv1a64:425a6be7508fcf60",
   "findings": []
 }

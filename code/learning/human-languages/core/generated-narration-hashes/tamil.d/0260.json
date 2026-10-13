@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 260,
-  "sourceHash": "fnv1a64:e81e66e6c6b3413c",
+  "sourceHash": "fnv1a64:2eb46f61aebc781d",
   "lessonIds": [
     "TA-C260-atikari2",
     "TA-C260-paravu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch260.txt",
   "json": "tamil/narration/ch260.json",
-  "textHash": "fnv1a64:a7de43f288a03ada",
-  "jsonHash": "fnv1a64:5507cc14cd902eeb",
+  "textHash": "fnv1a64:493d760171ab6688",
+  "jsonHash": "fnv1a64:cee4c887fe582aff",
   "findings": []
 }

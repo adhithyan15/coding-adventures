@@ -13,7 +13,8 @@ gloss: "sleep"
 concept_tag: FR-SANTE155-SOMMEIL
 prerequisites: [FR-C154-rein, FR-C155-repos]
 sounds: []
-roots: []
+roots: [somnus-latin]
+etymology_hook: "sommeil ← Vulgar Latin *somniculus 'a little sleep', from somnus — English somnolent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C155-repos]
 <!-- hl-knowledge: introduces=[FR-LEX-C155-SANTE155-02]; assesses=[] -->
 
 **le sommeil** — "sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sommeil** ← Vulgar Latin *\*somniculus*, "a little sleep", from Latin *somnus*, "sleep" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

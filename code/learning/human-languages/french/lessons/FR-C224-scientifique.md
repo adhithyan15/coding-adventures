@@ -13,7 +13,8 @@ gloss: "a scientist"
 concept_tag: FR-CHOSES224-SCIENTIFIQUE
 prerequisites: [FR-C224-pilote, FR-C224-comptable]
 sounds: []
-roots: []
+roots: [scientia-latin]
+etymology_hook: "scientifique ← Latin scientificus, from scientia 'knowledge' — English scientific"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C224-comptable]
 <!-- hl-knowledge: introduces=[FR-LEX-C224-CHOSES224-04]; assesses=[] -->
 
 **le scientifique** — "a scientist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scientifique** ← Latin *scientificus*, "making knowledge", from *scientia*, "knowledge" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

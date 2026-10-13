@@ -14,7 +14,8 @@ romanization: "capāti"
 concept_tag: KA-VASTU221-CAPATI
 prerequisites: [KA-C221-pappayi, KA-C221-kallangadi]
 sounds: []
-roots: []
+roots: [hindustani-capati]
+etymology_hook: "capāti ← Hindustani capātī 'flat bread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C221-kallangadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C221-VASTU221-05]; assesses=[] -->
 
 **ಚಪಾತಿ** — *capāti* — "a chapati".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಪಾತಿ** (*capāti*) came from Hindustani *capātī*, "a flat bread", usually linked to *capāṭ*, "flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

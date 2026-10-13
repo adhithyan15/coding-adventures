@@ -13,7 +13,8 @@ gloss: "unfriendly"
 concept_tag: GE-QUAL167-UNFREUNDLICH
 prerequisites: [GE-C166-nachmittag, GE-C167-bequem]
 sounds: []
-roots: []
+roots: [germanic-frijonds]
+etymology_hook: "unfreundlich — un- 'not' + freundlich 'friendly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C167-bequem]
 <!-- hl-knowledge: introduces=[GE-LEX-C167-QUAL167-02]; assesses=[] -->
 
 **unfreundlich** — "unfriendly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unfreundlich** is *un-*, "not", + *freundlich* (EtymDB 2.1), which is built on *Freund*, "friend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

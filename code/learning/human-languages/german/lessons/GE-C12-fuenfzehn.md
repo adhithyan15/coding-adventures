@@ -10,7 +10,7 @@ gloss: fifteen — the rule's third run, and where English clipped and German di
 concept_tag: GE-NUMBER-15
 prerequisites: [GE-C12-vierzehn]
 sounds: [umlaut-ue, z-ts]
-roots: []
+roots: [fimf-germanic, tehun-germanic]
 etymology_hook: "fünfzehn keeps its digit whole where English wore five down to fif-, so the German is the more transparent of the two"
 duration:
   max_seconds: 155
@@ -46,6 +46,11 @@ the two languages.
 
 The digit is whole. English is not: **five** became *fif-*, so *fifteen* no
 longer shows its own number. German keeps *fünf* visible and audible.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fünfzehn** is *fünf* + *zehn*, both inherited; EtymDB 2.1 lists it beside English *fifteen*, Old English *fīftīene*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-FUENF-UE-01, GE-LEX-FUENFZEHN-01] -->

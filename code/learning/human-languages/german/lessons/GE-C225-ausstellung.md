@@ -13,7 +13,8 @@ gloss: "an exhibition"
 concept_tag: GE-THING225-AUSSTELLUNG
 prerequisites: [GE-C225-alltag, GE-C225-ausbildung]
 sounds: []
-roots: []
+roots: [germanic-stallijana]
+etymology_hook: "Ausstellung — aus- 'out' + stellen 'to put' + -ung: things put out on show"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C225-ausbildung]
 <!-- hl-knowledge: introduces=[GE-LEX-C225-THING225-05]; assesses=[] -->
 
 **die Ausstellung** — "an exhibition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ausstellung** is *aus-*, "out", + *stellen*, "to put", + *-ung* (EtymDB 2.1): things put out on show.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

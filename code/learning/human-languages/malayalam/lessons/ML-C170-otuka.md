@@ -14,7 +14,8 @@ romanization: "ōṭuka"
 concept_tag: ML-VERB-OTUKA
 prerequisites: [ML-C170-terraya, ML-C170-purnamaya, ML-C110-imeyil, ML-C110-imeyil]
 sounds: []
-roots: []
+roots: [dravidian-otu-run]
+etymology_hook: "ōṭuka: native Dravidian, one word with Tamil ōṭu and Kannada ōḍu (DEDR 1041)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C170-purnamaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C170-QUAL170-04]; assesses=[] -->
 
 **ഓടുക** — *ōṭuka* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓടുക** (*ōṭuka*) is native Dravidian, one word with Tamil *ōṭu*, Kannada *ōḍu* and Telugu *ōḍu* (DEDR 1041).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

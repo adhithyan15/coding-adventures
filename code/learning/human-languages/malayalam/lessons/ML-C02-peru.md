@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [ML-C01-namaskaram]
 sounds: [ee-sign, chandrakkala]
 roots: [peer-dravidian]
+etymology_hook: "pēr: native Dravidian, one word with Tamil peyar and Telugu pēru (DEDR 4410)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +49,8 @@ reviews_of: [ML-C01-namaskaram]
 — the same word as Tamil *peyar* and Telugu *pēru*, a cousin of Kannada *hesaru*
 (*p*→*h*). Being Tamil's closest sister, Malayalam keeps the native word, *not*
 Sanskrit *nāma* (Hindi *nām*, English *name*).
+
+DEDR 4410 lists Malayalam *pēr* with Tamil *peyar*, Kannada *pesar(u)* and Telugu *pēru*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-PERU-01] -->

@@ -14,7 +14,8 @@ romanization: "uruku"
 concept_tag: TA-VERB-URUKU
 prerequisites: [TA-C257-poramaippatu, TA-C257-muttamitu]
 sounds: []
-roots: []
+roots: [dravidian-uruku-melt]
+etymology_hook: "உருகு — native Dravidian (DEDR 661); Malayalam urukuka 'to melt', Telugu ukku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C257-muttamitu]
 <!-- hl-knowledge: introduces=[TA-LEX-C258-ACT258-01]; assesses=[] -->
 
 **உருகு** — *uruku* — "to melt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உருகு** (*uruku*) is native Dravidian. DEDR 661 lists Malayalam *urukuka*, "to melt" and Telugu *ukku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

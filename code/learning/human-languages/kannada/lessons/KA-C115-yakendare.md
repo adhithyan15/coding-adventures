@@ -14,7 +14,8 @@ romanization: "yākendare"
 concept_tag: KA-WHY115-YAKENDARE
 prerequisites: [KA-C115-adudarinda, KA-C115-adakke]
 sounds: []
-roots: []
+roots: [yaa-dravidian, dravidian-en-say]
+etymology_hook: "yākendare: native yāke 'why' (DEDR 5151) + endare 'if one says' (DEDR 868)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C115-adakke]
 <!-- hl-knowledge: introduces=[KA-LEX-C115-WHY115-04]; assesses=[] -->
 
 **ಯಾಕೆಂದರೆ** — *yākendare* — "because".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾಕೆಂದರೆ** (*yākendare*) is native Dravidian: *yāke*, "why" (DEDR 5151), and *endare*, "if one says", from *en-*, "to say" (DEDR 868). "If you say why" introduces the reason.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

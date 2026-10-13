@@ -14,7 +14,8 @@ romanization: "añcal talai"
 concept_tag: TA-PORUL244-ANCAL-TALAI
 prerequisites: [TA-C243-vacanai, TA-C243-vellarikkay]
 sounds: []
-roots: []
+roots: [dravidian-ancal-post, dravidian-talai-kai]
+etymology_hook: "அஞ்சல் தலை — native: añcal 'letter post' (DEDR 54) + talai 'head' (DEDR 3103)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C243-vellarikkay]
 <!-- hl-knowledge: introduces=[TA-LEX-C244-PORUL244-01]; assesses=[] -->
 
 **அஞ்சல் தலை** — *añcal talai* — "a postage stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அஞ்சல் தலை** (*añcal talai*) is native: *añcal*, "letter post" (DEDR 54), and *talai*, "head" (DEDR 3103). Early stamps carried the ruler's head, so a stamp became "the post head".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

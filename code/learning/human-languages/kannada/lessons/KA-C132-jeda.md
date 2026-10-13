@@ -14,7 +14,8 @@ romanization: "jēḍa"
 concept_tag: KA-THINGS132-JEDA
 prerequisites: [KA-C132-iruve, KA-C132-solle]
 sounds: []
-roots: []
+roots: [dravidian-jeda-spider]
+etymology_hook: "jēḍa: native Dravidian (DEDR 2809)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C132-solle]
 <!-- hl-knowledge: introduces=[KA-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **ಜೇಡ** — *jēḍa* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೇಡ** (*jēḍa*) is native Dravidian (DEDR 2809). DEDR lists *jēḍa*, "a weaver; spider": the spider is the weaver.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

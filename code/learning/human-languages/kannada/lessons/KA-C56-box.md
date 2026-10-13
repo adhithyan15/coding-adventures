@@ -11,7 +11,8 @@ romanization: "peṭṭige"
 concept_tag: KA-NOUN-BOX
 prerequisites: [KA-C56-vessel, KA-C54-seed]
 sounds: []
-roots: []
+roots: [dravidian-petti-box]
+etymology_hook: "peṭṭige: native Dravidian, one word with Tamil peṭṭi and Telugu peṭṭe (DEDR 4388)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ All four sisters have this word and it is nearly the same in each: Tamil *peṭ�
 A ಪೆಟ್ಟಿಗೆ is the wooden or tin chest a household keeps its papers and its good ಬಟ್ಟೆ in, standing in a corner with a padlock on it. It is also the word that stretched to cover a suitcase, a jewellery box and the case a musical instrument travels in.
 
 Notice how much of this chapter is containers. The ಬುಟ್ಟಿ carries, the ಪಾತ್ರೆ cooks, the ಪೆಟ್ಟಿಗೆ keeps. A house is largely a set of things for putting other things into.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೆಟ್ಟಿಗೆ** (*peṭṭige*) is native Dravidian, one word with Tamil *peṭṭi* and Telugu *peṭṭe* (DEDR 4388). DEDR lists Kannada *peṭṭi*, *peṭṭige*. DEDR 4388 compares Sanskrit *peṭaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

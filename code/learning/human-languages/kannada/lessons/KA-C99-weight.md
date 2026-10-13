@@ -11,7 +11,8 @@ romanization: "tūka"
 concept_tag: KA-BODY2-WEIGHT
 prerequisites: [KA-C99-blood, KA-C99-stomachache]
 sounds: []
-roots: []
+roots: [dravidian-tuungu-weigh]
+etymology_hook: "tūka: native Dravidian, of tūgu 'to weigh' (DEDR 3376); Tamil tūṅku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C99-stomachache]
 
 **ನಿಮ್ಮ ತೂಕ ಎಷ್ಟು?** (*nimma tūka eṣṭu?*) — "what is your weight?", a doctor's
 question, with **ಎಷ್ಟು**, "how much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೂಕ** (*tūka*) is native Dravidian, of the root *tūgu*, "to weigh, swing", which DEDR 3376 lists; the entry also has Tamil *tūṅku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "cūṭŭ"
 concept_tag: ML-WX-HEAT
 prerequisites: [ML-C117-wound, ML-C118-coldweather]
 sounds: []
-roots: []
+roots: [dravidian-cutu-burn]
+etymology_hook: "cūṭŭ: native Dravidian, one word with Tamil cuṭu and Kannada suḍu (DEDR 2654)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C118-coldweather]
 <!-- hl-knowledge: introduces=[ML-LEX-C118-WEATHER-02]; assesses=[] -->
 
 **ചൂട്** (*cūṭŭ*) — "heat", and also "hot". **നല്ല ചൂട്** — "it's really hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചൂട്** (*cūṭŭ*) is native Dravidian, one word with Tamil *cuṭu* and Kannada *suḍu* (DEDR 2654). DEDR 2654 compares Sanskrit *cūḍ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

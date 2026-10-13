@@ -14,7 +14,8 @@ romanization: "aṅṅōṭṭŭ"
 concept_tag: ML-STHALAM240-ANNOTTU
 prerequisites: [ML-C240-arram, ML-C240-kuruke]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "aṅṅōṭṭŭ: native Dravidian, the far-pointing base + -ōṭṭŭ 'towards' (DEDR 1)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C240-kuruke]
 <!-- hl-knowledge: introduces=[ML-LEX-C240-STHALAM240-03]; assesses=[] -->
 
 **അങ്ങോട്ട്** — *aṅṅōṭṭŭ* — "to there, that way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അങ്ങോട്ട്** (*aṅṅōṭṭŭ*) is native Dravidian: the far-pointing base (DEDR 1) with *-ōṭṭŭ*, "towards".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

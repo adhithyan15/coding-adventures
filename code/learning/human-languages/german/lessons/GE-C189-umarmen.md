@@ -13,7 +13,8 @@ gloss: "to hug"
 concept_tag: GE-VERB-UMARMEN
 prerequisites: [GE-C188-ueberqueren, GE-C189-uebersetzen]
 sounds: []
-roots: []
+roots: [germanic-armaz]
+etymology_hook: "umarmen — um- 'around' + Arm 'arm': to put your arms around someone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C189-uebersetzen]
 <!-- hl-knowledge: introduces=[GE-LEX-C189-VERB189-02]; assesses=[] -->
 
 **umarmen** — "to hug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**umarmen** is *um-*, "around", + *Arm* + a verb ending: to put your arms around someone. *Arm* ← Proto-Germanic *\*armaz*, English *arm*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

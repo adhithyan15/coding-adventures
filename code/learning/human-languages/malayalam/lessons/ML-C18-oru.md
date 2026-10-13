@@ -14,7 +14,7 @@ sounds: []
 roots: [proto-dravidian-numbers]
 etymology_hook: "oru and onnu are one Dravidian numeral in two shapes — onnu stands alone, oru leans on the noun after it — and Tamil keeps the same pair"
 duration:
-  max_seconds: 215
+  max_seconds: 274
 requires:
   knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01]
 introduces:
@@ -56,6 +56,11 @@ page from here, because a number usually has something to count.
 
 **Tamil keeps the same pair**, *oru* against *oṉṟu*, split the same way — which
 is a sign the split is old rather than a tidy-up Malayalam did on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒരു** (*oru*) is native Dravidian, the shape "one" takes in front of a noun. DEDR 990 lists Tamil *oru* before a consonant and *ōr* before a vowel, with Kannada *ondu*, "one thing".
 
 ## Grammar Lens: the same word does the work of "a"
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ORU-01] -->

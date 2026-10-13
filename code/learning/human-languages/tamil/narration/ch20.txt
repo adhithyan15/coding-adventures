@@ -12,6 +12,9 @@ Here's how this arc closes: four completely different approaches to "twenty" acr
 You'll want to know: பதினொன்று–பத்தொன்பது — "ten" + digit.
 Tamil's teens echo பத்து (pathu, "ten") plus each digit — பதினொன்று (patiṉoṉḏṟu, 11), பன்னிரண்டு (paṉṉiraṇḍu, 12), and onward through பத்தொன்பது (pattoṉbatu, 19) — the same digit-plus- ten-echo compounding you've now seen across Kannada, Telugu, and Malayalam.
 
+The word, taken apart.
+Both halves are native Dravidian. Pattu, "ten", is DEDR 3918, with Malayalam pattu, Kannada pattu and Telugu padi. The bound iru, "two", is DEDR 474, and that entry lists Malayalam iru-patu and Kannada irpattu, "twenty", built the same way.
+
 You'll want to know: இருபது — transparently "two-tens".
 இரு + பத்து becomes இருபது (irupathu, "twenty"): an older word for "two," alongside the everyday இரண்டு iraṇḍu, plus pathu, "ten" — fully transparent as "two-tens," matching Malayalam's own irupathu almost letter-for-letter.
 

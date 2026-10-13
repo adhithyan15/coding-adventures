@@ -14,6 +14,7 @@ concept_tag: GE-GESCHIRR-MESSER
 prerequisites: [GE-C79-glas, GE-C79-gabel]
 sounds: []
 roots: []
+etymology_hook: "Messer ← Old High German mezzisahs 'food-knife': a word for 'food' (English meat) + 'knife'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C79-gabel]
 <!-- hl-knowledge: introduces=[GE-LEX-C79-GESCHIRR-05]; assesses=[] -->
 
 **das Messer** — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Messer** ← Old High German *mezzisahs* ← Proto-Germanic *\*matisahsą*, "food-knife" (EtymDB 2.1): the old word for "food", English *meat*, + *sahs*, "knife", worn down to one word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

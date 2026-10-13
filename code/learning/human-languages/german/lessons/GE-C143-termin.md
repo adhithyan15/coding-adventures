@@ -13,7 +13,8 @@ gloss: "an appointment"
 concept_tag: GE-READ143-TERMIN
 prerequisites: [GE-C143-miete, GE-C143-anzeige]
 sounds: []
-roots: []
+roots: [terminus-latin]
+etymology_hook: "Termin ← Latin terminus 'boundary, end' — an appointment is a fixed point in time"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [GE-C143-anzeige]
 
 The message says **Ihr Termin: Montag, zehn Uhr.** Your appointment is on Monday
 at ten: be there before ten.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Termin** ← Latin *terminus*, "boundary, limit, end" (EtymDB 2.1) — borrowed: a fixed point in time. English *term* shares it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

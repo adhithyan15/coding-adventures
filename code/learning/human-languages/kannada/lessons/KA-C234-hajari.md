@@ -14,7 +14,8 @@ romanization: "hājari"
 concept_tag: KA-KELASA234-HAJARI
 prerequisites: [KA-C234-sibbandi, KA-C234-naukara]
 sounds: []
-roots: []
+roots: [arabic-hazir]
+etymology_hook: "hājari ← Arabic ḥāḍir 'present', through Persian and Hindustani hāzirī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C234-naukara]
 <!-- hl-knowledge: introduces=[KA-LEX-C234-KELASA234-03]; assesses=[] -->
 
 **ಹಾಜರಿ** — *hājari* — "attendance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಜರಿ** (*hājari*) came through Hindustani *hāzirī*, "attendance", from Arabic *ḥāḍir*, "present".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

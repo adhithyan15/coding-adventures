@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 306,
-  "sourceHash": "fnv1a64:c3a04c4d144444cb",
+  "sourceHash": "fnv1a64:40aea0430e7c71cb",
   "lessonIds": [
     "KA-C306-moci",
     "KA-C306-kumbara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch306.txt",
   "json": "kannada/narration/ch306.json",
-  "textHash": "fnv1a64:fb5121557c635087",
-  "jsonHash": "fnv1a64:803b34276717b993",
+  "textHash": "fnv1a64:5ff5e9bd0af7e971",
+  "jsonHash": "fnv1a64:b72be5c5d663c170",
   "findings": []
 }

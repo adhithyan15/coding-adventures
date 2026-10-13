@@ -11,7 +11,8 @@ romanization: "candran"
 concept_tag: ML-NOUN-MOON
 prerequisites: [ML-C53-sun, ML-C51-respect]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "candran ← Sanskrit candra 'shining; the moon', a tatsama (CDIAL 4661)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *candra* means "shining, bright", and Malayalam took it whole, then gav
 *candra* went west too. It shares an ancestor with the Latin piece behind English *candle* and *incandescent*: a very old root for burning white.
 
 Malayalam's inherited moon-word is തിങ്കൾ (*tiṅkaḷ*), and that word also names Monday and once named a month. One shape for the moon and for the stretch of time it measures — the moon being the oldest calendar there is, and Malayalam keeping that fact inside a single word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചന്ദ്രൻ** (*candran*) ← Sanskrit *candra*, "shining; the moon", taken over whole as a tatsama, with the masculine ending *-n* (CDIAL 4661).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

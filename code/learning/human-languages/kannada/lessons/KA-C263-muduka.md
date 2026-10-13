@@ -14,7 +14,8 @@ romanization: "muduka"
 concept_tag: KA-VASTU263-MUDUKA
 prerequisites: [KA-C263-gandasu, KA-C263-hengasu]
 sounds: []
-roots: []
+roots: [dravidian-mutu-old]
+etymology_hook: "muduka: native Dravidian, one word with Tamil mutu and Telugu mudara (DEDR 4954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C263-hengasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C263-VASTU263-05]; assesses=[] -->
 
 **ಮುದುಕ** — *muduka* — "an old man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುದುಕ** (*muduka*) is native Dravidian, one word with Tamil *mutu*, Telugu *mudara* and Malayalam *mutu* (DEDR 4954). DEDR lists *mudaka*, *muduku*, "old man".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

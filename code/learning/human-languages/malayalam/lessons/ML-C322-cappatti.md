@@ -14,7 +14,8 @@ romanization: "cappātti"
 concept_tag: ML-VASTU322-CAPPATTI
 prerequisites: [ML-C321-satyasandhamaya, ML-C322-biriyani]
 sounds: []
-roots: []
+roots: [hindustani-chapati]
+etymology_hook: "cappātti ← Hindustani capātī, from capāṭ 'flat; to flatten by slapping'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C322-biriyani]
 <!-- hl-knowledge: introduces=[ML-LEX-C322-VASTU322-02]; assesses=[] -->
 
 **ചപ്പാത്തി** — *cappātti* — "a chapati".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചപ്പാത്തി** (*cappātti*) ← Hindustani *capātī*, the bread flattened between the palms, from a word meaning "flat, slapped flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

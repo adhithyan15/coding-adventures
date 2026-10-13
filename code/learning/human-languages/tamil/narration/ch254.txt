@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a pension, then the Tamil for a certificat
 You'll want to know: கடன் வாங்கு.
 கடன் வாங்கு — kaṭaṉ vāṅku — "to borrow".
 
+The word, taken apart.
+கடன் வாங்கு (kaṭaṉ vāṅku) is native: kaṭaṉ, "debt, loan" (DEDR 1113, which lists Kannada kaḍa), and vāṅku, "to receive, to take" (DEDR 5336): "take a loan".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a certificate, then the Tamil for to borro
 
 You'll want to know: செலுத்து.
 செலுத்து — celuttu — "to pay".
+
+The word, taken apart.
+செலுத்து (celuttu) is native Dravidian. DEDR 2781 lists Malayalam celuttuka, "to pay". It is the causative of cel, "to go": "make the money go".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for to borrow, then the Tamil for to pay.
 You'll want to know: தேர்ந்தெடு.
 தேர்ந்தெடு — tērnteṭu — "to choose".
 
+The word, taken apart.
+தேர்ந்தெடு (tērnteṭu) is native: tērntu, "having examined, having chosen", from tēr (DEDR 3419), and eṭu, "to take up" (DEDR 851): "examine and take".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for to pay, then the Tamil for to choose.
 You'll want to know: நுழை.
 நுழை — nuḻai — "to enter".
 
+The word, taken apart.
+நுழை (nuḻai) is native Dravidian. DEDR 3714 lists Malayalam nuḻayuka, "to creep through".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for to choose, then the Tamil for to enter.
 
 You'll want to know: வெளியேறு.
 வெளியேறு — veḷiyēṟu — "to exit, to go out".
+
+The word, taken apart.
+வெளியேறு (veḷiyēṟu) is native: veḷi, "outside" (DEDR 5498), and ēṟu, "to rise, to go up" (DEDR 916): "rise to the outside".
 
 What you've built.
 One more word for this chapter.

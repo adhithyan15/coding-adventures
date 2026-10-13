@@ -14,7 +14,8 @@ romanization: "halasu"
 concept_tag: KA-THINGS126-HALASU
 prerequisites: [KA-C126-nimbe, KA-C126-draksi]
 sounds: []
-roots: []
+roots: [dravidian-pala-jack]
+etymology_hook: "halasu: native Dravidian, one word with Tamil palā and Telugu panasa (DEDR 3988)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C126-draksi]
 <!-- hl-knowledge: introduces=[KA-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **ಹಲಸು** — *halasu* — "a jackfruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಲಸು** (*halasu*) is native Dravidian, one word with Tamil *palā* and Telugu *panasa* (DEDR 3988). DEDR gives the older Kannada *palasu*: the *p-* has become *h-*. DEDR 3988 compares Sanskrit *panasa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

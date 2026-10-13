@@ -11,7 +11,8 @@ romanization: "ūsi"
 concept_tag: TA-NOUN-NEEDLE
 prerequisites: [TA-C59-sugar, TA-C58-cow, TA-C59-curd]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "ஊசி ← Sanskrit sūcī 'needle' (CDIAL 13551)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C59-sugar]
 The sewing needle, and whatever else is that shape. It is the tool துணி is repaired with, which is most of what துணி asks for.
 
 Kannada ಸೂಜಿ (*sūji*) and Telugu సూది (*sūdi*) hold on to a sound at the front that Tamil let go of, so Tamil's is the shortest of the three. Open it on a long ஊ.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஊசி** (*ūsi*) is a loan from Sanskrit *sūcī*, "needle" (CDIAL 13551). Tamil dropped the first *s-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

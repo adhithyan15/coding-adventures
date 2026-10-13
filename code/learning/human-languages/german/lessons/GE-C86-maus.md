@@ -13,7 +13,8 @@ gloss: "a mouse"
 concept_tag: GE-TIERE1-MAUS
 prerequisites: [GE-C86-schwein, GE-C86-vogel]
 sounds: []
-roots: []
+roots: [germanic-mus]
+etymology_hook: "Maus ← Old High German mūs ← Proto-Germanic *mūs — the same word as English mouse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C86-vogel]
 <!-- hl-knowledge: introduces=[GE-LEX-C86-TIERE1-03]; assesses=[] -->
 
 **die Maus** — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Maus** ← Old High German *mūs* ← Proto-Germanic *\*mūs* — inherited, the same word as English *mouse*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

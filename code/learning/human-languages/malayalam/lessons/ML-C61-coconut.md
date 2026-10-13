@@ -11,7 +11,8 @@ romanization: "tēṅṅa"
 concept_tag: ML-NOUN-COCONUT
 prerequisites: [ML-C60-elephant, ML-C59-wind]
 sounds: []
-roots: []
+roots: [dravidian-tengu-coconut]
+etymology_hook: "tēṅṅa: native Dravidian, 'coconut-tree fruit'; Tamil tēṅkāy (DEDR 3408)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, and the fruit of the tree the tree-lesson pointed at without n
 One long-standing account derives the name Kerala itself from a word for the coconut palm. The account is debated and worth holding loosely, but nobody argues about the tree's place in the kitchen.
 
 A തേങ്ങ is the ripe nut with the husk off. Almost everything on the shelf after this one comes out of it in some form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തേങ്ങ** (*tēṅṅa*) is native Dravidian, the coconut tree's name with the word for "fruit" fused on; DEDR 3408 lists the root with Tamil *tēṅkāy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

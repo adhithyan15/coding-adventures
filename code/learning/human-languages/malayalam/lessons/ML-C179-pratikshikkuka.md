@@ -14,7 +14,8 @@ romanization: "pratīkṣikkuka"
 concept_tag: ML-VERB-PRATIKSHIKKUKA
 prerequisites: [ML-C179-bhavi, ML-C179-tirumanikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-pratiksha]
+etymology_hook: "pratīkṣikkuka ← Sanskrit pratīkṣā 'expectation' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C179-tirumanikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C179-BHAVI179-05]; assesses=[] -->
 
 **പ്രതീക്ഷിക്കുക** — *pratīkṣikkuka* — "to expect, to hope for". **ഞാൻ ഒരു മറുപടി പ്രതീക്ഷിക്കുന്നു** — *ñān oru maṟupaṭi pratīkṣikkunnu* — "I am expecting a reply."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രതീക്ഷിക്കുക** (*pratīkṣikkuka*) is built on Sanskrit *pratīkṣā*, "expectation, looking toward", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

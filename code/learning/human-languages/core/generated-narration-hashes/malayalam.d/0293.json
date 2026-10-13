@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 293,
-  "sourceHash": "fnv1a64:e2fb64a8b3f16bad",
+  "sourceHash": "fnv1a64:311097d39a63e8f3",
   "lessonIds": [
     "ML-C293-tivi",
     "ML-C293-sanketikavidya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch293.txt",
   "json": "malayalam/narration/ch293.json",
-  "textHash": "fnv1a64:8d35dcbdcfd676a2",
-  "jsonHash": "fnv1a64:bc49ddadd7c2db58",
+  "textHash": "fnv1a64:28e0e3fecd029e6d",
+  "jsonHash": "fnv1a64:ae287846ca4df280",
   "findings": []
 }

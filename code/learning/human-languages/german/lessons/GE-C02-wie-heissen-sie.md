@@ -11,8 +11,9 @@ concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [GE-C02-wie, GE-C02-du-sie, GE-C02-heissen, GE-C02-heissen-endungen, GE-C02-ich-heisse]
 sounds: []
 roots: [hwi, haitana]
+etymology_hook: "wie heißen Sie? — heißen ← Old High German heizzan 'to call' ← Proto-Germanic *haitaną; Sie is 'they'"
 duration:
-  max_seconds: 240
+  max_seconds: 252
 requires:
   knowledge: [GE-LEX-WIE-02, GE-LEX-DU-SIE-02, GE-LEX-HEISSEN-02, GE-GRAMMAR-VERB-ENDINGS-01, GE-LEX-ICH-HEISSE-01]
 introduces:
@@ -45,6 +46,11 @@ opens the introduction.
 
 > **wie heißen Sie?** = literally "**how are you called?**" = the polite
 > **"what's your name?"**
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wie heißen Sie** is built from *wie*, "how", *heißen*, "to be called", and *Sie*. *heißen* ← Old High German *heizzan* ← Proto-Germanic *\*haitaną*, "to call, to command" (EtymDB 2.1). The polite *Sie* is the word for "they", capitalised.
 
 ## Grammar Lens: verb in second place
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-VERB-SECOND-02]; assesses=[GE-GRAMMAR-VERB-ENDINGS-01, GE-LEX-ICH-HEISSE-01] -->

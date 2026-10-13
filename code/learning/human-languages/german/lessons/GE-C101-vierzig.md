@@ -13,7 +13,8 @@ gloss: "forty"
 concept_tag: GE-ZAHLEN-VIERZIG
 prerequisites: [GE-C100-sprache, GE-C101-dreissig]
 sounds: []
-roots: []
+roots: [fedwor-germanic]
+etymology_hook: "vierzig ← Old High German fiorzug, 'four tens' — the same build as English forty"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C101-dreissig]
 <!-- hl-knowledge: introduces=[GE-LEX-C101-ZAHLEN-02]; assesses=[] -->
 
 **vierzig** — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vierzig** ← Old High German *fiorzug* ← Proto-Germanic *\*fedwōr tigiwiz*, "four tens" — the same build as English *forty*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

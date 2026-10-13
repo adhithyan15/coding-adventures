@@ -14,7 +14,8 @@ romanization: "kaṭaiciyāka"
 concept_tag: TA-NERAM262-KATAICIYAKA
 prerequisites: [TA-C262-varantorum, TA-C262-tamatamaka]
 sounds: []
-roots: []
+roots: [dravidian-kadai-end, tamil-aaku-become]
+etymology_hook: "கடைசியாக — native: kaṭaici 'the last' (DEDR 1109) + āka 'as' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C262-tamatamaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C262-NERAM262-04]; assesses=[] -->
 
 **கடைசியாக** — *kaṭaiciyāka* — "finally, at last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடைசியாக** (*kaṭaiciyāka*) is native: *kaṭaici*, "the end, the last" (DEDR 1109), and *āka*, "as", from *āku*, "to become" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

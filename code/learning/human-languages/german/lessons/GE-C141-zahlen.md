@@ -13,7 +13,8 @@ gloss: "to pay"
 concept_tag: GE-VERB-ZAHLEN
 prerequisites: [GE-C140-fuehlen, GE-C140-fallen]
 sounds: []
-roots: []
+roots: [germanic-talo]
+etymology_hook: "zahlen — the verb made from the word for 'number' ← Proto-Germanic *talō: paying is counting out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C140-fallen]
 <!-- hl-knowledge: introduces=[GE-LEX-C141-VERB141-01]; assesses=[] -->
 
 **zahlen** — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zahlen** is the verb made from the word for "number", Old High German *zala* ← Proto-Germanic *\*talō* (EtymDB 2.1): paying is counting out. English *tale* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

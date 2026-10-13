@@ -12,6 +12,9 @@ Before the new one: say the German for a delay, then the German for a platform.
 You'll want to know: der Fahrplan.
 der Fahrplan — "a timetable".
 
+The word, taken apart.
+Fahrplan is fahren + Plan, "plan" from French plan, from Latin plānus, "flat" (EtymDB 2.1): a plan of journeys.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a platform, then the German for a timetab
 
 You'll want to know: die Rückfahrt.
 die Rückfahrt — "a return journey".
+
+The word, taken apart.
+Rückfahrt is the word for "back" (as in Rücken) + the word for "a journey", Old High German vart from Proto-Germanic fardiz (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a timetable, then the German for a return
 You'll want to know: die Unterkunft.
 die Unterkunft — "accommodation".
 
+The word, taken apart.
+Unterkunft is the word for "under" + an old noun for "a coming", built on kommen (EtymDB 2.1): a place you come under, a shelter.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a return journey, then the German for acc
 You'll want to know: die Jugendherberge.
 die Jugendherberge — "a youth hostel".
 
+The word, taken apart.
+Jugendherberge is the word for "youth" + Herberge, "inn" from Old High German heriberga, "shelter for an army" (EtymDB 2.1). English harbour and French auberge are cousins.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for accommodation, then the German for a yout
 
 You'll want to know: das Gepäck.
 das Gepäck — "luggage".
+
+The word, taken apart.
+Gepäck is ge-, the gathering prefix, + the word for "a pack" (EtymDB 2.1 has the word), the same word as English pack: everything packed together.
 
 What you've built.
 One more word for this chapter.

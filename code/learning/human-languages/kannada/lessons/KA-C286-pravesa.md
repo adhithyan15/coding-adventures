@@ -14,7 +14,8 @@ romanization: "pravēśa"
 concept_tag: KA-STHALA286-PRAVESA
 prerequisites: [KA-C286-kattada, KA-C286-mahadi]
 sounds: []
-roots: []
+roots: [sanskrit-pravesha]
+etymology_hook: "pravēśa ← Sanskrit pravēśa 'entrance', a tatsama (CDIAL 8809)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C286-mahadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C286-STHALA286-03]; assesses=[] -->
 
 **ಪ್ರವೇಶ** — *pravēśa* — "an entrance, entry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರವೇಶ** (*pravēśa*) is Sanskrit *pravēśa*, "entrance", taken over whole as a learned loan, a tatsama (CDIAL 8809).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

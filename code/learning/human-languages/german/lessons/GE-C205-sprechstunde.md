@@ -13,7 +13,8 @@ gloss: "surgery hours, office hours"
 concept_tag: GE-THING205-SPRECHSTUNDE
 prerequisites: [GE-C205-knochen, GE-C205-zahnarzt]
 sounds: []
-roots: []
+roots: [germanic-stundo, germanic-sprekana]
+etymology_hook: "Sprechstunde — the verb 'to speak' + Stunde 'hour': the hour for speaking to the doctor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C205-zahnarzt]
 <!-- hl-knowledge: introduces=[GE-LEX-C205-THING205-03]; assesses=[] -->
 
 **die Sprechstunde** — "surgery hours, office hours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sprechstunde** is the verb "to speak", Old High German *sprehhan*, English *speak*, + *Stunde*, "hour" (EtymDB 2.1): the hour when you can speak to the doctor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

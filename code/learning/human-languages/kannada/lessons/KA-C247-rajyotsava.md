@@ -14,7 +14,8 @@ romanization: "rājyōtsava"
 concept_tag: KA-KALA247-RAJYOTSAVA
 prerequisites: [KA-C247-sankranti, KA-C247-ganesa-caturthi]
 sounds: []
-roots: []
+roots: [sanskrit-rajya, sanskrit-utsava]
+etymology_hook: "rājyōtsava ← Sanskrit rājya 'kingdom, state' (CDIAL 10694) + utsava 'festival' (CDIAL 1876)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C247-ganesa-caturthi]
 <!-- hl-knowledge: introduces=[KA-LEX-C247-KALA247-05]; assesses=[] -->
 
 **ರಾಜ್ಯೋತ್ಸವ** — *rājyōtsava* — "Rajyotsava, Karnataka Formation Day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಾಜ್ಯೋತ್ಸವ** (*rājyōtsava*) is Sanskrit *rājya*, "kingdom, state" (CDIAL 10694), and *utsava*, "festival" (CDIAL 1876): "the festival of the state".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

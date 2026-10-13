@@ -14,7 +14,8 @@ romanization: "tiṭṭam"
 concept_tag: TA-ETIR159-TITTAM
 prerequisites: [TA-C159-atutta, TA-C159-inimel]
 sounds: []
-roots: []
+roots: [tamil-tittam-plan]
+etymology_hook: "திட்டம் — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C159-inimel]
 <!-- hl-knowledge: introduces=[TA-LEX-C159-ETIR159-03]; assesses=[] -->
 
 **திட்டம்** — *tiṭṭam* — "a plan". **எங்களுக்கு ஒரு திட்டம் இருக்கிறது** — *eṅkaḷukku oru tiṭṭam irukkiṟatu* — "We have a plan."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **திட்டம்** (*tiṭṭam*) is uncertain. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Saying So, and Saying Why",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:135bc612f52e62dd",
+  "sourceHash": "fnv1a64:b4c8b2c712523939",
   "lessons": [
     {
       "id": "KA-C70-say",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6895aea3ab196bdf",
+      "sourceHash": "fnv1a64:e2c516886a5e52f2",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೇಳು (hēḷu) is native Dravidian, one word with Tamil pēcu (DEDR 4430). DEDR gives the older Kannada pēḻ, \"to say\": the p- has become h- and the ḻ has become ḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -150,7 +161,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,7 +193,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:2d39e0b7f7ccbe5d",
+      "sourceHash": "fnv1a64:ff0d6e61a934c29a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -237,6 +248,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಂತ (anta) is native Dravidian, usually explained as a form of the verb an-, en-, \"to say\", which DEDR 868 lists with Tamil eṉ and Telugu anu. A quotation in Kannada ends with \"saying\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the quotation closes before the verb arrives",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -279,7 +301,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -355,7 +377,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -555,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c240be7a240e74f7",
+      "sourceHash": "fnv1a64:b2b09f3fc8ab2fa5",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +626,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏಕೆಂದರೆ (ēkendare) is native Dravidian: ēke, \"why\" (DEDR 5151), and endare, \"if one says\", from en-, \"to say\" (DEDR 868). \"If you ask why\" opens the reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the same ending, for the third time",
           "segments": [
@@ -618,7 +651,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -629,7 +662,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -714,7 +747,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -745,7 +778,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a37a701713bcb1b",
+      "sourceHash": "fnv1a64:66bed65e89acd5f3",
       "notice": null,
       "blocks": [
         {
@@ -786,6 +819,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅದು ನಿಜ ಅಂತ ಯೋಚಿಸುತ್ತೇನೆ (adu nija anta yōcisuttēne) is built from adu, \"that\" (DEDR 1), nija, \"true\", from Sanskrit nija (CDIAL 7181), anta, \"saying\" (DEDR 868), and yōcisu, \"to think\", from Sanskrit yojanā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one frame, and the slot you change",
           "segments": [
@@ -804,7 +848,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -815,7 +859,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -891,7 +935,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -13,7 +13,8 @@ gloss: "a curtain"
 concept_tag: GE-HAUS113-VORHANG
 prerequisites: [GE-C113-badewanne, GE-C113-regal]
 sounds: []
-roots: []
+roots: [germanic-hangijana]
+etymology_hook: "Vorhang — the word for 'before' + the verb 'to hang': what hangs in front"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C113-regal]
 <!-- hl-knowledge: introduces=[GE-LEX-C113-HAUS113-04]; assesses=[] -->
 
 **der Vorhang** — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Vorhang** is the word for "before, in front" + the stem of the verb "to hang" (Old High German *hengen*, EtymDB 2.1): what hangs in front.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

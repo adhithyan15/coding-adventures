@@ -14,7 +14,8 @@ romanization: "maidāna"
 concept_tag: KA-STHALA212-MAIDANA
 prerequisites: [KA-C212-karkhane, KA-C212-citramandira]
 sounds: []
-roots: []
+roots: [persian-maydan]
+etymology_hook: "maidāna ← Persian maydān 'open field', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C212-citramandira]
 <!-- hl-knowledge: introduces=[KA-LEX-C212-STHALA212-04]; assesses=[] -->
 
 **ಮೈದಾನ** — *maidāna* — "a ground, a playground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೈದಾನ** (*maidāna*) is a loan from Persian *maydān*, "an open field, a square", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

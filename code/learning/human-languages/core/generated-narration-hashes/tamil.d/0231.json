@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 231,
-  "sourceHash": "fnv1a64:a297f68e5ae9ab13",
+  "sourceHash": "fnv1a64:59729c38e3ba8659",
   "lessonIds": [
     "TA-C231-mayanku",
     "TA-C231-vatu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch231.txt",
   "json": "tamil/narration/ch231.json",
-  "textHash": "fnv1a64:f0711802adece45d",
-  "jsonHash": "fnv1a64:c6ea40a10bc998b2",
+  "textHash": "fnv1a64:1736fdae584ba91d",
+  "jsonHash": "fnv1a64:184ef8e87904d90f",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 262,
-  "sourceHash": "fnv1a64:8768b580557c2da2",
+  "sourceHash": "fnv1a64:de034a4f809a7a76",
   "lessonIds": [
     "KA-C262-torana",
     "KA-C262-kunkuma",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch262.txt",
   "json": "kannada/narration/ch262.json",
-  "textHash": "fnv1a64:3df018a3b607e829",
-  "jsonHash": "fnv1a64:b6755ee503242fde",
+  "textHash": "fnv1a64:dde10ceaf4ffbcc8",
+  "jsonHash": "fnv1a64:91f9fe735b02c439",
   "findings": []
 }

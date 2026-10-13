@@ -14,6 +14,7 @@ concept_tag: FR-ECOLE79-IDEE
 prerequisites: [FR-C127-devoirs, FR-C127-reponse]
 sounds: []
 roots: []
+etymology_hook: "idée ← Latin idea, from Greek idea 'a form', from idein 'to see' — English idea"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C127-reponse]
 <!-- hl-knowledge: introduces=[FR-LEX-C127-ECOLE79-04]; assesses=[] -->
 
 **l'idée** — "an idea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**idée** ← Latin *idea*, from Greek *idea*, "a form, a pattern", from *idein*, "to see" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

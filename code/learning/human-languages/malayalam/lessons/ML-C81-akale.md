@@ -11,7 +11,8 @@ romanization: "akale"
 concept_tag: ML-WORD-FAR
 prerequisites: [ML-C81-aduthu, ML-C41-deixis-system]
 sounds: []
-roots: []
+roots: [dravidian-akal-far]
+etymology_hook: "akale: native Dravidian, from the verb 'to spread, go away'; Tamil akal (DEDR 8)"
 duration:
   max_seconds: 250
 requires:
@@ -50,6 +51,11 @@ The scale now has both ends:
 
 Between them you can place anything, and **അവിടെ** stops having to do a job it
 was never built for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അകലെ** (*akale*) is native Dravidian, from the verb "to spread out, go away"; DEDR 8 lists the root with Tamil *akal* and Kannada *agal*.
 
 ## Why it's said this way: a shape that is not the pattern
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C41-DEIXIS-SYSTEM, ML-LEX-C41-DEIXIS-04] -->

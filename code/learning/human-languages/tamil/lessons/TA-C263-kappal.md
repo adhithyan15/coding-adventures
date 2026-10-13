@@ -14,7 +14,8 @@ romanization: "kappal"
 concept_tag: TA-IDAM263-KAPPAL
 prerequisites: [TA-C263-vimanam, TA-C263-vimana-nilaiyam]
 sounds: []
-roots: []
+roots: [dravidian-kappal-ship]
+etymology_hook: "கப்பல் — native Dravidian (DEDR 1219); Malayalam kappal 'ship', Telugu kappali"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C263-vimana-nilaiyam]
 <!-- hl-knowledge: introduces=[TA-LEX-C263-IDAM263-05]; assesses=[] -->
 
 **கப்பல்** — *kappal* — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கப்பல்** (*kappal*) is native Dravidian. DEDR 1219 lists Malayalam *kappal*, "ship" and Telugu *kappali*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

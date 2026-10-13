@@ -11,7 +11,8 @@ romanization: "buṭṭi"
 concept_tag: KA-NOUN-BASKET
 prerequisites: [KA-C56-mat, KA-C54-branch]
 sounds: []
-roots: []
+roots: [dravidian-puttil-basket]
+etymology_hook: "buṭṭi: native Dravidian, one word with Tamil puṭṭil (DEDR 4263)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Woven, usually from bamboo, and carried on the hip or the head rather than in th
 The little *-ina* in the middle of those is the joining piece Kannada slips between two names to say the second belongs to the first. Fruit-of basket. You can build the same shape with anything you already have.
 
 ಬುಟ್ಟಿ shares its ending with the ಚಾಪೆ's world rather than the ಕುರ್ಚಿ's: another light, cheap, repairable thing made from what grows nearby, and one that a house replaces every few years without thinking about it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬುಟ್ಟಿ** (*buṭṭi*) is native Dravidian, one word with Tamil *puṭṭil* (DEDR 4263). DEDR lists Kannada *puṭṭi*, *buṭṭi*, "basket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to live"
 concept_tag: GE-VERB-LEBEN
 prerequisites: [GE-C67-glauben, GE-C67-brauchen]
 sounds: []
-roots: []
+roots: [germanic-libjana]
+etymology_hook: "leben ← Old High German lebēn ← Proto-Germanic *libjaną — the same verb as English live"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C67-brauchen]
 <!-- hl-knowledge: introduces=[GE-LEX-C67-VERBEN4-04]; assesses=[] -->
 
 **leben** — "to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**leben** ← Old High German *lebēn* ← Proto-Germanic *\*libjaną*, "to live" — inherited, the same verb as English *live*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

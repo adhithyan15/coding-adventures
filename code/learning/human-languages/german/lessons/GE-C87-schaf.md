@@ -13,7 +13,8 @@ gloss: "a sheep"
 concept_tag: GE-TIERE2-SCHAF
 prerequisites: [GE-C86-schlange, GE-C87-ente]
 sounds: []
-roots: []
+roots: [germanic-skepa]
+etymology_hook: "Schaf ← Old High German scāf ← Proto-Germanic *skēpą — the same word as English sheep"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C87-ente]
 <!-- hl-knowledge: introduces=[GE-LEX-C87-TIERE2-02]; assesses=[] -->
 
 **das Schaf** — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schaf** ← Old High German *scāf* ← Proto-Germanic *\*skēpą* — inherited, the same word as English *sheep*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

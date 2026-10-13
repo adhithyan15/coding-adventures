@@ -51,6 +51,11 @@ vowel away) · **ಕು** (*ku*). [YOU READ: the word slowly]
 Four is where the virama earns its keep — it is what lets *l* and *k* sit
 together with no vowel between them.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾಲ್ಕು** (*nālku*) is native Dravidian, one word with Tamil *nālku* and Telugu *nālugu* (DEDR 3655). The entry gives Kannada *nāl(u)ku* and *nāku*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NAALKU-01, KA-SCRIPT-RECOG-01, KA-SCRIPT-RECOG-03, KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02] -->
 

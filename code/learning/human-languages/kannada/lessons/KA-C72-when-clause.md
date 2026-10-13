@@ -11,9 +11,10 @@ romanization: "bandāga"
 concept_tag: KA-CLAUSE-WHEN
 prerequisites: [KA-C71-which, KA-C32-baa, KA-C04-hoogi-baruttene, KA-C56-mat, KA-C32-noodu, KA-C32-tinnu, KA-C32-iru, KA-C70-say, KA-C70-quotative]
 sounds: []
-roots: []
+roots: [baa-come-dravidian, dravidian-a-distal-deictic]
+etymology_hook: "bandāga: native banda 'having come', from baru (DEDR 5270), + āga 'time' (DEDR 1)"
 duration:
-  max_seconds: 210
+  max_seconds: 273
 requires:
   knowledge: [KA-LEX-C71-MORE-05, KA-LEX-C71-MORE-04, KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02, KA-GRAMMAR-C04-HOOGI-BARUTTENE-02]
 introduces:
@@ -46,6 +47,11 @@ clock: **ನೀವು ಬಂದಾಗ** (*nīvu bandāga*) — "when you come".
 It is ಬಾ / ಬರು ("come") in its past shape ಬಂದ-, with **-ಆಗ** (*-āga*) on the end
 — and that ending is the same ಆಗ that sits inside ಯಾವಾಗ. "When?" and "when it
 happens" are built from one piece.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಂದಾಗ** (*bandāga*) is native Dravidian: *banda*, "who has come", from *baru*, "to come" (DEDR 5270), and *āga*, "time, then" (DEDR 1). It is "at the time of coming".
 
 ## Grammar Lens: the when-clause comes first, and rides on the verb
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C72-WANT-02]; assesses=[] -->

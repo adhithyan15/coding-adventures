@@ -11,7 +11,8 @@ romanization: "ele"
 concept_tag: KA-NOUN-LEAF
 prerequisites: [KA-C54-branch, KA-C52-rangoli]
 sounds: []
-roots: []
+roots: [dravidian-ilai-leaf]
+etymology_hook: "ele: native Dravidian, one word with Tamil ilai (DEDR 497)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and close to its sisters: Tamil *ilai*, Malayalam *ila*. Telugu is th
 The everyday weight of ಎಲೆ is heavier than "leaf" suggests. Say it on its own in a Kannada house and you are usually talking about the betel leaf — ಎಲೆ ಅಡಿಕೆ, leaf and areca nut, handed to a guest at the end of an *ūṭa* and at the end of a welcome. The ಬಾಗಿಲು, the ಕುರ್ಚಿ, the ರಂಗೋಲಿ and the ಹೂಮಾಲೆ each had their moment; the ಎಲೆ is what the visitor is holding on the way out.
 
 The other big ಎಲೆ is the plantain leaf a meal is served on, which is a plate you do not wash.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಲೆ** (*ele*) is native Dravidian, one word with Tamil *ilai* (DEDR 497).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

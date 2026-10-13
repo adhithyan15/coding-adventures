@@ -11,7 +11,8 @@ romanization: "pāy"
 concept_tag: TA-NOUN-MAT
 prerequisites: [TA-C53-village, TA-C52-tree, TA-C53-river]
 sounds: []
-roots: []
+roots: [dravidian-paay-spread]
+etymology_hook: "பாய் — native: the thing spread out, from pāy 'to spread' (DEDR 4088)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C53-village]
 The woven mat that is unrolled to sleep on and unrolled again for a guest to sit on. Malayalam says പായ (*pāya*) and Telugu చాప (*cāpa*).
 
 பாய் is also 'to leap'. Nothing joins the two but the sound, and what sits around the word settles which is meant — the same one-shape-two-jobs arrangement *tuṇi* already showed you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாய்** (*pāy*) is native Dravidian (DEDR 4088). The entry's verb *pāy* means "to spread", and the noun is "spreading, a mat, a sail": a mat is the thing spread out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

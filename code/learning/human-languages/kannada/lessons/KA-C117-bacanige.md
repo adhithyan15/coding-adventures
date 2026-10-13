@@ -14,7 +14,8 @@ romanization: "bācaṇige"
 concept_tag: KA-THINGS117-BACANIGE
 prerequisites: [KA-C117-suttige, KA-C117-kattari]
 sounds: []
-roots: []
+roots: [dravidian-vaar-comb]
+etymology_hook: "bācaṇige: native Dravidian; DEDR 5357 lists bācaṇige 'comb' under bācu 'to comb'; Tamil vār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C117-kattari]
 <!-- hl-knowledge: introduces=[KA-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **ಬಾಚಣಿಗೆ** — *bācaṇige* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಚಣಿಗೆ** (*bācaṇige*) is native Dravidian, from *bācu*, "to comb", and DEDR 5357 lists *bācaṇige*, "a comb", itself: the old *v-* has become *b-*; the entry also has Tamil *vār*. DEDR 5357 compares Sanskrit *vārakīra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

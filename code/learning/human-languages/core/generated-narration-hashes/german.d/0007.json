@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 7,
-  "sourceHash": "fnv1a64:2c25bdac67bbc20b",
+  "sourceHash": "fnv1a64:85deb08de0e096eb",
   "lessonIds": [
     "GE-C06-vier",
     "GE-C06-fuenf",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "german/narration/ch07.txt",
   "json": "german/narration/ch07.json",
-  "textHash": "fnv1a64:4a373675d6f3d9ee",
-  "jsonHash": "fnv1a64:906bcdf5a220caac",
+  "textHash": "fnv1a64:0a08ad7ccd3ddbfc",
+  "jsonHash": "fnv1a64:16f1bf4c8697061b",
   "findings": []
 }

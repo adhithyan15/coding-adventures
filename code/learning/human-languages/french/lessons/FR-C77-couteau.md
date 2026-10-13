@@ -13,7 +13,8 @@ gloss: "a knife"
 concept_tag: FR-TABLE29-COUTEAU
 prerequisites: [FR-C76-assiette, FR-C77-cuillere]
 sounds: []
-roots: []
+roots: [cultellus-latin]
+etymology_hook: "couteau ← Latin cultellus 'little knife', from culter — English cutlass and cutlery"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C77-cuillere]
 <!-- hl-knowledge: introduces=[FR-LEX-C77-TABLE29-02]; assesses=[] -->
 
 **le couteau** — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**couteau** ← Old French *coutel* ← Latin *cultellus*, "a little knife", from *culter*, "knife" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

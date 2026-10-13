@@ -14,7 +14,8 @@ romanization: "itihāsa"
 concept_tag: KA-KELASA233-ITIHASA
 prerequisites: [KA-C233-nasta, KA-C233-vijnana]
 sounds: []
-roots: []
+roots: [sanskrit-itihasa]
+etymology_hook: "itihāsa ← Sanskrit itihāsa 'so indeed it was', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C233-vijnana]
 <!-- hl-knowledge: introduces=[KA-LEX-C233-KELASA233-05]; assesses=[] -->
 
 **ಇತಿಹಾಸ** — *itihāsa* — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇತಿಹಾಸ** (*itihāsa*) is Sanskrit *itihāsa*, from *iti ha āsa*, "so indeed it was": history is what is told as having happened. A tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

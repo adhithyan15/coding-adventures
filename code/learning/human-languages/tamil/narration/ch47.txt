@@ -14,6 +14,9 @@ You'll want to know: உண்மை.
 It is built out of uḷ, 'to be, to exist', and the -mai Tamil adds to turn a quality into something you can name. The truth, then, is is-ness: what is the case.
 As a reply it stands on its own. Somebody tells you something surprising and uṇmai means "true" — and uṇmaiyā?, with the question fixed to the end, means "really?".
 
+The word, taken apart.
+உண்மை (uṇmai) is native Dravidian. DEDR 697 lists Malayalam uḷ, "to be there". It is the noun of uḷ, "to be, to exist": the truth is what is.
+
 What you've built.
 The first of five short replies.
 
@@ -45,6 +48,9 @@ You'll want to know: போதும்.
 போதும் (pōdum) — "that is enough".
 It grows out of pōdu, 'to suffice', and it is the polite full stop of a Tamil meal: your host is serving, your plate is filling, and pōdum stops it without giving offence. Said twice — pōdum pōdum — it means you are serious.
 It has nothing to do with pō, 'to go', though the two look alike at a glance. Different roots, similar clothes.
+
+The word, taken apart.
+போதும் (pōdum) is native Dravidian. DEDR 4594 lists Malayalam pōruka, "to suffice".
 
 What you've built.
 Two: agreeing, and calling a halt.
@@ -110,6 +116,9 @@ You'll want to know: ஒருவேளை.
 Two pieces welded together: oru, 'one', which you have, and vēḷai, 'an occasion, a time', which you have not. One occasion out of the several that could happen — which is exactly the claim "perhaps" makes.
 Tamil builds its hedge out of counting. English does the same trick with "maybe", which is a "may" and a "be" pushed against each other until they stuck.
 
+The word, taken apart.
+ஒருவேளை (oruvēḷai) is "one time, at one moment": oru, "one", native (DEDR 990), and vēḷai, "time", a loan from Sanskrit velā, "limit, time" (CDIAL 12115). CDIAL adds that velā itself probably came from Dravidian.
+
 What you've built.
 Four, and the fourth one steps back from the other three.
 
@@ -141,6 +150,9 @@ You'll want to know: அப்படியே.
 அப்படியே (appaḍiyē) — "just so".
 The front of it is the far pointer a- from adu and aṅgē; appaḍi is 'in that manner'; and the -ē on the end is how Tamil presses down on a word. In that manner, precisely.
 Move the pointer and the whole set follows: ippaḍi, 'like this', and eppaḍi, 'how' — which you have been saying since you first asked somebody how they were. One pattern, three words, and only the front letter moves.
+
+The word, taken apart.
+அப்படியே (appaḍiyē) is native: the far base a- (DEDR 1, which lists appaṭi, "thus") with paṭi, "manner", and the stressing -ē: "in just that way".
 
 What you've built.
 That closes the run: true, enough, certainly, perhaps, just so.

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-MERITER
 prerequisites: [FR-C236-frapper, FR-C237-manquer]
 sounds: []
 roots: []
+etymology_hook: "mériter — from the word for 'merit', Latin meritum 'what one has earned'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C237-manquer]
 <!-- hl-knowledge: introduces=[FR-LEX-C237-VERBES237-02]; assesses=[] -->
 
 **mériter** — "to deserve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mériter** — formed from the word for "merit", ← Latin *meritum*, "what one has earned". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

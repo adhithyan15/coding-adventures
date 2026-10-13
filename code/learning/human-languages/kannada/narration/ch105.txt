@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a driver, then the Kannada for a shop.
 You'll want to know: ಶುಭಾಶಯಗಳು.
 ಶುಭಾಶಯಗಳು (śubhāśayagaḷu) — "best wishes", ಶುಭ (śubha), "good", with ಆಶಯ (āśaya), "wish", in the plural.
 
+The word, taken apart.
+ಶುಭಾಶಯಗಳು (śubhāśayagaḷu) is Sanskrit śubha, "auspicious, good" (CDIAL 12532), and āśaya, "intention, wish", with Kannada's plural -gaḷu: good wishes.
+
 What you've built.
 Good wishes, many of them.
 
@@ -41,6 +44,9 @@ Before the new one: say the Kannada for a shop, then the Kannada for best wishes
 You'll want to know: ಹಬ್ಬ.
 ಹಬ್ಬ (habba) — "festival", the second half of ಹುಟ್ಟುಹಬ್ಬ, "birthday".
 ಹಬ್ಬದ ಶುಭಾಶಯಗಳು (habbada śubhāśayagaḷu) — "festival greetings".
+
+The word, taken apart.
+ಹಬ್ಬ (habba) is usually traced to Sanskrit parvan, "knot, joint" (CDIAL 7947), through Prakrit pavva. In Sanskrit the word also named the joints of the lunar month and the feasts held on them. It is a tadbhava: the p- became h- and rv became bb.
 
 What you've built.
 The festival inside birthday.
@@ -72,6 +78,9 @@ You'll want to know: ಆತಿಥ್ಯ.
 ಆತಿಥ್ಯ (ātithya) — "hospitality", from ಅತಿಥಿ (atithi), "guest".
 ನಿಮ್ಮ ಆತಿಥ್ಯಕ್ಕೆ ಧನ್ಯವಾದ (nimma ātithyakke dhanyavāda) — "thank you for your hospitality".
 
+The word, taken apart.
+ಆತಿಥ್ಯ (ātithya) is Sanskrit ātithya, "hospitality", the noun of atithi, "guest", taken over whole: a tatsama.
+
 What you've built.
 What a guest thanks the host for.
 
@@ -101,6 +110,9 @@ Before the new one: say the Kannada for a festival, then the Kannada for hospita
 You'll want to know: ಪ್ರೀತಿ.
 ಪ್ರೀತಿ (prīti) — "love, affection".
 
+The word, taken apart.
+ಪ್ರೀತಿ (prīti) is Sanskrit prīti, "pleasure; love", taken over whole as a learned loan, a tatsama (CDIAL 8982).
+
 What you've built.
 The warmest word in the chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Kannada for hospitality, then the Kannada for love.
 
 You'll want to know: ಮೆಚ್ಚುಗೆ.
 ಮೆಚ್ಚುಗೆ (meccuge) — "appreciation, praise", from ಮೆಚ್ಚು (meccu), "to like, to admire".
+
+The word, taken apart.
+ಮೆಚ್ಚುಗೆ (meccuge) is native Dravidian, from meccu, "to approve, like", which DEDR 4722 lists itself; the entry also has Tamil maruvu and Telugu maragu.
 
 What you've built.
 Praise for something well done.

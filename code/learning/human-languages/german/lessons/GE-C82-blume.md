@@ -13,7 +13,8 @@ gloss: "a flower"
 concept_tag: GE-NATUR1-BLUME
 prerequisites: [GE-C82-telefon, GE-C82-baum]
 sounds: []
-roots: []
+roots: [germanic-bloma]
+etymology_hook: "Blume ← Old High German bluomo ← Proto-Germanic *blōmô 'flower' — the same word as English bloom"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C82-baum]
 <!-- hl-knowledge: introduces=[GE-LEX-C82-NATUR1-03]; assesses=[] -->
 
 **die Blume** — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Blume** ← Old High German *bluomo* ← Proto-Germanic *\*blōmô*, "flower" — inherited, the same word as English *bloom*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to pay a visit, then the Kannada for to 
 You'll want to know: ಬೊಗಳು.
 ಬೊಗಳು — bogaḷu — "to bark".
 
+The word, taken apart.
+ಬೊಗಳು (bogaḷu) is native Dravidian (DEDR 5204). DEDR lists bogaḷu, "to bark".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to hug, then the Kannada for to bark.
 
 You'll want to know: ಕೂಗು.
 ಕೂಗು — kūgu — "to shout, to cry out".
+
+The word, taken apart.
+ಕೂಗು (kūgu) is native Dravidian, one word with Tamil kū (DEDR 1868). DEDR lists kūgu itself, "to cry aloud". DEDR 1868 compares Sanskrit kū.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to bark, then the Kannada for to shout.
 You'll want to know: ಮುಳುಗು.
 ಮುಳುಗು — muḷugu — "to sink; to set (of the sun)".
 
+The word, taken apart.
+ಮುಳುಗು (muḷugu) is native Dravidian, one word with Tamil muḻuku and Malayalam muḻukuka (DEDR 4993). DEDR gives the older Kannada muḻugu, "to sink, dive".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to shout, then the Kannada for to sink.
 You'll want to know: ವಾದಿಸು.
 ವಾದಿಸು — vādisu — "to argue".
 
+The word, taken apart.
+ವಾದಿಸು (vādisu) is Sanskrit vāda, "speech, dispute" (CDIAL 11507), made into a Kannada verb with -isu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to sink, then the Kannada for to argue.
 
 You'll want to know: ಕಲ್ಪಿಸಿಕೊ.
 ಕಲ್ಪಿಸಿಕೊ — kalpisiko — "to imagine".
+
+The word, taken apart.
+ಕಲ್ಪಿಸಿಕೊ (kalpisiko) is Sanskrit kalpanā, "arranging, making" (CDIAL 2943), made into a verb with -isu, and ko, "take" (DEDR 2151): "to form for oneself".
 
 What you've built.
 One more word for this chapter.

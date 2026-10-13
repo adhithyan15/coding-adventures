@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Yes or No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c62a66581b0b999b",
+  "sourceHash": "fnv1a64:bcf7c15528073ce0",
   "lessons": [
     {
       "id": "TA-C75-polar",
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da7a8e1cb9c99b66",
+      "sourceHash": "fnv1a64:63f5888a19ce7e17",
       "notice": null,
       "blocks": [
         {
@@ -602,6 +602,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் உள்ளே வரலாமா? (nāṉ uḷḷē varalāmā?) is all native: nāṉ, \"I\" (DEDR 5160), uḷḷē, \"inside\" (DEDR 698), and varu, \"to come\" (DEDR 5270), with the ending that asks \"may I?\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -612,7 +623,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -697,7 +708,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

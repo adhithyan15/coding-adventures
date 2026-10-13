@@ -13,7 +13,8 @@ gloss: "to prefer"
 concept_tag: FR-VERB-PREFERER
 prerequisites: [FR-C137-croire, FR-C138-connaitre]
 sounds: []
-roots: []
+roots: [ferre-latin]
+etymology_hook: "préférer ← Latin praeferre 'to put first' — English prefer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C138-connaitre]
 <!-- hl-knowledge: introduces=[FR-LEX-C138-VERBES90-02]; assesses=[] -->
 
 **préférer** — "to prefer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**préférer** ← Latin *praeferre*, "to carry before, to put first" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

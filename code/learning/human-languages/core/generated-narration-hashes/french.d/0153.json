@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 153,
-  "sourceHash": "fnv1a64:3962e230b0087f55",
+  "sourceHash": "fnv1a64:18d62f11f3fbd20f",
   "lessonIds": [
     "FR-C153-remarquer",
     "FR-C153-remplacer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch153.txt",
   "json": "french/narration/ch153.json",
-  "textHash": "fnv1a64:68ba415a1d6b553a",
-  "jsonHash": "fnv1a64:eae8cdafef54c1b1",
+  "textHash": "fnv1a64:484767e271dea8a4",
+  "jsonHash": "fnv1a64:4490688950d17ee9",
   "findings": []
 }

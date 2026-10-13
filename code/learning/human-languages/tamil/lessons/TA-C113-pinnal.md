@@ -14,7 +14,8 @@ romanization: "piṉṉāl"
 concept_tag: TA-LOC113-PINNAL
 prerequisites: [TA-C113-arukil, TA-C113-turam]
 sounds: []
-roots: []
+roots: [tamil-pin-after]
+etymology_hook: "பின்னால் — native Dravidian (DEDR 4205); Malayalam pin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C113-turam]
 <!-- hl-knowledge: introduces=[TA-LEX-C113-LOC113-04]; assesses=[] -->
 
 **பின்னால்** — *piṉṉāl* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பின்னால்** (*piṉṉāl*) is native Dravidian. DEDR 4205 lists Malayalam *pin*. It is *piṉ*, "back, behind", with *-āl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

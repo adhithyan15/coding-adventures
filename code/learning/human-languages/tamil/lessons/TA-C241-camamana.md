@@ -14,7 +14,8 @@ romanization: "camamāṉa"
 concept_tag: TA-GUNAM241-CAMAMANA
 prerequisites: [TA-C241-cataranamana, TA-C241-apurvamana]
 sounds: []
-roots: []
+roots: [sanskrit-sama]
+etymology_hook: "சமமான ← Sanskrit sama 'equal, alike' (CDIAL 13173)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C241-apurvamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C241-GUNAM241-03]; assesses=[] -->
 
 **சமமான** — *camamāṉa* — "equal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சமமான** (*camamāṉa*) is a loan from Sanskrit *sama*, "equal, alike" (CDIAL 13173). *Camam* takes *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kākkai"
 concept_tag: TA-NOUN-CROW
 prerequisites: [TA-C58-hen, TA-C56-no-need, TA-C57-smoke]
 sounds: []
-roots: []
+roots: [dravidian-kaakkai-crow]
+etymology_hook: "காக்கை — native Dravidian (DEDR 1425); Malayalam kākka, Kannada kāge, Telugu kāki"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C58-hen]
 Named off the noise it makes, and the sisters landed on the same trick from the same starting point: Kannada ಕಾಗೆ (*kāge*). Say it once and you have the etymology.
 
 Of everything with wings around a Tamil house this is the one the house deals with daily. சாதம் set out on the வாசல் step is put there for the காக்கை, and it comes down within the minute.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காக்கை** (*kākkai*) is native Dravidian. DEDR 1425 lists Malayalam *kākka*, Kannada *kāge* and Telugu *kāki*. The word imitates the bird's call, and the entry gives the cry too. It compares Sanskrit *kāka*, "crow", and notes that some forms may be borrowed back from Indo-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

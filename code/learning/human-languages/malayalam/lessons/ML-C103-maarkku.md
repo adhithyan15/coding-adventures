@@ -46,6 +46,11 @@ moment.
 borrowed whole. Kerala's schools took the English examination system and the
 English word along with it, and this is the word people reach for.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാർക്ക്** (*mārkkŭ*) ← English *mark*, borrowed in the sense "a score".
+
 ## Grammar Lens: what the borrowing had to change
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C103-MARKS-01] -->
 

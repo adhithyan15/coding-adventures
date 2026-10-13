@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 53,
-  "sourceHash": "fnv1a64:4fdd1b476cb9d669",
+  "sourceHash": "fnv1a64:5e7fd6036f2ba9d4",
   "lessonIds": [
     "FR-C53-douleur",
     "FR-C53-fievre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch53.txt",
   "json": "french/narration/ch53.json",
-  "textHash": "fnv1a64:87e214b675a2e69d",
-  "jsonHash": "fnv1a64:7233a4bfd694fdc8",
+  "textHash": "fnv1a64:f5b75997382a87b6",
+  "jsonHash": "fnv1a64:aa34fd0313a04cfc",
   "findings": []
 }

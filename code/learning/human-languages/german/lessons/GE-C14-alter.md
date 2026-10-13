@@ -53,6 +53,11 @@ usually does.
 Notice which verb is doing the work: *bin*. Not *habe*. Hold on to that, because
 it is the whole point of the next lesson.
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alt** ← Old High German *alt* ← Proto-Germanic *\*aldaz*, English *old*; **Jahre** ← Old High German *jār* ← Proto-Germanic *\*jērą*, English *year*. (EtymDB 2.1)
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-BIN-JAHRE-ALT-01, GE-GRAMMAR-SEIN-ICH-BIN-01] -->
 

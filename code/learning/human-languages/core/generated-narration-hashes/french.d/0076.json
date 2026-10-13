@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 76,
-  "sourceHash": "fnv1a64:c19b12141e5dd72b",
+  "sourceHash": "fnv1a64:32499c6f85473b0e",
   "lessonIds": [
     "FR-C76-placard",
     "FR-C76-plafond",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch76.txt",
   "json": "french/narration/ch76.json",
-  "textHash": "fnv1a64:d1e81b3d1468404f",
-  "jsonHash": "fnv1a64:754668645f26230e",
+  "textHash": "fnv1a64:897966582770a2d3",
+  "jsonHash": "fnv1a64:2a1d7fc8bc90e325",
   "findings": []
 }

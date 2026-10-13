@@ -13,7 +13,8 @@ gloss: "a market"
 concept_tag: GE-STADT1-MARKT
 prerequisites: [GE-C95-rechts, GE-C96-laden]
 sounds: []
-roots: []
+roots: [mercatus-latin]
+etymology_hook: "Markt ← Old High German marcāt ← Latin mercātus — borrowed, like English market"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C96-laden]
 <!-- hl-knowledge: introduces=[GE-LEX-C96-STADT1-02]; assesses=[] -->
 
 **der Markt** — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Markt** ← Old High German *marcāt* ← Latin *mercātus*, "trade, market" (EtymDB 2.1) — borrowed, like English *market*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

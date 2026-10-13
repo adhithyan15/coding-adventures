@@ -13,7 +13,8 @@ gloss: "to die"
 concept_tag: FR-VERB-MOURIR
 prerequisites: [FR-C206-refroidir, FR-C207-naitre]
 sounds: []
-roots: []
+roots: [mori-latin]
+etymology_hook: "mourir ← Latin mori 'to die' — English mortal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C207-naitre]
 <!-- hl-knowledge: introduces=[FR-LEX-C207-VERBES207-02]; assesses=[] -->
 
 **mourir** — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mourir** ← Old French *morir* ← Vulgar Latin *\*morire* ← Latin *mori*, "to die" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

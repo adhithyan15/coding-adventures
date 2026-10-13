@@ -13,7 +13,7 @@ sounds: [w-as-v, ie-long-ee]
 roots: [gehen-german]
 etymology_hook: "Wie geht es dir asks, word for word, how goes it to you, from four words already earned"
 duration:
-  max_seconds: 180
+  max_seconds: 290
 requires:
   knowledge: [GE-LEX-WIE-02, GE-LEX-GEHEN-01, GE-LEX-ES-01, GE-LEX-DIR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01]
 introduces:
@@ -60,6 +60,11 @@ Every piece has been earned: *wie* from asking someone's name, *geht* from
 *gehen*, *es* and *dir* from the last two lessons. This is what the book has
 been building toward — a real question assembled from parts, not memorised
 whole.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geht** is a form of *gehen* ← Old High German *gān* ← Proto-Germanic *\*gāną*, "to go" — the same verb as English *go*. (EtymDB 2.1)
 
 ## You'll want to know: Wie geht's?
 <!-- hl-knowledge: introduces=[GE-LEX-WIE-GEHTS-02]; assesses=[GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01] -->

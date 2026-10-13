@@ -14,7 +14,8 @@ romanization: "iḷijāru"
 concept_tag: KA-STHALA251-ILIJARU
 prerequisites: [KA-C251-kaluve, KA-C251-suranga]
 sounds: []
-roots: []
+roots: [dravidian-izhi-descend, dravidian-cari-slide]
+etymology_hook: "iḷijāru: native iḷi 'to descend' (DEDR 502) + jāru 'to slide' (DEDR 2360)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C251-suranga]
 <!-- hl-knowledge: introduces=[KA-LEX-C251-STHALA251-04]; assesses=[] -->
 
 **ಇಳಿಜಾರು** — *iḷijāru* — "a downward slope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಳಿಜಾರು** (*iḷijāru*) is native Dravidian: *iḷi*, "to come down" (DEDR 502), and *jāru*, "to slip, slide", which DEDR 2360 lists as *jari*, *jaragu*: "a sliding down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

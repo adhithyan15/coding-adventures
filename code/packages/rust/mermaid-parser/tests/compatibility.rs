@@ -1626,6 +1626,16 @@ fn swimlane_text_block_attribute_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_label_rect_reaches_label_only_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Labels\n  caption@{ shape: labelRect, label: \"Context only\" }\nend",
+    ).expect("Mermaid 11.16.1 labelRect should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TextBlock);
+    assert_eq!(diagram.nodes[0].label, "Context only");
+}
+
+#[test]
 fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 
@@ -2235,6 +2245,133 @@ fn swimlane_monotone_curve_config_lowers_to_semantic_ir() {
 
     assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
         Some(SwimlaneEdgeCurve::MonotoneX), Some(SwimlaneEdgeCurve::MonotoneY),
+    ]);
+}
+
+#[test]
+fn swimlane_spline_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst cardinal@--> sixth\nsecond catmull@--> fifth\nthird natural@--> fourth\ncardinal@{ curve: cardinal }\ncatmull@{ curve: catmullRom }\nnatural@{ curve: natural }",
+    ).expect("Flowchart spline curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::Cardinal),
+        Some(SwimlaneEdgeCurve::CatmullRom),
+        Some(SwimlaneEdgeCurve::Natural),
+    ]);
+}
+
+#[test]
+fn swimlane_rounded_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\n  queued[Queued]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest rounded@--> done\nrounded@{ curve: rounded }",
+    ).expect("Flowchart rounded curve configuration should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Rounded));
+}
+
+#[test]
+fn swimlane_line_hops_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneLineHops;
+
+    let source = "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third";
+    let arc = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: arc\n---\n{source}"))
+        .expect("arc line hops should parse");
+    let gap = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: gap\n---\n{source}"))
+        .expect("gap line hops should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: false\n---\n{source}"))
+        .expect("disabled line hops should parse");
+
+    assert_eq!(arc.line_hops, Some(SwimlaneLineHops::Arc));
+    assert_eq!(gap.line_hops, Some(SwimlaneLineHops::Gap));
+    assert_eq!(disabled.line_hops, None);
+}
+
+#[test]
+fn swimlane_automatic_lane_ordering_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: true\n---\n{source}"))
+        .expect("automatic lane ordering should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: false\n---\n{source}"))
+        .expect("disabled automatic lane ordering should parse");
+
+    assert!(enabled.automatic_lane_ordering);
+    assert!(!disabled.automatic_lane_ordering);
+}
+
+#[test]
+fn swimlane_ignore_cross_lane_edges_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let defaulted = parse_swimlane(source).expect("default cross-lane behavior should parse");
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: true\n---\n{source}"))
+        .expect("ignored cross-lane edges should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n---\n{source}"))
+        .expect("cross-lane rank constraints should parse");
+
+    assert!(defaulted.ignore_cross_lane_edges);
+    assert!(enabled.ignore_cross_lane_edges);
+    assert!(!disabled.ignore_cross_lane_edges);
+}
+
+#[test]
+fn swimlane_optimize_ranks_by_crossings_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  a[A]\nend\nsubgraph B\n  b[B]\nend\na --> b";
+    let defaulted = parse_swimlane(source).expect("default rank optimization should parse");
+    let enabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: true\n---\n{source}"))
+        .expect("rank crossing optimization should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    optimizeRanksByCrossings: false\n---\n{source}"))
+        .expect("disabled rank crossing optimization should parse");
+
+    assert!(defaulted.optimize_ranks_by_crossings);
+    assert!(enabled.optimize_ranks_by_crossings);
+    assert!(!disabled.optimize_ranks_by_crossings);
+}
+
+#[test]
+fn swimlane_nested_subgraphs_reach_semantic_ir() {
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
+        .expect("nested Swimlane subgraphs should parse");
+
+    assert_eq!(diagram.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+        vec!["Engineering", "Operations"]);
+    assert_eq!(diagram.groups.len(), 2);
+    assert_eq!(diagram.groups[0].lane_id, "Engineering");
+    assert_eq!(diagram.groups[0].parent_id, None);
+    assert_eq!(diagram.groups[0].node_ids, vec!["plan"]);
+    assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Platform"));
+    assert_eq!(diagram.groups[1].node_ids, vec!["build"]);
+}
+
+#[test]
+fn swimlane_state_choice_and_note_attributes_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Workflow\n  pending@{ shape: state, label: \"Pending\" }\n  branch@{ shape: choice, label: \"Choose\" }\n  memo@{ shape: note, label: \"Decision note\" }\nend\npending --> branch --> memo")
+        .expect("state, choice, and note shapes should parse");
+
+    assert_eq!(diagram.nodes[0].shape, DiagramShape::RoundedRect);
+    assert_eq!(diagram.nodes[1].shape, DiagramShape::Diamond);
+    assert_eq!(diagram.nodes[2].shape, DiagramShape::Note);
+}
+
+#[test]
+fn swimlane_legacy_internal_shape_aliases_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Legacy\n  process@{ shape: squareRect, label: \"Process\" }\n  event@{ shape: roundedRect, label: \"Event\" }\n  start@{ shape: stateStart }\n  stop@{ shape: stateEnd }\n  branch@{ shape: forkJoin }\n  manual@{ shape: inv_trapezoid, label: \"Manual\" }\n  final@{ shape: doublecircle, label: \"Final\" }\n  odd@{ shape: rect_left_inv_arrow, label: \"Odd\" }\nend\nstart --> process --> event --> branch --> manual --> final --> stop\nbranch --> odd --> final")
+        .expect("legacy internal ShapeIDs accepted by Mermaid 11.16.1 should parse");
+
+    assert_eq!(diagram.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+        &DiagramShape::Rect,
+        &DiagramShape::RoundedRect,
+        &DiagramShape::SmallCircle,
+        &DiagramShape::FramedCircle,
+        &DiagramShape::ForkJoin,
+        &DiagramShape::InvertedTrapezoid,
+        &DiagramShape::DoubleCircle,
+        &DiagramShape::Asymmetric,
     ]);
 }
 

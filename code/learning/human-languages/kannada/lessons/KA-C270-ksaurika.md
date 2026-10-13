@@ -14,7 +14,8 @@ romanization: "kṣaurika"
 concept_tag: KA-KELASA270-KSAURIKA
 prerequisites: [KA-C270-pada, KA-C270-vakya]
 sounds: []
-roots: []
+roots: [sanskrit-kshaura]
+etymology_hook: "kṣaurika ← Sanskrit kṣaurika, from kṣaura 'shaving' (CDIAL 3756)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C270-vakya]
 <!-- hl-knowledge: introduces=[KA-LEX-C270-KELASA270-04]; assesses=[] -->
 
 **ಕ್ಷೌರಿಕ** — *kṣaurika* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ಷೌರಿಕ** (*kṣaurika*) is Sanskrit *kṣaurika*, built on *kṣaura*, "shaving" (CDIAL 3756): "the one who shaves".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a judge"
 concept_tag: FR-CHOSES222-JUGE
 prerequisites: [FR-C222-loi, FR-C222-tribunal]
 sounds: []
-roots: []
+roots: [iudex-latin]
+etymology_hook: "juge ← Latin iudex 'one who speaks the law' — English judge"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C222-tribunal]
 <!-- hl-knowledge: introduces=[FR-LEX-C222-CHOSES222-05]; assesses=[] -->
 
 **le juge** — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**juge** ← Old French *juge* ← Latin *iudex*, *iudicis*, "a judge", from *ius*, "law", and *dicere*, "to say" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-VILLE55-CHEMISE
 prerequisites: [FR-C103-aeroport, FR-C103-vetements]
 sounds: []
 roots: []
+etymology_hook: "chemise ← Late Latin camisia 'a shirt', probably Gaulish — English chemise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C103-vetements]
 <!-- hl-knowledge: introduces=[FR-LEX-C103-VILLE55-04]; assesses=[] -->
 
 **la chemise** — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chemise** ← Late Latin *camisia*, "a shirt", probably a Gaulish word (EtymDB 2.1) — inherited: *ca-* became *che-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

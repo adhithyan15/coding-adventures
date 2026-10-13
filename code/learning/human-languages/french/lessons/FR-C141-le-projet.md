@@ -13,7 +13,8 @@ gloss: "a plan, a project"
 concept_tag: FR-FUT141-LE-PROJET
 prerequisites: [FR-C141-lavenir, FR-C141-ce-soir]
 sounds: []
-roots: []
+roots: [iacere-latin]
+etymology_hook: "projet — after Latin proiectus 'thrown forward': a plan cast ahead — English project"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C141-ce-soir]
 <!-- hl-knowledge: introduces=[FR-LEX-C141-FUT141-03]; assesses=[] -->
 
 **le projet** — "a plan, a project". **Quels sont tes projets pour le week-end ?** — "What are your plans for the weekend?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**projet** — formed from the verb for "to throw forward", reshaped after Latin *proiectus*, "thrown forward" (EtymDB 2.1): a plan cast ahead.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

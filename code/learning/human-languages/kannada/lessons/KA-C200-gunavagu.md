@@ -14,7 +14,8 @@ romanization: "guṇavāgu"
 concept_tag: KA-VERB-GUNAVAGU
 prerequisites: [KA-C199-istri-madu, KA-C199-badalisu]
 sounds: []
-roots: []
+roots: [sanskrit-guna, tamil-aaku-become]
+etymology_hook: "guṇavāgu: Sanskrit guṇa 'good quality' (CDIAL 4190) + native āgu 'to become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C199-badalisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C200-KRIYE200-01]; assesses=[] -->
 
 **ಗುಣವಾಗು** — *guṇavāgu* — "to get well, to heal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಣವಾಗು** (*guṇavāgu*) is *guṇa*, "good quality, health", from Sanskrit *guṇa* (CDIAL 4190), with native *āgu*, "to become" (DEDR 333): "to become well". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṣāyaṁ"
 concept_tag: ML-AROGYAM313-KASAYAM
 prerequisites: [ML-C313-kottuva, ML-C313-lepanam]
 sounds: []
-roots: []
+roots: [sanskrit-kashaya]
+etymology_hook: "kaṣāyaṁ ← Sanskrit kaṣāya 'astringent; an astringent juice', a tatsama (CDIAL 2974)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C313-lepanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C313-AROGYAM313-04]; assesses=[] -->
 
 **കഷായം** — *kaṣāyaṁ* — "a herbal decoction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഷായം** (*kaṣāyaṁ*) ← Sanskrit *kaṣāya*, "astringent; an astringent juice", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 2974).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

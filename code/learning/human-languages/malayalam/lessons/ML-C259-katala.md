@@ -14,7 +14,8 @@ romanization: "kaṭala"
 concept_tag: ML-VASTU259-KATALA
 prerequisites: [ML-C259-murinnakka, ML-C259-colam]
 sounds: []
-roots: []
+roots: [dravidian-katalai-gram]
+etymology_hook: "kaṭala: native Dravidian, one word with Tamil kaṭalai and Kannada kaḍale (DEDR 1120)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C259-colam]
 <!-- hl-knowledge: introduces=[ML-LEX-C259-VASTU259-05]; assesses=[] -->
 
 **കടല** — *kaṭala* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടല** (*kaṭala*) is native Dravidian, one word with Tamil *kaṭalai* and Kannada *kaḍale* (DEDR 1120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

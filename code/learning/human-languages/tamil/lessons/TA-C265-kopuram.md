@@ -14,7 +14,8 @@ romanization: "kōpuram"
 concept_tag: TA-IDAM265-KOPURAM
 prerequisites: [TA-C265-mavattam, TA-C265-kuticai]
 sounds: []
-roots: []
+roots: [sanskrit-gopura]
+etymology_hook: "கோபுரம் ← Sanskrit gopura 'town gate', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C265-kuticai]
 <!-- hl-knowledge: introduces=[TA-LEX-C265-IDAM265-03]; assesses=[] -->
 
 **கோபுரம்** — *kōpuram* — "a tower, a temple gateway tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோபுரம்** (*kōpuram*) is a well-established loan from Sanskrit *gopura*, "town gate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

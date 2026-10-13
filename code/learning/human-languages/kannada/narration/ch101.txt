@@ -13,6 +13,9 @@ You'll want to know: ತೆರೆಯಿರಿ.
 ತೆರೆಯಿರಿ (tereyiri) — "please open", the polite ‑ಇರಿ form, like ಕಾಯಿರಿ, "please wait".
 ಬಾಗಿಲು ತೆರೆಯಿರಿ (bāgilu tereyiri) — "please open the door".
 
+The word, taken apart.
+ತೆರೆಯಿರಿ (tereyiri) is native Dravidian, of the root for "opening", and DEDR 3259 lists teṟe, "to open, uncover", itself; the entry also has Tamil tiṟa, Telugu teṟa and Malayalam tuṟakka.
+
 What you've built.
 A polite command on a known ending.
 
@@ -43,6 +46,9 @@ You'll want to know: ಮುಚ್ಚಿ.
 ಮುಚ್ಚಿ (mucci) — "please close".
 ಬಾಗಿಲು ಮುಚ್ಚಿ (bāgilu mucci) — "please close the door".
 
+The word, taken apart.
+ಮುಚ್ಚಿ (mucci) is native Dravidian, from muccu, "to close, shut", which DEDR 4915 lists itself; mucci is its polite command; the entry also has Tamil muccu and Telugu mūyu.
+
 What you've built.
 The partner of open.
 
@@ -71,6 +77,9 @@ Before the new one: say the Kannada for please open, then the Kannada for please
 
 You'll want to know: ನಿಲ್ಲಿಸಿ.
 ನಿಲ್ಲಿಸಿ (nillisi) — "please stop (it)", said to a driver or about a machine. It comes from ನಿಲ್ಲು, "to stop, to stand".
+
+The word, taken apart.
+ನಿಲ್ಲಿಸಿ (nillisi) is native Dravidian, from nil, "to stand, stop", with -isu, "to make": nillisu, "to make stop"; DEDR 3675 lists the root with Tamil nil, Telugu nilucu and Malayalam nilkka.
 
 What you've built.
 The request on a bus or in a taxi.
@@ -102,6 +111,9 @@ You'll want to know: ಕರೆಯಿರಿ.
 ಕರೆಯಿರಿ (kareyiri) — "please call (someone)".
 ವೈದ್ಯರನ್ನು ಕರೆಯಿರಿ (vaidyarannu kareyiri) — "please call the doctor".
 
+The word, taken apart.
+ಕರೆಯಿರಿ (kareyiri) is native Dravidian, from kare, "to call, invite", which DEDR 1291 lists itself, with the polite ending -iri; the entry also has Tamil karai, Telugu kraṅgu and Malayalam karayuka.
+
 What you've built.
 The request when help is needed.
 
@@ -131,6 +143,9 @@ Before the new one: say the Kannada for please stop, then the Kannada for please
 You'll want to know: ತುರ್ತು.
 ತುರ್ತು (turtu) — "urgent, an emergency".
 ತುರ್ತು (turtu)! — "it's urgent!"
+
+The word, taken apart.
+ತುರ್ತು (turtu) is a loan from Persian turt, "quick, prompt", through Hindustani. What must be done quickly is urgent.
 
 What you've built.
 The word that makes people hurry.

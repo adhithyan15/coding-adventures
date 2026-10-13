@@ -11,7 +11,8 @@ romanization: "elumbu"
 concept_tag: TA-NOUN-BONE
 prerequisites: [TA-C55-nail, TA-C53-village, TA-C54-box]
 sounds: []
-roots: []
+roots: [dravidian-elumbu-bone]
+etymology_hook: "எலும்பு — native Dravidian (DEDR 839); Malayalam elumpu, Kannada elubu, Telugu emuka"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C55-nail]
 Malayalam എല്ല് (*ellŭ*) and Telugu ఎముక (*emuka*) sit either side of Tamil's எலும்பு: the same opening, and then three different amounts of word after it.
 
 *elumbum tōlum* — "bone and skin" — is what Tamil says of somebody who has gone very thin. English says the same two things in the other order.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எலும்பு** (*elumbu*) is native Dravidian. DEDR 839 lists Malayalam *elumpu*, Kannada *elubu* and Telugu *emuka*. The entry compares Sanskrit *eḍūka*, "a monument holding bones".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

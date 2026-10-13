@@ -14,7 +14,8 @@ romanization: "ēṟu"
 concept_tag: TA-VERB-ERU
 prerequisites: [TA-C152-para, TA-C152-vilu]
 sounds: []
-roots: []
+roots: [dravidian-eeru-climb]
+etymology_hook: "ஏறு — native Dravidian (DEDR 916); Malayalam ēṟuka, Kannada ēṟu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C152-vilu]
 <!-- hl-knowledge: introduces=[TA-LEX-C153-ACT153-01]; assesses=[] -->
 
 **ஏறு** — *ēṟu* — "to climb, to get on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏறு** (*ēṟu*) is native Dravidian. DEDR 916 lists Malayalam *ēṟuka* and Kannada *ēṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

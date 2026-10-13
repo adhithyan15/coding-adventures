@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-TOOTH
 prerequisites: [KA-C47-leg, KA-C45-grandfather]
 sounds: []
 roots: []
+etymology_hook: "hallu: native Dravidian, older Kannada pal (DEDR 3986); Tamil pal, Telugu pallu and pannu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C47-leg]
 Proto-Dravidian **\*pal**. Tamil kept பல்; Telugu took a third road and came out with పన్ను; Kannada applied its own law and got ಹಲ್ಲು, the *p-* turned to *h-* exactly where the chapter before said to watch for it.
 
 That makes ಹಣ್ಣು and ಹಲ್ಲು a matched pair: two inherited words, one *h* apiece, and a *p* at the front of both a thousand years ago.
+
+DEDR 3986 lists the older Kannada *pal* with Tamil *pal* and Telugu *pallu*, *pannu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

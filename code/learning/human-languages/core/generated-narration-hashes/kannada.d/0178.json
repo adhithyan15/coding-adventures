@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 178,
-  "sourceHash": "fnv1a64:f6134f92048824f0",
+  "sourceHash": "fnv1a64:0b4bd6f3eeaa41e5",
   "lessonIds": [
     "KA-C178-bekantale",
     "KA-C178-akasmat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch178.txt",
   "json": "kannada/narration/ch178.json",
-  "textHash": "fnv1a64:f8ee5461d758183a",
-  "jsonHash": "fnv1a64:cb350408b9237af1",
+  "textHash": "fnv1a64:0887a2a26d3211a5",
+  "jsonHash": "fnv1a64:9e5064b3cf808d6d",
   "findings": []
 }

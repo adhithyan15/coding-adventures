@@ -14,7 +14,8 @@ romanization: "oḻike"
 concept_tag: ML-KARANAM201-OLIKE
 prerequisites: [ML-C200-anusariccu, ML-C201-atupole]
 sounds: []
-roots: []
+roots: [dravidian-ozhi-quit]
+etymology_hook: "oḻike: native Dravidian, from the verb 'to quit, leave aside' (DEDR 1009)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C201-atupole]
 <!-- hl-knowledge: introduces=[ML-LEX-C201-KARANAM201-02]; assesses=[] -->
 
 **ഒഴികെ** — *oḻike* — "except".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒഴികെ** (*oḻike*) is native Dravidian, a form of the verb "to quit, leave aside" (DEDR 1009, with Tamil *oḻi*): "leaving that aside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

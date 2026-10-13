@@ -13,7 +13,8 @@ gloss: "to sew"
 concept_tag: GE-VERB-NAEHEN
 prerequisites: [GE-C183-messen, GE-C183-mischen]
 sounds: []
-roots: []
+roots: [germanic-neana]
+etymology_hook: "nähen ← Old High German nājen ← Proto-Germanic *nēaną 'to sew' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C183-mischen]
 <!-- hl-knowledge: introduces=[GE-LEX-C183-VERB183-04]; assesses=[] -->
 
 **nähen** — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nähen** ← Old High German *nājen* ← Proto-Germanic *\*nēaną*, "to sew, to stitch" — inherited. (EtymDB 2.1) The German word for "needle" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

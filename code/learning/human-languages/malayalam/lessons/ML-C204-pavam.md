@@ -14,7 +14,8 @@ romanization: "pāvaṁ"
 concept_tag: ML-GUNAM204-PAVAM
 prerequisites: [ML-C203-irukiya, ML-C203-kaliyaya]
 sounds: []
-roots: []
+roots: [sanskrit-papa]
+etymology_hook: "pāvaṁ: usually traced to Sanskrit pāpa 'wicked; wretched' (CDIAL 8092), softened to 'poor thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C203-kaliyaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C204-GUNAM204-01]; assesses=[] -->
 
 **പാവം** — *pāvaṁ* — "poor, innocent, harmless (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാവം** (*pāvaṁ*) is usually traced to Sanskrit *pāpa*, "wicked; wretched" (CDIAL 8092); in Malayalam the sense softened to "poor, harmless".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to drink"
 concept_tag: FR-VERB-BOIRE
 prerequisites: [FR-C60-apprendre, FR-C61-enseigner]
 sounds: []
-roots: []
+roots: [bibere-latin]
+etymology_hook: "boire ← Latin bibere 'to drink' — English beverage and imbibe share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C61-enseigner]
 <!-- hl-knowledge: introduces=[FR-LEX-C61-VERBES13-02]; assesses=[] -->
 
 **boire** — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**boire** ← Old French *boivre* ← Latin *bibere*, "to drink" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

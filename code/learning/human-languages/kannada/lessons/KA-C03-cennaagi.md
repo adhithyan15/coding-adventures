@@ -12,6 +12,7 @@ concept_tag: WORD-WELL
 prerequisites: [KA-C03-naanu, KA-C03-niivu-hegiddiira, KA-C02-enu]
 sounds: [ca-sound, double-nn]
 roots: [cennu-good-dravidian]
+etymology_hook: "cennāgi: native cennu 'beauty, niceness' (DEDR 2423) + the adverb ending -āgi"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,8 @@ reviews_of: [KA-C03-naanu]
 literally means "in a beautiful way" — Kannada answers "how are you?" by saying,
 in effect, "beautifully." The root *cennu* is pure Kannada, with no Sanskrit or
 European cousin.
+
+DEDR 2423 lists Kannada *cennu*, "beauty, grace", with Tulu *canna*, "handsome".
 
 ## You'll want to know: The reply
 <!-- hl-knowledge: introduces=[KA-LEX-C03-CENNAAGI-03]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṅka"
 concept_tag: KA-KELASA269-ANKA
 prerequisites: [KA-C269-suddi, KA-C269-mahiti]
 sounds: []
-roots: []
+roots: [sanskrit-anka]
+etymology_hook: "aṅka ← Sanskrit aṅka 'curved line, mark, sign', a tatsama (CDIAL 100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C269-mahiti]
 <!-- hl-knowledge: introduces=[KA-LEX-C269-KELASA269-05]; assesses=[] -->
 
 **ಅಂಕ** — *aṅka* — "a mark, a score".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಕ** (*aṅka*) is Sanskrit *aṅka*, "curved line, mark, sign", taken over whole as a learned loan, a tatsama (CDIAL 100). DEDR 29 has a Kannada *aṅka*, "fight", but that is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

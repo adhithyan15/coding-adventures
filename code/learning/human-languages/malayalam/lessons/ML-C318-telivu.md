@@ -14,7 +14,8 @@ romanization: "teḷivŭ"
 concept_tag: ML-KARANAM318-TELIVU
 prerequisites: [ML-C317-kasticcu, ML-C318-parajayam]
 sounds: []
-roots: []
+roots: [teliyu-become-clear-dravidian]
+etymology_hook: "teḷivŭ: native Dravidian, 'what makes clear', from the verb to become clear; Tamil teḷ (DEDR 3433)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C318-parajayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C318-KARANAM318-02]; assesses=[] -->
 
 **തെളിവ്** — *teḷivŭ* — "evidence, proof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെളിവ്** (*teḷivŭ*) is native Dravidian, the noun of the verb "to become clear"; DEDR 3433 lists the root with Tamil *teḷ* and Telugu *teli*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

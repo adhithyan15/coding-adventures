@@ -13,7 +13,8 @@ gloss: "homework"
 concept_tag: FR-ECOLE79-DEVOIRS
 prerequisites: [FR-C126-tableau, FR-C127-gomme]
 sounds: []
-roots: []
+roots: [debere-latin]
+etymology_hook: "devoirs — devoir 'to have to' as a noun: duties; from Latin debere 'to owe' — English debt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C127-gomme]
 <!-- hl-knowledge: introduces=[FR-LEX-C127-ECOLE79-02]; assesses=[] -->
 
 **les devoirs** — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**devoirs** is the plural of *devoir*, "to have to", used as a noun: duties, the work one owes. The verb ← Latin *debere*, "to owe" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

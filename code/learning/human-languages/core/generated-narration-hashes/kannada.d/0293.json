@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 293,
-  "sourceHash": "fnv1a64:35f9f584418b5b3c",
+  "sourceHash": "fnv1a64:bee0698fc949ae2b",
   "lessonIds": [
     "KA-C293-sasive",
     "KA-C293-kottambari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch293.txt",
   "json": "kannada/narration/ch293.json",
-  "textHash": "fnv1a64:9b801098b0f3bc8c",
-  "jsonHash": "fnv1a64:2a066b9033198258",
+  "textHash": "fnv1a64:f53a285630660431",
+  "jsonHash": "fnv1a64:d988764c95e1535b",
   "findings": []
 }

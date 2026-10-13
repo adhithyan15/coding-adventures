@@ -12,6 +12,9 @@ Before the new one: say the Tamil for heavy, then the Tamil for light.
 You'll want to know: மென்மையான.
 மென்மையான — meṉmaiyāṉa — "soft".
 
+The word, taken apart.
+மென்மையான (meṉmaiyāṉa) is native Dravidian (DEDR 5078). It is meṉmai, "softness", from mel, "soft", with -āṉa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for light, then the Tamil for soft.
 
 You'll want to know: கடினமான.
 கடினமான — kaṭiṉamāṉa — "hard, difficult".
+
+The word, taken apart.
+கடினமான (kaṭiṉamāṉa) is a loan from Sanskrit kaṭhina, "hard, stiff" (CDIAL 2650). CDIAL notes a proposal that the Sanskrit word itself came from Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for soft, then the Tamil for hard.
 You'll want to know: சுத்தமான.
 சுத்தமான — cuttamāṉa — "clean".
 
+The word, taken apart.
+சுத்தமான (cuttamāṉa) is a loan from Sanskrit śuddha, "clean, pure" (CDIAL 12520).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for hard, then the Tamil for clean.
 You'll want to know: அழுக்கான.
 அழுக்கான — aḻukkāṉa — "dirty".
 
+The word, taken apart.
+அழுக்கான (aḻukkāṉa) is native Dravidian. DEDR 283 lists Malayalam aḻukku, "dirt".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for clean, then the Tamil for dirty.
 
 You'll want to know: வேகமான.
 வேகமான — vēkamāṉa — "fast".
+
+The word, taken apart.
+வேகமான (vēkamāṉa) is a loan from Sanskrit vega, "speed" (CDIAL 12089).
 
 What you've built.
 One more word for this chapter.

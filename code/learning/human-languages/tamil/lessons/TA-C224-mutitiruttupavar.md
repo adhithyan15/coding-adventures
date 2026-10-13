@@ -14,7 +14,8 @@ romanization: "muṭitiruttupavar"
 concept_tag: TA-VELAI224-MUTITIRUTTUPAVAR
 prerequisites: [TA-C224-minavar, TA-C224-kuyavar]
 sounds: []
-roots: []
+roots: [dravidian-mudi-knot, dravidian-tiruntu-correct]
+etymology_hook: "முடிதிருத்துபவர் — native: muṭi 'hair' (DEDR 4921) + tiruttu 'to set right' (DEDR 3251) + -pavar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C224-kuyavar]
 <!-- hl-knowledge: introduces=[TA-LEX-C224-VELAI224-03]; assesses=[] -->
 
 **முடிதிருத்துபவர்** — *muṭitiruttupavar* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முடிதிருத்துபவர்** (*muṭitiruttupavar*) is native: *muṭi*, "hair" (DEDR 4921), and *tiruttu*, "to correct, to set right" (DEDR 3251), with *-pavar*, "the one who": "the one who sets the hair right".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

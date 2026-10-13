@@ -95,7 +95,7 @@ lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
 property. Fresh `native-complete` reports currently contain 38 XAML, 63 SwiftUI,
-40 Compose, 93 Qt, and 69 Flutter drops; any new property or increase above
+40 Compose, 83 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -118,6 +118,10 @@ Qt controls now lower their 15 exact `width: 100%` declarations to
 `Layout.fillWidth: true`, reducing the Qt inventory from 108 to 93. The three
 remaining Qt width omissions belong to `Text` geometry, while other
 percentages and mixed fixed/fill states remain explicit debt (#17338).
+Qt now also treats the ten non-inset CSS shadows paired with supported
+`elevation` tokens as consumed by their emitted native `MultiEffect` depth,
+reducing its inventory from 93 to 83. The inset theme-toggle moon and any raw
+shadow without elevation remain explicit drawing-effect debt (#17386).
 Compose now treats the ten non-inset CSS shadows paired with supported
 `elevation` tokens as consumed by their emitted native depth, reducing its
 inventory from 50 to 40. The inset theme-toggle moon and any raw shadow without
@@ -256,6 +260,12 @@ also reconciles natively emitted elevation shadows with the degradation report
 and rolls forward the matching style-ratchet correction. The downloadable
 web/native artifact matrix remains unchanged: Static HTML, Web Components, and
 Paint are CI-only, while signing, notarization, and installers remain #13977.
+
+The `task-app-v0.5.4` patch preserves authored fill widths on Qt controls and
+reconciles supported elevation-backed shadows across Compose Desktop and
+SwiftUI. The downloadable web/native artifact matrix remains unchanged: Static
+HTML, Web Components, and Paint are CI-only, while signing, notarization, and
+installers remain #13977.
 
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI

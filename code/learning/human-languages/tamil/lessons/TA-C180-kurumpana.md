@@ -14,7 +14,8 @@ romanization: "kuṟumpāṉa"
 concept_tag: TA-GUNAM180-KURUMPANA
 prerequisites: [TA-C179-unarcci, TA-C180-curucuruppana]
 sounds: []
-roots: []
+roots: [dravidian-kurumpu-mischief]
+etymology_hook: "குறும்பான — native Dravidian (DEDR 1856); Malayalam kuṟumpu 'insolence'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C180-curucuruppana]
 <!-- hl-knowledge: introduces=[TA-LEX-C180-GUNAM180-02]; assesses=[] -->
 
 **குறும்பான** — *kuṟumpāṉa* — "naughty, mischievous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குறும்பான** (*kuṟumpāṉa*) is native Dravidian. DEDR 1856 lists Malayalam *kuṟumpu*, "insolence". It is *kuṟumpu*, "mischief", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

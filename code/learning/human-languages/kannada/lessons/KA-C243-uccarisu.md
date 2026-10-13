@@ -14,7 +14,8 @@ romanization: "uccarisu"
 concept_tag: KA-VERB-UCCARISU
 prerequisites: [KA-C242-hari, KA-C243-gurutisu]
 sounds: []
-roots: []
+roots: [sanskrit-uccarana]
+etymology_hook: "uccarisu: Sanskrit uccāraṇa 'utterance' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C243-gurutisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C243-KRIYE243-02]; assesses=[] -->
 
 **ಉಚ್ಚರಿಸು** — *uccarisu* — "to pronounce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಚ್ಚರಿಸು** (*uccarisu*) is Sanskrit *uccāraṇa*, "utterance, pronunciation", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

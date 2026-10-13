@@ -14,7 +14,8 @@ romanization: "bēyisu"
 concept_tag: KA-VERB-BEYISU
 prerequisites: [KA-C157-jahiratu, KA-C157-rasidi]
 sounds: []
-roots: []
+roots: [dravidian-vee-burn]
+etymology_hook: "bēyisu: native Dravidian, 'make cook', from bē 'to be cooked' (DEDR 5517); Tamil vē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C157-rasidi]
 <!-- hl-knowledge: introduces=[KA-LEX-C158-KRIYE158-01]; assesses=[] -->
 
 **ಬೇಯಿಸು** — *bēyisu* — "to boil, to cook (in water or steam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇಯಿಸು** (*bēyisu*) is native Dravidian, from *bē*, "to be cooked, be burnt", with *-isu*, "to make"; DEDR 5517 lists *bēyisu* itself; the entry also has Tamil *vē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

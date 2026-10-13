@@ -11,7 +11,8 @@ romanization: "talavēdana"
 concept_tag: ML-UNWELL-HEADACHE
 prerequisites: [ML-C63-fever, ML-C115-cold]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai, sanskrit-vedana]
+etymology_hook: "talavēdana: native tala 'head' (DEDR 3103) + Sanskrit vēdanā 'pain' (CDIAL 12106)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C115-cold]
 
 **തലവേദന** (*talavēdana*) — "a headache": **തല** (*tala*), "head", with **വേദന**
 (*vēdana*), "pain", which you already know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തലവേദന** (*talavēdana*) joins native *tala*, "head" (DEDR 3103, with Tamil *talai*), to Sanskrit *vēdanā*, "pain" (CDIAL 12106).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

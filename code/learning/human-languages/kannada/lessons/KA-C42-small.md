@@ -11,7 +11,8 @@ romanization: "cikka"
 concept_tag: KA-ADJ-SMALL
 prerequisites: [KA-C42-big, KA-C39-haalu]
 sounds: []
-roots: []
+roots: [dravidian-cikka-small]
+etymology_hook: "cikka: native Dravidian per DEDR 2495, with Telugu cikiciki 'small'; its note cites Prakrit cikka 'small'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **ದೊಡ್ಡ** *doḍḍa* a moment ago. Put them side by side and 
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿಕ್ಕ** (*cikka*) is native Dravidian by DEDR 2495, which lists *cikka*, "little, small, young", with Telugu *cikiciki*, "small". Its note cites a Prakrit *cikka*, "small" (CDIAL 4781). DEDR 2495 compares Sanskrit *cikkagaja*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02] -->

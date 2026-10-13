@@ -13,7 +13,8 @@ gloss: "boring"
 concept_tag: FR-QUAL219-ENNUYEUX-ENNUYEUSE
 prerequisites: [FR-C218-nerveux-nerveuse, FR-C218-tranquille]
 sounds: []
-roots: []
+roots: [odium-latin]
+etymology_hook: "ennuyeux — from the noun beside s'ennuyer + -eux 'full of'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C218-tranquille]
 <!-- hl-knowledge: introduces=[FR-LEX-C219-QUAL219-01]; assesses=[] -->
 
 **ennuyeux / ennuyeuse** — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ennuyeux** — built from the noun beside *s'ennuyer*, with *-eux*, "full of": full of boredom.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

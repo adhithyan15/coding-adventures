@@ -11,7 +11,8 @@ romanization: "kēḷisalilla"
 concept_tag: KA-REP-DIDNT-HEAR
 prerequisites: [KA-C86-wait, KA-C86-show]
 sounds: []
-roots: []
+roots: [dravidian-kel-hear-ask, il]
+etymology_hook: "kēḷisalilla: native kēḷisu 'to be heard' (DEDR 2017) + illa 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C86-show]
 
 **ಕೇಳಿಸಲಿಲ್ಲ** (*kēḷisalilla*) — "(it) was not heard", the way to say "I didn't
 hear". It is built on **ಕೇಳು**, "hear, listen", with **‑ಇಲ್ಲ**, "not".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೇಳಿಸಲಿಲ್ಲ** (*kēḷisalilla*) is native Dravidian: *kēḷisu*, "to be heard", from *kēḷu*, "to hear" (DEDR 2017), and *illa*, "not" (DEDR 2559). It is "it was not heard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

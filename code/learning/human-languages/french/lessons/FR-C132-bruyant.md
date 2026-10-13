@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES84-BRUYANT
 prerequisites: [FR-C131-ferme, FR-C131-calme]
 sounds: []
 roots: []
+etymology_hook: "bruyant — 'roaring', from Old French bruire, usually traced to Latin rugire 'to roar' — English bruit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C131-calme]
 <!-- hl-knowledge: introduces=[FR-LEX-C132-QUALITES84-01]; assesses=[] -->
 
 **bruyant** — "noisy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bruyant** is the present participle of the Old French verb *bruire*, "to roar, to rustle", usually traced to Latin *rugire*, "to roar" (Lewis & Short), with a changed start.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

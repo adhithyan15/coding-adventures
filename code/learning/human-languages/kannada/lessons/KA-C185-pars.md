@@ -14,7 +14,8 @@ romanization: "pars"
 concept_tag: KA-VASTU185-PARS
 prerequisites: [KA-C185-riyayiti, KA-C185-kilo]
 sounds: []
-roots: []
+roots: [english-purse]
+etymology_hook: "pars ← English purse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C185-kilo]
 <!-- hl-knowledge: introduces=[KA-LEX-C185-VASTU185-05]; assesses=[] -->
 
 **ಪರ್ಸ್** — *pars* — "a purse, a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪರ್ಸ್** (*pars*) is a loan from English *purse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

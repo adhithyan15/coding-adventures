@@ -14,6 +14,9 @@ From the animal and colour chapters: say die Katze and gelb once more.
 You'll want to know: der Joghurt.
 der Joghurt — "a yoghurt".
 
+The word, taken apart.
+Joghurt from Turkish yoğurt (EtymDB 2.1) — borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the German for a meal, then the German for a yoghurt.
 
 You'll want to know: die Krankenschwester.
 die Krankenschwester — "a nurse".
+
+The word, taken apart.
+Krankenschwester is krank, "ill", + Schwester, "sister": the sister who tends the sick, a title from nursing orders.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the German for a yoghurt, then the German for a nurse.
 You'll want to know: der Koch.
 der Koch — "a cook".
 
+The word, taken apart.
+Koch from Old High German koch from Latin coquus, "cook" (EtymDB 2.1) — borrowed, like English cook.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the German for a nurse, then the German for a cook.
 You'll want to know: der Polizist.
 der Polizist — "a police officer".
 
+The word, taken apart.
+Polizist is Polizei + -ist, the ending for a person who does a job. Polizei from Medieval Latin politia from Greek politeía, "government". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the German for a cook, then the German for a police offi
 
 You'll want to know: der Verkäufer.
 der Verkäufer — "a shop assistant".
+
+The word, taken apart.
+Verkäufer is the verb "to sell" + -er: the seller. That verb is ver-, "away", + kaufen, "to buy", which goes back to Latin caupō, "tradesman" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

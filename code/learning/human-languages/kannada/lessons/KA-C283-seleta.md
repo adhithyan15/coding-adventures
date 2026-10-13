@@ -14,7 +14,8 @@ romanization: "seḷeta"
 concept_tag: KA-AROGYA283-SELETA
 prerequisites: [KA-C282-ascarya, KA-C283-nadi]
 sounds: []
-roots: []
+roots: [dravidian-sele-pull]
+etymology_hook: "seḷeta: native Dravidian, 'a pulling', from seḷe 'to pull' (DEDR 2791)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C283-nadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C283-AROGYA283-02]; assesses=[] -->
 
 **ಸೆಳೆತ** — *seḷeta* — "a cramp, a spasm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೆಳೆತ** (*seḷeta*) is native Dravidian, from *seḷe*, "to draw, pull", which DEDR 2791 lists: a cramp is a pulling; the entry also has Telugu *celuku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

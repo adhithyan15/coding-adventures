@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 94,
-  "sourceHash": "fnv1a64:948fa0dfc5441bbb",
+  "sourceHash": "fnv1a64:930afbfcd82b0ea2",
   "lessonIds": [
     "KA-C94-snack",
     "KA-C94-spoon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch94.txt",
   "json": "kannada/narration/ch94.json",
-  "textHash": "fnv1a64:562fbee9d6e873ab",
-  "jsonHash": "fnv1a64:121f2166f7017c94",
+  "textHash": "fnv1a64:b94aa21ce69b3db0",
+  "jsonHash": "fnv1a64:71b2f77ddbd5d9ac",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kayaṟuka"
 concept_tag: ML-VERB-KAYARUKA
 prerequisites: [ML-C175-ayaykkuka, ML-C175-eriyuka]
 sounds: []
-roots: []
+roots: [dravidian-kayaru-climb]
+etymology_hook: "kayaṟuka: native Dravidian, one word with Telugu kasaru (DEDR 1255)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C175-eriyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C175-ACT175-05]; assesses=[] -->
 
 **കയറുക** — *kayaṟuka* — "to climb, to get in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കയറുക** (*kayaṟuka*) is native Dravidian, one word with Telugu *kasaru* (DEDR 1255).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

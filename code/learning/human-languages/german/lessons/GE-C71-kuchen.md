@@ -13,7 +13,8 @@ gloss: "a cake"
 concept_tag: GE-ESSEN3-KUCHEN
 prerequisites: [GE-C70-zwiebel, GE-C70-moehre]
 sounds: []
-roots: []
+roots: [germanic-koko]
+etymology_hook: "Kuchen ← Old High German kuohho ← Proto-Germanic *kōkô 'cake' — a cousin of English cake"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C70-moehre]
 <!-- hl-knowledge: introduces=[GE-LEX-C71-ESSEN3-01]; assesses=[] -->
 
 **der Kuchen** — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kuchen** ← Old High German *kuohho* ← Proto-Germanic *\*kōkô*, "cake" — inherited; Dutch *koek* is the same word. (EtymDB 2.1) English *cake* is a cousin, through Norse.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mēle"
 concept_tag: KA-LOC107-MELE
 prerequisites: [KA-C107-nera, KA-C107-dura]
 sounds: []
-roots: []
+roots: [dravidian-mel-above]
+etymology_hook: "mēle: native Dravidian, one word with Tamil mēl (DEDR 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C107-dura]
 <!-- hl-knowledge: introduces=[KA-LEX-C107-LOC107-05]; assesses=[] -->
 
 **ಮೇಲೆ** — *mēle* — "above, on top".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೇಲೆ** (*mēle*) is native Dravidian, one word with Tamil *mēl* (DEDR 5086). DEDR lists *mēle* itself, "that which is above, the top".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

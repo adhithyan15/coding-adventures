@@ -13,7 +13,8 @@ gloss: "to fall asleep"
 concept_tag: GE-VERB-EINSCHLAFEN
 prerequisites: [GE-C177-drucken, GE-C178-duschen]
 sounds: []
-roots: []
+roots: [germanic-slepana]
+etymology_hook: "einschlafen — ein- 'in' + schlafen 'to sleep': to fall into sleep"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C178-duschen]
 <!-- hl-knowledge: introduces=[GE-LEX-C178-VERB178-02]; assesses=[] -->
 
 **einschlafen** — "to fall asleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einschlafen** is *ein-*, "into", + *schlafen*, "to sleep" ← Proto-Germanic *\*slēpaną*, English *sleep* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

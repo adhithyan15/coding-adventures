@@ -11,7 +11,8 @@ romanization: "varṣaṁ"
 concept_tag: ML-SPAN-YEAR
 prerequisites: [ML-C139-hour, ML-C139-month]
 sounds: []
-roots: []
+roots: [sanskrit-varsha]
+etymology_hook: "varṣaṁ ← Sanskrit varṣa 'rain; year', a tatsama (CDIAL 11392)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C139-month]
 <!-- hl-knowledge: introduces=[ML-LEX-C139-TIME-05]; assesses=[] -->
 
 **വർഷം** (*varṣaṁ*) — "a year", twelve **മാസം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വർഷം** (*varṣaṁ*) ← Sanskrit *varṣa*, "rain; year", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11392). Its first sense is "rain": the year was counted in rainy seasons.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

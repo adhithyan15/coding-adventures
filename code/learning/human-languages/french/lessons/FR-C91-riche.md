@@ -14,6 +14,7 @@ concept_tag: FR-ADJ43-RICHE
 prerequisites: [FR-C91-fort, FR-C91-faible]
 sounds: []
 roots: []
+etymology_hook: "riche ← Frankish *riki 'powerful' — English rich is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C91-faible]
 <!-- hl-knowledge: introduces=[FR-LEX-C91-ADJ43-03]; assesses=[] -->
 
 **riche** — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riche** ← Frankish *\*riki*, "powerful" — borrowed from the Franks. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

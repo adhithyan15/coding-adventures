@@ -13,7 +13,8 @@ gloss: "friendly"
 concept_tag: FR-QUAL220-AIMABLE
 prerequisites: [FR-C220-ponctuel-ponctuelle, FR-C220-etranger-etrangere]
 sounds: []
-roots: []
+roots: [amare-latin]
+etymology_hook: "aimable ← Latin amabilis 'lovable', reshaped on aimer — English amiable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C220-etranger-etrangere]
 <!-- hl-knowledge: introduces=[FR-LEX-C220-QUAL220-03]; assesses=[] -->
 
 **aimable** — "friendly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aimable** ← Latin *amabilis*, "lovable" (Lewis & Short) — inherited, reshaped on *aimer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

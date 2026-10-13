@@ -14,7 +14,8 @@ romanization: "cillare"
 concept_tag: KA-VASTU294-CILLARE
 prerequisites: [KA-C294-catni, KA-C294-duddu]
 sounds: []
-roots: []
+roots: [dravidian-cillarai-change]
+etymology_hook: "cillare: native Dravidian, one word with Tamil cillaṟai and Telugu cillara (DEDR 2574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C294-duddu]
 <!-- hl-knowledge: introduces=[KA-LEX-C294-VASTU294-05]; assesses=[] -->
 
 **ಚಿಲ್ಲರೆ** — *cillare* — "small change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿಲ್ಲರೆ** (*cillare*) is native Dravidian, one word with Tamil *cillaṟai*, Telugu *cillara* and Malayalam *cillaṟa* (DEDR 2574). DEDR lists *cillaṟe*, "petty things, money under a rupee".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 271,
-  "sourceHash": "fnv1a64:3dee3fb7bbeab31f",
+  "sourceHash": "fnv1a64:5040d142237ca6d6",
   "lessonIds": [
     "TA-C271-kottamalli",
     "TA-C271-kariveppilai",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch271.txt",
   "json": "tamil/narration/ch271.json",
-  "textHash": "fnv1a64:97f6bfdab1459f73",
-  "jsonHash": "fnv1a64:061712bc6f2b6912",
+  "textHash": "fnv1a64:666984ca4e957d52",
+  "jsonHash": "fnv1a64:3cf6d037597e931c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ellām"
 concept_tag: TA-GUNAM181-ELLAM
 prerequisites: [TA-C181-mocamana, TA-C181-pala]
 sounds: []
-roots: []
+roots: [dravidian-ella-all]
+etymology_hook: "எல்லாம் — native Dravidian (DEDR 844); Malayalam ellām, Kannada ella, Telugu ella"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C181-pala]
 <!-- hl-knowledge: introduces=[TA-LEX-C181-GUNAM181-04]; assesses=[] -->
 
 **எல்லாம்** — *ellām* — "everything, all".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எல்லாம்** (*ellām*) is native Dravidian. DEDR 844 lists Malayalam *ellām*, Kannada *ella* and Telugu *ella*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

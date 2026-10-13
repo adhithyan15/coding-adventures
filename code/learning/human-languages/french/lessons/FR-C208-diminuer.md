@@ -14,6 +14,7 @@ concept_tag: FR-VERB-DIMINUER
 prerequisites: [FR-C208-traverser, FR-C208-augmenter]
 sounds: []
 roots: []
+etymology_hook: "diminuer ← Latin diminuere 'to make smaller' — English diminish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C208-augmenter]
 <!-- hl-knowledge: introduces=[FR-LEX-C208-VERBES208-04]; assesses=[] -->
 
 **diminuer** — "to decrease".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diminuer** ← Latin *diminuere*, "to break into small pieces" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

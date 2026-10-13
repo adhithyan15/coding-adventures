@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a passenger, then the Malayalam for a 
 You'll want to know: മൂല.
 മൂല — mūla — "a corner".
 
+The word, taken apart.
+മൂല (mūla) is native Dravidian, one word with Tamil mūlai, Kannada mūle and Telugu mūla (DEDR 5044).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a junction, then the Malayalam for a c
 
 You'll want to know: കുന്ന്.
 കുന്ന് — kunnŭ — "a hill".
+
+The word, taken apart.
+കുന്ന് (kunnŭ) is native Dravidian, one word with Tamil kuṉṟam and Telugu koṇḍa (DEDR 1864).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a corner, then the Malayalam for a hil
 You'll want to know: കായൽ.
 കായൽ — kāyal — "the backwaters, a lagoon".
 
+The word, taken apart.
+കായൽ (kāyal) is native Dravidian, one word with Tamil kāyal (DEDR 1463).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a hill, then the Malayalam for the bac
 You'll want to know: തോട്.
 തോട് — tōṭŭ — "a stream, a canal".
 
+The word, taken apart.
+തോട് (tōṭŭ) is native Dravidian, one word with Kannada tōḍu (DEDR 3543).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for the backwaters, then the Malayalam for
 
 You'll want to know: ഗുഹ.
 ഗുഹ — guha — "a cave".
+
+The word, taken apart.
+ഗുഹ (guha) from Sanskrit guhā, "hiding place, cave", taken over whole as a tatsama (CDIAL 4220).
 
 What you've built.
 One more word for this chapter.

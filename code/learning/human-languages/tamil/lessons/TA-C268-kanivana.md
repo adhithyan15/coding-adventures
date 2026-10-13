@@ -14,7 +14,8 @@ romanization: "kaṉivāṉa"
 concept_tag: TA-GUNAM268-KANIVANA
 prerequisites: [TA-C268-kulappam, TA-C268-punnakai]
 sounds: []
-roots: []
+roots: [dravidian-kani-ripe]
+etymology_hook: "கனிவான — native: kaṉivu 'ripeness, compassion' (DEDR 1408) + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C268-punnakai]
 <!-- hl-knowledge: introduces=[TA-LEX-C268-GUNAM268-04]; assesses=[] -->
 
 **கனிவான** — *kaṉivāṉa* — "gentle, kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கனிவான** (*kaṉivāṉa*) is native: *kaṉivu*, "ripeness, compassion" (DEDR 1408, which lists Kannada kani 'pity'), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an app, then the Kannada for a video.
 You'll want to know: ಡಬ್ಬಿ.
 ಡಬ್ಬಿ — ḍabbi — "a tin, a container".
 
+The word, taken apart.
+ಡಬ್ಬಿ (ḍabbi) is probably the northern word for "box", Hindi ḍabbī, ḍabbā, which CDIAL 5528 traces to a reconstructed ḍabba, "box", and calls non-Aryan in origin, citing a view that takes it from Dravidian. CDIAL does not list the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a video, then the Kannada for a tin.
 
 You'll want to know: ಬಿಂದಿಗೆ.
 ಬಿಂದಿಗೆ — bindige — "a water pitcher".
+
+The word, taken apart.
+Where ಬಿಂದಿಗೆ (bindige) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "pitcher".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a tin, then the Kannada for a water pitc
 You'll want to know: ಜಾಡಿ.
 ಜಾಡಿ — jāḍi — "a jar".
 
+The word, taken apart.
+Where ಜಾಡಿ (jāḍi) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "jar".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a water pitcher, then the Kannada for a 
 You'll want to know: ಪೊಟ್ಟಣ.
 ಪೊಟ್ಟಣ — poṭṭaṇa — "a packet, a parcel".
 
+The word, taken apart.
+Where ಪೊಟ್ಟಣ (poṭṭaṇa) comes from is uncertain. It looks like Sanskrit pōṭṭala, "a bundle" (CDIAL 8396), whose northern forms include Hindi poṭlī, but no source records the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a jar, then the Kannada for a packet.
 
 You'll want to know: ಉಕ್ಕು.
 ಉಕ್ಕು — ukku — "steel".
+
+The word, taken apart.
+ಉಕ್ಕು (ukku) is native Dravidian, one word with Tamil urukku and Telugu ukku (DEDR 661). DEDR lists urku, ukku, "steel", under the root for "to melt": steel is "what is melted".
 
 What you've built.
 One more word for this chapter.

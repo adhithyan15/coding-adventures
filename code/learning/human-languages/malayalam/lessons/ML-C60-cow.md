@@ -11,7 +11,8 @@ romanization: "paśu"
 concept_tag: ML-NOUN-COW
 prerequisites: [ML-C59-ember, ML-C58-more]
 sounds: []
-roots: []
+roots: [sanskrit-pashu]
+etymology_hook: "paśu ← Sanskrit paśu 'domestic animal', a tatsama (CDIAL 7984)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited from Sanskrit *paśu*, which named any tethered beast a household kept
 The Sanskrit word has relatives a long way west. Latin *pecu* meant a herd, and the English word *fee* began as the same idea — the wealth you could drive to market on its own legs.
 
 The milk-word *pāl* comes out of a പശു, and so does most of what a Kerala kitchen does next with it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പശു** (*paśu*) ← Sanskrit *paśu*, "domestic animal", taken over whole as a tatsama (CDIAL 7984). Sanskrit used it for any domestic or sacrificial beast; Malayalam narrowed it to the cow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

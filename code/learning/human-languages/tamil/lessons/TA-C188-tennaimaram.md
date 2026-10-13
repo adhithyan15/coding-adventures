@@ -14,7 +14,8 @@ romanization: "teṉṉaimaram"
 concept_tag: TA-PORUL188-TENNAIMARAM
 prerequisites: [TA-C188-mallikai, TA-C188-veppamaram]
 sounds: []
-roots: []
+roots: [dravidian-tengu-coconut, dravidian-maram-tree]
+etymology_hook: "தென்னைமரம் — native: teṉṉai 'coconut palm' (DEDR 3408) + maram 'tree' (DEDR 4711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C188-veppamaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C188-PORUL188-05]; assesses=[] -->
 
 **தென்னைமரம்** — *teṉṉaimaram* — "a coconut palm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தென்னைமரம்** (*teṉṉaimaram*) is native: *teṉṉai*, "coconut palm" (DEDR 3408), and *maram*, "tree" (DEDR 4711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

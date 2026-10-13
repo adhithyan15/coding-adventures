@@ -13,7 +13,8 @@ gloss: "a coat"
 concept_tag: GE-KLEIDUNG119-MANTEL
 prerequisites: [GE-C119-stiefel, GE-C119-rock]
 sounds: []
-roots: []
+roots: [mantellum-latin]
+etymology_hook: "Mantel ← Old High German mantal ← Latin mantellum 'cloak' — borrowed; English mantle shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C119-rock]
 <!-- hl-knowledge: introduces=[GE-LEX-C119-KLEIDUNG119-04]; assesses=[] -->
 
 **der Mantel** — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mantel** ← Old High German *mantal*, from Latin *mantellum*, "cloak" — borrowed, like English *mantle*. EtymDB 2.1 has the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

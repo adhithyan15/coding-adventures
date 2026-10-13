@@ -14,7 +14,8 @@ romanization: "naṭuka"
 concept_tag: ML-VERB-NATUKA
 prerequisites: [ML-C187-visuka, ML-C187-viriyuka]
 sounds: []
-roots: []
+roots: [dravidian-natu-plant]
+etymology_hook: "naṭuka: native Dravidian, one word with Tamil naṭu and Kannada naḍu (DEDR 3583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C187-viriyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C187-KRIYA187-03]; assesses=[] -->
 
 **നടുക** — *naṭuka* — "to plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നടുക** (*naṭuka*) is native Dravidian, one word with Tamil *naṭu* and Kannada *naḍu* (DEDR 3583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

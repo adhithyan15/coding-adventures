@@ -13,7 +13,8 @@ gloss: "public"
 concept_tag: GE-QUAL219-OEFFENTLICH
 prerequisites: [GE-C219-neugierig, GE-C219-nuetzlich]
 sounds: []
-roots: []
+roots: [germanic-upanona]
+etymology_hook: "öffentlich — the word for 'open' + -lich: done in the open"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C219-nuetzlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C219-QUAL219-03]; assesses=[] -->
 
 **öffentlich** — "public".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**öffentlich** is built on the word for "open", Old High German *offan*, English *open* (EtymDB 2.1), + *-lich*: in the open, public.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

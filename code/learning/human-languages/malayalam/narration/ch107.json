@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Medicine and Keeping Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:efc9a00d6e8417a0",
+  "sourceHash": "fnv1a64:1a81df840418bcbb",
   "lessons": [
     {
       "id": "ML-C107-marunnu",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8931916abd891455",
+      "sourceHash": "fnv1a64:540bdaf75dd6b180",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +352,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വൃത്തി (vṛtti) from Sanskrit vṛtti, \"mode of life, conduct\" (CDIAL 12070), from the root vṛt, \"to turn, to proceed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -370,7 +381,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -410,7 +421,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

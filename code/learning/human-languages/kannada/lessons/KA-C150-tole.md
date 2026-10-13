@@ -14,7 +14,8 @@ romanization: "toḷe"
 concept_tag: KA-VERB-TOLE
 prerequisites: [KA-C149-kare, KA-C149-enisu]
 sounds: []
-roots: []
+roots: [dravidian-tulai-wash]
+etymology_hook: "toḷe: native Dravidian, one word with Tamil tuḷai (DEDR 3530)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C149-enisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C150-ACT150-01]; assesses=[] -->
 
 **ತೊಳೆ** — *toḷe* — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೊಳೆ** (*toḷe*) is native Dravidian, one word with Tamil *tuḷai* (DEDR 3530). DEDR lists *toḷe*, *toḷi*, "to wash".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

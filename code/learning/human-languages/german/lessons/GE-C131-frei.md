@@ -13,7 +13,8 @@ gloss: "free"
 concept_tag: GE-EIGEN131-FREI
 prerequisites: [GE-C130-breit, GE-C131-beschaeftigt]
 sounds: []
-roots: []
+roots: [germanic-frijaz]
+etymology_hook: "frei ← Old High German frī ← Proto-Germanic *frijaz — the same word as English free"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C131-beschaeftigt]
 <!-- hl-knowledge: introduces=[GE-LEX-C131-EIGEN131-02]; assesses=[] -->
 
 **frei** — "free".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frei** ← Old High German *frī* — inherited; EtymDB 2.1 lists it beside English *free* and Dutch *vrij*, all from Proto-Germanic *\*frijaz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

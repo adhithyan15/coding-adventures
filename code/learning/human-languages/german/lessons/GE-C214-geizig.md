@@ -14,6 +14,7 @@ concept_tag: GE-QUAL214-GEIZIG
 prerequisites: [GE-C214-furchtbar, GE-C214-geduldig]
 sounds: []
 roots: []
+etymology_hook: "geizig — the word for 'greed, avarice' + -ig; from Middle High German gītesen 'to be greedy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C214-geduldig]
 <!-- hl-knowledge: introduces=[GE-LEX-C214-QUAL214-04]; assesses=[] -->
 
 **geizig** — "stingy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geizig** is the word for "avarice" + *-ig*. It goes back to Middle High German *gītesen*, "to be greedy" (EtymDB 2.1), and EtymDB lists Old English *ġītsian*, "to covet", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

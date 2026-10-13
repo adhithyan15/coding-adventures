@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES171-VOLCAN
 prerequisites: [FR-C170-statue, FR-C170-fontaine]
 sounds: []
 roots: []
+etymology_hook: "volcan ← Italian vulcano, from Latin Vulcanus, the god of fire — English volcano"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C170-fontaine]
 <!-- hl-knowledge: introduces=[FR-LEX-C171-CHOSES171-01]; assesses=[] -->
 
 **le volcan** — "a volcano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volcan** ← Italian *vulcano*, from Latin *Vulcanus*, the god of fire — borrowed. (EtymDB 2.1 records the Latin name.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

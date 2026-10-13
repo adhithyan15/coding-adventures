@@ -11,6 +11,7 @@ gloss: Tamil kept transparent middle-day and middle-night synonyms beside the ol
 prerequisites: [TA-C17-nanpakal-nalliravu]
 sounds: [tamil-gemination]
 roots: [tamil-naTu-middle, tamil-nal-middle-proto-dravidian]
+etymology_hook: "நடு 'middle' (DEDR 3584), pakal 'day' (DEDR 3805), iravu 'night' (DEDR 2552) — all native Dravidian"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +50,11 @@ Both use **நடு** (*naṭu*, "middle"), the everyday word still heard in *n
 Latin daughter languages often inherit one fate for an old compound: eroded or
 transparent. Tamil kept **both fates inside one language**—old fused forms and
 fresh transparent synonyms side by side.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All three parts are native Dravidian: *naṭu*, "middle" (DEDR 3584; Malayalam *naṭu*, Kannada *naḍu*), *pakal*, "daytime" (DEDR 3805; Malayalam *pakal*), and *iravu*, "night" (DEDR 2552; Malayalam *iravu*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01] -->

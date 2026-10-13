@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 223,
-  "sourceHash": "fnv1a64:044a48b9b59f3aa0",
+  "sourceHash": "fnv1a64:639bacb0cd7ff699",
   "lessonIds": [
     "KA-C223-namune",
     "KA-C223-pramanapatra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch223.txt",
   "json": "kannada/narration/ch223.json",
-  "textHash": "fnv1a64:9fb68304b7edfc80",
-  "jsonHash": "fnv1a64:6cf190c4d047b339",
+  "textHash": "fnv1a64:cc509b0a9ee6a2ad",
+  "jsonHash": "fnv1a64:8cd98ba884b3d347",
   "findings": []
 }

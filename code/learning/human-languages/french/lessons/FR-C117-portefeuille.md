@@ -13,7 +13,8 @@ gloss: "a wallet"
 concept_tag: FR-HABITS69-PORTEFEUILLE
 prerequisites: [FR-C117-maillot, FR-C117-taille]
 sounds: []
-roots: []
+roots: [portare-latin, folium-latin]
+etymology_hook: "portefeuille — 'carry-leaves': porter + feuille, a case for papers — English portfolio"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C117-taille]
 <!-- hl-knowledge: introduces=[FR-LEX-C117-HABITS69-05]; assesses=[] -->
 
 **le portefeuille** — "a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**portefeuille** — "carry-leaves": *porte*, from *porter*, "to carry", and *feuille*, "a leaf, a sheet": a case for carrying papers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

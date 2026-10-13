@@ -12,6 +12,7 @@ concept_tag: KA-WORD-TRUE
 prerequisites: [KA-C48-guest, KA-C47-leg]
 sounds: []
 roots: []
+etymology_hook: "nija ← Sanskrit nija 'innate, one's own', taken over whole (CDIAL 7181)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C48-guest]
 Sanskrit *nija* began as 'one's own, innate, born in' — what belongs to a thing by nature rather than by accident.
 
 Kannada and Telugu both took that and turned it toward truth, and you can watch the turn happen inside the word: what is true of a thing is what the thing is in itself, as against what is merely said about it. Said alone, ನಿಜ does the work of a whole sentence — 'true', 'that's right'.
+
+CDIAL 7181 lists Sanskrit *nija*, "innate, one's own".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

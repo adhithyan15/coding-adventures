@@ -13,7 +13,8 @@ gloss: "lightning"
 concept_tag: FR-CHOSES229-ECLAIR
 prerequisites: [FR-C228-racine, FR-C228-branche]
 sounds: []
-roots: []
+roots: [clarus]
+etymology_hook: "éclair — from the verb 'to light up', built on clair 'bright'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C228-branche]
 <!-- hl-knowledge: introduces=[FR-LEX-C229-CHOSES229-01]; assesses=[] -->
 
 **l'éclair** — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**éclair** — formed from the verb for "to light up", built on *clair*, "bright".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naḍe"
 concept_tag: KA-VERB-NADE
 prerequisites: [KA-C152-hadu, KA-C152-maru]
 sounds: []
-roots: []
+roots: [dravidian-natai-walk]
+etymology_hook: "naḍe: native Dravidian, one word with Tamil naṭa and Telugu naḍa (DEDR 3582)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C152-maru]
 <!-- hl-knowledge: introduces=[KA-LEX-C152-ACT152-05]; assesses=[] -->
 
 **ನಡೆ** — *naḍe* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಡೆ** (*naḍe*) is native Dravidian, one word with Tamil *naṭa* and Telugu *naḍa* (DEDR 3582). DEDR lists *naḍe* itself, "to walk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mūsu"
 concept_tag: KA-VERB-MUSU
 prerequisites: [KA-C206-tappisikollu, KA-C206-aturapadu]
 sounds: []
-roots: []
+roots: [dravidian-mookku-smell]
+etymology_hook: "mūsu: native Dravidian, one word with Tamil muka (DEDR 4886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C206-aturapadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C207-KRIYE207-01]; assesses=[] -->
 
 **ಮೂಸು** — *mūsu* — "to sniff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೂಸು** (*mūsu*) is native Dravidian, one word with Tamil *muka* (DEDR 4886). DEDR lists *mūsu* itself, "to smell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

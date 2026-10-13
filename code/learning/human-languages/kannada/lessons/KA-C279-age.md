@@ -14,7 +14,8 @@ romanization: "age"
 concept_tag: KA-VERB-AGE
 prerequisites: [KA-C279-akalisu, KA-C279-bageharisu]
 sounds: []
-roots: []
+roots: [dravidian-akazh-dig]
+etymology_hook: "age: native Dravidian, one word with Tamil akaḻ (DEDR 11)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C279-bageharisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C279-KRIYE279-05]; assesses=[] -->
 
 **ಅಗೆ** — *age* — "to dig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಗೆ** (*age*) is native Dravidian, one word with Tamil *akaḻ* (DEDR 11). DEDR lists *agi*, *age*, "to dig, burrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

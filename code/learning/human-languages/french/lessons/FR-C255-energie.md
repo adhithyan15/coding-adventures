@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES255-ENERGIE
 prerequisites: [FR-C255-dechets, FR-C255-recyclage]
 sounds: []
 roots: []
+etymology_hook: "énergie ← Late Latin energia, from Greek energeia 'activity' — English energy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C255-recyclage]
 <!-- hl-knowledge: introduces=[FR-LEX-C255-CHOSES255-03]; assesses=[] -->
 
 **l'énergie** — "energy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**énergie** ← Late Latin *energia*, from Greek *energeia*, "activity", built on *ergon*, "work" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

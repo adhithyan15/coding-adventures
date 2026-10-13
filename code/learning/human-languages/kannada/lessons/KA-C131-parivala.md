@@ -14,7 +14,8 @@ romanization: "pārivāḷa"
 concept_tag: KA-THINGS131-PARIVALA
 prerequisites: [KA-C131-ame, KA-C131-gili]
 sounds: []
-roots: []
+roots: [sanskrit-paravata]
+etymology_hook: "pārivāḷa ← Sanskrit pārāvata 'turtle-dove, pigeon', reshaped as a tadbhava (CDIAL 8109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C131-gili]
 <!-- hl-knowledge: introduces=[KA-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **ಪಾರಿವಾಳ** — *pārivāḷa* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾರಿವಾಳ** (*pārivāḷa*) comes from Sanskrit *pārāvata*, "turtle-dove, pigeon", reshaped to Kannada sounds: a tadbhava (CDIAL 8109). Prakrit *pārāvaya* shows the softened middle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

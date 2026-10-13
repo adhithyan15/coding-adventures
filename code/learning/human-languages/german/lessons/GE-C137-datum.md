@@ -13,7 +13,8 @@ gloss: "a date"
 concept_tag: GE-ZEIT137-DATUM
 prerequisites: [GE-C136-lieber, GE-C137-wochenende]
 sounds: []
-roots: []
+roots: [datum-latin]
+etymology_hook: "Datum ← Latin datum 'given', from letters dated 'given at …' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C137-wochenende]
 <!-- hl-knowledge: introduces=[GE-LEX-C137-ZEIT137-02]; assesses=[] -->
 
 **das Datum** — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Datum** ← Latin *datum*, "given", from *datus* (EtymDB 2.1) — borrowed: Latin letters ended *datum …*, "given on …", followed by the day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

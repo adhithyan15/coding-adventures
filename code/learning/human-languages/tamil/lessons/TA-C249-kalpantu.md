@@ -14,7 +14,8 @@ romanization: "kālpantu"
 concept_tag: TA-PORUL249-KALPANTU
 prerequisites: [TA-C248-neruppu, TA-C249-vilaiyattu]
 sounds: []
-roots: []
+roots: [dravidian-kaal-leg, dravidian-pantu-ball]
+etymology_hook: "கால்பந்து — native: kāl 'foot' (DEDR 1479) + pantu 'ball' (DEDR 3925), modelled on English"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C249-vilaiyattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C249-PORUL249-02]; assesses=[] -->
 
 **கால்பந்து** — *kālpantu* — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கால்பந்து** (*kālpantu*) is native: *kāl*, "foot, leg" (DEDR 1479), and *pantu*, "ball" (DEDR 3925): "foot ball", modelled on the English.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

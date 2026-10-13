@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES172-COTON
 prerequisites: [FR-C171-caillou, FR-C172-plastique]
 sounds: []
 roots: []
+etymology_hook: "coton ← Italian cotone, from Arabic qutn — English cotton"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C172-plastique]
 <!-- hl-knowledge: introduces=[FR-LEX-C172-CHOSES172-02]; assesses=[] -->
 
 **le coton** — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coton** ← Italian *cotone* ← Arabic *qutn* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

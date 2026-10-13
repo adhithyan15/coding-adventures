@@ -12,6 +12,9 @@ Before the new one: say the Tamil for the day before yesterday, then the Tamil f
 You'll want to know: அஞ்சலகம்.
 அஞ்சலகம் — añcalakam — "a post office".
 
+The word, taken apart.
+அஞ்சலகம் (añcalakam) is native: añcal, "relay, letter post" (DEDR 54, which lists Malayalam añcal and Telugu ance), and akam, "house" (DEDR 7): "the post house".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a second (of time), then the Tamil for a p
 
 You'll want to know: நகரம்.
 நகரம் — nakaram — "a city".
+
+The word, taken apart.
+நகரம் (nakaram) is native Dravidian. DEDR 3568 lists Malayalam nakar, "town". The entry compares Sanskrit nagara, "town, city".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a post office, then the Tamil for a city.
 You'll want to know: நாடு.
 நாடு — nāṭu — "a country".
 
+The word, taken apart.
+நாடு (nāṭu) is native Dravidian. DEDR 3638 lists Malayalam nāṭu, Kannada nāḍu and Telugu nāḍu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a city, then the Tamil for a country.
 You'll want to know: தலைநகரம்.
 தலைநகரம் — talainakaram — "a capital city".
 
+The word, taken apart.
+தலைநகரம் (talainakaram) is talai, "head" (DEDR 3103), and nakaram, "city" (DEDR 3568, which compares Sanskrit nagara): "the head city".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a country, then the Tamil for a capital ci
 
 You'll want to know: நாற்சந்தி.
 நாற்சந்தி — nāṟcanti — "a crossroads".
+
+The word, taken apart.
+நாற்சந்தி (nāṟcanti) is native nāl, "four" (DEDR 3655), and canti, "junction", from Sanskrit saṁdhi (CDIAL 12913): "the four-way junction".
 
 What you've built.
 One more word for this chapter.

@@ -11,7 +11,8 @@ romanization: "puttakam"
 concept_tag: TA-NOUN-BOOK
 prerequisites: [TA-C44-salt]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka]
+etymology_hook: "புத்தகம் ← Sanskrit pustaka 'book' (CDIAL 8413), which CDIAL traces further back to Iranian"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "nīccal kuḷam"
 concept_tag: TA-IDAM206-NICCAL-KULAM
 prerequisites: [TA-C206-kutam, TA-C206-maitanam]
 sounds: []
-roots: []
+roots: [dravidian-niintu-swim, dravidian-kulam-tank]
+etymology_hook: "நீச்சல் குளம் — native: nīccal 'swimming', from nīntu (DEDR 3687) + kuḷam 'pond' (DEDR 1828)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C206-maitanam]
 <!-- hl-knowledge: introduces=[TA-LEX-C206-IDAM206-05]; assesses=[] -->
 
 **நீச்சல் குளம்** — *nīccal kuḷam* — "a swimming pool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நீச்சல் குளம்** (*nīccal kuḷam*) is native: *nīccal*, "swimming", from *nīntu*, "to swim" (DEDR 3687), and *kuḷam*, "pond, tank" (DEDR 1828, which compares Sanskrit *kūla*, "pond").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

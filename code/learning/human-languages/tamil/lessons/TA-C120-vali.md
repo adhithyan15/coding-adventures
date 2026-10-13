@@ -14,7 +14,8 @@ romanization: "vāḷi"
 concept_tag: TA-THINGS120-VALI
 prerequisites: [TA-C120-kannati, TA-C120-coppu]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "வாளி ← Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C120-coppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **வாளி** — *vāḷi* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாளி** (*vāḷi*) is a loan from Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the sales"
 concept_tag: FR-CHOSES198-SOLDES
 prerequisites: [FR-C198-promesse, FR-C198-reduction]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "soldes — from Italian saldare 'to settle an account', from Latin solidus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C198-reduction]
 <!-- hl-knowledge: introduces=[FR-LEX-C198-CHOSES198-03]; assesses=[] -->
 
 **les soldes** — "the sales".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soldes** — from the verb for "to settle an account", ← Italian *saldare*, from *saldo*, "solid", ← Latin *solidus* — borrowed: goods sold off to settle up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

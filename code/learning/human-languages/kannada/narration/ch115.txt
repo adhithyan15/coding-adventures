@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a decision, then the Kannada for to wish
 You'll want to know: ಕಾರಣ.
 ಕಾರಣ — kāraṇa — "a reason".
 
+The word, taken apart.
+ಕಾರಣ (kāraṇa) is Sanskrit kāraṇa, "cause", taken over whole as a learned loan, a tatsama (CDIAL 3057).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to wish for, then the Kannada for a reas
 
 You'll want to know: ಆದುದರಿಂದ.
 ಆದುದರಿಂದ — ādudarinda — "therefore".
+
+The word, taken apart.
+ಆದುದರಿಂದ (ādudarinda) is native Dravidian: ādudu, "that which became", from āgu, "to become" (DEDR 333), with adu, "that" (DEDR 1), and -inda, "from, because of": "because of that which happened". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a reason, then the Kannada for therefore
 You'll want to know: ಅದಕ್ಕೇ.
 ಅದಕ್ಕೇ — adakkē — "that is why".
 
+The word, taken apart.
+ಅದಕ್ಕೇ (adakkē) is native Dravidian: adu, "that" (DEDR 1), with -kke, "for", and -ē, "exactly": "exactly for that".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for therefore, then the Kannada for that is 
 You'll want to know: ಯಾಕೆಂದರೆ.
 ಯಾಕೆಂದರೆ — yākendare — "because".
 
+The word, taken apart.
+ಯಾಕೆಂದರೆ (yākendare) is native Dravidian: yāke, "why" (DEDR 5151), and endare, "if one says", from en-, "to say" (DEDR 868). "If you say why" introduces the reason.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for that is why, then the Kannada for becaus
 
 You'll want to know: ಮಂಚ.
 ಮಂಚ — maṁca — "a bed".
+
+The word, taken apart.
+ಮಂಚ (maṁca) is Sanskrit mañca, "stage, platform; bed", taken over whole as a learned loan, a tatsama (CDIAL 9715).
 
 What you've built.
 One more word for this chapter.

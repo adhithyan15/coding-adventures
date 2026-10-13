@@ -13,7 +13,8 @@ gloss: "a solution"
 concept_tag: GE-THING166-LOESUNG
 prerequisites: [GE-C165-meinung, GE-C166-grund]
 sounds: []
-roots: []
+roots: [germanic-lausaz]
+etymology_hook: "Lösung — the verb 'to loosen' + -ung; built on the word for 'loose', English loose and -less"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C166-grund]
 <!-- hl-knowledge: introduces=[GE-LEX-C166-THING166-02]; assesses=[] -->
 
 **die Lösung** — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lösung** is the verb "to loosen, to release", Old High German *lōsen* ← Proto-Germanic *\*lausijaną*, built on *\*lausaz*, "loose" (EtymDB 2.1), + *-ung*. A solution unties a knot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

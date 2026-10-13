@@ -11,7 +11,8 @@ romanization: "kurci"
 concept_tag: KA-NOUN-CHAIR
 prerequisites: [KA-C52-door, KA-C50-day-after]
 sounds: []
-roots: []
+roots: [arabic-kursi]
+etymology_hook: "kurci ← Arabic kursī 'seat, throne', through Persian and Hindustani"
 duration:
   max_seconds: 210
 requires:

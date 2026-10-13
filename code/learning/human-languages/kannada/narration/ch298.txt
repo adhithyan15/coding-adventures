@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a leopard, then the Kannada for a tail.
 You'll want to know: ಆಟ.
 ಆಟ — āṭa — "a game, a match".
 
+The word, taken apart.
+ಆಟ (āṭa) is native Dravidian, from āḍu, "to play, move", and DEDR 347 lists āṭu beside it: a game is "playing"; the entry also has Tamil āṭu, Telugu āḍu and Malayalam āṭuka.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a tail, then the Kannada for a game.
 
 You'll want to know: ಸಿನಿಮಾ.
 ಸಿನಿಮಾ — sinimā — "a film, the cinema".
+
+The word, taken apart.
+ಸಿನಿಮಾ (sinimā) is a loan from English cinema.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a game, then the Kannada for a film.
 You'll want to know: ಸಂಗೀತ.
 ಸಂಗೀತ — saṅgīta — "music".
 
+The word, taken apart.
+ಸಂಗೀತ (saṅgīta) is Sanskrit saṁgīta, "chorus, concert", taken over whole as a learned loan, a tatsama (CDIAL 12849). Kannada writes the nasal before g as ṅ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a film, then the Kannada for music.
 You'll want to know: ಸ್ಪರ್ಧೆ.
 ಸ್ಪರ್ಧೆ — spardhe — "a competition".
 
+The word, taken apart.
+ಸ್ಪರ್ಧೆ (spardhe) is Sanskrit spardhā, "rivalry, competition", with the Kannada -e for final -ā.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for music, then the Kannada for a competitio
 
 You'll want to know: ಬಹುಮಾನ.
 ಬಹುಮಾನ — bahumāna — "a prize".
+
+The word, taken apart.
+ಬಹುಮಾನ (bahumāna) is Sanskrit bahumāna, "high esteem", taken over whole as a learned loan, a tatsama (CDIAL 9192).
 
 What you've built.
 One more word for this chapter.

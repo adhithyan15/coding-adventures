@@ -11,7 +11,8 @@ romanization: "bhaya"
 concept_tag: KA-FEEL-FEAR
 prerequisites: [KA-C83-sadness, KA-C83-worry]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "bhaya ← Sanskrit bhaya 'fear, peril', a tatsama (CDIAL 9390)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C83-worry]
 **ಭಯ** (*bhaya*) — "fear".
 
 **ನನಗೆ ಭಯ** (*nanage bhaya*) — "I am afraid", again with the person in **ನನಗೆ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭಯ** (*bhaya*) is Sanskrit *bhaya*, "fear, peril", taken over whole as a learned loan, a tatsama (CDIAL 9390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

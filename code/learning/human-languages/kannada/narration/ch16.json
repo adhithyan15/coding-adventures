@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:397a8d04c84e67fa",
+  "sourceHash": "fnv1a64:dfbcd4eee7f0d62e",
   "lessons": [
     {
       "id": "KA-C16-tingalugalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:898e249c46c4c301",
+      "sourceHash": "fnv1a64:94e465717b31e4fe",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All twelve names are Sanskrit, most kept whole and a few lightly reshaped (kārtīka for Sanskrit kārttika, phālguṇa for phālguna). Most are named for a lunar asterism: caitra is the month whose full moon is in the asterism Sanskrit calls citrā (CDIAL 4915, 4812). CDIAL also lists vaiśākha (12149), jyaiṣṭha (5293), āṣāḍha (1473), bhādrapada (9447), Sanskrit kārttika (3070), mārgaśiras (10076), puṣya (8307), māgha (9993) and phālguna (9075)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: this is Hindi's calendar too, not a Dravidian one",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:714a19467057ac82",
+      "sourceHash": "fnv1a64:f11458715fede74e",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +203,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತರ (uttara) is Sanskrit uttara, \"upper, northern; answer\", taken over whole as a learned loan, a tatsama (CDIAL 1767)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -222,7 +244,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

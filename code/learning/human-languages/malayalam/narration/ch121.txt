@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for please help, then the Malayalam for pl
 You'll want to know: വിളിക്കൂ.
 വിളിക്കൂ (viḷikkū) — "please call (someone)", or "please phone".
 
+The word, taken apart.
+വിളിക്കൂ (viḷikkū) is native Dravidian, from the root "to say, cry out, call"; DEDR 5433 lists the root with Tamil viḷ.
+
 What you've built.
 The request when help is needed.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for please stop, then the Malayalam for pl
 
 You'll want to know: ടിക്കറ്റ്.
 ടിക്കറ്റ് (ṭikkaṟṟŭ) — "a ticket", from English. ഒരു ടിക്കറ്റ് — "one ticket".
+
+The word, taken apart.
+ടിക്കറ്റ് (ṭikkaṟṟŭ) from English ticket, which came into English from French étiquette, "label".
 
 What you've built.
 An English word in Malayalam clothes.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for please call, then the Malayalam for a 
 You'll want to know: ബസ്.
 ബസ് (bas) — "a bus". The ബ is the letter you wrote from ബുധൻ.
 
+The word, taken apart.
+ബസ് (bas) from English bus, short for omnibus, Latin for "for everyone".
+
 What you've built.
 The everyday way to travel.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a ticket, then the Malayalam for a bus
 You'll want to know: സ്റ്റേഷൻ.
 സ്റ്റേഷൻ (sṟṟēṣan) — "a station", from English. സ്റ്റേഷൻ എവിടെ? — "where is the station?"
 
+The word, taken apart.
+സ്റ്റേഷൻ (sṟṟēṣan) from English station, from Latin statio, "a standing place".
+
 What you've built.
 Where the train stops.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a bus, then the Malayalam for a statio
 
 You'll want to know: ഭൂപടം.
 ഭൂപടം (bhūpaṭaṁ) — "a map", literally "earth picture": ഭൂ (bhū), "earth", and പടം (paṭaṁ), "picture".
+
+The word, taken apart.
+ഭൂപടം (bhūpaṭaṁ) is built from Sanskrit parts: bhū, "earth" (CDIAL 9546), and paṭa, "woven cloth" (CDIAL 7692), which in Malayalam has come to mean a picture. A map is an earth-picture.
 
 What you've built.
 Earth, drawn on paper.

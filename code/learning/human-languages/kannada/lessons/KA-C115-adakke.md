@@ -14,7 +14,8 @@ romanization: "adakkē"
 concept_tag: KA-WHY115-ADAKKE
 prerequisites: [KA-C115-karana, KA-C115-adudarinda]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "adakkē: native adu 'that' (DEDR 1) + -kke 'for' + emphatic -ē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C115-adudarinda]
 <!-- hl-knowledge: introduces=[KA-LEX-C115-WHY115-03]; assesses=[] -->
 
 **ಅದಕ್ಕೇ** — *adakkē* — "that is why".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅದಕ್ಕೇ** (*adakkē*) is native Dravidian: *adu*, "that" (DEDR 1), with *-kke*, "for", and *-ē*, "exactly": "exactly for that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

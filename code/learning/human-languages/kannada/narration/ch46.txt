@@ -13,6 +13,7 @@ You'll want to know: ಹಣ್ಣು.
 ಹಣ್ಣು (haṇṇu) — "a fruit".
 Behind it there is a verb: ಹಣ್ಣಾಗು, to ripen. The fruit is named for what happened to it — the ripened thing — and Kannada saw no need to invent a second noun for the object itself.
 Proto-Dravidian paḻ, 'to ripen, to grow old', is the source, and the sound law this book keeps returning to is at work in the very first letter. Tamil kept பழம் (paḻam); Telugu has పండు (paṇḍu); Kannada turned that p- into h- and arrived at ಹಣ್ಣು (haṇṇu). It is the same law that made milk ಹಾಲು here and left it pāl next door.
+DEDR 4004 lists the older Kannada paṇṇu, "ripe fruit", with Tamil paḻu, "to ripen", and Telugu paṇḍu. DEDR 4004 compares Sanskrit phala, "fruit".
 
 What you've built.
 The first of five things you might ask someone for.
@@ -46,6 +47,9 @@ You'll want to know: ಬಟ್ಟೆ.
 Sanskrit has paṭṭa, 'a strip of cloth, a bandage', and here the borrowing most likely ran the unusual way — out of Dravidian and into Sanskrit, rather than the direction this book has shown so often. The same strip reached English by another road: Hindi paṭṭī, a wrapping, is the soldier's puttee.
 Older Kannada also used ಬಟ್ಟೆ (baṭṭe) for a road — the way you go — a sense the modern language has quietly let go of.
 
+The word, taken apart.
+The origin of ಬಟ್ಟೆ (baṭṭe) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 Two: a fruit and a cloth.
 
@@ -76,6 +80,7 @@ You'll want to know: ದೀಪ.
 Sanskrit dīpa, from a root meaning to blaze, to shine. Kannada took it whole and wore not one letter off it.
 Put it beside āvali, 'a row', and you have Dīpāvali — a row of lamps — a festival whose name explains itself the moment the seam is visible.
 Kannada has a word of its own as well, ಹಣತೆ (haṇate), and it means something narrower: the small clay saucer with a wick lying in it. The borrowed word covers every lamp; the native one names a particular thing you can hold in one hand.
+CDIAL 6348 lists Sanskrit dīpa, "lamp".
 
 What you've built.
 Three, and one of them came from Sanskrit.
@@ -107,6 +112,7 @@ You'll want to know: ಉಪ್ಪು.
 ಉಪ್ಪು (uppu) — "salt".
 Proto-Dravidian uppu, and the whole family kept it very nearly untouched: Tamil உப்பு, Telugu ఉప్పు, Malayalam ഉപ്പ്.
 There is a p sitting in the middle of this word, and it did not become h. That is worth stopping over, because the law that made ಹಣ್ಣು (haṇṇu) out of an older p-word only ever reached the FIRST sound of a word. Inside one, the p stays where it was put.
+DEDR 2674 lists Kannada uppu with Tamil, Malayalam and Telugu uppu.
 
 What you've built.
 Four. Salt, and the fruit, and the cloth, and the lamp.

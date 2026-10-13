@@ -11,9 +11,10 @@ romanization: "sinima"
 concept_tag: ML-CINEMA
 prerequisites: [ML-C98-kalikkuka, ML-C92-hottal, ML-C60-cow, ML-C69-words, ML-C89-nallathu]
 sounds: []
-roots: []
+roots: [english-cinema]
+etymology_hook: "sinima ← English cinema, from Greek kinēma 'movement'"
 duration:
-  max_seconds: 250
+  max_seconds: 267
 requires:
   knowledge: [ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01]
 introduces:
@@ -76,6 +77,8 @@ has been welding to **ആണ്** since your very first question: **എന്ത
 
 That **-ŭ** is not a **full** vowel, so when an ending arrives it steps out of
 the way rather than sending a letter in ahead of it.
+
+**Where the word comes from.** It is English *cinema*, short for *cinematograph*, from Greek *kinēma*, "movement".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-C41-DEIXIS-01] -->

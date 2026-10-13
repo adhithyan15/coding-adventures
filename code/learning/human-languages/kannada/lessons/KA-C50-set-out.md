@@ -11,7 +11,8 @@ romanization: "horaḍu"
 concept_tag: KA-VERB-SET-OUT
 prerequisites: [KA-C50-journey, KA-C48-farmer]
 sounds: []
-roots: []
+roots: [dravidian-pura-outside]
+etymology_hook: "horaḍu: native Dravidian; DEDR 4333 derives hoṟaḍu from *poṟa-paṭu, 'to go to the outside'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C50-journey]
 ಹೊರಡು is to set out, to start off, to leave a place with somewhere else in mind — not merely to go, for which Kannada already handed you a word.
 
 Its front half is ಹೊರ (*hora*), 'outside'. To set out is to go outward. And ಹೊರ is one more inherited word with an *h* where Tamil has a *p*: புறம் (*puṟam*) is the outside there. The law turns up again in the middle of an ordinary travelling verb.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊರಡು** (*horaḍu*) is native Dravidian. DEDR 4333 lists it as *hoṟaḍu* and derives it from *\*poṟa-paṭu*, built on *poṟa*, "the outside", the same root as Tamil *puṟam*: to set out is to go outside.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

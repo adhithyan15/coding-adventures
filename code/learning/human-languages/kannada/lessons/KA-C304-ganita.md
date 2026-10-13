@@ -14,7 +14,8 @@ romanization: "gaṇita"
 concept_tag: KA-KELASA304-GANITA
 prerequisites: [KA-C304-tarabeti, KA-C304-visaya]
 sounds: []
-roots: []
+roots: [sanskrit-ganita]
+etymology_hook: "gaṇita ← Sanskrit gaṇita 'counted', a tatsama (CDIAL 3996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C304-visaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C304-KELASA304-05]; assesses=[] -->
 
 **ಗಣಿತ** — *gaṇita* — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಣಿತ** (*gaṇita*) is Sanskrit *gaṇita*, "counted", taken over whole as a learned loan, a tatsama (CDIAL 3996).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

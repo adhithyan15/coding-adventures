@@ -14,6 +14,7 @@ concept_tag: FR-VERB-ATTACHER
 prerequisites: [FR-C240-insister, FR-C240-interrompre]
 sounds: []
 roots: []
+etymology_hook: "attacher ← Old French atachier, from a Germanic word for 'a stake' — English attach"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C240-interrompre]
 <!-- hl-knowledge: introduces=[FR-LEX-C240-VERBES240-03]; assesses=[] -->
 
 **attacher** — "to tie, to fasten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**attacher** ← Old French *atachier*, built on the word for "a nail, a fastener", which came from a Germanic word for "a stake". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 286,
-  "sourceHash": "fnv1a64:daecf290eb2bd144",
+  "sourceHash": "fnv1a64:3d65ef5b156f966d",
   "lessonIds": [
     "ML-C286-soks",
     "ML-C286-sus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch286.txt",
   "json": "malayalam/narration/ch286.json",
-  "textHash": "fnv1a64:4c457c2e3d00d2b6",
-  "jsonHash": "fnv1a64:33ad59a9df2fbf64",
+  "textHash": "fnv1a64:12f489abbb9ac40d",
+  "jsonHash": "fnv1a64:0e7dfb93e4471f0c",
   "findings": []
 }

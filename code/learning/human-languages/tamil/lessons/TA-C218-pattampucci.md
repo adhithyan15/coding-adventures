@@ -14,7 +14,8 @@ romanization: "paṭṭāmpūcci"
 concept_tag: TA-PORUL218-PATTAMPUCCI
 prerequisites: [TA-C218-varikkutirai, TA-C218-mutalai]
 sounds: []
-roots: []
+roots: [sanskrit-patta, dravidian-pucci-insect]
+etymology_hook: "பட்டாம்பூச்சி — paṭṭu 'silk' ← Sanskrit paṭṭa (CDIAL 7700) + native pūcci 'insect' (DEDR 4353)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C218-mutalai]
 <!-- hl-knowledge: introduces=[TA-LEX-C218-PORUL218-04]; assesses=[] -->
 
 **பட்டாம்பூச்சி** — *paṭṭāmpūcci* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பட்டாம்பூச்சி** (*paṭṭāmpūcci*) is *paṭṭu*, "silk", from Sanskrit *paṭṭa*, "woven silk" (CDIAL 7700), and native *pūcci*, "insect" (DEDR 4353): "the silk insect".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to stop"
 concept_tag: GE-VERB-AUFHOEREN
 prerequisites: [GE-C144-aendern, GE-C144-anrufen]
 sounds: []
-roots: []
+roots: [germanic-hauzijana]
+etymology_hook: "aufhören ← Middle High German ūfhœren — auf + hören 'to hear'; on the usual account, to stop and listen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C144-anrufen]
 <!-- hl-knowledge: introduces=[GE-LEX-C144-VERB144-03]; assesses=[] -->
 
 **aufhören** — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aufhören** ← Middle High German *ūfhœren* (EtymDB 2.1): *auf* + *hören*, "to hear". On the usual account, to stop was first to look up and listen.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

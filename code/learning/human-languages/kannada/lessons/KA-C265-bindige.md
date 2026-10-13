@@ -14,7 +14,8 @@ romanization: "bindige"
 concept_tag: KA-VASTU265-BINDIGE
 prerequisites: [KA-C264-vidiyo, KA-C265-dabbi]
 sounds: []
-roots: []
+roots: [kannada-bindige-pitcher]
+etymology_hook: "bindige: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C265-dabbi]
 <!-- hl-knowledge: introduces=[KA-LEX-C265-VASTU265-02]; assesses=[] -->
 
 **ಬಿಂದಿಗೆ** — *bindige* — "a water pitcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಬಿಂದಿಗೆ** (*bindige*) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "pitcher".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

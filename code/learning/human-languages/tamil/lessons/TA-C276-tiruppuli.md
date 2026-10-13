@@ -14,7 +14,8 @@ romanization: "tiruppuḷi"
 concept_tag: TA-PORUL276-TIRUPPULI
 prerequisites: [TA-C276-iyantiram, TA-C276-copa]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn, dravidian-uli-chisel]
+etymology_hook: "திருப்புளி — native: tiruppu 'to turn' (DEDR 3246) + uḷi 'chisel' (DEDR 699)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C276-copa]
 <!-- hl-knowledge: introduces=[TA-LEX-C276-PORUL276-05]; assesses=[] -->
 
 **திருப்புளி** — *tiruppuḷi* — "a screwdriver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திருப்புளி** (*tiruppuḷi*) is native: *tiruppu*, "to turn" (DEDR 3246), and *uḷi*, "chisel" (DEDR 699): "the turning chisel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

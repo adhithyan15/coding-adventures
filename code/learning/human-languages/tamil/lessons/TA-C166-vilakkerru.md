@@ -14,7 +14,8 @@ romanization: "viḷakkēṟṟu"
 concept_tag: TA-VERB-VILAKKERRU
 prerequisites: [TA-C165-natanamatu, TA-C165-vananku]
 sounds: []
-roots: []
+roots: [dravidian-vel-white-bright, dravidian-eeru-climb]
+etymology_hook: "விளக்கேற்று — native: viḷakku 'lamp' (DEDR 5496) + ēṟṟu 'to raise, light', from ēṟu (DEDR 916)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C165-vananku]
 <!-- hl-knowledge: introduces=[TA-LEX-C166-ACT166-01]; assesses=[] -->
 
 **விளக்கேற்று** — *viḷakkēṟṟu* — "to light a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விளக்கேற்று** (*viḷakkēṟṟu*) is native: *viḷakku*, "lamp" (DEDR 5496), and *ēṟṟu*, "to raise, to light", the causative of *ēṟu*, "to rise" (DEDR 916).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

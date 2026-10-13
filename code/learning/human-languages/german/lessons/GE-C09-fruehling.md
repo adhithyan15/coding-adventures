@@ -48,6 +48,11 @@ early; a *Frühling* is the early one — the year's first *Jahreszeit*.
 
 You will meet *-ling* again elsewhere, and it does the same job every time.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Frühling** is *früh*, "early" ← Old High German *fruoji* (EtymDB 2.1), with the ending *-ling*: "the early one".
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-FRUEHLING-01] -->
 

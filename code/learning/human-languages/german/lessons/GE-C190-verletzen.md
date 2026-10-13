@@ -14,6 +14,7 @@ concept_tag: GE-VERB-VERLETZEN
 prerequisites: [GE-C189-verbinden, GE-C190-vergleichen]
 sounds: []
 roots: []
+etymology_hook: "verletzen ← Middle High German verletzen 'to injure', from a verb 'to hinder, to harm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C190-vergleichen]
 <!-- hl-knowledge: introduces=[GE-LEX-C190-VERB190-02]; assesses=[] -->
 
 **verletzen** — "to injure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verletzen** ← Middle High German *verletzen*, "to injure" (EtymDB 2.1): *ver-* + an old verb "to hinder, to harm", built on the root of English *late*, "slow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

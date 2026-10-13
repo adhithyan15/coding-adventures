@@ -14,7 +14,8 @@ romanization: "eḷanīru"
 concept_tag: KA-VASTU184-ELANIRU
 prerequisites: [KA-C184-hurulikayi, KA-C184-soppu]
 sounds: []
-roots: []
+roots: [dravidian-ilam-tender]
+etymology_hook: "eḷanīru: native Dravidian; DEDR 513 lists eḷa-nīr 'water of an unripe coconut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C184-soppu]
 <!-- hl-knowledge: introduces=[KA-LEX-C184-VASTU184-05]; assesses=[] -->
 
 **ಎಳನೀರು** — *eḷanīru* — "tender coconut water".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಳನೀರು** (*eḷanīru*) is native Dravidian, built on *eḷa*, "tender, young", and DEDR 513 lists *eḷa-nīr*, "water of an unripe coconut", itself, with *nīru*, "water"; the entry also has Tamil *iḷa* and Malayalam *iḷa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

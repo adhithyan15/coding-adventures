@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN6-WURST
 prerequisites: [GE-C73-zucker, GE-C74-saft]
 sounds: []
 roots: []
+etymology_hook: "Wurst ← Old High German wurst — perhaps 'something twisted'; the origin is not certain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C74-saft]
 <!-- hl-knowledge: introduces=[GE-LEX-C74-ESSEN6-02]; assesses=[] -->
 
 **die Wurst** — "a sausage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wurst** ← Old High German *wurst* — inherited. EtymDB 2.1 derives it from Proto-Germanic *\*wurstiz*, "something twisted", but that account is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

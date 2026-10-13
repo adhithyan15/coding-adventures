@@ -13,7 +13,8 @@ gloss: "the future"
 concept_tag: GE-FUT142-ZUKUNFT
 prerequisites: [GE-C141-reparieren, GE-C141-anfangen]
 sounds: []
-roots: []
+roots: [kwemana-germanic]
+etymology_hook: "Zukunft ← Old High German zuochumft, 'a coming-to', built on kommen 'to come'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C141-anfangen]
 <!-- hl-knowledge: introduces=[GE-LEX-C142-FUT142-01]; assesses=[] -->
 
 **die Zukunft** — "the future". German builds the future with **werden** and an infinitive at the very end: **Ich werde Deutsch lernen.** — "I will learn German."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zukunft** ← Middle High German *zuokunft* ← Old High German *zuochumft*: *zu-*, "to", + a noun built on *kommen*, "to come" (EtymDB 2.1). The future is what is coming.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

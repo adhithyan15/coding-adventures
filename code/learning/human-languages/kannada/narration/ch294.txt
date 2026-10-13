@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a tomato, then the Kannada for a carrot.
 You'll want to know: ಕಡಲೆಕಾಯಿ.
 ಕಡಲೆಕಾಯಿ — kaḍalekāyi — "a peanut".
 
+The word, taken apart.
+ಕಡಲೆಕಾಯಿ (kaḍalekāyi) is native Dravidian: kaḍale, "Bengal gram", one word with Tamil kaṭalai (DEDR 1120), and kāyi, "unripe fruit, nut, pod" (DEDR 1459). DEDR 1459 compares a reconstructed Indo-Aryan kacca, "raw, unripe" (CDIAL 2613).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a carrot, then the Kannada for a peanut.
 
 You'll want to know: ಮಸಾಲೆ.
 ಮಸಾಲೆ — masāle — "spices, a spice mix".
+
+The word, taken apart.
+ಮಸಾಲೆ (masāle) is Hindustani masālā, "spices", from Arabic maṣāliḥ, "things needed, ingredients", with the Kannada -e for final -ā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a peanut, then the Kannada for spices.
 You'll want to know: ಚಟ್ನಿ.
 ಚಟ್ನಿ — caṭni — "chutney".
 
+The word, taken apart.
+ಚಟ್ನಿ (caṭni) is Hindustani caṭnī, "chutney", usually linked with the verb for "to lick, taste", which CDIAL 4573 reconstructs as caṭṭ, "lick, taste".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for spices, then the Kannada for chutney.
 You'll want to know: ದುಡ್ಡು.
 ದುಡ್ಡು — duḍḍu — "money".
 
+The word, taken apart.
+ದುಡ್ಡು (duḍḍu) is native Dravidian, one word with Telugu duḍḍu (DEDR 3303). DEDR lists duḍḍu, "a copper coin; money".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for chutney, then the Kannada for money.
 
 You'll want to know: ಚಿಲ್ಲರೆ.
 ಚಿಲ್ಲರೆ — cillare — "small change".
+
+The word, taken apart.
+ಚಿಲ್ಲರೆ (cillare) is native Dravidian, one word with Tamil cillaṟai, Telugu cillara and Malayalam cillaṟa (DEDR 2574). DEDR lists cillaṟe, "petty things, money under a rupee".
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "to change (money), to switch"
 concept_tag: GE-VERB-WECHSELN
 prerequisites: [GE-C152-vorstellen, GE-C153-wandern]
 sounds: []
-roots: []
+roots: [germanic-wihslona]
+etymology_hook: "wechseln ← Old High German wehsalōn ← Proto-Germanic *wihslōną 'to change' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C153-wandern]
 <!-- hl-knowledge: introduces=[GE-LEX-C153-VERB153-02]; assesses=[] -->
 
 **wechseln** — "to change (money), to switch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wechseln** ← Old High German *wehsalōn* ← Proto-Germanic *\*wihslōną*, "to change" — inherited; Dutch *wisselen* is the same verb. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

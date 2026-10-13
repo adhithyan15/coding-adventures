@@ -14,7 +14,8 @@ romanization: "paṭṭŭ"
 concept_tag: ML-VASTU217-PATTU
 prerequisites: [ML-C216-simanru, ML-C217-parutti]
 sounds: []
-roots: []
+roots: [sanskrit-patta]
+etymology_hook: "paṭṭŭ ← Sanskrit paṭṭa 'cloth, woven silk', a tatsama (CDIAL 7700)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C217-parutti]
 <!-- hl-knowledge: introduces=[ML-LEX-C217-VASTU217-02]; assesses=[] -->
 
 **പട്ട്** — *paṭṭŭ* — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പട്ട്** (*paṭṭŭ*) ← Sanskrit *paṭṭa*, "cloth, woven silk", taken over whole as a tatsama (CDIAL 7700). CDIAL thinks Sanskrit itself took it from a non-Aryan source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

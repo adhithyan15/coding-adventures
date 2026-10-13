@@ -11,7 +11,8 @@ romanization: "mēsai"
 concept_tag: TA-NOUN-TABLE
 prerequisites: [TA-C69-station, TA-C68-shop, TA-C69-vehicle]
 sounds: []
-roots: []
+roots: [portuguese-mesa]
+etymology_hook: "மேசை ← Portuguese mesa 'table'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ into "four" and "leg". A மேசை and a நாற்காலி are the pai
 you can name both.
 
 Its two signs are old friends: the **ே** in front of ம, and the **ை** at the end.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மேசை** (*mēsai*) is a loan from Portuguese *mesa*, "table".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

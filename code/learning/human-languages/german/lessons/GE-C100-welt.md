@@ -13,7 +13,8 @@ gloss: "the world"
 concept_tag: GE-WELT-WELT
 prerequisites: [GE-C100-jacke, GE-C100-grenze]
 sounds: []
-roots: []
+roots: [germanic-weraldiz]
+etymology_hook: "Welt ← Old High German weralt 'age of man': wer 'man' + alt 'age' — built like English world"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C100-grenze]
 <!-- hl-knowledge: introduces=[GE-LEX-C100-WELT-04]; assesses=[] -->
 
 **die Welt** — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Welt** ← Old High German *weralt* ← Proto-Germanic *\*weraldiz*, built from *\*weraz*, "man", and *\*aldiz*, "age" (EtymDB 2.1): "the age of man". English *world* is the same compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

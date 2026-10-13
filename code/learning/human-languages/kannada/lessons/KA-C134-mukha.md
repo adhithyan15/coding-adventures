@@ -14,7 +14,8 @@ romanization: "mukha"
 concept_tag: KA-THINGS134-MUKHA
 prerequisites: [KA-C134-emme, KA-C134-kuri]
 sounds: []
-roots: []
+roots: [sanskrit-mukha]
+etymology_hook: "mukha ← Sanskrit mukha 'mouth, face', a tatsama (CDIAL 10158)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C134-kuri]
 <!-- hl-knowledge: introduces=[KA-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **ಮುಖ** — *mukha* — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಖ** (*mukha*) is Sanskrit *mukha*, "mouth, face", taken over whole as a learned loan, a tatsama (CDIAL 10158).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

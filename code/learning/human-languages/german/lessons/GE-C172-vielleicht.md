@@ -14,6 +14,7 @@ concept_tag: GE-ADV172-VIELLEICHT
 prerequisites: [GE-C171-nachher, GE-C172-leider]
 sounds: []
 roots: []
+etymology_hook: "vielleicht ← Middle High German vil līhte 'very easily': viel + leicht"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C172-leider]
 <!-- hl-knowledge: introduces=[GE-LEX-C172-ADV172-02]; assesses=[] -->
 
 **vielleicht** — "perhaps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vielleicht** ← Middle High German *vil līhte*, "very easily" (EtymDB 2.1): *viel* + *leicht*. What could very easily happen is what perhaps will.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

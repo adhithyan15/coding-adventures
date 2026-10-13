@@ -46,6 +46,11 @@ reviews_of: [GE-C10-vater]
 A *die*-word beside *der Vater*, and the pair is how the two articles are
 usually first met in a sentence about people.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mutter** ← Old High German *muoter* ← Proto-Germanic *\*mōdēr* — inherited, the same word as English *mother*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MUTTER-01] -->
 

@@ -13,7 +13,8 @@ gloss: "jam"
 concept_tag: FR-CUISINE23-CONFITURE
 prerequisites: [FR-C71-citron, FR-C71-raisin]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "confiture — from Old French confire 'to preserve', from Latin conficere — English confection"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C71-raisin]
 <!-- hl-knowledge: introduces=[FR-LEX-C71-CUISINE23-03]; assesses=[] -->
 
 **la confiture** — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**confiture** — built on Old French *confire*, "to preserve", ← Latin *conficere*, "to prepare". (EtymDB 2.1 links it to Latin *confectura*, "a preparing".)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

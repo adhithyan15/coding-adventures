@@ -14,6 +14,7 @@ concept_tag: GE-THING238-STIMME
 prerequisites: [GE-C238-sinn, GE-C238-sorge]
 sounds: []
 roots: []
+etymology_hook: "Stimme ← Old High German stimna — Old English stefn, 'voice', was the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C238-sorge]
 <!-- hl-knowledge: introduces=[GE-LEX-C238-THING238-05]; assesses=[] -->
 
 **die Stimme** — "a voice, a vote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stimme** ← Old High German *stimna* — inherited; EtymDB 2.1 lists Old English *stefn*, "voice", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "rompa nāḷāccu"
 concept_tag: TA-GREET-LONG-TIME
 prerequisites: [TA-C107-comeagain, TA-C108-eaten]
 sounds: []
-roots: []
+roots: [dravidian-nira-full, proto-dravidian-naal-day]
+etymology_hook: "ரொம்ப நாளாச்சு — native: rompa 'very', from nira 'be full' (DEDR 3672) + nāḷ 'day' (DEDR 3656)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C108-eaten]
 **ரொம்ப நாளாச்சு** (*rompa nāḷāccu*) — "it's been a long time", in everyday speech.
 
 **ரொம்ப** is spoken "very"; **நாள்** is "day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரொம்ப நாளாச்சு** (*rompa nāḷāccu*) is native: *rompa*, "very", the spoken form of *nirampa*, "fully", from *nira*, "to be full" (DEDR 3672), and *nāḷ*, "day" (DEDR 3656), with *āccu*, "it has become": "it has been many days".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "oppu"
 concept_tag: KA-VERB-OPPU
 prerequisites: [KA-C238-taip-madu, KA-C238-kaleduhogu]
 sounds: []
-roots: []
+roots: [dravidian-oppu-agree]
+etymology_hook: "oppu: native Dravidian, one word with Tamil o and Telugu oppu (DEDR 924)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C238-kaleduhogu]
 <!-- hl-knowledge: introduces=[KA-LEX-C238-KRIYE238-03]; assesses=[] -->
 
 **ಒಪ್ಪು** — *oppu* — "to agree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಪ್ಪು** (*oppu*) is native Dravidian, one word with Tamil *o* and Telugu *oppu* (DEDR 924). DEDR lists *oppu* itself, "to agree with, assent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

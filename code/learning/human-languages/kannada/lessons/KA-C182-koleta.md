@@ -14,7 +14,8 @@ romanization: "koḷeta"
 concept_tag: KA-GUNA182-KOLETA
 prerequisites: [KA-C182-jipuna, KA-C182-hathamari]
 sounds: []
-roots: []
+roots: [dravidian-kuzhai-rot]
+etymology_hook: "koḷeta: native Dravidian, 'rotted', from koḻe 'to rot' (DEDR 1822)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C182-hathamari]
 <!-- hl-knowledge: introduces=[KA-LEX-C182-GUNA182-03]; assesses=[] -->
 
 **ಕೊಳೆತ** — *koḷeta* — "rotten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊಳೆತ** (*koḷeta*) is native Dravidian, from *koḷe*, "to rot", which DEDR 1822 lists as older Kannada *koḻe*; *koḷeta* is "rotted"; the entry also has Tamil *kuḻai* and Telugu *kuḷḷu*. DEDR 1822 compares Sanskrit *kuṇapa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

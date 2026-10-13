@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 147,
-  "sourceHash": "fnv1a64:98c2ec84b638ff63",
+  "sourceHash": "fnv1a64:1a2f4db51dd7056f",
   "lessonIds": [
     "ML-C147-soppu",
     "ML-C147-torttu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch147.txt",
   "json": "malayalam/narration/ch147.json",
-  "textHash": "fnv1a64:834a6d6cde7508f1",
-  "jsonHash": "fnv1a64:7d94125b9d764649",
+  "textHash": "fnv1a64:5bbb703a00cbc982",
+  "jsonHash": "fnv1a64:5cd06fe15c45aae1",
   "findings": []
 }

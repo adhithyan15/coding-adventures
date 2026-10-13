@@ -11,7 +11,8 @@ romanization: "bil"
 concept_tag: ML-NOUN-BILL
 prerequisites: [ML-C92-hottal, ML-C91-ethra-rupa]
 sounds: []
-roots: []
+roots: [english-bill]
+etymology_hook: "bil ← English bill"
 duration:
   max_seconds: 250
 requires:
@@ -51,6 +52,11 @@ chapter, and **വില** since the shopping chapter:
 |---|---|
 | **എത്ര രൂപ?** | how many rupees? |
 | **ബിൽ** | the bill |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബിൽ** (*bil*) ← English *bill*, borrowed with its sense intact.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C92-BILL-01, ML-LEX-C91-MONEY-01, ML-LEX-C81-HOW-MUCH-01] -->

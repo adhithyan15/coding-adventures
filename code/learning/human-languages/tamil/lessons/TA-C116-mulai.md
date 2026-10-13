@@ -14,7 +14,8 @@ romanization: "mūlai"
 concept_tag: TA-LOC116-MULAI
 prerequisites: [TA-C115-aluvalakam, TA-C116-tottam]
 sounds: []
-roots: []
+roots: [dravidian-moolai-corner]
+etymology_hook: "மூலை — native Dravidian (DEDR 5044); Malayalam mūla, Kannada mūle, Telugu mūla"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C116-tottam]
 <!-- hl-knowledge: introduces=[TA-LEX-C116-LOC116-02]; assesses=[] -->
 
 **மூலை** — *mūlai* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூலை** (*mūlai*) is native Dravidian. DEDR 5044 lists Malayalam *mūla*, Kannada *mūle* and Telugu *mūla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

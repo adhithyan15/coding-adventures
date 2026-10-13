@@ -14,7 +14,8 @@ romanization: "pukaippaṭam"
 concept_tag: TA-PORUL272-PUKAIPPATAM
 prerequisites: [TA-C272-vari, TA-C272-vinnappam]
 sounds: []
-roots: []
+roots: [dravidian-pukai-smoke, sanskrit-pata-cloth]
+etymology_hook: "புகைப்படம் — native pukai 'smoke' (DEDR 4240) + paṭam 'picture' ← Sanskrit paṭa (CDIAL 7692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C272-vinnappam]
 <!-- hl-knowledge: introduces=[TA-LEX-C272-PORUL272-04]; assesses=[] -->
 
 **புகைப்படம்** — *pukaippaṭam* — "a photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புகைப்படம்** (*pukaippaṭam*) is native *pukai*, "smoke" (DEDR 4240), and *paṭam*, "picture", from Sanskrit *paṭa*, "cloth" (CDIAL 7692): "smoke picture". Why "smoke" is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "miniṟṟŭ"
 concept_tag: ML-SPAN-MINUTE
 prerequisites: [ML-C138-rabbit, ML-C139-time]
 sounds: []
-roots: []
+roots: [english-minute]
+etymology_hook: "miniṟṟŭ ← English minute, from Latin minūta 'small (part)'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C139-time]
 
 **മിനിറ്റ്** (*miniṟṟŭ*) — "a minute", from English. **ഒരു മിനിറ്റ്** — "one minute",
 said with a raised hand.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മിനിറ്റ്** (*miniṟṟŭ*) ← English *minute*, from Latin *minūta*, "a small part" of the hour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

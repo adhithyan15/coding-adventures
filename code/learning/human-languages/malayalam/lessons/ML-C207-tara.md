@@ -14,7 +14,8 @@ romanization: "taṟa"
 concept_tag: ML-VASTU207-TARA
 prerequisites: [ML-C206-sthiramaya, ML-C206-orra]
 sounds: []
-roots: []
+roots: [dravidian-tara-base]
+etymology_hook: "taṟa: native Dravidian, one word with Tamil taṟu and Kannada taṟi (DEDR 3142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C206-orra]
 <!-- hl-knowledge: introduces=[ML-LEX-C207-VASTU207-01]; assesses=[] -->
 
 **തറ** — *taṟa* — "the floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തറ** (*taṟa*) is native Dravidian, one word with Tamil *taṟu* and Kannada *taṟi* (DEDR 3142). Its older sense is "foundation".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

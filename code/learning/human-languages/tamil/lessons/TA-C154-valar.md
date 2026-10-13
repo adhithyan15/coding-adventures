@@ -14,7 +14,8 @@ romanization: "vaḷar"
 concept_tag: TA-VERB-VALAR
 prerequisites: [TA-C154-ani2, TA-C154-alai2]
 sounds: []
-roots: []
+roots: [dravidian-val-fertile]
+etymology_hook: "வளர் — native Dravidian (DEDR 5304); Malayalam vaḷaruka 'to grow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C154-alai2]
 <!-- hl-knowledge: introduces=[TA-LEX-C154-ACT154-03]; assesses=[] -->
 
 **வளர்** — *vaḷar* — "to grow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வளர்** (*vaḷar*) is native Dravidian. DEDR 5304 lists Malayalam *vaḷaruka*, "to grow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

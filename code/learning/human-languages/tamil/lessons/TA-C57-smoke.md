@@ -11,7 +11,8 @@ romanization: "pukai"
 concept_tag: TA-NOUN-SMOKE
 prerequisites: [TA-C57-mud, TA-C55-nail, TA-C56-no-need]
 sounds: []
-roots: []
+roots: [dravidian-pukai-smoke]
+etymology_hook: "புகை — native Dravidian (DEDR 4240); Malayalam puka, Kannada poge, Telugu poga"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C57-mud]
 Malayalam പുക (*puka*) is the same word one step shorter. Tamil's ends in the *-ai* that so many of its everyday things end in: *kiḷai*, *kūṭai*, *vitai*, and now this one.
 
 புகை is the smoke and also what somebody does over a cigarette. And when trains reached the Tamil country they were called *pukaivaṇṭi*, the smoke vehicle, which is still what a great many people call them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புகை** (*pukai*) is native Dravidian. DEDR 4240 lists Malayalam *puka*, Kannada *poge* and Telugu *poga*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

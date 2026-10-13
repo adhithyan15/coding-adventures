@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a plant, then the Tamil for a creeper.
 You'll want to know: இருட்டு.
 இருட்டு — iruṭṭu — "darkness".
 
+The word, taken apart.
+இருட்டு (iruṭṭu) is native Dravidian. DEDR 2552 lists Malayalam iruṭṭu, "darkness" and Telugu irulu. The same entry holds iravu, "night".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a creeper, then the Tamil for darkness.
 
 You'll want to know: நிழல்.
 நிழல் — niḻal — "shade, a shadow".
+
+The word, taken apart.
+நிழல் (niḻal) is native Dravidian. DEDR 3679 lists Malayalam niḻal, "shadow" and Kannada neḻal.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for darkness, then the Tamil for shade.
 You'll want to know: இயந்திரம்.
 இயந்திரம் — iyantiram — "a machine".
 
+The word, taken apart.
+இயந்திரம் (iyantiram) is a loan from Sanskrit yantra, "any implement or contrivance" (CDIAL 10412).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for shade, then the Tamil for a machine.
 You'll want to know: சோபா.
 சோபா — cōpā — "a sofa".
 
+The word, taken apart.
+சோபா (cōpā) is a loan from English sofa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a machine, then the Tamil for a sofa.
 
 You'll want to know: திருப்புளி.
 திருப்புளி — tiruppuḷi — "a screwdriver".
+
+The word, taken apart.
+திருப்புளி (tiruppuḷi) is native: tiruppu, "to turn" (DEDR 3246), and uḷi, "chisel" (DEDR 699): "the turning chisel".
 
 What you've built.
 One more word for this chapter.

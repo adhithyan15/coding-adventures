@@ -11,7 +11,8 @@ romanization: "kuṭa"
 concept_tag: ML-THINGS-UMBRELLA
 prerequisites: [ML-C129-bed, ML-C129-key]
 sounds: []
-roots: []
+roots: [dravidian-kudai-umbrella]
+etymology_hook: "kuṭa: native Dravidian, one word with Tamil kuṭai and Kannada koḍe (DEDR 1663)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C129-key]
 <!-- hl-knowledge: introduces=[ML-LEX-C129-THINGS-03]; assesses=[] -->
 
 **കുട** (*kuṭa*) — "an umbrella", which in **മഴക്കാലം** nobody leaves home without.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുട** (*kuṭa*) is native Dravidian, one word with Tamil *kuṭai*, Kannada *koḍe* and Telugu *goḍugu* (DEDR 1663). DEDR 1663 compares Sanskrit *utkūṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

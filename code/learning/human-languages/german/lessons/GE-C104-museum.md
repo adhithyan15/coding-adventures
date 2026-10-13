@@ -13,7 +13,8 @@ gloss: "a museum"
 concept_tag: GE-ORT104-MUSEUM
 prerequisites: [GE-C104-flughafen, GE-C104-platz]
 sounds: []
-roots: []
+roots: [musica-latin]
+etymology_hook: "Museum ← Latin museum ← Greek mouseîon 'seat of the Muses' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C104-platz]
 <!-- hl-knowledge: introduces=[GE-LEX-C104-ORT104-03]; assesses=[] -->
 
 **das Museum** — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Museum** ← Latin *museum* ← Greek *mouseîon*, "seat of the Muses", from *moûsa*, "Muse" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

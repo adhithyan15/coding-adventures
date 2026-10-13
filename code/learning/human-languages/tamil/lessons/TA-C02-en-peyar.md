@@ -12,6 +12,7 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [TA-C02-en, TA-C02-peyar]
 sounds: []
 roots: []
+etymology_hook: "என் பெயர் — two native Dravidian words, 'my' (DEDR 5160) and 'name' (DEDR 4410), and no word for 'is'"
 reviews_of: [TA-C02-en, TA-C02-peyar]
 duration:
   max_seconds: 180

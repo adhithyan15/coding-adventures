@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES32-PHOTO
 prerequisites: [FR-C80-billet, FR-C80-carte]
 sounds: []
 roots: []
+etymology_hook: "photo — short for photographie, from Greek phos 'light' + graphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C80-carte]
 <!-- hl-knowledge: introduces=[FR-LEX-C80-CHOSES32-05]; assesses=[] -->
 
 **la photo** — "a photo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**photo** — short for *photographie* (EtymDB 2.1), a 19th-century coinage from Greek *phos*, *photos*, "light", and *graphein*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

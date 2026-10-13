@@ -11,7 +11,8 @@ romanization: "huṭṭuhabba"
 concept_tag: KA-YOU-BIRTHDAY
 prerequisites: [KA-C90-uncle, KA-C91-address]
 sounds: []
-roots: []
+roots: [dravidian-puttu-born, sanskrit-parvan]
+etymology_hook: "huṭṭuhabba: native huṭṭu 'birth' (DEDR 4264) + habba 'festival' ← Sanskrit parvan (CDIAL 7947)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C91-address]
 
 **ಹುಟ್ಟುಹಬ್ಬ** (*huṭṭuhabba*) — "birthday", literally "birth festival": **ಹುಟ್ಟು**
 (*huṭṭu*), "birth", and *habba*, "festival", which gets a lesson of its own later.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಟ್ಟುಹಬ್ಬ** (*huṭṭuhabba*) is *huṭṭu*, "birth", native Dravidian (DEDR 4264, older Kannada *puṭṭu*), and *habba*, "festival", usually traced to Sanskrit *parvan*, "a joint" (CDIAL 7947), which also named the joints of the lunar month and the feasts held on them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

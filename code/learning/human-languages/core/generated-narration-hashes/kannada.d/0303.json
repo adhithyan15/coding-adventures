@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 303,
-  "sourceHash": "fnv1a64:80a711c11517814f",
+  "sourceHash": "fnv1a64:82aec58f689597f1",
   "lessonIds": [
     "KA-C303-jagali",
     "KA-C303-atta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch303.txt",
   "json": "kannada/narration/ch303.json",
-  "textHash": "fnv1a64:b7dd7c3782bbec05",
-  "jsonHash": "fnv1a64:8f8e5b5dc19e164b",
+  "textHash": "fnv1a64:6a00ea500de0de0b",
+  "jsonHash": "fnv1a64:0c943872aba8c5ac",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "paiyaṉ"
 concept_tag: TA-FAMILY-BOY
 prerequisites: [TA-C99-dontworry, TA-C100-children]
 sounds: []
-roots: []
+roots: [dravidian-paiyan-boy]
+etymology_hook: "பையன் — native Dravidian (DEDR 3939); Malayalam paital, Telugu paida"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C100-children]
 **பையன்** (*paiyaṉ*) — "a boy", and in a family, "a son".
 
 **என் பையன்** — "my boy", "my son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பையன்** (*paiyaṉ*) is native Dravidian. DEDR 3939 lists Malayalam *paital* and Telugu *paida*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

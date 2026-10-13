@@ -14,7 +14,8 @@ romanization: "valippaṁ"
 concept_tag: ML-GUNAM284-VALIPPAM
 prerequisites: [ML-C283-nerittu, ML-C284-kurran]
 sounds: []
-roots: []
+roots: [dravidian-val-strong]
+etymology_hook: "valippaṁ: native Dravidian, the noun of val 'great'; Tamil val (DEDR 5276)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C284-kurran]
 <!-- hl-knowledge: introduces=[ML-LEX-C284-GUNAM284-02]; assesses=[] -->
 
 **വലിപ്പം** — *valippaṁ* — "size".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വലിപ്പം** (*valippaṁ*) is native Dravidian, the noun of *val*, "great, strong"; DEDR 5276 lists the root with Tamil *val* and Kannada *bal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

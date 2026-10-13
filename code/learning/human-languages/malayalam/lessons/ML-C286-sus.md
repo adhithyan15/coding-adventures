@@ -14,7 +14,8 @@ romanization: "ṣūs"
 concept_tag: ML-VASTU286-SUS
 prerequisites: [ML-C285-manniya, ML-C286-soks]
 sounds: []
-roots: []
+roots: [english-shoes]
+etymology_hook: "ṣūs ← English shoes"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C286-soks]
 <!-- hl-knowledge: introduces=[ML-LEX-C286-VASTU286-02]; assesses=[] -->
 
 **ഷൂസ്** — *ṣūs* — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഷൂസ്** (*ṣūs*) ← English *shoes*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

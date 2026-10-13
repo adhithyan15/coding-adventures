@@ -13,7 +13,8 @@ gloss: "a factory"
 concept_tag: GE-ORT106-FABRIK
 prerequisites: [GE-C106-schwimmbad, GE-C106-stadion]
 sounds: []
-roots: []
+roots: [fabrica-latin]
+etymology_hook: "Fabrik ← French fabrique ← Latin fabrica 'workshop', from faber 'smith' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C106-stadion]
 <!-- hl-knowledge: introduces=[GE-LEX-C106-ORT106-05]; assesses=[] -->
 
 **die Fabrik** — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fabrik** ← French *fabrique* ← Latin *fabrica*, "workshop", from *faber*, "smith, craftsman" (EtymDB 2.1) — borrowed. English *fabric* shares the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

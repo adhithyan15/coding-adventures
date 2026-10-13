@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for busy, then the Malayalam for expensive
 You'll want to know: വിലകുറഞ്ഞ.
 വിലകുറഞ്ഞ — vilakuṟañña — "cheap".
 
+The word, taken apart.
+വിലകുറഞ്ഞ (vilakuṟañña) is native Dravidian, "whose price has dwindled": vila, "price" (DEDR 5421), with kuṟañña, from the verb "to dwindle" (DEDR 1851, with Tamil kuṟu).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Say "a capital city." (Talasthānaṁ — it opens with tala, "head.")
 You'll want to know: തെറ്റായ.
 തെറ്റായ — teṟṟāya — "wrong".
 
+The word, taken apart.
+തെറ്റായ (teṟṟāya) is native Dravidian: teṟṟŭ, "a slip, a mistake" (DEDR 3445, with Tamil teṟṟu), with āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Malayalam for cheap, then the Malayalam for wrong.
 
 You'll want to know: പൂർണ്ണമായ.
 പൂർണ്ണമായ — pūrṇamāya — "complete, whole".
+
+The word, taken apart.
+പൂർണ്ണമായ (pūrṇamāya) joins Sanskrit pūrṇa, "filled, full" (CDIAL 8339), to native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -103,6 +112,9 @@ Say "e-mail" and "the internet." (Imeyil, inṟarneṟṟŭ.)
 You'll want to know: ഓടുക.
 ഓടുക — ōṭuka — "to run".
 
+The word, taken apart.
+ഓടുക (ōṭuka) is native Dravidian, one word with Tamil ōṭu, Kannada ōḍu and Telugu ōḍu (DEDR 1041).
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Malayalam for complete, then the Malayalam for to ru
 
 You'll want to know: നടക്കുക.
 നടക്കുക — naṭakkuka — "to walk".
+
+The word, taken apart.
+നടക്കുക (naṭakkuka) is native Dravidian, one word with Tamil naṭa, Kannada naḍe and Telugu naḍa (DEDR 3582).
 
 What you've built.
 One more word for this chapter.

@@ -11,9 +11,10 @@ romanization: "ōdalu"
 concept_tag: KA-CLAUSE-PURPOSE
 prerequisites: [KA-C73-very, KA-C33-oodu, KA-C32-hoogu, KA-C57-back, KA-C71-when, KA-C71-which, KA-C72-when-clause]
 sounds: []
-roots: []
+roots: [dravidian-oodu-read]
+etymology_hook: "ōdalu: native ōdu 'to read, recite' (DEDR 1052) + -alu 'to, in order to'"
 duration:
-  max_seconds: 210
+  max_seconds: 229
 requires:
   knowledge: [KA-LEX-C73-ABLE-01, KA-LEX-C33-OODU-01, KA-LEX-C32-HOOGU-01, KA-LEX-C46-ASK-05]
 introduces:
@@ -45,6 +46,11 @@ whole change, and it turns a verb into a purpose.
 
 **ಪುಸ್ತಕ ಓದಲು ಹೋಗುತ್ತೇನೆ** (*pustaka ōdalu hōguttēne*) — "I am going to read a
 book", meaning I am going in order to read one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಓದಲು** (*ōdalu*) is native Dravidian: *ōdu*, "to read, recite" (DEDR 1052, with Tamil *ōtu*), with *-alu*, the ending that means "to, in order to".
 
 ## Grammar Lens: three endings, three ways to join two actions
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C73-ABLE-03]; assesses=[] -->

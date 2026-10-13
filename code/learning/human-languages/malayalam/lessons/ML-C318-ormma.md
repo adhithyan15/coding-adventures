@@ -14,7 +14,8 @@ romanization: "ōrmma"
 concept_tag: ML-KARANAM318-ORMMA
 prerequisites: [ML-C318-telivu, ML-C318-vicaram]
 sounds: []
-roots: []
+roots: [dravidian-or-remember]
+etymology_hook: "ōrmma: native Dravidian, the noun of the verb 'to remember'; Tamil ōr (DEDR 1059)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C318-vicaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C318-KARANAM318-04]; assesses=[] -->
 
 **ഓർമ്മ** — *ōrmma* — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓർമ്മ** (*ōrmma*) is native Dravidian, the noun of the verb "to think, remember"; DEDR 1059 lists Malayalam *ōrmma*, "recollection", itself, beside Tamil *ōr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

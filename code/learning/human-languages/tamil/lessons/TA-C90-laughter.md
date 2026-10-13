@@ -11,7 +11,8 @@ romanization: "sirippu"
 concept_tag: TA-MOOD-LAUGH
 prerequisites: [TA-C89-calm, TA-C89-shivering]
 sounds: []
-roots: []
+roots: [dravidian-ciri-laugh]
+etymology_hook: "சிரிப்பு — native Dravidian (DEDR 1562); Malayalam ciri 'laughter'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C89-shivering]
 **சிரிப்பு** (*sirippu*) — "laughter", and "a smile".
 
 **சிரிப்பு வருகிறது** — "I feel like laughing", literally "laughter is coming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிரிப்பு** (*sirippu*) is native Dravidian. DEDR 1562 lists Malayalam *ciri*, "laughter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

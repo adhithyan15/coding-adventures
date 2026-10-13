@@ -11,7 +11,8 @@ romanization: "mātraṁ"
 concept_tag: ML-WORD-ONLY
 prerequisites: [ML-C64-sometimes, ML-C62-broom]
 sounds: []
-roots: []
+roots: [sanskrit-matra]
+etymology_hook: "mātraṁ ← Sanskrit mātrā 'measure', a tatsama (CDIAL 10023)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *mātra*, a measure, from the root *mā*, to measure. The Greek *metron
 Set after a word it fences that word off: this much, and nothing beyond it.
 
 Beside *kuṟaccŭ*, which says a small amount, മാത്രം says an exact amount and shuts the door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാത്രം** (*mātraṁ*) ← Sanskrit *mātrā*, "measure", taken over whole as a tatsama (CDIAL 10023). At the end of a Sanskrit compound *-mātra* already meant "only so much".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

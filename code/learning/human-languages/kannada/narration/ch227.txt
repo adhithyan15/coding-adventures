@@ -12,6 +12,9 @@ Before the new one: say the Kannada for son-in-law, then the Kannada for sister-
 You'll want to know: ಗರಗಸ.
 ಗರಗಸ — garagasa — "a saw".
 
+The word, taken apart.
+ಗರಗಸ (garagasa) is usually linked to garasu, "a jag, the toothed part of a file or saw", which DEDR 1265 lists. DEDR does not list garagasa itself. DEDR 1265 compares Sanskrit karaṭa and karavāla.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for sister-in-law, then the Kannada for a sa
 
 You'll want to know: ಏಣಿ.
 ಏಣಿ — ēṇi — "a ladder".
+
+The word, taken apart.
+The origin of ಏಣಿ (ēṇi) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a saw, then the Kannada for a ladder.
 You'll want to know: ಅಂಟು.
 ಅಂಟು — aṇṭu — "glue".
 
+The word, taken apart.
+ಅಂಟು (aṇṭu) is native Dravidian, one word with Tamil aṭṭu and Telugu aṇṭu (DEDR 96). DEDR lists aṇṭu, "that which is sticky, gum, paste".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a ladder, then the Kannada for glue.
 You'll want to know: ಟಾರ್ಚ್.
 ಟಾರ್ಚ್ — ṭārc — "a torch".
 
+The word, taken apart.
+ಟಾರ್ಚ್ (ṭārc) is a loan from English torch.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for glue, then the Kannada for a torch.
 
 You'll want to know: ಯಂತ್ರ.
 ಯಂತ್ರ — yantra — "a machine".
+
+The word, taken apart.
+ಯಂತ್ರ (yantra) is Sanskrit yantra, "controlling device; any contrivance", taken over whole as a learned loan, a tatsama (CDIAL 10412).
 
 What you've built.
 One more word for this chapter.

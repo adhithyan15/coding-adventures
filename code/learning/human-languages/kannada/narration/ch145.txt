@@ -12,6 +12,9 @@ Before the new one: say the Kannada for grey, then the Kannada for spicy.
 You'll want to know: ಕಹಿ.
 ಕಹಿ — kahi — "bitter".
 
+The word, taken apart.
+ಕಹಿ (kahi) is native Dravidian, one word with Tamil kaya, "to be bitter" (DEDR 1249). DEDR lists the older Kannada kayi, kaypu, "bitterness". DEDR 1249 compares Sanskrit kaṣāya.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for spicy, then the Kannada for bitter.
 
 You'll want to know: ಹುಳಿ.
 ಹುಳಿ — huḷi — "sour".
+
+The word, taken apart.
+ಹುಳಿ (huḷi) is native Dravidian, one word with Tamil puḷi and Telugu puli (DEDR 4322). DEDR lists Kannada puḷi, "sourness", and huḷi, "to turn sour".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for bitter, then the Kannada for sour.
 You'll want to know: ಸಿಹಿ.
 ಸಿಹಿ — sihi — "sweet".
 
+The word, taken apart.
+ಸಿಹಿ (sihi) is native Dravidian, of the root for "sweet", and DEDR 3268 lists sihi, "sweet", itself; the entry also has Tamil tīm. DEDR 3268 compares, with a query, Prakrit tiṇisa.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for sour, then the Kannada for sweet.
 You'll want to know: ಸೋಮಾರಿ.
 ಸೋಮಾರಿ — sōmāri — "lazy".
 
+The word, taken apart.
+The origin of ಸೋಮಾರಿ (sōmāri) is uncertain. DEDR has no Kannada form for it, though DEDR 2882 lists Tamil cōmāṟi, "sluggard", which looks like the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for sweet, then the Kannada for lazy.
 
 You'll want to know: ಜಾಣ.
 ಜಾಣ — jāṇa — "clever".
+
+The word, taken apart.
+The origin of ಜಾಣ (jāṇa) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.

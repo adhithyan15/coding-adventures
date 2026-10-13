@@ -11,7 +11,8 @@ romanization: "bēga"
 concept_tag: KA-WORD-SOON
 prerequisites: [KA-C64-still, KA-C62-broom]
 sounds: []
-roots: []
+roots: [sanskrit-vega]
+etymology_hook: "bēga ← Sanskrit vēga 'violent agitation; speed', reshaped as a tadbhava (CDIAL 12089)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C64-still]
 ಬೇಗ is inherited, and it holds hurry and nearness-in-time on one shape. ಬೇಗ ಬಾ is *come quickly* and equally *come soon*, and which one is meant is settled by everything around it rather than by the word.
 
 Set it against *īga*, the now-word from the leave-taking chapter. *Īga* is this moment. ಬೇಗ is a moment that has not arrived but will not keep you waiting. They rhyme and are unrelated, which by now should surprise you less than it did.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇಗ** (*bēga*) comes from Sanskrit *vēga*, "violent agitation; speed", reshaped to Kannada sounds: a tadbhava (CDIAL 12089). The Sanskrit *v-* became Kannada *b-*, and the noun "speed" became "quickly, soon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

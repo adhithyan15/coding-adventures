@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 168,
-  "sourceHash": "fnv1a64:aa8d07ed2c8bfb3b",
+  "sourceHash": "fnv1a64:3245fa55f04ca33a",
   "lessonIds": [
     "FR-C168-regle",
     "FR-C168-permission",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch168.txt",
   "json": "french/narration/ch168.json",
-  "textHash": "fnv1a64:56302a11d49d53fa",
-  "jsonHash": "fnv1a64:9472aa5acbe64510",
+  "textHash": "fnv1a64:dd6eb399c56c5b84",
+  "jsonHash": "fnv1a64:31cac3d901babd42",
   "findings": []
 }

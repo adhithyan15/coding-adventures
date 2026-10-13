@@ -13,7 +13,8 @@ gloss: "a potato"
 concept_tag: GE-ESSEN2-KARTOFFEL
 prerequisites: [GE-C69-apfel, GE-C70-banane]
 sounds: []
-roots: []
+roots: [tuber-latin]
+etymology_hook: "Kartoffel ← older Tartuffel ← Italian tartufolo 'truffle' — the potato was named after the truffle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C70-banane]
 <!-- hl-knowledge: introduces=[GE-LEX-C70-ESSEN2-02]; assesses=[] -->
 
 **die Kartoffel** — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kartoffel** ← older German *Tartuffel* ← Italian *tartufolo*, "truffle" (EtymDB 2.1) — borrowed: the potato, another lump dug from the earth, was named after the truffle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

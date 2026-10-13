@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 7,
-  "sourceHash": "fnv1a64:c80d4714467efee8",
+  "sourceHash": "fnv1a64:e8d3a6572ed60ee3",
   "lessonIds": [
     "FR-C07-lune",
     "FR-C07-lundi",
@@ -17,7 +17,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch07.txt",
   "json": "french/narration/ch07.json",
-  "textHash": "fnv1a64:00aee7f890a75a01",
-  "jsonHash": "fnv1a64:212217a78dd6e65d",
+  "textHash": "fnv1a64:cf00312e43f2724d",
+  "jsonHash": "fnv1a64:3e64b6aea144d326",
   "findings": []
 }

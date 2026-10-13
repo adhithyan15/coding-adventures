@@ -14,6 +14,7 @@ concept_tag: GE-KLEIDUNG120-BLUSE
 prerequisites: [GE-C119-schuhe, GE-C120-socken]
 sounds: []
 roots: []
+etymology_hook: "Bluse ← French blouse — borrowed, like English blouse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C120-socken]
 <!-- hl-knowledge: introduces=[GE-LEX-C120-KLEIDUNG120-02]; assesses=[] -->
 
 **die Bluse** — "a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bluse** ← French *blouse* (EtymDB 2.1) — borrowed, like English *blouse*. Where the French word came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

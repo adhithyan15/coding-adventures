@@ -14,6 +14,7 @@ concept_tag: FR-MAISON64-RIDEAU
 prerequisites: [FR-C112-armoire, FR-C112-etagere]
 sounds: []
 roots: []
+etymology_hook: "rideau ← Old French ridel 'a pleated cloth', from rider 'to pleat'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C112-etagere]
 <!-- hl-knowledge: introduces=[FR-LEX-C112-MAISON64-05]; assesses=[] -->
 
 **le rideau** — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rideau** ← Old French *ridel*, "a pleated cloth", from *rider*, "to pleat, to wrinkle". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

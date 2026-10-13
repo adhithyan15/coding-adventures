@@ -13,7 +13,8 @@ gloss: "a monkey"
 concept_tag: FR-ANIMAUX39-SINGE
 prerequisites: [FR-C87-chevre, FR-C87-lion]
 sounds: []
-roots: []
+roots: [simia-latin]
+etymology_hook: "singe ← Latin simius 'ape', from simus 'snub-nosed' — English simian shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C87-lion]
 <!-- hl-knowledge: introduces=[FR-LEX-C87-ANIMAUX39-04]; assesses=[] -->
 
 **le singe** — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**singe** ← Latin *simius*, "an ape", a form of *simia*, built on *simus*, "snub-nosed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

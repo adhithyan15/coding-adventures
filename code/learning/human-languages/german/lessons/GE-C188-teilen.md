@@ -13,7 +13,8 @@ gloss: "to share, to divide"
 concept_tag: GE-VERB-TEILEN
 prerequisites: [GE-C187-steigen, GE-C188-streichen]
 sounds: []
-roots: []
+roots: [germanic-dailijana]
+etymology_hook: "teilen ← Old High German teilen ← Proto-Germanic *dailijaną — the same verb as English deal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C188-streichen]
 <!-- hl-knowledge: introduces=[GE-LEX-C188-VERB188-02]; assesses=[] -->
 
 **teilen** — "to share, to divide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**teilen** ← Old High German *teilen* ← Proto-Germanic *\*dailijaną*, "to divide, to deal out" — inherited, the same verb as English *deal*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

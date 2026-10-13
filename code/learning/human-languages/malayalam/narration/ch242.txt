@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for however, then the Malayalam for if so.
 You'll want to know: കുറഞ്ഞത്.
 കുറഞ്ഞത് — kuṟaññatŭ — "at least".
 
+The word, taken apart.
+കുറഞ്ഞത് (kuṟaññatŭ) is native Dravidian, "the least amount", from the verb "to dwindle, be little" (DEDR 1851, with Tamil kuṟu).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for if so, then the Malayalam for at least
 
 You'll want to know: ഒന്നുകിൽ.
 ഒന്നുകിൽ — onnukil — "either (… or)".
+
+The word, taken apart.
+ഒന്നുകിൽ (onnukil) is native Dravidian: onnŭ, "one" (DEDR 990), with the conditional -kil, "if": "if one (thing)…".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for at least, then the Malayalam for eithe
 You'll want to know: വ്യത്യാസം.
 വ്യത്യാസം — vyatyāsaṁ — "a difference".
 
+The word, taken apart.
+വ്യത്യാസം (vyatyāsaṁ) from Sanskrit vyatyāsa, "inversion, contrariety", taken over whole as a tatsama, with Malayalam's noun ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for either, then the Malayalam for a diffe
 You'll want to know: കാര്യം.
 കാര്യം — kāryaṁ — "a matter, an affair".
 
+The word, taken apart.
+കാര്യം (kāryaṁ) from Sanskrit kārya, "to be done; business", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 3078). It is built on the root kṛ, "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a difference, then the Malayalam for a
 
 You'll want to know: സാഹചര്യം.
 സാഹചര്യം — sāhacaryaṁ — "a situation".
+
+The word, taken apart.
+സാഹചര്യം (sāhacaryaṁ) from Sanskrit sāhacarya, "companionship, accompaniment", taken over whole as a tatsama, with Malayalam's noun ending -ṁ.
 
 What you've built.
 One more word for this chapter.

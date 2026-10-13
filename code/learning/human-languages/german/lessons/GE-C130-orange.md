@@ -14,6 +14,7 @@ concept_tag: GE-FARBE130-ORANGE
 prerequisites: [GE-C129-fest, GE-C130-rosa]
 sounds: []
 roots: []
+etymology_hook: "orange ← French orange, the fruit, whose name came west from Persian through Arabic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C130-rosa]
 <!-- hl-knowledge: introduces=[GE-LEX-C130-FARBE130-02]; assesses=[] -->
 
 **orange** — "orange (the colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orange** ← French *orange*, the fruit (EtymDB 2.1), whose name came west from Persian *nārang* through Arabic — borrowed; the colour is named after the fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

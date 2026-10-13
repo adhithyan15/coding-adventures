@@ -11,7 +11,8 @@ romanization: "maram"
 concept_tag: TA-NOUN-TREE
 prerequisites: [TA-C51-cloud, TA-C50-threshold, TA-C51-sky]
 sounds: []
-roots: []
+roots: [dravidian-maram-tree]
+etymology_hook: "மரம் — native Dravidian (DEDR 4711): Malayalam maram, Kannada mara"
 duration:
   max_seconds: 210
 requires:

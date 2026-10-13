@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES223-CONCERT
 prerequisites: [FR-C223-chargeur, FR-C223-chanteur]
 sounds: []
 roots: []
+etymology_hook: "concert ← Italian concerto 'an agreement' — English concert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C223-chanteur]
 <!-- hl-knowledge: introduces=[FR-LEX-C223-CHOSES223-04]; assesses=[] -->
 
 **le concert** — "a concert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**concert** ← Italian *concerto*, "an agreement, a concert" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

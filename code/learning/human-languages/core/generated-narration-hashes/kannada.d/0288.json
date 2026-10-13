@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 288,
-  "sourceHash": "fnv1a64:23865c3b386bd42a",
+  "sourceHash": "fnv1a64:bf8042bcf86bd51f",
   "lessonIds": [
     "KA-C288-allade",
     "KA-C288-iddakkiddante",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch288.txt",
   "json": "kannada/narration/ch288.json",
-  "textHash": "fnv1a64:5427f01581e4ced6",
-  "jsonHash": "fnv1a64:6bea54f97a85f0fe",
+  "textHash": "fnv1a64:0cbea1d2a8d89692",
+  "jsonHash": "fnv1a64:e99e832fae44c93d",
   "findings": []
 }

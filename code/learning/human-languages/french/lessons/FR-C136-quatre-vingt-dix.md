@@ -14,6 +14,7 @@ concept_tag: FR-NOMBRES88-QUATRE-VINGT-DIX
 prerequisites: [FR-C136-soixante, FR-C136-soixante-dix]
 sounds: []
 roots: []
+etymology_hook: "quatre-vingt-dix — 'four-twenties-ten': quatre + vingt + dix"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C136-soixante-dix]
 <!-- hl-knowledge: introduces=[FR-LEX-C136-NOMBRES88-04]; assesses=[] -->
 
 **quatre-vingt-dix** — "ninety". Literally "four-twenties-ten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quatre-vingt-dix** — "four-twenties-ten": *quatre*, *vingt* and *dix*. Old French often counted in twenties.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

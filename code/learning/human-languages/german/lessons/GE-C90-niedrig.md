@@ -13,7 +13,8 @@ gloss: "low"
 concept_tag: GE-ADJ2-NIEDRIG
 prerequisites: [GE-C90-billig, GE-C90-hoch]
 sounds: []
-roots: []
+roots: [germanic-nither]
+etymology_hook: "niedrig — the word for 'down' + -ig; 'down' ← Old High German nidar, kin to English nether"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C90-hoch]
 <!-- hl-knowledge: introduces=[GE-LEX-C90-ADJ2-04]; assesses=[] -->
 
 **niedrig** — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**niedrig** is the word for "down" + *-ig*. That word ← Old High German *nidar* ← Proto-Germanic *\*niþer* (EtymDB 2.1); English *nether*, "lower", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

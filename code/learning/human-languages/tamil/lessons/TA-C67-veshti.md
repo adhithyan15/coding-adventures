@@ -11,7 +11,8 @@ romanization: "vēṭṭi"
 concept_tag: TA-NOUN-VESHTI
 prerequisites: [TA-C67-shirt, TA-C66-inside]
 sounds: []
-roots: []
+roots: [sanskrit-veshta]
+etymology_hook: "வேட்டி — probably from Sanskrit veṣṭ- 'to wrap' (CDIAL 12130, veṣṭa 'band'): the cloth wrapped round"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ English borrowed the northern word *dhoti* for the same idea. In Tamil Nadu the 
 hear, and the word to say, is வேட்டி.
 
 Its middle is the doubled ட you met one lesson ago in சட்டை, riding a long ே this time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வேட்டி** (*vēṭṭi*) is probably from Sanskrit *veṣṭ-*, "to wrap": CDIAL 12130 gives *veṣṭa*, "band, enclosure", and its family. A veshti is the cloth wrapped round.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

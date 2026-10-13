@@ -13,7 +13,8 @@ gloss: "to build"
 concept_tag: GE-VERB-BAUEN
 prerequisites: [GE-C175-backen, GE-C175-baden]
 sounds: []
-roots: []
+roots: [germanic-buana]
+etymology_hook: "bauen ← Old High German būan 'to dwell, to farm' — building began as settling the land"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C175-baden]
 <!-- hl-knowledge: introduces=[GE-LEX-C175-VERB175-05]; assesses=[] -->
 
 **bauen** — "to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bauen** ← Middle High German *būwen* ← Old High German *būan*, "to dwell, to farm" (EtymDB 2.1) — inherited, the verb beside *Bauer*. Old English *būan* meant "to dwell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

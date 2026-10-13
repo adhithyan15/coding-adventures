@@ -13,7 +13,8 @@ gloss: "a mushroom"
 concept_tag: GE-KLEIDUNG120-PILZ
 prerequisites: [GE-C120-rindfleisch, GE-C120-gemuese]
 sounds: []
-roots: []
+roots: [boletus-latin]
+etymology_hook: "Pilz ← Old High German buliz ← Latin bōlētus 'edible mushroom' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C120-gemuese]
 <!-- hl-knowledge: introduces=[GE-LEX-C120-KLEIDUNG120-05]; assesses=[] -->
 
 **der Pilz** — "a mushroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Pilz** ← Old High German *buliz*, from Latin *bōlētus*, "edible mushroom" ← Greek *bōlítēs* — borrowed. EtymDB 2.1 has the Latin and Greek step.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

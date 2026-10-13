@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for long ago, then the Malayalam for at da
 You'll want to know: സംസ്ഥാനം.
 സംസ്ഥാനം — saṁsthānaṁ — "a state".
 
+The word, taken apart.
+സംസ്ഥാനം (saṁsthānaṁ) from Sanskrit saṁsthāna, "standing firm; a place, a state", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13050a).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for at dawn, then the Malayalam for a stat
 
 You'll want to know: വിദേശം.
 വിദേശം — vidēśaṁ — "abroad, a foreign country".
+
+The word, taken apart.
+വിദേശം (vidēśaṁ) from Sanskrit vidēśa, "another country", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. Its parts are vi-, "apart", and dēśa, "country".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a state, then the Malayalam for abroad
 You'll want to know: സ്ഥലം.
 സ്ഥലം — sthalaṁ — "a place".
 
+The word, taken apart.
+സ്ഥലം (sthalaṁ) from Sanskrit sthala, "dry land, ground, place", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13744).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for abroad, then the Malayalam for a place
 You'll want to know: ദിശ.
 ദിശ — diśa — "a direction".
 
+The word, taken apart.
+ദിശ (diśa) from Sanskrit diś, "direction, region", taken over whole as a tatsama (CDIAL 6339).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a place, then the Malayalam for a dire
 
 You'll want to know: വടക്ക്.
 വടക്ക് — vaṭakkŭ — "north".
+
+The word, taken apart.
+വടക്ക് (vaṭakkŭ) is native Dravidian, one word with Tamil vaṭa and Kannada baḍa (DEDR 5218). DEDR 5218 lists Malayalam vaṭakku itself.
 
 What you've built.
 One more word for this chapter.

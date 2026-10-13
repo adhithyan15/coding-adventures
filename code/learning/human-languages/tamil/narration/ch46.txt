@@ -110,6 +110,9 @@ You'll want to know: விவசாயி.
 The ending is -i, which Tamil hangs on somebody by their work rather than by their sex, so the one word covers a man and a woman alike.
 The stem is borrowed. The inherited word is உழவன் (uḻavaṉ), built straight on uḻu, 'to plough', and it carries an older weight — Tamil poetry praises the uḻavaṉ, while a form at an office asks for the vivasāyi. Two words, one occupation, two registers.
 
+The word, taken apart.
+விவசாயி (vivasāyi) is built on vivasāyam, "farming", a loan from Sanskrit vyavasāya, "effort, undertaking", with -i for the person who does it. In Tamil the word narrowed from any undertaking to the work of the fields.
+
 What you've built.
 Four, and the fourth one feeds the other three.
 
@@ -141,6 +144,9 @@ You'll want to know: விருந்தாளி.
 விருந்தாளி (viruntāḷi) — "a guest".
 Take it apart and the guest is named after the meal. The first half is virundu, a feast laid on for somebody; the second is āḷi, from āḷ, 'a person'. A guest, in Tamil, is the person a feast is for — the obligation is inside the word, not added to it afterwards.
 There is an older form too, viruntiṉar, carrying the -ar you now know well. Both say the same thing: somebody has arrived, and there will be food.
+
+The word, taken apart.
+விருந்தாளி (viruntāḷi) is native: viruntu, "feast, guest" (DEDR 5415; Malayalam virunnu), and āḷ, "person". The guest is the one the feast is for.
 
 What you've built.
 That closes the run: a teacher, a student, a doctor, a farmer, a guest.

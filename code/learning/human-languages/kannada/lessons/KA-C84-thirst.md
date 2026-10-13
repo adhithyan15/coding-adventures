@@ -11,7 +11,8 @@ romanization: "bāyārike"
 concept_tag: KA-BODY-THIRST
 prerequisites: [KA-C83-anger, KA-C83-laughter]
 sounds: []
-roots: []
+roots: [dravidian-vaay-mouth, dravidian-aaru-dry]
+etymology_hook: "bāyārike: native bāyi 'mouth' (DEDR 5352) + āru 'to dry up' (DEDR 404): the mouth drying"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C83-laughter]
 which you already know: thirst is a dry mouth.
 
 **ನನಗೆ ಬಾಯಾರಿಕೆ** (*nanage bāyārike*) — "I am thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಯಾರಿಕೆ** (*bāyārike*) is native Dravidian: *bāyi*, "mouth" (DEDR 5352, with Tamil *vāy*), and *āru*, "to dry up" (DEDR 404), with the noun ending *-ike*. Thirst is the mouth drying out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

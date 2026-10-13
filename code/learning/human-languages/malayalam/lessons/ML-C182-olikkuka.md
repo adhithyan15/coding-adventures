@@ -14,7 +14,8 @@ romanization: "oḻikkuka"
 concept_tag: ML-VERB-OLIKKUKA
 prerequisites: [ML-C182-tilappikkuka, ML-C182-varukkuka]
 sounds: []
-roots: []
+roots: [dravidian-ozhuku-flow]
+etymology_hook: "oḻikkuka: native Dravidian, one word with Tamil oḻuku and Kannada oḻku (DEDR 1010)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C182-varukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C182-KRIYA182-05]; assesses=[] -->
 
 **ഒഴിക്കുക** — *oḻikkuka* — "to pour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒഴിക്കുക** (*oḻikkuka*) is native Dravidian, one word with Tamil *oḻuku* and Kannada *oḻku* (DEDR 1010). The root is about flowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

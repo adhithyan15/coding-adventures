@@ -14,7 +14,8 @@ romanization: "udāharaṇaṁ"
 concept_tag: ML-JOLI262-UDAHARANAM
 prerequisites: [ML-C261-ripporttu, ML-C262-kurippu]
 sounds: []
-roots: []
+roots: [sanskrit-udaharana]
+etymology_hook: "udāharaṇaṁ ← Sanskrit udāharaṇa 'example, illustration', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C262-kurippu]
 <!-- hl-knowledge: introduces=[ML-LEX-C262-JOLI262-02]; assesses=[] -->
 
 **ഉദാഹരണം** — *udāharaṇaṁ* — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉദാഹരണം** (*udāharaṇaṁ*) ← Sanskrit *udāharaṇa*, "example, illustration", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

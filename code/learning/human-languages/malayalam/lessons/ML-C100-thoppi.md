@@ -11,7 +11,8 @@ romanization: "toppi"
 concept_tag: ML-CAP
 prerequisites: [ML-C100-cheruppu, ML-C42-new]
 sounds: []
-roots: []
+roots: [hindustani-topi]
+etymology_hook: "toppi: shared with Hindustani ṭopī; CDIAL 5481 sets up an Indo-Aryan *ṭōppa 'hat', origin uncertain"
 duration:
   max_seconds: 250
 requires:
@@ -60,6 +61,8 @@ reviews_of: [ML-C100-saari, ML-C100-cheruppu]
 has taken the **യ** since **ഇത് എന്റെ കുട്ടിയാണ്**. **പാട്ട്**, **കളി** and
 **ഭംഗി** are the most recent words to use them, not the words they began with.
 What the chapter gave you is four things to wear.
+
+**Where the word comes from.** It is shared with Hindustani *ṭopī*, "cap". CDIAL 5481 sets up an Indo-Aryan form *\*ṭōppa*, "hat, covering", and its ultimate origin is uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C100-CAP-01, ML-LEX-C100-SARI-01, ML-LEX-C41-DEIXIS-01] -->

@@ -12,6 +12,7 @@ concept_tag: KA-VERB-MATANADU
 prerequisites: [KA-C03-naanu, KA-C03-cennaagi]
 sounds: [long-aa]
 roots: [maatu-word-dravidian]
+etymology_hook: "mātanāḍu: native mātu 'word' (DEDR 4834; Telugu māṭa) + āḍu 'to move, play' (DEDR 347)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,8 @@ to converse. To say "**I speak**," Kannada adds a two-part ending to the stem:
 The **-ಏನೆ** (*-ēne*) ending *is* "I," so *nānu* is rarely needed. Change the
 ending, change the person: *mātanāḍuttāne* (he), *mātanāḍuttāḷe* (she),
 *mātanāḍuttāre* (they / you-respectful).
+
+DEDR 4834 lists Kannada *mātu*, "word, saying", with Telugu *māṭa*, "word", and even Telugu *māṭal-āḍu*, "to speak"; *āḍu* is in DEDR 347.
 
 ## Grammar Lens: stem + tense + person
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C05-MATANADU-02]; assesses=[] -->

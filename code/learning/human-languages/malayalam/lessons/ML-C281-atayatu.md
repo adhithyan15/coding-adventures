@@ -14,7 +14,8 @@ romanization: "atāyatŭ"
 concept_tag: ML-KARANAM281-ATAYATU
 prerequisites: [ML-C281-kutate, ML-C281-udaharanattinu]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, aaka-dravidian]
+etymology_hook: "atāyatŭ: native Dravidian, 'that which is that': atŭ (DEDR 1) + āyatŭ (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C281-udaharanattinu]
 <!-- hl-knowledge: introduces=[ML-LEX-C281-KARANAM281-04]; assesses=[] -->
 
 **അതായത്** — *atāyatŭ* — "that is, in other words".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അതായത്** (*atāyatŭ*) is native Dravidian, "that is": *atŭ*, "that" (DEDR 1), and *āyatŭ*, "what has become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

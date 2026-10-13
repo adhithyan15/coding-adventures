@@ -13,7 +13,8 @@ gloss: "to foresee, to plan for"
 concept_tag: FR-VERB-PREVOIR
 prerequisites: [FR-C141-ce-soir, FR-C141-le-projet]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "prévoir ← Old French preveoir, after Latin praevidere 'to see beforehand' — English provide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C141-le-projet]
 <!-- hl-knowledge: introduces=[FR-LEX-C141-FUT141-04]; assesses=[] -->
 
 **prévoir** — "to foresee, to plan for". **voir** with **pré-**, "before": seeing a thing before it comes. The future of **être** is irregular: **je serai**, **tu seras**, **il sera**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prévoir** ← Old French *preveoir*, modelled on Latin *praevidere*, "to see beforehand", from *videre*, "to see". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

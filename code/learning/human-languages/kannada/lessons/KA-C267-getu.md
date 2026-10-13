@@ -14,7 +14,8 @@ romanization: "gēṭu"
 concept_tag: KA-VASTU267-GETU
 prerequisites: [KA-C267-paip, KA-C267-pampu]
 sounds: []
-roots: []
+roots: [english-gate]
+etymology_hook: "gēṭu ← English gate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C267-pampu]
 <!-- hl-knowledge: introduces=[KA-LEX-C267-VASTU267-05]; assesses=[] -->
 
 **ಗೇಟು** — *gēṭu* — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೇಟು** (*gēṭu*) is a loan from English *gate*. Kannada adds a final *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

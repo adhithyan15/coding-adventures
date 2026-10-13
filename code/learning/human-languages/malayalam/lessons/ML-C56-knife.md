@@ -11,7 +11,8 @@ romanization: "katti"
 concept_tag: ML-NOUN-KNIFE
 prerequisites: [ML-C56-basket, ML-C54-trunk]
 sounds: []
-roots: []
+roots: [dravidian-katti-knife]
+etymology_hook: "katti: native Dravidian, one word with Tamil katti and Kannada katti (DEDR 1204)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *katti*, and the doubled *tt* is held long here too �
 Kerala's characteristic blade is not held in the hand at all. It is the വാക്കത്തി and the sickle-shaped cutter clamped to a board, worked by pulling the vegetable across a fixed edge while sitting on the floor. The word covers that as readily as it covers a table knife.
 
 A word for a tool tends to outlast the tool's shape, and this one has outlasted several.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കത്തി** (*katti*) is native Dravidian, one word with Tamil *katti*, Kannada *katti* and Telugu *katti* (DEDR 1204).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

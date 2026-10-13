@@ -12,6 +12,9 @@ Before the new one: say the French for a coin, a room, then the French for a ban
 You'll want to know: l'entrée.
 l'entrée — "an entrance".
 
+The word, taken apart.
+entrée is the past participle of the verb for "to enter", used as a noun, from Latin intrare (Lewis & Short): the way in.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the French for a banknote, then the French for an entran
 
 You'll want to know: la sortie.
 la sortie — "an exit".
+
+The word, taken apart.
+sortie is the past participle of the verb for "to go out", used as a noun: the way out. The verb's origin is uncertain; the usual guess is Latin sortiri, "to draw lots".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the French for an entrance, then the French for an exit.
 You'll want to know: les bagages.
 les bagages — "luggage".
 
+The word, taken apart.
+bagages — built from Old French bague, "a bundle" (EtymDB 2.1), with -age; bague's own origin is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the French for an exit, then the French for luggage.
 You'll want to know: le siège.
 le siège — "a seat".
 
+The word, taken apart.
+siège from Old French siege from Vulgar Latin sedicum, from Latin sedes, "a seat" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the French for luggage, then the French for a seat.
 
 You'll want to know: le volant.
 le volant — "a steering wheel".
+
+The word, taken apart.
+volant is the present participle of the verb for "to fly", from Latin volare (Lewis & Short), used as a noun: a thing that spins freely.
 
 What you've built.
 One more word for this chapter.

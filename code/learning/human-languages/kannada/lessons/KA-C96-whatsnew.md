@@ -11,7 +11,8 @@ romanization: "ēnu samācāra"
 concept_tag: KA-GREET-WHATS-NEW
 prerequisites: [KA-C95-certainly, KA-C96-eaten]
 sounds: []
-roots: []
+roots: [yaa-dravidian, sanskrit-samacara]
+etymology_hook: "ēnu samācāra: native ēnu 'what' (DEDR 5151) + samācāra ← Sanskrit 'news, conduct'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C96-eaten]
 
 **ಏನು ಸಮಾಚಾರ?** (*ēnu samācāra?*) — "what's new?", literally "what news?".
 **ಸಮಾಚಾರ** (*samācāra*) is "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಏನು ಸಮಾಚಾರ** (*ēnu samācāra*) is *ēnu*, "what" (DEDR 5151), native, and *samācāra*, "news", from Sanskrit *samācāra*, "conduct, usage", which also came to mean news.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

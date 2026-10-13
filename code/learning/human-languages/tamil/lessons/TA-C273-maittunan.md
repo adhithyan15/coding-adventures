@@ -14,7 +14,8 @@ romanization: "maittuṉaṉ"
 concept_tag: TA-PORUL273-MAITTUNAN
 prerequisites: [TA-C273-utanpirantavar, TA-C273-irattaiyar]
 sounds: []
-roots: []
+roots: [sanskrit-maithuna]
+etymology_hook: "மைத்துனன் ← Sanskrit maithuna 'paired' (CDIAL 10341), the kin sense via Prakrit (DEDR App. 53)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C273-irattaiyar]
 <!-- hl-knowledge: introduces=[TA-LEX-C273-PORUL273-05]; assesses=[] -->
 
 **மைத்துனன்** — *maittuṉaṉ* — "a brother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மைத்துனன்** (*maittuṉaṉ*) is a loan from Sanskrit *maithuna*, "paired, coupled" (CDIAL 10341); DEDR App. 53 traces the kinship sense through Prakrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

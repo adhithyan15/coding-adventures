@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX40-ELEPHANT
 prerequisites: [FR-C87-abeille, FR-C88-fourmi]
 sounds: []
 roots: []
+etymology_hook: "éléphant ← Latin elephantus, from Greek elephas 'elephant, ivory' — English elephant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C88-fourmi]
 <!-- hl-knowledge: introduces=[FR-LEX-C88-ANIMAUX40-02]; assesses=[] -->
 
 **l'éléphant** — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**éléphant** ← Latin *elephantus*, from Greek *elephas*, "elephant, ivory" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

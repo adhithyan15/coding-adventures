@@ -14,7 +14,8 @@ romanization: "paṟa"
 concept_tag: TA-VERB-PARA
 prerequisites: [TA-C152-kuti, TA-C152-nintu]
 sounds: []
-roots: []
+roots: [dravidian-para-fly]
+etymology_hook: "பற — native Dravidian (DEDR 4020); Malayalam paṟakka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C152-nintu]
 <!-- hl-knowledge: introduces=[TA-LEX-C152-ACT152-04]; assesses=[] -->
 
 **பற** — *paṟa* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பற** (*paṟa*) is native Dravidian. DEDR 4020 lists Malayalam *paṟakka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

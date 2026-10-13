@@ -14,7 +14,8 @@ romanization: "piṅkŭ"
 concept_tag: ML-GUNAM245-PINKU
 prerequisites: [ML-C245-tavittu, ML-C245-caraniram]
 sounds: []
-roots: []
+roots: [english-pink]
+etymology_hook: "piṅkŭ ← English pink"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C245-caraniram]
 <!-- hl-knowledge: introduces=[ML-LEX-C245-GUNAM245-04]; assesses=[] -->
 
 **പിങ്ക്** — *piṅkŭ* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിങ്ക്** (*piṅkŭ*) ← English *pink*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rōgi"
 concept_tag: ML-AROGYAM312-ROGI
 prerequisites: [ML-C311-pataruka, ML-C312-rogam]
 sounds: []
-roots: []
+roots: [sanskrit-roga]
+etymology_hook: "rōgi ← Sanskrit rōgin 'diseased, a sick person', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C312-rogam]
 <!-- hl-knowledge: introduces=[ML-LEX-C312-AROGYAM312-02]; assesses=[] -->
 
 **രോഗി** — *rōgi* — "a patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രോഗി** (*rōgi*) ← Sanskrit *rōgin*, "diseased, a sick person", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

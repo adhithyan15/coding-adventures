@@ -14,7 +14,8 @@ romanization: "hubbu"
 concept_tag: KA-THINGS136-HUBBU
 prerequisites: [KA-C136-ede, KA-C136-sonta]
 sounds: []
-roots: []
+roots: [kannada-hubbu-eyebrow]
+etymology_hook: "hubbu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C136-sonta]
 <!-- hl-knowledge: introduces=[KA-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **ಹುಬ್ಬು** — *hubbu* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಹುಬ್ಬು** (*hubbu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

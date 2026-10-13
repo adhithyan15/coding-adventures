@@ -14,7 +14,8 @@ romanization: "aḻukkāṉa"
 concept_tag: TA-QUAL145-ALUKKANA
 prerequisites: [TA-C145-katinamana, TA-C145-cuttamana]
 sounds: []
-roots: []
+roots: [dravidian-azhukku-dirt]
+etymology_hook: "அழுக்கான — native Dravidian (DEDR 283); Malayalam aḻukku 'dirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C145-cuttamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C145-QUAL145-04]; assesses=[] -->
 
 **அழுக்கான** — *aḻukkāṉa* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழுக்கான** (*aḻukkāṉa*) is native Dravidian. DEDR 283 lists Malayalam *aḻukku*, "dirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

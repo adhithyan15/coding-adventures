@@ -14,7 +14,8 @@ romanization: "ṭōrccŭ"
 concept_tag: ML-VASTU214-TORCCU
 prerequisites: [ML-C213-paruntu, ML-C213-kokku]
 sounds: []
-roots: []
+roots: [english-torch]
+etymology_hook: "ṭōrccŭ ← English torch"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C213-kokku]
 <!-- hl-knowledge: introduces=[ML-LEX-C214-VASTU214-01]; assesses=[] -->
 
 **ടോർച്ച്** — *ṭōrccŭ* — "a torch, a flashlight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ടോർച്ച്** (*ṭōrccŭ*) ← English *torch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

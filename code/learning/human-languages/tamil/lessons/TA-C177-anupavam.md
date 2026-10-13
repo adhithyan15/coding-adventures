@@ -14,7 +14,8 @@ romanization: "aṉupavam"
 concept_tag: TA-KARANAM177-ANUPAVAM
 prerequisites: [TA-C177-tirvu, TA-C177-nokkam]
 sounds: []
-roots: []
+roots: [sanskrit-anubhava]
+etymology_hook: "அனுபவம் ← Sanskrit anubhava 'experience, perception', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C177-nokkam]
 <!-- hl-knowledge: introduces=[TA-LEX-C177-KARANAM177-05]; assesses=[] -->
 
 **அனுபவம்** — *aṉupavam* — "an experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அனுபவம்** (*aṉupavam*) is a well-established loan from Sanskrit *anubhava*, "experience, perception".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

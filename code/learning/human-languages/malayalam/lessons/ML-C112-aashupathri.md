@@ -11,7 +11,8 @@ gloss: a hospital — the place that gathers the doctor and the medicine you can
 concept_tag: ML-NOUN-HOSPITAL
 prerequisites: [ML-C112-poleesu, ML-C107-marunnu, ML-C48-doctor]
 sounds: [malayalam-sha, conjunct]
-roots: []
+roots: [english-hospital]
+etymology_hook: "āśupatri: generally explained as English hospital, reshaped and given a Sanskrit-looking spelling"
 duration:
   max_seconds: 215
 requires:
@@ -42,6 +43,11 @@ substance for some time. You have never had the building they are both in.
 **ആശുപത്രി** (*āśupatri*) — **a hospital**.
 
 The doctor, the medicine, the building. The set is complete now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആശുപത്രി** (*āśupatri*) is generally explained as English *hospital*, reshaped in the mouth and then given a Sanskrit-looking spelling. The Sanskrit look is a later dressing, not its source.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C112-HOSPITAL-01, ML-LEX-C112-POLICE-01] -->

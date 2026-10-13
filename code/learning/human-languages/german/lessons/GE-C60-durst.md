@@ -13,7 +13,8 @@ gloss: "thirst"
 concept_tag: GE-GEFUEHLE1-DURST
 prerequisites: [GE-C59-krank, GE-C60-gesund]
 sounds: []
-roots: []
+roots: [germanic-thurstuz]
+etymology_hook: "Durst ← Old High German durst ← Proto-Germanic *þurstuz — the same word as English thirst"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C60-gesund]
 <!-- hl-knowledge: introduces=[GE-LEX-C60-GEFUEHLE1-02]; assesses=[] -->
 
 **der Durst** — "thirst".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Durst** ← Old High German *durst* ← Proto-Germanic *\*þurstuz*, "dryness, thirst" — inherited, the same word as English *thirst*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

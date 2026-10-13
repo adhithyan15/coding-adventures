@@ -14,7 +14,8 @@ romanization: "tērcci peṟu"
 concept_tag: TA-VERB-TERCCI-PERU
 prerequisites: [TA-C164-oppatai, TA-C164-payirci-cey]
 sounds: []
-roots: []
+roots: [dravidian-teri-be-clear, dravidian-peru-get]
+etymology_hook: "தேர்ச்சி பெறு — native: tērcci, from tēr 'to examine' (DEDR 3419) + peṟu 'to get' (DEDR 4422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C164-payirci-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C164-ACT164-04]; assesses=[] -->
 
 **தேர்ச்சி பெறு** — *tērcci peṟu* — "to pass (an exam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேர்ச்சி பெறு** (*tērcci peṟu*) is native: *tērcci*, "proficiency, a pass", from *tēr*, "to examine, to become skilled" (DEDR 3419), and *peṟu*, "to get" (DEDR 4422).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

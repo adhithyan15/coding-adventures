@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 66,
-  "sourceHash": "fnv1a64:a7c2007afed88c2c",
+  "sourceHash": "fnv1a64:853797d5f1f168d5",
   "lessonIds": [
     "FR-C66-dessiner",
     "FR-C66-peindre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch66.txt",
   "json": "french/narration/ch66.json",
-  "textHash": "fnv1a64:b1e599a91b35ac1e",
-  "jsonHash": "fnv1a64:8924a5cf759a2fa6",
+  "textHash": "fnv1a64:00e82b358d64e276",
+  "jsonHash": "fnv1a64:77d51eb35e0cd257",
   "findings": []
 }

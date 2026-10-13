@@ -12,6 +12,7 @@ concept_tag: TA-WORD-TAMIZH
 prerequisites: [TA-C05-pesu, TA-C03-naan]
 sounds: [zh-retroflex]
 roots: [tamizh]
+etymology_hook: "தமிழ் — native (DEDR 3080, which compares Sanskrit draviḍa), with nāṉ 'I' (DEDR 5160) and pēsu 'speak' (DEDR 4430)"
 reviews_of: [TA-C05-pesu, TA-C03-naan]
 duration:
   max_seconds: 240

@@ -14,7 +14,8 @@ romanization: "poḷikkuka"
 concept_tag: ML-VERB-POLIKKUKA
 prerequisites: [ML-C311-talotuka, ML-C311-otukkuka]
 sounds: []
-roots: []
+roots: [dravidian-poli-break]
+etymology_hook: "poḷikkuka: native Dravidian, one word with Tamil poḷi and Kannada poḷḷu (DEDR 4560)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C311-otukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C311-KRIYA311-03]; assesses=[] -->
 
 **പൊളിക്കുക** — *poḷikkuka* — "to pull down, to demolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊളിക്കുക** (*poḷikkuka*) is native Dravidian, one word with Tamil *poḷi* and Kannada *poḷḷu* (DEDR 4560). Its first sense is "to break open, unroof".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

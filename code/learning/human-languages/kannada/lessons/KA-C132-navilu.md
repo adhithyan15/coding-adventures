@@ -14,7 +14,8 @@ romanization: "navilu"
 concept_tag: KA-THINGS132-NAVILU
 prerequisites: [KA-C131-parivala, KA-C131-gube]
 sounds: []
-roots: []
+roots: [dravidian-navil-peacock]
+etymology_hook: "navilu: native Dravidian, one word with Telugu nemali (DEDR 2902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C131-gube]
 <!-- hl-knowledge: introduces=[KA-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **ನವಿಲು** — *navilu* — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನವಿಲು** (*navilu*) is native Dravidian, one word with Telugu *nemali* (DEDR 2902). DEDR lists Kannada *navil(u)*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

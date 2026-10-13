@@ -13,7 +13,8 @@ gloss: "however, yet"
 concept_tag: FR-POURQUOI158-POURTANT
 prerequisites: [FR-C157-a-cote, FR-C158-donc]
 sounds: []
-roots: []
+roots: [tantus]
+etymology_hook: "pourtant — 'for so much', 'for all that'; tant ← Latin tantum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C158-donc]
 <!-- hl-knowledge: introduces=[FR-LEX-C158-POURQUOI158-02]; assesses=[] -->
 
 **pourtant** — "however, yet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pourtant** — the words for "for" and "so much", the second ← Latin *tantum* (Lewis & Short): "for all that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

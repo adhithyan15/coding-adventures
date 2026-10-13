@@ -14,6 +14,7 @@ concept_tag: GE-THING206-SPRITZE
 prerequisites: [GE-C206-pflaster, GE-C206-salbe]
 sounds: []
 roots: []
+etymology_hook: "Spritze — from a verb 'to squirt, to spray', shaped like the sound of a spurt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C206-salbe]
 <!-- hl-knowledge: introduces=[GE-LEX-C206-THING206-04]; assesses=[] -->
 
 **die Spritze** — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Spritze** comes from the verb "to squirt, to spray" (EtymDB 2.1), shaped to sound like a spurt of liquid.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

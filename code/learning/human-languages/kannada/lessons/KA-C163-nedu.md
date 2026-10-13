@@ -14,7 +14,8 @@ romanization: "neḍu"
 concept_tag: KA-VERB-NEDU
 prerequisites: [KA-C163-mosa-madu, KA-C163-hondiko]
 sounds: []
-roots: []
+roots: [dravidian-natu-plant]
+etymology_hook: "neḍu: native Dravidian, one word with Tamil naṭu (DEDR 3583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C163-hondiko]
 <!-- hl-knowledge: introduces=[KA-LEX-C163-KRIYE163-05]; assesses=[] -->
 
 **ನೆಡು** — *neḍu* — "to plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆಡು** (*neḍu*) is native Dravidian, one word with Tamil *naṭu* (DEDR 3583). DEDR lists *naḍu*, *neḍu*, "to fix in the ground, plant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

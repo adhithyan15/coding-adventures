@@ -13,6 +13,9 @@ You'll want to know: ದುಃಖ.
 ದುಃಖ (duḥkha) — "sadness, sorrow". The two small circles ಃ after ದು are the visarga: a breath at the end of the syllable, duḥ-kha.
 It is the opposite of ಸಂತೋಷ (santōṣa), "happiness", which you met at the start.
 
+The word, taken apart.
+ದುಃಖ (duḥkha) is Sanskrit duḥkha, "difficulty, pain", taken over whole as a learned loan, a tatsama (CDIAL 6375).
+
 What you've built.
 The other side of santōṣa.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for rest, then the Kannada for sadness.
 You'll want to know: ಚಿಂತೆ.
 ಚಿಂತೆ (cinte) — "worry".
 ಚಿಂತೆ ಮಾಡಬೇಡಿ (cinte māḍabēḍi) — "don't worry". The ending ‑ಬೇಡಿ is ಬೇಡ, "don't want", said politely.
+
+The word, taken apart.
+ಚಿಂತೆ (cinte) is Sanskrit cintā, "thought, care", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 4816). The Sanskrit word meant thought in general; Kannada narrowed it to anxious thought.
 
 What you've built.
 A feeling, and a kind thing to say about it.
@@ -73,6 +79,9 @@ You'll want to know: ಭಯ.
 ಭಯ (bhaya) — "fear".
 ನನಗೆ ಭಯ (nanage bhaya) — "I am afraid", again with the person in ನನಗೆ.
 
+The word, taken apart.
+ಭಯ (bhaya) is Sanskrit bhaya, "fear, peril", taken over whole as a learned loan, a tatsama (CDIAL 9390).
+
 What you've built.
 Fear, said with to-me like hunger and tiredness.
 
@@ -103,6 +112,9 @@ You'll want to know: ಕೋಪ.
 ಕೋಪ (kōpa) — "anger".
 ಕೋಪ ಬೇಡ (kōpa bēḍa) — "no anger", a gentle "please don't be angry".
 
+The word, taken apart.
+ಕೋಪ (kōpa) is Sanskrit kōpa, "anger", taken over whole as a learned loan, a tatsama (CDIAL 3516).
+
 What you've built.
 A strong feeling, and a way to calm it.
 
@@ -132,6 +144,9 @@ Before the new one: say the Kannada for fear, then the Kannada for anger.
 You'll want to know: ನಗು.
 ನಗು (nagu) — "laughter, a smile", and also the verb "to laugh".
 After sadness, worry, fear and anger, the chapter ends on this one.
+
+The word, taken apart.
+ನಗು (nagu) is native Dravidian, one word with Tamil naku (DEDR 3569).
 
 What you've built.
 The lightest feeling in the chapter.

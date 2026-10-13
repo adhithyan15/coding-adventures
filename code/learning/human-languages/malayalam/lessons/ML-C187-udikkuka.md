@@ -14,7 +14,8 @@ romanization: "udikkuka"
 concept_tag: ML-VERB-UDIKKUKA
 prerequisites: [ML-C187-natuka, ML-C187-kuraykkuka]
 sounds: []
-roots: []
+roots: [sanskrit-udaya]
+etymology_hook: "udikkuka ← Sanskrit udēti 'goes up, rises' (CDIAL 1944) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C187-kuraykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C187-KRIYA187-05]; assesses=[] -->
 
 **ഉദിക്കുക** — *udikkuka* — "to rise (of the sun or moon)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉദിക്കുക** (*udikkuka*) is built on Sanskrit *udita*, "risen", from *udēti*, "goes up, rises" (CDIAL 1944), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

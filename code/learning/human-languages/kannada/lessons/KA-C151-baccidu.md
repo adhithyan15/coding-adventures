@@ -14,7 +14,8 @@ romanization: "bacciḍu"
 concept_tag: KA-VERB-BACCIDU
 prerequisites: [KA-C151-gellu, KA-C151-solu]
 sounds: []
-roots: []
+roots: [dravidian-bay-deposit, dravidian-idu-put]
+etymology_hook: "bacciḍu: native baccu 'to put aside, hide' (DEDR 5549) + iḍu 'to put' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C151-solu]
 <!-- hl-knowledge: introduces=[KA-LEX-C151-ACT151-03]; assesses=[] -->
 
 **ಬಚ್ಚಿಡು** — *bacciḍu* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಚ್ಚಿಡು** (*bacciḍu*) is native Dravidian: *baccu*, "to deposit, put aside, hide", which DEDR 5549 lists, and *iḍu*, "to put, place" (DEDR 442).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

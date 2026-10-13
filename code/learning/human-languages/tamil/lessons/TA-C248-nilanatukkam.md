@@ -14,7 +14,8 @@ romanization: "nilanaṭukkam"
 concept_tag: TA-PORUL248-NILANATUKKAM
 prerequisites: [TA-C247-pulu, TA-C248-varatci]
 sounds: []
-roots: []
+roots: [dravidian-nilam-ground, dravidian-natunku-shake]
+etymology_hook: "நிலநடுக்கம் — native: nilam 'ground' (DEDR 3676) + naṭukkam 'trembling' (DEDR 3585)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C248-varatci]
 <!-- hl-knowledge: introduces=[TA-LEX-C248-PORUL248-02]; assesses=[] -->
 
 **நிலநடுக்கம்** — *nilanaṭukkam* — "an earthquake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிலநடுக்கம்** (*nilanaṭukkam*) is native: *nilam*, "ground, land" (DEDR 3676, which lists Malayalam nilam), and *naṭukkam*, "trembling" (DEDR 3585): "the shaking of the ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

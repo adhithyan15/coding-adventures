@@ -14,6 +14,7 @@ concept_tag: FR-VERB-ECONOMISER
 prerequisites: [FR-C205-reserver, FR-C205-depenser]
 sounds: []
 roots: []
+etymology_hook: "économiser — from Greek oikonomia 'running a household' — English economise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C205-depenser]
 <!-- hl-knowledge: introduces=[FR-LEX-C205-VERBES205-03]; assesses=[] -->
 
 **économiser** — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**économiser** — built from the word for "economy", ← Latin *oeconomia*, from Greek *oikonomia*, "running a household" (EtymDB 2.1), with *-iser*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

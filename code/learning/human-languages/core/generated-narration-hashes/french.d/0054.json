@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 54,
-  "sourceHash": "fnv1a64:dd5f51e07e6d451c",
+  "sourceHash": "fnv1a64:004b05ee9570e399",
   "lessonIds": [
     "FR-C54-hopital",
     "FR-C54-maladie",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch54.txt",
   "json": "french/narration/ch54.json",
-  "textHash": "fnv1a64:c15d9935e55d610d",
-  "jsonHash": "fnv1a64:36b6288945f7612f",
+  "textHash": "fnv1a64:f45e4da9f50a562e",
+  "jsonHash": "fnv1a64:f40133d01e4b31e5",
   "findings": []
 }

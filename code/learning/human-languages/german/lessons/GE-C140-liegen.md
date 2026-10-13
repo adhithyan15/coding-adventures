@@ -13,7 +13,8 @@ gloss: "to lie (be lying)"
 concept_tag: GE-VERB-LIEGEN
 prerequisites: [GE-C139-legen, GE-C139-stellen]
 sounds: []
-roots: []
+roots: [germanic-ligjana]
+etymology_hook: "liegen ← Old High German ligen — the same verb as English lie, 'to be lying down'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C139-stellen]
 <!-- hl-knowledge: introduces=[GE-LEX-C140-VERB140-01]; assesses=[] -->
 
 **liegen** — "to lie (be lying)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**liegen** ← Old High German *ligen* — inherited; EtymDB 2.1 lists it beside English *lie*, "to lie down", Dutch *liggen* and Gothic *ligan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

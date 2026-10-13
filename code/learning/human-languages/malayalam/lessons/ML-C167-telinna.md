@@ -14,7 +14,8 @@ romanization: "teḷiñña"
 concept_tag: ML-QUAL167-TELINNA
 prerequisites: [ML-C167-unanniya, ML-C167-irunta, ML-C79-degree-slot]
 sounds: []
-roots: []
+roots: [teliyu-become-clear-dravidian]
+etymology_hook: "teḷiñña: native Dravidian, 'having become clear'; Tamil teḷ (DEDR 3433)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C167-irunta]
 <!-- hl-knowledge: introduces=[ML-LEX-C167-QUAL167-04]; assesses=[] -->
 
 **തെളിഞ്ഞ** — *teḷiñña* — "clear, bright".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെളിഞ്ഞ** (*teḷiñña*) is native Dravidian, a past form of the verb "to become clear"; DEDR 3433 lists the root with Tamil *teḷ* and Telugu *teli*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

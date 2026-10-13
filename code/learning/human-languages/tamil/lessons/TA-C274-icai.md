@@ -14,7 +14,8 @@ romanization: "icai"
 concept_tag: TA-PORUL274-ICAI
 prerequisites: [TA-C273-irattaiyar, TA-C273-maittunan]
 sounds: []
-roots: []
+roots: [dravidian-iyampu-sound]
+etymology_hook: "இசை — native Dravidian (DEDR 470); Malayalam ica 'song, music'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C273-maittunan]
 <!-- hl-knowledge: introduces=[TA-LEX-C274-PORUL274-01]; assesses=[] -->
 
 **இசை** — *icai* — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இசை** (*icai*) is native Dravidian. DEDR 470 lists Malayalam *ica*, "song, music". The entry glosses the Tamil verb *icai* as "to sound, to sing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

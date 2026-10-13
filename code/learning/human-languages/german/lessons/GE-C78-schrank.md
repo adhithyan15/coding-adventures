@@ -14,6 +14,7 @@ concept_tag: GE-HAUS3-SCHRANK
 prerequisites: [GE-C77-zimmer, GE-C77-bett]
 sounds: []
 roots: []
+etymology_hook: "Schrank ← Middle High German schranc 'a closed-off space'; its older history is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C77-bett]
 <!-- hl-knowledge: introduces=[GE-LEX-C78-HAUS3-01]; assesses=[] -->
 
 **der Schrank** — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schrank** ← Middle High German *schranc*, "a closed-off space" — inherited, and related to the word for "a barrier". Its older history is uncertain, and EtymDB 2.1 has no source for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

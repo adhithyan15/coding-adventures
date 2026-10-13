@@ -13,7 +13,8 @@ gloss: "a kitchen; cooking"
 concept_tag: FR-MAISON25-CUISINE
 prerequisites: [FR-C72-poivre, FR-C72-noix]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "cuisine ← Latin coquina 'kitchen', from coquere 'to cook' — English kitchen is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C72-noix]
 <!-- hl-knowledge: introduces=[FR-LEX-C73-MAISON25-01]; assesses=[] -->
 
 **la cuisine** — "a kitchen; cooking". The noun behind **cuisiner**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuisine** ← Vulgar Latin *\*cocina* ← Latin *coquina*, "kitchen", from *coquere*, "to cook" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "urimai"
 concept_tag: TA-CAN117-URIMAI
 prerequisites: [TA-C116-tiramai, TA-C117-vallamai]
 sounds: []
-roots: []
+roots: [dravidian-urimai-right]
+etymology_hook: "உரிமை — native Dravidian (DEDR 654); Malayalam uriyan 'suitable, one who has rights'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C117-vallamai]
 <!-- hl-knowledge: introduces=[TA-LEX-C117-CAN117-02]; assesses=[] -->
 
 **உரிமை** — *urimai* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உரிமை** (*urimai*) is native Dravidian. DEDR 654 lists Malayalam *uriyan*, "suitable, one who has rights".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

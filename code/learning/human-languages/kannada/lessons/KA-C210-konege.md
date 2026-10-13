@@ -14,7 +14,8 @@ romanization: "konege"
 concept_tag: KA-KALA210-KONEGE
 prerequisites: [KA-C209-yoga, KA-C209-dhyana]
 sounds: []
-roots: []
+roots: [dravidian-kone-end]
+etymology_hook: "konege: native kone 'end, tip' (DEDR 2174) + -ge 'to, at'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C209-dhyana]
 <!-- hl-knowledge: introduces=[KA-LEX-C210-KALA210-01]; assesses=[] -->
 
 **ಕೊನೆಗೆ** — *konege* — "finally, in the end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊನೆಗೆ** (*konege*) is native Dravidian: *kone*, "extremity, end", which DEDR 2174 lists, with *-ge*, "to, at": "at the end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

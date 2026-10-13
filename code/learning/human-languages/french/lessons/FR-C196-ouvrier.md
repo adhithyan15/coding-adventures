@@ -13,7 +13,8 @@ gloss: "a worker"
 concept_tag: FR-CHOSES196-OUVRIER
 prerequisites: [FR-C196-electricien, FR-C196-plombier]
 sounds: []
-roots: []
+roots: [opus-latin]
+etymology_hook: "ouvrier ← Latin operarius 'a labourer', from opus 'work' — English operate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C196-plombier]
 <!-- hl-knowledge: introduces=[FR-LEX-C196-CHOSES196-05]; assesses=[] -->
 
 **l'ouvrier** — "a worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ouvrier** ← Old French *ovrier* ← Latin *operarius*, "a labourer", from *opus*, *operis*, "work" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

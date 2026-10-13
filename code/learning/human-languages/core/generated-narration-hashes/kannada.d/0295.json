@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 295,
-  "sourceHash": "fnv1a64:71368384e19ffa79",
+  "sourceHash": "fnv1a64:0139f41034367d23",
   "lessonIds": [
     "KA-C295-hatti",
     "KA-C295-resme",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch295.txt",
   "json": "kannada/narration/ch295.json",
-  "textHash": "fnv1a64:82c536309a6a30c0",
-  "jsonHash": "fnv1a64:ab4e67a8deca8fce",
+  "textHash": "fnv1a64:3c4a94d44b6db44c",
+  "jsonHash": "fnv1a64:1262cc19b2d29489",
   "findings": []
 }

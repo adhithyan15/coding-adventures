@@ -13,7 +13,8 @@ gloss: "sometimes"
 concept_tag: FR-TEMPS50-PARFOIS
 prerequisites: [FR-C98-hier, FR-C98-souvent]
 sounds: []
-roots: []
+roots: [vicis-latin]
+etymology_hook: "parfois — 'by times': by + the word for 'time', from Latin vices 'turns' — English vice-versa"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C98-souvent]
 <!-- hl-knowledge: introduces=[FR-LEX-C98-TEMPS50-03]; assesses=[] -->
 
 **parfois** — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parfois** — built from the word for "by" and the word for "a time, an occasion", ← Latin *vices*, "turns" (Lewis & Short): by times.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mutala"
 concept_tag: ML-VASTU327-MUTALA
 prerequisites: [ML-C326-samskaram, ML-C327-cemmariyatu]
 sounds: []
-roots: []
+roots: [dravidian-mutalai-crocodile]
+etymology_hook: "mutala: native Dravidian, one word with Tamil mutalai and Kannada mosaḷe (DEDR 4952)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C327-cemmariyatu]
 <!-- hl-knowledge: introduces=[ML-LEX-C327-VASTU327-02]; assesses=[] -->
 
 **മുതല** — *mutala* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുതല** (*mutala*) is native Dravidian, one word with Tamil *mutalai*, Kannada *mosaḷe* and Telugu *mosali* (DEDR 4952). DEDR 4952 compares Sanskrit *mācala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nepa"
 concept_tag: KA-KARANA289-NEPA
 prerequisites: [KA-C289-hegadaru, KA-C289-andare]
 sounds: []
-roots: []
+roots: [kannada-nepa-excuse]
+etymology_hook: "nepa: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C289-andare]
 <!-- hl-knowledge: introduces=[KA-LEX-C289-KARANA289-03]; assesses=[] -->
 
 **ನೆಪ** — *nepa* — "an excuse, a pretext".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ನೆಪ** (*nepa*) comes from is uncertain: neither DEDR nor CDIAL records it for Kannada, under its form or under "excuse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

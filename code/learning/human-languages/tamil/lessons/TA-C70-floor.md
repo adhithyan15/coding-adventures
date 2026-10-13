@@ -11,7 +11,8 @@ romanization: "tarai"
 concept_tag: TA-NOUN-FLOOR
 prerequisites: [TA-C70-wall, TA-C68-buy, TA-C69-road]
 sounds: []
-roots: []
+roots: [sanskrit-dhara]
+etymology_hook: "தரை — usually traced to Sanskrit dharā 'the earth' (CDIAL 6748); DEDR has no native entry for it"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ This is where the கோலம் (*kōlam*) is drawn each morning, just inside 
 words are already yours, and this is the one that was missing to put them in a place.
 
 It ends in the **ை** again — the fifth word in three chapters to do so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தரை** (*tarai*) is usually traced to Sanskrit *dharā*, "the earth" (CDIAL 6748). DEDR has no native entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

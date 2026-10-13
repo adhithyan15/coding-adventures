@@ -14,7 +14,8 @@ romanization: "vivari"
 concept_tag: TA-VERB-VIVARI
 prerequisites: [TA-C163-peram-pecu, TA-C163-caripar]
 sounds: []
-roots: []
+roots: [sanskrit-vivarana]
+etymology_hook: "விவரி — a verb from Sanskrit vivaraṇa 'explanation', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C163-caripar]
 <!-- hl-knowledge: introduces=[TA-LEX-C164-ACT164-01]; assesses=[] -->
 
 **விவரி** — *vivari* — "to describe, to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விவரி** (*vivari*) is a verb made from Sanskrit *vivaraṇa*, "explanation, an opening up", a well-established loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

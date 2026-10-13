@@ -11,7 +11,8 @@ romanization: "nāṭŭ"
 concept_tag: ML-NOUN-HOMELAND
 prerequisites: [ML-C55-rock, ML-C53-moon]
 sounds: []
-roots: []
+roots: [dravidian-nadu-land]
+etymology_hook: "nāṭŭ: native Dravidian, one word with Tamil nāṭu and Kannada nāḍu (DEDR 3638)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *nāṭu*, and it is one of the busiest words in the l
 It sits inside place-names all over the south, and inside the everyday question a Malayali asks a stranger early in a conversation: which നാട് are you from. Answering with a village is as correct as answering with a country.
 
 Its opposite is കാട് (*kāṭŭ*), the forest — settled ground against wild ground, one vowel apart, and the pair is old enough to be shared right across the family.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാട്** (*nāṭŭ*) is native Dravidian, one word with Tamil *nāṭu*, Kannada *nāḍu* and Telugu *nāḍu* (DEDR 3638). Its older sense is "cultivated land", as against the wild.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caukāsi māḍu"
 concept_tag: KA-VERB-CAUKASI-MADU
 prerequisites: [KA-C236-ebbisu, KA-C236-eccaragollu]
 sounds: []
-roots: []
+roots: [kannada-caukasi, maadu-do-dravidian]
+etymology_hook: "caukāsi māḍu: caukāsi 'haggling', of uncertain origin, + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C236-eccaragollu]
 <!-- hl-knowledge: introduces=[KA-LEX-C236-KRIYE236-04]; assesses=[] -->
 
 **ಚೌಕಾಸಿ ಮಾಡು** — *caukāsi māḍu* — "to bargain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚೌಕಾಸಿ ಮಾಡು** (*caukāsi māḍu*) is *caukāsi*, "haggling", whose origin is uncertain, and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

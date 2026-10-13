@@ -14,7 +14,8 @@ romanization: "cillaṟa"
 concept_tag: ML-JOLI219-CILLARA
 prerequisites: [ML-C219-nanayam, ML-C219-nottu]
 sounds: []
-roots: []
+roots: [dravidian-cillarai-small]
+etymology_hook: "cillaṟa: native Dravidian, one word with Tamil cillaṟai and Kannada cillaṟa (DEDR 2574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C219-nottu]
 <!-- hl-knowledge: introduces=[ML-LEX-C219-JOLI219-03]; assesses=[] -->
 
 **ചില്ലറ** — *cillaṟa* — "small change (coins)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചില്ലറ** (*cillaṟa*) is native Dravidian, one word with Tamil *cillaṟai*, Kannada *cillaṟa* and Telugu *cillara* (DEDR 2574). Its first sense is "small, trifling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

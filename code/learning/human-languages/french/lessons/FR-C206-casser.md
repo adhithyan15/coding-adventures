@@ -14,6 +14,7 @@ concept_tag: FR-VERB-CASSER
 prerequisites: [FR-C205-commander, FR-C205-secher]
 sounds: []
 roots: []
+etymology_hook: "casser ← Latin quassare 'to shatter' — English quash"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C205-secher]
 <!-- hl-knowledge: introduces=[FR-LEX-C206-VERBES206-01]; assesses=[] -->
 
 **casser** — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casser** ← Old French *quasser* ← Latin *quassare*, "to shake hard, to shatter" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

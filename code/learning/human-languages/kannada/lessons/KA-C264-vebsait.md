@@ -14,7 +14,8 @@ romanization: "vebsaiṭ"
 concept_tag: KA-VASTU264-VEBSAIT
 prerequisites: [KA-C263-muduka, KA-C264-intarnet]
 sounds: []
-roots: []
+roots: [english-website]
+etymology_hook: "vebsaiṭ ← English website"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C264-intarnet]
 <!-- hl-knowledge: introduces=[KA-LEX-C264-VASTU264-02]; assesses=[] -->
 
 **ವೆಬ್ಸೈಟ್** — *vebsaiṭ* — "a website".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವೆಬ್ಸೈಟ್** (*vebsaiṭ*) is a loan from English *website*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

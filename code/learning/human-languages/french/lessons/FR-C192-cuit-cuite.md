@@ -13,7 +13,8 @@ gloss: "cooked"
 concept_tag: FR-QUAL192-CUIT-CUITE
 prerequisites: [FR-C191-utile, FR-C191-inutile]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "cuit ← Latin coctus 'cooked' — -ct- became -it, as in lait"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C191-inutile]
 <!-- hl-knowledge: introduces=[FR-LEX-C192-QUAL192-01]; assesses=[] -->
 
 **cuit / cuite** — "cooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuit** ← Old French *cuit* ← Latin *coctus*, "cooked", the past participle of *coquere* (EtymDB 2.1) — inherited: *-ct-* became *-it*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

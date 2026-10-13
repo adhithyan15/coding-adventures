@@ -14,7 +14,8 @@ romanization: "uṇṇe"
 concept_tag: KA-VASTU302-UNNE
 prerequisites: [KA-C302-hittale, KA-C302-kattige]
 sounds: []
-roots: []
+roots: [sanskrit-urna]
+etymology_hook: "uṇṇe: tadbhava of Sanskrit ūrṇā 'wool' (CDIAL 2424)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C302-kattige]
 <!-- hl-knowledge: introduces=[KA-LEX-C302-VASTU302-03]; assesses=[] -->
 
 **ಉಣ್ಣೆ** — *uṇṇe* — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಣ್ಣೆ** (*uṇṇe*) is a tadbhava of Sanskrit *ūrṇā*, "wool" (CDIAL 2424), through Prakrit *uṇṇā*. DEDR 604 has a Kannada *uṇṇe*, "tick", but that is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

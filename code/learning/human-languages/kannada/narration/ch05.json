@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6e55cd897311917c",
+  "sourceHash": "fnv1a64:24a591b63b27f182",
   "lessons": [
     {
       "id": "KA-C05-maatanaadu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5ab7c3fe9c9c7558",
+      "sourceHash": "fnv1a64:cf5932d52b72d641",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -76,6 +76,10 @@
             {
               "kind": "speech",
               "text": "The -ಏನೆ (-ēne) ending is \"I,\" so nānu is rarely needed. Change the ending, change the person: mātanāḍuttāne (he), mātanāḍuttāḷe (she), mātanāḍuttāre (they / you-respectful)."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4834 lists Kannada mātu, \"word, saying\", with Telugu māṭa, \"word\", and even Telugu māṭal-āḍu, \"to speak\"; āḍu is in DEDR 347."
             }
           ]
         },
@@ -373,7 +377,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:69d4d853fd30aba4",
+      "sourceHash": "fnv1a64:68422402d8ac4f74",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -421,6 +425,10 @@
             {
               "kind": "speech",
               "text": "ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ (nānu kannaḍa mātanāḍuttēne) = ನಾನು (nānu, \"I\") + ಕನ್ನಡ (kannaḍa, the object) + ಮಾತನಾಡುತ್ತೇನೆ (mātanāḍuttēne, \"speak\") — \"I Kannada speak,\" the verb last as always. The name ಕನ್ನಡ (kannaḍa) is native (often linked to kar-nāḍu, \"the black/high land,\" whence Karnataka). Kannada has a literature over a thousand years old and holds the second-most Jnanpith literary awards of any Indian language — a classical tongue, spoken by some fifty million."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 1284 lists kannaḍa and karṇāṭa for the Kannada country and its language, with Tamil kaṉṉaṭam."
             }
           ]
         },
@@ -507,7 +515,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7cf09a63b2df9c87",
+      "sourceHash": "fnv1a64:b7b0edb18adbd902",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -556,6 +564,10 @@
             {
               "kind": "speech",
               "text": "ಇರು (iru, \"to be, to exist, to stay, to live\") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā (\"how are you\") and cennāgiddēne (\"I'm well\"). It also means \"to reside\": nānu Beṅgaḷūrinalli iddēne (\"I live in Bangalore\"). One verb covers \"be,\" \"stay,\" and \"live.\""
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 480 lists Kannada ir, iru, \"to be, exist, stay\", with Tamil iru."
             }
           ]
         },
@@ -651,7 +663,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:301a642824eb6c40",
+      "sourceHash": "fnv1a64:89014ab89bb2df7b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -715,6 +727,10 @@
             {
               "kind": "speech",
               "text": "So \"I work\" is ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ (nānu kelasa māḍuttēne). Notice sahāya māḍu (\"to help\") pairs a Sanskrit noun with the native māḍu — Kannada's two vocabularies working together in one verb."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 1970 lists kelasa with Telugu kelasamu, \"work\"; DEDR 4797 lists māḍu with Malayalam māṭuka, \"to build\"."
             }
           ]
         },

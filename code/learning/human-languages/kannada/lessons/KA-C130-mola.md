@@ -14,7 +14,8 @@ romanization: "mola"
 concept_tag: KA-THINGS130-MOLA
 prerequisites: [KA-C130-karadi, KA-C130-koti]
 sounds: []
-roots: []
+roots: [dravidian-muyal-hare]
+etymology_hook: "mola: native Dravidian, one word with Tamil muyal (DEDR 4968)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C130-koti]
 <!-- hl-knowledge: introduces=[KA-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **ಮೊಲ** — *mola* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಲ** (*mola*) is native Dravidian, one word with Tamil *muyal* (DEDR 4968).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

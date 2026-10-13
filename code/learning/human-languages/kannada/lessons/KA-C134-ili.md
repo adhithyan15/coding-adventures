@@ -14,7 +14,8 @@ romanization: "ili"
 concept_tag: KA-THINGS134-ILI
 prerequisites: [KA-C133-katte, KA-C133-onte]
 sounds: []
-roots: []
+roots: [dravidian-eli-rat]
+etymology_hook: "ili: native Dravidian, one word with Tamil eli and Telugu eluka (DEDR 833)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C133-onte]
 <!-- hl-knowledge: introduces=[KA-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **ಇಲಿ** — *ili* — "a rat, a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಲಿ** (*ili*) is native Dravidian, one word with Tamil *eli* and Telugu *eluka* (DEDR 833). DEDR lists *eli*, *ili*, "rat, mouse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

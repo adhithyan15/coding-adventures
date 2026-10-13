@@ -11,7 +11,8 @@ romanization: "viḷakkŭ"
 concept_tag: ML-NOUN-LAMP
 prerequisites: [ML-C46-cloth, ML-C44-look]
 sounds: []
-roots: []
+roots: [dravidian-vilakku-lamp]
+etymology_hook: "viḷakkŭ: native Dravidian, built on the verb 'to shine'; Tamil viḷakku is the same word (DEDR 5496)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ A native word, built on a root about shining. Tamil விளக்கு (*vi�
 The object itself has a particular shape in Kerala: the നിലവിളക്ക് (*nilaviḷakkŭ*), the tall standing brass lamp lit at a doorway on an occasion. Its first piece is നില (*nila*), the ground it stands on.
 
 Kannada reached for a borrowed word here, ದೀಪ (*dīpa*) from Sanskrit, where Malayalam kept its own. Malayalam has ദീപം (*dīpaṁ*) as well, in temple and festival senses, which leaves the everyday lamp to the older resident.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിളക്ക്** (*viḷakkŭ*) is native Dravidian, built on the verb "to shine"; DEDR 5496 lists the root with Tamil *viḷakku*, Kannada *beḷaku* and Telugu *velũgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

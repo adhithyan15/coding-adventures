@@ -14,7 +14,8 @@ romanization: "kiḻakkŭ"
 concept_tag: ML-STHALAM198-KILAKKU
 prerequisites: [ML-C197-nere, ML-C198-tekku]
 sounds: []
-roots: []
+roots: [dravidian-kizh-below]
+etymology_hook: "kiḻakkŭ: native Dravidian, built on kīḻ 'below'; Tamil kīḻ (DEDR 1619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C198-tekku]
 <!-- hl-knowledge: introduces=[ML-LEX-C198-STHALAM198-02]; assesses=[] -->
 
 **കിഴക്ക്** — *kiḻakkŭ* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിഴക്ക്** (*kiḻakkŭ*) is native Dravidian, built on *kīḻ*, "below"; DEDR 1619 glosses it as the lowland of the Tamil country beyond the hills, and so the east, beside Tamil *kīḻ* and Kannada *kīḻ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

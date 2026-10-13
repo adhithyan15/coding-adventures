@@ -14,7 +14,8 @@ romanization: "aparicitan"
 concept_tag: ML-VASTU211-APARICITAN
 prerequisites: [ML-C211-varan, ML-C211-vadhu]
 sounds: []
-roots: []
+roots: [sanskrit-paricaya]
+etymology_hook: "aparicitan ← Sanskrit aparicita 'unacquainted', from paricaya (CDIAL 7807)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C211-vadhu]
 <!-- hl-knowledge: introduces=[ML-LEX-C211-VASTU211-04]; assesses=[] -->
 
 **അപരിചിതൻ** — *aparicitan* — "a stranger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അപരിചിതൻ** (*aparicitan*) is Sanskrit *aparicita*, "not acquainted": *a-*, "not", with the root of *paricaya*, "acquaintance" (CDIAL 7807), and the masculine ending *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

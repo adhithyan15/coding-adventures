@@ -14,7 +14,8 @@ romanization: "ale"
 concept_tag: KA-THINGS128-ALE
 prerequisites: [KA-C128-mimcu, KA-C128-birugali]
 sounds: []
-roots: []
+roots: [dravidian-alai-shake]
+etymology_hook: "ale: native Dravidian; DEDR 240 lists ale 'to move to and fro'; Tamil alai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C128-birugali]
 <!-- hl-knowledge: introduces=[KA-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **ಅಲೆ** — *ale* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲೆ** (*ale*) is native Dravidian, from *ale*, "to move to and fro, shake", which DEDR 240 lists itself; the entry also has Telugu *ala* and Malayalam *ala*. DEDR 240 compares, with a query, Sanskrit *alaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "veṇṭaikkāy"
 concept_tag: TA-PORUL278-VENTAIKKAY
 prerequisites: [TA-C277-karuttu, TA-C278-karumpu]
 sounds: []
-roots: []
+roots: [dravidian-kaay-fruit]
+etymology_hook: "வெண்டைக்காய் — veṇṭai (origin uncertain) + native kāy 'unripe fruit, vegetable' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C278-karumpu]
 <!-- hl-knowledge: introduces=[TA-LEX-C278-PORUL278-02]; assesses=[] -->
 
 **வெண்டைக்காய்** — *veṇṭaikkāy* — "okra, ladies' finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெண்டைக்காய்** (*veṇṭaikkāy*) is *veṇṭai*, the name of the plant, and native *kāy*, "unripe fruit, vegetable" (DEDR 1459, which compares Indo-Aryan *\*kacca*, "raw"). The origin of *veṇṭai* is uncertain; DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

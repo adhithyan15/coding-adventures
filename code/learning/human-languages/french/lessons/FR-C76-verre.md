@@ -13,7 +13,8 @@ gloss: "a glass"
 concept_tag: FR-MAISON28-VERRE
 prerequisites: [FR-C76-plafond, FR-C76-couloir]
 sounds: []
-roots: []
+roots: [vitrum-latin]
+etymology_hook: "verre ← Latin vitrum 'glass' — English vitreous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C76-couloir]
 <!-- hl-knowledge: introduces=[FR-LEX-C76-MAISON28-04]; assesses=[] -->
 
 **le verre** — "a glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verre** ← Latin *vitrum*, "glass" — inherited; the *t* between vowels dropped out. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

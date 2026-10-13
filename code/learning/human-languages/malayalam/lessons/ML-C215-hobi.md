@@ -14,7 +14,8 @@ romanization: "hōbi"
 concept_tag: ML-VASTU215-HOBI
 prerequisites: [ML-C215-tim, ML-C215-samanila]
 sounds: []
-roots: []
+roots: [english-hobby]
+etymology_hook: "hōbi ← English hobby"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C215-samanila]
 <!-- hl-knowledge: introduces=[ML-LEX-C215-VASTU215-05]; assesses=[] -->
 
 **ഹോബി** — *hōbi* — "a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഹോബി** (*hōbi*) ← English *hobby*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

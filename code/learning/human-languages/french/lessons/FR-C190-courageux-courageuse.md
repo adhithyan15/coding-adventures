@@ -13,7 +13,8 @@ gloss: "brave"
 concept_tag: FR-QUAL190-COURAGEUX-COURAGEUSE
 prerequisites: [FR-C190-serieux-serieuse, FR-C190-timide]
 sounds: []
-roots: []
+roots: [cor-latin]
+etymology_hook: "courageux — courage + -eux 'full of' — English courageous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C190-timide]
 <!-- hl-knowledge: introduces=[FR-LEX-C190-QUAL190-04]; assesses=[] -->
 
 **courageux / courageuse** — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**courageux** — *courage* with *-eux*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

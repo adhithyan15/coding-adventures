@@ -14,7 +14,8 @@ romanization: "siṁha"
 concept_tag: KA-THINGS129-SIMHA
 prerequisites: [KA-C129-ane, KA-C129-huli]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "siṁha ← Sanskrit siṃha 'lion', a tatsama (CDIAL 13384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C129-huli]
 <!-- hl-knowledge: introduces=[KA-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **ಸಿಂಹ** — *siṁha* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿಂಹ** (*siṁha*) is Sanskrit *siṃha*, "lion", taken over whole as a learned loan, a tatsama (CDIAL 13384).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

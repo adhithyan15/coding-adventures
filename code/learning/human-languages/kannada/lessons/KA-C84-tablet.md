@@ -11,7 +11,8 @@ romanization: "mātre"
 concept_tag: KA-BODY-TABLET
 prerequisites: [KA-C84-sweat, KA-C84-hospital]
 sounds: []
-roots: []
+roots: [sanskrit-matra]
+etymology_hook: "mātre ← Sanskrit mātrā 'measure; minute portion', a tatsama (CDIAL 10023)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C84-hospital]
 **ಮಾತ್ರೆ** (*mātre*) — "a tablet, a pill".
 
 **ಮಾತ್ರೆ ಬೇಕು** (*mātre bēku*) — "I need a tablet", with **ಬೇಕು**, "want, need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಾತ್ರೆ** (*mātre*) is Sanskrit *mātrā*, "measure; minute portion", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 10023). The sense moved from "a measured amount" to a pill that holds one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

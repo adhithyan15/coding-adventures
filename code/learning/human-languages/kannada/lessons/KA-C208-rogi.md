@@ -14,7 +14,8 @@ romanization: "rōgi"
 concept_tag: KA-AROGYA208-ROGI
 prerequisites: [KA-C208-mulamu, KA-C208-kayile]
 sounds: []
-roots: []
+roots: [sanskrit-rogin]
+etymology_hook: "rōgi ← Sanskrit rogin 'sick person', from roga 'illness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C208-kayile]
 <!-- hl-knowledge: introduces=[KA-LEX-C208-AROGYA208-05]; assesses=[] -->
 
 **ರೋಗಿ** — *rōgi* — "a patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರೋಗಿ** (*rōgi*) is Sanskrit *rogin*, "one who is ill", from *roga*, "illness". Kannada drops the final *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

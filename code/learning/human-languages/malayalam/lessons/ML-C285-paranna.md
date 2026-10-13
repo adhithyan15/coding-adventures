@@ -14,7 +14,8 @@ romanization: "paranna"
 concept_tag: ML-GUNAM285-PARANNA
 prerequisites: [ML-C284-virasamaya, ML-C284-apakatakaramaya]
 sounds: []
-roots: []
+roots: [dravidian-para-spread]
+etymology_hook: "paranna: native Dravidian, 'spread out'; Tamil para (DEDR 3949)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C284-apakatakaramaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C285-GUNAM285-01]; assesses=[] -->
 
 **പരന്ന** — *paranna* — "flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരന്ന** (*paranna*) is native Dravidian, a past form of the verb "to spread out"; DEDR 3949 lists the root with Tamil *para*, Kannada *paraḍu* and Telugu *parapu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

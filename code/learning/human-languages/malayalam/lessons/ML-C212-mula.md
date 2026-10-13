@@ -14,7 +14,8 @@ romanization: "muḷa"
 concept_tag: ML-VASTU212-MULA
 prerequisites: [ML-C212-matsaram, ML-C212-daivam]
 sounds: []
-roots: []
+roots: [malayalam-mula-bamboo]
+etymology_hook: "muḷa 'bamboo': origin uncertain; perhaps the word DEDR 4997 lists as 'shoot, young plant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C212-daivam]
 <!-- hl-knowledge: introduces=[ML-LEX-C212-VASTU212-05]; assesses=[] -->
 
 **മുള** — *muḷa* — "bamboo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുള** (*muḷa*) is of uncertain origin. It may be the word DEDR 4997 lists as "germ, shoot, young plant", with Tamil *muḷai*, but that link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

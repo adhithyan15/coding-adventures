@@ -14,7 +14,8 @@ romanization: "rēkha"
 concept_tag: ML-VASTU324-REKHA
 prerequisites: [ML-C323-vellarikka, ML-C323-malli]
 sounds: []
-roots: []
+roots: [sanskrit-rekha]
+etymology_hook: "rēkha ← Sanskrit rēkhā 'scratch, streak, line', a tatsama (CDIAL 10810)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C323-malli]
 <!-- hl-knowledge: introduces=[ML-LEX-C324-VASTU324-01]; assesses=[] -->
 
 **രേഖ** — *rēkha* — "a document, a record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രേഖ** (*rēkha*) ← Sanskrit *rēkhā*, "scratch, streak, line", taken over whole as a tatsama (CDIAL 10810). A line of writing became a written record.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

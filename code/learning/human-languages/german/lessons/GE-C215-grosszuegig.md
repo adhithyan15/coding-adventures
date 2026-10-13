@@ -13,7 +13,8 @@ gloss: "generous"
 concept_tag: GE-QUAL215-GROSSZUEGIG
 prerequisites: [GE-C215-geschieden, GE-C215-gleichzeitig]
 sounds: []
-roots: []
+roots: [germanic-grautaz, germanic-teuhana]
+etymology_hook: "großzügig — 'great' + Zug 'a stroke, a trait' + -ig: of great strokes, generous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C215-gleichzeitig]
 <!-- hl-knowledge: introduces=[GE-LEX-C215-QUAL215-04]; assesses=[] -->
 
 **großzügig** — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**großzügig** is the word for "great" + *Zug*, here "a trait", + *-ig*: of great traits, generous. The word for "great" ← Old High German *grōz* ← Proto-Germanic *\*grautaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

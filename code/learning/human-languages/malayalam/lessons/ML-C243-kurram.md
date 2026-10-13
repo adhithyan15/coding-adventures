@@ -14,7 +14,8 @@ romanization: "kuṟṟaṁ"
 concept_tag: ML-KARANAM243-KURRAM
 prerequisites: [ML-C242-sahacaryam, ML-C243-olikalivu]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟṟaṁ: native Dravidian; DEDR 1851 lists Malayalam kuṟṟam 'defect, fault, crime'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C243-olikalivu]
 <!-- hl-knowledge: introduces=[ML-LEX-C243-KARANAM243-02]; assesses=[] -->
 
 **കുറ്റം** — *kuṟṟaṁ* — "blame, an offence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറ്റം** (*kuṟṟaṁ*) is native Dravidian: DEDR 1851 lists it, "defect, fault, crime", under *kuṟu*, "short, defective", with Tamil *kuṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

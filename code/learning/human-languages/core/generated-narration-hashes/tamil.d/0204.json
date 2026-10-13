@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 204,
-  "sourceHash": "fnv1a64:65adf6bf13c920e4",
+  "sourceHash": "fnv1a64:4db5ae798e400d77",
   "lessonIds": [
     "TA-C204-patikkattu",
     "TA-C204-maruntukkatai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch204.txt",
   "json": "tamil/narration/ch204.json",
-  "textHash": "fnv1a64:f50c5baff3131e87",
-  "jsonHash": "fnv1a64:b84115971514fab4",
+  "textHash": "fnv1a64:70a950e9681b5401",
+  "jsonHash": "fnv1a64:22505147188dc09f",
   "findings": []
 }

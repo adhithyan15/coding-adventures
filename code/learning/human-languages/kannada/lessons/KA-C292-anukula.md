@@ -14,7 +14,8 @@ romanization: "anukūla"
 concept_tag: KA-GUNA292-ANUKULA
 prerequisites: [KA-C292-accukattada, KA-C292-astavyasta]
 sounds: []
-roots: []
+roots: [sanskrit-kula-shore]
+etymology_hook: "anukūla ← Sanskrit anukūla 'along the bank', from kūla 'shore' (CDIAL 3416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C292-astavyasta]
 <!-- hl-knowledge: introduces=[KA-LEX-C292-GUNA292-05]; assesses=[] -->
 
 **ಅನುಕೂಲ** — *anukūla* — "convenient; convenience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅನುಕೂಲ** (*anukūla*) is Sanskrit *anukūla*, "along the bank", built on *kūla*, "shore, slope" (CDIAL 3416): what goes with the current is easy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

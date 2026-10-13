@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 105,
-  "sourceHash": "fnv1a64:96d8a06abdfebe14",
+  "sourceHash": "fnv1a64:a4c677c400d5d4b8",
   "lessonIds": [
     "FR-C105-chaussettes",
     "FR-C105-trente",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch105.txt",
   "json": "french/narration/ch105.json",
-  "textHash": "fnv1a64:5d54904af810dc6d",
-  "jsonHash": "fnv1a64:6abe2b7dafa0bdcb",
+  "textHash": "fnv1a64:c81fc9c211311c53",
+  "jsonHash": "fnv1a64:8d0050bb684f838c",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: GE-FAHRT111-TAXI
 prerequisites: [GE-C110-u-bahn, GE-C110-strassenbahn]
 sounds: []
 roots: []
+etymology_hook: "Taxi ← French taxi, short for taximètre 'fare meter' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C110-strassenbahn]
 <!-- hl-knowledge: introduces=[GE-LEX-C111-FAHRT111-01]; assesses=[] -->
 
 **das Taxi** — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Taxi** ← French *taxi* (EtymDB 2.1), short for *taximètre*, "fare meter", from *taxe*, "charge", and Greek *métron*, "measure" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

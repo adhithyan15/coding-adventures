@@ -11,7 +11,8 @@ romanization: "viṣu"
 concept_tag: ML-FEST-VISHU
 prerequisites: [ML-C140-answer, ML-C141-onam]
 sounds: []
-roots: []
+roots: [sanskrit-vishuva]
+etymology_hook: "viṣu ← Sanskrit viṣuva 'the equinox', the day of equal halves"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C141-onam]
 <!-- hl-knowledge: introduces=[ML-LEX-C141-FESTIVALS-02]; assesses=[] -->
 
 **വിഷു** (*viṣu*) — the new-year festival of **മേടം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിഷു** (*viṣu*) comes from Sanskrit *viṣuva*, "the equinox", the day split into equal halves.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

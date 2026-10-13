@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 160,
-  "sourceHash": "fnv1a64:698fa9c3e1f8ec9c",
+  "sourceHash": "fnv1a64:44e2c4f253d70e1b",
   "lessonIds": [
     "ML-C160-koni",
     "ML-C160-varanta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch160.txt",
   "json": "malayalam/narration/ch160.json",
-  "textHash": "fnv1a64:11b7ffc471372b73",
-  "jsonHash": "fnv1a64:97ccb01508b2a914",
+  "textHash": "fnv1a64:1f6100148eae9d25",
+  "jsonHash": "fnv1a64:e509928e0d172cb8",
   "findings": []
 }

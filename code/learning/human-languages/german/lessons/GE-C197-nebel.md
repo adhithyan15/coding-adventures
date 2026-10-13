@@ -13,7 +13,8 @@ gloss: "fog"
 concept_tag: GE-THING197-NEBEL
 prerequisites: [GE-C196-tal, GE-C197-kueste]
 sounds: []
-roots: []
+roots: [germanic-nebulaz]
+etymology_hook: "Nebel ← Old High German nebul ← Proto-Germanic *nebulaz 'fog' — a cousin of Latin nebula"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C197-kueste]
 <!-- hl-knowledge: introduces=[GE-LEX-C197-THING197-02]; assesses=[] -->
 
 **der Nebel** — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nebel** ← Old High German *nebul*, "cloud, fog" ← Proto-Germanic *\*nebulaz* — inherited, a cousin of Latin *nebula*, "mist". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

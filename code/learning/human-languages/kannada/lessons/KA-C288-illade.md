@@ -14,7 +14,8 @@ romanization: "illade"
 concept_tag: KA-KARANA288-ILLADE
 prerequisites: [KA-C288-iddakkiddante, KA-C288-horatu]
 sounds: []
-roots: []
+roots: [il]
+etymology_hook: "illade: native Dravidian; DEDR 2559 lists illade 'not being', from illa 'is not'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C288-horatu]
 <!-- hl-knowledge: introduces=[KA-LEX-C288-KARANA288-04]; assesses=[] -->
 
 **ಇಲ್ಲದೆ** — *illade* — "without".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಲ್ಲದೆ** (*illade*) is native Dravidian, from *illa*, "is not", and DEDR 2559 lists *illade*, "not being", itself; the entry also has Tamil *il*, Telugu *lē-* and Malayalam *illa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

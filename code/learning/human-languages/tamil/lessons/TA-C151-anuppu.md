@@ -14,7 +14,8 @@ romanization: "anuppu"
 concept_tag: TA-VERB-ANUPPU
 prerequisites: [TA-C151-utai, TA-C151-vai]
 sounds: []
-roots: []
+roots: [dravidian-anuppu-send]
+etymology_hook: "அனுப்பு — native Dravidian (DEDR 329); Malayalam anuppuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C151-vai]
 <!-- hl-knowledge: introduces=[TA-LEX-C151-ACT151-03]; assesses=[] -->
 
 **அனுப்பு** — *anuppu* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அனுப்பு** (*anuppu*) is native Dravidian. DEDR 329 lists Malayalam *anuppuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

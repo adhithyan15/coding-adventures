@@ -14,7 +14,8 @@ romanization: "nērāka"
 concept_tag: TA-LOC113-NERAKA
 prerequisites: [TA-C108-areyouwell, TA-C108-howareyou]
 sounds: []
-roots: []
+roots: [dravidian-ner-straight]
+etymology_hook: "நேராக — native Dravidian (DEDR 3772)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C108-howareyou]
 <!-- hl-knowledge: introduces=[TA-LEX-C113-LOC113-01]; assesses=[] -->
 
 **நேராக** — *nērāka* — "straight ahead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நேராக** (*nērāka*) is native Dravidian (DEDR 3772). It is *nēr*, "straightness", with *-āka*, "in the manner of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

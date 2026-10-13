@@ -11,7 +11,8 @@ romanization: "ēnū illa"
 concept_tag: KA-RESP-NOTHING
 prerequisites: [KA-C86-didntunderstand, KA-C87-really]
 sounds: []
-roots: []
+roots: [yaa-dravidian, il]
+etymology_hook: "ēnū illa: native ēnu 'what' (DEDR 5151) + -ū 'even' + illa 'is not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C87-really]
 
 **ಏನೂ ಇಲ್ಲ** (*ēnū illa*) — "nothing", literally "anything, there isn't".
 **ಏನು** (*ēnu*), "what", takes **‑ಊ** to become "anything".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಏನೂ ಇಲ್ಲ** (*ēnū illa*) is native Dravidian: *ēnū*, "even what", from *ēnu*, "what" (DEDR 5151), and *illa*, "is not" (DEDR 2559). "Not even anything" is nothing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

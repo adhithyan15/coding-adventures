@@ -14,7 +14,8 @@ romanization: "sāks"
 concept_tag: KA-THINGS138-SAKS
 prerequisites: [KA-C138-batali, KA-C138-jebu]
 sounds: []
-roots: []
+roots: [english-socks]
+etymology_hook: "sāks ← English socks"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C138-jebu]
 <!-- hl-knowledge: introduces=[KA-LEX-C138-THINGS138-04]; assesses=[] -->
 
 **ಸಾಕ್ಸ್** — *sāks* — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಕ್ಸ್** (*sāks*) is a loan from English *socks*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

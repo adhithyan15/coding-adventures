@@ -14,7 +14,8 @@ romanization: "tirai"
 concept_tag: TA-PORUL189-TIRAI
 prerequisites: [TA-C189-inaiyatalam, TA-C189-ceyali]
 sounds: []
-roots: []
+roots: [dravidian-tirai-curtain]
+etymology_hook: "திரை — native Dravidian (DEDR 3244); Malayalam tira 'curtain', Telugu tera 'screen, curtain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C189-ceyali]
 <!-- hl-knowledge: introduces=[TA-LEX-C189-PORUL189-05]; assesses=[] -->
 
 **திரை** — *tirai* — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திரை** (*tirai*) is native Dravidian. DEDR 3244 lists Malayalam *tira*, "curtain" and Telugu *tera*, "screen, curtain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

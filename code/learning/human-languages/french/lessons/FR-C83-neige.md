@@ -13,7 +13,8 @@ gloss: "snow"
 concept_tag: FR-NATURE35-NEIGE
 prerequisites: [FR-C83-nuage, FR-C83-pluie]
 sounds: []
-roots: []
+roots: [nix-latin]
+etymology_hook: "neige — from the verb 'to snow', from Latin nix, nivis 'snow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C83-pluie]
 <!-- hl-knowledge: introduces=[FR-LEX-C83-NATURE35-05]; assesses=[] -->
 
 **la neige** — "snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neige** — formed from the verb for "to snow", which ← Vulgar Latin *\*nivicare*, from Latin *nix*, *nivis*, "snow" (EtymDB 2.1 records the Latin word).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

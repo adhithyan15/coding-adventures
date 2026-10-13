@@ -14,7 +14,8 @@ romanization: "gumastan"
 concept_tag: ML-JOLI220-GUMASTAN
 prerequisites: [ML-C220-sahapravarttakan, ML-C220-udyogasthan]
 sounds: []
-roots: []
+roots: [persian-gumashta]
+etymology_hook: "gumastan ← Persian gumāshta 'agent, appointed one', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C220-udyogasthan]
 <!-- hl-knowledge: introduces=[ML-LEX-C220-JOLI220-03]; assesses=[] -->
 
 **ഗുമസ്തൻ** — *gumastan* — "a clerk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗുമസ്തൻ** (*gumastan*) ← Persian *gumāshta*, "an agent, one appointed", which came through Hindustani with the clerks of the courts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 208,
-  "sourceHash": "fnv1a64:103d8749a215853f",
+  "sourceHash": "fnv1a64:9e9d0d98d8294dea",
   "lessonIds": [
     "KA-C208-deha",
     "KA-C208-cuccumaddu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch208.txt",
   "json": "kannada/narration/ch208.json",
-  "textHash": "fnv1a64:4ea33d72380840f3",
-  "jsonHash": "fnv1a64:ce728161839944dd",
+  "textHash": "fnv1a64:058326bf2848a0a9",
+  "jsonHash": "fnv1a64:b38dfcbdf39dea0d",
   "findings": []
 }

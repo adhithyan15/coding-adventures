@@ -11,6 +11,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C01-answering, TA-C01-vanakkam-family-register, TA-C01-nandri-family-register, TA-C01-aam, TA-C01-illai, TA-C01-sari, TA-W00-va-guided-copy]
 sounds: []
 roots: []
+etymology_hook: "வணக்கம் — native, from vaṇaṅku 'to bow' (DEDR 5236), where the neighbours borrowed Sanskrit namas"
 reviews_of: [TA-C01-answering, TA-C01-vanakkam-family-register, TA-C01-nandri-family-register, TA-C01-vanakkam, TA-C01-nandri, TA-C01-aam, TA-C01-illai, TA-C01-sari, TA-W00-va-guided-copy]
 duration:
   max_seconds: 270

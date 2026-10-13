@@ -14,6 +14,7 @@ concept_tag: GE-FREIZEIT129-SPORT
 prerequisites: [GE-C128-seite, GE-C128-zeichnung]
 sounds: []
 roots: []
+etymology_hook: "Sport ← English sport, short for disport 'amusement' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C128-zeichnung]
 <!-- hl-knowledge: introduces=[GE-LEX-C129-FREIZEIT129-01]; assesses=[] -->
 
 **der Sport** — "sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sport** ← English *sport* (EtymDB 2.1), short for *disport*, "amusement" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

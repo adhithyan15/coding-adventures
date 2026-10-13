@@ -14,7 +14,8 @@ romanization: "tayyāṟākkuka"
 concept_tag: ML-VERB-TAYYARAKKUKA
 prerequisites: [ML-C226-carcca-ceyyuka, ML-C226-visadikarikkuka]
 sounds: []
-roots: []
+roots: [persian-taiyar, aaka-dravidian]
+etymology_hook: "tayyāṟākkuka: Hindustani taiyār 'ready', from Arabic, + native ākkuka 'to make' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C226-visadikarikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C226-KRIYA226-03]; assesses=[] -->
 
 **തയ്യാറാക്കുക** — *tayyāṟākkuka* — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തയ്യാറാക്കുക** (*tayyāṟākkuka*) joins *tayyāṟŭ*, "ready", from Hindustani *taiyār*, an Arabic word, to native *ākkuka*, "to make" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

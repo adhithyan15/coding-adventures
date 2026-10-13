@@ -11,7 +11,8 @@ romanization: "kacēri"
 concept_tag: KA-WORK-OFFICE
 prerequisites: [KA-C92-school, KA-C92-college]
 sounds: []
-roots: []
+roots: [hindustani-kacahri]
+etymology_hook: "kacēri ← Hindustani kacahrī 'office, court'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C92-college]
 **ಕಚೇರಿ** (*kacēri*) — "office".
 
 **ನಾನು ಕಚೇರಿಗೆ ಹೋಗುತ್ತೇನೆ** (*nānu kacērige hōguttēne*) — "I go to the office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಚೇರಿ** (*kacēri*) came from Hindustani *kacahrī*, "an office, a court of law". The word's deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

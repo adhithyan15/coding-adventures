@@ -13,7 +13,8 @@ gloss: "old"
 concept_tag: FR-ANIMAUX41-VIEUX
 prerequisites: [FR-C89-tortue, FR-C89-nouveau]
 sounds: []
-roots: []
+roots: [vetulus-latin]
+etymology_hook: "vieux ← Vulgar Latin *veclus, from Latin vetulus 'oldish' — English veteran"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C89-nouveau]
 <!-- hl-knowledge: introduces=[FR-LEX-C89-ANIMAUX41-03]; assesses=[] -->
 
 **vieux** — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vieux** ← Old French *viel* ← Vulgar Latin *\*veclus* ← Latin *vetulus*, "oldish", from *vetus*, "old" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

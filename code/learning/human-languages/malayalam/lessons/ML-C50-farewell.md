@@ -11,7 +11,8 @@ romanization: "viṭa"
 concept_tag: ML-NOUN-FAREWELL
 prerequisites: [ML-C50-set-out, ML-C48-guest]
 sounds: []
-roots: []
+roots: [dravidian-vidu-release]
+etymology_hook: "viṭa: native Dravidian, the noun of the verb 'to let go'; Tamil viṭu, Kannada biḍu (DEDR 5393)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ A short word off a plain verb: വിടുക (*viṭuka*) is 'to let go, to re
 And it is used exactly as the journey-word was: വിട പറയുക, 'to say farewell'. Malayalam has two ways to announce a departure, one naming the going and one naming the release, and both are built by hanging the speaking-verb off a noun.
 
 Kannada's word here, ಬೀಳ್ಕೊಡುಗೆ (*bīḷkoḍuge*), is longer and made of its own native parts — a giving of leave. Three languages could hardly agree less on how to say goodbye, and each of them is transparent once opened.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിട** (*viṭa*) is native Dravidian, the noun of the verb "to let go, to release"; DEDR 5393 lists the root with Tamil *viṭu*, Kannada *biḍu* and Telugu *viḍu*. DEDR 5393 notes Sanskrit *avamocana*, "inn", as a translation of Tamil *viṭuti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

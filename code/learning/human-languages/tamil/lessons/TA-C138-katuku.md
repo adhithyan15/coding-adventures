@@ -14,7 +14,8 @@ romanization: "kaṭuku"
 concept_tag: TA-THINGS138-KATUKU
 prerequisites: [TA-C138-puli2, TA-C138-milaku]
 sounds: []
-roots: []
+roots: [dravidian-katuku-mustard]
+etymology_hook: "கடுகு — native Dravidian (DEDR 1137); Malayalam kaṭuku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C138-milaku]
 <!-- hl-knowledge: introduces=[TA-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **கடுகு** — *kaṭuku* — "mustard seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடுகு** (*kaṭuku*) is native Dravidian. DEDR 1137 lists Malayalam *kaṭuku*. It belongs with *kaṭu*, "pungent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

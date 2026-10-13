@@ -14,7 +14,8 @@ romanization: "kuniyuka"
 concept_tag: ML-VERB-KUNIYUKA
 prerequisites: [ML-C231-caruka, ML-C231-muttuka]
 sounds: []
-roots: []
+roots: [dravidian-kun-bend]
+etymology_hook: "kuniyuka: native Dravidian; DEDR 1927 lists it with Tamil kūṉ 'hump, bend'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C231-muttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C231-KRIYA231-03]; assesses=[] -->
 
 **കുനിയുക** — *kuniyuka* — "to bend down, to stoop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുനിയുക** (*kuniyuka*) is native Dravidian: DEDR 1927 lists it with Tamil *kūṉ* and Kannada *kūn*, "a hump, a bend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

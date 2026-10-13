@@ -11,7 +11,8 @@ romanization: "paḷḷi"
 concept_tag: TA-WORK-SCHOOL
 prerequisites: [TA-C105-occupation, TA-C105-college]
 sounds: []
-roots: []
+roots: [dravidian-palli-hamlet]
+etymology_hook: "பள்ளி — native Dravidian (DEDR 4018); Malayalam paḷḷi, Kannada haḷḷi 'village', Telugu palli 'village'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C105-college]
 **பள்ளி** (*paḷḷi*) — "a school".
 
 **பள்ளிக்கூடம்** is the fuller word; **பள்ளி** alone is what people say.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பள்ளி** (*paḷḷi*) is native Dravidian. DEDR 4018 lists Malayalam *paḷḷi*, Kannada *haḷḷi*, "village" and Telugu *palli*, "village". It first meant a hamlet, then a hermitage or temple, where children were taught. The entry compares Sanskrit *pallī*, "small village" (CDIAL 7972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

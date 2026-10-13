@@ -14,7 +14,8 @@ romanization: "kai kulukku"
 concept_tag: TA-VERB-KAI-KULUKKU
 prerequisites: [TA-C258-kurai, TA-C258-terru]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-kulukku-shake]
+etymology_hook: "கை குலுக்கு — native: kai 'hand' (DEDR 2023) + kulukku 'to shake' (DEDR 1806)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C258-terru]
 <!-- hl-knowledge: introduces=[TA-LEX-C258-ACT258-05]; assesses=[] -->
 
 **கை குலுக்கு** — *kai kulukku* — "to shake hands".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கை குலுக்கு** (*kai kulukku*) is native: *kai*, "hand" (DEDR 2023), and *kulukku*, "to shake up and down" (DEDR 1806, which lists Malayalam kulukkuka).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

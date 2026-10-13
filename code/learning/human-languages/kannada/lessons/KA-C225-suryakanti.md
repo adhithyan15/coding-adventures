@@ -14,7 +14,8 @@ romanization: "sūryakānti"
 concept_tag: KA-VASTU225-SURYAKANTI
 prerequisites: [KA-C225-bevu, KA-C225-mallige]
 sounds: []
-roots: []
+roots: [sanskrit-surya, sanskrit-kanti]
+etymology_hook: "sūryakānti ← Sanskrit sūrya 'sun' (CDIAL 13574) + kānti 'brightness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C225-mallige]
 <!-- hl-knowledge: introduces=[KA-LEX-C225-VASTU225-03]; assesses=[] -->
 
 **ಸೂರ್ಯಕಾಂತಿ** — *sūryakānti* — "a sunflower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೂರ್ಯಕಾಂತಿ** (*sūryakānti*) is Sanskrit *sūrya*, "sun" (CDIAL 13574), and *kānti*, "brightness, loveliness": "the sun's brightness", a flower that turns to the sun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

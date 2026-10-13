@@ -14,7 +14,8 @@ romanization: "kāluve"
 concept_tag: KA-STHALA251-KALUVE
 prerequisites: [KA-C250-kanive, KA-C251-gadi]
 sounds: []
-roots: []
+roots: [dravidian-kaal-channel]
+etymology_hook: "kāluve: native Dravidian, one word with Tamil kāl (DEDR 1480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C251-gadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C251-STHALA251-02]; assesses=[] -->
 
 **ಕಾಲುವೆ** — *kāluve* — "a canal, a channel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಲುವೆ** (*kāluve*) is native Dravidian, one word with Tamil *kāl* (DEDR 1480). DEDR lists *kāluve*, "water-course, channel". DEDR 1480 compares Sanskrit *khalla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

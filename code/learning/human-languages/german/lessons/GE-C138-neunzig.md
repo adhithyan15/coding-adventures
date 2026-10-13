@@ -13,7 +13,8 @@ gloss: "ninety"
 concept_tag: GE-ZAHL138-NEUNZIG
 prerequisites: [GE-C138-siebzig, GE-C138-achtzig]
 sounds: []
-roots: []
+roots: [newun-germanic]
+etymology_hook: "neunzig — neun 'nine' + -zig 'tens' — the same build as English ninety"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C138-achtzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C138-ZAHL138-04]; assesses=[] -->
 
 **neunzig** — "ninety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neunzig** is *neun*, "nine", + *-zig*, "tens" — the same build as English *ninety*. EtymDB 2.1 has the German word but not its parts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

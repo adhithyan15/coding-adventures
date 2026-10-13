@@ -14,7 +14,8 @@ romanization: "ammāyi"
 concept_tag: ML-VASTU289-AMMAYI
 prerequisites: [ML-C288-phom, ML-C289-ankutti]
 sounds: []
-roots: []
+roots: [dravidian-appa-amma]
+etymology_hook: "ammāyi: native Dravidian; DEDR 183 lists Malayalam ammāyi 'maternal aunt, uncle's wife'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C289-ankutti]
 <!-- hl-knowledge: introduces=[ML-LEX-C289-VASTU289-02]; assesses=[] -->
 
 **അമ്മായി** — *ammāyi* — "an aunt (father's sister)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അമ്മായി** (*ammāyi*) is native Dravidian: DEDR 183 lists it, "aunt, uncle's wife, mother-in-law", under *amma*, "mother". DEDR 183 compares Sanskrit *ambā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

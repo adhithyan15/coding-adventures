@@ -14,7 +14,8 @@ romanization: "gaḍi"
 concept_tag: KA-STHALA251-GADI
 prerequisites: [KA-C250-ance-kaceri, KA-C250-kanive]
 sounds: []
-roots: []
+roots: [kannada-gadi-border]
+etymology_hook: "gaḍi: native Dravidian, 'limit', listed with kaḍe 'to pass over; end' (DEDR 1109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C250-kanive]
 <!-- hl-knowledge: introduces=[KA-LEX-C251-STHALA251-01]; assesses=[] -->
 
 **ಗಡಿ** — *gaḍi* — "a frontier, a boundary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಡಿ** (*gaḍi*) is native Dravidian. DEDR 1109 lists *gaḍi*, with *gaḍa* and *gaḍu*, "limit", under *kaḍe*, "to pass over; end"; the entry also has Tamil *kaṭa*, "to cross".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

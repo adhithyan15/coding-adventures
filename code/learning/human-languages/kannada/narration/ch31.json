@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5d04b2d9196794ea",
+  "sourceHash": "fnv1a64:d81da6d697f43849",
   "lessons": [
     {
       "id": "KA-C31-shubha-madhyahna",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad19a9ca13f9dc1c",
+      "sourceHash": "fnv1a64:750e356b7195f46e",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +183,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೃಷಿ (kṛṣi) is Sanskrit kṛṣi, \"ploughing\", taken over whole as a learned loan, a tatsama (CDIAL 3448)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -213,7 +224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

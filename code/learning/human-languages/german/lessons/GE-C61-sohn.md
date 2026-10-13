@@ -13,7 +13,8 @@ gloss: "a son"
 concept_tag: GE-GEFUEHLE2-SOHN
 prerequisites: [GE-C61-angst, GE-C61-freude]
 sounds: []
-roots: []
+roots: [germanic-sunuz]
+etymology_hook: "Sohn ← Old High German sunu ← Proto-Germanic *sunuz — the same word as English son"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C61-freude]
 <!-- hl-knowledge: introduces=[GE-LEX-C61-GEFUEHLE2-03]; assesses=[] -->
 
 **der Sohn** — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sohn** ← Old High German *sunu* ← Proto-Germanic *\*sunuz* — inherited, the same word as English *son*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

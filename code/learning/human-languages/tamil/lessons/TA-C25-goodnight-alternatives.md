@@ -11,6 +11,7 @@ gloss: Tamil repeats its native greeting loyalty with good-night alternatives bu
 prerequisites: [TA-C25-iniya-iravu, TA-W10-read-naan]
 sounds: [tamil-geminate-lla]
 roots: [tamil-nal-good, vaṇaṅku]
+etymology_hook: "nalla 'good' (DEDR 3610), iravu 'night' (DEDR 2552), vaṇakkam 'bowing' (DEDR 5236) — native, not Sanskrit"
 duration:
   max_seconds: 240
 requires:

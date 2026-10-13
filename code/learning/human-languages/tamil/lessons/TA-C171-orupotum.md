@@ -14,7 +14,8 @@ romanization: "orupōtum"
 concept_tag: TA-NERAM171-ORUPOTUM
 prerequisites: [TA-C171-cila-nerankalil, TA-C171-eppotum]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, dravidian-podu-time]
+etymology_hook: "ஒருபோதும் — native: oru 'one' (DEDR 990) + pōtu 'time' (DEDR 4559) + -um: 'not even once'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C171-eppotum]
 <!-- hl-knowledge: introduces=[TA-LEX-C171-NERAM171-04]; assesses=[] -->
 
 **ஒருபோதும்** — *orupōtum* — "never (with a negative verb)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒருபோதும்** (*orupōtum*) is native: *oru*, "one" (DEDR 990), and *pōtu*, "time" (DEDR 4559), with *-um*: "not even once".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

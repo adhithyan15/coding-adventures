@@ -11,7 +11,8 @@ romanization: "cariyāka"
 concept_tag: TA-RIGHT-EXACTLY
 prerequisites: [TA-C94-onemoretime, TA-C94-whatsaid]
 sounds: []
-roots: []
+roots: [sari]
+etymology_hook: "சரியாக — sari 'correct' + -āka; sari's origin is uncertain, perhaps Sanskrit sadṛśa 'like' (CDIAL 13120)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C94-whatsaid]
 **சரியாக** (*cariyāka*) — "exactly, correctly".
 
 It is the **சரி** of "okay", with **-ஆக**. **சரியாகச் சொன்னீர்கள்** — "you said it exactly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சரியாக** (*cariyāka*) is *sari*, "correct", with *-āka*, "in the manner of". As its own lesson said, the origin of *sari* is uncertain; the usual guess is Sanskrit *sadṛśa*, "like" (CDIAL 13120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

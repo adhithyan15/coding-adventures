@@ -11,9 +11,10 @@ romanization: "yāke"
 concept_tag: KA-Q-WHY
 prerequisites: [KA-C69-isnt-it, KA-C41-deixis-system, KA-C53-star, KA-C43-stand, KA-C43-sit, KA-C43-come, KA-C67-but, KA-C67-and-too]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "yāke: native Dravidian, on the question base yā- (DEDR 5151), which lists yāke itself"
 duration:
-  max_seconds: 210
+  max_seconds: 220
 requires:
   knowledge: [KA-LEX-C69-ASK-03, KA-GRAMMAR-C41-DEIXIS-SYSTEM, KA-LEX-C41-DEIXIS-05, KA-LEX-C41-DEIXIS-06]
 introduces:
@@ -50,6 +51,11 @@ short conversation runs out of first.
 You will also meet **ಏಕೆ** (*ēke*) for the same word. It is the careful, written
 form; ಯಾಕೆ is what gets said. Keep the two side by side — the word for "because"
 is built on the written one, and it is not far off.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾಕೆ** (*yāke*) is native Dravidian, built on the question base *yā-*. DEDR 5151 lists *yāke* itself, "why".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

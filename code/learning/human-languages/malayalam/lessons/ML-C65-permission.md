@@ -11,7 +11,8 @@ romanization: "anuvādaṁ"
 concept_tag: ML-NOUN-PERMISSION
 prerequisites: [ML-C65-request, ML-C63-tiredness]
 sounds: []
-roots: []
+roots: [sanskrit-anuvada]
+etymology_hook: "anuvādaṁ ← Sanskrit anuvāda 'a saying after, assent', a tatsama"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *anuvāda*: a piece meaning after or along, and a piece meaning speakin
 The same Sanskrit word names a repetition and a translation, which is one picture seen from another side — saying again what somebody else has already said.
 
 So the shape of the courtesy is built into the word: somebody asks, and somebody speaks after.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അനുവാദം** (*anuvādaṁ*) ← Sanskrit *anuvāda*, "a saying after, assent", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. Its parts are *anu*, "after", and *vāda*, "speaking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

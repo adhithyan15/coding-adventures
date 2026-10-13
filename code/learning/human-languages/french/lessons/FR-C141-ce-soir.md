@@ -13,7 +13,8 @@ gloss: "this evening"
 concept_tag: FR-FUT141-CE-SOIR
 prerequisites: [FR-C140-se-produire, FR-C141-lavenir]
 sounds: []
-roots: []
+roots: [ecce-hoc-latin]
+etymology_hook: "ce soir — ce 'this', from Latin ecce hoc 'look, this', + soir 'evening'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C141-lavenir]
 <!-- hl-knowledge: introduces=[FR-LEX-C141-FUT141-02]; assesses=[] -->
 
 **ce soir** — "this evening". The time word can stand first: **Ce soir, je travaillerai.** — "This evening I will work." **Dans** a length of time gives "in": **dans deux jours** — "in two days".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ce soir** — *ce*, "this", ← Latin *ecce hoc*, "look, this" (Lewis & Short for *ecce*), and *soir*, "evening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

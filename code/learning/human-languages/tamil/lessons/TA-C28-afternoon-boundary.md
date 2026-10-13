@@ -11,6 +11,7 @@ romanization: "naṭuppakal / matiyam"
 prerequisites: [TA-C28-pirpakal]
 sounds: [tamil-vowel-sign-i]
 roots: [tamil-naTu-middle, sanskrit-madhya-middle]
+etymology_hook: "நடுப்பகல் — native naṭu + pakal (DEDR 3584, 3805); மதியம் ← Sanskrit madhya 'middle' (CDIAL 9804)"
 duration:
   max_seconds: 240
 requires:

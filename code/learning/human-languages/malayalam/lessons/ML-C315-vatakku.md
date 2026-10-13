@@ -14,7 +14,8 @@ romanization: "vaṭakkŭ"
 concept_tag: ML-STHALAM315-VATAKKU
 prerequisites: [ML-C315-sthalam, ML-C315-disa]
 sounds: []
-roots: []
+roots: [dravidian-vada-north]
+etymology_hook: "vaṭakkŭ: native Dravidian, one word with Tamil vaṭa and Kannada baḍa (DEDR 5218)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C315-disa]
 <!-- hl-knowledge: introduces=[ML-LEX-C315-STHALAM315-05]; assesses=[] -->
 
 **വടക്ക്** — *vaṭakkŭ* — "north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വടക്ക്** (*vaṭakkŭ*) is native Dravidian, one word with Tamil *vaṭa* and Kannada *baḍa* (DEDR 5218). DEDR 5218 lists Malayalam *vaṭakku* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

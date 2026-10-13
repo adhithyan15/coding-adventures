@@ -18,6 +18,9 @@ Tamil marks the one being done to, and then the order stops carrying the weight:
 நான் அவரை நினைக்கிறேன் nāṉ avarai ninaikkiṟēṉ — "I think of them".
 அவர் became அவரை. Nothing else moved. The verb you already know from the thinking chapter did not change, and nāṉ is still optional because the -ēṉ on the end is already saying "I".
 
+The word, taken apart.
+-ஐ (-ai) is the native Dravidian accusative ending. It is a suffix, not a word, so the etymological dictionary gives it no entry of its own; Malayalam marks the same case with -e.
+
 Grammar Lens: where the two endings sit.
 [a table of 2 rows, read aloud]
 the word: அவர். + ending: அவர்உக்கு becomes அவருக்கு. what it says: to them, for them.
@@ -62,6 +65,9 @@ Read down the middle column and then down the right one. The left part of each w
 என்னை நினை eṉṉai ninai — "think of me".
 A bare verb stem is already a command — you met that with pō! in the farewell chapter — so this is a whole sentence with no machinery you have not used.
 
+The word, taken apart.
+என்னை / உன்னை (eṉṉai / uṉṉai) are the native pronouns with the accusative -ai: eṉ-, the joining form of "I" (DEDR 5160), and uṉ-, the joining form of "you" (DEDR 3684).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "enakku … eṉṉai"]
@@ -95,6 +101,9 @@ On a thing it is a choice, and the choice carries meaning. Bare தேநீர�
 the object is: a person. the ending: required.
 the object is: a thing, in general. the ending: usually left off.
 the object is: a thing, a particular one. the ending: put on.
+
+The word, taken apart.
+தேநீர் / தேநீரை (tēnīr / tēnīrai) is tēnīr, "tea", with the accusative -ai. Tēnīr is the travelling word tē, "tea", and native nīr, "water" (DEDR 3690; it compares Sanskrit nīra).
 
 Across the family: the same line, drawn at the other end.
 Spanish draws this line too, and a Spanish learner has met it: veo la casa ("I see the house") against veo a María ("I see María"). A human object gets a marker; a thing does not.

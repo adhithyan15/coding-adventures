@@ -14,7 +14,8 @@ romanization: "haḷasida"
 concept_tag: KA-GUNA179-HALASIDA
 prerequisites: [KA-C178-andahage, KA-C179-taja]
 sounds: []
-roots: []
+roots: [dravidian-pazha-old]
+etymology_hook: "haḷasida: native Dravidian, 'gone stale', from paḻasu 'to grow old, spoil' (DEDR 3999)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C179-taja]
 <!-- hl-knowledge: introduces=[KA-LEX-C179-GUNA179-02]; assesses=[] -->
 
 **ಹಳಸಿದ** — *haḷasida* — "stale, spoiled (food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಳಸಿದ** (*haḷasida*) is native Dravidian, from *haḷasu*, "to go stale", which DEDR 3999 lists as older Kannada *paḻasu*, "to become old, decay, be spoiled"; the entry also has Tamil *paḻa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

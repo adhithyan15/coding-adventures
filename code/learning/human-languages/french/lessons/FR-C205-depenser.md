@@ -13,7 +13,8 @@ gloss: "to spend (money)"
 concept_tag: FR-VERB-DEPENSER
 prerequisites: [FR-C204-feuille-de-papier, FR-C205-reserver]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "dépenser ← Latin dispensare 'to weigh out, to pay out' — English spend and dispense"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C205-reserver]
 <!-- hl-knowledge: introduces=[FR-LEX-C205-VERBES205-02]; assesses=[] -->
 
 **dépenser** — "to spend (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dépenser** ← Old French *despenser* ← Latin *dispensare*, "to weigh out, to pay out" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

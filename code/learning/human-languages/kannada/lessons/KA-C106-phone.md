@@ -11,7 +11,8 @@ romanization: "phōn māḍi"
 concept_tag: KA-SOON-PHONE
 prerequisites: [KA-C106-today, KA-C106-later]
 sounds: []
-roots: []
+roots: [english-phone, maadu-do-dravidian]
+etymology_hook: "phōn māḍi: English phone + native māḍi 'please do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C106-later]
 
 **ಫೋನ್ ಮಾಡಿ** (*phōn māḍi*) — "please phone (me)", literally "please do a phone".
 **ಮಾಡಿ** is the polite form of **ಮಾಡು**, "do".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫೋನ್ ಮಾಡಿ** (*phōn māḍi*) is *phōn*, from English *phone*, and *māḍi*, the polite form of *māḍu*, "to do" (DEDR 4797), native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

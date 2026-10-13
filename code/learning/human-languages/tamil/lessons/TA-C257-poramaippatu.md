@@ -14,7 +14,8 @@ romanization: "poṟāmaippaṭu"
 concept_tag: TA-VERB-PORAMAIPPATU
 prerequisites: [TA-C257-accariyappatu, TA-C257-vetkappatu]
 sounds: []
-roots: []
+roots: [dravidian-poru-bear]
+etymology_hook: "பொறாமைப்படு — native: poṟāmai 'envy', lit. 'not bearing' (DEDR 4565) + paṭu 'to undergo'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C257-vetkappatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C257-ACT257-04]; assesses=[] -->
 
 **பொறாமைப்படு** — *poṟāmaippaṭu* — "to be jealous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொறாமைப்படு** (*poṟāmaippaṭu*) is native: *poṟāmai*, "envy", literally "not bearing", from *poṟu*, "to bear" (DEDR 4565), and *paṭu*, "to undergo" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

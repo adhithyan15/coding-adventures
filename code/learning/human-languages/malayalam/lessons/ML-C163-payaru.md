@@ -14,7 +14,8 @@ romanization: "payaṟŭ"
 concept_tag: ML-THINGS163-PAYARU
 prerequisites: [ML-C163-kaivella, ML-C163-kanji, ML-C25-shubha-rathri, ML-C29-suprabhaatham, ML-C30-shubha-sayaahnam, ML-C31-shubha-madhyaahnam]
 sounds: []
-roots: []
+roots: [dravidian-payaru-pulse]
+etymology_hook: "payaṟŭ: native Dravidian, one word with Tamil payaṟu and Kannada pesaṟ (DEDR 3941)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C163-kanji]
 <!-- hl-knowledge: introduces=[ML-LEX-C163-THINGS163-04]; assesses=[] -->
 
 **പയറ്** — *payaṟŭ* — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പയറ്** (*payaṟŭ*) is native Dravidian, one word with Tamil *payaṟu*, Kannada *pesaṟ* and Telugu *pesalu* (DEDR 3941).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

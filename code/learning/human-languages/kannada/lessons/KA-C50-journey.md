@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-JOURNEY
 prerequisites: [KA-C50-day-after, KA-C48-doctor]
 sounds: []
 roots: []
+etymology_hook: "prayāṇa ← Sanskrit prayāṇa 'setting out, journey', taken over whole (CDIAL 8732)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C50-day-after]
 Sanskrit *pra-yāṇa*: *pra*, 'forth, forward', laid on a root meaning to go. A going-forth.
 
 That *pra-* is very old and very widely travelled. It is the *pro-* of Latin, the *pro-* of Greek and the *forth* of English, one prefix that four languages inherited rather than borrowed from one another. Wish someone ಶುಭ ಪ್ರಯಾಣ, a good journey, and half the phrase is a word this book taught you on a quite different errand.
+
+CDIAL 8732 lists Sanskrit *prayāṇa*, "setting out, journey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

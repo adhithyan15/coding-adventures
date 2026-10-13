@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 176,
-  "sourceHash": "fnv1a64:0628a719e21373f4",
+  "sourceHash": "fnv1a64:f30bddbcd178caf8",
   "lessonIds": [
     "GE-C176-bedeuten",
     "GE-C176-beeilen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch176.txt",
   "json": "german/narration/ch176.json",
-  "textHash": "fnv1a64:4507f47474581433",
-  "jsonHash": "fnv1a64:edec55aa2e362b66",
+  "textHash": "fnv1a64:406542d6d642b614",
+  "jsonHash": "fnv1a64:ba456b1bd617a95b",
   "findings": []
 }

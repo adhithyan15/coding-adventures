@@ -13,7 +13,8 @@ gloss: "to draw"
 concept_tag: GE-VERB-ZEICHNEN
 prerequisites: [GE-C191-wecken, GE-C191-wiegen]
 sounds: []
-roots: []
+roots: [germanic-taikna]
+etymology_hook: "zeichnen — the verb of the word for 'sign', the same word as English token: drawing is making signs"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C191-wiegen]
 <!-- hl-knowledge: introduces=[GE-LEX-C191-VERB191-05]; assesses=[] -->
 
 **zeichnen** — "to draw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zeichnen** is the verb of the word for "a sign", Old High German *zeihhan* ← Proto-Germanic *\*taikną*, the same word as English *token*. (EtymDB 2.1) To draw is to make signs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tāḷme"
 concept_tag: KA-AROGYA169-TALME
 prerequisites: [KA-C168-tode, KA-C168-angai]
 sounds: []
-roots: []
+roots: [dravidian-taal-bear]
+etymology_hook: "tāḷme: native Dravidian, 'bearing', from tāḷ 'to hold, suffer patiently' (DEDR 3188)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C168-angai]
 <!-- hl-knowledge: introduces=[KA-LEX-C169-AROGYA169-01]; assesses=[] -->
 
 **ತಾಳ್ಮೆ** — *tāḷme* — "patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಾಳ್ಮೆ** (*tāḷme*) is native Dravidian, from *tāḷ*, "to hold, suffer patiently", with the noun ending *-me*; DEDR 3188 lists the root with Tamil *tāḷu* and Telugu *tālimi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

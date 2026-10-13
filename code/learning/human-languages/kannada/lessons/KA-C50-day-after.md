@@ -11,7 +11,8 @@ romanization: "nāḍiddu"
 concept_tag: KA-WORD-DAY-AFTER-TOMORROW
 prerequisites: [KA-C50-now, KA-C48-student]
 sounds: []
-roots: []
+roots: [naale-tomorrow-dravidian]
+etymology_hook: "nāḍiddu: native Dravidian, built on nāḷ 'day'; DEDR 3656 lists nāḍiddu itself"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C50-now]
 English needs four words for this. Kannada needs one, and keeps a matching one running the other way: ಮೊನ್ನೆ (*monne*), the day before yesterday.
 
 You can hear ನಾಳೆ, 'tomorrow', at the front of ನಾಡಿದ್ದು — the two belong together, one step out and two steps out. A language that sows and marries by the calendar finds it worth keeping single words this far from today.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾಡಿದ್ದು** (*nāḍiddu*) is native Dravidian, built on *nāḷ*, "day", and DEDR 3656 lists *nāḍiddu* itself, "the day after tomorrow"; the entry also has Tamil *nāḷ* and Malayalam *nāḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lakōṭe"
 concept_tag: KA-VASTU295-LAKOTE
 prerequisites: [KA-C295-hatti, KA-C295-resme]
 sounds: []
-roots: []
+roots: [kannada-lakote-envelope]
+etymology_hook: "lakōṭe: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C295-resme]
 <!-- hl-knowledge: introduces=[KA-LEX-C295-VASTU295-03]; assesses=[] -->
 
 **ಲಕೋಟೆ** — *lakōṭe* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಲಕೋಟೆ** (*lakōṭe*) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "envelope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

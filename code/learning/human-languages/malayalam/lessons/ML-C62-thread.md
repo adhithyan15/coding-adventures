@@ -11,7 +11,8 @@ romanization: "nūlŭ"
 concept_tag: ML-NOUN-THREAD
 prerequisites: [ML-C62-rope, ML-C60-goat]
 sounds: []
-roots: []
+roots: [dravidian-nul-thread]
+etymology_hook: "nūlŭ: native Dravidian, one word with Tamil nūl and Kannada nūl (DEDR 3726)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *nūl*, and it stands behind *tuṇi*, the clot
 The older language put the same word to a second job. A treatise, a work of scholarship, was also a *nūl* — a thread of argument running from one end of a subject to the other, which is close to what English does with a train of thought.
 
 It closes on the bare *l* of *cōṟŭ* and *vērŭ*: the consonant with its vowel shaved off.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നൂല്** (*nūlŭ*) is native Dravidian, one word with Tamil *nūl*, Kannada *nūl* and Telugu *nūlu* (DEDR 3726).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

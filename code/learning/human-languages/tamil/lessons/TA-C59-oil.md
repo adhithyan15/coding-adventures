@@ -11,7 +11,8 @@ romanization: "eṇṇey"
 concept_tag: TA-NOUN-OIL
 prerequisites: [TA-C59-ghee, TA-C57-mud, TA-C58-hen]
 sounds: []
-roots: []
+roots: [dravidian-ney-ghee]
+etymology_hook: "எண்ணெய் — native: eḷ 'sesame' + ney 'oil' (DEDR 854); Malayalam eṇṇa, Kannada eṇṇe"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C59-ghee]
 The end of it is நெய், standing there unchanged. The front piece is an old name for the sesame seed, so the whole thing began as sesame-fat — and then it widened until it covered every oil a kitchen has, sesame or not.
 
 Kannada kept the same word as ಎಣ್ಣೆ (*eṇṇe*); Telugu went to నూనె (*nūne*). The doubled ண் in the middle is the one made with the tongue curled back, held twice as long.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எண்ணெய்** (*eṇṇey*) is native: *eḷ*, "sesame", and *ney*, "ghee, oil". DEDR 854 lists it as "gingelly oil", with Malayalam *eṇṇa* and Kannada *eṇṇe*, "oil". Oil was first sesame oil.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

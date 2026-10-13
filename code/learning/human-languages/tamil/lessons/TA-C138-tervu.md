@@ -14,7 +14,8 @@ romanization: "tērvu"
 concept_tag: TA-THINGS138-TERVU
 prerequisites: [TA-C137-kaiyurai, TA-C137-vakuppu, TA-C16-thamizh-maadangal, TA-C16-thamizh-maadangal, TA-C83-date, TA-C83-date]
 sounds: []
-roots: []
+roots: [dravidian-teri-be-clear]
+etymology_hook: "தேர்வு — native Dravidian (DEDR 3419)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C137-vakuppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **தேர்வு** — *tērvu* — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேர்வு** (*tērvu*) is native Dravidian (DEDR 3419). It is the noun of *tēr*, "to examine, to inquire into", which DEDR files with *teri*, "to become clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

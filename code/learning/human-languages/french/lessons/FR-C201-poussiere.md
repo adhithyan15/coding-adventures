@@ -13,7 +13,8 @@ gloss: "dust"
 concept_tag: FR-CHOSES201-POUSSIERE
 prerequisites: [FR-C201-terre, FR-C201-boue]
 sounds: []
-roots: []
+roots: [pulvis-latin]
+etymology_hook: "poussière — Old French pous 'dust', from Latin pulvis — English pulverise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C201-boue]
 <!-- hl-knowledge: introduces=[FR-LEX-C201-CHOSES201-03]; assesses=[] -->
 
 **la poussière** — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poussière** — built from Old French *pous*, "dust", ← Vulgar Latin *\*pulvus*, from Latin *pulvis*, "dust" (Lewis & Short), with *-ière*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

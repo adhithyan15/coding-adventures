@@ -13,7 +13,8 @@ gloss: "to watch television"
 concept_tag: GE-VERB-FERNSEHEN
 prerequisites: [GE-C180-erwarten, GE-C180-fangen]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "fernsehen — 'far' + sehen 'to see': to see far, a German copy of television"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C180-fangen]
 <!-- hl-knowledge: introduces=[GE-LEX-C180-VERB180-03]; assesses=[] -->
 
 **fernsehen** — "to watch television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fernsehen** is the word for "far" + *sehen*, "to see" (EtymDB 2.1): a piece-by-piece copy of *television*, Greek *tēle*, "far", + Latin *vīsiō*, "seeing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

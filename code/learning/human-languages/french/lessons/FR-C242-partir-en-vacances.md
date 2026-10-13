@@ -13,7 +13,8 @@ gloss: "to go on holiday"
 concept_tag: FR-VERB-PARTIR-EN-VACANCES
 prerequisites: [FR-C242-maigrir, FR-C242-nourrir]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "partir en vacances — partir 'to leave', first 'to divide', + en + vacances"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C242-nourrir]
 <!-- hl-knowledge: introduces=[FR-LEX-C242-VERBES242-03]; assesses=[] -->
 
 **partir en vacances** — "to go on holiday".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partir en vacances** — *partir*, "to leave", first "to divide", ← Latin *partire*, "to share out" (EtymDB 2.1); *en*, "on"; and *vacances*, "holidays".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

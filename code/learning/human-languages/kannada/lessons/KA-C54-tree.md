@@ -11,7 +11,8 @@ romanization: "mara"
 concept_tag: KA-NOUN-TREE
 prerequisites: [KA-C53-cloud, KA-C52-door]
 sounds: []
-roots: []
+roots: [dravidian-maram-tree]
+etymology_hook: "mara: native Dravidian, one word with Tamil maram (DEDR 4711)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Two syllables, and one of the oldest words the family has. Tamil says *maram*, M
 ಮರ is the standing tree and equally the wood it is cut into. A carpenter and a forester reach for the same word, and Kannada has felt no need to split them — the thing and the material are one item as far as the language is concerned.
 
 It is also the first word of this chapter for a plain reason: everything else here is a part of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮರ** (*mara*) is native Dravidian, one word with Tamil *maram* (DEDR 4711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a landscape"
 concept_tag: FR-CHOSES231-PAYSAGE
 prerequisites: [FR-C231-depart, FR-C231-destination]
 sounds: []
-roots: []
+roots: [pagus-latin]
+etymology_hook: "paysage — from the word for 'country', Late Latin pagensis — English peasant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C231-destination]
 <!-- hl-knowledge: introduces=[FR-LEX-C231-CHOSES231-05]; assesses=[] -->
 
 **le paysage** — "a landscape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paysage** — built from the word for "country", ← Late Latin *pagensis*, from *pagus*, "a district" (Lewis & Short), with *-age*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 221,
-  "sourceHash": "fnv1a64:ce5b06b78ea7c5a7",
+  "sourceHash": "fnv1a64:b034c28c42cce0c2",
   "lessonIds": [
     "FR-C221-ciseaux",
     "FR-C221-montre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch221.txt",
   "json": "french/narration/ch221.json",
-  "textHash": "fnv1a64:d11bc7a9bf9108fb",
-  "jsonHash": "fnv1a64:7659d2c3e6880437",
+  "textHash": "fnv1a64:b5efb432f94d037b",
+  "jsonHash": "fnv1a64:22a2cc35f1f26b33",
   "findings": []
 }

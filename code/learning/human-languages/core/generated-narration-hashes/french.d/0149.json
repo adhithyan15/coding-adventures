@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 149,
-  "sourceHash": "fnv1a64:fd3d355999922d6b",
+  "sourceHash": "fnv1a64:8189e3a847d7496a",
   "lessonIds": [
     "FR-C149-decouvrir",
     "FR-C149-sembler",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch149.txt",
   "json": "french/narration/ch149.json",
-  "textHash": "fnv1a64:cca086a639a19f3b",
-  "jsonHash": "fnv1a64:9d58fd669bc06866",
+  "textHash": "fnv1a64:8d6ac8ad090891de",
+  "jsonHash": "fnv1a64:b0806ded0fcce208",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 32,
-  "sourceHash": "fnv1a64:33e1beab740551de",
+  "sourceHash": "fnv1a64:108a1eaacc93c493",
   "lessonIds": [
     "TA-C32-iru",
     "TA-C32-po",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "tamil/narration/ch32.txt",
   "json": "tamil/narration/ch32.json",
-  "textHash": "fnv1a64:d7d4dd2e2c1b51e2",
-  "jsonHash": "fnv1a64:33aa318a038440cd",
+  "textHash": "fnv1a64:10cad7a1110c0730",
+  "jsonHash": "fnv1a64:f2d6c12ee88862da",
   "findings": []
 }

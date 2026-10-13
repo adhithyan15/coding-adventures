@@ -14,7 +14,8 @@ romanization: "guḍisalu"
 concept_tag: KA-STHALA250-GUDISALU
 prerequisites: [KA-C249-jille, KA-C250-sutta]
 sounds: []
-roots: []
+roots: [dravidian-kuti-hut]
+etymology_hook: "guḍisalu: native Dravidian, one word with Tamil kuṭi and Telugu koṭika (DEDR 1655)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C250-sutta]
 <!-- hl-knowledge: introduces=[KA-LEX-C250-STHALA250-02]; assesses=[] -->
 
 **ಗುಡಿಸಲು** — *guḍisalu* — "a hut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಡಿಸಲು** (*guḍisalu*) is native Dravidian, one word with Tamil *kuṭi*, Telugu *koṭika* and Malayalam *kuṭi* (DEDR 1655). DEDR lists *guḍisalu*, "hut with a thatched roof". DEDR 1655 compares Sanskrit *kūṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

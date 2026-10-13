@@ -14,7 +14,8 @@ romanization: "tavir"
 concept_tag: TA-VERB-TAVIR
 prerequisites: [TA-C197-ninaivuttu, TA-C197-campati]
 sounds: []
-roots: []
+roots: [dravidian-tavir-avoid]
+etymology_hook: "தவிர் — native Dravidian (DEDR 3113); Malayalam tavirkka 'to exclude, omit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C197-campati]
 <!-- hl-knowledge: introduces=[TA-LEX-C197-ACT197-03]; assesses=[] -->
 
 **தவிர்** — *tavir* — "to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தவிர்** (*tavir*) is native Dravidian. DEDR 3113 lists Malayalam *tavirkka*, "to exclude, omit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

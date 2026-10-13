@@ -11,7 +11,8 @@ romanization: "mucci"
 concept_tag: KA-DO-CLOSE
 prerequisites: [KA-C100-near, KA-C101-open]
 sounds: []
-roots: []
+roots: [dravidian-muccu-shut]
+etymology_hook: "mucci: native Dravidian, from muccu 'to close, shut' (DEDR 4915)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C101-open]
 **ಮುಚ್ಚಿ** (*mucci*) — "please close".
 
 **ಬಾಗಿಲು ಮುಚ್ಚಿ** (*bāgilu mucci*) — "please close the door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಚ್ಚಿ** (*mucci*) is native Dravidian, from *muccu*, "to close, shut", which DEDR 4915 lists itself; *mucci* is its polite command; the entry also has Tamil *muccu* and Telugu *mūyu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

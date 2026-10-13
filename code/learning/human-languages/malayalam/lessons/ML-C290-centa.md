@@ -14,7 +14,8 @@ romanization: "ceṇṭa"
 concept_tag: ML-VASTU290-CENTA
 prerequisites: [ML-C290-kathakali, ML-C290-pulikali]
 sounds: []
-roots: []
+roots: [dravidian-cendai-drum]
+etymology_hook: "ceṇṭa: native Dravidian, one word with Tamil ceṇṭai and Kannada caṇḍe (DEDR 2767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C290-pulikali]
 <!-- hl-knowledge: introduces=[ML-LEX-C290-VASTU290-04]; assesses=[] -->
 
 **ചെണ്ട** — *ceṇṭa* — "a chenda drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെണ്ട** (*ceṇṭa*) is native Dravidian, one word with Tamil *ceṇṭai* and Kannada *caṇḍe* (DEDR 2767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

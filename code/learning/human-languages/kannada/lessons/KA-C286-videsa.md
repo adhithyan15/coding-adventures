@@ -14,7 +14,8 @@ romanization: "vidēśa"
 concept_tag: KA-STHALA286-VIDESA
 prerequisites: [KA-C286-pravesa, KA-C286-vedike]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "vidēśa ← Sanskrit vi- 'apart' + dēśa 'country' (CDIAL 6547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C286-vedike]
 <!-- hl-knowledge: introduces=[KA-LEX-C286-STHALA286-05]; assesses=[] -->
 
 **ವಿದೇಶ** — *vidēśa* — "abroad, a foreign country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿದೇಶ** (*vidēśa*) is Sanskrit *vi-*, "apart, away", with *dēśa*, "region, country" (CDIAL 6547): "a country away from home".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

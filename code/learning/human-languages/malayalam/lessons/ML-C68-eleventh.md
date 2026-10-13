@@ -11,7 +11,8 @@ romanization: "patinonnāṁ"
 concept_tag: ML-ORDINAL-ELEVENTH
 prerequisites: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky, ML-C20-pathinonnu-irupathu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "patinonnāṁ: native Dravidian, ten + one + -āṁ (DEDR 3918, 990)"
 duration:
   max_seconds: 220
 requires:
@@ -49,6 +50,11 @@ reviews_of: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky]
 a word of three parts, not one of which had to be learned as a whole.
 
 **പതിനൊന്നാം ദിവസം** (*patinonnāṁ divasaṁ*), the eleventh day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പതിനൊന്നാം** (*patinonnāṁ*) is native Dravidian throughout: the joining shape of "ten" (DEDR 3918, with Tamil *patiṉ-*), "one" (DEDR 990), and the ordinal ending *-āṁ*.
 
 ## Grammar Lens: the ending is a fact about numbers, not about ten
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C68-ORDINAL-07]; assesses=[ML-LEX-C68-ORDINAL-06] -->

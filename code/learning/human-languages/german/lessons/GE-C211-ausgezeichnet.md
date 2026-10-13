@@ -13,7 +13,8 @@ gloss: "excellent"
 concept_tag: GE-QUAL211-AUSGEZEICHNET
 prerequisites: [GE-C211-anstrengend, GE-C211-aufgeregt]
 sounds: []
-roots: []
+roots: [germanic-taikna]
+etymology_hook: "ausgezeichnet — 'marked out', from aus- + zeichnen 'to mark, to draw'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C211-aufgeregt]
 <!-- hl-knowledge: introduces=[GE-LEX-C211-QUAL211-04]; assesses=[] -->
 
 **ausgezeichnet** — "excellent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ausgezeichnet** is the past participle of *aus-* + *zeichnen*, "to mark": marked out from the rest. *zeichnen* is built on the word for "sign", English *token*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

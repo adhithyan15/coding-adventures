@@ -13,7 +13,8 @@ gloss: "the face"
 concept_tag: FR-CORPS2-VISAGE
 prerequisites: [FR-C50-epaule, FR-C50-genou]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "visage — Old French vis 'face' + -age; vis ← Latin visus 'a look' — English vision"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C50-genou]
 <!-- hl-knowledge: introduces=[FR-LEX-C50-CORPS2-04]; assesses=[] -->
 
 **le visage** — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**visage** — built in Old French from *vis*, "face", with the ending *-age*. *vis* ← Latin *visus*, "a look, an appearance", from *videre*, "to see". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

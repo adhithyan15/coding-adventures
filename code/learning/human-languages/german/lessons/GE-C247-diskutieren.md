@@ -13,7 +13,8 @@ gloss: "to discuss"
 concept_tag: GE-VERB-DISKUTIEREN
 prerequisites: [GE-C247-beweisen, GE-C247-bluehen]
 sounds: []
-roots: []
+roots: [discutere-latin]
+etymology_hook: "diskutieren ← Latin discutere 'to shake apart, to examine' — borrowed with -ieren"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C247-bluehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C247-VERB247-04]; assesses=[] -->
 
 **diskutieren** — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diskutieren** comes from Latin *discutere*, "to shake apart, to examine" (EtymDB 2.1 has the related *discutiō*) — borrowed, with the ending *-ieren*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

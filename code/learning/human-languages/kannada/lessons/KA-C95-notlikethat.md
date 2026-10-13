@@ -11,7 +11,8 @@ romanization: "hāgalla"
 concept_tag: KA-RESP-NOT-LIKE-THAT
 prerequisites: [KA-C94-price, KA-C95-notpossible]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-al-not]
+etymology_hook: "hāgalla: native hāge 'that way' (DEDR 1) + alla 'is not' (DEDR 234)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C95-notpossible]
 
 **ಹಾಗಲ್ಲ** (*hāgalla*) — "it's not like that", "no, that's not it". It is **ಹಾಗೆ**
 (*hāge*), "like that", with **ಅಲ್ಲ** (*alla*), "is not".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಗಲ್ಲ** (*hāgalla*) is native Dravidian: *hāge*, "in that way" (DEDR 1), and *alla*, "is not" (DEDR 234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

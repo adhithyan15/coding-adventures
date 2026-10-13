@@ -11,7 +11,8 @@ romanization: "aḻu"
 concept_tag: TA-VERB-AZHU
 prerequisites: [TA-C72-laugh, TA-C70-roof, TA-C71-play]
 sounds: []
-roots: []
+roots: [dravidian-azhu-weep]
+etymology_hook: "அழு — native Dravidian (DEDR 282); Malayalam aḻuka, Kannada aḻ"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ met it after தமிழ் and கழுவு.
 
 Five feelings now: three you can have — கோபம், பயம், வருத்தம் — and two you can do, சிரி and
 அழு.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழு** (*aḻu*) is native Dravidian. DEDR 282 lists Malayalam *aḻuka* and Kannada *aḻ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 250,
-  "sourceHash": "fnv1a64:6890da594f579a52",
+  "sourceHash": "fnv1a64:91cf6ccda4495695",
   "lessonIds": [
     "KA-C250-sutta",
     "KA-C250-gudisalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch250.txt",
   "json": "kannada/narration/ch250.json",
-  "textHash": "fnv1a64:50800571e188536d",
-  "jsonHash": "fnv1a64:d10554dd2b7d05b0",
+  "textHash": "fnv1a64:e1646399ef044f87",
+  "jsonHash": "fnv1a64:f7b1ddef78a11acf",
   "findings": []
 }

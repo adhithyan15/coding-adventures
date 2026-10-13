@@ -14,6 +14,7 @@ concept_tag: FR-VILLE54-POLICE
 prerequisites: [FR-C101-village, FR-C101-poste]
 sounds: []
 roots: []
+etymology_hook: "police ← Latin politia 'government', from Greek polis 'city' — English police and politics"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C101-poste]
 <!-- hl-knowledge: introduces=[FR-LEX-C102-VILLE54-01]; assesses=[] -->
 
 **la police** — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**police** ← Latin *politia*, "government, citizenship", from Greek *politeia*, built on *polis*, "a city" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

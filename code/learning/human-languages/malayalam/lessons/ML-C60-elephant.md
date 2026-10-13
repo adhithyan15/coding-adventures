@@ -11,7 +11,8 @@ romanization: "āna"
 concept_tag: ML-NOUN-ELEPHANT
 prerequisites: [ML-C60-crow, ML-C58-that-will-do]
 sounds: []
-roots: []
+roots: [dravidian-yanai-elephant]
+etymology_hook: "āna: native Dravidian, one word with Tamil yāṉai and Kannada āne (DEDR 5161)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and a worn-down cousin of Tamil *yāṉai*: the same Dravidian word, 
 You met a piece of this animal before you met the animal. *Kompŭ*, the branch-word, already covered the tusk of an ആന — one picture for the branch, the horn and the tusk, and no separate word needed for the third.
 
 In Kerala the ആന belongs to a festival before it belongs to a forest. A caparisoned elephant standing in front of a temple is what most Malayalis picture on hearing the word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആന** (*āna*) is native Dravidian, one word with Tamil *yāṉai* and Kannada *āne* (DEDR 5161). Malayalam lost the old opening *y-*, which Tamil still writes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

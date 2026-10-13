@@ -11,9 +11,10 @@ romanization: "eppaṭi irukkīṅka?"
 concept_tag: TA-GREET-HOW-ARE-YOU
 prerequisites: [TA-C108-whatsnew, TA-C108-areyouwell]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-iru-be]
+etymology_hook: "எப்படி இருக்கீங்க — native: eppaṭi 'how' (DEDR 5151) + iru 'to be' (DEDR 480), in spoken form"
 duration:
-  max_seconds: 200
+  max_seconds: 204
 requires:
   knowledge: [TA-LEX-C108-GREET-03, TA-LEX-C108-GREET-04]
 introduces:
@@ -41,6 +42,11 @@ reviews_of: [TA-C108-areyouwell]
 **எப்படி இருக்கீங்க?** (*eppaṭi irukkīṅka?*) — "how are you?", the everyday spoken form.
 
 It is the written **எப்படி இருக்கிறீர்கள்?** worn short in speech.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எப்படி இருக்கீங்க?** (*eppaṭi irukkīṅka?*) is native: *eppaṭi*, "how" (DEDR 5151), and *iru*, "to be" (DEDR 480), in its spoken form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

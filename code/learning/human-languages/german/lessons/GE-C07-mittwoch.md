@@ -10,10 +10,10 @@ gloss: Wednesday — the first day that breaks the pattern, because the Church w
 concept_tag: GE-WEEKDAY-WEDNESDAY
 prerequisites: [GE-C07-freitag, GE-C01-nacht]
 sounds: [ch-ach]
-roots: []
+roots: [germanic-medja]
 etymology_hook: "English kept Wednesday, Wodan's day; German did not, because the medieval Church declined to name a day for the chief pagan god and put mid-week there instead"
 duration:
-  max_seconds: 170
+  max_seconds: 262
 requires:
   knowledge: [GE-GRAMMAR-GOTT-PLUS-TAG-01, GE-SOUND-NACHT-CH-01, GE-LEX-TAG-02]
 introduces:
@@ -52,6 +52,11 @@ English did **not** do this. *Wednesday* is **Woden's day** — the chief god,
 sitting exactly where the pattern says he should. So English kept the Germanic
 name and German threw it away, which is the opposite of what the rest of this
 chapter would lead you to expect.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mittwoch** ← Middle High German *mittewoche* ← Old High German *mittawehha*, "middle of the week" (EtymDB 2.1) — built from "mid" and "week", the same pair as English *midweek*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-NACHT-CH-01, GE-LEX-MITTWOCH-01] -->

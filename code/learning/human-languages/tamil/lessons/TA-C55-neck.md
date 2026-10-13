@@ -11,7 +11,8 @@ romanization: "kaḻuttu"
 concept_tag: TA-NOUN-NECK
 prerequisites: [TA-C54-box, TA-C53-river, TA-C54-mat]
 sounds: []
-roots: []
+roots: [dravidian-kazhuttu-neck]
+etymology_hook: "கழுத்து — native Dravidian (DEDR 1366); Malayalam kaḻuttu, Kannada kattu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C54-box]
 Malayalam കഴുത്ത് (*kaḻuttŭ*) is the same word, ழ and all — that letter again, the one only these two sisters still write. Telugu went its own way here, to మెడ (*meḍa*).
 
 It is the neck outside and the throat inside, both in one word. A garland goes round the கழுத்து, and so does the thread tied at a wedding.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கழுத்து** (*kaḻuttu*) is native Dravidian. DEDR 1366 lists Malayalam *kaḻuttu* and Kannada *kattu*. The entry compares Sanskrit *kaṇṭha*, "neck" (CDIAL 2680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the face"
 concept_tag: GE-KOERPER2-GESICHT
 prerequisites: [GE-C56-schulter, GE-C56-knie]
 sounds: []
-roots: []
+roots: [sehwan-germanic]
+etymology_hook: "Gesicht — ge- on the stem of sehen 'to see': first 'sight', then the face that is seen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C56-knie]
 <!-- hl-knowledge: introduces=[GE-LEX-C57-KOERPER2-01]; assesses=[] -->
 
 **das Gesicht** — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gesicht** ← Middle High German *gesiht*, "sight": *ge-* on the stem of *sehen*, "to see", which EtymDB 2.1 traces to Proto-Germanic *\*sehwaną*. The face is what is seen; English *sight* comes from the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

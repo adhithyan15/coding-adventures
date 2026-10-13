@@ -14,7 +14,8 @@ romanization: "phalaṁ"
 concept_tag: ML-WHY144-PHALAM
 prerequisites: [ML-C144-atukontu, ML-C144-uddesyam]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phalaṁ ← Sanskrit phala 'fruit', a tatsama (CDIAL 9051)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C144-uddesyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C144-WHY144-03]; assesses=[] -->
 
 **ഫലം** — *phalaṁ* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫലം** (*phalaṁ*) ← Sanskrit *phala*, "fruit", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 9051). A result is the fruit of an action.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

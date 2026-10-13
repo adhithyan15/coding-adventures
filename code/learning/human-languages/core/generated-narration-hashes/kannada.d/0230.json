@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 230,
-  "sourceHash": "fnv1a64:4528647af577e78f",
+  "sourceHash": "fnv1a64:1ab5953405b27667",
   "lessonIds": [
     "KA-C230-gere",
     "KA-C230-hundi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch230.txt",
   "json": "kannada/narration/ch230.json",
-  "textHash": "fnv1a64:2fd5cef8ba5b20bd",
-  "jsonHash": "fnv1a64:ebdaef6480ee97b7",
+  "textHash": "fnv1a64:b73c69f5a56cba8d",
+  "jsonHash": "fnv1a64:16d6c59ce4f609bd",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bagge"
 concept_tag: KA-KARANA215-BAGGE
 prerequisites: [KA-C215-mulaka, KA-C215-prakara]
 sounds: []
-roots: []
+roots: [dravidian-vakai-think]
+etymology_hook: "bagge: native Dravidian; DEDR 5205 lists bagge 'with regard to' under bage 'to think'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C215-prakara]
 <!-- hl-knowledge: introduces=[KA-LEX-C215-KARANA215-03]; assesses=[] -->
 
 **ಬಗ್ಗೆ** — *bagge* — "about, concerning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಗ್ಗೆ** (*bagge*) is native Dravidian, from *bage*, "to think; thought, regard", and DEDR 5205 lists *bagge*, "on account of, with regard to", itself; the entry also has Tamil *vakai* and Telugu *vagacu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

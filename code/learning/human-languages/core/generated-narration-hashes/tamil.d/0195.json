@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 195,
-  "sourceHash": "fnv1a64:1617524e9547a971",
+  "sourceHash": "fnv1a64:2a22492edab8969b",
   "lessonIds": [
     "TA-C195-kontu-va",
     "TA-C195-tiruppik-kotu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch195.txt",
   "json": "tamil/narration/ch195.json",
-  "textHash": "fnv1a64:48a28cee97acb2ca",
-  "jsonHash": "fnv1a64:fb63c8fe2818cac0",
+  "textHash": "fnv1a64:37299626abb7c938",
+  "jsonHash": "fnv1a64:bd747c50eb350267",
   "findings": []
 }

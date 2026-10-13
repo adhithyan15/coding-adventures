@@ -13,7 +13,8 @@ gloss: "to calculate"
 concept_tag: FR-VERB-CALCULER
 prerequisites: [FR-C236-bruler, FR-C236-jeter]
 sounds: []
-roots: []
+roots: [calculus-latin]
+etymology_hook: "calculer ← Late Latin calculare, from calculus 'a pebble' — English calculate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C236-jeter]
 <!-- hl-knowledge: introduces=[FR-LEX-C236-VERBES236-04]; assesses=[] -->
 
 **calculer** — "to calculate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calculer** ← Late Latin *calculare*, from *calculus*, "a pebble" (Lewis & Short): sums were done with counting stones — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

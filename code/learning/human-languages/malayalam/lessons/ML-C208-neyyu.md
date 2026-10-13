@@ -14,7 +14,8 @@ romanization: "neyyŭ"
 concept_tag: ML-VASTU208-NEYYU
 prerequisites: [ML-C208-accar, ML-C208-moru]
 sounds: []
-roots: []
+roots: [dravidian-ney-ghee]
+etymology_hook: "neyyŭ: native Dravidian, one word with Tamil ney and Kannada ney (DEDR 3746)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C208-moru]
 <!-- hl-knowledge: introduces=[ML-LEX-C208-VASTU208-03]; assesses=[] -->
 
 **നെയ്യ്** — *neyyŭ* — "ghee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നെയ്യ്** (*neyyŭ*) is native Dravidian, one word with Tamil *ney*, Kannada *ney* and Telugu *neyyi* (DEDR 3746). Its older sense is any fat or oil.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

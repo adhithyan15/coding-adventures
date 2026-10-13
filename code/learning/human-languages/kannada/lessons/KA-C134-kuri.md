@@ -14,7 +14,8 @@ romanization: "kuri"
 concept_tag: KA-THINGS134-KURI
 prerequisites: [KA-C134-ili, KA-C134-emme]
 sounds: []
-roots: []
+roots: [dravidian-kori-sheep]
+etymology_hook: "kuri: native Dravidian, one word with Tamil koṟi (DEDR 2165)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C134-emme]
 <!-- hl-knowledge: introduces=[KA-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **ಕುರಿ** — *kuri* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುರಿ** (*kuri*) is native Dravidian, one word with Tamil *koṟi* (DEDR 2165). DEDR lists Kannada *kuṟi*, *koṟi*, "sheep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

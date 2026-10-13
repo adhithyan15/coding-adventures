@@ -14,7 +14,8 @@ romanization: "sumāru"
 concept_tag: KA-KARANA252-SUMARU
 prerequisites: [KA-C252-adrsta, KA-C252-salahe]
 sounds: []
-roots: []
+roots: [kannada-sumaru]
+etymology_hook: "sumāru: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C252-salahe]
 <!-- hl-knowledge: introduces=[KA-LEX-C252-KARANA252-03]; assesses=[] -->
 
 **ಸುಮಾರು** — *sumāru* — "approximately, roughly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಸುಮಾರು** (*sumāru*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

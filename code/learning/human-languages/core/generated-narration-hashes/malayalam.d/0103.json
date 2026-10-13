@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 103,
-  "sourceHash": "fnv1a64:a1bb96589904cd8d",
+  "sourceHash": "fnv1a64:3bcd8a4fe075c0fb",
   "lessonIds": [
     "ML-C103-pallikkoodam",
     "ML-S147-letter-ttha",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch103.txt",
   "json": "malayalam/narration/ch103.json",
-  "textHash": "fnv1a64:9392c09d6e1692a6",
-  "jsonHash": "fnv1a64:5f1fc323231e031f",
+  "textHash": "fnv1a64:d9f44b418e1c0b52",
+  "jsonHash": "fnv1a64:65c496b077bd98bc",
   "findings": []
 }

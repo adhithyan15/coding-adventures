@@ -13,7 +13,8 @@ gloss: "to bake"
 concept_tag: GE-VERB-BACKEN
 prerequisites: [GE-C175-ausfuellen, GE-C175-ausruhen]
 sounds: []
-roots: []
+roots: [germanic-bakana]
+etymology_hook: "backen ← Old High German backan — the same verb as English bake"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C175-ausruhen]
 <!-- hl-knowledge: introduces=[GE-LEX-C175-VERB175-03]; assesses=[] -->
 
 **backen** — "to bake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**backen** ← Middle High German *backen* ← Old High German *backan* — inherited, the same verb as English *bake*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

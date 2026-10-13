@@ -11,7 +11,8 @@ romanization: "nācike"
 concept_tag: KA-MOOD-SHY
 prerequisites: [KA-C98-boredom, KA-C98-enthusiasm]
 sounds: []
-roots: []
+roots: [dravidian-naan-shame]
+etymology_hook: "nācike: native Dravidian, from nācu 'to be abashed' (DEDR 3639); Tamil nāṇ"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C98-enthusiasm]
 **ನಾಚಿಕೆ** (*nācike*) — "shyness, embarrassment".
 
 **ನಾಚಿಕೆ ಬೇಡ** (*nācike bēḍa*) — "don't be shy", a kind thing to say to a new learner.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾಚಿಕೆ** (*nācike*) is native Dravidian, from *nāṇ*, "shame, modesty", and DEDR 3639 lists the verb *nācu*, "to become abashed"; the entry also has Tamil *nāṇ*, Telugu *nāna* and Malayalam *nāṇam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

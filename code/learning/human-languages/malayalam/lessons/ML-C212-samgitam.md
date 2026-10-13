@@ -14,7 +14,8 @@ romanization: "saṁgītaṁ"
 concept_tag: ML-VASTU212-SAMGITAM
 prerequisites: [ML-C211-partti, ML-C212-kala]
 sounds: []
-roots: []
+roots: [sanskrit-sangita]
+etymology_hook: "saṁgītaṁ ← Sanskrit saṁgīta 'chorus, concert', a tatsama (CDIAL 12849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C212-kala]
 <!-- hl-knowledge: introduces=[ML-LEX-C212-VASTU212-02]; assesses=[] -->
 
 **സംഗീതം** — *saṁgītaṁ* — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സംഗീതം** (*saṁgītaṁ*) ← Sanskrit *saṁgīta*, "chorus, concert", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12849). It is built on the root *gai*, "to sing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

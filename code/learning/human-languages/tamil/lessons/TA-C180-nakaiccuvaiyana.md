@@ -14,7 +14,8 @@ romanization: "nakaiccuvaiyāṉa"
 concept_tag: TA-GUNAM180-NAKAICCUVAIYANA
 prerequisites: [TA-C180-kurumpana, TA-C180-pitivatamana]
 sounds: []
-roots: []
+roots: [dravidian-naku-laugh, dravidian-cavi-taste]
+etymology_hook: "நகைச்சுவையான — native: nakai 'laughter' (DEDR 3569) + cuvai 'flavour' (DEDR 2396)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C180-pitivatamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C180-GUNAM180-04]; assesses=[] -->
 
 **நகைச்சுவையான** — *nakaiccuvaiyāṉa* — "funny, humorous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நகைச்சுவையான** (*nakaiccuvaiyāṉa*) is native: *nakai*, "laughter" (DEDR 3569), and *cuvai*, "taste, flavour" (DEDR 2396), with *-āṉa*: "with the flavour of laughter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

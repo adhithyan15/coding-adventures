@@ -14,7 +14,8 @@ romanization: "keñcu"
 concept_tag: TA-VERB-KENCU
 prerequisites: [TA-C231-vatu, TA-C231-eccari]
 sounds: []
-roots: []
+roots: [dravidian-kencu-beg]
+etymology_hook: "கெஞ்சு — native Dravidian (DEDR 1939); Malayalam keñcuka 'to beg'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C231-eccari]
 <!-- hl-knowledge: introduces=[TA-LEX-C231-ACT231-04]; assesses=[] -->
 
 **கெஞ்சு** — *keñcu* — "to beg, to plead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கெஞ்சு** (*keñcu*) is native Dravidian. DEDR 1939 lists Malayalam *keñcuka*, "to beg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

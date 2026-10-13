@@ -13,7 +13,8 @@ gloss: "a woman; a wife"
 concept_tag: FR-FAMILLE9-FEMME
 prerequisites: [FR-C56-grand-mere, FR-C57-mari]
 sounds: []
-roots: []
+roots: [femina-latin]
+etymology_hook: "femme ← Latin femina 'woman' — English feminine and female are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C57-mari]
 <!-- hl-knowledge: introduces=[FR-LEX-C57-FAMILLE9-02]; assesses=[] -->
 
 **la femme** — "a woman; a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**femme** ← Latin *femina*, "woman" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

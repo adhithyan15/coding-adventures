@@ -11,7 +11,8 @@ romanization: "uṟakkaṁ"
 concept_tag: ML-WX-SLEEP
 prerequisites: [ML-C118-coldweather, ML-C118-heat]
 sounds: []
-roots: []
+roots: [dravidian-urangu-sleep]
+etymology_hook: "uṟakkaṁ: native Dravidian, the noun of the verb 'to sleep'; Tamil uṟakkam (DEDR 707)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C118-heat]
 
 **ഉറക്കം** (*uṟakkaṁ*) — "sleep". **എനിക്ക് ഉറക്കം വരുന്നു** — "I'm getting sleepy",
 literally "sleep is coming to me".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉറക്കം** (*uṟakkaṁ*) is native Dravidian, the noun of the verb "to sleep"; DEDR 707 lists the root with Tamil *uṟakkam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

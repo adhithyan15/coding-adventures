@@ -14,6 +14,7 @@ concept_tag: GE-STADT2-APOTHEKE
 prerequisites: [GE-C97-bruecke, GE-C97-kirche]
 sounds: []
 roots: []
+etymology_hook: "Apotheke ← Greek apothēkē 'storehouse', from 'to put away' — borrowed through Latin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C97-kirche]
 <!-- hl-knowledge: introduces=[GE-LEX-C97-STADT2-03]; assesses=[] -->
 
 **die Apotheke** — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Apotheke** ← Greek *apothḗkē*, "storehouse", from *apotíthēmi*, "to put away" (EtymDB 2.1) — borrowed through Latin: a store where medicines were kept.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

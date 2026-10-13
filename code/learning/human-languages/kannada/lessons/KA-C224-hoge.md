@@ -14,7 +14,8 @@ romanization: "hoge"
 concept_tag: KA-VASTU224-HOGE
 prerequisites: [KA-C223-gurutina-citi, KA-C223-cek]
 sounds: []
-roots: []
+roots: [dravidian-pukai-smoke]
+etymology_hook: "hoge: native Dravidian, one word with Telugu poga (DEDR 4240)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C223-cek]
 <!-- hl-knowledge: introduces=[KA-LEX-C224-VASTU224-01]; assesses=[] -->
 
 **ಹೊಗೆ** — *hoge* — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಗೆ** (*hoge*) is native Dravidian, one word with Telugu *poga* (DEDR 4240). DEDR gives the older Kannada *poge*, "smoke": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

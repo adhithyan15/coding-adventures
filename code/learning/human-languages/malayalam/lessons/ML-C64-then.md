@@ -11,7 +11,8 @@ romanization: "pinne"
 concept_tag: ML-WORD-THEN
 prerequisites: [ML-C63-fever, ML-C62-rope]
 sounds: []
-roots: []
+roots: [dravidian-pin-behind]
+etymology_hook: "pinne: native Dravidian, built on pin 'behind, after'; Tamil piṉ (DEDR 4205)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, built on *pin*, the piece meaning behind or at the back. What 
 Kerala also leans on it as a filler, the *so...* a speaker puts in front of a sentence to buy a second before starting it.
 
 After *śari*, it turns an agreement into a continuation: right, and then.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിന്നെ** (*pinne*) is native Dravidian, built on *pin*, "behind, after"; DEDR 4205 lists the root with Tamil *piṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

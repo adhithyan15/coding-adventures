@@ -13,7 +13,8 @@ gloss: "forty"
 concept_tag: FR-HABITS57-QUARANTE
 prerequisites: [FR-C105-chaussettes, FR-C105-trente]
 sounds: []
-roots: []
+roots: [quadraginta-latin]
+etymology_hook: "quarante ← Latin quadraginta 'forty' — English quarantine, forty days"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C105-trente]
 <!-- hl-knowledge: introduces=[FR-LEX-C105-HABITS57-03]; assesses=[] -->
 
 **quarante** — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quarante** ← Latin *quadraginta*, "forty" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "avasaraṁ"
 concept_tag: ML-CAN142-AVASARAM
 prerequisites: [ML-C142-sakti, ML-C142-avakasam]
 sounds: []
-roots: []
+roots: [sanskrit-avasara]
+etymology_hook: "avasaraṁ ← Sanskrit avasara 'occasion, opportunity', a tatsama (CDIAL 858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C142-avakasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C142-CAN142-04]; assesses=[] -->
 
 **അവസരം** — *avasaraṁ* — "an opportunity, a chance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അവസരം** (*avasaraṁ*) ← Sanskrit *avasara*, "occasion, opportunity", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 858).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to smile"
 concept_tag: FR-VERB-SOURIRE
 prerequisites: [FR-C143-eteindre, FR-C143-sauter]
 sounds: []
-roots: []
+roots: [subridere-latin]
+etymology_hook: "sourire ← Latin subridere 'to smile', rire with sou- 'under'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C143-sauter]
 <!-- hl-knowledge: introduces=[FR-LEX-C143-VERBES143-04]; assesses=[] -->
 
 **sourire** — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sourire** ← Latin *subridere*, "to smile": *rire* with *sou-*, "under", in front (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

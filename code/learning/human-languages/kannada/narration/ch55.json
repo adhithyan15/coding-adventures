@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "River and Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d1439542a05be06",
+  "sourceHash": "fnv1a64:fed6bdac7911fcac",
   "lessons": [
     {
       "id": "KA-C55-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0e34bee2f806d44",
+      "sourceHash": "fnv1a64:9e92d24d9b857e1e",
       "notice": null,
       "blocks": [
         {
@@ -55,6 +55,10 @@
             {
               "kind": "speech",
               "text": "Kannada's own river-word is ಹೊಳೆ (hoḷe), and it opens with the h you have learned to read as an old p. ಹೊಳೆ is the water you can walk to — the stream behind the village. ನದಿ (nadi) is the ಕಾವೇರಿ. The borrowed word took the big rivers and left the small ones to the inherited one, which is the opposite of what usually happens."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 6943 lists Sanskrit nadī, \"river\"."
             }
           ]
         },
@@ -150,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0acfc94f9ef4f799",
+      "sourceHash": "fnv1a64:74d066992ffa1202",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +199,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೆರೆ (kere) is native Dravidian, of the root kiṟ, \"to confine, block up, fence\", and DEDR 1980 lists keṟe, \"tank\", under it: water penned in; the entry also has Tamil ceṟi and Telugu ceṟa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -205,7 +220,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,7 +269,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7288b54f18afc778",
+      "sourceHash": "fnv1a64:f34f0d95229fe3e6",
       "notice": null,
       "blocks": [
         {
@@ -330,6 +345,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಟ್ಟ (beṭṭa) is native Dravidian, one word with Tamil viṭam (DEDR 5474). DEDR gives Kannada beṭṭa, beṭṭu, \"big hill, mountain\": the old v- has become b-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -340,7 +366,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -389,7 +415,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -420,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2de875fd883638af",
+      "sourceHash": "fnv1a64:339f721f7876d8e4",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +486,10 @@
             {
               "kind": "speech",
               "text": "Tamil kept paḷḷi too and steered it a different way, toward a place of rest and then toward a school."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4018 lists Kannada paḷḷi, haḷḷi with Tamil paḷḷi and Telugu palli. DEDR 4018 compares Sanskrit pallī, \"small village\"."
             }
           ]
         },
@@ -555,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3003eefa5f8c19f5",
+      "sourceHash": "fnv1a64:29e80a4c21f9a39d",
       "notice": null,
       "blocks": [
         {
@@ -600,6 +630,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಾರಿ (dāri) is native Dravidian, one word with Telugu dāri (DEDR 3170). DEDR notes that Tamil tārai, \"path\", is a loan from Telugu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -610,7 +651,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -659,7 +700,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

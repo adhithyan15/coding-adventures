@@ -14,7 +14,8 @@ romanization: "cūṇṭuka"
 concept_tag: ML-VERB-CUNTUKA
 prerequisites: [ML-C191-urukuka, ML-C191-piriyuka]
 sounds: []
-roots: []
+roots: [dravidian-cuttu-point]
+etymology_hook: "cūṇṭuka: native Dravidian, one word with Tamil cuṭṭu and Kannada suṭṭu (DEDR 2658)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C191-piriyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C191-KRIYA191-05]; assesses=[] -->
 
 **ചൂണ്ടുക** — *cūṇṭuka* — "to point (at)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചൂണ്ടുക** (*cūṇṭuka*) is native Dravidian, one word with Tamil *cuṭṭu* and Kannada *suṭṭu* (DEDR 2658).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

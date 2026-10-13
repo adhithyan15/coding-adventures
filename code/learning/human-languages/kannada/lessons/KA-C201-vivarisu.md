@@ -14,7 +14,8 @@ romanization: "vivarisu"
 concept_tag: KA-VERB-VIVARISU
 prerequisites: [KA-C200-suru-madu, KA-C201-mundudu]
 sounds: []
-roots: []
+roots: [sanskrit-vivarana]
+etymology_hook: "vivarisu: Sanskrit vivara, vivaraṇa 'opening, explanation' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C201-mundudu]
 <!-- hl-knowledge: introduces=[KA-LEX-C201-KRIYE201-02]; assesses=[] -->
 
 **ವಿವರಿಸು** — *vivarisu* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿವರಿಸು** (*vivarisu*) is Sanskrit *vivaraṇa*, "an opening out, an explanation", made into a Kannada verb with *-isu*. CDIAL 11915 lists the root noun *vivara*, "hole, opening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

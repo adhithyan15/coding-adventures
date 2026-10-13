@@ -14,7 +14,8 @@ romanization: "kuṟuke"
 concept_tag: ML-STHALAM240-KURUKE
 prerequisites: [ML-C239-guha, ML-C240-arram]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟuke: native Dravidian, built on kuṟu 'short' (DEDR 1851): crossing by the short way"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C240-arram]
 <!-- hl-knowledge: introduces=[ML-LEX-C240-STHALAM240-02]; assesses=[] -->
 
 **കുറുകെ** — *kuṟuke* — "across".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറുകെ** (*kuṟuke*) is native Dravidian, built on *kuṟu*, "short" (DEDR 1851, with Tamil *kuṟu*): across is the short way over.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

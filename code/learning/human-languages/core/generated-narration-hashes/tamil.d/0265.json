@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 265,
-  "sourceHash": "fnv1a64:d97a6f48d25895ac",
+  "sourceHash": "fnv1a64:cdeccb1830e03bf9",
   "lessonIds": [
     "TA-C265-mavattam",
     "TA-C265-kuticai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch265.txt",
   "json": "tamil/narration/ch265.json",
-  "textHash": "fnv1a64:f51b225478f81b23",
-  "jsonHash": "fnv1a64:ebb8bcc2c1869956",
+  "textHash": "fnv1a64:dab8f1d2390b0f4c",
+  "jsonHash": "fnv1a64:0849784229a31252",
   "findings": []
 }

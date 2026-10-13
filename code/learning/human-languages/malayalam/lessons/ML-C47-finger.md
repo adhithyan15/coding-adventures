@@ -11,7 +11,8 @@ romanization: "viral"
 concept_tag: ML-NOUN-FINGER
 prerequisites: [ML-C47-hair, ML-C45-husband]
 sounds: []
-roots: []
+roots: [dravidian-viral-finger]
+etymology_hook: "viral: native Dravidian, one word with Tamil viral and Kannada beral (DEDR 5409)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Proto-Dravidian **\*viral**, and Tamil விரல் (*viral*) matches Malayal
 Kannada has ಬೆರಳು (*beraḷu*), where the opening *v-* has hardened into a *b-*. That exchange runs the other way through the family often enough to be worth naming: a *v* at the front of a Kannada word is frequently a *b*, and this is one of the clearest cases. Telugu walked away from the root and says వేలు (*vēlu*).
 
 The word ends in the same chillu ൽ as the leg-word, two chapters' worth of body parts stopping on the same letter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിരൽ** (*viral*) is native Dravidian, one word with Tamil *viral*, Kannada *beral* and Telugu *v(r)ēlu* (DEDR 5409).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

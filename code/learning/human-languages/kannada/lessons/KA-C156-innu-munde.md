@@ -14,7 +14,8 @@ romanization: "innu munde"
 concept_tag: KA-MUNDE156-INNU-MUNDE
 prerequisites: [KA-C155-kale, KA-C156-mundina]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-mun-front]
+etymology_hook: "innu munde: native innu 'hereafter' (DEDR 410) + munde 'in front' (DEDR 5020)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C156-mundina]
 <!-- hl-knowledge: introduces=[KA-LEX-C156-MUNDE156-02]; assesses=[] -->
 
 **ಇನ್ನು ಮುಂದೆ** — *innu munde* — "from now on". **ಇನ್ನು ಮುಂದೆ ನಾನು ಬೇಗ ಏಳುತ್ತೇನೆ** — *innu munde nānu bēga ēḷuttēne* — "From now on I will get up early."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇನ್ನು ಮುಂದೆ** (*innu munde*) is native Dravidian: *innu*, "still, hereafter" (DEDR 410), and *munde*, "in front, ahead" (DEDR 5020).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

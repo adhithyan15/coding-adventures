@@ -14,7 +14,8 @@ romanization: "ciṟuttai"
 concept_tag: TA-PORUL187-CIRUTTAI
 prerequisites: [TA-C187-kanru, TA-C187-onay]
 sounds: []
-roots: []
+roots: [dravidian-ciruttai-leopard]
+etymology_hook: "சிறுத்தை — native Dravidian (DEDR 2590); Kannada ciṟate, Telugu ciṟuta"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C187-onay]
 <!-- hl-knowledge: introduces=[TA-LEX-C187-PORUL187-05]; assesses=[] -->
 
 **சிறுத்தை** — *ciṟuttai* — "a leopard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிறுத்தை** (*ciṟuttai*) is native Dravidian. DEDR 2590 lists Kannada *ciṟate* and Telugu *ciṟuta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

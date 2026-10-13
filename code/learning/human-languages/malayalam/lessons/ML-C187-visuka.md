@@ -14,7 +14,8 @@ romanization: "vīśuka"
 concept_tag: ML-VERB-VISUKA
 prerequisites: [ML-C186-pinannuka, ML-C186-kaliyakkuka]
 sounds: []
-roots: []
+roots: [dravidian-vicu-fan]
+etymology_hook: "vīśuka: native Dravidian, one word with Tamil vīcu and Kannada bīsu (DEDR 5450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C186-kaliyakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C187-KRIYA187-01]; assesses=[] -->
 
 **വീശുക** — *vīśuka* — "to blow (of wind)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വീശുക** (*vīśuka*) is native Dravidian, one word with Tamil *vīcu*, Kannada *bīsu* and Telugu *vīcu* (DEDR 5450). Its root is "to fan, to wave": the wind fans. DEDR 5450 compares Sanskrit *vīj*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

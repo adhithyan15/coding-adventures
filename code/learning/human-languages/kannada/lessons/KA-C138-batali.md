@@ -14,7 +14,8 @@ romanization: "bāṭali"
 concept_tag: KA-THINGS138-BATALI
 prerequisites: [KA-C137-kampyutar, KA-C138-rupayi]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "bāṭali ← English bottle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C138-rupayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C138-THINGS138-02]; assesses=[] -->
 
 **ಬಾಟಲಿ** — *bāṭali* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಟಲಿ** (*bāṭali*) is a loan from English *bottle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

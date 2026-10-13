@@ -14,7 +14,8 @@ romanization: "hondiko"
 concept_tag: KA-VERB-HONDIKO
 prerequisites: [KA-C163-sahisu, KA-C163-mosa-madu]
 sounds: []
-roots: []
+roots: [dravidian-poru-join, dravidian-kol-take]
+etymology_hook: "hondiko: native hondu 'to join, fit' (DEDR 4541) + ko 'take', the self-directed helper (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C163-mosa-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C163-KRIYE163-04]; assesses=[] -->
 
 **ಹೊಂದಿಕೊ** — *hondiko* — "to get along, to adjust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಂದಿಕೊ** (*hondiko*) is native Dravidian: *hondu*, "to join, come together", which DEDR 4541 lists, and *ko*, from *koḷḷu*, "to take" (DEDR 2151), which turns the action back on the doer: "to fit oneself in". DEDR 4541 compares, with a query, Prakrit *pora*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

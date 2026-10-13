@@ -11,7 +11,8 @@ romanization: "kār"
 concept_tag: ML-RIDE-CAR
 prerequisites: [ML-C136-harbour, ML-C137-vehicle]
 sounds: []
-roots: []
+roots: [english-car]
+etymology_hook: "kār ← English car, from Latin carrus 'wagon'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C137-vehicle]
 <!-- hl-knowledge: introduces=[ML-LEX-C137-RIDE-02]; assesses=[] -->
 
 **കാർ** (*kār*) — "a car", from English.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാർ** (*kār*) ← English *car*, which goes back to Latin *carrus*, "a wagon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

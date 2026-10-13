@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-SALT
 prerequisites: [KA-C46-lamp, KA-C44-listen]
 sounds: []
 roots: []
+etymology_hook: "uppu: native Dravidian, one word with Tamil uppu and Telugu uppu (DEDR 2674)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C46-lamp]
 Proto-Dravidian **\*uppu**, and the whole family kept it very nearly untouched: Tamil உப்பு, Telugu ఉప్పు, Malayalam ഉപ്പ്.
 
 There is a *p* sitting in the middle of this word, and it did not become *h*. That is worth stopping over, because the law that made ಹಣ್ಣು out of an older *p*-word only ever reached the FIRST sound of a word. Inside one, the *p* stays where it was put.
+
+DEDR 2674 lists Kannada *uppu* with Tamil, Malayalam and Telugu *uppu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

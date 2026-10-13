@@ -37,7 +37,7 @@
       "id": "fixtures",
       "long": "fixtures",
       "short": "f",
-      "description": "Path to a JSON object of slot values. Applied by the html backend in both legacy single-file and three-file pipeline modes.",
+      "description": "Path to a JSON object of slot values. Applied by the html backend in both legacy single-file and three-file pipeline modes, and by every other pipeline backend except compose to its --emit-project shell (compose refuses or warns until #14704).",
       "type": "string",
       "required": false
     },

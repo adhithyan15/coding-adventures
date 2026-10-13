@@ -13,7 +13,7 @@ sounds: [i-short, d-t-final]
 roots: [bald-germanic]
 etymology_hook: "bis bald is until soon, the twin of hasta pronto and a bientot, and it carries a small promise"
 duration:
-  max_seconds: 150
+  max_seconds: 156
 requires:
   knowledge: [GE-LEX-BIS-01, GE-LEX-BALD-01, GE-ETYMON-BALD-BOLD-02]
 introduces:
@@ -53,6 +53,11 @@ you are unlikely to meet again.
 
 Its twins: Spanish *hasta pronto*, French *à bientôt*. All three are the same
 two-word recipe — preposition plus "soon."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bis bald** is *bis* + *bald*. *bald* ← Old High German *baldo*, "boldly, quickly" (EtymDB 2.1) — the same word as English *bold*; "soon" grew out of "quickly".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BIS-BALD-01, GE-LEX-BALD-01] -->

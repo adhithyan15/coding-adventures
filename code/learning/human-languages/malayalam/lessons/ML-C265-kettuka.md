@@ -14,7 +14,8 @@ romanization: "keṭṭuka"
 concept_tag: ML-VERB-KETTUKA
 prerequisites: [ML-C265-kattikkuka, ML-C265-ketuttuka]
 sounds: []
-roots: []
+roots: [dravidian-kattu-bind]
+etymology_hook: "keṭṭuka: native Dravidian, one word with Tamil kaṭṭu and Kannada kaṭṭu (DEDR 1147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C265-ketuttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C265-KRIYA265-04]; assesses=[] -->
 
 **കെട്ടുക** — *keṭṭuka* — "to tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കെട്ടുക** (*keṭṭuka*) is native Dravidian, one word with Tamil *kaṭṭu*, Kannada *kaṭṭu* and Telugu *kaṭṭu* (DEDR 1147). DEDR 1147 compares Sanskrit *ghaṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

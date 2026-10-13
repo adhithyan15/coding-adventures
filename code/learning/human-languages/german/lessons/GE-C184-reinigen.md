@@ -13,7 +13,8 @@ gloss: "to clean"
 concept_tag: GE-VERB-REINIGEN
 prerequisites: [GE-C184-pfluecken, GE-C184-pruefen]
 sounds: []
-roots: []
+roots: [germanic-hrainiz]
+etymology_hook: "reinigen — the word for 'pure, clean' + -igen; that word ← Old High German reini"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C184-pruefen]
 <!-- hl-knowledge: introduces=[GE-LEX-C184-VERB184-05]; assesses=[] -->
 
 **reinigen** — "to clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reinigen** is the word for "pure, clean", Old High German *reini* ← Proto-Germanic *\*hrainiz* (EtymDB 2.1), + the verb ending *-igen*: to make clean.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

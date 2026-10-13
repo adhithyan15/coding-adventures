@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES197-ECHEC
 prerequisites: [FR-C197-veuf, FR-C197-succes]
 sounds: []
 roots: []
+etymology_hook: "échec ← Old French eschec 'check', from Persian shah 'king' — English check and chess"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C197-succes]
 <!-- hl-knowledge: introduces=[FR-LEX-C197-CHOSES197-05]; assesses=[] -->
 
 **l'échec** — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**échec** ← Old French *eschec*, "check" in chess, from Arabic, from Persian *shah*, "king" — borrowed: a check is a setback.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nēraḷe"
 concept_tag: KA-QUAL144-NERALE
 prerequisites: [KA-C144-apayakari, KA-C144-sullu]
 sounds: []
-roots: []
+roots: [dravidian-neral-jambolan]
+etymology_hook: "nēraḷe: native Dravidian, one word with Telugu nēreḍu (DEDR 2917)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C144-sullu]
 <!-- hl-knowledge: introduces=[KA-LEX-C144-QUAL144-03]; assesses=[] -->
 
 **ನೇರಳೆ** — *nēraḷe* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೇರಳೆ** (*nēraḷe*) is native Dravidian, one word with Telugu *nēreḍu* (DEDR 2917). DEDR lists *nēṟaḷe*, the jambolan tree, whose dark purple fruit gives the colour its name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

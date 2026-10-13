@@ -13,7 +13,8 @@ gloss: "glasses"
 concept_tag: GE-DINGE116-BRILLE
 prerequisites: [GE-C116-handy, GE-C116-kamera]
 sounds: []
-roots: []
+roots: [beryllus-latin]
+etymology_hook: "Brille ← Middle High German berille 'beryl': the first lenses were ground from beryl crystal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C116-kamera]
 <!-- hl-knowledge: introduces=[GE-LEX-C116-DINGE116-04]; assesses=[] -->
 
 **die Brille** — "glasses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Brille** ← Middle High German *brille* (EtymDB 2.1), from *berille*, "beryl", ← Latin *bēryllus*: the first eyeglass lenses were ground from beryl. Borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

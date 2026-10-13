@@ -13,7 +13,8 @@ gloss: "dry"
 concept_tag: FR-ADJ46-SEC
 prerequisites: [FR-C94-rond, FR-C94-carre]
 sounds: []
-roots: []
+roots: [siccus-latin]
+etymology_hook: "sec ← Latin siccus 'dry' — English desiccate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C94-carre]
 <!-- hl-knowledge: introduces=[FR-LEX-C94-ADJ46-05]; assesses=[] -->
 
 **sec** — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sec** ← Latin *siccus*, "dry" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

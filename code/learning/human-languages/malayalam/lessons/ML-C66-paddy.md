@@ -11,7 +11,8 @@ romanization: "nellŭ"
 concept_tag: ML-NOUN-PADDY
 prerequisites: [ML-C65-trust, ML-C64-then]
 sounds: []
-roots: []
+roots: [dravidian-nel-paddy]
+etymology_hook: "nellŭ: native Dravidian, one word with Tamil nel and Kannada nel (DEDR 3753)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *nel*, and it completes a set you have been col
 Three words for one plant is what a language does when the plant is the year's whole work. The flooded field you already know by name, *vayal*, is where the first of the three lives.
 
 It sounds like *ellŭ*, the bone-word, with an *n* set in front. The two have nothing to do with one another, and the front of the word is again where the ear earns its keep.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നെല്ല്** (*nellŭ*) is native Dravidian, one word with Tamil *nel* and Kannada *nel* (DEDR 3753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

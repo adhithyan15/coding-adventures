@@ -14,7 +14,8 @@ romanization: "huli"
 concept_tag: KA-THINGS129-HULI
 prerequisites: [KA-C129-kudure, KA-C129-ane]
 sounds: []
-roots: []
+roots: [dravidian-puli-tiger]
+etymology_hook: "huli: native Dravidian, one word with Tamil puli and Telugu puli (DEDR 4307)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C129-ane]
 <!-- hl-knowledge: introduces=[KA-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **ಹುಲಿ** — *huli* — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಲಿ** (*huli*) is native Dravidian, one word with Tamil *puli* and Telugu *puli* (DEDR 4307). DEDR gives the older Kannada *puli*: the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

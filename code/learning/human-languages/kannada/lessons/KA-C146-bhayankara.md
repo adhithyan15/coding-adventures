@@ -14,7 +14,8 @@ romanization: "bhayaṅkara"
 concept_tag: KA-QUAL146-BHAYANKARA
 prerequisites: [KA-C145-jana, KA-C146-ketta]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "bhayaṅkara ← Sanskrit bhayaṅkara 'causing fear', bhaya 'fear' (CDIAL 9390) + kara 'making'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C146-ketta]
 <!-- hl-knowledge: introduces=[KA-LEX-C146-QUAL146-02]; assesses=[] -->
 
 **ಭಯಂಕರ** — *bhayaṅkara* — "terrible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭಯಂಕರ** (*bhayaṅkara*) is Sanskrit *bhayaṅkara*, "causing fear": *bhaya*, "fear" (CDIAL 9390), and *kara*, "making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

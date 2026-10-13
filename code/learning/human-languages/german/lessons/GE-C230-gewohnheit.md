@@ -13,7 +13,8 @@ gloss: "a habit"
 concept_tag: GE-THING230-GEWOHNHEIT
 prerequisites: [GE-C230-gespraech, GE-C230-gewicht]
 sounds: []
-roots: []
+roots: [wonen-germanic]
+etymology_hook: "Gewohnheit — gewohnt 'accustomed' + -heit: what you are accustomed to"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C230-gewicht]
 <!-- hl-knowledge: introduces=[GE-LEX-C230-THING230-05]; assesses=[] -->
 
 **die Gewohnheit** — "a habit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gewohnheit** is *gewohnt*, "accustomed", + *-heit*: what you are accustomed to. *gewohnt* is built on *wohnen*, first "to be accustomed, to stay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

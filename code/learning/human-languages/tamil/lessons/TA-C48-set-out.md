@@ -11,7 +11,8 @@ romanization: "puṟappaḍu"
 concept_tag: TA-LEAVE-SET-OUT
 prerequisites: [TA-C48-later, TA-C46-guest, TA-C47-just-so]
 sounds: []
-roots: []
+roots: [dravidian-puram-outside]
+etymology_hook: "புறப்படு — native: puṟam 'outside' (DEDR 4333; Malayalam puṟam) + paṭu 'to become' (DEDR 3853)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C48-later]
 Two pieces, both still visible. *puṟam* is the outside, and *paḍu* is the all-purpose ending Tamil uses when something happens to you. To *puṟappaḍu* is to come to be outside — which is what leaving a house actually consists of.
 
 *nāṉ puṟappaḍugiṟēṉ* announces your departure with none of the weight of *pōy varugiṟēṉ*. It is what you say at the door with your bag already in your hand.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புறப்படு** (*puṟappaḍu*) is native: *puṟam*, "outside" (DEDR 4333; Malayalam *puṟam*), and *paṭu*, "to become" (DEDR 3853). To set out is "to get outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

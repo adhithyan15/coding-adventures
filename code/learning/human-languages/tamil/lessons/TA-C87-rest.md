@@ -11,7 +11,8 @@ romanization: "ōyvu"
 concept_tag: TA-UNWELL-REST
 prerequisites: [TA-C87-cough, TA-C87-weariness]
 sounds: []
-roots: []
+roots: [dravidian-oy-cease]
+etymology_hook: "ஓய்வு — native Dravidian (DEDR 1057)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C87-weariness]
 **ஓய்வு** (*ōyvu*) — "rest".
 
 **ஓய்வு எடுங்கள்** — "please take some rest", what you say to someone who is unwell.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஓய்வு** (*ōyvu*) is native Dravidian (DEDR 1057). It is the noun of *ōy*, "to cease, to grow tired, to rest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

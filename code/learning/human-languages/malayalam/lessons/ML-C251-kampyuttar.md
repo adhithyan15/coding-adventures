@@ -14,7 +14,8 @@ romanization: "kampyūṭṭar"
 concept_tag: ML-VASTU251-KAMPYUTTAR
 prerequisites: [ML-C250-patram, ML-C250-srrampu]
 sounds: []
-roots: []
+roots: [english-computer]
+etymology_hook: "kampyūṭṭar ← English computer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C250-srrampu]
 <!-- hl-knowledge: introduces=[ML-LEX-C251-VASTU251-01]; assesses=[] -->
 
 **കമ്പ്യൂട്ടർ** — *kampyūṭṭar* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കമ്പ്യൂട്ടർ** (*kampyūṭṭar*) ← English *computer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

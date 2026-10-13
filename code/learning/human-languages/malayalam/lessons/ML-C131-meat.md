@@ -11,7 +11,8 @@ romanization: "iṟacci"
 concept_tag: ML-KITCHEN-MEAT
 prerequisites: [ML-C130-payasam, ML-C131-fish]
 sounds: []
-roots: []
+roots: [dravidian-iracci-meat]
+etymology_hook: "iṟacci: native Dravidian, one word with Tamil iṟacci and Telugu eṟaci (DEDR 529)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C131-fish]
 <!-- hl-knowledge: introduces=[ML-LEX-C131-KITCHEN-02]; assesses=[] -->
 
 **ഇറച്ചി** (*iṟacci*) — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇറച്ചി** (*iṟacci*) is native Dravidian, one word with Tamil *iṟacci* and Telugu *eṟaci* (DEDR 529).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

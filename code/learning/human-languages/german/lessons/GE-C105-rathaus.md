@@ -13,7 +13,8 @@ gloss: "a town hall"
 concept_tag: GE-ORT105-RATHAUS
 prerequisites: [GE-C105-kino, GE-C105-theater]
 sounds: []
-roots: []
+roots: [germanic-redaz]
+etymology_hook: "Rathaus — the word for 'council' + the word for 'house': the council house"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C105-theater]
 <!-- hl-knowledge: introduces=[GE-LEX-C105-ORT105-05]; assesses=[] -->
 
 **das Rathaus** — "a town hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rathaus** is built from the word for "council", Old High German *rāt* ← Proto-Germanic *\*rēdaz*, "advice" (EtymDB 2.1), and the word for "house". English *rede*, "counsel", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

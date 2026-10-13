@@ -14,7 +14,8 @@ romanization: "snēhikkuka"
 concept_tag: ML-VERB-SNEHIKKUKA
 prerequisites: [ML-C174-kantettuka, ML-C174-marakkuka]
 sounds: []
-roots: []
+roots: [sanskrit-sneha]
+etymology_hook: "snēhikkuka ← Sanskrit snēha 'oiliness; love' (CDIAL 13802) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C174-marakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C175-ACT175-01]; assesses=[] -->
 
 **സ്നേഹിക്കുക** — *snēhikkuka* — "to love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്നേഹിക്കുക** (*snēhikkuka*) is built on Sanskrit *snēha*, "oiliness; tenderness, love" (CDIAL 13802), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

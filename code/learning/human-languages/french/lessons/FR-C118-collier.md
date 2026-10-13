@@ -13,7 +13,8 @@ gloss: "a necklace"
 concept_tag: FR-OBJETS70-COLLIER
 prerequisites: [FR-C118-bijou, FR-C118-bague]
 sounds: []
-roots: []
+roots: [collum-latin]
+etymology_hook: "collier ← Late Latin collare, from collum 'neck', the Latin of cou — English collar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C118-bague]
 <!-- hl-knowledge: introduces=[FR-LEX-C118-OBJETS70-03]; assesses=[] -->
 
 **le collier** — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collier** ← Late Latin *collare*, "a band for the neck", from *collum*, "neck" (EtymDB 2.1) — inherited: the same *collum* as *cou*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

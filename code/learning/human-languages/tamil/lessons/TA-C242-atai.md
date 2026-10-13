@@ -14,7 +14,8 @@ romanization: "āṭai"
 concept_tag: TA-PORUL242-ATAI
 prerequisites: [TA-C241-karatumuratana, TA-C241-vetuvetuppana]
 sounds: []
-roots: []
+roots: [tamil-aadai-garment]
+etymology_hook: "ஆடை — origin uncertain; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C241-vetuvetuppana]
 <!-- hl-knowledge: introduces=[TA-LEX-C242-PORUL242-01]; assesses=[] -->
 
 **ஆடை** — *āṭai* — "clothing, a garment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ஆடை** (*āṭai*) is uncertain. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

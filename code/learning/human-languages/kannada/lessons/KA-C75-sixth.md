@@ -11,7 +11,8 @@ romanization: "āraneya"
 concept_tag: KA-ORDINAL-SIXTH
 prerequisites: [KA-C74-fifth, KA-C74-second, KA-C71-another, KA-C59-wind, KA-C07-aaru]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "āraneya: native āru 'six' (DEDR 2485) + the ordinal ending -aneya"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ it stopped.
 That "nothing else to notice" is the point of the whole chapter. Six to ten were
 a separate lesson from one to five when you learned to count; for ordering they
 are not a separate anything.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆರನೆಯ** (*āraneya*) is built from *āru*, "six", native Dravidian (DEDR 2485, with Tamil *āṟu*), and the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C75-ORDINAL-01, KA-LEX-C74-ORDINAL-07] -->

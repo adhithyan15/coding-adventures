@@ -13,7 +13,7 @@ sounds: [eu-diphthong, tsch-ch]
 roots: []
 etymology_hook: "the first line in this book you assemble yourself: a pronoun, a stem, an ending, and a noun you already own"
 duration:
-  max_seconds: 180
+  max_seconds: 198
 requires:
   knowledge: [GE-LEX-ICH-02, GE-LEX-LERNEN-01, GE-LEX-DEUTSCH-01, GE-GRAMMAR-VERB-STEM-01, GE-LEX-ICH-WOHNE-IN-02, GE-LEX-WAS-MACHST-DU-02, GE-GRAMMAR-WEAK-SINGULAR-02]
 introduces:
@@ -57,6 +57,11 @@ it: a pronoun, a stem, an ending, a noun. Change any piece and it still works.
 Remember there is no separate "am …-ing" in German. *Ich lerne* covers both "I
 learn" and "I am learning," so this one line does the work of two English
 tenses.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ich lerne Deutsch** is three inherited words: *lernen* ← Old High German *lernēn*, and *Deutsch* ← Old High German *diutisc*, "of the people" ← Proto-Germanic *\*þiudiskaz* (EtymDB 2.1). *lernen* is a cousin of English *learn*.
 
 ## Grammar Lens: swap the pieces
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-LERNE-DEUTSCH-01, GE-LEX-ICH-WOHNE-IN-02, GE-LEX-WAS-MACHST-DU-02] -->

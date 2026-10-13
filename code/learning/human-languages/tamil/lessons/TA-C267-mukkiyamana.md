@@ -14,7 +14,8 @@ romanization: "mukkiyamāṉa"
 concept_tag: TA-GUNAM267-MUKKIYAMANA
 prerequisites: [TA-C266-karanam, TA-C267-kuntana]
 sounds: []
-roots: []
+roots: [sanskrit-mukhya]
+etymology_hook: "முக்கியமான — mukkiyam ← Sanskrit mukhya 'chief' (CDIAL 10174) + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C267-kuntana]
 <!-- hl-knowledge: introduces=[TA-LEX-C267-GUNAM267-02]; assesses=[] -->
 
 **முக்கியமான** — *mukkiyamāṉa* — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முக்கியமான** (*mukkiyamāṉa*) is *mukkiyam*, "importance", from Sanskrit *mukhya*, "chief" (CDIAL 10174), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

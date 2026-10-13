@@ -14,7 +14,8 @@ romanization: "paḻaccāṟu"
 concept_tag: TA-PORUL214-PALACCARU
 prerequisites: [TA-C213-paltulakki, TA-C214-mor]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen, dravidian-caaru-juice]
+etymology_hook: "பழச்சாறு — native: paḻam 'fruit' (DEDR 4004) + cāṟu 'juice' (DEDR 2484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C214-mor]
 <!-- hl-knowledge: introduces=[TA-LEX-C214-PORUL214-02]; assesses=[] -->
 
 **பழச்சாறு** — *paḻaccāṟu* — "fruit juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பழச்சாறு** (*paḻaccāṟu*) is native: *paḻam*, "fruit" (DEDR 4004, which compares Sanskrit *phala*), and *cāṟu*, "juice" (DEDR 2484).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

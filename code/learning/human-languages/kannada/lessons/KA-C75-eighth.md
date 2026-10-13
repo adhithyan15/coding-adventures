@@ -11,7 +11,8 @@ romanization: "eṇṭaneya"
 concept_tag: KA-ORDINAL-EIGHTH
 prerequisites: [KA-C75-seventh, KA-C74-first, KA-C71-when, KA-C59-sand, KA-C07-entu]
 sounds: [kannada-anusvara]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "eṇṭaneya: native eṇṭu 'eight' (DEDR 784) + the ordinal ending -aneya"
 duration:
   max_seconds: 200
 requires:
@@ -50,6 +51,11 @@ added at the far end of the word, so the dot keeps the same neighbour and the
 same sound.
 
 **ಎಂಟನೆಯ ದಿನ** (*eṇṭaneya dina*), the eighth day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಂಟನೆಯ** (*eṇṭaneya*) is built from *eṇṭu*, "eight", native Dravidian (DEDR 784, with Tamil *eṭṭu*), and the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C75-ORDINAL-03, KA-LEX-C75-ORDINAL-02] -->

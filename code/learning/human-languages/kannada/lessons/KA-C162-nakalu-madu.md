@@ -14,7 +14,8 @@ romanization: "nakalu māḍu"
 concept_tag: KA-VERB-NAKALU-MADU
 prerequisites: [KA-C161-raddu-madu, KA-C162-tiddu]
 sounds: []
-roots: []
+roots: [arabic-naql, maadu-do-dravidian]
+etymology_hook: "nakalu māḍu: nakalu ← Arabic naql 'copy' through Hindustani + native māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C162-tiddu]
 <!-- hl-knowledge: introduces=[KA-LEX-C162-KRIYE162-02]; assesses=[] -->
 
 **ನಕಲು ಮಾಡು** — *nakalu māḍu* — "to copy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಕಲು ಮಾಡು** (*nakalu māḍu*) is *nakalu*, "a copy", from Arabic *naql*, "a copy, a transfer", which came through Hindustani, and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

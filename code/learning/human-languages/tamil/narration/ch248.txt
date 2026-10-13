@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a squirrel, then the Tamil for a worm.
 You'll want to know: வறட்சி.
 வறட்சி — vaṟaṭci — "a drought".
 
+The word, taken apart.
+வறட்சி (vaṟaṭci) is native Dravidian. DEDR 5320 lists Malayalam vaṟu, "dry" and Telugu vaṟapu, "drought". It comes from vaṟa, "to dry up".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a worm, then the Tamil for a drought.
 
 You'll want to know: நிலநடுக்கம்.
 நிலநடுக்கம் — nilanaṭukkam — "an earthquake".
+
+The word, taken apart.
+நிலநடுக்கம் (nilanaṭukkam) is native: nilam, "ground, land" (DEDR 3676, which lists Malayalam nilam), and naṭukkam, "trembling" (DEDR 3585): "the shaking of the ground".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a drought, then the Tamil for an earthquak
 You'll want to know: இயற்கை.
 இயற்கை — iyaṟkai — "nature".
 
+The word, taken apart.
+இயற்கை (iyaṟkai) is native Dravidian, built on iyal, "to be fitting; nature, quality" (DEDR 471), which gives Malayalam iyaluka.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for an earthquake, then the Tamil for nature.
 You'll want to know: பாறை.
 பாறை — pāṟai — "a rock".
 
+The word, taken apart.
+பாறை (pāṟai) is native Dravidian. DEDR 4121 lists Malayalam pāṟa, "rock".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for nature, then the Tamil for a rock.
 
 You'll want to know: நெருப்பு.
 நெருப்பு — neruppu — "fire".
+
+The word, taken apart.
+நெருப்பு (neruppu) is native Dravidian. DEDR 2929 lists Malayalam nerippu, "fire" and Telugu nippu.
 
 What you've built.
 One more word for this chapter.

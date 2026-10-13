@@ -11,7 +11,8 @@ romanization: "ayyō"
 concept_tag: ML-RESP-OH-NO
 prerequisites: [ML-C122-really, ML-C122-nothing]
 sounds: []
-roots: []
+roots: [interjection]
+etymology_hook: "ayyō: an exclamation shared across the south, Tamil aiyō among them; no root lies behind it"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C122-nothing]
 
 **അയ്യോ** (*ayyō*) — "oh no!", "oh dear!", heard everywhere in the south when something
 goes wrong.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അയ്യോ** (*ayyō*) is an exclamation shared across the south of India; Tamil says *aiyō*. It is a cry rather than a word built from a root, so no dictionary entry lies behind it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

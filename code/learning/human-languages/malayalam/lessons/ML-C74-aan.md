@@ -11,7 +11,8 @@ romanization: -āṉ
 concept_tag: ML-INFINITIVE-AAN
 prerequisites: [ML-C33-vaayikkuka]
 sounds: []
-roots: []
+roots: [dravidian-verb-endings]
+etymology_hook: "-āṉ: a native Malayalam verb ending, inherited grammar rather than a loan"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +59,11 @@ stem — stays exactly as it was, so a verb you can say you can already swap.
 This is the ending Malayalam builds two separate things on, and the next two
 lessons are those two things. Getting the swap into your hand now makes both of
 them free.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**-ആൻ** (*-āṉ*) is a native Dravidian verb ending, part of Malayalam's own grammar rather than a loan. DEDR is a dictionary of roots and does not list endings, so no entry number goes with it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C74-AAN-01, ML-CONCEPT-C33-VAAYIKKUKA-01] -->

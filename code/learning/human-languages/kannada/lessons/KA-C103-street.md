@@ -11,7 +11,8 @@ romanization: "bīdi"
 concept_tag: KA-HOME-STREET
 prerequisites: [KA-C102-fornoreason, KA-C103-house]
 sounds: []
-roots: []
+roots: [sanskrit-vithi]
+etymology_hook: "bīdi ← Sanskrit vīthi 'road, street; line, row', reshaped as a tadbhava (CDIAL 12050)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C103-house]
 <!-- hl-knowledge: introduces=[KA-LEX-C103-HOME-02]; assesses=[] -->
 
 **ಬೀದಿ** (*bīdi*) — "street". It is part of an **ವಿಳಾಸ**, "address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೀದಿ** (*bīdi*) comes from Sanskrit *vīthi*, "road, street; line, row", reshaped to Kannada sounds: a tadbhava (CDIAL 12050). The Sanskrit *v-* became Kannada *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "es regnet"
 concept_tag: GE-C21-DAS-WETTER-MORE
 prerequisites: [GE-C21-das-wetter]
 sounds: []
-roots: []
+roots: [germanic-regen-rain]
+etymology_hook: "es regnet — regnen ← Proto-Germanic *regnōną 'to rain', the same root as English rain"
 duration:
   max_seconds: 150
 requires:

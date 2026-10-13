@@ -11,7 +11,8 @@ romanization: "tumbā dina āytu"
 concept_tag: KA-GREET-LONG-TIME
 prerequisites: [KA-C96-eaten, KA-C96-whatsnew]
 sounds: []
-roots: []
+roots: [dravidian-tumbu-fill, sanskrit-dina]
+etymology_hook: "tumbā dina āytu: native tumbā 'very' (DEDR 3331), Sanskrit dina 'day' (CDIAL 6328), āytu 'it became' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C96-whatsnew]
 
 **ತುಂಬಾ ದಿನ ಆಯ್ತು** (*tumbā dina āytu*) — "it's been a long time", literally
 "many days have happened": **ತುಂಬಾ**, "very, many"; **ದಿನ**, "day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುಂಬಾ ದಿನ ಆಯ್ತು** (*tumbā dina āytu*) is *tumbā*, "very" (DEDR 3331), *dina*, "day", from Sanskrit *dina* (CDIAL 6328), and *āytu*, "it has become", from native *āgu*, "to become" (DEDR 333): "it has become very many days". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

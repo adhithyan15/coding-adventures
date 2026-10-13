@@ -11,7 +11,8 @@ romanization: "vīṭŭ"
 concept_tag: ML-HOME-HOUSE
 prerequisites: [ML-C127-holiday, ML-C127-illcall]
 sounds: []
-roots: []
+roots: [dravidian-vidu-release]
+etymology_hook: "vīṭŭ: native Dravidian; DEDR 5393 lists it, 'house', under the verb 'to let go, rest'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C127-illcall]
 **വീട്** (*vīṭŭ*) — "a house", and also "home".
 
 **എന്റെ വീട്** (*enṟe vīṭŭ*) — "my house", with **എന്റെ**, "my", which you already know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വീട്** (*vīṭŭ*) is native Dravidian: DEDR 5393 lists it, "house", under the verb "to let go, leave off", with Tamil *viṭu*. DEDR 5393 notes Sanskrit *avamocana*, "inn", as a translation of Tamil *viṭuti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

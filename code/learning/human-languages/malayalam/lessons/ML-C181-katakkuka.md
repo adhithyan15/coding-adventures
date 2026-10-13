@@ -14,7 +14,8 @@ romanization: "kaṭakkuka"
 concept_tag: ML-VERB-KATAKKUKA
 prerequisites: [ML-C181-kitakkuka, ML-C181-tiriyuka]
 sounds: []
-roots: []
+roots: [dravidian-kada-cross]
+etymology_hook: "kaṭakkuka: native Dravidian, one word with Tamil kaṭa and Kannada kaḍe (DEDR 1109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C181-tiriyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C181-KRIYA181-03]; assesses=[] -->
 
 **കടക്കുക** — *kaṭakkuka* — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടക്കുക** (*kaṭakkuka*) is native Dravidian, one word with Tamil *kaṭa*, Kannada *kaḍe* and Telugu *kaḍacu* (DEDR 1109).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

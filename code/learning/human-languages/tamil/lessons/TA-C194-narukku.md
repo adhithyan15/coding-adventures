@@ -14,7 +14,8 @@ romanization: "naṟukku"
 concept_tag: TA-VERB-NARUKKU
 prerequisites: [TA-C193-taccar, TA-C194-urru]
 sounds: []
-roots: []
+roots: [dravidian-narukku-chop]
+etymology_hook: "நறுக்கு — native Dravidian (DEDR 3625); Malayalam naṟukkuka 'to cut off'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C194-urru]
 <!-- hl-knowledge: introduces=[TA-LEX-C194-ACT194-02]; assesses=[] -->
 
 **நறுக்கு** — *naṟukku* — "to chop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நறுக்கு** (*naṟukku*) is native Dravidian. DEDR 3625 lists Malayalam *naṟukkuka*, "to cut off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

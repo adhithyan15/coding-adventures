@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES249-POEME
 prerequisites: [FR-C249-acteur, FR-C249-actrice]
 sounds: []
 roots: []
+etymology_hook: "poème ← Latin poema, from Greek poiema 'a thing made' — English poem"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C249-actrice]
 <!-- hl-knowledge: introduces=[FR-LEX-C249-CHOSES249-03]; assesses=[] -->
 
 **le poème** — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poème** ← Latin *poema*, from Greek *poiema*, "a thing made", from *poiein*, "to make" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

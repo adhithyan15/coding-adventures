@@ -14,7 +14,8 @@ romanization: "uri"
 concept_tag: TA-VERB-URI
 prerequisites: [TA-C194-urru, TA-C194-narukku]
 sounds: []
-roots: []
+roots: [dravidian-uri-peel]
+etymology_hook: "உரி — native Dravidian (DEDR 652); Malayalam uri 'skin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C194-narukku]
 <!-- hl-knowledge: introduces=[TA-LEX-C194-ACT194-03]; assesses=[] -->
 
 **உரி** — *uri* — "to peel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உரி** (*uri*) is native Dravidian. DEDR 652 lists Malayalam *uri*, "skin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

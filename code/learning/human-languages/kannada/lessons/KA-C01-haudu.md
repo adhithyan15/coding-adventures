@@ -11,7 +11,8 @@ romanization: "haudu"
 concept_tag: RESPONSE-YES
 prerequisites: [KA-C01-namaskara]
 sounds: [au-vowel-sign, u-vowel-sign]
-roots: [haudu]
+roots: [haudu, tamil-aaku-become]
+etymology_hook: "haudu: native, usually explained as ahudu 'it is so', from āgu 'to become' (DEDR 333)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,8 @@ Left to right: **ಹೌ · ದು** = *hau-du* →
 **ಹೌದು** (*haudu*) is the everyday **"yes / that's so,"** a genuinely native
 Kannada word (not a Sanskrit loan). Its polite-agreement cousins — *audu*,
 *houdu* in speech — all circle the same "it is so."
+
+It is usually explained as *ahudu*, "it becomes, it is so", a form of the native verb *āgu*, "to become" (DEDR 333). Telugu *avunu*, "yes", comes from the same verb in that entry. DEDR 333 compares Sanskrit *ām*.
 
 ## Grammar Lens: Dravidian often answers by echoing the verb
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C01-HAUDU-02]; assesses=[] -->

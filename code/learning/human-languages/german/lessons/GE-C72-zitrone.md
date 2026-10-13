@@ -13,7 +13,8 @@ gloss: "a lemon"
 concept_tag: GE-ESSEN4-ZITRONE
 prerequisites: [GE-C72-reis, GE-C72-birne]
 sounds: []
-roots: []
+roots: [citrus-latin]
+etymology_hook: "Zitrone ← French citron ← Latin citrus — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C72-birne]
 <!-- hl-knowledge: introduces=[GE-LEX-C72-ESSEN4-05]; assesses=[] -->
 
 **die Zitrone** — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zitrone** ← French *citron*, "lemon" ← Latin *citrus* (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -39,8 +39,11 @@ Supported events (also accept the `onNavigate`/`onFormulaChange` spelling):
 Indices must be integer numbers within bounds. Invalid events are rejected
 before mutation; the runtime may retry the same sequence number. Navigation,
 commit, cancel, restore and new-workbook operations emit standard announcements.
-Protocol-2 hosts execute standard `file.open` and `file.save` Await effects through
-the dedicated completion channel. Protocol-1 native hosts receive an explicit
+Protocol-2 hosts execute UI87's standard `files.open` and `files.save` Await
+effects through the dedicated completion channel. Both name the type
+`application/vnd.coding-adventures.visicalc+json` in their `accept` list, which
+every host maps to the `.visicalc` extension, so Open and Save work on the
+native hosts as well as the browser (#16927). Protocol-1 native hosts receive an explicit
 unavailable status and emit no unsupported Await. Filesystem access belongs to
 the shared host capability executor.
 

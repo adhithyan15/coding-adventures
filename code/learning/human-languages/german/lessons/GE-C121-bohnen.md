@@ -13,7 +13,8 @@ gloss: "beans"
 concept_tag: GE-ESSEN121-BOHNEN
 prerequisites: [GE-C120-gemuese, GE-C120-pilz, GE-C01-die-plural, GE-C14-jahr]
 sounds: []
-roots: []
+roots: [germanic-bauno]
+etymology_hook: "Bohnen — plural of Bohne ← Old High German bōna ← Proto-Germanic *baunō, the same word as English bean"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C120-pilz]
 <!-- hl-knowledge: introduces=[GE-LEX-C121-ESSEN121-01]; assesses=[] -->
 
 **die Bohnen** — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bohnen** is the plural of *Bohne* ← Old High German *bōna* ← Proto-Germanic *\*baunō* — inherited, the same word as English *bean*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

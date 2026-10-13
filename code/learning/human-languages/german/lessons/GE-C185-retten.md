@@ -14,6 +14,7 @@ concept_tag: GE-VERB-RETTEN
 prerequisites: [GE-C184-pruefen, GE-C184-reinigen]
 sounds: []
 roots: []
+etymology_hook: "retten ← Old High German retten — the same Germanic verb as English rid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C184-reinigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C185-VERB185-01]; assesses=[] -->
 
 **retten** — "to rescue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**retten** ← Middle High German *retten* ← Old High German *retten* — inherited; EtymDB 2.1 lists it beside English *rid* and Dutch *redden*. To rescue is to rid someone of danger.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

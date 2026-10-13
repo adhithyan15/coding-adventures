@@ -14,7 +14,8 @@ romanization: "patiṟṟāṇṭŭ"
 concept_tag: ML-SAMAYAM314-PATIRRANTU
 prerequisites: [ML-C313-garbhini, ML-C314-nurrantu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, dravidian-andu-year]
+etymology_hook: "patiṟṟāṇṭŭ: native Dravidian, 'ten years': the joining form of 'ten' (DEDR 3918) + āṇṭu 'year' (DEDR 5153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C314-nurrantu]
 <!-- hl-knowledge: introduces=[ML-LEX-C314-SAMAYAM314-02]; assesses=[] -->
 
 **പതിറ്റാണ്ട്** — *patiṟṟāṇṭŭ* — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പതിറ്റാണ്ട്** (*patiṟṟāṇṭŭ*) is native Dravidian, "ten years": the joining form of "ten" (DEDR 3918) and *āṇṭu*, "year" (DEDR 5153, with Tamil *yāṇṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

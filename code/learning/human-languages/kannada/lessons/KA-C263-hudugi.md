@@ -14,7 +14,8 @@ romanization: "huḍugi"
 concept_tag: KA-VASTU263-HUDUGI
 prerequisites: [KA-C262-abharana, KA-C263-huduga]
 sounds: []
-roots: []
+roots: [dravidian-putta-small]
+etymology_hook: "huḍugi: native Dravidian (DEDR 4259)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C263-huduga]
 <!-- hl-knowledge: introduces=[KA-LEX-C263-VASTU263-02]; assesses=[] -->
 
 **ಹುಡುಗಿ** — *huḍugi* — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಡುಗಿ** (*huḍugi*) is native Dravidian (DEDR 4259). DEDR lists *huḍugi*, "girl", beside *puṭṭa*, "small". DEDR 4259 compares Sanskrit *puṭṭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

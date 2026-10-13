@@ -13,7 +13,8 @@ gloss: "the world"
 concept_tag: FR-LIEU62-MONDE
 prerequisites: [FR-C110-droite, FR-C110-gauche]
 sounds: []
-roots: []
+roots: [mundus-latin]
+etymology_hook: "monde ← Latin mundus 'the world' — English mundane shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C110-gauche]
 <!-- hl-knowledge: introduces=[FR-LEX-C110-LIEU62-03]; assesses=[] -->
 
 **le monde** — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**monde** ← Latin *mundus*, "the world" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

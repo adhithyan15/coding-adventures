@@ -14,6 +14,7 @@ concept_tag: GE-ADV173-UNGEFAEHR
 prerequisites: [GE-C173-ziemlich, GE-C173-besonders]
 sounds: []
 roots: []
+etymology_hook: "ungefähr ← Middle High German āne gevære 'without deceit' — roughly, with no claim to precision"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C173-besonders]
 <!-- hl-knowledge: introduces=[GE-LEX-C173-ADV173-03]; assesses=[] -->
 
 **ungefähr** — "about, roughly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ungefähr** ← Middle High German *āne gevære*, "without intent to deceive" (EtymDB 2.1): a figure given honestly but roughly. The *un-* replaced the old word for "without".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-NATURE36-DESERT
 prerequisites: [FR-C84-feu, FR-C84-colline]
 sounds: []
 roots: []
+etymology_hook: "désert ← Latin desertum 'a wasteland', from desertus 'abandoned' — English desert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C84-colline]
 <!-- hl-knowledge: introduces=[FR-LEX-C84-NATURE36-04]; assesses=[] -->
 
 **le désert** — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**désert** ← Latin *desertum*, "a wasteland", from *desertus*, "abandoned" — taken from Church Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

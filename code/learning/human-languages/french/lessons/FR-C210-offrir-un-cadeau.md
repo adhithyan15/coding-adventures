@@ -13,7 +13,8 @@ gloss: "to give a present"
 concept_tag: FR-VERB-OFFRIR-UN-CADEAU
 prerequisites: [FR-C210-atteindre, FR-C210-realiser]
 sounds: []
-roots: []
+roots: [ferre-latin]
+etymology_hook: "offrir un cadeau — offrir, from Latin offerre, + un + cadeau"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C210-realiser]
 <!-- hl-knowledge: introduces=[FR-LEX-C210-VERBES210-03]; assesses=[] -->
 
 **offrir un cadeau** — "to give a present".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**offrir un cadeau** — *offrir*, "to offer", ← Latin *offerre* (EtymDB 2.1), *un*, "a", and *cadeau*, "a present".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

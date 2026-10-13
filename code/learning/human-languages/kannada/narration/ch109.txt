@@ -12,6 +12,9 @@ Before the new one: say the Kannada for in the middle, then the Kannada for a ro
 You'll want to know: ಸೇತುವೆ.
 ಸೇತುವೆ — sētuve — "a bridge".
 
+The word, taken apart.
+ಸೇತುವೆ (sētuve) comes from Sanskrit setu, "dam, bridge", reshaped to Kannada sounds: a tadbhava (CDIAL 13585). Kannada added -ve to the end.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a road, then the Kannada for a bridge.
 
 You'll want to know: ಉದ್ಯಾನ.
 ಉದ್ಯಾನ — udyāna — "a park".
+
+The word, taken apart.
+ಉದ್ಯಾನ (udyāna) is Sanskrit udyāna, "going out; park, garden", taken over whole as a learned loan, a tatsama (CDIAL 2052).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a bridge, then the Kannada for a park.
 You'll want to know: ದೇವಸ್ಥಾನ.
 ದೇವಸ್ಥಾನ — dēvasthāna — "a temple".
 
+The word, taken apart.
+ದೇವಸ್ಥಾನ (dēvasthāna) is Sanskrit deva, "god" (CDIAL 6523), and sthāna, "place" (CDIAL 13753): "the god's place".
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Kannada for a park, then the Kannada for a temple.
 
 You'll want to know: ಗ್ರಂಥಾಲಯ.
 ಗ್ರಂಥಾಲಯ — granthālaya — "a library".
+
+The word, taken apart.
+ಗ್ರಂಥಾಲಯ (granthālaya) is Sanskrit grantha, "knot; book" (CDIAL 4350), and ālaya, "house, receptacle" (CDIAL 1366): "a house of books".
 
 What you've built.
 One more word for this chapter.
@@ -130,6 +142,9 @@ Say the ordinals past eight: ಒಂಬತ್ತನೆಯ, ಹತ್ತನೆಯ,
 
 You'll want to know: ಬ್ಯಾಂಕು.
 ಬ್ಯಾಂಕು — byāṅku — "a bank".
+
+The word, taken apart.
+ಬ್ಯಾಂಕು (byāṅku) is a loan from English bank. Kannada adds -u after the final consonant.
 
 What you've built.
 One more word for this chapter.

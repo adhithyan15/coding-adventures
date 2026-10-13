@@ -14,7 +14,8 @@ romanization: "kukkar"
 concept_tag: ML-VASTU295-KUKKAR
 prerequisites: [ML-C294-cannala, ML-C294-vati]
 sounds: []
-roots: []
+roots: [english-cooker]
+etymology_hook: "kukkar ← English cooker"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C294-vati]
 <!-- hl-knowledge: introduces=[ML-LEX-C295-VASTU295-01]; assesses=[] -->
 
 **കുക്കർ** — *kukkar* — "a pressure cooker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുക്കർ** (*kukkar*) ← English *cooker*, as in *pressure cooker*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

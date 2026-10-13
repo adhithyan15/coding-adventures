@@ -14,7 +14,8 @@ romanization: "karuvi"
 concept_tag: TA-CAN117-KARUVI
 prerequisites: [TA-C117-urimai, TA-C117-vayppu]
 sounds: []
-roots: []
+roots: [dravidian-karuvi-tool]
+etymology_hook: "கருவி — native Dravidian (DEDR 1290); Malayalam karuvi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C117-vayppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C117-CAN117-04]; assesses=[] -->
 
 **கருவி** — *karuvi* — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கருவி** (*karuvi*) is native Dravidian. DEDR 1290 lists Malayalam *karuvi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

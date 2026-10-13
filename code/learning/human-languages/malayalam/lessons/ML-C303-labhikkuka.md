@@ -14,7 +14,8 @@ romanization: "lābhikkuka"
 concept_tag: ML-VERB-LABHIKKUKA
 prerequisites: [ML-C303-ennuka, ML-C303-kuttuka]
 sounds: []
-roots: []
+roots: [sanskrit-labha]
+etymology_hook: "lābhikkuka ← Sanskrit lābha 'profit' (CDIAL 11018) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C303-kuttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C303-KRIYA303-04]; assesses=[] -->
 
 **ലാഭിക്കുക** — *lābhikkuka* — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലാഭിക്കുക** (*lābhikkuka*) is built on Sanskrit *lābha*, "finding, profit" (CDIAL 11018), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

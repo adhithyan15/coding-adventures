@@ -14,7 +14,8 @@ romanization: "niṟaṁ"
 concept_tag: ML-GUNAM245-NIRAM
 prerequisites: [ML-C244-svakarya, ML-C244-potu]
 sounds: []
-roots: []
+roots: [dravidian-niram-colour]
+etymology_hook: "niṟaṁ: native Dravidian, one word with Tamil niṟa (DEDR 3680)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C244-potu]
 <!-- hl-knowledge: introduces=[ML-LEX-C245-GUNAM245-01]; assesses=[] -->
 
 **നിറം** — *niṟaṁ* — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിറം** (*niṟaṁ*) is native Dravidian, one word with Tamil *niṟa* (DEDR 3680). Its older senses are "light, splendour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

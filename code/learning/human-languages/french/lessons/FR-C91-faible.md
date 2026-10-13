@@ -14,6 +14,7 @@ concept_tag: FR-ADJ43-FAIBLE
 prerequisites: [FR-C90-vide, FR-C91-fort]
 sounds: []
 roots: []
+etymology_hook: "faible ← Latin flebilis 'pitiable, to be wept over' — English feeble"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C91-fort]
 <!-- hl-knowledge: introduces=[FR-LEX-C91-ADJ43-02]; assesses=[] -->
 
 **faible** — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faible** ← Old French *feble* ← Latin *flebilis*, "to be wept over, pitiable" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

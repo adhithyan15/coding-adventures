@@ -14,7 +14,8 @@ romanization: "paṭam eṭu"
 concept_tag: TA-VERB-PATAM-ETU
 prerequisites: [TA-C258-terru, TA-C258-kai-kulukku]
 sounds: []
-roots: []
+roots: [sanskrit-pata-cloth, dravidian-ezhu-rise]
+etymology_hook: "படம் எடு — paṭam ← Sanskrit paṭa 'cloth' (CDIAL 7692) + native eṭu 'to take up' (DEDR 851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C258-kai-kulukku]
 <!-- hl-knowledge: introduces=[TA-LEX-C259-ACT259-01]; assesses=[] -->
 
 **படம் எடு** — *paṭam eṭu* — "to take a photo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**படம் எடு** (*paṭam eṭu*) is *paṭam*, "picture", from Sanskrit *paṭa*, "cloth", once the painted cloth of a picture (CDIAL 7692), with native *eṭu*, "to take up" (DEDR 851).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

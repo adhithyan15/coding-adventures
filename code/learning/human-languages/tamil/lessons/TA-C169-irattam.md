@@ -14,7 +14,8 @@ romanization: "irattam"
 concept_tag: TA-NALAM169-IRATTAM
 prerequisites: [TA-C169-tontai, TA-C169-itayam]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "இரத்தம் ← Sanskrit rakta 'red; blood' (CDIAL 10539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C169-itayam]
 <!-- hl-knowledge: introduces=[TA-LEX-C169-NALAM169-05]; assesses=[] -->
 
 **இரத்தம்** — *irattam* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இரத்தம்** (*irattam*) is a loan from Sanskrit *rakta*, "red; blood" (CDIAL 10539). Tamil puts a vowel before an initial *r*, so *rakta* became *irattam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

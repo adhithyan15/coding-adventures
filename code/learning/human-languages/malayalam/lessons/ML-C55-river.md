@@ -11,7 +11,8 @@ romanization: "puḻa"
 concept_tag: ML-NOUN-RIVER
 prerequisites: [ML-C54-seed, ML-C53-sky]
 sounds: []
-roots: []
+roots: [dravidian-puzha-river]
+etymology_hook: "puḻa: native Dravidian, one word with Kannada poḻe (DEDR 4318)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and it carries ഴ — the sound Kannada and Telugu both lost, and th
 Kerala has forty-four rivers running west off the hills, and their names end in this word: Bharatappuzha, Chaliyar-puzha, Periyar. Reading a Kerala map is largely a matter of hearing പുഴ at the end of things.
 
 The borrowed നദി (*nadi*) is the formal one, and it is what a textbook prints. പുഴ is what somebody points at.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുഴ** (*puḻa*) is native Dravidian, one word with Kannada *poḻe* (DEDR 4318).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

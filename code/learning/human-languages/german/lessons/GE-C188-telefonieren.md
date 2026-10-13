@@ -14,6 +14,7 @@ concept_tag: GE-VERB-TELEFONIEREN
 prerequisites: [GE-C188-streichen, GE-C188-teilen]
 sounds: []
 roots: []
+etymology_hook: "telefonieren — Telefon + -ieren: to telephone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C188-teilen]
 <!-- hl-knowledge: introduces=[GE-LEX-C188-VERB188-03]; assesses=[] -->
 
 **telefonieren** — "to talk on the phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefonieren** is *Telefon* + the verb ending *-ieren*. *Telefon* is a modern coinage from Greek *tēle*, "far", and *phōnē*, "sound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

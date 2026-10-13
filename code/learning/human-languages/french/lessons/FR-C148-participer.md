@@ -13,7 +13,8 @@ gloss: "to take part"
 concept_tag: FR-VERB-PARTICIPER
 prerequisites: [FR-C147-demontrer, FR-C148-observer]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "participer ← Latin participare 'to take a part' — English participate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C148-observer]
 <!-- hl-knowledge: introduces=[FR-LEX-C148-VERBES148-02]; assesses=[] -->
 
 **participer** — "to take part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**participer** ← Latin *participare*, "to share in", from *pars*, "a part", and *capere*, "to take" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

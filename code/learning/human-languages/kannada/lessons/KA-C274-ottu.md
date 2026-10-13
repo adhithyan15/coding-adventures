@@ -14,7 +14,8 @@ romanization: "ottu"
 concept_tag: KA-VERB-OTTU
 prerequisites: [KA-C273-jaru, KA-C274-kuni]
 sounds: []
-roots: []
+roots: [dravidian-ottu-press]
+etymology_hook: "ottu: native Dravidian, one word with Tamil oṟṟu and Telugu ottu (DEDR 1021)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C274-kuni]
 <!-- hl-knowledge: introduces=[KA-LEX-C274-KRIYE274-02]; assesses=[] -->
 
 **ಒತ್ತು** — *ottu* — "to press".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒತ್ತು** (*ottu*) is native Dravidian, one word with Tamil *oṟṟu* and Telugu *ottu* (DEDR 1021). DEDR lists *ottu*, "to press together, press, squeeze".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

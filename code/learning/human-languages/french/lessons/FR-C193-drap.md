@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES193-DRAP
 prerequisites: [FR-C192-clair-claire, FR-C192-lointain-lointaine]
 sounds: []
 roots: []
+etymology_hook: "drap ← Late Latin drappus 'cloth', probably Gaulish — English drape"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C192-lointain-lointaine]
 <!-- hl-knowledge: introduces=[FR-LEX-C193-CHOSES193-01]; assesses=[] -->
 
 **le drap** — "a sheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**drap** ← Late Latin *drappus*, "cloth", probably a Gaulish word — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

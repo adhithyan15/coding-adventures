@@ -14,7 +14,8 @@ romanization: "khāli"
 concept_tag: KA-GUNA217-KHALI
 prerequisites: [KA-C216-kartavya, KA-C217-agga]
 sounds: []
-roots: []
+roots: [arabic-khali]
+etymology_hook: "khāli ← Arabic xālī 'empty', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C217-agga]
 <!-- hl-knowledge: introduces=[KA-LEX-C217-GUNA217-02]; assesses=[] -->
 
 **ಖಾಲಿ** — *khāli* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಖಾಲಿ** (*khāli*) is a loan from Arabic *xālī*, "empty, vacant", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

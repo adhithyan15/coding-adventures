@@ -11,7 +11,8 @@ romanization: "vānti"
 concept_tag: KA-WX-VOMIT
 prerequisites: [KA-C93-ease, KA-C93-wound]
 sounds: []
-roots: []
+roots: [sanskrit-vanti]
+etymology_hook: "vānti ← Sanskrit vānti 'vomiting', a tatsama (CDIAL 11518)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C93-wound]
 
 **ವಾಂತಿ ಆಗುತ್ತಿದೆ** (*vānti āguttide*) — "(I) feel like vomiting". It is a word
 to say to a doctor.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಾಂತಿ** (*vānti*) is Sanskrit *vānti*, "vomiting", taken over whole as a learned loan, a tatsama (CDIAL 11518).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

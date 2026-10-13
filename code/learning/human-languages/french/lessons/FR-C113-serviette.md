@@ -13,7 +13,8 @@ gloss: "a towel; a napkin"
 concept_tag: FR-MAISON65-SERVIETTE
 prerequisites: [FR-C113-oreiller, FR-C113-couverture]
 sounds: []
-roots: []
+roots: [servire-latin]
+etymology_hook: "serviette — from the verb 'to serve' + -ette; Latin servire — English servant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C113-couverture]
 <!-- hl-knowledge: introduces=[FR-LEX-C113-MAISON65-03]; assesses=[] -->
 
 **la serviette** — "a towel; a napkin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serviette** — built from the verb for "to serve", with *-ette*: a little thing for serving. The verb ← Latin *servire*, "to be a servant". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

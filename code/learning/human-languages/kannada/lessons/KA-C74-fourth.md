@@ -11,7 +11,8 @@ romanization: "nālkaneya"
 concept_tag: KA-ORDINAL-FOURTH
 prerequisites: [KA-C74-first, KA-C73-can, KA-C70-because, KA-C58-no-thanks, KA-C07-naalku]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "nālkaneya: native nālku 'four' (DEDR 3655) + the ordinal ending -aneya"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +54,11 @@ exactly where it was and **-ಅನೆಯ** is added after it.
 | **ನಾಲ್ಕು** (*nālku*) | **ನಾಲ್ಕನೆಯ** (*nālkaneya*) |
 
 **ನಾಲ್ಕನೆಯ ಕುರ್ಚಿ** (*nālkaneya kurci*), the fourth chair.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾಲ್ಕನೆಯ** (*nālkaneya*) is built from *nālku*, "four", native Dravidian (DEDR 3655, with Tamil *nālku*), and the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C74-ORDINAL-06, KA-LEX-C74-ORDINAL-04] -->

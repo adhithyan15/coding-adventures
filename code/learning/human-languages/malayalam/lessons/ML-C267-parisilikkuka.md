@@ -14,7 +14,8 @@ romanization: "pariśīlikkuka"
 concept_tag: ML-VERB-PARISILIKKUKA
 prerequisites: [ML-C266-vilunnuka, ML-C266-manakkuka]
 sounds: []
-roots: []
+roots: [sanskrit-parishilana]
+etymology_hook: "pariśīlikkuka ← Sanskrit pariśīlana 'practice' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C266-manakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C267-KRIYA267-01]; assesses=[] -->
 
 **പരിശീലിക്കുക** — *pariśīlikkuka* — "to practise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിശീലിക്കുക** (*pariśīlikkuka*) is built on Sanskrit *pariśīlana*, "repeated practice", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "nereyavaru"
 concept_tag: KA-KIN-NEIGHBOURS
 prerequisites: [KA-C90-granddaughter, KA-C90-relative]
 sounds: []
-roots: []
+roots: [dravidian-neer-join]
+etymology_hook: "nereyavaru: native nere 'neighbourhood' (DEDR 3770) + avaru 'those people' (DEDR 1)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C90-relative]
 
 **ನೆರೆಯವರು** (*nereyavaru*) — "the neighbours, the people next door", from **ನೆರೆ**
 (*nere*), "nearby, next door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆರೆಯವರು** (*nereyavaru*) is native Dravidian: *nere*, "proximity, neighbourhood", which DEDR 3770 lists itself, and *avaru*, "those people" (DEDR 1). The neighbours are "the people close by".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

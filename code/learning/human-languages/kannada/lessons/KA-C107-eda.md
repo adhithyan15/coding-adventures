@@ -14,7 +14,8 @@ romanization: "eḍa"
 concept_tag: KA-LOC107-EDA
 prerequisites: [KA-C106-seeyou, KA-C107-bala]
 sounds: []
-roots: []
+roots: [dravidian-itam-left]
+etymology_hook: "eḍa: native Dravidian, one word with Tamil iṭam and Telugu eḍama (DEDR 449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C107-bala]
 <!-- hl-knowledge: introduces=[KA-LEX-C107-LOC107-02]; assesses=[] -->
 
 **ಎಡ** — *eḍa* — "left (not right)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಡ** (*eḍa*) is native Dravidian, one word with Tamil *iṭam* and Telugu *eḍama* (DEDR 449). DEDR lists *eḍa* itself, "left, left side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

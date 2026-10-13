@@ -11,7 +11,8 @@ romanization: "sahāyikkū"
 concept_tag: ML-REP-HELP
 prerequisites: [ML-C120-didnthear, ML-C120-didntunderstand]
 sounds: []
-roots: []
+roots: [sanskrit-sahaaya-companion]
+etymology_hook: "sahāyikkū ← Sanskrit sahāya 'companion, helper' (CDIAL 13309) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C120-didntunderstand]
 <!-- hl-knowledge: introduces=[ML-LEX-C120-HELP-04]; assesses=[] -->
 
 **സഹായിക്കൂ** (*sahāyikkū*) — "please help (me)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സഹായിക്കൂ** (*sahāyikkū*) is built on Sanskrit *sahāya*, "companion, helper" (CDIAL 13309), with the ending that makes a Malayalam verb, here in its request form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

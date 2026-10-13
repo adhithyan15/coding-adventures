@@ -13,7 +13,8 @@ gloss: "to obey"
 concept_tag: FR-VERB-OBEIR
 prerequisites: [FR-C240-attacher, FR-C240-melanger]
 sounds: []
-roots: []
+roots: [oboedire-latin]
+etymology_hook: "obéir ← Latin oboedire 'to obey' — English obey"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C240-melanger]
 <!-- hl-knowledge: introduces=[FR-LEX-C240-VERBES240-05]; assesses=[] -->
 
 **obéir** — "to obey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**obéir** ← Old French *obeir* ← Latin *oboedire*, "to obey" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

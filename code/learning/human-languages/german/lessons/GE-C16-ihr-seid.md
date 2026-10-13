@@ -13,7 +13,7 @@ sounds: [ie-long-ee, s-voiced, diphthong-ei]
 roots: [pie-h1es]
 etymology_hook: "seid is the plural you-form English used to have and threw away, leaving one you for one person and for a crowd"
 duration:
-  max_seconds: 155
+  max_seconds: 188
 requires:
   knowledge: [GE-GRAMMAR-SEIN-WIR-SIND-01, GE-SOUND-SEIN-01, GE-LEX-DU-SIE-02]
 introduces:
@@ -51,6 +51,11 @@ English *you* now does the work of four German words.
 
 **seid** opens exactly like the infinitive: *sei-* is *sein* without its *n*.
 Both the *s* and the *ei* behave as they did there.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ihr** ← Old High German *ir* ← Proto-Germanic *\*jīz* — inherited, the same word as English *ye*. (EtymDB 2.1) *seid* is a form of *sein*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-SEIN-IHR-SEID-01, GE-SOUND-SEIN-01] -->

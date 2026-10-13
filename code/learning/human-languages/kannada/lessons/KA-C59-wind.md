@@ -11,7 +11,8 @@ romanization: "gāḷi"
 concept_tag: KA-NOUN-WIND
 prerequisites: [KA-C58-thats-all, KA-C57-neck]
 sounds: []
-roots: []
+roots: [dravidian-gaali-wind]
+etymology_hook: "gāḷi: native Dravidian, one word with Telugu gāli (DEDR 1499)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and it holds the moving wind and the still air on one shape. ಗಾ�
 Now put it beside the weather-word you already have. ಹವಾಮಾನ was built from a Persian piece meaning air and a Sanskrit piece meaning measure — a borrowed air-word for the forecast on the radio. ಗಾಳಿ is the air on your face. The formal report and the thing itself ended up in different layers of the language, and a Kannada speaker moves between them without noticing.
 
 ಗಾಳಿ also carries rumour, the way English talks about something being in the air.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಾಳಿ** (*gāḷi*) is native Dravidian, one word with Telugu *gāli* (DEDR 1499).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

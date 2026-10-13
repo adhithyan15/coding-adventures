@@ -14,7 +14,8 @@ romanization: "āppŭ"
 concept_tag: ML-VASTU250-APPU
 prerequisites: [ML-C249-karikku, ML-C250-nampar]
 sounds: []
-roots: []
+roots: [english-app]
+etymology_hook: "āppŭ ← English app, short for application"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C250-nampar]
 <!-- hl-knowledge: introduces=[ML-LEX-C250-VASTU250-02]; assesses=[] -->
 
 **ആപ്പ്** — *āppŭ* — "an app".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആപ്പ്** (*āppŭ*) ← English *app*, short for *application*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

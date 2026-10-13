@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 90,
-  "sourceHash": "fnv1a64:a39a4a925f7a9c35",
+  "sourceHash": "fnv1a64:e38b791f36dcb565",
   "lessonIds": [
     "FR-C90-difficile",
     "FR-C90-cher",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch90.txt",
   "json": "french/narration/ch90.json",
-  "textHash": "fnv1a64:2a1ffb808a888273",
-  "jsonHash": "fnv1a64:ad9bd922cf031a76",
+  "textHash": "fnv1a64:0e94f4b33ad63ab8",
+  "jsonHash": "fnv1a64:066d229364b6d924",
   "findings": []
 }

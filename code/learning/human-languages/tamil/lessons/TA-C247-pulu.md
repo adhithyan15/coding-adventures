@@ -14,7 +14,8 @@ romanization: "puḻu"
 concept_tag: TA-PORUL247-PULU
 prerequisites: [TA-C247-naykkutti, TA-C247-anil]
 sounds: []
-roots: []
+roots: [dravidian-puzhu-worm]
+etymology_hook: "புழு — native Dravidian (DEDR 4312); Malayalam puḻu 'worm, maggot', Kannada puḻu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C247-anil]
 <!-- hl-knowledge: introduces=[TA-LEX-C247-PORUL247-05]; assesses=[] -->
 
 **புழு** — *puḻu* — "a worm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**புழு** (*puḻu*) is native Dravidian. DEDR 4312 lists Malayalam *puḻu*, "worm, maggot" and Kannada *puḻu*. The entry compares Sanskrit *pīlu*, "worm" (CDIAL 8240).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

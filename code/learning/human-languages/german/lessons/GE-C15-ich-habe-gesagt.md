@@ -10,10 +10,10 @@ gloss: I said — the first filled slot of the Perfekt, and a sentence you can u
 concept_tag: GE-PERFEKT-ICH
 prerequisites: [GE-C15-perfekt]
 sounds: [ge-prefix, final-t]
-roots: []
+roots: [germanic-habjana, germanic-sagjana]
 etymology_hook: "ich habe gesagt is I have said with the words in the same order and the same jobs, which makes it the least foreign sentence in the chapter"
 duration:
-  max_seconds: 150
+  max_seconds: 183
 requires:
   knowledge: [GE-GRAMMAR-PERFEKT-HABEN-01, GE-LEX-GESAGT-01, GE-LEX-ICH-02]
 introduces:
@@ -51,6 +51,11 @@ Say it as one run rather than three separate words. The stress lands on
 *gesagt*, and *habe* shrinks in ordinary speech to something close to *hab*:
 *ich HAB gezahkt*. That contraction is not sloppy — it is how the sentence
 sounds when a German says it at speed.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ich habe gesagt** — *habe* ← Old High German *habēn* ← Proto-Germanic *\*habjaną*, English *have*; *gesagt* from *sagēn*, English *say*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-ICH-01] -->

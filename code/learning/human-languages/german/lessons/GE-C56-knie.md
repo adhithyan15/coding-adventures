@@ -13,7 +13,8 @@ gloss: "a knee"
 concept_tag: GE-KOERPER1-KNIE
 prerequisites: [GE-C56-hals, GE-C56-schulter]
 sounds: []
-roots: []
+roots: [germanic-knewa]
+etymology_hook: "Knie ← Old High German kneo ← Proto-Germanic *knewą — the same word as English knee"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C56-schulter]
 <!-- hl-knowledge: introduces=[GE-LEX-C56-KOERPER1-05]; assesses=[] -->
 
 **das Knie** — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Knie** ← Old High German *kneo* ← Proto-Germanic *\*knewą* — inherited, the same word as English *knee*, whose *k* English stopped saying. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

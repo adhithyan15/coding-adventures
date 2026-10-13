@@ -14,7 +14,8 @@ romanization: "buddhiyuḷḷa"
 concept_tag: ML-QUAL169-BUDDHIYULLA
 prerequisites: [ML-C168-palutta, ML-C168-dhairyamulla, ML-C100-thoppi]
 sounds: []
-roots: []
+roots: [sanskrit-buddhi, dravidian-ul-be]
+etymology_hook: "buddhiyuḷḷa: Sanskrit buddhi 'intelligence' (CDIAL 9277) + native uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C168-dhairyamulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C169-QUAL169-01]; assesses=[] -->
 
 **ബുദ്ധിയുള്ള** — *buddhiyuḷḷa* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബുദ്ധിയുള്ള** (*buddhiyuḷḷa*) joins Sanskrit *buddhi*, "intelligence" (CDIAL 9277), to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

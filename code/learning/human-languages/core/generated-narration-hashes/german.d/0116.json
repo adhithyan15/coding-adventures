@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 116,
-  "sourceHash": "fnv1a64:5d44e2df8a30f02a",
+  "sourceHash": "fnv1a64:45f91a40e4bca62f",
   "lessonIds": [
     "GE-C116-wecker",
     "GE-C116-handy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch116.txt",
   "json": "german/narration/ch116.json",
-  "textHash": "fnv1a64:96659bfc6a4951cc",
-  "jsonHash": "fnv1a64:f6e1147667a0391d",
+  "textHash": "fnv1a64:6a8f3d83469b96da",
+  "jsonHash": "fnv1a64:0504daa73560cb7f",
   "findings": []
 }

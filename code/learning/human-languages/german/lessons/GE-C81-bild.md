@@ -13,7 +13,8 @@ gloss: "a picture"
 concept_tag: GE-SCHULE-BILD
 prerequisites: [GE-C81-schule, GE-C81-karte]
 sounds: []
-roots: []
+roots: [germanic-bilithja]
+etymology_hook: "Bild ← Old High German bilidi ← Proto-Germanic *biliþją 'image' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C81-karte]
 <!-- hl-knowledge: introduces=[GE-LEX-C81-SCHULE-03]; assesses=[] -->
 
 **das Bild** — "a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bild** ← Old High German *bilidi*, "image, figure" ← Proto-Germanic *\*biliþją* — inherited; Dutch *beeld* is the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

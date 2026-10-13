@@ -12,6 +12,9 @@ Before the new one: say the German for to weigh, then the German for to draw.
 You'll want to know: die Abfahrt.
 die Abfahrt — "a departure".
 
+The word, taken apart.
+Abfahrt is ab-, "off", + the word for "a journey", Old High German vart from Proto-Germanic fardiz (EtymDB 2.1), from fahren.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for to draw, then the German for a departure.
 
 You'll want to know: die Ankunft.
 die Ankunft — "an arrival".
+
+The word, taken apart.
+Ankunft is an-, "at", + an old noun for "a coming", built on kommen (EtymDB 2.1). An arrival is a coming-at.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a departure, then the German for an arriv
 You'll want to know: der Abflug.
 der Abflug — "a take-off, a departure (by air)".
 
+The word, taken apart.
+Abflug is ab-, "off", + the word for "flight", Old High German flug from Proto-Germanic flugiz, from fliegen (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for an arrival, then the German for a take-of
 You'll want to know: die Verspätung.
 die Verspätung — "a delay".
 
+The word, taken apart.
+Verspätung is ver- + spät, "late", + -ung: being made late. spät from Old High German spāti. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a take-off, then the German for a delay.
 
 You'll want to know: das Gleis.
 das Gleis — "a platform, a track".
+
+The word, taken apart.
+Gleis is worn down from Middle High German geleise, "rut, track": ge- + an old word for "a track", the ruts carts cut into a road. EtymDB 2.1 has no source for it.
 
 What you've built.
 One more word for this chapter.

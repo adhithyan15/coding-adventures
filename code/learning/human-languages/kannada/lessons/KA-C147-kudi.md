@@ -14,7 +14,8 @@ romanization: "kuḍi"
 concept_tag: KA-VERB-KUDI
 prerequisites: [KA-C146-cinnada, KA-C146-belliya]
 sounds: []
-roots: []
+roots: [dravidian-kudi-drink]
+etymology_hook: "kuḍi: native Dravidian, one word with Tamil kuṭi and Malayalam kuṭi (DEDR 1654)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C146-belliya]
 <!-- hl-knowledge: introduces=[KA-LEX-C147-ACT147-01]; assesses=[] -->
 
 **ಕುಡಿ** — *kuḍi* — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಡಿ** (*kuḍi*) is native Dravidian, one word with Tamil *kuṭi* and Malayalam *kuṭi* (DEDR 1654). DEDR lists *kuḍi* itself, "to drink". DEDR 1654 compares Sanskrit *kuṭī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

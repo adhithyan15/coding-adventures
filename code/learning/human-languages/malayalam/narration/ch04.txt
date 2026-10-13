@@ -51,6 +51,9 @@ Say it: uṭuppŭ.
 [once you have stopped driving — look: at its shape as you say it.]
 The lessons that follow take pieces of it, ഉ (u), and write each one on its own.
 
+The word, taken apart.
+ഉടുപ്പ് (uṭuppŭ) is native Dravidian, a noun made from the verb for putting on clothes; DEDR 587 lists the root with Tamil uṭu, Kannada uḍu and Telugu uḍupu.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: uṭuppŭ]
@@ -114,6 +117,7 @@ The letters in this word.
 
 The word, taken apart.
 പോകുക (pōkuka, "to go") and വരിക (varika, "to come") are native Dravidian verbs. Notice the ending -ഉക (-uka) — this is how Malayalam names a verb in the dictionary, its "to ___" form (where Tamil uses a bare stem). Malayalam, like all its family, does not say a plain "goodbye": it says "I go, and I come back."
+DEDR 4572 lists the going verb with Tamil pō and Kannada pōgu; DEDR 5270 lists the coming verb with Tamil varu and Kannada bar.
 
 Guided Practice.
 [pause 1 second]
@@ -141,6 +145,9 @@ You'll want to know: കൂട്.
 Say it: kūṭŭ.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ൂ (ū), and writes it on its own.
+
+The word, taken apart.
+കൂട് (kūṭŭ) is native Dravidian, one word with Tamil kūṭu and Kannada gūḍu (DEDR 1883). DEDR 1883 compares Sanskrit kūṭa.
 
 Guided Practice.
 [pause 1 second]
@@ -206,6 +213,7 @@ Two vowel signs do the work here. In യി, ya takes the i sign ി. In രാ,
 The word, taken apart.
 പോയി വരാം (pōyi varāṁ) = പോയി (pōyi, "having gone") + വരാം (varāṁ, "I'll come") — literally "having gone, I'll come [back]," i.e. "I'll go and come back." A Malayali never signs off with a bare "I'm leaving." It is the same "go-and-come-back" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Telugu veḷḷi vastānu). The warm reply is പോയി വരൂ (pōyi varū, "go and come [back]").
 It reaches past Dravidian, too: Bengali, an Indo-Aryan language with no shared ancestor for these words, says goodbye with āshi — "I come." The whole south, and beyond, prefers a promise of return to a blunt farewell.
+Both verbs are native: DEDR 4572 for going, DEDR 5270 for coming.
 
 Grammar Lens: the -ആം ending, "let me / I will".
 -ആം (-āṁ) added to a verb stem means "I/we will" or "let me" — a soft, volitional future: varāṁ ("I'll come"), kāṇāṁ ("let's see," coming next lesson), ceyyāṁ ("I'll do it"). It is Malayalam's gentle way of promising an action.
@@ -241,6 +249,7 @@ The letters in this word.
 
 The word, taken apart.
 നാളെ (nāḷe, "tomorrow") is native Dravidian, from നാൾ (nāḷ, "day") — the very same nāḷ behind Tamil's nāḷai and Kannada's nāḷe. കാണാം (kāṇāṁ, "let's see") is from കാണുക (kāṇuka, "to see") + -āṁ — so the phrase is "tomorrow, let's see [each other]." One family, one word for "day," one habit of parting until the next.
+DEDR 3656 lists the day-word with Tamil nāḷai and Kannada nāḷe, "tomorrow"; DEDR 1443 lists the seeing verb with Tamil kāṇ.
 
 Guided Practice.
 [pause 1 second]
@@ -271,6 +280,7 @@ The letters in this word.
 
 The word, taken apart.
 വീണ്ടും കാണാം (vīṇḍuṁ kāṇāṁ) = വീണ്ടും (vīṇḍuṁ, "again") + കാണാം (kāṇāṁ, "let's see") — "we'll see [each other] again." Both words are native Dravidian: vīṇḍuṁ ("again," from vīṇṭu, "to return") and kāṇ ("to see"). Where Tamil's "we'll meet again" reaches for the Sanskrit loan sandi to say "meet," Malayalam — like Kannada — keeps its own native verb, here "to see."
+DEDR 4883 lists the word for "again" beside Tamil mīḷ, "to return"; DEDR 1443 is the seeing verb.
 
 Guided Practice.
 [pause 1 second]

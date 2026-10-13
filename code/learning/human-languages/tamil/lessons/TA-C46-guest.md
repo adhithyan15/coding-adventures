@@ -11,7 +11,8 @@ romanization: "viruntāḷi"
 concept_tag: TA-ROLE-GUEST
 prerequisites: [TA-C46-farmer, TA-C44-book, TA-C45-stomach]
 sounds: []
-roots: []
+roots: [dravidian-viruntu-feast]
+etymology_hook: "விருந்தாளி — native viruntu 'feast, guest' (DEDR 5415; Malayalam virunnu) + āḷ 'person'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C46-farmer]
 Take it apart and the guest is named after the meal. The first half is *virundu*, a feast laid on for somebody; the second is *āḷi*, from *āḷ*, 'a person'. A guest, in Tamil, is the person a feast is for — the obligation is inside the word, not added to it afterwards.
 
 There is an older form too, *viruntiṉar*, carrying the *-ar* you now know well. Both say the same thing: somebody has arrived, and there will be food.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விருந்தாளி** (*viruntāḷi*) is native: *viruntu*, "feast, guest" (DEDR 5415; Malayalam *virunnu*), and *āḷ*, "person". The guest is the one the feast is for.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

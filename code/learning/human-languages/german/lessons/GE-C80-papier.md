@@ -13,7 +13,8 @@ gloss: "paper"
 concept_tag: GE-SACHEN-PAPIER
 prerequisites: [GE-C80-heft, GE-C80-stift]
 sounds: []
-roots: []
+roots: [papyrus-latin]
+etymology_hook: "Papier ← Latin papyrus ← Greek pápyros — borrowed, like English paper"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C80-stift]
 <!-- hl-knowledge: introduces=[GE-LEX-C80-SACHEN-05]; assesses=[] -->
 
 **das Papier** — "paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Papier** ← Middle High German *papier* ← Latin *papyrus* ← Greek *pápyros* (EtymDB 2.1) — borrowed, like English *paper*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a forest"
 concept_tag: GE-NATUR2-WALD
 prerequisites: [GE-C82-blatt, GE-C82-berg]
 sounds: []
-roots: []
+roots: [germanic-walthuz]
+etymology_hook: "Wald ← Old High German wald ← Proto-Germanic *walþuz 'woodland' — the same word as English wold"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C82-berg]
 <!-- hl-knowledge: introduces=[GE-LEX-C83-NATUR2-01]; assesses=[] -->
 
 **der Wald** — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wald** ← Old High German *wald* ← Proto-Germanic *\*walþuz*, "high land covered with wood" — inherited. (EtymDB 2.1) English *wold*, as in the Cotswolds, is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

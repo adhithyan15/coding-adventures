@@ -11,7 +11,8 @@ romanization: "bandhu"
 concept_tag: ML-KIN-RELATIVE
 prerequisites: [ML-C124-wishes, ML-C125-grandchild]
 sounds: []
-roots: []
+roots: [sanskrit-bandhu]
+etymology_hook: "bandhu ← Sanskrit bandhu 'kinsman', a tatsama (CDIAL 9144)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C125-grandchild]
 <!-- hl-knowledge: introduces=[ML-LEX-C125-KIN-02]; assesses=[] -->
 
 **ബന്ധു** (*bandhu*) — "a relative". **ബന്ധുക്കൾ** (*bandhukkaḷ*) — "relatives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബന്ധു** (*bandhu*) ← Sanskrit *bandhu*, "kinsman", taken over whole as a tatsama (CDIAL 9144). It is built on the root *bandh*, "to bind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

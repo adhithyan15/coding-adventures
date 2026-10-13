@@ -14,7 +14,8 @@ romanization: "tiruppam"
 concept_tag: TA-LOC116-TIRUPPAM
 prerequisites: [TA-C116-tottam, TA-C116-mulai]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn]
+etymology_hook: "திருப்பம் — native Dravidian (DEDR 3246); Kannada tiri 'to turn round'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C116-mulai]
 <!-- hl-knowledge: introduces=[TA-LEX-C116-LOC116-03]; assesses=[] -->
 
 **திருப்பம்** — *tiruppam* — "a turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திருப்பம்** (*tiruppam*) is native Dravidian. DEDR 3246 lists Kannada *tiri*, "to turn round". It is the noun of *tiruppu*, "to turn", from *tiri*, "to turn, to revolve".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

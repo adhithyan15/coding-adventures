@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createBrowserFileEffects, EXECUTABLE_EXTENSIONS, hasExecutableExtension, isPlainFileName, isReservedDeviceName, MAX_FILE_BYTES } from './mosaic-file-effects.mjs';
 import { loadMosaicModule } from './mosaic-host.mjs';
 
-const effect = (id = 1, kind = 'file.open', payload = {}) => ({ id, delivery: 'await', kind, payload });
+const effect = (id = 1, kind = 'files.open', payload = {}) => ({ id, delivery: 'await', kind, payload });
 const deferred = () => {
   let resolve;
   const promise = new Promise(done => { resolve = done; });
@@ -36,11 +36,11 @@ function fixture(overrides = {}) {
 
 test('open preserves arbitrary bytes, invokes picker before yielding and never replays duplicate IDs', async () => {
   const { files, calls, completions } = fixture();
-  const pending = files.run(effect(1, 'file.open', { mimeType: 'application/json', extension: '.json' }));
+  const pending = files.run(effect(1, 'files.open', { accept: ['application/json'] }));
   assert.equal(calls[0][0], 'open', 'picker must start inside the initiating gesture');
   assert.equal(await files.run(effect()), undefined);
   assert.deepEqual(await pending, { revision: 1 });
-  assert.deepEqual(completions, [[1, { ok: { name: 'workbook.json', bytes: 'AAF/gP8=' } }]]);
+  assert.deepEqual(completions, [[1, { ok: { name: 'workbook.json', mimeType: 'application/json', bytes: 'AAF/gP8=' } }]]);
   assert.equal(calls[0][1].multiple, false);
   assert.deepEqual(calls[0][1].types, [{ accept: { 'application/json': ['.json'] } }]);
   assert.equal(await files.run(effect()), undefined);
@@ -51,7 +51,7 @@ test('open preserves arbitrary bytes, invokes picker before yielding and never r
 
 test('save writes opaque bytes and reports success only after close', async () => {
   const { files, calls, completions } = fixture();
-  await files.run(effect(1, 'file.save', { suggestedName: 'budget.json', bytes: 'AAF/gP8=' }));
+  await files.run(effect(1, 'files.save', { suggestedName: 'budget.json', bytes: 'AAF/gP8=' }));
   assert.deepEqual(calls, [['save', { suggestedName: 'budget.json' }], ['write', [0, 1, 127, 128, 255]], ['close']]);
   assert.deepEqual(completions, [[1, { ok: { name: 'budget.json' } }]]);
 });
@@ -88,7 +88,7 @@ test('payload limits reject malformed bytes and oversized reads without writing'
     { suggestedName: 'budget.json', bytes: 'not base64!' },
     { suggestedName: 'budget.json', bytes: 'AAAA'.repeat(Math.ceil(MAX_FILE_BYTES / 3) + 1) }]) {
     const { files, calls, completions } = fixture();
-    await files.run(effect(1, 'file.save', payload));
+    await files.run(effect(1, 'files.save', payload));
     assert.ok(completions[0][1].failed);
     assert.ok(calls.every(([name]) => name !== 'write'));
   }
@@ -109,7 +109,7 @@ test('write and close failures abort the stream and do not report save success',
       async close() { operations.push('close'); if (failing === 'close') throw new Error('close failed'); },
       async abort() { operations.push('abort'); throw new Error('cleanup also failed'); },
     }) }) });
-    await files.run(effect(1, 'file.save', { suggestedName: 'budget.json', bytes: 'AA==' }));
+    await files.run(effect(1, 'files.save', { suggestedName: 'budget.json', bytes: 'AA==' }));
     assert.equal(operations.at(-1), 'abort');
     assert.deepEqual(completions[0][1], { failed: { message: `${failing} failed` } });
   }
@@ -121,7 +121,7 @@ test('a maximum-size valid payload stays within the transport limit', async () =
     async write(bytes) { written = bytes.length; assert.equal(bytes[bytes.length - 1], 0); },
     async close() {}, async abort() { assert.fail('valid bytes must not abort'); },
   }) }) });
-  await files.run(effect(1, 'file.save', { suggestedName: 'large.bin', bytes: Buffer.alloc(MAX_FILE_BYTES).toString('base64') }));
+  await files.run(effect(1, 'files.save', { suggestedName: 'large.bin', bytes: Buffer.alloc(MAX_FILE_BYTES).toString('base64') }));
   assert.equal(written, MAX_FILE_BYTES);
   assert.deepEqual(completions[0][1], { ok: { name: 'large.bin' } });
 });
@@ -140,7 +140,7 @@ test('disposal ignores outstanding pickers and aborts writes before commit', asy
     write: () => write.promise, close() { assert.fail('disposed write must not commit'); },
     async abort() { aborted = true; },
   }) }) });
-  const saving = second.files.run(effect(1, 'file.save', { suggestedName: 'budget.json', bytes: '' }));
+  const saving = second.files.run(effect(1, 'files.save', { suggestedName: 'budget.json', bytes: '' }));
   await new Promise(resolve => setImmediate(resolve));
   second.files.dispose(); write.resolve();
   assert.equal(await saving, undefined);
@@ -179,7 +179,7 @@ test('compiled Mosaic keeps rejected file results pending and accepts explicit c
   const files = createBrowserFileEffects(app, environment);
   // The counter fixture rejects a file payload: the real Rust boundary must
   // retain Await state, while retrying must never read the file a second time.
-  await assert.rejects(files.run({ ...requested, kind: 'file.open' }), /integer/);
+  await assert.rejects(files.run({ ...requested, kind: 'files.open' }), /integer/);
   await assert.rejects(files.retry(requested.id), /integer/);
   assert.equal(calls.length, 1);
   assert.equal(app.update.revision, 2);
@@ -188,7 +188,7 @@ test('compiled Mosaic keeps rejected file results pending and accepts explicit c
   const next = module.create({ protocolVersion: 2 });
   const cancelled = next.dispatch('requestEffect').effects[0];
   const cancellation = createBrowserFileEffects(next, fixture({ showOpenFilePicker() { throw new DOMException('dismissed', 'AbortError'); } }).environment);
-  assert.equal((await cancellation.run({ ...cancelled, kind: 'file.open' })).revision, 3);
+  assert.equal((await cancellation.run({ ...cancelled, kind: 'files.open' })).revision, 3);
   assert.ok(next.snapshot());
   cancellation.dispose(); next.dispose();
 });
@@ -256,12 +256,6 @@ test('without the File System Access API, files.save downloads the bytes under t
   await files.run(effect(12, 'files.save', { suggestedName: 'again.json', accept: ['application/json'], bytes: 'AA==' }));
   assert.equal(clicked.length, 1);
   assert.ok(completions[1][1].failed);
-
-  // The older alias keeps its explicit degradation: no download claims a save.
-  const legacy = fixture({ showSaveFilePicker: undefined, document: { createElement: () => ({ click() {} }) },
-    URL: { createObjectURL: () => 'blob:x', revokeObjectURL() {} }, Blob: class {} });
-  await legacy.files.run(effect(11, 'file.save', { suggestedName: 'book.json', bytes: 'AA==' }));
-  assert.ok(legacy.completions[0][1].failed);
 });
 
 test('the download fallback refuses a name with no accepted type', async () => {
@@ -281,6 +275,18 @@ test('the download fallback refuses a name with no accepted type', async () => {
   }
 });
 
+test('files.open never falls back to a download, whatever its payload carries', async () => {
+  const clicked = [];
+  const { files, completions } = fixture({
+    showOpenFilePicker: undefined, showSaveFilePicker: undefined,
+    Blob: class {}, URL: { createObjectURL: () => 'blob:x', revokeObjectURL() {} }, setTimeout: () => {},
+    document: { createElement: () => ({ click() { clicked.push(1); } }) },
+  });
+  await files.run(effect(16, 'files.open', { accept: ['application/json'], suggestedName: 'x.json', bytes: 'AA==' }));
+  assert.equal(clicked.length, 0);
+  assert.ok(completions[0][1].failed);
+});
+
 test('the plain-name rule and executable list match the Compose library', async () => {
   // The rules live in the half Compose Desktop and Android share (UI89 §3.8).
   const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicFileEffects.kt', import.meta.url), 'utf8');
@@ -297,15 +303,27 @@ test('the plain-name rule and executable list match the Compose library', async 
   assert.equal(isPlainFileName('\u2764\uFE0F list.txt'), true);
 });
 
-test('the legacy file.save type may not name a launcher', async () => {
-  const { files, calls, completions } = fixture();
-  await files.run(effect(14, 'file.save', { suggestedName: 'photo', mimeType: 'application/x-msdownload', extension: '.scr', bytes: 'AA==' }));
-  assert.equal(calls.length, 0);
-  assert.ok(completions[0][1].failed);
-  const trailing = fixture();
-  await trailing.files.run(effect(15, 'file.save', { suggestedName: 'photo', mimeType: 'application/x-msdownload', extension: '.exe.', bytes: 'AA==' }));
-  assert.equal(trailing.calls.length, 0);
-  assert.ok(trailing.completions[0][1].failed);
+test('the retired file.* kinds and their mimeType + extension pair are refused (UI87 §3.2)', async () => {
+  // Nothing sends the old kinds any more (#16927). They now fail like any
+  // unknown kind, and the old type pair cannot ride along on files.*: it
+  // would otherwise be ignored and widen the picker to every file.
+  for (const kind of ['file.open', 'file.save']) {
+    const { files, calls, completions } = fixture();
+    await files.run(effect(14, kind, { suggestedName: 'book.json', bytes: 'AA==' }));
+    assert.equal(calls.length, 0, kind);
+    assert.match(completions[0][1].failed.message, /Unsupported/, kind);
+  }
+  for (const [kind, payload] of [
+    ['files.open', { mimeType: 'application/json', extension: '.json' }],
+    ['files.open', { accept: ['application/json'], extension: '.json' }],
+    ['files.save', { suggestedName: 'photo', mimeType: 'application/x-msdownload', extension: '.scr', bytes: 'AA==' }],
+    ['files.save', { suggestedName: 'book.json', accept: ['application/json'], mimeType: 'application/json', bytes: 'AA==' }],
+  ]) {
+    const { files, calls, completions } = fixture();
+    await files.run(effect(15, kind, payload));
+    assert.equal(calls.length, 0, JSON.stringify(payload));
+    assert.match(completions[0][1].failed.message, /retired/, JSON.stringify(payload));
+  }
 });
 
 test('Windows device names are never plain names, and active content counts as executable (UI87 §3.1)', () => {
@@ -322,4 +340,23 @@ test('Windows device names are never plain names, and active content counts as e
   for (const name of ['notes.txt', 'data.xlsx', 'report.docx', 'photo.png']) {
     assert.equal(hasExecutableExtension(name), false, name);
   }
+});
+
+test('a VisiCalc workbook saves and opens through files.* with its vendor type (#16927)', async () => {
+  // VisiCalc moved from the retired `file.*` kinds to UI87's `files.*`. Its
+  // type maps to `.visicalc` here and on every native host, so the suggested
+  // `Workbook.visicalc` is accepted rather than refused for a `.json` mismatch.
+  const visicalc = 'application/vnd.coding-adventures.visicalc+json';
+  const { files, calls, completions } = fixture();
+  await files.run(effect(1, 'files.save', { suggestedName: 'Workbook.visicalc', accept: [visicalc], bytes: 'AA==' }));
+  assert.deepEqual(calls[0], ['save', { suggestedName: 'Workbook.visicalc', types: [{ accept: { [visicalc]: ['.visicalc'] } }] }]);
+  assert.deepEqual(completions[0], [1, { ok: { name: 'Workbook.visicalc' } }]);
+
+  const opening = fixture();
+  await opening.files.run(effect(2, 'files.open', { accept: [visicalc] }));
+  assert.deepEqual(opening.calls[0][1].types, [{ accept: { [visicalc]: ['.visicalc'] } }]);
+
+  const mismatched = fixture();
+  await mismatched.files.run(effect(3, 'files.save', { suggestedName: 'Workbook.json', accept: [visicalc], bytes: 'AA==' }));
+  assert.match(mismatched.completions[0][1].failed.message, /accepted type/);
 });

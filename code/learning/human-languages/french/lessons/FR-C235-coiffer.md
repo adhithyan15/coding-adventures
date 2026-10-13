@@ -14,6 +14,7 @@ concept_tag: FR-VERB-COIFFER
 prerequisites: [FR-C235-reposer, FR-C235-reveiller]
 sounds: []
 roots: []
+etymology_hook: "se coiffer — from the word for 'a cap', Late Latin cofia — English coif and coiffure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C235-reveiller]
 <!-- hl-knowledge: introduces=[FR-LEX-C235-VERBES235-05]; assesses=[] -->
 
 **se coiffer** — "to do one's hair".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se coiffer** — formed from the word for "a cap", ← Late Latin *cofia*, a Germanic word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

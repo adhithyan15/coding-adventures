@@ -14,6 +14,7 @@ concept_tag: GE-THING164-NACHBARIN
 prerequisites: [GE-C163-party, GE-C163-einladung]
 sounds: []
 roots: []
+etymology_hook: "Nachbarin — Nachbar 'neighbour' + -in; Nachbar is 'the one who dwells near'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C163-einladung]
 <!-- hl-knowledge: introduces=[GE-LEX-C164-THING164-01]; assesses=[] -->
 
 **die Nachbarin** — "a neighbour (woman)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nachbarin** is *Nachbar* + *-in*, the ending that names a woman. *Nachbar* ← Middle High German *nāchbūre*, "the one who dwells near". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

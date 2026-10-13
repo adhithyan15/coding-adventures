@@ -14,7 +14,8 @@ romanization: "kattarisu"
 concept_tag: KA-VERB-KATTARISU
 prerequisites: [KA-C147-odu, KA-C147-malagu]
 sounds: []
-roots: []
+roots: [sanskrit-kartari]
+etymology_hook: "kattarisu: from kattari 'scissors' ← Sanskrit kartarī (CDIAL 2858) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C147-malagu]
 <!-- hl-knowledge: introduces=[KA-LEX-C147-ACT147-04]; assesses=[] -->
 
 **ಕತ್ತರಿಸು** — *kattarisu* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕತ್ತರಿಸು** (*kattarisu*) is *kattari*, "scissors", from Sanskrit *kartarī* (CDIAL 2858), made into a verb with *-isu*: "to scissor", to cut.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

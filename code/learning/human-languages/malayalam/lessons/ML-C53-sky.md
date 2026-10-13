@@ -11,7 +11,8 @@ romanization: "ākāśaṁ"
 concept_tag: ML-NOUN-SKY
 prerequisites: [ML-C52-garland, ML-C51-gratitude]
 sounds: []
-roots: []
+roots: [sanskrit-akasha]
+etymology_hook: "ākāśaṁ ← Sanskrit ākāśa 'sky', a tatsama (CDIAL 1008)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *ākāśa*, built on a piece meaning "to shine, to be visible". The sky
 Malayalam keeps an inherited word for the same overhead space, വാനം (*vānaṁ*), which owes Sanskrit nothing. The two divide the work between them: ആകാശം takes the ordinary shift and turns up in weather talk, while വാനം keeps to songs and to verse. A borrowed word taking the daily job and leaving the older one the ceremony is an arrangement this book has shown you before, at the doorway.
 
 *ākāśa* travelled as well. Traders carried it east, and Malay and Indonesian still say *angkasa* for the sky.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആകാശം** (*ākāśaṁ*) ← Sanskrit *ākāśa*, "sky", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 1008).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

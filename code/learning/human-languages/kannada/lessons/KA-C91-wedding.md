@@ -11,7 +11,8 @@ romanization: "maduve"
 concept_tag: KA-YOU-WEDDING
 prerequisites: [KA-C91-address, KA-C91-birthday]
 sounds: []
-roots: []
+roots: [dravidian-mada-wedding]
+etymology_hook: "maduve: native Dravidian, one word with Tamil vatuvai (DEDR 4694)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C91-birthday]
 
 **ಮದುವೆಗೆ ಆಹ್ವಾನ** (*maduvege āhvāna*) — "an invitation to a wedding", with
 **ಆಹ್ವಾನ**, "invitation", from the last tranche.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮದುವೆ** (*maduve*) is native Dravidian, one word with Tamil *vatuvai* (DEDR 4694). DEDR lists *maduve* itself, with *mada*, "joining, wedding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

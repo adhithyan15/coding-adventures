@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES225-EXPERIENCE
 prerequisites: [FR-C224-scientifique, FR-C224-chercheur]
 sounds: []
 roots: []
+etymology_hook: "expérience ← Latin experientia 'a trial', from experiri 'to try' — English experience"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C224-chercheur]
 <!-- hl-knowledge: introduces=[FR-LEX-C225-CHOSES225-01]; assesses=[] -->
 
 **l'expérience** — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**expérience** ← Latin *experientia*, "a trial, a test", from *experiri*, "to try" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

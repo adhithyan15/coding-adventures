@@ -3498,6 +3498,17 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
+    fn any_paint_instruction(
+        instructions: &[PaintInstruction],
+        predicate: &impl Fn(&PaintInstruction) -> bool,
+    ) -> bool {
+        instructions.iter().any(|instruction| {
+            predicate(instruction)
+                || matches!(instruction, PaintInstruction::Group(group)
+                    if any_paint_instruction(&group.children, predicate))
+        })
+    }
+
     #[test]
     fn render_pinned_mermaid_swimlane_visual_corpus_to_png() {
         let syntax: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus JSON");
@@ -3875,6 +3886,132 @@ line "Target" [35, 50, 68, 82]"##,
                     Some(&"monotoneX".to_string()));
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
                     Some(&"monotoneY".to_string()));
+            }
+            if fixture_name == "edge-spline-curves" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::CubicTo { .. }))
+                )).count(), 3, "spline edges must lower to backend-neutral cubic paths");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"cardinal".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"catmullRom".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.2.curve")),
+                    Some(&"natural".to_string()));
+            }
+            if fixture_name == "edge-rounded-curve" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::QuadTo { .. })).count() == 2
+                )).count(), 1, "rounded edges must lower both orthogonal corners to quadratic curves");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.0.curve")),
+                    Some(&"rounded".to_string()));
+            }
+            if fixture_name == "line-hops-arc" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::QuadTo { .. }))
+                )).count(), 1, "the later crossing edge must contain one arc hop");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.lineHops")),
+                    Some(&"arc".to_string()));
+            }
+            if fixture_name == "line-hops-gap" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                )).count(), 1, "the later crossing edge must contain one visible gap");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.lineHops")),
+                    Some(&"gap".to_string()));
+            }
+            if fixture_name == "automatic-lane-ordering" {
+                assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+                    vec!["laneB", "laneC", "laneA", "laneD"]);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.automaticLaneOrdering")),
+                    Some(&"true".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.laneOrder")),
+                    Some(&"laneB,laneC,laneA,laneD".to_string()));
+            }
+            if fixture_name == "line-hops-step" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::QuadTo { .. }))
+                )).count(), 1, "the later step edge must contain an arc hop");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"step".to_string()));
+            }
+            if fixture_name == "line-hops-rounded" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                )).count(), 1, "the later rounded edge must contain one visible gap");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"rounded".to_string()));
+            }
+            if fixture_name == "nested-subgraphs" {
+                assert_eq!(layout.groups.len(), 2);
+                let platform = layout.groups.iter().find(|group| group.id == "Platform").unwrap();
+                let runtime = layout.groups.iter().find(|group| group.id == "Runtime").unwrap();
+                assert!(runtime.x >= platform.x && runtime.y >= platform.y);
+                assert!(runtime.x + runtime.width <= platform.x + platform.width);
+                assert!(runtime.y + runtime.height <= platform.y + platform.height);
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.stroke_dash.as_deref() == Some(&[6.0, 4.0][..])
+                )).count(), 2);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
+                    Some(&"Platform".to_string()));
+            }
+            if fixture_name == "state-choice-note-shapes" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::Diamond,
+                    &diagram_ir::DiagramShape::Note,
+                ]);
+                assert!(any_paint_instruction(&scene.instructions, &|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.iter().filter(|child|
+                        matches!(child, PaintInstruction::Path(_))).count() == 2
+                )), "the note must lower to an outline and interior fold path");
+            }
+            if fixture_name == "label-rect-shape" {
+                assert_eq!(layout.nodes[1].shape, diagram_ir::DiagramShape::TextBlock);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.stroke.is_none()
+                )), "labelRect must lower without visible container geometry");
+            }
+            if fixture_name == "legacy-internal-shape-aliases" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::Rect,
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::SmallCircle,
+                    &diagram_ir::DiagramShape::FramedCircle,
+                    &diagram_ir::DiagramShape::ForkJoin,
+                    &diagram_ir::DiagramShape::InvertedTrapezoid,
+                    &diagram_ir::DiagramShape::DoubleCircle,
+                    &diagram_ir::DiagramShape::Asymmetric,
+                ]);
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 4, "legacy control aliases must retain their circle geometry");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                )), "the legacy inverted-trapezoid alias must retain polygon geometry");
+            }
+            if fixture_name == "cross-lane-rank-constraints" {
+                let validate = layout.nodes.iter().find(|node| node.id == "validate").unwrap();
+                let build = layout.nodes.iter().find(|node| node.id == "build").unwrap();
+                assert!(build.x > validate.x + validate.width,
+                    "cross-lane rank constraints must place the destination after the source");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.ignoreCrossLaneEdges")), Some(&"false".to_string()));
+            }
+            if fixture_name == "rank-crossing-optimization" {
+                let a = layout.nodes.iter().find(|node| node.id == "a").unwrap();
+                let b = layout.nodes.iter().find(|node| node.id == "b").unwrap();
+                let c = layout.nodes.iter().find(|node| node.id == "c").unwrap();
+                let d = layout.nodes.iter().find(|node| node.id == "d").unwrap();
+                assert!(a.x > c.x && d.x > b.x,
+                    "crossing optimization must separate the independent edge rank intervals");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.optimizeRanksByCrossings")), Some(&"true".to_string()));
             }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-FRAPPER
 prerequisites: [FR-C236-jeter, FR-C236-calculer]
 sounds: []
 roots: []
+etymology_hook: "frapper ← Old French fraper 'to strike', of uncertain origin — English frappé"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C236-calculer]
 <!-- hl-knowledge: introduces=[FR-LEX-C236-VERBES236-05]; assesses=[] -->
 
 **frapper** — "to hit, to knock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frapper** ← Old French *fraper*, "to strike" (EtymDB 2.1), of uncertain origin; it may imitate the sound of a blow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

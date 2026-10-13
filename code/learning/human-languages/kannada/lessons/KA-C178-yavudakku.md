@@ -14,7 +14,8 @@ romanization: "yāvudakkū"
 concept_tag: KA-KARANA178-YAVUDAKKU
 prerequisites: [KA-C178-akasmat, KA-C178-bekadare]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "yāvudakkū: native yāvudu 'which thing' (DEDR 5151) + -kkū 'even for'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C178-bekadare]
 <!-- hl-knowledge: introduces=[KA-LEX-C178-KARANA178-04]; assesses=[] -->
 
 **ಯಾವುದಕ್ಕೂ** — *yāvudakkū* — "in case, to be on the safe side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾವುದಕ್ಕೂ** (*yāvudakkū*) is native Dravidian: *yāvudu*, "which thing", on the question base *yā-* (DEDR 5151), with *-kkū*, "even for": "for whatever may come".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

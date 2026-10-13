@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 148,
-  "sourceHash": "fnv1a64:2180ac879f6ff990",
+  "sourceHash": "fnv1a64:ce312fa9a1155a52",
   "lessonIds": [
     "KA-C148-kalisu",
     "KA-C148-huduku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch148.txt",
   "json": "kannada/narration/ch148.json",
-  "textHash": "fnv1a64:6b7c5a9fc5230aa0",
-  "jsonHash": "fnv1a64:c5a4b08bbbc4c7d4",
+  "textHash": "fnv1a64:f2c78e988dd92347",
+  "jsonHash": "fnv1a64:1b504d983e7edd1e",
   "findings": []
 }

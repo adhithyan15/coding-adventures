@@ -11,7 +11,8 @@ romanization: "kuttige"
 concept_tag: KA-NOUN-NECK
 prerequisites: [KA-C56-box, KA-C55-river]
 sounds: []
-roots: []
+roots: [dravidian-kuttige-neck]
+etymology_hook: "kuttige: native Dravidian, one word with Telugu kutika (DEDR 1718)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The everyday word, and the one a ವೈದ್ಯ uses. Kannada has a second, ಕ
 So a singer's is a ಕೊರಳು and a patient's is a ಕುತ್ತಿಗೆ, and the same piece of a person is both, depending on why you brought it up.
 
 This chapter picks up where the leg and the tooth left off, and the run gets less obvious as it goes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುತ್ತಿಗೆ** (*kuttige*) is native Dravidian, one word with Telugu *kutika* (DEDR 1718).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

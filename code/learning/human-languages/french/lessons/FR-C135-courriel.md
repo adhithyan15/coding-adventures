@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS87-COURRIEL
 prerequisites: [FR-C135-date, FR-C135-siecle]
 sounds: []
 roots: []
+etymology_hook: "courriel — coined in Quebec from courrier électronique, 'electronic mail'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C135-siecle]
 <!-- hl-knowledge: introduces=[FR-LEX-C135-TEMPS87-05]; assesses=[] -->
 
 **le courriel** — "an email".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**courriel** — coined in Quebec in the 1990s from *courrier électronique*, "electronic mail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

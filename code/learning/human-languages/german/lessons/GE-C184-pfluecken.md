@@ -14,6 +14,7 @@ concept_tag: GE-VERB-PFLUECKEN
 prerequisites: [GE-C184-parken, GE-C184-pflegen]
 sounds: []
 roots: []
+etymology_hook: "pflücken ← Middle High German pflocken — the same Germanic verb as English pluck"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C184-pflegen]
 <!-- hl-knowledge: introduces=[GE-LEX-C184-VERB184-03]; assesses=[] -->
 
 **pflücken** — "to pick (flowers, fruit)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pflücken** ← Middle High German *pflocken* — inherited; EtymDB 2.1 lists it beside English *pluck* and Dutch *plukken*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "bhārya"
 concept_tag: ML-NOUN-WIFE
 prerequisites: [ML-C45-husband, ML-C43-sleep]
 sounds: []
-roots: []
+roots: [sanskrit-bharya]
+etymology_hook: "bhārya ← Sanskrit bhāryā 'wife', a tatsama (CDIAL 9471)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C45-husband]
 **ഭാര്യ** (*bhārya*) — "wife".
 
 The same root *bhṛ* as the last word, ending differently: 'she who is to be supported'. Telugu borrowed the identical pair from Sanskrit, so *bharta* and *bhārya* there are these two words again, wearing local endings. What the pair records is Sanskrit's older picture of a household, not a modern one — worth saying out loud rather than smoothing over.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭാര്യ** (*bhārya*) ← Sanskrit *bhāryā*, "wife", taken over whole as a tatsama (CDIAL 9471).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "nantara"
 concept_tag: KA-SOON-LATER
 prerequisites: [KA-C106-farewell, KA-C106-today]
 sounds: []
-roots: []
+roots: [sanskrit-anantara]
+etymology_hook: "nantara ← Sanskrit anantara 'having no interval', reshaped as a tadbhava (CDIAL 287)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C106-today]
 
 **ನಂತರ** (*nantara*) — "later, afterwards". **ಆಮೇಲೆ** (*āmēle*) says the same in
 everyday speech.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಂತರ** (*nantara*) comes from Sanskrit *anantara*, "having no interval", reshaped to Kannada sounds: a tadbhava (CDIAL 287). Kannada dropped the first *a-*; "with no gap after" became "then, afterwards".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

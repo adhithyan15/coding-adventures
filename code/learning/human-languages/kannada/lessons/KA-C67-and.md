@@ -11,7 +11,8 @@ romanization: "mattu"
 concept_tag: KA-CONJ-AND
 prerequisites: [KA-C66-harvest, KA-C39-kaapi, KA-C51-gratitude, KA-C50-farewell, KA-C50-set-out, KA-C50-journey, KA-C65-request, KA-C65-permission]
 sounds: []
-roots: []
+roots: [matte-again-dravidian]
+etymology_hook: "mattu: native Dravidian; DEDR 4766 lists mattu 'and, besides' under maṟu 'other'; Tamil maṟṟu"
 duration:
   max_seconds: 210
 requires:
@@ -52,6 +53,11 @@ two nouns by simply naming them one after the other, with nothing between; ಮ�
 is what a careful sentence, a notice or a written list reaches for. Both are
 ordinary standard-colloquial Kannada, and ಮತ್ತು is the one that never sounds
 wrong.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮತ್ತು** (*mattu*) is native Dravidian, of the root *maṟu*, "other, next", and DEDR 4766 lists *mattu*, "and, besides", itself; the entry also has Tamil *maṟu*, Telugu *maṟi* and Malayalam *maṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

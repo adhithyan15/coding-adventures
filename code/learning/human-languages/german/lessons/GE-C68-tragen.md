@@ -13,7 +13,8 @@ gloss: "to carry; to wear"
 concept_tag: GE-VERB-TRAGEN
 prerequisites: [GE-C67-leben, GE-C67-rufen]
 sounds: []
-roots: []
+roots: [germanic-dragana]
+etymology_hook: "tragen ← Old High German tragan ← Proto-Germanic *draganą 'to draw' — kin to English draw and drag"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C67-rufen]
 <!-- hl-knowledge: introduces=[GE-LEX-C68-VERBEN5-01]; assesses=[] -->
 
 **tragen** — "to carry; to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tragen** ← Old High German *tragan* ← Proto-Germanic *\*draganą*, "to draw, to drag" — inherited, a cousin of English *draw* and *drag*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

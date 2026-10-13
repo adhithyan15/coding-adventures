@@ -11,7 +11,8 @@ romanization: "krismas"
 concept_tag: ML-FEST-CHRISTMAS
 prerequisites: [ML-C141-onam, ML-C141-vishu]
 sounds: []
-roots: []
+roots: [english-christmas]
+etymology_hook: "krismas ← English Christmas, 'Christ's Mass'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C141-vishu]
 <!-- hl-knowledge: introduces=[ML-LEX-C141-FESTIVALS-03]; assesses=[] -->
 
 **ക്രിസ്മസ്** (*krismas*) — "Christmas", kept at the **പള്ളി**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ക്രിസ്മസ്** (*krismas*) ← English *Christmas*, "Christ's Mass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

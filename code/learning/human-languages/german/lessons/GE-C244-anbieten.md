@@ -14,6 +14,7 @@ concept_tag: GE-VERB-ANBIETEN
 prerequisites: [GE-C243-wettbewerb, GE-C243-ziel]
 sounds: []
 roots: []
+etymology_hook: "anbieten — an- + the verb 'to offer, to bid', a cousin of English bid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C243-ziel]
 <!-- hl-knowledge: introduces=[GE-LEX-C244-VERB244-01]; assesses=[] -->
 
 **anbieten** — "to offer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anbieten** is *an-* + the verb "to offer, to bid", which EtymDB 2.1 lists beside English *bid* and Dutch *bieden*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

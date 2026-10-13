@@ -13,7 +13,8 @@ gloss: "ugly"
 concept_tag: GE-ADJ3-HAESSLICH
 prerequisites: [GE-C91-schwach, GE-C91-reich]
 sounds: []
-roots: []
+roots: [germanic-hataz]
+etymology_hook: "hässlich ← Middle High German hezzelich 'hateful': the word for 'hate' + -lich"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C91-reich]
 <!-- hl-knowledge: introduces=[GE-LEX-C91-ADJ3-04]; assesses=[] -->
 
 **hässlich** — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hässlich** ← Middle High German *hezzelich*, "hateful" (EtymDB 2.1): the word for "hate" + *-lich*. What was hateful came to mean ugly.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

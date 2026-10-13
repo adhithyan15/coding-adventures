@@ -14,7 +14,8 @@ romanization: "kācāḷar"
 concept_tag: TA-VELAI191-KACALAR
 prerequisites: [TA-C191-kataikkarar, TA-C191-vatikkaiyalar]
 sounds: []
-roots: []
+roots: [dravidian-kaacu-coin]
+etymology_hook: "காசாளர் — native Dravidian (DEDR 1431); Malayalam kāśu 'money', Kannada kāsu 'coin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C191-vatikkaiyalar]
 <!-- hl-knowledge: introduces=[TA-LEX-C191-VELAI191-03]; assesses=[] -->
 
 **காசாளர்** — *kācāḷar* — "a cashier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காசாளர்** (*kācāḷar*) is native Dravidian. DEDR 1431 lists Malayalam *kāśu*, "money" and Kannada *kāsu*, "coin". It is *kācu*, "coin, money", with *-āḷar*, "the one who handles". DEDR compares *kācu*, with a query, to Sanskrit *karṣa*, a weight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṟakkuka"
 concept_tag: ML-VERB-KARAKKUKA
 prerequisites: [ML-C231-kuniyuka, ML-C231-parikkuka]
 sounds: []
-roots: []
+roots: [dravidian-kara-milk]
+etymology_hook: "kaṟakkuka: native Dravidian, one word with Tamil kaṟa and Kannada kaṟe (DEDR 1385)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C231-parikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C231-KRIYA231-05]; assesses=[] -->
 
 **കറക്കുക** — *kaṟakkuka* — "to milk (a cow)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കറക്കുക** (*kaṟakkuka*) is native Dravidian, one word with Tamil *kaṟa* and Kannada *kaṟe* (DEDR 1385). DEDR 1385 compares, with a query, Sanskrit *kara*, "tax".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

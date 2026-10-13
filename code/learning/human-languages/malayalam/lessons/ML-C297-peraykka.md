@@ -14,7 +14,8 @@ romanization: "pēraykka"
 concept_tag: ML-VASTU297-PERAYKKA
 prerequisites: [ML-C297-aval, ML-C297-kun]
 sounds: []
-roots: []
+roots: [portuguese-pera]
+etymology_hook: "pēraykka: pēra 'guava', from Portuguese pera 'pear', + kāy 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C297-kun]
 <!-- hl-knowledge: introduces=[ML-LEX-C297-VASTU297-04]; assesses=[] -->
 
 **പേരയ്ക്ക** — *pēraykka* — "a guava".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പേരയ്ക്ക** (*pēraykka*) is *pēra*, "guava", from Portuguese *pera*, "pear", with the ending for an unripe fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

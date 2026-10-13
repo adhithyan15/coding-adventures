@@ -14,7 +14,8 @@ romanization: "naṭakkuka"
 concept_tag: ML-VERB-NATAKKUKA
 prerequisites: [ML-C170-purnamaya, ML-C170-otuka]
 sounds: []
-roots: []
+roots: [dravidian-nada-walk]
+etymology_hook: "naṭakkuka: native Dravidian, one word with Tamil naṭa and Kannada naḍe (DEDR 3582)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C170-otuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C170-QUAL170-05]; assesses=[] -->
 
 **നടക്കുക** — *naṭakkuka* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നടക്കുക** (*naṭakkuka*) is native Dravidian, one word with Tamil *naṭa*, Kannada *naḍe* and Telugu *naḍa* (DEDR 3582).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

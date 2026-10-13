@@ -13,7 +13,8 @@ gloss: "a grocer's shop"
 concept_tag: FR-VILLE59-EPICERIE
 prerequisites: [FR-C107-stade, FR-C107-piscine]
 sounds: []
-roots: []
+roots: [specere-latin]
+etymology_hook: "épicerie — the word for 'spice' + -erie; spice ← Latin species 'a kind, wares'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C107-piscine]
 <!-- hl-knowledge: introduces=[FR-LEX-C107-VILLE59-05]; assesses=[] -->
 
 **l'épicerie** — "a grocer's shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**épicerie** — built from the French word for "spice", with *-erie*, "a shop for". The spice word ← Latin *species*, "a kind; wares" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

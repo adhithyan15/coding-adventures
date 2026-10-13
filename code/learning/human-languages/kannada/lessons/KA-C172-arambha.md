@@ -14,7 +14,8 @@ romanization: "ārambha"
 concept_tag: KA-KALA172-ARAMBHA
 prerequisites: [KA-C172-aparupakke, KA-C172-pratidina]
 sounds: []
-roots: []
+roots: [sanskrit-arambha]
+etymology_hook: "ārambha ← Sanskrit ārambha 'beginning', a tatsama (CDIAL 1307)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C172-pratidina]
 <!-- hl-knowledge: introduces=[KA-LEX-C172-KALA172-03]; assesses=[] -->
 
 **ಆರಂಭ** — *ārambha* — "the beginning, the start".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆರಂಭ** (*ārambha*) is Sanskrit *ārambha*, "beginning", taken over whole as a learned loan, a tatsama (CDIAL 1307).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

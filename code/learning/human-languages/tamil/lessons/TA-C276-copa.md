@@ -14,7 +14,8 @@ romanization: "cōpā"
 concept_tag: TA-PORUL276-COPA
 prerequisites: [TA-C276-nilal, TA-C276-iyantiram]
 sounds: []
-roots: []
+roots: [english-sofa]
+etymology_hook: "சோபா ← English sofa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C276-iyantiram]
 <!-- hl-knowledge: introduces=[TA-LEX-C276-PORUL276-04]; assesses=[] -->
 
 **சோபா** — *cōpā* — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சோபா** (*cōpā*) is a loan from English *sofa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

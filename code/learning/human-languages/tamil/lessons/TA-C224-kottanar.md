@@ -14,7 +14,8 @@ romanization: "kottaṉār"
 concept_tag: TA-VELAI224-KOTTANAR
 prerequisites: [TA-C224-kuyavar, TA-C224-mutitiruttupavar]
 sounds: []
-roots: []
+roots: [dravidian-kottu-peck]
+etymology_hook: "கொத்தனார் — native Dravidian (DEDR 2091); Malayalam kottuka 'to dig, carve'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C224-mutitiruttupavar]
 <!-- hl-knowledge: introduces=[TA-LEX-C224-VELAI224-04]; assesses=[] -->
 
 **கொத்தனார்** — *kottaṉār* — "a mason, a bricklayer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொத்தனார்** (*kottaṉār*) is native Dravidian. DEDR 2091 lists Malayalam *kottuka*, "to dig, carve". It is built on *kottu*, "to hack, to carve": the mason chips stone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

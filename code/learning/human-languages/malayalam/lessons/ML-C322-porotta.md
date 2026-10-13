@@ -14,7 +14,8 @@ romanization: "poṟōṭṭa"
 concept_tag: ML-VASTU322-POROTTA
 prerequisites: [ML-C322-biriyani, ML-C322-cappatti]
 sounds: []
-roots: []
+roots: [hindustani-paratha]
+etymology_hook: "poṟōṭṭa ← Hindustani parāṭhā, 'layered flatbread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C322-cappatti]
 <!-- hl-knowledge: introduces=[ML-LEX-C322-VASTU322-03]; assesses=[] -->
 
 **പൊറോട്ട** — *poṟōṭṭa* — "a parotta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊറോട്ട** (*poṟōṭṭa*) is the Hindustani *parāṭhā*, a layered flatbread, reshaped in the mouth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṇṭettuka"
 concept_tag: ML-VERB-KANTETTUKA
 prerequisites: [ML-C174-kattirikkuka, ML-C174-tirayuka, ML-C43-give]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see, dravidian-ettu-reach]
+etymology_hook: "kaṇṭettuka: native Dravidian, 'reach having seen': kāṇ 'see' (DEDR 1443) + a verb 'to reach' (DEDR 809)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C174-tirayuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C174-ACT174-04]; assesses=[] -->
 
 **കണ്ടെത്തുക** — *kaṇṭettuka* — "to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണ്ടെത്തുക** (*kaṇṭettuka*) is native Dravidian, "reach having seen": the past of the seeing verb (DEDR 1443, with Tamil *kāṇ*) and the verb "to reach, arrive" (DEDR 809, with Tamil *eytu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

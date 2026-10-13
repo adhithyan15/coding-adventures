@@ -14,7 +14,8 @@ romanization: "avvappōtu"
 concept_tag: TA-NERAM262-AVVAPPOTU
 prerequisites: [TA-C261-arippu, TA-C261-talaiccurral]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-podu-time]
+etymology_hook: "அவ்வப்போது — native: a- 'that' (DEDR 1), doubled, + pōtu 'time' (DEDR 4559)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C261-talaiccurral]
 <!-- hl-knowledge: introduces=[TA-LEX-C262-NERAM262-01]; assesses=[] -->
 
 **அவ்வப்போது** — *avvappōtu* — "now and then, occasionally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அவ்வப்போது** (*avvappōtu*) is native: *a-*, "that" (DEDR 1), doubled, and *pōtu*, "time" (DEDR 4559): "at that time and that time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "karār"
 concept_tag: ML-JOLI301-KARAR
 prerequisites: [ML-C300-labham, ML-C300-nastam]
 sounds: []
-roots: []
+roots: [arabic-qarar]
+etymology_hook: "karār ← Arabic qarār 'settlement, agreement', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C300-nastam]
 <!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-01]; assesses=[] -->
 
 **കരാർ** — *karār* — "a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കരാർ** (*karār*) ← Arabic *qarār*, "settlement, agreement", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

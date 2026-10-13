@@ -4,7 +4,7 @@
   "chapter": 150,
   "title": "Potato, Tomato, Aubergine, Black pepper, Garlic",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3b8bed56d095d104",
+  "sourceHash": "fnv1a64:e4b2d44789c14399",
   "lessons": [
     {
       "id": "ML-C150-urulakkilannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a6d11479156ac7f",
+      "sourceHash": "fnv1a64:de5bdff83d912a52",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉരുളക്കിഴങ്ങ് (urulakkiḻaṅṅŭ) is native Dravidian, \"the round tuber\": uruḷa, \"a ball, round\" (DEDR 664, with Tamil uruḷ), and kiḻaṅṅŭ, \"bulb, yam\" (DEDR 1578, with Tamil kiḻaṅku). The potato came from the Americas; the name was made from old words. DEDR 664 compares Sanskrit uṇḍeraka."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea926a022785eedb",
+      "sourceHash": "fnv1a64:9db99fbe21a9aef4",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തക്കാളി (takkāḷi) is native Dravidian, one word with Tamil takkāḷi and Kannada takkāḷi (DEDR 3009). It first named a native hill-berry, and passed to the tomato when that arrived from the Americas."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34b9096b1f3095cb",
+      "sourceHash": "fnv1a64:8c8ea50b69db9c92",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വഴുതന (vaḻutana) is native Dravidian, one word with Tamil vaḻutalai (DEDR 5301). DEDR 5301 compares Sanskrit bhaṇṭākī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3843ad00968a3851",
+      "sourceHash": "fnv1a64:08b0f0f0d1aa03ba",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +464,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുരുമുളക് (kurumuḷakŭ) is native Dravidian, \"seed pepper\": kuru, \"kernel, seed\" (DEDR 1781, with Tamil kuru), and muḷakŭ, \"pepper\" (DEDR 4867). Once the chilli took muḷakŭ, the old pepper needed the extra word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -521,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65733e89c331729f",
+      "sourceHash": "fnv1a64:f01f7efed416049d",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വെളുത്തുള്ളി (veḷuttuḷḷi) is native Dravidian, \"the white onion\": veḷutta, \"white\" (DEDR 5496, with Tamil veḷ), and uḷḷi, \"onion\" (DEDR 705). DEDR 705 compares Sanskrit ūlī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

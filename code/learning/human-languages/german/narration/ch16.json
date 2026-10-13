@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Pair That Proves Grimm's Law",
   "drivablePrefix": 13,
-  "sourceHash": "fnv1a64:acf5a4dfb8fcd708",
+  "sourceHash": "fnv1a64:4a4e39187028afe3",
   "lessons": [
     {
       "id": "GE-C10-vater",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54a6c32b98eba9e2",
+      "sourceHash": "fnv1a64:b9c347b5c056549f",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vater from Old High German fater from Proto-Germanic fadēr — inherited, the same word as English father. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -78,7 +89,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -127,7 +138,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88ddb220c62c1634",
+      "sourceHash": "fnv1a64:6253bccaad0fec91",
       "notice": null,
       "blocks": [
         {
@@ -340,6 +351,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mutter from Old High German muoter from Proto-Germanic mōdēr — inherited, the same word as English mother. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -358,7 +380,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -407,7 +429,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -584,7 +606,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b293ee3e80b8222",
+      "sourceHash": "fnv1a64:0d19c82f1693de75",
       "notice": null,
       "blocks": [
         {
@@ -625,6 +647,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Eltern from Old High German eltirōn from Proto-Germanic alþizô, \"older\" — inherited; EtymDB 2.1 sets it beside English elders."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -639,7 +672,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -697,7 +730,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -728,7 +761,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ebfbd9d099016d4",
+      "sourceHash": "fnv1a64:f4ba18abe3cbd445",
       "notice": null,
       "blocks": [
         {
@@ -765,6 +798,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bruder from Old High German bruoder from Proto-Germanic brōþēr — inherited, the same word as English brother. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -787,7 +831,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -836,7 +880,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1145,7 +1189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a109c51fd8c6bfe7",
+      "sourceHash": "fnv1a64:b158c461fa11044c",
       "notice": null,
       "blocks": [
         {
@@ -1186,6 +1230,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schwester from Old High German swester from Proto-Germanic swestēr — inherited, the same word as English sister. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1208,7 +1263,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1257,7 +1312,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1434,7 +1489,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:466d07305478c143",
+      "sourceHash": "fnv1a64:719183e3bcb129b2",
       "notice": null,
       "blocks": [
         {
@@ -1471,6 +1526,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Geschwister from Middle High German geswister from Old High German giswestar (EtymDB 2.1): the gathering prefix ge- on Schwester."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -1480,12 +1546,12 @@
             },
             {
               "kind": "speech",
-              "text": "German built the collective on the word that happened to be there, and the collective then outranked the piece it was made from. English never built one at all: it says brothers and sisters and reaches for the Latin-derived siblings when it needs a single term."
+              "text": "German built the collective on the word that happened to be there, and the collective then outranked the piece it was made from. English never built one at all: it says brothers and sisters, and for a single term it revived siblings, an Old English word for \"relatives\"."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1543,7 +1609,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

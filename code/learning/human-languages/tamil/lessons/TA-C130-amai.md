@@ -14,7 +14,8 @@ romanization: "āmai"
 concept_tag: TA-THINGS130-AMAI
 prerequisites: [TA-C130-eli, TA-C130-tavalai]
 sounds: []
-roots: []
+roots: [dravidian-aamai-tortoise]
+etymology_hook: "ஆமை — native Dravidian (DEDR 5155); Malayalam āma, Kannada āme"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C130-tavalai]
 <!-- hl-knowledge: introduces=[TA-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **ஆமை** — *āmai* — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆமை** (*āmai*) is native Dravidian. DEDR 5155 lists Malayalam *āma* and Kannada *āme*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

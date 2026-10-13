@@ -11,7 +11,8 @@ romanization: "maṇal"
 concept_tag: TA-NOUN-SAND
 prerequisites: [TA-C57-wind, TA-C55-back, TA-C56-a-lot]
 sounds: []
-roots: []
+roots: [dravidian-man-earth]
+etymology_hook: "மணல் — native Dravidian (DEDR 4666); Malayalam maṇal"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C57-wind]
 Malayalam മണൽ (*maṇal*), letter for letter and sound for sound. Telugu goes somewhere else, to *isuka*.
 
 The ண is the one made with the tongue curled back — the same letter you have just been doubling in *kiṇṇam*. Here there is only one of them, so touch it once and move on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மணல்** (*maṇal*) is native Dravidian. DEDR 4666 lists Malayalam *maṇal*. The entry sets it beside the native word for earth and soil.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

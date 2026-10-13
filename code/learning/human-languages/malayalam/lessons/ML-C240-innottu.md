@@ -14,7 +14,8 @@ romanization: "iṅṅōṭṭŭ"
 concept_tag: ML-STHALAM240-INNOTTU
 prerequisites: [ML-C240-kuruke, ML-C240-annottu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "iṅṅōṭṭŭ: native Dravidian; DEDR 410 lists Malayalam iṅṅōṭṭu 'hither'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C240-annottu]
 <!-- hl-knowledge: introduces=[ML-LEX-C240-STHALAM240-04]; assesses=[] -->
 
 **ഇങ്ങോട്ട്** — *iṅṅōṭṭŭ* — "to here, this way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇങ്ങോട്ട്** (*iṅṅōṭṭŭ*) is native Dravidian: DEDR 410 lists it, "hither, this way", among the near-pointing words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

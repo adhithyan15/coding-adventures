@@ -22,6 +22,9 @@ You'll want to know: ഒന്നാം.
 ഒന്ന്, രണ്ട്, മൂന്ന് answer how many. This word answers which one in the line, and Malayalam keeps a second set of words for that job.
 It goes straight in front of what it counts, and nothing on the noun changes: ഒന്നാം വഴി (onnāṁ vaḻi), the first way; ഒന്നാം പുസ്തകം (onnāṁ pustakaṁ), the first book.
 
+The word, taken apart.
+ഒന്നാം (onnāṁ) is native Dravidian: the number "one" (DEDR 990, with Tamil oṉṟu and Kannada ondu) with the ordinal ending -āṁ. Tamil builds its ordinals with a matching ending, as in iraṇṭām, "second" (DEDR 474).
+
 Grammar Lens: one ending, and no exceptions to it.
 Put the word beside the number it comes from:
 [a table of 1 row, read aloud]
@@ -65,6 +68,9 @@ You'll want to know: രണ്ടാം.
 cardinal: ഒന്ന് (onnŭ). ordinal: ഒന്നാം (onnāṁ).
 cardinal: രണ്ട് (raṇṭŭ). ordinal: രണ്ടാം (raṇṭāṁ).
 രണ്ടാം വാതിൽ (raṇṭāṁ vātil), the second door.
+
+The word, taken apart.
+രണ്ടാം (raṇṭāṁ) is native Dravidian: DEDR 474 lists it, "second", with Tamil iraṇṭām, built on the number "two" (Tamil iraṇṭu).
 
 Across the family: the word Malayalam did not use.
 Two ordinals is enough to see the machine, and enough to see what it saved Malayalam from. Its three closest relatives all have a separate word for first, and it is the same word in all three:
@@ -110,6 +116,9 @@ Three was the number the Dravidian family never quarrelled over: Tamil mūṉṟ
 cardinal: മൂന്ന് (mūnnŭ). ordinal: മൂന്നാം (mūnnāṁ).
 മൂന്നാം കസേര (mūnnāṁ kasēra), the third chair.
 
+The word, taken apart.
+മൂന്നാം (mūnnāṁ) is native Dravidian: DEDR 5052 lists it with Tamil mūṉṟām, "third", built on mūṉṟu, "three".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mūnnŭ, then mūnnāṁ — hold the ū long both times]
@@ -145,6 +154,9 @@ cardinal: നാല് (nālŭ). ordinal: നാലാം (nālāṁ).
 Written, the change is smaller than it sounds. നാല് ends in ല with the virama ് under it, the sign that says "no vowel here". The ordinal replaces that sign with the ാ of ā and adds the ം: നാല് becomes നാലാം (nālāṁ).
 നാലാം പൂവ് (nālāṁ pūvŭ), the fourth flower.
 
+The word, taken apart.
+നാലാം (nālāṁ) is native Dravidian: DEDR 3655 lists it with Tamil nāṉkām, "fourth", built on nālu, "four".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: nālŭ, then nālāṁ]
@@ -174,6 +186,9 @@ Warm-up.
 
 You'll want to know: അഞ്ചാം.
 അഞ്ചാം (añcāṁ) — "fifth". അഞ്ച് drops its ŭ, takes ആം, and the set is complete.
+
+The word, taken apart.
+അഞ്ചാം (añcāṁ) is native Dravidian: añcŭ, "five" (DEDR 2826, with Tamil aintu, añcu and Kannada ay(i)du), with the ordinal ending -āṁ.
 
 What you've built.
 [a table of 5 rows, read aloud]

@@ -14,7 +14,8 @@ romanization: "tēnīcca"
 concept_tag: ML-VASTU327-TENICCA
 prerequisites: [ML-C327-mutala, ML-C327-palli]
 sounds: []
-roots: []
+roots: [dravidian-tem-sweet, dravidian-i-fly]
+etymology_hook: "tēnīcca: native Dravidian, 'honey fly': tēn (DEDR 3268) + īcca 'fly' (DEDR 533)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C327-palli]
 <!-- hl-knowledge: introduces=[ML-LEX-C327-VASTU327-04]; assesses=[] -->
 
 **തേനീച്ച** — *tēnīcca* — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തേനീച്ച** (*tēnīcca*) is native Dravidian, "the honey fly": *tēn*, "honey" (DEDR 3268), and *īcca*, "fly" (DEDR 533, with Tamil *ī*). DEDR 3268 compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

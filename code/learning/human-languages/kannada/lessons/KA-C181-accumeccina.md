@@ -14,7 +14,8 @@ romanization: "accumeccina"
 concept_tag: KA-GUNA181-ACCUMECCINA
 prerequisites: [KA-C181-upayukta, KA-C181-visesa]
 sounds: []
-roots: []
+roots: [dravidian-meccu-like]
+etymology_hook: "accumeccina: meccina 'liked', from meccu 'to like' (DEDR 4722); the first part is not explained in DEDR"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C181-visesa]
 <!-- hl-knowledge: introduces=[KA-LEX-C181-GUNA181-03]; assesses=[] -->
 
 **ಅಚ್ಚುಮೆಚ್ಚಿನ** — *accumeccina* — "favourite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಚ್ಚುಮೆಚ್ಚಿನ** (*accumeccina*) ends in *meccina*, "liked", from native *meccu*, "to approve, like" (DEDR 4722). DEDR does not explain the first part, *accu-*, which pairs with it in rhyme.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

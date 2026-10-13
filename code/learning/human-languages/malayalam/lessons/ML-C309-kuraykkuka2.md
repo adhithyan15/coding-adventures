@@ -14,7 +14,8 @@ romanization: "kuṟaykkuka"
 concept_tag: ML-VERB-KURAYKKUKA2
 prerequisites: [ML-C308-photto-etukkuka, ML-C308-taippu-ceyyuka]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟaykkuka: native Dravidian, 'make less', from the verb to dwindle; Tamil kuṟu (DEDR 1851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C308-taippu-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C309-KRIYA309-01]; assesses=[] -->
 
 **കുറയ്ക്കുക** — *kuṟaykkuka* — "to reduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറയ്ക്കുക** (*kuṟaykkuka*) is native Dravidian, the causative of the verb "to dwindle": "make less"; DEDR 1851 lists the root with Tamil *kuṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

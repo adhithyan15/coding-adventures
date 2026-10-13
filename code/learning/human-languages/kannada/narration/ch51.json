@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9a250ad341d027f2",
+  "sourceHash": "fnv1a64:bb64504a03c17603",
   "lessons": [
     {
       "id": "KA-C51-gratitude",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec7fb1ca2486b711",
+      "sourceHash": "fnv1a64:32fdd80c4b653c8b",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೃತಜ್ಞತೆ (kṛtajñate) is Sanskrit kṛtajñatā, \"gratitude\", with Kannada's -e for the Sanskrit -ā: kṛta, \"what was done\", and jña, \"knowing\", so the grateful person is the one who knows what was done for them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4f2e315cb7c788b",
+      "sourceHash": "fnv1a64:10b541f710136271",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪಕಾರ (upakāra) is Sanskrit upakāra, \"help, use\", taken over whole as a learned loan, a tatsama (CDIAL 2141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:067a522dcc6e8b02",
+      "sourceHash": "fnv1a64:811f3b371a2016f5",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,10 @@
             {
               "kind": "speech",
               "text": "The teacher is called guru by the same logic — the weighty one. And guru is a true relative of Latin gravis, so the English grave and gravity are this word arriving by another road. Kannada had already given it to you once, sitting quietly in the name of a weekday."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 4346 lists Sanskrit gaurava, \"weight, venerableness\", and CDIAL 4209 guru, \"heavy\"."
             }
           ]
         },
@@ -412,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84dff7fbff0abdec",
+      "sourceHash": "fnv1a64:acdffcc906500ce8",
       "notice": null,
       "blocks": [
         {
@@ -453,6 +479,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಶೀರ್ವಾದ (āśīrvāda) is Sanskrit āśīrvāda, taken over whole: āśīs, \"a wish, a blessing\", and vāda, \"a saying\" (CDIAL 11507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -463,7 +500,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -512,7 +549,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:708b5366ead659f7",
+      "sourceHash": "fnv1a64:a2da530df075ad68",
       "notice": null,
       "blocks": [
         {
@@ -583,6 +620,10 @@
             {
               "kind": "speech",
               "text": "Five courtesies: gratitude, a good turn, respect, a blessing, a salutation."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 11271 lists Sanskrit vandana, \"praising\"."
             }
           ]
         },

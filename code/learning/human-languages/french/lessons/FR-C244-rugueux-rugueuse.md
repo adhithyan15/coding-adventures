@@ -13,7 +13,8 @@ gloss: "rough"
 concept_tag: FR-QUAL244-RUGUEUX-RUGUEUSE
 prerequisites: [FR-C244-dur-dure, FR-C244-lisse]
 sounds: []
-roots: []
+roots: [ruga-latin]
+etymology_hook: "rugueux ← Latin rugosus 'wrinkled', from ruga — the Latin of rue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C244-lisse]
 <!-- hl-knowledge: introduces=[FR-LEX-C244-QUAL244-05]; assesses=[] -->
 
 **rugueux / rugueuse** — "rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rugueux** ← Latin *rugosus*, "wrinkled", from *ruga*, the Latin of *rue* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tummu"
 concept_tag: TA-VERB-TUMMU
 prerequisites: [TA-C226-arampi, TA-C226-totu]
 sounds: []
-roots: []
+roots: [dravidian-tummu-sneeze]
+etymology_hook: "தும்மு — native Dravidian (DEDR 3336); Malayalam tummuka, Telugu tummu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C226-totu]
 <!-- hl-knowledge: introduces=[TA-LEX-C226-ACT226-03]; assesses=[] -->
 
 **தும்மு** — *tummu* — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தும்மு** (*tummu*) is native Dravidian. DEDR 3336 lists Malayalam *tummuka* and Telugu *tummu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

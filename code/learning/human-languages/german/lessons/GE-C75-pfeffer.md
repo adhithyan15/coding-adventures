@@ -13,7 +13,8 @@ gloss: "pepper"
 concept_tag: GE-ESSEN7-PFEFFER
 prerequisites: [GE-C74-nudeln, GE-C75-sahne]
 sounds: []
-roots: []
+roots: [piper-latin]
+etymology_hook: "Pfeffer ← Old High German pheffar ← Latin piper ← Greek peperi — an early loan, like English pepper"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C75-sahne]
 <!-- hl-knowledge: introduces=[GE-LEX-C75-ESSEN7-02]; assesses=[] -->
 
 **der Pfeffer** — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Pfeffer** ← Old High German *pheffar*, from Latin *piper* ← Greek *péperi* (EtymDB 2.1) — borrowed so early that its *p* shifted to *pf*, as in *Apfel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

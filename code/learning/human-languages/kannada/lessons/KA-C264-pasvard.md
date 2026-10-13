@@ -14,7 +14,8 @@ romanization: "pāsvarḍ"
 concept_tag: KA-VASTU264-PASVARD
 prerequisites: [KA-C264-intarnet, KA-C264-vebsait]
 sounds: []
-roots: []
+roots: [english-password]
+etymology_hook: "pāsvarḍ ← English password"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C264-vebsait]
 <!-- hl-knowledge: introduces=[KA-LEX-C264-VASTU264-03]; assesses=[] -->
 
 **ಪಾಸ್ವರ್ಡ್** — *pāsvarḍ* — "a password".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾಸ್ವರ್ಡ್** (*pāsvarḍ*) is a loan from English *password*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

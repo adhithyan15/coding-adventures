@@ -14,7 +14,8 @@ romanization: "nimiṣaṁ"
 concept_tag: ML-SAMAYAM236-NIMISAM
 prerequisites: [ML-C236-tiruvonam, ML-C236-sandhya]
 sounds: []
-roots: []
+roots: [sanskrit-nimisha]
+etymology_hook: "nimiṣaṁ ← Sanskrit nimiṣa 'a wink, the twinkling of an eye', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C236-sandhya]
 <!-- hl-knowledge: introduces=[ML-LEX-C236-SAMAYAM236-05]; assesses=[] -->
 
 **നിമിഷം** — *nimiṣaṁ* — "a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിമിഷം** (*nimiṣaṁ*) ← Sanskrit *nimiṣa*, "a wink, the twinkling of an eye", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

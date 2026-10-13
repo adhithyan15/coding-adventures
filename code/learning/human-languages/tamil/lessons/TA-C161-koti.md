@@ -14,7 +14,8 @@ romanization: "koti"
 concept_tag: TA-VERB-KOTI
 prerequisites: [TA-C160-racitu, TA-C161-vil]
 sounds: []
-roots: []
+roots: [dravidian-koti-boil]
+etymology_hook: "கொதி — native Dravidian (DEDR 2084); Kannada kudi 'to boil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C161-vil]
 <!-- hl-knowledge: introduces=[TA-LEX-C161-ACT161-02]; assesses=[] -->
 
 **கொதி** — *koti* — "to boil (of liquids)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொதி** (*koti*) is native Dravidian. DEDR 2084 lists Kannada *kudi*, "to boil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

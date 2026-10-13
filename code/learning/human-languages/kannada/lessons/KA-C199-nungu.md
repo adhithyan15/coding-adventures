@@ -14,7 +14,8 @@ romanization: "nuṅgu"
 concept_tag: KA-VERB-NUNGU
 prerequisites: [KA-C198-hidi, KA-C198-bidu]
 sounds: []
-roots: []
+roots: [dravidian-nungu-swallow]
+etymology_hook: "nuṅgu: native Dravidian, one word with Tamil nuṅku (DEDR 3697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C198-bidu]
 <!-- hl-knowledge: introduces=[KA-LEX-C199-KRIYE199-01]; assesses=[] -->
 
 **ನುಂಗು** — *nuṅgu* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನುಂಗು** (*nuṅgu*) is native Dravidian, one word with Tamil *nuṅku* (DEDR 3697). DEDR lists *nuṅgu* itself, "to swallow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

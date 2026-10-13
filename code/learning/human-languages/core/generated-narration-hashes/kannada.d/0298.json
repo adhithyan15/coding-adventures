@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 298,
-  "sourceHash": "fnv1a64:8c56172a400eaf4e",
+  "sourceHash": "fnv1a64:6766870bc62dde9d",
   "lessonIds": [
     "KA-C298-ata",
     "KA-C298-sinima",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch298.txt",
   "json": "kannada/narration/ch298.json",
-  "textHash": "fnv1a64:059b4520a9d797b6",
-  "jsonHash": "fnv1a64:6f351e0bf9fcb7b3",
+  "textHash": "fnv1a64:d0fc12d5f2e8964c",
+  "jsonHash": "fnv1a64:4632dec8a0ca41ca",
   "findings": []
 }

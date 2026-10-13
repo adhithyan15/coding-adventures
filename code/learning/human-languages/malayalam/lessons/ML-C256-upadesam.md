@@ -14,7 +14,8 @@ romanization: "upadēśaṁ"
 concept_tag: ML-VASTU256-UPADESAM
 prerequisites: [ML-C256-abhiprayam, ML-C256-asayam]
 sounds: []
-roots: []
+roots: [sanskrit-upadesha]
+etymology_hook: "upadēśaṁ ← Sanskrit upadēśa 'instruction, advice', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C256-asayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C256-VASTU256-05]; assesses=[] -->
 
 **ഉപദേശം** — *upadēśaṁ* — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപദേശം** (*upadēśaṁ*) ← Sanskrit *upadēśa*, "instruction, advice", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

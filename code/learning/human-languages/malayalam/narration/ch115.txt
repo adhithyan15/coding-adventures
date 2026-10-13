@@ -13,6 +13,9 @@ You'll want to know: ജലദോഷം.
 ജലദോഷം (jaladōṣaṁ) — "a cold", the kind with a runny nose.
 എനിക്ക് ജലദോഷമുണ്ട് (enikkŭ jaladōṣamuṇṭŭ) — "I have a cold". The person sits in എനിക്ക്, "to me", and ഉണ്ട് says "there is".
 
+The word, taken apart.
+ജലദോഷം (jaladōṣaṁ) is built from two Sanskrit words: jala, "water" (CDIAL 5155), and dōṣa, "fault, disorder" (CDIAL 6587). A cold is a water-disorder.
+
 What you've built.
 An illness, said with to-me and there-is.
 
@@ -41,6 +44,9 @@ Before the new one: say the Malayalam for a fever, then the Malayalam for a cold
 
 You'll want to know: തലവേദന.
 തലവേദന (talavēdana) — "a headache": തല (tala), "head", with വേദന (vēdana), "pain", which you already know.
+
+The word, taken apart.
+തലവേദന (talavēdana) joins native tala, "head" (DEDR 3103, with Tamil talai), to Sanskrit vēdanā, "pain" (CDIAL 12106).
 
 What you've built.
 Two known words make a new one.
@@ -72,6 +78,9 @@ You'll want to know: വിശ്രമം.
 വിശ്രമം (viśramaṁ) — "rest".
 വിശ്രമിക്കൂ (viśramikkū) — "please rest", what you tell a friend who is unwell.
 
+The word, taken apart.
+വിശ്രമം (viśramaṁ) from Sanskrit viśrama, "rest", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11947). Its root is śram, "to toil": rest is the stop after toil.
+
 What you've built.
 The answer to a cold and a headache.
 
@@ -101,6 +110,9 @@ Before the new one: say the Malayalam for a headache, then the Malayalam for res
 You'll want to know: തലകറക്കം.
 തലകറക്കം (talakaṟakkaṁ) — "dizziness", literally "head-turning": തല, "head", with കറക്കം (kaṟakkaṁ), "spinning".
 
+The word, taken apart.
+തലകറക്കം (talakaṟakkaṁ) is native Dravidian: tala, "head" (DEDR 3103), with a noun from the verb "to turn round, whirl" (DEDR 1387, with Tamil kaṟaṅku).
+
 What you've built.
 One more head word.
 
@@ -129,6 +141,9 @@ Before the new one: say the Malayalam for rest, then the Malayalam for dizziness
 
 You'll want to know: സുഖമില്ല.
 സുഖമില്ല (sukhamilla) — "(I'm) not well", സുഖം (sukhaṁ), "well-being", with ഇല്ല (illa), "there isn't". It answers സുഖമാണോ?, "are you well?".
+
+The word, taken apart.
+സുഖമില്ല (sukhamilla) joins Sanskrit sukha, "well-being" (CDIAL 13451), to native illa, "there is not" (DEDR 2559, with Tamil illai).
 
 What you've built.
 The honest answer to sukhamāṇō.

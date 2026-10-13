@@ -14,7 +14,8 @@ romanization: "kyāmaṟa"
 concept_tag: ML-VASTU255-KYAMARA
 prerequisites: [ML-C255-skrin, ML-C255-vebsairru]
 sounds: []
-roots: []
+roots: [english-camera]
+etymology_hook: "kyāmaṟa ← English camera, from Latin camera 'vaulted room'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C255-vebsairru]
 <!-- hl-knowledge: introduces=[ML-LEX-C255-VASTU255-04]; assesses=[] -->
 
 **ക്യാമറ** — *kyāmaṟa* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ക്യാമറ** (*kyāmaṟa*) ← English *camera*, from Latin *camera*, "a vaulted room", as in *camera obscura*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

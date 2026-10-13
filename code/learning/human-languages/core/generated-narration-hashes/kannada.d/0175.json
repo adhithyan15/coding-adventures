@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 175,
-  "sourceHash": "fnv1a64:fd2fc8690b45d5fd",
+  "sourceHash": "fnv1a64:245c6cd5db5563c0",
   "lessonIds": [
     "KA-C175-beli",
     "KA-C175-kamba",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch175.txt",
   "json": "kannada/narration/ch175.json",
-  "textHash": "fnv1a64:35f1f179bc1ae6b5",
-  "jsonHash": "fnv1a64:487447e204e0df96",
+  "textHash": "fnv1a64:dd499f7a9ef93624",
+  "jsonHash": "fnv1a64:4027af3891f0da73",
   "findings": []
 }

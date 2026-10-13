@@ -14,7 +14,8 @@ romanization: "kāḻcappāṭŭ"
 concept_tag: ML-VASTU294-KALCAPPATU
 prerequisites: [ML-C293-canal, ML-C293-paripati]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see]
+etymology_hook: "kāḻcappāṭŭ: native Dravidian, kāḻca 'sight' (DEDR 1443) + a second part meaning 'manner'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C293-paripati]
 <!-- hl-knowledge: introduces=[ML-LEX-C294-VASTU294-01]; assesses=[] -->
 
 **കാഴ്ചപ്പാട്** — *kāḻcappāṭŭ* — "a point of view".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാഴ്ചപ്പാട്** (*kāḻcappāṭŭ*) is native Dravidian: *kāḻca*, "sight", which DEDR 1443 lists under the seeing verb, with a second part meaning "manner": "the manner of seeing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

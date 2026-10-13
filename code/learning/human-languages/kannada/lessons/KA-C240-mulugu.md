@@ -14,7 +14,8 @@ romanization: "muḷugu"
 concept_tag: KA-VERB-MULUGU
 prerequisites: [KA-C240-bogalu, KA-C240-kugu]
 sounds: []
-roots: []
+roots: [dravidian-muzhuku-sink]
+etymology_hook: "muḷugu: native Dravidian, one word with Tamil muḻuku and Malayalam muḻukuka (DEDR 4993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C240-kugu]
 <!-- hl-knowledge: introduces=[KA-LEX-C240-KRIYE240-03]; assesses=[] -->
 
 **ಮುಳುಗು** — *muḷugu* — "to sink; to set (of the sun)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಳುಗು** (*muḷugu*) is native Dravidian, one word with Tamil *muḻuku* and Malayalam *muḻukuka* (DEDR 4993). DEDR gives the older Kannada *muḻugu*, "to sink, dive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

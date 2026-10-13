@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 66,
-  "sourceHash": "fnv1a64:9073b327b7439869",
+  "sourceHash": "fnv1a64:2dea4e80f0c7f13d",
   "lessonIds": [
     "TA-C66-up",
     "TA-C66-down",
@@ -16,7 +16,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch66.txt",
   "json": "tamil/narration/ch66.json",
-  "textHash": "fnv1a64:d1fad262b770add7",
-  "jsonHash": "fnv1a64:d809778fda689c29",
+  "textHash": "fnv1a64:748d0820e76a4d7a",
+  "jsonHash": "fnv1a64:852baecaf5c8c8c1",
   "findings": []
 }

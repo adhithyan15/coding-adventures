@@ -13,7 +13,8 @@ gloss: "to spend (money)"
 concept_tag: GE-VERB-AUSGEBEN
 prerequisites: [GE-C244-anmelden, GE-C245-aufpassen]
 sounds: []
-roots: []
+roots: [germanic-gebana]
+etymology_hook: "ausgeben — aus- 'out' + the verb 'to give': to give money out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C245-aufpassen]
 <!-- hl-knowledge: introduces=[GE-LEX-C245-VERB245-02]; assesses=[] -->
 
 **ausgeben** — "to spend (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ausgeben** is *aus-*, "out", + the verb "to give", Old High German *geban* ← Proto-Germanic *\*gebaną*, English *give* (EtymDB 2.1): to give money out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

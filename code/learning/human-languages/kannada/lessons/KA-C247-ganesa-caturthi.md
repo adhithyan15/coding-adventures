@@ -14,7 +14,8 @@ romanization: "gaṇēśa caturthi"
 concept_tag: KA-KALA247-GANESA-CATURTHI
 prerequisites: [KA-C247-dipavali, KA-C247-sankranti]
 sounds: []
-roots: []
+roots: [sanskrit-ganesha, sanskrit-caturthi]
+etymology_hook: "gaṇēśa caturthi ← Sanskrit gaṇa 'host' + īśa 'lord' + caturthī 'fourth day' (CDIAL 3988, 1617, 4600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C247-sankranti]
 <!-- hl-knowledge: introduces=[KA-LEX-C247-KALA247-04]; assesses=[] -->
 
 **ಗಣೇಶ ಚತುರ್ಥಿ** — *gaṇēśa caturthi* — "Ganesha Chaturthi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಣೇಶ ಚತುರ್ಥಿ** (*gaṇēśa caturthi*) is Sanskrit *gaṇa*, "host" (CDIAL 3988), and *īśa*, "lord" (CDIAL 1617), joined as *gaṇeśa*, "lord of the hosts", the god Ganesha, with *caturthī*, "the fourth" (CDIAL 4600), the fourth day of the lunar fortnight. Kannada shortens its last vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

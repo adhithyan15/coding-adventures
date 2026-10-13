@@ -14,7 +14,8 @@ romanization: "surakṣita"
 concept_tag: KA-QUAL143-SURAKSITA
 prerequisites: [KA-C143-srimanta, KA-C143-prasiddha]
 sounds: []
-roots: []
+roots: [sanskrit-surakshita]
+etymology_hook: "surakṣita ← Sanskrit surakṣita 'well protected', a tatsama (CDIAL 13499)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C143-prasiddha]
 <!-- hl-knowledge: introduces=[KA-LEX-C143-QUAL143-05]; assesses=[] -->
 
 **ಸುರಕ್ಷಿತ** — *surakṣita* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುರಕ್ಷಿತ** (*surakṣita*) is Sanskrit *surakṣita*, "well protected", taken over whole as a learned loan, a tatsama (CDIAL 13499).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

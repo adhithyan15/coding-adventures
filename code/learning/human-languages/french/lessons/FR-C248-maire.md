@@ -13,7 +13,8 @@ gloss: "a mayor"
 concept_tag: FR-CHOSES248-MAIRE
 prerequisites: [FR-C247-moto, FR-C247-quai]
 sounds: []
-roots: []
+roots: [maior-latin]
+etymology_hook: "maire ← Latin maior 'greater' — the noun behind mairie; English mayor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C247-quai]
 <!-- hl-knowledge: introduces=[FR-LEX-C248-CHOSES248-01]; assesses=[] -->
 
 **le maire** — "a mayor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maire** ← Old French *maire* ← Latin *maior*, "greater" (EtymDB 2.1) — inherited: the noun behind *mairie*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

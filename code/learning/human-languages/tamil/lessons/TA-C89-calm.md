@@ -11,7 +11,8 @@ romanization: "amaiti"
 concept_tag: TA-FEEL-CALM
 prerequisites: [TA-C89-worry, TA-C89-nervousness]
 sounds: []
-roots: []
+roots: [dravidian-amar-rest]
+etymology_hook: "அமைதி — native Dravidian (DEDR 161)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C89-nervousness]
 **அமைதி** (*amaiti*) — "calm, peace", and "quiet".
 
 **அமைதியாக இருங்கள்** — "please stay calm", or in a library, "please be quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அமைதி** (*amaiti*) is native Dravidian (DEDR 161). The entry lists *amaiti*, "calmness", with *amar*, "to become tranquil, to rest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

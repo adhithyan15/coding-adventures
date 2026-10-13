@@ -14,7 +14,8 @@ romanization: "eṅkiluṁ"
 concept_tag: ML-KARANAM241-ENKILUM
 prerequisites: [ML-C240-vasam, ML-C241-sambandhiccu]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "eṅkiluṁ: native Dravidian, a conditional form of the verb 'to say' (DEDR 868) + -uṁ 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C241-sambandhiccu]
 <!-- hl-knowledge: introduces=[ML-LEX-C241-KARANAM241-02]; assesses=[] -->
 
 **എങ്കിലും** — *eṅkiluṁ* — "although, even so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എങ്കിലും** (*eṅkiluṁ*) is native Dravidian: a conditional form of the verb "to say" (DEDR 868, with Tamil *eṉ*), with *-uṁ*, "even": "even if one says so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

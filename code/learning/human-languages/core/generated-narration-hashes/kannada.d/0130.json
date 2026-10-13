@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 130,
-  "sourceHash": "fnv1a64:269a2363905a915d",
+  "sourceHash": "fnv1a64:c9c7678eb3e7e46c",
   "lessonIds": [
     "KA-C130-karadi",
     "KA-C130-koti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch130.txt",
   "json": "kannada/narration/ch130.json",
-  "textHash": "fnv1a64:1ffede8e5115c0a7",
-  "jsonHash": "fnv1a64:f1af22cb1c1f79c8",
+  "textHash": "fnv1a64:27f9ed22329f40b8",
+  "jsonHash": "fnv1a64:231b5b24c9832962",
   "findings": []
 }

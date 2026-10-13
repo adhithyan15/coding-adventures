@@ -14,7 +14,8 @@ romanization: "añcecīṭi"
 concept_tag: KA-VASTU295-ANCECITI
 prerequisites: [KA-C295-resme, KA-C295-lakote]
 sounds: []
-roots: []
+roots: [dravidian-ance-post, hindustani-citthi]
+etymology_hook: "añcecīṭi: native añce 'the post' (DEDR 54) + cīṭi 'a slip', probably Hindi cīṭhī (CDIAL 4832)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C295-lakote]
 <!-- hl-knowledge: introduces=[KA-LEX-C295-VASTU295-04]; assesses=[] -->
 
 **ಅಂಚೆಚೀಟಿ** — *añcecīṭi* — "a postage stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಚೆಚೀಟಿ** (*añcecīṭi*) is native *añce*, "the post" (DEDR 54), with *cīṭi*, "a slip, a note", which probably came from Hindi *cīṭhī*, *ciṭṭhī*, "a note, a letter"; CDIAL 4832 traces that to a reconstructed *\*ciṣṭa*, "message".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

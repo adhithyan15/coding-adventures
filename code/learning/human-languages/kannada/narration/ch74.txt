@@ -22,6 +22,9 @@ You'll want to know: ಎರಡನೆಯ.
 ಒಂದು, ಎರಡು, ಮೂರು answer how many. This word answers which one in the line, and Kannada keeps a second set of words for that job.
 It goes straight in front of what it counts, and nothing on the noun changes: ಎರಡನೆಯ ದಿನ (eraḍaneya dina), the second day; ಎರಡನೆಯ ಬಾಗಿಲು (eraḍaneya bāgilu), the second door.
 
+The word, taken apart.
+ಎರಡನೆಯ (eraḍaneya) is built from eraḍu, "two", native Dravidian (DEDR 474, with Tamil iraṇṭu), and the ordinal ending -aneya.
+
 Grammar Lens: the ending, and why the chapter opens on two.
 Put the word beside the number it comes from:
 [a table of 1 row, read aloud]
@@ -66,6 +69,9 @@ cardinal: ಮೂರು (mūru). ordinal: ಮೂರನೆಯ (mūraneya).
 ಮೂರನೆಯ ದಿನ (mūraneya dina), the third day. ಮೂರನೆಯ ಮರ (mūraneya mara), the third tree.
 This is the second word and it needed nothing new. That is what an exceptionless ending buys you: from here on, a number you can say is a position you can say.
 
+The word, taken apart.
+ಮೂರನೆಯ (mūraneya) is built from mūru, "three", native Dravidian (DEDR 5052, with Tamil mūṉṟu), and the ordinal ending -aneya.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mūru, then mūraneya]
@@ -100,6 +106,9 @@ cardinal: ಒಂದು (ondu). ordinal: ಮೊದಲನೆಯ (modalaneya).
 cardinal: ಎರಡು (eraḍu). ordinal: ಎರಡನೆಯ (eraḍaneya).
 cardinal: ಮೂರು (mūru). ordinal: ಮೂರನೆಯ (mūraneya).
 ಮೊದಲನೆಯ ದಿನ (modalaneya dina), the first day. ಮೊದಲನೆಯ ದಾರಿ (modalaneya dāri), the first road.
+
+The word, taken apart.
+ಮೊದಲನೆಯ (modalaneya) is built from modalu, "beginning, the first thing", native Dravidian (DEDR 4950), and the ordinal ending -aneya.
 
 Across the family: ಮೊದಲು, "a beginning".
 Under it sits ಮೊದಲು (modalu), "a beginning" — so the word means "of the beginning", not "one-th".
@@ -145,6 +154,9 @@ You'll want to know: ನಾಲ್ಕನೆಯ.
 cardinal: ನಾಲ್ಕು (nālku). ordinal: ನಾಲ್ಕನೆಯ (nālkaneya).
 ನಾಲ್ಕನೆಯ ಕುರ್ಚಿ (nālkaneya kurci), the fourth chair.
 
+The word, taken apart.
+ನಾಲ್ಕನೆಯ (nālkaneya) is built from nālku, "four", native Dravidian (DEDR 3655, with Tamil nālku), and the ordinal ending -aneya.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: nālku, then nālkaneya]
@@ -175,6 +187,9 @@ Warm-up.
 You'll want to know: ಐದನೆಯ.
 ಐದನೆಯ (aidaneya) — "fifth". ಐದು drops its -ು, takes -ಅನೆಯ, and the set is complete.
 ಐದನೆಯ ದಿನ (aidaneya dina), the fifth day.
+
+The word, taken apart.
+ಐದನೆಯ (aidaneya) is built from aidu, "five", native Dravidian (DEDR 2826, with Tamil aintu), and the ordinal ending -aneya.
 
 What you've built.
 [a table of 5 rows, read aloud]

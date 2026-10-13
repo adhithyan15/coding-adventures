@@ -14,7 +14,8 @@ romanization: "kāttirikkuka"
 concept_tag: ML-VERB-KATTIRIKKUKA
 prerequisites: [ML-C173-tutannuka, ML-C174-nirttuka, ML-C99-katha]
 sounds: []
-roots: []
+roots: [dravidian-ka-guard, dravidian-iru-be]
+etymology_hook: "kāttirikkuka: native Dravidian, 'sit watching': kā 'guard, wait' (DEDR 1416) + iru 'sit, be' (DEDR 480)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C174-nirttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C174-ACT174-02]; assesses=[] -->
 
 **കാത്തിരിക്കുക** — *kāttirikkuka* — "to wait".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാത്തിരിക്കുക** (*kāttirikkuka*) is native Dravidian, "sit watching": the verb "to guard, watch, wait" (DEDR 1416, with Tamil *kā*) joined to the verb "to sit, to be" (DEDR 480, with Tamil *iru*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

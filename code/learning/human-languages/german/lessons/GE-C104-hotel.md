@@ -13,7 +13,8 @@ gloss: "a hotel"
 concept_tag: GE-ORT104-HOTEL
 prerequisites: [GE-C104-platz, GE-C104-museum]
 sounds: []
-roots: []
+roots: [hospitale-latin]
+etymology_hook: "Hotel ← French hôtel ← Latin hospitāle 'guesthouse' — borrowed; hostel and hospital share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C104-museum]
 <!-- hl-knowledge: introduces=[GE-LEX-C104-ORT104-04]; assesses=[] -->
 
 **das Hotel** — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hotel** ← French *hôtel* ← Old French *hostel* ← Latin *hospitāle*, "guesthouse" (EtymDB 2.1) — borrowed. English *hostel* and *hospital* come from the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

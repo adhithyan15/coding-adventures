@@ -14,7 +14,8 @@ romanization: "vaḷaiyal"
 concept_tag: TA-THINGS137-VALAIYAL
 prerequisites: [TA-C136-panappai, TA-C137-motiram]
 sounds: []
-roots: []
+roots: [dravidian-valai-bend]
+etymology_hook: "வளையல் — native Dravidian (DEDR 5314); Malayalam vaḷayuka 'to bend'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C137-motiram]
 <!-- hl-knowledge: introduces=[TA-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **வளையல்** — *vaḷaiyal* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வளையல்** (*vaḷaiyal*) is native Dravidian. DEDR 5314 lists Malayalam *vaḷayuka*, "to bend". It is "the bent thing", from *vaḷai*, "to bend, to curve".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

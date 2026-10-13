@@ -13,7 +13,8 @@ gloss: "to depend"
 concept_tag: FR-VERB-DEPENDRE
 prerequisites: [FR-C178-annoncer, FR-C178-apparaitre]
 sounds: []
-roots: []
+roots: [pendere-latin]
+etymology_hook: "dépendre ← Latin dependere 'to hang from' — English depend and pendant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C178-apparaitre]
 <!-- hl-knowledge: introduces=[FR-LEX-C179-VERBES179-01]; assesses=[] -->
 
 **dépendre** — "to depend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dépendre** ← Latin *dependere*, "to hang from" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

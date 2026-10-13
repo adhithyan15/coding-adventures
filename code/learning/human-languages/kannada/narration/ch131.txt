@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a deer, then the Kannada for a fox.
 You'll want to know: ಹಾವು.
 ಹಾವು — hāvu — "a snake".
 
+The word, taken apart.
+ಹಾವು (hāvu) is native Dravidian, one word with Tamil pāmpu and Telugu pāmu (DEDR 4085). DEDR gives the older Kannada pāvu: the p- has become h-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a fox, then the Kannada for a snake.
 
 You'll want to know: ಆಮೆ.
 ಆಮೆ — āme — "a tortoise".
+
+The word, taken apart.
+ಆಮೆ (āme) is native Dravidian, one word with Tamil yāmai (DEDR 5155). DEDR lists āme itself: Kannada lost the y- that Tamil yāmai keeps.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a snake, then the Kannada for a tortoise
 You'll want to know: ಗಿಳಿ.
 ಗಿಳಿ — giḷi — "a parrot".
 
+The word, taken apart.
+ಗಿಳಿ (giḷi) is native Dravidian, one word with Tamil kiḷi and Telugu ciluka (DEDR 1584). DEDR lists Kannada giḷi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a tortoise, then the Kannada for a parro
 You'll want to know: ಪಾರಿವಾಳ.
 ಪಾರಿವಾಳ — pārivāḷa — "a pigeon".
 
+The word, taken apart.
+ಪಾರಿವಾಳ (pārivāḷa) comes from Sanskrit pārāvata, "turtle-dove, pigeon", reshaped to Kannada sounds: a tadbhava (CDIAL 8109). Prakrit pārāvaya shows the softened middle.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a parrot, then the Kannada for a pigeon.
 
 You'll want to know: ಗೂಬೆ.
 ಗೂಬೆ — gūbe — "an owl".
+
+The word, taken apart.
+ಗೂಬೆ (gūbe) is native Dravidian, one word with Tamil kūkai and Telugu gūba (DEDR 1871). DEDR lists gūbe beside gūge. DEDR 1871 compares Sanskrit ghūka.
 
 What you've built.
 One more word for this chapter.

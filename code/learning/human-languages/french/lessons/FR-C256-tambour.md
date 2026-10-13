@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES256-TAMBOUR
 prerequisites: [FR-C256-piano, FR-C256-violon]
 sounds: []
 roots: []
+etymology_hook: "tambour ← Old French tabour, from Arabic tunbur — English tambourine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C256-violon]
 <!-- hl-knowledge: introduces=[FR-LEX-C256-CHOSES256-05]; assesses=[] -->
 
 **le tambour** — "a drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tambour** ← Old French *tabour*, from Arabic *tunbur* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

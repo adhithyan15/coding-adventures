@@ -11,7 +11,8 @@ romanization: "kēḷkkū"
 concept_tag: ML-VERB-LISTEN
 prerequisites: [ML-C44-look, ML-C42-small]
 sounds: []
-roots: []
+roots: [dravidian-kel-hear-ask]
+etymology_hook: "kēḷkkū: native Dravidian, one word with Tamil kēḷ and Kannada kēḷ (DEDR 2017)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C44-look]
 **കേൾക്കൂ** (*kēḷkkū*) — "listen".
 
 And Kannada's *kēḷu* again. Malayalam separated from Tamil later than the others, but this stem is older than any of the splits.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കേൾക്കൂ** (*kēḷkkū*) is native Dravidian, one word with Tamil *kēḷ* and Kannada *kēḷ* (DEDR 2017). The same verb also means "to ask": hearing and asking are one root in this family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a till, a checkout"
 concept_tag: GE-BERUF126-KASSE
 prerequisites: [GE-C126-kellner, GE-C126-kunde]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "Kasse ← Italian cassa 'box' ← Latin capsa 'case' — borrowed; English cash and case share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C126-kunde]
 <!-- hl-knowledge: introduces=[GE-LEX-C126-BERUF126-04]; assesses=[] -->
 
 **die Kasse** — "a till, a checkout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kasse** ← Italian *cassa*, "box" ← Latin *capsa*, "case, box" (EtymDB 2.1) — borrowed. English *cash* and *case* come from the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

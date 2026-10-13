@@ -13,7 +13,8 @@ gloss: "a leaf; a sheet of paper"
 concept_tag: FR-NATURE33-FEUILLE
 prerequisites: [FR-C81-arbre, FR-C81-fleur]
 sounds: []
-roots: []
+roots: [folium-latin]
+etymology_hook: "feuille ← Latin folia 'leaves', plural of folium — English foliage and foil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C81-fleur]
 <!-- hl-knowledge: introduces=[FR-LEX-C81-NATURE33-03]; assesses=[] -->
 
 **la feuille** — "a leaf; a sheet of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feuille** ← Late Latin *folia*, "leaves", the plural of *folium*, used as a singular — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

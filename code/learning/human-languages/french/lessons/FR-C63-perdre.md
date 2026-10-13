@@ -13,7 +13,8 @@ gloss: "to lose"
 concept_tag: FR-VERB-PERDRE
 prerequisites: [FR-C63-oublier, FR-C63-chercher]
 sounds: []
-roots: []
+roots: [perdere-latin]
+etymology_hook: "perdre ← Latin perdere 'to destroy, to lose' — English perdition shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C63-chercher]
 <!-- hl-knowledge: introduces=[FR-LEX-C63-VERBES15-05]; assesses=[] -->
 
 **perdre** — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perdre** ← Latin *perdere*, "to destroy, to lose" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

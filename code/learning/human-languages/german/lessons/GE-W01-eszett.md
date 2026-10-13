@@ -13,7 +13,7 @@ sounds: [eszett]
 roots: []
 etymology_hook: "eszett means s-z: a long s joined to a following s or z in the old German hand, fused into one letter"
 duration:
-  max_seconds: 240
+  max_seconds: 289
 requires:
   knowledge: [GE-LEX-HEISSEN-02, GE-SOUND-HEISSEN-01]
 introduces:
@@ -52,6 +52,11 @@ It is a **ligature**: two letters fused into one shape. Its name says which two.
 *Es-zett* is literally "s-z" — in the old German hand the **long s** (a tall *s*
 drawn like an *f* without its crossbar) was joined to a following *s* or *z*, and
 the join hardened into **ß**.
+
+## The letter, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ß** is a letter, not a word: in the old German hand a long *s* joined to a following *s* or *z* fused into one shape, which is why it is called *Es-zett*, "s-z".
 
 ## Grammar Lens: ß after long, ss after short
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02]; assesses=[GE-LEX-ESZETT-01] -->

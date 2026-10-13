@@ -13,7 +13,8 @@ gloss: "a fever"
 concept_tag: GE-GESUNDHEIT-FIEBER
 prerequisites: [GE-C58-zehe, GE-C58-magen]
 sounds: []
-roots: []
+roots: [febris-latin]
+etymology_hook: "Fieber ← Old High German fiebar ← Latin febris 'fever' — borrowed, like English fever"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C58-magen]
 <!-- hl-knowledge: introduces=[GE-LEX-C59-GESUNDHEIT-01]; assesses=[] -->
 
 **das Fieber** — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fieber** ← Old High German *fiebar* ← Latin *febris*, "fever" (EtymDB 2.1) — borrowed from Latin, as English *fever* was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āppiḷ"
 concept_tag: TA-PORUL271-APPIL
 prerequisites: [TA-C271-kottamalli, TA-C271-kariveppilai]
 sounds: []
-roots: []
+roots: [english-apple]
+etymology_hook: "ஆப்பிள் ← English apple"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C271-kariveppilai]
 <!-- hl-knowledge: introduces=[TA-LEX-C271-PORUL271-03]; assesses=[] -->
 
 **ஆப்பிள்** — *āppiḷ* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆப்பிள்** (*āppiḷ*) is a loan from English *apple*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

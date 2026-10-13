@@ -13,7 +13,8 @@ gloss: "sour, annoyed"
 concept_tag: GE-QUAL220-SAUER
 prerequisites: [GE-C220-roh, GE-C220-salzig]
 sounds: []
-roots: []
+roots: [germanic-suraz]
+etymology_hook: "sauer ← Old High German sūr — the same word as English sour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C220-salzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C220-QUAL220-05]; assesses=[] -->
 
 **sauer** — "sour, annoyed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sauer** ← Middle High German *sūr* ← Old High German *sūr* (EtymDB 2.1) — inherited, the same word as English *sour*. "Annoyed" is a soured mood.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

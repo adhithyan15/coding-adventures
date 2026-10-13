@@ -14,7 +14,8 @@ romanization: "kaṇaṅkai"
 concept_tag: ML-AROGYAM235-KANANKAI
 prerequisites: [ML-C234-avesam, ML-C234-asvasam]
 sounds: []
-roots: []
+roots: [dravidian-kan-joint, dravidian-tala-kai]
+etymology_hook: "kaṇaṅkai: native Dravidian, 'the hand's joint': kaṇ 'joint' (DEDR 1160) + kai 'hand' (DEDR 2023)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C234-asvasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C235-AROGYAM235-01]; assesses=[] -->
 
 **കണങ്കൈ** — *kaṇaṅkai* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണങ്കൈ** (*kaṇaṅkai*) is native Dravidian, "the joint of the hand": *kaṇ*, "a joint, a node" (DEDR 1160), and *kai*, "hand" (DEDR 2023).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

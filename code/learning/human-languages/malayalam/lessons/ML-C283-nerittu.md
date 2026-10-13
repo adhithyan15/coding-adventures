@@ -14,7 +14,8 @@ romanization: "nēriṭṭŭ"
 concept_tag: ML-GUNAM283-NERITTU
 prerequisites: [ML-C283-suraksitamaya, ML-C283-talkkalika]
 sounds: []
-roots: []
+roots: [dravidian-ner-straight, dravidian-idu-put]
+etymology_hook: "nēriṭṭŭ: native Dravidian, 'putting straight': nēr (DEDR 3770) + iṭṭu 'having put' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C283-talkkalika]
 <!-- hl-knowledge: introduces=[ML-LEX-C283-GUNAM283-05]; assesses=[] -->
 
 **നേരിട്ട്** — *nēriṭṭŭ* — "directly, in person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നേരിട്ട്** (*nēriṭṭŭ*) is native Dravidian: *nēr*, "straight, direct" (DEDR 3770, with Tamil *nēr*), and *iṭṭu*, "having put" (DEDR 442).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

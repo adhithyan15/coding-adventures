@@ -14,7 +14,8 @@ romanization: "kuḻambu"
 concept_tag: TA-THINGS121-KULAMBU
 prerequisites: [TA-C121-celai, TA-C121-paruppu]
 sounds: []
-roots: []
+roots: [dravidian-kuzhambu-thick]
+etymology_hook: "குழம்பு — native Dravidian (DEDR 1817); Malayalam kuḻampu 'thickened fluid'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C121-paruppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **குழம்பு** — *kuḻambu* — "a curry, a gravy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குழம்பு** (*kuḻambu*) is native Dravidian. DEDR 1817 lists Malayalam *kuḻampu*, "thickened fluid". It comes from *kuḻampu*, "to become mixed, thick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

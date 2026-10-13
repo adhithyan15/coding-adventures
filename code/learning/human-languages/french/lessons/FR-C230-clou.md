@@ -13,7 +13,8 @@ gloss: "a nail for hammering"
 concept_tag: FR-CHOSES230-CLOU
 prerequisites: [FR-C230-fil, FR-C230-aiguille]
 sounds: []
-roots: []
+roots: [clavus-latin]
+etymology_hook: "clou ← Latin clavus 'a nail' — English cloves, shaped like nails"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C230-aiguille]
 <!-- hl-knowledge: introduces=[FR-LEX-C230-CHOSES230-03]; assesses=[] -->
 
 **le clou** — "a nail for hammering".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clou** ← Old French *clou* ← Latin *clavus*, "a nail" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 123,
-  "sourceHash": "fnv1a64:872e4c2e24f198f9",
+  "sourceHash": "fnv1a64:52d36153d0037564",
   "lessonIds": [
     "FR-C123-infirmiere",
     "FR-C123-cuisinier",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch123.txt",
   "json": "french/narration/ch123.json",
-  "textHash": "fnv1a64:29e4e53b8d688910",
-  "jsonHash": "fnv1a64:c7c455ef149cd4f8",
+  "textHash": "fnv1a64:1af2735b37aabaf4",
+  "jsonHash": "fnv1a64:5433dcfa7ca433ef",
   "findings": []
 }

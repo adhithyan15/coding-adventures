@@ -13,7 +13,8 @@ gloss: "a wheel"
 concept_tag: FR-CHOSES227-ROUE
 prerequisites: [FR-C226-pret, FR-C226-dette]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "roue ← Latin rota 'a wheel' — English rotate and rotary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C226-dette]
 <!-- hl-knowledge: introduces=[FR-LEX-C227-CHOSES227-01]; assesses=[] -->
 
 **la roue** — "a wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**roue** ← Old French *ruee* (EtymDB 2.1) ← Latin *rota*, "a wheel" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

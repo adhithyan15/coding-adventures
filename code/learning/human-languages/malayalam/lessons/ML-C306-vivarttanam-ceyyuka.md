@@ -14,7 +14,8 @@ romanization: "vivarttanaṁ ceyyuka"
 concept_tag: ML-VERB-VIVARTTANAM-CEYYUKA
 prerequisites: [ML-C305-sandarsikkuka, ML-C306-tiruttuka]
 sounds: []
-roots: []
+roots: [sanskrit-vivartana, cey-do-dravidian]
+etymology_hook: "vivarttanaṁ ceyyuka: Sanskrit vivartana 'turning round' + native ceyyuka (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C306-tiruttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C306-KRIYA306-02]; assesses=[] -->
 
 **വിവർത്തനം ചെയ്യുക** — *vivarttanaṁ ceyyuka* — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിവർത്തനം ചെയ്യുക** (*vivarttanaṁ ceyyuka*) joins Sanskrit *vivartana*, "turning round, turning over", to native *ceyyuka*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

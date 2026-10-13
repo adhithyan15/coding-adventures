@@ -14,7 +14,8 @@ romanization: "nimittaṁ"
 concept_tag: ML-WHY144-NIMITTAM
 prerequisites: [ML-C144-phalam, ML-C144-hetu]
 sounds: []
-roots: []
+roots: [sanskrit-nimitta]
+etymology_hook: "nimittaṁ ← Sanskrit nimitta 'cause, omen', a tatsama (CDIAL 7241)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C144-hetu]
 <!-- hl-knowledge: introduces=[ML-LEX-C144-WHY144-05]; assesses=[] -->
 
 **നിമിത്തം** — *nimittaṁ* — "on account of, because of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിമിത്തം** (*nimittaṁ*) ← Sanskrit *nimitta*, "cause, omen", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7241).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

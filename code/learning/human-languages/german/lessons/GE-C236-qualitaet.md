@@ -13,7 +13,8 @@ gloss: "quality"
 concept_tag: GE-THING236-QUALITAET
 prerequisites: [GE-C235-paar, GE-C236-pflicht]
 sounds: []
-roots: []
+roots: [qualitas-latin]
+etymology_hook: "Qualität ← Latin quālitās 'what kind', from quālis — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C236-pflicht]
 <!-- hl-knowledge: introduces=[GE-LEX-C236-THING236-02]; assesses=[] -->
 
 **die Qualität** — "quality".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Qualität** ← Latin *quālitās*, "what kind something is", from *quālis*, "of what kind" (EtymDB 2.1) — borrowed, like English *quality*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

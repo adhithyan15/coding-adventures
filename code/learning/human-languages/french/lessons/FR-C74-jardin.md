@@ -14,6 +14,7 @@ concept_tag: FR-MAISON26-JARDIN
 prerequisites: [FR-C73-mur, FR-C74-toit]
 sounds: []
 roots: []
+etymology_hook: "jardin ← Old French jardin, from Frankish *gardo 'enclosure' — English garden and yard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C74-toit]
 <!-- hl-knowledge: introduces=[FR-LEX-C74-MAISON26-02]; assesses=[] -->
 
 **le jardin** — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jardin** ← Old French *jardin* (EtymDB 2.1), from Frankish *\*gardo*, "an enclosure" — borrowed from the Franks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

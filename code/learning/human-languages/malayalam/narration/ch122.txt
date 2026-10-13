@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a station, then the Malayalam for a ma
 You'll want to know: ശരിക്കും.
 ശരിക്കും (śarikkuṁ) — "really, truly", built on ശരി (śari), "right, okay". ശരിക്കും? — "really?".
 
+The word, taken apart.
+ശരിക്കും (śarikkuṁ) is śari, "right", with two endings: "rightly, truly". The origin of śari itself is uncertain; it is usually traced to Sanskrit sadṛśa, "alike" (CDIAL 13120).
+
 What you've built.
 Okay, turned into really.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a map, then the Malayalam for really.
 
 You'll want to know: ഒന്നുമില്ല.
 ഒന്നുമില്ല (onnumilla) — "nothing", literally "not even one": ഒന്ന്, "one", ‑ഉം, "even", ഇല്ല, "not".
+
+The word, taken apart.
+ഒന്നുമില്ല (onnumilla) is native Dravidian: onnŭ, "one" (DEDR 990), -um, "even", and illa, "not" (DEDR 2559): "not even one".
 
 What you've built.
 One, even, not.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for really, then the Malayalam for nothing
 You'll want to know: അയ്യോ.
 അയ്യോ (ayyō) — "oh no!", "oh dear!", heard everywhere in the south when something goes wrong.
 
+The word, taken apart.
+അയ്യോ (ayyō) is an exclamation shared across the south of India; Tamil says aiyō. It is a cry rather than a word built from a root, so no dictionary entry lies behind it.
+
 What you've built.
 The sound of a small disaster.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for nothing, then the Malayalam for oh no.
 You'll want to know: അതുതന്നെ.
 അതുതന്നെ (atutanne) — "that very one, exactly that": അത് (atŭ), "that", with തന്നെ, "itself".
 
+The word, taken apart.
+അതുതന്നെ (atutanne) is native Dravidian: atŭ, "that" (DEDR 1), with tanne, "itself", built on tān, "self" (DEDR 3196, with Tamil tāṉ).
+
 What you've built.
 That, made emphatic.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for oh no, then the Malayalam for the same
 
 You'll want to know: ഓഹോ.
 ഓഹോ (ōhō) — "oh, I see!", the sound of understanding arriving.
+
+The word, taken apart.
+ഓഹോ (ōhō) is an exclamation, the sound of understanding arriving. It is made of sound rather than built from a root, so no dictionary entry lies behind it.
 
 What you've built.
 The happy opposite of ayyō.

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-FONCTIONNER
 prerequisites: [FR-C212-fixer, FR-C212-freiner]
 sounds: []
 roots: []
+etymology_hook: "fonctionner — from Latin functio 'a performing' — English function"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C212-freiner]
 <!-- hl-knowledge: introduces=[FR-LEX-C212-VERBES212-03]; assesses=[] -->
 
 **fonctionner** — "to function, to work".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fonctionner** — built from the word for "function", ← Latin *functio*, "a performing", with *-er*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

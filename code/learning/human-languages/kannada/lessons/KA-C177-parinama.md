@@ -14,7 +14,8 @@ romanization: "pariṇāma"
 concept_tag: KA-KARANA177-PARINAMA
 prerequisites: [KA-C177-sahajavagi, KA-C177-phalitamsa]
 sounds: []
-roots: []
+roots: [sanskrit-parinama]
+etymology_hook: "pariṇāma ← Sanskrit pariṇāma 'change, ripening, result'; CDIAL 7822 lists the verb 'ripens'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C177-phalitamsa]
 <!-- hl-knowledge: introduces=[KA-LEX-C177-KARANA177-04]; assesses=[] -->
 
 **ಪರಿಣಾಮ** — *pariṇāma* — "an effect, a consequence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪರಿಣಾಮ** (*pariṇāma*) is Sanskrit *pariṇāma*, "transformation, ripening, result", taken over whole. CDIAL 7822 lists the verb behind it, "ripens, brings to an end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

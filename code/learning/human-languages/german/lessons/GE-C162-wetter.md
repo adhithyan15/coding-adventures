@@ -13,7 +13,8 @@ gloss: "the weather"
 concept_tag: GE-THING162-WETTER
 prerequisites: [GE-C162-sofa, GE-C162-radio]
 sounds: []
-roots: []
+roots: [germanic-wetter-weather]
+etymology_hook: "Wetter ← Old High German wetar ← Proto-Germanic *wedrą — the same word as English weather"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C162-radio]
 <!-- hl-knowledge: introduces=[GE-LEX-C162-THING162-03]; assesses=[] -->
 
 **das Wetter** — "the weather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wetter** ← Old High German *wetar* ← Proto-Germanic *\*wedrą* — inherited, the same word as English *weather*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

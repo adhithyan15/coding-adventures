@@ -14,6 +14,7 @@ concept_tag: GE-VERB-SPAREN
 prerequisites: [GE-C149-schenken, GE-C149-schreien]
 sounds: []
 roots: []
+etymology_hook: "sparen — the same Germanic verb as English spare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C149-schreien]
 <!-- hl-knowledge: introduces=[GE-LEX-C150-VERB150-01]; assesses=[] -->
 
 **sparen** — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sparen** is inherited, from Old High German *sparēn*. EtymDB 2.1 lists English *spare* beside Dutch *sparen* and Swedish *spara*: one Germanic verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

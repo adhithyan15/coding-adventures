@@ -14,7 +14,8 @@ romanization: "ese"
 concept_tag: KA-VERB-ESE
 prerequisites: [KA-C235-muttu, KA-C235-ettu]
 sounds: []
-roots: []
+roots: [dravidian-ey-shoot]
+etymology_hook: "ese: native Dravidian, one word with Tamil ey (DEDR 805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C235-ettu]
 <!-- hl-knowledge: introduces=[KA-LEX-C235-KRIYE235-05]; assesses=[] -->
 
 **ಎಸೆ** — *ese* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಸೆ** (*ese*) is native Dravidian, one word with Tamil *ey* (DEDR 805). DEDR lists *esu*, *ese*, "to shoot (an arrow), throw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

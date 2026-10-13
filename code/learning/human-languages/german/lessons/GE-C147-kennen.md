@@ -13,7 +13,8 @@ gloss: "to know (a person or place)"
 concept_tag: GE-VERB-KENNEN
 prerequisites: [GE-C147-haengen, GE-C147-heiraten]
 sounds: []
-roots: []
+roots: [germanic-kannijana]
+etymology_hook: "kennen ← Old High German kennan ← Proto-Germanic *kannijaną — English ken shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C147-heiraten]
 <!-- hl-knowledge: introduces=[GE-LEX-C147-VERB147-04]; assesses=[] -->
 
 **kennen** — "to know (a person or place)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kennen** ← Old High German *kennan* ← Proto-Germanic *\*kannijaną*, "to make known" — inherited. (EtymDB 2.1) English *ken*, "range of knowledge", is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to bleed"
 concept_tag: FR-VERB-SAIGNER
 prerequisites: [FR-C153-rencontrer, FR-C153-rougir]
 sounds: []
-roots: []
+roots: [sanguis-latin]
+etymology_hook: "saigner ← Latin sanguinare 'to bleed', from sanguis — the Latin of sang"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C153-rougir]
 <!-- hl-knowledge: introduces=[FR-LEX-C153-VERBES153-05]; assesses=[] -->
 
 **saigner** — "to bleed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saigner** ← Latin *sanguinare*, "to bleed", from *sanguis*, the Latin of *sang* (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāvalugāra"
 concept_tag: KA-KELASA197-KAVALUGARA
 prerequisites: [KA-C196-preksaka, KA-C196-badagi]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard]
+etymology_hook: "kāvalugāra: native kāvalu 'guarding' (DEDR 1416) + -gāra 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C196-badagi]
 <!-- hl-knowledge: introduces=[KA-LEX-C197-KELASA197-01]; assesses=[] -->
 
 **ಕಾವಲುಗಾರ** — *kāvalugāra* — "a watchman, a security guard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾವಲುಗಾರ** (*kāvalugāra*) is *kāvalu*, "guarding, watch", of the native *kā*, "to guard" (DEDR 1416, with Tamil *kā*), with *-gāra*, "one who does it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

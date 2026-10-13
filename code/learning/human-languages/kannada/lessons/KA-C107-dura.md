@@ -14,7 +14,8 @@ romanization: "dūra"
 concept_tag: KA-LOC107-DURA
 prerequisites: [KA-C107-eda, KA-C107-nera]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūra ← Sanskrit dūra 'distant; distance', a tatsama (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C107-nera]
 <!-- hl-knowledge: introduces=[KA-LEX-C107-LOC107-04]; assesses=[] -->
 
 **ದೂರ** — *dūra* — "far; distance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೂರ** (*dūra*) is Sanskrit *dūra*, "distant; distance", taken over whole as a learned loan, a tatsama (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

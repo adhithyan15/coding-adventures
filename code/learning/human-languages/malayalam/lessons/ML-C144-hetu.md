@@ -14,7 +14,8 @@ romanization: "hētu"
 concept_tag: ML-WHY144-HETU
 prerequisites: [ML-C144-uddesyam, ML-C144-phalam, ML-C24-native-night-words]
 sounds: []
-roots: []
+roots: [sanskrit-hetu]
+etymology_hook: "hētu ← Sanskrit hētu 'motive, cause', a tatsama (CDIAL 14160)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C144-phalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C144-WHY144-04]; assesses=[] -->
 
 **ഹേതു** — *hētu* — "a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഹേതു** (*hētu*) ← Sanskrit *hētu*, "motive, cause", taken over whole as a tatsama (CDIAL 14160).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

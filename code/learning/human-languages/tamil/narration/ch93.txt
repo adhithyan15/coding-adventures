@@ -13,6 +13,9 @@ You'll want to know: அர்த்தம்.
 அர்த்தம் (arttam) — "meaning".
 இதன் அர்த்தம் (arttam) என்ன? — "what does this mean?", the question that turns anyone into a teacher.
 
+The word, taken apart.
+அர்த்தம் (arttam) is a loan from Sanskrit artha, "aim, thing, meaning" (CDIAL 638).
+
 What you've built.
 The question that unlocks a word.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for please wait, then the Tamil for meaning.
 You'll want to know: தமிழில்.
 தமிழில் (tamiḻil) — "in Tamil".
 -இல் is "in", added to the name of the language. ஆங்கிலத்தில் would be "in English".
+
+The word, taken apart.
+தமிழில் (tamiḻil) is tamiḻ, native (DEDR 3080, which compares Sanskrit draviḍa), with the locative -il, "in".
 
 What you've built.
 A way to name the language you want.
@@ -73,6 +79,9 @@ You'll want to know: எப்படிச் சொல்வது?
 எப்படிச் சொல்வது? (eppaṭic colvatu?) — "how does one say it?".
 தமிழில் (tamiḻil) இதை எப்படிச் சொல்வது? (eppaṭic colvatu?) — "how do you say this in Tamil?". எப்படி is the "how" you know.
 
+The word, taken apart.
+எப்படிச் சொல்வது? (eppaṭic colvatu?) is native: eppaṭi, "how" (DEDR 5151), and colvatu, "saying", from col, "to say" (DEDR 2855).
+
 What you've built.
 The question that lets you learn from anyone.
 
@@ -103,6 +112,9 @@ You'll want to know: காட்டுங்கள்.
 காட்டுங்கள் (kāṭṭuṅkaḷ) — "please show me".
 When a word will not come, point and say காட்டுங்கள் (kāṭṭuṅkaḷ).
 
+The word, taken apart.
+காட்டுங்கள் (kāṭṭuṅkaḷ) is native Dravidian. DEDR 1443 lists Malayalam kāṭṭuka, "to show". The verb kāṭṭu, "to show", is "to make see", from kāṇ, "to see".
+
 What you've built.
 A request for when words run out.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for how do you say it, then the Tamil for plea
 You'll want to know: கேட்கவில்லை.
 கேட்கவில்லை (kēṭkavillai) — "I did not hear (it)".
 It ends in இல்லை, the "no" of your first chapter. Pair it with சத்தமாக.
+
+The word, taken apart.
+கேட்கவில்லை (kēṭkavillai) is native: kēḷ, "to hear" (DEDR 2017), and illai, "not" (DEDR 2559).
 
 What you've built.
 Meaning, in Tamil, how to say it, show me, I did not hear.

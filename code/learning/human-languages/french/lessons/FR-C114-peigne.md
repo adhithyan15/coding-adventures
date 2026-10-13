@@ -13,7 +13,8 @@ gloss: "a comb"
 concept_tag: FR-MAISON66-PEIGNE
 prerequisites: [FR-C114-dentifrice, FR-C114-shampooing]
 sounds: []
-roots: []
+roots: [pecten-latin]
+etymology_hook: "peigne ← Latin pecten, pectinis 'a comb' — the scallop Pecten is named for its ridges"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C114-shampooing]
 <!-- hl-knowledge: introduces=[FR-LEX-C114-MAISON66-03]; assesses=[] -->
 
 **le peigne** — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peigne** ← Old French *peigne* ← Latin *pecten*, *pectinis*, "a comb" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

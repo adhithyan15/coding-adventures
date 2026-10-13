@@ -13,7 +13,8 @@ gloss: "high, tall"
 concept_tag: FR-ADJ42-HAUT
 prerequisites: [FR-C90-difficile, FR-C90-cher]
 sounds: []
-roots: []
+roots: [altus-latin]
+etymology_hook: "haut ← Latin altus 'high', with an h from Frankish *hauh — English altitude"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C90-cher]
 <!-- hl-knowledge: introduces=[FR-LEX-C90-ADJ42-03]; assesses=[] -->
 
 **haut** — "high, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**haut** ← Latin *altus*, "high", blended with Frankish *\*hauh*, "high", which gave it its *h* (EtymDB 2.1 gives the Frankish side) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

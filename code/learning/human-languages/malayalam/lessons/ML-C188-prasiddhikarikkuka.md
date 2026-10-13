@@ -14,7 +14,8 @@ romanization: "prasiddhīkarikkuka"
 concept_tag: ML-VERB-PRASIDDHIKARIKKUKA
 prerequisites: [ML-C188-onakkuka, ML-C188-ophakkuka]
 sounds: []
-roots: []
+roots: [sanskrit-prasiddha]
+etymology_hook: "prasiddhīkarikkuka ← Sanskrit prasiddha 'celebrated, made known' (CDIAL 8842) + -kar- 'make'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C188-ophakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C188-KRIYA188-04]; assesses=[] -->
 
 **പ്രസിദ്ധീകരിക്കുക** — *prasiddhīkarikkuka* — "to publish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രസിദ്ധീകരിക്കുക** (*prasiddhīkarikkuka*) is built on Sanskrit *prasiddha*, "celebrated, made known" (CDIAL 8842), with *-karikkuka*, "to make", on the Sanskrit root *kṛ*: "to make known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mūṭuka"
 concept_tag: ML-VERB-MUTUKA
 prerequisites: [ML-C224-rucikkuka, ML-C224-niraykkuka]
 sounds: []
-roots: []
+roots: [dravidian-mudu-cover]
+etymology_hook: "mūṭuka: native Dravidian, one word with Tamil mūṭu (DEDR 5034)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C224-niraykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C224-KRIYA224-05]; assesses=[] -->
 
 **മൂടുക** — *mūṭuka* — "to cover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൂടുക** (*mūṭuka*) is native Dravidian, one word with Tamil *mūṭu* (DEDR 5034).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

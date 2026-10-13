@@ -13,7 +13,8 @@ gloss: "an onion"
 concept_tag: FR-CUISINE20-OIGNON
 prerequisites: [FR-C68-terre, FR-C68-tomate]
 sounds: []
-roots: []
+roots: [unus-latin]
+etymology_hook: "oignon ← Latin unio, unionis, a single-bulbed onion — English onion came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C68-tomate]
 <!-- hl-knowledge: introduces=[FR-LEX-C68-CUISINE20-05]; assesses=[] -->
 
 **l'oignon** — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oignon** ← Old French *oingnon* ← Latin *unio*, *unionis*, a kind of onion that grows as a single bulb — inherited. (EtymDB 2.1) *unio* is built on *unus*, "one" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

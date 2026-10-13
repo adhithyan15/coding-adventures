@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES195-ECRAN
 prerequisites: [FR-C195-nouvelle, FR-C195-publicite]
 sounds: []
 roots: []
+etymology_hook: "écran ← Old French escran, from Middle Dutch scherm 'a shield' — English screen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C195-publicite]
 <!-- hl-knowledge: introduces=[FR-LEX-C195-CHOSES195-04]; assesses=[] -->
 
 **l'écran** — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**écran** ← Old French *escran*, from Middle Dutch *scherm*, "a shield, a screen" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

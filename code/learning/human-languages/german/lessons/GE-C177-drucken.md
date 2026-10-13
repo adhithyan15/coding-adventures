@@ -13,7 +13,8 @@ gloss: "to print"
 concept_tag: GE-VERB-DRUCKEN
 prerequisites: [GE-C177-braten, GE-C177-buchstabieren]
 sounds: []
-roots: []
+roots: [germanic-thrukjana]
+etymology_hook: "drucken ← Proto-Germanic *þrukjaną 'to press' — printing is pressing"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C177-buchstabieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C177-VERB177-05]; assesses=[] -->
 
 **drucken** — "to print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**drucken** ← Proto-Germanic *\*þrukjaną*, "to press" (EtymDB 2.1) — inherited; printing is pressing. Dutch *drukken* is the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ romanization: "varumpōḷ"
 concept_tag: ML-WHEN-CLAUSE
 prerequisites: [ML-C75-eppol, ML-C32-varuka, ML-C32-pokuka, ML-C71-avan-aval]
 sounds: []
-roots: []
+roots: [va-come-dravidian, dravidian-pozhutu-time]
+etymology_hook: "varumpōḷ: native Dravidian, 'at the time of coming': varu (DEDR 5270) + pōḷ 'time' (DEDR 4559)"
 duration:
-  max_seconds: 240
+  max_seconds: 288
 requires:
   knowledge: [ML-LEX-C75-EPPOL-01, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-POKUKA-02, ML-LEX-C71-AVAN-AVAL-01]
 introduces:
@@ -71,6 +72,8 @@ tense lesson, with the time-piece from the last lesson stuck on the back.
 
 Tamil builds it the same way, from the same two parts: **வரும்போது**
 (*varumpōtu*).
+
+**Where the word comes from.** Both parts are native Dravidian: *varuka*, "to come" (DEDR 5270, with Tamil *varu*), and *pōḷ*, "time" (DEDR 4559, with Tamil *pōtu*).
 
 ## Grammar Lens: it is not a question any more
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C75-UMBOL-01, ML-LEX-C75-EPPOL-01] -->

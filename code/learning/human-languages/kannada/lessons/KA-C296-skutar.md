@@ -14,7 +14,8 @@ romanization: "skūṭar"
 concept_tag: KA-VASTU296-SKUTAR
 prerequisites: [KA-C295-anceciti, KA-C295-parsel]
 sounds: []
-roots: []
+roots: [english-scooter]
+etymology_hook: "skūṭar ← English scooter"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C295-parsel]
 <!-- hl-knowledge: introduces=[KA-LEX-C296-VASTU296-01]; assesses=[] -->
 
 **ಸ್ಕೂಟರ್** — *skūṭar* — "a scooter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ಕೂಟರ್** (*skūṭar*) is a loan from English *scooter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 227,
-  "sourceHash": "fnv1a64:cf0939ea5afa2275",
+  "sourceHash": "fnv1a64:3a9b385bd165c9fb",
   "lessonIds": [
     "ML-C227-kuriccetukkuka",
     "ML-C227-hajarakuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch227.txt",
   "json": "malayalam/narration/ch227.json",
-  "textHash": "fnv1a64:83936c8206c3ebe6",
-  "jsonHash": "fnv1a64:8fd1e223acf1264e",
+  "textHash": "fnv1a64:3826377dc6c27f09",
+  "jsonHash": "fnv1a64:3594b1b95ee52ad8",
   "findings": []
 }

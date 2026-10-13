@@ -11,7 +11,8 @@ romanization: "pālaṁ"
 concept_tag: ML-TOWN-BRIDGE
 prerequisites: [ML-C135-temple, ML-C135-church]
 sounds: []
-roots: []
+roots: [dravidian-palam-bridge]
+etymology_hook: "pālaṁ: native Dravidian, one word with Tamil pālam and Kannada pāla (DEDR 4099)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C135-church]
 <!-- hl-knowledge: introduces=[ML-LEX-C135-TOWN-04]; assesses=[] -->
 
 **പാലം** (*pālaṁ*) — "a bridge", over a **പുഴ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാലം** (*pālaṁ*) is native Dravidian, one word with Tamil *pālam* and Kannada *pāla* (DEDR 4099).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

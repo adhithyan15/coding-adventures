@@ -11,7 +11,8 @@ romanization: "pathāṁ"
 concept_tag: ML-ORDINAL-TENTH
 prerequisites: [ML-C68-ninth, ML-C67-fifth, ML-C64-but, ML-C52-garland, ML-C07-numbers-6-10]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "pathāṁ: native Dravidian, 'ten' + -āṁ; Tamil pattu 'ten' (DEDR 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [ML-C68-ninth, ML-C67-fifth, ML-C64-but, ML-C52-garland]
 **ആം**, and the ten are done.
 
 **പത്താം ദിവസം** (*pathāṁ divasaṁ*), the tenth day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പത്താം** (*pathāṁ*) is native Dravidian: "ten" (DEDR 3918, with Tamil *pattu* and Kannada *pattu*) with the ordinal ending *-āṁ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-05, ML-LEX-C68-ORDINAL-04] -->

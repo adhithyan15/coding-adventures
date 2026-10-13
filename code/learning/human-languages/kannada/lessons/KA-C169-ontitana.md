@@ -14,7 +14,8 @@ romanization: "oṇṭitana"
 concept_tag: KA-AROGYA169-ONTITANA
 prerequisites: [KA-C169-talme, KA-C169-asuye]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "oṇṭitana: native oṇṭi 'alone, single' (DEDR 990) + -tana '-ness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C169-asuye]
 <!-- hl-knowledge: introduces=[KA-LEX-C169-AROGYA169-03]; assesses=[] -->
 
 **ಒಂಟಿತನ** — *oṇṭitana* — "loneliness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂಟಿತನ** (*oṇṭitana*) is native Dravidian: *oṇṭi*, "single, alone", which DEDR 990 lists on the root for "one", with *-tana*, the ending for "-ness": "aloneness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

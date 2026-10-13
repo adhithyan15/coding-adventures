@@ -13,7 +13,8 @@ gloss: "a grandmother"
 concept_tag: GE-FAMILIE-GROSSMUTTER
 prerequisites: [GE-C61-tochter, GE-C61-grossvater]
 sounds: []
-roots: []
+roots: [germanic-moder]
+etymology_hook: "Großmutter — 'great' + Mutter, modelled on French grand-mère"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C61-grossvater]
 <!-- hl-knowledge: introduces=[GE-LEX-C62-FAMILIE-01]; assesses=[] -->
 
 **die Großmutter** — "a grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Großmutter** is the word for "great, big" + *Mutter*: a "great mother", modelled on French *grand-mère*. The "great" word ← Old High German *grōz* ← Proto-Germanic *\*grautaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

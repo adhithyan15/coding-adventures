@@ -14,7 +14,8 @@ romanization: "mūle"
 concept_tag: KA-LOC110-MULE
 prerequisites: [KA-C110-kadalatira, KA-C110-tota]
 sounds: []
-roots: []
+roots: [dravidian-muulai-corner]
+etymology_hook: "mūle: native Dravidian, one word with Tamil mūlai and Telugu mūla (DEDR 5044)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C110-tota]
 <!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-04]; assesses=[] -->
 
 **ಮೂಲೆ** — *mūle* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೂಲೆ** (*mūle*) is native Dravidian, one word with Tamil *mūlai* and Telugu *mūla* (DEDR 5044).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

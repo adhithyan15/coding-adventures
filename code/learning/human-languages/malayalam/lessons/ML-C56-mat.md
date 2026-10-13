@@ -11,7 +11,8 @@ romanization: "pāya"
 concept_tag: ML-NOUN-MAT
 prerequisites: [ML-C55-field, ML-C54-tree]
 sounds: []
-roots: []
+roots: [dravidian-pay-mat]
+etymology_hook: "pāya: native Dravidian, one word with Tamil pāy and Kannada pāsu (DEDR 4088)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *pāy*, and it names the woven mat that a Kerala house
 The material is usually screwpine leaf or reed, split and plaited, and the making of them is a village trade with its own vocabulary. A പായ rolls up and stands in a corner, which is why a house with few chairs can still seat twenty people.
 
 The mat and the chair answer the same question by different means, and the older answer is the one still in daily use.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പായ** (*pāya*) is native Dravidian, one word with Tamil *pāy* and Kannada *pāsu* (DEDR 4088). The same word once also named a sail, another woven sheet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cappātti"
 concept_tag: TA-PORUL270-CAPPATTI
 prerequisites: [TA-C270-totu2, TA-C270-cankili]
 sounds: []
-roots: []
+roots: [hindustani-capati]
+etymology_hook: "சப்பாத்தி ← Hindustani capātī, the flat bread of North India"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C270-cankili]
 <!-- hl-knowledge: introduces=[TA-LEX-C270-PORUL270-04]; assesses=[] -->
 
 **சப்பாத்தி** — *cappātti* — "a chapati".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சப்பாத்தி** (*cappātti*) is a loan from Hindustani *capātī*, the flat bread of North India.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

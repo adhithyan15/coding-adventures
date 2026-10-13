@@ -14,7 +14,8 @@ romanization: "hōlisu"
 concept_tag: KA-VERB-HOLISU
 prerequisites: [KA-C275-anuvadisu, KA-C275-arji-haku]
 sounds: []
-roots: []
+roots: [dravidian-pol-resemble]
+etymology_hook: "hōlisu: native Dravidian, from hōl 'to resemble'; older pōlisu (DEDR 4597)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C275-arji-haku]
 <!-- hl-knowledge: introduces=[KA-LEX-C275-KRIYE275-05]; assesses=[] -->
 
 **ಹೋಲಿಸು** — *hōlisu* — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೋಲಿಸು** (*hōlisu*) is native Dravidian, from *hōl*, "to resemble", and DEDR 4597 lists *pōlisu*, "to cause to resemble, compare", with the older *p-*; the entry also has Tamil *pōl*, Telugu *pōlu* and Malayalam *pōluka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a cow"
 concept_tag: GE-NATUR4-KUH
 prerequisites: [GE-C85-wueste, GE-C85-pferd]
 sounds: []
-roots: []
+roots: [germanic-kuz]
+etymology_hook: "Kuh ← Old High German kuo ← Proto-Germanic *kūz — the same word as English cow"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C85-pferd]
 <!-- hl-knowledge: introduces=[GE-LEX-C85-NATUR4-05]; assesses=[] -->
 
 **die Kuh** — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kuh** ← Old High German *kuo* ← Proto-Germanic *\*kūz* — inherited, the same word as English *cow*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

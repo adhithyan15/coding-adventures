@@ -14,7 +14,8 @@ romanization: "āḻamāṉa"
 concept_tag: TA-QUAL148-ALAMANA
 prerequisites: [TA-C147-comperi, TA-C147-tairiyamana]
 sounds: []
-roots: []
+roots: [dravidian-aazh-deep]
+etymology_hook: "ஆழமான — native Dravidian (DEDR 396); Malayalam āḻam 'depth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C147-tairiyamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C148-QUAL148-01]; assesses=[] -->
 
 **ஆழமான** — *āḻamāṉa* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆழமான** (*āḻamāṉa*) is native Dravidian. DEDR 396 lists Malayalam *āḻam*, "depth". It is *āḻam*, "depth", from *āḻ*, "to sink, to be deep", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

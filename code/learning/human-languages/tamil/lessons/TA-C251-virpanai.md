@@ -14,7 +14,8 @@ romanization: "viṟpaṉai"
 concept_tag: TA-VELAI251-VIRPANAI
 prerequisites: [TA-C251-pattiyal, TA-C251-porul]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell]
+etymology_hook: "விற்பனை — native Dravidian (DEDR 5421); Malayalam vilpana 'sale', Kannada bil 'to sell'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C251-porul]
 <!-- hl-knowledge: introduces=[TA-LEX-C251-VELAI251-04]; assesses=[] -->
 
 **விற்பனை** — *viṟpaṉai* — "a sale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விற்பனை** (*viṟpaṉai*) is native Dravidian. DEDR 5421 lists Malayalam *vilpana*, "sale" and Kannada *bil*, "to sell". It comes from *vil*, "to sell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

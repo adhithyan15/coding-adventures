@@ -14,7 +14,8 @@ romanization: "veḷiyēṟu"
 concept_tag: TA-VERB-VELIYERU
 prerequisites: [TA-C254-terntetu, TA-C254-nulai]
 sounds: []
-roots: []
+roots: [dravidian-veli-outside, dravidian-eeru-climb]
+etymology_hook: "வெளியேறு — native: veḷi 'outside' (DEDR 5498) + ēṟu 'to rise, go up' (DEDR 916)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C254-nulai]
 <!-- hl-knowledge: introduces=[TA-LEX-C254-ACT254-05]; assesses=[] -->
 
 **வெளியேறு** — *veḷiyēṟu* — "to exit, to go out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெளியேறு** (*veḷiyēṟu*) is native: *veḷi*, "outside" (DEDR 5498), and *ēṟu*, "to rise, to go up" (DEDR 916): "rise to the outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

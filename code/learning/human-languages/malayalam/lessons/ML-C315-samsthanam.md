@@ -14,7 +14,8 @@ romanization: "saṁsthānaṁ"
 concept_tag: ML-STHALAM315-SAMSTHANAM
 prerequisites: [ML-C314-pantu2, ML-C314-pularcce]
 sounds: []
-roots: []
+roots: [sanskrit-samsthana]
+etymology_hook: "saṁsthānaṁ ← Sanskrit saṁsthāna 'standing firm; a place, a state', a tatsama (CDIAL 13050a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C314-pularcce]
 <!-- hl-knowledge: introduces=[ML-LEX-C315-STHALAM315-01]; assesses=[] -->
 
 **സംസ്ഥാനം** — *saṁsthānaṁ* — "a state".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സംസ്ഥാനം** (*saṁsthānaṁ*) ← Sanskrit *saṁsthāna*, "standing firm; a place, a state", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13050a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

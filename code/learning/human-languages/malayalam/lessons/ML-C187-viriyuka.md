@@ -14,7 +14,8 @@ romanization: "viriyuka"
 concept_tag: ML-VERB-VIRIYUKA
 prerequisites: [ML-C186-kaliyakkuka, ML-C187-visuka]
 sounds: []
-roots: []
+roots: [dravidian-viri-open]
+etymology_hook: "viriyuka: native Dravidian, one word with Tamil viri and Kannada biri (DEDR 5411)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C187-visuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C187-KRIYA187-02]; assesses=[] -->
 
 **വിരിയുക** — *viriyuka* — "to bloom; to hatch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിരിയുക** (*viriyuka*) is native Dravidian, one word with Tamil *viri*, Kannada *biri* and Telugu *viriyu* (DEDR 5411). DEDR 5411 compares Sanskrit *ara-vinda*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

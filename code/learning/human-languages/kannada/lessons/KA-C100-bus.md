@@ -11,7 +11,8 @@ romanization: "bas"
 concept_tag: KA-FIND-BUS
 prerequisites: [KA-C100-map, KA-C100-ticket]
 sounds: []
-roots: []
+roots: [english-bus]
+etymology_hook: "bas ← English bus"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C100-ticket]
 
 **ಬಸ್** (*bas*) — "a bus". The **‑್** at the end keeps the last *s* bare, with no
 vowel after it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಸ್** (*bas*) is a loan from English *bus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

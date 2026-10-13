@@ -14,7 +14,8 @@ romanization: "āṇi"
 concept_tag: TA-THINGS135-ANI
 prerequisites: [TA-C135-kattarikkol, TA-C135-cuttiyal]
 sounds: []
-roots: []
+roots: [sanskrit-ani]
+etymology_hook: "ஆணி — an Indo-Aryan loan (DEDR App. 10): Sanskrit āṇi 'linch-pin'; Malayalam and Kannada āṇi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C135-cuttiyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **ஆணி** — *āṇi* — "a nail (to hammer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆணி** (*āṇi*) is filed in DEDR's appendix of Indo-Aryan loans (DEDR App. 10), beside Malayalam *āṇi*, "peg", and Kannada *āṇi*, "nail". The source is Sanskrit *āṇi*, "linch-pin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

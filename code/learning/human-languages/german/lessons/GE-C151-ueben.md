@@ -14,6 +14,7 @@ concept_tag: GE-VERB-UEBEN
 prerequisites: [GE-C151-treffen, GE-C151-traeumen]
 sounds: []
 roots: []
+etymology_hook: "üben ← Middle High German üeben 'to practise, to do' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C151-traeumen]
 <!-- hl-knowledge: introduces=[GE-LEX-C151-VERB151-03]; assesses=[] -->
 
 **üben** — "to practise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**üben** ← Middle High German *üeben*, "to practise, to carry out" (EtymDB 2.1) — inherited, from Old High German *uoben*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

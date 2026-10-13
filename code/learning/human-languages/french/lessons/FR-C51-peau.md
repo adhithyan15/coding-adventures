@@ -13,7 +13,8 @@ gloss: "skin"
 concept_tag: FR-CORPS3-PEAU
 prerequisites: [FR-C50-visage, FR-C50-sang]
 sounds: []
-roots: []
+roots: [pellis-latin]
+etymology_hook: "peau ← Latin pellis 'skin, hide' — Old French said pel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C50-sang]
 <!-- hl-knowledge: introduces=[FR-LEX-C51-CORPS3-01]; assesses=[] -->
 
 **la peau** — "skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peau** ← Old French *pel* ← Latin *pellis*, "skin, hide" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

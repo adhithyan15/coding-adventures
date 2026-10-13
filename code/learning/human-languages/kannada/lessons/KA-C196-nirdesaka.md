@@ -14,7 +14,8 @@ romanization: "nirdēśaka"
 concept_tag: KA-KELASA196-NIRDESAKA
 prerequisites: [KA-C195-bil, KA-C196-lekhaka]
 sounds: []
-roots: []
+roots: [sanskrit-nirdesha]
+etymology_hook: "nirdēśaka ← Sanskrit nirdeśaka 'one who points out, directs', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C196-lekhaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C196-KELASA196-02]; assesses=[] -->
 
 **ನಿರ್ದೇಶಕ** — *nirdēśaka* — "a director".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿರ್ದೇಶಕ** (*nirdēśaka*) is Sanskrit *nirdeśaka*, "one who points out, directs", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

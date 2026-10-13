@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES172-PLASTIQUE
 prerequisites: [FR-C171-rocher, FR-C171-caillou]
 sounds: []
 roots: []
+etymology_hook: "plastique ← Latin plasticus, from Greek plastikos 'fit for moulding'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C171-caillou]
 <!-- hl-knowledge: introduces=[FR-LEX-C172-CHOSES172-01]; assesses=[] -->
 
 **le plastique** — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plastique** ← Latin *plasticus*, "of moulding", from Greek *plastikos* (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

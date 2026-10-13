@@ -13,7 +13,8 @@ gloss: "to wait for"
 concept_tag: FR-VERB-ATTENDRE
 prerequisites: [FR-C64-regarder, FR-C64-ecouter]
 sounds: []
-roots: []
+roots: [tendere-latin]
+etymology_hook: "attendre ← Latin attendere 'to stretch toward, to heed' — English attend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C64-ecouter]
 <!-- hl-knowledge: introduces=[FR-LEX-C64-VERBES16-03]; assesses=[] -->
 
 **attendre** — "to wait for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**attendre** ← Latin *attendere*, "to stretch toward, to pay heed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

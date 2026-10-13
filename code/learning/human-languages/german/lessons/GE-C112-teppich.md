@@ -13,7 +13,8 @@ gloss: "a rug, a carpet"
 concept_tag: GE-HAUS112-TEPPICH
 prerequisites: [GE-C111-aufzug, GE-C111-fliegen, GE-C52-erste-lesung, GE-C52-words]
 sounds: []
-roots: []
+roots: [tapete-latin]
+etymology_hook: "Teppich ← Old High German teppih, from Latin tapētum 'carpet' — borrowed; English tapestry shares it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GE-C111-fliegen]
 <!-- hl-knowledge: introduces=[GE-LEX-C112-HAUS112-01]; assesses=[] -->
 
 **der Teppich** — "a rug, a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Teppich** ← Old High German *teppih*, from Latin *tapētum*, "carpet, tapestry" (EtymDB 2.1 has the Latin word), itself from Greek — borrowed. English *tapestry* shares the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

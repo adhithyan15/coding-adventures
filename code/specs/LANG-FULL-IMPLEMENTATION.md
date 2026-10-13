@@ -1438,10 +1438,14 @@ backend immediately) come before the enabler-dependent items.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
   already nonnegative and bounded; signed and nested-exponential forms stay
   conservative.
-  Bare unaliased local runtime-real snapshots may cross a procedure-call
-  selector through unary plus and minus chains; arithmetic and standard-function
-  transforms, globals, captured locals, and other real-name branches remain
-  conservative. Additive composition,
+  Unaliased local runtime-real snapshots may cross a procedure-call selector
+  through unary signs, additive or multiplicative composition, and powers with
+  finite static operands and pure supported standard-function transforms.
+  The exact bounded `entier(sign(...))` transform also crosses that selector;
+  finite specialisation may carry the same unaliased local-rooted proof through
+  a real name formal. Unary signs may wrap that exact name actual while
+  preserving the proof. Unrestricted runtime `entier`, globals, captured
+  locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

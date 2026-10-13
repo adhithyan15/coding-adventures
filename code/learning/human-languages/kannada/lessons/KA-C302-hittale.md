@@ -14,7 +14,8 @@ romanization: "hittāḷe"
 concept_tag: KA-VASTU302-HITTALE
 prerequisites: [KA-C301-patti, KA-C301-kavali]
 sounds: []
-roots: []
+roots: [sanskrit-pittala]
+etymology_hook: "hittāḷe: tadbhava of Sanskrit pittala 'brass' (CDIAL 8184)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C301-kavali]
 <!-- hl-knowledge: introduces=[KA-LEX-C302-VASTU302-01]; assesses=[] -->
 
 **ಹಿತ್ತಾಳೆ** — *hittāḷe* — "brass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿತ್ತಾಳೆ** (*hittāḷe*) is a tadbhava of Sanskrit *pittala*, "brass" (CDIAL 8184): the *p-* became *h-* and the *l* became *ḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

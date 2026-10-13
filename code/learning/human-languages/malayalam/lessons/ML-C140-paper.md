@@ -11,7 +11,8 @@ romanization: "kaṭalās"
 concept_tag: ML-CLASS-PAPER
 prerequisites: [ML-C140-pen, ML-C140-pencil]
 sounds: []
-roots: []
+roots: [arabic-qirtas]
+etymology_hook: "kaṭalās ← Arabic qirṭās 'paper', itself from Greek chartēs"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C140-pencil]
 <!-- hl-knowledge: introduces=[ML-LEX-C140-SCHOOL-03]; assesses=[] -->
 
 **കടലാസ്** (*kaṭalās*) — "paper", a sheet for **എഴുതുക**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടലാസ്** (*kaṭalās*) comes from Arabic *qirṭās*, "paper, a sheet", which Arabic took from Greek *chartēs*; it reached Malayalam through the trade of the coast.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

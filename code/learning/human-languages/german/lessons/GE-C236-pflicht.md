@@ -13,7 +13,8 @@ gloss: "a duty"
 concept_tag: GE-THING236-PFLICHT
 prerequisites: [GE-C235-ordnung, GE-C235-paar]
 sounds: []
-roots: []
+roots: [germanic-plihtiz]
+etymology_hook: "Pflicht ← Old High German pfliht ← Proto-Germanic *plihtiz — the same word as English plight"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C235-paar]
 <!-- hl-knowledge: introduces=[GE-LEX-C236-THING236-01]; assesses=[] -->
 
 **die Pflicht** — "a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Pflicht** ← Old High German *pfliht* ← Proto-Germanic *\*plihtiz* — inherited, the same word as English *plight*, as in "plight one's troth". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

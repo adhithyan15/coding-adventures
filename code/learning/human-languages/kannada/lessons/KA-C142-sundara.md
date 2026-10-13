@@ -14,7 +14,8 @@ romanization: "sundara"
 concept_tag: KA-QUAL142-SUNDARA
 prerequisites: [KA-C141-kolaku, KA-C141-vega]
 sounds: []
-roots: []
+roots: [sanskrit-sundara]
+etymology_hook: "sundara ← Sanskrit sundara 'beautiful', a tatsama (CDIAL 13474)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C141-vega]
 <!-- hl-knowledge: introduces=[KA-LEX-C142-QUAL142-01]; assesses=[] -->
 
 **ಸುಂದರ** — *sundara* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸುಂದರ** (*sundara*) is Sanskrit *sundara*, "beautiful", taken over whole as a learned loan, a tatsama (CDIAL 13474).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

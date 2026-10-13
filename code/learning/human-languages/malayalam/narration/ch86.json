@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "Two Kinds Of With",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8453fc878eaa428f",
+  "sourceHash": "fnv1a64:5a0106f4ed6ee240",
   "lessons": [
     {
       "id": "ML-C86-oppam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b73c37e515bacef4",
+      "sourceHash": "fnv1a64:cb868a95faba8593",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒപ്പം (oppaṁ) is native Dravidian, from the root \"to be alike, to agree\"; DEDR 924 lists the root with Kannada oppu and Telugu oppu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -137,7 +148,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -168,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb3c7b81eae189f7",
+      "sourceHash": "fnv1a64:881e721a8a85e106",
       "notice": null,
       "blocks": [
         {
@@ -230,6 +241,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടെ (kūṭe) is native Dravidian, a form of the verb \"to come together, join\"; DEDR 1882 lists the root with Tamil kūṭu and Kannada kūḍu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -278,7 +300,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

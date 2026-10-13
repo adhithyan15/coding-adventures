@@ -14,7 +14,8 @@ romanization: "payaṉuḷḷa"
 concept_tag: TA-GUNAM179-PAYANULLA
 prerequisites: [TA-C178-ilavacam, TA-C178-palutta]
 sounds: []
-roots: []
+roots: [dravidian-paya-yield, dravidian-ul-be]
+etymology_hook: "பயனுள்ள — payaṉ 'use', usually linked to paya 'to yield' (DEDR 3937), + uḷḷa 'which has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C178-palutta]
 <!-- hl-knowledge: introduces=[TA-LEX-C179-GUNAM179-01]; assesses=[] -->
 
 **பயனுள்ள** — *payaṉuḷḷa* — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பயனுள்ள** (*payaṉuḷḷa*) is *payaṉ*, "use, benefit", with *uḷḷa*, "which has", from native *uḷ*, "to be" (DEDR 697). *Payaṉ* is usually connected with *paya*, "to yield, to bear fruit" (DEDR 3937), but DEDR does not list *payaṉ* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

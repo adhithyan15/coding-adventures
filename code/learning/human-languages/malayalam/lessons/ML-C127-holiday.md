@@ -11,7 +11,8 @@ romanization: "avadhi"
 concept_tag: ML-LEAVE-HOLIDAY
 prerequisites: [ML-C127-late, ML-C127-letsgo]
 sounds: []
-roots: []
+roots: [sanskrit-avadhi]
+etymology_hook: "avadhi ← Sanskrit avadhi 'limit, a fixed term', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C127-letsgo]
 <!-- hl-knowledge: introduces=[ML-LEX-C127-CARE-04]; assesses=[] -->
 
 **അവധി** (*avadhi*) — "a holiday, time off". **നാളെ അവധിയാണ്** — "tomorrow is a holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അവധി** (*avadhi*) ← Sanskrit *avadhi*, "limit, a fixed term", taken over whole as a tatsama. A set limit of time became time off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

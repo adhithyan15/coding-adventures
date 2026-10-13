@@ -11,7 +11,8 @@ romanization: "hagga"
 concept_tag: KA-NOUN-ROPE
 prerequisites: [KA-C62-needle, KA-C60-hen]
 sounds: []
-roots: []
+roots: [sanskrit-pragraha]
+etymology_hook: "hagga: an Indo-Aryan loan; DEDR App. 2 links it to pragraha 'bridle, thong' (CDIAL 8478)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C62-needle]
 ಹಗ್ಗ is ನೂಲು grown up: strands laid together until the result will hold weight. Native, with nothing borrowed anywhere in it.
 
 In a ಹಳ್ಳಿ yard it is the thing at the end of which the ಹಸು stands. Twist it thinner and it ties a ಬುಟ್ಟಿ shut; twist it thicker and it draws water out of a ಕೆರೆ.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಗ್ಗ** (*hagga*) is a loan from Indo-Aryan. DEDR files it in its appendix of such loans (DEDR App. 2) and links it to Sanskrit *pragraha*, "bridle, thong" (CDIAL 8478), with Kannada *agga* beside *hagga*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

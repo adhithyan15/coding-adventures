@@ -10,10 +10,10 @@ gloss: you have — the first form where the b falls out and the rule stops work
 concept_tag: GE-HABEN-DU-HAST
 prerequisites: [GE-C14-hab-stamm]
 sounds: [d-t-final, vowel-a]
-roots: []
+roots: [germanic-habjana]
 etymology_hook: "du hast and archaic English thou hast are the same form of the same verb, both having lost the same b in the same place"
 duration:
-  max_seconds: 145
+  max_seconds: 187
 requires:
   knowledge: [GE-GRAMMAR-HABEN-REGULAR-01, GE-LEX-HABEN-01, GE-LEX-DU-SIE-02, GE-GRAMMAR-WEAK-SINGULAR-02]
 introduces:
@@ -51,6 +51,11 @@ lands crisply on the end.
 This is not a spelling convenience. It is one of exactly two places in the whole
 verb where the machine fails, and it is worth meeting on its own so that it is a
 form you know rather than a form you derive wrongly.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hast** is a form of *haben* ← Old High German *habēn* ← Proto-Germanic *\*habjaną* — inherited, the same verb as English *have*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-HABEN-DU-HAST-01] -->

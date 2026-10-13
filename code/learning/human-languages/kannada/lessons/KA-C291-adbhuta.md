@@ -14,7 +14,8 @@ romanization: "adbhuta"
 concept_tag: KA-GUNA291-ADBHUTA
 prerequisites: [KA-C291-beccage, KA-C291-vicitra]
 sounds: []
-roots: []
+roots: [sanskrit-adbhuta]
+etymology_hook: "adbhuta ← Sanskrit adbhuta 'wonderful', a tatsama (CDIAL 240)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C291-vicitra]
 <!-- hl-knowledge: introduces=[KA-LEX-C291-GUNA291-04]; assesses=[] -->
 
 **ಅದ್ಭುತ** — *adbhuta* — "wonderful, amazing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅದ್ಭುತ** (*adbhuta*) is Sanskrit *adbhuta*, "wonderful", taken over whole as a learned loan, a tatsama (CDIAL 240).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baṭṭalu"
 concept_tag: KA-VASTU183-BATTALU
 prerequisites: [KA-C183-banale, KA-C183-kukkar]
 sounds: []
-roots: []
+roots: [kannada-battalu-bowl]
+etymology_hook: "baṭṭalu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C183-kukkar]
 <!-- hl-knowledge: introduces=[KA-LEX-C183-VASTU183-03]; assesses=[] -->
 
 **ಬಟ್ಟಲು** — *baṭṭalu* — "a bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಬಟ್ಟಲು** (*baṭṭalu*) is uncertain. Neither DEDR nor CDIAL records it for Kannada, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

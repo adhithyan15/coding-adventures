@@ -14,7 +14,8 @@ romanization: "nari"
 concept_tag: TA-THINGS130-NARI
 prerequisites: [TA-C129-muyal, TA-C129-man2]
 sounds: []
-roots: []
+roots: [dravidian-nari-jackal]
+etymology_hook: "நரி — native Dravidian (DEDR 3606); Malayalam nari, Kannada nari"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C129-man2]
 <!-- hl-knowledge: introduces=[TA-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **நரி** — *nari* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நரி** (*nari*) is native Dravidian. DEDR 3606 lists Malayalam *nari* and Kannada *nari*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

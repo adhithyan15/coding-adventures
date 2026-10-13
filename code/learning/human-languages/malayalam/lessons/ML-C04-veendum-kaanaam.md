@@ -12,6 +12,7 @@ concept_tag: FAREWELL-LATER
 prerequisites: [ML-C04-naale-kaanaam]
 sounds: [retroflex-nd]
 roots: [veendum-again-dravidian, dravidian-kaan-see]
+etymology_hook: "vīṇḍuṁ kāṇāṁ: native Dravidian 'we'll see again'; the 'again' is kin to Tamil mīḷ 'return' (DEDR 4883, 1443)"
 duration:
   max_seconds: 180
 requires:
@@ -49,6 +50,8 @@ see") — "**we'll see [each other] again**." Both words are native Dravidian:
 *vīṇḍuṁ* ("again," from *vīṇṭu*, "to return") and *kāṇ* ("to see"). Where Tamil's
 "we'll meet again" reaches for the Sanskrit loan *sandi* to say "meet," Malayalam
 — like Kannada — keeps its own native verb, here "to see."
+
+DEDR 4883 lists the word for "again" beside Tamil *mīḷ*, "to return"; DEDR 1443 is the seeing verb.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C04-VEENDUM-KAANAAM-01] -->

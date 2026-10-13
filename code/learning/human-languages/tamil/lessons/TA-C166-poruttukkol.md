@@ -14,7 +14,8 @@ romanization: "poṟuttukkoḷ"
 concept_tag: TA-VERB-PORUTTUKKOL
 prerequisites: [TA-C166-vilakkerru, TA-C166-veti]
 sounds: []
-roots: []
+roots: [dravidian-poru-bear, dravidian-kol-take]
+etymology_hook: "பொறுத்துக்கொள் — native: poṟu 'to bear' (DEDR 4565; Malayalam poṟukka) + koḷ 'to take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C166-veti]
 <!-- hl-knowledge: introduces=[TA-LEX-C166-ACT166-03]; assesses=[] -->
 
 **பொறுத்துக்கொள்** — *poṟuttukkoḷ* — "to put up with, to tolerate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொறுத்துக்கொள்** (*poṟuttukkoḷ*) is native: *poṟuttu*, "having borne", from *poṟu*, "to bear, to tolerate" (DEDR 4565; Malayalam *poṟukka*), and *koḷ*, "to take" (DEDR 2151).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

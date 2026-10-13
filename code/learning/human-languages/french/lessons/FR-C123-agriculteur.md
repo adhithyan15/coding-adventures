@@ -14,6 +14,7 @@ concept_tag: FR-METIERS75-AGRICULTEUR
 prerequisites: [FR-C123-policier, FR-C123-vendeur]
 sounds: []
 roots: []
+etymology_hook: "agriculteur ← Latin agricultor, from ager 'field' + cultor 'tiller' — English agriculture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C123-vendeur]
 <!-- hl-knowledge: introduces=[FR-LEX-C123-METIERS75-05]; assesses=[] -->
 
 **l'agriculteur** — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agriculteur** ← Latin *agricultor*, "a farmer", from *ager*, "a field", and *cultor*, "a tiller" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

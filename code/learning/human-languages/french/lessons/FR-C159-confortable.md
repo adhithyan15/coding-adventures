@@ -14,6 +14,7 @@ concept_tag: FR-QUAL159-CONFORTABLE
 prerequisites: [FR-C158-au-contraire, FR-C158-bien-que]
 sounds: []
 roots: []
+etymology_hook: "confortable ← English comfortable, built on Old French conforter 'to strengthen'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C158-bien-que]
 <!-- hl-knowledge: introduces=[FR-LEX-C159-QUAL159-01]; assesses=[] -->
 
 **confortable** — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**confortable** ← English *comfortable* — borrowed in the 1700s. English had built it on Old French *conforter*, "to strengthen", from Latin *fortis*, "strong" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-THING195-FUSSGAENGERZONE
 prerequisites: [GE-C194-rundfahrt, GE-C194-marktplatz]
 sounds: []
 roots: []
+etymology_hook: "Fußgängerzone — Fuß 'foot' + Gänger 'goer' + Zone ← Greek zōnē 'belt': a zone for walkers"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C194-marktplatz]
 <!-- hl-knowledge: introduces=[GE-LEX-C195-THING195-01]; assesses=[] -->
 
 **die Fußgängerzone** — "a pedestrian zone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fußgängerzone** is *Fuß* + a noun built on *gehen*, "to go", + *Zone*, "zone", which came through Latin from Greek *zṓnē*, "belt": a belt of town for people on foot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

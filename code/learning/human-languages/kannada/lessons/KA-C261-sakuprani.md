@@ -14,7 +14,8 @@ romanization: "sākuprāṇi"
 concept_tag: KA-VASTU261-SAKUPRANI
 prerequisites: [KA-C260-vahana, KA-C260-ato]
 sounds: []
-roots: []
+roots: [dravidian-saku-rear, sanskrit-pranin]
+etymology_hook: "sākuprāṇi: native sāku 'to rear' (DEDR 2427) + Sanskrit prāṇin 'living creature' (CDIAL 8932)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C260-ato]
 <!-- hl-knowledge: introduces=[KA-LEX-C261-VASTU261-01]; assesses=[] -->
 
 **ಸಾಕುಪ್ರಾಣಿ** — *sākuprāṇi* — "a pet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಕುಪ್ರಾಣಿ** (*sākuprāṇi*) joins native *sāku*, "to bring up, rear", which DEDR 2427 lists, to Sanskrit *prāṇin*, "a living creature" (CDIAL 8932): "a creature you rear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

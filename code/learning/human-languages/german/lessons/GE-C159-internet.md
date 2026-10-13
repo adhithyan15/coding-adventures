@@ -14,6 +14,7 @@ concept_tag: GE-THING159-INTERNET
 prerequisites: [GE-C159-adresse, GE-C159-telefonnummer]
 sounds: []
 roots: []
+etymology_hook: "Internet ← English Internet — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C159-telefonnummer]
 <!-- hl-knowledge: introduces=[GE-LEX-C159-THING159-03]; assesses=[] -->
 
 **das Internet** — "the internet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Internet** ← English *Internet* (EtymDB 2.1) — borrowed, built from Latin *inter*, "between", and English *net*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

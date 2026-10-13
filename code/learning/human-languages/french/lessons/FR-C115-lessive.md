@@ -14,6 +14,7 @@ concept_tag: FR-MAISON67-LESSIVE
 prerequisites: [FR-C115-aspirateur, FR-C115-linge]
 sounds: []
 roots: []
+etymology_hook: "lessive ← Latin lixivus 'made into lye' — clothes were washed with lye from ashes"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C115-linge]
 <!-- hl-knowledge: introduces=[FR-LEX-C115-MAISON67-03]; assesses=[] -->
 
 **la lessive** — "washing powder; the washing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lessive** ← Old French *lissive* (EtymDB 2.1) ← Latin *lixivus*, "made into lye", from *lix*, "ashes, lye" (Lewis & Short) — inherited: clothes were washed in lye.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

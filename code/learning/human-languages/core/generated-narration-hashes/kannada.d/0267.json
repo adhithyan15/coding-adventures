@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 267,
-  "sourceHash": "fnv1a64:90d8f103e6c9f7ad",
+  "sourceHash": "fnv1a64:02d2de92cf0b4bb6",
   "lessonIds": [
     "KA-C267-gobbara",
     "KA-C267-kunda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch267.txt",
   "json": "kannada/narration/ch267.json",
-  "textHash": "fnv1a64:9177d48d72dfa790",
-  "jsonHash": "fnv1a64:f6e0373e33636d4f",
+  "textHash": "fnv1a64:7d04c860d76d3c3f",
+  "jsonHash": "fnv1a64:273ab611378af6bf",
   "findings": []
 }

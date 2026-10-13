@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 224,
-  "sourceHash": "fnv1a64:4f52168b2f792ffd",
+  "sourceHash": "fnv1a64:eb82319272cb582c",
   "lessonIds": [
     "KA-C224-hoge",
     "KA-C224-dhulu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch224.txt",
   "json": "kannada/narration/ch224.json",
-  "textHash": "fnv1a64:1357871e1db478ea",
-  "jsonHash": "fnv1a64:04c2016fa99b02a0",
+  "textHash": "fnv1a64:8688b565df699e47",
+  "jsonHash": "fnv1a64:3327b61fba25722f",
   "findings": []
 }

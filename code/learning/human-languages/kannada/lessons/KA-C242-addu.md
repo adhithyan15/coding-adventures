@@ -14,7 +14,8 @@ romanization: "addu"
 concept_tag: KA-VERB-ADDU
 prerequisites: [KA-C242-nenesu, KA-C242-hindu]
 sounds: []
-roots: []
+roots: [dravidian-azhuttu-dip]
+etymology_hook: "addu: native Dravidian, one word with Telugu addu (DEDR 285)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C242-hindu]
 <!-- hl-knowledge: introduces=[KA-LEX-C242-KRIYE242-04]; assesses=[] -->
 
 **ಅದ್ದು** — *addu* — "to dip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅದ್ದು** (*addu*) is native Dravidian, one word with Telugu *addu* (DEDR 285). DEDR lists *addu*, "to immerse, dip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

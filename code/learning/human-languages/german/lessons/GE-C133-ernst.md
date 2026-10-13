@@ -13,7 +13,8 @@ gloss: "serious"
 concept_tag: GE-EIGEN133-ERNST
 prerequisites: [GE-C133-boese, GE-C133-lustig]
 sounds: []
-roots: []
+roots: [germanic-ernustuz]
+etymology_hook: "ernst ← Old High German ernust 'vigour, strife' — the same word as English earnest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C133-lustig]
 <!-- hl-knowledge: introduces=[GE-LEX-C133-EIGEN133-03]; assesses=[] -->
 
 **ernst** — "serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ernst** ← Old High German *ernust*, "vigour, strife" ← Proto-Germanic *\*ernustuz* — inherited, the same word as English *earnest*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

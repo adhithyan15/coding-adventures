@@ -14,7 +14,8 @@ romanization: "jyūs"
 concept_tag: ML-VASTU249-JYUS
 prerequisites: [ML-C249-gotambu, ML-C249-rotti]
 sounds: []
-roots: []
+roots: [english-juice]
+etymology_hook: "jyūs ← English juice"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C249-rotti]
 <!-- hl-knowledge: introduces=[ML-LEX-C249-VASTU249-04]; assesses=[] -->
 
 **ജ്യൂസ്** — *jyūs* — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജ്യൂസ്** (*jyūs*) ← English *juice*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

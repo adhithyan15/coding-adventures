@@ -13,7 +13,8 @@ gloss: "a flame"
 concept_tag: FR-CHOSES201-FLAMME
 prerequisites: [FR-C201-poussiere, FR-C201-fumee]
 sounds: []
-roots: []
+roots: [flamma-latin]
+etymology_hook: "flamme ← Latin flamma 'a flame' — English flame and inflammable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C201-fumee]
 <!-- hl-knowledge: introduces=[FR-LEX-C201-CHOSES201-05]; assesses=[] -->
 
 **la flamme** — "a flame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**flamme** ← Old French *flame* ← Latin *flamma*, "a flame" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 244,
-  "sourceHash": "fnv1a64:82bfc51c3d3355a3",
+  "sourceHash": "fnv1a64:e3f4de9ca0f70726",
   "lessonIds": [
     "GE-C244-anbieten",
     "GE-C244-annehmen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch244.txt",
   "json": "german/narration/ch244.json",
-  "textHash": "fnv1a64:e306b0e7dde3444e",
-  "jsonHash": "fnv1a64:3d123fa7e2819335",
+  "textHash": "fnv1a64:e27b691834c5274d",
+  "jsonHash": "fnv1a64:d8c7585b690618e5",
   "findings": []
 }

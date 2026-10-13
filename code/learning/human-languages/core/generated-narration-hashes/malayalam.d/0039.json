@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 39,
-  "sourceHash": "fnv1a64:4b61536296ee175e",
+  "sourceHash": "fnv1a64:b6c8ba7a8693dea7",
   "lessonIds": [
     "ML-C39-chaaya",
     "ML-C39-kaapi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch39.txt",
   "json": "malayalam/narration/ch39.json",
-  "textHash": "fnv1a64:61dd9c1b4e637a03",
-  "jsonHash": "fnv1a64:4c209fe389a4f348",
+  "textHash": "fnv1a64:963986172e2bbad1",
+  "jsonHash": "fnv1a64:fd3184252f5220f6",
   "findings": []
 }

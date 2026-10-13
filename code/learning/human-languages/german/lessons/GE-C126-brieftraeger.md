@@ -13,7 +13,8 @@ gloss: "a postman"
 concept_tag: GE-BERUF126-BRIEFTRAEGER
 prerequisites: [GE-C125-anwalt, GE-C125-ingenieur]
 sounds: []
-roots: []
+roots: [brevis-latin, germanic-dragana]
+etymology_hook: "Briefträger — Brief 'letter' + Träger 'carrier': the letter carrier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C125-ingenieur]
 <!-- hl-knowledge: introduces=[GE-LEX-C126-BERUF126-01]; assesses=[] -->
 
 **der Briefträger** — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Briefträger** is the word for "letter" + *Träger*, "carrier", from *tragen*. The letter word ← Old High German *briaf* ← Latin *brevis*, "short (document)" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

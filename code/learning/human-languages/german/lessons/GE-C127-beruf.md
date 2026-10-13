@@ -13,7 +13,8 @@ gloss: "a job, a profession"
 concept_tag: GE-SCHULE127-BERUF
 prerequisites: [GE-C126-kasse, GE-C126-chef]
 sounds: []
-roots: []
+roots: [germanic-hropana]
+etymology_hook: "Beruf — be- + Ruf 'call': a calling, the sense Luther gave the word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C126-chef]
 <!-- hl-knowledge: introduces=[GE-LEX-C127-SCHULE127-01]; assesses=[] -->
 
 **der Beruf** — "a job, a profession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Beruf** is *be-* + the noun of *rufen*, "to call", Old High German *hruof* (EtymDB 2.1): a calling, the sense Luther gave the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

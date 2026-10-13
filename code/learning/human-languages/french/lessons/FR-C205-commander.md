@@ -13,7 +13,8 @@ gloss: "to order"
 concept_tag: FR-VERB-COMMANDER
 prerequisites: [FR-C205-depenser, FR-C205-economiser]
 sounds: []
-roots: []
+roots: [mandare-latin]
+etymology_hook: "commander ← Latin commendare 'to entrust' — English command and commend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C205-economiser]
 <!-- hl-knowledge: introduces=[FR-LEX-C205-VERBES205-04]; assesses=[] -->
 
 **commander** — "to order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commander** ← Old French *comander* ← Vulgar Latin *\*commandare*, from Latin *commendare*, "to entrust" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

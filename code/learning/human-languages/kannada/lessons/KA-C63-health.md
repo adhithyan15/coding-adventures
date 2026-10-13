@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-HEALTH
 prerequisites: [KA-C63-pain, KA-C61-sugar]
 sounds: []
 roots: []
+etymology_hook: "ārōgya ← Sanskrit ārogya 'health', a- 'not' + roga 'illness' (CDIAL 1330)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C63-pain]
 ಆರೋಗ್ಯ is Sanskrit, and it is built the negative way round: a piece meaning being unwell, with a *not* fixed on the front of it. Health is named by what is missing rather than by what is there.
 
 It gives you a better answer than you had. ನೀವು ಹೇಗಿದ್ದೀರಾ? has been answered with ಚೆನ್ನಾಗಿ since the how-are-you chapter, which says you are doing well. ಆರೋಗ್ಯ says the body itself is sound, and it is the word a ವೈದ್ಯ wants.
+
+CDIAL 1330 lists Sanskrit *ārogya*, "health".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

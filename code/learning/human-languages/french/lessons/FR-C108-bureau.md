@@ -14,6 +14,7 @@ concept_tag: FR-VILLE60-BUREAU
 prerequisites: [FR-C107-piscine, FR-C107-epicerie]
 sounds: []
 roots: []
+etymology_hook: "bureau ← Old French burel 'coarse cloth', the desk cover — then the desk, then the room"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C107-epicerie]
 <!-- hl-knowledge: introduces=[FR-LEX-C108-VILLE60-01]; assesses=[] -->
 
 **le bureau** — "an office; a desk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bureau** ← Old French *burel*, "coarse woollen cloth", from Old French *bure*, ← Latin *burra*, "shaggy cloth" (EtymDB 2.1): the cloth on a desk, then the desk, then the room.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

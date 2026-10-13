@@ -13,6 +13,9 @@ You'll want to know: மருத்துவமனை.
 மருத்துவமனை (maruttuvamaṉai) — "a hospital", literally "medicine-house".
 மனை is "a house, a dwelling". மருத்துவமனை (maruttuvamaṉai) எங்கே? — "where is the hospital?".
 
+The word, taken apart.
+மருத்துவமனை (maruttuvamaṉai) is native: maruttuvam, "medicine" (DEDR 4719), and maṉai, "house" (DEDR 4776). A hospital is "the house of medicine".
+
 What you've built.
 A place to ask the way to.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for rest, then the Tamil for a hospital.
 You'll want to know: வாந்தி.
 வாந்தி (vānti) — "vomiting".
 வாந்தி (vānti) வருகிறது — "I feel sick", literally "vomiting is coming".
+
+The word, taken apart.
+வாந்தி (vānti) is a loan from Sanskrit vānti, "vomiting" (CDIAL 11518).
 
 What you've built.
 A symptom a doctor will ask about.
@@ -73,6 +79,9 @@ You'll want to know: தலைவலி.
 தலைவலி (talaivali) — "a headache".
 It is தலை, "head", and வலி, "pain", written as one word. எனக்குத் தலைவலி (talaivali) — "I have a headache".
 
+The word, taken apart.
+தலைவலி (talaivali) is native: talai, "head" (DEDR 3103), and vali, "pain" (DEDR 5281).
+
 What you've built.
 Head and pain, joined.
 
@@ -103,6 +112,9 @@ You'll want to know: உடல்நலம்.
 உடல்நலம் (uṭalnalam) — "health", literally "body-wellbeing".
 நலம் is the wellbeing of your first greetings; உடல் is "the body".
 
+The word, taken apart.
+உடல்நலம் (uṭalnalam) is native: uṭal, "body" (DEDR 586), and nalam, "wellness" (DEDR 3610).
+
 What you've built.
 Health, built from a word you already use.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for a headache, then the Tamil for health.
 You'll want to know: வியர்வை.
 வியர்வை (viyarvai) — "sweat".
 வியர்வை (viyarvai) வருகிறது — "I am sweating", literally "sweat is coming", like வாந்தி (vānti).
+
+The word, taken apart.
+வியர்வை (viyarvai) is native Dravidian. DEDR 5486 lists Malayalam viyarppu and Kannada bemaru.
 
 What you've built.
 A hospital, feeling sick, a headache, health, and sweat.

@@ -14,7 +14,8 @@ romanization: "mōr"
 concept_tag: TA-PORUL214-MOR
 prerequisites: [TA-C213-parpacai, TA-C213-paltulakki]
 sounds: []
-roots: []
+roots: [dravidian-mor-buttermilk]
+etymology_hook: "மோர் — native Dravidian (DEDR 4902); Malayalam mōr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C213-paltulakki]
 <!-- hl-knowledge: introduces=[TA-LEX-C214-PORUL214-01]; assesses=[] -->
 
 **மோர்** — *mōr* — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மோர்** (*mōr*) is native Dravidian. DEDR 4902 lists Malayalam *mōr*. The entry compares Sanskrit *moraṭa*, "sour buttermilk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

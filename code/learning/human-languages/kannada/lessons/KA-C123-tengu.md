@@ -14,7 +14,8 @@ romanization: "teṅgu"
 concept_tag: KA-THINGS123-TENGU
 prerequisites: [KA-C123-balehannu, KA-C123-mavinahannu]
 sounds: []
-roots: []
+roots: [dravidian-tengu-coconut]
+etymology_hook: "teṅgu: native Dravidian, one word with Tamil teṅku and Telugu teṅkāya (DEDR 3408)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C123-mavinahannu]
 <!-- hl-knowledge: introduces=[KA-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **ತೆಂಗು** — *teṅgu* — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೆಂಗು** (*teṅgu*) is native Dravidian, one word with Tamil *teṅku* and Telugu *teṅkāya* (DEDR 3408). DEDR lists *teṅgu* itself, "coconut palm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

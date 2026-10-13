@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a pigeon, then the Kannada for an owl.
 You'll want to know: ನವಿಲು.
 ನವಿಲು — navilu — "a peacock".
 
+The word, taken apart.
+ನವಿಲು (navilu) is native Dravidian, one word with Telugu nemali (DEDR 2902). DEDR lists Kannada navil(u).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for an owl, then the Kannada for a peacock.
 
 You'll want to know: ಚಿಟ್ಟೆ.
 ಚಿಟ್ಟೆ — ciṭṭe — "a butterfly".
+
+The word, taken apart.
+The origin of ಚಿಟ್ಟೆ (ciṭṭe) is uncertain. DEDR has no entry for it in this sense, CDIAL does not record it, and no source for it is settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a peacock, then the Kannada for a butter
 You'll want to know: ಇರುವೆ.
 ಇರುವೆ — iruve — "an ant".
 
+The word, taken apart.
+ಇರುವೆ (iruve) is native Dravidian, one word with Tamil eṟumpu (DEDR 864). DEDR lists iṟuve among the Kannada forms; ṟ became r.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a butterfly, then the Kannada for an ant
 You'll want to know: ಸೊಳ್ಳೆ.
 ಸೊಳ್ಳೆ — soḷḷe — "a mosquito".
 
+The word, taken apart.
+ಸೊಳ್ಳೆ (soḷḷe) is native Dravidian, one word with Tamil cuḷḷāṉ (DEDR 2705). DEDR lists soḷḷe itself, "mosquito".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an ant, then the Kannada for a mosquito.
 
 You'll want to know: ಜೇಡ.
 ಜೇಡ — jēḍa — "a spider".
+
+The word, taken apart.
+ಜೇಡ (jēḍa) is native Dravidian (DEDR 2809). DEDR lists jēḍa, "a weaver; spider": the spider is the weaver.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "different"
 concept_tag: FR-QUAL219-DIFFERENT-DIFFERENTE
 prerequisites: [FR-C219-amusant-amusante, FR-C219-etrange]
 sounds: []
-roots: []
+roots: [ferre-latin]
+etymology_hook: "différent ← Latin differens, from differre 'to carry apart' — English different"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C219-etrange]
 <!-- hl-knowledge: introduces=[FR-LEX-C219-QUAL219-04]; assesses=[] -->
 
 **différent / différente** — "different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**différent** ← Latin *differens*, "carrying apart", from *differre* (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

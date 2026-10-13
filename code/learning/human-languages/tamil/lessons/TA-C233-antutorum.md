@@ -14,7 +14,8 @@ romanization: "āṇṭutōṟum"
 concept_tag: TA-NERAM233-ANTUTORUM
 prerequisites: [TA-C232-noyali, TA-C232-ceviliyar]
 sounds: []
-roots: []
+roots: [dravidian-aandu-year]
+etymology_hook: "ஆண்டுதோறும் — native Dravidian (DEDR 5153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C232-ceviliyar]
 <!-- hl-knowledge: introduces=[TA-LEX-C233-NERAM233-01]; assesses=[] -->
 
 **ஆண்டுதோறும்** — *āṇṭutōṟum* — "every year, yearly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆண்டுதோறும்** (*āṇṭutōṟum*) is native Dravidian (DEDR 5153). It is *āṇṭu*, "year", with *-tōṟum*, "each, every".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

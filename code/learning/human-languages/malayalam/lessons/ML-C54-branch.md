@@ -11,7 +11,8 @@ romanization: "kompŭ"
 concept_tag: ML-NOUN-BRANCH
 prerequisites: [ML-C54-tree, ML-C52-chair]
 sounds: []
-roots: []
+roots: [dravidian-kombu-horn]
+etymology_hook: "kompŭ: native Dravidian, one word with Tamil kompu and Kannada kombu (DEDR 2115)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *kompu*. Malayalam puts one shape on anything that jut
 That is a picture doing the work rather than a rule. Once you have seen the branch and the horn as one thing, the elephant's tusk needs no separate word, and Malayalam never gave it one.
 
 The elephant sense is the one you are most likely to hear in Kerala, where the animal is a fixture of festival and of conversation both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊമ്പ്** (*kompŭ*) is native Dravidian, one word with Tamil *kompu*, Kannada *kombu* and Telugu *kommu* (DEDR 2115). One word covers the branch, the horn and the tusk: anything that juts out to a point.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

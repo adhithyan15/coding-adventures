@@ -11,7 +11,8 @@ romanization: "pullŭ"
 concept_tag: ML-NOUN-GRASS
 prerequisites: [ML-C66-paddy, ML-C64-soon]
 sounds: []
-roots: []
+roots: [dravidian-pul-grass]
+etymology_hook: "pullŭ: native Dravidian, one word with Tamil pul and Kannada pul (DEDR 4300)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian, matching Tamil *pul*, and it ends the way നെല്ല് e
 They are the field's two crops seen from opposite sides. One is planted and counted; the other turns up on its own and is cut for the animals.
 
 Which makes this the *paśu*'s word rather than the farmer's: grass is what the cow is walked out to.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുല്ല്** (*pullŭ*) is native Dravidian, one word with Tamil *pul*, Kannada *pul* and Telugu *pulu* (DEDR 4300).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

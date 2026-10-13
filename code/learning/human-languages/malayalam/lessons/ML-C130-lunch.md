@@ -11,7 +11,8 @@ romanization: "uccabhakṣaṇaṁ"
 concept_tag: ML-MEALS-LUNCH
 prerequisites: [ML-C129-watch, ML-C130-breakfast]
 sounds: []
-roots: []
+roots: [sanskrit-ucca-high, sanskrit-bhakshana]
+etymology_hook: "uccabhakṣaṇaṁ: ucca 'noon', from Sanskrit ucca 'high' (CDIAL 1634), + Sanskrit bhakṣaṇa 'food'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C130-breakfast]
 
 **ഉച്ചഭക്ഷണം** (*uccabhakṣaṇaṁ*) — "lunch": **ഉച്ച** (*ucca*), "noon", with
 **ഭക്ഷണം** (*bhakṣaṇaṁ*), "food". Both halves are words you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉച്ചഭക്ഷണം** (*uccabhakṣaṇaṁ*) joins *ucca*, "noon", from Sanskrit *ucca*, "high" (CDIAL 1634), the sun at its height, to Sanskrit *bhakṣaṇa*, "food".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

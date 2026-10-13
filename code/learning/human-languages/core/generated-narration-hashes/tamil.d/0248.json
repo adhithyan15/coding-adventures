@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 248,
-  "sourceHash": "fnv1a64:10a441d7ae317233",
+  "sourceHash": "fnv1a64:3a130b715990be55",
   "lessonIds": [
     "TA-C248-varatci",
     "TA-C248-nilanatukkam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch248.txt",
   "json": "tamil/narration/ch248.json",
-  "textHash": "fnv1a64:956859528c72c604",
-  "jsonHash": "fnv1a64:ed82993c16d24b88",
+  "textHash": "fnv1a64:426587436984ecef",
+  "jsonHash": "fnv1a64:3d90735268321d43",
   "findings": []
 }

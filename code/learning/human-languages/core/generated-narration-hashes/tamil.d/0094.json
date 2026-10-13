@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 94,
-  "sourceHash": "fnv1a64:407432ddf7968241",
+  "sourceHash": "fnv1a64:d51f3e107f465a68",
   "lessonIds": [
     "TA-C94-dontunderstand",
     "TA-C94-write",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch94.txt",
   "json": "tamil/narration/ch94.json",
-  "textHash": "fnv1a64:cfe7320b73263e9d",
-  "jsonHash": "fnv1a64:2114c3455f26197d",
+  "textHash": "fnv1a64:baf4ab46953b3791",
+  "jsonHash": "fnv1a64:08f610446eb1370b",
   "findings": []
 }

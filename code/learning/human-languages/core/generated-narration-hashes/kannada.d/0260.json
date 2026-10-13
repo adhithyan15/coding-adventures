@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 260,
-  "sourceHash": "fnv1a64:ebce2c33109fc3f7",
+  "sourceHash": "fnv1a64:fe78142dbf770d90",
   "lessonIds": [
     "KA-C260-samanu",
     "KA-C260-kili",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch260.txt",
   "json": "kannada/narration/ch260.json",
-  "textHash": "fnv1a64:be7f026f9873c382",
-  "jsonHash": "fnv1a64:f44f7eaa878f9aaa",
+  "textHash": "fnv1a64:b9d59d2c68e1c9a4",
+  "jsonHash": "fnv1a64:9df34b71cc85f98f",
   "findings": []
 }

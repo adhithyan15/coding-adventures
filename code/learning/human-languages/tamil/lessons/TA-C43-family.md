@@ -11,7 +11,8 @@ romanization: "kuṭumbam"
 concept_tag: TA-NOUN-FAMILY
 prerequisites: [TA-C43-daughter, TA-C41-old]
 sounds: []
-roots: []
+roots: [sanskrit-kutumba]
+etymology_hook: "குடும்பம் ← Sanskrit kuṭumba 'household' (CDIAL 3233); DEDR 1655 sets kuṭumba beside native kuṭi 'house'"
 duration:
   max_seconds: 210
 requires:

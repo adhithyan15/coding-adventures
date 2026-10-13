@@ -14,7 +14,8 @@ romanization: "aḻikkuka"
 concept_tag: ML-VERB-ALIKKUKA
 prerequisites: [ML-C310-tennuka, ML-C310-uraykkuka]
 sounds: []
-roots: []
+roots: [dravidian-azhi-loose]
+etymology_hook: "aḻikkuka: native Dravidian, one word with Tamil aḻi and Kannada aḻi (DEDR 277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C310-uraykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C310-KRIYA310-03]; assesses=[] -->
 
 **അഴിക്കുക** — *aḻikkuka* — "to untie, to undo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഴിക്കുക** (*aḻikkuka*) is native Dravidian, one word with Tamil *aḻi* and Kannada *aḻi* (DEDR 277).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gurutina cīṭi"
 concept_tag: KA-VASTU223-GURUTINA-CITI
 prerequisites: [KA-C223-pramanapatra, KA-C223-pasport]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark]
+etymology_hook: "gurutina cīṭi: native gurutu 'mark, sign' (DEDR 1847) + cīṭi 'slip of paper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C223-pasport]
 <!-- hl-knowledge: introduces=[KA-LEX-C223-VASTU223-04]; assesses=[] -->
 
 **ಗುರುತಿನ ಚೀಟಿ** — *gurutina cīṭi* — "an identity card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುರುತಿನ ಚೀಟಿ** (*gurutina cīṭi*) is *gurutina*, "of identity", from native *gurutu*, "a mark, sign" (DEDR 1847), and *cīṭi*, "a slip of paper", which came through Hindustani *ciṭṭhī*, "a note".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

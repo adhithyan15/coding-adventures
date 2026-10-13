@@ -14,7 +14,8 @@ romanization: "atukoṇṭŭ"
 concept_tag: ML-WHY144-ATUKONTU
 prerequisites: [ML-C143-silam, ML-C143-yogyata]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-kolu-take]
+etymology_hook: "atukoṇṭŭ: native Dravidian, 'taking that': atŭ (DEDR 1) + koṇṭŭ (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C143-yogyata]
 <!-- hl-knowledge: introduces=[ML-LEX-C144-WHY144-01]; assesses=[] -->
 
 **അതുകൊണ്ട്** — *atukoṇṭŭ* — "so, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അതുകൊണ്ട്** (*atukoṇṭŭ*) is native Dravidian, "taking that": *atŭ*, "that" (DEDR 1), with *koṇṭŭ*, the past form of the verb "to take" (DEDR 2151, with Tamil *koḷ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

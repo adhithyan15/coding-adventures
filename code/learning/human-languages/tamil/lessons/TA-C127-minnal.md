@@ -14,7 +14,8 @@ romanization: "miṉṉal"
 concept_tag: TA-THINGS127-MINNAL
 prerequisites: [TA-C127-pani, TA-C127-iti]
 sounds: []
-roots: []
+roots: [dravidian-min-flash]
+etymology_hook: "மின்னல் — native Dravidian (DEDR 4876); Malayalam minnal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C127-iti]
 <!-- hl-knowledge: introduces=[TA-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **மின்னல்** — *miṉṉal* — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மின்னல்** (*miṉṉal*) is native Dravidian. DEDR 4876 lists Malayalam *minnal*. It is the noun of *miṉṉu*, "to flash".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

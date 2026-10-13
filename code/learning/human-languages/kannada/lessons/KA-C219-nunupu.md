@@ -14,7 +14,8 @@ romanization: "nuṇupu"
 concept_tag: KA-GUNA219-NUNUPU
 prerequisites: [KA-C219-samanya, KA-C219-mondu]
 sounds: []
-roots: []
+roots: [dravidian-nun-smooth]
+etymology_hook: "nuṇupu: native Dravidian, one word with Tamil nuṇ and Telugu nunu- (DEDR 3700)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C219-mondu]
 <!-- hl-knowledge: introduces=[KA-LEX-C219-GUNA219-03]; assesses=[] -->
 
 **ನುಣುಪು** — *nuṇupu* — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನುಣುಪು** (*nuṇupu*) is native Dravidian, one word with Tamil *nuṇ*, Telugu *nunu-* and Malayalam *nuṇma* (DEDR 3700). DEDR lists *nuṇupu* itself, "smoothness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

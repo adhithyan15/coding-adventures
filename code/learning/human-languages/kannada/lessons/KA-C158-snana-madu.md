@@ -14,7 +14,8 @@ romanization: "snāna māḍu"
 concept_tag: KA-VERB-SNANA-MADU
 prerequisites: [KA-C158-kharidisu, KA-C158-pavatisu]
 sounds: []
-roots: []
+roots: [sanskrit-snana, maadu-do-dravidian]
+etymology_hook: "snāna māḍu: Sanskrit snāna 'bathing' (CDIAL 13789) + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C158-pavatisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C158-KRIYE158-05]; assesses=[] -->
 
 **ಸ್ನಾನ ಮಾಡು** — *snāna māḍu* — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ನಾನ ಮಾಡು** (*snāna māḍu*) is *snāna*, "bathing", from Sanskrit *snāna* (CDIAL 13789), with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

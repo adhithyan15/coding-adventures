@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 245,
-  "sourceHash": "fnv1a64:6f4603e72a3b4796",
+  "sourceHash": "fnv1a64:3a1f627bca9b6727",
   "lessonIds": [
     "TA-C245-cumai",
     "TA-C245-kural",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch245.txt",
   "json": "tamil/narration/ch245.json",
-  "textHash": "fnv1a64:e1c6d3a6a5e4c6ff",
-  "jsonHash": "fnv1a64:878fd5f8e4b0e051",
+  "textHash": "fnv1a64:f1aa919a8095758e",
+  "jsonHash": "fnv1a64:0d4855f2afef807a",
   "findings": []
 }

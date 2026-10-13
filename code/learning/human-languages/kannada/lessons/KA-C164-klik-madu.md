@@ -14,7 +14,8 @@ romanization: "klik māḍu"
 concept_tag: KA-VERB-KLIK-MADU
 prerequisites: [KA-C163-nedu, KA-C164-aplod-madu]
 sounds: []
-roots: []
+roots: [english-click, maadu-do-dravidian]
+etymology_hook: "klik māḍu: English click + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C164-aplod-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C164-KRIYE164-02]; assesses=[] -->
 
 **ಕ್ಲಿಕ್ ಮಾಡು** — *klik māḍu* — "to click".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ಲಿಕ್ ಮಾಡು** (*klik māḍu*) is English *click* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
