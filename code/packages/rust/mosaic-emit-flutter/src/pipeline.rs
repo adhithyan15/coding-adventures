@@ -9833,7 +9833,11 @@ fn path_bounding_size(xs: &[f64], ys: &[f64]) -> (f64, f64) {
 /// | `x1: ( seg[0] )`    | `(seg[0]).toDouble()`      |
 ///
 /// `.toDouble()` is defined on `num`, so it accepts an `int` or `double`
-/// element, and a `dynamic` one at run time.
+/// element, and a `dynamic` one at run time. A value that is not finite (a
+/// diverged simulation's `NaN` or `Infinity`) becomes `0.0`, the posture
+/// UI36 takes for live numbers: `Size(Infinity, …)` throws during layout. The
+/// guard is an inline closure, `((double v) => v.isFinite ? v : 0.0)(…)`, so
+/// literal-only files gain no helper.
 #[derive(Debug, Clone)]
 enum PathCoord {
     Literal(f64),
@@ -9861,6 +9865,21 @@ impl PathCoord {
     }
 }
 
+/// `(e).toDouble()` as Dart source, with a non-finite result replaced by `0.0`.
+fn dart_finite_double(expression: &str) -> String {
+    format!("((double v) => v.isFinite ? v : 0.0)(({expression}).toDouble())")
+}
+
+/// A circle's radius: like [`required_path_coord`], but a bound radius is
+/// also floored at `0`. `Container(width: -10)` fails Flutter's constraint
+/// assertion.
+fn required_path_radius(node: &LayoutNode) -> Result<PathCoord, PipelineEmitError> {
+    Ok(match required_path_coord(node, "r")? {
+        PathCoord::Bound(expr) => PathCoord::Bound(format!("({expr}).clamp(0.0, double.infinity)")),
+        literal => literal,
+    })
+}
+
 /// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
 /// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
 /// compile error, never a silent `0`.
@@ -9870,10 +9889,10 @@ fn required_path_coord(node: &LayoutNode, prop_name: &str) -> Result<PathCoord, 
         Some(LayoutPropValue::SlotRef(slot)) => {
             let field = to_camel_case_first_lower(slot);
             validate_slot_or_field_name(&field)?;
-            Ok(PathCoord::Bound(format!("({field}).toDouble()")))
+            Ok(PathCoord::Bound(dart_finite_double(&field)))
         }
         Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
-            Ok(PathCoord::Bound(format!("({}).toDouble()", expression.trim())))
+            Ok(PathCoord::Bound(dart_finite_double(expression.trim())))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
@@ -9960,7 +9979,7 @@ fn emit_path(
         "circle" => {
             let cx = required_path_coord(node, "cx")?;
             let cy = required_path_coord(node, "cy")?;
-            let r = required_path_coord(node, "r")?;
+            let r = required_path_radius(node)?;
             // All-literal geometry keeps its computed numbers; any binding
             // writes the same arithmetic as a Dart expression.
             let (left, top) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
@@ -18435,7 +18454,7 @@ mod tests {
         let l = layout("X", node_with("Stack", vec![], vec![circle]));
         let out = from_pipeline(&m, &l, &empty_style("X")).expect("ok").output;
         assert!(
-            out.contains("Positioned(left: (dotX).toDouble() - 5, top: 5 - 5,"),
+            out.contains("Positioned(left: ((double v) => v.isFinite ? v : 0.0)((dotX).toDouble()) - 5, top: 5 - 5,"),
             "{out}"
         );
         assert!(out.contains("Container(width: 10, height: 10,"), "{out}");
@@ -18455,17 +18474,33 @@ mod tests {
         let l = layout("X", line);
         let out = from_pipeline(&m, &l, &empty_style("X")).expect("ok").output;
         assert!(
-            out.contains("start: Offset((segment[0]).toDouble(), (segment[1]).toDouble())"),
+            out.contains("start: Offset(((double v) => v.isFinite ? v : 0.0)((segment[0]).toDouble()), ((double v) => v.isFinite ? v : 0.0)((segment[1]).toDouble()))"),
             "{out}"
         );
-        assert!(out.contains("end: Offset((segment[2]).toDouble(), 188)"), "{out}");
+        assert!(out.contains("end: Offset(((double v) => v.isFinite ? v : 0.0)((segment[2]).toDouble()), 188)"), "{out}");
         assert!(
             out.contains(
-                "size: Size(<double>[(segment[0]).toDouble(), (segment[2]).toDouble()].fold(0.0, (a, b) => b > a ? b : a), <double>[(segment[1]).toDouble(), 188].fold(0.0, (a, b) => b > a ? b : a))"
+                "size: Size(<double>[((double v) => v.isFinite ? v : 0.0)((segment[0]).toDouble()), ((double v) => v.isFinite ? v : 0.0)((segment[2]).toDouble())].fold(0.0, (a, b) => b > a ? b : a), <double>[((double v) => v.isFinite ? v : 0.0)((segment[1]).toDouble()), 188].fold(0.0, (a, b) => b > a ? b : a))"
             ),
             "{out}"
         );
         assert!(!out.contains("const Offset((segment"), "{out}");
+    }
+
+    #[test]
+    fn path_bound_radius_is_floored_at_zero() {
+        // `Container(width: -10)` fails Flutter's constraint assertion.
+        let m = component("X", vec![], vec![]);
+        let mut circle = path_node("dot", "circle", &[("cx", 10.0), ("cy", 10.0)]);
+        circle.props.push(LayoutProp {
+            name: "r".to_string(),
+            value: LayoutPropValue::Expr("size".to_string()),
+        });
+        let out = from_pipeline(&m, &layout("X", circle), &empty_style("X"))
+            .expect("ok")
+            .output;
+        let r = "(((double v) => v.isFinite ? v : 0.0)((size).toDouble())).clamp(0.0, double.infinity)";
+        assert!(out.contains(&format!("Container(width: 2 * {r}, height: 2 * {r},")), "{out}");
     }
 
     #[test]
@@ -18477,7 +18512,8 @@ mod tests {
             value: LayoutPropValue::SlotRef("x); evil(".to_string()),
         });
         let l = layout("X", circle);
-        assert!(from_pipeline(&m, &l, &empty_style("X")).is_err());
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "{err:?}");
     }
 
     #[test]

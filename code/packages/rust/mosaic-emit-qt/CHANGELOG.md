@@ -10,6 +10,9 @@
   number".
 - A bound circle's position is the binding `Number(cx) - r`. A bound line's
   `Shape` size is `Math.max(0, …)`, floored at 0 as the literal size is.
+- A bound value that is not finite (a diverged simulation's `NaN` or
+  `Infinity`) becomes `0`, and a bound radius is floored at `0`. Without the
+  guard the shape silently disappeared.
 - All-literal geometry lowers byte-identically to before. An unsafe slot name
   is refused.
 - `tests/spice_workbench_compiles_to_qt.rs` compiles the real package and pins

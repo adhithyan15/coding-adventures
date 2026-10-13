@@ -43,7 +43,7 @@ fn emit_workbench() -> String {
 #[test]
 fn spice_workbench_waveform_segments_lower_to_bound_compose_lines() {
     let out = emit_workbench();
-    for needle in ["moveTo((( segment [ 0 ] )).toFloat(), (( segment [ 1 ] )).toFloat())", "lineTo((( segment [ 2 ] )).toFloat(), (( segment [ 3 ] )).toFloat())"] {
+    for needle in ["moveTo((( segment [ 0 ] )).toFloat().let { if (it.isFinite()) it else 0f }, (( segment [ 1 ] )).toFloat().let { if (it.isFinite()) it else 0f })", "lineTo((( segment [ 2 ] )).toFloat().let { if (it.isFinite()) it else 0f }, (( segment [ 3 ] )).toFloat().let { if (it.isFinite()) it else 0f })"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }
@@ -51,7 +51,7 @@ fn spice_workbench_waveform_segments_lower_to_bound_compose_lines() {
 #[test]
 fn spice_workbench_terminals_lower_to_bound_compose_circles() {
     let out = emit_workbench();
-    for needle in [".offset(x = ((( point [ 0 ] )).toFloat() - 5f).dp, y = ((( point [ 1 ] )).toFloat() - 5f).dp)"] {
+    for needle in [".offset(x = ((( point [ 0 ] )).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp, y = ((( point [ 1 ] )).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp)"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }

@@ -4459,7 +4459,10 @@ fn tree_needs_path_canvas(node: &LayoutNode) -> bool {
 /// | `x1: ( seg[0] )`    | `(seg[0]).toFloat()`       |
 ///
 /// `.toFloat()` is defined on every Kotlin `Number`, so a `Double` slot or
-/// list element and an `Int` index expression both convert. Literals are
+/// list element and an `Int` index expression both convert. A value that is
+/// not finite (a diverged simulation's `NaN` or `Infinity`) becomes `0f`, the
+/// posture UI36 takes for live numbers, since an infinite `.dp` cannot be
+/// laid out. Literals are
 /// written as `Float` (`28f`) in bound contexts, because Kotlin's `maxOf`
 /// and arithmetic do not mix `Int` and `Float` arguments implicitly.
 #[derive(Debug, Clone)]
@@ -4489,6 +4492,23 @@ impl PathCoord {
     }
 }
 
+/// `(e).toFloat()` as Kotlin source, with a non-finite result replaced by `0f`.
+fn kotlin_finite_float(expression: &str) -> String {
+    format!("({expression}).toFloat().let {{ if (it.isFinite()) it else 0f }}")
+}
+
+/// A circle's radius: like [`required_path_coord`], but a bound radius is
+/// also floored at `0f`, since a negative size is not a shape.
+fn required_path_radius(
+    node: &LayoutNode,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<PathCoord, PipelineEmitError> {
+    Ok(match required_path_coord(node, "r", for_payload)? {
+        PathCoord::Bound(expr) => PathCoord::Bound(format!("({expr}).coerceAtLeast(0f)")),
+        literal => literal,
+    })
+}
+
 /// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
 /// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
 /// compile error, never a silent `0`.
@@ -4506,11 +4526,11 @@ fn required_path_coord(
         Some(LayoutPropValue::SlotRef(slot)) => {
             let field = to_camel_case_first_lower(slot);
             validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-            Ok(PathCoord::Bound(format!("({field}).toFloat()")))
+            Ok(PathCoord::Bound(kotlin_finite_float(&field)))
         }
         Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
             let lowered = compose_collection_index_expr(expression.trim(), for_payload);
-            Ok(PathCoord::Bound(format!("({lowered}).toFloat()")))
+            Ok(PathCoord::Bound(kotlin_finite_float(&lowered)))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
@@ -4584,7 +4604,7 @@ fn emit_path(
         "circle" => {
             let cx = required_path_coord(node, "cx", for_payload)?;
             let cy = required_path_coord(node, "cy", for_payload)?;
-            let r = required_path_coord(node, "r", for_payload)?;
+            let r = required_path_radius(node, for_payload)?;
             // All-literal geometry keeps its computed numbers; any binding
             // writes the same arithmetic as a Kotlin `Float` expression.
             let (left, top) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
@@ -14539,7 +14559,7 @@ mod tests {
             .expect("ok")
             .output;
         assert!(
-            out.contains(".offset(x = ((dotX).toFloat() - 5f).dp, y = (5f - 5f).dp)"),
+            out.contains(".offset(x = ((dotX).toFloat().let { if (it.isFinite()) it else 0f } - 5f).dp, y = (5f - 5f).dp)"),
             "{out}"
         );
         assert!(out.contains(".size(10.dp)"), "a literal radius keeps a literal size: {out}");
@@ -14560,16 +14580,33 @@ mod tests {
             .expect("ok")
             .output;
         assert!(
-            out.contains("moveTo((segment[0]).toFloat(), (segment[1]).toFloat())"),
+            out.contains("moveTo((segment[0]).toFloat().let { if (it.isFinite()) it else 0f }, (segment[1]).toFloat().let { if (it.isFinite()) it else 0f })"),
             "{out}"
         );
-        assert!(out.contains("lineTo((segment[2]).toFloat(), 188f)"), "{out}");
+        assert!(out.contains("lineTo((segment[2]).toFloat().let { if (it.isFinite()) it else 0f }, 188f)"), "{out}");
         assert!(
             out.contains(
-                "Canvas(modifier = Modifier.size(maxOf(0f, (segment[0]).toFloat(), (segment[2]).toFloat()).dp, maxOf(0f, (segment[1]).toFloat(), 188f).dp))"
+                "Canvas(modifier = Modifier.size(maxOf(0f, (segment[0]).toFloat().let { if (it.isFinite()) it else 0f }, (segment[2]).toFloat().let { if (it.isFinite()) it else 0f }).dp, maxOf(0f, (segment[1]).toFloat().let { if (it.isFinite()) it else 0f }, 188f).dp))"
             ),
             "{out}"
         );
+    }
+
+    #[test]
+    fn path_bound_radius_is_floored_at_zero() {
+        // A negative size is not a shape; a diverged value must not reach
+        // `.size`.
+        let m = component("X", vec![], vec![]);
+        let mut circle = path_node("dot", "circle", &[("cx", 10.0), ("cy", 10.0)]);
+        circle.props.push(LayoutProp {
+            name: "r".to_string(),
+            value: LayoutPropValue::Expr("size".to_string()),
+        });
+        let out = from_pipeline(&m, &layout("X", circle), &empty_style("X"))
+            .expect("ok")
+            .output;
+        let r = "((size).toFloat().let { if (it.isFinite()) it else 0f }).coerceAtLeast(0f)";
+        assert!(out.contains(&format!(".size((2f * {r}).dp)")), "{out}");
     }
 
     #[test]

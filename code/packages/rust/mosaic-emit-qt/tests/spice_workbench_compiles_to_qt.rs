@@ -43,7 +43,7 @@ fn emit_workbench() -> String {
 #[test]
 fn spice_workbench_waveform_segments_lower_to_bound_qml_lines() {
     let out = emit_workbench();
-    for needle in ["startX: Number(( segment [ 0 ] ))", "PathLine { x: Number(( segment [ 2 ] )); y: Number(( segment [ 3 ] )) }", "width: Math.max(0, Number(( segment [ 0 ] )), Number(( segment [ 2 ] )))"] {
+    for needle in ["startX: (isFinite(Number(( segment [ 0 ] ))) ? Number(( segment [ 0 ] )) : 0)", "PathLine { x: (isFinite(Number(( segment [ 2 ] ))) ? Number(( segment [ 2 ] )) : 0); y: (isFinite(Number(( segment [ 3 ] ))) ? Number(( segment [ 3 ] )) : 0) }", "width: Math.max(0, (isFinite(Number(( segment [ 0 ] ))) ? Number(( segment [ 0 ] )) : 0), (isFinite(Number(( segment [ 2 ] ))) ? Number(( segment [ 2 ] )) : 0))"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }
@@ -51,7 +51,7 @@ fn spice_workbench_waveform_segments_lower_to_bound_qml_lines() {
 #[test]
 fn spice_workbench_terminals_lower_to_bound_qml_circles() {
     let out = emit_workbench();
-    for needle in ["x: Number(( point [ 0 ] )) - 5", "y: Number(( point [ 1 ] )) - 5"] {
+    for needle in ["x: (isFinite(Number(( point [ 0 ] ))) ? Number(( point [ 0 ] )) : 0) - 5", "y: (isFinite(Number(( point [ 1 ] ))) ? Number(( point [ 1 ] )) : 0) - 5"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }

@@ -9,6 +9,9 @@ Flutter; they were refused before with "only supports a literal number".
 - `Offset` and `Size` drop `const` only when a coordinate is bound.
 - A bound line's size is folded at run time from `0`, with no `dart:math`
   import.
+- A bound value that is not finite becomes `0.0`, and a bound radius is
+  clamped to at least `0`. `Size(Infinity, …)` and `Container(width: -10)`
+  both throw during layout.
 - All-literal geometry lowers byte-identically to before.
 - A slot name that is not a safe Dart identifier is refused.
 - `tests/spice_workbench_compiles_to_flutter.rs` compiles the real package

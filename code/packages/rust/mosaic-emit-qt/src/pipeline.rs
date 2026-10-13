@@ -2879,11 +2879,18 @@ fn qml_path_bounding_box_lines(xs: &[PathCoord], ys: &[PathCoord]) -> Vec<String
 /// | Authored            | QML                          |
 /// |---------------------|------------------------------|
 /// | `x1: 28`            | `28`                         |
-/// | `x1: slot: start-x` | `Number(mosaicRoot.startX)`  |
-/// | `x1: ( seg[0] )`    | `Number(seg[0])`             |
+/// | `x1: slot: start-x` | `Number(mosaicRoot.startX)`† |
+/// | `x1: ( seg[0] )`    | `Number(seg[0])`†            |
+///
+/// † inside the finite guard described below.
 ///
 /// `Number(…)` coerces whatever the slot or list element holds to a JS
-/// number, the same coercion the Web Components lowering applies.
+/// number, the same coercion the Web Components lowering applies. A value
+/// that is not finite (a diverged simulation's `NaN` or `Infinity`) becomes
+/// `0`, the posture UI36 takes for live numbers, rather than a `NaN` size
+/// that silently hides the shape. The guard is written inline as
+/// `(isFinite(Number(e)) ? Number(e) : 0)`; re-evaluating `e` is safe because
+/// the moslayout expression grammar has no calls or assignments.
 #[derive(Debug, Clone)]
 enum PathCoord {
     Literal(f64),
@@ -2911,6 +2918,20 @@ impl PathCoord {
     }
 }
 
+/// `Number(e)` as a QML expression, with a non-finite result replaced by `0`.
+fn qml_finite_number(expression: &str) -> String {
+    format!("(isFinite(Number({expression})) ? Number({expression}) : 0)")
+}
+
+/// A circle's radius: like [`required_path_coord`], but a bound radius is
+/// also floored at `0`, since a negative diameter is not a shape.
+fn required_path_radius(node: &LayoutNode) -> Result<PathCoord, PipelineEmitError> {
+    Ok(match required_path_coord(node, "r")? {
+        PathCoord::Bound(expr) => PathCoord::Bound(format!("Math.max(0, {expr})")),
+        literal => literal,
+    })
+}
+
 /// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
 /// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
 /// compile error, never a silent `0`.
@@ -2920,10 +2941,10 @@ fn required_path_coord(node: &LayoutNode, prop_name: &str) -> Result<PathCoord, 
         Some(LayoutPropValue::SlotRef(slot)) => {
             let field = to_camel_case_first_lower(slot);
             validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
-            Ok(PathCoord::Bound(format!("Number(mosaicRoot.{field})")))
+            Ok(PathCoord::Bound(qml_finite_number(&format!("mosaicRoot.{field}"))))
         }
         Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
-            Ok(PathCoord::Bound(format!("Number({})", expression.trim())))
+            Ok(PathCoord::Bound(qml_finite_number(expression.trim())))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
@@ -2970,7 +2991,7 @@ fn emit_path_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
         "circle" => {
             let cx = required_path_coord(node, "cx")?;
             let cy = required_path_coord(node, "cy")?;
-            let r = required_path_coord(node, "r")?;
+            let r = required_path_radius(node)?;
             // All-literal geometry keeps its computed numbers; any binding
             // turns the same arithmetic into a QML binding expression.
             let (x, y, d) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
@@ -11158,7 +11179,7 @@ mod tests {
         });
         let l = LayoutDef { component_name: "Foo".to_string(), root: node };
         let out = from_pipeline(&m, &l, &empty_style("Foo")).unwrap().output;
-        assert!(out.contains("x: Number(mosaicRoot.moonX) - 17"), "{out}");
+        assert!(out.contains("x: (isFinite(Number(mosaicRoot.moonX)) ? Number(mosaicRoot.moonX) : 0) - 17"), "{out}");
         assert!(out.contains("y: 17 - 17"), "{out}");
         assert!(out.contains("width: 34"), "a literal radius keeps a literal size: {out}");
     }
@@ -11176,11 +11197,28 @@ mod tests {
         let m = component("Plot", vec![], vec![]);
         let l = LayoutDef { component_name: "Plot".to_string(), root: node };
         let out = from_pipeline(&m, &l, &empty_style("Plot")).unwrap().output;
-        assert!(out.contains("startX: Number(segment[0])"), "{out}");
-        assert!(out.contains("startY: Number(segment[1])"), "{out}");
-        assert!(out.contains("PathLine { x: Number(segment[2]); y: 188 }"), "{out}");
-        assert!(out.contains("width: Math.max(0, Number(segment[0]), Number(segment[2]))"), "{out}");
-        assert!(out.contains("height: Math.max(0, Number(segment[1]), 188)"), "{out}");
+        assert!(out.contains("startX: (isFinite(Number(segment[0])) ? Number(segment[0]) : 0)"), "{out}");
+        assert!(out.contains("startY: (isFinite(Number(segment[1])) ? Number(segment[1]) : 0)"), "{out}");
+        assert!(out.contains("PathLine { x: (isFinite(Number(segment[2])) ? Number(segment[2]) : 0); y: 188 }"), "{out}");
+        assert!(out.contains("width: Math.max(0, (isFinite(Number(segment[0])) ? Number(segment[0]) : 0), (isFinite(Number(segment[2])) ? Number(segment[2]) : 0))"), "{out}");
+        assert!(out.contains("height: Math.max(0, (isFinite(Number(segment[1])) ? Number(segment[1]) : 0), 188)"), "{out}");
+    }
+
+    #[test]
+    fn path_bound_radius_is_floored_at_zero() {
+        // A negative diameter is not a shape; a diverged value must not
+        // reach `width`.
+        let m = component("Foo", vec![], vec![]);
+        let mut node = path_node("dot", "circle", &[("cx", 10.0), ("cy", 10.0)]);
+        node.props.push(LayoutProp {
+            name: "r".to_string(),
+            value: LayoutPropValue::Expr("size".to_string()),
+        });
+        let l = LayoutDef { component_name: "Foo".to_string(), root: node };
+        let out = from_pipeline(&m, &l, &empty_style("Foo")).unwrap().output;
+        let r = "Math.max(0, (isFinite(Number(size)) ? Number(size) : 0))";
+        assert!(out.contains(&format!("width: 2 * {r}")), "{out}");
+        assert!(out.contains(&format!("x: 10 - {r}")), "{out}");
     }
 
     #[test]

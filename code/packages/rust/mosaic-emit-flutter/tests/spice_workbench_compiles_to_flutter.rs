@@ -43,7 +43,7 @@ fn emit_workbench() -> String {
 #[test]
 fn spice_workbench_waveform_segments_lower_to_bound_flutter_lines() {
     let out = emit_workbench();
-    for needle in ["start: Offset((( segment [ 0 ] )).toDouble(), (( segment [ 1 ] )).toDouble())", "end: Offset((( segment [ 2 ] )).toDouble(), (( segment [ 3 ] )).toDouble())"] {
+    for needle in ["start: Offset(((double v) => v.isFinite ? v : 0.0)((( segment [ 0 ] )).toDouble()), ((double v) => v.isFinite ? v : 0.0)((( segment [ 1 ] )).toDouble()))", "end: Offset(((double v) => v.isFinite ? v : 0.0)((( segment [ 2 ] )).toDouble()), ((double v) => v.isFinite ? v : 0.0)((( segment [ 3 ] )).toDouble()))"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }
@@ -51,7 +51,7 @@ fn spice_workbench_waveform_segments_lower_to_bound_flutter_lines() {
 #[test]
 fn spice_workbench_terminals_lower_to_bound_flutter_circles() {
     let out = emit_workbench();
-    for needle in ["Positioned(left: (( point [ 0 ] )).toDouble() - 5, top: (( point [ 1 ] )).toDouble() - 5,"] {
+    for needle in ["Positioned(left: ((double v) => v.isFinite ? v : 0.0)((( point [ 0 ] )).toDouble()) - 5, top: ((double v) => v.isFinite ? v : 0.0)((( point [ 1 ] )).toDouble()) - 5,"] {
         assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
     }
 }
