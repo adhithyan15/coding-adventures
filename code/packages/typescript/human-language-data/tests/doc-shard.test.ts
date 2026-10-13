@@ -56,6 +56,7 @@ const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: tru
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
 const DUCTUS_CHANGELOG = "code/packages/typescript/script-ductus/CHANGELOG.md";
 const HINDI_CHANGELOG = "code/learning/human-languages/hindi/CHANGELOG.md";
+const JAPANESE_CHANGELOG = "code/learning/human-languages/japanese/CHANGELOG.md";
 const MALAYALAM_CHANGELOG = "code/learning/human-languages/malayalam/CHANGELOG.md";
 const HINDI_PLAN: DocShardPlan = {
   path: HINDI_CHANGELOG,
@@ -73,6 +74,12 @@ const MALAYALAM_PLAN: DocShardPlan = {
 const MALAYALAM_FORWARD_FRAGMENT =
   "00580-CHANGELOG-ENTRIES-NOW-HAVE-STABLE-OWNERS-15670-6061dc1b.md";
 const MALAYALAM_MIGRATION_MAX_RANK = 570;
+const JAPANESE_PLAN: DocShardPlan = {
+  path: JAPANESE_CHANGELOG,
+  headingLevel: 2,
+  newestFirst: true,
+};
+const JAPANESE_MIGRATION_MAX_RANK = 290;
 
 /**
  * The fewest entries for which sharding a document buys anything.
@@ -225,6 +232,64 @@ describe("Malayalam changelog ownership", () => {
     expect(splitDocument(rendered, 2).sections).toHaveLength(57);
     expect(createHash("sha256").update(rendered).digest("hex")).toBe(
       "6edf7f921c2734a989cc8c57d58afb99ef839cc29ca8237fc6c7f1e0ce1e7960",
+    );
+  });
+});
+
+describe("Japanese changelog ownership", () => {
+  it("registers the changelog as a fixed newest-first level-2 shard plan", () => {
+    expect(DOC_SHARD_PLANS.find((plan) => plan.path === JAPANESE_CHANGELOG)).toEqual(
+      JAPANESE_PLAN,
+    );
+  });
+
+  it("keeps the generated monolith absent from a clean checkout", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), JAPANESE_CHANGELOG);
+    let cause: unknown;
+    try {
+      lstatSync(monolith);
+    } catch (error) {
+      cause = error;
+    }
+    expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+  });
+
+  it("preserves the pre-migration Japanese history byte-for-byte", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), JAPANESE_CHANGELOG);
+    const shards = readDocShards(monolith, JAPANESE_PLAN);
+    expect(shards).not.toBeNull();
+
+    const historical = new Map(
+      [...shards!].filter(
+        ([name]) =>
+          name === DOC_META_SHARD || Number(name.slice(0, 5)) <= JAPANESE_MIGRATION_MAX_RANK,
+      ),
+    );
+    const rendered = joinDocShards(historical, JAPANESE_PLAN);
+
+    expect(Buffer.byteLength(rendered)).toBe(98_382);
+    expect(splitDocument(rendered, 2).sections).toHaveLength(29);
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      "dead175636ff61c85b2d095c409b2c3eb660e2abeccbe0dfdcf214b72527099a",
+    );
+  });
+
+  it("gives parallel same-rank Japanese entries distinct owners without changing metadata", () => {
+    const headingA = "## Added — Japanese agent A lesson";
+    const headingB = "## Added — Japanese agent B lesson";
+    const nameA = docShardFilename(300, docSlug(headingA), headingDigest(headingA));
+    const nameB = docShardFilename(300, docSlug(headingB), headingDigest(headingB));
+    const metadata = "# Changelog — Japanese track\n\nPreamble.\n\n";
+    const shards = new Map([
+      [DOC_META_SHARD, metadata],
+      [nameA, `${headingA}\n\nA.\n\n`],
+      [nameB, `${headingB}\n\nB.\n\n`],
+    ]);
+
+    expect(nameA).not.toBe(nameB);
+    expect(shards.get(DOC_META_SHARD)).toBe(metadata);
+    expect(joinDocShards(shards, JAPANESE_PLAN)).toBe(
+      `${metadata}${headingB}\n\nB.\n\n${headingA}\n\nA.\n\n`,
     );
   });
 });
