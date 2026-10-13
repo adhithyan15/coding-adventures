@@ -11,7 +11,7 @@ concept_tag: ES-ORTH-MINUSCULA-INICIAL
 prerequisites: [ES-C426-mayusculas]
 sounds: []
 roots: []
-etymology_hook: "inicial ← Latin initialis, from initium 'a beginning'; minúscula 'somewhat smaller'"
+etymology_hook: "inicial ← Latin initialis 'at the beginning', from initium 'a beginning' — English initial"
 duration:
   max_seconds: 240
 requires:

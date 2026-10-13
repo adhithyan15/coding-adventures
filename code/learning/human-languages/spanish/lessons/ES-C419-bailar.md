@@ -11,9 +11,9 @@ concept_tag: ES-VERB-BAILAR
 prerequisites: [ES-C413-musica, ES-C35-gustar]
 sounds: [b-soft, diphthong-ai, l-clear, r-tap]
 roots: [ballare]
-etymology_hook: "bailar ← Late Latin ballare, from Greek — English ball, ballet, ballad (not a ball you throw)"
+etymology_hook: "bailar ← Occitan balar, from Late Latin ballare — English ball, ballet, ballad (not a ball you throw)"
 duration:
-  max_seconds: 240
+  max_seconds: 291
 requires:
   knowledge: [ES-LEX-MUSICA, ES-LEX-GUSTAR-07, ES-GRAMMAR-GUSTAR-INVERSION-09, ES-GRAMMAR-DEFINITE-ARTICLES]
 introduces:
@@ -57,7 +57,8 @@ switches off.
 **bailar** — "to dance." An *-ar* infinitive, the most ordinary shape a Spanish
 verb can have.
 
-Root: Late Latin **ballare**, "to dance," from Greek *ballízein*. This root
+Root: Late Latin **ballare**, "to dance," probably from Greek *ballízein*;
+Spanish took it through Occitan *balar*. This root
 travelled further into English than almost any other on this page:
 
 - a **ball** — the *dancing* kind. A ballroom is a room for *ballare*.
@@ -68,9 +69,9 @@ travelled further into English than almost any other on this page:
 And now the trap worth knowing, because it looks like the strongest member of
 the family and is not:
 
-> A **ball** you *throw* is not related. That one is Germanic, a cousin of
-> *balloon* and *bowl*. English has two unrelated words spelled *ball*, and only
-> the one you dance at comes from *ballare*.
+> A **ball** you *throw* is not related. That one is Germanic. English has two
+> unrelated words spelled *ball*, and only the one you dance at comes from
+> *ballare*.
 
 ## Grammar Lens: where the article rule switches off
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GUSTAR-07, ES-GRAMMAR-GUSTAR-INVERSION-09, ES-LEX-MUSICA] -->

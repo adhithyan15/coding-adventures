@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 502,
-  "sourceHash": "fnv1a64:7c74302d03f8d203",
+  "sourceHash": "fnv1a64:0d0732c7eb2ff566",
   "lessonIds": [
     "ES-C502-presentar",
     "ES-C502-mencionar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch502.txt",
   "json": "spanish/narration/ch502.json",
-  "textHash": "fnv1a64:1d83aec851cee8dd",
-  "jsonHash": "fnv1a64:529fa4f66b2bd095",
+  "textHash": "fnv1a64:ceebc0a055ad9fe7",
+  "jsonHash": "fnv1a64:102280bb8dafbc62",
   "findings": []
 }

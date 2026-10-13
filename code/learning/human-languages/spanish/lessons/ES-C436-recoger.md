@@ -66,6 +66,9 @@ to remember four English translations is four times the work for less accuracy.
 be said differently from *go*. The sound stays put and the letter moves, which
 is the reverse of what English spelling usually does to you.
 
+*Recoger* is Latin *recolligere*, "to gather up again" (Lewis & Short); *coger*
+is *colligere*, "to gather".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-05, ES-LEX-C431-PEDIDO-01, ES-LEX-C434-MAQ-01] -->
 

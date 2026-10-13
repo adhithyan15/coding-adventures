@@ -4,7 +4,7 @@
   "chapter": 492,
   "title": "Intentarlo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:80fd1dbf73279abe",
+  "sourceHash": "fnv1a64:f228c8d21b78e9aa",
   "lessons": [
     {
       "id": "ES-C492-intentar",
@@ -437,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e03c4cc3e07d8478",
+      "sourceHash": "fnv1a64:cd9f5bd7be43aa76",
       "notice": null,
       "blocks": [
         {
@@ -483,7 +483,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "elegir from Latin eligere, \"to pick out\" (EtymDB 2.1): e-, \"out\", and legere, \"to gather, to choose\" — the legere inside inteligente, \"intelligent\"."
+              "text": "elegir from Latin eligere, \"to pick out\" (EtymDB 2.1): e-, \"out\", and legere, \"to gather, to choose\" — the legere inside inteligente, \"intelligent\". A learned word: speech lost the -g-, as legere became leer."
             }
           ]
         },

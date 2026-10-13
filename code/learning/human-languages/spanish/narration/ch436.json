@@ -4,7 +4,7 @@
   "chapter": 436,
   "title": "Gente Y Trato",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:168fa733cf3890b5",
+  "sourceHash": "fnv1a64:5d7b30acfce27f91",
   "lessons": [
     {
       "id": "ES-C436-companero",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e7df1c0103452db",
+      "sourceHash": "fnv1a64:04a517d88b9b680f",
       "notice": null,
       "blocks": [
         {
@@ -84,6 +84,10 @@
             {
               "kind": "speech",
               "text": "On its own, mi compañero is ambiguous between a work partner and a life partner, and Spanish speakers disambiguate with de trabajo, de piso, de clase when it matters. That ambiguity is not sloppiness; the word never promised more than the one I share things with."
+            },
+            {
+              "kind": "speech",
+              "text": "Its base is the old compaña, \"company\", spoken Latin compania: com- and panis, \"bread\"."
             }
           ]
         },
@@ -159,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25be90566270bec4",
+      "sourceHash": "fnv1a64:6bfd296ae1146fd8",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This one does not come apart. It arrived whole, by way of Italian, and there is no Spanish piece inside it to recognise."
+              "text": "This one does not come apart. It arrived whole, by way of Italian gruppo, and there is no Spanish piece inside it to recognise."
             },
             {
               "kind": "speech",
@@ -302,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0267f7761ef372d3",
+      "sourceHash": "fnv1a64:52c032e9c4fd3387",
       "notice": null,
       "blocks": [
         {
@@ -367,6 +371,10 @@
             {
               "kind": "speech",
               "text": "Watch the spelling in the yo form. Ofrecer takes a z before the o: ofrezco, not ofreco. Every verb ending -cer after a vowel does the same — conocer / conozco, parecer / parezco — so learning this one buys the pattern for a large family."
+            },
+            {
+              "kind": "speech",
+              "text": "Ofrecer is spoken Latin offerescere, built on Latin offerre, \"to offer\"."
             }
           ]
         },
@@ -601,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01ed81fd8e47d672",
+      "sourceHash": "fnv1a64:5be63c14f5e94858",
       "notice": null,
       "blocks": [
         {
@@ -671,6 +679,10 @@
             {
               "kind": "speech",
               "text": "Watch the spelling: recojo with a j in the yo form, because ge would be said differently from go. The sound stays put and the letter moves, which is the reverse of what English spelling usually does to you."
+            },
+            {
+              "kind": "speech",
+              "text": "Recoger is Latin recolligere, \"to gather up again\" (Lewis & Short); coger is colligere, \"to gather\"."
             }
           ]
         },

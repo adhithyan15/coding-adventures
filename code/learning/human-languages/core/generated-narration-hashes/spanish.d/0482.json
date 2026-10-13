@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 482,
-  "sourceHash": "fnv1a64:8a90b2b42fe68b09",
+  "sourceHash": "fnv1a64:6ac965cbe9175612",
   "lessonIds": [
     "ES-C482-concreto",
     "ES-C482-parecido",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch482.txt",
   "json": "spanish/narration/ch482.json",
   "textHash": "fnv1a64:8398d42a8852a627",
-  "jsonHash": "fnv1a64:0c67ea1f5723552e",
+  "jsonHash": "fnv1a64:63b77fe153ecc488",
   "findings": []
 }

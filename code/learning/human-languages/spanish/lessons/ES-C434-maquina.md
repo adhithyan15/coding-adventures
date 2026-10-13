@@ -11,7 +11,7 @@ concept_tag: ES-REF-MAQUINA
 prerequisites: [ES-C434-taller, ES-C432-lavadora, ES-C393-ordenador]
 sounds: []
 roots: []
-etymology_hook: "máquina ← Latin machina, from Greek mēchanē 'a device' — learned, stressed as in Latin"
+etymology_hook: "máquina ← Latin machina, from Greek mēchanē 'a device' — learned: it kept its middle vowel"
 duration:
   max_seconds: 230
 requires:
@@ -61,7 +61,7 @@ máquina del billete*. When you do not know an appliance's name, *la máquina de
 plus what it does will be understood every time.
 
 *Máquina* is Latin *machina*, from Greek *mēchanē*, "a device" (Lewis & Short)
-— a learned word, which is why it keeps its stress on the first syllable.
+— a learned word: speech would have worn away its middle vowel.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C434-MAQ-02, ES-LEX-C432-CASA-01] -->

@@ -4,7 +4,7 @@
   "chapter": 471,
   "title": "El curso de cocina",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:a970af6c0fb70fd5",
+  "sourceHash": "fnv1a64:703c5e7f90728b65",
   "lessons": [
     {
       "id": "ES-C471-demasiado",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e07a4cd20200bf51",
+      "sourceHash": "fnv1a64:71670adbc9bc1161",
       "notice": null,
       "blocks": [
         {
@@ -267,7 +267,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nivel is the same word, made small. Latin libella is a little libra, a builder's level: a tiny balance that tells you when a surface is true. It reached Spanish through Occitan or French, and on the way the first l turned into an n — livel became nivel — because two l sounds so close together pull apart."
+              "text": "Nivel is the same word, made small. Latin libella is a little libra, a builder's level: a tiny balance that tells you when a surface is true. It reached Spanish through Catalan nivell or Occitan, and on the way the first l turned into an n — livel became nivel — because two l sounds so close together pull apart."
             },
             {
               "kind": "speech",

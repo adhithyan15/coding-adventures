@@ -11,7 +11,7 @@ concept_tag: ES-VERB-APOYAR
 prerequisites: [ES-C484-utilizar, ES-C484-aprovechar]
 sounds: []
 roots: []
-etymology_hook: "apoyar ← Italian appoggiare 'to lean', from poggio 'a support', Latin podium — English podium"
+etymology_hook: "apoyar ← Italian appoggiare 'to lean', from spoken Latin *appodiare, built on podium — English podium"
 duration:
   max_seconds: 200
 requires:
@@ -49,7 +49,7 @@ reviews_of: [ES-C484-aprovechar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**apoyar** ← Italian *appoggiare*, "to lean", built on *poggio*, "a support, a hillock", from Latin *podium*, "a raised platform".
+**apoyar** ← Italian *appoggiare*, "to lean", from spoken Latin *\*appodiare*, built on *podium*, "a raised platform".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

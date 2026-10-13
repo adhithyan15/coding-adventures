@@ -10,7 +10,7 @@ gloss: "to understand"
 concept_tag: ES-VERB-COMPRENDER
 prerequisites: [ES-C476-alumno, ES-C476-practicar]
 sounds: []
-roots: [prehendere-latin]
+roots: [prehendere-latin, latin-comprehendere]
 etymology_hook: "comprender ← Latin comprehendere 'to grasp': com- + prehendere 'to seize' — English comprehend"
 duration:
   max_seconds: 200

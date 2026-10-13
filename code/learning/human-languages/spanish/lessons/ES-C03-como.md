@@ -43,7 +43,7 @@ that you already own a dozen English versions of.
 **cómo** — "how." Root: Latin **quo modo** — not a word but a **two-word
 phrase**, "in what **manner**."
 
-**The two halves, and their English cousins:**
+**The two halves, and their English relatives:**
 
 - *modo* ("manner, measure") → English **mode**, **modal**, **model**,
   **moderate**, **modify**, com**mod**ity.

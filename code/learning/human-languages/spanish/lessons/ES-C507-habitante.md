@@ -10,7 +10,7 @@ gloss: "the inhabitant"
 concept_tag: ES-REF-HABITANTE
 prerequisites: [ES-C507-impuesto, ES-C507-poblacion]
 sounds: []
-roots: [habitare]
+roots: [habitare-latin]
 etymology_hook: "habitante ← Latin habitans 'dwelling', from habitare — kin to habitación; English inhabitant"
 duration:
   max_seconds: 200
@@ -47,7 +47,7 @@ reviews_of: [ES-C507-poblacion]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**habitante** ← Latin *habitans*, *habitantis*, "dwelling", the participle of *habitare*, "to dwell" — the *habitare* inside *habitación*.
+**habitante** ← Latin *habitans*, *habitantis*, "dwelling", the participle of *habitare*, "to dwell" — the *habitare* inside *habitación*. A learned word: the *-t-* between vowels stayed *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

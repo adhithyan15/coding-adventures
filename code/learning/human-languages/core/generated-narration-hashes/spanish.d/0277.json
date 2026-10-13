@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 277,
-  "sourceHash": "fnv1a64:75268482826641a9",
+  "sourceHash": "fnv1a64:e75ba4e761ca0568",
   "lessonIds": [
     "ES-C277-segun",
     "ES-C277-es-decir",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch277.txt",
   "json": "spanish/narration/ch277.json",
   "textHash": "fnv1a64:e159debbb62ca01c",
-  "jsonHash": "fnv1a64:a7f5091496c2959d",
+  "jsonHash": "fnv1a64:1b9e379d0e33109b",
   "findings": []
 }

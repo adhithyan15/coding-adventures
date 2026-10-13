@@ -13,7 +13,7 @@ sounds: [vowel-e]
 roots: [habere]
 etymology_hook: "hablaré — hablar + he 'I have': late Latin built the future as cantare habeo, 'I have to sing'"
 duration:
-  max_seconds: 288
+  max_seconds: 273
 requires:
   knowledge: [ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-LEX-HABLAR]
 introduces:
@@ -65,11 +65,9 @@ This is the one Spanish tense built on the **complete infinitive**. Nothing is
 chopped off. Every other tense you have met removes the *-ar* first; this one
 leaves it alone and simply adds to the end.
 
-**Where the ending comes from.** It is a verb in its own right, worn down.
-Late Latin said *cantare habeo* — literally "**I have** to sing," in the
-sense of "I am to sing," a thing still ahead of me. Old Spanish did the same
-with *hablar* and *he*, "I have". Said often enough, the *he* shrank onto
-the back of the infinitive and stopped being a separate word:
+**Where the ending comes from.** It is a verb, worn down. Late Latin said
+*cantare habeo*, "**I have** to sing": a thing still ahead of me. Old Spanish
+said *hablar he*, "I have to speak", and the *he* shrank onto the infinitive:
 
 ```
 hablar he          →   hablaré

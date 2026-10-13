@@ -4,7 +4,7 @@
   "chapter": 476,
   "title": "En clase",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7f4d012135993054",
+  "sourceHash": "fnv1a64:c15a23a02a50d6f4",
   "lessons": [
     {
       "id": "ES-C476-alumno",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41cbeffde9066241",
+      "sourceHash": "fnv1a64:f7f4d281ba479065",
       "notice": null,
       "blocks": [
         {

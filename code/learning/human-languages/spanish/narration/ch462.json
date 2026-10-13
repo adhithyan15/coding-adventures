@@ -4,7 +4,7 @@
   "chapter": 462,
   "title": "La reunión",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:59bea1b178a7da98",
+  "sourceHash": "fnv1a64:4be5652f43c3ea8c",
   "lessons": [
     {
       "id": "ES-C462-reducir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90154ab91bbc26ae",
+      "sourceHash": "fnv1a64:d13225760b509140",
       "notice": null,
       "blocks": [
         {
@@ -106,7 +106,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ducere is everywhere once you see it. La ducha is the same root, and it travelled: Italian doccia, a water pipe, from Latin ductio, \"a leading\" (Lewis & Short), gave French douche, which gave Spanish ducha — a pipe that leads water. English has conduct, produce, educate (to lead out), duke — a leader — and aqueduct, which leads water exactly as a shower does."
+              "text": "Ducere is everywhere once you see it. La ducha is the same root, and it travelled: Italian doccia, a water pipe, probably from Latin ductio, \"a leading\" (Lewis & Short), gave French douche, which gave Spanish ducha — a pipe that leads water. English has conduct, produce, educate (to lead out), duke — a leader — and aqueduct, which leads water as a shower does."
             },
             {
               "kind": "speech",

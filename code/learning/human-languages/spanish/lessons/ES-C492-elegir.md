@@ -49,7 +49,7 @@ The e breaks into i and the g becomes j: *elijo*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**elegir** ← Latin *eligere*, "to pick out" (EtymDB 2.1): *e-*, "out", and *legere*, "to gather, to choose" — the *legere* inside *inteligente*, "intelligent".
+**elegir** ← Latin *eligere*, "to pick out" (EtymDB 2.1): *e-*, "out", and *legere*, "to gather, to choose" — the *legere* inside *inteligente*, "intelligent". A learned word: speech lost the *-g-*, as *legere* became *leer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

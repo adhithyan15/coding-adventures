@@ -4,7 +4,7 @@
   "chapter": 506,
   "title": "Un cumpleaños",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4565bff35dc10c06",
+  "sourceHash": "fnv1a64:83f759e2bec85401",
   "lessons": [
     {
       "id": "ES-C506-regalar",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:454a6aef26c530c8",
+      "sourceHash": "fnv1a64:b8aefdb4c6f79a98",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "juguete is built on juego, \"a game\", with the small-ending -ete. Juego is Latin iocus, \"a joke, a jest\"."
+              "text": "juguete is built on juego, \"a game\", with the small-ending -ete. Juego is Latin iocus, \"a joke, a jest\" — inherited: the stressed o opened into ue."
             }
           ]
         },
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51a2114a87efe25d",
+      "sourceHash": "fnv1a64:025df92a333aa08f",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "felicitar from Late Latin felicitare, \"to make happy\" (EtymDB 2.1), from felix, \"happy\" — the felix inside feliz."
+              "text": "felicitar from Late Latin felicitare, \"to make happy\" (EtymDB 2.1), from felix, \"happy\" — the felix inside feliz. A learned word: the -t- between vowels stayed t."
             }
           ]
         },

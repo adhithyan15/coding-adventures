@@ -4,7 +4,7 @@
   "chapter": 475,
   "title": "En el trabajo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bd3c3f00f460db36",
+  "sourceHash": "fnv1a64:e438bf35e4be2106",
   "lessons": [
     {
       "id": "ES-C475-profesional",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ab9e61527ad4f24",
+      "sourceHash": "fnv1a64:25112f0abff3a624",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "profesional is built from profesión, \"a profession\", with -al. Profesión is Latin professio, \"a public declaration\" (Lewis & Short), from profiteri, \"to declare openly\": a profession was the work you declared."
+              "text": "profesional is built from profesión, \"a profession\", with -al. Profesión is Latin professio, \"a public declaration\" (Lewis & Short), from profiteri, \"to declare openly\": a profession was the work you declared. Profesión is learned: speech would have turned its -ssi- into j."
             }
           ]
         },
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23edf75f0709b812",
+      "sourceHash": "fnv1a64:c0a2ff43d754c826",
       "notice": null,
       "blocks": [
         {
@@ -207,7 +207,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "iniciativa is built from iniciar, \"to begin\" — Latin initiare (EtymDB 2.1), from initium, \"a beginning\" — with the ending -tiva. English initiative is built the same way."
+              "text": "iniciativa is built from iniciar, \"to begin\" — Latin initiare (EtymDB 2.1), from initium, \"a beginning\" — with the ending -tiva. English initiative is built the same way. Iniciar is learned: its -ti- became -ci-, not the z of words worn down in speech."
             }
           ]
         },

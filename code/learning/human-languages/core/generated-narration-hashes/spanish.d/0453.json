@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 453,
-  "sourceHash": "fnv1a64:ac342a8184ddf04a",
+  "sourceHash": "fnv1a64:0fe3d9444daaf877",
   "lessonIds": [
     "ES-C453-limpieza",
     "ES-C453-instalacion",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch453.txt",
   "json": "spanish/narration/ch453.json",
-  "textHash": "fnv1a64:166d7f96522d6e01",
-  "jsonHash": "fnv1a64:b5ef71fb21b7fad4",
+  "textHash": "fnv1a64:7a1c8d4e5e9d0584",
+  "jsonHash": "fnv1a64:76c53d733deb8325",
   "findings": []
 }

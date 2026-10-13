@@ -47,7 +47,7 @@ reviews_of: [ES-C509-desear]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**meta** ← Latin *meta*, "the turning post of a racecourse" (EtymDB 2.1): the post the chariots raced round became a finish line, then any goal.
+**meta** ← Latin *meta*, "the turning post of a racecourse" (EtymDB 2.1): the post the chariots raced round became a finish line, then any goal. A learned word: the *-t-* between vowels stayed *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

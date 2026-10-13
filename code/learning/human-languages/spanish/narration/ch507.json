@@ -4,7 +4,7 @@
   "chapter": 507,
   "title": "La sociedad",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:17713e41db125c5b",
+  "sourceHash": "fnv1a64:2e45ed9ef044d571",
   "lessons": [
     {
       "id": "ES-C507-votar",
@@ -433,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2544c274b0553714",
+      "sourceHash": "fnv1a64:fd367a667a8b6efd",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "habitante from Latin habitans, habitantis, \"dwelling\", the participle of habitare, \"to dwell\" — the habitare inside habitación."
+              "text": "habitante from Latin habitans, habitantis, \"dwelling\", the participle of habitare, \"to dwell\" — the habitare inside habitación. A learned word: the -t- between vowels stayed t."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 487,
   "title": "Cómo nos sentimos",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7411bea95c0b361d",
+  "sourceHash": "fnv1a64:83e33eb4758f06ba",
   "lessons": [
     {
       "id": "ES-C487-alegrarse",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f014dc40e703349a",
+      "sourceHash": "fnv1a64:0226881ee67a1b98",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "preocupar from Latin praeoccupare, \"to seize beforehand\" (EtymDB 2.1): prae-, \"before\", and occupare, \"to take hold of\". A worry is a thought that has taken hold of you first."
+              "text": "preocupar from Latin praeoccupare, \"to seize beforehand\" (EtymDB 2.1): prae-, \"before\", and occupare, \"to take hold of\". A worry is a thought that has taken hold of you first. A learned word: the -p- between vowels was kept, where speech made saber from sapere."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 509,
   "title": "Planes y deseos",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2d958fb037c64942",
+  "sourceHash": "fnv1a64:5adb6a05da911a41",
   "lessons": [
     {
       "id": "ES-C509-planear",
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:042314886550aa1a",
+      "sourceHash": "fnv1a64:99b32ab8e7ee4ace",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "meta from Latin meta, \"the turning post of a racecourse\" (EtymDB 2.1): the post the chariots raced round became a finish line, then any goal."
+              "text": "meta from Latin meta, \"the turning post of a racecourse\" (EtymDB 2.1): the post the chariots raced round became a finish line, then any goal. A learned word: the -t- between vowels stayed t."
             }
           ]
         },

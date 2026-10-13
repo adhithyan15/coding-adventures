@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 506,
-  "sourceHash": "fnv1a64:4565bff35dc10c06",
+  "sourceHash": "fnv1a64:83f759e2bec85401",
   "lessonIds": [
     "ES-C506-regalar",
     "ES-C506-envolver",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch506.txt",
   "json": "spanish/narration/ch506.json",
-  "textHash": "fnv1a64:c7e7552119e6b816",
-  "jsonHash": "fnv1a64:731dfbd68a01edf7",
+  "textHash": "fnv1a64:c806276c420cf0f3",
+  "jsonHash": "fnv1a64:ee94cb192dd0d7eb",
   "findings": []
 }

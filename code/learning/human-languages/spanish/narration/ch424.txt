@@ -90,6 +90,7 @@ los dos puntos — "the colon." Spanish names it for what it looks like: two poi
 Its main job is to announce what follows:
 Tengo tres colores favoritos: rojo, azul y verde.
 The colon promises a list; the commas then divide it; and there is still no comma before the final y.
+Dos is Latin duos, "two", and punto is Latin punctum, "a prick".
 
 Grammar Lens: the letter opening, where English disagrees.
 This is the exam-relevant half, because a written paper often asks for a note or a message:

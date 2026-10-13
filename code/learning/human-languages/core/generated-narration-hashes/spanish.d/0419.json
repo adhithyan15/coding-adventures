@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 419,
-  "sourceHash": "fnv1a64:c6457bcabdfc573f",
+  "sourceHash": "fnv1a64:aa152b6778f5cfad",
   "lessonIds": [
     "ES-C419-bailar"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch419.txt",
   "json": "spanish/narration/ch419.json",
-  "textHash": "fnv1a64:22e155b48b870bdf",
-  "jsonHash": "fnv1a64:27618a841c8ad436",
+  "textHash": "fnv1a64:4ebe5b472598f37c",
+  "jsonHash": "fnv1a64:bbcde5e27776a031",
   "findings": []
 }

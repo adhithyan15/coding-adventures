@@ -13,7 +13,7 @@ sounds: [vowel-a, r-tap, stress-final]
 roots: [agere-latin]
 etymology_hook: "actriz ← Latin actrix, the feminine of actor: Latin -trix became Spanish -triz"
 duration:
-  max_seconds: 297
+  max_seconds: 276
 requires:
   knowledge: [ES-LEX-C421-ARTS-01, ES-LEX-C420-ARTS-01]
 introduces:
@@ -60,9 +60,7 @@ Latin had its own feminine for *-tor* nouns: **-trix**. *Actor* / **actrix**.
 Spanish took that pair from Latin, turned the Latin **-x** into **-z**, and
 kept it.
 
-The ending is nearly extinct. Spanish has only a small handful of *-triz*
-words left, and they are worth seeing together because the list is short enough
-to hold in your head:
+The ending is nearly extinct; the few *-triz* words left fit in one table:
 
 | masculine | feminine | meaning |
 |---|---|---|
@@ -70,9 +68,8 @@ to hold in your head:
 | el emperador | la empera**triz** | the emperor |
 | el institutor | la institu**triz** | the governess |
 
-English kept the same Latin ending in **aviatrix** and **dominatrix**. The
-mathematical **matrix** only looks like one of them: it is built on *mater*,
-"mother", and first meant a breeding animal, then the womb.
+English kept the same Latin ending in **aviatrix** and **dominatrix**;
+**matrix** only looks like one, built on *mater*, "mother".
 
 Everywhere else in Spanish, the feminine of a person-noun is the ordinary
 swap: *el camarero* / *la camarera*. **-triz** is the exception, and *actriz*
@@ -108,7 +105,7 @@ teatro*, *la actriz del teatro*. The theatre stays masculine either way.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C421-ARTS-02, ES-LEX-C421-ARTS-01] -->
 
-[PAUSE 3s] Why is it not *la actora*? (Spanish inherited the Latin feminine
-*actrix* whole, rather than applying its own **-o** to **-a** swap.) Which
-English word for a grid of numbers carries the same ending? (*Matrix*.) Which
+[PAUSE 3s] Why is it not *la actora*? (Spanish took the Latin feminine
+*actrix* from Latin, rather than applying its own **-o** to **-a** swap.) Which
+English words keep the same ending? (*Aviatrix*, *dominatrix*.) Which
 syllable is stressed in both *actor* and *actriz*? (The last.)

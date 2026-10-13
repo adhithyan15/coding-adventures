@@ -63,6 +63,8 @@ you than any single appliance. A machine that does something is usually that
 something plus this ending, and you can often reach the word without having met
 it.
 
+*Lavar* is Latin *lavare*, "to wash".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-01, ES-LEX-LAVAR] -->
 

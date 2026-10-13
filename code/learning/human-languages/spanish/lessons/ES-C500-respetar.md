@@ -49,7 +49,7 @@ The verb behind *el respeto*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**respetar** is built on *respeto*, "respect", from Latin *respectus*, "a looking back, regard", from *respicere*, "to look back" — a learned word: its *-ct-* became plain *-t-*, not *-ch-*.
+**respetar** is built on *respeto*, "respect", from Latin *respectus*, "a looking back, regard", from *respicere*, "to look back" — semi-learned: its *-ct-* was simplified to *-t-*, not turned into the *-ch-* of words worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

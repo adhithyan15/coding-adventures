@@ -4,7 +4,7 @@
   "chapter": 431,
   "title": "El Pedido Y La Devolución",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e25e67fbdeec4d25",
+  "sourceHash": "fnv1a64:56ce5c4294843eb5",
   "lessons": [
     {
       "id": "ES-C431-pedido",
@@ -467,7 +467,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a990eaeb550f3598",
+      "sourceHash": "fnv1a64:e552916c38440db6",
       "notice": null,
       "blocks": [
         {
@@ -532,6 +532,10 @@
             {
               "kind": "speech",
               "text": "Once you notice -dor, a long unfamiliar noun often decomposes into a verb you know plus the one who does it. That is a reading strategy, not a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Proveer is Latin providere, \"to see ahead, to provide\", worn down in speech."
             }
           ]
         },

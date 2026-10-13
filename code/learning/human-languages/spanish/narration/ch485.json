@@ -4,7 +4,7 @@
   "chapter": 485,
   "title": "Las tareas de casa",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d288fd5f0752396",
+  "sourceHash": "fnv1a64:075ab48c726adfe3",
   "lessons": [
     {
       "id": "ES-C485-barrer",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:010118df7c8b144d",
+      "sourceHash": "fnv1a64:91b6b7a90f3efced",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "limpiar is built on limpio, \"clean\", from Latin limpidus, \"clear\" (EtymDB 2.1) — a clear stream is a clean one."
+              "text": "limpiar is built on limpio, \"clean\", from Latin limpidus, \"clear\" (EtymDB 2.1) — a clear stream is a clean one. Limpio is inherited: the -d- of limpidus wore away."
             }
           ]
         },

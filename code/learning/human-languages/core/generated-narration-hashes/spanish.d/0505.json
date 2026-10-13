@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 505,
-  "sourceHash": "fnv1a64:f12158bfe01513f9",
+  "sourceHash": "fnv1a64:8d3b094c62231b76",
   "lessonIds": [
     "ES-C505-educacion",
     "ES-C505-asistir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch505.txt",
   "json": "spanish/narration/ch505.json",
-  "textHash": "fnv1a64:9f64a2cbecfe2c9f",
-  "jsonHash": "fnv1a64:99c37168f308b989",
+  "textHash": "fnv1a64:ee26ab1838faa4fa",
+  "jsonHash": "fnv1a64:d69474eb301eac00",
   "findings": []
 }

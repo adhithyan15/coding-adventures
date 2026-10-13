@@ -4,7 +4,7 @@
   "chapter": 426,
   "title": "Capitals, Short Forms And Symbols",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a625ddc56415c37e",
+  "sourceHash": "fnv1a64:0fc57dd085c2a449",
   "lessons": [
     {
       "id": "ES-C426-mayusculas",
@@ -203,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70a90ab67637c533",
+      "sourceHash": "fnv1a64:4e3030e28007017c",
       "notice": null,
       "blocks": [
         {

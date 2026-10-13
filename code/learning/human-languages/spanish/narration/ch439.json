@@ -4,7 +4,7 @@
   "chapter": 439,
   "title": "Andenes Y Cierres",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:164728d0b4d099f4",
+  "sourceHash": "fnv1a64:90d57659773f245b",
   "lessons": [
     {
       "id": "ES-C439-anden",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f51eff8121a306e",
+      "sourceHash": "fnv1a64:e825ab27bd83c5c7",
       "notice": null,
       "blocks": [
         {
@@ -65,11 +65,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "It does not come apart, and this time that is not a trick. Nobody knows where andén comes from."
+              "text": "It does not come apart, and this time that is not a trick. Nobody knows for certain where andén comes from."
             },
             {
               "kind": "speech",
-              "text": "The tempting guess is andar, to walk, because a platform is a place you walk along. Dictionaries do not accept it: the endings do not line up, and the word turns up first in senses that have nothing to do with walking. Other proposals have been made and none has carried the field."
+              "text": "The tempting guess is andar, to walk, because a platform is a place you walk along. Dictionaries do not accept it: the endings do not line up. The usual proposal is Latin indago, \"an encircling\" (EtymDB 2.1), and even that is offered only as a perhaps."
             },
             {
               "kind": "speech",

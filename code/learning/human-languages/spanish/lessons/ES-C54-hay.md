@@ -12,7 +12,7 @@ prerequisites: [ES-C53-sintesis-frases-largas, ES-C49-haber-completo]
 sounds: [diphthong-ai]
 roots: [habere-latin, ibi-latin]
 teaches_cells: []
-etymology_hook: "hay is not one word but two fused: ha, from haber, plus an old y meaning 'there' — and French did the identical thing in il y a"
+etymology_hook: "hay — ha, from haber (Latin habere), fused with an old y 'there' (Latin ibi); French il y a is alike"
 duration:
   max_seconds: 275
 requires:

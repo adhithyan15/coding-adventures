@@ -76,9 +76,9 @@ So *revisar* is to see again — the second look, which is the one where you
 find what the first look missed.
 
 You have met this root twice already without the seeing being visible. **Ver**
-is *videre* worn down to two letters. **El aviso** is *a-vis-o*, a bringing to
+is *videre* worn down to one syllable. **El aviso** is *a-vis-o*, a bringing to
 someone's sight. Add *revisar* and you have three words from one Latin verb,
-each hiding it to a different degree. The English cousins run alongside:
+each hiding it to a different degree. The English relatives run alongside:
 **vision**, **advise**, **revise**.
 
 ## Guided Practice

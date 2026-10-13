@@ -47,7 +47,7 @@ reviews_of: [ES-C502-presentar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**mencionar** is built on *mención*, "a mention", from Latin *mentio*, *mentionem*, "a calling to mind" (Lewis & Short), from the root of *mens*, "mind".
+**mencionar** is built on *mención*, "a mention", from Latin *mentio*, *mentionem*, "a calling to mind" (Lewis & Short), from the root of *mens*, "mind". *Mención* is learned: its *-ti-* became *-ci-*, not the *z* of speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

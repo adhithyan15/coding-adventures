@@ -65,6 +65,9 @@ partner, and Spanish speakers disambiguate with *de trabajo*, *de piso*, *de
 clase* when it matters. That ambiguity is not sloppiness; the word never
 promised more than *the one I share things with*.
 
+Its base is the old *compaña*, "company", spoken Latin *\*compania*: *com-* and
+*panis*, "bread".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-01, ES-ETYMON-COMPANION-03] -->
 

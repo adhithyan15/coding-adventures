@@ -66,7 +66,7 @@ Latin). That *noct-* runs all through English:
 **-ct-** softened into Spanish **-ch-**. This happened again and again:
 *factum* → *hecho* ("done"), *lactem* → *leche* ("milk"), *octo* → *ocho*
 ("eight"). Once you know *-ct- → -ch-*, you can often guess the Latin root
-(and its English cousins) behind a Spanish *-ch-* word on sight.
+(and the English words taken from it) behind a Spanish *-ch-* word on sight.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TARDE, ES-LEX-NOCHE, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER, ES-SOUND-LATIN-CLUSTER-TO-CH] -->

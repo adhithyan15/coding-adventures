@@ -40,6 +40,49 @@ HL24 §9's etymology gap for Spanish is closed: every word lesson now has an
   ES-C06-hablo-espanol 230→280, ES-C07-hablan 250→270,
   ES-C10-futuro-simple 240→288, ES-C421-actriz 240→297,
   ES-C422-pagina-web 240→266, ES-C462-reducir 275→281.
+- **Review corrections.** An independent review read all 497 changed lessons
+  against EtymDB 2.1, Lewis & Short and the standard accounts (Corominas, the
+  DLE), and fixed what it found:
+  - *Loan routes.* *empresa* is Italian *impresa*; *bailar* came through Occitan
+    *balar* (as ES-C377-baile already said); *ruta* is French *route*; *neto*
+    came in through Catalan or French *net*; *nivel* through Catalan *nivell* or
+    Occitan.
+  - *Etyma and glosses.* *aceptar* is *acceptare*, *opinión* is *opinio*,
+    *portero* is Latin *portarius*. Italian *poggio* is a hillock, not "a
+    support" (*apoyar* ← *appoggiare* ← *\*appodiare*). *ayer*'s *y* is the
+    diphthong of stressed *e*, not a softened *-ri*. *máquina* is learned
+    because it kept its middle vowel, not because of its stress. *ver* is one
+    syllable, not "two letters".
+  - *Hedges.* *andén* now names the usual proposal, Latin *indago*, as a
+    perhaps. *jubilar* "to retire" came through the jubilee, not a cheer. How
+    *copia* "plenty" became a copy is not settled. *ayer*'s *ad*, *doccia*'s
+    *ductio* and *ballare*'s Greek source are "probably".
+  - *ES-C421-actriz*'s recall still said *actrix* was inherited and *matrix*
+    shared the ending; it now matches the corrected block.
+  - *Labels.* Eighteen words a sound test decides are now labelled learned
+    (*proteger*, *felicitar*, *habitante*, *meta*, *aceptable*, *iniciar*,
+    *profesión*, *divorcio*, *mención*, *apetecer*, *preocupar*, *elegir*) or
+    inherited (*ensayo*, *caliente*, *limpio*, *juego*, *boca*, *pelo*).
+    *respetar* is semi-learned, not learned.
+  - *Visible origin.* 26 of the 46 blocks that only named Spanish parts now
+    say where those parts come from (*buenas noches*, *comprador*, *portal*,
+    *cumpleaños* and others).
+  - *Hooks.* Three hooks over 120 characters (ES-C07-hablan,
+    ES-C09-estudiante, ES-C54-hay) were shortened; ES-C426-minuscula-inicial's
+    hook no longer names a word its block lacks.
+  - *English asides.* "Cousin" is kept for inherited kin; nine lessons used it
+    for borrowings (*nocturnal*, *mode*, *disgust*, *clamour*, *multiple*,
+    *vision*, *record*, *enterprise*, *balloon*).
+  - *Root slugs.* *parecer* and *parecido* join Portuguese on
+    `apparere-latin` instead of sharing `parere` with *pariente*; *habitar*,
+    *decir*, *esperar* and *merced* use the `-latin` spelling the rest of the
+    corpus uses (four split-baseline entries pruned); *cancelar* uses
+    `cancellus-latin` like Italian *cancello*; *comprender* also carries
+    `latin-comprehendere`.
+  - *Durations.* ES-C421-actriz 297→276 and ES-C10-futuro-simple 288→273
+    after tightening; the review's own sentences raised ES-C03-como-se-llama
+    240→267, ES-C03-me-llamo 180→199 and ES-C419-bailar 240→291, each to its
+    computed length.
 
 ## Fixed — nosotros no longer teaches that -mos is a worn-down nos
 

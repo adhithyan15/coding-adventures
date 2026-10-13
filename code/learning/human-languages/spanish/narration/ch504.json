@@ -4,7 +4,7 @@
   "chapter": 504,
   "title": "Cuidar el planeta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c1cb9d7c2d52314",
+  "sourceHash": "fnv1a64:96f3e199607cb030",
   "lessons": [
     {
       "id": "ES-C504-reciclar",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1afa6ccc539976a",
+      "sourceHash": "fnv1a64:f2e2fc9c67629022",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "proteger from Latin protegere, \"to cover in front\" (Lewis & Short): pro- and tegere, \"to cover\". The participle of tegere, tectum, gave techo, \"a roof\"."
+              "text": "proteger from Latin protegere, \"to cover in front\" (Lewis & Short): pro- and tegere, \"to cover\". A learned word: the -t- and -g- between vowels were kept. The participle of tegere, tectum, gave techo, \"a roof\"."
             }
           ]
         },

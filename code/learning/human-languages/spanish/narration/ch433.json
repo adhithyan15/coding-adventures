@@ -4,7 +4,7 @@
   "chapter": 433,
   "title": "El Edificio Y Sus Normas",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:83e89707dfcb4ca6",
+  "sourceHash": "fnv1a64:d452959be2e732dc",
   "lessons": [
     {
       "id": "ES-C433-portal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8665d34ac56317e",
+      "sourceHash": "fnv1a64:858a5962dd7b196a",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,10 @@
             {
               "kind": "speech",
               "text": "English has no single word here, which is why translations reach for doorway, entrance, lobby or hallway and none quite fits. When a Spanish word has no clean English partner, learning the situation beats learning a gloss: the portal is where you buzz, where the post boxes are, and where you wait."
+            },
+            {
+              "kind": "speech",
+              "text": "Puerta is Latin porta, \"a gate\". In portal the stress falls elsewhere, so the o never opened into ue."
             }
           ]
         },
@@ -154,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cfb764e7669a481",
+      "sourceHash": "fnv1a64:6ab688dfa9f53d13",
       "notice": null,
       "blocks": [
         {
@@ -219,6 +223,10 @@
             {
               "kind": "speech",
               "text": "el portero also means the goalkeeper. The one who guards the gate, in both cases."
+            },
+            {
+              "kind": "speech",
+              "text": "Portero is an old word: Latin portarius, \"a door-keeper\" (Lewis & Short), from porta, \"a gate\", with the -arius that became -ero."
             }
           ]
         },

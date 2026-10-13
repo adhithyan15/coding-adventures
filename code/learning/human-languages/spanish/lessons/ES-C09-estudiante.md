@@ -12,7 +12,7 @@ prerequisites: [ES-C09-profesor, ES-C57-es-inicial]
 sounds: []
 roots: [studere-latin]
 teaches_cells: []
-etymology_hook: "estudiar plus -ante gives estudiante, the one who is studying — the same -ant that makes an English participant, an assistant and an inhabitant"
+etymology_hook: "estudiante — estudiar + -ante, the Latin participle ending -antem: 'one studying'"
 duration:
   max_seconds: 270
 requires:

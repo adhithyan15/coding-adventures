@@ -4,7 +4,7 @@
   "chapter": 502,
   "title": "Hablar con otros",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7c74302d03f8d203",
+  "sourceHash": "fnv1a64:0d0732c7eb2ff566",
   "lessons": [
     {
       "id": "ES-C502-presentar",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4823958fdc9572e",
+      "sourceHash": "fnv1a64:8768bca369a9a4da",
       "notice": null,
       "blocks": [
         {
@@ -203,7 +203,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mencionar is built on mención, \"a mention\", from Latin mentio, mentionem, \"a calling to mind\" (Lewis & Short), from the root of mens, \"mind\"."
+              "text": "mencionar is built on mención, \"a mention\", from Latin mentio, mentionem, \"a calling to mind\" (Lewis & Short), from the root of mens, \"mind\". Mención is learned: its -ti- became -ci-, not the z of speech."
             }
           ]
         },

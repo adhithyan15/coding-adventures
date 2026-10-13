@@ -61,6 +61,9 @@ shop sells before you have read the sign properly.
 Two endings, two different jobs: **-dor** gives you who or what does it,
 **-ería** gives you where it is kept.
 
+*Estante* is an old form of *estar*, "standing": a shelf is what stands against
+the wall. *Estar* is Latin *stare*, "to stand".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-03, ES-LEX-C432-CASA-02] -->
 

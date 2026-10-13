@@ -63,6 +63,8 @@ see it you will read words you have never met:
 — *conocer / conozco*, *parecer / parezco* — so learning this one buys the
 pattern for a large family.
 
+*Ofrecer* is spoken Latin *\*offerescere*, built on Latin *offerre*, "to offer".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-03, ES-LEX-AYUDAR-05] -->
 

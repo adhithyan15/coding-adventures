@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "The Rest of the Greetings",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:6ef886d6a6924766",
+  "sourceHash": "fnv1a64:d19e951d8e490be5",
   "lessons": [
     {
       "id": "ES-C02-tarde",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9557af6a78ba448",
+      "sourceHash": "fnv1a64:06f94168209ce9a4",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +200,10 @@
             {
               "kind": "speech",
               "text": "buenas tardes = buena (\"good\") + tardes (\"afternoons\") = literally \"good afternoons.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Tarde is Latin tarde, \"late\", from tardus, \"slow\"."
             }
           ]
         },
@@ -297,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96afaa3da2df95e6",
+      "sourceHash": "fnv1a64:37c666b3ab101a22",
       "notice": null,
       "blocks": [
         {
@@ -362,7 +366,7 @@
             },
             {
               "kind": "speech",
-              "text": "A pattern worth banking: Latin noctem becomes Spanish noche. The Latin -ct- softened into Spanish -ch-. This happened again and again: factum becomes hecho (\"done\"), lactem becomes leche (\"milk\"), octo becomes ocho (\"eight\"). Once you know -ct- becomes -ch-, you can often guess the Latin root (and its English cousins) behind a Spanish -ch- word on sight."
+              "text": "A pattern worth banking: Latin noctem becomes Spanish noche. The Latin -ct- softened into Spanish -ch-. This happened again and again: factum becomes hecho (\"done\"), lactem becomes leche (\"milk\"), octo becomes ocho (\"eight\"). Once you know -ct- becomes -ch-, you can often guess the Latin root (and the English words taken from it) behind a Spanish -ch- word on sight."
             }
           ]
         },
@@ -438,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1370839cf61c039",
+      "sourceHash": "fnv1a64:3c478ea4bfc77623",
       "notice": null,
       "blocks": [
         {
@@ -481,6 +485,10 @@
             {
               "kind": "speech",
               "text": "buenas noches = buena (\"good\") + noches (\"nights\"). noche is feminine (la noche), plural here, so — exactly like tardes — the adjective is buenas. No new rule; you're now just fluent in the agreement you learned two lessons ago: masculine días becomes buenos, feminine tardes/noches becomes buenas."
+            },
+            {
+              "kind": "speech",
+              "text": "Buena is Latin bona, and noche is Latin noctem, \"night\"."
             }
           ]
         },

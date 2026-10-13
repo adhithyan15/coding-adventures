@@ -4,7 +4,7 @@
   "chapter": 479,
   "title": "Papeles y plazos",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fb6bf8f94a14408a",
+  "sourceHash": "fnv1a64:7c672b0af7509d12",
   "lessons": [
     {
       "id": "ES-C479-inscribirse",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7518c84da0bc613",
+      "sourceHash": "fnv1a64:9cb8183bc1688d22",
       "notice": null,
       "blocks": [
         {

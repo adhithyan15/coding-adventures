@@ -4,7 +4,7 @@
   "chapter": 499,
   "title": "Algo de comer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a3c3428e16fb6380",
+  "sourceHash": "fnv1a64:1d5dd2cb05020b1b",
   "lessons": [
     {
       "id": "ES-C499-bocadillo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:805cc3aabd51db4a",
+      "sourceHash": "fnv1a64:2dfa7ffd851e6cce",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bocadillo is bocado, \"a mouthful\", with the small-ending -illo: a little mouthful. Bocado is built on boca, \"mouth\", Latin bucca, \"a cheek\"."
+              "text": "bocadillo is bocado, \"a mouthful\", with the small-ending -illo: a little mouthful. Bocado is built on boca, \"mouth\", Latin bucca, \"a cheek\" — inherited: the short u became o."
             }
           ]
         },
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e309a3bfdcae3e04",
+      "sourceHash": "fnv1a64:6ae8a761135f11ec",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "apetecer is Latin appetere, \"to reach for, to desire\" (Lewis & Short), with the ending -ecer. English appetite comes from the same verb."
+              "text": "apetecer is Latin appetere, \"to reach for, to desire\" (Lewis & Short), with the ending -ecer. English appetite comes from the same verb. The -t- between vowels was kept, the mark of a word taken from books."
             }
           ]
         },

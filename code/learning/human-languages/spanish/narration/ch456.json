@@ -4,7 +4,7 @@
   "chapter": 456,
   "title": "La cuenta",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5972d7743ee0e402",
+  "sourceHash": "fnv1a64:7024c96685d42030",
   "lessons": [
     {
       "id": "ES-C456-ensalada",
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f7e610896f034a7",
+      "sourceHash": "fnv1a64:06b50d9de03d9c05",
       "notice": null,
       "blocks": [
         {
@@ -418,7 +418,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin accipere: ad-, towards, plus capere, to take."
+              "text": "Latin acceptare, built on accipere: ad-, towards, plus capere, to take."
             },
             {
               "kind": "speech",

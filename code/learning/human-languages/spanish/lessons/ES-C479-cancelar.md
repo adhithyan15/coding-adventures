@@ -10,7 +10,7 @@ gloss: "to cancel"
 concept_tag: ES-VERB-CANCELAR
 prerequisites: [ES-C478-disponible, ES-C479-inscribirse]
 sounds: []
-roots: [cancelli-latin]
+roots: [cancellus-latin]
 etymology_hook: "cancelar ← Latin cancellare 'to make like a lattice', from cancelli 'railings' — English cancel"
 duration:
   max_seconds: 200

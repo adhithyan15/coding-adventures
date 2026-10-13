@@ -4,7 +4,7 @@
   "chapter": 451,
   "title": "La cola y el carné",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7343b7ef680dc848",
+  "sourceHash": "fnv1a64:50e49980a9391e36",
   "lessons": [
     {
       "id": "ES-C451-cola",
@@ -846,7 +846,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:04d2374e5918a519",
+      "sourceHash": "fnv1a64:67ac06868dd2be73",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -940,7 +940,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met this root twice already without the seeing being visible. Ver is videre worn down to two letters. El aviso is a-vis-o, a bringing to someone's sight. Add revisar and you have three words from one Latin verb, each hiding it to a different degree. The English cousins run alongside: vision, advise, revise."
+              "text": "You have met this root twice already without the seeing being visible. Ver is videre worn down to one syllable. El aviso is a-vis-o, a bringing to someone's sight. Add revisar and you have three words from one Latin verb, each hiding it to a different degree. The English relatives run alongside: vision, advise, revise."
             }
           ]
         },

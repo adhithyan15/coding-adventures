@@ -50,6 +50,8 @@ and that difference teaches you the other half of the agreement rule.
 **buenas tardes** = **buena** ("good") + **tardes** ("afternoons") =
 literally "good afternoons."
 
+*Tarde* is Latin *tarde*, "late", from *tardus*, "slow".
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES] -->
 

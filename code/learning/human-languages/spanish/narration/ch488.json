@@ -4,7 +4,7 @@
   "chapter": 488,
   "title": "Encuentros y despedidas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d602d3ce1b131bda",
+  "sourceHash": "fnv1a64:e9899bf6851862c2",
   "lessons": [
     {
       "id": "ES-C488-casarse",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9098cc2ef718f914",
+      "sourceHash": "fnv1a64:7fbabd1a7d6cb122",
       "notice": null,
       "blocks": [
         {
@@ -203,7 +203,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "divorciarse is built on divorcio, \"divorce\", Latin divortium, \"a separation\" (Lewis & Short), from divertere, \"to turn different ways\" — the verb behind divertirse, \"to have fun\"."
+              "text": "divorciarse is built on divorcio, \"divorce\", Latin divortium, \"a separation\" (Lewis & Short), from divertere, \"to turn different ways\" — the verb behind divertirse, \"to have fun\". Divorcio is learned: its -ti- became -ci-, not the z of speech."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 500,
   "title": "Vivir juntos",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a13a698aeb93727e",
+  "sourceHash": "fnv1a64:3a55408d00ad433a",
   "lessons": [
     {
       "id": "ES-C500-respetar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:584cf68c15f8bd48",
+      "sourceHash": "fnv1a64:ea92c7b29392bfa2",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "respetar is built on respeto, \"respect\", from Latin respectus, \"a looking back, regard\", from respicere, \"to look back\" — a learned word: its -ct- became plain -t-, not -ch-."
+              "text": "respetar is built on respeto, \"respect\", from Latin respectus, \"a looking back, regard\", from respicere, \"to look back\" — semi-learned: its -ct- was simplified to -t-, not turned into the -ch- of words worn down in speech."
             }
           ]
         },

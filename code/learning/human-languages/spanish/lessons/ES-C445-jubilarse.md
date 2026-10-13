@@ -11,7 +11,7 @@ concept_tag: ES-VERB-JUBILARSE
 prerequisites: [ES-C444-sintesis-casa, ES-C435-jubilado, ES-C394-trabajo]
 sounds: [j-jota, stress-final]
 roots: [iubilare-latin]
-etymology_hook: "jubilarse ← Latin iubilare 'to shout for joy' — English jubilant, jubilation"
+etymology_hook: "jubilarse ← Latin iubilare 'to shout for joy'; 'to retire' came via the jubilee — English jubilant"
 duration:
   max_seconds: 270
 requires:
@@ -53,13 +53,13 @@ employer does to somebody, and it can sound abrupt.
 Latin **iubilāre** — **to shout, to whoop for joy**. It was a countryman's word
 for the noise you make across a field, not a word about work at all.
 
-The connection runs through the **jubilee**: in the older calendar a jubilee
+The connection runs through the **jubilee**, a Hebrew word that Latin spelled
+to look like *iubilare*: in the older calendar a jubilee
 year cancelled debts and released people from service, and *jubilar* came to
 mean *to release from service*. The shout came first and the pension came after.
 
-So **el jubilado** is, underneath, *the one who has been cheered off*, and every
-Spanish retirement notice carries a faint sound of celebration nobody hears any
-more.
+So **el jubilado** carries the shout in its spelling, but its meaning came
+through the jubilee year.
 
 English keeps the shout in **jubilant** and **jubilation**, and has no verb for
 the Spanish sense at all.

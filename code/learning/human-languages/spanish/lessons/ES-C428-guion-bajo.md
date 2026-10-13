@@ -50,6 +50,8 @@ English names it *under-score*, from the typewriter habit of scoring a line
 mark it resembles. Two languages, two entirely reasonable descriptions of the
 same key.
 
+*Bajo* is Late Latin *bassus*, "low".
+
 ## Grammar Lens: the address, complete
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C428-02, ES-ORTH-C428-01, ES-ORTH-C424-07] -->
 

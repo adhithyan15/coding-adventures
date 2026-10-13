@@ -4,7 +4,7 @@
   "chapter": 428,
   "title": "Five Last Pieces",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be463a3c40e099aa",
+  "sourceHash": "fnv1a64:b516874f347594f1",
   "lessons": [
     {
       "id": "ES-C428-arroba",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92fc7d948982f48d",
+      "sourceHash": "fnv1a64:6c8613dd5db281f1",
       "notice": null,
       "blocks": [
         {
@@ -212,6 +212,10 @@
             {
               "kind": "speech",
               "text": "English names it under-score, from the typewriter habit of scoring a line under text to underline it. Spanish names it by where it sits relative to the mark it resembles. Two languages, two entirely reasonable descriptions of the same key."
+            },
+            {
+              "kind": "speech",
+              "text": "Bajo is Late Latin bassus, \"low\"."
             }
           ]
         },
@@ -334,7 +338,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:081246eac85630ce",
+      "sourceHash": "fnv1a64:c6de27bc693c11bc",
       "notice": null,
       "blocks": [
         {
@@ -369,7 +373,7 @@
             },
             {
               "kind": "speech",
-              "text": "The relationship to feliz is visible: feliz becomes felicidad becomes felicidades. An adjective, the noun made from it, and that noun pluralised into an act."
+              "text": "The relationship to feliz is visible: feliz becomes felicidad becomes felicidades. An adjective, the noun made from it, and that noun pluralised into an act. Felicidad is Latin felicitas, from felix, \"happy\"."
             }
           ]
         },

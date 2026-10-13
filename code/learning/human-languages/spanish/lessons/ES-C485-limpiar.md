@@ -49,7 +49,7 @@ The verb behind *limpio*, clean.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**limpiar** is built on *limpio*, "clean", from Latin *limpidus*, "clear" (EtymDB 2.1) — a clear stream is a clean one.
+**limpiar** is built on *limpio*, "clean", from Latin *limpidus*, "clear" (EtymDB 2.1) — a clear stream is a clean one. *Limpio* is inherited: the *-d-* of *limpidus* wore away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

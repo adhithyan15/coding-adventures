@@ -52,6 +52,8 @@ adjective is **buenas**. No new rule; you're now just *fluent* in the
 agreement you learned two lessons ago: masculine *días* → *buenos*, feminine
 *tardes*/*noches* → *buenas*.
 
+*Buena* is Latin *bona*, and *noche* is Latin *noctem*, "night".
+
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 

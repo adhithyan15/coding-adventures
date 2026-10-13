@@ -62,6 +62,9 @@ Spanish verb in **-ar** can take it, and English usually has the twin in
 One thing to watch: they are **always feminine**, whatever the verb, and the
 plural drops the accent — *la reparación*, *las reparaciones*.
 
+*Documentar* is built on *documento*, Latin *documentum*, "a lesson, a proof",
+from *docere*, "to teach".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C435-PAPEL-02, ES-LEX-C435-PAPEL-01] -->
 

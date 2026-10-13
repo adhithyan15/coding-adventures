@@ -12,7 +12,7 @@ prerequisites: [ES-C07-hablamos]
 sounds: []
 roots: [fabulari-latin, merces-latin]
 teaches_cells: [ES-CELL-IND-PRES-3PL-CONJ1]
-etymology_hook: "ustedes is vuestras mercedes, the plural of the phrase behind usted — so it takes a third-person form for exactly the reason usted does"
+etymology_hook: "hablan — the -n is Latin -nt; ustedes is vuestras mercedes 'your graces', so it takes usted's form"
 duration:
   max_seconds: 270
 requires:

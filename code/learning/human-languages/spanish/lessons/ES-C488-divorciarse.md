@@ -47,7 +47,7 @@ reviews_of: [ES-C488-casarse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**divorciarse** is built on *divorcio*, "divorce", Latin *divortium*, "a separation" (Lewis & Short), from *divertere*, "to turn different ways" — the verb behind *divertirse*, "to have fun".
+**divorciarse** is built on *divorcio*, "divorce", Latin *divortium*, "a separation" (Lewis & Short), from *divertere*, "to turn different ways" — the verb behind *divertirse*, "to have fun". *Divorcio* is learned: its *-ti-* became *-ci-*, not the *z* of speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

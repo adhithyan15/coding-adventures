@@ -4,7 +4,7 @@
   "chapter": 494,
   "title": "Por la mañana",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fe31dc09ad8b90e0",
+  "sourceHash": "fnv1a64:732dd812fb2ca5b7",
   "lessons": [
     {
       "id": "ES-C494-despertarse",
@@ -587,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c872bd0ded3b0208",
+      "sourceHash": "fnv1a64:31c919404818fd02",
       "notice": null,
       "blocks": [
         {
@@ -633,7 +633,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "calentar is built on caliente, \"hot\", from Latin calentem, \"being warm\" (EtymDB 2.1), the participle of calere, \"to be warm\"."
+              "text": "calentar is built on caliente, \"hot\", from Latin calentem, \"being warm\" (EtymDB 2.1), the participle of calere, \"to be warm\". Caliente is inherited: the stressed e opened into ie."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 510,
   "title": "Entre personas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bc511fd20a13c31d",
+  "sourceHash": "fnv1a64:0cb8237bcbd4bde4",
   "lessons": [
     {
       "id": "ES-C510-disculparse",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a3041fa2a20b447",
+      "sourceHash": "fnv1a64:640d37557f17273f",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pelear is built on pelo, \"hair\" (EtymDB 2.1): a fight was first a pulling of hair. Pelo is Latin pilus, \"a hair\"."
+              "text": "pelear is built on pelo, \"hair\" (EtymDB 2.1): a fight was first a pulling of hair. Pelo is Latin pilus, \"a hair\" — inherited: the short i became e."
             }
           ]
         },

@@ -52,7 +52,7 @@ Notice what el ordenador is: ordenar plus the doer-ending, the thing that orders
 language: Spanish. the computer is: the orderer.
 language: English. the computer is: the counter.
 la máquina sits above all of these as the general term, and it is the word you need for the ones with no special name: la máquina de hacer pan, la máquina del billete. When you do not know an appliance's name, la máquina de plus what it does will be understood every time.
-Máquina is Latin machina, from Greek mēchanē, "a device" (Lewis & Short) — a learned word, which is why it keeps its stress on the first syllable.
+Máquina is Latin machina, from Greek mēchanē, "a device" (Lewis & Short) — a learned word: speech would have worn away its middle vowel.
 
 Guided Practice.
 [pause 1 second]
@@ -156,6 +156,7 @@ verb: contar. the doer: el contador.
 verb: cargar. the doer: el cargador.
 cargar is worth more than the charger. It means to load, and it reaches much further than electricity: cargar el coche is to load the car, la carga is the load itself, and no se cobra from earlier meets it in hacerse cargo de — to take charge of something.
 The same verb also turns up wherever a shop charges you, which is why cobrar and cargar feel adjacent without being the same word.
+Cargar is Late Latin carricare, "to load a cart", from carrus, "a cart".
 
 Guided Practice.
 [pause 1 second]

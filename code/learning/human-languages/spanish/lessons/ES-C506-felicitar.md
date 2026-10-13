@@ -49,7 +49,7 @@ reviews_of: [ES-C506-juguete]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**felicitar** ← Late Latin *felicitare*, "to make happy" (EtymDB 2.1), from *felix*, "happy" — the *felix* inside *feliz*.
+**felicitar** ← Late Latin *felicitare*, "to make happy" (EtymDB 2.1), from *felix*, "happy" — the *felix* inside *feliz*. A learned word: the *-t-* between vowels stayed *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

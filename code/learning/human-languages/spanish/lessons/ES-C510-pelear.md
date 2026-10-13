@@ -49,7 +49,7 @@ reviews_of: [ES-C510-fiarse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**pelear** is built on *pelo*, "hair" (EtymDB 2.1): a fight was first a pulling of hair. *Pelo* is Latin *pilus*, "a hair".
+**pelear** is built on *pelo*, "hair" (EtymDB 2.1): a fight was first a pulling of hair. *Pelo* is Latin *pilus*, "a hair" — inherited: the short *i* became *e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

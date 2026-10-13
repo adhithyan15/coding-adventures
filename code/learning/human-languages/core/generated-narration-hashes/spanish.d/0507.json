@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 507,
-  "sourceHash": "fnv1a64:17713e41db125c5b",
+  "sourceHash": "fnv1a64:2e45ed9ef044d571",
   "lessonIds": [
     "ES-C507-votar",
     "ES-C507-impuesto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch507.txt",
   "json": "spanish/narration/ch507.json",
-  "textHash": "fnv1a64:0b1ad5af122bbb8f",
-  "jsonHash": "fnv1a64:d35b7f42ef2a20fc",
+  "textHash": "fnv1a64:42c71ac9a7c5ac40",
+  "jsonHash": "fnv1a64:74eb7084c30588fc",
   "findings": []
 }

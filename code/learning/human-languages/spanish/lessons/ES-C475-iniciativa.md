@@ -49,7 +49,7 @@ reviews_of: [ES-C475-profesional]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**iniciativa** is built from *iniciar*, "to begin" — Latin *initiare* (EtymDB 2.1), from *initium*, "a beginning" — with the ending *-tiva*. English *initiative* is built the same way.
+**iniciativa** is built from *iniciar*, "to begin" — Latin *initiare* (EtymDB 2.1), from *initium*, "a beginning" — with the ending *-tiva*. English *initiative* is built the same way. *Iniciar* is learned: its *-ti-* became *-ci-*, not the *z* of words worn down in speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

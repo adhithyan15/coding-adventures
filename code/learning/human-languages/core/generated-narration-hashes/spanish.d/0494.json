@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 494,
-  "sourceHash": "fnv1a64:fe31dc09ad8b90e0",
+  "sourceHash": "fnv1a64:732dd812fb2ca5b7",
   "lessonIds": [
     "ES-C494-despertarse",
     "ES-C494-arreglarse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch494.txt",
   "json": "spanish/narration/ch494.json",
-  "textHash": "fnv1a64:f9098001a3279dab",
-  "jsonHash": "fnv1a64:50d3d977e686b72b",
+  "textHash": "fnv1a64:2d39e5cf17d85f8e",
+  "jsonHash": "fnv1a64:a32781d54b66233c",
   "findings": []
 }

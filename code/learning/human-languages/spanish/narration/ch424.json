@@ -4,7 +4,7 @@
   "chapter": 424,
   "title": "The Marks Themselves",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:c77b4f7d39a41bda",
+  "sourceHash": "fnv1a64:2c8ea66df6e95e28",
   "lessons": [
     {
       "id": "ES-C424-punto",
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23379a89ed7f6dd4",
+      "sourceHash": "fnv1a64:f210e9cf267a30a8",
       "notice": null,
       "blocks": [
         {
@@ -379,6 +379,10 @@
             {
               "kind": "speech",
               "text": "The colon promises a list; the commas then divide it; and there is still no comma before the final y."
+            },
+            {
+              "kind": "speech",
+              "text": "Dos is Latin duos, \"two\", and punto is Latin punctum, \"a prick\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Building a Paragraph --- Plan, Add, Join, Refer Back",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bebaa3814b24dff9",
+  "sourceHash": "fnv1a64:bdf63900c6af513d",
   "lessons": [
     {
       "id": "ES-C273-en-primer-lugar",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48978419d0124e79",
+      "sourceHash": "fnv1a64:8b580890d19080fd",
       "notice": null,
       "blocks": [
         {
@@ -237,6 +237,10 @@
             {
               "kind": "speech",
               "text": "So it means, quite literally, \"in addition to more.\" Spanish built its heaviest additive connector out of its lightest pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "A is Latin ad, de is Latin de, and más is Latin magis, \"more\"."
             }
           ]
         },

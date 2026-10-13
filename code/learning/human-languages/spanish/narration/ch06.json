@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Asking Someone's Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:14051ab4d258ab05",
+  "sourceHash": "fnv1a64:5342a45ef1da4737",
   "lessons": [
     {
       "id": "ES-C03-como",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dcd4cb7ba2b93b6",
+      "sourceHash": "fnv1a64:e175207782dffb36",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "The two halves, and their English cousins:"
+              "text": "The two halves, and their English relatives:"
             },
             {
               "kind": "speech",
@@ -627,7 +627,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfc9cb1dfa93c401",
+      "sourceHash": "fnv1a64:3ad408c2197db82a",
       "notice": null,
       "blocks": [
         {
@@ -682,6 +682,10 @@
             {
               "kind": "speech",
               "text": "To a friend, a child, a peer becomes ¿Cómo te llamas?"
+            },
+            {
+              "kind": "speech",
+              "text": "Cómo is Latin quo modo, \"in what manner\", and llama is Latin clamat, \"calls out\"."
             }
           ]
         },
@@ -772,7 +776,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3783a9f88ef050e",
+      "sourceHash": "fnv1a64:7ef4c55077e38e36",
       "notice": null,
       "blocks": [
         {
@@ -810,7 +814,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mucho — \"much, a lot.\" Root: Latin multus (\"much, many\"). The English cousins keep the original -lt-:"
+              "text": "mucho — \"much, a lot.\" Root: Latin multus (\"much, many\"). The English borrowings keep the original -lt-:"
             },
             {
               "kind": "speech",
@@ -818,7 +822,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sound-change, again: Latin multum becomes Spanish mucho. The Latin -lt- softened into Spanish -ch- — the very same move as noctem becomes noche (-ct- becomes -ch-, as in the noche lesson). Spanish has a habit of melting these consonant clusters into ch. So a Spanish -ch- word very often points back to a Latin -ct- or -lt- root — and the English cousin usually preserves it (nocturnal, multiple)."
+              "text": "The sound-change, again: Latin multum becomes Spanish mucho. The Latin -lt- softened into Spanish -ch- — the very same move as noctem becomes noche (-ct- becomes -ch-, as in the noche lesson). Spanish has a habit of melting these consonant clusters into ch. So a Spanish -ch- word very often points back to a Latin -ct- or -lt- root — and the English borrowing usually preserves it (nocturnal, multiple)."
             }
           ]
         },
@@ -894,7 +898,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfca2550ebb5c9f2",
+      "sourceHash": "fnv1a64:06a0cc2c4eda06d4",
       "notice": null,
       "blocks": [
         {
@@ -932,7 +936,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "el gusto (masculine) — \"taste; pleasure, liking.\" Root: Latin gustus (\"a tasting, a taste\"). The English cousins:"
+              "text": "el gusto (masculine) — \"taste; pleasure, liking.\" Root: Latin gustus (\"a tasting, a taste\"). The English relatives:"
             },
             {
               "kind": "speech",
@@ -1011,7 +1015,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does mucho gusto literally mean? (\"Much pleasure.\") Is el gusto masculine or feminine? (Masculine.) And the English cousin of gusto built from dis-? (Disgust — \"distaste.\")"
+              "text": "What does mucho gusto literally mean? (\"Much pleasure.\") Is el gusto masculine or feminine? (Masculine.) And the English relative of gusto built from dis-? (Disgust — \"distaste.\")"
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 432,
   "title": "La Casa Por Dentro",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:106bde075b7514f0",
+  "sourceHash": "fnv1a64:bba12daf1735aa20",
   "lessons": [
     {
       "id": "ES-C432-lavadora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3ed02967e0c9b2a",
+      "sourceHash": "fnv1a64:83197d7fac60ddac",
       "notice": null,
       "blocks": [
         {
@@ -80,6 +80,10 @@
             {
               "kind": "speech",
               "text": "Spanish names most household machines this way, so -dora is worth more to you than any single appliance. A machine that does something is usually that something plus this ending, and you can often reach the word without having met it."
+            },
+            {
+              "kind": "speech",
+              "text": "Lavar is Latin lavare, \"to wash\"."
             }
           ]
         },
@@ -155,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efc7963f037b6835",
+      "sourceHash": "fnv1a64:0791ddd786c5adaf",
       "notice": null,
       "blocks": [
         {
@@ -215,6 +219,10 @@
             {
               "kind": "speech",
               "text": "el contador del agua is the phrase you will actually meet, on notices about somebody coming to read it. Note the gender: this one is masculine where the washing machine was feminine, and nothing about the ending decides that — the machine takes whatever gender its own word already had."
+            },
+            {
+              "kind": "speech",
+              "text": "Contar is Latin computare, \"to reckon\"."
             }
           ]
         },
@@ -290,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cc44b1450852810",
+      "sourceHash": "fnv1a64:ad35a93a051bc26c",
       "notice": null,
       "blocks": [
         {
@@ -355,6 +363,10 @@
             {
               "kind": "speech",
               "text": "Two endings, two different jobs: -dor gives you who or what does it, -ería gives you where it is kept."
+            },
+            {
+              "kind": "speech",
+              "text": "Estante is an old form of estar, \"standing\": a shelf is what stands against the wall. Estar is Latin stare, \"to stand\"."
             }
           ]
         },
@@ -430,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7b1bc1bcefaa34b",
+      "sourceHash": "fnv1a64:2114f55c09c12317",
       "notice": null,
       "blocks": [
         {
@@ -494,6 +506,10 @@
             {
               "kind": "speech",
               "text": "If you are keeping count, you have now reached four words in this chapter and three of them you could have guessed from a piece you already had."
+            },
+            {
+              "kind": "speech",
+              "text": "Tubo is Latin tubus, \"a pipe\"."
             }
           ]
         },

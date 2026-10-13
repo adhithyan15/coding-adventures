@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Making a Case --- Claim, Example, However, Although",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:772132ff7f59c25b",
+  "sourceHash": "fnv1a64:f67cae56eeca7b8c",
   "lessons": [
     {
       "id": "ES-C270-en-mi-opinion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:530d94322d580209",
+      "sourceHash": "fnv1a64:b419faa6857eff64",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Opinión is Latin opinari, \"to suppose, to think\" — and the -ión ending is the same one you met in habitación, turning a verb into the noun for its result. An opinion is a supposing, made into a thing you can hand someone."
+              "text": "Opinión is Latin opinio, from opinari, \"to suppose, to think\" — and the -ión ending is the same one you met in habitación, turning a verb into the noun for its result. An opinion is a supposing, made into a thing you can hand someone."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 440,
   "title": "La Fiesta Y El Año",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f8db8ea4ba7e9e62",
+  "sourceHash": "fnv1a64:f9aca979acf1901f",
   "lessons": [
     {
       "id": "ES-C440-boda",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2eb474ccbc672b5",
+      "sourceHash": "fnv1a64:af42d94c64eb0ef5",
       "notice": null,
       "blocks": [
         {
@@ -237,6 +237,10 @@
             {
               "kind": "speech",
               "text": "That is why el cumpleaños looks plural and is not. It is not an exception to be memorised; it is a sentence that hardened."
+            },
+            {
+              "kind": "speech",
+              "text": "Cumplir is Latin complere, \"to fill up\", and año is Latin annus, \"a year\"."
             }
           ]
         },

@@ -11,7 +11,7 @@ concept_tag: ES-VERB-ACEPTAR
 prerequisites: [ES-C456-cargo, ES-C382-pagar, ES-C311-cuenta]
 sounds: [soft-c, p-b-hard, stress-final]
 roots: [capere-latin]
-etymology_hook: "aceptar ← Latin accipere: ad- 'towards' + capere 'to take' — English accept"
+etymology_hook: "aceptar ← Latin acceptare, from accipere: ad- 'towards' + capere 'to take' — English accept"
 duration:
   max_seconds: 275
 requires:
@@ -69,7 +69,8 @@ The test is direction: *aceptar* is about **agreeing**, *admitir* about
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C456-CUENTA-03] -->
 
-Latin **accipere**: **ad-**, towards, plus **capere**, **to take**.
+Latin **acceptare**, built on **accipere**: **ad-**, towards, plus **capere**, **to
+take**.
 
 So to accept is to take a thing **towards yourself**, and the direction is the
 whole meaning. Something you did not take towards yourself, you did not

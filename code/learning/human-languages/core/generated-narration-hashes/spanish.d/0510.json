@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 510,
-  "sourceHash": "fnv1a64:bc511fd20a13c31d",
+  "sourceHash": "fnv1a64:0cb8237bcbd4bde4",
   "lessonIds": [
     "ES-C510-disculparse",
     "ES-C510-fiarse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch510.txt",
   "json": "spanish/narration/ch510.json",
-  "textHash": "fnv1a64:c01ebed6491fb303",
-  "jsonHash": "fnv1a64:168dd49514587875",
+  "textHash": "fnv1a64:c826eff551e4799b",
+  "jsonHash": "fnv1a64:174e9caf593b7bcb",
   "findings": []
 }

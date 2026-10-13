@@ -4,7 +4,7 @@
   "chapter": 277,
   "title": "Working From Sources --- Credit It, Restate It, Hold Both, Compress",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:75268482826641a9",
+  "sourceHash": "fnv1a64:e75ba4e761ca0568",
   "lessons": [
     {
       "id": "ES-C277-segun",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e03f8c38a9262fdd",
+      "sourceHash": "fnv1a64:03cac9b995e29be2",
       "notice": null,
       "blocks": [
         {

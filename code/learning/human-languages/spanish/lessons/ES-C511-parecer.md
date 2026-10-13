@@ -10,7 +10,7 @@ gloss: "to seem"
 concept_tag: ES-VERB-PARECER
 prerequisites: [ES-C510-odiar, ES-C510-sorprender]
 sounds: []
-roots: [parere]
+roots: [apparere-latin]
 etymology_hook: "parecer ← spoken Latin *parescere, built on parere 'to appear' — English apparent"
 duration:
   max_seconds: 200

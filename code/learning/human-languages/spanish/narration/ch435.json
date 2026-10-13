@@ -4,7 +4,7 @@
   "chapter": 435,
   "title": "Los Papeles Del Trabajo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:20e807b073f998d5",
+  "sourceHash": "fnv1a64:dde419b47d70d6f2",
   "lessons": [
     {
       "id": "ES-C435-curriculum",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa75b6e10fe123ef",
+      "sourceHash": "fnv1a64:67afc0f4d6a5eb17",
       "notice": null,
       "blocks": [
         {
@@ -227,6 +227,10 @@
             {
               "kind": "speech",
               "text": "One thing to watch: they are always feminine, whatever the verb, and the plural drops the accent — la reparación, las reparaciones."
+            },
+            {
+              "kind": "speech",
+              "text": "Documentar is built on documento, Latin documentum, \"a lesson, a proof\", from docere, \"to teach\"."
             }
           ]
         },
@@ -450,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31237cb21fec3be0",
+      "sourceHash": "fnv1a64:6d63d4715b9e3264",
       "notice": null,
       "blocks": [
         {
@@ -514,6 +518,10 @@
             {
               "kind": "speech",
               "text": "Sin previo aviso is a fixed phrase and keeps the older order. Fixed phrases preserve arrangements that ordinary speech has left behind, which is why they so often look like exceptions — they are the older rule, kept whole."
+            },
+            {
+              "kind": "speech",
+              "text": "Previo is Latin praevius, \"going before\" (Lewis & Short), taken from books."
             }
           ]
         },
@@ -589,7 +597,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3309b397f7705f8",
+      "sourceHash": "fnv1a64:770ebde37b8c68bc",
       "notice": null,
       "blocks": [
         {
@@ -653,11 +661,7 @@
             },
             {
               "kind": "speech",
-              "text": "And the root is not what you would expect. Latin iubilare meant to shout for joy — it is the same word under jubilant. Retiring in Spanish is, etymologically, letting out a cheer."
-            },
-            {
-              "kind": "speech",
-              "text": "Whether anybody feels that on the day is another matter, but the word was built by people who thought the end of work was worth shouting about."
+              "text": "And the root is not what you would expect. Latin iubilare meant to shout for joy — it is the same word under jubilant. The sense of retiring came later, by way of the jubilee, a year of release from work and debt."
             }
           ]
         },

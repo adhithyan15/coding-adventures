@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 504,
-  "sourceHash": "fnv1a64:6c1cb9d7c2d52314",
+  "sourceHash": "fnv1a64:96f3e199607cb030",
   "lessonIds": [
     "ES-C504-reciclar",
     "ES-C504-contaminacion",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch504.txt",
   "json": "spanish/narration/ch504.json",
-  "textHash": "fnv1a64:a4d264bc7fb5cbb4",
-  "jsonHash": "fnv1a64:0a5fc70f599b5947",
+  "textHash": "fnv1a64:8608799159ded872",
+  "jsonHash": "fnv1a64:625c1d5aab527617",
   "findings": []
 }

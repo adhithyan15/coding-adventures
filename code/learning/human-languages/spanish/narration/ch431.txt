@@ -129,6 +129,7 @@ verb: proveer. the doer: el proveedor.
 verb: trabajar. the doer: el trabajador.
 verb: vender. the doer: el vendedor.
 Once you notice -dor, a long unfamiliar noun often decomposes into a verb you know plus the one who does it. That is a reading strategy, not a word.
+Proveer is Latin providere, "to see ahead, to provide", worn down in speech.
 
 Guided Practice.
 [pause 1 second]

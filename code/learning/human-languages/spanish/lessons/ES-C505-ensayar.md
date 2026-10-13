@@ -49,7 +49,7 @@ reviews_of: [ES-C505-explicacion]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ensayar** is built on *ensayo*, "a trial, a rehearsal", from Late Latin *exagium*, "a weighing" (EtymDB 2.1).
+**ensayar** is built on *ensayo*, "a trial, a rehearsal", from Late Latin *exagium*, "a weighing" (EtymDB 2.1) — inherited: the *-gi-* became *y*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

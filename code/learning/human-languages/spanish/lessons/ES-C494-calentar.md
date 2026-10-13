@@ -49,7 +49,7 @@ The e breaks into ie under stress: *caliento*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**calentar** is built on *caliente*, "hot", from Latin *calentem*, "being warm" (EtymDB 2.1), the participle of *calere*, "to be warm".
+**calentar** is built on *caliente*, "hot", from Latin *calentem*, "being warm" (EtymDB 2.1), the participle of *calere*, "to be warm". *Caliente* is inherited: the stressed *e* opened into *ie*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

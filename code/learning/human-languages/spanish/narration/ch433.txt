@@ -19,6 +19,7 @@ puerta plus -al, an ending that makes a bigger or more general thing of the noun
 the thing: la puerta. the larger thing: el portal.
 the thing: la rama. the larger thing: el ramal.
 English has no single word here, which is why translations reach for doorway, entrance, lobby or hallway and none quite fits. When a Spanish word has no clean English partner, learning the situation beats learning a gloss: the portal is where you buzz, where the post boxes are, and where you wait.
+Puerta is Latin porta, "a gate". In portal the stress falls elsewhere, so the o never opened into ue.
 
 Guided Practice.
 [pause 1 second]
@@ -53,6 +54,7 @@ the thing: el pan. the person: el panadero.
 the thing: el zapato. the person: el zapatero.
 You met -ería for the place and -dor for the doer. This is the third: -ero for the person whose job is that thing. Three endings, three different questions, and all of them turn nouns you have into words you have not met.
 el portero also means the goalkeeper. The one who guards the gate, in both cases.
+Portero is an old word: Latin portarius, "a door-keeper" (Lewis & Short), from porta, "a gate", with the -arius that became -ero.
 
 Guided Practice.
 [pause 1 second]

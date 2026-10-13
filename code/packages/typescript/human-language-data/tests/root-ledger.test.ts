@@ -292,6 +292,9 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   // change, with Lewis & Short for Latin forms EtymDB lacks; Arabic loans name the Arabic word.
   // 16 new ones say the origin is uncertain or only usually traced. 41 older passages that
   // misreported an origin were corrected, and 22 blocks that never named one gained a sentence.
+  // A full review of all 497 then fixed loan routes (empresa, bailar, ruta), etyma (aceptar,
+  // opinión, portero, apoyar), hedges (andén, jubilar, copiar) and labels, and gave 26 more
+  // blocks that named only Spanish parts a sentence saying where the parts come from.
   spanish: { withoutHook: 0, withoutVisible: 0 },
   // tamil: 1185 / 1144 -> 0 / 4. Every Tamil word lesson now has an etymology_hook, and all
   // but four have a "taken apart" block: native words cite the Dravidian Etymological

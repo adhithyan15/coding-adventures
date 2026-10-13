@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 456,
-  "sourceHash": "fnv1a64:5972d7743ee0e402",
+  "sourceHash": "fnv1a64:7024c96685d42030",
   "lessonIds": [
     "ES-C456-ensalada",
     "ES-C456-cargo",
@@ -15,7 +15,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch456.txt",
   "json": "spanish/narration/ch456.json",
-  "textHash": "fnv1a64:7a813277bb04e105",
-  "jsonHash": "fnv1a64:2eb195beccf88df1",
+  "textHash": "fnv1a64:06ab117578b7d0e8",
+  "jsonHash": "fnv1a64:0bc893ee68f927c2",
   "findings": []
 }

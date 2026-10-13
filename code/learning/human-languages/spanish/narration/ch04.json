@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Saying Your Name",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1e1917753d02586a",
+  "sourceHash": "fnv1a64:73c1ca06520ecfcd",
   "lessons": [
     {
       "id": "ES-C03-me",
@@ -139,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a55bc0b64d998450",
+      "sourceHash": "fnv1a64:80f6bd8e9ec9444c",
       "notice": null,
       "blocks": [
         {
@@ -208,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "A sound-pattern to bank: Latin cl- became Spanish ll-. clamare becomes llamar. It happened repeatedly: clavem becomes llave (\"key\"), flamma becomes llama (\"flame\"), plovere becomes llover (\"to rain\"). A Spanish word starting ll- is very often a Latin cl-/fl-/pl- word in disguise — and its English cousin usually kept the original cluster (clamor, flame, pluvial)."
+              "text": "A sound-pattern to bank: Latin cl- became Spanish ll-. clamare becomes llamar. It happened repeatedly: clavem becomes llave (\"key\"), flamma becomes llama (\"flame\"), plovere becomes llover (\"to rain\"). A Spanish word starting ll- is very often a Latin cl-/fl-/pl- word in disguise — and its English borrowing usually kept the original cluster (clamor, flame, pluvial)."
             }
           ]
         },
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7a0cdabb96ca194",
+      "sourceHash": "fnv1a64:a585203a174b1b60",
       "notice": null,
       "blocks": [
         {
@@ -323,6 +323,10 @@
             {
               "kind": "speech",
               "text": "me llamo = me (\"myself\") + llamo (\"I call\") = literally \"I call myself.\" Then the name: Me llamo Susana — \"I call myself Susan.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Me is Latin me, and llamo is Latin clamo, \"I call out\"."
             }
           ]
         },

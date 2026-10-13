@@ -4,7 +4,7 @@
   "chapter": 421,
   "title": "The Actor and the Actress",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6269f44a02f50600",
+  "sourceHash": "fnv1a64:d8a584aed11e7bef",
   "lessons": [
     {
       "id": "ES-C421-actor",
@@ -209,7 +209,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:babe047b860aca74",
+      "sourceHash": "fnv1a64:2925bc7f2174cac5",
       "notice": null,
       "blocks": [
         {
@@ -270,7 +270,7 @@
             },
             {
               "kind": "speech",
-              "text": "The ending is nearly extinct. Spanish has only a small handful of -triz words left, and they are worth seeing together because the list is short enough to hold in your head:"
+              "text": "The ending is nearly extinct; the few -triz words left fit in one table:"
             },
             {
               "kind": "table",
@@ -289,7 +289,7 @@
             },
             {
               "kind": "speech",
-              "text": "English kept the same Latin ending in aviatrix and dominatrix. The mathematical matrix only looks like one of them: it is built on mater, \"mother\", and first meant a breeding animal, then the womb."
+              "text": "English kept the same Latin ending in aviatrix and dominatrix; matrix only looks like one, built on mater, \"mother\"."
             },
             {
               "kind": "speech",
@@ -393,7 +393,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why is it not la actora? (Spanish inherited the Latin feminine actrix whole, rather than applying its own -o to -a swap.) Which English word for a grid of numbers carries the same ending? (Matrix.) Which syllable is stressed in both actor and actriz? (The last.)"
+              "text": "Why is it not la actora? (Spanish took the Latin feminine actrix from Latin, rather than applying its own -o to -a swap.) Which English words keep the same ending? (Aviatrix, dominatrix.) Which syllable is stressed in both actor and actriz? (The last.)"
             }
           ]
         }

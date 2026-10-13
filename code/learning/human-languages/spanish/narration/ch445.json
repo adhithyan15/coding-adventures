@@ -4,7 +4,7 @@
   "chapter": 445,
   "title": "El Puesto",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1c7e17b2dc41e29e",
+  "sourceHash": "fnv1a64:ea2881e5ba1adf85",
   "lessons": [
     {
       "id": "ES-C445-jubilarse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d76e27f88180271c",
+      "sourceHash": "fnv1a64:6a8e6ca5b9f2ace3",
       "notice": null,
       "blocks": [
         {
@@ -69,11 +69,11 @@
             },
             {
               "kind": "speech",
-              "text": "The connection runs through the jubilee: in the older calendar a jubilee year cancelled debts and released people from service, and jubilar came to mean to release from service. The shout came first and the pension came after."
+              "text": "The connection runs through the jubilee, a Hebrew word that Latin spelled to look like iubilare: in the older calendar a jubilee year cancelled debts and released people from service, and jubilar came to mean to release from service. The shout came first and the pension came after."
             },
             {
               "kind": "speech",
-              "text": "So el jubilado is, underneath, the one who has been cheered off, and every Spanish retirement notice carries a faint sound of celebration nobody hears any more."
+              "text": "So el jubilado carries the shout in its spelling, but its meaning came through the jubilee year."
             },
             {
               "kind": "speech",

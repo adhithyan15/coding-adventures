@@ -49,6 +49,9 @@ teaching the pair together: one ending buys both halves of a transaction.
 | sells | vender | el vendedor |
 | buys | comprar | el comprador |
 
+*Comprar* is Latin *comparare*, "to procure", worn down in speech; *vender* is
+Latin *vendere*, "to sell".
+
 ## Grammar Lens: the pair that names an economy
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C427-AGENT-02, ES-LEX-C427-AGENT-01] -->
 

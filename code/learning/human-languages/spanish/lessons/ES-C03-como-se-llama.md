@@ -13,7 +13,7 @@ sounds: [inverted-marks, accent-mark]
 roots: []
 etymology_hook: "¿cómo se llama usted? — cómo 'how' + se llama 'calls oneself' + usted: how are you called"
 duration:
-  max_seconds: 240
+  max_seconds: 267
 requires:
   knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED]
 introduces:
@@ -59,6 +59,8 @@ real sentence:
 
 - To a stranger, an elder, a customer → *¿Cómo se llama usted?*
 - To a friend, a child, a peer → *¿Cómo te llamas?*
+
+*Cómo* is Latin *quo modo*, "in what manner", and *llama* is Latin *clamat*, "calls out".
 
 ## How to answer
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO] -->

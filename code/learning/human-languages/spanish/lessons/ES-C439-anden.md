@@ -11,7 +11,7 @@ concept_tag: ES-TRAVEL-ANDEN
 prerequisites: [ES-C438-sintesis-cuerpo, ES-C400-tren, ES-C346-estacion, ES-C330-parada]
 sounds: [written-accent, stress-final]
 roots: []
-etymology_hook: "andén — origin uncertain; the guess from andar 'to walk' is not accepted"
+etymology_hook: "andén — origin uncertain; perhaps Latin indago 'an encircling', not andar 'to walk'"
 duration:
   max_seconds: 250
 requires:
@@ -51,13 +51,13 @@ a listener uses to recognise it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-01] -->
 
-It does not come apart, and this time that is not a trick. Nobody knows where
-**andén** comes from.
+It does not come apart, and this time that is not a trick. Nobody knows for certain
+where **andén** comes from.
 
 The tempting guess is **andar**, to walk, because a platform is a place you walk
-along. Dictionaries do not accept it: the endings do not line up, and the word
-turns up first in senses that have nothing to do with walking. Other proposals
-have been made and none has carried the field.
+along. Dictionaries do not accept it: the endings do not line up. The usual
+proposal is Latin *indago*, "an encircling" (EtymDB 2.1), and even that is
+offered only as a perhaps.
 
 So the honest entry is *origin uncertain*, and that is worth meeting on purpose.
 Any book that produces an etymology for every word is inventing some of them.

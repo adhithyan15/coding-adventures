@@ -4,7 +4,7 @@
   "chapter": 505,
   "title": "Estudiar",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f12158bfe01513f9",
+  "sourceHash": "fnv1a64:8d3b094c62231b76",
   "lessons": [
     {
       "id": "ES-C505-educacion",
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:481e3ad44b1b9179",
+      "sourceHash": "fnv1a64:a0d8a338846e40ef",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ensayar is built on ensayo, \"a trial, a rehearsal\", from Late Latin exagium, \"a weighing\" (EtymDB 2.1)."
+              "text": "ensayar is built on ensayo, \"a trial, a rehearsal\", from Late Latin exagium, \"a weighing\" (EtymDB 2.1) — inherited: the -gi- became y."
             }
           ]
         },

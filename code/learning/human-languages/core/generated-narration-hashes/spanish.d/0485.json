@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 485,
-  "sourceHash": "fnv1a64:9d288fd5f0752396",
+  "sourceHash": "fnv1a64:075ab48c726adfe3",
   "lessonIds": [
     "ES-C485-barrer",
     "ES-C485-fregar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch485.txt",
   "json": "spanish/narration/ch485.json",
-  "textHash": "fnv1a64:7b4370ea6c5af23f",
-  "jsonHash": "fnv1a64:ec5939e1d6a7da2b",
+  "textHash": "fnv1a64:42a56eaaa4cde9ff",
+  "jsonHash": "fnv1a64:6c253ee9a5c9dd9e",
   "findings": []
 }

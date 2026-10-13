@@ -56,6 +56,8 @@ The ending is **productive**, which is the property worth having. You are not
 learning a word; you are learning a machine that turns any verb you know into
 the person who does it.
 
+*Vender* is Latin *vendere*, "to sell".
+
 ## Grammar Lens: where the ending puts the stress
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C427-AGENT-01, ES-LEX-C423-CHAR-03] -->
 

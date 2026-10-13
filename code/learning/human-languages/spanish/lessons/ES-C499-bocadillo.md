@@ -49,7 +49,7 @@ The word used in Spain; in much of Latin America a sandwich is *un sándwich*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**bocadillo** is *bocado*, "a mouthful", with the small-ending *-illo*: a little mouthful. *Bocado* is built on *boca*, "mouth", Latin *bucca*, "a cheek".
+**bocadillo** is *bocado*, "a mouthful", with the small-ending *-illo*: a little mouthful. *Bocado* is built on *boca*, "mouth", Latin *bucca*, "a cheek" — inherited: the short *u* became *o*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

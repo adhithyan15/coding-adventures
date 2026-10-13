@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 479,
-  "sourceHash": "fnv1a64:fb6bf8f94a14408a",
+  "sourceHash": "fnv1a64:7c672b0af7509d12",
   "lessonIds": [
     "ES-C479-inscribirse",
     "ES-C479-cancelar",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch479.txt",
   "json": "spanish/narration/ch479.json",
   "textHash": "fnv1a64:a46cfe5320c2cc53",
-  "jsonHash": "fnv1a64:29c3fe60780b415c",
+  "jsonHash": "fnv1a64:61a2abe19b40936c",
   "findings": []
 }

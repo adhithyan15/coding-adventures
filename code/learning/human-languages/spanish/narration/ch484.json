@@ -4,7 +4,7 @@
   "chapter": 484,
   "title": "Sacar partido",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ae394f4e714726e5",
+  "sourceHash": "fnv1a64:0d7584b47f3b1945",
   "lessons": [
     {
       "id": "ES-C484-utilizar",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d75f095f0fbc20ef",
+      "sourceHash": "fnv1a64:7c5ce06cd45e2ac6",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "apoyar from Italian appoggiare, \"to lean\", built on poggio, \"a support, a hillock\", from Latin podium, \"a raised platform\"."
+              "text": "apoyar from Italian appoggiare, \"to lean\", from spoken Latin appodiare, built on podium, \"a raised platform\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The Three Words for You",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:da50841f53a35b3e",
+  "sourceHash": "fnv1a64:3c6793cd2ce3ac6f",
   "lessons": [
     {
       "id": "ES-C03-tu-usted",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:469def272bcc1174",
+      "sourceHash": "fnv1a64:df0b5e973dcec6f3",
       "notice": null,
       "blocks": [
         {

@@ -10,7 +10,7 @@ gloss: "similar, alike"
 concept_tag: ES-REF-PARECIDO
 prerequisites: [ES-C481-vigilar, ES-C482-concreto]
 sounds: []
-roots: [parere]
+roots: [apparere-latin]
 etymology_hook: "parecido — participle of parecer 'to seem', from spoken Latin *parescere, built on parere 'to appear'"
 duration:
   max_seconds: 200

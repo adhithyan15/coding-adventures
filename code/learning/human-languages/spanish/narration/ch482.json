@@ -4,7 +4,7 @@
   "chapter": 482,
   "title": "Cómo son las cosas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8a90b2b42fe68b09",
+  "sourceHash": "fnv1a64:6ac965cbe9175612",
   "lessons": [
     {
       "id": "ES-C482-concreto",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23e2b81bd467bf36",
+      "sourceHash": "fnv1a64:c35a8afa5d41ed6c",
       "notice": null,
       "blocks": [
         {

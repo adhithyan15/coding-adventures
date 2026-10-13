@@ -61,6 +61,8 @@ and the word chooses itself accordingly.
 If you are keeping count, you have now reached four words in this chapter and
 three of them you could have guessed from a piece you already had.
 
+*Tubo* is Latin *tubus*, "a pipe".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-04, ES-LEX-AGUA-01] -->
 

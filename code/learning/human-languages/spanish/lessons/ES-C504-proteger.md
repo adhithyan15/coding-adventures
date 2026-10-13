@@ -49,7 +49,7 @@ The g becomes j before *o* and *a*: *protejo*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**proteger** ← Latin *protegere*, "to cover in front" (Lewis & Short): *pro-* and *tegere*, "to cover". The participle of *tegere*, *tectum*, gave *techo*, "a roof".
+**proteger** ← Latin *protegere*, "to cover in front" (Lewis & Short): *pro-* and *tegere*, "to cover". A learned word: the *-t-* and *-g-* between vowels were kept. The participle of *tegere*, *tectum*, gave *techo*, "a roof".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

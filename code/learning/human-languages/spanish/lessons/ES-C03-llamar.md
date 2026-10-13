@@ -65,7 +65,7 @@ shouts all through English:
 *llamar*. It happened repeatedly: *clavem* → *llave* ("key"), *flamma* →
 *llama* ("flame"), *\*plovere* → *llover* ("to rain"). A Spanish word starting
 *ll-* is very often a Latin *cl-*/*fl-*/*pl-* word in disguise — and its
-English cousin usually kept the original cluster (*clamor*, *flame*, *pluvial*).
+English borrowing usually kept the original cluster (*clamor*, *flame*, *pluvial*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME, ES-LEX-LLAMO, ES-GRAMMAR-FIRST-PERSON-VERB] -->

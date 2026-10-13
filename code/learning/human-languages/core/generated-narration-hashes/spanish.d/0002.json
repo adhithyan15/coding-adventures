@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 2,
-  "sourceHash": "fnv1a64:6ef886d6a6924766",
+  "sourceHash": "fnv1a64:d19e951d8e490be5",
   "lessonIds": [
     "ES-C02-tarde",
     "ES-C02-buenas-tardes",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch02.txt",
   "json": "spanish/narration/ch02.json",
-  "textHash": "fnv1a64:f693994f03cf5c5b",
-  "jsonHash": "fnv1a64:7e30cf53a953415e",
+  "textHash": "fnv1a64:a94123a47b5d68f6",
+  "jsonHash": "fnv1a64:e3126528da2509f6",
   "findings": []
 }

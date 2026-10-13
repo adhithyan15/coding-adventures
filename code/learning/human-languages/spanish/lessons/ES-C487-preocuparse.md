@@ -49,7 +49,7 @@ It goes with *por*: *preocuparse por alguien*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**preocupar** ← Latin *praeoccupare*, "to seize beforehand" (EtymDB 2.1): *prae-*, "before", and *occupare*, "to take hold of". A worry is a thought that has taken hold of you first.
+**preocupar** ← Latin *praeoccupare*, "to seize beforehand" (EtymDB 2.1): *prae-*, "before", and *occupare*, "to take hold of". A worry is a thought that has taken hold of you first. A learned word: the *-p-* between vowels was kept, where speech made *saber* from *sapere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

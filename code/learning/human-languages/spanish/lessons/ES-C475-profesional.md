@@ -49,7 +49,7 @@ It is an adjective and a noun: *un profesional* is a professional, a person who 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**profesional** is built from *profesión*, "a profession", with *-al*. *Profesión* is Latin *professio*, "a public declaration" (Lewis & Short), from *profiteri*, "to declare openly": a profession was the work you declared.
+**profesional** is built from *profesión*, "a profession", with *-al*. *Profesión* is Latin *professio*, "a public declaration" (Lewis & Short), from *profiteri*, "to declare openly": a profession was the work you declared. *Profesión* is learned: speech would have turned its *-ssi-* into *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

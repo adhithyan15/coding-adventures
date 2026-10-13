@@ -49,7 +49,7 @@ It works like *gustar*: *me apetece*. Used mostly in Spain; elsewhere *tener gan
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**apetecer** is Latin *appetere*, "to reach for, to desire" (Lewis & Short), with the ending *-ecer*. English *appetite* comes from the same verb.
+**apetecer** is Latin *appetere*, "to reach for, to desire" (Lewis & Short), with the ending *-ecer*. English *appetite* comes from the same verb. The *-t-* between vowels was kept, the mark of a word taken from books.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

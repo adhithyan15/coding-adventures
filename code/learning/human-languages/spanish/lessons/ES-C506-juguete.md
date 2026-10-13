@@ -47,7 +47,7 @@ reviews_of: [ES-C506-envolver]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**juguete** is built on *juego*, "a game", with the small-ending *-ete*. *Juego* is Latin *iocus*, "a joke, a jest".
+**juguete** is built on *juego*, "a game", with the small-ending *-ete*. *Juego* is Latin *iocus*, "a joke, a jest" — inherited: the stressed *o* opened into *ue*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -81,7 +81,8 @@ English took the same word as **limpid**, and kept it for water and for prose.
 Spanish let it drift from "clear" to "clean", which is a short walk: a clear
 stream is a clean one.
 
-Another Latin word for gleaming, *nitidus*, gave Spanish *neto*, and it
+Another Latin word for gleaming, *nitidus*, came in as *neto* by way of
+Catalan or French *net*, and it
 survives in *el peso neto* on a packet. Where Spanish kept two, it usually
 gave them separate jobs.
 

@@ -60,6 +60,9 @@ English has no single word here, which is why translations reach for *doorway*,
 clean English partner, learning the **situation** beats learning a gloss: the
 portal is where you buzz, where the post boxes are, and where you wait.
 
+*Puerta* is Latin *porta*, "a gate". In *portal* the stress falls elsewhere, so
+the *o* never opened into *ue*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C433-EDIF-01, ES-LEX-PUERTA, ES-LEX-C378-WHERE-60] -->
 

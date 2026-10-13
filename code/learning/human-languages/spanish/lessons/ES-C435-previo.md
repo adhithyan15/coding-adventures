@@ -61,6 +61,8 @@ noun and this one does both:
 preserve arrangements that ordinary speech has left behind, which is why they
 so often look like exceptions — they are the older rule, kept whole.
 
+*Previo* is Latin *praevius*, "going before" (Lewis & Short), taken from books.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C435-PAPEL-04, ES-LEX-C435-PAPEL-03] -->
 

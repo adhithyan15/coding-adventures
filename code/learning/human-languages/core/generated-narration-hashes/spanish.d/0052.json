@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 52,
-  "sourceHash": "fnv1a64:5ae418ae4c962fa6",
+  "sourceHash": "fnv1a64:77ddbfbaaf7168ba",
   "lessonIds": [
     "ES-C09-estudiante"
   ],
@@ -10,6 +10,6 @@
   "text": "spanish/narration/ch52.txt",
   "json": "spanish/narration/ch52.json",
   "textHash": "fnv1a64:a11ec8db28707bd0",
-  "jsonHash": "fnv1a64:3d70e32532bbe6dc",
+  "jsonHash": "fnv1a64:2783a8982bd56196",
   "findings": []
 }

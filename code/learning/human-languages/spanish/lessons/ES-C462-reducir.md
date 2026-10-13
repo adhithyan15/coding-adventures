@@ -81,11 +81,11 @@ Latin **reducere**: **re-**, back, plus **ducere**, **to lead**. To reduce
 something is to **lead it back** — to a smaller size, to where it was.
 
 *Ducere* is everywhere once you see it. **La ducha** is the same root, and it
-travelled: Italian *doccia*, a water pipe, from Latin *ductio*, "a leading"
+travelled: Italian *doccia*, a water pipe, probably from Latin *ductio*, "a leading"
 (Lewis & Short), gave French *douche*, which gave Spanish *ducha* — a pipe that
 **leads** water. English has
 **conduct**, **produce**, **educate** (to lead out), **duke** — a leader — and
-**aqueduct**, which leads water exactly as a shower does.
+**aqueduct**, which leads water as a shower does.
 
 Spanish keeps *conducir*, to drive, and *el conductor*. A driver leads the car;
 a shower leads the water; reducing leads the number back down.

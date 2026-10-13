@@ -4,7 +4,7 @@
   "chapter": 511,
   "title": "Hacer y parecer",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1a81f26b6ca52e7c",
+  "sourceHash": "fnv1a64:1371ea6568e0f65e",
   "lessons": [
     {
       "id": "ES-C511-parecer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e561316f33985a91",
+      "sourceHash": "fnv1a64:bc061d61cfbe64d7",
       "notice": null,
       "blocks": [
         {

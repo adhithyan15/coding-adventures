@@ -49,6 +49,8 @@ Its main job is to **announce** what follows:
 The colon promises a list; the commas then divide it; and there is still no
 comma before the final *y*.
 
+*Dos* is Latin *duos*, "two", and *punto* is Latin *punctum*, "a prick".
+
 ## Grammar Lens: the letter opening, where English disagrees
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-03] -->
 

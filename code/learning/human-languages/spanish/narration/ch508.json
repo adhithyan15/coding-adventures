@@ -4,7 +4,7 @@
   "chapter": 508,
   "title": "Cómo es",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dfbb1cfa678b9d08",
+  "sourceHash": "fnv1a64:8de8a3c784e1058f",
   "lessons": [
     {
       "id": "ES-C508-increible",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f1ba0668e102246",
+      "sourceHash": "fnv1a64:cc7a0f78b67b326e",
       "notice": null,
       "blocks": [
         {
@@ -621,7 +621,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aceptable from Latin acceptabilis, \"acceptable\" (EtymDB 2.1), from acceptare, \"to receive\", built on capere, \"to take\"."
+              "text": "aceptable from Latin acceptabilis, \"acceptable\" (EtymDB 2.1), from acceptare, \"to receive\", built on capere, \"to take\". A learned word: the -pt- was kept, where septem became siete."
             }
           ]
         },

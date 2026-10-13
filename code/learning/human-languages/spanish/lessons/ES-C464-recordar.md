@@ -77,7 +77,7 @@ memory and thought there rather than in the head. That is the same *cor* inside
 **el corazón**, which you have had for many chapters.
 
 The family is everywhere once seen: **el acuerdo**, an agreement — hearts
-brought together — and **recordar**'s English cousin **record**, which is
+brought together — and **recordar**'s English relative **record**, which is
 literally a thing committed to memory. **Courage** is *cor* too, by way of
 French, and so is **concordance**.
 

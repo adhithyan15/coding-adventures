@@ -75,7 +75,7 @@ balance — hiding in *lb*, in **Libra** the scales in the sky, in
 
 *Nivel* is the same word, made small. Latin **libella** is a *little libra*, a
 builder's level: a tiny balance that tells you when a surface is true. It
-reached Spanish through Occitan or French, and on the way the first **l** turned into an
+reached Spanish through Catalan *nivell* or Occitan, and on the way the first **l** turned into an
 **n** — *livel* became *nivel* — because two *l* sounds so close together pull
 apart.
 
