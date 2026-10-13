@@ -1440,8 +1440,8 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Unaliased local runtime-real snapshots may cross a procedure-call selector
   through unary signs, additive or multiplicative composition, and powers with
-  finite static operands; standard-function transforms, globals, captured
-  locals, and other real-name branches remain conservative. Additive composition,
+  finite static operands and pure supported standard-function transforms.
+  Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and
