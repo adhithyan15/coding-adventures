@@ -846,10 +846,49 @@ fn run_in_xlarge_stack(root: std::path::PathBuf, dir: std::path::PathBuf, tag: &
         .expect("thread panicked")
 }
 
+/// Self-hosted fixtures append slash-separated filenames to this base at runtime.
+/// Windows verbatim paths do not normalize those separators; ordinary disk/UNC
+/// spelling does. Recanonicalization proves that conversion preserves identity.
+#[cfg(test)]
+fn compiler_source_dir_for_tests() -> PathBuf {
+    let canonical = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent().unwrap().parent().unwrap().join("twig/compiler")
+        .canonicalize().expect("code/packages/twig/compiler/ must exist");
+    #[cfg(windows)]
+    if let Some(std::path::Component::Prefix(prefix)) = canonical.components().next() {
+        let mut ordinary = match prefix.kind() {
+            std::path::Prefix::VerbatimDisk(drive) => PathBuf::from(format!("{}:", char::from(drive))),
+            std::path::Prefix::VerbatimUNC(server, share) => {
+                let mut name = std::ffi::OsString::from(r"\\");
+                name.push(server);
+                name.push(r"\");
+                name.push(share);
+                PathBuf::from(name)
+            }
+            _ => return canonical,
+        };
+        for component in canonical.components().skip(1) {
+            ordinary.push(component.as_os_str());
+        }
+        assert_eq!(ordinary.canonicalize().expect("joinable compiler source base"), canonical);
+        return ordinary;
+    }
+    canonical
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::fs;
+
+    #[test]
+    fn canonical_compiler_fixture_base_accepts_slash_appended_filenames() {
+        let base = super::compiler_source_dir_for_tests();
+        let appended = format!("{}/span.tw", base.to_str().unwrap());
+        let expected = base.join("span.tw");
+        assert_eq!(fs::read(&appended).unwrap(), fs::read(&expected).unwrap());
+        assert_eq!(std::fs::canonicalize(&appended).unwrap(), expected.canonicalize().unwrap());
+    }
 
     /// Write a temp file and return its path.  The file is written to a
     /// directory created by `tempdir_for_test` (a simple per-test directory
@@ -2611,12 +2650,7 @@ mod tw05j_tests {
 
     /// Path to the compiler source directory (code/packages/twig/compiler/).
     fn compiler_src_dir() -> std::path::PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent().unwrap()  // rust/
-            .parent().unwrap()  // packages/
-            .join("twig/compiler")
-            .canonicalize()
-            .expect("code/packages/twig/compiler/ must exist")
+        super::compiler_source_dir_for_tests()
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -2853,12 +2887,7 @@ mod tw05k_tests {
     use std::path::Path;
 
     fn compiler_src_dir() -> std::path::PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent().unwrap()  // rust/
-            .parent().unwrap()  // packages/
-            .join("twig/compiler")
-            .canonicalize()
-            .expect("code/packages/twig/compiler/ must exist")
+        super::compiler_source_dir_for_tests()
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3065,12 +3094,7 @@ mod tw05l_tests {
     use std::path::Path;
 
     fn compiler_src_dir() -> std::path::PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent().unwrap()  // rust/
-            .parent().unwrap()  // packages/
-            .join("twig/compiler")
-            .canonicalize()
-            .expect("code/packages/twig/compiler/ must exist")
+        super::compiler_source_dir_for_tests()
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3280,12 +3304,7 @@ mod tw05m_tests {
     use std::path::Path;
 
     fn compiler_src_dir() -> std::path::PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent().unwrap()  // rust/
-            .parent().unwrap()  // packages/
-            .join("twig/compiler")
-            .canonicalize()
-            .expect("code/packages/twig/compiler/ must exist")
+        super::compiler_source_dir_for_tests()
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3593,12 +3612,7 @@ mod tw05n_tests {
     use std::path::Path;
 
     fn compiler_src_dir() -> std::path::PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent().unwrap()  // rust/
-            .parent().unwrap()  // packages/
-            .join("twig/compiler")
-            .canonicalize()
-            .expect("code/packages/twig/compiler/ must exist")
+        super::compiler_source_dir_for_tests()
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3927,12 +3941,7 @@ mod tw05q_tests {
     }
 
     fn compiler_src_dir() -> std::path::PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent().unwrap()  // rust/
-            .parent().unwrap()  // packages/
-            .join("twig/compiler")
-            .canonicalize()
-            .expect("code/packages/twig/compiler/ must exist")
+        super::compiler_source_dir_for_tests()
     }
 
     fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {

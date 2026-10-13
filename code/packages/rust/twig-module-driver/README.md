@@ -104,3 +104,8 @@ root.tw  →  BFS discovery
 - `twig-ir-compiler` — lower Twig AST to `IIRModule`
 - `iir-linker` — merge `[IIRModule]` into one
 - `interpreter-ir` — `IIRModule`, `IIRExport` types
+
+Test fixtures keep canonical source identity while using joinable ordinary Windows
+disk/UNC paths when the self-hosted compiler appends slash-separated filenames.
+String escaping, atomic temporary directories and every self-compile/fixed-point
+assertion and stack/work bound remain required. Production resolution is unchanged.

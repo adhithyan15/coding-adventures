@@ -16,7 +16,7 @@ that recanonicalization equals the original. Non-Windows paths unchanged. Keep
 Twig string backslash/quote/newline escaping and atomic tempdir creation, all
 source/function-count/fixed-point/assertion/stack/work limits. No production VM,
 host/read_file behavior, own types or crate dependencies changed. Use helper in
-five affected test modules; full actual package tests with one test thread avoid
+six fixture test modules; full actual package tests with one test thread avoid
 concurrent3GiB self-hosted test stacks during preserved background Miri. Native
 limits/assertions and cases remain identical, not skipped.
 
