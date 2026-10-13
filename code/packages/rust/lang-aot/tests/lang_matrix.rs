@@ -4769,6 +4769,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - a procedure-call selector may carry exact local-rooted
+    // runtime-real transforms through a specialised real name formal.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -21015,6 +21024,32 @@ fn algol_call_selected_entier_sign_local_runtime_real_output_runs_on_every_avail
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the call-selected entier-sign local runtime real did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(entier(sign(left))) else relay(entier(sign(right))); output(result)",
+                )
+        })
+        .expect("the ALGOL call-selected local name-actual runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the call-selected local name actual did not run"
             );
             continue;
         };

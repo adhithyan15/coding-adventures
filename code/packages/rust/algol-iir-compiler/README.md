@@ -218,7 +218,8 @@ multiplicative composition, powers with finite static operands, and pure
 supported standard-function transforms. Globals, captured locals, and other
 real-name branches remain conservative. The exact bounded
 `entier(sign(local-runtime-real))` transform is also safe across such a
-selector; unrestricted runtime `entier` remains conservative.
+selector, including when a specialised real name formal carries the exact
+local-rooted transform. Unrestricted runtime `entier` remains conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
