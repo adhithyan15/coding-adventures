@@ -11,8 +11,8 @@ when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. Calling
 selectors may choose between selector-safe runtime-real expressions rooted in
 direct formatter-safe real procedure results or unaliased local runtime-real
-snapshots through unary signs, additive or multiplicative composition, and
-powers with finite static operands and pure supported standard-function
+snapshots through unary signs, additive, multiplicative, or power composition
+with finite static operands and pure supported standard-function
 transforms, plus the exact bounded `entier(sign(...))` transform. Unrestricted
 runtime `entier`, globals, captured locals, and other real-name branches remain
 conservative. A specialised real name formal may carry the same unaliased
