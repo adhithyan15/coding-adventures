@@ -13,7 +13,8 @@ gloss: "a nurse"
 concept_tag: FR-METIERS75-INFIRMIERE
 prerequisites: [FR-C122-dessert, FR-C122-repas]
 sounds: []
-roots: []
+roots: [firmus-latin]
+etymology_hook: "infirmière — from the old word for 'sick ward'; Latin infirmus 'weak' — English infirmary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C122-repas]
 <!-- hl-knowledge: introduces=[FR-LEX-C123-METIERS75-01]; assesses=[] -->
 
 **l'infirmière** — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**infirmière** — built from the old word for "a sick ward", with *-ière*; behind it is Latin *infirmus*, "weak, sick", from *firmus*, "strong" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

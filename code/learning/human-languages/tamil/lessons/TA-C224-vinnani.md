@@ -14,7 +14,8 @@ romanization: "viññāṉi"
 concept_tag: TA-VELAI224-VINNANI
 prerequisites: [TA-C224-mutitiruttupavar, TA-C224-kottanar]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana]
+etymology_hook: "விஞ்ஞானி ← Sanskrit vijñāna 'act of discerning' (CDIAL 11707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C224-kottanar]
 <!-- hl-knowledge: introduces=[TA-LEX-C224-VELAI224-05]; assesses=[] -->
 
 **விஞ்ஞானி** — *viññāṉi* — "a scientist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விஞ்ஞானி** (*viññāṉi*) is a loan from Sanskrit *vijñāna*, "act of discerning" (CDIAL 11707). *-i* makes it "the one who has knowledge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

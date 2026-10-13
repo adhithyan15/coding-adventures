@@ -13,7 +13,8 @@ gloss: "recently"
 concept_tag: FR-PAS140-RECEMMENT
 prerequisites: [FR-C139-nimporte-quoi, FR-C140-deja]
 sounds: []
-roots: []
+roots: [recens-latin]
+etymology_hook: "récemment — the word for 'recent', from Latin recens, + -ment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C140-deja]
 <!-- hl-knowledge: introduces=[FR-LEX-C140-PAS140-02]; assesses=[] -->
 
 **récemment** — "recently". **Récemment, j'ai beaucoup lu.** — "Recently I have read a lot." The ending **-ment** makes an adverb, the way English uses -ly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**récemment** — built from the word for "recent", ← Latin *recens*, *recentis* (Lewis & Short), with the adverb ending *-ment*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

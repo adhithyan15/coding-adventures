@@ -13,7 +13,8 @@ gloss: "an engine"
 concept_tag: FR-CHOSES227-MOTEUR
 prerequisites: [FR-C226-dette, FR-C227-roue]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "moteur ← Latin motor 'a mover', from movere — English motor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C227-roue]
 <!-- hl-knowledge: introduces=[FR-LEX-C227-CHOSES227-02]; assesses=[] -->
 
 **le moteur** — "an engine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moteur** ← Latin *motor*, "a mover", from *movere*, "to move" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "change (coins); currency"
 concept_tag: FR-TEMPS87-MONNAIE
 prerequisites: [FR-C134-adresse, FR-C135-seconde]
 sounds: []
-roots: []
+roots: [moneta-latin]
+etymology_hook: "monnaie ← Latin moneta 'mint', from Juno Moneta's temple — English money and mint"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C135-seconde]
 <!-- hl-knowledge: introduces=[FR-LEX-C135-TEMPS87-02]; assesses=[] -->
 
 **la monnaie** — "change (coins); currency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**monnaie** ← Old French *moneie* ← Latin *moneta*, "a mint, coin", from Juno *Moneta*, in whose temple Rome struck its coins — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

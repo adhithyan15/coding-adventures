@@ -14,7 +14,8 @@ romanization: "ūtā"
 concept_tag: TA-QUAL150-UTA
 prerequisites: [TA-C149-unmaiyana, TA-C149-poyyana]
 sounds: []
-roots: []
+roots: [hindustani-uda]
+etymology_hook: "ஊதா ← Hindustani ūdā 'purple'; DEDR has no native entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C149-poyyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C150-QUAL150-01]; assesses=[] -->
 
 **ஊதா** — *ūtā* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஊதா** (*ūtā*) is a loan from Hindustani *ūdā*, "purple". DEDR has no native entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-VERB-BOUGER
 prerequisites: [FR-C183-skier, FR-C183-glisser]
 sounds: []
 roots: []
+etymology_hook: "bouger ← Vulgar Latin *bullicare 'to bubble, to stir', from bullire 'to boil'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C183-glisser]
 <!-- hl-knowledge: introduces=[FR-LEX-C184-VERBES184-01]; assesses=[] -->
 
 **bouger** — "to stir, to move".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bouger** ← Vulgar Latin *\*bullicare*, "to bubble, to stir", from Latin *bullire*, "to boil" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

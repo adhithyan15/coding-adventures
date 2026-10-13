@@ -13,7 +13,8 @@ gloss: "to promise"
 concept_tag: FR-VERB-PROMETTRE
 prerequisites: [FR-C176-enlever, FR-C176-tenir]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "promettre ← Latin promittere 'to send forward' — mettre with pro-; English promise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C176-tenir]
 <!-- hl-knowledge: introduces=[FR-LEX-C177-VERBES177-01]; assesses=[] -->
 
 **promettre** — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**promettre** ← Old French *prometre* ← Latin *promittere*, "to send forward, to promise" (EtymDB 2.1) — inherited: *mettre* with *pro-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

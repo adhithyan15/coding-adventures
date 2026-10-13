@@ -14,7 +14,8 @@ romanization: "cantu"
 concept_tag: TA-IDAM236-CANTU
 prerequisites: [TA-C235-merku, TA-C236-arunkatciyakam]
 sounds: []
-roots: []
+roots: [sandhi-sanskrit]
+etymology_hook: "சந்து — usually traced to Sanskrit saṁdhi 'joint, junction' (CDIAL 12913): a gap between houses"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C236-arunkatciyakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C236-IDAM236-02]; assesses=[] -->
 
 **சந்து** — *cantu* — "a lane, an alley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சந்து** (*cantu*) is usually traced to Sanskrit *saṁdhi*, "joint, junction" (CDIAL 12913): a lane is a gap between houses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

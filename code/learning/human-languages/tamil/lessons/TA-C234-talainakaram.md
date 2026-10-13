@@ -14,7 +14,8 @@ romanization: "talainakaram"
 concept_tag: TA-IDAM234-TALAINAKARAM
 prerequisites: [TA-C234-nakaram, TA-C234-natu]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-nakar-town]
+etymology_hook: "தலைநகரம் — talai 'head' (DEDR 3103) + nakaram 'city' (DEDR 3568): 'the head city'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C234-natu]
 <!-- hl-knowledge: introduces=[TA-LEX-C234-IDAM234-04]; assesses=[] -->
 
 **தலைநகரம்** — *talainakaram* — "a capital city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தலைநகரம்** (*talainakaram*) is *talai*, "head" (DEDR 3103), and *nakaram*, "city" (DEDR 3568): "the head city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

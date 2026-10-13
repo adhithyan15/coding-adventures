@@ -14,7 +14,8 @@ romanization: "āccariyappaṭu"
 concept_tag: TA-VERB-ACCARIYAPPATU
 prerequisites: [TA-C256-accitu, TA-C257-veru]
 sounds: []
-roots: []
+roots: [sanskrit-ashcarya]
+etymology_hook: "ஆச்சரியப்படு — āccariyam ← Sanskrit āścarya 'wonderful' (CDIAL 1464) + native paṭu 'undergo'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C257-veru]
 <!-- hl-knowledge: introduces=[TA-LEX-C257-ACT257-02]; assesses=[] -->
 
 **ஆச்சரியப்படு** — *āccariyappaṭu* — "to be surprised".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆச்சரியப்படு** (*āccariyappaṭu*) is *āccariyam*, "wonder", from Sanskrit *āścarya*, "wonderful" (CDIAL 1464), with native *paṭu*, "to undergo" (DEDR 3853): "undergo wonder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

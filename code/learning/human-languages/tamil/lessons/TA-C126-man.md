@@ -14,7 +14,8 @@ romanization: "maṇ"
 concept_tag: TA-THINGS126-MAN
 prerequisites: [TA-C126-katu, TA-C126-ilai]
 sounds: []
-roots: []
+roots: [dravidian-man-earth]
+etymology_hook: "மண் — native Dravidian (DEDR 4666); Malayalam maṇ, Kannada maṇ, Telugu mannu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C126-ilai]
 <!-- hl-knowledge: introduces=[TA-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **மண்** — *maṇ* — "soil, earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மண்** (*maṇ*) is native Dravidian. DEDR 4666 lists Malayalam *maṇ*, Kannada *maṇ* and Telugu *mannu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

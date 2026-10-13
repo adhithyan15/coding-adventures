@@ -14,7 +14,8 @@ romanization: "kaḻaṟṟu"
 concept_tag: TA-VERB-KALARRU
 prerequisites: [TA-C225-nirappu, TA-C225-mati2]
 sounds: []
-roots: []
+roots: [dravidian-kazhal-loosen]
+etymology_hook: "கழற்று — native Dravidian (DEDR 1349); Malayalam kaḻaṟṟuka 'to slip off'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C225-mati2]
 <!-- hl-knowledge: introduces=[TA-LEX-C225-ACT225-04]; assesses=[] -->
 
 **கழற்று** — *kaḻaṟṟu* — "to take off (clothes, shoes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கழற்று** (*kaḻaṟṟu*) is native Dravidian. DEDR 1349 lists Malayalam *kaḻaṟṟuka*, "to slip off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

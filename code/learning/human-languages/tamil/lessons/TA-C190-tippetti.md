@@ -14,7 +14,8 @@ romanization: "tīppeṭṭi"
 concept_tag: TA-PORUL190-TIPPETTI
 prerequisites: [TA-C189-tirai, TA-C190-yocanai]
 sounds: []
-roots: []
+roots: [dravidian-tii-fire, dravidian-petti-box]
+etymology_hook: "தீப்பெட்டி — native: tī 'fire' (DEDR 3266; Malayalam tī) + peṭṭi 'box' (DEDR 4388)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C190-yocanai]
 <!-- hl-knowledge: introduces=[TA-LEX-C190-PORUL190-02]; assesses=[] -->
 
 **தீப்பெட்டி** — *tīppeṭṭi* — "a matchbox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தீப்பெட்டி** (*tīppeṭṭi*) is native: *tī*, "fire" (DEDR 3266; Malayalam *tī*), and *peṭṭi*, "box" (DEDR 4388): "the fire box".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

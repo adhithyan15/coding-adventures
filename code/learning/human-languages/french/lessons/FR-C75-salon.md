@@ -14,6 +14,7 @@ concept_tag: FR-MAISON27-SALON
 prerequisites: [FR-C75-escalier, FR-C75-miroir]
 sounds: []
 roots: []
+etymology_hook: "salon ← Italian salone 'large hall' — English saloon came from it too"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C75-miroir]
 <!-- hl-knowledge: introduces=[FR-LEX-C75-MAISON27-04]; assesses=[] -->
 
 **le salon** — "a living room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salon** ← Italian *salone*, "a large hall", from *sala*, "a hall", a Germanic word — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

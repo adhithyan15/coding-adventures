@@ -13,7 +13,8 @@ gloss: "a show"
 concept_tag: FR-CHOSES223-SPECTACLE
 prerequisites: [FR-C223-chanteur, FR-C223-concert]
 sounds: []
-roots: []
+roots: [spectare-latin]
+etymology_hook: "spectacle ← Latin spectaculum 'a show', from spectare 'to watch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C223-concert]
 <!-- hl-knowledge: introduces=[FR-LEX-C223-CHOSES223-05]; assesses=[] -->
 
 **le spectacle** — "a show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spectacle** ← Latin *spectaculum*, "a show", from *spectare*, "to watch" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

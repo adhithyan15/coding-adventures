@@ -14,6 +14,7 @@ concept_tag: FR-HABITS56-MANTEAU
 prerequisites: [FR-C104-chaussures, FR-C104-chapeau]
 sounds: []
 roots: []
+etymology_hook: "manteau ← Latin mantellum 'a cloak' — English mantle and mantelpiece"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C104-chapeau]
 <!-- hl-knowledge: introduces=[FR-LEX-C104-HABITS56-04]; assesses=[] -->
 
 **le manteau** — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manteau** ← Old French *mantel* ← Latin *mantellum*, "a cloak" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

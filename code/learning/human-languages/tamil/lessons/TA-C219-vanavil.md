@@ -14,7 +14,8 @@ romanization: "vāṉavil"
 concept_tag: TA-PORUL219-VANAVIL
 prerequisites: [TA-C218-teni, TA-C219-munkil]
 sounds: []
-roots: []
+roots: [dravidian-vaanam-sky, dravidian-vil-bow]
+etymology_hook: "வானவில் — native: vāṉam 'sky' (DEDR 5381) + vil 'bow' (DEDR 5422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C219-munkil]
 <!-- hl-knowledge: introduces=[TA-LEX-C219-PORUL219-02]; assesses=[] -->
 
 **வானவில்** — *vāṉavil* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வானவில்** (*vāṉavil*) is native: *vāṉam*, "sky" (DEDR 5381), and *vil*, "bow" (DEDR 5422): "the sky's bow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

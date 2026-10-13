@@ -13,7 +13,8 @@ gloss: "a parcel"
 concept_tag: FR-CHOSES252-COLIS
 prerequisites: [FR-C252-enveloppe, FR-C252-timbre]
 sounds: []
-roots: []
+roots: [collum-latin]
+etymology_hook: "colis ← Italian colli 'loads', from collo 'neck' — the Latin collum of cou"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C252-timbre]
 <!-- hl-knowledge: introduces=[FR-LEX-C252-CHOSES252-05]; assesses=[] -->
 
 **le colis** — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colis** ← Italian *colli*, "loads", the plural of *collo*, "a neck, a load carried on it", ← Latin *collum*, the Latin of *cou* — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

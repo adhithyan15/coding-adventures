@@ -11,7 +11,8 @@ romanization: "kaiyeḻuttu"
 concept_tag: TA-WORK-SIGNATURE
 prerequisites: [TA-C104-address, TA-C104-birthday]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-ezhutu-write]
+etymology_hook: "கையெழுத்து — native: kai 'hand' (DEDR 2023) + eḻuttu 'writing' (DEDR 853)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C104-birthday]
 **கையெழுத்து** (*kaiyeḻuttu*) — "a signature", and "handwriting", literally "hand-writing".
 
 **கை** is "hand"; **எழுத்து** is "writing". **இங்கே கையெழுத்துப் போடுங்கள்** — "please sign here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கையெழுத்து** (*kaiyeḻuttu*) is native: *kai*, "hand" (DEDR 2023), and *eḻuttu*, "writing" (DEDR 853): "hand-writing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

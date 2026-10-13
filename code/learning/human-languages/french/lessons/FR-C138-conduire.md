@@ -13,7 +13,8 @@ gloss: "to drive"
 concept_tag: FR-VERB-CONDUIRE
 prerequisites: [FR-C138-preferer, FR-C138-esperer]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "conduire ← Latin conducere 'to lead together' — English conduct"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C138-esperer]
 <!-- hl-knowledge: introduces=[FR-LEX-C138-VERBES90-04]; assesses=[] -->
 
 **conduire** — "to drive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conduire** ← Old French *conduire* ← Latin *conducere*, "to lead together" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kiṭṭattaṭṭa"
 concept_tag: TA-KARANAM207-KITTATTATTA
 prerequisites: [TA-C206-niccal-kulam, TA-C207-appatiyanal]
 sounds: []
-roots: []
+roots: [dravidian-kittu-near]
+etymology_hook: "கிட்டத்தட்ட — native Dravidian (DEDR 1538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C207-appatiyanal]
 <!-- hl-knowledge: introduces=[TA-LEX-C207-KARANAM207-02]; assesses=[] -->
 
 **கிட்டத்தட்ட** — *kiṭṭattaṭṭa* — "almost, nearly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிட்டத்தட்ட** (*kiṭṭattaṭṭa*) is native Dravidian (DEDR 1538). The entry lists *kiṭṭa*, "near, close by"; *-taṭṭa* is an echo that rounds it off: "near enough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

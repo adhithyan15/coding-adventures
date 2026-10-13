@@ -14,6 +14,7 @@ concept_tag: FR-VERB-GAGNER
 prerequisites: [FR-C66-peindre, FR-C66-compter]
 sounds: []
 roots: []
+etymology_hook: "gagner ← Frankish *waidanjan 'to hunt for food' — first to win food, then money"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C66-compter]
 <!-- hl-knowledge: introduces=[FR-LEX-C66-VERBES18-04]; assesses=[] -->
 
 **gagner** — "to win; to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gagner** ← Old French *gaaignier* ← Frankish *\*waidanjan*, "to hunt for food, to graze" — borrowed from the Franks. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

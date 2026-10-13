@@ -350,6 +350,9 @@ The obvious reading is that this is a natural drift any language might undergo. 
 Linguists call that an areal change: one that travels by neighbourhood rather than by descent. And the evidence is at the edges. Spanish and Portuguese, out at the western rim, largely did not get it — they kept their simple past in everyday speech, which is why habló is still ordinary. Though Spain's Spanish has begun drifting the same way, with he hablado taking ground: the change reaching the edge, late.
 So the map explains what the family tree cannot. Italian and Spanish are close relatives that behave differently here, and French and German are distant relatives that behave the same — because what mattered was who was standing next to whom.
 
+The phrase, taken apart.
+passé simple — passé, "passed", goes back to Latin passus, "a step"; simple from Latin simplex. (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: the three retreats — "passé simple, Präteritum, passato remoto"]

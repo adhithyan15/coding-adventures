@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 241,
-  "sourceHash": "fnv1a64:06d5a2392f77d6ad",
+  "sourceHash": "fnv1a64:af48acb8088e2402",
   "lessonIds": [
     "FR-C241-tousser",
     "FR-C241-trembler",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch241.txt",
   "json": "french/narration/ch241.json",
-  "textHash": "fnv1a64:13f40722b30722a3",
-  "jsonHash": "fnv1a64:37013c6973a4af39",
+  "textHash": "fnv1a64:b837b77b5c03dcec",
+  "jsonHash": "fnv1a64:628755105a9ae1f5",
   "findings": []
 }

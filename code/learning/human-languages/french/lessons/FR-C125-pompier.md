@@ -14,6 +14,7 @@ concept_tag: FR-METIERS77-POMPIER
 prerequisites: [FR-C124-avocat, FR-C124-ingenieur]
 sounds: []
 roots: []
+etymology_hook: "pompier — the one who works the pump — English pump is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C124-ingenieur]
 <!-- hl-knowledge: introduces=[FR-LEX-C125-METIERS77-01]; assesses=[] -->
 
 **le pompier** — "a firefighter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pompier** — built from the word for "a pump", with *-ier*: the one who works the pump.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

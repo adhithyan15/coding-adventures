@@ -14,7 +14,8 @@ romanization: "uyaramāṉa"
 concept_tag: TA-QUAL144-UYARAMANA
 prerequisites: [TA-C143-nilamana, TA-C143-kuttaiyana]
 sounds: []
-roots: []
+roots: [dravidian-uyar-rise]
+etymology_hook: "உயரமான — native Dravidian (DEDR 646)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C143-kuttaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C144-QUAL144-01]; assesses=[] -->
 
 **உயரமான** — *uyaramāṉa* — "tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உயரமான** (*uyaramāṉa*) is native Dravidian (DEDR 646). It is *uyaram*, "height", from *uyar*, "to rise", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

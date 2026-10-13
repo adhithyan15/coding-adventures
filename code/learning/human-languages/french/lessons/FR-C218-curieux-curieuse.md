@@ -14,6 +14,7 @@ concept_tag: FR-QUAL218-CURIEUX-CURIEUSE
 prerequisites: [FR-C217-ensemble, FR-C217-cependant]
 sounds: []
 roots: []
+etymology_hook: "curieux ← Latin curiosus 'careful, inquisitive', from cura 'care' — English curious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C217-cependant]
 <!-- hl-knowledge: introduces=[FR-LEX-C218-QUAL218-01]; assesses=[] -->
 
 **curieux / curieuse** — "curious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**curieux** ← Latin *curiosus*, "careful, inquisitive", from *cura*, "care" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

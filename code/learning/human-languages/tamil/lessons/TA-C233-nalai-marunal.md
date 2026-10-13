@@ -14,7 +14,8 @@ romanization: "nāḷai maṟunāḷ"
 concept_tag: TA-NERAM233-NALAI-MARUNAL
 prerequisites: [TA-C233-antutorum, TA-C233-vitiyal]
 sounds: []
-roots: []
+roots: [proto-dravidian-naal-day, dravidian-maru-other]
+etymology_hook: "நாளை மறுநாள் — native: nāḷai 'tomorrow' (DEDR 3656) + maṟunāḷ 'the next day' (DEDR 4766)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C233-vitiyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C233-NERAM233-03]; assesses=[] -->
 
 **நாளை மறுநாள்** — *nāḷai maṟunāḷ* — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாளை மறுநாள்** (*nāḷai maṟunāḷ*) is native: *nāḷai*, "tomorrow" (DEDR 3656), and *maṟunāḷ*, "the next day" (DEDR 4766): "the day after tomorrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

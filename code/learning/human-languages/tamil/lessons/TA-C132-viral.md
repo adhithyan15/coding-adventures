@@ -14,7 +14,8 @@ romanization: "viral"
 concept_tag: TA-THINGS132-VIRAL
 prerequisites: [TA-C132-vay, TA-C132-nakku]
 sounds: []
-roots: []
+roots: [dravidian-viral-finger]
+etymology_hook: "விரல் — native Dravidian (DEDR 5409); Malayalam viral, Kannada beral"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C132-nakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **விரல்** — *viral* — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விரல்** (*viral*) is native Dravidian. DEDR 5409 lists Malayalam *viral* and Kannada *beral*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

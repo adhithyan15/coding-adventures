@@ -11,7 +11,8 @@ romanization: "suvar"
 concept_tag: TA-NOUN-WALL
 prerequisites: [TA-W26-read-mesai, TA-C68-money, TA-C69-train]
 sounds: []
-roots: []
+roots: [dravidian-cuvar-wall]
+etymology_hook: "சுவர் — native Dravidian (DEDR 1975); Malayalam cuvar, Kannada kēr"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ front of anything. Words shaped this plainly are usually old ones, and this is o
 
 It is also the surface that makes உள்ளே and வெளியே mean anything: a சுவர் is what there is an
 inside and an outside of.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுவர்** (*suvar*) is native Dravidian. DEDR 1975 lists Malayalam *cuvar* and Kannada *kēr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

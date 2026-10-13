@@ -14,7 +14,8 @@ romanization: "āḷ"
 concept_tag: TA-PORUL273-AL
 prerequisites: [TA-C272-pukaippatam, TA-C272-nakal]
 sounds: []
-roots: []
+roots: [dravidian-aal-man]
+etymology_hook: "ஆள் — native Dravidian (DEDR 399); Malayalam āḷ 'a person', Kannada āḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C272-nakal]
 <!-- hl-knowledge: introduces=[TA-LEX-C273-PORUL273-01]; assesses=[] -->
 
 **ஆள்** — *āḷ* — "a person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆள்** (*āḷ*) is native Dravidian. DEDR 399 lists Malayalam *āḷ*, "a person" and Kannada *āḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

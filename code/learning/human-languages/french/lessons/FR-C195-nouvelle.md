@@ -13,7 +13,8 @@ gloss: "a piece of news"
 concept_tag: FR-CHOSES195-NOUVELLE
 prerequisites: [FR-C194-moustique, FR-C195-dialecte]
 sounds: []
-roots: []
+roots: [novus-latin]
+etymology_hook: "nouvelle ← Vulgar Latin novella 'new things' — the feminine of nouveau; English novel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C195-dialecte]
 <!-- hl-knowledge: introduces=[FR-LEX-C195-CHOSES195-02]; assesses=[] -->
 
 **la nouvelle** — "a piece of news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nouvelle** ← Old French *novele* ← Vulgar Latin *novella*, "new things" (EtymDB 2.1) — inherited: the feminine of the word behind *nouveau*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

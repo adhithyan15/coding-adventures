@@ -14,7 +14,8 @@ romanization: "taṅku"
 concept_tag: TA-VERB-TANKU
 prerequisites: [TA-C161-kalakku, TA-C162-kata]
 sounds: []
-roots: []
+roots: [dravidian-tangu-stay]
+etymology_hook: "தங்கு — native Dravidian (DEDR 3014); Malayalam taṅṅuka, Kannada taṅgu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C162-kata]
 <!-- hl-knowledge: introduces=[TA-LEX-C162-ACT162-02]; assesses=[] -->
 
 **தங்கு** — *taṅku* — "to stay (overnight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தங்கு** (*taṅku*) is native Dravidian. DEDR 3014 lists Malayalam *taṅṅuka* and Kannada *taṅgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 132,
-  "sourceHash": "fnv1a64:e42355df3528f413",
+  "sourceHash": "fnv1a64:aadaba5779d20b3c",
   "lessonIds": [
     "TA-C132-kocu",
     "TA-C132-mukam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch132.txt",
   "json": "tamil/narration/ch132.json",
-  "textHash": "fnv1a64:cdd7ffc01870f994",
-  "jsonHash": "fnv1a64:74cc2f82cedd94cc",
+  "textHash": "fnv1a64:7d30254aa0cb5712",
+  "jsonHash": "fnv1a64:607a5034a7670e86",
   "findings": []
 }

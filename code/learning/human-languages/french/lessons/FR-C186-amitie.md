@@ -13,7 +13,8 @@ gloss: "friendship"
 concept_tag: FR-SANTE186-AMITIE
 prerequisites: [FR-C185-cicatrice, FR-C185-rhume]
 sounds: []
-roots: []
+roots: [amicus-latin]
+etymology_hook: "amitié ← Vulgar Latin *amicitas, from amicus — the Latin of ami; English amity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C185-rhume]
 <!-- hl-knowledge: introduces=[FR-LEX-C186-SANTE186-01]; assesses=[] -->
 
 **l'amitié** — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amitié** ← Old French *amistié* ← Vulgar Latin *\*amicitas*, from *amicus*, the Latin of *ami* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to share"
 concept_tag: FR-VERB-PARTAGER
 prerequisites: [FR-C178-apparaitre, FR-C179-dependre]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "partager — from the word for 'a share', from Latin pars 'a part'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C179-dependre]
 <!-- hl-knowledge: introduces=[FR-LEX-C179-VERBES179-02]; assesses=[] -->
 
 **partager** — "to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partager** — built from the word for "a share", from the word for "a part", ← Latin *pars*, *partis* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

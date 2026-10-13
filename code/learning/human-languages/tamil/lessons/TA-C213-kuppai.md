@@ -14,7 +14,8 @@ romanization: "kuppai"
 concept_tag: TA-PORUL213-KUPPAI
 prerequisites: [TA-C213-alamari, TA-C213-mincaram]
 sounds: []
-roots: []
+roots: [dravidian-kuppai-heap]
+etymology_hook: "குப்பை — native Dravidian (DEDR 1731); Malayalam kuppa 'heap of dirt or refuse'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C213-mincaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C213-PORUL213-03]; assesses=[] -->
 
 **குப்பை** — *kuppai* — "rubbish, garbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குப்பை** (*kuppai*) is native Dravidian. DEDR 1731 lists Malayalam *kuppa*, "heap of dirt or refuse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a loan"
 concept_tag: FR-CHOSES226-PRET
 prerequisites: [FR-C226-distributeur, FR-C226-compte-bancaire]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "prêt — from prêter 'to lend'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C226-compte-bancaire]
 <!-- hl-knowledge: introduces=[FR-LEX-C226-CHOSES226-04]; assesses=[] -->
 
 **le prêt** — "a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prêt** — formed from *prêter*, "to lend": a thing lent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

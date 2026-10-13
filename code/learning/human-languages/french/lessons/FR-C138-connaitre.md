@@ -13,7 +13,8 @@ gloss: "to know (a person, a place)"
 concept_tag: FR-VERB-CONNAITRE
 prerequisites: [FR-C137-mettre, FR-C137-croire]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "connaître ← Latin cognoscere 'to get to know' — English recognise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C137-croire]
 <!-- hl-knowledge: introduces=[FR-LEX-C138-VERBES90-01]; assesses=[] -->
 
 **connaître** — "to know (a person, a place)". **savoir** knows a fact; **connaître** knows a person or a place.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**connaître** ← Old French *conoistre* ← Latin *cognoscere*, "to get to know" — inherited. (EtymDB 2.1) The circumflex marks a lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

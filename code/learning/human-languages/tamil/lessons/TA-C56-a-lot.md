@@ -11,7 +11,8 @@ romanization: "niṟaiya"
 concept_tag: TA-REPLY-A-LOT
 prerequisites: [TA-C56-a-little, TA-C54-basket, TA-C55-back]
 sounds: []
-roots: []
+roots: [dravidian-nirai-full]
+etymology_hook: "நிறைய — native Dravidian (DEDR 3682); Malayalam niṟa 'fullness', Kannada neṟe 'to become full'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C56-a-little]
 The other end of the same question. நிறைய is built on *niṟai*, to fill, so a lot in Tamil is a fullness: as much as the thing will hold and no argument about it.
 
 Telugu says ఎక్కువ (*ekkuva*) and builds it out of nothing to do with filling — a reminder that two languages can land on the same everyday answer by two quite different routes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிறைய** (*niṟaiya*) is native Dravidian. DEDR 3682 lists Malayalam *niṟa*, "fullness" and Kannada *neṟe*, "to become full". It comes from *niṟai*, "to become full".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuḷirnta"
 concept_tag: TA-QUAL144-KULIRNTA
 prerequisites: [TA-C144-uyaramana, TA-C144-cutana]
 sounds: []
-roots: []
+roots: [dravidian-kulir-cool]
+etymology_hook: "குளிர்ந்த — native Dravidian (DEDR 1834); Malayalam kuḷir 'coldness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C144-cutana]
 <!-- hl-knowledge: introduces=[TA-LEX-C144-QUAL144-03]; assesses=[] -->
 
 **குளிர்ந்த** — *kuḷirnta* — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குளிர்ந்த** (*kuḷirnta*) is native Dravidian. DEDR 1834 lists Malayalam *kuḷir*, "coldness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

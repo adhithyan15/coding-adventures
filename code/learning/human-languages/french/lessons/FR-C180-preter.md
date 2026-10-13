@@ -13,7 +13,8 @@ gloss: "to lend"
 concept_tag: FR-VERB-PRETER
 prerequisites: [FR-C180-preparer, FR-C180-presenter]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "prêter ← Latin praestare 'to provide' — the circumflex marks a lost s"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C180-presenter]
 <!-- hl-knowledge: introduces=[FR-LEX-C180-VERBES180-03]; assesses=[] -->
 
 **prêter** — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prêter** ← Middle French *prester* ← Latin *praestare*, "to provide, to vouch for" (Lewis & Short) — inherited; the circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

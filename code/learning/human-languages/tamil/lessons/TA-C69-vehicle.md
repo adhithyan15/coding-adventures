@@ -11,7 +11,8 @@ romanization: "vaṇḍi"
 concept_tag: TA-NOUN-VEHICLE
 prerequisites: [TA-C68-bag, TA-C67-shirt, TA-C68-shop]
 sounds: []
-roots: []
+roots: [sanskrit-bhanda]
+etymology_hook: "வண்டி — an Indo-Aryan loan (DEDR App. 50), traced to Sanskrit bhāṇḍa 'goods': the cart carried them"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ a car. Tamil starts here and adds a word in front when it needs to be exact.
 
 In the middle sits **ண்ட** — the curled-back ண closed by a புள்ளி and leaning on ட. That pair
 is one of the most common shapes in the language, and you will now start seeing it everywhere.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வண்டி** (*vaṇḍi*) is filed in DEDR's appendix of Indo-Aryan loans (DEDR App. 50), beside Malayalam *vaṇṭi*, Kannada *baṇḍi* and Telugu *baṇḍi*. The entry traces it to Sanskrit *bhāṇḍa*, "goods, wares": the cart was the thing that carried them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

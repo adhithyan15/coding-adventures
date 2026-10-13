@@ -13,7 +13,8 @@ gloss: "a pillow"
 concept_tag: FR-MAISON65-OREILLER
 prerequisites: [FR-C112-etagere, FR-C112-rideau]
 sounds: []
-roots: []
+roots: [auricula-latin]
+etymology_hook: "oreiller — the thing for the ear; from Latin auricula 'a little ear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C112-rideau]
 <!-- hl-knowledge: introduces=[FR-LEX-C113-MAISON65-01]; assesses=[] -->
 
 **l'oreiller** — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oreiller** ← Old French *orillier* (EtymDB 2.1), built from the word for "ear", ← Latin *auricula*, "a little ear", with *-ier*: the thing for the ear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

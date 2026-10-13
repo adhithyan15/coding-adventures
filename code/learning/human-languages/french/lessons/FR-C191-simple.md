@@ -13,7 +13,8 @@ gloss: "simple"
 concept_tag: FR-QUAL191-SIMPLE
 prerequisites: [FR-C190-courageux-courageuse, FR-C190-peureux-peureuse]
 sounds: []
-roots: []
+roots: [simplex-latin]
+etymology_hook: "simple ← Latin simplex 'single, plain' — English simple"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C190-peureux-peureuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C191-QUAL191-01]; assesses=[] -->
 
 **simple** — "simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**simple** ← Latin *simplex*, "single, plain" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

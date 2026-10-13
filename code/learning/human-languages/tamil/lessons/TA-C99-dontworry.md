@@ -11,7 +11,8 @@ romanization: "kavalaippaṭātīrkaḷ"
 concept_tag: TA-HOST-DONT-WORRY
 prerequisites: [TA-C99-welcomeformal, TA-C99-forgive]
 sounds: []
-roots: []
+roots: [dravidian-kaval-care]
+etymology_hook: "கவலைப்படாதீர்கள் — native: kavalai 'worry' (DEDR 1328) + paṭu 'to undergo' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C99-forgive]
 **கவலைப்படாதீர்கள்** (*kavalaippaṭātīrkaḷ*) — "please don't worry".
 
 It is **கவலை**, "worry", with **படு**, "to suffer", and the respectful don't.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கவலைப்படாதீர்கள்** (*kavalaippaṭātīrkaḷ*) is native: *kavalai*, "worry" (DEDR 1328), and *paṭu*, "to experience, to undergo" (DEDR 3853), with the polite negative: "do not undergo worry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "veyil"
 concept_tag: TA-WEATHER-SUN
 prerequisites: [TA-C90-alone, TA-C90-hungry]
 sounds: []
-roots: []
+roots: [dravidian-ve-burn]
+etymology_hook: "வெயில் — native Dravidian (DEDR 5517)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C90-hungry]
 **வெயில்** (*veyil*) — "sunshine", the heat of the sun.
 
 **வெயில் அதிகம்** — "the sun is strong", literally "the sunshine is much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெயில்** (*veyil*) is native Dravidian (DEDR 5517). The entry lists *veyil*, "heat of the sun", under *vē*, "to burn, to be hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

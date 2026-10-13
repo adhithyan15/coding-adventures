@@ -11,7 +11,8 @@ romanization: "muṉbu"
 concept_tag: TA-ADVERB-BEFORE
 prerequisites: [TA-W28-read-inru, TA-C71-run, TA-C72-sorrow]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "முன்பு — native Dravidian (DEDR 5020); Malayalam mun, Kannada mun, Telugu muni 'first, former'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ two put events in order without your needing a single verb tense to do it.
 
 The **ன்** in its middle is closed by a புள்ளி and leans on the ப after it — the same joint you
 read a moment ago inside இன்று.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முன்பு** (*muṉbu*) is native Dravidian. DEDR 5020 lists Malayalam *mun*, Kannada *mun* and Telugu *muni*, "first, former".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 48,
-  "sourceHash": "fnv1a64:439fc6b5e5366581",
+  "sourceHash": "fnv1a64:27565fee4a6bc368",
   "lessonIds": [
     "TA-C48-now",
     "TA-C48-time",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch48.txt",
   "json": "tamil/narration/ch48.json",
-  "textHash": "fnv1a64:c6032bc450e8f3a0",
-  "jsonHash": "fnv1a64:1b60f12582709c39",
+  "textHash": "fnv1a64:85ff937320f4e317",
+  "jsonHash": "fnv1a64:7b71349c4c1a8904",
   "findings": []
 }

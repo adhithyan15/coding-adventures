@@ -13,7 +13,8 @@ gloss: "pleased, glad"
 concept_tag: FR-SENTIR8-CONTENT
 prerequisites: [FR-C55-heureux, FR-C56-triste]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "content ← Latin contentus 'satisfied, held in', from continere — English content"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C56-triste]
 <!-- hl-knowledge: introduces=[FR-LEX-C56-SENTIR8-02]; assesses=[] -->
 
 **content** — "pleased, glad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**content** ← Latin *contentus*, "satisfied", the past participle of *continere*, "to hold together" (Lewis & Short) — taken from written Latin; Old French already had it (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

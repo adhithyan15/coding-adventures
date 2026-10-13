@@ -11,7 +11,8 @@ romanization: "piṟaku"
 concept_tag: TA-LEAVE-LATER
 prerequisites: [TA-C48-journey, TA-C46-farmer, TA-C47-perhaps]
 sounds: []
-roots: []
+roots: [tamil-pin-after]
+etymology_hook: "பிறகு — native Dravidian (DEDR 4205); Malayalam pin, Kannada pin, Telugu piṟu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C48-journey]
 Underneath it is *piṉ*, 'behind'. What sits behind you in space becomes what comes after you in time, and Tamil made that move so long ago that nobody hears it any more. English did the same thing with "before", which began as a word about the front of things.
 
 As a way of parting it is gentle and slightly vague: *piṟaku pārkkalām*, "we'll see each other later", promises nothing and closes the conversation kindly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிறகு** (*piṟaku*) is native Dravidian. DEDR 4205 lists Malayalam *pin*, Kannada *pin* and Telugu *piṟu*. The entry lists *piṟaku* among the words built on *piṉ*, "behind, after".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

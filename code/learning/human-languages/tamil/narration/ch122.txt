@@ -12,6 +12,9 @@ Before the new one: say the Tamil for lentils, dal, then the Tamil for a curry, 
 You'll want to know: ரசம்.
 ரசம் — rasam — "rasam".
 
+The word, taken apart.
+ரசம் (rasam) is a loan from Sanskrit rasa, "juice, taste" (CDIAL 10650).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a curry, a gravy, then the Tamil for rasam
 
 You'll want to know: வெண்ணெய்.
 வெண்ணெய் — veṇṇey — "butter".
+
+The word, taken apart.
+வெண்ணெய் (veṇṇey) is native: veṇ, "white" (DEDR 5496), and ney, "ghee" (DEDR 3746): "white ghee", butter before it is melted.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for rasam, then the Tamil for butter.
 You'll want to know: முட்டை.
 முட்டை — muṭṭai — "an egg".
 
+The word, taken apart.
+முட்டை (muṭṭai) is native Dravidian. DEDR 4939 lists Malayalam muṭṭa and Kannada moṭṭe.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for butter, then the Tamil for an egg.
 You'll want to know: மீன்.
 மீன் — mīṉ — "a fish".
 
+The word, taken apart.
+மீன் (mīṉ) is native Dravidian. DEDR 4885 lists Malayalam mīn, Kannada mīn and Telugu mīnu. The entry compares Sanskrit mīna, "fish".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for an egg, then the Tamil for a fish.
 
 You'll want to know: இறைச்சி.
 இறைச்சி — iṟaicci — "meat".
+
+The word, taken apart.
+இறைச்சி (iṟaicci) is native Dravidian. DEDR 529 lists Malayalam iṟacci and Telugu eṟaci. The entry spells it iṟacci, "flesh".
 
 What you've built.
 One more word for this chapter.

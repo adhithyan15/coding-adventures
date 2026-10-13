@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 170,
-  "sourceHash": "fnv1a64:d942340871ccda86",
+  "sourceHash": "fnv1a64:362d6130642268ea",
   "lessonIds": [
     "FR-C170-chateau",
     "FR-C170-tour",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch170.txt",
   "json": "french/narration/ch170.json",
-  "textHash": "fnv1a64:1aab7900036431c4",
-  "jsonHash": "fnv1a64:d6f1f78ab1ee3c43",
+  "textHash": "fnv1a64:b7c6467f102280ce",
+  "jsonHash": "fnv1a64:6ec7401e7c1b5c00",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pāṭakar"
 concept_tag: TA-VELAI193-PATAKAR
 prerequisites: [TA-C193-parvaiyalar, TA-C193-natikar]
 sounds: []
-roots: []
+roots: [dravidian-paadu-sing]
+etymology_hook: "பாடகர் — native Dravidian (DEDR 4065)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C193-natikar]
 <!-- hl-knowledge: introduces=[TA-LEX-C193-VELAI193-03]; assesses=[] -->
 
 **பாடகர்** — *pāṭakar* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாடகர்** (*pāṭakar*) is native Dravidian (DEDR 4065). It is *pāṭu*, "to sing", with *-akar*, "the one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

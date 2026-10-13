@@ -13,7 +13,8 @@ gloss: "hard-working"
 concept_tag: FR-QUAL246-TRAVAILLEUR-TRAVAILLEUSE
 prerequisites: [FR-C246-genereux-genereuse, FR-C246-paresseux-paresseuse]
 sounds: []
-roots: []
+roots: [tripalium-latin]
+etymology_hook: "travailleur — travailler 'to work' + -eur 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C246-paresseux-paresseuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C246-QUAL246-03]; assesses=[] -->
 
 **travailleur / travailleuse** — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**travailleur** — *travailler*, "to work", with *-eur*, "one who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

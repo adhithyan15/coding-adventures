@@ -13,7 +13,8 @@ gloss: "a ban"
 concept_tag: FR-CHOSES168-INTERDICTION
 prerequisites: [FR-C168-regle, FR-C168-permission]
 sounds: []
-roots: []
+roots: [dicere-latin]
+etymology_hook: "interdiction ← Latin interdictio 'a forbidding', from interdicere"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C168-permission]
 <!-- hl-knowledge: introduces=[FR-LEX-C168-CHOSES168-03]; assesses=[] -->
 
 **l'interdiction** — "a ban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interdiction** ← Latin *interdictio*, "a forbidding", from *interdicere* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

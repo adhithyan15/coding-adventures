@@ -14,7 +14,8 @@ romanization: "aṟivippu"
 concept_tag: TA-PATI160-ARIVIPPU
 prerequisites: [TA-C159-etirpar, TA-C160-kala-attavanai]
 sounds: []
-roots: []
+roots: [dravidian-ari-know]
+etymology_hook: "அறிவிப்பு — native Dravidian (DEDR 314); Malayalam aṟiyuka 'to know'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [TA-C160-kala-attavanai]
 
 The notice says **ஞாயிறுதோறும் கடை விடுமுறை** — *ñāyiṟutōṟum kaṭai viṭumuṟai* —
 "Shop closed every Sunday." Come on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அறிவிப்பு** (*aṟivippu*) is native Dravidian. DEDR 314 lists Malayalam *aṟiyuka*, "to know". It is the noun of *aṟivi*, "to make known", from *aṟi*, "to know".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

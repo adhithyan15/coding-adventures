@@ -13,7 +13,8 @@ gloss: "a supermarket"
 concept_tag: FR-VILLE59-SUPERMARCHE
 prerequisites: [FR-C106-parking, FR-C106-ascenseur]
 sounds: []
-roots: []
+roots: [mercatus-latin]
+etymology_hook: "supermarché — super- + the word for 'market', from Latin mercatus — modelled on English"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C106-ascenseur]
 <!-- hl-knowledge: introduces=[FR-LEX-C107-VILLE59-01]; assesses=[] -->
 
 **le supermarché** — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**supermarché** — built from *super-*, Latin for "above", and the French word for "market", which ← Latin *mercatus*, "trade" (Lewis & Short); modelled on English *supermarket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

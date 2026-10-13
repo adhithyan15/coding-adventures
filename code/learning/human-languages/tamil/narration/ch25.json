@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:60c84e91393417c1",
+  "sourceHash": "fnv1a64:92afc8edfb793444",
   "lessons": [
     {
       "id": "TA-C25-iniya-iravu",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:41487a61933d7087",
+      "sourceHash": "fnv1a64:cd6b286730b7a144",
       "notice": {
         "modality": "sight",
         "needs": [

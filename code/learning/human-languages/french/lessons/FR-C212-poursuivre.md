@@ -13,7 +13,8 @@ gloss: "to chase"
 concept_tag: FR-VERB-POURSUIVRE
 prerequisites: [FR-C212-fonctionner, FR-C212-flotter]
 sounds: []
-roots: []
+roots: [sequi-latin]
+etymology_hook: "poursuivre ← Old French porsivre 'to follow after' — English pursue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C212-flotter]
 <!-- hl-knowledge: introduces=[FR-LEX-C212-VERBES212-05]; assesses=[] -->
 
 **poursuivre** — "to chase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poursuivre** ← Old French *porsivre* (EtymDB 2.1), from *pour-*, "forward", and the verb for "to follow", ← Latin *sequi* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

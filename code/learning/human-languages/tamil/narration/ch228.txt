@@ -12,6 +12,9 @@ Before the new one: say the Tamil for to book in advance, then the Tamil for to 
 You'll want to know: தட்டச்சு செய்.
 தட்டச்சு செய் — taṭṭaccu cey — "to type".
 
+The word, taken apart.
+தட்டச்சு செய் (taṭṭaccu cey) is a modern coinage from native words: taṭṭu, "to tap, to strike", accu, "mould, type" (DEDR 47, which lists Malayalam accu and Telugu accu 'print'), and sey, "to do" (DEDR 1957). DEDR itself compares accu, with a query, to Sanskrit sañcaka, "mould", so a link with Indo-Aryan is possible.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for to apply, then the Tamil for to type.
 
 You'll want to know: மொழிபெயர்.
 மொழிபெயர் — moḻipeyar — "to translate".
+
+The word, taken apart.
+மொழிபெயர் (moḻipeyar) is native: moḻi, "language" (DEDR 4989), and peyar, "to move, to shift" (DEDR 4409): "move into another language".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for to type, then the Tamil for to translate.
 You'll want to know: ரத்து செய்.
 ரத்து செய் — rattu cey — "to cancel".
 
+The word, taken apart.
+ரத்து செய் (rattu cey) is rattu, "cancelled", a loan from Arabic radd, "rejection, cancelling", through Hindustani, with native sey, "to do" (DEDR 1957).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for to translate, then the Tamil for to cancel
 You'll want to know: அவசரப்படு.
 அவசரப்படு — avacarappaṭu — "to hurry".
 
+The word, taken apart.
+அவசரப்படு (avacarappaṭu) is avacaram, "haste", from Sanskrit avasara, "occasion, opportunity" (CDIAL 858), with native paṭu, "to undergo" (DEDR 3853).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for to cancel, then the Tamil for to hurry.
 
 You'll want to know: நேசி.
 நேசி — nēci — "to love".
+
+The word, taken apart.
+நேசி (nēci) is a verb made from nēcam, "love, affection", from Sanskrit sneha, "oiliness, tenderness, love" (CDIAL 13802). Tamil dropped the first s.
 
 What you've built.
 One more word for this chapter.

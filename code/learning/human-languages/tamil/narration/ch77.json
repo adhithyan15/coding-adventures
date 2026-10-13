@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Saying, and Thinking",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0741f71eb6cbc5ea",
+  "sourceHash": "fnv1a64:81ae1455702bcd88",
   "lessons": [
     {
       "id": "TA-C77-say",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50f4ecb208680100",
+      "sourceHash": "fnv1a64:9a85181fed0def0c",
       "notice": null,
       "blocks": [
         {
@@ -85,6 +85,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சொல் (sol) is native Dravidian. DEDR 2855 lists Malayalam colluka and Kannada sol."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -95,7 +106,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -162,7 +173,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -514,7 +525,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1eb8762de878ce5",
+      "sourceHash": "fnv1a64:e05829ccde3f835a",
       "notice": null,
       "blocks": [
         {
@@ -584,6 +595,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "… என்று நினைக்கிறேன் (… eṉṟu niṉaikkiṟēṉ) is native: eṉṟu, \"having said\", from eṉ, \"to say\" (DEDR 868), and niṉai, \"to think\" (DEDR 3683). \"I think that …\" is \"saying '…', I think\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -594,7 +616,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +701,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

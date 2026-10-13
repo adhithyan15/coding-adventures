@@ -14,7 +14,8 @@ romanization: "calippāṉa"
 concept_tag: TA-GUNAM269-CALIPPANA
 prerequisites: [TA-C269-ciranta, TA-C269-vittiyacamana]
 sounds: []
-roots: []
+roots: [dravidian-cali-weary]
+etymology_hook: "சலிப்பான — native: calippu 'weariness' (DEDR 2371; Malayalam calippu) + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C269-vittiyacamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C269-GUNAM269-03]; assesses=[] -->
 
 **சலிப்பான** — *calippāṉa* — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சலிப்பான** (*calippāṉa*) is native: *calippu*, "weariness" (DEDR 2371, which lists Malayalam calippu), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

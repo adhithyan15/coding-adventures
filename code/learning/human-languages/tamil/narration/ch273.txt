@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a photograph, then the Tamil for a copy.
 You'll want to know: ஆள்.
 ஆள் — āḷ — "a person".
 
+The word, taken apart.
+ஆள் (āḷ) is native Dravidian. DEDR 399 lists Malayalam āḷ, "a person" and Kannada āḷ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a copy, then the Tamil for a person.
 
 You'll want to know: பெற்றோர்.
 பெற்றோர் — peṟṟōr — "parents".
+
+The word, taken apart.
+பெற்றோர் (peṟṟōr) is native: "those who bore", from peṟu, "to get, to bear (a child)" (DEDR 4422, which lists Malayalam peṟuka).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a person, then the Tamil for parents.
 You'll want to know: உடன்பிறந்தவர்.
 உடன்பிறந்தவர் — uṭaṉpiṟantavar — "a sibling".
 
+The word, taken apart.
+உடன்பிறந்தவர் (uṭaṉpiṟantavar) is native: uṭaṉ, "together with" (DEDR 945), and piṟantavar, "one who was born", from piṟa, "to be born" (DEDR 4422): "one born together with you".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for parents, then the Tamil for a sibling.
 You'll want to know: இரட்டையர்.
 இரட்டையர் — iraṭṭaiyar — "twins".
 
+The word, taken apart.
+இரட்டையர் (iraṭṭaiyar) is native Dravidian. DEDR 474 lists Malayalam raṇṭu, "two" and Telugu reṇḍu. The entry lists iraṭṭai, "pair", and iraṭṭaiyar, "twins", under the word for "two".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a sibling, then the Tamil for twins.
 
 You'll want to know: மைத்துனன்.
 மைத்துனன் — maittuṉaṉ — "a brother-in-law".
+
+The word, taken apart.
+மைத்துனன் (maittuṉaṉ) is a loan from Sanskrit maithuna, "paired, coupled" (CDIAL 10341); DEDR App. 53 traces the kinship sense through Prakrit.
 
 What you've built.
 One more word for this chapter.

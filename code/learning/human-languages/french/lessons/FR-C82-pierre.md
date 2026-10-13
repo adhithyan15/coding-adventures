@@ -13,7 +13,8 @@ gloss: "a stone"
 concept_tag: FR-NATURE34-PIERRE
 prerequisites: [FR-C81-riviere, FR-C82-mer]
 sounds: []
-roots: []
+roots: [petra-latin]
+etymology_hook: "pierre ← Latin petra 'rock', from Greek — English Peter and petrify"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C82-mer]
 <!-- hl-knowledge: introduces=[FR-LEX-C82-NATURE34-02]; assesses=[] -->
 
 **la pierre** — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pierre** ← Latin *petra*, "rock", from Greek *petra* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

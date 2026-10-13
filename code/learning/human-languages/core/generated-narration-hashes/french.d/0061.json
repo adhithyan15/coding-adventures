@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 61,
-  "sourceHash": "fnv1a64:2d9da2458d54c014",
+  "sourceHash": "fnv1a64:3c8cf7294328a87d",
   "lessonIds": [
     "FR-C61-enseigner",
     "FR-C61-boire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch61.txt",
   "json": "french/narration/ch61.json",
-  "textHash": "fnv1a64:ec7335fc4a6ec629",
-  "jsonHash": "fnv1a64:20186d08a4f5d9fc",
+  "textHash": "fnv1a64:d0e328d6fa6556f5",
+  "jsonHash": "fnv1a64:909aac0a5ddfd6fc",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kaḻuku"
 concept_tag: TA-PORUL247-KALUKU
 prerequisites: [TA-C246-parampariyam, TA-C247-kuruvi]
 sounds: []
-roots: []
+roots: [dravidian-kazhuku-eagle]
+etymology_hook: "கழுகு — native Dravidian (DEDR 1362); Malayalam kaḻuku 'eagle, vulture'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C247-kuruvi]
 <!-- hl-knowledge: introduces=[TA-LEX-C247-PORUL247-02]; assesses=[] -->
 
 **கழுகு** — *kaḻuku* — "an eagle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கழுகு** (*kaḻuku*) is native Dravidian. DEDR 1362 lists Malayalam *kaḻuku*, "eagle, vulture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

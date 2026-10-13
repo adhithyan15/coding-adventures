@@ -11,7 +11,8 @@ romanization: "tākam"
 concept_tag: TA-NOUN-THIRST
 prerequisites: [TA-C61-hunger, TA-C59-ghee, TA-C60-rope]
 sounds: []
-roots: []
+roots: [sanskrit-daha]
+etymology_hook: "தாகம் ← Sanskrit dāha 'burning, fever' (CDIAL 6321)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C61-hunger]
 Thirst. Sanskrit-descended, unlike பசி beside it, and taken in whole with the *-am* Tamil hangs on such arrivals — the same *-am* already sitting on புத்தகம்.
 
 It is answered with தண்ணீர் and with nothing else in particular, and a Tamil house offers the தண்ணீர் before it is asked for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தாகம்** (*tākam*) is a loan from Sanskrit *dāha*, "burning, fever" (CDIAL 6321). The burning in the throat became Tamil's word for thirst.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

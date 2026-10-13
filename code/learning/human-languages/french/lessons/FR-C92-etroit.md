@@ -13,7 +13,8 @@ gloss: "narrow"
 concept_tag: FR-ADJ44-ETROIT
 prerequisites: [FR-C92-jeune, FR-C92-gentil]
 sounds: []
-roots: []
+roots: [stringere-latin]
+etymology_hook: "étroit ← Latin strictus 'drawn tight' — English strict and strait share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C92-gentil]
 <!-- hl-knowledge: introduces=[FR-LEX-C92-ADJ44-05]; assesses=[] -->
 
 **étroit** — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étroit** ← Old French *estroit* ← Latin *strictus*, "drawn tight" (EtymDB 2.1) — inherited: *-ct-* became *-it*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

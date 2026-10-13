@@ -13,7 +13,8 @@ gloss: "to grow old"
 concept_tag: FR-VERB-VIEILLIR
 prerequisites: [FR-C207-naitre, FR-C207-mourir]
 sounds: []
-roots: []
+roots: [vetulus-latin]
+etymology_hook: "vieillir — vieux 'old' + -ir: to grow old"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C207-mourir]
 <!-- hl-knowledge: introduces=[FR-LEX-C207-VERBES207-03]; assesses=[] -->
 
 **vieillir** — "to grow old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vieillir** — built from *vieux*, "old", with the verb ending *-ir*: to grow old. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuppi"
 concept_tag: TA-THINGS136-KUPPI
 prerequisites: [TA-C135-ani, TA-C135-eni]
 sounds: []
-roots: []
+roots: [indo-aryan-kuppa]
+etymology_hook: "குப்பி — probably an Indo-Aryan flask-word: CDIAL 3402, kūpa 'leather oil vessel', variant kuppa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C135-eni]
 <!-- hl-knowledge: introduces=[TA-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **குப்பி** — *kuppi* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குப்பி** (*kuppi*) is probably an Indo-Aryan word for a flask: CDIAL 3402 sets North Indian forms for an oil vessel under *kūpa*, "leather oil vessel", and its variant *kuppa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

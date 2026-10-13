@@ -3912,6 +3912,14 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.lineHops")),
                     Some(&"gap".to_string()));
             }
+            if fixture_name == "automatic-lane-ordering" {
+                assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
+                    vec!["laneB", "laneC", "laneA", "laneD"]);
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.automaticLaneOrdering")),
+                    Some(&"true".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.laneOrder")),
+                    Some(&"laneB,laneC,laneA,laneD".to_string()));
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

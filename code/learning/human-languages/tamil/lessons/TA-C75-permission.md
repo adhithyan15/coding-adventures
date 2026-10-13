@@ -11,9 +11,10 @@ romanization: "nāṉ uḷḷē varalāmā?"
 concept_tag: TA-PRAGMATICS-PERMISSION
 prerequisites: [TA-W30-read-sariyaa]
 sounds: []
-roots: []
+roots: [naan-dravidian, dravidian-ul-inside, dravidian-vaa-come]
+etymology_hook: "நான் உள்ளே வரலாமா — all native: nāṉ 'I' (DEDR 5160), uḷḷē 'inside' (DEDR 698), varu 'come' (DEDR 5270)"
 duration:
-  max_seconds: 235
+  max_seconds: 255
 requires:
   knowledge: [TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-SARIYAA-01]
 introduces:
@@ -56,6 +57,11 @@ about the asking.
 To grant it, you have both answers already:
 
 > **ஆம், வரலாம்.** or, at a doorway, plainly: **சரி.**
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நான் உள்ளே வரலாமா?** (*nāṉ uḷḷē varalāmā?*) is all native: *nāṉ*, "I" (DEDR 5160), *uḷḷē*, "inside" (DEDR 698), and *varu*, "to come" (DEDR 5270), with the ending that asks "may I?".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

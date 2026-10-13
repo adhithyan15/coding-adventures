@@ -14,6 +14,7 @@ concept_tag: FR-VILLE54-THEATRE
 prerequisites: [FR-C101-poste, FR-C102-police]
 sounds: []
 roots: []
+etymology_hook: "théâtre ← Latin theatrum, from Greek theatron 'a place for viewing' — English theatre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C102-police]
 <!-- hl-knowledge: introduces=[FR-LEX-C102-VILLE54-02]; assesses=[] -->
 
 **le théâtre** — "a theatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**théâtre** ← Latin *theatrum*, from Greek *theatron*, "a place for viewing" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

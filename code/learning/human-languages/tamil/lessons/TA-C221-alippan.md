@@ -14,7 +14,8 @@ romanization: "aḻippāṉ"
 concept_tag: TA-PORUL221-ALIPPAN
 prerequisites: [TA-C221-cakkaram, TA-C221-karumpalakai]
 sounds: []
-roots: []
+roots: [dravidian-azhi-perish]
+etymology_hook: "அழிப்பான் — native Dravidian (DEDR 277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C221-karumpalakai]
 <!-- hl-knowledge: introduces=[TA-LEX-C221-PORUL221-04]; assesses=[] -->
 
 **அழிப்பான்** — *aḻippāṉ* — "an eraser, a rubber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழிப்பான்** (*aḻippāṉ*) is native Dravidian (DEDR 277). It is "the one that rubs out", from *aḻi*, "to destroy, to wipe out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

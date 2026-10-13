@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 140,
-  "sourceHash": "fnv1a64:b508fb5dfd857538",
+  "sourceHash": "fnv1a64:ea887b3084ea5de2",
   "lessonIds": [
     "FR-C140-deja",
     "FR-C140-recemment",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch140.txt",
   "json": "french/narration/ch140.json",
-  "textHash": "fnv1a64:9781ac0ba8d8fb34",
-  "jsonHash": "fnv1a64:b2abccfef1756d74",
+  "textHash": "fnv1a64:1711bebbd8ad5749",
+  "jsonHash": "fnv1a64:2960c5f4efd01c3a",
   "findings": []
 }

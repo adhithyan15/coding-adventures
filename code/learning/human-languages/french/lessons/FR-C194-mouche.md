@@ -13,7 +13,8 @@ gloss: "a fly"
 concept_tag: FR-CHOSES194-MOUCHE
 prerequisites: [FR-C194-temperature, FR-C194-papillon]
 sounds: []
-roots: []
+roots: [musca-latin]
+etymology_hook: "mouche ← Latin musca 'a fly' — Spanish mosca and English mosquito are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C194-papillon]
 <!-- hl-knowledge: introduces=[FR-LEX-C194-CHOSES194-04]; assesses=[] -->
 
 **la mouche** — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mouche** ← Old French *mousche* ← Latin *musca*, "a fly" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

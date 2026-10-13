@@ -14,7 +14,8 @@ romanization: "vivāti"
 concept_tag: TA-VERB-VIVATI
 prerequisites: [TA-C199-ottukkol, TA-C199-maru]
 sounds: []
-roots: []
+roots: [sanskrit-vivada]
+etymology_hook: "விவாதி — a verb from Sanskrit vivāda 'dispute, debate', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C199-maru]
 <!-- hl-knowledge: introduces=[TA-LEX-C199-ACT199-04]; assesses=[] -->
 
 **விவாதி** — *vivāti* — "to discuss, to debate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விவாதி** (*vivāti*) is a verb made from Sanskrit *vivāda*, "dispute, debate", a well-established loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuṟai col"
 concept_tag: TA-VERB-KURAI-COL
 prerequisites: [TA-C230-karpanai-cey, TA-C230-cantekappatu]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short, dravidian-col-say]
+etymology_hook: "குறை சொல் — native: kuṟai 'defect' (DEDR 1851) + col 'to say' (DEDR 2855)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C230-cantekappatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C230-ACT230-03]; assesses=[] -->
 
 **குறை சொல்** — *kuṟai col* — "to complain, to find fault".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குறை சொல்** (*kuṟai col*) is native: *kuṟai*, "defect, deficiency" (DEDR 1851), and *col*, "to say" (DEDR 2855): "speak of the defect".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

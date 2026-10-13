@@ -11,7 +11,8 @@ romanization: "aṉbu"
 concept_tag: TA-COURTESY-AFFECTION
 prerequisites: [TA-C48-set-out, TA-C47-true, TA-C48-now]
 sounds: []
-roots: []
+roots: [dravidian-anbu-love]
+etymology_hook: "அன்பு — native Dravidian (DEDR 330); Malayalam anpu, Kannada aṇpu 'friendship'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C48-set-out]
 This is the warm, ordinary love — for a family, for a friend, for a place. *kādal* is the other kind, the one the poems are about, and Tamil keeps the two apart where English makes one word do both.
 
 A letter opens *aṉbuḷḷa*, "dear", which is literally 'having affection'. Put the endings you know on the stem and you get *aṉbaṉ* and *aṉbar*, somebody who loves — the same two endings, doing the same work, on new material.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அன்பு** (*aṉbu*) is native Dravidian. DEDR 330 lists Malayalam *anpu* and Kannada *aṇpu*, "friendship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "silk"
 concept_tag: FR-CHOSES172-SOIE
 prerequisites: [FR-C172-coton, FR-C172-laine]
 sounds: []
-roots: []
+roots: [saeta-latin]
+etymology_hook: "soie ← Latin saeta 'a bristle', later a silk thread"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C172-laine]
 <!-- hl-knowledge: introduces=[FR-LEX-C172-CHOSES172-04]; assesses=[] -->
 
 **la soie** — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soie** ← Latin *saeta*, "a bristle, a stiff hair", later a silk thread — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

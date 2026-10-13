@@ -11,6 +11,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren, TA-C05-vaazh, TA-C05-velai-sey]
 sounds: []
 roots: []
+etymology_hook: "pēsu, vāḻ, sey and vēlai are all native Dravidian (DEDR 4430, 5372, 1957, 5540)"
 reviews_of: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren, TA-C05-vaazh, TA-C05-velai-sey, TA-C03-naan]
 duration:
   max_seconds: 240
@@ -52,6 +53,11 @@ yourself.
 - [YOU SAY: the three stacked pieces of every Tamil verb (stem + tense + person)]
 - [YOU SAY: the ending that means "I" (*-ēṉ*)]
 - [YOU SAY: where Tamil marks gender — and where it doesn't (3rd person only)]
+
+## The words, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All four words in this recap are native Dravidian, and each has a cousin in Malayalam: *pēsu*, "to speak" (DEDR 4430; Malayalam pēcuka), *vāḻ*, "to live" (DEDR 5372; Malayalam vāḻuka), *sey*, "to do" (DEDR 1957; Malayalam ceyka), and *vēlai*, "work" (DEDR 5540; Malayalam vēla).
 
 ## What you've built — roots you now carry
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01, TA-LEX-C05-VELAI-SEY-01] -->

@@ -13,7 +13,8 @@ gloss: "unpleasant"
 concept_tag: FR-QUAL159-DESAGREABLE
 prerequisites: [FR-C159-poli-polie, FR-C159-impoli-impolie]
 sounds: []
-roots: []
+roots: [gratus]
+etymology_hook: "désagréable — dés- + the word for 'pleasant', from Latin gratum 'pleasing' — English agreeable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C159-impoli-impolie]
 <!-- hl-knowledge: introduces=[FR-LEX-C159-QUAL159-05]; assesses=[] -->
 
 **désagréable** — "unpleasant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**désagréable** — *dés-*, "not", and the word for "pleasant", built on Old French *gré*, "liking", ← Latin *gratum*, "pleasing" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

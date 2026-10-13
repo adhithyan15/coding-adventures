@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES248-POLITIQUE
 prerequisites: [FR-C248-elections, FR-C248-vote]
 sounds: []
 roots: []
+etymology_hook: "politique ← Latin politicus, Greek politikos 'of citizens' — the polis of police"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C248-vote]
 <!-- hl-knowledge: introduces=[FR-LEX-C248-CHOSES248-04]; assesses=[] -->
 
 **la politique** — "politics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**politique** ← Latin *politicus*, from Greek *politikos*, "of citizens", from the same *polis*, "city", as *police* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

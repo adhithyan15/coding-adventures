@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 172,
-  "sourceHash": "fnv1a64:9e8ca6e2240deda4",
+  "sourceHash": "fnv1a64:46800128a449e18a",
   "lessonIds": [
     "TA-C172-etirkalam",
     "TA-C172-inriravu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch172.txt",
   "json": "tamil/narration/ch172.json",
-  "textHash": "fnv1a64:a73bbedcf0f05abb",
-  "jsonHash": "fnv1a64:5483a741bb64c8a6",
+  "textHash": "fnv1a64:7c259528cdadefaa",
+  "jsonHash": "fnv1a64:78fad58c860a2f27",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 162,
-  "sourceHash": "fnv1a64:92d21cb496b5bb74",
+  "sourceHash": "fnv1a64:e6d89feb34788421",
   "lessonIds": [
     "FR-C162-inquiet-inquiete",
     "FR-C162-enrhume-enrhumee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch162.txt",
   "json": "french/narration/ch162.json",
-  "textHash": "fnv1a64:8920fa7ccc4d177a",
-  "jsonHash": "fnv1a64:6fc8e2ee8b44d114",
+  "textHash": "fnv1a64:f9de18d5a19ea777",
+  "jsonHash": "fnv1a64:3449645d2a7ab57f",
   "findings": []
 }

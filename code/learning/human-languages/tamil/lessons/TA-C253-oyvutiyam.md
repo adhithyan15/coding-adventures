@@ -14,7 +14,8 @@ romanization: "ōyvūtiyam"
 concept_tag: TA-VELAI253-OYVUTIYAM
 prerequisites: [TA-C253-atikari, TA-C253-nitipati]
 sounds: []
-roots: []
+roots: [dravidian-oy-cease, dravidian-utavu-help]
+etymology_hook: "ஓய்வூதியம் — a coinage: native ōyvu 'rest' (DEDR 1057) + ūtiyam 'pay, benefit' (DEDR 609)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C253-nitipati]
 <!-- hl-knowledge: introduces=[TA-LEX-C253-VELAI253-04]; assesses=[] -->
 
 **ஓய்வூதியம்** — *ōyvūtiyam* — "a pension".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஓய்வூதியம்** (*ōyvūtiyam*) is a modern coinage: native *ōyvu*, "rest" (DEDR 1057), and *ūtiyam*, "pay, benefit", which DEDR 609 lists, with a query, beside a verb meaning "to help": "rest pay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

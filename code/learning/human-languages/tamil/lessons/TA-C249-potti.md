@@ -14,7 +14,8 @@ romanization: "pōṭṭi"
 concept_tag: TA-PORUL249-POTTI
 prerequisites: [TA-C249-kiriket, TA-C249-catarankam]
 sounds: []
-roots: []
+roots: [dravidian-potti-rivalry]
+etymology_hook: "போட்டி — native Dravidian (DEDR 4583); Kannada pōṭi 'competition', Telugu pōṭi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C249-catarankam]
 <!-- hl-knowledge: introduces=[TA-LEX-C249-PORUL249-05]; assesses=[] -->
 
 **போட்டி** — *pōṭṭi* — "a competition, a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போட்டி** (*pōṭṭi*) is native Dravidian. DEDR 4583 lists Kannada *pōṭi*, "competition" and Telugu *pōṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

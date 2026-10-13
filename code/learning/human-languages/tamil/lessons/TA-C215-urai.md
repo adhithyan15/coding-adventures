@@ -14,7 +14,8 @@ romanization: "uṟai"
 concept_tag: TA-PORUL215-URAI
 prerequisites: [TA-C215-kattanam, TA-C215-katitam]
 sounds: []
-roots: []
+roots: [dravidian-urai-sheath]
+etymology_hook: "உறை — native Dravidian (DEDR 723); Malayalam uṟa 'sheath, case'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C215-katitam]
 <!-- hl-knowledge: introduces=[TA-LEX-C215-PORUL215-05]; assesses=[] -->
 
 **உறை** — *uṟai* — "an envelope; a cover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உறை** (*uṟai*) is native Dravidian. DEDR 723 lists Malayalam *uṟa*, "sheath, case".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

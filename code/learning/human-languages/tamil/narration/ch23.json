@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:691125fa175a51fc",
+  "sourceHash": "fnv1a64:03daa276154f22ae",
   "lessons": [
     {
       "id": "TA-C23-naal",
@@ -123,7 +123,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66f11d4091607d07",
+      "sourceHash": "fnv1a64:a560c653219ff559",
       "notice": null,
       "blocks": [
         {

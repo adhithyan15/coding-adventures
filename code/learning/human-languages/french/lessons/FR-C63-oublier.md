@@ -13,7 +13,8 @@ gloss: "to forget"
 concept_tag: FR-VERB-OUBLIER
 prerequisites: [FR-C63-nettoyer, FR-C63-couper]
 sounds: []
-roots: []
+roots: [oblivisci-latin]
+etymology_hook: "oublier ← Vulgar Latin *oblitare, from Latin oblitus 'forgotten' — English oblivion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C63-couper]
 <!-- hl-knowledge: introduces=[FR-LEX-C63-VERBES15-03]; assesses=[] -->
 
 **oublier** — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oublier** ← Old French *oblier* ← Vulgar Latin *\*oblitare*, from Latin *oblitus*, "forgotten", the past participle of *oblivisci*, "to forget" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

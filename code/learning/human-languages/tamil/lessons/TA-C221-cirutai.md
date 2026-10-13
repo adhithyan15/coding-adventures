@@ -14,7 +14,8 @@ romanization: "cīruṭai"
 concept_tag: TA-PORUL221-CIRUTAI
 prerequisites: [TA-C221-karumpalakai, TA-C221-alippan]
 sounds: []
-roots: []
+roots: [dravidian-ciir-excellence, dravidian-udu-wear]
+etymology_hook: "சீருடை — native: cīr 'good condition, fitting' (DEDR 2624) + uṭai 'clothing' (DEDR 587)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C221-alippan]
 <!-- hl-knowledge: introduces=[TA-LEX-C221-PORUL221-05]; assesses=[] -->
 
 **சீருடை** — *cīruṭai* — "a uniform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சீருடை** (*cīruṭai*) is native: *cīr*, "good condition, what is fitting" (DEDR 2624), and *uṭai*, "clothing" (DEDR 587): "the fitting dress".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

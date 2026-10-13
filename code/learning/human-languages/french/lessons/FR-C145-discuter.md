@@ -14,6 +14,7 @@ concept_tag: FR-VERB-DISCUTER
 prerequisites: [FR-C145-remplir-un-formulaire, FR-C145-telephoner]
 sounds: []
 roots: []
+etymology_hook: "discuter ← Latin discutere 'to shake apart' — English discuss"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C145-telephoner]
 <!-- hl-knowledge: introduces=[FR-LEX-C145-VERBES145-04]; assesses=[] -->
 
 **discuter** — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**discuter** ← Latin *discutere*, "to shake apart" (Lewis & Short) — a learned borrowing: to examine by taking apart.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

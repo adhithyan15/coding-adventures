@@ -13,7 +13,8 @@ gloss: "a coach"
 concept_tag: FR-CHOSES203-ENTRAINEUR
 prerequisites: [FR-C203-championnat, FR-C203-joueur]
 sounds: []
-roots: []
+roots: [trahere-latin]
+etymology_hook: "entraîneur — from the verb 'to draw along', from Latin trahere — English train"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C203-joueur]
 <!-- hl-knowledge: introduces=[FR-LEX-C203-CHOSES203-04]; assesses=[] -->
 
 **l'entraîneur** — "a coach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entraîneur** — built from the verb for "to train, to draw along", from *en-* and the verb for "to drag", ← Vulgar Latin *\*traginare*, from Latin *trahere*, "to draw" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

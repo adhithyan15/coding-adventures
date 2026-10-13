@@ -14,7 +14,8 @@ romanization: "māṉ"
 concept_tag: TA-THINGS129-MAN2
 prerequisites: [TA-C129-kuranku, TA-C129-muyal]
 sounds: []
-roots: []
+roots: [dravidian-maa-beast]
+etymology_hook: "மான் — native Dravidian (DEDR 4780); Malayalam mān 'deer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C129-muyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **மான்** — *māṉ* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மான்** (*māṉ*) is native Dravidian. DEDR 4780 lists Malayalam *mān*, "deer". The entry lists *mā*, "animal, beast", beside *māṉ*, "deer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

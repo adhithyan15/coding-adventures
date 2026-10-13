@@ -14,7 +14,8 @@ romanization: "utāraṇamāka"
 concept_tag: TA-KARANAM176-UTARANAMAKA
 prerequisites: [TA-C176-iruntalum, TA-C176-melum]
 sounds: []
-roots: []
+roots: [sanskrit-udaharana]
+etymology_hook: "உதாரணமாக — utāraṇam ← Sanskrit udāharaṇa 'example', a well-established loan, + -āka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C176-melum]
 <!-- hl-knowledge: introduces=[TA-LEX-C176-KARANAM176-04]; assesses=[] -->
 
 **உதாரணமாக** — *utāraṇamāka* — "for example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உதாரணமாக** (*utāraṇamāka*) is *utāraṇam*, "example", a well-established loan from Sanskrit *udāharaṇa*, with *-āka*, "as".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "palporuḷ aṅkāṭi"
 concept_tag: TA-IDAM204-PALPORUL-ANKATI
 prerequisites: [TA-C204-maruntukkatai, TA-C204-unavakam]
 sounds: []
-roots: []
+roots: [dravidian-pala-many, dravidian-porul-thing, dravidian-angadi-bazaar]
+etymology_hook: "பல்பொருள் அங்காடி — native: pal 'many' (DEDR 3987) + poruḷ 'thing' (DEDR 4544) + aṅkāṭi 'bazaar' (DEDR 35)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C204-unavakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C204-IDAM204-04]; assesses=[] -->
 
 **பல்பொருள் அங்காடி** — *palporuḷ aṅkāṭi* — "a supermarket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பல்பொருள் அங்காடி** (*palporuḷ aṅkāṭi*) is native: *pal*, "many" (DEDR 3987), *poruḷ*, "thing" (DEDR 4544), and *aṅkāṭi*, "bazaar" (DEDR 35; Malayalam *aṅṅāṭi*): "the many-things bazaar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

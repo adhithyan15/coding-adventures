@@ -12,6 +12,7 @@ concept_tag: TA-VERB-PESU
 prerequisites: [TA-C03-naan]
 sounds: [long-e]
 roots: [pesu-speak-dravidian]
+etymology_hook: "பேசு — native Dravidian (DEDR 4430); Malayalam pēcuka 'to speak', Kannada pēḻ 'to say'"
 reviews_of: []
 duration:
   max_seconds: 240

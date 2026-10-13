@@ -14,6 +14,7 @@ concept_tag: FR-QUAL246-BAVARD-BAVARDE
 prerequisites: [FR-C246-paresseux-paresseuse, FR-C246-travailleur-travailleuse]
 sounds: []
 roots: []
+etymology_hook: "bavard — from the word for 'drool' + -ard: the adjective behind bavarder"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C246-travailleur-travailleuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C246-QUAL246-04]; assesses=[] -->
 
 **bavard / bavarde** — "talkative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bavard** — built from the word for "drool", with *-ard*: the adjective behind *bavarder*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

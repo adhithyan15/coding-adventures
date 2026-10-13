@@ -14,7 +14,8 @@ romanization: "vallamai"
 concept_tag: TA-CAN117-VALLAMAI
 prerequisites: [TA-C116-mutiyum, TA-C116-tiramai]
 sounds: []
-roots: []
+roots: [dravidian-val-strong]
+etymology_hook: "வல்லமை — native Dravidian (DEDR 5276); Malayalam val 'strong', Kannada bal 'to grow strong'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C116-tiramai]
 <!-- hl-knowledge: introduces=[TA-LEX-C117-CAN117-01]; assesses=[] -->
 
 **வல்லமை** — *vallamai* — "ability, strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வல்லமை** (*vallamai*) is native Dravidian. DEDR 5276 lists Malayalam *val*, "strong" and Kannada *bal*, "to grow strong". The entry lists *vallamai*, "strength", under *val*, "strong".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

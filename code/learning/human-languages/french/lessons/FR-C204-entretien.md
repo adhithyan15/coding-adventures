@@ -13,7 +13,8 @@ gloss: "an interview"
 concept_tag: FR-TRAV204-ENTRETIEN
 prerequisites: [FR-C203-entraineur, FR-C203-correspondance]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "entretien — entre- 'between' + tenir 'to hold': a talk held between two"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C203-correspondance]
 <!-- hl-knowledge: introduces=[FR-LEX-C204-TRAV204-01]; assesses=[] -->
 
 **l'entretien** — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entretien** — built from *entre-*, "between", and *tenir*, "to hold": a talk held between two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

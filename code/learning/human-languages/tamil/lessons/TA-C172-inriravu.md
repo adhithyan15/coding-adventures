@@ -14,7 +14,8 @@ romanization: "iṉṟiravu"
 concept_tag: TA-NERAM172-INRIRAVU
 prerequisites: [TA-C171-tamatam, TA-C172-etirkalam]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, proto-dravidian-cira-darkness]
+etymology_hook: "இன்றிரவு — native: iṉṟu 'today' (DEDR 410) + iravu 'night' (DEDR 2552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C172-etirkalam]
 <!-- hl-knowledge: introduces=[TA-LEX-C172-NERAM172-02]; assesses=[] -->
 
 **இன்றிரவு** — *iṉṟiravu* — "tonight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இன்றிரவு** (*iṉṟiravu*) is native: *iṉṟu*, "today" (DEDR 410), and *iravu*, "night" (DEDR 2552).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

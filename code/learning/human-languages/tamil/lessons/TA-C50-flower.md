@@ -11,7 +11,8 @@ romanization: "malar"
 concept_tag: TA-WELCOME-FLOWER
 prerequisites: [TA-C50-kolam, TA-C48-journey, TA-C49-gladness]
 sounds: []
-roots: []
+roots: [dravidian-malar-bloom]
+etymology_hook: "மலர் — native Dravidian (DEDR 4739); Malayalam malar, Kannada malar"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C50-kolam]
 The everyday word is *pū*, short and plain. *malar* is its fuller partner, the one that goes into names and poems and careful speech.
 
 It also says what a flower does: *malar* means 'to open, to blossom'. One shape names the act and the result of it, and Tamil saw no reason to invent a second word for the second thing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மலர்** (*malar*) is native Dravidian. DEDR 4739 lists Malayalam *malar* and Kannada *malar*. It is also a verb, *malar*, "to open as a flower, to bloom".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

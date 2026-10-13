@@ -13,7 +13,8 @@ gloss: "a possibility"
 concept_tag: FR-CHOSES225-POSSIBILITE
 prerequisites: [FR-C225-choix, FR-C225-decision]
 sounds: []
-roots: []
+roots: [posse-latin]
+etymology_hook: "possibilité ← Latin possibilitas, from posse 'to be able' — English possibility"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C225-decision]
 <!-- hl-knowledge: introduces=[FR-LEX-C225-CHOSES225-04]; assesses=[] -->
 
 **la possibilité** — "a possibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**possibilité** ← Latin *possibilitas*, from *possibilis*, "possible", from *posse*, "to be able" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

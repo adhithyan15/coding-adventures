@@ -14,7 +14,8 @@ romanization: "iruntālum"
 concept_tag: TA-KARANAM176-IRUNTALUM
 prerequisites: [TA-C175-mirukakkatcicalai, TA-C176-analum]
 sounds: []
-roots: []
+roots: [dravidian-iru-be]
+etymology_hook: "இருந்தாலும் — native Dravidian (DEDR 480); Malayalam irikkuka 'to be'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C176-analum]
 <!-- hl-knowledge: introduces=[TA-LEX-C176-KARANAM176-02]; assesses=[] -->
 
 **இருந்தாலும்** — *iruntālum* — "even though, although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இருந்தாலும்** (*iruntālum*) is native Dravidian. DEDR 480 lists Malayalam *irikkuka*, "to be". It is *iru*, "to be", in the form "even if it is".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

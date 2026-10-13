@@ -11,7 +11,8 @@ gloss: "fourth — the ending working on a number you already count with"
 concept_tag: TA-ORDINAL-FOURTH
 prerequisites: [TA-C82-third, TA-C81-which-tamil, TA-C77-opinion, TA-C66-right]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, tamil-aaku-become]
+etymology_hook: "நான்காவது — native: nāṉku 'four' (DEDR 3655) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 195
 requires:
@@ -46,6 +47,11 @@ reviews_of: [TA-C82-third, TA-C81-which-tamil, TA-C77-opinion, TA-C66-right]
 and nothing else changes.
 
 **நான்காவது நாற்காலி** (*nāṉkāvadu nāṟkāli*), the fourth chair.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நான்காவது** (*nāṉkāvadu*) is native: *nāṉku*, "four" (DEDR 3655), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C82-ORDINAL-07, TA-LEX-C82-ORDINAL-06] -->

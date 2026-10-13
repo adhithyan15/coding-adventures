@@ -13,7 +13,8 @@ gloss: "then"
 concept_tag: FR-TEMPS48-PUIS
 prerequisites: [FR-C96-jamais, FR-C96-maintenant]
 sounds: []
-roots: []
+roots: [post-latin]
+etymology_hook: "puis ← Vulgar Latin *postius, from Latin post 'after' — English post- in postpone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C96-maintenant]
 <!-- hl-knowledge: introduces=[FR-LEX-C96-TEMPS48-03]; assesses=[] -->
 
 **puis** — "then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**puis** ← Vulgar Latin *\*postius*, from Latin *post*, "after" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

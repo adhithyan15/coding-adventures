@@ -11,7 +11,8 @@ romanization: "kaḻuvu"
 concept_tag: TA-VERB-KAZHUVU
 prerequisites: [TA-C71-run, TA-C69-road, TA-C70-floor]
 sounds: []
-roots: []
+roots: [dravidian-kazhuvu-wash]
+etymology_hook: "கழுவு — native Dravidian (DEDR 1369); Malayalam kaḻukuka, Telugu kaḍugu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ To wash: hands, a கிண்ணம், the தரை.
 It carries **ழ**, the curled glide that Tamil kept and named itself with — the ழ at the end of
 தமிழ். You have met it inside எழுது and at the front of கீழே, and here it sits between two
 *u* sounds, which is the hardest place to hear it and the best place to practise it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கழுவு** (*kaḻuvu*) is native Dravidian. DEDR 1369 lists Malayalam *kaḻukuka* and Telugu *kaḍugu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

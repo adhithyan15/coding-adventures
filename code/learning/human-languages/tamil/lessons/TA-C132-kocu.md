@@ -14,7 +14,8 @@ romanization: "kocu"
 concept_tag: TA-THINGS132-KOCU
 prerequisites: [TA-C131-mayil, TA-C131-erumpu]
 sounds: []
-roots: []
+roots: [dravidian-kocu-mosquito]
+etymology_hook: "கொசு — native Dravidian (DEDR 2086); Malayalam kotuku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C131-erumpu]
 <!-- hl-knowledge: introduces=[TA-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **கொசு** — *kocu* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொசு** (*kocu*) is native Dravidian. DEDR 2086 lists Malayalam *kotuku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

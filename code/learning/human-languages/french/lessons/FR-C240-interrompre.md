@@ -13,7 +13,8 @@ gloss: "to interrupt"
 concept_tag: FR-VERB-INTERROMPRE
 prerequisites: [FR-C239-depecher, FR-C240-insister]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "interrompre ← Latin interrumpere 'to break apart' — English interrupt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C240-insister]
 <!-- hl-knowledge: introduces=[FR-LEX-C240-VERBES240-02]; assesses=[] -->
 
 **interrompre** — "to interrupt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interrompre** ← Latin *interrumpere*, "to break apart" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

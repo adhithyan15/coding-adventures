@@ -14,7 +14,8 @@ romanization: "toḻilāḷi"
 concept_tag: TA-VELAI279-TOLILALI
 prerequisites: [TA-C278-tarpucani, TA-C278-murukku]
 sounds: []
-roots: []
+roots: [dravidian-tozhil-work, dravidian-aal-man]
+etymology_hook: "தொழிலாளி — native: toḻil 'work' (DEDR 3524) + āḷi 'one who does', from āḷ (DEDR 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C278-murukku]
 <!-- hl-knowledge: introduces=[TA-LEX-C279-VELAI279-01]; assesses=[] -->
 
 **தொழிலாளி** — *toḻilāḷi* — "a worker, a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொழிலாளி** (*toḻilāḷi*) is native: *toḻil*, "work, occupation" (DEDR 3524), and *āḷi*, "one who does", from *āḷ*, "person" (DEDR 399).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

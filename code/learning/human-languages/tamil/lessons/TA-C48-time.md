@@ -11,7 +11,8 @@ romanization: "nēram"
 concept_tag: TA-LEAVE-TIME
 prerequisites: [TA-C48-now, TA-C46-student, TA-C47-enough]
 sounds: []
-roots: []
+roots: [dravidian-neram-time]
+etymology_hook: "நேரம் — native Dravidian (DEDR 3774); Malayalam nēram"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C48-now]
 Not the hour on the clock — that is *maṇi*, which you already have — but time as a quantity of it: whether there is any, whether this is the right one, whether it has run out.
 
 *nēram āccu* is how a Tamil speaker says the moment has come, and it is very often the sentence that ends a visit. Nobody has to be rude about leaving if the clock can be blamed.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நேரம்** (*nēram*) is native Dravidian. DEDR 3774 lists Malayalam *nēram*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

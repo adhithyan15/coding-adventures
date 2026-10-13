@@ -14,7 +14,8 @@ romanization: "eli"
 concept_tag: TA-THINGS130-ELI
 prerequisites: [TA-C130-nari, TA-C130-pampu]
 sounds: []
-roots: []
+roots: [dravidian-eli-rat]
+etymology_hook: "எலி — native Dravidian (DEDR 833); Malayalam eli, Kannada eli, Telugu eluka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C130-pampu]
 <!-- hl-knowledge: introduces=[TA-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **எலி** — *eli* — "a rat, a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எலி** (*eli*) is native Dravidian. DEDR 833 lists Malayalam *eli*, Kannada *eli* and Telugu *eluka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tēṉ"
 concept_tag: TA-THINGS124-TEN
 prerequisites: [TA-C124-inci, TA-C124-puntu]
 sounds: []
-roots: []
+roots: [dravidian-tiim-sweet]
+etymology_hook: "தேன் — native Dravidian (DEDR 3268); Malayalam tēn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C124-puntu]
 <!-- hl-knowledge: introduces=[TA-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **தேன்** — *tēṉ* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேன்** (*tēṉ*) is native Dravidian. DEDR 3268 lists Malayalam *tēn*. The entry sets it beside *tīm*, "sweet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

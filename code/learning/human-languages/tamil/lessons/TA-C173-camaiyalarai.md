@@ -14,7 +14,8 @@ romanization: "camaiyalaṟai"
 concept_tag: TA-IDAM173-CAMAIYALARAI
 prerequisites: [TA-C172-munkuttiye, TA-C172-natkatti]
 sounds: []
-roots: []
+roots: [dravidian-camai-prepare, dravidian-arai-chamber]
+etymology_hook: "சமையலறை — native: camaiyal 'cooking' (DEDR 2342) + aṟai 'room' (DEDR 322)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C172-natkatti]
 <!-- hl-knowledge: introduces=[TA-LEX-C173-IDAM173-01]; assesses=[] -->
 
 **சமையலறை** — *camaiyalaṟai* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சமையலறை** (*camaiyalaṟai*) is native: *camaiyal*, "cooking" (DEDR 2342), and *aṟai*, "room" (DEDR 322).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

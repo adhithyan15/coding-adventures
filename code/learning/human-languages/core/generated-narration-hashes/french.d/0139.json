@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 139,
-  "sourceHash": "fnv1a64:bc0cf19b25a2882d",
+  "sourceHash": "fnv1a64:896599c0c1de0565",
   "lessonIds": [
     "FR-C139-rien",
     "FR-C139-aucun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch139.txt",
   "json": "french/narration/ch139.json",
-  "textHash": "fnv1a64:5a1cf3b1aab21ca5",
-  "jsonHash": "fnv1a64:b91f9712b3ff9750",
+  "textHash": "fnv1a64:3a8b864440ce1996",
+  "jsonHash": "fnv1a64:0328464dbe37e518",
   "findings": []
 }

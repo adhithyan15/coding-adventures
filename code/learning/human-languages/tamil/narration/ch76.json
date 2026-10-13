@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "But, and Or",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5fab46354ba7379c",
+  "sourceHash": "fnv1a64:fd454f2ce42cca9c",
   "lessons": [
     {
       "id": "TA-C76-but",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1374778e4626779",
+      "sourceHash": "fnv1a64:95ed061397dc0a25",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆனால் (āṉāl) is native: a form of ā, \"to become, to be\" (DEDR 333), meaning \"if it is so\". \"But\" grew out of \"be that as it may\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -193,7 +204,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -225,7 +236,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:1f0f0c6e9a11127d",
+      "sourceHash": "fnv1a64:57ba1fafe4ea9f0e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -304,6 +315,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அல்லது (alladu) is native: \"if it is not that\". It is built on al-, the native verb of not-being (DEDR 234), which lists allatu, \"or else\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -314,7 +336,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -381,7 +403,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -574,7 +596,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08c44769fb837c5e",
+      "sourceHash": "fnv1a64:e9048cf5fe152908",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +662,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பால் வேண்டுமா, அல்லது தேநீர் வேண்டுமா? (pāl vēṇḍumā, alladu tēnīr vēṇḍumā?) is built from words met before, all native except one: pāl, \"milk\", vēṇḍum, \"is wanted\" (DEDR 5528), and alladu, \"or\" (DEDR 234). The one loan is tēnīr: tē, the travelling word for tea, on native nīr, \"water\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +683,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -735,7 +768,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

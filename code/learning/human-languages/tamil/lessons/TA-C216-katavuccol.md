@@ -14,7 +14,8 @@ romanization: "kaṭavuccol"
 concept_tag: TA-PORUL216-KATAVUCCOL
 prerequisites: [TA-C215-urai, TA-C216-inaiyam]
 sounds: []
-roots: []
+roots: [dravidian-katavu-door, dravidian-col-say]
+etymology_hook: "கடவுச்சொல் — a coinage: kaṭavu 'passing', from kaṭa 'to pass' (DEDR 1109) + col 'word' (DEDR 2855)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C216-inaiyam]
 <!-- hl-knowledge: introduces=[TA-LEX-C216-PORUL216-02]; assesses=[] -->
 
 **கடவுச்சொல்** — *kaṭavuccol* — "a password".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடவுச்சொல்** (*kaṭavuccol*) is a modern coinage from native parts: *kaṭavu*, "a passing", from *kaṭa*, "to pass" (DEDR 1109), and *col*, "word" (DEDR 2855): "the passing word".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

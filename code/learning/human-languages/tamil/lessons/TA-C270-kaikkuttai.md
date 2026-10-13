@@ -14,7 +14,8 @@ romanization: "kaikkuṭṭai"
 concept_tag: TA-PORUL270-KAIKKUTTAI
 prerequisites: [TA-C269-eliya, TA-C269-vacatiyana]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, dravidian-kuttai-cloth]
+etymology_hook: "கைக்குட்டை — native: kai 'hand' (DEDR 2023) + kuṭṭai 'kerchief' (DEDR 1681)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C269-vacatiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C270-PORUL270-01]; assesses=[] -->
 
 **கைக்குட்டை** — *kaikkuṭṭai* — "a handkerchief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கைக்குட்டை** (*kaikkuṭṭai*) is native: *kai*, "hand" (DEDR 2023), and *kuṭṭai*, "kerchief, strip of cloth" (DEDR 1681, which lists Telugu guḍḍa 'cloth').
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

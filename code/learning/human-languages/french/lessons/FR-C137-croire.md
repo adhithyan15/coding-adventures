@@ -13,7 +13,8 @@ gloss: "to believe"
 concept_tag: FR-VERB-CROIRE
 prerequisites: [FR-C137-repondre, FR-C137-mettre]
 sounds: []
-roots: []
+roots: [credere-latin]
+etymology_hook: "croire ← Latin credere 'to believe' — English credit and creed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C137-mettre]
 <!-- hl-knowledge: introduces=[FR-LEX-C137-VERBES89-05]; assesses=[] -->
 
 **croire** — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**croire** ← Old French *creire* (EtymDB 2.1) ← Latin *credere*, "to believe" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

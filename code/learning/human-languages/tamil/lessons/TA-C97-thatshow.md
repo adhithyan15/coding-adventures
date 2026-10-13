@@ -11,7 +11,8 @@ romanization: "appaṭittāṉ"
 concept_tag: TA-SURE-THATS-HOW
 prerequisites: [TA-C96-dontknow, TA-C97-definitely]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-taan-self]
+etymology_hook: "அப்படித்தான் — native: appaṭi 'thus' (DEDR 1) + tāṉ 'just, indeed' (DEDR 3196)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C97-definitely]
 **அப்படித்தான்** (*appaṭittāṉ*) — "that's how it is", "quite so".
 
 **அப்படி**, "like that", with **-தான்**, the same "that and no other" as **சரிதான்**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அப்படித்தான்** (*appaṭittāṉ*) is native: *appaṭi*, "thus" (DEDR 1), and *tāṉ*, "just, indeed" (DEDR 3196).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

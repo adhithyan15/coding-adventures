@@ -13,7 +13,8 @@ gloss: "a teacher"
 concept_tag: FR-FAMILLE11-PROFESSEUR
 prerequisites: [FR-C59-niece, FR-C59-eleve]
 sounds: []
-roots: []
+roots: [profiteri-latin]
+etymology_hook: "professeur ← Latin professor 'a public teacher' — English professor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C59-eleve]
 <!-- hl-knowledge: introduces=[FR-LEX-C59-FAMILLE11-04]; assesses=[] -->
 
 **le professeur** — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**professeur** ← Latin *professor*, "a public teacher", from *profiteri*, "to declare in public" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

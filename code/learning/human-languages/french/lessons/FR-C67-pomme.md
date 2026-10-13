@@ -13,7 +13,8 @@ gloss: "an apple"
 concept_tag: FR-VERBES19-POMME
 prerequisites: [FR-C67-poulet, FR-C67-fruit]
 sounds: []
-roots: []
+roots: [pomum-latin]
+etymology_hook: "pomme ← Latin poma 'fruits', plural of pomum — English pomegranate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C67-fruit]
 <!-- hl-knowledge: introduces=[FR-LEX-C67-VERBES19-05]; assesses=[] -->
 
 **la pomme** — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pomme** ← Latin *poma*, "fruits", the plural of *pomum* — inherited. (EtymDB 2.1) In Latin *pomum* was any fruit; French narrowed it to the apple.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

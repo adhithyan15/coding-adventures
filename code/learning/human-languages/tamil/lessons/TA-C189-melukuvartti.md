@@ -14,7 +14,8 @@ romanization: "meḻukuvartti"
 concept_tag: TA-PORUL189-MELUKUVARTTI
 prerequisites: [TA-C188-tennaimaram, TA-C189-pacai]
 sounds: []
-roots: []
+roots: [dravidian-mezhuku-smear, sanskrit-varti]
+etymology_hook: "மெழுகுவர்த்தி — meḻuku 'wax' (DEDR 5082) + vartti ← Sanskrit varti 'wick' (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C189-pacai]
 <!-- hl-knowledge: introduces=[TA-LEX-C189-PORUL189-02]; assesses=[] -->
 
 **மெழுகுவர்த்தி** — *meḻukuvartti* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மெழுகுவர்த்தி** (*meḻukuvartti*) is *meḻuku*, "wax", which DEDR 5082 files with words for smearing and glossing, and *vartti*, "wick", from Sanskrit *varti* (CDIAL 11359): "the wax wick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

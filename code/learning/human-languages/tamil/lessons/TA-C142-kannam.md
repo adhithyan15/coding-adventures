@@ -14,7 +14,8 @@ romanization: "kaṉṉam"
 concept_tag: TA-THINGS142-KANNAM
 prerequisites: [TA-C142-ottakam, TA-C142-vattu]
 sounds: []
-roots: []
+roots: [dravidian-kannam-cheek]
+etymology_hook: "கன்னம் — native Dravidian (DEDR 1413); Malayalam kannam, Kannada kanna"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C142-vattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C142-THINGS142-03]; assesses=[] -->
 
 **கன்னம்** — *kaṉṉam* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கன்னம்** (*kaṉṉam*) is native Dravidian. DEDR 1413 lists Malayalam *kannam* and Kannada *kanna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

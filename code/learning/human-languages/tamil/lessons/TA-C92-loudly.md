@@ -11,7 +11,8 @@ romanization: "cattamāka"
 concept_tag: TA-AGAIN-LOUDLY
 prerequisites: [TA-C92-slowly, TA-C92-again]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "சத்தமாக ← Sanskrit śabda 'sound, noise' (CDIAL 12298)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C92-again]
 **சத்தமாக** (*cattamāka*) — "loudly".
 
 **சத்தம்** is "a noise, a sound". **கொஞ்சம் சத்தமாகப் பேசுங்கள்** — "please speak a little louder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சத்தமாக** (*cattamāka*) is a loan from Sanskrit *śabda*, "sound, noise" (CDIAL 12298). The noun *cattam*, "sound, noise", takes *-āka*, "in the manner of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

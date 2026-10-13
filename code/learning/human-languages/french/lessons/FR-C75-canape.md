@@ -14,6 +14,7 @@ concept_tag: FR-MAISON27-CANAPE
 prerequisites: [FR-C75-miroir, FR-C75-salon]
 sounds: []
 roots: []
+etymology_hook: "canapé ← Latin conopeum 'a bed with a mosquito net', from Greek konops 'mosquito' — English canopy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C75-salon]
 <!-- hl-knowledge: introduces=[FR-LEX-C75-MAISON27-05]; assesses=[] -->
 
 **le canapé** — "a sofa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canapé** ← Medieval Latin *canapeum* ← Latin *conopeum*, "a bed with a mosquito net", from Greek *konopeion*, built on *konops*, "mosquito" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

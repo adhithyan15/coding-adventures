@@ -13,7 +13,8 @@ gloss: "to prove"
 concept_tag: FR-VERB-DEMONTRER
 prerequisites: [FR-C147-convaincre, FR-C147-critiquer]
 sounds: []
-roots: []
+roots: [monstrare-latin]
+etymology_hook: "démontrer ← Latin demonstrare 'to point out' — montrer with dé-; English demonstrate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C147-critiquer]
 <!-- hl-knowledge: introduces=[FR-LEX-C147-VERBES147-05]; assesses=[] -->
 
 **démontrer** — "to prove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**démontrer** ← Old French *demonstrer* ← Latin *demonstrare*, "to point out" (EtymDB 2.1) — inherited: *montrer* with *dé-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

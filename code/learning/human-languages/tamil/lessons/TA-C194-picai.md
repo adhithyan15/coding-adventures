@@ -14,7 +14,8 @@ romanization: "picai"
 concept_tag: TA-VERB-PICAI
 prerequisites: [TA-C194-uri, TA-C194-pori]
 sounds: []
-roots: []
+roots: [dravidian-picai-knead]
+etymology_hook: "பிசை — native Dravidian (DEDR 4135); Kannada pisuku 'to knead'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C194-pori]
 <!-- hl-knowledge: introduces=[TA-LEX-C194-ACT194-05]; assesses=[] -->
 
 **பிசை** — *picai* — "to knead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிசை** (*picai*) is native Dravidian. DEDR 4135 lists Kannada *pisuku*, "to knead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

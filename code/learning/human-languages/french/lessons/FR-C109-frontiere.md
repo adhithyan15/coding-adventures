@@ -13,7 +13,8 @@ gloss: "a border"
 concept_tag: FR-LIEU61-FRONTIERE
 prerequisites: [FR-C108-carrefour, FR-C108-feu-rouge]
 sounds: []
-roots: []
+roots: [frons-latin]
+etymology_hook: "frontière — Old French front 'the front line', from Latin frons 'forehead' — English frontier"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C108-feu-rouge]
 <!-- hl-knowledge: introduces=[FR-LEX-C109-LIEU61-01]; assesses=[] -->
 
 **la frontière** — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frontière** — built from Old French *front*, "forehead, the front line", ← Latin *frons*, *frontis* (Lewis & Short), with *-ière*: the line an army faced.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

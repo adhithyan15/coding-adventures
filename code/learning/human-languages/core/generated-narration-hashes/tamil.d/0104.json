@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 104,
-  "sourceHash": "fnv1a64:332846492fdb09b2",
+  "sourceHash": "fnv1a64:79049f59ee2394d5",
   "lessonIds": [
     "TA-C104-language",
     "TA-C104-english",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch104.txt",
   "json": "tamil/narration/ch104.json",
-  "textHash": "fnv1a64:8cddca0f9daefd9f",
-  "jsonHash": "fnv1a64:580e881056a34114",
+  "textHash": "fnv1a64:5ba8127471f3f3f8",
+  "jsonHash": "fnv1a64:bcd3426ac03f022d",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "veḷḷam"
 concept_tag: TA-PORUL219-VELLAM
 prerequisites: [TA-C219-mutupani, TA-C219-tenral]
 sounds: []
-roots: []
+roots: [dravidian-vellam-flood]
+etymology_hook: "வெள்ளம் — native Dravidian (DEDR 5503); Malayalam veḷḷam 'water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C219-tenral]
 <!-- hl-knowledge: introduces=[TA-LEX-C219-PORUL219-05]; assesses=[] -->
 
 **வெள்ளம்** — *veḷḷam* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெள்ளம்** (*veḷḷam*) is native Dravidian. DEDR 5503 lists Malayalam *veḷḷam*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

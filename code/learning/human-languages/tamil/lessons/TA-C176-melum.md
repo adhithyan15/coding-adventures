@@ -14,7 +14,8 @@ romanization: "mēlum"
 concept_tag: TA-KARANAM176-MELUM
 prerequisites: [TA-C176-analum, TA-C176-iruntalum]
 sounds: []
-roots: []
+roots: [dravidian-mel-above]
+etymology_hook: "மேலும் — native Dravidian (DEDR 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C176-iruntalum]
 <!-- hl-knowledge: introduces=[TA-LEX-C176-KARANAM176-03]; assesses=[] -->
 
 **மேலும்** — *mēlum* — "moreover, furthermore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மேலும்** (*mēlum*) is native Dravidian (DEDR 5086). It is *mēl*, "above, more", with *-um*, "also".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "still, again"
 concept_tag: FR-TEMPS156-ENCORE
 prerequisites: [FR-C156-enfin, FR-C156-desormais]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "encore — usually traced to Latin hinc ad horam or hanc horam; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C156-desormais]
 <!-- hl-knowledge: introduces=[FR-LEX-C156-TEMPS156-05]; assesses=[] -->
 
 **encore** — "still, again".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**encore** — its origin is not settled: the usual account takes it to Latin *hinc ad horam*, "from here to the hour", or *hanc horam*, "this hour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

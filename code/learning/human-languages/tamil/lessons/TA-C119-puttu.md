@@ -14,7 +14,8 @@ romanization: "pūṭṭu"
 concept_tag: TA-THINGS119-PUTTU
 prerequisites: [TA-C118-karanti, TA-C119-cavi]
 sounds: []
-roots: []
+roots: [dravidian-puun-fasten]
+etymology_hook: "பூட்டு — native Dravidian (DEDR 4361)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C119-cavi]
 <!-- hl-knowledge: introduces=[TA-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **பூட்டு** — *pūṭṭu* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பூட்டு** (*pūṭṭu*) is native Dravidian (DEDR 4361). The entry lists *pūṭṭu*, "to lock, to fasten", under *pūṇ*, "to put on, to be fastened".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

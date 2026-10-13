@@ -14,6 +14,7 @@ concept_tag: FR-ADJ47-TOUJOURS
 prerequisites: [FR-C95-mois, FR-C95-matin]
 sounds: []
 roots: []
+etymology_hook: "toujours — Old French toz jorz 'all days': all + jours"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C95-matin]
 <!-- hl-knowledge: introduces=[FR-LEX-C95-ADJ47-05]; assesses=[] -->
 
 **toujours** — "always; still".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**toujours** ← Old French *toz jorz*, "all days": the word for "all" with *jours*, "days". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

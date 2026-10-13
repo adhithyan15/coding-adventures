@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:fe0379b604a5b653",
+  "sourceHash": "fnv1a64:a1f220ed06730248",
   "lessons": [
     {
       "id": "TA-C08-sontham",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd874a9959a0809e",
+      "sourceHash": "fnv1a64:949416159f24bc58",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சொந்தம் (sontham) is not native, but its route is not settled. It is usually derived from Sanskrit svānta, \"one's own\", built on sva, \"self\", probably through Telugu sonta, \"own\". Treat the route as likely, not proven."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -271,7 +282,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44c8d81b0076277c",
+      "sourceHash": "fnv1a64:67f5ce4d48b5c704",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +319,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Solluṅgaḷ is native Dravidian: the verb sol, \"to say\" (DEDR 2855), with the respectful ending. Malayalam colluka and Kannada sollu are the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -338,7 +360,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

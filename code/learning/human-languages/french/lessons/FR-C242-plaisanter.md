@@ -13,7 +13,8 @@ gloss: "to joke"
 concept_tag: FR-VERB-PLAISANTER
 prerequisites: [FR-C242-nourrir, FR-C242-partir-en-vacances]
 sounds: []
-roots: []
+roots: [placere-latin]
+etymology_hook: "plaisanter — from the word for 'pleasing', Latin placere — English pleasant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C242-partir-en-vacances]
 <!-- hl-knowledge: introduces=[FR-LEX-C242-VERBES242-04]; assesses=[] -->
 
 **plaisanter** — "to joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plaisanter** — built from the word for "pleasing", from the verb for "to please", ← Latin *placere* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

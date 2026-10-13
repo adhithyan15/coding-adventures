@@ -13,7 +13,8 @@ gloss: "an airport"
 concept_tag: FR-VILLE55-AEROPORT
 prerequisites: [FR-C102-mairie, FR-C103-quartier]
 sounds: []
-roots: []
+roots: [portus-latin]
+etymology_hook: "aéroport — aéro- 'air', from Greek aer, + port 'harbour', from Latin portus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C103-quartier]
 <!-- hl-knowledge: introduces=[FR-LEX-C103-VILLE55-02]; assesses=[] -->
 
 **l'aéroport** — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aéroport** — a 20th-century coinage from *aéro-*, "air", from Greek *aer*, and Old French *port*, "harbour", ← Latin *portus* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

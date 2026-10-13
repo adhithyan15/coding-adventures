@@ -13,7 +13,8 @@ gloss: "a birthday"
 concept_tag: FR-TRAV257-ANNIVERSAIRE
 prerequisites: [FR-C257-art, FR-C257-equipe]
 sounds: []
-roots: []
+roots: [annus-latin]
+etymology_hook: "anniversaire ← Latin anniversarius 'coming round each year' — the annus of an"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C257-equipe]
 <!-- hl-knowledge: introduces=[FR-LEX-C257-TRAV257-05]; assesses=[] -->
 
 **l'anniversaire** — "a birthday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anniversaire** ← Latin *anniversarius*, "coming round each year", from *annus*, the Latin of *an*, and *vertere*, "to turn" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ciṟanta"
 concept_tag: TA-GUNAM269-CIRANTA
 prerequisites: [TA-C268-kanivana, TA-C268-nermaiyana]
 sounds: []
-roots: []
+roots: [dravidian-cira-excel]
+etymology_hook: "சிறந்த — native Dravidian (DEDR 2589); Malayalam ciṟakka 'to be glorious'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C268-nermaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C269-GUNAM269-01]; assesses=[] -->
 
 **சிறந்த** — *ciṟanta* — "best, finest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிறந்த** (*ciṟanta*) is native Dravidian. DEDR 2589 lists Malayalam *ciṟakka*, "to be glorious". It is a participle of *ciṟa*, "to be eminent, to excel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

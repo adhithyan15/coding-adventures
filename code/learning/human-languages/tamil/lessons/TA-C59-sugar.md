@@ -11,7 +11,8 @@ romanization: "sarkkarai"
 concept_tag: TA-NOUN-SUGAR
 prerequisites: [TA-C59-jaggery, TA-C57-ember, TA-C58-bird]
 sounds: []
-roots: []
+roots: [sanskrit-sharkara]
+etymology_hook: "சர்க்கரை ← Sanskrit śarkarā 'candied sugar' (CDIAL 12338), the word behind English sugar"
 duration:
   max_seconds: 210
 requires:

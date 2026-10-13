@@ -14,7 +14,8 @@ romanization: "veṇṇey"
 concept_tag: TA-THINGS122-VENNEY
 prerequisites: [TA-C121-kulambu, TA-C122-rasam]
 sounds: []
-roots: []
+roots: [dravidian-vel-white-bright, dravidian-ney-ghee]
+etymology_hook: "வெண்ணெய் — native: veṇ 'white' (DEDR 5496) + ney 'ghee' (DEDR 3746)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C122-rasam]
 <!-- hl-knowledge: introduces=[TA-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **வெண்ணெய்** — *veṇṇey* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெண்ணெய்** (*veṇṇey*) is native: *veṇ*, "white" (DEDR 5496), and *ney*, "ghee" (DEDR 3746): "white ghee", butter before it is melted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

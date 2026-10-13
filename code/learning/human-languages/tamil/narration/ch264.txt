@@ -12,6 +12,9 @@ Before the new one: say the Tamil for an airport, then the Tamil for a ship.
 You'll want to know: எதிரே.
 எதிரே — etirē — "opposite".
 
+The word, taken apart.
+எதிரே (etirē) is native Dravidian. DEDR 795 lists Malayalam etir, "opposite" and Telugu eduru. -ē adds emphasis: "right opposite".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a ship, then the Tamil for opposite.
 
 You'll want to know: இடையில்.
 இடையில் — iṭaiyil — "between".
+
+The word, taken apart.
+இடையில் (iṭaiyil) is native Dravidian. DEDR 448 lists Malayalam iṭa, "interval, middle" and Kannada eḍe. It is iṭai, "middle, interval", with -il, "in".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for opposite, then the Tamil for between.
 You'll want to know: வழி.
 வழி — vaḻi — "a way, a route".
 
+The word, taken apart.
+வழி (vaḻi) is native Dravidian. DEDR 5297 lists Malayalam vaḻi, "way, road" and Kannada baḻi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for between, then the Tamil for a way.
 You'll want to know: நிலம்.
 நிலம் — nilam — "land, the ground".
 
+The word, taken apart.
+நிலம் (nilam) is native Dravidian. DEDR 3676 lists Malayalam nilam, "ground" and Kannada nela.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a way, then the Tamil for land.
 
 You'll want to know: பள்ளத்தாக்கு.
 பள்ளத்தாக்கு — paḷḷattākku — "a valley".
+
+The word, taken apart.
+பள்ளத்தாக்கு (paḷḷattākku) is native, built on paḷḷam, "low land, valley" (DEDR 4016, which lists Malayalam paḷḷam and Telugu pallamu).
 
 What you've built.
 One more word for this chapter.

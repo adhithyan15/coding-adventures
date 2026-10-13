@@ -11,7 +11,8 @@ romanization: "kōḻi"
 concept_tag: TA-NOUN-HEN
 prerequisites: [TA-C58-goat, TA-C56-less, TA-C57-mud]
 sounds: []
-roots: []
+roots: [dravidian-kozhi-fowl]
+etymology_hook: "கோழி — native Dravidian (DEDR 2248); Malayalam kōḻi, Kannada kōḻi, Telugu kōḍi"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C58-goat]
 Hen or cock alike; the word does not split them, and where the difference matters a second word goes in front. Kannada ಕೋಳಿ (*kōḷi*) and Telugu కోడి (*kōḍi*) are the same word three ways, and the middle letter is where they separate: Tamil's ழ, Kannada's ಳ, Telugu's డ.
 
 It is the clock of a கிராமம். A கோழி has a house awake well before anybody there needs to know the மணி.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கோழி** (*kōḻi*) is native Dravidian. DEDR 2248 lists Malayalam *kōḻi*, Kannada *kōḻi* and Telugu *kōḍi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

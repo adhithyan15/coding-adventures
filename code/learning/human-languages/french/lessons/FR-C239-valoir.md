@@ -13,7 +13,8 @@ gloss: "to be worth"
 concept_tag: FR-VERB-VALOIR
 prerequisites: [FR-C238-voler, FR-C239-unir]
 sounds: []
-roots: []
+roots: [valere-latin]
+etymology_hook: "valoir ← Latin valere 'to be strong, to be worth' — English value and valiant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C239-unir]
 <!-- hl-knowledge: introduces=[FR-LEX-C239-VERBES239-02]; assesses=[] -->
 
 **valoir** — "to be worth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valoir** ← Old French *valoir* ← Latin *valere*, "to be strong, to be worth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

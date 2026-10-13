@@ -14,7 +14,8 @@ romanization: "uraiyāṭal"
 concept_tag: TA-PORUL245-URAIYATAL
 prerequisites: [TA-C245-cumai, TA-C245-kural]
 sounds: []
-roots: []
+roots: [dravidian-urai-speak, dravidian-aadu-move]
+etymology_hook: "உரையாடல் — native: urai 'to speak' (DEDR 648) + āṭal 'doing, saying' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C245-kural]
 <!-- hl-knowledge: introduces=[TA-LEX-C245-PORUL245-03]; assesses=[] -->
 
 **உரையாடல்** — *uraiyāṭal* — "a conversation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உரையாடல்** (*uraiyāṭal*) is native: *urai*, "to speak, to tell" (DEDR 648), and *āṭal*, "doing, saying" (DEDR 347): "the saying back and forth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

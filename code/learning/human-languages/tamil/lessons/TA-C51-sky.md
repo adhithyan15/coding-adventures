@@ -11,7 +11,8 @@ romanization: "ākāyam"
 concept_tag: TA-NOUN-SKY
 prerequisites: [TA-C50-welcome, TA-C49-affection, TA-C50-threshold]
 sounds: []
-roots: []
+roots: [sanskrit-akasha]
+etymology_hook: "ஆகாயம் ← Sanskrit ākāśa 'sky' (CDIAL 1008), with ய where Tamil had no letter for ś"
 duration:
   max_seconds: 210
 requires:

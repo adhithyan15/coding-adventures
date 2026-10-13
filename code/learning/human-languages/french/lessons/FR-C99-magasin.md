@@ -14,6 +14,7 @@ concept_tag: FR-VILLE51-MAGASIN
 prerequisites: [FR-C98-ville, FR-C98-rue]
 sounds: []
 roots: []
+etymology_hook: "magasin ← Italian magazzino, from Arabic makhazin 'storehouses' — English magazine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C98-rue]
 <!-- hl-knowledge: introduces=[FR-LEX-C99-VILLE51-01]; assesses=[] -->
 
 **le magasin** — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**magasin** ← Italian *magazzino*, "a storehouse", from Arabic *makhazin*, "storehouses" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "The People Not Here",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2e0824ad7b105a1a",
+  "sourceHash": "fnv1a64:22ece0a9df5bca54",
   "lessons": [
     {
       "id": "TA-C85-avan-aval",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd0afc02721db0be",
+      "sourceHash": "fnv1a64:565b89e5a826ea05",
       "notice": null,
       "blocks": [
         {
@@ -70,6 +70,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவன் / அவள் (avaṉ / avaḷ) is native: the far base a- (DEDR 1) with -aṉ for a man and -aḷ for a woman. DEDR 1 lists both, with Malayalam avan and avaḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: choosing between them",
           "segments": [
@@ -98,7 +109,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -147,7 +158,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -179,7 +190,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:212da8a4ac75b137",
+      "sourceHash": "fnv1a64:349bb54d8c07f9aa",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -253,6 +264,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவர்கள் (avarkaḷ) is native: avar, \"that person\", from the far base a- (DEDR 1, which lists avarkaḷ), with the plural ending -kaḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the same double duty",
           "segments": [
@@ -267,7 +289,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -316,7 +338,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -347,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d0efc7c4ead8064",
+      "sourceHash": "fnv1a64:74f82bba88352ab8",
       "notice": null,
       "blocks": [
         {
@@ -411,6 +433,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாம் / நாங்கள் (nām / nāṅgaḷ) is native Dravidian. DEDR 3647 lists Malayalam nām. The entry lists both nām, \"we\", and nāṅkaḷ, \"we (not you)\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the piece you can already see",
           "segments": [
@@ -425,7 +458,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -474,7 +507,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

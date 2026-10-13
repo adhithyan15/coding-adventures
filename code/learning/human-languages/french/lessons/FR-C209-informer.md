@@ -13,7 +13,8 @@ gloss: "to inform"
 concept_tag: FR-VERB-INFORMER
 prerequisites: [FR-C209-imaginer, FR-C209-indiquer]
 sounds: []
-roots: []
+roots: [forma-latin]
+etymology_hook: "informer ← Latin informare 'to give shape to' — English inform"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C209-indiquer]
 <!-- hl-knowledge: introduces=[FR-LEX-C209-VERBES209-04]; assesses=[] -->
 
 **informer** — "to inform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**informer** ← Latin *informare*, "to give shape to, to describe" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

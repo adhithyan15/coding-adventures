@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX41-TORTUE
 prerequisites: [FR-C88-grenouille, FR-C88-tigre]
 sounds: []
 roots: []
+etymology_hook: "tortue ← Old Provençal tortuga, perhaps from Late Latin tartaruchus 'of the underworld'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C88-tigre]
 <!-- hl-knowledge: introduces=[FR-LEX-C89-ANIMAUX41-01]; assesses=[] -->
 
 **la tortue** — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tortue** ← Old Provençal *tortuga* — borrowed. (EtymDB 2.1) The usual account takes it to Late Latin *tartaruchus*, "of the underworld", a name for a creature thought demonic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

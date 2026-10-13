@@ -13,7 +13,8 @@ gloss: "a cough"
 concept_tag: FR-SANTE5-TOUX
 prerequisites: [FR-C53-douleur, FR-C53-fievre]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "toux ← Old French tous, from Latin tussis 'a cough'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C53-fievre]
 <!-- hl-knowledge: introduces=[FR-LEX-C53-SANTE5-03]; assesses=[] -->
 
 **la toux** — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**toux** ← Old French *tous* (EtymDB 2.1) ← Latin *tussis*, "a cough" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-REPAS72-FRAISE
 prerequisites: [FR-C119-haricots, FR-C119-concombre]
 sounds: []
 roots: []
+etymology_hook: "fraise ← Latin fraga 'strawberries', with an unexplained -s-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C119-concombre]
 <!-- hl-knowledge: introduces=[FR-LEX-C120-REPAS72-01]; assesses=[] -->
 
 **la fraise** — "a strawberry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fraise** ← Latin *fraga*, "strawberries" (Lewis & Short) — inherited. The *-s-* is unexplained; it may come from the French word for "raspberry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nīntu"
 concept_tag: TA-VERB-NINTU
 prerequisites: [TA-C152-mara, TA-C152-kuti]
 sounds: []
-roots: []
+roots: [dravidian-niintu-swim]
+etymology_hook: "நீந்து — native Dravidian (DEDR 3687); Malayalam nīntuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C152-kuti]
 <!-- hl-knowledge: introduces=[TA-LEX-C152-ACT152-03]; assesses=[] -->
 
 **நீந்து** — *nīntu* — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நீந்து** (*nīntu*) is native Dravidian. DEDR 3687 lists Malayalam *nīntuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

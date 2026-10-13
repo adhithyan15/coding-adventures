@@ -13,7 +13,8 @@ gloss: "to exchange"
 concept_tag: FR-VERB-ECHANGER
 prerequisites: [FR-C182-feter, FR-C183-renoncer]
 sounds: []
-roots: []
+roots: [cambiare-latin]
+etymology_hook: "échanger ← Vulgar Latin *excambiare — changer with é-; English exchange"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C183-renoncer]
 <!-- hl-knowledge: introduces=[FR-LEX-C183-VERBES183-02]; assesses=[] -->
 
 **échanger** — "to exchange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**échanger** ← Old French *eschangier* ← Vulgar Latin *\*excambiare* (EtymDB 2.1) — inherited: *changer* with *é-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṇai"
 concept_tag: TA-VERB-ANAI
 prerequisites: [TA-C157-utu, TA-C157-eri2]
 sounds: []
-roots: []
+roots: [dravidian-anai-extinguish]
+etymology_hook: "அணை — native Dravidian (DEDR 121); Malayalam aṇaykkuka 'to put out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C157-eri2]
 <!-- hl-knowledge: introduces=[TA-LEX-C157-ACT157-05]; assesses=[] -->
 
 **அணை** — *aṇai* — "to put out; to hug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அணை** (*aṇai*) is native Dravidian. DEDR 121 lists Malayalam *aṇaykkuka*, "to put out". The "hug" sense belongs to a separate entry, *aṇai*, "to approach, to embrace" (DEDR 120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

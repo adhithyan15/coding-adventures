@@ -14,7 +14,8 @@ romanization: "arukil"
 concept_tag: TA-LOC113-ARUKIL
 prerequisites: [TA-C108-howareyou, TA-C113-neraka, TA-C40-deixis-system]
 sounds: []
-roots: []
+roots: [dravidian-aruku-near]
+etymology_hook: "அருகில் — native Dravidian (DEDR 222)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C113-neraka]
 <!-- hl-knowledge: introduces=[TA-LEX-C113-LOC113-02]; assesses=[] -->
 
 **அருகில்** — *arukil* — "near, close by".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அருகில்** (*arukil*) is native Dravidian (DEDR 222). It is *aruku*, "nearness, vicinity", with the locative *-il*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

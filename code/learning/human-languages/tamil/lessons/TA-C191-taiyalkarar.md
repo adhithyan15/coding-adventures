@@ -14,7 +14,8 @@ romanization: "taiyalkārar"
 concept_tag: TA-VELAI191-TAIYALKARAR
 prerequisites: [TA-C191-vatikkaiyalar, TA-C191-kacalar]
 sounds: []
-roots: []
+roots: [dravidian-tai-sew]
+etymology_hook: "தையல்காரர் — native Dravidian (DEDR 3473)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C191-kacalar]
 <!-- hl-knowledge: introduces=[TA-LEX-C191-VELAI191-04]; assesses=[] -->
 
 **தையல்காரர்** — *taiyalkārar* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தையல்காரர்** (*taiyalkārar*) is native Dravidian (DEDR 3473). It is *taiyal*, "sewing", from *tai*, "to sew", with *-kārar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

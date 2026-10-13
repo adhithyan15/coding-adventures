@@ -13,7 +13,8 @@ gloss: "to get used to"
 concept_tag: FR-VERB-HABITUER
 prerequisites: [FR-C239-unir, FR-C239-valoir]
 sounds: []
-roots: []
+roots: [habitus-latin]
+etymology_hook: "s'habituer ← Late Latin habituare, from habitus 'a state, a habit'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C239-valoir]
 <!-- hl-knowledge: introduces=[FR-LEX-C239-VERBES239-03]; assesses=[] -->
 
 **s'habituer** — "to get used to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**s'habituer** ← Late Latin *habituare*, "to bring into a condition", from *habitus*, "a state, a habit" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

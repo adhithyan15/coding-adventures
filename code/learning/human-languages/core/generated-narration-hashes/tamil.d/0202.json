@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 202,
-  "sourceHash": "fnv1a64:4460e8a7e00e2205",
+  "sourceHash": "fnv1a64:6b5a2314ab7b5d57",
   "lessonIds": [
     "TA-C202-vara-iruti",
     "TA-C202-varai",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch202.txt",
   "json": "tamil/narration/ch202.json",
-  "textHash": "fnv1a64:c9268796165b99dc",
-  "jsonHash": "fnv1a64:00e764796c251fe0",
+  "textHash": "fnv1a64:2be48816e2ba68bd",
+  "jsonHash": "fnv1a64:b65fd878a101b631",
   "findings": []
 }

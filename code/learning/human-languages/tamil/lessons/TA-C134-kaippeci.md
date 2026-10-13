@@ -14,7 +14,8 @@ romanization: "kaippēci"
 concept_tag: TA-THINGS134-KAIPPECI
 prerequisites: [TA-C134-mettai, TA-C134-tolaikkatci]
 sounds: []
-roots: []
+roots: [dravidian-talai-kai, pesu-speak-dravidian]
+etymology_hook: "கைப்பேசி — a coinage: kai 'hand' (DEDR 2023) + pēci 'speaker', from pēsu (DEDR 4430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C134-tolaikkatci]
 <!-- hl-knowledge: introduces=[TA-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **கைப்பேசி** — *kaippēci* — "a mobile phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கைப்பேசி** (*kaippēci*) is a modern coinage from native parts: *kai*, "hand" (DEDR 2023), and *pēci*, "speaker", from *pēsu*, "to speak" (DEDR 4430): "the hand-speaker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pappāḷi"
 concept_tag: TA-PORUL271-PAPPALI
 prerequisites: [TA-C271-appil, TA-C271-arancu]
 sounds: []
-roots: []
+roots: [caribbean-papaya]
+etymology_hook: "பப்பாளி — from papaya, a Caribbean name carried to Asia by the Portuguese and Spanish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C271-arancu]
 <!-- hl-knowledge: introduces=[TA-LEX-C271-PORUL271-05]; assesses=[] -->
 
 **பப்பாளி** — *pappāḷi* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பப்பாளி** (*pappāḷi*) goes back to *papaya*, a Caribbean name for the fruit, which the Portuguese and Spanish carried to Asia. The exact path into Tamil is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

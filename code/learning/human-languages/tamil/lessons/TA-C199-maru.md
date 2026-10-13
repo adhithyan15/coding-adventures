@@ -14,7 +14,8 @@ romanization: "maṟu"
 concept_tag: TA-VERB-MARU
 prerequisites: [TA-C199-nampu, TA-C199-ottukkol]
 sounds: []
-roots: []
+roots: [dravidian-maru-refuse]
+etymology_hook: "மறு — native Dravidian (DEDR 4765); Malayalam maṟukka 'to resist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C199-ottukkol]
 <!-- hl-knowledge: introduces=[TA-LEX-C199-ACT199-03]; assesses=[] -->
 
 **மறு** — *maṟu* — "to refuse, to deny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மறு** (*maṟu*) is native Dravidian. DEDR 4765 lists Malayalam *maṟukka*, "to resist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

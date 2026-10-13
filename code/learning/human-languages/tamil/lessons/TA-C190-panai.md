@@ -14,7 +14,8 @@ romanization: "pāṉai"
 concept_tag: TA-PORUL190-PANAI
 prerequisites: [TA-C190-yocanai, TA-C190-tippetti]
 sounds: []
-roots: []
+roots: [dravidian-paanai-pot]
+etymology_hook: "பானை — native Dravidian (DEDR 4124); Malayalam pāna, Kannada pāne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C190-tippetti]
 <!-- hl-knowledge: introduces=[TA-LEX-C190-PORUL190-03]; assesses=[] -->
 
 **பானை** — *pāṉai* — "a clay pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பானை** (*pāṉai*) is native Dravidian. DEDR 4124 lists Malayalam *pāna* and Kannada *pāne*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "paṇivu"
 concept_tag: TA-NOUN-HUMILITY
 prerequisites: [TA-C63-trust, TA-C61-pain, TA-C62-first-of-all]
 sounds: []
-roots: []
+roots: [dravidian-pani-bow]
+etymology_hook: "பணிவு — native Dravidian (DEDR 3888); Malayalam paṇiyuka 'to bow, salute'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C63-trust]
 The bending: humility, deference, a manner rather than an act. Set it against மரியாதை, which you already have — மரியாதை is respect paid outward to somebody, பணிவு is the carriage you keep in yourself.
 
 Telugu's మర్యాద (*maryāda*) is the same word as your மரியாதை, which makes the pair easy to keep straight across the two.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பணிவு** (*paṇivu*) is native Dravidian. DEDR 3888 lists Malayalam *paṇiyuka*, "to bow, salute". It is the noun of *paṇi*, "to be low, to bow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

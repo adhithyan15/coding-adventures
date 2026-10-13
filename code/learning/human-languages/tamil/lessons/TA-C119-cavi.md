@@ -14,7 +14,8 @@ romanization: "cāvi"
 concept_tag: TA-THINGS119-CAVI
 prerequisites: [TA-C118-koppai, TA-C118-karanti]
 sounds: []
-roots: []
+roots: [portuguese-chave]
+etymology_hook: "சாவி ← Portuguese chave 'key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C118-karanti]
 <!-- hl-knowledge: introduces=[TA-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **சாவி** — *cāvi* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சாவி** (*cāvi*) is a loan from Portuguese *chave*, "key".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "soft; mild; sweet"
 concept_tag: FR-ADJ44-DOUX
 prerequisites: [FR-C91-pauvre, FR-C91-gris]
 sounds: []
-roots: []
+roots: [dulcis-latin]
+etymology_hook: "doux ← Latin dulcis 'sweet' — English dulcet shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C91-gris]
 <!-- hl-knowledge: introduces=[FR-LEX-C92-ADJ44-01]; assesses=[] -->
 
 **doux** — "soft; mild; sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**doux** ← Old French *dous* ← Latin *dulcis*, "sweet" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

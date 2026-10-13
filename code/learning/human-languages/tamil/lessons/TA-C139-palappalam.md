@@ -14,7 +14,8 @@ romanization: "palāppaḻam"
 concept_tag: TA-THINGS139-PALAPPALAM
 prerequisites: [TA-C139-cirakam, TA-C139-kirai, TA-C34-pidi, TA-C34-pidi]
 sounds: []
-roots: []
+roots: [dravidian-palaa-jack, dravidian-pazhu-ripen]
+etymology_hook: "பலாப்பழம் — native: palā 'jack tree' (DEDR 3988; Malayalam plāvu) + paḻam 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C139-kirai]
 <!-- hl-knowledge: introduces=[TA-LEX-C139-THINGS139-03]; assesses=[] -->
 
 **பலாப்பழம்** — *palāppaḻam* — "a jackfruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பலாப்பழம்** (*palāppaḻam*) is native: *palā*, "jack tree" (DEDR 3988; Malayalam *plāvu*), and *paḻam*, "fruit" (DEDR 4004).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a town, a city"
 concept_tag: FR-TEMPS50-VILLE
 prerequisites: [FR-C98-souvent, FR-C98-parfois]
 sounds: []
-roots: []
+roots: [villa-latin]
+etymology_hook: "ville ← Latin villa 'a country house, a farm' — English villa and village"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C98-parfois]
 <!-- hl-knowledge: introduces=[FR-LEX-C98-TEMPS50-04]; assesses=[] -->
 
 **la ville** — "a town, a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ville** ← Latin *villa*, "a country house, a farm" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

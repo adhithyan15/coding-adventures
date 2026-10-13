@@ -14,6 +14,7 @@ concept_tag: FR-VERB-RESERVER
 prerequisites: [FR-C204-telephone-portable, FR-C204-feuille-de-papier]
 sounds: []
 roots: []
+etymology_hook: "réserver ← Latin reservare 'to keep back' — English reserve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C204-feuille-de-papier]
 <!-- hl-knowledge: introduces=[FR-LEX-C205-VERBES205-01]; assesses=[] -->
 
 **réserver** — "to book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**réserver** ← Latin *reservare*, "to keep back" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

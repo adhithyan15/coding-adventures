@@ -14,7 +14,8 @@ romanization: "cuṟṟu"
 concept_tag: TA-VERB-CURRU
 prerequisites: [TA-C162-kata, TA-C162-tanku]
 sounds: []
-roots: []
+roots: [dravidian-curru-revolve]
+etymology_hook: "சுற்று — native Dravidian (DEDR 2715); Malayalam cuṟṟuka, Kannada suttu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C162-tanku]
 <!-- hl-knowledge: introduces=[TA-LEX-C162-ACT162-03]; assesses=[] -->
 
 **சுற்று** — *cuṟṟu* — "to go around, to wander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுற்று** (*cuṟṟu*) is native Dravidian. DEDR 2715 lists Malayalam *cuṟṟuka* and Kannada *suttu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

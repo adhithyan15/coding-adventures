@@ -13,7 +13,8 @@ gloss: "a week"
 concept_tag: FR-ADJ47-SEMAINE
 prerequisites: [FR-C94-sec, FR-C95-mouille]
 sounds: []
-roots: []
+roots: [septem-latin]
+etymology_hook: "semaine ← Latin septimana 'a set of seven', from septem — the seven of sept"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C95-mouille]
 <!-- hl-knowledge: introduces=[FR-LEX-C95-ADJ47-02]; assesses=[] -->
 
 **la semaine** — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semaine** ← Latin *septimana*, "a set of seven", from *septimus*, "seventh", and *septem*, "seven" — inherited. *sept* is the same Latin number. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "piḻi"
 concept_tag: TA-VERB-PILI
 prerequisites: [TA-C260-mulku, TA-C260-mita]
 sounds: []
-roots: []
+roots: [dravidian-pizhi-squeeze]
+etymology_hook: "பிழி — native Dravidian (DEDR 4183); Malayalam piḻiyuka 'to wring out', Kannada piḻi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C260-mita]
 <!-- hl-knowledge: introduces=[TA-LEX-C260-ACT260-05]; assesses=[] -->
 
 **பிழி** — *piḻi* — "to squeeze, to wring out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பிழி** (*piḻi*) is native Dravidian. DEDR 4183 lists Malayalam *piḻiyuka*, "to wring out" and Kannada *piḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

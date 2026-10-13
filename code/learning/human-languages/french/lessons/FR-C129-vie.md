@@ -13,7 +13,8 @@ gloss: "life"
 concept_tag: FR-LOISIRS81-VIE
 prerequisites: [FR-C128-chanson, FR-C129-dessin]
 sounds: []
-roots: []
+roots: [vita]
+etymology_hook: "vie ← Latin vita 'life' — the t between vowels fell away; English vital"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C129-dessin]
 <!-- hl-knowledge: introduces=[FR-LEX-C129-LOISIRS81-02]; assesses=[] -->
 
 **la vie** — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vie** ← Latin *vita*, "life" (EtymDB 2.1) — inherited: the *t* between vowels dropped out. It shares its root with *vivre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

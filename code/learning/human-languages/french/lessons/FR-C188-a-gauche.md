@@ -14,6 +14,7 @@ concept_tag: FR-LIEU188-A-GAUCHE
 prerequisites: [FR-C188-au-fond, FR-C188-a-droite]
 sounds: []
 roots: []
+etymology_hook: "à gauche — à + gauche: on the left"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C188-a-droite]
 <!-- hl-knowledge: introduces=[FR-LEX-C188-LIEU188-05]; assesses=[] -->
 
 **à gauche** — "on the left".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**à gauche** — *à*, "on", and *gauche*, "the left".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

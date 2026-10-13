@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Telling the Time",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:29451b6dde3466ff",
+  "sourceHash": "fnv1a64:15a39628fae7590c",
   "lessons": [
     {
       "id": "FR-C08-heure",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:304baeb025492ce4",
+      "sourceHash": "fnv1a64:acb5f3b01b04bee9",
       "notice": null,
       "blocks": [
         {
@@ -205,6 +205,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il est … heures — il from Latin ille, \"that\"; est is Latin est, \"is\"; heure from Latin hora, \"hour\". All three are inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

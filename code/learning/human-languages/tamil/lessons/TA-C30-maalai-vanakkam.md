@@ -12,9 +12,9 @@ concept_tag: GREETING-EVENING
 prerequisites: [TA-C27-maalai, TA-C29-kaalai-vanakkam]
 sounds: [tamil-vowel-sign-aa, tamil-geminate-kka]
 roots: [vaṇaṅku]
-etymology_hook: "மாலை வணக்கம் (mālai vaṇakkam, 'good evening'), literally 'evening greetings/salutations,' is confirmed by TWO independently-fetched sources (talkpal.ai, preply.com — practical language-learning content, the same source tier as TA-C29's) as a real, standard Tamil evening greeting — preply.com labels it formal and gives timing 'used after noon through evening,' while talkpal.ai independently gives 'can be used from late afternoon until nightfall'; both agree on the general afternoon-into-evening window, with some looseness in exact boundaries (unsurprising, matching the boundary-blur already seen in TA-C28's noon/afternoon overlap). Structurally, this follows the EXACT SAME compositional pattern as TA-C29's kālai vaṇakkam: மாலை (already met, TA-C27, 'evening') plus வணக்கம் (already met, TA-C01, Tamil's general greeting) — this pattern was independently re-verified here, not just assumed to automatically carry over from the morning greeting, since this whole arc has repeatedly found that greeting formation doesn't reliably generalize even within a single language"
+etymology_hook: "மாலை 'evening' — native, among the 'dark' words of DEDR 4781 (Malayalam māla 'night'); vaṇakkam is native too"
 duration:
-  max_seconds: 265
+  max_seconds: 288
 requires:
   knowledge: [TA-ETYMON-MAALAI-01, TA-LEX-KAALAI-VANAKKAM-01]
 introduces:
@@ -51,6 +51,11 @@ boundary-blur already seen in TA-C28). It's built exactly the same way
 as TA-C29's morning greeting: **மாலை** (already met, Chapter 27,
 "**evening**") plus **வணக்கம்** (already met, Chapter 1, Tamil's
 general greeting). Literally: "**evening salutations**."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are native. *Mālai*, "evening", sits in DEDR 4781 among words for black and dark, beside Malayalam *māla*, "night, darkness"; *vaṇakkam* is from the verb "to bow" (DEDR 5236). The *mālai* that means "garland" is a different word.
 
 ## Why it's said this way: Be honest: this pattern was re-checked, not assumed
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-MAALAI-VANAKKAM-02]; assesses=[] -->

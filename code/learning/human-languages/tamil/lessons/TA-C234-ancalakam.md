@@ -14,7 +14,8 @@ romanization: "añcalakam"
 concept_tag: TA-IDAM234-ANCALAKAM
 prerequisites: [TA-C233-nerru-muntinam, TA-C233-vinati]
 sounds: []
-roots: []
+roots: [dravidian-ancal-post, dravidian-akam-inside]
+etymology_hook: "அஞ்சலகம் — native: añcal 'letter post' (DEDR 54) + akam 'house' (DEDR 7)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C233-vinati]
 <!-- hl-knowledge: introduces=[TA-LEX-C234-IDAM234-01]; assesses=[] -->
 
 **அஞ்சலகம்** — *añcalakam* — "a post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அஞ்சலகம்** (*añcalakam*) is native: *añcal*, "relay, letter post" (DEDR 54, which lists Malayalam añcal and Telugu ance), and *akam*, "house" (DEDR 7): "the post house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES256-GUITARE
 prerequisites: [FR-C255-gaz, FR-C256-outil]
 sounds: []
 roots: []
+etymology_hook: "guitare ← Spanish guitarra, from Arabic and Greek kithara 'a lyre' — English guitar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C256-outil]
 <!-- hl-knowledge: introduces=[FR-LEX-C256-CHOSES256-02]; assesses=[] -->
 
 **la guitare** — "a guitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guitare** ← Spanish *guitarra* ← Arabic *qitara*, from Greek *kithara*, "a lyre" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

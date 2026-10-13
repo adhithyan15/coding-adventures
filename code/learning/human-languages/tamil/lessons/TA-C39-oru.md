@@ -11,8 +11,8 @@ romanization: oru
 concept_tag: TA-ONE-ATTRIBUTIVE
 prerequisites: [TA-C39-evvalavu, TA-C07-numbers-1-5, TA-C36-teneer, TA-C37-uur, TA-C37-nanban, TA-C37-ivar]
 sounds: [tamil-inherent-a, matra-u]
-roots: []
-etymology_hook: "ஒரு and ஒன்று are one word wearing two shapes — the counting form and the form that leans on a noun"
+roots: [proto-dravidian-numbers]
+etymology_hook: "ஒரு — native Dravidian (DEDR 990); Malayalam oru, Kannada or"
 duration:
   max_seconds: 275
 requires:
@@ -47,6 +47,11 @@ reviews_of: [TA-C39-evvalavu, TA-C39-vendum, TA-C07-numbers-1-5]
 You learned **ஒன்று** in chapter 7 as the number one. **ஒரு** is the same word
 in the shape it takes when it leans on a noun. Tamil will not let you say
 *oṉṟu tēnīr*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒரு** (*oru*) is native Dravidian. DEDR 990 lists Malayalam *oru* and Kannada *or*, also used before a noun.
 
 ## Grammar Lens: the counting form and the leaning form
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-ORU-ATTRIBUTIVE-02]; assesses=[TA-LEX-NUMBERS-1-5-01] -->

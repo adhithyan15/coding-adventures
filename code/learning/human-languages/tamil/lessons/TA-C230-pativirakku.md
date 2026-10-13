@@ -14,7 +14,8 @@ romanization: "pativiṟakku"
 concept_tag: TA-VERB-PATIVIRAKKU
 prerequisites: [TA-C230-cantekappatu, TA-C230-kurai-col]
 sounds: []
-roots: []
+roots: [dravidian-pati-imprint, dravidian-iranku-descend]
+etymology_hook: "பதிவிறக்கு — a coinage: pativu 'record' (DEDR 3911) + iṟakku 'to bring down' (DEDR 516)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C230-kurai-col]
 <!-- hl-knowledge: introduces=[TA-LEX-C230-ACT230-04]; assesses=[] -->
 
 **பதிவிறக்கு** — *pativiṟakku* — "to download".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பதிவிறக்கு** (*pativiṟakku*) is a modern coinage from native parts: *pativu*, "record" (DEDR 3911), and *iṟakku*, "to bring down", from *iṟaṅku*, "to descend" (DEDR 516).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṟiviyal"
 concept_tag: TA-VELAI252-ARIVIYAL
 prerequisites: [TA-C252-kalvi, TA-C252-kanitam]
 sounds: []
-roots: []
+roots: [dravidian-ari-know, dravidian-iyal-nature]
+etymology_hook: "அறிவியல் — native: aṟivu 'knowledge' (DEDR 314) + iyal 'field of study' (DEDR 471)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C252-kanitam]
 <!-- hl-knowledge: introduces=[TA-LEX-C252-VELAI252-05]; assesses=[] -->
 
 **அறிவியல்** — *aṟiviyal* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அறிவியல்** (*aṟiviyal*) is native: *aṟivu*, "knowledge" (DEDR 314), and *iyal*, "nature, a field of study" (DEDR 471): "the study of knowledge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

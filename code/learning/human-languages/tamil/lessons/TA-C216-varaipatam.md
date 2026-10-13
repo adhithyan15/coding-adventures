@@ -14,7 +14,8 @@ romanization: "varaipaṭam"
 concept_tag: TA-PORUL216-VARAIPATAM
 prerequisites: [TA-C216-nalital, TA-C216-cittu]
 sounds: []
-roots: []
+roots: [dravidian-vari-line, sanskrit-pata]
+etymology_hook: "வரைபடம் — native varai 'to draw' (DEDR 5263) + paṭam 'picture' ← Sanskrit paṭa 'cloth' (CDIAL 7692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C216-cittu]
 <!-- hl-knowledge: introduces=[TA-LEX-C216-PORUL216-05]; assesses=[] -->
 
 **வரைபடம்** — *varaipaṭam* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வரைபடம்** (*varaipaṭam*) is native *varai*, "to draw" (DEDR 5263), and *paṭam*, "picture", from Sanskrit *paṭa*, "woven cloth" (CDIAL 7692): "a drawn picture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

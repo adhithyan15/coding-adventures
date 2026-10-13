@@ -14,7 +14,8 @@ romanization: "viḻā"
 concept_tag: TA-PORUL217-VILA
 prerequisites: [TA-C217-niccayatarttam, TA-C217-viruntu]
 sounds: []
-roots: []
+roots: [dravidian-vizhaa-festival]
+etymology_hook: "விழா — native Dravidian (DEDR 5427); Malayalam viḻā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C217-viruntu]
 <!-- hl-knowledge: introduces=[TA-LEX-C217-PORUL217-05]; assesses=[] -->
 
 **விழா** — *viḻā* — "a festival, a function, a ceremony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விழா** (*viḻā*) is native Dravidian. DEDR 5427 lists Malayalam *viḻā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

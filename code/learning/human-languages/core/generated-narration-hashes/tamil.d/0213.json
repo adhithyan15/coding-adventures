@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 213,
-  "sourceHash": "fnv1a64:571b34eff1e85143",
+  "sourceHash": "fnv1a64:b3bf922ab5650fc1",
   "lessonIds": [
     "TA-C213-alamari",
     "TA-C213-mincaram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch213.txt",
   "json": "tamil/narration/ch213.json",
-  "textHash": "fnv1a64:3a79b7e6224c9c1b",
-  "jsonHash": "fnv1a64:5e7cdee1b20e772a",
+  "textHash": "fnv1a64:232f40a69de0ace9",
+  "jsonHash": "fnv1a64:fb6411ac01a061f8",
   "findings": []
 }

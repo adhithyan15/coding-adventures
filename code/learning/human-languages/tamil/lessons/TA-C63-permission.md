@@ -11,7 +11,8 @@ romanization: "aṉumati"
 concept_tag: TA-NOUN-PERMISSION
 prerequisites: [TA-C63-request, TA-C61-thirst, TA-C62-still]
 sounds: []
-roots: []
+roots: [sanskrit-anumati]
+etymology_hook: "அனுமதி ← Sanskrit anumati 'assent, permission', a well-established loan"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C63-request]
 Permission to do a thing — asked for, given, refused. Here all three sisters took the same Sanskrit word and did not even change its shape: Kannada ಅನುಮತಿ (*anumati*), Telugu అనుమతి (*anumati*), Tamil அனுமதி.
 
 Hold it apart from விடை, which you already have. விடை is permission to go, taken formally at a door. அனுமதி is the wider one and covers everything else you might be allowed.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அனுமதி** (*aṉumati*) is a well-established loan from Sanskrit *anumati*, "assent, permission".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

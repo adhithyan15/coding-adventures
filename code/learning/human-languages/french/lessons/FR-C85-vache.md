@@ -13,7 +13,8 @@ gloss: "a cow"
 concept_tag: FR-ANIMAUX37-VACHE
 prerequisites: [FR-C84-desert, FR-C84-vague]
 sounds: []
-roots: []
+roots: [vacca-latin]
+etymology_hook: "vache ← Latin vacca 'cow' — English vaccine, first made from cowpox"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C84-vague]
 <!-- hl-knowledge: introduces=[FR-LEX-C85-ANIMAUX37-01]; assesses=[] -->
 
 **la vache** — "a cow". It gives **le lait**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vache** ← Latin *vacca*, "cow" — inherited: Latin *ca* became French *che*. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

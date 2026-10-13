@@ -14,6 +14,7 @@ concept_tag: FR-VERB-ESSAYER
 prerequisites: [FR-C144-traduire, FR-C144-decider]
 sounds: []
 roots: []
+etymology_hook: "essayer ← Vulgar Latin *exagiare, from exagium 'a weighing' — English essay"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C144-decider]
 <!-- hl-knowledge: introduces=[FR-LEX-C144-VERBES144-04]; assesses=[] -->
 
 **essayer** — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**essayer** ← Vulgar Latin *\*exagiare*, from Late Latin *exagium*, "a weighing" (Lewis & Short) — inherited: to try was to weigh up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

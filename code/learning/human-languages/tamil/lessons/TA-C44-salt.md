@@ -11,7 +11,8 @@ romanization: "uppu"
 concept_tag: TA-NOUN-SALT
 prerequisites: [TA-C44-lamp, TA-C42-give, TA-C43-daughter]
 sounds: []
-roots: []
+roots: [dravidian-uppu-salt]
+etymology_hook: "உப்பு — native Dravidian (DEDR 2674): Malayalam uppu, Kannada uppu, Telugu uppu"
 duration:
   max_seconds: 210
 requires:

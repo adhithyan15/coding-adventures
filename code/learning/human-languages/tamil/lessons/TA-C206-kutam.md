@@ -14,7 +14,8 @@ romanization: "kūṭam"
 concept_tag: TA-IDAM206-KUTAM
 prerequisites: [TA-C206-tevalayam, TA-C206-macuti]
 sounds: []
-roots: []
+roots: [tamil-kudam-hall]
+etymology_hook: "கூடம் 'hall' — origin uncertain; DEDR's kūṭam 'hammer' (App. 29) is a different word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C206-macuti]
 <!-- hl-knowledge: introduces=[TA-LEX-C206-IDAM206-03]; assesses=[] -->
 
 **கூடம்** — *kūṭam* — "a hall, a living room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **கூடம்** (*kūṭam*), "hall", is uncertain. DEDR's *kūṭam* is a different word, "a smith's hammer", filed among Indo-Aryan loans (DEDR App. 29).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

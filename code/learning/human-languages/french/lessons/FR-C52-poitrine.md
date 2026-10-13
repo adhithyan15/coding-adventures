@@ -13,7 +13,8 @@ gloss: "the chest"
 concept_tag: FR-CORPS4-POITRINE
 prerequisites: [FR-C51-gorge, FR-C51-joue]
 sounds: []
-roots: []
+roots: [pectus-latin]
+etymology_hook: "poitrine ← Late Latin *pectorina, from pectus 'chest' — English pectoral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C51-joue]
 <!-- hl-knowledge: introduces=[FR-LEX-C52-CORPS4-01]; assesses=[] -->
 
 **la poitrine** — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poitrine** ← Old French *peitrine* ← Late Latin *\*pectorina*, from Latin *pectus*, *pectoris*, "chest" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

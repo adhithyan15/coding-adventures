@@ -13,7 +13,8 @@ gloss: "a bag"
 concept_tag: FR-CHOSES30-SAC
 prerequisites: [FR-C78-cahier, FR-C78-crayon]
 sounds: []
-roots: []
+roots: [saccus-latin]
+etymology_hook: "sac ← Latin saccus, from Greek sakkos 'a coarse bag' — English sack"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C78-crayon]
 <!-- hl-knowledge: introduces=[FR-LEX-C78-CHOSES30-05]; assesses=[] -->
 
 **le sac** — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sac** ← Latin *saccus*, from Greek *sakkos*, "a coarse bag" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

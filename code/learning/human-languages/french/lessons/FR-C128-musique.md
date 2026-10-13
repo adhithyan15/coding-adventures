@@ -14,6 +14,7 @@ concept_tag: FR-LOISIRS80-MUSIQUE
 prerequisites: [FR-C127-idee, FR-C127-probleme, FR-C24-aimer]
 sounds: []
 roots: []
+etymology_hook: "musique ← Latin musica, from Greek mousike 'the art of the Muses' — English music"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C127-probleme]
 <!-- hl-knowledge: introduces=[FR-LEX-C128-LOISIRS80-01]; assesses=[] -->
 
 **la musique** — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**musique** ← Latin *musica*, from Greek *mousike*, "the art of the Muses" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

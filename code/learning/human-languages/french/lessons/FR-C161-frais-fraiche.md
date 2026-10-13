@@ -14,6 +14,7 @@ concept_tag: FR-QUAL161-FRAIS-FRAICHE
 prerequisites: [FR-C161-moderne, FR-C161-ancien-ancienne]
 sounds: []
 roots: []
+etymology_hook: "frais ← Frankish *frisk 'fresh' — English fresh is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C161-ancien-ancienne]
 <!-- hl-knowledge: introduces=[FR-LEX-C161-QUAL161-03]; assesses=[] -->
 
 **frais / fraîche** — "fresh, cool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frais** ← Old French *fres* ← Frankish *\*frisk*, "fresh" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

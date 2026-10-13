@@ -13,7 +13,8 @@ gloss: "beef; an ox"
 concept_tag: FR-REPAS71-BOEUF
 prerequisites: [FR-C118-parfum, FR-C118-lettre, FR-C10-oe]
 sounds: []
-roots: []
+roots: [bos-latin]
+etymology_hook: "bœuf ← Latin bos, bovis 'ox' — English beef came from Old French; bovine"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C118-lettre]
 <!-- hl-knowledge: introduces=[FR-LEX-C119-REPAS71-01]; assesses=[] -->
 
 **le bœuf** — "beef; an ox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bœuf** ← Latin *bos*, *bovis*, "ox" (EtymDB 2.1) — inherited: the stressed *o* became *œu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

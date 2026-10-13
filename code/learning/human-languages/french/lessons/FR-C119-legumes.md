@@ -14,6 +14,7 @@ concept_tag: FR-REPAS71-LEGUMES
 prerequisites: [FR-C118-lettre, FR-C119-boeuf]
 sounds: []
 roots: []
+etymology_hook: "légumes ← Latin legumen 'a pulse, a bean' — English legume"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C119-boeuf]
 <!-- hl-knowledge: introduces=[FR-LEX-C119-REPAS71-02]; assesses=[] -->
 
 **les légumes** — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**légumes** is the plural of the word for "a vegetable", ← Latin *legumen*, "a pulse, a bean" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

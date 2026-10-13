@@ -14,7 +14,8 @@ romanization: "kuḷam"
 concept_tag: TA-THINGS126-KULAM
 prerequisites: [TA-C125-katal, TA-C126-eri]
 sounds: []
-roots: []
+roots: [dravidian-kulam-tank]
+etymology_hook: "குளம் — native Dravidian (DEDR 1828); Malayalam kuḷam, Kannada koḷa, Telugu kolanu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C126-eri]
 <!-- hl-knowledge: introduces=[TA-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **குளம்** — *kuḷam* — "a pond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குளம்** (*kuḷam*) is native Dravidian. DEDR 1828 lists Malayalam *kuḷam*, Kannada *koḷa* and Telugu *kolanu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

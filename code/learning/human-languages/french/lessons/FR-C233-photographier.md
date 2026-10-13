@@ -14,6 +14,7 @@ concept_tag: FR-VERB-PHOTOGRAPHIER
 prerequisites: [FR-C233-reparer, FR-C233-construire]
 sounds: []
 roots: []
+etymology_hook: "photographier — from photography, Greek phos 'light' + graphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C233-construire]
 <!-- hl-knowledge: introduces=[FR-LEX-C233-VERBES233-04]; assesses=[] -->
 
 **photographier** — "to photograph".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**photographier** — formed from the word for "photography", built like *photo* from Greek *phos*, "light", and *graphein*, "to write".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

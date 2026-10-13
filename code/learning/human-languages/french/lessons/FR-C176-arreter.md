@@ -13,7 +13,8 @@ gloss: "to stop"
 concept_tag: FR-VERB-ARRETER
 prerequisites: [FR-C175-inviter, FR-C175-garer]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "arrêter ← Vulgar Latin *arrestare 'to make stay' — English arrest and rest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C175-garer]
 <!-- hl-knowledge: introduces=[FR-LEX-C176-VERBES176-01]; assesses=[] -->
 
 **arrêter** — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrêter** ← Old French *arester* ← Vulgar Latin *\*arrestare*, from *ad* and *restare*, "to stay back" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

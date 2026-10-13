@@ -11,7 +11,8 @@ romanization: "eppōdu"
 concept_tag: TA-QUESTION-WHEN
 prerequisites: [TA-C78-for-the-sake-of, TA-C77-say]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-podu-time]
+etymology_hook: "எப்போது — native: question base e- (DEDR 5151) + pōtu 'time' (DEDR 4559): 'what time'"
 duration:
   max_seconds: 225
 requires:
@@ -54,6 +55,11 @@ The shared piece is **போது**, a word meaning *a time, an occasion*. Chan
 you have walked from a statement to a question, exactly as இங்கே walked to எங்கே.
 
 > **எப்போது வேண்டும்?** — "When do you want it?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எப்போது** (*eppōdu*) is native: the question base *e-* (DEDR 5151) and *pōtu*, "time" (DEDR 4559). DEDR 5151 lists *eppōtu* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

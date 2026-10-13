@@ -11,7 +11,8 @@ romanization: "vēṇḍukōḷ"
 concept_tag: TA-NOUN-REQUEST
 prerequisites: [TA-C62-first-of-all, TA-C61-hunger, TA-C62-only]
 sounds: []
-roots: []
+roots: [dravidian-beku-want]
+etymology_hook: "வேண்டுகோள் — native: vēṇṭu 'to want, ask' (DEDR 5528) + kōḷ, from koḷ 'to take, hold' (DEDR 2151)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C62-first-of-all]
 A request as a thing you make and hand over, rather than the asking itself. It stands beside வேண்டும், which you already have, and you can hear that word at the front of it.
 
 Kannada ವಿನಂತಿ (*vinanti*) and Telugu మనవి (*manavi*) both went their own way. A வேண்டுகோள் is what தயவுசெய்து is put in front of when the asking has to be formal.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வேண்டுகோள்** (*vēṇḍukōḷ*) is native: *vēṇṭu*, "to want, to ask for" (DEDR 5528), and *kōḷ*, a noun from *koḷ*, "to take, to hold" (DEDR 2151). A request is "a wanting put forward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

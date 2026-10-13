@@ -13,7 +13,8 @@ gloss: "a promise"
 concept_tag: FR-CHOSES198-PROMESSE
 prerequisites: [FR-C197-succes, FR-C197-echec]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "promesse ← Latin promissa 'things promised' — the noun beside promettre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C197-echec]
 <!-- hl-knowledge: introduces=[FR-LEX-C198-CHOSES198-01]; assesses=[] -->
 
 **la promesse** — "a promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**promesse** ← Latin *promissa*, "things promised" — inherited: the noun beside *promettre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

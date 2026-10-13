@@ -13,7 +13,8 @@ gloss: "a motorway"
 concept_tag: FR-CHOSES227-AUTOROUTE
 prerequisites: [FR-C227-moteur, FR-C227-peage]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "autoroute — auto- + the word for 'road', from Latin via rupta 'a road broken through'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C227-peage]
 <!-- hl-knowledge: introduces=[FR-LEX-C227-CHOSES227-04]; assesses=[] -->
 
 **l'autoroute** — "a motorway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autoroute** — *auto-*, from the word for "motor car", and the word for "a road", ← Latin *via rupta*, "a road broken through" (Lewis & Short for *rumpere*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

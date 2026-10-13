@@ -11,7 +11,8 @@ romanization: "kūṭai"
 concept_tag: TA-NOUN-BASKET
 prerequisites: [TA-C54-mat, TA-C52-branch, TA-C53-hill]
 sounds: []
-roots: []
+roots: [dravidian-kuudai-basket]
+etymology_hook: "கூடை — native Dravidian (DEDR 1884); Malayalam kūṭa, Kannada gūḍe, Telugu gūḍa"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C54-mat]
 Woven, usually of palm leaf or split bamboo. Malayalam's basket is *koṭṭa* and Telugu's is *buṭṭa*; Tamil's is கூடை.
 
 It is the word for the basket a vendor sets down in front of you on the pavement, and for the one that goes up onto a head to be carried home.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கூடை** (*kūṭai*) is native Dravidian. DEDR 1884 lists Malayalam *kūṭa*, Kannada *gūḍe* and Telugu *gūḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

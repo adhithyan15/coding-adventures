@@ -14,7 +14,8 @@ romanization: "muṭṭāḷ"
 concept_tag: TA-GUNAM211-MUTTAL
 prerequisites: [TA-C211-inimaiyana, TA-C211-natpana]
 sounds: []
-roots: []
+roots: [dravidian-muttal-fool]
+etymology_hook: "முட்டாள் — native Dravidian (DEDR 4929); Kannada muṭṭāḷa 'stupidity'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C211-natpana]
 <!-- hl-knowledge: introduces=[TA-LEX-C211-GUNAM211-03]; assesses=[] -->
 
 **முட்டாள்** — *muṭṭāḷ* — "a fool; foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முட்டாள்** (*muṭṭāḷ*) is native Dravidian. DEDR 4929 lists Kannada *muṭṭāḷa*, "stupidity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

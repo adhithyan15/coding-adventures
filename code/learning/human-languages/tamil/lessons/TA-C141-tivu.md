@@ -14,7 +14,8 @@ romanization: "tīvu"
 concept_tag: TA-THINGS141-TIVU
 prerequisites: [TA-C140-aruvi, TA-C140-kunru]
 sounds: []
-roots: []
+roots: [sanskrit-dvipa]
+etymology_hook: "தீவு — usually traced to Sanskrit dvīpa 'land, island' (CDIAL 6691); DEDR has no native entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C140-kunru]
 <!-- hl-knowledge: introduces=[TA-LEX-C141-THINGS141-01]; assesses=[] -->
 
 **தீவு** — *tīvu* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தீவு** (*tīvu*) is usually traced to Sanskrit *dvīpa*, "land, island" (CDIAL 6691), worn down in Tamil. DEDR has no native entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

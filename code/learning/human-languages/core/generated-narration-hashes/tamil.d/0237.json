@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 237,
-  "sourceHash": "fnv1a64:411dc3575b78fd9a",
+  "sourceHash": "fnv1a64:4ff2a18c04d6f0c8",
   "lessonIds": [
     "TA-C237-kurippaka",
     "TA-C237-atarkup-patilaka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch237.txt",
   "json": "tamil/narration/ch237.json",
-  "textHash": "fnv1a64:d89ddaead6cdb3db",
-  "jsonHash": "fnv1a64:da5e96a073cb0979",
+  "textHash": "fnv1a64:d877045cfa7116b8",
+  "jsonHash": "fnv1a64:e662dd3db794feb7",
   "findings": []
 }

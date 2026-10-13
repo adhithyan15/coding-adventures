@@ -13,7 +13,8 @@ gloss: "a castle"
 concept_tag: FR-CHOSES170-CHATEAU
 prerequisites: [FR-C169-etiquette, FR-C169-guide]
 sounds: []
-roots: []
+roots: [castellum-latin]
+etymology_hook: "château ← Latin castellum 'a fort' — ca- became cha-; English castle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C169-guide]
 <!-- hl-knowledge: introduces=[FR-LEX-C170-CHOSES170-01]; assesses=[] -->
 
 **le château** — "a castle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**château** ← Old French *chastel* ← Latin *castellum*, "a fort" (EtymDB 2.1) — inherited: *ca-* became *cha-*, and the circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

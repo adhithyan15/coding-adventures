@@ -11,7 +11,8 @@ gloss: "tenth — the ending working on a number you already count with"
 concept_tag: TA-ORDINAL-TENTH
 prerequisites: [TA-C83-ninth, TA-C82-fifth, TA-C79-when-question, TA-C67-sari]
 sounds: []
-roots: []
+roots: [dravidian-pathu-ten, tamil-aaku-become]
+etymology_hook: "பத்தாவது — native: pattu 'ten' (DEDR 3918) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 195
 requires:
@@ -46,6 +47,11 @@ reviews_of: [TA-C83-ninth, TA-C82-fifth, TA-C79-when-question, TA-C67-sari]
 and nothing else changes.
 
 **பத்தாவது நாள்** (*pattāvadu nāḷ*), the tenth day, and the ten are done.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பத்தாவது** (*pattāvadu*) is native: *pattu*, "ten" (DEDR 3918), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C83-ORDINAL-05, TA-LEX-C83-ORDINAL-04, TA-LEX-C82-ORDINAL-08] -->

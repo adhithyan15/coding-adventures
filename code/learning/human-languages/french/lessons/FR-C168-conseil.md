@@ -13,7 +13,8 @@ gloss: "advice"
 concept_tag: FR-CHOSES168-CONSEIL
 prerequisites: [FR-C168-interdiction, FR-C168-securite]
 sounds: []
-roots: []
+roots: [consilium-latin]
+etymology_hook: "conseil ← Latin consilium 'advice, a council' — English counsel and council"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C168-securite]
 <!-- hl-knowledge: introduces=[FR-LEX-C168-CHOSES168-05]; assesses=[] -->
 
 **le conseil** — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conseil** ← Old French *conseil* ← Latin *consilium*, "advice, a plan, a council" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

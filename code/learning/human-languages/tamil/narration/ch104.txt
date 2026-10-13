@@ -13,6 +13,9 @@ You'll want to know: மொழி.
 மொழி (moḻi) — "a language".
 தமிழ் என் மொழி (moḻi) — "Tamil is my language". தாய்மொழி is "mother tongue".
 
+The word, taken apart.
+மொழி (moḻi) is native Dravidian. DEDR 4989 lists Malayalam moḻi, "word". The entry glosses moḻi "to say, to speak; word, language".
+
 What you've built.
 A language.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for a pet name, then the Tamil for a language.
 You'll want to know: ஆங்கிலம்.
 ஆங்கிலம் (āṅkilam) — "English".
 எனக்கு ஆங்கிலம் (āṅkilam) தெரியும் — "I know English".
+
+The word, taken apart.
+ஆங்கிலம் (āṅkilam) usually comes from Āṅgla, the Sanskrit-style name for the English, which itself goes back to the English people's own name, the Angles (as in Anglo-). Tamil added its -am.
 
 What you've built.
 English.
@@ -73,6 +79,9 @@ You'll want to know: திருமணம்.
 திருமணம் (tirumaṇam) — "a wedding", "marriage".
 திரு- is "sacred, honoured", as in the title திரு, "Mr".
 
+The word, taken apart.
+திருமணம் (tirumaṇam) is tiru, "holy, auspicious", usually traced to Sanskrit śrī (CDIAL 12708), and native maṇam, "union, marriage" (DEDR 4667; Malayalam maṇam).
+
 What you've built.
 A wedding.
 
@@ -103,6 +112,9 @@ You'll want to know: முகவரி.
 முகவரி (mukavari) — "an address", literally "face-line".
 உங்கள் முகவரி (mukavari) என்ன? — "what is your address?".
 
+The word, taken apart.
+முகவரி (mukavari) is "face-line": mukam, "face", from Sanskrit mukha (CDIAL 10158), and native vari, "line, writing" (DEDR 5263).
+
 What you've built.
 An address.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for a wedding, then the Tamil for an address.
 You'll want to know: பிறந்தநாள்.
 பிறந்தநாள் (piṟantanāḷ) — "a birthday", literally "the day one was born".
 பிறந்தநாள் (piṟantanāḷ) வாழ்த்துகள் — "happy birthday", with the wishes you know.
+
+The word, taken apart.
+பிறந்தநாள் (piṟantanāḷ) is native: piṟanta, "on which one was born", from piṟa, "to be born" (DEDR 4422), and nāḷ, "day" (DEDR 3656).
 
 What you've built.
 Language, English, wedding, address, birthday.

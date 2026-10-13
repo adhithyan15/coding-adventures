@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 2,
-  "sourceHash": "fnv1a64:9e98d0f4544374cc",
+  "sourceHash": "fnv1a64:61ce273da096fa28",
   "lessonIds": [
     "TA-C02-peyar",
     "TA-C02-en",
@@ -17,6 +17,6 @@
   "text": "tamil/narration/ch02.txt",
   "json": "tamil/narration/ch02.json",
   "textHash": "fnv1a64:0bafd0dcc13c0e31",
-  "jsonHash": "fnv1a64:2aece19ca7794aa5",
+  "jsonHash": "fnv1a64:2e3109619a99de8d",
   "findings": []
 }

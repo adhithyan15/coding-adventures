@@ -13,7 +13,8 @@ gloss: "rarely"
 concept_tag: FR-TEMPS156-RAREMENT
 prerequisites: [FR-C155-angoisse, FR-C155-amour]
 sounds: []
-roots: []
+roots: [rarus-latin]
+etymology_hook: "rarement — the word for 'rare', from Latin rarus, + -ment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C155-amour]
 <!-- hl-knowledge: introduces=[FR-LEX-C156-TEMPS156-01]; assesses=[] -->
 
 **rarement** — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rarement** — built from the word for "rare", ← Latin *rarus*, "thin, scattered" (Lewis & Short), with *-ment*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

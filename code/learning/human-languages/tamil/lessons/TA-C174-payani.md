@@ -14,7 +14,8 @@ romanization: "payaṇi"
 concept_tag: TA-IDAM174-PAYANI
 prerequisites: [TA-C174-kar, TA-C174-atto]
 sounds: []
-roots: []
+roots: [sanskrit-prayana]
+etymology_hook: "பயணி — payaṇam ← Sanskrit prayāṇa 'journey' (CDIAL 8732) + -i 'the one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C174-atto]
 <!-- hl-knowledge: introduces=[TA-LEX-C174-IDAM174-05]; assesses=[] -->
 
 **பயணி** — *payaṇi* — "a passenger, a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பயணி** (*payaṇi*) is *payaṇam*, "journey", from Sanskrit *prayāṇa* (CDIAL 8732), with *-i*, "the one who": "the traveller".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

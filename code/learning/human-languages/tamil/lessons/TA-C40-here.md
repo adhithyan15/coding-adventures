@@ -11,7 +11,8 @@ romanization: "iṅgē"
 concept_tag: TA-DEIXIS-HERE
 prerequisites: [TA-C40-that, TA-C38-sugam, TA-C39-evvalavu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "இங்கே — native: the near base i- + a place ending (DEDR 410)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இங்கே** (*iṅgē*) is native Dravidian: the near base *i-* with a place ending. DEDR 410 lists it under the same base as "this".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-03, TA-LEX-SUGAM-01, TA-ETYMON-SUGAM-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02] -->

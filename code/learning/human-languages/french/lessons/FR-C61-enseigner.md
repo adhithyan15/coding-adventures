@@ -13,7 +13,8 @@ gloss: "to teach"
 concept_tag: FR-VERB-ENSEIGNER
 prerequisites: [FR-C60-jouer, FR-C60-apprendre]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "enseigner ← Vulgar Latin *insignare 'to mark out', from signum 'a sign' — English ensign"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C60-apprendre]
 <!-- hl-knowledge: introduces=[FR-LEX-C61-VERBES13-01]; assesses=[] -->
 
 **enseigner** — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enseigner** ← Old French *enseignier* ← Vulgar Latin *\*insignare*, "to mark, to point out", from Latin *signum*, "a mark, a sign" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

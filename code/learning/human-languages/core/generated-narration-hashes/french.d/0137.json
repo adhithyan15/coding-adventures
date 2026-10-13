@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 137,
-  "sourceHash": "fnv1a64:a4b66a7c9ae5f134",
+  "sourceHash": "fnv1a64:333521a910832948",
   "lessonIds": [
     "FR-C137-commencer",
     "FR-C137-visiter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch137.txt",
   "json": "french/narration/ch137.json",
-  "textHash": "fnv1a64:a350080c3d5b4d18",
-  "jsonHash": "fnv1a64:8a861d126360a8bf",
+  "textHash": "fnv1a64:573ff6fc7ea8ef76",
+  "jsonHash": "fnv1a64:ccf261d8c8cdf420",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "tēṭu"
 concept_tag: TA-VERB-TETU
 prerequisites: [TA-C151-vai, TA-C151-anuppu]
 sounds: []
-roots: []
+roots: [dravidian-teedu-seek]
+etymology_hook: "தேடு — native Dravidian (DEDR 3456); Malayalam tēṭuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C151-anuppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C151-ACT151-04]; assesses=[] -->
 
 **தேடு** — *tēṭu* — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேடு** (*tēṭu*) is native Dravidian. DEDR 3456 lists Malayalam *tēṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

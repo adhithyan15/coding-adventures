@@ -14,7 +14,8 @@ romanization: "poṟiyāḷar"
 concept_tag: TA-VELAI279-PORIYALAR
 prerequisites: [TA-C279-kuttam, TA-C279-melalar]
 sounds: []
-roots: []
+roots: [dravidian-aal-man]
+etymology_hook: "பொறியாளர் — poṟi 'machine' (origin uncertain) + native āḷar 'persons' (DEDR 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C279-melalar]
 <!-- hl-knowledge: introduces=[TA-LEX-C279-VELAI279-04]; assesses=[] -->
 
 **பொறியாளர்** — *poṟiyāḷar* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொறியாளர்** (*poṟiyāḷar*) is *poṟi*, "machine, contrivance", and native *āḷar*, "persons", from *āḷ* (DEDR 399): "machine person". DEDR has *poṟi* only as "mark, impression", so the origin of the "machine" sense is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

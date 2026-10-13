@@ -14,6 +14,7 @@ concept_tag: FR-VILLE53-RESTAURANT
 prerequisites: [FR-C100-eglise, FR-C100-musee]
 sounds: []
 roots: []
+etymology_hook: "restaurant — 'restoring', from Latin restaurare; first a restoring broth — English restore"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C100-musee]
 <!-- hl-knowledge: introduces=[FR-LEX-C101-VILLE53-01]; assesses=[] -->
 
 **le restaurant** — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**restaurant** is the present participle of the verb for "to restore", a learned borrowing of Latin *restaurare* (EtymDB 2.1): first a restoring broth, then the place that served it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

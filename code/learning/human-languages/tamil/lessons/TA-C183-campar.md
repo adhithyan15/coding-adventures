@@ -14,7 +14,8 @@ romanization: "cāmpār"
 concept_tag: TA-PORUL183-CAMPAR
 prerequisites: [TA-C183-ponkal, TA-C183-uppuma]
 sounds: []
-roots: []
+roots: [sanskrit-sambhara]
+etymology_hook: "சாம்பார் — usually traced to Sanskrit saṁbhāra 'materials' (CDIAL 12966), via Marathi; not proven"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C183-uppuma]
 <!-- hl-knowledge: introduces=[TA-LEX-C183-PORUL183-03]; assesses=[] -->
 
 **சாம்பார்** — *cāmpār* — "sambar, a lentil and vegetable stew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **சாம்பார்** (*cāmpār*) is not settled. It is usually traced to Sanskrit *saṁbhāra*, "bringing together, materials" (CDIAL 12966), through Marathi *sāmbār*, but that route is not proven.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

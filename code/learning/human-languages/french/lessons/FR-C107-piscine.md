@@ -13,7 +13,8 @@ gloss: "a swimming pool"
 concept_tag: FR-VILLE59-PISCINE
 prerequisites: [FR-C107-cinema, FR-C107-stade]
 sounds: []
-roots: []
+roots: [piscis-latin]
+etymology_hook: "piscine ← Latin piscina 'a fishpond', from piscis 'fish' — the fish of poisson"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C107-stade]
 <!-- hl-knowledge: introduces=[FR-LEX-C107-VILLE59-04]; assesses=[] -->
 
 **la piscine** — "a swimming pool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piscine** ← Latin *piscina*, "a fishpond", from *piscis*, "fish" (EtymDB 2.1) — a learned borrowing: the same Latin fish as *poisson*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

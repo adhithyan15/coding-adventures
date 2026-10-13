@@ -13,7 +13,8 @@ gloss: "now"
 concept_tag: FR-TEMPS48-MAINTENANT
 prerequisites: [FR-C95-toujours, FR-C96-jamais]
 sounds: []
-roots: []
+roots: [latin-manus]
+etymology_hook: "maintenant — 'holding in the hand', the moment at hand; main is 'hand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C96-jamais]
 <!-- hl-knowledge: introduces=[FR-LEX-C96-TEMPS48-02]; assesses=[] -->
 
 **maintenant** — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maintenant** is the present participle of the verb "to maintain", from Latin *manu tenere*, "to hold in the hand": the moment at hand. The *main-* is *main*, "hand". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

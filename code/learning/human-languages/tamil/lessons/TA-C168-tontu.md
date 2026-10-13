@@ -14,7 +14,8 @@ romanization: "tōṇṭu"
 concept_tag: TA-VERB-TONTU
 prerequisites: [TA-C167-uruttu, TA-C168-ulu]
 sounds: []
-roots: []
+roots: [dravidian-tondu-dig]
+etymology_hook: "தோண்டு — native Dravidian (DEDR 3549); Malayalam tōṇṭuka, Kannada tōḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C168-ulu]
 <!-- hl-knowledge: introduces=[TA-LEX-C168-ACT168-02]; assesses=[] -->
 
 **தோண்டு** — *tōṇṭu* — "to dig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தோண்டு** (*tōṇṭu*) is native Dravidian. DEDR 3549 lists Malayalam *tōṇṭuka* and Kannada *tōḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

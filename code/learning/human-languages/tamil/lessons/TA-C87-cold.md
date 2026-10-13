@@ -11,7 +11,8 @@ romanization: "caḷi"
 concept_tag: TA-UNWELL-COLD
 prerequisites: [TA-C61-sleep, TA-C87-tiredness]
 sounds: []
-roots: []
+roots: [dravidian-cali-catarrh]
+etymology_hook: "சளி — native Dravidian (DEDR 2409); Malayalam caḷi 'mucus'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C87-tiredness]
 **சளி** (*caḷi*) — "a cold", the kind with a runny nose.
 
 **எனக்குச் சளி பிடித்திருக்கிறது** — "I have caught a cold", literally "a cold has caught me".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சளி** (*caḷi*) is native Dravidian. DEDR 2409 lists Malayalam *caḷi*, "mucus".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

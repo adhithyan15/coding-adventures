@@ -14,7 +14,8 @@ romanization: "muṭi"
 concept_tag: TA-THINGS133-MUTI
 prerequisites: [TA-C133-marpu, TA-C133-mulankal]
 sounds: []
-roots: []
+roots: [dravidian-mudi-knot]
+etymology_hook: "முடி — native Dravidian (DEDR 4921); Malayalam muṭi 'knot', Kannada muḍi 'to tie'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C133-mulankal]
 <!-- hl-knowledge: introduces=[TA-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **முடி** — *muṭi* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முடி** (*muṭi*) is native Dravidian. DEDR 4921 lists Malayalam *muṭi*, "knot" and Kannada *muḍi*, "to tie". The entry gives *muṭi*, "to tie", and the noun *muṭi*, "knot, tuft or coil of hair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

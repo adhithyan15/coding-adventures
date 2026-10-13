@@ -16,6 +16,9 @@ You'll want to know: அவன் and அவள்.
 These are the plain, familiar words, and அவர் was built on top of them: the lesson that taught இவர் said so in passing, that it comes from இவன் and இவள் with the same -அர் that makes நண்பர் out of நண்பன்.
 So the ending you met on a word for friend is the same ending that turns a familiar he into a respectful that person. One suffix, three words, and it does the same job in all of them.
 
+The word, taken apart.
+அவன் / அவள் (avaṉ / avaḷ) is native: the far base a- (DEDR 1) with -aṉ for a man and -aḷ for a woman. DEDR 1 lists both, with Malayalam avan and avaḷ.
+
 Grammar Lens: choosing between them.
 [a table of 3 rows, read aloud]
 about: a man, familiarly. you say: அவன்.
@@ -59,6 +62,9 @@ one: நீ. more than one: நீங்கள்.
 one: அவர். more than one: அவர்கள் (avarkaḷ).
 The ending you have been pronouncing for eighty chapters turns out to be a word-building piece, and now it builds something for you rather than arriving pre-attached.
 
+The word, taken apart.
+அவர்கள் (avarkaḷ) is native: avar, "that person", from the far base a- (DEDR 1, which lists avarkaḷ), with the plural ending -kaḷ.
+
 Grammar Lens: the same double duty.
 அவர்கள் (avarkaḷ) carries the same ambiguity as நீங்கள். About several people it is plainly they; about one person it is a step more respectful still than அவர் — the way some languages use a plural to raise the register.
 Context settles which, and context usually settles it easily: a room with three people in it needs no disambiguation.
@@ -96,6 +102,9 @@ English has one we and hides which it means. Tamil has two and makes you decide 
 you mean: you and me. you say: நாம்.
 you mean: me and them, but not you. you say: நாங்கள்.
 "Shall we go?" said to a friend is நாம் — the invitation is the point. "We went yesterday" said to somebody who stayed behind is நாங்கள், and using நாம் there would tell them they had been present when they were not.
+
+The word, taken apart.
+நாம் / நாங்கள் (nām / nāṅgaḷ) is native Dravidian. DEDR 3647 lists Malayalam nām. The entry lists both nām, "we", and nāṅkaḷ, "we (not you)".
 
 Grammar Lens: the piece you can already see.
 நாங்கள் ends in the plural -கள் met in the lesson before this one. நாம் does not, and that is a useful shape to hold on to: the shorter word is the one that gathers everybody in.

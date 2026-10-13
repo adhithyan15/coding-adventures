@@ -11,7 +11,8 @@ romanization: "mūkku"
 concept_tag: TA-NOUN-NOSE
 prerequisites: [TA-C45-ear, TA-C43-daughter, TA-C44-lamp]
 sounds: []
-roots: []
+roots: [dravidian-mookku-nose]
+etymology_hook: "மூக்கு — native Dravidian (DEDR 5024); Malayalam mūkku, Kannada mūgu, Telugu mukku"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C45-ear]
 Another word the family barely touched: Malayalam മൂക്ക്, Telugu ముక్కు, Kannada ಮೂಗು. Only the ending moves.
 
 *mūkku* also names the point of a thing — the prow of a boat, the tip of a pen. Whatever sticks out in front is the nose of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூக்கு** (*mūkku*) is native Dravidian. DEDR 5024 lists Malayalam *mūkku*, Kannada *mūgu* and Telugu *mukku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

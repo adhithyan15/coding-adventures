@@ -2606,7 +2606,9 @@ impl ElevationTier {
 /// error), so an unrecognized value here is treated defensively as "no
 /// elevation" rather than panicking. Base props only — matches
 /// `mosaic-emit-xaml`/`mosaic-emit-compose`'s `part_elevation_tier`; no real
-/// part conditions elevation on a state today.
+/// part conditions elevation on a state today. A non-inset CSS `box-shadow`
+/// authored beside a supported elevation token is the web fallback for the
+/// same depth intent, so the native shadow consumes that companion too.
 fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
     let value = base_props
         .iter()
@@ -2624,6 +2626,18 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         // Recording only recognised tiers keeps a manually constructed or
         // future unsupported value visible to the drop reporter.
         record_style_read(base_props, "elevation");
+
+        // #17386 -- TaskApp authors the web-facing CSS shadow and portable
+        // elevation token together. Qt already emits equivalent native depth
+        // from the supported token, so the non-inset companion is not a real
+        // drop. Inset shadows are drawing effects and remain explicit debt.
+        if base_props
+            .iter()
+            .find(|prop| prop.name == "box-shadow")
+            .is_some_and(|prop| !prop.value.to_ascii_lowercase().contains("inset"))
+        {
+            record_style_read(base_props, "box-shadow");
+        }
     }
     tier
 }
@@ -17932,9 +17946,10 @@ mod tests {
         // `elevation` is the only signal Qt reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
 
-        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
-        assert_eq!(dropped.len(), 1, "only raw CSS shadow remains: {dropped:?}");
-        assert_eq!(dropped[0].name, "box-shadow");
+        assert!(
+            dropped_style_properties(&component("X", vec![], vec![]), &l, &style).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -17976,7 +17991,11 @@ mod tests {
             component_name: "X".to_string(),
             parts: vec![PartStyle {
                 name: "card".to_string(),
-                base: vec![sp("elevation", "floating"), sp("background", "#ffffff")],
+                base: vec![
+                    sp("box-shadow", "0 8px 20px rgba(0,0,0,.2)"),
+                    sp("elevation", "floating"),
+                    sp("background", "#ffffff"),
+                ],
                 transitions: vec![],
                 states: vec![],
             }],
@@ -17987,9 +18006,10 @@ mod tests {
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
         assert!(!out.contains("MultiEffect {"), "unsupported tier lowered:\n{out}");
         let dropped = dropped_style_properties(&model, &layout, &style);
-        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
-        assert_eq!(dropped[0].name, "elevation");
-        assert!(dropped[0].reason.contains("raised"), "got: {dropped:?}");
+        assert_eq!(dropped.len(), 2, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
+        assert_eq!(dropped[1].name, "elevation");
+        assert!(dropped[1].reason.contains("raised"), "got: {dropped:?}");
     }
 
     #[test]
@@ -18016,14 +18036,16 @@ mod tests {
             !out.contains("import QtQuick.Effects"),
             "got:\n{out}"
         );
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     #[test]
     fn inset_box_shadow_alongside_elevation_still_shadows_from_elevation_only() {
-        // The theme-toggle moon-icon `inset` hack: `elevation` is the only
-        // signal read, so an `inset` box-shadow value alongside a real
-        // `elevation` declaration behaves identically to any other
-        // box-shadow value -- it's ignored, not specially detected.
+        // The theme-toggle moon-icon `inset` hack is a drawing effect, not a
+        // portable depth fallback, so it must remain visible to the reporter
+        // even when native elevation is emitted alongside it.
         let style = StyleDef {
             component_name: "X".to_string(),
             parts: vec![PartStyle {
@@ -18043,6 +18065,9 @@ mod tests {
 
         assert!(out.contains("MultiEffect {"), "got:\n{out}");
         assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
@@ -18271,7 +18296,7 @@ mod tests {
     /// TaskApp's board cards rely on that box for their fill, inset, spacing,
     /// border, overdue edge, radius, pointer cursor, and elevation.
     #[test]
-    fn host_draggable_lowers_native_container_styles_without_hiding_raw_shadow() {
+    fn host_draggable_lowers_native_container_styles_and_reconciles_native_shadow() {
         let style = StyleDef {
             component_name: "Board".to_string(),
             parts: vec![PartStyle {
@@ -18334,9 +18359,10 @@ mod tests {
             assert!(out.contains(expected), "missing {expected:?} in:\n{out}");
         }
 
-        let drops = dropped_style_properties(&m, &l, &style);
-        assert_eq!(drops.len(), 1, "got: {drops:?}");
-        assert_eq!(drops[0].name, "box-shadow");
+        assert!(
+            dropped_style_properties(&m, &l, &style).is_empty(),
+            "the supported draggable surface should retire its paired shadow drop"
+        );
     }
 
     /// A draggable is a container, so its inheritable typography belongs on

@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS87-DATE
 prerequisites: [FR-C135-seconde, FR-C135-monnaie]
 sounds: []
 roots: []
+etymology_hook: "date ← Late Latin data 'given', as letters opened 'given at Rome…' — English date"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C135-monnaie]
 <!-- hl-knowledge: introduces=[FR-LEX-C135-TEMPS87-03]; assesses=[] -->
 
 **la date** — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**date** ← Late Latin *data*, "given", the first word of a dated letter: "given at Rome on…" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "near"
 concept_tag: FR-TEMPS48-PRES
 prerequisites: [FR-C96-puis, FR-C96-loin]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "près ← Latin presse 'closely', from pressus 'pressed' — English press"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C96-loin]
 <!-- hl-knowledge: introduces=[FR-LEX-C96-TEMPS48-05]; assesses=[] -->
 
 **près** — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**près** ← Old French *pres* ← Latin *presse*, "closely", from *pressus*, "pressed" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

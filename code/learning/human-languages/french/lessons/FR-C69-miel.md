@@ -13,7 +13,8 @@ gloss: "honey"
 concept_tag: FR-CUISINE21-MIEL
 prerequisites: [FR-C69-gateau, FR-C69-soupe]
 sounds: []
-roots: []
+roots: [mel-latin]
+etymology_hook: "miel ← Latin mel 'honey' — English mellifluous, 'flowing with honey'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C69-soupe]
 <!-- hl-knowledge: introduces=[FR-LEX-C69-CUISINE21-04]; assesses=[] -->
 
 **le miel** — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**miel** ← Latin *mel*, "honey" (EtymDB 2.1) — inherited: the stressed *e* broke into *ie*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

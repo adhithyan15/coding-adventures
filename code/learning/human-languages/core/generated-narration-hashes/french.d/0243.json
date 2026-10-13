@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 243,
-  "sourceHash": "fnv1a64:114828f04654b503",
+  "sourceHash": "fnv1a64:d5e151fd5e0fa738",
   "lessonIds": [
     "FR-C243-pansement",
     "FR-C243-urgences",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch243.txt",
   "json": "french/narration/ch243.json",
-  "textHash": "fnv1a64:fc8126f1088cbf49",
-  "jsonHash": "fnv1a64:6732ff1717251937",
+  "textHash": "fnv1a64:071227150fbbda17",
+  "jsonHash": "fnv1a64:628c0f2f49562c9a",
   "findings": []
 }

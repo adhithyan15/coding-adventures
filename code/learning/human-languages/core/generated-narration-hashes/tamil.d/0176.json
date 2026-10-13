@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 176,
-  "sourceHash": "fnv1a64:15642af3210f7d86",
+  "sourceHash": "fnv1a64:b03f8cceff2e1728",
   "lessonIds": [
     "TA-C176-analum",
     "TA-C176-iruntalum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch176.txt",
   "json": "tamil/narration/ch176.json",
-  "textHash": "fnv1a64:5071185f9164a04c",
-  "jsonHash": "fnv1a64:ab09724ba5f52849",
+  "textHash": "fnv1a64:226ded7489008ecb",
+  "jsonHash": "fnv1a64:c60f9409dc41f6c2",
   "findings": []
 }

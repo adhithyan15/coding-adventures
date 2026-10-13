@@ -11,9 +11,10 @@ romanization: "vilai evvaḷavu?"
 concept_tag: TA-PRAGMATICS-ASK-PRICE
 prerequisites: [TA-W35-read-marradu]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell]
+etymology_hook: "விலை எவ்வளவு — native: vilai 'price' (DEDR 5421) + evvaḷavu 'what measure' (DEDR 295)"
 duration:
-  max_seconds: 230
+  max_seconds: 276
 requires:
   knowledge: [TA-GRAMMAR-C80-OTHER-02, TA-SCRIPT-READ-MARRADU-01]
 introduces:
@@ -58,6 +59,11 @@ Then chapter seventy-five lets you check what you heard, or push back on it:
 
 **குறைவு** is the shortfall word from chapter fifty-six, and the **-ஆ** on the end is the
 question ending. Two chapters, one sentence you can say across a counter.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விலை எவ்வளவு?** (*vilai evvaḷavu?*) is two native words: *vilai*, "price" (DEDR 5421), and *evvaḷavu*, "how much", the question base *e-* with *aḷavu*, "measure" (DEDR 295).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

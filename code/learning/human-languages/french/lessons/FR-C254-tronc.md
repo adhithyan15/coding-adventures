@@ -13,7 +13,8 @@ gloss: "a trunk"
 concept_tag: FR-CHOSES254-TRONC
 prerequisites: [FR-C253-chantier, FR-C253-immeuble]
 sounds: []
-roots: []
+roots: [truncus-latin]
+etymology_hook: "tronc ← Latin truncus 'a trunk, a stem' — English trunk and truncate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C253-immeuble]
 <!-- hl-knowledge: introduces=[FR-LEX-C254-CHOSES254-01]; assesses=[] -->
 
 **le tronc** — "a trunk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tronc** ← Latin *truncus*, "a trunk, a stem" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

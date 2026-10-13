@@ -13,7 +13,8 @@ gloss: "to pay"
 concept_tag: FR-VERB-PAYER
 prerequisites: [FR-C62-revenir, FR-C62-etudier]
 sounds: []
-roots: []
+roots: [pax-latin]
+etymology_hook: "payer ← Latin pacare 'to calm, to satisfy', from pax 'peace' — English pay and pacify"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C62-etudier]
 <!-- hl-knowledge: introduces=[FR-LEX-C62-VERBES14-03]; assesses=[] -->
 
 **payer** — "to pay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**payer** ← Old French *paiier* ← Latin *pacare*, "to calm, to satisfy", from *pax*, "peace" (EtymDB 2.1) — inherited: to pay was to settle with someone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

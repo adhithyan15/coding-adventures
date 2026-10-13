@@ -13,7 +13,8 @@ gloss: "a son-in-law"
 concept_tag: FR-CHOSES167-GENDRE
 prerequisites: [FR-C166-pharmacien, FR-C167-belle-mere]
 sounds: []
-roots: []
+roots: [gener-latin]
+etymology_hook: "gendre ← Latin gener 'son-in-law' — French added a d after the n"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C167-belle-mere]
 <!-- hl-knowledge: introduces=[FR-LEX-C167-CHOSES167-02]; assesses=[] -->
 
 **le gendre** — "a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gendre** ← Latin *gener*, "son-in-law" (EtymDB 2.1) — inherited; French slipped a *d* between *n* and *r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

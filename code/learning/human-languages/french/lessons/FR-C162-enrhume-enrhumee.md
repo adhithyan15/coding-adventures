@@ -14,6 +14,7 @@ concept_tag: FR-QUAL162-ENRHUME-ENRHUMEE
 prerequisites: [FR-C161-cru-crue, FR-C162-inquiet-inquiete]
 sounds: []
 roots: []
+etymology_hook: "enrhumé — from the word for 'a cold', Latin rheuma, Greek rheuma 'a flow' — English rheumatism"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C162-inquiet-inquiete]
 <!-- hl-knowledge: introduces=[FR-LEX-C162-QUAL162-02]; assesses=[] -->
 
 **enrhumé / enrhumée** — "with a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enrhumé** is the past participle of the verb for "to give a cold", built on the word for "a cold", ← Latin *rheuma*, from Greek *rheuma*, "a flow" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

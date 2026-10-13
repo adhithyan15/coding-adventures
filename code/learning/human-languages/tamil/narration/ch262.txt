@@ -12,6 +12,9 @@ Before the new one: say the Tamil for an itch, then the Tamil for dizziness.
 You'll want to know: அவ்வப்போது.
 அவ்வப்போது — avvappōtu — "now and then, occasionally".
 
+The word, taken apart.
+அவ்வப்போது (avvappōtu) is native: a-, "that" (DEDR 1), doubled, and pōtu, "time" (DEDR 4559): "at that time and that time".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for dizziness, then the Tamil for now and then
 
 You'll want to know: வாரந்தோறும்.
 வாரந்தோறும் — vārantōṟum — "every week".
+
+The word, taken apart.
+வாரந்தோறும் (vārantōṟum) is vāram, "week", from Sanskrit vāra, "day of the week" (CDIAL 11547), and native tōṟum, "each, every" (DEDR 3566).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for now and then, then the Tamil for every wee
 You'll want to know: தாமதமாக.
 தாமதமாக — tāmatamāka — "late".
 
+The word, taken apart.
+தாமதமாக (tāmatamāka) is tāmatam, "delay", usually traced to Sanskrit tāmasa, "dark, dull" (CDIAL 5775), with native āka, "as", from āku, "to become" (DEDR 333).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for every week, then the Tamil for late.
 You'll want to know: கடைசியாக.
 கடைசியாக — kaṭaiciyāka — "finally, at last".
 
+The word, taken apart.
+கடைசியாக (kaṭaiciyāka) is native: kaṭaici, "the end, the last" (DEDR 1109), and āka, "as", from āku, "to become" (DEDR 333).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for late, then the Tamil for finally.
 
 You'll want to know: இப்போதெல்லாம்.
 இப்போதெல்லாம் — ippōtellām — "these days, nowadays".
+
+The word, taken apart.
+இப்போதெல்லாம் (ippōtellām) is native: ippōtu, "now", from i-, "this" (DEDR 410), and pōtu, "time" (DEDR 4559), with ellām, "all" (DEDR 844): "all these times".
 
 What you've built.
 One more word for this chapter.

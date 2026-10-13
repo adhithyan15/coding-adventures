@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 196,
-  "sourceHash": "fnv1a64:995d7cde76682a5c",
+  "sourceHash": "fnv1a64:0cc58943cf0c2224",
   "lessonIds": [
     "TA-C196-kili",
     "TA-C196-ila",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch196.txt",
   "json": "tamil/narration/ch196.json",
-  "textHash": "fnv1a64:5fbe1fdfe36bf7fd",
-  "jsonHash": "fnv1a64:e8139f2019e90ea2",
+  "textHash": "fnv1a64:d8b6a58e04d4d624",
+  "jsonHash": "fnv1a64:7814d4770466aa9b",
   "findings": []
 }

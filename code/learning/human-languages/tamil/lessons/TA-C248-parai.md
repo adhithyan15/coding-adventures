@@ -14,7 +14,8 @@ romanization: "pāṟai"
 concept_tag: TA-PORUL248-PARAI
 prerequisites: [TA-C248-nilanatukkam, TA-C248-iyarkai]
 sounds: []
-roots: []
+roots: [dravidian-paarai-rock]
+etymology_hook: "பாறை — native Dravidian (DEDR 4121); Malayalam pāṟa 'rock'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C248-iyarkai]
 <!-- hl-knowledge: introduces=[TA-LEX-C248-PORUL248-04]; assesses=[] -->
 
 **பாறை** — *pāṟai* — "a rock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாறை** (*pāṟai*) is native Dravidian. DEDR 4121 lists Malayalam *pāṟa*, "rock".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

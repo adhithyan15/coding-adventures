@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 126,
-  "sourceHash": "fnv1a64:1d1386f7d03c4f71",
+  "sourceHash": "fnv1a64:f5ba2c162d328d19",
   "lessonIds": [
     "FR-C126-classe",
     "FR-C126-lecon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch126.txt",
   "json": "french/narration/ch126.json",
-  "textHash": "fnv1a64:a0bdd5b283a0e3da",
-  "jsonHash": "fnv1a64:f818c394688d6903",
+  "textHash": "fnv1a64:188254b03cbe8f00",
+  "jsonHash": "fnv1a64:90165cc93122e6a5",
   "findings": []
 }

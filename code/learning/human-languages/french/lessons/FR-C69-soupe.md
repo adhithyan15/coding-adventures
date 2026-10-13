@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE21-SOUPE
 prerequisites: [FR-C69-carotte, FR-C69-gateau]
 sounds: []
 roots: []
+etymology_hook: "soupe ← Late Latin suppa 'bread soaked in broth' — English soup and sop"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C69-gateau]
 <!-- hl-knowledge: introduces=[FR-LEX-C69-CUISINE21-03]; assesses=[] -->
 
 **la soupe** — "a soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soupe** ← Old French *sope* ← Late Latin *suppa*, "bread soaked in broth" — inherited (EtymDB 2.1); Late Latin had taken *suppa* from a Germanic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a grandmother"
 concept_tag: FR-SENTIR8-GRAND-MERE
 prerequisites: [FR-C56-fille, FR-C56-grand-pere]
 sounds: []
-roots: []
+roots: [grandis-latin, mater-latin]
+etymology_hook: "grand-mère — the word for 'great' (Latin grandis) + mère; English grandmother copied it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C56-grand-pere]
 <!-- hl-knowledge: introduces=[FR-LEX-C56-SENTIR8-05]; assesses=[] -->
 
 **la grand-mère** — "a grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grand-mère** — built from the French word for "big, great", from Latin *grandis* (EtymDB 2.1), and *mère*, "mother". English *grandmother* copied the French pattern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

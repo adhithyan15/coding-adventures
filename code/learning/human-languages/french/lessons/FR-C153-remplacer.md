@@ -14,6 +14,7 @@ concept_tag: FR-VERB-REMPLACER
 prerequisites: [FR-C152-baisser, FR-C153-remarquer]
 sounds: []
 roots: []
+etymology_hook: "remplacer — to put back in place; place ← Latin platea 'a broad street'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C153-remarquer]
 <!-- hl-knowledge: introduces=[FR-LEX-C153-VERBES153-02]; assesses=[] -->
 
 **remplacer** — "to replace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**remplacer** — built from *re-*, *en-* and the word for "a place", ← Latin *platea*, "a broad street" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

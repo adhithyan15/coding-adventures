@@ -14,6 +14,7 @@ concept_tag: FR-SANTE185-BLESSURE
 prerequisites: [FR-C185-muscle, FR-C185-pouce]
 sounds: []
 roots: []
+etymology_hook: "blessure — from the verb 'to wound', usually traced to Frankish *blettjan 'to bruise'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C185-pouce]
 <!-- hl-knowledge: introduces=[FR-LEX-C185-SANTE185-03]; assesses=[] -->
 
 **la blessure** — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**blessure** — built from the verb for "to wound", ← Old French *blecier*, from Frankish *\*blettjan*, "to bruise". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

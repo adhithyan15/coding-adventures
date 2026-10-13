@@ -13,7 +13,8 @@ gloss: "to act"
 concept_tag: FR-VERB-AGIR
 prerequisites: [FR-C151-respirer, FR-C152-admirer]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "agir ← Latin agere 'to do, to drive' — English act and agent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C152-admirer]
 <!-- hl-knowledge: introduces=[FR-LEX-C152-VERBES152-02]; assesses=[] -->
 
 **agir** — "to act".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agir** ← Latin *agere*, "to do, to drive" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

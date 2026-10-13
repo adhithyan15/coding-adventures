@@ -13,7 +13,8 @@ gloss: "a television"
 concept_tag: FR-MAISON63-TELEVISION
 prerequisites: [FR-C110-vacances, FR-C111-tapis]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "télévision — Greek tele 'far off' + vision, from Latin visio 'seeing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C111-tapis]
 <!-- hl-knowledge: introduces=[FR-LEX-C111-MAISON63-02]; assesses=[] -->
 
 **la télévision** — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**télévision** — a 20th-century coinage from Greek *tele*, "far off", and *vision*, ← Latin *visio*, "seeing" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

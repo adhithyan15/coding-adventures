@@ -13,7 +13,8 @@ gloss: "a bank account"
 concept_tag: FR-CHOSES226-COMPTE-BANCAIRE
 prerequisites: [FR-C226-carte-bancaire, FR-C226-distributeur]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "compte bancaire — compte, from compter + the adjective of banque"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C226-distributeur]
 <!-- hl-knowledge: introduces=[FR-LEX-C226-CHOSES226-03]; assesses=[] -->
 
 **le compte bancaire** — "a bank account".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compte bancaire** — *compte*, "an account", from *compter*, and the adjective made from *banque*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

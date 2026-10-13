@@ -13,7 +13,8 @@ gloss: "hope"
 concept_tag: FR-SANTE186-ESPOIR
 prerequisites: [FR-C185-rhume, FR-C186-amitie]
 sounds: []
-roots: []
+roots: [sperare-latin]
+etymology_hook: "espoir — formed from espérer 'to hope'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C186-amitie]
 <!-- hl-knowledge: introduces=[FR-LEX-C186-SANTE186-02]; assesses=[] -->
 
 **l'espoir** — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espoir** — formed from *espérer*, "to hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kaṇavar"
 concept_tag: TA-FAMILY-HUSBAND
 prerequisites: [TA-C100-children, TA-C100-boy]
 sounds: []
-roots: []
+roots: [dravidian-kanavan-husband]
+etymology_hook: "கணவர் — native Dravidian (DEDR 1173)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C100-boy]
 **கணவர்** (*kaṇavar*) — "a husband", in its respectful form.
 
 **என் கணவர்** — "my husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கணவர்** (*kaṇavar*) is native Dravidian (DEDR 1173). The entry lists *kaṇavaṉ*, "husband"; *-ar* is the respectful ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

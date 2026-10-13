@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 248,
-  "sourceHash": "fnv1a64:b2e3f6410d0260f3",
+  "sourceHash": "fnv1a64:21b1b72564b0710d",
   "lessonIds": [
     "FR-C248-maire",
     "FR-C248-elections",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch248.txt",
   "json": "french/narration/ch248.json",
-  "textHash": "fnv1a64:32c8da2f97720082",
-  "jsonHash": "fnv1a64:e8ac36050852233e",
+  "textHash": "fnv1a64:854ce2920bf3afbc",
+  "jsonHash": "fnv1a64:7546a9f0b25c608d",
   "findings": []
 }

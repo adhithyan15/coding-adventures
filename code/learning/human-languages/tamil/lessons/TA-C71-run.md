@@ -11,7 +11,8 @@ romanization: "ōḍu"
 concept_tag: TA-VERB-OODU
 prerequisites: [TA-S126-letter-oo, TA-C69-train, TA-C70-wall]
 sounds: []
-roots: []
+roots: [dravidian-oodu-run]
+etymology_hook: "ஓடு — native Dravidian (DEDR 1041); Malayalam ōṭuka, Kannada ōḍu, Telugu ōḍu"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ It is not only for people. Water runs, and so does a வண்டி on a சா
 verb for all three, where English would want "flow" for one of them.
 
 Two letters, one sign, and you can read every part of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஓடு** (*ōḍu*) is native Dravidian. DEDR 1041 lists Malayalam *ōṭuka*, Kannada *ōḍu* and Telugu *ōḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

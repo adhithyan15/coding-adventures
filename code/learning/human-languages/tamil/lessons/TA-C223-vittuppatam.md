@@ -14,7 +14,8 @@ romanization: "vīṭṭuppāṭam"
 concept_tag: TA-VELAI223-VITTUPPATAM
 prerequisites: [TA-C223-tolircalai, TA-C223-patam]
 sounds: []
-roots: []
+roots: [dravidian-viidu-house, sanskrit-patha-recitation]
+etymology_hook: "வீட்டுப்பாடம் — native vīṭu 'house' (DEDR 5393) + pāṭam 'lesson' ← Sanskrit pāṭha (CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C223-patam]
 <!-- hl-knowledge: introduces=[TA-LEX-C223-VELAI223-05]; assesses=[] -->
 
 **வீட்டுப்பாடம்** — *vīṭṭuppāṭam* — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வீட்டுப்பாடம்** (*vīṭṭuppāṭam*) is native *vīṭu*, "house" (DEDR 5393), and *pāṭam*, "lesson", from Sanskrit *pāṭha* (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

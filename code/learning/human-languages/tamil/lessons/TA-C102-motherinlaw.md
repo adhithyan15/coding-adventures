@@ -11,7 +11,8 @@ romanization: "māmiyār"
 concept_tag: TA-INLAWS-MIL
 prerequisites: [TA-C102-fatherselderbrother, TA-C102-periyamma]
 sounds: []
-roots: []
+roots: [dravidian-maama-uncle]
+etymology_hook: "மாமியார் — native Dravidian (DEDR 4813)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C102-periyamma]
 **மாமியார்** (*māmiyār*) — "a mother-in-law", the respectful word.
 
 It is built on the same **மாமா** root as the uncle.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாமியார்** (*māmiyār*) is native Dravidian (DEDR 4813). The entry lists *māmi*, "mother-in-law", beside *māmā*, "uncle"; *-yār* is the respectful ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

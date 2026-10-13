@@ -14,6 +14,7 @@ concept_tag: FR-CUISINE22-DINER
 prerequisites: [FR-C69-huile, FR-C70-dejeuner]
 sounds: []
 roots: []
+etymology_hook: "dîner ← Vulgar Latin *disiunare 'to break the fast' — the same verb as déjeuner"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C70-dejeuner]
 <!-- hl-knowledge: introduces=[FR-LEX-C70-CUISINE22-02]; assesses=[] -->
 
 **le dîner** — "dinner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dîner** ← Old French *disner* ← Vulgar Latin *\*disiunare*, from *disieiunare*, "to break the fast" — inherited. (EtymDB 2.1) It is the same verb as *déjeuner*, worn down differently.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

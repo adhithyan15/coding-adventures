@@ -12,6 +12,9 @@ Before the new one: say the Tamil for together, then the Tamil for carefully.
 You'll want to know: நிறம்.
 நிறம் — niṟam — "a colour".
 
+The word, taken apart.
+நிறம் (niṟam) is native Dravidian. DEDR 3680 lists Malayalam niṟam, "colour".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for carefully, then the Tamil for a colour.
 
 You'll want to know: அளவு.
 அளவு — aḷavu — "a size, an amount".
+
+The word, taken apart.
+அளவு (aḷavu) is native Dravidian. DEDR 295 lists Telugu alavi, "measure".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a colour, then the Tamil for a size.
 You'll want to know: எடை.
 எடை — eṭai — "weight".
 
+The word, taken apart.
+எடை (eṭai) is native Dravidian (DEDR 851). The entry lists eṭai, "weighing, weight", in the family of eṭu, "to lift": weight is what is lifted.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a size, then the Tamil for weight.
 You'll want to know: ஆரோக்கியமான.
 ஆரோக்கியமான — ārōkkiyamāṉa — "healthy".
 
+The word, taken apart.
+ஆரோக்கியமான (ārōkkiyamāṉa) is a loan from Sanskrit ārogya, "health" (CDIAL 1330). Ārōkkiyam takes -āṉa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for weight, then the Tamil for healthy.
 
 You'll want to know: ஒல்லியான.
 ஒல்லியான — olliyāṉa — "thin, slim".
+
+The word, taken apart.
+ஒல்லியான (olliyāṉa) is native Dravidian (DEDR 1004). The entry lists olli, "a thin person, thinness", under olku, "to grow thin"; -āṉa makes it "thin".
 
 What you've built.
 One more word for this chapter.

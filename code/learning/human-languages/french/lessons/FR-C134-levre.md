@@ -13,7 +13,8 @@ gloss: "a lip"
 concept_tag: FR-NATURE86-LEVRE
 prerequisites: [FR-C134-herbe, FR-C134-oreille]
 sounds: []
-roots: []
+roots: [labrum-latin]
+etymology_hook: "lèvre ← Latin labra 'lips', plural of labrum — English labial is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C134-oreille]
 <!-- hl-knowledge: introduces=[FR-LEX-C134-NATURE86-03]; assesses=[] -->
 
 **la lèvre** — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lèvre** ← Latin *labra*, "lips", the plural of *labrum* (Lewis & Short) — inherited: stressed *a* became *e*, and *b* became *v*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

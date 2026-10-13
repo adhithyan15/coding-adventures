@@ -13,7 +13,8 @@ gloss: "to serve"
 concept_tag: FR-VERB-SERVIR
 prerequisites: [FR-C149-decouvrir, FR-C149-sembler]
 sounds: []
-roots: []
+roots: [servire-latin]
+etymology_hook: "servir ← Latin servire 'to be a servant' — English serve and servant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C149-sembler]
 <!-- hl-knowledge: introduces=[FR-LEX-C149-VERBES149-03]; assesses=[] -->
 
 **servir** — "to serve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**servir** ← Latin *servire*, "to be a servant", from *servus*, "a slave" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a train"
 concept_tag: FR-VILLE51-TRAIN
 prerequisites: [FR-C99-ecole, FR-C99-banque]
 sounds: []
-roots: []
+roots: [trahere-latin]
+etymology_hook: "train — from the verb 'to drag', from Latin trahere 'to draw' — English train and traction"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C99-banque]
 <!-- hl-knowledge: introduces=[FR-LEX-C99-VILLE51-04]; assesses=[] -->
 
 **le train** — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**train** — formed from the verb for "to drag, to pull along", which ← Vulgar Latin *\*traginare*, from Latin *trahere*, "to draw" (Lewis & Short): a train is a line of things pulled along.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

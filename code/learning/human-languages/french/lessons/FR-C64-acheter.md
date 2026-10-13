@@ -13,7 +13,8 @@ gloss: "to buy"
 concept_tag: FR-VERB-ACHETER
 prerequisites: [FR-C64-ecouter, FR-C64-attendre]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "acheter ← Vulgar Latin *accaptare, from captare 'to try to catch' — English capture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C64-attendre]
 <!-- hl-knowledge: introduces=[FR-LEX-C64-VERBES16-04]; assesses=[] -->
 
 **acheter** — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acheter** ← Old French *acheter* (EtymDB 2.1) ← Vulgar Latin *\*accaptare*, from Latin *captare*, "to try to catch" (Lewis & Short) — inherited: Latin *ca-* became French *che-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

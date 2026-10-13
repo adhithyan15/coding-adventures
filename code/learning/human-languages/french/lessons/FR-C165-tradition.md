@@ -13,7 +13,8 @@ gloss: "a tradition"
 concept_tag: FR-CHOSES165-TRADITION
 prerequisites: [FR-C165-armee, FR-C165-soldat]
 sounds: []
-roots: []
+roots: [dare-latin]
+etymology_hook: "tradition ← Latin traditio 'a handing over' — English tradition"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C165-soldat]
 <!-- hl-knowledge: introduces=[FR-LEX-C165-CHOSES165-05]; assesses=[] -->
 
 **la tradition** — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tradition** ← Old French *tradicion* ← Latin *traditio*, "a handing over" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

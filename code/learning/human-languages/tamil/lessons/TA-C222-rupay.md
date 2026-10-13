@@ -14,7 +14,8 @@ romanization: "rūpāy"
 concept_tag: TA-VELAI222-RUPAY
 prerequisites: [TA-C221-cirutai, TA-C222-tallupati]
 sounds: []
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "ரூபாய் ← Sanskrit rūpya 'silver' (CDIAL 10805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C222-tallupati]
 <!-- hl-knowledge: introduces=[TA-LEX-C222-VELAI222-02]; assesses=[] -->
 
 **ரூபாய்** — *rūpāy* — "a rupee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரூபாய்** (*rūpāy*) is a loan from Sanskrit *rūpya*, "silver" (CDIAL 10805). It came through Hindustani *rupayā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kuṇṭāṉa"
 concept_tag: TA-GUNAM267-KUNTANA
 prerequisites: [TA-C266-atirstavacamaka, TA-C266-karanam]
 sounds: []
-roots: []
+roots: [dravidian-kundu-ball]
+etymology_hook: "குண்டான — native: kuṇṭu 'ball, anything round and heavy' (DEDR 1695) + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C266-karanam]
 <!-- hl-knowledge: introduces=[TA-LEX-C267-GUNAM267-01]; assesses=[] -->
 
 **குண்டான** — *kuṇṭāṉa* — "fat, plump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குண்டான** (*kuṇṭāṉa*) is native: *kuṇṭu*, "ball, anything round and heavy" (DEDR 1695, which lists Kannada guṇḍu and Telugu guṇḍu), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

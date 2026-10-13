@@ -14,7 +14,8 @@ romanization: "kaḻippaṟai"
 concept_tag: TA-IDAM173-KALIPPARAI
 prerequisites: [TA-C173-kuliyalarai, TA-C173-patukkaiyarai]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-pass, dravidian-arai-chamber]
+etymology_hook: "கழிப்பறை — native: kaḻippu 'discharge', from kaḻi 'to pass' (DEDR 1356) + aṟai 'room' (DEDR 322)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C173-patukkaiyarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C173-IDAM173-04]; assesses=[] -->
 
 **கழிப்பறை** — *kaḻippaṟai* — "a toilet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கழிப்பறை** (*kaḻippaṟai*) is native: *kaḻippu*, "discharge, getting rid", from *kaḻi*, "to pass, to go out" (DEDR 1356), and *aṟai*, "room" (DEDR 322).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

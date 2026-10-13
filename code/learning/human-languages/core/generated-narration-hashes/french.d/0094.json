@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 94,
-  "sourceHash": "fnv1a64:c3b80c6b45774980",
+  "sourceHash": "fnv1a64:bfd1c3f4ae98b3e9",
   "lessonIds": [
     "FR-C94-sale",
     "FR-C94-amer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch94.txt",
   "json": "french/narration/ch94.json",
-  "textHash": "fnv1a64:f9750b6dc8385ca4",
-  "jsonHash": "fnv1a64:449aa377c9472932",
+  "textHash": "fnv1a64:444d9917d60f0927",
+  "jsonHash": "fnv1a64:36cbfb4644659cfd",
   "findings": []
 }

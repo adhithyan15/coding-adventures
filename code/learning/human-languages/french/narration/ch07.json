@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Days of the Week",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c80d4714467efee8",
+  "sourceHash": "fnv1a64:e8d3a6572ed60ee3",
   "lessons": [
     {
       "id": "FR-C07-lune",
@@ -976,7 +976,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dd69336f2f2918bc",
+      "sourceHash": "fnv1a64:3a1fce6889b87fd8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1070,6 +1070,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dimanche from Old French diemenche from Latin dies Dominica, \"the Lord's day\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1109,7 +1120,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

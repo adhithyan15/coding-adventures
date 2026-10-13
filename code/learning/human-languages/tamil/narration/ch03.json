@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:125f50e96e1a902c",
+  "sourceHash": "fnv1a64:a1f0df52244ea913",
   "lessons": [
     {
       "id": "TA-C03-eppadi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb9bb35f0d176ca7",
+      "sourceHash": "fnv1a64:01774813bb4dd30f",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f720920f85cda312",
+      "sourceHash": "fnv1a64:8561f2d7d34712b9",
       "notice": null,
       "blocks": [
         {
@@ -244,7 +244,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d91406771cec9875",
+      "sourceHash": "fnv1a64:9d6fa72eba4ef4f0",
       "notice": null,
       "blocks": [
         {
@@ -358,7 +358,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39281118b905a4d5",
+      "sourceHash": "fnv1a64:2b3d02a7d514f321",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +480,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e821c280d9539a3e",
+      "sourceHash": "fnv1a64:6949f815d942ce75",
       "notice": null,
       "blocks": [
         {
@@ -507,11 +507,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பரவாயில்லை (paravāyillai) literally means \"there is no harm\" — paravāy (\"harm, trouble\")."
+              "text": "பரவாயில்லை (paravāyillai) literally means \"there is no concern\" — paravāy (\"care, concern\")."
             },
             {
               "kind": "speech",
-              "text": "illai (\"is-not, there-is-not\"). It serves as \"it's okay / no worries / never mind / you're welcome.\" The key atom, illai, you already met in Chapter 1 — the Tamil word for negation and non-existence, the mirror of iru (\"to be\"). Where iru says \"it is,\" illai says \"it is not.\" This one word is shared, in almost the same shape, across Tamil, Kannada, and Malayalam (illa) — one of the deep bonds of the Dravidian south. (Telugu alone breaks away, using lēdu.)"
+              "text": "illai (\"is-not, there-is-not\"). It serves as \"it's okay / no worries / never mind / you're welcome.\" Paravāy is a loan: Persian parvā, \"care, concern,\" which reached Tamil through Hindustani. The key atom, illai, you already met in Chapter 1 — the Tamil word for negation and non-existence, the mirror of iru (\"to be\"). Where iru says \"it is,\" illai says \"it is not.\" This one word is shared, in almost the same shape, across Tamil, Kannada, and Malayalam (illa) — one of the deep bonds of the Dravidian south. (Telugu's lēdu looks different, but DEDR 2559 files it with them.)"
             }
           ]
         },
@@ -598,7 +598,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da999defeadd41ae",
+      "sourceHash": "fnv1a64:e4dae4fb9503ebc0",
       "notice": null,
       "blocks": [
         {

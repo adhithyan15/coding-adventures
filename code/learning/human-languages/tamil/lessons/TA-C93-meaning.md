@@ -11,7 +11,8 @@ romanization: "arttam"
 concept_tag: TA-ASK-MEANING
 prerequisites: [TA-C92-oneminute, TA-C92-wait]
 sounds: []
-roots: []
+roots: [sanskrit-artha-meaning]
+etymology_hook: "அர்த்தம் ← Sanskrit artha 'aim, thing, meaning' (CDIAL 638)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C92-wait]
 **அர்த்தம்** (*arttam*) — "meaning".
 
 **இதன் அர்த்தம் என்ன?** — "what does this mean?", the question that turns anyone into a teacher.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அர்த்தம்** (*arttam*) is a loan from Sanskrit *artha*, "aim, thing, meaning" (CDIAL 638).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

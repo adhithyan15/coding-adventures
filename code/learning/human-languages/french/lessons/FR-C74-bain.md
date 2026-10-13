@@ -13,7 +13,8 @@ gloss: "a bathroom"
 concept_tag: FR-MAISON26-BAIN
 prerequisites: [FR-C74-jardin, FR-C74-lampe]
 sounds: []
-roots: []
+roots: [balneum-latin]
+etymology_hook: "salle de bain — 'room of bath'; salle from Frankish, bain ← Latin balneum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C74-lampe]
 <!-- hl-knowledge: introduces=[FR-LEX-C74-MAISON26-04]; assesses=[] -->
 
 **la salle de bain** — "a bathroom".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salle de bain** — "room of bath": *salle*, "a room", ← Frankish *\*sal*, "a hall" (EtymDB 2.1); *de*, "of"; *bain*, "bath", ← Latin *balneum* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

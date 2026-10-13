@@ -14,7 +14,8 @@ romanization: "ceviliyar"
 concept_tag: TA-NALAM232-CEVILIYAR
 prerequisites: [TA-C232-mattirai, TA-C232-noyali]
 sounds: []
-roots: []
+roots: [tamil-cevili-nurse]
+etymology_hook: "செவிலியர் — built on cevili 'nurse, foster mother'; origin uncertain, no DEDR entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C232-noyali]
 <!-- hl-knowledge: introduces=[TA-LEX-C232-NALAM232-05]; assesses=[] -->
 
 **செவிலியர்** — *ceviliyar* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **செவிலியர்** (*ceviliyar*) is uncertain. It is built on *cevili*, an old word for a nurse or foster mother, and DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

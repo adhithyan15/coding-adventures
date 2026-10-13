@@ -14,7 +14,8 @@ romanization: "eḻuppu"
 concept_tag: TA-VERB-ELUPPU
 prerequisites: [TA-C255-kunamaku, TA-C255-vinku]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "எழுப்பு — native Dravidian (DEDR 851); Malayalam eḻuka 'to rise'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C255-vinku]
 <!-- hl-knowledge: introduces=[TA-LEX-C255-ACT255-04]; assesses=[] -->
 
 **எழுப்பு** — *eḻuppu* — "to wake (someone) up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எழுப்பு** (*eḻuppu*) is native Dravidian. DEDR 851 lists Malayalam *eḻuka*, "to rise". It is the causative of *eḻu*, "to rise": "make rise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

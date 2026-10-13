@@ -14,7 +14,8 @@ romanization: "celavu"
 concept_tag: TA-VELAI222-CELAVU
 prerequisites: [TA-C222-rupay, TA-C222-nanayam]
 sounds: []
-roots: []
+roots: [dravidian-cel-go]
+etymology_hook: "செலவு — native Dravidian (DEDR 2781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C222-nanayam]
 <!-- hl-knowledge: introduces=[TA-LEX-C222-VELAI222-04]; assesses=[] -->
 
 **செலவு** — *celavu* — "an expense, a cost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**செலவு** (*celavu*) is native Dravidian (DEDR 2781). The entry lists *celavu*, "going, passing; expense", under *cel*, "to go, to pass (as coin)": spending is money going out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

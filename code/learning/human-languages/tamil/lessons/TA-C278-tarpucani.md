@@ -14,7 +14,8 @@ romanization: "tarpūcaṇi"
 concept_tag: TA-PORUL278-TARPUCANI
 prerequisites: [TA-C278-ventaikkay, TA-C278-nilakkatalai]
 sounds: []
-roots: []
+roots: [persian-tarbuz]
+etymology_hook: "தர்பூசணி — usually explained as Persian tarbuz 'watermelon' blended with Tamil pūcaṇi 'pumpkin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C278-nilakkatalai]
 <!-- hl-knowledge: introduces=[TA-LEX-C278-PORUL278-04]; assesses=[] -->
 
 **தர்பூசணி** — *tarpūcaṇi* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தர்பூசணி** (*tarpūcaṇi*) is usually explained as Persian *tarbuz*, "watermelon", which reached Tamil through Hindustani, blended with Tamil *pūcaṇi*, "pumpkin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

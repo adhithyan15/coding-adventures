@@ -14,7 +14,8 @@ romanization: "tuṭai"
 concept_tag: TA-VERB-TUTAI
 prerequisites: [TA-C155-kattu2, TA-C155-tuvai]
 sounds: []
-roots: []
+roots: [dravidian-tudai-wipe]
+etymology_hook: "துடை — native Dravidian (DEDR 3301); Malayalam tuṭekka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C155-tuvai]
 <!-- hl-knowledge: introduces=[TA-LEX-C156-ACT156-01]; assesses=[] -->
 
 **துடை** — *tuṭai* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**துடை** (*tuṭai*) is native Dravidian. DEDR 3301 lists Malayalam *tuṭekka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

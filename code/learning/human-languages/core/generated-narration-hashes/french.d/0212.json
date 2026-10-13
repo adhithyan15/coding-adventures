@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 212,
-  "sourceHash": "fnv1a64:9697abb8dbdc947d",
+  "sourceHash": "fnv1a64:d13a705de7151608",
   "lessonIds": [
     "FR-C212-fixer",
     "FR-C212-freiner",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch212.txt",
   "json": "french/narration/ch212.json",
-  "textHash": "fnv1a64:cc7493131dd7ee4f",
-  "jsonHash": "fnv1a64:8b438659bf1a7f65",
+  "textHash": "fnv1a64:f7c92e492bc415cd",
+  "jsonHash": "fnv1a64:e89272c75909e42e",
   "findings": []
 }

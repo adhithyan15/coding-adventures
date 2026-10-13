@@ -11,7 +11,8 @@ romanization: "nakam"
 concept_tag: TA-NOUN-NAIL
 prerequisites: [TA-C55-lip, TA-C53-path, TA-C54-bowl]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "நகம் ← Sanskrit nakha 'nail, claw' (CDIAL 6914)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C55-lip]
 The nail on a finger and the claw on an animal, in one word. Malayalam writes നഖം (*nakhaṁ*), with a breathed letter in the middle that Tamil's own set does not carry, so Tamil prints it plain: நகம். The two words are heard as one and written as two.
 
 Telugu holds on to something else entirely, గోరు (*gōru*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நகம்** (*nakam*) is a loan from Sanskrit *nakha*, "nail, claw" (CDIAL 6914).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES255-ELECTRICITE
 prerequisites: [FR-C255-recyclage, FR-C255-energie]
 sounds: []
 roots: []
+etymology_hook: "électricité ← English electricity, from Latin electrum 'amber'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C255-energie]
 <!-- hl-knowledge: introduces=[FR-LEX-C255-CHOSES255-04]; assesses=[] -->
 
 **l'électricité** — "electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**électricité** ← English *electricity* (EtymDB 2.1), built on Latin *electrum*, "amber" — borrowed in the 1700s.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a hospital"
 concept_tag: FR-SANTE6-HOPITAL
 prerequisites: [FR-C53-medicament, FR-C53-medecin]
 sounds: []
-roots: []
+roots: [hospes-latin]
+etymology_hook: "hôpital ← Medieval Latin hospitale 'guest house', from hospes 'guest' — English hospital"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C53-medecin]
 <!-- hl-knowledge: introduces=[FR-LEX-C54-SANTE6-01]; assesses=[] -->
 
 **l'hôpital** — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hôpital** ← Old French *hospital* ← Medieval Latin *hospitale*, "a guest house", from Latin *hospes*, "guest" — a learned borrowing. (EtymDB 2.1) The circumflex marks the *s* that French later stopped writing. The same Latin word, worn down in everyday speech, also gave French its word for "hotel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

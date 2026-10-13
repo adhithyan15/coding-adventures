@@ -14,7 +14,8 @@ romanization: "mārpu"
 concept_tag: TA-THINGS133-MARPU
 prerequisites: [TA-C132-viral, TA-C133-tol]
 sounds: []
-roots: []
+roots: [dravidian-maar-chest]
+etymology_hook: "மார்பு — native Dravidian (DEDR 4818); Malayalam mār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C133-tol]
 <!-- hl-knowledge: introduces=[TA-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **மார்பு** — *mārpu* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மார்பு** (*mārpu*) is native Dravidian. DEDR 4818 lists Malayalam *mār*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

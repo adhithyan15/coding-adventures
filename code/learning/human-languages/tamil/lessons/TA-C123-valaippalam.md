@@ -14,7 +14,8 @@ romanization: "vāḻaippaḻam"
 concept_tag: TA-THINGS123-VALAIPPALAM
 prerequisites: [TA-C122-iraicci, TA-C123-kaykari]
 sounds: []
-roots: []
+roots: [dravidian-vazhai-plantain, dravidian-pazhu-ripen]
+etymology_hook: "வாழைப்பழம் — native: vāḻai 'plantain' (DEDR 5373; Malayalam vāḻa) + paḻam 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C123-kaykari]
 <!-- hl-knowledge: introduces=[TA-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **வாழைப்பழம்** — *vāḻaippaḻam* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாழைப்பழம்** (*vāḻaippaḻam*) is native: *vāḻai*, "plantain" (DEDR 5373; Malayalam *vāḻa*, Kannada *bāḻe*), and *paḻam*, "fruit" (DEDR 4004).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

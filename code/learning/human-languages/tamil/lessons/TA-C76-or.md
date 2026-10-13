@@ -11,7 +11,8 @@ romanization: "alladu"
 concept_tag: TA-JOIN-OR
 prerequisites: [TA-C76-but, TA-C73-month, TA-C73-year]
 sounds: []
-roots: []
+roots: [dravidian-al-not]
+etymology_hook: "அல்லது — native: 'if not that', on al- 'not to be' (DEDR 234), which lists allatu 'or else'"
 duration:
   max_seconds: 220
 requires:
@@ -60,6 +61,11 @@ It works on two statements as well as two things:
 > **நீங்கள் வரலாம், அல்லது நான் வருகிறேன்.**
 
 > "You may come, or I will come."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அல்லது** (*alladu*) is native: "if it is not that". It is built on *al-*, the native verb of not-being (DEDR 234), which lists *allatu*, "or else".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

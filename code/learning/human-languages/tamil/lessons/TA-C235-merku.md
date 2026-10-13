@@ -14,7 +14,8 @@ romanization: "mēṟku"
 concept_tag: TA-IDAM235-MERKU
 prerequisites: [TA-C235-terku, TA-C235-kilakku]
 sounds: []
-roots: []
+roots: [dravidian-mel-above]
+etymology_hook: "மேற்கு — native Dravidian (DEDR 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C235-kilakku]
 <!-- hl-knowledge: introduces=[TA-LEX-C235-IDAM235-05]; assesses=[] -->
 
 **மேற்கு** — *mēṟku* — "west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மேற்கு** (*mēṟku*) is native Dravidian (DEDR 5086). The entry lists *mēṟku*, "west", under *mē*, "height, high place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

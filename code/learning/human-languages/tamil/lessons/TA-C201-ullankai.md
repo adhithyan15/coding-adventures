@@ -14,7 +14,8 @@ romanization: "uḷḷaṅkai"
 concept_tag: TA-NALAM201-ULLANKAI
 prerequisites: [TA-C201-tati, TA-C201-micai]
 sounds: []
-roots: []
+roots: [dravidian-ul-inside, dravidian-talai-kai]
+etymology_hook: "உள்ளங்கை — native: uḷ 'inside' (DEDR 698) + kai 'hand' (DEDR 2023)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C201-micai]
 <!-- hl-knowledge: introduces=[TA-LEX-C201-NALAM201-04]; assesses=[] -->
 
 **உள்ளங்கை** — *uḷḷaṅkai* — "the palm of the hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உள்ளங்கை** (*uḷḷaṅkai*) is native: *uḷ*, "inside" (DEDR 698), and *kai*, "hand" (DEDR 2023): "the inside of the hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

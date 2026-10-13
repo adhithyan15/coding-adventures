@@ -13,7 +13,8 @@ gloss: "below"
 concept_tag: FR-LIEU157-AU-DESSOUS
 prerequisites: [FR-C156-encore, FR-C157-au-dessus]
 sounds: []
-roots: []
+roots: [subtus-latin]
+etymology_hook: "au-dessous — au + dessous 'underneath'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C157-au-dessus]
 <!-- hl-knowledge: introduces=[FR-LEX-C157-LIEU157-02]; assesses=[] -->
 
 **au-dessous** — "below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**au-dessous** — *au*, "at the", and *dessous*, "underneath".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

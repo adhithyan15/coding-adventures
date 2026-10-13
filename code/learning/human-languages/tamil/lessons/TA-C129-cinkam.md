@@ -14,7 +14,8 @@ romanization: "ciṅkam"
 concept_tag: TA-THINGS129-CINKAM
 prerequisites: [TA-C128-yanai, TA-C128-puli]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "சிங்கம் ← Sanskrit siṁha 'lion' (CDIAL 13384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C128-puli]
 <!-- hl-knowledge: introduces=[TA-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **சிங்கம்** — *ciṅkam* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சிங்கம்** (*ciṅkam*) is a loan from Sanskrit *siṁha*, "lion" (CDIAL 13384). Tamil spells the nasal as *ṅ*, before *k*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

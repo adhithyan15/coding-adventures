@@ -14,7 +14,8 @@ romanization: "āṇ"
 concept_tag: TA-PORUL245-AN
 prerequisites: [TA-C245-kural, TA-C245-uraiyatal]
 sounds: []
-roots: []
+roots: [dravidian-aal-man]
+etymology_hook: "ஆண் — native Dravidian (DEDR 399); Malayalam āṇ 'male', Kannada āṇ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C245-uraiyatal]
 <!-- hl-knowledge: introduces=[TA-LEX-C245-PORUL245-04]; assesses=[] -->
 
 **ஆண்** — *āṇ* — "a man, male".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆண்** (*āṇ*) is native Dravidian. DEDR 399 lists Malayalam *āṇ*, "male" and Kannada *āṇ*. The same entry holds the everyday word for "person".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

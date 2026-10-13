@@ -14,7 +14,8 @@ romanization: "kaṇukkāl"
 concept_tag: TA-NALAM169-KANUKKAL
 prerequisites: [TA-C168-valukku, TA-C168-kottavi-vitu]
 sounds: []
-roots: []
+roots: [dravidian-kanu-joint, dravidian-kaal-leg]
+etymology_hook: "கணுக்கால் — native Dravidian (DEDR 1160); Malayalam kaṇu 'joint'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C168-kottavi-vitu]
 <!-- hl-knowledge: introduces=[TA-LEX-C169-NALAM169-01]; assesses=[] -->
 
 **கணுக்கால்** — *kaṇukkāl* — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கணுக்கால்** (*kaṇukkāl*) is native Dravidian. DEDR 1160 lists Malayalam *kaṇu*, "joint". The entry lists *kaṇukkāl*, "ankle": *kaṇu*, "joint", and *kāl*, "leg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

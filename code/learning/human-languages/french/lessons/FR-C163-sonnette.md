@@ -13,7 +13,8 @@ gloss: "a doorbell"
 concept_tag: FR-CHOSES163-SONNETTE
 prerequisites: [FR-C163-balcon, FR-C163-serrure]
 sounds: []
-roots: []
+roots: [sonare-latin]
+etymology_hook: "sonnette — a little ringer; from Latin sonare 'to sound' — English sonnet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C163-serrure]
 <!-- hl-knowledge: introduces=[FR-LEX-C163-CHOSES163-05]; assesses=[] -->
 
 **la sonnette** — "a doorbell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sonnette** — built from the verb for "to ring", ← Latin *sonare*, "to sound", with *-ette*, "little". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "thin, slim"
 concept_tag: FR-ADJ45-MINCE
 prerequisites: [FR-C92-gentil, FR-C92-etroit]
 sounds: []
-roots: []
+roots: [minutus-latin]
+etymology_hook: "mince — from Old French mincier 'to cut fine', from Latin minutus 'small' — English mince"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C92-etroit]
 <!-- hl-knowledge: introduces=[FR-LEX-C93-ADJ45-01]; assesses=[] -->
 
 **mince** — "thin, slim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mince** — formed from the Old French verb *mincier*, "to cut fine", from Vulgar Latin *\*minutiare*, built on Latin *minutus*, "small" (EtymDB 2.1 records the Latin word).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

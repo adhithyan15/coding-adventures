@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES251-MENSONGE
 prerequisites: [FR-C251-exemple, FR-C251-verite]
 sounds: []
 roots: []
+etymology_hook: "mensonge ← Old French mençonge, usually traced to Latin mentiri 'to lie'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C251-verite]
 <!-- hl-knowledge: introduces=[FR-LEX-C251-CHOSES251-05]; assesses=[] -->
 
 **le mensonge** — "a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mensonge** ← Old French *mençonge* (EtymDB 2.1), usually traced to Vulgar Latin *\*mentionica*, built on Latin *mentiri*, "to lie" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

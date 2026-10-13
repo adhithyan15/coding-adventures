@@ -14,7 +14,8 @@ romanization: "aṭutta"
 concept_tag: TA-ETIR159-ATUTTA
 prerequisites: [TA-C158-oru-kalattil, TA-C158-kali]
 sounds: []
-roots: []
+roots: [dravidian-adu-near]
+etymology_hook: "அடுத்த — native Dravidian (DEDR 79); Malayalam aṭukka 'to approach'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C158-kali]
 <!-- hl-knowledge: introduces=[TA-LEX-C159-ETIR159-01]; assesses=[] -->
 
 **அடுத்த** — *aṭutta* — "next, coming". Tamil's future for "I" ends in **-வேன்** or **-ப்பேன்**: **அடுத்த வாரம் நான் போவேன்** — *aṭutta vāram nāṉ pōvēṉ* — "I will go next week."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அடுத்த** (*aṭutta*) is native Dravidian. DEDR 79 lists Malayalam *aṭukka*, "to approach". It comes from *aṭu*, "to be next, near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

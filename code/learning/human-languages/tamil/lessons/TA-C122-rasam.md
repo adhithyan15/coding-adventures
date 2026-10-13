@@ -14,7 +14,8 @@ romanization: "rasam"
 concept_tag: TA-THINGS122-RASAM
 prerequisites: [TA-C121-paruppu, TA-C121-kulambu]
 sounds: []
-roots: []
+roots: [sanskrit-rasa]
+etymology_hook: "ரசம் ← Sanskrit rasa 'juice, taste' (CDIAL 10650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C121-kulambu]
 <!-- hl-knowledge: introduces=[TA-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **ரசம்** — *rasam* — "rasam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ரசம்** (*rasam*) is a loan from Sanskrit *rasa*, "juice, taste" (CDIAL 10650).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

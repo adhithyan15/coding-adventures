@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES169-FICHE-DE-PAIE
 prerequisites: [FR-C169-carte-postale, FR-C169-dossier]
 sounds: []
 roots: []
+etymology_hook: "fiche de paie — 'slip of pay': fiche + de + paie, from payer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C169-dossier]
 <!-- hl-knowledge: introduces=[FR-LEX-C169-CHOSES169-03]; assesses=[] -->
 
 **la fiche de paie** — "a pay slip".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiche de paie** — "slip of pay": *fiche*, "a slip, a peg", from the verb for "to fix" (EtymDB 2.1); *de*, "of"; and *paie*, "pay", from *payer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

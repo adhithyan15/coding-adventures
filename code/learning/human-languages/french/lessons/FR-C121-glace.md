@@ -13,7 +13,8 @@ gloss: "ice cream; ice; a mirror"
 concept_tag: FR-REPAS73-GLACE
 prerequisites: [FR-C121-biere, FR-C121-jus]
 sounds: []
-roots: []
+roots: [glacies-latin]
+etymology_hook: "glace ← Latin glacies 'ice' — English glacier and glacial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C121-jus]
 <!-- hl-knowledge: introduces=[FR-LEX-C121-REPAS73-03]; assesses=[] -->
 
 **la glace** — "ice cream; ice; a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**glace** ← Vulgar Latin *\*glacia* ← Latin *glacies*, "ice" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

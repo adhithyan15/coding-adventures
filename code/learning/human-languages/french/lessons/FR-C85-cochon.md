@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX37-COCHON
 prerequisites: [FR-C84-vague, FR-C85-vache]
 sounds: []
 roots: []
+etymology_hook: "cochon — origin uncertain, probably from a call used to summon pigs"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C85-vache]
 <!-- hl-knowledge: introduces=[FR-LEX-C85-ANIMAUX37-02]; assesses=[] -->
 
 **le cochon** — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cochon** — its origin is uncertain; the usual account is that it grew from a call used to summon pigs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

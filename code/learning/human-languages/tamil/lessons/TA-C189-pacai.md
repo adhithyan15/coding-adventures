@@ -14,7 +14,8 @@ romanization: "pacai"
 concept_tag: TA-PORUL189-PACAI
 prerequisites: [TA-C188-veppamaram, TA-C188-tennaimaram]
 sounds: []
-roots: []
+roots: [dravidian-pacai-glue]
+etymology_hook: "பசை — native Dravidian (DEDR 3827); Malayalam paca 'gum, glue'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C188-tennaimaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C189-PORUL189-01]; assesses=[] -->
 
 **பசை** — *pacai* — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பசை** (*pacai*) is native Dravidian. DEDR 3827 lists Malayalam *paca*, "gum, glue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

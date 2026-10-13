@@ -14,7 +14,8 @@ romanization: "muḻaṅkāl"
 concept_tag: TA-THINGS133-MULANKAL
 prerequisites: [TA-C133-tol, TA-C133-marpu]
 sounds: []
-roots: []
+roots: [dravidian-muzham-cubit, dravidian-kaal-leg]
+etymology_hook: "முழங்கால் — native: DEDR 4990 lists it, built on muḻam 'joint, cubit' + kāl 'leg'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C133-marpu]
 <!-- hl-knowledge: introduces=[TA-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **முழங்கால்** — *muḻaṅkāl* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முழங்கால்** (*muḻaṅkāl*) is native: DEDR 4990 lists *muḻaṅkāl*, "knee", built on *muḻam*, "cubit, joint", with *kāl*, "leg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

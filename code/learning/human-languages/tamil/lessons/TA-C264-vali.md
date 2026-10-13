@@ -14,7 +14,8 @@ romanization: "vaḻi"
 concept_tag: TA-IDAM264-VALI
 prerequisites: [TA-C264-etire, TA-C264-itaiyil]
 sounds: []
-roots: []
+roots: [dravidian-vazhi-way]
+etymology_hook: "வழி — native Dravidian (DEDR 5297); Malayalam vaḻi 'way, road', Kannada baḻi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C264-itaiyil]
 <!-- hl-knowledge: introduces=[TA-LEX-C264-IDAM264-03]; assesses=[] -->
 
 **வழி** — *vaḻi* — "a way, a route".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வழி** (*vaḻi*) is native Dravidian. DEDR 5297 lists Malayalam *vaḻi*, "way, road" and Kannada *baḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

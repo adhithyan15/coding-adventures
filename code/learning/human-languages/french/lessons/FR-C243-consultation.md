@@ -14,6 +14,7 @@ concept_tag: FR-SANTE243-CONSULTATION
 prerequisites: [FR-C243-urgences, FR-C243-urgence]
 sounds: []
 roots: []
+etymology_hook: "consultation ← Latin consultatio 'a deliberation' — English consultation"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C243-urgence]
 <!-- hl-knowledge: introduces=[FR-LEX-C243-SANTE243-04]; assesses=[] -->
 
 **la consultation** — "a medical appointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**consultation** ← Latin *consultatio*, "a deliberation" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

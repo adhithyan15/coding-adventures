@@ -14,7 +14,8 @@ romanization: "uṇar"
 concept_tag: TA-VERB-UNAR
 prerequisites: [TA-C196-ila, TA-C196-aluttu]
 sounds: []
-roots: []
+roots: [dravidian-unar-perceive]
+etymology_hook: "உணர் — native Dravidian (DEDR 603); Malayalam uṇaruka 'to wake', Kannada oṇar 'to feel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C196-aluttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C196-ACT196-04]; assesses=[] -->
 
 **உணர்** — *uṇar* — "to feel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உணர்** (*uṇar*) is native Dravidian. DEDR 603 lists Malayalam *uṇaruka*, "to wake" and Kannada *oṇar*, "to feel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

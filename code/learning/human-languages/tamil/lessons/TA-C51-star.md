@@ -11,7 +11,8 @@ romanization: "viṇmīṉ"
 concept_tag: TA-NOUN-STAR
 prerequisites: [TA-C51-moon, TA-C49-good-wish, TA-C50-betel-leaf]
 sounds: []
-roots: []
+roots: [dravidian-vin-sky, dravidian-miin-star]
+etymology_hook: "விண்மீன் — native: viṇ 'sky' (DEDR 5396; Malayalam viṇṇu) + mīṉ 'star', a 'shining' word (DEDR 4876)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C51-moon]
 Two pieces, and they come apart cleanly. *viṇ* is the sky as height, the open air above; *mīṉ* is a fish, and from the oldest Tamil poetry onward it is a star as well. A star, in Tamil, is a fish in the sky — a shoal of small bright things moving in something you cannot walk on.
 
 The sisters went other ways. Malayalam takes the Sanskrit നക്ഷത്രം (*nakṣatraṁ*); Telugu says చుక్క (*cukka*), which is also its word for a dot.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விண்மீன்** (*viṇmīṉ*) is native: *viṇ*, "sky" (DEDR 5396; Malayalam *viṇṇu*), and *mīṉ*, "star", from the family of words for flashing and shining (DEDR 4876). A star is "the shining one of the sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

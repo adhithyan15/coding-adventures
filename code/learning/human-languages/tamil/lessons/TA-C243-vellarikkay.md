@@ -14,7 +14,8 @@ romanization: "veḷḷarikkāy"
 concept_tag: TA-PORUL243-VELLARIKKAY
 prerequisites: [TA-C243-kattarikkay, TA-C243-vacanai]
 sounds: []
-roots: []
+roots: [dravidian-vellari-cucumber, dravidian-kaay-fruit]
+etymology_hook: "வெள்ளரிக்காய் — native: veḷḷari 'cucumber' (DEDR 5504) + kāy 'unripe fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C243-vacanai]
 <!-- hl-knowledge: introduces=[TA-LEX-C243-PORUL243-05]; assesses=[] -->
 
 **வெள்ளரிக்காய்** — *veḷḷarikkāy* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெள்ளரிக்காய்** (*veḷḷarikkāy*) is native: *veḷḷari*, "cucumber" (DEDR 5504, which lists Malayalam veḷḷari), and *kāy*, "unripe fruit, vegetable" (DEDR 1459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

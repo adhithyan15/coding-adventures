@@ -11,7 +11,8 @@ romanization: "vēr"
 concept_tag: TA-NOUN-ROOT
 prerequisites: [TA-C52-shoot, TA-C50-betel-leaf, TA-C51-star]
 sounds: []
-roots: []
+roots: [dravidian-veer-root]
+etymology_hook: "வேர் — native Dravidian (DEDR 5535); Malayalam vēr, Kannada bēr"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C52-shoot]
 One word in three hands. Malayalam വേര് (*vērŭ*), Telugu వేరు (*vēru*), Tamil வேர். Set them beside each other and there is nothing left to choose between them.
 
 It is the root of a plant and the bottom of anything else: a tooth has a வேர், and so does a word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வேர்** (*vēr*) is native Dravidian. DEDR 5535 lists Malayalam *vēr* and Kannada *bēr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

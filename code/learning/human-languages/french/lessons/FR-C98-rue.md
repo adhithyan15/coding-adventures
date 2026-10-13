@@ -13,7 +13,8 @@ gloss: "a street"
 concept_tag: FR-TEMPS50-RUE
 prerequisites: [FR-C98-parfois, FR-C98-ville]
 sounds: []
-roots: []
+roots: [ruga-latin]
+etymology_hook: "rue ← Latin ruga 'a wrinkle, a furrow' — the g between vowels dropped out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C98-ville]
 <!-- hl-knowledge: introduces=[FR-LEX-C98-TEMPS50-05]; assesses=[] -->
 
 **la rue** — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rue** ← Latin *ruga*, "a wrinkle, a furrow" (Lewis & Short) — inherited: a street was a furrow between houses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

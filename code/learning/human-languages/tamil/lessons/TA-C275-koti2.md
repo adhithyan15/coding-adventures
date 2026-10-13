@@ -14,7 +14,8 @@ romanization: "koṭi"
 concept_tag: TA-PORUL275-KOTI2
 prerequisites: [TA-C275-kutu, TA-C275-ceti]
 sounds: []
-roots: []
+roots: [dravidian-kodi-creeper]
+etymology_hook: "கொடி — native: koṭi 'creeper' (DEDR 2050) and koṭi 'flag' (DEDR 2049)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C275-ceti]
 <!-- hl-knowledge: introduces=[TA-LEX-C275-PORUL275-05]; assesses=[] -->
 
 **கொடி** — *koṭi* — "a creeper, a vine; a flag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கொடி** (*koṭi*) is native in both senses: *koṭi*, "creeper" (DEDR 2050, which lists Malayalam koṭi), and *koṭi*, "banner, flag" (DEDR 2049).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

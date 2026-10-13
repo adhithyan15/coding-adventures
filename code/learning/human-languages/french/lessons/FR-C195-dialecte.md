@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES195-DIALECTE
 prerequisites: [FR-C194-mouche, FR-C194-moustique]
 sounds: []
 roots: []
+etymology_hook: "dialecte ← Latin dialectos, from Greek dialektos 'a way of speaking' — English dialect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C194-moustique]
 <!-- hl-knowledge: introduces=[FR-LEX-C195-CHOSES195-01]; assesses=[] -->
 
 **le dialecte** — "a dialect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dialecte** ← Latin *dialectos*, from Greek *dialektos*, "a way of speaking" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

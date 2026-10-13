@@ -13,7 +13,8 @@ gloss: "shy"
 concept_tag: FR-QUAL190-TIMIDE
 prerequisites: [FR-C190-joyeux-joyeuse, FR-C190-serieux-serieuse]
 sounds: []
-roots: []
+roots: [timere-latin]
+etymology_hook: "timide ← Latin timidus 'fearful', from timere — English timid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C190-serieux-serieuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C190-QUAL190-03]; assesses=[] -->
 
 **timide** — "shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**timide** ← Latin *timidus*, "fearful", from *timere*, "to fear" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

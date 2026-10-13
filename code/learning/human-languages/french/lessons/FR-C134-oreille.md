@@ -13,7 +13,8 @@ gloss: "an ear"
 concept_tag: FR-NATURE86-OREILLE
 prerequisites: [FR-C133-brouillard, FR-C134-herbe]
 sounds: []
-roots: []
+roots: [auricula-latin]
+etymology_hook: "oreille ← Latin auricula 'a little ear' — English aural and auricle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C134-herbe]
 <!-- hl-knowledge: introduces=[FR-LEX-C134-NATURE86-02]; assesses=[] -->
 
 **l'oreille** — "an ear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oreille** ← Vulgar Latin *\*oricla* ← Latin *auricula*, "a little ear", from *auris*, "ear" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

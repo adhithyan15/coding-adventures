@@ -14,6 +14,7 @@ concept_tag: FR-OBJETS70-BIJOU
 prerequisites: [FR-C117-taille, FR-C117-portefeuille]
 sounds: []
 roots: []
+etymology_hook: "bijou ← Breton bizou 'a ring', from biz 'finger'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C117-portefeuille]
 <!-- hl-knowledge: introduces=[FR-LEX-C118-OBJETS70-01]; assesses=[] -->
 
 **le bijou** — "a jewel, a piece of jewellery". Plural **les bijoux**, with an x.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bijou** ← Breton *bizou*, "a ring", from *biz*, "finger" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

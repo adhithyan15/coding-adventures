@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "Every year, Dawn, Day after tomorrow, Day before yesterday, Second",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b5a49598e4bed487",
+  "sourceHash": "fnv1a64:e3c3d664d1d317bc",
   "lessons": [
     {
       "id": "TA-C233-antutorum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a485d42b75597fb",
+      "sourceHash": "fnv1a64:bfcaebe0c52395e3",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆண்டுதோறும் (āṇṭutōṟum) is native Dravidian (DEDR 5153). It is āṇṭu, \"year\", with -tōṟum, \"each, every\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd4f5d3ee3f0dd87",
+      "sourceHash": "fnv1a64:452203b7f60cfde9",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடியல் (viṭiyal) is native Dravidian. DEDR 5475 lists Telugu viḍi, \"clearness\". The entry lists viṭiyal, \"break of day\", under viṭi, \"to dawn\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e2450b556292702",
+      "sourceHash": "fnv1a64:580c8c0fc08c652e",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாளை மறுநாள் (nāḷai maṟunāḷ) is native: nāḷai, \"tomorrow\" (DEDR 3656), and maṟunāḷ, \"the next day\" (DEDR 4766): \"the day after tomorrow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dfe2c761263337e",
+      "sourceHash": "fnv1a64:42514e8f1b83c22c",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேற்று முன்தினம் (nēṟṟu muṉtiṉam) is native nēṟṟu, \"yesterday\", and muṉtiṉam, \"the day before\", from native muṉ, \"before\" (DEDR 5020), and tiṉam, \"day\", from Sanskrit dina (CDIAL 6328). DEDR 3758 gives the older Tamil forms nerunal and nerunaṟṟu, \"yesterday\"; modern nēṟṟu is most likely the shortened form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ef05152588906ef",
+      "sourceHash": "fnv1a64:d8213e1f74a0d119",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விநாடி (vināṭi) is a well-established loan from Sanskrit vināḍī, \"a sixtieth of a nāḍī\", the old 24-minute unit, used now for a second."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

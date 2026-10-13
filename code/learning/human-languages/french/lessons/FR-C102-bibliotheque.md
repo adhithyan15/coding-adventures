@@ -14,6 +14,7 @@ concept_tag: FR-VILLE54-BIBLIOTHEQUE
 prerequisites: [FR-C102-police, FR-C102-theatre]
 sounds: []
 roots: []
+etymology_hook: "bibliothèque ← Latin bibliotheca, from Greek 'a case for books' — English Bible shares biblion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C102-theatre]
 <!-- hl-knowledge: introduces=[FR-LEX-C102-VILLE54-03]; assesses=[] -->
 
 **la bibliothèque** — "a library". A false friend: a bookshop is **la librairie**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bibliothèque** ← Latin *bibliotheca*, from Greek *bibliotheke*, "a case for books", built on *biblion*, "a book" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

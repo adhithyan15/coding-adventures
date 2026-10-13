@@ -11,7 +11,8 @@ romanization: "mādam"
 concept_tag: TA-NOUN-MONTH
 prerequisites: [TA-C73-before, TA-C71-wash, TA-C72-laugh]
 sounds: []
-roots: []
+roots: [sanskrit-masa]
+etymology_hook: "மாதம் ← Sanskrit māsa 'moon, month' (CDIAL 10104)"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ particular one.
 
 And another **ம்** ending — like கோபம், பயம் and பணம் before it — on a word whose middle
 vowel is the long **ா**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாதம்** (*mādam*) is a loan from Sanskrit *māsa*, "moon, month" (CDIAL 10104). Tamil wrote the *s* as *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
