@@ -1221,6 +1221,38 @@ where
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::Note => {
+                let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
+                let outline = PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands: vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width - fold, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                    stroke_dash_offset: None,
+                });
+                let crease = PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands: vec![
+                        PathCommand::MoveTo { x: node.x + node.width - fold, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width - fold, y: node.y + fold },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                    ],
+                    fill: None, fill_rule: None, stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                    stroke_dash_offset: None,
+                });
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase::default(), children: vec![outline, crease],
+                    transform: None, opacity: None,
+                })
+            }
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -2674,9 +2706,8 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::BlockArrow(directions) => block_arrow_instruction(node, directions),
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
-            PaintInstruction::Path(PaintPath {
-                base: PaintBase::default(),
-                commands: vec![
+            let outline = PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands: vec![
                     PathCommand::MoveTo {
                         x: node.x,
                         y: node.y,
@@ -2707,6 +2738,20 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
                 stroke_join: Some(StrokeJoin::Round),
                 stroke_dash: node.style.stroke_dash.clone(),
                 stroke_dash_offset: None,
+            });
+            let crease = PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands: vec![
+                    PathCommand::MoveTo { x: node.x + node.width - fold, y: node.y },
+                    PathCommand::LineTo { x: node.x + node.width - fold, y: node.y + fold },
+                    PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                ],
+                fill: None, fill_rule: None, stroke: Some(node.style.stroke.clone()),
+                stroke_width: Some(node.style.stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: node.style.stroke_dash.clone(),
+                stroke_dash_offset: None,
+            });
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(), children: vec![outline, crease], transform: None, opacity: None,
             })
         }
         DiagramShape::Rect | DiagramShape::Bar => PaintInstruction::Rect(PaintRect {
@@ -9896,7 +9941,8 @@ mod tests {
         let scene = diagram_to_paint(&layout, &opts);
 
         assert!(scene.instructions.iter().any(|instruction| {
-            matches!(instruction, PaintInstruction::Path(path) if path.commands.len() == 6)
+            matches!(instruction, PaintInstruction::Group(group)
+                if group.children.iter().filter(|child| matches!(child, PaintInstruction::Path(_))).count() == 2)
         }));
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())

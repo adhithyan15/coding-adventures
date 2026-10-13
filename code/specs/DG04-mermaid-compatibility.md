@@ -1031,6 +1031,8 @@ Tagged processes recognize `tag-rect`, `tagged-rectangle`, `tag-proc`, and
 Paper tape recognizes `flag` and `paper-tape` aliases.
 Lined documents recognize `lin-doc` and `lined-document` aliases.
 Data stores recognize `datastore` and `data-store` aliases.
+The Flowchart registry's accepted `state`, `choice`, and `note` attribute shapes lower to rounded-state,
+diamond-decision, and folded-corner note geometry respectively; notes include an explicit interior crease.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick

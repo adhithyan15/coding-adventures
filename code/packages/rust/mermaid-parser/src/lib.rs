@@ -7154,9 +7154,9 @@ fn parse_swimlane_shape_attributes(
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
                     "rect" | "proc" | "process" | "rectangle" => DiagramShape::Rect,
-                    "rounded" | "event" => DiagramShape::RoundedRect,
+                    "rounded" | "event" | "state" => DiagramShape::RoundedRect,
                     "circle" | "circ" => DiagramShape::Ellipse,
-                    "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
+                    "choice" | "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
                     "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
                     "hourglass" | "collate" => DiagramShape::Hourglass,
                     "tri" | "extract" | "triangle" => DiagramShape::Triangle,
@@ -7201,6 +7201,7 @@ fn parse_swimlane_shape_attributes(
                     "cyl" | "cylinder" | "database" | "db" => DiagramShape::Cylinder,
                     "dbl-circ" | "double-circle" => DiagramShape::DoubleCircle,
                     "odd" => DiagramShape::Asymmetric,
+                    "note" => DiagramShape::Note,
                     other => return Err(swimlane_error(line, format!("unsupported Swimlane attribute shape {other:?}"))),
                 });
             }

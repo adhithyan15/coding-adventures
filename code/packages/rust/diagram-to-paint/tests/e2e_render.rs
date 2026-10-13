@@ -3498,6 +3498,17 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
+    fn any_paint_instruction(
+        instructions: &[PaintInstruction],
+        predicate: &impl Fn(&PaintInstruction) -> bool,
+    ) -> bool {
+        instructions.iter().any(|instruction| {
+            predicate(instruction)
+                || matches!(instruction, PaintInstruction::Group(group)
+                    if any_paint_instruction(&group.children, predicate))
+        })
+    }
+
     #[test]
     fn render_pinned_mermaid_swimlane_visual_corpus_to_png() {
         let syntax: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus JSON");
@@ -3948,6 +3959,17 @@ line "Target" [35, 50, 68, 82]"##,
                 )).count(), 2);
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
                     Some(&"Platform".to_string()));
+            }
+            if fixture_name == "state-choice-note-shapes" {
+                assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
+                    &diagram_ir::DiagramShape::RoundedRect,
+                    &diagram_ir::DiagramShape::Diamond,
+                    &diagram_ir::DiagramShape::Note,
+                ]);
+                assert!(any_paint_instruction(&scene.instructions, &|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.iter().filter(|child|
+                        matches!(child, PaintInstruction::Path(_))).count() == 2
+                )), "the note must lower to an outline and interior fold path");
             }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
