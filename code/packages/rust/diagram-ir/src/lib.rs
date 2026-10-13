@@ -1976,6 +1976,7 @@ pub struct SwimlaneDiagram {
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub groups: Vec<SwimlaneGroup>, pub nodes: Vec<SwimlaneNode>,
     pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
     pub line_hops: Option<SwimlaneLineHops>, pub automatic_lane_ordering: bool,
+    pub ignore_cross_lane_edges: bool,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
@@ -2004,7 +2005,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub lanes: Vec<LayoutedSwimlaneLane>, pub groups: Vec<LayoutedSwimlaneGroup>,
     pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
     pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>, pub line_hops: Option<SwimlaneLineHops>,
-    pub automatic_lane_ordering: bool,
+    pub automatic_lane_ordering: bool, pub ignore_cross_lane_edges: bool,
 }
 
 // GRAMMAR VISUALIZATION FAMILY
