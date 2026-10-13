@@ -32,13 +32,11 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "display": 1,
         "flex-direction": 1,
         "flex-shrink": 9,
-        "flex-wrap": 1,
         "font": 1,
         "overflow": 1,
         "text-overflow": 1,
         "transform": 2,
         "white-space": 1,
-        "width": 8,
     },
     "swiftui": {
         "border-left-style": 1,

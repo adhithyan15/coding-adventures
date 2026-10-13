@@ -85,7 +85,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         backend: sum(properties.values())
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
-        "xaml": 38,
+        "xaml": 29,
         "swiftui": 63,
         "compose": 40,
         "qt": 83,
@@ -217,13 +217,14 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     backend = "xaml"
     report = _report(backend)
     report["styleDegradations"].append(_style_entry(backend, "new-property"))
-    report["styleDegradations"].append(_style_entry(backend, "width"))
+    report["styleDegradations"].append(_style_entry(backend, "border-style"))
 
     errors = validate_style_degradations(backend, report, "report.json")
 
     assert any("unbaselined style drop 'new-property'" in error for error in errors)
     assert any(
-        "style drop 'width' increased from at most 8 to 9" in error for error in errors
+        "style drop 'border-style' increased from at most 4 to 5" in error
+        for error in errors
     )
 
 
