@@ -2,6 +2,57 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04 multiplicative selector integration -->
+CV04a multiplicative-selector reconciliation integrates main `146f77f4734e136e2146f4427607758889f73a8f`
+(#17387). Spec649ef6fbaa precedes conflict-free merge/tests; actual source
+`329cacee024416817a13c208cf0d5a62dc6e3a9d` adds16by-name formatter-refusal cells paired with16value
+snapshot controls over both roots, selector arms, direct/assigned consumers and
+root-first/static-first multiply/divide arrangements.16native sources assert
+exact independently derived -4.5/1.75/-4/7 output on every available standard
+backend; present-but-no-result fails. Upstream bounded multiplicative admission,
+all original bare/signed/additive/preANDpost alias guards/static fallback and
+production limits remain. No general arithmetic/runtime-expression-finiteness
+or broader Closure parity claim.
+
+Actual **1263 tests/docs/124 targets/0fail/1existing archive-helper ignore**:
+compiler/shared942/16, strict4alltarget warnings/unknown-lints denied, all eleven
+unchanged LANG production BUILD selections and all48exact native targets PASS.
+16focused repeats excluded from unique counts. Docs/1101lessons/whitespace
+PASS; COMPLETE73rows and actual validator EXIT0 required. No fullunfilteredLANG
+acceptance inferred. Actual prior46native/11BUILD roster explicitly derives from
+additive766 receipt, without any rewritten ancestry pointer or reattribution.
+Initial81119 EXIT1: parallel rustc/LLVM allocation/OOM failures during production00
+compilation before tests. Serial8144 EXIT1: rust-lld output no-space-on-device,
+also before tests. Both failed receipts/logs preserved, never passed. Path-checked
+package-scoped Cargo dry-run and actual clean in separate delivery target removed
+18,913 rebuildable LANG artifacts/28.0GiB, preserving source/receipts/frozenMiri.
+Same-source/profile/assertion disk continuation uses one Cargo build job, retaining
+16 successful rows without replay and actually completing remaining selections.
+No production limit, safety assertion, source behavior or required CI weakened.
+
+Complete NONEMPTY rounded3f/19be seventeen-package/fixture/script objects retain
+829/37/strict17/oracle27/Python18/oneexistingGDIignore; SwiftUI525 sixpackages/
+scripts retain637/30/strict6/Python46/freshprofile1. TaskApp runtime/config exact
+except2release docs. OtherRust entries excludingchangedALGOL/lang and programs/
+scripts/grammars/CI match published822. No diagram/device/content/TS acceptance
+reattributed to new compiler source. Historical negative receipts retained.
+
+Final backlog-only fullobject/payload proof and independent exact-final security,
+freshmain/openPR completefile/review/conflict audit precede same sole PR17288
+publication. Current822 CI stays active until newer reviewed workflow exists.
+Exacthead terminal acceptable checks plus whole3OSnativeSUCCESS/packageSUCCESS/
+timestampedClosurecBUILT gate auto-merge. Actual fetched-main reachability/full
+payload mode/type/blob proof precede cleanup/CV04b. Prior blocks are historical
+source/CI frames, not current gates.
+
+Full final-source Miri **DEFERRED/PENDING**, neverpassed. Frozen run/497inputs/
+checkout/receipts/target preserved without progresspolling/termination/duplicate
+execution. Implementationdelivery first, genuine final-sourceMiri afterward with
+invalidated-input reruns. BaseESTree/ownedtypes/no newcrates.io dependencies. Full
+Closure parity/CV04b/output-byte-source joins/all folding-renaming-inlining-motion-
+merging-deletion lineage/fullgoal OPEN; heartbeatACTIVE.
+<!-- /CV04 multiplicative selector integration -->
+
 <!-- CV04 rounded integration -->
 CV04a rounded Swimlane reconciliation integrates main `19be4bad9817a4c5d17b61787fbb7e798aee145f`
 (#17385 and Sanskrit/Urdu/German source imports). Spec3d96cd6f10 precedes merge/
