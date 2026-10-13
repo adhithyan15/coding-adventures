@@ -3920,6 +3920,22 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.laneOrder")),
                     Some(&"laneB,laneC,laneA,laneD".to_string()));
             }
+            if fixture_name == "line-hops-step" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command|
+                        matches!(command, PathCommand::QuadTo { .. }))
+                )).count(), 1, "the later step edge must contain an arc hop");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"step".to_string()));
+            }
+            if fixture_name == "line-hops-rounded" {
+                assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command|
+                        matches!(command, PathCommand::MoveTo { .. })).count() == 2
+                )).count(), 1, "the later rounded edge must contain one visible gap");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.edge.1.curve")),
+                    Some(&"rounded".to_string()));
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
