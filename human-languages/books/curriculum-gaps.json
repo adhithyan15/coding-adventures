@@ -31,8 +31,8 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 14558,
-    "wordLessonsWithoutVisibleEtymology": 14282,
+    "wordLessonsWithoutEtymologyHook": 13182,
+    "wordLessonsWithoutVisibleEtymology": 12964,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -43,7 +43,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 139,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27759,
+    "drivableLessons": 27758,
     "drivablePercent": 94,
     "chaptersWithoutDrivablePrefix": 186,
     "chaptersWithoutDrivablePrefixByType": 179,
@@ -13800,7 +13800,7 @@
           "totalGlyphs": 67,
           "lessonViolations": 0,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 39
+          "lessonsWithForeignScript": 38
         },
         {
           "language": "urdu",
@@ -13816,7 +13816,7 @@
       "summary": {
         "lessonViolations": 0,
         "systemViolations": 0,
-        "lessonsWithForeignScript": 217,
+        "lessonsWithForeignScript": 216,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": null
       }
@@ -341588,9 +341588,9 @@
       {
         "language": "telugu",
         "wordLessons": 1435,
-        "wordLessonsWithoutEtymologyHook": 1376,
-        "wordLessonsWithoutVisibleEtymology": 1318,
-        "wordLessonsWithoutAnyEtymology": 1309
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0
       },
       {
         "language": "urdu",
@@ -341602,11 +341602,11 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 14558,
-      "wordLessonsWithoutVisibleEtymology": 14282,
-      "wordLessonsWithoutAnyEtymology": 13772,
-      "hookPercent": 43,
-      "visiblePercent": 44
+      "wordLessonsWithoutEtymologyHook": 13182,
+      "wordLessonsWithoutVisibleEtymology": 12964,
+      "wordLessonsWithoutAnyEtymology": 12463,
+      "hookPercent": 48,
+      "visiblePercent": 49
     }
   },
   "writingStages": {
@@ -364511,10 +364511,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 29572,
-    "voice": 27189,
-    "sight": 893,
+    "voice": 27188,
+    "sight": 894,
     "pen": 1490,
-    "coreVoice": 27759,
+    "coreVoice": 27758,
     "lessonsWithWritingSegments": 957,
     "drivablePercent": 94,
     "tracks": [
@@ -444749,12 +444749,12 @@
       {
         "language": "telugu",
         "lessonCount": 1592,
-        "voice": 1471,
-        "sight": 50,
+        "voice": 1470,
+        "sight": 51,
         "pen": 71,
-        "coreVoice": 1508,
+        "coreVoice": 1507,
         "drivablePercent": 95,
-        "drivablePrefixTotal": 1464,
+        "drivablePrefixTotal": 1463,
         "chapters": [
           {
             "language": "telugu",
@@ -447701,15 +447701,16 @@
             "language": "telugu",
             "chapter": 193,
             "lessonCount": 5,
-            "voice": 5,
-            "sight": 0,
+            "voice": 4,
+            "sight": 1,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null,
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "TE-C193-cakram",
             "unstartable": null
           },
           {
@@ -454012,36 +454013,38 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 9415,
-    "underspent": 8682,
-    "neverSpent": 6338,
+    "roots": 10588,
+    "underspent": 9822,
+    "neverSpent": 7343,
     "payoffDistribution": {
-      "0": 6338,
-      "1": 1594,
-      "2": 750,
-      "3": 365,
-      "4": 180,
-      "5": 85,
-      "6": 30,
-      "7": 29,
+      "0": 7343,
+      "1": 1709,
+      "2": 770,
+      "3": 378,
+      "4": 184,
+      "5": 90,
+      "6": 33,
+      "7": 30,
       "8": 10,
       "9": 6,
       "10": 7,
-      "11": 1,
-      "12": 4,
+      "11": 3,
+      "12": 5,
       "13": 2,
-      "15": 2,
+      "15": 3,
       "16": 3,
       "18": 1,
       "19": 1,
-      "21": 2,
+      "21": 3,
+      "22": 1,
       "25": 1,
       "27": 1,
       "28": 1,
       "30": 1,
+      "35": 1,
       "43": 1
     },
-    "underspentPercent": 92
+    "underspentPercent": 93
   },
   "infoDump": {
     "lessons": 29572,
@@ -454065,22 +454068,22 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 28922,
-    "usesBeforeIntroduction": 49446,
-    "technicalUsesBeforeIntroduction": 7858,
-    "technicalLessons": 4857,
+    "lessonsUsingTerms": 28973,
+    "usesBeforeIntroduction": 49970,
+    "technicalUsesBeforeIntroduction": 8008,
+    "technicalLessons": 5001,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2885
+        "lessons": 2928
       },
       {
         "term": "noun",
-        "lessons": 1549
+        "lessons": 1649
       },
       {
         "term": "adjective",
-        "lessons": 391
+        "lessons": 392
       },
       {
         "term": "participle",
@@ -454088,7 +454091,7 @@
       },
       {
         "term": "case",
-        "lessons": 285
+        "lessons": 286
       },
       {
         "term": "voice",
