@@ -3861,7 +3861,7 @@ impl Compiler {
                             ProcedureParamType::Scalar(ScalarType::Real),
                         ) => {
                             self.is_selector_call_safe_runtime_real_value(actual)
-                                || self.is_selector_call_safe_powered_entier_sign_root(actual)
+                                || self.is_selector_call_safe_standard_entier_sign_root(actual)
                         }
                         _ => true,
                     }
@@ -4054,6 +4054,40 @@ impl Compiler {
         let children = direct_nodes(node);
         children.len() == 1
             && self.is_selector_call_safe_powered_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_standard_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_powered_entier_sign_root(node) {
+            return true;
+        }
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_selector_call_safe_powered_entier_sign_root(actuals[0]);
+                }
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_standard_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_standard_entier_sign_root(children[0])
     }
 
     fn builtin_nonnegative_bounded_sign_operand<'n>(
@@ -14027,6 +14061,26 @@ mod tests {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
                     "a calling selector may choose powered exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_standard_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose standard-function exact local transforms through real name formals for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
