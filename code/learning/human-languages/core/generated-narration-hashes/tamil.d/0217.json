@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 217,
-  "sourceHash": "fnv1a64:c126d65c9aa0639e",
+  "sourceHash": "fnv1a64:f2720e21c729b0e6",
   "lessonIds": [
     "TA-C217-manamakal",
     "TA-C217-manamakan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch217.txt",
   "json": "tamil/narration/ch217.json",
-  "textHash": "fnv1a64:7f5acd06cd633cd4",
-  "jsonHash": "fnv1a64:5f56bd101130a522",
+  "textHash": "fnv1a64:f16c2861f840c635",
+  "jsonHash": "fnv1a64:3b97a1e511015ed6",
   "findings": []
 }

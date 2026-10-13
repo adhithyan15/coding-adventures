@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Not at All, Is That So?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9f9523a50cea50d9",
+  "sourceHash": "fnv1a64:3e093b0e65cebdbd",
   "lessons": [
     {
       "id": "TA-C96-notatall",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b2150cb27a9961b",
+      "sourceHash": "fnv1a64:321b8d77ac3a3ed7",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "அடடா (aṭaṭā) is an exclamation, a sound of surprise or pity rather than a word built from parts. DEDR has no entry for it, and its origin is uncertain."
+              "text": "அடடா (aṭaṭā) is an exclamation, a sound of surprise or pity rather than a word built from parts. DEDR has no entry for it; the nearest is the exclamation aṭā (DEDR 70). Its origin is uncertain."
             }
           ]
         },

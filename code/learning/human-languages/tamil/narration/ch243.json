@@ -4,7 +4,7 @@
   "chapter": 243,
   "title": "Wheat, Potato, Aubergine, Fragrance, Cucumber",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a638d7bad7c4c5ad",
+  "sourceHash": "fnv1a64:ab9467f0fd65e6de",
   "lessons": [
     {
       "id": "TA-C243-kotumai",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84261e8a8606eafe",
+      "sourceHash": "fnv1a64:158b877d01153586",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கத்தரிக்காய் (kattarikkāy) is kattari, the name of the plant, and native kāy, \"unripe fruit, vegetable\" (DEDR 1459). The origin of kattari is uncertain; DEDR has no entry for it."
+              "text": "கத்தரிக்காய் (kattarikkāy) is kattari, the name of the plant, and native kāy, \"unripe fruit, vegetable\" (DEDR 1459, which compares Indo-Aryan kacca, \"raw\"). The origin of kattari is uncertain; DEDR has no entry for it."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1b49d0037404ba4",
+      "sourceHash": "fnv1a64:d1d1797807581b0e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வெள்ளரிக்காய் (veḷḷarikkāy) is native: veḷḷari, \"cucumber\" (DEDR 5504, which lists Malayalam veḷḷari), and kāy, \"unripe fruit, vegetable\" (DEDR 1459)."
+              "text": "வெள்ளரிக்காய் (veḷḷarikkāy) is native: veḷḷari, \"cucumber\" (DEDR 5504, which lists Malayalam veḷḷari), and kāy, \"unripe fruit, vegetable\" (DEDR 1459, which compares Indo-Aryan kacca, \"raw\")."
             }
           ]
         },

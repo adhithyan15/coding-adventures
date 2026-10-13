@@ -4,7 +4,7 @@
   "chapter": 258,
   "title": "To melt, To pick, To bark, To comfort, To shake hands",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7625452716c47e14",
+  "sourceHash": "fnv1a64:71cbf820a45706d4",
   "lessons": [
     {
       "id": "TA-C258-uruku",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e4301f6ecee4b64",
+      "sourceHash": "fnv1a64:15ca8c8cbc0b0426",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குரை (kurai) is native Dravidian. DEDR 1796 lists Malayalam kura, \"barking\"."
+              "text": "குரை (kurai) is native Dravidian. DEDR 1796 lists Malayalam kura, \"barking\", and compares Sanskrit kurkura, \"dog\" (CDIAL 3329)."
             }
           ]
         },

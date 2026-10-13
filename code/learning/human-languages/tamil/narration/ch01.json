@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:57acd2523d37dd16",
+  "sourceHash": "fnv1a64:4c8d2f47a2a6cf57",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bf96e78dad9d9da",
+      "sourceHash": "fnv1a64:23b554d3923d5cba",
       "notice": null,
       "blocks": [
         {
@@ -1119,7 +1119,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c7f719eed34da49",
+      "sourceHash": "fnv1a64:78158f1bc17a51cf",
       "notice": null,
       "blocks": [
         {
@@ -1169,7 +1169,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In ஆம் / இல்லை / சரி (ām / illai / sari), ām is worn down from ākum, \"it will be\", a form of the native verb \"to become\" (DEDR 333), and illai is native \"not being\" (DEDR 2559); Malayalam has ām and illa. The origin of sari is uncertain, and its own lesson gives the usual guess."
+              "text": "In ஆம் / இல்லை / சரி (ām / illai / sari), ām is worn down from ākum, \"it will be\", a form of the native verb \"to become\" (DEDR 333), and illai is native \"not being\" (DEDR 2559). DEDR compares Sanskrit ām, \"yes\". The origin of sari is uncertain, and its own lesson gives the usual guess."
             }
           ]
         },

@@ -13,7 +13,7 @@ You'll want to know: கரும்பு.
 கரும்பு — karumpu — "sugarcane".
 
 The word, taken apart.
-The origin of கரும்பு (karumpu) is uncertain. DEDR has no entry for it.
+கரும்பு (karumpu) is native Dravidian. DEDR 1288 lists Malayalam karimpu, Kannada kabbu and Tulu karmbu, all "sugarcane".
 
 What you've built.
 One more word for this chapter.
@@ -45,7 +45,7 @@ You'll want to know: வெண்டைக்காய்.
 வெண்டைக்காய் — veṇṭaikkāy — "okra, ladies' finger".
 
 The word, taken apart.
-வெண்டைக்காய் (veṇṭaikkāy) is veṇṭai, the name of the plant, and native kāy, "unripe fruit, vegetable" (DEDR 1459). The origin of veṇṭai is uncertain; DEDR has no entry for it.
+வெண்டைக்காய் (veṇṭaikkāy) is veṇṭai, the name of the plant, and native kāy, "unripe fruit, vegetable" (DEDR 1459, which compares Indo-Aryan kacca, "raw"). The origin of veṇṭai is uncertain; DEDR has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: முறுக்கு.
 முறுக்கு — muṟukku — "murukku (a crunchy spiral snack)".
 
 The word, taken apart.
-முறுக்கு (muṟukku) is native Dravidian. DEDR 5012 lists Malayalam muṟukuka, "to be twisted" and Kannada muṟuku. The entry glosses muṟukku as "a twisted cake", from "to twist".
+முறுக்கு (muṟukku) is native Dravidian. DEDR 5012 lists Malayalam muṟukuka, "to be twisted" and Kannada muṟuku. Its Malayalam muṟukku is glossed "a twisted cake", from "to twist".
 
 What you've built.
 One more word for this chapter.

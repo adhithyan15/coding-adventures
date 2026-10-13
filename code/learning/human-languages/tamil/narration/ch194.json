@@ -4,7 +4,7 @@
   "chapter": 194,
   "title": "To pour, To chop, To peel, To deep-fry, To knead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:37a9011a33b59d1a",
+  "sourceHash": "fnv1a64:07edde5763a759b1",
   "lessons": [
     {
       "id": "TA-C194-urru",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7a0f236330a5226",
+      "sourceHash": "fnv1a64:d6fa4011ef9819ae",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பிசை (picai) is native Dravidian. DEDR 4135 lists Kannada pisuku, \"to knead\"."
+              "text": "பிசை (picai) is native Dravidian. DEDR 4135 lists Kannada pisuku, \"to knead\", and compares Sanskrit picc-, \"to press\" (CDIAL 8149)."
             }
           ]
         },

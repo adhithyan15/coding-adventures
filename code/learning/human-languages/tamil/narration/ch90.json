@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Laughter and Tears",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:029169530caeae17",
+  "sourceHash": "fnv1a64:c51b3a39b21b51c8",
   "lessons": [
     {
       "id": "TA-C90-laughter",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59308366af824ac7",
+      "sourceHash": "fnv1a64:1dd21bd74df09fb7",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கண்ணீர் (kaṇṇīr) is native: kaṇ, \"eye\" (DEDR 1159), and nīr, \"water\" (DEDR 3690). DEDR 1159 lists kaṇṇīr itself."
+              "text": "கண்ணீர் (kaṇṇīr) is native: kaṇ, \"eye\" (DEDR 1159), and nīr, \"water\" (DEDR 3690). DEDR 1159 lists kaṇṇīr itself; DEDR 3690 compares Sanskrit nīra, \"water\"."
             }
           ]
         },

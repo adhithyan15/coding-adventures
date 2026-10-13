@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Things in the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5e04235cdbf52302",
+  "sourceHash": "fnv1a64:813b5829351b540a",
   "lessons": [
     {
       "id": "TA-C54-mat",
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4c0ef00a47434e6",
+      "sourceHash": "fnv1a64:2fb38793633059a0",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பெட்டி (peṭṭi) is native Dravidian. DEDR 4388 lists Malayalam peṭṭi, Kannada peṭṭi and Telugu peṭṭe."
+              "text": "பெட்டி (peṭṭi) is native Dravidian. DEDR 4388 lists Malayalam peṭṭi, Kannada peṭṭi and Telugu peṭṭe. The entry compares Sanskrit peṭaka, \"box\" (CDIAL 8164)."
             }
           ]
         },

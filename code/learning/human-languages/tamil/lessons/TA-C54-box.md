@@ -48,7 +48,7 @@ A பெட்டி is a box of any size: the tin trunk clothes live in, a matc
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பெட்டி** (*peṭṭi*) is native Dravidian. DEDR 4388 lists Malayalam *peṭṭi*, Kannada *peṭṭi* and Telugu *peṭṭe*.
+**பெட்டி** (*peṭṭi*) is native Dravidian. DEDR 4388 lists Malayalam *peṭṭi*, Kannada *peṭṭi* and Telugu *peṭṭe*. The entry compares Sanskrit *peṭaka*, "box" (CDIAL 8164).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

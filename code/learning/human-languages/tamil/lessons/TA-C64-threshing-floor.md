@@ -48,7 +48,7 @@ It is not காலம், the season word you already have. This one is short a
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**களம்** (*kaḷam*) is native Dravidian. DEDR 1376 lists Malayalam *kaḷam* and Kannada *kaḷa*.
+**களம்** (*kaḷam*) is native Dravidian. DEDR 1376 lists Malayalam *kaḷam* and Kannada *kaḷa*. The entry compares Sanskrit *khala*, "threshing floor" (CDIAL 3834).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

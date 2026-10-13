@@ -49,7 +49,7 @@ reviews_of: [TA-C123-valaippalam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மாம்பழம்** (*māmpaḻam*) is native: *mā*, "mango" (DEDR 4782; Malayalam *mā*), and *paḻam*, "fruit" (DEDR 4004). English *mango* came, through Portuguese, from the Malayalam form *māṅṅa*.
+**மாம்பழம்** (*māmpaḻam*) is native: *mā*, "mango" (DEDR 4782; Malayalam *mā*), and *paḻam*, "fruit" (DEDR 4004). DEDR compares Sanskrit *mākanda*, "mango tree", and *phala*, "fruit". English *mango* came, through Portuguese, from the Malayalam form *māṅṅa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

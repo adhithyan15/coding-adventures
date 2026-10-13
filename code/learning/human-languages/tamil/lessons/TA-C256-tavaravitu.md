@@ -15,7 +15,7 @@ concept_tag: TA-VERB-TAVARAVITU
 prerequisites: [TA-C256-errukkol, TA-C256-pinparru]
 sounds: []
 roots: [dravidian-tavaru-slip-fail, dravidian-vidu-let-go]
-etymology_hook: "தவறவிடு — native: tavaṟa 'failing, missing' (DEDR 3068) + viṭu 'to let go' (DEDR 5393)"
+etymology_hook: "தவறவிடு — native: tavaṟa 'failing, missing' (DEDR 3071) + viṭu 'to let go' (DEDR 5393)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C256-pinparru]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**தவறவிடு** (*tavaṟaviṭu*) is native: *tavaṟa*, "failing, missing", from *tavaṟu* (DEDR 3068), and *viṭu*, "to let go" (DEDR 5393).
+**தவறவிடு** (*tavaṟaviṭu*) is native: *tavaṟa*, "failing, missing", from *tavaṟu*, "to slip, to fail" (DEDR 3071), and *viṭu*, "to let go" (DEDR 5393).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

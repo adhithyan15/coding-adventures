@@ -15,7 +15,7 @@ concept_tag: TA-GUNAM181-MOCAMANA
 prerequisites: [TA-C180-cuvaraciyamana, TA-C181-pitittamana]
 sounds: []
 roots: [tamil-mosam-bad]
-etymology_hook: "மோசமான — origin uncertain; mōcam 'deceit, a bad turn' has no DEDR entry"
+etymology_hook: "மோசமான — mōcam 'deceit', probably Sanskrit mōṣa 'theft' (CDIAL 10358); no DEDR entry"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C181-pitittamana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **மோசமான** (*mōcamāṉa*) is uncertain. *Mōcam*, "deceit, a bad turn", has no entry in DEDR, and its source is not settled.
+The origin of **மோசமான** (*mōcamāṉa*) is uncertain. *Mōcam*, "deceit, a bad turn", has no entry in DEDR; it is probably Sanskrit *mōṣa*, "theft" (CDIAL 10358).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

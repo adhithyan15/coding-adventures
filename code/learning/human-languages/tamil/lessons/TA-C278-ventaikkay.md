@@ -47,7 +47,7 @@ reviews_of: [TA-C278-karumpu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**வெண்டைக்காய்** (*veṇṭaikkāy*) is *veṇṭai*, the name of the plant, and native *kāy*, "unripe fruit, vegetable" (DEDR 1459). The origin of *veṇṭai* is uncertain; DEDR has no entry for it.
+**வெண்டைக்காய்** (*veṇṭaikkāy*) is *veṇṭai*, the name of the plant, and native *kāy*, "unripe fruit, vegetable" (DEDR 1459, which compares Indo-Aryan *\*kacca*, "raw"). The origin of *veṇṭai* is uncertain; DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

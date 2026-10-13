@@ -46,7 +46,7 @@ reviews_of: [TA-C108-eaten]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ரொம்ப நாளாச்சு** (*rompa nāḷāccu*) is native: *rompa*, "very", the spoken form of *nirampa*, "fully", from *nira*, "to be full" (DEDR 3672), and *nāḷ*, "day" (DEDR 3656), with *ācci*, "it has become": "it has been many days".
+**ரொம்ப நாளாச்சு** (*rompa nāḷāccu*) is native: *rompa*, "very", the spoken form of *nirampa*, "fully", from *nira*, "to be full" (DEDR 3672), and *nāḷ*, "day" (DEDR 3656), with *āccu*, "it has become": "it has been many days".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

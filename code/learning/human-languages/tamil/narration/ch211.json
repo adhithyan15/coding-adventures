@@ -4,7 +4,7 @@
   "chapter": 211,
   "title": "Pleasant, Friendly, Fool, Pink, Brown",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:61bd0713c208d859",
+  "sourceHash": "fnv1a64:10069f9f4d31bfcd",
   "lessons": [
     {
       "id": "TA-C211-inimaiyana",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40230d8cf912c203",
+      "sourceHash": "fnv1a64:9ff4fe91406dc373",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பழுப்பு (paḻuppu) is native Dravidian (DEDR 4004). The entry gives paḻuppu, \"ripeness, the yellowness of ripe fruit\": brown is the colour of ripening."
+              "text": "பழுப்பு (paḻuppu) is native Dravidian (DEDR 4004). The entry gives paḻuppu, \"ripeness, the yellowness of ripe fruit\": brown is the colour of ripening. The entry compares Sanskrit phala, \"fruit\"."
             }
           ]
         },

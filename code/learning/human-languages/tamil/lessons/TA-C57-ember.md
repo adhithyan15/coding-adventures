@@ -48,7 +48,7 @@ It is the word Tamil reaches for when it means heat held rather than heat let go
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கனல்** (*kaṉal*) is native Dravidian. DEDR 1406 lists Malayalam *kanal*, "live coals" and Kannada *kanal*, "to glow".
+**கனல்** (*kaṉal*) is native Dravidian. DEDR 1406 lists Malayalam *kanal*, "live coals" and Kannada *kanal*, "to glow". The entry compares Sanskrit *kanala*, "shining".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

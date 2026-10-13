@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "Stairs, Pharmacy, Restaurant, Supermarket, Clothes shop",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bc979026b33b043b",
+  "sourceHash": "fnv1a64:4db5ae798e400d77",
   "lessons": [
     {
       "id": "TA-C204-patikkattu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d8ef0d9f0540506",
+      "sourceHash": "fnv1a64:5aae41c61f289d30",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பல்பொருள் அங்காடி (palporuḷ aṅkāṭi) is native: pal, \"many\" (DEDR 3987), poruḷ, \"thing\" (DEDR 4544), and aṅkāṭi, \"bazaar\" (DEDR 35; Malayalam aṅṅāṭi): \"the many-things bazaar\"."
+              "text": "பல்பொருள் அங்காடி (palporuḷ aṅkāṭi) is native: pal, \"many\" (DEDR 3987), poruḷ, \"thing\" (DEDR 4544), and aṅkāṭi, \"bazaar\" (DEDR 35; Malayalam aṅṅāṭi): \"the many-things bazaar\". DEDR compares aṅkāṭi, with a query, to Sanskrit aṅgaṇa, \"courtyard\"."
             }
           ]
         },

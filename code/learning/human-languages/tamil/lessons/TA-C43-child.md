@@ -46,7 +46,7 @@ Take it apart and the stem is *kuḻa-*, 'young, tender', closed off into a noun
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குழந்தை** (*kuḻandai*) is native Dravidian. DEDR 2149 files it with words for young and tender things: Malayalam *koḻuntu*, "tender twig", and Telugu *koḍuku*, "son".
+**குழந்தை** (*kuḻandai*) is native Dravidian. DEDR 2149 files it with words for young and tender things: Malayalam *koḻuntu*, "tender twig", and Telugu *koḍuku*, "son". The entry compares Sanskrit *kuḍaka*, "child" (CDIAL 3245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

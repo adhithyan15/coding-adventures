@@ -47,7 +47,7 @@ reviews_of: [TA-C141-pucci]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**சிலந்தி** (*cilanti*) is native Dravidian. DEDR 2562 lists Malayalam *cilanni* and Kannada *selandi*.
+**சிலந்தி** (*cilanti*) is native Dravidian. DEDR 2562 lists Malayalam *cilanni* and Kannada *selandi*. The entry compares Sanskrit *śalaka*, "spider".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

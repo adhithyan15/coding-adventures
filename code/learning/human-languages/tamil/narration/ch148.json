@@ -4,7 +4,7 @@
   "chapter": 148,
   "title": "Deep, Wide, Narrow, Dry, Wet",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0bbe08e575b639ac",
+  "sourceHash": "fnv1a64:08f62a092be8a8bf",
   "lessons": [
     {
       "id": "TA-C148-alamana",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c42a1d5c9f83304c",
+      "sourceHash": "fnv1a64:9480505d692d5fa2",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "காய்ந்த (kāynta) is native Dravidian. DEDR 1458 lists Malayalam kāyuka, \"to grow dry\". It comes from kāy, \"to grow hot, to dry up\"."
+              "text": "காய்ந்த (kāynta) is native Dravidian. DEDR 1458 lists Malayalam kāyuka, \"to grow dry\". It comes from kāy, \"to grow hot, to dry up\". The entry compares Sanskrit (lexicons) kāhala, \"dry\"."
             }
           ]
         },

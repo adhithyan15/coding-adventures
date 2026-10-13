@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 47,
-  "sourceHash": "fnv1a64:6a7e6da5ff3c5600",
+  "sourceHash": "fnv1a64:853e3ecc8b7076b3",
   "lessonIds": [
     "TA-C47-true",
     "TA-C47-enough",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch47.txt",
   "json": "tamil/narration/ch47.json",
-  "textHash": "fnv1a64:a308b558058b8433",
-  "jsonHash": "fnv1a64:3c25433cd4b87164",
+  "textHash": "fnv1a64:9fbf6c35d9f515d5",
+  "jsonHash": "fnv1a64:507bc6c66cb41c83",
   "findings": []
 }

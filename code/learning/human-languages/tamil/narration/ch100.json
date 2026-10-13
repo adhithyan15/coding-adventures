@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Children, Husbands, Wives",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:597a611018781993",
+  "sourceHash": "fnv1a64:b24aab30a4c59138",
   "lessons": [
     {
       "id": "TA-C100-children",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2f3ab1839a95921",
+      "sourceHash": "fnv1a64:b925aad764475139",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "குழந்தைகள் (kuḻantaikaḷ) is native Dravidian (DEDR 2149). It is kuḻandai, \"child\", with the plural -kaḷ."
+              "text": "குழந்தைகள் (kuḻantaikaḷ) is native Dravidian (DEDR 2149). It is kuḻandai, \"child\", with the plural -kaḷ. DEDR compares Sanskrit kuḍaka, \"child\"."
             }
           ]
         },
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0a5c354623c9d8e",
+      "sourceHash": "fnv1a64:ad0b46404b6276be",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கணவர் (kaṇavar) is native Dravidian (DEDR 1173). The entry lists kaṇavaṉ, \"husband\"; -ar is the respectful ending."
+              "text": "கணவர் (kaṇavar) is native Dravidian (DEDR 1173). The entry lists kaṇavaṉ, \"husband\"; -ar is the respectful ending. DEDR compares Sanskrit (lexicons) gaṇḍa, \"hero\"."
             }
           ]
         },

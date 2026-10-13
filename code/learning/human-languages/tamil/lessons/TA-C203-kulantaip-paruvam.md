@@ -47,7 +47,7 @@ reviews_of: [TA-C203-atuvarai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குழந்தைப் பருவம்** (*kuḻantaip paruvam*) is native *kuḻantai*, "child" (DEDR 2149), and *paruvam*, "season, stage of life", from Sanskrit *parvan*, "joint, section" (CDIAL 7947).
+**குழந்தைப் பருவம்** (*kuḻantaip paruvam*) is native *kuḻantai*, "child" (DEDR 2149, which compares Sanskrit *kuḍaka*), and *paruvam*, "season, stage of life", from Sanskrit *parvan*, "joint, section" (CDIAL 7947).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [TA-C232-palvali]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **காயம்** (*kāyam*), "wound", is uncertain. DEDR does not give this sense, but it lists *kāyam*, "scar", beside *kāy*, "to form a callus, as from a wound" (DEDR 1460), and the two may be one word.
+The origin of **காயம்** (*kāyam*), "wound", is uncertain. DEDR does not give this sense, but it lists *kāyam*, "scar", beside *kāy*, "to form a callus, as from a wound" (DEDR 1460), and the two may be one word. Another possible source is Prakrit *ghāya*, "wound" (CDIAL 4460).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

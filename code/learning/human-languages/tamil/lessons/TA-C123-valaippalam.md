@@ -47,7 +47,7 @@ reviews_of: [TA-C123-kaykari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**வாழைப்பழம்** (*vāḻaippaḻam*) is native: *vāḻai*, "plantain" (DEDR 5373; Malayalam *vāḻa*, Kannada *bāḻe*), and *paḻam*, "fruit" (DEDR 4004).
+**வாழைப்பழம்** (*vāḻaippaḻam*) is native: *vāḻai*, "plantain" (DEDR 5373; Malayalam *vāḻa*, Kannada *bāḻe*), and *paḻam*, "fruit" (DEDR 4004). DEDR compares Sanskrit (lexicons) *vārabuṣā*, "plantain", and *phala*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

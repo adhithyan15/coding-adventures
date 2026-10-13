@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 250,
-  "sourceHash": "fnv1a64:a5261233fba257b3",
+  "sourceHash": "fnv1a64:8b79e3e6a7fd0e14",
   "lessonIds": [
     "TA-C250-kutaram",
     "TA-C250-uncal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch250.txt",
   "json": "tamil/narration/ch250.json",
-  "textHash": "fnv1a64:9d729d9c1c5dab62",
-  "jsonHash": "fnv1a64:23078d49d22bc7c4",
+  "textHash": "fnv1a64:cda681b47e88980d",
+  "jsonHash": "fnv1a64:5a9fdf5e17137188",
   "findings": []
 }

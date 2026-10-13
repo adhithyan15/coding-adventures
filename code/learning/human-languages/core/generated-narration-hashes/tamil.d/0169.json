@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 169,
-  "sourceHash": "fnv1a64:8544382fa2bc9f3e",
+  "sourceHash": "fnv1a64:f8aa7a2dc68a9539",
   "lessonIds": [
     "TA-C169-kanukkal",
     "TA-C169-ituppu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch169.txt",
   "json": "tamil/narration/ch169.json",
-  "textHash": "fnv1a64:e0998d684ecfc058",
-  "jsonHash": "fnv1a64:32b4ebb6302f932d",
+  "textHash": "fnv1a64:fee9b321e62199dd",
+  "jsonHash": "fnv1a64:42895330a50fdfea",
   "findings": []
 }

@@ -47,7 +47,7 @@ reviews_of: [TA-C180-cuvaraciyamana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பிடித்தமான** (*piṭittamāṉa*) is native Dravidian (DEDR 4148). The entry lists *piṭittam*, "grasp"; what you are fond of is what "takes hold" of you, as in *enakku piṭikkum*, "I like it".
+**பிடித்தமான** (*piṭittamāṉa*) is native Dravidian (DEDR 4148). The entry glosses the verb *piṭi* "to grasp" and also "to be pleasing"; what you are fond of is what "takes hold" of you, as in *enakku piṭikkum*, "I like it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

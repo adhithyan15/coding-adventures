@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "What You Wear",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0b35a5ef31835bf3",
+  "sourceHash": "fnv1a64:9055e19df02ef054",
   "lessons": [
     {
       "id": "TA-C67-shirt",
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fef819bfc77f7d58",
+      "sourceHash": "fnv1a64:e313d38e92f73068",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "புடவை (puḍavai) is native Dravidian. DEDR 4256 lists Malayalam puṭava and Kannada puṭṭige."
+              "text": "புடவை (puḍavai) is native Dravidian. DEDR 4256 lists Malayalam puṭava and Kannada puṭṭige. The entry compares Sanskrit phuṭṭikā, \"a kind of cloth\"."
             }
           ]
         },

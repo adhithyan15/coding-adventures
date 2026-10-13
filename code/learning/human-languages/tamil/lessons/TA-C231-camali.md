@@ -15,7 +15,7 @@ concept_tag: TA-VERB-CAMALI
 prerequisites: [TA-C231-eccari, TA-C231-kencu]
 sounds: []
 roots: [tamil-samali-manage]
-etymology_hook: "சமாளி — origin uncertain; DEDR has no entry for it"
+etymology_hook: "சமாளி — origin uncertain; no DEDR entry; perhaps Indo-Aryan sambhāḷ- 'take care' (CDIAL 12962)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [TA-C231-kencu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **சமாளி** (*camāḷi*) is uncertain. DEDR has no entry for it.
+The origin of **சமாளி** (*camāḷi*) is uncertain. DEDR has no entry for it. It may be Indo-Aryan *sambhāḷ-*, "take care", as in Marathi (CDIAL 12962).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

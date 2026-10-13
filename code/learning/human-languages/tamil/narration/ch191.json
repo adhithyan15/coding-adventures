@@ -4,7 +4,7 @@
   "chapter": 191,
   "title": "Shopkeeper, Customer, Cashier, Tailor, Small change",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:63f9908dd08c0c29",
+  "sourceHash": "fnv1a64:21309a1d6329f5b9",
   "lessons": [
     {
       "id": "TA-C191-kataikkarar",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1261f9987577766",
+      "sourceHash": "fnv1a64:4ccd84b32bf74ff8",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "காசாளர் (kācāḷar) is native Dravidian. DEDR 1431 lists Malayalam kāśu, \"money\" and Kannada kāsu, \"coin\". It is kācu, \"coin, money\", with -āḷar, \"the one who handles\"."
+              "text": "காசாளர் (kācāḷar) is native Dravidian. DEDR 1431 lists Malayalam kāśu, \"money\" and Kannada kāsu, \"coin\". It is kācu, \"coin, money\", with -āḷar, \"the one who handles\". DEDR compares kācu, with a query, to Sanskrit karṣa, a weight."
             }
           ]
         },

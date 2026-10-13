@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Rest of You",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b86da4f1bd170bbc",
+  "sourceHash": "fnv1a64:522a85cdd96f94e9",
   "lessons": [
     {
       "id": "TA-C55-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da70007b380a3745",
+      "sourceHash": "fnv1a64:2243586acca1e239",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கழுத்து (kaḻuttu) is native Dravidian. DEDR 1366 lists Malayalam kaḻuttu and Kannada kattu."
+              "text": "கழுத்து (kaḻuttu) is native Dravidian. DEDR 1366 lists Malayalam kaḻuttu and Kannada kattu. The entry compares Sanskrit kaṇṭha, \"neck\" (CDIAL 2680)."
             }
           ]
         },
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29e91d7f0bfaf532",
+      "sourceHash": "fnv1a64:ea2f79853bb5abc8",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "எலும்பு (elumbu) is native Dravidian. DEDR 839 lists Malayalam elumpu, Kannada elubu and Telugu emuka."
+              "text": "எலும்பு (elumbu) is native Dravidian. DEDR 839 lists Malayalam elumpu, Kannada elubu and Telugu emuka. The entry compares Sanskrit eḍūka, \"a monument holding bones\"."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [TA-C114-palam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பூங்கா** (*pūṅkā*) is native: *pū*, "flower" (DEDR 4345), and *kā*, "grove, garden" (DEDR 1418): "flower-garden".
+**பூங்கா** (*pūṅkā*) is native: *pū*, "flower" (DEDR 4345), and *kā*, "grove, garden" (DEDR 1418): "flower-garden". DEDR compares Sanskrit *kānana*, "forest", and, with a query, *puṣpa*, "flower".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

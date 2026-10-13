@@ -4,7 +4,7 @@
   "chapter": 241,
   "title": "Ordinary, Rare, Equal, Rough, Lukewarm",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9f0de34df33adf7a",
+  "sourceHash": "fnv1a64:01ec7dda2225aeed",
   "lessons": [
     {
       "id": "TA-C241-cataranamana",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66dcdfdfbdd71e57",
+      "sourceHash": "fnv1a64:baa7de85e799fdfb",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கரடுமுரடான (karaṭumuraṭāṉa) is native Dravidian. DEDR 1265 lists Kannada karaḍu, \"rough, uneven\". Karaṭu, \"roughness\", is doubled with a rhyming partner, muraṭu."
+              "text": "கரடுமுரடான (karaṭumuraṭāṉa) is native Dravidian. DEDR 1265 lists Kannada karaḍu, \"rough, uneven\". Karaṭu, \"roughness\", is doubled with a rhyming partner, muraṭu. The entry compares Sanskrit karkaśa, \"rough, harsh\"."
             }
           ]
         },

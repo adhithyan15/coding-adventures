@@ -4,7 +4,7 @@
   "chapter": 147,
   "title": "Young, Old, Clever, Lazy, Brave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:62942f7ce7a7c4ad",
+  "sourceHash": "fnv1a64:5ff533259351103f",
   "lessons": [
     {
       "id": "TA-C147-ilaiya",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b42bab2fdef50f44",
+      "sourceHash": "fnv1a64:abb508a507b4a199",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "சோம்பேறி (cōmpēṟi) is native Dravidian. DEDR 2882 lists Kannada jompisu, \"to doze\". It is built on cōmpu, \"to be idle, sluggish\"."
+              "text": "சோம்பேறி (cōmpēṟi) is native Dravidian. DEDR 2882 lists Kannada sōmāri, \"sluggard\", and jompisu, \"to be stupefied\". It is built on cōmpu, \"to be idle, sluggish\"."
             }
           ]
         },

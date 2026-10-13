@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "The Room You Are In",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a5674721c58f6e0f",
+  "sourceHash": "fnv1a64:12d0ec29d44a8acb",
   "lessons": [
     {
       "id": "TA-C70-table",
@@ -174,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f785f532b98ad9b",
+      "sourceHash": "fnv1a64:c54260af5ecae6e1",
       "notice": null,
       "blocks": [
         {
@@ -224,7 +224,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கட்டில் (kaṭṭil) is native Dravidian. DEDR 1145 lists Malayalam kaṭṭil and Telugu kaṭli, \"litter\"."
+              "text": "கட்டில் (kaṭṭil) is native Dravidian. DEDR 1145 lists Malayalam kaṭṭil and Telugu kaṭli, \"litter\". The entry compares Sanskrit khaṭvā, \"cot\" (CDIAL 3781)."
             }
           ]
         },

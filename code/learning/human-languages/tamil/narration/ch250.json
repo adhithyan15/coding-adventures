@@ -4,7 +4,7 @@
   "chapter": 250,
   "title": "Tent, Swing, Banyan tree, Pair of scales, Straw",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a5261233fba257b3",
+  "sourceHash": "fnv1a64:8b79e3e6a7fd0e14",
   "lessons": [
     {
       "id": "TA-C250-kutaram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d163f0d95ac49ab",
+      "sourceHash": "fnv1a64:7adf36c05143bc83",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கூடாரம் (kūṭāram) is a South Indian word: DEDR 1881 lists Malayalam kūṭāram, Kannada guḍāra and Telugu guḍāramu. DEDR also compares Prakrit guḍḍara, \"tent\", so which way the word travelled is uncertain."
+              "text": "கூடாரம் (kūṭāram) is a South Indian word: DEDR 1881 lists Malayalam kūṭāram, Kannada guḍāra and Telugu guḍāramu. DEDR also compares Sanskrit (lexicons) kuṭaru and Prakrit guḍḍara, \"tent\", so which way the word travelled is uncertain."
             }
           ]
         },

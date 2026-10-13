@@ -48,7 +48,7 @@ Kannada ಕೊಡೆ (*koḍe*) is the same word. It ends on the ை you already
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குடை** (*kuṭai*) is native Dravidian. DEDR 1663 lists Malayalam *kuṭa*, Kannada *koḍe* and Telugu *goḍugu*.
+**குடை** (*kuṭai*) is native Dravidian. DEDR 1663 lists Malayalam *kuṭa*, Kannada *koḍe* and Telugu *goḍugu*. The entry compares Sanskrit (lexicons) *utkūṭa*, "umbrella".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

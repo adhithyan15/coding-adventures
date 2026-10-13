@@ -4,7 +4,7 @@
   "chapter": 214,
   "title": "Buttermilk, Fruit juice, Tender coconut water, Flour, Bread",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1c99b3c0ceef3a2e",
+  "sourceHash": "fnv1a64:52d400fb6d6550b5",
   "lessons": [
     {
       "id": "TA-C214-mor",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6975a15121f7faa7",
+      "sourceHash": "fnv1a64:ca03229db40b9ef9",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பழச்சாறு (paḻaccāṟu) is native: paḻam, \"fruit\" (DEDR 4004), and cāṟu, \"juice\" (DEDR 2484)."
+              "text": "பழச்சாறு (paḻaccāṟu) is native: paḻam, \"fruit\" (DEDR 4004, which compares Sanskrit phala), and cāṟu, \"juice\" (DEDR 2484)."
             }
           ]
         },
