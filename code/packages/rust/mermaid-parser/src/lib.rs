@@ -7226,8 +7226,9 @@ fn parse_swimlane_shape_attributes(
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
                     "rect" | "proc" | "process" | "rectangle" | "squarerect" => DiagramShape::Rect,
-                    "rounded" | "event" | "state" | "roundedrect" => DiagramShape::RoundedRect,
-                    "circle" | "circ" => DiagramShape::Ellipse,
+                    "rounded" | "event" | "state" | "roundedrect" | "kanbanitem"
+                    | "defaultmindmapnode" => DiagramShape::RoundedRect,
+                    "circle" | "circ" | "mindmapcircle" => DiagramShape::Ellipse,
                     "choice" | "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
                     "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
                     "hourglass" | "collate" => DiagramShape::Hourglass,

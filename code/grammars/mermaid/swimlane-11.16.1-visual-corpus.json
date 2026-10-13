@@ -80,6 +80,7 @@
     "label-rect-shape",
     "anchor-shape",
     "rect-with-title-shape",
+    "internal-container-shapes",
     "legacy-internal-shape-aliases",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
