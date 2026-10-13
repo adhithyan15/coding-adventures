@@ -275,6 +275,18 @@ test('the download fallback refuses a name with no accepted type', async () => {
   }
 });
 
+test('files.open never falls back to a download, whatever its payload carries', async () => {
+  const clicked = [];
+  const { files, completions } = fixture({
+    showOpenFilePicker: undefined, showSaveFilePicker: undefined,
+    Blob: class {}, URL: { createObjectURL: () => 'blob:x', revokeObjectURL() {} }, setTimeout: () => {},
+    document: { createElement: () => ({ click() { clicked.push(1); } }) },
+  });
+  await files.run(effect(16, 'files.open', { accept: ['application/json'], suggestedName: 'x.json', bytes: 'AA==' }));
+  assert.equal(clicked.length, 0);
+  assert.ok(completions[0][1].failed);
+});
+
 test('the plain-name rule and executable list match the Compose library', async () => {
   // The rules live in the half Compose Desktop and Android share (UI89 §3.8).
   const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicFileEffects.kt', import.meta.url), 'utf8');

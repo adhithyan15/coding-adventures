@@ -268,7 +268,9 @@ export function createBrowserFileEffects(host, environment = globalThis) {
         const match = accepted.find(([, extensions]) =>
           extensions.some(extension => options.suggestedName?.toLowerCase().endsWith(extension)));
         const now = typeof environment.performance?.now === 'function' ? environment.performance.now() : Date.now();
-        if (match
+        // `saving` is explicit: an open must never become a download, even if
+        // a later change gives the open picker a suggested name.
+        if (saving && match
             && typeof environment.document?.createElement === 'function'
             && typeof environment.URL?.createObjectURL === 'function') {
           if (now - lastFallbackDownload < DOWNLOAD_FALLBACK_INTERVAL_MS) {

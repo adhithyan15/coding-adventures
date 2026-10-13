@@ -12,6 +12,8 @@
   would quietly widen the picker to every file.
 - `files.open` always returns `{name, mimeType, bytes}`; the alias-only
   result without `mimeType` is gone, as is the alias's download refusal.
+- The download fallback now checks `saving` explicitly instead of relying on
+  the kind, so an open can never become a download. A test pins it.
 - Tests use `files.*` throughout. A new test pins both refusals.
 
 ### Added — the VisiCalc workbook type (#16927)
