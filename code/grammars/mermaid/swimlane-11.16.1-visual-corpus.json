@@ -71,6 +71,7 @@
     "automatic-lane-ordering",
     "line-hops-step",
     "line-hops-rounded",
-    "nested-subgraphs"
+    "nested-subgraphs",
+    "state-choice-note-shapes"
   ]
 }

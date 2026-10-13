@@ -2309,6 +2309,17 @@ fn swimlane_nested_subgraphs_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_state_choice_and_note_attributes_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+    let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Workflow\n  pending@{ shape: state, label: \"Pending\" }\n  branch@{ shape: choice, label: \"Choose\" }\n  memo@{ shape: note, label: \"Decision note\" }\nend\npending --> branch --> memo")
+        .expect("state, choice, and note shapes should parse");
+
+    assert_eq!(diagram.nodes[0].shape, DiagramShape::RoundedRect);
+    assert_eq!(diagram.nodes[1].shape, DiagramShape::Diamond);
+    assert_eq!(diagram.nodes[2].shape, DiagramShape::Note);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
