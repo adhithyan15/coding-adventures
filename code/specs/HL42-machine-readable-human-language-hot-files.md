@@ -46,24 +46,30 @@ same repository state and arguments produce byte-identical output.
 
 ## 3. Counting rules
 
-For each selected commit, the tool asks Git for NUL-delimited name/status data
-with rename detection enabled. Each resulting path is counted at most once in
-that commit.
+For each selected commit, the tool asks Git for repository-wide NUL-delimited
+name/status data with rename detection enabled, then applies the literal scope
+filter itself. Inspecting the complete commit diff means a rename whose source
+or destination crosses the scope boundary remains visible. Each resulting
+in-scope destination path is counted at most once in that commit.
 
-- add, modify, type-change, copy, and delete statuses count against the path
-  named by that status;
+- add, modify, type-change, and delete statuses count against the path named by
+  that status;
 - a rename counts once against the destination path, not once against each of
   the old and new names;
-- every rename is also recorded explicitly with commit, source, destination,
-  and similarity score;
+- every rename with at least one endpoint in scope is also recorded explicitly
+  with commit, source, destination, and similarity score; a destination outside
+  the scope receives no file row;
+- copy detection is intentionally not enabled: an ordinary copied file is an
+  add, and the report makes no claim about copy provenance;
 - an unsupported or malformed Git status is an error, not a skipped row.
 
 File rows contain the path, number of commits touching it, status counts, the
-full commit identities that contributed, and `present_at_revision`. The latter
-is false when the newest selected status for that path is deletion. Deleted hot
-spots stay visible as historical evidence without being mistaken for current
-work. They sort by descending touch count and then raw Unicode code-point path
-order. Status keys and commit lists have deterministic order.
+full commit identities that contributed, and `present_at_revision`. Presence is
+derived independently from a NUL-delimited listing of the resolved Git tree,
+not inferred from history statuses. Deleted and renamed-away hot spots therefore
+stay visible as historical evidence without being mistaken for current work.
+They sort by descending touch count and then raw Unicode code-point path order.
+Status keys and commit lists have deterministic order.
 
 ## 4. Direct-owner families
 
@@ -115,7 +121,9 @@ Tests create disposable Git repositories rather than mocking Git. They cover:
 
 - the exact recent-human-language commit window and scope filter;
 - stable file and family ordering;
-- rename accounting without source/destination double-counting;
+- rename accounting without source/destination double-counting, including a
+  multi-commit renamed-away path and a rename across the scope boundary;
+- explicit add semantics for copies;
 - an empty scoped history;
 - filenames containing spaces, tabs, newlines, quotes, and non-ASCII text;
 - invalid counts, revisions, path arguments, and malformed status streams;

@@ -145,7 +145,7 @@ class HotFileReportTests(unittest.TestCase):
         self.assertEqual(row["hottest_members"], [first])
         self.assertIn(first, [file_row["path"] for file_row in report["files"]])
 
-    def test_rename_counts_only_the_destination_and_records_provenance(self) -> None:
+    def test_rename_marks_the_earlier_source_absent_and_counts_only_the_destination(self) -> None:
         old_path = "code/learning/human-languages/punjabi/old name.md"
         new_path = "code/learning/human-languages/punjabi/new name.md"
         self.fixture.write(old_path, "unchanged bytes\n")
@@ -156,13 +156,16 @@ class HotFileReportTests(unittest.TestCase):
         report = hot_files.build_report(
             self.fixture.root,
             revision="HEAD",
-            commit_count=1,
+            commit_count=10,
             path_scope=("code/learning/human-languages",),
         )
 
-        self.assertEqual([row["path"] for row in report["files"]], [new_path])
-        self.assertEqual(report["files"][0]["status_counts"], {"R": 1})
-        self.assertTrue(report["files"][0]["present_at_revision"])
+        rows = {row["path"]: row for row in report["files"]}
+        self.assertEqual(set(rows), {old_path, new_path})
+        self.assertEqual(rows[new_path]["status_counts"], {"R": 1})
+        self.assertTrue(rows[new_path]["present_at_revision"])
+        self.assertEqual(rows[old_path]["status_counts"], {"A": 1})
+        self.assertFalse(rows[old_path]["present_at_revision"])
         self.assertEqual(
             report["renames"],
             [
@@ -174,6 +177,55 @@ class HotFileReportTests(unittest.TestCase):
                 }
             ],
         )
+
+    def test_records_a_rename_that_crosses_the_scope_boundary(self) -> None:
+        old_path = "code/learning/human-languages/punjabi/in-scope.md"
+        new_path = "archive/outside-scope.md"
+        self.fixture.write(old_path, "unchanged bytes\n")
+        self.fixture.commit("in scope")
+        (self.fixture.root / new_path).parent.mkdir(parents=True)
+        self.fixture.git("mv", old_path, new_path)
+        renamed_at = self.fixture.commit("move out of scope")
+
+        report = hot_files.build_report(
+            self.fixture.root,
+            revision="HEAD",
+            commit_count=10,
+            path_scope=("code/learning/human-languages",),
+        )
+
+        self.assertEqual([row["path"] for row in report["files"]], [old_path])
+        self.assertFalse(report["files"][0]["present_at_revision"])
+        self.assertEqual(
+            report["renames"],
+            [
+                {
+                    "commit": renamed_at,
+                    "old_path": old_path,
+                    "new_path": new_path,
+                    "similarity": 100,
+                }
+            ],
+        )
+
+    def test_reports_an_ordinary_copy_as_an_add_without_provenance(self) -> None:
+        source = "code/learning/human-languages/punjabi/source.md"
+        copied = "code/learning/human-languages/punjabi/copied.md"
+        self.fixture.write(source, "same bytes\n")
+        self.fixture.commit("source")
+        self.fixture.write(copied, "same bytes\n")
+        self.fixture.commit("copy")
+
+        report = hot_files.build_report(
+            self.fixture.root,
+            revision="HEAD",
+            commit_count=1,
+            path_scope=("code/learning/human-languages",),
+        )
+
+        self.assertEqual([row["path"] for row in report["files"]], [copied])
+        self.assertEqual(report["files"][0]["status_counts"], {"A": 1})
+        self.assertEqual(report["renames"], [])
 
     def test_preserves_control_sensitive_and_unicode_paths_in_json(self) -> None:
         names = (

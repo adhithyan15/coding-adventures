@@ -40,9 +40,10 @@ class HotFileReportError(RuntimeError):
 class Change:
     """One destination-oriented path change from one commit.
 
-    Rename and copy records carry two Git paths. The destination is the owner
-    that receives the touch; the source remains provenance rather than a second
-    touch. This is what prevents a rename from looking like two hot files.
+    Two-path records carry a source as well as a destination. The destination
+    is the owner that receives the touch; the source remains provenance rather
+    than a second touch. This is what prevents a rename from looking like two
+    hot files.
     """
 
     status: str
@@ -159,7 +160,7 @@ def _selected_commits(
                 f"--max-count={commit_count}",
                 revision,
                 "--",
-                *path_scope,
+                *(_literal_pathspec(scope) for scope in path_scope),
             ),
         ),
         "commit list",
@@ -228,7 +229,6 @@ def parse_name_status(data: bytes, commit: str) -> list[Change]:
 def _changes_for_commit(
     root: Path,
     commit: str,
-    path_scope: Sequence[str],
 ) -> list[Change]:
     return parse_name_status(
         _git(
@@ -243,12 +243,58 @@ def _changes_for_commit(
                 "-r",
                 "-M",
                 commit,
-                "--",
-                *path_scope,
             ),
         ),
         commit,
     )
+
+
+def _literal_pathspec(scope: str) -> str:
+    """Return a top-anchored literal pathspec for a validated scope."""
+
+    return f":(top,literal){scope}"
+
+
+def _path_in_scope(path: str, path_scope: Sequence[str]) -> bool:
+    return any(path == scope or path.startswith(f"{scope}/") for scope in path_scope)
+
+
+def _change_in_scope(change: Change, path_scope: Sequence[str]) -> bool:
+    return _path_in_scope(change.path, path_scope) or (
+        change.source_path is not None and _path_in_scope(change.source_path, path_scope)
+    )
+
+
+def _paths_at_revision(
+    root: Path,
+    revision: str,
+    path_scope: Sequence[str],
+) -> set[str]:
+    """Return exact scoped path membership from the resolved tree."""
+
+    output = _git(
+        root,
+        (
+            "ls-tree",
+            "-r",
+            "-z",
+            "--name-only",
+            revision,
+            "--",
+            *(_literal_pathspec(scope) for scope in path_scope),
+        ),
+    )
+    if not output:
+        return set()
+    if not output.endswith(b"\0"):
+        raise HotFileReportError("malformed tree path stream")
+    paths = {
+        _decode_utf8(token, "path in resolved tree")
+        for token in output[:-1].split(b"\0")
+    }
+    if any(not _path_in_scope(path, path_scope) for path in paths):
+        raise HotFileReportError("git returned a tree path outside the requested scope")
+    return paths
 
 
 def _owner_family(path: str) -> str | None:
@@ -289,10 +335,10 @@ def build_report(
     repository = _repository_root(Path(root))
     resolved = _resolve_revision(repository, revision)
     commits = _selected_commits(repository, resolved, commit_count, scopes)
+    present_paths = _paths_at_revision(repository, resolved, scopes)
 
     file_commits: dict[str, list[str]] = defaultdict(list)
     file_statuses: dict[str, Counter[str]] = defaultdict(Counter)
-    newest_file_status: dict[str, str] = {}
     family_commits: dict[str, set[str]] = defaultdict(set)
     family_members: dict[str, set[str]] = defaultdict(set)
     family_member_touches: dict[str, Counter[str]] = defaultdict(Counter)
@@ -300,9 +346,24 @@ def build_report(
     renames: list[dict[str, object]] = []
 
     for commit in commits:
-        changes = _changes_for_commit(repository, commit, scopes)
+        changes = [
+            change
+            for change in _changes_for_commit(repository, commit)
+            if _change_in_scope(change, scopes)
+        ]
         by_path: dict[str, Change] = {}
         for change in changes:
+            if not _path_in_scope(change.path, scopes):
+                if change.status == "R":
+                    renames.append(
+                        {
+                            "commit": commit,
+                            "old_path": change.source_path,
+                            "new_path": change.path,
+                            "similarity": change.similarity,
+                        }
+                    )
+                continue
             previous = by_path.get(change.path)
             if previous is not None and previous != change:
                 raise HotFileReportError(
@@ -314,7 +375,6 @@ def build_report(
             change = by_path[path]
             file_commits[path].append(commit)
             file_statuses[path][change.status] += 1
-            newest_file_status.setdefault(path, change.status)
             family = _owner_family(path)
             if family is not None:
                 family_commits[family].add(commit)
@@ -338,7 +398,7 @@ def build_report(
             "commits_touching": len(file_commits[path]),
             "status_counts": _ordered_status_counts(file_statuses[path]),
             "commits": file_commits[path],
-            "present_at_revision": newest_file_status[path] != "D",
+            "present_at_revision": path in present_paths,
         }
         for path in file_commits
     ]
