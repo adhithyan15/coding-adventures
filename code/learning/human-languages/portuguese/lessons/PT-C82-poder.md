@@ -13,7 +13,8 @@ gloss: "to be able to, can"
 concept_tag: PT-VERB-PODER
 prerequisites: [PT-C81-perder, PT-C81-chegar]
 sounds: []
-roots: []
+roots: [posse-latin]
+etymology_hook: "poder ← Vulgar Latin *potere, from posse 'to be able' — English potent and possible"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C81-chegar]
 <!-- hl-knowledge: introduces=[PT-LEX-C82-PODER82-01]; assesses=[] -->
 
 **poder** — "to be able to, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poder** ← Vulgar Latin *\*potere* (EtymDB 2.1), from Latin *posse*, "to be able" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

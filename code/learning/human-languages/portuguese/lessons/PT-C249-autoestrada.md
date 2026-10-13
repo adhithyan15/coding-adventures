@@ -13,7 +13,8 @@ gloss: "a motorway"
 concept_tag: PT-COISAS249-AUTOESTRADA
 prerequisites: [PT-C249-motor, PT-C249-portagem]
 sounds: []
-roots: []
+roots: [strata-latin]
+etymology_hook: "autoestrada — auto- + the road word, from Latin strata 'paved road' — English street"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C249-portagem]
 <!-- hl-knowledge: introduces=[PT-LEX-C249-COISAS249-03]; assesses=[] -->
 
 **a autoestrada** — "a motorway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autoestrada** is built from *auto-*, as in automobile, and the word for a road, which goes back to Latin *strata*, "paved (road)" (EtymDB 2.1 has the Old Portuguese form).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

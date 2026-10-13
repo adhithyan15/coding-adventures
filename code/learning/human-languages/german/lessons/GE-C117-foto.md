@@ -14,6 +14,7 @@ concept_tag: GE-DINGE117-FOTO
 prerequisites: [GE-C117-kette, GE-C117-geschenk]
 sounds: []
 roots: []
+etymology_hook: "Foto — short for the word for 'photography', from Greek phōs 'light' + gráphein 'to write'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C117-geschenk]
 <!-- hl-knowledge: introduces=[GE-LEX-C117-DINGE117-05]; assesses=[] -->
 
 **das Foto** — "a photo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Foto** is short for the word for "photography", a modern coinage from Greek *phōs*, "light", and *gráphein*, "to write": writing with light. EtymDB 2.1 has no source for *Foto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

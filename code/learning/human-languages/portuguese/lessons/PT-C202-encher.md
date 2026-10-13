@@ -13,7 +13,8 @@ gloss: "to fill"
 concept_tag: PT-VERB-ENCHER
 prerequisites: [PT-C202-aquecer, PT-C202-arrefecer]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "encher ← Latin implere 'to fill up': pl- became ch- — English replete shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C202-arrefecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C202-VERBOS202-03]; assesses=[] -->
 
 **encher** — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**encher** ← Latin *implere*, "to fill up" (EtymDB 2.1) — inherited. The *pl* of *implere* became *ch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

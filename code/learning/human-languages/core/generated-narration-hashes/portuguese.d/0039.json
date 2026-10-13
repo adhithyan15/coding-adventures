@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 39,
-  "sourceHash": "fnv1a64:1d5ad00281e01462",
+  "sourceHash": "fnv1a64:73403fc01d1169af",
   "lessonIds": [
     "PT-C39-crianca",
     "PT-C39-vizinho",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch39.txt",
   "json": "portuguese/narration/ch39.json",
-  "textHash": "fnv1a64:f6300674eb04c58d",
-  "jsonHash": "fnv1a64:67978c9c9b1a2476",
+  "textHash": "fnv1a64:d18e9a1ae9b66c8d",
+  "jsonHash": "fnv1a64:26edc935119c9101",
   "findings": []
 }

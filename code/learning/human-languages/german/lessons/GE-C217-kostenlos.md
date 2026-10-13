@@ -13,7 +13,8 @@ gloss: "free of charge"
 concept_tag: GE-QUAL217-KOSTENLOS
 prerequisites: [GE-C217-kaputt, GE-C217-klug]
 sounds: []
-roots: []
+roots: [constare-latin]
+etymology_hook: "kostenlos — Kosten 'costs' + -los 'without': without cost, like English costless"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C217-klug]
 <!-- hl-knowledge: introduces=[GE-LEX-C217-QUAL217-03]; assesses=[] -->
 
 **kostenlos** — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kostenlos** is the word for "costs", from *kosten*, + *-los*, "without", the same ending as English *-less*: without cost. EtymDB 2.1 lists English *costless* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

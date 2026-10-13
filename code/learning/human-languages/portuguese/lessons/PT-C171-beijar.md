@@ -13,7 +13,8 @@ gloss: "to kiss"
 concept_tag: PT-VERB-BEIJAR
 prerequisites: [PT-C170-reuniao, PT-C170-contrato]
 sounds: []
-roots: []
+roots: [basium-latin]
+etymology_hook: "beijar ← Latin basiare 'to kiss', from basium 'a kiss'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C170-contrato]
 <!-- hl-knowledge: introduces=[PT-LEX-C171-VERBOS171-01]; assesses=[] -->
 
 **beijar** — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beijar** ← Latin *basiare*, "to kiss" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

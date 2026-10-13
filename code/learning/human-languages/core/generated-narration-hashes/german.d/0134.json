@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 134,
-  "sourceHash": "fnv1a64:93b8780aba26f555",
+  "sourceHash": "fnv1a64:961503971b12a1c6",
   "lessonIds": [
     "GE-C134-langweilig",
     "GE-C134-schwierig",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch134.txt",
   "json": "german/narration/ch134.json",
-  "textHash": "fnv1a64:30289950e3abc626",
-  "jsonHash": "fnv1a64:d626a2e3719e1c34",
+  "textHash": "fnv1a64:e2cc8e2dcf33f209",
+  "jsonHash": "fnv1a64:0e2c6d5873cebb78",
   "findings": []
 }

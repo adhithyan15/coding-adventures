@@ -13,7 +13,8 @@ gloss: "to buy"
 concept_tag: GE-VERB-KAUFEN
 prerequisites: [GE-C63-schueler, GE-C63-schuelerin]
 sounds: []
-roots: []
+roots: [caupo-latin]
+etymology_hook: "kaufen ← Old High German koufōn, from Latin caupō 'tradesman', an early loan; English cheap shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C63-schuelerin]
 <!-- hl-knowledge: introduces=[GE-LEX-C64-VERBEN1-01]; assesses=[] -->
 
 **kaufen** — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kaufen** ← Old High German *koufōn* ← Proto-Germanic *\*kaupōną*, from *\*kaupô*, "merchant" ← Latin *caupō*, "tradesman, innkeeper" (EtymDB 2.1) — an early loan. English *cheap* comes from the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

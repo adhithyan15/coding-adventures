@@ -13,7 +13,8 @@ gloss: "a bee"
 concept_tag: GE-TIERE3-BIENE
 prerequisites: [GE-C87-loewe, GE-C87-affe]
 sounds: []
-roots: []
+roots: [germanic-biniz]
+etymology_hook: "Biene ← Old High German bini ← Proto-Germanic *biniz 'bee' — a cousin of English bee"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C87-affe]
 <!-- hl-knowledge: introduces=[GE-LEX-C88-TIERE3-01]; assesses=[] -->
 
 **die Biene** — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Biene** ← Old High German *bini* ← Proto-Germanic *\*biniz*, "bee" — inherited, a cousin of English *bee*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

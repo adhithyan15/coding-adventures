@@ -13,7 +13,8 @@ gloss: "the government"
 concept_tag: PT-COISAS158-GOVERNO
 prerequisites: [PT-C158-mosquito, PT-C158-sociedade]
 sounds: []
-roots: []
+roots: [gubernare-latin]
+etymology_hook: "governo — from the verb to govern ← Latin gubernare 'to steer a ship', from Greek"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C158-sociedade]
 <!-- hl-knowledge: introduces=[PT-LEX-C158-COISAS158-03]; assesses=[] -->
 
 **o governo** — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**governo** is built from the verb "to govern" (EtymDB 2.1), which ← Latin *gubernare*, "to steer a ship", from Greek (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

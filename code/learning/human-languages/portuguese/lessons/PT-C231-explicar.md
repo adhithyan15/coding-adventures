@@ -13,7 +13,8 @@ gloss: "to explain"
 concept_tag: PT-VERB-EXPLICAR
 prerequisites: [PT-C231-fotografar, PT-C231-repetir]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "explicar ← Latin explicare 'to unfold', from plicare 'to fold', the verb behind chegar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C231-repetir]
 <!-- hl-knowledge: introduces=[PT-LEX-C231-VERBOS231-04]; assesses=[] -->
 
 **explicar** — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**explicar** ← Latin *explicare*, "to unfold" (EtymDB 2.1) — a learned borrowing from Latin. It is learned; *chegar* is the inherited form of *plicare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

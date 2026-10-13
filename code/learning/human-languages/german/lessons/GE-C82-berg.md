@@ -13,7 +13,8 @@ gloss: "a mountain"
 concept_tag: GE-NATUR1-BERG
 prerequisites: [GE-C82-blume, GE-C82-blatt]
 sounds: []
-roots: []
+roots: [germanic-bergaz]
+etymology_hook: "Berg ← Old High German berg ← Proto-Germanic *bergaz 'mountain'; English iceberg took it from Dutch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C82-blatt]
 <!-- hl-knowledge: introduces=[GE-LEX-C82-NATUR1-05]; assesses=[] -->
 
 **der Berg** — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Berg** ← Old High German *berg* ← Proto-Germanic *\*bergaz*, "mountain, hill" — inherited. (EtymDB 2.1) English *barrow*, "burial mound", is a cousin, and *iceberg* came in from Dutch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

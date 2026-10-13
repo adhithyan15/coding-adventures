@@ -13,7 +13,8 @@ gloss: "to hide"
 concept_tag: IT-VERB-NASCONDERE
 prerequisites: [IT-C142-vincere, IT-C142-rompere]
 sounds: []
-roots: []
+roots: [abscondere-latin]
+etymology_hook: "nascondere ← Late Latin inabscondere, from abscondere 'to hide' — English abscond"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C142-rompere]
 <!-- hl-knowledge: introduces=[IT-LEX-C142-VERBI142-03]; assesses=[] -->
 
 **nascondere** — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nascondere** ← Late Latin *inabscondere*, from Latin *abscondere*, "to hide" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

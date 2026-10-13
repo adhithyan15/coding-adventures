@@ -13,7 +13,8 @@ gloss: "a colleague"
 concept_tag: IT-LAV172-COLLEGA
 prerequisites: [IT-C172-ditta, IT-C172-azienda]
 sounds: []
-roots: []
+roots: [collega-latin]
+etymology_hook: "collega ← Latin collega 'a partner in office', a learned word — English colleague"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C172-azienda]
 <!-- hl-knowledge: introduces=[IT-LEX-C172-LAV172-03]; assesses=[] -->
 
 **il collega** — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**collega** ← Latin *collega*, "a partner in office" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *collega*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

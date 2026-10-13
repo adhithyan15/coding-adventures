@@ -13,7 +13,8 @@ gloss: "sadness"
 concept_tag: PT-SENTIR-TRISTEZA
 prerequisites: [PT-C36-medo, PT-C36-raiva]
 sounds: []
-roots: []
+roots: [tristis]
+etymology_hook: "tristeza ← Latin tristitia 'sadness', from tristis 'sad'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C36-raiva]
 <!-- hl-knowledge: introduces=[PT-LEX-C36-SENTIR-03]; assesses=[] -->
 
 **a tristeza** — "sadness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tristeza** ← Latin *tristitia*, "sadness" (EtymDB 2.1), from *tristis*, "sad" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

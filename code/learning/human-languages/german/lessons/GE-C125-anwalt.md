@@ -13,7 +13,8 @@ gloss: "a lawyer"
 concept_tag: GE-BERUF125-ANWALT
 prerequisites: [GE-C125-baecker, GE-C125-fahrer]
 sounds: []
-roots: []
+roots: [germanic-waldana]
+etymology_hook: "Anwalt ← Middle High German anwalte, 'one who acts with authority', from a verb 'to rule'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C125-fahrer]
 <!-- hl-knowledge: introduces=[GE-LEX-C125-BERUF125-04]; assesses=[] -->
 
 **der Anwalt** — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Anwalt** ← Middle High German *anwalte*, "one who acts with authority": *an-* + the verb "to rule, to have power", Old High German *waltan* ← Proto-Germanic *\*waldaną* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "useless"
 concept_tag: PT-QUAL154-INUTIL
 prerequisites: [PT-C154-necessario-necessaria, PT-C154-util]
 sounds: []
-roots: []
+roots: [uti-latin]
+etymology_hook: "inútil ← Latin inutilis 'useless', in- 'not' + utilis 'useful'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C154-util]
 <!-- hl-knowledge: introduces=[PT-LEX-C154-QUAL154-04]; assesses=[] -->
 
 **inútil** — "useless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inútil** ← Latin *inutilis*, "useless" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

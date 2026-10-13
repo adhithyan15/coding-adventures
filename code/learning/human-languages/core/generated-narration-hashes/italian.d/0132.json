@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 132,
-  "sourceHash": "fnv1a64:772c37733d193d34",
+  "sourceHash": "fnv1a64:6019966d4415d895",
   "lessonIds": [
     "IT-C132-zero",
     "IT-C132-sessanta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch132.txt",
   "json": "italian/narration/ch132.json",
-  "textHash": "fnv1a64:f0359a3cb3bd8221",
-  "jsonHash": "fnv1a64:301cf041613c29ea",
+  "textHash": "fnv1a64:6c128d9619cea578",
+  "jsonHash": "fnv1a64:796814c9c14c7bde",
   "findings": []
 }

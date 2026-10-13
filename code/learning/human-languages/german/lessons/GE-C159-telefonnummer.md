@@ -13,7 +13,8 @@ gloss: "a phone number"
 concept_tag: GE-THING159-TELEFONNUMMER
 prerequisites: [GE-C158-briefmarke, GE-C159-adresse]
 sounds: []
-roots: []
+roots: [numerus-latin]
+etymology_hook: "Telefonnummer — Telefon + the word for 'number' ← Italian numero ← Latin numerus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C159-adresse]
 <!-- hl-knowledge: introduces=[GE-LEX-C159-THING159-02]; assesses=[] -->
 
 **die Telefonnummer** — "a phone number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Telefonnummer** is *Telefon* + the word for "number", which came from Italian *numero* ← Latin *numerus*, "number". EtymDB 2.1 has the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

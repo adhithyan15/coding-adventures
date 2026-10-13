@@ -13,7 +13,8 @@ gloss: "yellow"
 concept_tag: PT-ADJ5-AMARELO
 prerequisites: [PT-C68-rico, PT-C68-pobre]
 sounds: []
-roots: []
+roots: [amarus-latin]
+etymology_hook: "amarelo ← Late Latin amarellus, from amarus 'bitter': the colour of bile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C68-pobre]
 <!-- hl-knowledge: introduces=[PT-LEX-C68-ADJ5-05]; assesses=[] -->
 
 **amarelo** — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amarelo** ← Late Latin *amarellus*, "yellowish" (EtymDB 2.1), from Latin *amarus*, "bitter" — inherited. It was probably the colour of bile.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

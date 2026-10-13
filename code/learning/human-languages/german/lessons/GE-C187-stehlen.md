@@ -13,7 +13,8 @@ gloss: "to steal"
 concept_tag: GE-VERB-STEHLEN
 prerequisites: [GE-C187-starten, GE-C187-stecken]
 sounds: []
-roots: []
+roots: [germanic-stelana]
+etymology_hook: "stehlen ← Old High German stelan ← Proto-Germanic *stelaną — the same verb as English steal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C187-stecken]
 <!-- hl-knowledge: introduces=[GE-LEX-C187-VERB187-04]; assesses=[] -->
 
 **stehlen** — "to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stehlen** ← Old High German *stelan* ← Proto-Germanic *\*stelaną* — inherited, the same verb as English *steal*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "love"
 concept_tag: IT-SAL186-AMORE
 prerequisites: [IT-C186-ansia, IT-C186-calma]
 sounds: []
-roots: []
+roots: [amor-latin]
+etymology_hook: "amore ← Latin amor 'love', from amare 'to love' — English amorous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C186-calma]
 <!-- hl-knowledge: introduces=[IT-LEX-C186-SAL186-03]; assesses=[] -->
 
 **l'amore** — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amore** ← Latin *amor*, "love" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

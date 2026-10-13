@@ -13,7 +13,8 @@ gloss: "safety, security"
 concept_tag: GE-THING238-SICHERHEIT
 prerequisites: [GE-C237-schritt, GE-C238-schwierigkeit]
 sounds: []
-roots: []
+roots: [securus-latin]
+etymology_hook: "Sicherheit — sicher 'safe' + -heit; sicher goes back to Latin sēcūrus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C238-schwierigkeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C238-THING238-02]; assesses=[] -->
 
 **die Sicherheit** — "safety, security".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Sicherheit** is *sicher*, "safe", + *-heit*. *sicher* ← Old High German *sihhur*, from Latin *sēcūrus* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

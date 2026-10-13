@@ -13,7 +13,8 @@ gloss: "a shop window"
 concept_tag: PT-COISAS227-MONTRA
 prerequisites: [PT-C227-peixaria, PT-C227-centro-comercial]
 sounds: []
-roots: []
+roots: [monstrare-latin]
+etymology_hook: "montra ← French montre 'display', from montrer 'to show'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C227-centro-comercial]
 <!-- hl-knowledge: introduces=[PT-LEX-C227-COISAS227-05]; assesses=[] -->
 
 **a montra** — "a shop window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**montra** ← French *montre*, "display" (EtymDB 2.1) — borrowed. The French word comes from *montrer*, "to show".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

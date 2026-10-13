@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 233,
-  "sourceHash": "fnv1a64:f6a63455eed32f96",
+  "sourceHash": "fnv1a64:730a74504769c92e",
   "lessonIds": [
     "IT-C233-ordinare",
     "IT-C233-tagliare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch233.txt",
   "json": "italian/narration/ch233.json",
-  "textHash": "fnv1a64:d40883848cff3b29",
-  "jsonHash": "fnv1a64:7ace6d118e699054",
+  "textHash": "fnv1a64:612d723fea55edef",
+  "jsonHash": "fnv1a64:67aaa1fac69bb83b",
   "findings": []
 }

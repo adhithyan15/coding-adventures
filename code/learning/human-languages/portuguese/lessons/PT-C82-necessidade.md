@@ -13,7 +13,8 @@ gloss: "a need"
 concept_tag: PT-PODER82-NECESSIDADE
 prerequisites: [PT-C82-poder, PT-C82-dever]
 sounds: []
-roots: []
+roots: [necesse-latin]
+etymology_hook: "necessidade ← Latin necessitas 'need' — English necessity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C82-dever]
 <!-- hl-knowledge: introduces=[PT-LEX-C82-PODER82-03]; assesses=[] -->
 
 **a necessidade** — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**necessidade** ← Latin *necessitas, necessitatis*, "need" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

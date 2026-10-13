@@ -13,7 +13,7 @@ sounds: [vowel-a, ng-cluster]
 roots: [frankish-blank]
 etymology_hook: "German blank still means 'shining' — the sense it had when Romance borrowed it and turned it into a colour"
 duration:
-  max_seconds: 145
+  max_seconds: 151
 requires:
   knowledge: [GE-LEX-WEISS-01, GE-ETYMON-WEISS-WHITE-01]
 introduces:
@@ -50,6 +50,11 @@ polished shoe is *blank*; a bare sword is *blank*. The idea underneath is
 
 Hold on to that meaning exactly as it is, because the next lesson is about what
 happened when the neighbours borrowed it and let it drift.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**blank** ← Old High German *blanc*, "shining, bright" ← Proto-Germanic *\*blankaz* — inherited. (EtymDB 2.1) French *blanc*, "white", was borrowed from the Germanic word.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BLANK-01] -->

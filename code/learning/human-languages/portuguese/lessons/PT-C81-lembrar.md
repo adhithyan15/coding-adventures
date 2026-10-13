@@ -13,7 +13,8 @@ gloss: "to remember"
 concept_tag: PT-VERB-LEMBRAR
 prerequisites: [PT-C80-limpar, PT-C80-cortar]
 sounds: []
-roots: []
+roots: [memorare-latin]
+etymology_hook: "lembrar ← Latin memorare 'to remind': Old Portuguese nembrar — English memory"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C80-cortar]
 <!-- hl-knowledge: introduces=[PT-LEX-C81-VERBOS7-01]; assesses=[] -->
 
 **lembrar** — "to remember".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lembrar** ← Latin *memorare*, "to remind" (EtymDB 2.1) — inherited. Old Portuguese said *nembrar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

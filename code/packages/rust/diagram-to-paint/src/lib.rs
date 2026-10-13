@@ -42,6 +42,7 @@ use diagram_ir::{
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
     GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind,
+    SwimlaneLineHops,
     TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
@@ -866,7 +867,7 @@ where
             },
         ));
     }
-    for edge in &diagram.edges {
+    for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
         }
@@ -879,19 +880,38 @@ where
             stroke,
             stroke_width,
         );
-        let (start_previous, end_previous) = if edge.curve == Some(SwimlaneEdgeCurve::Basis) {
+        let (start_previous, end_previous) = if matches!(edge.curve,
+            Some(SwimlaneEdgeCurve::Basis | SwimlaneEdgeCurve::BumpX | SwimlaneEdgeCurve::BumpY
+                | SwimlaneEdgeCurve::Cardinal | SwimlaneEdgeCurve::CatmullRom
+                | SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY
+                | SwimlaneEdgeCurve::Natural)
+        ) {
             let dx = edge.to.x - edge.from.x;
             let dy = edge.to.y - edge.from.y;
-            let (first, second) = if dx.abs() >= dy.abs() {
-                (
+            let (first, second) = match edge.curve {
+                Some(SwimlaneEdgeCurve::BumpX) => {
+                    let middle = (edge.from.x + edge.to.x) / 2.0;
+                    (Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y })
+                }
+                Some(SwimlaneEdgeCurve::BumpY) => {
+                    let middle = (edge.from.y + edge.to.y) / 2.0;
+                    (Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle })
+                }
+                Some(SwimlaneEdgeCurve::Cardinal | SwimlaneEdgeCurve::CatmullRom
+                    | SwimlaneEdgeCurve::MonotoneX | SwimlaneEdgeCurve::MonotoneY
+                    | SwimlaneEdgeCurve::Natural) => (
+                    Point { x: edge.from.x + dx / 3.0, y: edge.from.y + dy / 3.0 },
+                    Point { x: edge.from.x + dx * 2.0 / 3.0, y: edge.from.y + dy * 2.0 / 3.0 },
+                ),
+                Some(SwimlaneEdgeCurve::Basis) if dx.abs() >= dy.abs() => (
                     Point { x: edge.from.x + dx * 0.4, y: edge.from.y },
                     Point { x: edge.to.x - dx * 0.4, y: edge.to.y },
-                )
-            } else {
-                (
+                ),
+                Some(SwimlaneEdgeCurve::Basis) => (
                     Point { x: edge.from.x, y: edge.from.y + dy * 0.4 },
                     Point { x: edge.to.x, y: edge.to.y - dy * 0.4 },
-                )
+                ),
+                _ => unreachable!("cubic curve already matched"),
             };
             path.commands = vec![
                 PathCommand::MoveTo { x: edge.from.x, y: edge.from.y },
@@ -901,6 +921,20 @@ where
                 },
             ];
             (first, second)
+        } else if edge.curve == Some(SwimlaneEdgeCurve::Rounded) {
+            let horizontal = matches!(diagram.direction, DiagramDirection::Lr | DiagramDirection::Rl);
+            let (first, second) = if horizontal {
+                let middle = (edge.from.x + edge.to.x) / 2.0;
+                (Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y })
+            } else {
+                let middle = (edge.from.y + edge.to.y) / 2.0;
+                (Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle })
+            };
+            let (commands, start_previous, end_previous) = rounded_swimlane_path(
+                &[edge.from.clone(), first, second, edge.to.clone()], 12.0,
+            );
+            path.commands = commands;
+            (start_previous, end_previous)
         } else if matches!(edge.curve,
             Some(SwimlaneEdgeCurve::Step | SwimlaneEdgeCurve::StepBefore | SwimlaneEdgeCurve::StepAfter)
         ) {
@@ -929,6 +963,18 @@ where
         } else {
             (edge.to.clone(), edge.from.clone())
         };
+        if let Some(line_hops) = diagram.line_hops.filter(|_| {
+            matches!(edge.curve, None | Some(SwimlaneEdgeCurve::Linear))
+        }) {
+            let mut crossings = diagram.edges[..edge_index].iter().filter(|other| {
+                other.kind != SwimlaneEdgeKind::Invisible
+                    && matches!(other.curve, None | Some(SwimlaneEdgeCurve::Linear))
+            }).filter_map(|other| swimlane_line_crossing(
+                &edge.from, &edge.to, &other.from, &other.to,
+            )).collect::<Vec<_>>();
+            crossings.sort_by(|left, right| left.0.total_cmp(&right.0));
+            apply_swimlane_line_hops(&mut path, &edge.from, &edge.to, &crossings, line_hops);
+        }
         if let Some(stroke_dash) = &edge.style.stroke_dash {
             path.stroke_dash = Some(stroke_dash.clone());
         } else if edge.kind == SwimlaneEdgeKind::Dotted {
@@ -1411,6 +1457,12 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    if let Some(line_hops) = diagram.line_hops {
+        metadata.insert("swimlane.lineHops".into(), match line_hops {
+            SwimlaneLineHops::Arc => "arc",
+            SwimlaneLineHops::Gap => "gap",
+        }.into());
+    }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
             metadata.insert(format!("swimlane.edge.{index}.id"), id.clone());
@@ -1431,6 +1483,14 @@ where
             metadata.insert(format!("swimlane.edge.{index}.curve"), match curve {
                 SwimlaneEdgeCurve::Linear => "linear",
                 SwimlaneEdgeCurve::Basis => "basis",
+                SwimlaneEdgeCurve::BumpX => "bumpX",
+                SwimlaneEdgeCurve::BumpY => "bumpY",
+                SwimlaneEdgeCurve::Cardinal => "cardinal",
+                SwimlaneEdgeCurve::CatmullRom => "catmullRom",
+                SwimlaneEdgeCurve::MonotoneX => "monotoneX",
+                SwimlaneEdgeCurve::MonotoneY => "monotoneY",
+                SwimlaneEdgeCurve::Natural => "natural",
+                SwimlaneEdgeCurve::Rounded => "rounded",
                 SwimlaneEdgeCurve::Step => "step",
                 SwimlaneEdgeCurve::StepBefore => "stepBefore",
                 SwimlaneEdgeCurve::StepAfter => "stepAfter",
@@ -1507,6 +1567,109 @@ fn swimlane_endpoint_marker(
             ]
         }
     }
+}
+
+fn swimlane_line_crossing(
+    from: &Point, to: &Point, other_from: &Point, other_to: &Point,
+) -> Option<(f64, Point)> {
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    let other_dx = other_to.x - other_from.x;
+    let other_dy = other_to.y - other_from.y;
+    let denominator = dx * other_dy - dy * other_dx;
+    if denominator.abs() <= f64::EPSILON {
+        return None;
+    }
+    let offset_x = other_from.x - from.x;
+    let offset_y = other_from.y - from.y;
+    let t = (offset_x * other_dy - offset_y * other_dx) / denominator;
+    let u = (offset_x * dy - offset_y * dx) / denominator;
+    let endpoint_epsilon = 1e-6;
+    if !(endpoint_epsilon..1.0 - endpoint_epsilon).contains(&t)
+        || !(endpoint_epsilon..1.0 - endpoint_epsilon).contains(&u)
+    {
+        return None;
+    }
+    Some((t, Point { x: from.x + dx * t, y: from.y + dy * t }))
+}
+
+fn apply_swimlane_line_hops(
+    path: &mut PaintPath, from: &Point, to: &Point, crossings: &[(f64, Point)],
+    line_hops: SwimlaneLineHops,
+) {
+    if crossings.is_empty() {
+        return;
+    }
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    let length = dx.hypot(dy);
+    if length <= f64::EPSILON {
+        return;
+    }
+    let radius = 6.0;
+    let unit_x = dx / length;
+    let unit_y = dy / length;
+    path.commands = vec![PathCommand::MoveTo { x: from.x, y: from.y }];
+    for (_, crossing) in crossings {
+        let before = Point { x: crossing.x - unit_x * radius, y: crossing.y - unit_y * radius };
+        let after = Point { x: crossing.x + unit_x * radius, y: crossing.y + unit_y * radius };
+        path.commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+        match line_hops {
+            SwimlaneLineHops::Arc => path.commands.push(PathCommand::QuadTo {
+                cx: crossing.x - unit_y * radius * 2.0,
+                cy: crossing.y + unit_x * radius * 2.0,
+                x: after.x,
+                y: after.y,
+            }),
+            SwimlaneLineHops::Gap => path.commands.push(PathCommand::MoveTo { x: after.x, y: after.y }),
+        }
+    }
+    path.commands.push(PathCommand::LineTo { x: to.x, y: to.y });
+}
+
+fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Point, Point) {
+    let mut commands = vec![PathCommand::MoveTo { x: points[0].x, y: points[0].y }];
+    let mut start_previous = points[1].clone();
+    let mut end_previous = points[points.len() - 2].clone();
+    let mut rounded_corner_count = 0;
+
+    for index in 1..points.len() - 1 {
+        let previous = &points[index - 1];
+        let corner = &points[index];
+        let next = &points[index + 1];
+        let incoming_x = corner.x - previous.x;
+        let incoming_y = corner.y - previous.y;
+        let outgoing_x = next.x - corner.x;
+        let outgoing_y = next.y - corner.y;
+        let incoming_length = incoming_x.hypot(incoming_y);
+        let outgoing_length = outgoing_x.hypot(outgoing_y);
+        if incoming_length <= f64::EPSILON || outgoing_length <= f64::EPSILON {
+            continue;
+        }
+        let cut = radius.min(incoming_length / 2.0).min(outgoing_length / 2.0);
+        let before = Point {
+            x: corner.x - incoming_x / incoming_length * cut,
+            y: corner.y - incoming_y / incoming_length * cut,
+        };
+        let after = Point {
+            x: corner.x + outgoing_x / outgoing_length * cut,
+            y: corner.y + outgoing_y / outgoing_length * cut,
+        };
+        commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+        commands.push(PathCommand::QuadTo {
+            cx: corner.x, cy: corner.y, x: after.x, y: after.y,
+        });
+        if rounded_corner_count == 0 {
+            start_previous = before;
+        }
+        end_previous = after;
+        rounded_corner_count += 1;
+    }
+    commands.push(PathCommand::LineTo {
+        x: points[points.len() - 1].x,
+        y: points[points.len() - 1].y,
+    });
+    (commands, start_previous, end_previous)
 }
 /// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.
 pub fn diagram_to_paint_railroad<S, M, R>(diagram: &LayoutedRailroadDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene

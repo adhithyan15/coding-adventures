@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Opening Hours, a Notice, the Rent, a Receipt, an Appointment",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:66e752cd382dcce2",
+  "sourceHash": "fnv1a64:9c7b37ce12386ac7",
   "lessons": [
     {
       "id": "IT-C139-lorario",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8b304445ffb412f",
+      "sourceHash": "fnv1a64:550fd9126f24169a",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "orario — built from ora, \"hour\", with -ario: a list of hours. EtymDB 2.1 has no row for its origin; the parts are plain to see."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ee55c4bc2683378",
+      "sourceHash": "fnv1a64:92137ccdce98db75",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avviso from Old French avis, \"opinion\" — borrowed. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01fadfb2f31d3d36",
+      "sourceHash": "fnv1a64:632ef29701948666",
       "notice": null,
       "blocks": [
         {
@@ -337,6 +359,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "affitto is the noun of affittare, \"to rent\": both are built on fitto, \"a fixed payment\", from Latin fixus, \"fixed\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -347,7 +380,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -396,7 +429,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -427,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:601a418def4b018a",
+      "sourceHash": "fnv1a64:bfe7e881ee104714",
       "notice": null,
       "blocks": [
         {
@@ -473,6 +506,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ricevuta is the past participle of the verb for \"to receive\", used as a noun: a thing received. That verb from Latin recipere, \"to receive\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -483,7 +527,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -532,7 +576,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -563,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7aba69ebcf47fe2",
+      "sourceHash": "fnv1a64:a135b0dd9aae87a4",
       "notice": null,
       "blocks": [
         {
@@ -609,6 +653,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appuntamento — built from appuntare, \"to fix to a point\", with -mento. appuntare is built on punto, \"a point\" from Latin punctum. (EtymDB 2.1 records punto.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -619,7 +674,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -668,7 +723,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

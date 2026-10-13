@@ -13,7 +13,8 @@ gloss: "a border"
 concept_tag: GE-WELT-GRENZE
 prerequisites: [GE-C100-guertel, GE-C100-jacke]
 sounds: []
-roots: []
+roots: [granica-slavic]
+etymology_hook: "Grenze ← Middle High German grenize, from a Slavic word granica 'boundary' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C100-jacke]
 <!-- hl-knowledge: introduces=[GE-LEX-C100-WELT-03]; assesses=[] -->
 
 **die Grenze** — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Grenze** ← Middle High German *grenize*, from a Slavic word, Proto-Slavic *\*granica*, "boundary" (EtymDB 2.1) — borrowed at the eastern frontier.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

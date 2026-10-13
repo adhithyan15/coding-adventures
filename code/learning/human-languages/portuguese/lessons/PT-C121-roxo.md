@@ -13,7 +13,8 @@ gloss: "purple"
 concept_tag: PT-CORES121-ROXO
 prerequisites: [PT-C120-peito, PT-C121-lilas]
 sounds: []
-roots: []
+roots: [russus-latin]
+etymology_hook: "roxo ← Latin russeus 'reddish': the colour slid from red to purple"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C121-lilas]
 <!-- hl-knowledge: introduces=[PT-LEX-C121-CORES121-02]; assesses=[] -->
 
 **roxo** — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**roxo** ← Latin *russeus*, "reddish" (EtymDB 2.1), from *russus*, "red" — inherited. The colour slid from red to purple.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

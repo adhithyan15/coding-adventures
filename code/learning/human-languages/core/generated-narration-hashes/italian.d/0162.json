@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 162,
-  "sourceHash": "fnv1a64:4bf1bac60c5c3c81",
+  "sourceHash": "fnv1a64:2ec678b288e19e87",
   "lessonIds": [
     "IT-C162-sito",
     "IT-C162-schermo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch162.txt",
   "json": "italian/narration/ch162.json",
-  "textHash": "fnv1a64:3a38a4632efe0869",
-  "jsonHash": "fnv1a64:1b4b0abe25a0851e",
+  "textHash": "fnv1a64:f470c37dbacdee5d",
+  "jsonHash": "fnv1a64:6ddf0c281546206e",
   "findings": []
 }

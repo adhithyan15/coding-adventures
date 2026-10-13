@@ -13,7 +13,8 @@ gloss: "a booking"
 concept_tag: PT-COISAS244-RESERVA
 prerequisites: [PT-C243-principal, PT-C244-alfandega]
 sounds: []
-roots: []
+roots: [servare-latin]
+etymology_hook: "reserva — built from reservar (← Latin reservare 'to keep back')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C244-alfandega]
 <!-- hl-knowledge: introduces=[PT-LEX-C244-COISAS244-02]; assesses=[] -->
 
 **a reserva** — "a booking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reserva** is built from *reservar*, "to book" (← Latin *reservare*, "to keep back").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

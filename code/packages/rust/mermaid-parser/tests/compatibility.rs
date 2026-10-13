@@ -2213,6 +2213,75 @@ fn swimlane_step_curve_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_bump_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: bumpX }\nvertical@{ curve: bumpY }",
+    ).expect("Flowchart bump curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::BumpX), Some(SwimlaneEdgeCurve::BumpY),
+    ]);
+}
+
+#[test]
+fn swimlane_monotone_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst horizontal@--> fourth\nsecond vertical@--> third\nhorizontal@{ curve: monotoneX }\nvertical@{ curve: monotoneY }",
+    ).expect("Flowchart monotone curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::MonotoneX), Some(SwimlaneEdgeCurve::MonotoneY),
+    ]);
+}
+
+#[test]
+fn swimlane_spline_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\n  third[Third]\nend\nsubgraph Review\n  fourth[Fourth]\n  fifth[Fifth]\n  sixth[Sixth]\nend\nfirst cardinal@--> sixth\nsecond catmull@--> fifth\nthird natural@--> fourth\ncardinal@{ curve: cardinal }\ncatmull@{ curve: catmullRom }\nnatural@{ curve: natural }",
+    ).expect("Flowchart spline curve configuration should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.curve).collect::<Vec<_>>(), vec![
+        Some(SwimlaneEdgeCurve::Cardinal),
+        Some(SwimlaneEdgeCurve::CatmullRom),
+        Some(SwimlaneEdgeCurve::Natural),
+    ]);
+}
+
+#[test]
+fn swimlane_rounded_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\n  queued[Queued]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest rounded@--> done\nrounded@{ curve: rounded }",
+    ).expect("Flowchart rounded curve configuration should parse");
+
+    assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Rounded));
+}
+
+#[test]
+fn swimlane_line_hops_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneLineHops;
+
+    let source = "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third";
+    let arc = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: arc\n---\n{source}"))
+        .expect("arc line hops should parse");
+    let gap = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: gap\n---\n{source}"))
+        .expect("gap line hops should parse");
+    let disabled = parse_swimlane(&format!("---\nconfig:\n  swimlane:\n    lineHops: false\n---\n{source}"))
+        .expect("disabled line hops should parse");
+
+    assert_eq!(arc.line_hops, Some(SwimlaneLineHops::Arc));
+    assert_eq!(gap.line_hops, Some(SwimlaneLineHops::Gap));
+    assert_eq!(disabled.line_hops, None);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

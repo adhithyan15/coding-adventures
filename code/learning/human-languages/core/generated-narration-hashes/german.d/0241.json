@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 241,
-  "sourceHash": "fnv1a64:a3d9cbcebfdee96b",
+  "sourceHash": "fnv1a64:0c8db2dad28f24f9",
   "lessonIds": [
     "GE-C241-umwelt",
     "GE-C241-unterricht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch241.txt",
   "json": "german/narration/ch241.json",
-  "textHash": "fnv1a64:405f1790a1073089",
-  "jsonHash": "fnv1a64:3be049ffa0e9d09d",
+  "textHash": "fnv1a64:3fc64f02218fe333",
+  "jsonHash": "fnv1a64:143044f78476d76c",
   "findings": []
 }

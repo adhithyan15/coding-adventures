@@ -13,7 +13,8 @@ gloss: "ancient, former; old (of things)"
 concept_tag: PT-QUAL216-ANTIGO-ANTIGA
 prerequisites: [PT-C216-gratuito-gratuita, PT-C216-moderno-moderna]
 sounds: []
-roots: []
+roots: [antiquus-latin]
+etymology_hook: "antigo ← Latin antiquus 'former, old' — English antique and ancient"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C216-moderno-moderna]
 <!-- hl-knowledge: introduces=[PT-LEX-C216-QUAL216-03]; assesses=[] -->
 
 **antigo / antiga** — "ancient, former; old (of things)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**antigo** ← Latin *antiquus*, "former, old" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

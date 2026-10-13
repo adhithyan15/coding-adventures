@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for to clean, then the Portuguese for to 
 You'll want to know: lembrar.
 lembrar — "to remember".
 
+The word, taken apart.
+lembrar from Latin memorare, "to remind" (EtymDB 2.1) — inherited. Old Portuguese said nembrar.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for to cut, then the Portuguese for to re
 
 You'll want to know: esquecer.
 esquecer — "to forget".
+
+The word, taken apart.
+esquecer from Vulgar Latin excadescere, "to fall out", from Latin cadere, "to fall" — inherited: what you forget falls out of mind. EtymDB 2.1 records no ancestor for it; this is the usual account.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to remember, then the Portuguese for 
 You'll want to know: procurar.
 procurar — "to look for".
 
+The word, taken apart.
+procurar from Latin procurare, "to take care of" (EtymDB 2.1), from cura, "care" — a learned borrowing from Latin. An inherited word would have turned the -c- into -g-.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to forget, then the Portuguese for to
 You'll want to know: perder.
 perder — "to lose".
 
+The word, taken apart.
+perder from Latin perdere, "to lose, to destroy" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to look for, then the Portuguese for 
 
 You'll want to know: chegar.
 chegar — "to arrive".
+
+The word, taken apart.
+chegar from Latin plicare, "to fold" (EtymDB 2.1) — inherited. The sense "arrive" probably comes from bringing a ship in to shore.
 
 What you've built.
 One more word for this chapter.

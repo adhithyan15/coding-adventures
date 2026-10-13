@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 195,
-  "sourceHash": "fnv1a64:7cf88ceae9560dc6",
+  "sourceHash": "fnv1a64:f7745cb01a5fffc5",
   "lessonIds": [
     "IT-C195-pilota",
     "IT-C195-commercialista",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch195.txt",
   "json": "italian/narration/ch195.json",
-  "textHash": "fnv1a64:e5313c1f3d9633a9",
-  "jsonHash": "fnv1a64:1316289e051f54dd",
+  "textHash": "fnv1a64:6e99b312d85150cd",
+  "jsonHash": "fnv1a64:975d99bbe52d468b",
   "findings": []
 }

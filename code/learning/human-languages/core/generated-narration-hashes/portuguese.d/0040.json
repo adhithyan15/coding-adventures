@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 40,
-  "sourceHash": "fnv1a64:f4e21eb8929c8843",
+  "sourceHash": "fnv1a64:c23e1aa566ab68b9",
   "lessonIds": [
     "PT-C40-cantar",
     "PT-C40-dancar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch40.txt",
   "json": "portuguese/narration/ch40.json",
-  "textHash": "fnv1a64:3fa2fa16063ec31b",
-  "jsonHash": "fnv1a64:66b00679a258a499",
+  "textHash": "fnv1a64:e452dcb967e23597",
+  "jsonHash": "fnv1a64:2d027db455bff47a",
   "findings": []
 }

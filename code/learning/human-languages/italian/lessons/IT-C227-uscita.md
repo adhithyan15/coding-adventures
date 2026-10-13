@@ -13,7 +13,8 @@ gloss: "an exit"
 concept_tag: IT-COSE227-USCITA
 prerequisites: [IT-C227-guida, IT-C227-ingresso]
 sounds: []
-roots: []
+roots: [exire-latin]
+etymology_hook: "uscita — a way out, from uscire 'to go out', Latin exire — English exit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C227-ingresso]
 <!-- hl-knowledge: introduces=[IT-LEX-C227-COSE227-03]; assesses=[] -->
 
 **l'uscita** — "an exit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uscita** is the past participle of *uscire*, "to go out", used as a noun: a way out. *uscire* goes back to Latin *exire*, "to go out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

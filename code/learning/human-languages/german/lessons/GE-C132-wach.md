@@ -13,7 +13,8 @@ gloss: "awake"
 concept_tag: GE-EIGEN132-WACH
 prerequisites: [GE-C132-fleissig, GE-C132-faul]
 sounds: []
-roots: []
+roots: [germanic-wakjana]
+etymology_hook: "wach — from the verb 'to be awake, to watch', the same root as English wake and watch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C132-faul]
 <!-- hl-knowledge: introduces=[GE-LEX-C132-EIGEN132-03]; assesses=[] -->
 
 **wach** — "awake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wach** comes from the verb "to be awake, to keep watch", Old High German *wahhēn*, which EtymDB 2.1 lists beside English *wake* and *watch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

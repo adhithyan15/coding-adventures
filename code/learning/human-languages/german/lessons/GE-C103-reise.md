@@ -13,7 +13,8 @@ gloss: "a journey"
 concept_tag: GE-FREIZEIT-REISE
 prerequisites: [GE-C103-spiel, GE-C103-farbe]
 sounds: []
-roots: []
+roots: [germanic-raisona]
+etymology_hook: "Reise ← Middle High German reise 'journey, military expedition' — the noun of reisen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C103-farbe]
 <!-- hl-knowledge: introduces=[GE-LEX-C103-FREIZEIT-04]; assesses=[] -->
 
 **die Reise** — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Reise** ← Middle High German *reise*, "journey, expedition" (EtymDB 2.1) — the noun beside *reisen*, both inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

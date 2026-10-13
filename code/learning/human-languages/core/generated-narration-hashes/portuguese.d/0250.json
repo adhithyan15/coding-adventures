@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 250,
-  "sourceHash": "fnv1a64:392ebb1bd32eda10",
+  "sourceHash": "fnv1a64:f4502b92663f5ecd",
   "lessonIds": [
     "PT-C250-semente",
     "PT-C250-raiz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch250.txt",
   "json": "portuguese/narration/ch250.json",
-  "textHash": "fnv1a64:fbd01825fc6a8e19",
-  "jsonHash": "fnv1a64:674e4da7f799b154",
+  "textHash": "fnv1a64:9b9d9bf253341502",
+  "jsonHash": "fnv1a64:ae884eb1426f3425",
   "findings": []
 }

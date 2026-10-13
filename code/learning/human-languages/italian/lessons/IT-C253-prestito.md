@@ -13,7 +13,8 @@ gloss: "a loan"
 concept_tag: IT-COSE253-PRESTITO
 prerequisites: [IT-C252-segreto, IT-C253-conto-corrente]
 sounds: []
-roots: []
+roots: [praestare-latin]
+etymology_hook: "prestito — 'a thing lent', from prestare ← Latin praestare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C253-conto-corrente]
 <!-- hl-knowledge: introduces=[IT-LEX-C253-COSE253-02]; assesses=[] -->
 
 **il prestito** — "a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prestito** is "a thing lent", from *prestare*, "to lend", which ← Latin *praestare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

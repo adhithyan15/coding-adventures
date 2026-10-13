@@ -13,7 +13,8 @@ gloss: "to prefer"
 concept_tag: PT-VERB-PREFERIR
 prerequisites: [PT-C83-querer, PT-C83-gostaria, PT-C21-esperar, PT-C21-esperar-expect, PT-C21-esperar-hope]
 sounds: []
-roots: []
+roots: [praeferre-latin]
+etymology_hook: "preferir ← Latin praeferre 'to carry before' — English prefer"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C83-gostaria]
 <!-- hl-knowledge: introduces=[PT-LEX-C83-QUERER83-03]; assesses=[] -->
 
 **preferir** — "to prefer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preferir** ← Latin *praeferre*, "to carry before, to prefer" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

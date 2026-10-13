@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 234,
-  "sourceHash": "fnv1a64:f6dc582e97374358",
+  "sourceHash": "fnv1a64:a859c506dc8d4c9c",
   "lessonIds": [
     "GE-C234-lohn",
     "GE-C234-mannschaft",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch234.txt",
   "json": "german/narration/ch234.json",
-  "textHash": "fnv1a64:53972f806336c488",
-  "jsonHash": "fnv1a64:2ce1e3e8d24cf283",
+  "textHash": "fnv1a64:e34c8f786d5d723c",
+  "jsonHash": "fnv1a64:827df156a7d9879e",
   "findings": []
 }

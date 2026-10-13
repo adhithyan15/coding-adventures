@@ -13,7 +13,8 @@ gloss: "to prepare"
 concept_tag: PT-VERB-PREPARAR
 prerequisites: [PT-C235-dobrar, PT-C235-possuir]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "preparar ← Latin praeparare 'to make ready beforehand' — English prepare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C235-possuir]
 <!-- hl-knowledge: introduces=[PT-LEX-C235-VERBOS235-03]; assesses=[] -->
 
 **preparar** — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preparar** ← Latin *praeparare*, "to make ready beforehand" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

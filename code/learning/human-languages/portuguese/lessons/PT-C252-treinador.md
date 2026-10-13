@@ -14,6 +14,7 @@ concept_tag: PT-COISAS252-TREINADOR
 prerequisites: [PT-C252-campeonato, PT-C252-jogador]
 sounds: []
 roots: []
+etymology_hook: "treinador — from the verb to train, borrowed from French or English, + -dor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C252-jogador]
 <!-- hl-knowledge: introduces=[PT-LEX-C252-COISAS252-04]; assesses=[] -->
 
 **o treinador** — "a coach, a trainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**treinador** is built from the verb "to train", borrowed from French or English, and *-dor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

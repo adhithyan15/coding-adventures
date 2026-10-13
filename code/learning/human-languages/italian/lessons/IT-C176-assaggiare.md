@@ -13,7 +13,8 @@ gloss: "to taste"
 concept_tag: IT-VERB-ASSAGGIARE
 prerequisites: [IT-C176-toccare, IT-C176-odorare]
 sounds: []
-roots: []
+roots: [exagium-latin]
+etymology_hook: "assaggiare — from saggio 'a sample', Late Latin exagium 'a weighing' — English assay, essay"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C176-odorare]
 <!-- hl-knowledge: introduces=[IT-LEX-C176-VERBI176-04]; assesses=[] -->
 
 **assaggiare** — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**assaggiare** — built from *saggio*, "a sample, a trial", with *a-*: to take a trial of. *saggio* goes back to Late Latin *exagium*, "a weighing". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

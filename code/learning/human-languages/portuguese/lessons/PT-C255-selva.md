@@ -13,7 +13,8 @@ gloss: "a jungle"
 concept_tag: PT-COISAS255-SELVA
 prerequisites: [PT-C255-quintal, PT-C255-oceano]
 sounds: []
-roots: []
+roots: [silva-latin]
+etymology_hook: "selva ← Latin silva 'forest' — English sylvan shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C255-oceano]
 <!-- hl-knowledge: introduces=[PT-LEX-C255-COISAS255-04]; assesses=[] -->
 
 **a selva** — "a jungle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**selva** ← Latin *silva*, "forest" — inherited. EtymDB 2.1 has no ancestor row for *selva*; it derives Italian *selva* from *silva*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

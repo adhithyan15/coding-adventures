@@ -13,7 +13,8 @@ gloss: "a boy, a young man"
 concept_tag: PT-COISAS102-RAPAZ
 prerequisites: [PT-C102-mundo, PT-C102-pessoas]
 sounds: []
-roots: []
+roots: [rapere-latin]
+etymology_hook: "rapaz ← Latin rapax 'grasping', from rapere 'to seize': a young rascal became a boy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C102-pessoas]
 <!-- hl-knowledge: introduces=[PT-LEX-C102-COISAS102-04]; assesses=[] -->
 
 **o rapaz** — "a boy, a young man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rapaz** ← Latin *rapax, rapacis*, "grasping", from *rapere*, "to seize" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *rapaz*. A young rascal became simply a boy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

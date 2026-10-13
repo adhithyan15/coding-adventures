@@ -13,7 +13,8 @@ gloss: "to arrive"
 concept_tag: PT-VERB-CHEGAR
 prerequisites: [PT-C81-procurar, PT-C81-perder]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "chegar ← Latin plicare 'to fold': pl- became ch- — English apply and ply share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C81-perder]
 <!-- hl-knowledge: introduces=[PT-LEX-C81-VERBOS7-05]; assesses=[] -->
 
 **chegar** — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chegar** ← Latin *plicare*, "to fold" (EtymDB 2.1) — inherited. The sense "arrive" probably comes from bringing a ship in to shore.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -17,7 +17,7 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
+    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -6194,6 +6194,7 @@ fn is_treeview_metadata_line(line: &str) -> bool {
 
 /// Parse Mermaid 11.16.1 Swimlane ownership lanes and Flowchart-style steps.
 pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
+    let line_hops = parse_swimlane_line_hops(source)?;
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6221,6 +6222,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         edges: Vec::new(),
         links: Vec::new(),
         callbacks: Vec::new(),
+        line_hops,
     };
     let mut current_lane: Option<usize> = None;
     let mut last_edge_targets: Option<Vec<String>> = None;
@@ -6453,6 +6455,25 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     Ok(diagram)
 }
 
+fn parse_swimlane_line_hops(source: &str) -> Result<Option<SwimlaneLineHops>, ParseError> {
+    let Some(section) = mermaid_front_matter_section(source, &["config", "swimlane"]) else {
+        return Ok(None);
+    };
+    let Some(value) = section.lines().find_map(|line| {
+        let (key, value) = line.split_once(':')?;
+        key.trim().eq_ignore_ascii_case("lineHops").then(||
+            value.trim().trim_matches(['\'', '"']).to_ascii_lowercase())
+    }) else {
+        return Ok(None);
+    };
+    match value.as_str() {
+        "true" | "arc" => Ok(Some(SwimlaneLineHops::Arc)),
+        "gap" => Ok(Some(SwimlaneLineHops::Gap)),
+        "false" => Ok(None),
+        _ => Err(swimlane_error(1, "Swimlane lineHops must be true, false, arc, or gap")),
+    }
+}
+
 enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
 
 struct SwimlaneEdgeConfig {
@@ -6598,6 +6619,14 @@ fn parse_swimlane_edge_config(
             "curve" => curve = Some(match value.to_ascii_lowercase().as_str() {
                 "linear" => SwimlaneEdgeCurve::Linear,
                 "basis" => SwimlaneEdgeCurve::Basis,
+                "bumpx" | "bump-x" => SwimlaneEdgeCurve::BumpX,
+                "bumpy" | "bump-y" => SwimlaneEdgeCurve::BumpY,
+                "cardinal" => SwimlaneEdgeCurve::Cardinal,
+                "catmullrom" | "catmull-rom" => SwimlaneEdgeCurve::CatmullRom,
+                "monotonex" | "monotone-x" => SwimlaneEdgeCurve::MonotoneX,
+                "monotoney" | "monotone-y" => SwimlaneEdgeCurve::MonotoneY,
+                "natural" => SwimlaneEdgeCurve::Natural,
+                "rounded" => SwimlaneEdgeCurve::Rounded,
                 "step" => SwimlaneEdgeCurve::Step,
                 "stepbefore" | "step-before" => SwimlaneEdgeCurve::StepBefore,
                 "stepafter" | "step-after" => SwimlaneEdgeCurve::StepAfter,

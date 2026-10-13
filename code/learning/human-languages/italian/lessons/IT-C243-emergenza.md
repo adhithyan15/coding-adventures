@@ -13,7 +13,8 @@ gloss: "an emergency"
 concept_tag: IT-SAL243-EMERGENZA
 prerequisites: [IT-C243-ambulanza, IT-C243-infermeria]
 sounds: []
-roots: []
+roots: [emergere-latin]
+etymology_hook: "emergenza — from Latin emergere 'to rise out', after English emergency"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C243-infermeria]
 <!-- hl-knowledge: introduces=[IT-LEX-C243-SAL243-04]; assesses=[] -->
 
 **l'emergenza** — "an emergency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**emergenza** — built from *emergere*, "to rise out of the water", from Latin *emergere* (Lewis & Short), on the model of English *emergency*. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

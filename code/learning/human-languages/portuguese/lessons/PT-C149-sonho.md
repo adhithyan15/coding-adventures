@@ -13,7 +13,8 @@ gloss: "a dream"
 concept_tag: PT-SAUDE149-SONHO
 prerequisites: [PT-C148-figado, PT-C148-rim]
 sounds: []
-roots: []
+roots: [somnus-latin]
+etymology_hook: "sonho ← Latin somnium 'dream', from somnus 'sleep' — English insomnia shares somnus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C148-rim]
 <!-- hl-knowledge: introduces=[PT-LEX-C149-SAUDE149-01]; assesses=[] -->
 
 **o sonho** — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sonho** ← Latin *somnium*, "dream" (EtymDB 2.1), from *somnus*, "sleep" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

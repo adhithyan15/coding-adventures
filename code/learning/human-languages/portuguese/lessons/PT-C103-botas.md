@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA103-BOTAS
 prerequisites: [PT-C103-luvas, PT-C103-cachecol]
 sounds: []
 roots: []
+etymology_hook: "botas — the boot word ← French botte, of uncertain origin — English boot is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C103-cachecol]
 <!-- hl-knowledge: introduces=[PT-LEX-C103-ROUPA103-05]; assesses=[] -->
 
 **as botas** — "boots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**botas** is the plural of the boot word ← French *botte* — borrowed (EtymDB 2.1). The French word's own origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

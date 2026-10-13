@@ -13,7 +13,8 @@ gloss: "pain"
 concept_tag: PT-SAUDE1-DOR
 prerequisites: [PT-C33-garganta, PT-C33-estomago]
 sounds: []
-roots: []
+roots: [dolor-latin]
+etymology_hook: "dor ← Latin dolor 'pain': the -l- between vowels fell out — English dolorous"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C33-estomago]
 **a dor** — "pain". Put it with *cabeça*, "head", and you have a headache:
 
 *dor* + *de* + *cabeça* → *dor de cabeça*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dor** ← Latin *dolor*, "pain" (EtymDB 2.1) — inherited. The Latin *-l-* between vowels fell out: *dolor* became Old Portuguese *door*, then *dor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

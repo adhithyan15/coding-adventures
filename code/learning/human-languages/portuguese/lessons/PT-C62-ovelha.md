@@ -13,7 +13,8 @@ gloss: "a sheep"
 concept_tag: PT-ANIMAIS3-OVELHA
 prerequisites: [PT-C62-galinha, PT-C62-pato]
 sounds: []
-roots: []
+roots: [ovis-latin]
+etymology_hook: "ovelha ← Vulgar Latin *ovicula 'little sheep', from ovis — English ovine shares ovis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C62-pato]
 <!-- hl-knowledge: introduces=[PT-LEX-C62-ANIMAIS3-04]; assesses=[] -->
 
 **a ovelha** — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ovelha** ← Vulgar Latin *\*ovicula*, "little sheep" (EtymDB 2.1), from Latin *ovis*, "sheep" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

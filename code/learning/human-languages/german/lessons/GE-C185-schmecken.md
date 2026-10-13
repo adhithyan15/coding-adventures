@@ -13,7 +13,8 @@ gloss: "to taste"
 concept_tag: GE-VERB-SCHMECKEN
 prerequisites: [GE-C185-schieben, GE-C185-schlagen]
 sounds: []
-roots: []
+roots: [germanic-smakkijana]
+etymology_hook: "schmecken ← Proto-Germanic *smakkijaną 'to taste' — English smack, 'a taste', shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C185-schlagen]
 <!-- hl-knowledge: introduces=[GE-LEX-C185-VERB185-05]; assesses=[] -->
 
 **schmecken** — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schmecken** ← Proto-Germanic *\*smakkijaną*, "to taste" — inherited; EtymDB 2.1 lists English *smack*, "a taste, a hint", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

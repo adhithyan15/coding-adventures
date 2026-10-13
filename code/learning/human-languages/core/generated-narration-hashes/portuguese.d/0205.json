@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 205,
-  "sourceHash": "fnv1a64:9eb0d62f67baafeb",
+  "sourceHash": "fnv1a64:36e7393a0a9b98ec",
   "lessonIds": [
     "PT-C205-piorar",
     "PT-C205-oferecer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch205.txt",
   "json": "portuguese/narration/ch205.json",
-  "textHash": "fnv1a64:8acd4460ddc9dfb4",
-  "jsonHash": "fnv1a64:2282c0c02322d434",
+  "textHash": "fnv1a64:79279da18eaf7ec0",
+  "jsonHash": "fnv1a64:45104f7404e619d6",
   "findings": []
 }

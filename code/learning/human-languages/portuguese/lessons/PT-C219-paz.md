@@ -13,7 +13,8 @@ gloss: "peace"
 concept_tag: PT-COISAS219-PAZ
 prerequisites: [PT-C218-passaporte, PT-C219-guerra]
 sounds: []
-roots: []
+roots: [pax-latin]
+etymology_hook: "paz ← Latin pax, pacis 'peace' — English peace and pacify share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C219-guerra]
 <!-- hl-knowledge: introduces=[PT-LEX-C219-COISAS219-02]; assesses=[] -->
 
 **a paz** — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paz** ← Latin *pax, pacis*, "peace" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

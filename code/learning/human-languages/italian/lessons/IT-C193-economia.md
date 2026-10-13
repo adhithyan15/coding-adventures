@@ -13,7 +13,8 @@ gloss: "the economy"
 concept_tag: IT-COSE193-ECONOMIA
 prerequisites: [IT-C192-prenotazione, IT-C193-politica]
 sounds: []
-roots: []
+roots: [oeconomia-latin]
+etymology_hook: "economia ← Latin oeconomia, from Greek oikonomia 'running a household' — English economy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C193-politica]
 <!-- hl-knowledge: introduces=[IT-LEX-C193-COSE193-02]; assesses=[] -->
 
 **l'economia** — "the economy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**economia** ← Latin *oeconomia*, from Greek *oikonomia*, "running a household" — a learned borrowing. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

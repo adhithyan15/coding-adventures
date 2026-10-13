@@ -13,7 +13,8 @@ gloss: "a calendar"
 concept_tag: GE-DINGE118-KALENDER
 prerequisites: [GE-C117-foto, GE-C118-kerze]
 sounds: []
-roots: []
+roots: [calendae-latin]
+etymology_hook: "Kalender ← Latin calendārium 'account book', from calendae, the first day of the month"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C118-kerze]
 <!-- hl-knowledge: introduces=[GE-LEX-C118-DINGE118-02]; assesses=[] -->
 
 **der Kalender** — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kalender** ← Latin *calendārium*, "account book", from *calendae*, "the first day of the month", when debts fell due (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

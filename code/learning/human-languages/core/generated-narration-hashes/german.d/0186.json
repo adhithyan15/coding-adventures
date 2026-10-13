@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 186,
-  "sourceHash": "fnv1a64:aa9f3009dc43d886",
+  "sourceHash": "fnv1a64:731e7e80eedcc2ee",
   "lessonIds": [
     "GE-C186-schneien",
     "GE-C186-schuetzen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch186.txt",
   "json": "german/narration/ch186.json",
-  "textHash": "fnv1a64:376999873e7acc45",
-  "jsonHash": "fnv1a64:7396367115f9157d",
+  "textHash": "fnv1a64:3845bc106fa72817",
+  "jsonHash": "fnv1a64:75b1ab83da139941",
   "findings": []
 }

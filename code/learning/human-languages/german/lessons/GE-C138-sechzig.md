@@ -13,7 +13,8 @@ gloss: "sixty"
 concept_tag: GE-ZAHL138-SECHZIG
 prerequisites: [GE-C137-nie, GE-C137-oft]
 sounds: []
-roots: []
+roots: [sehs-germanic]
+etymology_hook: "sechzig ← Old High German sehszug, 'six tens' — the same build as English sixty"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C137-oft]
 <!-- hl-knowledge: introduces=[GE-LEX-C138-ZAHL138-01]; assesses=[] -->
 
 **sechzig** — "sixty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sechzig** ← Old High German *sehszug* ← Proto-Germanic *\*sehs tigiwiz*, "six tens" — the same build as English *sixty*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

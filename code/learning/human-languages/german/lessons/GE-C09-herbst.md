@@ -48,6 +48,11 @@ It is the **reaping** season: the stretch of the year when the crop comes in.
 That meaning is the whole of the word, and the next lesson is about where else
 you already have it.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Herbst** ← Old High German *herbist* ← Proto-Germanic *\*harbistaz* — inherited, the same word as English *harvest*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HERBST-01] -->
 

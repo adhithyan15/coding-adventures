@@ -13,7 +13,8 @@ gloss: "in (so much time from now)"
 concept_tag: PT-FUT136-DAQUI-A
 prerequisites: [PT-C135-acontecer, PT-C136-o-futuro]
 sounds: []
-roots: []
+roots: [hic-latin]
+etymology_hook: "daqui a — 'from here to': de + aqui 'here' (← Vulgar Latin *eccu hic) + a 'to'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C136-o-futuro]
 <!-- hl-knowledge: introduces=[PT-LEX-C136-FUT136-02]; assesses=[] -->
 
 **daqui a** — "in (so much time from now)". Count forward from now: **daqui a dois dias** — "in two days", **Daqui a uma semana, vou viajar.** — "In a week I am going to travel."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**daqui a** is "from here to": *de*, "from", + *aqui*, "here" (← Vulgar Latin *\*eccu hic*), + *a*, "to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a trunk"
 concept_tag: PT-COISAS250-TRONCO
 prerequisites: [PT-C250-raiz, PT-C250-ramo]
 sounds: []
-roots: []
+roots: [truncus-latin]
+etymology_hook: "tronco ← Latin truncus 'tree trunk' — English trunk"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C250-ramo]
 <!-- hl-knowledge: introduces=[PT-LEX-C250-COISAS250-04]; assesses=[] -->
 
 **o tronco** — "a trunk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tronco** ← Latin *truncus*, "tree trunk" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

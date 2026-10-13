@@ -13,7 +13,8 @@ gloss: "a sheet of paper"
 concept_tag: IT-LAV232-FOGLIO
 prerequisites: [IT-C231-allenatore, IT-C232-numero]
 sounds: []
-roots: []
+roots: [folium-latin]
+etymology_hook: "foglio ← Latin folium 'a leaf' — English folio and foliage share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C232-numero]
 <!-- hl-knowledge: introduces=[IT-LEX-C232-LAV232-02]; assesses=[] -->
 
 **il foglio** — "a sheet of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**foglio** ← Latin *folium*, "a leaf" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

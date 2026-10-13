@@ -13,7 +13,8 @@ gloss: "to get up"
 concept_tag: PT-VERB-LEVANTAR-SE
 prerequisites: [PT-C131-vestir-se, PT-C132-lavar-se]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "levantar-se — levantar ← Vulgar Latin *levantare, from levare 'to lift'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C132-lavar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C132-VERBOS132-02]; assesses=[] -->
 
 **levantar-se** — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**levantar** ← Vulgar Latin *\*levantare* (EtymDB 2.1), from Latin *levare*, "to lift" — inherited. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 91,
-  "sourceHash": "fnv1a64:81fe0369908ea4d3",
+  "sourceHash": "fnv1a64:335073a45cf30d95",
   "lessonIds": [
     "PT-C91-metro",
     "PT-C91-eletrico",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch91.txt",
   "json": "portuguese/narration/ch91.json",
-  "textHash": "fnv1a64:7bca111314d2dfbd",
-  "jsonHash": "fnv1a64:9e04b9a5864ee460",
+  "textHash": "fnv1a64:88541aafc3322ed4",
+  "jsonHash": "fnv1a64:62a5fb9e0469ef2f",
   "findings": []
 }

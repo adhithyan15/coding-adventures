@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Restaurant, Bakery, Cinema, Theatre, Town hall",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:90825f6d1dbf50f9",
+  "sourceHash": "fnv1a64:abfcf7d06d97cdfe",
   "lessons": [
     {
       "id": "GE-C105-restaurant",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53b4f004006e486e",
+      "sourceHash": "fnv1a64:3d24e5a8bb84ec17",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Restaurant from French restaurant, \"restoring\", from restaurer, \"to restore\" from Latin restaurāre (EtymDB 2.1) — borrowed: a place that restores you."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18c6b05c007c3aa5",
+      "sourceHash": "fnv1a64:6a664189f0ee3b68",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bäckerei is the word for \"baker\" + -ei, the ending that names a trade's workplace (EtymDB 2.1). The baker is the one who bakes."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d1f0cf0e50acaae",
+      "sourceHash": "fnv1a64:fbe1462fa4d377c4",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kino is short for the word for the cinematograph, a modern coinage from Greek kínēma, \"movement\", and gráphein, \"to write\": the machine that records movement. EtymDB 2.1 has no source for Kino."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8e9b3fc40e030b5",
+      "sourceHash": "fnv1a64:2bce58093169ce8b",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +464,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Theater from Greek théatron, \"a place for viewing\", from theáomai, \"to watch\" (EtymDB 2.1) — borrowed through Latin theātrum."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -521,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea306265b024aeb9",
+      "sourceHash": "fnv1a64:e09705a6fa68ba50",
       "notice": null,
       "blocks": [
         {
@@ -554,6 +598,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rathaus is built from the word for \"council\", Old High German rāt from Proto-Germanic rēdaz, \"advice\" (EtymDB 2.1), and the word for \"house\". English rede, \"counsel\", is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -564,7 +619,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -613,7 +668,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

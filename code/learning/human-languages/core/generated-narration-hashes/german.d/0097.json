@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 97,
-  "sourceHash": "fnv1a64:4e0e93355a80fbb8",
+  "sourceHash": "fnv1a64:6cfcba49aa56441e",
   "lessonIds": [
     "GE-C97-bruecke",
     "GE-C97-kirche",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch97.txt",
   "json": "german/narration/ch97.json",
-  "textHash": "fnv1a64:b01c6caf84f9a4ca",
-  "jsonHash": "fnv1a64:93b4880d4acae74e",
+  "textHash": "fnv1a64:05d92f8f1c49e46e",
+  "jsonHash": "fnv1a64:b16debd6e422e0e0",
   "findings": []
 }

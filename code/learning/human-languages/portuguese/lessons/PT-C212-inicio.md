@@ -13,7 +13,8 @@ gloss: "the beginning"
 concept_tag: PT-TEMPO212-INICIO
 prerequisites: [PT-C211-dor-de-cabeca, PT-C212-fim]
 sounds: []
-roots: []
+roots: [initium-latin]
+etymology_hook: "início ← Latin initium 'a going in', from inire — English initial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C212-fim]
 <!-- hl-knowledge: introduces=[PT-LEX-C212-TEMPO212-02]; assesses=[] -->
 
 **o início** — "the beginning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**início** ← Latin *initium*, "a going in" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "strange"
 concept_tag: PT-QUAL154-ESTRANHO-ESTRANHA
 prerequisites: [PT-C154-util, PT-C154-inutil]
 sounds: []
-roots: []
+roots: [extraneus-latin]
+etymology_hook: "estranho ← Latin extraneus 'from outside' — English strange shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C154-inutil]
 <!-- hl-knowledge: introduces=[PT-LEX-C154-QUAL154-05]; assesses=[] -->
 
 **estranho / estranha** — "strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estranho** ← Latin *extraneus*, "from outside, foreign" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

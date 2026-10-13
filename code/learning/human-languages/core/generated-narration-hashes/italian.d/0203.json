@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 203,
-  "sourceHash": "fnv1a64:3436c0a8eaa11c36",
+  "sourceHash": "fnv1a64:a1332735a2b8e2ae",
   "lessonIds": [
     "IT-C203-contratto",
     "IT-C203-colloquio",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch203.txt",
   "json": "italian/narration/ch203.json",
-  "textHash": "fnv1a64:75bdc5f423efeb4c",
-  "jsonHash": "fnv1a64:1e98e7fa5e10566c",
+  "textHash": "fnv1a64:9ef3d84df09f41db",
+  "jsonHash": "fnv1a64:75efcf0b14d397da",
   "findings": []
 }

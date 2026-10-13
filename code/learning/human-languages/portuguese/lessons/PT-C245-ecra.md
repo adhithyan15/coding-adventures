@@ -14,6 +14,7 @@ concept_tag: PT-COISAS245-ECRA
 prerequisites: [PT-C245-noticia, PT-C245-publicidade]
 sounds: []
 roots: []
+etymology_hook: "ecrã ← French écran 'screen' — the nasal ending imitates the French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C245-publicidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C245-COISAS245-04]; assesses=[] -->
 
 **o ecrã** — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ecrã** ← French *écran*, "screen" — borrowed; the nasal ending imitates the French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

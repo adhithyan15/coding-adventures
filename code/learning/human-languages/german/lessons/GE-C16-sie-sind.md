@@ -13,7 +13,7 @@ sounds: [s-voiced, ie-long-ee, d-t-final]
 roots: [pie-h1es]
 etymology_hook: "the polite Sie IS the word for they, so German addresses one person as a plural third party and marks it only with a capital"
 duration:
-  max_seconds: 165
+  max_seconds: 209
 requires:
   knowledge: [GE-GRAMMAR-SEIN-IHR-SEID-01, GE-GRAMMAR-SEIN-WIR-SIND-01, GE-LEX-DU-SIE-02, GE-GRAMMAR-GROSSSCHREIBUNG-01]
 introduces:
@@ -48,6 +48,11 @@ courtesy. Its verb form follows from that, and costs you nothing new.
 The form is **sind**, the very same word you learned for *wir*. Nothing changes
 in the mouth at all: *wir sind*, *sie sind*, *Sie sind* are three subjects and
 one verb form.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sind** ← Old High German *sint* — inherited, from the same root as English *is* (EtymDB 2.1 traces *is* to Proto-Germanic *\*isti*). The polite *Sie* is the word for "they", capitalised.
 
 ## Grammar Lens: the capital carries the politeness
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-SEIN-SIE-SIND-01] -->

@@ -13,7 +13,8 @@ gloss: "oil"
 concept_tag: GE-ESSEN3-OEL
 prerequisites: [GE-C71-suppe, GE-C71-honig]
 sounds: []
-roots: []
+roots: [oleum-latin]
+etymology_hook: "Öl ← Old High German oli ← Latin oleum ← Greek elaion 'olive oil' — borrowed, like English oil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C71-honig]
 <!-- hl-knowledge: introduces=[GE-LEX-C71-ESSEN3-04]; assesses=[] -->
 
 **das Öl** — "oil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Öl** ← Old High German *oli* ← Latin *oleum* ← Greek *élaion*, "olive oil" (EtymDB 2.1) — borrowed with the olive, as English *oil* was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

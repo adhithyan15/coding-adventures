@@ -13,7 +13,8 @@ gloss: "to sail"
 concept_tag: GE-VERB-SEGELN
 prerequisites: [GE-C186-schneien, GE-C186-schuetzen]
 sounds: []
-roots: []
+roots: [germanic-segla]
+etymology_hook: "segeln — the verb of Segel 'sail' ← Old High German segal, the same word as English sail"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C186-schuetzen]
 <!-- hl-knowledge: introduces=[GE-LEX-C186-VERB186-03]; assesses=[] -->
 
 **segeln** — "to sail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**segeln** is the verb of the word for "a sail", Old High German *segal* (EtymDB 2.1) ← Proto-Germanic *\*seglą* — the same word as English *sail*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

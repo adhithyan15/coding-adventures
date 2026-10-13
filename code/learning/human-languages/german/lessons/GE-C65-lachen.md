@@ -13,7 +13,8 @@ gloss: "to laugh"
 concept_tag: GE-VERB-LACHEN
 prerequisites: [GE-C65-bezahlen, GE-C65-kochen]
 sounds: []
-roots: []
+roots: [germanic-hlahjana]
+etymology_hook: "lachen ← Old High German lahhan ← Proto-Germanic *hlahjaną — the same verb as English laugh"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C65-kochen]
 <!-- hl-knowledge: introduces=[GE-LEX-C65-VERBEN2-04]; assesses=[] -->
 
 **lachen** — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lachen** ← Old High German *lahhan* ← Proto-Germanic *\*hlahjaną* — inherited, the same verb as English *laugh*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an exam"
 concept_tag: IT-SCUOLA114-ESAME
 prerequisites: [IT-C113-classe, IT-C114-lezione]
 sounds: []
-roots: []
+roots: [examen-latin]
+etymology_hook: "esame ← Latin examen 'the tongue of a balance', a learned word — English examine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C114-lezione]
 <!-- hl-knowledge: introduces=[IT-LEX-C114-SCUOLA114-02]; assesses=[] -->
 
 **l'esame** — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esame** ← Latin *examen*, "the tongue of a balance, a weighing" (Lewis & Short) — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

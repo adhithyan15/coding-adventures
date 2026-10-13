@@ -13,7 +13,8 @@ gloss: "to hold"
 concept_tag: PT-VERB-SEGURAR
 prerequisites: [PT-C172-mover, PT-C172-tirar]
 sounds: []
-roots: []
+roots: [cura-latin]
+etymology_hook: "segurar — built from seguro 'safe' (← Latin securus)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C172-tirar]
 <!-- hl-knowledge: introduces=[PT-LEX-C172-VERBOS172-03]; assesses=[] -->
 
 **segurar** — "to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**segurar** is built from *seguro*, "safe" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

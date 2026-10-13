@@ -13,7 +13,8 @@ gloss: "to feed"
 concept_tag: PT-VERB-ALIMENTAR
 prerequisites: [PT-C239-engordar, PT-C239-emagrecer]
 sounds: []
-roots: []
+roots: [alere-latin]
+etymology_hook: "alimentar — built on Latin alimentum 'food', from alere 'to nourish'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C239-emagrecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C239-VERBOS239-03]; assesses=[] -->
 
 **alimentar** — "to feed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alimentar** is built on Latin *alimentum*, "food" (EtymDB 2.1), from *alere*, "to nourish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

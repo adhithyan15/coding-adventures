@@ -14,6 +14,7 @@ concept_tag: GE-WANN-LILA
 prerequisites: [GE-C93-braun, GE-C94-grau]
 sounds: []
 roots: []
+etymology_hook: "lila ← French lilas 'lilac', a word that came west from Persian through Arabic — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C94-grau]
 <!-- hl-knowledge: introduces=[GE-LEX-C94-WANN-02]; assesses=[] -->
 
 **lila** — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lila** is the colour of lilac, from French *lilas* (EtymDB 2.1 has the French word), which came west from Persian through Arabic — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

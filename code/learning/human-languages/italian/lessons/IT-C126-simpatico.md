@@ -14,6 +14,7 @@ concept_tag: IT-QUALITA126-SIMPATICO
 prerequisites: [IT-C126-noioso, IT-C126-divertente]
 sounds: []
 roots: []
+etymology_hook: "simpatico — from simpatia ← Greek sympatheia 'feeling with' — English sympathy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C126-divertente]
 <!-- hl-knowledge: introduces=[IT-LEX-C126-QUALITA126-03]; assesses=[] -->
 
 **simpatico** — "nice, likeable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**simpatico** — built from *simpatia*, "fellow feeling", with *-ico*. *simpatia* ← Late Latin *sympathia*, from Greek *sympatheia*, "feeling with". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "brown"
 concept_tag: PT-CORES121-CASTANHO
 prerequisites: [PT-C121-lilas, PT-C121-roxo]
 sounds: []
-roots: []
+roots: [castanea-latin]
+etymology_hook: "castanho ← Latin castaneus 'of chestnut', from castanea — English chestnut"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C121-roxo]
 <!-- hl-knowledge: introduces=[PT-LEX-C121-CORES121-03]; assesses=[] -->
 
 **castanho** — "brown". In Brazil, **marrom**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**castanho** ← Latin *castaneus*, "of chestnut" (EtymDB 2.1), from *castanea*, "chestnut" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

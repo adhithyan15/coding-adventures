@@ -13,7 +13,8 @@ gloss: "a plumber"
 concept_tag: IT-COSE163-IDRAULICO
 prerequisites: [IT-C163-meccanico, IT-C163-elettricista]
 sounds: []
-roots: []
+roots: [hydraulicus-latin]
+etymology_hook: "idraulico ← Latin hydraulicus, from Greek hydraulikos — water and pipe; English hydraulic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C163-elettricista]
 <!-- hl-knowledge: introduces=[IT-LEX-C163-COSE163-03]; assesses=[] -->
 
 **l'idraulico** — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**idraulico** ← Latin *hydraulicus*, "of the water organ", from Greek *hydraulikos* — a learned borrowing. EtymDB 2.1 has no row for *idraulico*; it derives French *hydraulique* from *hydraulicus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

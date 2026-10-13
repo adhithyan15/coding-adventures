@@ -14,6 +14,7 @@ concept_tag: IT-COSE228-GRATTACIELO
 prerequisites: [IT-C227-bagaglio, IT-C227-posto]
 sounds: []
 roots: []
+etymology_hook: "grattacielo — gratta 'scratches' + cielo 'sky', after English skyscraper"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C227-posto]
 <!-- hl-knowledge: introduces=[IT-LEX-C228-COSE228-01]; assesses=[] -->
 
 **il grattacielo** — "a skyscraper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grattacielo** is *gratta*, "it scratches", plus *cielo*, "sky", after English *skyscraper*. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the truth"
 concept_tag: GE-THING243-WAHRHEIT
 prerequisites: [GE-C242-vorteil, GE-C243-nachteil]
 sounds: []
-roots: []
+roots: [germanic-weraz]
+etymology_hook: "Wahrheit ← Old High German wārheit: wahr 'true' + -heit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C243-nachteil]
 <!-- hl-knowledge: introduces=[GE-LEX-C243-THING243-02]; assesses=[] -->
 
 **die Wahrheit** — "the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wahrheit** ← Middle High German *wārheit* ← Old High German *wārheit* (EtymDB 2.1): the word for "true" + *-heit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

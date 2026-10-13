@@ -14,6 +14,7 @@ concept_tag: GE-FREIZEIT129-FILM
 prerequisites: [GE-C128-zeichnung, GE-C129-sport]
 sounds: []
 roots: []
+etymology_hook: "Film ← English film 'thin skin, coating' — borrowed for the coated strip"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C129-sport]
 <!-- hl-knowledge: introduces=[GE-LEX-C129-FREIZEIT129-02]; assesses=[] -->
 
 **der Film** — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Film** ← English *film*, Old English *filmen*, "thin skin" (EtymDB 2.1) — borrowed: the coated strip in the camera.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-VERB-VERGESSEN
 prerequisites: [GE-C66-zeigen, GE-C66-bringen]
 sounds: []
 roots: []
+etymology_hook: "vergessen ← Old High German firgezzan — built like English forget, 'away' + an old verb 'to get'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C66-bringen]
 <!-- hl-knowledge: introduces=[GE-LEX-C66-VERBEN3-05]; assesses=[] -->
 
 **vergessen** — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vergessen** ← Old High German *firgezzan* (EtymDB 2.1) — inherited, and built like English *forget*: *ver-*, "away", + an old verb meaning "to get".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 49,
-  "sourceHash": "fnv1a64:ae494534248d10f7",
+  "sourceHash": "fnv1a64:f127b5d31d05b558",
   "lessonIds": [
     "GE-C36-mein",
     "GE-C36-dein",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "german/narration/ch49.txt",
   "json": "german/narration/ch49.json",
-  "textHash": "fnv1a64:85a160059241d76b",
-  "jsonHash": "fnv1a64:d2b06b89e1591df4",
+  "textHash": "fnv1a64:af734171673f6a48",
+  "jsonHash": "fnv1a64:66c6d5548653c285",
   "findings": []
 }

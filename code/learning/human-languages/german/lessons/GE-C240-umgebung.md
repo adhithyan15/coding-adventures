@@ -13,7 +13,8 @@ gloss: "the surroundings"
 concept_tag: GE-THING240-UMGEBUNG
 prerequisites: [GE-C240-traum, GE-C240-ueberraschung]
 sounds: []
-roots: []
+roots: [germanic-gebana]
+etymology_hook: "Umgebung — um- 'around' + the verb 'to give' + -ung: what is placed around you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C240-ueberraschung]
 <!-- hl-knowledge: introduces=[GE-LEX-C240-THING240-05]; assesses=[] -->
 
 **die Umgebung** — "the surroundings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Umgebung** is the noun of a verb built from *um-*, "around", + the verb "to give", English *give*: what surrounds you. EtymDB 2.1 lists Dutch *omgeving* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

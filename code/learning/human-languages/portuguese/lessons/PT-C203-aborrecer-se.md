@@ -13,7 +13,8 @@ gloss: "to get bored"
 concept_tag: PT-VERB-ABORRECER-SE
 prerequisites: [PT-C203-acordar, PT-C203-pentear-se]
 sounds: []
-roots: []
+roots: [abhorrere-latin]
+etymology_hook: "aborrecer-se — aborrecer ← Latin abhorrescere 'to shrink from', with -se"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C203-pentear-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C203-VERBOS203-05]; assesses=[] -->
 
 **aborrecer-se** — "to get bored".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aborrecer** ← Latin *abhorrescere*, "to shrink from in horror" — inherited; EtymDB 2.1 traces it to Old Portuguese *avorrecer*. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 96,
-  "sourceHash": "fnv1a64:ae344bfbc09a11e9",
+  "sourceHash": "fnv1a64:c35b94e2bfc24a86",
   "lessonIds": [
     "PT-C96-lixo",
     "PT-C96-vassoura",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch96.txt",
   "json": "portuguese/narration/ch96.json",
-  "textHash": "fnv1a64:6ba59c0c6c74a6d8",
-  "jsonHash": "fnv1a64:6753d41a2b9616f3",
+  "textHash": "fnv1a64:8a19372365a189f2",
+  "jsonHash": "fnv1a64:9073df7e7cff2970",
   "findings": []
 }

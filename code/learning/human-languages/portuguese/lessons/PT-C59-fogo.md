@@ -13,7 +13,8 @@ gloss: "fire"
 concept_tag: PT-TEMPO-FOGO
 prerequisites: [PT-C59-colina, PT-C59-deserto]
 sounds: []
-roots: []
+roots: [focus-latin]
+etymology_hook: "fogo ← Latin focus 'hearth, fireplace' — English focus is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C59-deserto]
 <!-- hl-knowledge: introduces=[PT-LEX-C59-TEMPO-05]; assesses=[] -->
 
 **o fogo** — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fogo** ← Latin *focus*, "hearth, fireplace" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

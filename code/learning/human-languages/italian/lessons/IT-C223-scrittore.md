@@ -13,7 +13,8 @@ gloss: "a writer"
 concept_tag: IT-COSE223-SCRITTORE
 prerequisites: [IT-C223-poesia, IT-C223-quadro]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "scrittore ← Latin scriptor 'a writer', from scribere — Latin pt became tt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C223-quadro]
 <!-- hl-knowledge: introduces=[IT-LEX-C223-COSE223-03]; assesses=[] -->
 
 **lo scrittore** — "a writer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scrittore** ← Latin *scriptor*, "a writer" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

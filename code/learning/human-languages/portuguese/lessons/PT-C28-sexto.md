@@ -10,8 +10,8 @@ gloss: "sixth — the last day the Portuguese week numbers"
 concept_tag: PT-ORDINAL-SEXTO
 prerequisites: [PT-C27-quinto, PT-C27-primeiro, PT-C24-arroz, PT-C16-ser-vs-estar, PT-C16-ser-estar-meaning, PT-C02-tudo, PT-C02-tudo-bem]
 sounds: [open-e]
-roots: []
-etymology_hook: "seis gives sexto, sexta-feira is Friday, and Sexta-feira Santa is Good Friday -- after this one the numbering stops, because sabado and domingo kept their own names"
+roots: [sextus-latin]
+etymology_hook: "sexto ← Latin sextus 'sixth', from sex 'six' — English sextet shares it"
 duration:
   max_seconds: 250
 requires:
@@ -55,6 +55,11 @@ reviews_of: [PT-C27-quinto, PT-C27-primeiro, PT-C24-arroz, PT-C16-ser-vs-estar, 
 Friday is ***sexta*-feira**, and **Sexta-feira Santa** is Good Friday — "holy
 sixth feast-day", which is a striking thing to be able to read once you know the
 number is in there.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sexto** ← Latin *sextus*, "sixth", from *sex*, "six" — inherited. EtymDB 2.1 has no ancestor row for *sexto*; it derives Old Portuguese *sexto*, also written *sesto*, from *sextus*.
 
 ## Why it's said this way: five numbered days, not seven
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

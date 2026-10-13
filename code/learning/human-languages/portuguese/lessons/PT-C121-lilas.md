@@ -14,6 +14,7 @@ concept_tag: PT-CORES121-LILAS
 prerequisites: [PT-C120-labios, PT-C120-peito]
 sounds: []
 roots: []
+etymology_hook: "lilás ← French lilas, from Arabic, from Persian nilak 'bluish' — English lilac"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C120-peito]
 <!-- hl-knowledge: introduces=[PT-LEX-C121-CORES121-01]; assesses=[] -->
 
 **lilás** — "lilac".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lilás** ← French *lilas* — borrowed. French took it from Arabic *līlak*, and Arabic from Persian *nīlak*, "bluish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

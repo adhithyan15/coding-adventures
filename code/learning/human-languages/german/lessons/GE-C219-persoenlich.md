@@ -13,7 +13,8 @@ gloss: "personal"
 concept_tag: GE-QUAL219-PERSOENLICH
 prerequisites: [GE-C219-oeffentlich, GE-C219-ordentlich]
 sounds: []
-roots: []
+roots: [persona-latin]
+etymology_hook: "persönlich ← Middle High German persōnlich: Person ← Latin persōna + -lich"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C219-ordentlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C219-QUAL219-05]; assesses=[] -->
 
 **persönlich** — "personal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**persönlich** ← Middle High German *persōnlich* (EtymDB 2.1): the word for "person", from Latin *persōna*, + *-lich*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the interior, inland"
 concept_tag: PT-LUGAR213-INTERIOR
 prerequisites: [PT-C213-dentro, PT-C213-fora]
 sounds: []
-roots: []
+roots: [inter-latin]
+etymology_hook: "interior ← Latin interior 'inner' — English interior"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C213-fora]
 <!-- hl-knowledge: introduces=[PT-LEX-C213-LUGAR213-03]; assesses=[] -->
 
 **o interior** — "the interior, inland".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interior** ← Latin *interior*, "inner" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

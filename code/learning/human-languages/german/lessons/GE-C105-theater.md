@@ -13,7 +13,8 @@ gloss: "a theatre"
 concept_tag: GE-ORT105-THEATER
 prerequisites: [GE-C105-baeckerei, GE-C105-kino]
 sounds: []
-roots: []
+roots: [theatrum-latin]
+etymology_hook: "Theater ← Greek théatron 'a place for viewing', from theáomai 'to watch' — borrowed through Latin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C105-kino]
 <!-- hl-knowledge: introduces=[GE-LEX-C105-ORT105-04]; assesses=[] -->
 
 **das Theater** — "a theatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Theater** ← Greek *théatron*, "a place for viewing", from *theáomai*, "to watch" (EtymDB 2.1) — borrowed through Latin *theātrum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

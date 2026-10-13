@@ -13,7 +13,8 @@ gloss: "to depart"
 concept_tag: GE-VERB-ABFAHREN
 prerequisites: [GE-C173-allein, GE-C174-abholen]
 sounds: []
-roots: []
+roots: [farana-germanic]
+etymology_hook: "abfahren — ab- 'off, away' + fahren 'to travel': to set off"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C174-abholen]
 <!-- hl-knowledge: introduces=[GE-LEX-C174-VERB174-02]; assesses=[] -->
 
 **abfahren** — "to depart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abfahren** is *ab-*, "off, away", + *fahren*, "to travel", which EtymDB 2.1 lists beside English *fare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

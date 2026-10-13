@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 79,
-  "sourceHash": "fnv1a64:6966944e4385cb3e",
+  "sourceHash": "fnv1a64:b04f13ff816f97d5",
   "lessonIds": [
     "GE-C79-tasse",
     "GE-C79-teller",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch79.txt",
   "json": "german/narration/ch79.json",
-  "textHash": "fnv1a64:8cc6ffa216d8a42a",
-  "jsonHash": "fnv1a64:276bcd8316cb9cea",
+  "textHash": "fnv1a64:a08714a1a353247e",
+  "jsonHash": "fnv1a64:121d52ba71f6cce8",
   "findings": []
 }

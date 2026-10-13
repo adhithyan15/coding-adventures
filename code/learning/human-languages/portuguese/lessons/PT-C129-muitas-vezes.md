@@ -13,7 +13,8 @@ gloss: "often"
 concept_tag: PT-TEMPO129-MUITAS-VEZES
 prerequisites: [PT-C128-data, PT-C129-seculo]
 sounds: []
-roots: []
+roots: [vicis-latin]
+etymology_hook: "muitas vezes — 'many times': muito ← Latin multus; vez ← Latin vicis 'turn'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C129-seculo]
 <!-- hl-knowledge: introduces=[PT-LEX-C129-TEMPO129-02]; assesses=[] -->
 
 **muitas vezes** — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**muitas vezes** is "many times": *muito* ← Latin *multus*, "much" (EtymDB 2.1), and *vez*, "time, turn" ← Latin *vicis*, "turn, change" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

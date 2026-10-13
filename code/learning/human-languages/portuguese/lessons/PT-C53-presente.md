@@ -13,7 +13,8 @@ gloss: "a present, a gift"
 concept_tag: PT-COISAS2-PRESENTE
 prerequisites: [PT-C53-guarda-chuva, PT-C53-dinheiro]
 sounds: []
-roots: []
+roots: [praesens-latin]
+etymology_hook: "presente ← Latin praesens 'present, at hand' — a gift is something set before you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C53-dinheiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C53-COISAS2-04]; assesses=[] -->
 
 **o presente** — "a present, a gift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**presente** ← Latin *praesens, praesentis*, "present, at hand" (EtymDB 2.1) — inherited. A gift is something set before someone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

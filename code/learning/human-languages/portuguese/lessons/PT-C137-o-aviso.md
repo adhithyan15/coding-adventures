@@ -14,6 +14,7 @@ concept_tag: PT-LER137-O-AVISO
 prerequisites: [PT-C136-organizar, PT-C137-o-horario]
 sounds: []
 roots: []
+etymology_hook: "aviso — from the verb to warn, borrowed from French aviser — English advise is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [PT-C137-o-horario]
 
 The notice says **Aviso: loja fechada ao sábado.** The shop is closed on
 Saturdays, so come on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aviso** is built from the verb "to warn", which was borrowed from French *aviser*, "to perceive, to advise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

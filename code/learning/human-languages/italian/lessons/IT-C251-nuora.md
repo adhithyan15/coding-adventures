@@ -13,7 +13,8 @@ gloss: "a daughter-in-law"
 concept_tag: IT-COSE251-NUORA
 prerequisites: [IT-C251-suocera, IT-C251-genero]
 sounds: []
-roots: []
+roots: [nurus-latin]
+etymology_hook: "nuora ← Latin nurus 'a daughter-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C251-genero]
 <!-- hl-knowledge: introduces=[IT-LEX-C251-COSE251-04]; assesses=[] -->
 
 **la nuora** — "a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nuora** ← Latin *nurus*, "a daughter-in-law" — inherited. EtymDB 2.1 has no row for *nuora*; it derives Old Provençal *nora* from *nurus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

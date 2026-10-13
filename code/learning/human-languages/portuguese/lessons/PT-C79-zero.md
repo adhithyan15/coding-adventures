@@ -14,6 +14,7 @@ concept_tag: PT-NUMEROS-ZERO
 prerequisites: [PT-C79-cem, PT-C79-mil]
 sounds: []
 roots: []
+etymology_hook: "zero ← French zéro, from Italian, from Arabic ṣifr 'empty' — English cipher shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C79-mil]
 <!-- hl-knowledge: introduces=[PT-LEX-C79-NUMEROS-05]; assesses=[] -->
 
 **zero** — "zero".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zero** ← French *zéro*, "zero" (EtymDB 2.1) — borrowed. French took it from Italian *zero*. Behind them is Arabic *ṣifr*, "empty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

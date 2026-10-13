@@ -13,7 +13,8 @@ gloss: "round"
 concept_tag: IT-QUALITA129-ROTONDO
 prerequisites: [IT-C128-morbido, IT-C129-duro]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "rotondo ← Latin rotundus 'round', from rota 'wheel' — English rotund and round share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C129-duro]
 <!-- hl-knowledge: introduces=[IT-LEX-C129-QUALITA129-02]; assesses=[] -->
 
 **rotondo** — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rotondo** ← Latin *rotundus*, "round", from *rota*, "wheel" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

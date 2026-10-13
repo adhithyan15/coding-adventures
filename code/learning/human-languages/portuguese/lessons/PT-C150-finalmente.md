@@ -13,7 +13,8 @@ gloss: "finally"
 concept_tag: PT-TEMPO150-FINALMENTE
 prerequisites: [PT-C150-raramente, PT-C150-seguir]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "finalmente — final (← Latin finalis, from finis 'end') + -mente '-ly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C150-seguir]
 <!-- hl-knowledge: introduces=[PT-LEX-C150-TEMPO150-03]; assesses=[] -->
 
 **finalmente** — "finally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**finalmente** is built from *final* (← Latin *finalis*, from *finis*, "end") and *-mente*, "-ly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

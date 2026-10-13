@@ -13,7 +13,8 @@ gloss: "above, upstairs"
 concept_tag: PT-LUGAR151-EM-CIMA
 prerequisites: [PT-C150-partir-de-agora, PT-C150-ainda]
 sounds: []
-roots: []
+roots: [cyma-latin]
+etymology_hook: "em cima — 'on top': cima ← Latin cyma 'young shoot', from Greek kyma 'a swelling'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C150-ainda]
 <!-- hl-knowledge: introduces=[PT-LEX-C151-LUGAR151-01]; assesses=[] -->
 
 **em cima** — "above, upstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**em cima** is "on top": *cima*, "top" ← Latin *cyma*, "young shoot", from Greek *kyma*, "a swelling" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

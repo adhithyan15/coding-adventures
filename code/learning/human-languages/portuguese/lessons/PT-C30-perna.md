@@ -13,7 +13,8 @@ gloss: "a leg"
 concept_tag: PT-CORPO1-PERNA
 prerequisites: [PT-C28-decimo, PT-C30-braco, PT-C22-encontrar-meet]
 sounds: []
-roots: []
+roots: [perna-latin]
+etymology_hook: "perna ← Latin perna 'haunch, ham': the leg was named after a cut of meat"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C30-braco]
 <!-- hl-knowledge: introduces=[PT-LEX-C30-CORPO1-02]; assesses=[] -->
 
 **a perna** — "a leg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perna** ← Latin *perna*, "haunch, ham" (EtymDB 2.1) — inherited. The leg was named after a cut of meat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

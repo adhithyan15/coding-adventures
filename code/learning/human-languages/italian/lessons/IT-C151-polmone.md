@@ -13,7 +13,8 @@ gloss: "a lung"
 concept_tag: IT-SAL151-POLMONE
 prerequisites: [IT-C150-sciare, IT-C151-cervello]
 sounds: []
-roots: []
+roots: [pulmo-latin]
+etymology_hook: "polmone ← Latin pulmo, pulmonem 'lung' — English pulmonary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C151-cervello]
 <!-- hl-knowledge: introduces=[IT-LEX-C151-SAL151-02]; assesses=[] -->
 
 **il polmone** — "a lung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**polmone** ← Latin *pulmo*, "lung" (accusative *pulmonem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

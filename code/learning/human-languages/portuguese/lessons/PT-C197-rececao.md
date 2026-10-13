@@ -13,7 +13,8 @@ gloss: "a reception desk"
 concept_tag: PT-COISAS197-RECECAO
 prerequisites: [PT-C197-paisagem, PT-C197-visita-guiada]
 sounds: []
-roots: []
+roots: [capere-latin]
+etymology_hook: "receção ← Latin receptio 'a receiving', from recipere — English reception"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C197-visita-guiada]
 <!-- hl-knowledge: introduces=[PT-LEX-C197-COISAS197-03]; assesses=[] -->
 
 **a receção** — "a reception desk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**receção** ← Latin *receptio, receptionis*, "a receiving" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

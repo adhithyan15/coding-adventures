@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for a cucumber, then the Portuguese for a
 You'll want to know: a cereja.
 a cereja — "a cherry".
 
+The word, taken apart.
+cereja from Vulgar Latin ceresia, "cherry", from Greek kerasion — inherited. EtymDB 2.1 has no ancestor row for cereja; it derives Spanish cereza from ceresia.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for a strawberry, then the Portuguese for
 
 You'll want to know: o melão.
 o melão — "a melon".
+
+The word, taken apart.
+melão from Late Latin melo, melonis, "melon" (EtymDB 2.1) — inherited. It is short for Greek mēlopepōn, "apple-melon".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for a cherry, then the Portuguese for a m
 You'll want to know: o alho.
 o alho — "garlic".
 
+The word, taken apart.
+alho from Latin allium, "garlic" — inherited. EtymDB 2.1 traces it only to Old Portuguese allo; it derives Spanish ajo from allium.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for a melon, then the Portuguese for garl
 You'll want to know: o chocolate.
 o chocolate — "chocolate".
 
+The word, taken apart.
+chocolate from Spanish chocolate (EtymDB 2.1) — borrowed. Spanish took it from Nahuatl.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for garlic, then the Portuguese for choco
 
 You'll want to know: a bolacha.
 a bolacha — "a biscuit". In Brazil, o biscoito.
+
+The word, taken apart.
+bolacha is built from bolo, "cake", and -acha (EtymDB 2.1): a small flat cake.
 
 What you've built.
 One more word for this chapter.

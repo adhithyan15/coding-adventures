@@ -13,7 +13,8 @@ gloss: "a board"
 concept_tag: GE-SCHULE127-TAFEL
 prerequisites: [GE-C127-klasse, GE-C127-pruefung]
 sounds: []
-roots: []
+roots: [tabula-latin]
+etymology_hook: "Tafel ← Old High German tavala ← Latin tabula 'board' — borrowed, like English table"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C127-pruefung]
 <!-- hl-knowledge: introduces=[GE-LEX-C127-SCHULE127-04]; assesses=[] -->
 
 **die Tafel** — "a board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tafel** ← Old High German *tavala* (EtymDB 2.1), from Latin *tabula*, "board, tablet" — borrowed, like English *table*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

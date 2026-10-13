@@ -13,7 +13,8 @@ gloss: "a twin"
 concept_tag: PT-COISAS191-GEMEO-A-GEMEA
 prerequisites: [PT-C191-adulto, PT-C191-idoso]
 sounds: []
-roots: []
+roots: [geminus-latin]
+etymology_hook: "gémeo ← Latin geminus 'twin' — English Gemini shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C191-idoso]
 <!-- hl-knowledge: introduces=[PT-LEX-C191-COISAS191-03]; assesses=[] -->
 
 **o gémeo / a gémea** — "a twin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gémeo** ← Latin *geminus*, "twin" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

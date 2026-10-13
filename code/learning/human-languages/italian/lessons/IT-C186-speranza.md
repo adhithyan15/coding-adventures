@@ -13,7 +13,8 @@ gloss: "hope"
 concept_tag: IT-SAL186-SPERANZA
 prerequisites: [IT-C186-amore, IT-C186-amicizia]
 sounds: []
-roots: []
+roots: [sperare-latin]
+etymology_hook: "speranza — sperare 'to hope' ← Latin sperare + -anza — French espérance is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C186-amicizia]
 <!-- hl-knowledge: introduces=[IT-LEX-C186-SAL186-05]; assesses=[] -->
 
 **la speranza** — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**speranza** — built from *sperare*, "to hope", with *-anza*. *sperare* ← Latin *sperare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

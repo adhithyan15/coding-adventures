@@ -14,6 +14,7 @@ concept_tag: IT-COSE230-COTONE
 prerequisites: [IT-C230-plastica, IT-C230-vetro]
 sounds: []
 roots: []
+etymology_hook: "cotone ← Arabic qutn 'cotton' — borrowed; English cotton is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C230-vetro]
 <!-- hl-knowledge: introduces=[IT-LEX-C230-COSE230-03]; assesses=[] -->
 
 **il cotone** — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cotone** ← Arabic *qutn*, "cotton" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

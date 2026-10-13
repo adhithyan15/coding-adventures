@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 74,
-  "sourceHash": "fnv1a64:63b41f16aa357752",
+  "sourceHash": "fnv1a64:5a8776282e8713ab",
   "lessonIds": [
     "PT-C74-estacao",
     "PT-C74-aviao",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch74.txt",
   "json": "portuguese/narration/ch74.json",
-  "textHash": "fnv1a64:ca442922c61067a1",
-  "jsonHash": "fnv1a64:fd815436699ced7c",
+  "textHash": "fnv1a64:714da46a52ed3ac4",
+  "jsonHash": "fnv1a64:0189988bcb95d792",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a nail"
 concept_tag: PT-CASA97-PREGO
 prerequisites: [PT-C97-balde, PT-C97-corda]
 sounds: []
-roots: []
+roots: [plicare-latin]
+etymology_hook: "prego — from the verb 'to nail', usually traced to Latin plicare 'to fold', like chegar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C97-corda]
 <!-- hl-knowledge: introduces=[PT-LEX-C97-CASA97-05]; assesses=[] -->
 
 **o prego** — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prego** comes from the verb "to nail", which is usually traced to Latin *plicare*, "to fold", the same verb as *chegar*. EtymDB 2.1 has no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

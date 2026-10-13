@@ -14,6 +14,7 @@ concept_tag: PT-COISAS198-PACOTE
 prerequisites: [PT-C198-quilo, PT-C198-litro]
 sounds: []
 roots: []
+etymology_hook: "pacote — built from an old bundle word + -ote; the bundle word is probably Germanic, like English pack"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C198-litro]
 <!-- hl-knowledge: introduces=[PT-LEX-C198-COISAS198-04]; assesses=[] -->
 
 **o pacote** — "a packet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pacote** is built from an older word for a bundle and *-ote* (EtymDB 2.1). The bundle word is probably Germanic, like English *pack*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

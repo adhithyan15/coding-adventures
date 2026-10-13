@@ -13,7 +13,8 @@ gloss: "instead"
 concept_tag: IT-PERCHE155-INVECE
 prerequisites: [IT-C155-dunque, IT-C155-pero]
 sounds: []
-roots: []
+roots: [vicis-latin]
+etymology_hook: "invece — in vece 'in the stead', from Latin vicis 'a turn' — English vice-president shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C155-pero]
 <!-- hl-knowledge: introduces=[IT-LEX-C155-PERCHE155-04]; assesses=[] -->
 
 **invece** — "instead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**invece** is *in vece*, "in the stead": *vece*, "turn, place", ← Latin *vicis*, "a change, a turn". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "fruit"
 concept_tag: PT-FRUTA-FRUTA
 prerequisites: [PT-C44-sal, PT-C44-frango]
 sounds: []
-roots: []
+roots: [fructus-latin]
+etymology_hook: "fruta ← Late Latin fructa, from fructus 'enjoyment, produce' — English fruit shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C44-frango]
 <!-- hl-knowledge: introduces=[PT-LEX-C45-FRUTA-01]; assesses=[] -->
 
 **a fruta** — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fruta** ← Late Latin *fructa*, "fruits", from Latin *fructus*, "enjoyment, produce" — inherited. EtymDB 2.1 has no usable row for *fruta*; it derives Spanish *fruta* from Late Latin *fructa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

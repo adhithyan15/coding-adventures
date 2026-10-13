@@ -13,7 +13,8 @@ gloss: "a flame"
 concept_tag: IT-COSE256-FIAMMA
 prerequisites: [IT-C255-cortile, IT-C255-cantina]
 sounds: []
-roots: []
+roots: [flamma-latin]
+etymology_hook: "fiamma ← Latin flamma 'a flame' — Latin fl- became Italian fi-; English flame"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C255-cantina]
 <!-- hl-knowledge: introduces=[IT-LEX-C256-COSE256-01]; assesses=[] -->
 
 **la fiamma** — "a flame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiamma** ← Latin *flamma*, "a flame" — inherited. EtymDB 2.1 has no row for *fiamma*; it derives Spanish *llama* and Old French *flamme* from *flamma*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

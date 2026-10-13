@@ -13,7 +13,8 @@ gloss: "a colleague"
 concept_tag: PT-TRAB170-COLEGA
 prerequisites: [PT-C169-guarda-roupa, PT-C170-empresa]
 sounds: []
-roots: []
+roots: [collega-latin]
+etymology_hook: "colega ← Latin collega 'partner in office' — English colleague"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C170-empresa]
 <!-- hl-knowledge: introduces=[PT-LEX-C170-TRAB170-02]; assesses=[] -->
 
 **o colega** — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colega** ← Latin *collega*, "partner in office" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

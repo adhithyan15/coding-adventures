@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 18,
-  "sourceHash": "fnv1a64:50cd8fc5636a744c",
+  "sourceHash": "fnv1a64:85f6bf1bcfb412ae",
   "lessonIds": [
     "PT-C18-ser-estar",
     "PT-C18-ter-haver",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "portuguese/narration/ch18.txt",
   "json": "portuguese/narration/ch18.json",
-  "textHash": "fnv1a64:b24870b3091cf367",
-  "jsonHash": "fnv1a64:395f0ba9145ed5f4",
+  "textHash": "fnv1a64:30064ca52ecf9ea2",
+  "jsonHash": "fnv1a64:acc844f119d92195",
   "findings": []
 }

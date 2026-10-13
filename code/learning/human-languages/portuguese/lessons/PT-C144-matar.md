@@ -14,6 +14,7 @@ concept_tag: PT-VERB-MATAR
 prerequisites: [PT-C144-temer, PT-C144-transportar]
 sounds: []
 roots: []
+etymology_hook: "matar — usually traced to Latin mactare 'to slaughter'; its origin is disputed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C144-transportar]
 <!-- hl-knowledge: introduces=[PT-LEX-C144-VERBOS144-04]; assesses=[] -->
 
 **matar** — "to kill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**matar** is usually traced to Latin *mactare*, "to sacrifice, to slaughter" (EtymDB 2.1), though some trace it to other sources; its origin is disputed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

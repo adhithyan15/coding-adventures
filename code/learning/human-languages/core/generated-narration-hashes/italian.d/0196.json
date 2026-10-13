@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 196,
-  "sourceHash": "fnv1a64:d547ea19183912bc",
+  "sourceHash": "fnv1a64:414ced18884dba03",
   "lessonIds": [
     "IT-C196-esperienza",
     "IT-C196-pensiero",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch196.txt",
   "json": "italian/narration/ch196.json",
-  "textHash": "fnv1a64:0cf53c6be4f9207d",
-  "jsonHash": "fnv1a64:991db39814d7809e",
+  "textHash": "fnv1a64:b5e4029e179ae701",
+  "jsonHash": "fnv1a64:9a9acfab544b1f3d",
   "findings": []
 }

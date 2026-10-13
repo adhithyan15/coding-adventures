@@ -13,7 +13,8 @@ gloss: "a mood"
 concept_tag: GE-THING233-LAUNE
 prerequisites: [GE-C232-landschaft, GE-C233-laerm]
 sounds: []
-roots: []
+roots: [luna-latin]
+etymology_hook: "Laune ← Latin lūna 'moon' — moods were thought to change with the moon"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C233-laerm]
 <!-- hl-knowledge: introduces=[GE-LEX-C233-THING233-02]; assesses=[] -->
 
 **die Laune** — "a mood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Laune** ← Middle High German *lūne*, from Latin *lūna*, "moon" (EtymDB 2.1 has the Latin word) — borrowed: moods were thought to change with the moon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

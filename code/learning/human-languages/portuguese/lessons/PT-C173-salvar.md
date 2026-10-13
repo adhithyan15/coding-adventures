@@ -13,7 +13,8 @@ gloss: "to rescue, to save"
 concept_tag: PT-VERB-SALVAR
 prerequisites: [PT-C172-partir, PT-C172-provar]
 sounds: []
-roots: []
+roots: [salvus]
+etymology_hook: "salvar ← Late Latin salvare 'to save', from salvus 'safe' — English salvage"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C172-provar]
 <!-- hl-knowledge: introduces=[PT-LEX-C173-VERBOS173-01]; assesses=[] -->
 
 **salvar** — "to rescue, to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salvar** ← Late Latin *salvare*, "to save" (EtymDB 2.1), from *salvus*, "safe" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

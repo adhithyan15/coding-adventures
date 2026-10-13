@@ -13,7 +13,8 @@ gloss: "a bee"
 concept_tag: PT-ANIMAIS4-ABELHA
 prerequisites: [PT-C63-leao, PT-C63-macaco]
 sounds: []
-roots: []
+roots: [apis-latin]
+etymology_hook: "abelha ← Latin apicula 'little bee', from apis 'bee' — English apiary shares apis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C63-macaco]
 <!-- hl-knowledge: introduces=[PT-LEX-C63-ANIMAIS4-03]; assesses=[] -->
 
 **a abelha** — "a bee". It makes **o mel**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abelha** ← Latin *apicula*, "little bee" (EtymDB 2.1), from *apis*, "bee" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

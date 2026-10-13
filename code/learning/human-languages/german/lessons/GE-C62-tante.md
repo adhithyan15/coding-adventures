@@ -13,7 +13,8 @@ gloss: "an aunt"
 concept_tag: GE-FAMILIE-TANTE
 prerequisites: [GE-C62-maedchen, GE-C62-onkel]
 sounds: []
-roots: []
+roots: [amita-latin]
+etymology_hook: "Tante ← French tante ← Old French ante ← Latin amita 'father's sister' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C62-onkel]
 <!-- hl-knowledge: introduces=[GE-LEX-C62-FAMILIE-05]; assesses=[] -->
 
 **die Tante** — "an aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tante** ← French *tante* ← Old French *ante* ← Latin *amita*, "father's sister" (EtymDB 2.1) — borrowed. English *aunt* comes from the same Old French word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

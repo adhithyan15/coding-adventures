@@ -13,7 +13,8 @@ gloss: "a medical appointment"
 concept_tag: PT-SAUDE240-CONSULTA
 prerequisites: [PT-C240-urgencias, PT-C240-emergencia]
 sounds: []
-roots: []
+roots: [consulere-latin]
+etymology_hook: "consulta — from the verb to consult ← Latin consultare 'to ask advice'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C240-emergencia]
 <!-- hl-knowledge: introduces=[PT-LEX-C240-SAUDE240-03]; assesses=[] -->
 
 **a consulta** — "a medical appointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**consulta** is built from the verb "to consult", which ← Latin *consultare*, "to ask advice" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

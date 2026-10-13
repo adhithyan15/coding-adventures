@@ -13,7 +13,8 @@ gloss: "a light switch"
 concept_tag: PT-COISAS229-INTERRUPTOR
 prerequisites: [PT-C229-colchao, PT-C229-tomada]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "interruptor ← Late Latin interruptor, from interrumpere 'to break in'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C229-tomada]
 <!-- hl-knowledge: introduces=[PT-LEX-C229-COISAS229-05]; assesses=[] -->
 
 **o interruptor** — "a light switch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interruptor** ← Late Latin *interruptor*, "one who breaks in" (EtymDB 2.1) — a learned borrowing from Late Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

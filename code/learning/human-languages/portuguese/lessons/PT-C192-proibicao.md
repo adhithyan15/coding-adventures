@@ -13,7 +13,8 @@ gloss: "a ban"
 concept_tag: PT-COISAS192-PROIBICAO
 prerequisites: [PT-C192-regra, PT-C192-autorizacao]
 sounds: []
-roots: []
+roots: [habere-latin]
+etymology_hook: "proibição ← Latin prohibitio 'a forbidding' — English prohibition"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C192-autorizacao]
 <!-- hl-knowledge: introduces=[PT-LEX-C192-COISAS192-04]; assesses=[] -->
 
 **a proibição** — "a ban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proibição** ← Latin *prohibitio, prohibitionis*, "a forbidding" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

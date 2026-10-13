@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 114,
-  "sourceHash": "fnv1a64:551012bf04b5b85b",
+  "sourceHash": "fnv1a64:78c94dbd75308cac",
   "lessonIds": [
     "PT-C114-frase",
     "PT-C114-pagina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch114.txt",
   "json": "portuguese/narration/ch114.json",
-  "textHash": "fnv1a64:73136c795f724eaa",
-  "jsonHash": "fnv1a64:21b1ebac8114d169",
+  "textHash": "fnv1a64:7be59d640f7c1f96",
+  "jsonHash": "fnv1a64:6dcf522b7bd01a40",
   "findings": []
 }

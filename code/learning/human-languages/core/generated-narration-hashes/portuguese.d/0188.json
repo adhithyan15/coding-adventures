@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 188,
-  "sourceHash": "fnv1a64:7d8ddca53b7ee747",
+  "sourceHash": "fnv1a64:dfa9dfb62ebc5e9a",
   "lessonIds": [
     "PT-C188-lencol",
     "PT-C188-gaveta",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch188.txt",
   "json": "portuguese/narration/ch188.json",
-  "textHash": "fnv1a64:ea25bb30a50ee513",
-  "jsonHash": "fnv1a64:a16dfe1c6c7049d9",
+  "textHash": "fnv1a64:d402daea73bce536",
+  "jsonHash": "fnv1a64:017c0dd053e621f2",
   "findings": []
 }

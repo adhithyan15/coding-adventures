@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Mine, Yours, His, Hers",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ae494534248d10f7",
+  "sourceHash": "fnv1a64:f127b5d31d05b558",
   "lessons": [
     {
       "id": "GE-C36-mein",
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a32ddea8e129262e",
+      "sourceHash": "fnv1a64:a3269f6d47049599",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +544,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ihr from Old High German iru, iro, \"her, their\" (EtymDB 2.1) — inherited, a form of the pronoun for \"she\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: three jobs, all settled by position",
           "segments": [
@@ -574,7 +585,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -632,7 +643,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -663,7 +674,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:659090703e0b2147",
+      "sourceHash": "fnv1a64:cb1c8d4b073e9769",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -715,6 +726,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Das ist mein Bruder — mein from Old High German mīn from Proto-Germanic mīnaz, English mine; Bruder from Proto-Germanic brōþēr, English brother. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the das that ignores gender",
           "segments": [
@@ -737,7 +759,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -795,7 +817,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

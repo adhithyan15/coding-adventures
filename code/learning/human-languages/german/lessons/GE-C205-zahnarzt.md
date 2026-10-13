@@ -13,7 +13,8 @@ gloss: "a dentist"
 concept_tag: GE-THING205-ZAHNARZT
 prerequisites: [GE-C204-koerper, GE-C205-knochen]
 sounds: []
-roots: []
+roots: [germanic-tanths, archiater-latin]
+etymology_hook: "Zahnarzt — Zahn 'tooth' + Arzt 'doctor': a tooth doctor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C205-knochen]
 <!-- hl-knowledge: introduces=[GE-LEX-C205-THING205-02]; assesses=[] -->
 
 **der Zahnarzt** — "a dentist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zahnarzt** is *Zahn*, "tooth", + *Arzt*, "doctor" (EtymDB 2.1). *Arzt* goes back to Late Latin *archiāter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

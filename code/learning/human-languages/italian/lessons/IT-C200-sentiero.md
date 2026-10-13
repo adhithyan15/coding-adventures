@@ -14,6 +14,7 @@ concept_tag: IT-COSE200-SENTIERO
 prerequisites: [IT-C200-spina, IT-C200-prato]
 sounds: []
 roots: []
+etymology_hook: "sentiero ← Old French sentier, from Vulgar Latin semitarius, built on semita 'a path'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C200-prato]
 <!-- hl-knowledge: introduces=[IT-LEX-C200-COSE200-05]; assesses=[] -->
 
 **il sentiero** — "a path".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sentiero** ← Old French *sentier*, "a path" — borrowed; behind it is Vulgar Latin *semitarius*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

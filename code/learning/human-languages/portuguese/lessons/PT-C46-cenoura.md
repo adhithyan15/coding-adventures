@@ -14,6 +14,7 @@ concept_tag: PT-LEGUMES-CENOURA
 prerequisites: [PT-C46-tomate, PT-C46-cebola]
 sounds: []
 roots: []
+etymology_hook: "cenoura ← Andalusian Arabic safunnāriya 'carrot' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C46-cebola]
 <!-- hl-knowledge: introduces=[PT-LEX-C46-LEGUMES-04]; assesses=[] -->
 
 **a cenoura** — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cenoura** ← Andalusian Arabic *safunnāriya*, "carrot" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

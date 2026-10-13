@@ -13,7 +13,8 @@ gloss: "only"
 concept_tag: IT-PERCHE244-SOLTANTO
 prerequisites: [IT-C244-quasi, IT-C244-circa]
 sounds: []
-roots: []
+roots: [solus-latin]
+etymology_hook: "soltanto — solo 'only' + tanto 'so much'; from Latin solus 'alone'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C244-circa]
 <!-- hl-knowledge: introduces=[IT-LEX-C244-PERCHE244-04]; assesses=[] -->
 
 **soltanto** — "only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soltanto** is *solo*, "alone, only", plus *tanto*, "so much": only so much. *solo* ← Latin *solus*, "alone"; *tanto* ← Latin *tantus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

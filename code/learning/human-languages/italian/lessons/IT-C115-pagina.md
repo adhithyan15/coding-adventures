@@ -13,7 +13,8 @@ gloss: "a page"
 concept_tag: IT-SCUOLA115-PAGINA
 prerequisites: [IT-C115-problema, IT-C115-frase]
 sounds: []
-roots: []
+roots: [pagina-latin]
+etymology_hook: "pagina ← Latin pagina 'a page', a learned word — English page is the same word, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C115-frase]
 <!-- hl-knowledge: introduces=[IT-LEX-C115-SCUOLA115-05]; assesses=[] -->
 
 **la pagina** — "a page".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pagina** ← Latin *pagina*, "a page, a leaf" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

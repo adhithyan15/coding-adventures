@@ -13,7 +13,8 @@ gloss: "an arm"
 concept_tag: PT-CORPO1-BRACO
 prerequisites: [PT-C28-nono, PT-C28-decimo]
 sounds: []
-roots: []
+roots: [bracchium-latin]
+etymology_hook: "braço ← Latin bracchium 'arm' — English bracelet shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C28-decimo]
 <!-- hl-knowledge: introduces=[PT-LEX-C30-CORPO1-01]; assesses=[] -->
 
 **o braço** — "an arm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**braço** ← Latin *bracchium*, "arm" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

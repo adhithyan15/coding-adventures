@@ -13,7 +13,8 @@ gloss: "a bill, an invoice"
 concept_tag: PT-LER137-A-FATURA
 prerequisites: [PT-C137-a-renda, PT-C137-o-anuncio]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "fatura ← Latin factura 'a making', from facere 'to make' — English factory"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [PT-C137-o-anuncio]
 
 The bill says **Fatura: renda, 400 euros. Pagar até segunda-feira.** Pay it by
 Monday. Older Portuguese texts write it **factura**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fatura** ← Latin *factura*, "a making" (Lewis & Short), from *facere*, "to make" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

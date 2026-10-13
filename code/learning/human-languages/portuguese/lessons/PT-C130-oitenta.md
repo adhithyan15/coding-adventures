@@ -13,7 +13,8 @@ gloss: "eighty"
 concept_tag: PT-NUMEROS130-OITENTA
 prerequisites: [PT-C130-sessenta, PT-C130-setenta]
 sounds: []
-roots: []
+roots: [octoginta-latin]
+etymology_hook: "oitenta ← Latin octoginta 'eighty': -ct- became -it-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C130-setenta]
 <!-- hl-knowledge: introduces=[PT-LEX-C130-NUMEROS130-03]; assesses=[] -->
 
 **oitenta** — "eighty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oitenta** ← Latin *octoginta*, "eighty" — inherited. EtymDB 2.1 traces it only to Old Portuguese *oytenta*; it derives Spanish *ochenta* from *octoginta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

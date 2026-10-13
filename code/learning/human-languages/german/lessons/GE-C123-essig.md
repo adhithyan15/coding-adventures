@@ -13,7 +13,8 @@ gloss: "vinegar"
 concept_tag: GE-ESSEN123-ESSIG
 prerequisites: [GE-C123-butter, GE-C123-sosse]
 sounds: []
-roots: []
+roots: [acetum-latin]
+etymology_hook: "Essig ← Old High German ezzih ← Latin acētum 'vinegar' — an early loan with its sounds swapped"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C123-sosse]
 <!-- hl-knowledge: introduces=[GE-LEX-C123-ESSEN123-03]; assesses=[] -->
 
 **der Essig** — "vinegar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Essig** ← Old High German *ezzih* ← Latin *acētum*, "vinegar" (EtymDB 2.1) — an early loan whose consonants swapped places.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

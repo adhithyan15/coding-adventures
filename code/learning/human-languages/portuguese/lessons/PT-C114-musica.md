@@ -13,7 +13,8 @@ gloss: "music"
 concept_tag: PT-LAZER114-MUSICA
 prerequisites: [PT-C114-frase, PT-C114-pagina, PT-C20-gostar, PT-C20-gostar]
 sounds: []
-roots: []
+roots: [musica-latin]
+etymology_hook: "música ← Latin musica, from Greek mousike 'art of the Muses' — English music"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C114-pagina]
 <!-- hl-knowledge: introduces=[PT-LEX-C114-LAZER114-03]; assesses=[] -->
 
 **a música** — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**música** ← Latin *musica*, "music" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *mousikē*, "the art of the Muses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

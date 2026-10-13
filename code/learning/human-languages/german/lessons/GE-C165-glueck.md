@@ -14,6 +14,7 @@ concept_tag: GE-THING165-GLUECK
 prerequisites: [GE-C164-mensch, GE-C165-leute]
 sounds: []
 roots: []
+etymology_hook: "Glück ← Middle High German gelücke 'luck'; English luck is the same word; its source is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C165-leute]
 <!-- hl-knowledge: introduces=[GE-LEX-C165-THING165-02]; assesses=[] -->
 
 **das Glück** — "luck, happiness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Glück** ← Middle High German *gelücke*, "luck" (EtymDB 2.1) — inherited. English *luck* is the same word, taken from Low German or Dutch; where *gelücke* came from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

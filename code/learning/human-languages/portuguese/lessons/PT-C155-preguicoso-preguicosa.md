@@ -13,7 +13,8 @@ gloss: "lazy"
 concept_tag: PT-QUAL155-PREGUICOSO-PREGUICOSA
 prerequisites: [PT-C155-paciente, PT-C155-generoso-generosa]
 sounds: []
-roots: []
+roots: [piger-latin]
+etymology_hook: "preguiçoso — built from the laziness word (← Latin pigritia, from piger 'slow') + -oso"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C155-generoso-generosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C155-QUAL155-05]; assesses=[] -->
 
 **preguiçoso / preguiçosa** — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preguiçoso** is built from the word for laziness and *-oso*, "full of". That word ← Latin *pigritia*, "sluggishness", from *piger*, "slow" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

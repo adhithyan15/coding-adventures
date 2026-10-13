@@ -13,7 +13,8 @@ gloss: "a tablet"
 concept_tag: GE-THING157-TABLETTE
 prerequisites: [GE-C156-husten, GE-C156-grippe]
 sounds: []
-roots: []
+roots: [tabula-latin]
+etymology_hook: "Tablette ← French tablette 'a small flat board', from Latin tabula — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C156-grippe]
 <!-- hl-knowledge: introduces=[GE-LEX-C157-THING157-01]; assesses=[] -->
 
 **die Tablette** — "a tablet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tablette** ← French *tablette*, "a little tablet" (EtymDB 2.1), a diminutive of the word that goes back to Latin *tabula*, "board" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

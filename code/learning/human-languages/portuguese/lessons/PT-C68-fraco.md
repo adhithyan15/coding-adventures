@@ -13,7 +13,8 @@ gloss: "weak"
 concept_tag: PT-ADJ5-FRACO
 prerequisites: [PT-C67-vazio, PT-C68-forte]
 sounds: []
-roots: []
+roots: [flaccus]
+etymology_hook: "fraco ← Latin flaccus 'flabby, drooping' — English flaccid shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C68-forte]
 <!-- hl-knowledge: introduces=[PT-LEX-C68-ADJ5-02]; assesses=[] -->
 
 **fraco** — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fraco** ← Latin *flaccus*, "flabby, drooping" (EtymDB 2.1) — inherited. Latin *fl-* here became *fr-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

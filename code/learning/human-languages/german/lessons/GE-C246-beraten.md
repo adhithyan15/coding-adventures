@@ -13,7 +13,8 @@ gloss: "to advise"
 concept_tag: GE-VERB-BERATEN
 prerequisites: [GE-C246-begleiten, GE-C246-bemerken]
 sounds: []
-roots: []
+roots: [germanic-redana]
+etymology_hook: "beraten — be- + raten 'to advise' ← Proto-Germanic *rēdaną; English rede is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C246-bemerken]
 <!-- hl-knowledge: introduces=[GE-LEX-C246-VERB246-03]; assesses=[] -->
 
 **beraten** — "to advise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beraten** is *be-* + the verb "to advise", Old High German *rātan* ← Proto-Germanic *\*rēdaną* (EtymDB 2.1). English *rede*, "counsel", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

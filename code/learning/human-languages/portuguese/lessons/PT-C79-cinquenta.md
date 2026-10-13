@@ -13,7 +13,8 @@ gloss: "fifty"
 concept_tag: PT-NUMEROS-CINQUENTA
 prerequisites: [PT-C78-cinto, PT-C79-quarenta]
 sounds: []
-roots: []
+roots: [quinquaginta-latin]
+etymology_hook: "cinquenta ← Latin quinquaginta 'fifty', through Vulgar Latin *cinquaginta"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C79-quarenta]
 <!-- hl-knowledge: introduces=[PT-LEX-C79-NUMEROS-02]; assesses=[] -->
 
 **cinquenta** — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinquenta** ← Latin *quinquaginta*, "fifty" (EtymDB 2.1), through Vulgar Latin *\*cinquaginta* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

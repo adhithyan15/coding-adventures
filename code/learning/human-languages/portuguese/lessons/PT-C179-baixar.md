@@ -13,7 +13,8 @@ gloss: "to lower"
 concept_tag: PT-VERB-BAIXAR
 prerequisites: [PT-C179-avancar, PT-C179-recuar]
 sounds: []
-roots: []
+roots: [bassus-latin]
+etymology_hook: "baixar — built from baixo 'low' (← Late Latin bassus) + -ar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C179-recuar]
 <!-- hl-knowledge: introduces=[PT-LEX-C179-VERBOS179-04]; assesses=[] -->
 
 **baixar** — "to lower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**baixar** is built from *baixo*, "low" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

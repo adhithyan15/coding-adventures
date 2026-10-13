@@ -13,7 +13,8 @@ gloss: "rest"
 concept_tag: PT-SAUDE240-DESCANSO
 prerequisites: [PT-C240-consulta, PT-C240-dieta]
 sounds: []
-roots: []
+roots: [campsare-latin]
+etymology_hook: "descanso — built from descansar 'to rest'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C240-dieta]
 <!-- hl-knowledge: introduces=[PT-LEX-C240-SAUDE240-05]; assesses=[] -->
 
 **o descanso** — "rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**descanso** is built from *descansar*, "to rest" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

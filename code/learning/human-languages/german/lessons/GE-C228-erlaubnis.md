@@ -13,7 +13,8 @@ gloss: "permission"
 concept_tag: GE-THING228-ERLAUBNIS
 prerequisites: [GE-C228-entscheidung, GE-C228-erinnerung]
 sounds: []
-roots: []
+roots: [germanic-galaubijana]
+etymology_hook: "Erlaubnis — erlauben 'to allow' + -nis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C228-erinnerung]
 <!-- hl-knowledge: introduces=[GE-LEX-C228-THING228-03]; assesses=[] -->
 
 **die Erlaubnis** — "permission".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Erlaubnis** is *erlauben*, "to allow", + *-nis*, an ending that makes a noun. *erlauben* ← Old High German *irlouben*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "lunch"
 concept_tag: PT-REFEICOES-ALMOCO
 prerequisites: [PT-C47-bolo, PT-C47-mel]
 sounds: []
-roots: []
+roots: [admordere-latin]
+etymology_hook: "almoço ← Latin admorsus 'bitten into', from admordere — lunch as a first bite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C47-mel]
 <!-- hl-knowledge: introduces=[PT-LEX-C47-REFEICOES-03]; assesses=[] -->
 
 **o almoço** — "lunch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**almoço** ← Latin *admorsus*, "bitten into" (EtymDB 2.1), from *admordere*, "to bite into" — inherited. Old Portuguese said *almorço*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

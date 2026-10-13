@@ -13,7 +13,8 @@ gloss: "a flat, an apartment"
 concept_tag: GE-HAUS3-WOHNUNG
 prerequisites: [GE-C78-treppe, GE-C78-spiegel]
 sounds: []
-roots: []
+roots: [wonen-germanic]
+etymology_hook: "Wohnung ← Old High German wonunga — wohnen 'to live' + -ung, 'a dwelling'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C78-spiegel]
 <!-- hl-knowledge: introduces=[GE-LEX-C78-HAUS3-05]; assesses=[] -->
 
 **die Wohnung** — "a flat, an apartment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wohnung** ← Middle High German *wonunge* ← Old High German *wonunga* — *wohnen* + *-ung*: "a dwelling". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

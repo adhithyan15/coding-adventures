@@ -13,7 +13,8 @@ gloss: "a dog"
 concept_tag: PT-ANIMAIS1-CAO
 prerequisites: [PT-C59-deserto, PT-C59-fogo]
 sounds: []
-roots: []
+roots: [canis-latin]
+etymology_hook: "cão ← Latin canis 'dog': the lost -n- left a nasal vowel — English canine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C59-fogo]
 <!-- hl-knowledge: introduces=[PT-LEX-C60-ANIMAIS1-01]; assesses=[] -->
 
 **o cão** — "a dog". Also **o cachorro** in Brazil.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cão** ← Latin *canis*, "dog" (EtymDB 2.1) — inherited. The *-n-* of the form *canem* fell out and left a nasal vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

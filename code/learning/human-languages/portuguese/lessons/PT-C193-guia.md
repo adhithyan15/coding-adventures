@@ -14,6 +14,7 @@ concept_tag: PT-COISAS193-GUIA
 prerequisites: [PT-C193-pasta, PT-C193-etiqueta]
 sounds: []
 roots: []
+etymology_hook: "guia — from the verb to guide, borrowed through Provençal from a Germanic verb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C193-etiqueta]
 <!-- hl-knowledge: introduces=[PT-LEX-C193-COISAS193-04]; assesses=[] -->
 
 **o guia** — "a guide, a guidebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guia** is built from the verb "to guide", which came through Provençal from a Germanic verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

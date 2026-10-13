@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3a37308f58435ad6",
+  "sourceHash": "fnv1a64:e33ade6eaeae9b20",
   "lessons": [
     {
       "id": "GE-C22-hund-katze",
@@ -122,7 +122,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3209d8e13395ed80",
+      "sourceHash": "fnv1a64:57b034c1b33d10eb",
       "notice": null,
       "blocks": [
         {

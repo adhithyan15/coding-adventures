@@ -13,7 +13,8 @@ gloss: "to please, to be liked"
 concept_tag: GE-VERB-GEFALLEN
 prerequisites: [GE-C146-feiern, GE-C146-fuellen]
 sounds: []
-roots: []
+roots: [germanic-fallana]
+etymology_hook: "gefallen ← Old High German gifallan — ge- + fallen: what falls to you suits you"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C146-fuellen]
 <!-- hl-knowledge: introduces=[GE-LEX-C146-VERB146-05]; assesses=[] -->
 
 **gefallen** — "to please, to be liked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gefallen** ← Middle High German *gevallen* ← Old High German *gifallan* (EtymDB 2.1): *ge-* + *fallen*. What falls your way pleases you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

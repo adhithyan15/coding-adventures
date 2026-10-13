@@ -13,7 +13,8 @@ gloss: "necessary"
 concept_tag: IT-QUAL157-NECESSARIO
 prerequisites: [IT-C157-possibile, IT-C157-impossibile]
 sounds: []
-roots: []
+roots: [necessarius-latin]
+etymology_hook: "necessario ← Latin necessarius 'unavoidable', a learned word — English necessary"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C157-impossibile]
 <!-- hl-knowledge: introduces=[IT-LEX-C157-QUAL157-05]; assesses=[] -->
 
 **necessario** — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**necessario** ← Latin *necessarius*, "unavoidable" — a learned borrowing: Latin *-arius* passed down by speech became *-aio*, not *-ario*. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

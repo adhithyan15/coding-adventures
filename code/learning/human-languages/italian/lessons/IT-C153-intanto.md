@@ -13,7 +13,8 @@ gloss: "meanwhile"
 concept_tag: IT-TEMPO153-INTANTO
 prerequisites: [IT-C153-subito, IT-C153-infine]
 sounds: []
-roots: []
+roots: [tantus]
+etymology_hook: "intanto — in + tanto 'so much', from Latin tantus 'so great'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C153-infine]
 <!-- hl-knowledge: introduces=[IT-LEX-C153-TEMPO153-04]; assesses=[] -->
 
 **intanto** — "meanwhile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intanto** is *in tanto*, "in so much (time)", from Latin *in* and *tantus*, "so great". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

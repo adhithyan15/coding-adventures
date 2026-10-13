@@ -13,7 +13,8 @@ gloss: "a cucumber"
 concept_tag: PT-COMIDA105-PEPINO
 prerequisites: [PT-C105-legumes, PT-C105-cogumelo]
 sounds: []
-roots: []
+roots: [pepo-latin]
+etymology_hook: "pepino ← Spanish pepino, from Latin pepo 'melon', from Greek pepon 'ripe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C105-cogumelo]
 <!-- hl-knowledge: introduces=[PT-LEX-C105-COMIDA105-04]; assesses=[] -->
 
 **o pepino** — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pepino** ← Spanish *pepino* — borrowed (EtymDB 2.1). Behind it is Latin *pepo*, "melon", from Greek *pepōn*, "ripe" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

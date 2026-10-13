@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 185,
-  "sourceHash": "fnv1a64:be6c671930054ef0",
+  "sourceHash": "fnv1a64:e9c736f83d8e009f",
   "lessonIds": [
     "GE-C185-retten",
     "GE-C185-rudern",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch185.txt",
   "json": "german/narration/ch185.json",
-  "textHash": "fnv1a64:582c43e977439ca2",
-  "jsonHash": "fnv1a64:9d90ab6064efa693",
+  "textHash": "fnv1a64:ed2ae53c9cccea05",
+  "jsonHash": "fnv1a64:1616b690f2d4331a",
   "findings": []
 }

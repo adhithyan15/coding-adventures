@@ -14,6 +14,7 @@ concept_tag: IT-QUAL156-CORTESE
 prerequisites: [IT-C156-comodo, IT-C156-scomodo]
 sounds: []
 roots: []
+etymology_hook: "cortese — corte 'a court' + -ese: with a court's manners — English courteous is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C156-scomodo]
 <!-- hl-knowledge: introduces=[IT-LEX-C156-QUAL156-03]; assesses=[] -->
 
 **cortese** — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cortese** — built from *corte*, "a court", with *-ese*: having the manners of a court. *corte* ← Latin *cortem*, "an enclosed yard". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a game"
 concept_tag: GE-FREIZEIT-SPIEL
 prerequisites: [GE-C102-musik, GE-C103-lied]
 sounds: []
-roots: []
+roots: [germanic-spilona]
+etymology_hook: "Spiel ← Old High German spil ← Proto-Germanic *spilą 'game, dance' — the noun of spielen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C103-lied]
 <!-- hl-knowledge: introduces=[GE-LEX-C103-FREIZEIT-02]; assesses=[] -->
 
 **das Spiel** — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Spiel** ← Old High German *spil* ← Proto-Germanic *\*spilą*, "game, dance" — inherited, the noun beside *spielen*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

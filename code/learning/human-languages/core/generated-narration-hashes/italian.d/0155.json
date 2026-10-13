@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 155,
-  "sourceHash": "fnv1a64:cc45b25658b0bdf9",
+  "sourceHash": "fnv1a64:70d71423b7fb7f49",
   "lessonIds": [
     "IT-C155-quindi",
     "IT-C155-dunque",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch155.txt",
   "json": "italian/narration/ch155.json",
-  "textHash": "fnv1a64:5dd0b780441b0d3e",
-  "jsonHash": "fnv1a64:e654078e578fcfec",
+  "textHash": "fnv1a64:4c619dbc7a06f9aa",
+  "jsonHash": "fnv1a64:cb59f556217ed8a8",
   "findings": []
 }

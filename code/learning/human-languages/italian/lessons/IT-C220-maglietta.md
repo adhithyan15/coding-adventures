@@ -13,7 +13,8 @@ gloss: "a T-shirt"
 concept_tag: IT-COSE220-MAGLIETTA
 prerequisites: [IT-C219-gratuito, IT-C219-moderno]
 sounds: []
-roots: []
+roots: [macula-latin]
+etymology_hook: "maglietta — a little maglia 'knit top', from Old Provençal malha ← Latin macula 'mesh'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C219-moderno]
 <!-- hl-knowledge: introduces=[IT-LEX-C220-COSE220-01]; assesses=[] -->
 
 **la maglietta** — "a T-shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maglietta** — built from *maglia*, "a knitted top", with *-etta*, "little". *maglia* ← Old Provençal *malha*, from Latin *macula*, "a mesh". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to allow"
 concept_tag: GE-VERB-ERLAUBEN
 prerequisites: [GE-C179-empfangen, GE-C179-erinnern]
 sounds: []
-roots: []
+roots: [germanic-galaubijana]
+etymology_hook: "erlauben ← Old High German irlouben — kin to English leave, 'permission'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C179-erinnern]
 <!-- hl-knowledge: introduces=[GE-LEX-C179-VERB179-03]; assesses=[] -->
 
 **erlauben** — "to allow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erlauben** ← Middle High German *erlouben* ← Old High German *irlouben* (EtymDB 2.1) — inherited, from the root of English *leave*, "permission". EtymDB lists Old English *ālyfan*, "to allow", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

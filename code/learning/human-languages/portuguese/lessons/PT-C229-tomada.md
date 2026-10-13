@@ -14,6 +14,7 @@ concept_tag: PT-COISAS229-TOMADA
 prerequisites: [PT-C229-sanita, PT-C229-colchao]
 sounds: []
 roots: []
+etymology_hook: "tomada — built from tomar 'to take' + -ada: where you take the power"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C229-colchao]
 <!-- hl-knowledge: introduces=[PT-LEX-C229-COISAS229-04]; assesses=[] -->
 
 **a tomada** — "a socket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tomada** is built from *tomar*, "to take" (EtymDB 2.1), and *-ada*: where you take the power.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

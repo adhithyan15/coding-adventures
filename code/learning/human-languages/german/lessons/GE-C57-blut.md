@@ -13,7 +13,8 @@ gloss: "blood"
 concept_tag: GE-KOERPER2-BLUT
 prerequisites: [GE-C56-knie, GE-C57-gesicht]
 sounds: []
-roots: []
+roots: [germanic-blotha]
+etymology_hook: "Blut ← Old High German bluot ← Proto-Germanic *blōþą — the same word as English blood"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C57-gesicht]
 <!-- hl-knowledge: introduces=[GE-LEX-C57-KOERPER2-02]; assesses=[] -->
 
 **das Blut** — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Blut** ← Old High German *bluot* ← Proto-Germanic *\*blōþą* — inherited, the same word as English *blood*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

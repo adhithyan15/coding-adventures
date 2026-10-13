@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 187,
-  "sourceHash": "fnv1a64:eb63985ab4dbae8e",
+  "sourceHash": "fnv1a64:568df0de7c8e7ab6",
   "lessonIds": [
     "IT-C187-ancora",
     "IT-C187-allora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch187.txt",
   "json": "italian/narration/ch187.json",
-  "textHash": "fnv1a64:5ecde730f4de4cae",
-  "jsonHash": "fnv1a64:35dc06bca3774938",
+  "textHash": "fnv1a64:a5619339002f5695",
+  "jsonHash": "fnv1a64:037054c74df4480d",
   "findings": []
 }

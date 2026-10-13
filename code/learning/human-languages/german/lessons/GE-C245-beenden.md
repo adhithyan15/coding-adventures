@@ -13,7 +13,8 @@ gloss: "to end, to finish"
 concept_tag: GE-VERB-BEENDEN
 prerequisites: [GE-C245-aussprechen, GE-C245-beantworten]
 sounds: []
-roots: []
+roots: [germanic-andijaz]
+etymology_hook: "beenden — be- + the verb from Ende 'end': to bring to an end"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C245-beantworten]
 <!-- hl-knowledge: introduces=[GE-LEX-C245-VERB245-05]; assesses=[] -->
 
 **beenden** — "to end, to finish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beenden** is *be-* + the verb built on *Ende*, "end" ← Proto-Germanic *\*andijaz*, English *end* (EtymDB 2.1): to bring to an end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

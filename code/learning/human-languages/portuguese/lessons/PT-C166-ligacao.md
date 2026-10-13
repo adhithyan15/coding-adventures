@@ -13,7 +13,8 @@ gloss: "a connection; a phone call"
 concept_tag: PT-COISAS166-LIGACAO
 prerequisites: [PT-C165-saco, PT-C165-fio]
 sounds: []
-roots: []
+roots: [ligare-latin]
+etymology_hook: "ligação ← Latin ligatio 'a binding', from ligare 'to bind' — English ligature"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C165-fio]
 <!-- hl-knowledge: introduces=[PT-LEX-C166-COISAS166-01]; assesses=[] -->
 
 **a ligação** — "a connection; a phone call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ligação** ← Latin *ligatio, ligationis*, "a binding" (EtymDB 2.1), from *ligare*, "to bind" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a factory"
 concept_tag: PT-LUGARES86-FABRICA
 prerequisites: [PT-C86-piscina, PT-C86-estadio]
 sounds: []
-roots: []
+roots: [fabrica-latin]
+etymology_hook: "fábrica ← Latin fabrica 'workshop', from faber 'smith' — English fabric shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C86-estadio]
 <!-- hl-knowledge: introduces=[PT-LEX-C86-LUGARES86-05]; assesses=[] -->
 
 **a fábrica** — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fábrica** ← Latin *fabrica*, "workshop" (EtymDB 2.1), from *faber*, "smith" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

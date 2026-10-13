@@ -13,7 +13,7 @@ sounds: [w-as-v, diphthong-ei]
 roots: [vinum-latin]
 etymology_hook: "Wein is w as v and ei as eye, so it comes out sounding exactly like English vine — which is not a coincidence, because the vine and the word arrived together"
 duration:
-  max_seconds: 165
+  max_seconds: 170
 requires:
   knowledge: [GE-LEX-WASSER-01, GE-SOUND-W-AS-V-01, GE-SOUND-EI-AS-EYE-01, GE-LEX-DER-DIE-DAS-02]
 introduces:
@@ -46,6 +46,11 @@ and that is the smaller of the two things different about it.
 
 A ***der***-word, where *Brot* and *Wasser* are both *das*. So the three now run
 one of each: *das Brot*, *das Wasser*, *der Wein*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wein** ← Old High German *wīn* ← Proto-Germanic *\*wīną* ← Latin *vīnum* (EtymDB 2.1) — borrowed from Latin very early, as English *wine* was.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-W-AS-V-01, GE-SOUND-EI-AS-EYE-01, GE-LEX-WEIN-01] -->

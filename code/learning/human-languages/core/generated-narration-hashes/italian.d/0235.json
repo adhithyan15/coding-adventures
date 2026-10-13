@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 235,
-  "sourceHash": "fnv1a64:0d25315c07710222",
+  "sourceHash": "fnv1a64:84fb95aadcfde211",
   "lessonIds": [
     "IT-C235-controllare",
     "IT-C235-firmare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch235.txt",
   "json": "italian/narration/ch235.json",
-  "textHash": "fnv1a64:7a8edd8a4d737b25",
-  "jsonHash": "fnv1a64:9c5cb8f21247343c",
+  "textHash": "fnv1a64:1cc9d199d06a85ed",
+  "jsonHash": "fnv1a64:ed9600473f3f969c",
   "findings": []
 }

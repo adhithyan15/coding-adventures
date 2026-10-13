@@ -13,7 +13,8 @@ gloss: "a thumb"
 concept_tag: PT-SAUDE180-POLEGAR
 prerequisites: [PT-C179-defender, PT-C180-musculo]
 sounds: []
-roots: []
+roots: [pollex-latin]
+etymology_hook: "polegar ← Latin pollicaris 'of the thumb', from pollex 'thumb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C180-musculo]
 <!-- hl-knowledge: introduces=[PT-LEX-C180-SAUDE180-02]; assesses=[] -->
 
 **o polegar** — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**polegar** ← Latin *pollicaris*, "of the thumb" (EtymDB 2.1), from *pollex*, "thumb" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

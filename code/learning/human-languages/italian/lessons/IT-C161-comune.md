@@ -13,7 +13,8 @@ gloss: "the town council"
 concept_tag: IT-COSE161-COMUNE
 prerequisites: [IT-C161-giudice, IT-C161-sindaco]
 sounds: []
-roots: []
+roots: [communis-latin]
+etymology_hook: "comune ← Latin commune 'a community', from communis 'common' — English commune"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C161-sindaco]
 <!-- hl-knowledge: introduces=[IT-LEX-C161-COSE161-04]; assesses=[] -->
 
 **il comune** — "the town council".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comune** ← Latin *commune*, "a community", from *communis*, "common" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

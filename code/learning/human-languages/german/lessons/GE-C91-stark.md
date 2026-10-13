@@ -13,7 +13,8 @@ gloss: "strong"
 concept_tag: GE-ADJ3-STARK
 prerequisites: [GE-C90-niedrig, GE-C90-leer]
 sounds: []
-roots: []
+roots: [germanic-starkuz]
+etymology_hook: "stark ← Old High German stark ← Proto-Germanic *starkuz 'stiff, strong' — the same word as English stark"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C90-leer]
 <!-- hl-knowledge: introduces=[GE-LEX-C91-ADJ3-01]; assesses=[] -->
 
 **stark** — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stark** ← Old High German *stark* ← Proto-Germanic *\*starkuz*, "stiff, strong" — inherited, the same word as English *stark*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

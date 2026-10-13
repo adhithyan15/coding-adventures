@@ -13,7 +13,8 @@ gloss: "closed"
 concept_tag: GE-EIGEN131-GESCHLOSSEN
 prerequisites: [GE-C131-beschaeftigt, GE-C131-frei]
 sounds: []
-roots: []
+roots: [germanic-sleutana]
+etymology_hook: "geschlossen — the past participle of schließen 'to close' ← Old High German sliozan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C131-frei]
 <!-- hl-knowledge: introduces=[GE-LEX-C131-EIGEN131-03]; assesses=[] -->
 
 **geschlossen** — "closed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geschlossen** is the past participle of *schließen*, "to close" ← Old High German *sliozan* ← Proto-Germanic *\*sleutaną* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

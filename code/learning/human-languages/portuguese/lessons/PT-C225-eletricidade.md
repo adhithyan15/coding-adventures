@@ -13,7 +13,8 @@ gloss: "electricity"
 concept_tag: PT-COISAS225-ELETRICIDADE
 prerequisites: [PT-C225-reciclagem, PT-C225-energia]
 sounds: []
-roots: []
+roots: [electrum-latin]
+etymology_hook: "eletricidade — built from elétrico 'electric' + -idade '-ity'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C225-energia]
 <!-- hl-knowledge: introduces=[PT-LEX-C225-COISAS225-05]; assesses=[] -->
 
 **a eletricidade** — "electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**eletricidade** is built from *elétrico*, "electric", and *-idade*, "-ity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

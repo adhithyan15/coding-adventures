@@ -13,7 +13,8 @@ gloss: "to promise"
 concept_tag: PT-VERB-PROMETER
 prerequisites: [PT-C139-mudar, PT-C140-discutir]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "prometer ← Latin promittere 'to send forth, to promise' — English promise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C140-discutir]
 <!-- hl-knowledge: introduces=[PT-LEX-C140-VERBOS140-02]; assesses=[] -->
 
 **prometer** — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prometer** ← Latin *promittere*, "to send forth, to promise" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

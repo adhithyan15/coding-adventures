@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 65,
-  "sourceHash": "fnv1a64:fd2de35d068f3bf6",
+  "sourceHash": "fnv1a64:061a6cfb885469ca",
   "lessonIds": [
     "PT-C65-bonito",
     "PT-C65-feio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch65.txt",
   "json": "portuguese/narration/ch65.json",
-  "textHash": "fnv1a64:17b4f2779797c1ca",
-  "jsonHash": "fnv1a64:3aa0c56db10ce409",
+  "textHash": "fnv1a64:60dc9c9a76c1fc39",
+  "jsonHash": "fnv1a64:75e3e2bbb3ce9634",
   "findings": []
 }

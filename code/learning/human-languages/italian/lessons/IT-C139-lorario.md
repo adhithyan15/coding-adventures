@@ -14,6 +14,7 @@ concept_tag: IT-READ139-LORARIO
 prerequisites: [IT-C138-prevedere, IT-C138-organizzare]
 sounds: []
 roots: []
+etymology_hook: "orario — ora 'hour' + -ario: a list of the hours"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [IT-C138-organizzare]
 
 The door says **Orario: lunedì – venerdì, 9 – 18.** Open on weekdays from nine
 to six: not on **sabato**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orario** — built from *ora*, "hour", with *-ario*: a list of hours. EtymDB 2.1 has no row for its origin; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

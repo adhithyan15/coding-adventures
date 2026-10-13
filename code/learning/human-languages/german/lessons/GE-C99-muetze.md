@@ -13,7 +13,8 @@ gloss: "a cap, a woollen hat"
 concept_tag: GE-KLEIDUNG-MUETZE
 prerequisites: [GE-C99-hose, GE-C99-schuh]
 sounds: []
-roots: []
+roots: [almutia-latin]
+etymology_hook: "Mütze ← Middle High German almuz ← Medieval Latin almutia 'hood' — borrowed, its first syllable lost"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C99-schuh]
 <!-- hl-knowledge: introduces=[GE-LEX-C99-KLEIDUNG-04]; assesses=[] -->
 
 **die Mütze** — "a cap, a woollen hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mütze** ← Middle High German *almuz* ← Medieval Latin *almutia*, "hood, cowl" (EtymDB 2.1) — borrowed, and its first syllable was later dropped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

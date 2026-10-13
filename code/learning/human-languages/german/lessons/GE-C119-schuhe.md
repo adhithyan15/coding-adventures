@@ -13,7 +13,8 @@ gloss: "shoes"
 concept_tag: GE-KLEIDUNG119-SCHUHE
 prerequisites: [GE-C119-rock, GE-C119-mantel]
 sounds: []
-roots: []
+roots: [germanic-skohaz]
+etymology_hook: "Schuhe — the plural of Schuh ← Proto-Germanic *skōhaz, the same word as English shoe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C119-mantel]
 <!-- hl-knowledge: introduces=[GE-LEX-C119-KLEIDUNG119-05]; assesses=[] -->
 
 **die Schuhe** — "shoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schuhe** is the plural of *Schuh* ← Old High German *scuoh* ← Proto-Germanic *\*skōhaz*, the same word as English *shoe*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

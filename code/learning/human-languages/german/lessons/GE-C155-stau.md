@@ -13,7 +13,8 @@ gloss: "a traffic jam"
 concept_tag: GE-THING155-STAU
 prerequisites: [GE-C155-ausweis, GE-C155-visum]
 sounds: []
-roots: []
+roots: [germanic-stowo]
+etymology_hook: "Stau — from a verb 'to dam up' ← Old High German stouwōn; English stow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C155-visum]
 <!-- hl-knowledge: introduces=[GE-LEX-C155-THING155-04]; assesses=[] -->
 
 **der Stau** — "a traffic jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stau** comes from the verb "to dam up, to hold back", Middle High German *stouwen* ← Old High German *stouwōn* (EtymDB 2.1). English *stow* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

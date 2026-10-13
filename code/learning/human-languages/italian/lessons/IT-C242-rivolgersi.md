@@ -13,7 +13,8 @@ gloss: "to turn to"
 concept_tag: IT-VERB-RIVOLGERSI
 prerequisites: [IT-C242-rinunciare, IT-C242-riscuotere]
 sounds: []
-roots: []
+roots: [volvere-latin]
+etymology_hook: "rivolgersi ← Latin revolvere 'to roll back' + -si: to turn oneself to — English revolve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C242-riscuotere]
 <!-- hl-knowledge: introduces=[IT-LEX-C242-VERBI242-05]; assesses=[] -->
 
 **rivolgersi** — "to turn to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rivolgersi** ← Latin *revolvere*, "to roll back", with *-si*, "oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to criticise"
 concept_tag: IT-VERB-CRITICARE
 prerequisites: [IT-C145-convincere, IT-C145-coprire]
 sounds: []
-roots: []
+roots: [criticus-latin]
+etymology_hook: "criticare — from critico ← Latin criticus ← Greek kritikos 'able to judge' — English criticise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C145-coprire]
 <!-- hl-knowledge: introduces=[IT-LEX-C145-VERBI145-05]; assesses=[] -->
 
 **criticare** — "to criticise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**criticare** — built from *critico*, "a critic", which goes back to Latin *criticus*, from Greek *kritikos*, "able to judge" (Lewis & Short). EtymDB 2.1 has no row for either Italian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

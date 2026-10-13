@@ -14,6 +14,7 @@ concept_tag: IT-COSE170-TAMBURO
 prerequisites: [IT-C170-pianoforte, IT-C170-violino]
 sounds: []
 roots: []
+etymology_hook: "tamburo ← Arabic tunbur — borrowed; English tambour and tambourine are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C170-violino]
 <!-- hl-knowledge: introduces=[IT-LEX-C170-COSE170-04]; assesses=[] -->
 
 **il tamburo** — "a drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tamburo** ← Arabic *tunbur* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

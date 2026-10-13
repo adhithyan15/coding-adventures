@@ -13,7 +13,8 @@ gloss: "to call"
 concept_tag: GE-VERB-RUFEN
 prerequisites: [GE-C67-brauchen, GE-C67-leben]
 sounds: []
-roots: []
+roots: [germanic-hropana]
+etymology_hook: "rufen ← Old High German ruofan ← Proto-Germanic *hrōpaną — Dutch roepen is the same verb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C67-leben]
 <!-- hl-knowledge: introduces=[GE-LEX-C67-VERBEN4-05]; assesses=[] -->
 
 **rufen** — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rufen** ← Old High German *ruofan* ← Proto-Germanic *\*hrōpaną* — inherited; Dutch *roepen*, "to call out", is the same verb. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

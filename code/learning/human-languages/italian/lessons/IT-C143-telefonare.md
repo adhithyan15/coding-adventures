@@ -14,6 +14,7 @@ concept_tag: IT-VERB-TELEFONARE
 prerequisites: [IT-C142-mostrare, IT-C142-guardare]
 sounds: []
 roots: []
+etymology_hook: "telefonare — telefono 'telephone' + the verb ending -are"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C142-guardare]
 <!-- hl-knowledge: introduces=[IT-LEX-C143-VERBI143-01]; assesses=[] -->
 
 **telefonare** — "to phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telefonare** — built from *telefono*, "telephone", with the verb ending *-are*. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

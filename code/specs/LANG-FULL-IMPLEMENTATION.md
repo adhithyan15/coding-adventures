@@ -1438,9 +1438,10 @@ backend immediately) come before the enabler-dependent items.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
   already nonnegative and bounded; signed and nested-exponential forms stay
   conservative.
-  Provenance-backed local and other real-name branches remain conservative
-  across selector calls. Unary plus
-  and unary minus preserve the same runtime-real proof. Additive composition,
+  Unaliased local runtime-real snapshots may cross a procedure-call selector
+  through unary signs and additive or multiplicative composition with finite
+  static operands; standard-function transforms, globals, captured locals, and
+  other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

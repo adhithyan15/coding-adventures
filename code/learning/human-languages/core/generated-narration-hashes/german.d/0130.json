@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 130,
-  "sourceHash": "fnv1a64:660010fd758bffa8",
+  "sourceHash": "fnv1a64:549413ff912d590b",
   "lessonIds": [
     "GE-C130-rosa",
     "GE-C130-orange",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch130.txt",
   "json": "german/narration/ch130.json",
-  "textHash": "fnv1a64:d7e08c0b351c774c",
-  "jsonHash": "fnv1a64:38b8c4a4fff542b5",
+  "textHash": "fnv1a64:3304ef539cf4d94c",
+  "jsonHash": "fnv1a64:6e75e4359510d367",
   "findings": []
 }

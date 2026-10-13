@@ -13,7 +13,8 @@ gloss: "a researcher"
 concept_tag: PT-COISAS160-INVESTIGADOR
 prerequisites: [PT-C160-contabilista, PT-C160-cientista]
 sounds: []
-roots: []
+roots: [vestigium-latin]
+etymology_hook: "investigador ← Latin investigator 'one who tracks', from vestigium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C160-cientista]
 <!-- hl-knowledge: introduces=[PT-LEX-C160-COISAS160-03]; assesses=[] -->
 
 **o investigador** — "a researcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**investigador** ← Latin *investigator*, "one who tracks" (EtymDB 2.1), from *vestigium*, "footprint" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

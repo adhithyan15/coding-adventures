@@ -13,7 +13,8 @@ gloss: "dark"
 concept_tag: PT-QUAL242-ESCURO-ESCURA
 prerequisites: [PT-C242-cozido-cozida, PT-C242-maduro-madura]
 sounds: []
-roots: []
+roots: [obscurus-latin]
+etymology_hook: "escuro ← Latin obscurus 'dark' — English obscure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C242-maduro-madura]
 <!-- hl-knowledge: introduces=[PT-LEX-C242-QUAL242-03]; assesses=[] -->
 
 **escuro / escura** — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escuro** ← Latin *obscurus*, "dark" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *escuro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

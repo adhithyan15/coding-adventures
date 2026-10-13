@@ -13,7 +13,8 @@ gloss: "a victory"
 concept_tag: PT-COISAS226-VITORIA
 prerequisites: [PT-C226-natacao, PT-C226-tenis]
 sounds: []
-roots: []
+roots: [vincere-latin]
+etymology_hook: "vitória ← Latin victoria 'victory', from vincere 'to conquer'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C226-tenis]
 <!-- hl-knowledge: introduces=[PT-LEX-C226-COISAS226-05]; assesses=[] -->
 
 **a vitória** — "a victory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vitória** ← Latin *victoria*, "victory" (Lewis & Short) — a learned borrowing from Latin. EtymDB 2.1 traces it only to Old Portuguese *vitoria*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

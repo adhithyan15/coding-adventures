@@ -13,7 +13,8 @@ gloss: "a century"
 concept_tag: PT-TEMPO129-SECULO
 prerequisites: [PT-C128-fim-de-semana, PT-C128-data, PT-C08-hora, PT-C08-hora]
 sounds: []
-roots: []
+roots: [saeculum-latin]
+etymology_hook: "século ← Latin saeculum 'an age, a generation' — English secular"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C128-data]
 <!-- hl-knowledge: introduces=[PT-LEX-C129-TEMPO129-01]; assesses=[] -->
 
 **o século** — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**século** ← Latin *saeculum*, "an age, a generation" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

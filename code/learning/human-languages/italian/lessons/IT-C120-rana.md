@@ -13,7 +13,8 @@ gloss: "a frog"
 concept_tag: IT-ANIMALI120-RANA
 prerequisites: [IT-C120-tigre, IT-C120-farfalla]
 sounds: []
-roots: []
+roots: [rana-latin]
+etymology_hook: "rana ← Latin rana 'a frog' — the same word in Latin and Italian"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C120-farfalla]
 <!-- hl-knowledge: introduces=[IT-LEX-C120-ANIMALI120-05]; assesses=[] -->
 
 **la rana** — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rana** ← Latin *rana*, "a frog" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

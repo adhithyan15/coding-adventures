@@ -13,7 +13,8 @@ gloss: "to cost"
 concept_tag: GE-VERB-KOSTEN
 prerequisites: [GE-C147-kennen, GE-C147-klingeln]
 sounds: []
-roots: []
+roots: [constare-latin]
+etymology_hook: "kosten ← Middle High German kosten, from Old French coster ← Latin cōnstāre 'to cost'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C147-klingeln]
 <!-- hl-knowledge: introduces=[GE-LEX-C148-VERB148-01]; assesses=[] -->
 
 **kosten** — "to cost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kosten**, "to cost", ← Middle High German *kosten*, from Old French *coster* ← Latin *cōnstāre*, "to stand at, to cost" (EtymDB 2.1) — borrowed, like English *cost*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

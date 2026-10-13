@@ -13,7 +13,8 @@ gloss: "to plan"
 concept_tag: PT-VERB-PLANEAR
 prerequisites: [PT-C136-daqui-a, PT-C136-o-plano]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "planear — built from plano 'plan' (← Latin planus 'flat') + -ear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C136-o-plano]
 <!-- hl-knowledge: introduces=[PT-LEX-C136-FUT136-04]; assesses=[] -->
 
 **planear** — "to plan". Portugal says **planear**; Brazil says **planejar**. Like other verbs in **-ear**, it takes an **i** where the stress falls: **eu planeio**. **Vou planear a viagem.** — "I am going to plan the trip."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**planear** is built from *plano*, "plan", and *-ear* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

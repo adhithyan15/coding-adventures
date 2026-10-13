@@ -13,7 +13,8 @@ gloss: "to divide, to share"
 concept_tag: IT-VERB-DIVIDERE
 prerequisites: [IT-C179-dimostrare, IT-C179-dipendere]
 sounds: []
-roots: []
+roots: [dividere-latin]
+etymology_hook: "dividere ← Latin dividere 'to separate', a learned word — English divide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C179-dipendere]
 <!-- hl-knowledge: introduces=[IT-LEX-C179-VERBI179-03]; assesses=[] -->
 
 **dividere** — "to divide, to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dividere** ← Latin *dividere*, "to separate" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

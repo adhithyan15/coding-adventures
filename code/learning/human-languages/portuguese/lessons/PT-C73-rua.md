@@ -13,7 +13,8 @@ gloss: "a street"
 concept_tag: PT-CIDADE1-RUA
 prerequisites: [PT-C72-depressa, PT-C73-cidade]
 sounds: []
-roots: []
+roots: [ruga-latin]
+etymology_hook: "rua ← Latin ruga 'wrinkle, furrow': a street as a furrow — French rue is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C73-cidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C73-CIDADE1-02]; assesses=[] -->
 
 **a rua** — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rua** ← Latin *ruga*, "wrinkle, furrow" (EtymDB 2.1) — inherited. A street was a furrow through the town; the *-g-* fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

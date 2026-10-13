@@ -13,7 +13,8 @@ gloss: "a swimming pool"
 concept_tag: GE-ORT106-SCHWIMMBAD
 prerequisites: [GE-C106-supermarkt, GE-C106-tankstelle]
 sounds: []
-roots: []
+roots: [germanic-swimmana, germanic-batha]
+etymology_hook: "Schwimmbad — the verb 'to swim' + Bad 'bath': a swimming bath"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C106-tankstelle]
 <!-- hl-knowledge: introduces=[GE-LEX-C106-ORT106-03]; assesses=[] -->
 
 **das Schwimmbad** — "a swimming pool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schwimmbad** is the verb "to swim" (Old High German *swimman*, the same verb as English *swim*) + *Bad*, "bath": a swimming bath. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

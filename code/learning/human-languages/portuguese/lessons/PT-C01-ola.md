@@ -11,6 +11,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [stress-accent]
 roots: []
+etymology_hook: "olá — of uncertain origin, probably a natural call for attention; Spanish hola is its near-twin"
 duration:
   max_seconds: 180
 requires:

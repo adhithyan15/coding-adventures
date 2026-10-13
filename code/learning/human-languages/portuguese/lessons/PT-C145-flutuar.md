@@ -13,7 +13,8 @@ gloss: "to float"
 concept_tag: PT-VERB-FLUTUAR
 prerequisites: [PT-C144-matar, PT-C144-unir]
 sounds: []
-roots: []
+roots: [fluctuare-latin]
+etymology_hook: "flutuar ← Latin fluctuare 'to toss like waves' — English fluctuate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C144-unir]
 <!-- hl-knowledge: introduces=[PT-LEX-C145-VERBOS145-01]; assesses=[] -->
 
 **flutuar** — "to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**flutuar** ← Latin *fluctuare*, "to toss like waves" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

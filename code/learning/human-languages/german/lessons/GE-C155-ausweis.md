@@ -14,6 +14,7 @@ concept_tag: GE-THING155-AUSWEIS
 prerequisites: [GE-C154-stelle, GE-C155-gehalt]
 sounds: []
 roots: []
+etymology_hook: "Ausweis — from a verb 'to prove who you are': aus- + an old verb 'to show the way'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C155-gehalt]
 <!-- hl-knowledge: introduces=[GE-LEX-C155-THING155-02]; assesses=[] -->
 
 **der Ausweis** — "an identity card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ausweis** comes from the verb "to prove who you are": *aus-*, "out", + an old verb meaning "to show the way", a cousin of English *wise*. An identity card shows who you are.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

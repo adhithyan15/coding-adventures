@@ -13,7 +13,8 @@ gloss: "private"
 concept_tag: PT-QUAL156-PRIVADO-PRIVADA
 prerequisites: [PT-C156-seguinte, PT-C156-publico-publica]
 sounds: []
-roots: []
+roots: [privatus-latin]
+etymology_hook: "privado ← Latin privatus 'set apart, private' — English private"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C156-publico-publica]
 <!-- hl-knowledge: introduces=[PT-LEX-C156-QUAL156-04]; assesses=[] -->
 
 **privado / privada** — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**privado** ← Latin *privatus*, "set apart" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

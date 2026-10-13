@@ -13,7 +13,8 @@ gloss: "a sauce"
 concept_tag: PT-COMIDA107-MOLHO
 prerequisites: [PT-C106-bolacha, PT-C107-sandes]
 sounds: []
-roots: []
+roots: [mollis-latin]
+etymology_hook: "molho — from the verb to soak, which ← Vulgar Latin *molliare 'to soften', from mollis 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C107-sandes]
 <!-- hl-knowledge: introduces=[PT-LEX-C107-COMIDA107-02]; assesses=[] -->
 
 **o molho** — "a sauce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**molho** is built from the verb "to wet, to soak" (EtymDB 2.1), which ← Vulgar Latin *\*molliare*, "to soften by soaking", from Latin *mollis*, "soft" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

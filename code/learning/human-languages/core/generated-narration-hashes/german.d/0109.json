@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 109,
-  "sourceHash": "fnv1a64:63947bf7abc2b03b",
+  "sourceHash": "fnv1a64:c9d91d807e85ac6c",
   "lessonIds": [
     "GE-C109-oben",
     "GE-C109-unten",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch109.txt",
   "json": "german/narration/ch109.json",
-  "textHash": "fnv1a64:c59b4f56af1c291a",
-  "jsonHash": "fnv1a64:bb08de46f196b5f5",
+  "textHash": "fnv1a64:01ae0a1255aff3f0",
+  "jsonHash": "fnv1a64:0daef5886a77aea2",
   "findings": []
 }

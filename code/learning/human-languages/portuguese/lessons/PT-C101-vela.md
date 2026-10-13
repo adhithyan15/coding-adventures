@@ -13,7 +13,8 @@ gloss: "a candle"
 concept_tag: PT-COISAS101-VELA
 prerequisites: [PT-C101-colar, PT-C101-fotografia]
 sounds: []
-roots: []
+roots: [vigilare-latin]
+etymology_hook: "vela — from the verb to keep watch, which ← Latin vigilare 'to stay awake' — English vigil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C101-fotografia]
 <!-- hl-knowledge: introduces=[PT-LEX-C101-COISAS101-03]; assesses=[] -->
 
 **a vela** — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vela** comes from the verb "to keep watch", which ← Latin *vigilare*, "to stay awake" (Lewis & Short): a candle kept the night watch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

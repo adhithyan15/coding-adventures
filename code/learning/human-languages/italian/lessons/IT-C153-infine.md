@@ -13,7 +13,8 @@ gloss: "finally"
 concept_tag: IT-TEMPO153-INFINE
 prerequisites: [IT-C153-raramente, IT-C153-subito]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "infine — in fine 'in the end'; fine ← Latin finis — English final"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C153-subito]
 <!-- hl-knowledge: introduces=[IT-LEX-C153-TEMPO153-03]; assesses=[] -->
 
 **infine** — "finally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**infine** is *in fine*, "in the end": *fine* ← Latin *finis*, "end". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

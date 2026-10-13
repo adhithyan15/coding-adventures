@@ -14,6 +14,7 @@ concept_tag: IT-COSE227-GUIDA
 prerequisites: [IT-C226-banconota, IT-C226-bancomat]
 sounds: []
 roots: []
+etymology_hook: "guida — from guidare ← Old Provençal guidar — English guide"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C226-bancomat]
 <!-- hl-knowledge: introduces=[IT-LEX-C227-COSE227-01]; assesses=[] -->
 
 **la guida** — "a guide, a guidebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guida** is the noun of *guidare*, "to guide, to drive", which ← Old Provençal *guidar*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to snow"
 concept_tag: GE-VERB-SCHNEIEN
 prerequisites: [GE-C185-schlagen, GE-C185-schmecken]
 sounds: []
-roots: []
+roots: [germanic-sniwana]
+etymology_hook: "schneien ← Old High German snīwan ← Proto-Germanic *snīwaną — the verb of the word for snow"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C185-schmecken]
 <!-- hl-knowledge: introduces=[GE-LEX-C186-VERB186-01]; assesses=[] -->
 
 **schneien** — "to snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**schneien** ← Old High German *snīwan* ← Proto-Germanic *\*snīwaną*, "to snow" — inherited, from the same root as English *snow*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

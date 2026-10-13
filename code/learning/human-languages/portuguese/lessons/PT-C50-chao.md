@@ -13,7 +13,8 @@ gloss: "the floor, the ground"
 concept_tag: PT-CASA3-CHAO
 prerequisites: [PT-C50-lampada, PT-C50-sala]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "chão ← Latin planus 'flat': pl- became ch-, and -n- left a nasal vowel — English plain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C50-sala]
 <!-- hl-knowledge: introduces=[PT-LEX-C50-CASA3-03]; assesses=[] -->
 
 **o chão** — "the floor, the ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chão** ← Latin *planus*, "flat, level" (EtymDB 2.1) — inherited. Latin *pl-* became *ch-*, and the lost *-n-* left a nasal vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

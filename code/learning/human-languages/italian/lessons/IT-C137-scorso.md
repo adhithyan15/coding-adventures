@@ -13,7 +13,8 @@ gloss: "last (week, month, year)"
 concept_tag: IT-PAST137-SCORSO
 prerequisites: [IT-C136-trovare, IT-C136-cercare]
 sounds: []
-roots: []
+roots: [excurrere-latin]
+etymology_hook: "scorso ← Latin excursus 'run out': the week that has run its course"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C136-cercare]
 <!-- hl-knowledge: introduces=[IT-LEX-C137-PAST137-01]; assesses=[] -->
 
 **scorso / scorsa** — "last (week, month, year)". It follows the time word and agrees with it: **la settimana scorsa**, **il mese scorso**, **l'anno scorso**. With the passato prossimo: **La settimana scorsa ho lavorato.** — "Last week I worked."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scorso** ← Latin *excursus*, "run out" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

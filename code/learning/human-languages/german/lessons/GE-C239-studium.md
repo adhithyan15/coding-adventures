@@ -13,7 +13,8 @@ gloss: "university studies"
 concept_tag: GE-THING239-STUDIUM
 prerequisites: [GE-C239-stimmung, GE-C239-streit]
 sounds: []
-roots: []
+roots: [studium-latin]
+etymology_hook: "Studium ← Latin studium 'zeal, dedication' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C239-streit]
 <!-- hl-knowledge: introduces=[GE-LEX-C239-THING239-03]; assesses=[] -->
 
 **das Studium** — "university studies".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Studium** ← Latin *studium*, "zeal, dedication, study" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

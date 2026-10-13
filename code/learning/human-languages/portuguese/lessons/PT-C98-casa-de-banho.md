@@ -13,7 +13,8 @@ gloss: "a bathroom"
 concept_tag: PT-CASA98-CASA-DE-BANHO
 prerequisites: [PT-C98-tesoura, PT-C98-candeeiro]
 sounds: []
-roots: []
+roots: [balneum-latin]
+etymology_hook: "casa de banho — 'house of bath': banho ← Latin balneum 'bath'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C98-candeeiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C98-CASA98-05]; assesses=[] -->
 
 **a casa de banho** — "a bathroom". In Brazil, **o banheiro**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casa de banho** is "house of bath": *casa* ← Latin *casa* (EtymDB 2.1), and *banho* ← Vulgar Latin *\*baneum*, from Latin *balneum*, "bath" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

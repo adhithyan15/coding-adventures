@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 185,
-  "sourceHash": "fnv1a64:ffdfbdfa4d99eeaf",
+  "sourceHash": "fnv1a64:9c494342d5258cfc",
   "lessonIds": [
     "IT-C185-muscolo",
     "IT-C185-pollice",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch185.txt",
   "json": "italian/narration/ch185.json",
-  "textHash": "fnv1a64:97e467223696416a",
-  "jsonHash": "fnv1a64:9ad721319771070e",
+  "textHash": "fnv1a64:26c962d76932992f",
+  "jsonHash": "fnv1a64:72a0d5fbb389a5b5",
   "findings": []
 }

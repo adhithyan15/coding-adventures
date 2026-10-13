@@ -13,7 +13,8 @@ gloss: "a market square"
 concept_tag: GE-THING194-MARKTPLATZ
 prerequisites: [GE-C194-stadtplan, GE-C194-rundfahrt]
 sounds: []
-roots: []
+roots: [mercatus-latin, platea-latin]
+etymology_hook: "Marktplatz — Markt 'market' + Platz 'square'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C194-rundfahrt]
 <!-- hl-knowledge: introduces=[GE-LEX-C194-THING194-05]; assesses=[] -->
 
 **der Marktplatz** — "a market square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Marktplatz** is *Markt* + *Platz* (EtymDB 2.1): both came from Latin, *mercātus* and *platēa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

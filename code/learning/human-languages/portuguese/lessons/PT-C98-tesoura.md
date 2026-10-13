@@ -13,7 +13,8 @@ gloss: "scissors"
 concept_tag: PT-CASA98-TESOURA
 prerequisites: [PT-C98-martelo, PT-C98-cola]
 sounds: []
-roots: []
+roots: [tondere-latin]
+etymology_hook: "tesoura ← Latin tonsoria '(blades) for shearing', from tondere 'to shear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C98-cola]
 <!-- hl-knowledge: introduces=[PT-LEX-C98-CASA98-03]; assesses=[] -->
 
 **a tesoura** — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tesoura** ← Latin *tonsoria*, "for shearing" (Lewis & Short), from *tondere*, "to shear" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

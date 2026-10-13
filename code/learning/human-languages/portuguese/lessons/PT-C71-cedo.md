@@ -13,7 +13,8 @@ gloss: "early"
 concept_tag: PT-QUANDO2-CEDO
 prerequisites: [PT-C71-agora, PT-C71-depois]
 sounds: []
-roots: []
+roots: [cito-latin]
+etymology_hook: "cedo ← Latin cito 'quickly, soon': the -t- became -d-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C71-depois]
 <!-- hl-knowledge: introduces=[PT-LEX-C71-QUANDO2-04]; assesses=[] -->
 
 **cedo** — "early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cedo** ← Latin *cito*, "quickly, soon" (EtymDB 2.1) — inherited. The Latin *-t-* between vowels became *-d-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

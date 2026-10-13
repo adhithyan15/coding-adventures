@@ -14,6 +14,7 @@ concept_tag: GE-TIME171-NACHHER
 prerequisites: [GE-C171-danach, GE-C171-vorher]
 sounds: []
 roots: []
+etymology_hook: "nachher — nach 'after' + her 'hither': after this point"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C171-vorher]
 <!-- hl-knowledge: introduces=[GE-LEX-C171-TIME171-05]; assesses=[] -->
 
 **nachher** — "later, afterwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nachher** is the word for "after" + *her*, "hither", Old High German *hera* (EtymDB 2.1): after the time you are looking from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

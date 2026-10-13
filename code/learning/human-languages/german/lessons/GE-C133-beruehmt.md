@@ -13,7 +13,8 @@ gloss: "famous"
 concept_tag: GE-EIGEN133-BERUEHMT
 prerequisites: [GE-C133-lustig, GE-C133-ernst]
 sounds: []
-roots: []
+roots: [germanic-hromiz]
+etymology_hook: "berühmt — 'praised', built on the word for 'fame' ← Old High German ruom"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C133-ernst]
 <!-- hl-knowledge: introduces=[GE-LEX-C133-EIGEN133-04]; assesses=[] -->
 
 **berühmt** — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**berühmt** is "praised": the past participle of a verb built on the word for "fame", Old High German *ruom* ← Proto-Germanic *\*hrōmiz* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

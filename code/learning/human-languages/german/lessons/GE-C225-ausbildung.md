@@ -13,7 +13,8 @@ gloss: "training, an apprenticeship"
 concept_tag: GE-THING225-AUSBILDUNG
 prerequisites: [GE-C225-ahnung, GE-C225-alltag]
 sounds: []
-roots: []
+roots: [germanic-bilithja]
+etymology_hook: "Ausbildung — aus- + the word for 'forming, education', from a verb built on Bild 'image'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C225-alltag]
 <!-- hl-knowledge: introduces=[GE-LEX-C225-THING225-04]; assesses=[] -->
 
 **die Ausbildung** — "training, an apprenticeship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ausbildung** is *aus-* + the word for "forming, education", Old High German *bildunga* (EtymDB 2.1), from the verb built on *Bild*: shaping someone out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

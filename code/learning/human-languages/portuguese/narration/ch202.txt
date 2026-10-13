@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for to order, then the Portuguese for to 
 You'll want to know: aquecer.
 aquecer — "to heat, to warm up".
 
+The word, taken apart.
+aquecer from Vulgar Latin adcalescere, from Latin calescere, "to grow warm" (Lewis & Short) — inherited. EtymDB 2.1 has no ancestor for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for to dry, then the Portuguese for to he
 
 You'll want to know: arrefecer.
 arrefecer — "to cool down".
+
+The word, taken apart.
+arrefecer is built from a- and an old verb from Latin refrigescere, "to grow cool" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to heat, then the Portuguese for to c
 You'll want to know: encher.
 encher — "to fill".
 
+The word, taken apart.
+encher from Latin implere, "to fill up" (EtymDB 2.1) — inherited. The pl of implere became ch.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to cool down, then the Portuguese for
 You'll want to know: esvaziar.
 esvaziar — "to empty".
 
+The word, taken apart.
+esvaziar is built from vazio, "empty", with es- and -ar.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to fill, then the Portuguese for to e
 
 You'll want to know: medir.
 medir — "to measure".
+
+The word, taken apart.
+medir from Latin metiri, "to measure" (EtymDB 2.1), through Vulgar Latin metire — inherited.
 
 What you've built.
 One more word for this chapter.

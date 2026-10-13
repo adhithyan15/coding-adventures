@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 150,
-  "sourceHash": "fnv1a64:0b52e0904da48b47",
+  "sourceHash": "fnv1a64:fa3a6b242a7bab8a",
   "lessonIds": [
     "IT-C150-salvarsi",
     "IT-C150-sbagliare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch150.txt",
   "json": "italian/narration/ch150.json",
-  "textHash": "fnv1a64:28804c06735b6d4b",
-  "jsonHash": "fnv1a64:e245a1dc18af5fd3",
+  "textHash": "fnv1a64:68beb5bc7f713d74",
+  "jsonHash": "fnv1a64:42cf614999209008",
   "findings": []
 }

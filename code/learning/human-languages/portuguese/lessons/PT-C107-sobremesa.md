@@ -13,7 +13,8 @@ gloss: "a dessert"
 concept_tag: PT-COMIDA107-SOBREMESA
 prerequisites: [PT-C107-molho, PT-C107-vinagre]
 sounds: []
-roots: []
+roots: [mensa-latin]
+etymology_hook: "sobremesa — 'over the table': sobre (← Latin super) + mesa 'table'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C107-vinagre]
 <!-- hl-knowledge: introduces=[PT-LEX-C107-COMIDA107-04]; assesses=[] -->
 
 **a sobremesa** — "a dessert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sobremesa** is "over the table": built from *sobre*, "over" (← Latin *super*), and *mesa*, "table" — what comes when the meal is done.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

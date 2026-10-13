@@ -14,6 +14,7 @@ concept_tag: IT-COSE194-ROMANZO
 prerequisites: [IT-C194-attore, IT-C194-attrice]
 sounds: []
 roots: []
+etymology_hook: "romanzo ← Old French romanz, Vulgar Latin romanice 'in the Roman way' — English romance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C194-attrice]
 <!-- hl-knowledge: introduces=[IT-LEX-C194-COSE194-05]; assesses=[] -->
 
 **il romanzo** — "a novel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**romanzo** ← Old French *romanz* — borrowed; behind it is Vulgar Latin *romanice*, "in the Roman way". (EtymDB 2.1) A *romanz* was a tale told in the everyday tongue, not in learned Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

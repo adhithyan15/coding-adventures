@@ -13,7 +13,8 @@ gloss: "to travel"
 concept_tag: GE-VERB-REISEN
 prerequisites: [GE-C65-weinen, GE-C66-singen]
 sounds: []
-roots: []
+roots: [germanic-raisona]
+etymology_hook: "reisen ← Old High German reisōn 'to set out on a journey' ← Proto-Germanic *raisōną"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C66-singen]
 <!-- hl-knowledge: introduces=[GE-LEX-C66-VERBEN3-02]; assesses=[] -->
 
 **reisen** — "to travel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reisen** ← Old High German *reisōn*, "to set out on a journey" ← Proto-Germanic *\*raisōną* — inherited. (EtymDB 2.1) It is related to English *rise*: a journey began by getting up and going.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

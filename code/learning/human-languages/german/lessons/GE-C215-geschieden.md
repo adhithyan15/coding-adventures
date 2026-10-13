@@ -13,7 +13,8 @@ gloss: "divorced"
 concept_tag: GE-QUAL215-GESCHIEDEN
 prerequisites: [GE-C214-gemuetlich, GE-C215-gerecht]
 sounds: []
-roots: []
+roots: [germanic-skaithana]
+etymology_hook: "geschieden — the past participle of a verb 'to separate, to part': separated"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C215-gerecht]
 <!-- hl-knowledge: introduces=[GE-LEX-C215-QUAL215-02]; assesses=[] -->
 
 **geschieden** — "divorced".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geschieden** is the past participle of the verb "to separate, to part", Old High German *sceidan* ← Proto-Germanic *\*skaiþaną* (EtymDB 2.1): separated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

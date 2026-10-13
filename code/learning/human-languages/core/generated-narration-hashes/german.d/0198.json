@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 198,
-  "sourceHash": "fnv1a64:b8e473243e6febae",
+  "sourceHash": "fnv1a64:585e2bace89131c1",
   "lessonIds": [
     "GE-C198-tier",
     "GE-C198-hase",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch198.txt",
   "json": "german/narration/ch198.json",
-  "textHash": "fnv1a64:1a485002915bf847",
-  "jsonHash": "fnv1a64:ca06122821b785ce",
+  "textHash": "fnv1a64:6245c1fae96236e3",
+  "jsonHash": "fnv1a64:d720448071dd1aaa",
   "findings": []
 }

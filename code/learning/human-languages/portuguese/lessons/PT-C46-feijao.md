@@ -13,7 +13,8 @@ gloss: "beans"
 concept_tag: PT-LEGUMES-FEIJAO
 prerequisites: [PT-C46-cebola, PT-C46-cenoura]
 sounds: []
-roots: []
+roots: [phaseolus-latin]
+etymology_hook: "feijão ← Latin phaseolus 'bean', from Greek phaselos"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C46-cenoura]
 <!-- hl-knowledge: introduces=[PT-LEX-C46-LEGUMES-05]; assesses=[] -->
 
 **o feijão** — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feijão** ← Latin *phaseolus*, "bean" (EtymDB 2.1) — inherited. Latin took it from Greek *phasēlos*; the Latin *-l-* fell out on the way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

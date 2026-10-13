@@ -13,7 +13,8 @@ gloss: "to wish, to want"
 concept_tag: PT-VERB-DESEJAR
 prerequisites: [PT-C83-gostaria, PT-C83-preferir, PT-C21-esperar-expect]
 sounds: []
-roots: []
+roots: [desidia-latin]
+etymology_hook: "desejar — from the wish noun, which ← Vulgar Latin *desidium, from Latin desidia 'idleness'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PT-C83-preferir]
 <!-- hl-knowledge: introduces=[PT-LEX-C83-QUERER83-04]; assesses=[] -->
 
 **desejar** — "to wish, to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**desejar** is built from the noun for a wish, which ← Vulgar Latin *\*desidium*, from Latin *desidia*, "idleness" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 56,
-  "sourceHash": "fnv1a64:569c651502829b4b",
+  "sourceHash": "fnv1a64:4e035299a0247897",
   "lessonIds": [
     "GE-C56-bein",
     "GE-C56-zahn",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch56.txt",
   "json": "german/narration/ch56.json",
-  "textHash": "fnv1a64:5c0760215db8c555",
-  "jsonHash": "fnv1a64:9383aa54962449d3",
+  "textHash": "fnv1a64:9665c36fa63eb362",
+  "jsonHash": "fnv1a64:55fc038cad4a6359",
   "findings": []
 }

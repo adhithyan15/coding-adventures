@@ -13,7 +13,8 @@ gloss: "boring"
 concept_tag: PT-QUALIDADES123-ABORRECIDO
 prerequisites: [PT-C123-importante, PT-C123-interessante]
 sounds: []
-roots: []
+roots: [abhorrere-latin]
+etymology_hook: "aborrecido — from the verb to bore, which goes back to Latin abhorrescere 'to shrink from' — English abhor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C123-interessante]
 <!-- hl-knowledge: introduces=[PT-LEX-C123-QUALIDADES123-04]; assesses=[] -->
 
 **aborrecido** — "boring". In Brazil, **chato**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aborrecido** is the participle of the verb "to bore, to annoy" (EtymDB 2.1), which goes back to Latin *abhorrescere*, "to shrink from in horror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

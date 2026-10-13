@@ -13,7 +13,8 @@ gloss: "a page; a side"
 concept_tag: GE-SCHULE128-SEITE
 prerequisites: [GE-C128-idee, GE-C128-satz]
 sounds: []
-roots: []
+roots: [germanic-sido]
+etymology_hook: "Seite ← Old High German sīta ← Proto-Germanic *sīdōn — the same word as English side"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C128-satz]
 <!-- hl-knowledge: introduces=[GE-LEX-C128-SCHULE128-04]; assesses=[] -->
 
 **die Seite** — "a page; a side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Seite** ← Old High German *sīta* ← Proto-Germanic *\*sīdōn*, "side, flank" — inherited, the same word as English *side*. (EtymDB 2.1) A page is one side of a leaf.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

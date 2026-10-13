@@ -13,7 +13,8 @@ gloss: "calm"
 concept_tag: PT-QUALIDADES122-CALMO
 prerequisites: [PT-C122-aberto, PT-C122-fechado]
 sounds: []
-roots: []
+roots: [cauma-latin]
+etymology_hook: "calmo — from the calm word ← Late Latin cauma 'midday heat', from Greek: the still hour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C122-fechado]
 <!-- hl-knowledge: introduces=[PT-LEX-C122-QUALIDADES122-03]; assesses=[] -->
 
 **calmo** — "calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calmo** is built from the word for calm (EtymDB 2.1), which ← Late Latin *cauma*, "the heat of midday", from Greek *kauma* (EtymDB 2.1): the still hour when everyone rests.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

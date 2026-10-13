@@ -13,7 +13,8 @@ gloss: "to transport"
 concept_tag: IT-VERB-TRASPORTARE
 prerequisites: [IT-C148-tentare, IT-C148-trascorrere]
 sounds: []
-roots: []
+roots: [transportare-latin]
+etymology_hook: "trasportare ← Latin transportare 'to carry across' — English transport is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C148-trascorrere]
 <!-- hl-knowledge: introduces=[IT-LEX-C148-VERBI148-05]; assesses=[] -->
 
 **trasportare** — "to transport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trasportare** ← Latin *transportare*, "to carry across" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

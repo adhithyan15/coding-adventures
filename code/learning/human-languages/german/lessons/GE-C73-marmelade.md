@@ -14,6 +14,7 @@ concept_tag: GE-ESSEN5-MARMELADE
 prerequisites: [GE-C72-zitrone, GE-C73-traube]
 sounds: []
 roots: []
+etymology_hook: "Marmelade ← French marmelade ← Portuguese marmelada 'quince jam' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C73-traube]
 <!-- hl-knowledge: introduces=[GE-LEX-C73-ESSEN5-02]; assesses=[] -->
 
 **die Marmelade** — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Marmelade** ← French *marmelade* ← Portuguese *marmelada*, "quince jam", from *marmelo*, "quince" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

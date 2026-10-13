@@ -11,6 +11,7 @@ concept_tag: GRAMMAR-THE
 prerequisites: [PT-C01-bom]
 sounds: []
 roots: [ille, illa]
+etymology_hook: "o, a ← Latin ille, illa 'that one' — a pointing word worn down to a single vowel"
 reviews_of: [PT-C01-bom]
 duration:
   max_seconds: 120

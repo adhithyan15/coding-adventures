@@ -13,7 +13,8 @@ gloss: "an emergency"
 concept_tag: PT-SAUDE240-EMERGENCIA
 prerequisites: [PT-C239-notar, PT-C240-urgencias]
 sounds: []
-roots: []
+roots: [mergere-latin]
+etymology_hook: "emergência ← Medieval Latin emergentia, from emergere 'to rise out'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C240-urgencias]
 <!-- hl-knowledge: introduces=[PT-LEX-C240-SAUDE240-02]; assesses=[] -->
 
 **a emergência** — "an emergency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**emergência** ← Medieval Latin *emergentia*, "a rising out" (EtymDB 2.1), from Latin *emergere*, "to rise out" — a learned borrowing from Medieval Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

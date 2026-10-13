@@ -14,6 +14,7 @@ concept_tag: GE-QUAL216-HAEUFIG
 prerequisites: [GE-C215-guenstig, GE-C216-gruendlich]
 sounds: []
 roots: []
+etymology_hook: "häufig — the word for 'a heap' + -ig: in heaps, so frequent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C216-gruendlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C216-QUAL216-02]; assesses=[] -->
 
 **häufig** — "frequent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**häufig** is the word for "a heap" + *-ig*: coming in heaps, so frequent. The heap word is a cousin of English *heap*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

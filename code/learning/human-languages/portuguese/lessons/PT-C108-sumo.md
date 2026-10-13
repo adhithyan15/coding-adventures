@@ -14,6 +14,7 @@ concept_tag: PT-COMIDA108-SUMO
 prerequisites: [PT-C108-bife, PT-C108-fiambre]
 sounds: []
 roots: []
+etymology_hook: "sumo — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C108-fiambre]
 <!-- hl-knowledge: introduces=[PT-LEX-C108-COMIDA108-05]; assesses=[] -->
 
 **o sumo** — "juice". In Brazil, **o suco**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sumo** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

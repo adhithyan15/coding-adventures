@@ -13,7 +13,8 @@ gloss: "a farmer"
 concept_tag: GE-BERUF125-BAUER
 prerequisites: [GE-C124-polizist, GE-C124-verkaeufer]
 sounds: []
-roots: []
+roots: [germanic-buraz]
+etymology_hook: "Bauer ← Middle High German būr, gebūre — the one who dwells and farms the land"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C124-verkaeufer]
 <!-- hl-knowledge: introduces=[GE-LEX-C125-BERUF125-01]; assesses=[] -->
 
 **der Bauer** — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bauer** ← Middle High German *būr*, *gebūre* ← Old High German *būr*, "peasant" (EtymDB 2.1) — inherited, from a root meaning "to dwell, to farm". English *neighbour* hides the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

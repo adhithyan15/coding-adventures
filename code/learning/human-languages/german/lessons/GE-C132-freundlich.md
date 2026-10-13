@@ -13,7 +13,8 @@ gloss: "friendly"
 concept_tag: GE-EIGEN132-FREUNDLICH
 prerequisites: [GE-C132-wach, GE-C132-nett]
 sounds: []
-roots: []
+roots: [germanic-frijonds]
+etymology_hook: "freundlich — Freund 'friend' + -lich: friendly, built like the English word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C132-nett]
 <!-- hl-knowledge: introduces=[GE-LEX-C132-EIGEN132-05]; assesses=[] -->
 
 **freundlich** — "friendly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**freundlich** ← Middle High German *vriuntlich*: *Freund* + *-lich*, built like English *friendly*. *Freund* ← Proto-Germanic *\*frijōndz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

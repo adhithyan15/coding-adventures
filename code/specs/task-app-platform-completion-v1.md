@@ -187,6 +187,10 @@ rather than letting them read as silent gaps.
     `elevation` tokens that already emit equivalent native depth, reducing its
     fresh inventory from 50 to 40. The inset theme-toggle moon and raw shadows
     without elevation remain reported drawing-effect debt.
+    #17365 lowers SwiftUI's supported elevation tokens to native `.shadow`
+    modifiers and reconciles only their ten non-inset CSS companions, reducing
+    its fresh inventory from 83 to 63. Standalone, inset, and unsupported
+    shadows or elevation values remain reported drawing-effect debt.
     #17224 then preserves all 15 supported fixed Flutter `border-radius`
     declarations and paints eight coupled rounded-text backgrounds, reducing
     Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe
@@ -238,19 +242,25 @@ rather than letting them read as silent gaps.
     style-ratchet correction. Keep the verified downloadable artifact matrix
     unchanged: Static HTML, Web Components, and Paint remain CI-only, while
     signing, notarization, and installers remain tracked by #13977.
+13. **P1 [#17375](https://github.com/adhithyan15/coding-adventures/issues/17375)
+    — publish `task-app-v0.5.4`.** Roll the compatible Qt fill-width and
+    Compose/SwiftUI elevation-shadow fixes into an immutable patch release.
+    Keep the verified downloadable artifact matrix unchanged: Static HTML, Web
+    Components, and Paint remain CI-only, while signing, notarization, and
+    installers remain tracked by #13977.
 
 ### Tier C — reach, stated honestly
 
-13. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
+14. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
     #16041, and #16144.** The generated app carries the real runtime, launches
     on iPhone and iPad simulators, restores state from its sandbox, and
     quarantines corrupt state. Signing, device execution, and a downloadable
     iOS artifact remain outside that claim.
-14. **Android has no backend.** `compose` is Compose Desktop. An Android target
+15. **Android has no backend.** `compose` is Compose Desktop. An Android target
     is a new Mosaic backend, not a TaskApp task, and belongs to
     [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
     here. Recorded so its absence is a decision rather than an oversight.
-15. **Signing, notarization, and installers**
+16. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up

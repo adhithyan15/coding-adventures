@@ -13,7 +13,7 @@ sounds: [w-as-v, i-short]
 roots: [germanic-wintruz]
 etymology_hook: "Winter is written letter for letter as in English but German w is a v, so the word that looks identical on the page begins differently in the mouth"
 duration:
-  max_seconds: 160
+  max_seconds: 176
 requires:
   knowledge: [GE-LEX-HERBST-01, GE-LEX-SOMMER-01, GE-LEX-JAHRESZEIT-01]
 introduces:
@@ -46,6 +46,11 @@ exactly as you would not.
 
 Same six letters as English, same inherited Germanic word, and like *Sommer* it
 was never worth replacing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Winter** ← Middle High German *winter* ← Old High German *wintar* — inherited, from Proto-Germanic *\*wintruz*. EtymDB 2.1 traces English *winter* to the same *\*wintruz*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-W-AS-V-01]; assesses=[GE-LEX-WINTER-01] -->

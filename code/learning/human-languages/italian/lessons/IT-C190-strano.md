@@ -13,7 +13,8 @@ gloss: "strange"
 concept_tag: IT-QUAL190-STRANO
 prerequisites: [IT-C190-utile, IT-C190-inutile]
 sounds: []
-roots: []
+roots: [extraneus-latin]
+etymology_hook: "strano ← Latin extraneus 'outside, foreign' — English strange is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C190-inutile]
 <!-- hl-knowledge: introduces=[IT-LEX-C190-QUAL190-03]; assesses=[] -->
 
 **strano** — "strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**strano** ← Latin *extraneus*, "outside, foreign" — inherited. EtymDB 2.1 has no row for *strano*; it derives the older Italian *stranio*, "foreign", from *extraneus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

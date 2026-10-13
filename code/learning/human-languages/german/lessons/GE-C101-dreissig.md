@@ -13,7 +13,8 @@ gloss: "thirty"
 concept_tag: GE-ZAHLEN-DREISSIG
 prerequisites: [GE-C100-welt, GE-C100-sprache]
 sounds: []
-roots: []
+roots: [thrijiz-germanic]
+etymology_hook: "dreißig ← Old High German drīzzug, 'three tens' — the same build as English thirty"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C100-sprache]
 <!-- hl-knowledge: introduces=[GE-LEX-C101-ZAHLEN-01]; assesses=[] -->
 
 **dreißig** — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dreißig** ← Old High German *drīzzug* ← Proto-Germanic *\*þrīz tigiwiz*, "three tens" — the same build as English *thirty*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

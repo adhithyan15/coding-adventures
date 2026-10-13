@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Being Your Years",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:a45523df620257b6",
+  "sourceHash": "fnv1a64:4794e2a56d9102ef",
   "lessons": [
     {
       "id": "GE-C14-alt",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3af4cd0225c718dc",
+      "sourceHash": "fnv1a64:63c5078c228d032b",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +195,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Jahre is the plural of Jahr from Old High German jār from Proto-Germanic jērą — inherited, the same word as English year. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -213,7 +224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -262,7 +273,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -427,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49e3ef0f90b40de5",
+      "sourceHash": "fnv1a64:ecdd7777b2b01d1d",
       "notice": null,
       "blocks": [
         {
@@ -476,6 +487,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alt from Old High German alt from Proto-Germanic aldaz — inherited, the same word as English old. (EtymDB 2.1) The other three words are inherited too."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -524,7 +546,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -555,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4046a12499fb4080",
+      "sourceHash": "fnv1a64:00e20045acab62f7",
       "notice": null,
       "blocks": [
         {
@@ -600,6 +622,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alt from Old High German alt from Proto-Germanic aldaz, English old; Jahre from Old High German jār from Proto-Germanic jērą, English year. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -657,7 +690,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

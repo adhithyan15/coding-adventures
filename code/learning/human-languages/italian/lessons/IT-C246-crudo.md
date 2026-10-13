@@ -13,7 +13,8 @@ gloss: "raw"
 concept_tag: IT-QUAL246-CRUDO
 prerequisites: [IT-C246-giovane, IT-C246-piccante]
 sounds: []
-roots: []
+roots: [crudus-latin]
+etymology_hook: "crudo ← Latin crudus 'raw' — English crude and cruel share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C246-piccante]
 <!-- hl-knowledge: introduces=[IT-LEX-C246-QUAL246-04]; assesses=[] -->
 
 **crudo** — "raw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crudo** ← Latin *crudus*, "raw, bloody" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

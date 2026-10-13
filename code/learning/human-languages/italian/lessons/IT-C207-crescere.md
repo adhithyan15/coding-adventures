@@ -13,7 +13,8 @@ gloss: "to grow"
 concept_tag: IT-VERB-CRESCERE
 prerequisites: [IT-C206-contare, IT-C206-misurare]
 sounds: []
-roots: []
+roots: [crescere-latin]
+etymology_hook: "crescere ← Latin crescere 'to grow' — English crescent and increase share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C206-misurare]
 <!-- hl-knowledge: introduces=[IT-LEX-C207-VERBI207-01]; assesses=[] -->
 
 **crescere** — "to grow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crescere** ← Latin *crescere*, "to grow" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

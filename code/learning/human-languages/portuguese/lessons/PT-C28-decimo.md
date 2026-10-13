@@ -10,8 +10,8 @@ gloss: "tenth — and the word the whole series above ten is built on"
 concept_tag: PT-ORDINAL-DECIMO
 prerequisites: [PT-C28-nono, PT-C27-quinto, PT-C25-homem, PT-C18-ter-que, PT-C18-ir, PT-C03-practice, PT-C04-adeus]
 sounds: [accent-marks-stress]
-roots: []
-etymology_hook: "dez gives decimo with the same first-syllable accent as setimo, and decimo is the hinge of the series above ten -- decimo primeiro is eleventh, built by stacking rather than by a new word"
+roots: [decimus-latin]
+etymology_hook: "décimo ← Latin decimus 'tenth', from decem 'ten' — English decimal shares it"
 duration:
   max_seconds: 250
 requires:
@@ -55,6 +55,11 @@ reviews_of: [PT-C28-nono, PT-C27-quinto, PT-C25-homem, PT-C18-ter-que, PT-C18-ir
 *Dez* is ten, and *décimo* carries the acute accent for exactly the reason
 *sétimo* did: the stress sits on the first syllable — **DÉ**-ci-mo — against
 where a reader would otherwise put it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**décimo** ← Latin *decimus*, "tenth" (Lewis & Short), from *decem*, "ten" — a learned borrowing from Latin. The inherited descendant of *decimus* is a different word, meaning a tithe.
 
 ## Grammar Lens: past ten, the words stack
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-DECIMO-04]; assesses=[] -->

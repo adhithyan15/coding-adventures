@@ -13,7 +13,8 @@ gloss: "fire"
 concept_tag: GE-NATUR3-FEUER
 prerequisites: [GE-C84-regen, GE-C84-teich]
 sounds: []
-roots: []
+roots: [germanic-for]
+etymology_hook: "Feuer ← Old High German fiur ← Proto-Germanic *fōr — the same word as English fire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C84-teich]
 <!-- hl-knowledge: introduces=[GE-LEX-C84-NATUR3-05]; assesses=[] -->
 
 **das Feuer** — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Feuer** ← Old High German *fiur* ← Proto-Germanic *\*fōr* — inherited, the same word as English *fire*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

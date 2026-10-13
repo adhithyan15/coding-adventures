@@ -13,7 +13,8 @@ gloss: "a wallet"
 concept_tag: PT-COISAS100-CARTEIRA
 prerequisites: [PT-C100-telemovel, PT-C100-selo]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "carteira — built from the letter or card word (← Latin charta 'paper') + -eira: a holder"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C100-selo]
 <!-- hl-knowledge: introduces=[PT-LEX-C100-COISAS100-04]; assesses=[] -->
 
 **a carteira** — "a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carteira** is built from the word for a letter or card and *-eira* (EtymDB 2.1): a holder for papers. That word ← Latin *charta*, "paper", from Greek *chartēs* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-THING196-UFER
 prerequisites: [GE-C195-burg, GE-C196-hafen]
 sounds: []
 roots: []
+etymology_hook: "Ufer ← Middle High German uover — kin to an old English word over, 'shore'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C196-hafen]
 <!-- hl-knowledge: introduces=[GE-LEX-C196-THING196-02]; assesses=[] -->
 
 **das Ufer** — "a bank, a shore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ufer** ← Middle High German *uover* — inherited; EtymDB 2.1 lists Dutch *oever* and an old English *over*, "shore", beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

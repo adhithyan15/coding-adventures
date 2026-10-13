@@ -13,7 +13,8 @@ gloss: "a mountain"
 concept_tag: PT-NATUREZA1-MONTANHA
 prerequisites: [PT-C56-flor, PT-C56-folha]
 sounds: []
-roots: []
+roots: [mons-latin]
+etymology_hook: "montanha ← Vulgar Latin *montanea, from mons, montis 'mountain' — English mountain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C56-folha]
 <!-- hl-knowledge: introduces=[PT-LEX-C56-NATUREZA1-04]; assesses=[] -->
 
 **a montanha** — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**montanha** ← Vulgar Latin *\*montanea* (EtymDB 2.1), from Latin *mons, montis*, "mountain" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "departure"
 concept_tag: IT-COSE171-PARTENZA
 prerequisites: [IT-C170-pallone, IT-C171-arrivo]
 sounds: []
-roots: []
+roots: [partire-latin]
+etymology_hook: "partenza — from partire 'to leave' ← Latin partire 'to divide, to part'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C171-arrivo]
 <!-- hl-knowledge: introduces=[IT-LEX-C171-COSE171-02]; assesses=[] -->
 
 **la partenza** — "departure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partenza** — built from *partire*, "to leave", with *-enza*. *partire* ← Latin *partire*, "to divide, to part". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

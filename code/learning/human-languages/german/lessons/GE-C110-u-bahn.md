@@ -14,6 +14,7 @@ concept_tag: GE-RICHTUNG110-U-BAHN
 prerequisites: [GE-C110-zwischen, GE-C110-hinter]
 sounds: []
 roots: []
+etymology_hook: "U-Bahn — U for the word for 'underground' + Bahn 'railway', which first meant 'path, way'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C110-hinter]
 <!-- hl-knowledge: introduces=[GE-LEX-C110-RICHTUNG110-04]; assesses=[] -->
 
 **die U-Bahn** — "the underground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**U-Bahn** is short for "underground railway": the *U* is the first letter of the word for "underground". *Bahn* ← Old High German *bana* ← Proto-Germanic *\*banō*, "path, cleared way" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

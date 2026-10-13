@@ -6,7 +6,7 @@ sequence: 274
 chapter: 15
 type: word
 headword: früh
-gloss: early — the word the first season is built out of, and a cousin of English early
+gloss: early — the word the first season is built out of, though not a cousin of English early
 concept_tag: GE-EARLY
 prerequisites: [GE-C09-jahreszeit]
 sounds: [umlaut-ue, h-silent-lengthening]
@@ -45,6 +45,11 @@ reviews_of: [GE-C09-jahreszeit, GE-C09-jahr]
 
 Not a noun and not capitalised: an adjective, and one you will meet constantly —
 *früh aufstehen*, to get up early.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**früh** ← Old High German *fruoji* ← Proto-Germanic *\*frōwijaz*, "early" — inherited. Dutch *vroeg* is the same word. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-FRUEH-01, GE-SOUND-H-LENGTHEN-01] -->

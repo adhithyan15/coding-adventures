@@ -61,6 +61,12 @@
     "edge-class-styles",
     "edge-animation-config",
     "edge-curve-config",
-    "edge-step-curves"
+    "edge-step-curves",
+    "edge-bump-curves",
+    "edge-monotone-curves",
+    "edge-spline-curves",
+    "edge-rounded-curve",
+    "line-hops-arc",
+    "line-hops-gap"
   ]
 }

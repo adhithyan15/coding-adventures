@@ -13,7 +13,8 @@ gloss: "an argument"
 concept_tag: GE-THING239-STREIT
 prerequisites: [GE-C238-stimme, GE-C239-stimmung]
 sounds: []
-roots: []
+roots: [germanic-stridana]
+etymology_hook: "Streit ← Old High German strīt 'quarrel' — the noun beside streiten"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C239-stimmung]
 <!-- hl-knowledge: introduces=[GE-LEX-C239-THING239-02]; assesses=[] -->
 
 **der Streit** — "an argument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Streit** ← Middle High German *strīt* ← Old High German *strīt*, "quarrel" (EtymDB 2.1) — the noun beside *streiten*, both inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

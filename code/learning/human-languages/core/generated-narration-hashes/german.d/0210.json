@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 210,
-  "sourceHash": "fnv1a64:335cfd7504030bab",
+  "sourceHash": "fnv1a64:2d86c92d8dc390e4",
   "lessonIds": [
     "GE-C210-industrie",
     "GE-C210-werkstatt",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch210.txt",
   "json": "german/narration/ch210.json",
-  "textHash": "fnv1a64:cf25f297b9a51824",
-  "jsonHash": "fnv1a64:8315f0aaa88be089",
+  "textHash": "fnv1a64:4a39e6dd1b0addaa",
+  "jsonHash": "fnv1a64:622a1fd0c98b1b85",
   "findings": []
 }

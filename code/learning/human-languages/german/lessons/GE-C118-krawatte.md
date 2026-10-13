@@ -14,6 +14,7 @@ concept_tag: GE-DINGE118-KRAWATTE
 prerequisites: [GE-C118-kalender, GE-C118-pullover]
 sounds: []
 roots: []
+etymology_hook: "Krawatte ← French cravate 'Croat' — named after the neckcloths of Croatian soldiers"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C118-pullover]
 <!-- hl-knowledge: introduces=[GE-LEX-C118-DINGE118-04]; assesses=[] -->
 
 **die Krawatte** — "a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Krawatte** ← French *cravate*, from the Croatian word for "Croat" (EtymDB 2.1) — borrowed: the neckcloths of Croatian soldiers in French service set the fashion.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a price"
 concept_tag: IT-TEMPOLIBERO117-PREZZO
 prerequisites: [IT-C116-disegno, IT-C116-vita]
 sounds: []
-roots: []
+roots: [pretium-latin]
+etymology_hook: "prezzo ← Latin pretium 'price, value' — English price and precious share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C116-vita]
 <!-- hl-knowledge: introduces=[IT-LEX-C117-TEMPOLIBERO117-01]; assesses=[] -->
 
 **il prezzo** — "a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prezzo** ← Latin *pretium*, "price, value" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

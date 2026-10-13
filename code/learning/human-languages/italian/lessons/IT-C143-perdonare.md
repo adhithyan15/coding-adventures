@@ -13,7 +13,8 @@ gloss: "to forgive"
 concept_tag: IT-VERB-PERDONARE
 prerequisites: [IT-C143-litigare, IT-C143-scusarsi]
 sounds: []
-roots: []
+roots: [perdonare-latin]
+etymology_hook: "perdonare ← Late Latin perdonare, per- + donare 'to give' — English pardon is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C143-scusarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C143-VERBI143-05]; assesses=[] -->
 
 **perdonare** — "to forgive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perdonare** ← Late Latin *perdonare*, "to give completely", from *per-*, "thoroughly", and *donare*, "to give" — inherited. EtymDB 2.1 has no row for *perdonare*; it derives Spanish *perdonar* from *perdonare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 191,
-  "sourceHash": "fnv1a64:5a87373365584b6b",
+  "sourceHash": "fnv1a64:6a3d388727d2a7ac",
   "lessonIds": [
     "IT-C191-soffitto",
     "IT-C191-serratura",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch191.txt",
   "json": "italian/narration/ch191.json",
-  "textHash": "fnv1a64:f182ccf6a7c0ce08",
-  "jsonHash": "fnv1a64:019790a96220e862",
+  "textHash": "fnv1a64:da536c3b3019f238",
+  "jsonHash": "fnv1a64:d3d8e25887a4b9ca",
   "findings": []
 }

@@ -10,10 +10,10 @@ gloss: how old are you — word for word the English question, built from four w
 concept_tag: GE-AGE-QUESTION
 prerequisites: [GE-C14-jahr-alt, GE-C16-du-bist, GE-C02-wie, GE-C02-wie-heissen-sie]
 sounds: []
-roots: []
+roots: [germanic-aldaz]
 etymology_hook: "German and English ask this question with the same four words in the same order, because neither borrowed it — they inherited it together"
 duration:
-  max_seconds: 160
+  max_seconds: 250
 requires:
   knowledge: [GE-LEX-ALT-01, GE-LEX-WIE-02, GE-GRAMMAR-SEIN-DU-BIST-01, GE-LEX-DU-SIE-02, GE-GRAMMAR-VERB-SECOND-02]
 introduces:
@@ -56,6 +56,11 @@ question word in front — *Wie* first, *bist* second, and the rest behind.
 
 To someone you would address formally, it is *Wie alt sind Sie?* — the same
 question with the polite form of the verb.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alt** ← Old High German *alt* ← Proto-Germanic *\*aldaz* — inherited, the same word as English *old*. (EtymDB 2.1) The other three words are inherited too.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-ALT-BIST-DU-01, GE-GRAMMAR-SEIN-DU-BIST-01] -->

@@ -14,6 +14,7 @@ concept_tag: PT-CASA94-PRATELEIRA
 prerequisites: [PT-C94-duche, PT-C94-banheira]
 sounds: []
 roots: []
+etymology_hook: "prateleira — built from an old word for a small plate, from Old French platel, + -eira"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C94-banheira]
 <!-- hl-knowledge: introduces=[PT-LEX-C94-CASA94-03]; assesses=[] -->
 
 **a prateleira** — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prateleira** is built from an old word for a small plate and *-eira* (EtymDB 2.1). That word came from Old French *platel* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

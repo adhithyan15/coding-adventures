@@ -13,7 +13,8 @@ gloss: "to go up, to get on"
 concept_tag: IT-VERB-SALIRE
 prerequisites: [IT-C134-sedersi, IT-C134-cadere]
 sounds: []
-roots: []
+roots: [salire-latin]
+etymology_hook: "salire ← Latin salire 'to jump' — jumping up became going up; English salient"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C134-cadere]
 <!-- hl-knowledge: introduces=[IT-LEX-C135-VERBI135-01]; assesses=[] -->
 
 **salire** — "to go up, to get on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salire** ← Latin *salire*, "to jump" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

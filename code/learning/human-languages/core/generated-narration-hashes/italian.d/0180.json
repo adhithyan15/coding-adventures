@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 180,
-  "sourceHash": "fnv1a64:c1af68c8e66f3f58",
+  "sourceHash": "fnv1a64:3646348a21e5820f",
   "lessonIds": [
     "IT-C180-osservare",
     "IT-C180-partecipare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch180.txt",
   "json": "italian/narration/ch180.json",
-  "textHash": "fnv1a64:76eae1e706511670",
-  "jsonHash": "fnv1a64:8fa6d1c5563cb781",
+  "textHash": "fnv1a64:80d2542f38facb8c",
+  "jsonHash": "fnv1a64:164c79c23b8f4846",
   "findings": []
 }

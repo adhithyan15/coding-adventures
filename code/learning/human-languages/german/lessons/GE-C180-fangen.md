@@ -13,7 +13,8 @@ gloss: "to catch"
 concept_tag: GE-VERB-FANGEN
 prerequisites: [GE-C179-erreichen, GE-C180-erwarten]
 sounds: []
-roots: []
+roots: [germanic-fanhana]
+etymology_hook: "fangen ← Old High German fāhan ← Proto-Germanic *fanhaną — English fang, 'a seizing tooth', shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C180-erwarten]
 <!-- hl-knowledge: introduces=[GE-LEX-C180-VERB180-02]; assesses=[] -->
 
 **fangen** — "to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fangen** ← Middle High German *vāhen* ← Old High German *fāhan* ← Proto-Germanic *\*fanhaną* — inherited. (EtymDB 2.1) English *fang*, the seizing tooth, is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

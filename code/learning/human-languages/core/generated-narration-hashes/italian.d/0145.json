@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 145,
-  "sourceHash": "fnv1a64:ca50a9e22d820e89",
+  "sourceHash": "fnv1a64:71f9d0cc40444bc8",
   "lessonIds": [
     "IT-C145-confrontare",
     "IT-C145-consigliare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch145.txt",
   "json": "italian/narration/ch145.json",
-  "textHash": "fnv1a64:a9272db9a08eada3",
-  "jsonHash": "fnv1a64:fd13ae39d5ba4918",
+  "textHash": "fnv1a64:cf9afa7b8268a3ba",
+  "jsonHash": "fnv1a64:0968a2b652161697",
   "findings": []
 }

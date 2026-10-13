@@ -1952,7 +1952,12 @@ pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SwimlaneEdgeAnimation { Slow, Fast }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum SwimlaneEdgeCurve { Linear, Basis, Step, StepBefore, StepAfter }
+pub enum SwimlaneLineHops { Arc, Gap }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneEdgeCurve {
+    Linear, Basis, BumpX, BumpY, Cardinal, CatmullRom, MonotoneX, MonotoneY, Natural,
+    Rounded, Step, StepBefore, StepAfter,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneEdge {
     pub id: Option<String>, pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
@@ -1966,6 +1971,7 @@ pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub nodes: Vec<SwimlaneNode>,
     pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
+    pub line_hops: Option<SwimlaneLineHops>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
@@ -1987,7 +1993,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
     pub accessibility_title: Option<String>, pub accessibility_description: Option<String>,
     pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
-    pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
+    pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>, pub line_hops: Option<SwimlaneLineHops>,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

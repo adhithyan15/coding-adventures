@@ -13,7 +13,8 @@ gloss: "a stamp"
 concept_tag: PT-COISAS100-SELO
 prerequisites: [PT-C100-despertador, PT-C100-telemovel]
 sounds: []
-roots: []
+roots: [sigillum-latin]
+etymology_hook: "selo ← Latin sigillum 'little sign, seal', from signum — English seal shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C100-telemovel]
 <!-- hl-knowledge: introduces=[PT-LEX-C100-COISAS100-03]; assesses=[] -->
 
 **o selo** — "a stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**selo** ← Latin *sigillum*, "little sign, seal" (EtymDB 2.1), from *signum*, "sign" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

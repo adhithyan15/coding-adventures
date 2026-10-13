@@ -12,6 +12,9 @@ Before the new one: say the Italian for although, then the Italian for despite.
 You'll want to know: allegro.
 allegro — "cheerful".
 
+The word, taken apart.
+allegro goes back to Latin alacer, "lively, brisk" (Lewis & Short), through a Vulgar Latin form alecrus. EtymDB 2.1 calls it borrowed from French allègre, which this book could not confirm.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for despite, then the Italian for cheerful.
 
 You'll want to know: timido.
 timido — "shy".
+
+The word, taken apart.
+timido from Latin timidus, "fearful" — a learned borrowing. EtymDB 2.1 has no row for timido; it derives Spanish and Portuguese tímido from timidus.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for cheerful, then the Italian for shy.
 You'll want to know: coraggioso.
 coraggioso — "brave".
 
+The word, taken apart.
+coraggioso — built from the word for "courage" with -oso, "full of". That word from Old Provençal coratge, built on Latin cor, "heart" — borrowed. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for shy, then the Italian for brave.
 You'll want to know: pauroso.
 pauroso — "fearful".
 
+The word, taken apart.
+pauroso — built from paura, "fear", with -oso, "full of". paura goes back to Latin pavor, "fear". EtymDB 2.1 has no row for pauroso.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for brave, then the Italian for fearful.
 
 You'll want to know: curioso.
 curioso — "curious".
+
+The word, taken apart.
+curioso from Latin curiosus, "careful, inquisitive" — a learned borrowing. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

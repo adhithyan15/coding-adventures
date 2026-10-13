@@ -13,7 +13,8 @@ gloss: "work"
 concept_tag: GE-DINGE-ARBEIT
 prerequisites: [GE-C102-wort, GE-C102-antwort]
 sounds: []
-roots: []
+roots: [germanic-arbaidiz]
+etymology_hook: "Arbeit ← Old High German arbeit ← Proto-Germanic *arbaidiz 'toil, hardship' — work was first suffering"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C102-antwort]
 <!-- hl-knowledge: introduces=[GE-LEX-C102-DINGE-04]; assesses=[] -->
 
 **die Arbeit** — "work".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Arbeit** ← Old High German *arbeit* ← Proto-Germanic *\*arbaidiz*, "toil, hardship" — inherited. (EtymDB 2.1) Work began as hardship.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

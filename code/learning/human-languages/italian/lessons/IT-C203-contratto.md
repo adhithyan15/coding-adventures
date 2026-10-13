@@ -13,7 +13,8 @@ gloss: "a contract"
 concept_tag: IT-LAV203-CONTRATTO
 prerequisites: [IT-C202-nuoto, IT-C202-sci]
 sounds: []
-roots: []
+roots: [contractus-latin]
+etymology_hook: "contratto ← Latin contractus 'an agreement' — English contract is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C202-sci]
 <!-- hl-knowledge: introduces=[IT-LEX-C203-LAV203-01]; assesses=[] -->
 
 **il contratto** — "a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contratto** ← Latin *contractus*, "a drawing together, an agreement" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a purse, a wallet"
 concept_tag: GE-DINGE117-GELDBOERSE
 prerequisites: [GE-C116-brille, GE-C116-regenschirm, GE-C01-abend, GE-C01-der-die-das]
 sounds: []
-roots: []
+roots: [germanic-gelda, bursa-latin]
+etymology_hook: "Geldbörse — Geld 'money' + Börse 'purse' ← Late Latin bursa 'leather bag'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C116-regenschirm]
 <!-- hl-knowledge: introduces=[GE-LEX-C117-DINGE117-01]; assesses=[] -->
 
 **die Geldbörse** — "a purse, a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Geldbörse** is *Geld*, "money", + *Börse*, "purse", which came through Dutch and Old French from Late Latin *bursa*, "leather bag" (EtymDB 2.1). English *purse* shares it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "leather"
 concept_tag: GE-THING204-LEDER
 prerequisites: [GE-C203-wolle, GE-C203-seide]
 sounds: []
-roots: []
+roots: [germanic-lethra]
+etymology_hook: "Leder ← Old High German ledar ← Proto-Germanic *leþrą — the same word as English leather"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C203-seide]
 <!-- hl-knowledge: introduces=[GE-LEX-C204-THING204-01]; assesses=[] -->
 
 **das Leder** — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Leder** ← Old High German *ledar* ← Proto-Germanic *\*leþrą* — inherited, the same word as English *leather*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

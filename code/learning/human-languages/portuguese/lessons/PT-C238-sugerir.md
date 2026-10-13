@@ -13,7 +13,8 @@ gloss: "to suggest"
 concept_tag: PT-VERB-SUGERIR
 prerequisites: [PT-C238-suspeitar, PT-C238-apertar]
 sounds: []
-roots: []
+roots: [gerere-latin]
+etymology_hook: "sugerir ← Latin suggerere 'to bring up, to supply' — English suggest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C238-apertar]
 <!-- hl-knowledge: introduces=[PT-LEX-C238-VERBOS238-05]; assesses=[] -->
 
 **sugerir** — "to suggest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sugerir** ← Latin *suggerere*, "to bring up, to supply" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

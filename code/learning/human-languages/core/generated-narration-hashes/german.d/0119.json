@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 119,
-  "sourceHash": "fnv1a64:e5510e9edb8946a9",
+  "sourceHash": "fnv1a64:c428bc8062aceb66",
   "lessonIds": [
     "GE-C119-schal",
     "GE-C119-stiefel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch119.txt",
   "json": "german/narration/ch119.json",
-  "textHash": "fnv1a64:6055cca1b71119f7",
-  "jsonHash": "fnv1a64:9da785ef43aae4eb",
+  "textHash": "fnv1a64:07430bc5782a6b84",
+  "jsonHash": "fnv1a64:8391245ba4c06b79",
   "findings": []
 }

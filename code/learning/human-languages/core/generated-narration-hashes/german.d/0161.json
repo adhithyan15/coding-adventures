@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 161,
-  "sourceHash": "fnv1a64:77d4dd747280e00d",
+  "sourceHash": "fnv1a64:ccd29e9aeaf841eb",
   "lessonIds": [
     "GE-C161-haus",
     "GE-C161-schlafzimmer",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch161.txt",
   "json": "german/narration/ch161.json",
-  "textHash": "fnv1a64:ce2a0a4c4d344797",
-  "jsonHash": "fnv1a64:06d9f4dc14398127",
+  "textHash": "fnv1a64:2f84a08db163ec55",
+  "jsonHash": "fnv1a64:e0605d5185d62b47",
   "findings": []
 }

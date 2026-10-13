@@ -13,7 +13,8 @@ gloss: "order, tidiness"
 concept_tag: GE-THING235-ORDNUNG
 prerequisites: [GE-C235-nummer, GE-C235-oeffentlichkeit]
 sounds: []
-roots: []
+roots: [ordo-latin]
+etymology_hook: "Ordnung ← Old High German ordinunga, from ordinōn 'to put in order' ← Latin ōrdināre"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C235-oeffentlichkeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C235-THING235-04]; assesses=[] -->
 
 **die Ordnung** — "order, tidiness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ordnung** ← Middle High German *ordenunge* ← Old High German *ordinunga* (EtymDB 2.1), from *ordinōn*, "to put in order", taken from Latin *ōrdināre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

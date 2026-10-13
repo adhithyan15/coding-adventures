@@ -13,7 +13,8 @@ gloss: "a feeling"
 concept_tag: GE-THING229-GEFUEHL
 prerequisites: [GE-C229-fuehrung, GE-C229-gebuehr]
 sounds: []
-roots: []
+roots: [germanic-folijana]
+etymology_hook: "Gefühl — ge- + fühlen 'to feel': a feeling"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C229-gebuehr]
 <!-- hl-knowledge: introduces=[GE-LEX-C229-THING229-04]; assesses=[] -->
 
 **das Gefühl** — "a feeling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Gefühl** is *ge-* + *fühlen*, "to feel": a feeling. EtymDB 2.1 lists English *feel* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

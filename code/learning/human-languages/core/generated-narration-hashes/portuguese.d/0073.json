@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 73,
-  "sourceHash": "fnv1a64:e9d3c033bba2d37a",
+  "sourceHash": "fnv1a64:50a621037f4b0030",
   "lessonIds": [
     "PT-C73-cidade",
     "PT-C73-rua",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch73.txt",
   "json": "portuguese/narration/ch73.json",
-  "textHash": "fnv1a64:73cc3dea537629ef",
-  "jsonHash": "fnv1a64:6f65acaeb9d74b02",
+  "textHash": "fnv1a64:3df247edfe03cb69",
+  "jsonHash": "fnv1a64:aa56ae4f51068bed",
   "findings": []
 }

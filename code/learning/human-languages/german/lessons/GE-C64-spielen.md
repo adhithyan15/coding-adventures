@@ -13,7 +13,8 @@ gloss: "to play"
 concept_tag: GE-VERB-SPIELEN
 prerequisites: [GE-C63-schuelerin, GE-C64-kaufen]
 sounds: []
-roots: []
+roots: [germanic-spilona]
+etymology_hook: "spielen ← Proto-Germanic *spilōną 'to revel, to play' — Dutch spelen is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C64-kaufen]
 <!-- hl-knowledge: introduces=[GE-LEX-C64-VERBEN1-02]; assesses=[] -->
 
 **spielen** — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spielen** ← Proto-Germanic *\*spilōną*, "to revel, to play" — inherited, beside Old High German *spil*, "game, dance". (EtymDB 2.1) Dutch *spelen* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

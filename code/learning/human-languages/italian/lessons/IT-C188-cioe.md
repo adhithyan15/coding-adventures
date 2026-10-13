@@ -13,7 +13,8 @@ gloss: "that is"
 concept_tag: IT-PERCHE188-CIOE
 prerequisites: [IT-C188-anzi, IT-C188-infatti]
 sounds: []
-roots: []
+roots: [hoc-latin]
+etymology_hook: "cioè — ciò è 'that is'; ciò from Latin ecce hoc 'look, this'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C188-infatti]
 <!-- hl-knowledge: introduces=[IT-LEX-C188-PERCHE188-03]; assesses=[] -->
 
 **cioè** — "that is".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cioè** is *ciò è*, "that is": *ciò*, "that", from Latin *ecce hoc*, "look, this". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

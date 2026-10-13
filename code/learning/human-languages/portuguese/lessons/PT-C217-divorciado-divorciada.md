@@ -13,7 +13,8 @@ gloss: "divorced"
 concept_tag: PT-QUAL217-DIVORCIADO-DIVORCIADA
 prerequisites: [PT-C216-picante, PT-C216-cru-crua]
 sounds: []
-roots: []
+roots: [vertere-latin]
+etymology_hook: "divorciado — 'divorced': from divorciar, built on Latin divortium 'a parting of the ways'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C216-cru-crua]
 <!-- hl-knowledge: introduces=[PT-LEX-C217-QUAL217-01]; assesses=[] -->
 
 **divorciado / divorciada** — "divorced".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divorciado** is the participle of *divorciar*, built on the word for a divorce ← Latin *divortium*, "a parting of the ways".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

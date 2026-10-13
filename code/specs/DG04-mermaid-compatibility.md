@@ -1054,6 +1054,16 @@ Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; b
 to portable cubic paths with tangent-aware endpoint markers.
 The `step`, `stepBefore`, and `stepAfter` curve modes lower to deterministic orthogonal paths in
 the diagram's authored direction.
+The `bumpX` and `bumpY` curve modes lower to portable cubic paths with horizontal or vertical
+midpoint tangents and preserve their authored mode in scene metadata.
+The `monotoneX` and `monotoneY` curve modes preserve their axis constraint in semantic and layout
+IR and lower their two-point routes to the equivalent monotonic cubic Hermite segment.
+The `cardinal`, `catmullRom`, and `natural` spline modes also survive semantic and layout IR; their
+two-point routes lower to pixel-equivalent collinear cubic segments while preserving mode metadata.
+The `rounded` curve mode lowers direction-aware orthogonal routing to line and quadratic Bézier
+commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
+Explicit `swimlane.lineHops` front-matter configuration supports `arc`, `gap`, and `false` modes.
+Straight crossing routes lower the later edge to portable arc or split-subpath paint commands.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
@@ -1063,5 +1073,5 @@ handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
 and link catalog beyond the documented marker forms, configuration-driven lane
-ordering and line hops, and exact upstream routing or typography remain
+ordering, line hops on non-straight routes, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

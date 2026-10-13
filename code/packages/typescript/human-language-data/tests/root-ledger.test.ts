@@ -213,15 +213,21 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   bengali: { withoutHook: 1136, withoutVisible: 1144 },
   chinese: { withoutHook: 0, withoutVisible: 62 },
   french: { withoutHook: 1048, withoutVisible: 1049 },
-  german: { withoutHook: 988, withoutVisible: 1071 },
+  // german: 988 / 1071 -> 0 / 0. Every German word lesson now carries an etymology_hook
+  // and a learner-visible "taken apart" block, sourced from EtymDB 2.1 (Fourrier &
+  // Sagot 2020), CC BY-SA 4.0, where a row supports the line; well-established origins
+  // with no supporting row carry no source tag, and 12 genuinely uncertain origins say so.
+  german: { withoutHook: 0, withoutVisible: 0 },
   gujarati: { withoutHook: 529, withoutVisible: 543 },
   hindi: { withoutHook: 1126, withoutVisible: 967 },
-  // italian: 1126 / 1135 -> 745 / 745. The first 401 gap lessons in sequence order
-  // (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
+  // italian: 1126 / 1135 -> 745 / 745 -> 0 / 0. The first 401 gap lessons in sequence
+  // order (through IT-C110-pepe) gained a sourced origin -- EtymDB 2.1 (Fourrier & Sagot
   // 2020), CC BY-SA 4.0, with Lewis & Short for textbook Latin forms EtymDB lacks --
   // a well-established origin stated without a source tag (4), or an explicit "not recorded in
-  // EtymDB 2.1" (12 lessons, all genuinely uncertain).
-  italian: { withoutHook: 745, withoutVisible: 745 },
+  // EtymDB 2.1" (12 lessons, all genuinely uncertain). The remaining 745 (IT-C111-infermiera
+  // through IT-C259-storia) followed the same way: from the same two sources, with sister-word
+  // tracing where EtymDB has no row; 14 say the origin is uncertain and why.
+  italian: { withoutHook: 0, withoutVisible: 0 },
   japanese: { withoutHook: 601, withoutVisible: 688 },
   kannada: { withoutHook: 1330, withoutVisible: 1281 },
   latin: { withoutHook: 1095, withoutVisible: 1105 },
@@ -229,7 +235,11 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
   marathi: { withoutHook: 1163, withoutVisible: 1116 },
   marwadi: { withoutHook: 552, withoutVisible: 716 },
   persian: { withoutHook: 1300, withoutVisible: 1311 },
-  portuguese: { withoutHook: 1142, withoutVisible: 1141 },
+  // portuguese: 1142 / 1141 -> 0 / 0. Every word lesson now states its word's origin in a
+  // "taken apart" block and a matching etymology_hook: EtymDB 2.1 (Fourrier & Sagot 2020),
+  // CC BY-SA 4.0, with Lewis & Short for certain Latin forms EtymDB lacks. 62 say the
+  // origin is uncertain or disputed, each a genuinely open question, never a stand-in.
+  portuguese: { withoutHook: 0, withoutVisible: 0 },
   punjabi: { withoutHook: 549, withoutVisible: 524 },
   russian: { withoutHook: 1135, withoutVisible: 1148 },
   sanskrit: { withoutHook: 1200, withoutVisible: 1099 },

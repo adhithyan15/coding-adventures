@@ -14,6 +14,7 @@ concept_tag: IT-READ139-LAVVISO
 prerequisites: [IT-C138-organizzare, IT-C139-lorario]
 sounds: []
 roots: []
+etymology_hook: "avviso ← Old French avis 'opinion' — borrowed; English advice is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [IT-C139-lorario]
 
 The notice says **Oggi il negozio è chiuso.** The shop is closed today, so come
 back another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avviso** ← Old French *avis*, "opinion" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

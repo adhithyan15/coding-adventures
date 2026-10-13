@@ -13,7 +13,8 @@ gloss: "to expect"
 concept_tag: GE-VERB-ERWARTEN
 prerequisites: [GE-C179-ernaehren, GE-C179-erreichen]
 sounds: []
-roots: []
+roots: [wardon-germanic]
+etymology_hook: "erwarten — er- + warten 'to wait, to watch': to watch out for"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C179-erreichen]
 <!-- hl-knowledge: introduces=[GE-LEX-C180-VERB180-01]; assesses=[] -->
 
 **erwarten** — "to expect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erwarten** is *er-* + *warten*, "to wait", which first meant "to watch" ← Proto-Germanic *\*wardāną* (EtymDB 2.1): to watch out for something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COISAS199-EMENTA
 prerequisites: [PT-C199-milho, PT-C199-canela]
 sounds: []
 roots: []
+etymology_hook: "ementa — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C199-canela]
 <!-- hl-knowledge: introduces=[PT-LEX-C199-COISAS199-03]; assesses=[] -->
 
 **a ementa** — "a menu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ementa** — its origin is uncertain. EtymDB 2.1 links it only to a verb meaning "to list".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

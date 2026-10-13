@@ -13,7 +13,8 @@ gloss: "anger"
 concept_tag: PT-SENTIR-RAIVA
 prerequisites: [PT-C35-alegria, PT-C36-medo]
 sounds: []
-roots: []
+roots: [rabies-latin]
+etymology_hook: "raiva ← Vulgar Latin *rabia, from rabies 'rage' — English rabies and rage share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C36-medo]
 <!-- hl-knowledge: introduces=[PT-LEX-C36-SENTIR-02]; assesses=[] -->
 
 **a raiva** — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raiva** ← Vulgar Latin *\*rabia*, from Latin *rabies*, "rage, madness" — inherited. EtymDB 2.1 traces it only to Old Portuguese *raiva*; it derives Italian *rabbia* from *\*rabia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

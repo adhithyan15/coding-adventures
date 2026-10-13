@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 164,
-  "sourceHash": "fnv1a64:f70781eaa3e8f545",
+  "sourceHash": "fnv1a64:52e73106335924cc",
   "lessonIds": [
     "PT-C164-relvado",
     "PT-C164-caminho",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch164.txt",
   "json": "portuguese/narration/ch164.json",
-  "textHash": "fnv1a64:7273e19d71e5668e",
-  "jsonHash": "fnv1a64:3f1eb067567935f7",
+  "textHash": "fnv1a64:5e4c892225b49738",
+  "jsonHash": "fnv1a64:6f0749f74583eb20",
   "findings": []
 }

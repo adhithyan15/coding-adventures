@@ -13,7 +13,8 @@ gloss: "fifty"
 concept_tag: GE-ZAHLEN-FUENFZIG
 prerequisites: [GE-C101-dreissig, GE-C101-vierzig]
 sounds: []
-roots: []
+roots: [fimf-germanic]
+etymology_hook: "fünfzig — fünf 'five' + -zig 'tens', the same build as English fifty"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C101-vierzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C101-ZAHLEN-03]; assesses=[] -->
 
 **fünfzig** — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fünfzig** is *fünf* + *-zig*, "tens" — the same build as English *fifty*. EtymDB 2.1 traces *fünf* to Old High German *fimf* ← Proto-Germanic *\*fimf*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

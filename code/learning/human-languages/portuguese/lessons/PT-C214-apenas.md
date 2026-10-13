@@ -14,6 +14,7 @@ concept_tag: PT-PORQUE214-APENAS
 prerequisites: [PT-C213-fronteira, PT-C213-regiao]
 sounds: []
 roots: []
+etymology_hook: "apenas — origin disputed: a penas 'with difficulty' or Latin ad paene 'almost'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C213-regiao]
 <!-- hl-knowledge: introduces=[PT-LEX-C214-PORQUE214-01]; assesses=[] -->
 
 **apenas** — "only, merely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apenas** — its origin is disputed. It is usually explained as *a penas*, "with pains, with difficulty", from Latin *poena*, "penalty"; EtymDB 2.1 derives it from Latin *ad paene*, "almost".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a tip"
 concept_tag: GE-THING200-TRINKGELD
 prerequisites: [GE-C200-speisekarte, GE-C200-bestellung]
 sounds: []
-roots: []
+roots: [germanic-drinkana, germanic-gelda]
+etymology_hook: "Trinkgeld — 'drink' + Geld 'money': money for a drink"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C200-bestellung]
 <!-- hl-knowledge: introduces=[GE-LEX-C200-THING200-03]; assesses=[] -->
 
 **das Trinkgeld** — "a tip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Trinkgeld** is the stem of the verb "to drink", Old High German *trinkan* ← Proto-Germanic *\*drinkaną*, English *drink*, + *Geld*, "money" (EtymDB 2.1): money for a drink.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

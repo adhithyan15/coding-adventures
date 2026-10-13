@@ -13,7 +13,8 @@ gloss: "cutlery"
 concept_tag: GE-THING200-BESTECK
 prerequisites: [GE-C200-trinkgeld, GE-C200-kellnerin]
 sounds: []
-roots: []
+roots: [germanic-stikana]
+etymology_hook: "Besteck — from a verb 'to stick in': knives once carried stuck in a case"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C200-kellnerin]
 <!-- hl-knowledge: introduces=[GE-LEX-C200-THING200-05]; assesses=[] -->
 
 **das Besteck** — "cutlery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Besteck** comes from the verb "to stick in, to fit with" (EtymDB 2.1): a case with knives and forks stuck into it, then the cutlery itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

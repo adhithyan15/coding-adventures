@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The German Weekend",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:14a8b5640401f884",
+  "sourceHash": "fnv1a64:165f1631497a1065",
   "lessons": [
     {
       "id": "GE-C07-sonne",
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fc7bd56a1f39eea",
+      "sourceHash": "fnv1a64:715661be4afd58b3",
       "notice": null,
       "blocks": [
         {
@@ -622,6 +622,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sonnabend from Middle High German sunābent (EtymDB 2.1): Sonne + Abend, the eve of Sunday."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -636,7 +647,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -685,7 +696,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

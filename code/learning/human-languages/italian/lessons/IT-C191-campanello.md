@@ -13,7 +13,8 @@ gloss: "a doorbell"
 concept_tag: IT-COSE191-CAMPANELLO
 prerequisites: [IT-C191-soffitto, IT-C191-serratura]
 sounds: []
-roots: []
+roots: [campana-latin]
+etymology_hook: "campanello — a little campana 'bell', from Late Latin campana — English campanile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C191-serratura]
 <!-- hl-knowledge: introduces=[IT-LEX-C191-COSE191-03]; assesses=[] -->
 
 **il campanello** — "a doorbell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campanello** — built from *campana*, "a bell", with *-ello*, "little". *campana* ← Late Latin *campana*, "a bell". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

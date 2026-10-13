@@ -13,7 +13,8 @@ gloss: "to rain"
 concept_tag: IT-VERB-PIOVERE
 prerequisites: [IT-C177-proteggere, IT-C177-salvare]
 sounds: []
-roots: []
+roots: [pluere-latin]
+etymology_hook: "piovere ← Vulgar Latin plovere, Latin pluere 'to rain' — Latin pl- became pi-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C177-salvare]
 <!-- hl-knowledge: introduces=[IT-LEX-C178-VERBI178-01]; assesses=[] -->
 
 **piovere** — "to rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piovere** ← Vulgar Latin *plovere*, "to rain" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 126,
-  "sourceHash": "fnv1a64:5ad69c12aba9f673",
+  "sourceHash": "fnv1a64:55e9b4dcdbe68ff8",
   "lessonIds": [
     "PT-C126-fresco",
     "PT-C126-macio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch126.txt",
   "json": "portuguese/narration/ch126.json",
-  "textHash": "fnv1a64:9efdfcc396e9f83c",
-  "jsonHash": "fnv1a64:0cb25ebe700e2774",
+  "textHash": "fnv1a64:882128c912b8285d",
+  "jsonHash": "fnv1a64:fd2ce88e3eee308f",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "salt"
 concept_tag: PT-COMIDA1-SAL
 prerequisites: [PT-C44-peixe, PT-C44-manteiga]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "sal ← Latin sal 'salt' — English salary and salad share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C44-manteiga]
 <!-- hl-knowledge: introduces=[PT-LEX-C44-COMIDA1-04]; assesses=[] -->
 
 **o sal** — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sal** ← Latin *sal*, "salt" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

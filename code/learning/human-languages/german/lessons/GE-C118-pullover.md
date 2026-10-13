@@ -14,6 +14,7 @@ concept_tag: GE-DINGE118-PULLOVER
 prerequisites: [GE-C118-kerze, GE-C118-kalender]
 sounds: []
 roots: []
+etymology_hook: "Pullover ← English pullover: pull + over, a garment you pull over your head"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C118-kalender]
 <!-- hl-knowledge: introduces=[GE-LEX-C118-DINGE118-03]; assesses=[] -->
 
 **der Pullover** — "a jumper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Pullover** ← English *pullover*, from *pull* + *over* (EtymDB 2.1) — borrowed: a garment you pull over your head.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

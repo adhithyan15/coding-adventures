@@ -13,7 +13,8 @@ gloss: "pepper"
 concept_tag: PT-COMIDA109-PIMENTA
 prerequisites: [PT-C109-compota, PT-C109-noz]
 sounds: []
-roots: []
+roots: [pigmentum-latin]
+etymology_hook: "pimenta ← Latin pigmenta 'paints, spices', plural of pigmentum — English pigment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C109-noz]
 <!-- hl-knowledge: introduces=[PT-LEX-C109-COMIDA109-04]; assesses=[] -->
 
 **a pimenta** — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pimenta** ← Latin *pigmenta*, "paints, spices" (EtymDB 2.1), the plural of *pigmentum* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

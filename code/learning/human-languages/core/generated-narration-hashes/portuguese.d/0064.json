@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 64,
-  "sourceHash": "fnv1a64:75a8e3635782a237",
+  "sourceHash": "fnv1a64:69d5efa221b5c75d",
   "lessonIds": [
     "PT-C64-grande",
     "PT-C64-pequeno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch64.txt",
   "json": "portuguese/narration/ch64.json",
-  "textHash": "fnv1a64:5f86e32350b95d8e",
-  "jsonHash": "fnv1a64:14720eb43c65e34b",
+  "textHash": "fnv1a64:0b5d2769d4836e4e",
+  "jsonHash": "fnv1a64:6d0c417cd94139fa",
   "findings": []
 }

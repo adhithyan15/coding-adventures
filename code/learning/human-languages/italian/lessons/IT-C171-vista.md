@@ -13,7 +13,8 @@ gloss: "a view"
 concept_tag: IT-COSE171-VISTA
 prerequisites: [IT-C171-destinazione, IT-C171-paesaggio]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "vista ← Vulgar Latin visita 'seen', from videre 'to see': a thing seen — English vista"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C171-paesaggio]
 <!-- hl-knowledge: introduces=[IT-LEX-C171-COSE171-05]; assesses=[] -->
 
 **la vista** — "a view".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vista** ← Vulgar Latin *visita*, "seen", built on Latin *videre*, "to see": a thing seen — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

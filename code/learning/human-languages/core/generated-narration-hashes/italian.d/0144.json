@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 144,
-  "sourceHash": "fnv1a64:3f1bb4a9d8417f7c",
+  "sourceHash": "fnv1a64:64f8fca13410b9a7",
   "lessonIds": [
     "IT-C144-arrabbiarsi",
     "IT-C144-preoccuparsi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch144.txt",
   "json": "italian/narration/ch144.json",
-  "textHash": "fnv1a64:1763b0591991eb40",
-  "jsonHash": "fnv1a64:70daa3b3a3532f8c",
+  "textHash": "fnv1a64:759fe0b53176b7c8",
+  "jsonHash": "fnv1a64:b5492e4dbcde42aa",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 163,
-  "sourceHash": "fnv1a64:429c768d37593407",
+  "sourceHash": "fnv1a64:8e5f8c0917ac8d60",
   "lessonIds": [
     "IT-C163-meccanico",
     "IT-C163-elettricista",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch163.txt",
   "json": "italian/narration/ch163.json",
-  "textHash": "fnv1a64:14ffbec0c5487376",
-  "jsonHash": "fnv1a64:b219f682e6662071",
+  "textHash": "fnv1a64:705ef3ce865fdbdb",
+  "jsonHash": "fnv1a64:6bd382768dc3d88f",
   "findings": []
 }

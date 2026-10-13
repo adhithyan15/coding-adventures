@@ -13,7 +13,8 @@ gloss: "to die"
 concept_tag: PT-VERB-MORRER
 prerequisites: [PT-C173-salvar, PT-C173-nascer]
 sounds: []
-roots: []
+roots: [mori-latin]
+etymology_hook: "morrer ← Latin mori 'to die', through Vulgar Latin *morire — English mortal"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C173-nascer]
 <!-- hl-knowledge: introduces=[PT-LEX-C173-VERBOS173-03]; assesses=[] -->
 
 **morrer** — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**morrer** ← Latin *mori*, "to die", through Vulgar Latin *\*morire* — inherited. EtymDB 2.1 traces it only to Old Portuguese *morrer*; it derives Spanish *morir* from *\*morire*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

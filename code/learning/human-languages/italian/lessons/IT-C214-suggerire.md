@@ -13,7 +13,8 @@ gloss: "to suggest"
 concept_tag: IT-VERB-SUGGERIRE
 prerequisites: [IT-C213-ospitare, IT-C213-raccomandare]
 sounds: []
-roots: []
+roots: [suggerere-latin]
+etymology_hook: "suggerire ← Latin suggerere 'to bring up, to supply', a learned word — English suggest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C213-raccomandare]
 <!-- hl-knowledge: introduces=[IT-LEX-C214-VERBI214-01]; assesses=[] -->
 
 **suggerire** — "to suggest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suggerire** ← Latin *suggerere*, "to bring up, to supply" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *suggerire*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

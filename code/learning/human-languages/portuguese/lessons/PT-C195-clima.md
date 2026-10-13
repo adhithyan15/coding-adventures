@@ -13,7 +13,8 @@ gloss: "the climate"
 concept_tag: PT-COISAS195-CLIMA
 prerequisites: [PT-C195-fumo, PT-C195-chama]
 sounds: []
-roots: []
+roots: [clima-latin]
+etymology_hook: "clima ← Latin clima, from Greek klima 'slope, zone of the earth' — English climate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C195-chama]
 <!-- hl-knowledge: introduces=[PT-LEX-C195-COISAS195-05]; assesses=[] -->
 
 **o clima** — "the climate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clima** ← Latin *clima*, "zone of the earth" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *klima*, "slope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

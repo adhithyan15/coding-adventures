@@ -13,7 +13,8 @@ gloss: "below, downstairs"
 concept_tag: PT-LUGAR151-EM-BAIXO
 prerequisites: [PT-C150-ainda, PT-C151-em-cima]
 sounds: []
-roots: []
+roots: [bassus-latin]
+etymology_hook: "em baixo — 'in low': baixo ← Late Latin bassus 'low'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C151-em-cima]
 <!-- hl-knowledge: introduces=[PT-LEX-C151-LUGAR151-02]; assesses=[] -->
 
 **em baixo** — "below, downstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**em baixo** is "in low": *baixo* ← Late Latin *bassus*, "low" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

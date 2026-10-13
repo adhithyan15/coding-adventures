@@ -13,7 +13,8 @@ gloss: "to worry"
 concept_tag: PT-VERB-PREOCUPAR-SE
 prerequisites: [PT-C233-divertir-se, PT-C233-zangar-se]
 sounds: []
-roots: []
+roots: [occupare]
+etymology_hook: "preocupar-se ← Latin praeoccupare 'to seize beforehand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C233-zangar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C233-VERBOS233-03]; assesses=[] -->
 
 **preocupar-se** — "to worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**preocupar** ← Latin *praeoccupare*, "to seize beforehand" (EtymDB 2.1) — a learned borrowing from Latin. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -49,6 +49,11 @@ nearly free.
 
 It is English **we**, wearing German pronunciation. Nothing else to learn.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wir** ← Old High German *wir* ← Proto-Germanic *\*wīz*, "we" — inherited, the same word as English *we*. (EtymDB 2.1)
+
 ## Grammar Lens: wir takes -en
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-WIR-EN-02]; assesses=[GE-LEX-WIR-01, GE-GRAMMAR-VERB-STEM-01, GE-LEX-WOHNEN-01] -->
 

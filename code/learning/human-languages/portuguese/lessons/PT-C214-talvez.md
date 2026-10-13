@@ -13,7 +13,8 @@ gloss: "perhaps"
 concept_tag: PT-PORQUE214-TALVEZ
 prerequisites: [PT-C214-juntos-juntas, PT-C214-contudo]
 sounds: []
-roots: []
+roots: [vicis-latin]
+etymology_hook: "talvez — 'such a time': tal 'such' (← Latin talis) + vez 'time' (← Latin vicis)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C214-contudo]
 <!-- hl-knowledge: introduces=[PT-LEX-C214-PORQUE214-04]; assesses=[] -->
 
 **talvez** — "perhaps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**talvez** is "such a time": *tal*, "such" (← Latin *talis*), and *vez*, "time, turn" (← Latin *vicis*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the police"
 concept_tag: PT-CIDADE4-POLICIA
 prerequisites: [PT-C76-aldeia, PT-C76-correio]
 sounds: []
-roots: []
+roots: [politia-latin]
+etymology_hook: "polícia ← Latin politia, from Greek politeia 'government' — English police and policy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C76-correio]
 <!-- hl-knowledge: introduces=[PT-LEX-C76-CIDADE4-03]; assesses=[] -->
 
 **a polícia** — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**polícia** ← Latin *politia*, "government" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *politeia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

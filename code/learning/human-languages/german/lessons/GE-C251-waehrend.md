@@ -14,6 +14,7 @@ concept_tag: GE-LINK251-WAEHREND
 prerequisites: [GE-C251-hoechstens, GE-C251-mindestens]
 sounds: []
 roots: []
+etymology_hook: "während — the present participle of währen 'to last': while it lasts"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C251-mindestens]
 <!-- hl-knowledge: introduces=[GE-LEX-C251-LINK251-05]; assesses=[] -->
 
 **während** — "during, while".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**während** is the present participle of the verb "to last, to endure", Middle High German *wëren* (EtymDB 2.1): "lasting", so "while, during".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

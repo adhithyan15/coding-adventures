@@ -12,6 +12,9 @@ Before the new one: say the German for a hundred, then the German for a thousand
 You'll want to know: null.
 null — "zero".
 
+The word, taken apart.
+null came in with Arabic numerals from Italian nulla, "nothing" from Latin nūllus, "none", built from ne, "not", and ūllus, "any" (EtymDB 2.1) — borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a thousand, then the German for zero.
 
 You'll want to know: das Wort.
 das Wort — "a word".
+
+The word, taken apart.
+Wort from Old High German wort from Proto-Germanic wurdą — inherited, the same word as English word. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for zero, then the German for a word.
 You'll want to know: die Antwort.
 die Antwort — "an answer".
 
+The word, taken apart.
+Antwort from Old High German antwurti from Proto-Germanic andawurdiją (EtymDB 2.1): ant-, "against", + Wort — a word given back. English answer pairs the same "against" with a verb meaning "to swear".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a word, then the German for an answer.
 You'll want to know: die Arbeit.
 die Arbeit — "work".
 
+The word, taken apart.
+Arbeit from Old High German arbeit from Proto-Germanic arbaidiz, "toil, hardship" — inherited. (EtymDB 2.1) Work began as hardship.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for an answer, then the German for work.
 
 You'll want to know: die Musik.
 die Musik — "music".
+
+The word, taken apart.
+Musik from Latin mūsica from Greek mousikḗ, "the art of the Muses" (EtymDB 2.1) — borrowed, like English music.
 
 What you've built.
 One more word for this chapter.

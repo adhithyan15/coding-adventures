@@ -13,7 +13,8 @@ gloss: "a cold"
 concept_tag: GE-THING156-ERKAELTUNG
 prerequisites: [GE-C156-rezept, GE-C156-schmerz]
 sounds: []
-roots: []
+roots: [germanic-kaldaz]
+etymology_hook: "Erkältung — er- + the word for 'cold' + -ung: catching a chill"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C156-schmerz]
 <!-- hl-knowledge: introduces=[GE-LEX-C156-THING156-03]; assesses=[] -->
 
 **die Erkältung** — "a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Erkältung** is the noun of the verb "to catch a chill", Middle High German *erkelten* (EtymDB 2.1): *er-* + the word for "cold", Old High German *kalt*, English *cold*, + *-ung*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

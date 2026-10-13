@@ -13,7 +13,8 @@ gloss: "a back yard"
 concept_tag: PT-COISAS255-QUINTAL
 prerequisites: [PT-C254-salsicha, PT-C255-corredor]
 sounds: []
-roots: []
+roots: [quintus-latin]
+etymology_hook: "quintal — from the farm word for land let for a fifth of its harvest, from Latin quintus 'fifth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C255-corredor]
 <!-- hl-knowledge: introduces=[PT-LEX-C255-COISAS255-02]; assesses=[] -->
 
 **o quintal** — "a back yard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quintal** is built on the word for a farm let for a fifth of its harvest, from Latin *quintus*, "fifth" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

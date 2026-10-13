@@ -13,7 +13,8 @@ gloss: "to begin"
 concept_tag: GE-VERB-BEGINNEN
 prerequisites: [GE-C138-neunzig, GE-C138-million]
 sounds: []
-roots: []
+roots: [germanic-biginnana]
+etymology_hook: "beginnen ← Old High German biginnan ← Proto-Germanic *biginnaną — the same verb as English begin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C138-million]
 <!-- hl-knowledge: introduces=[GE-LEX-C139-VERB139-01]; assesses=[] -->
 
 **beginnen** — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beginnen** ← Old High German *biginnan* ← Proto-Germanic *\*biginnaną*, "to begin" — inherited, the same verb as English *begin*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

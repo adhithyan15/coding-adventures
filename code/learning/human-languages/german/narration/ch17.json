@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Bread, Water, Wine",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:815c386b5855b728",
+  "sourceHash": "fnv1a64:c004c03bb7679150",
   "lessons": [
     {
       "id": "GE-C11-brot",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:777f4a67ac95839d",
+      "sourceHash": "fnv1a64:186e80f4ac648fc8",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Brot from Old High German brōt from Proto-Germanic braudą — inherited, the same word as English bread. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -78,7 +89,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -136,7 +147,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -317,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a211d4d0c0d5be70",
+      "sourceHash": "fnv1a64:d98df83769d08aaf",
       "notice": null,
       "blocks": [
         {
@@ -354,6 +365,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wasser from Old High German wazzar from Proto-Germanic watōr — inherited, the same word as English water, with German ss where English kept t. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -376,7 +398,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -425,7 +447,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -604,7 +626,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab85a06fece62fb4",
+      "sourceHash": "fnv1a64:f3f1ecf8c597ef6d",
       "notice": null,
       "blocks": [
         {
@@ -641,6 +663,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wein from Old High German wīn from Proto-Germanic wīną from Latin vīnum (EtymDB 2.1) — borrowed from Latin very early, as English wine was."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -659,7 +692,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +741,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

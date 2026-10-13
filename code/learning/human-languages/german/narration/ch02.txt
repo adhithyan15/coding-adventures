@@ -103,6 +103,9 @@ Warm-up.
 [pause 2 seconds]
 You have the verb and you have the people. heißen is the form a dictionary prints; it is not the form you say. Put a person in front of it and the tail of the word moves.
 
+The word, taken apart.
+heißen from Old High German heizzan, "to call, to command" from Proto-Germanic haitaną — inherited. (EtymDB 2.1) The old English word hight, "called", comes from the same verb.
+
 Grammar Lens: one verb, changing its ending.
 heißen is the dictionary (infinitive) form. German swaps the ending for each person:
 ich heiße — I am called.
@@ -197,6 +200,9 @@ Assemble it: "how" + "are you called" = the polite question that opens the intro
 You'll want to know: wie heißen Sie?
 wie (how) + heißen Sie ("are you [formal] called").
 wie heißen Sie? = literally "how are you called?" = the polite "what's your name?"
+
+The phrase, taken apart.
+wie heißen Sie is built from wie, "how", heißen, "to be called", and Sie. heißen from Old High German heizzan from Proto-Germanic haitaną, "to call, to command" (EtymDB 2.1). The polite Sie is the word for "they", capitalised.
 
 Grammar Lens: verb in second place.
 German likes the verb in the second slot of a sentence:

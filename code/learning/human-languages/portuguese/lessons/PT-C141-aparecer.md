@@ -13,7 +13,8 @@ gloss: "to appear"
 concept_tag: PT-VERB-APARECER
 prerequisites: [PT-C141-acrescentar, PT-C141-anunciar]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "aparecer ← Late Latin apparescere, from apparere 'to appear' — English appear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C141-anunciar]
 <!-- hl-knowledge: introduces=[PT-LEX-C141-VERBOS141-04]; assesses=[] -->
 
 **aparecer** — "to appear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aparecer** ← Late Latin *apparescere*, "to begin to appear" (EtymDB 2.1), from *apparere*, "to appear" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

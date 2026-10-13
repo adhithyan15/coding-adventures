@@ -14,6 +14,7 @@ concept_tag: PT-CASA96-LIXO
 prerequisites: [PT-C95-pasta-de-dentes, PT-C95-pente]
 sounds: []
 roots: []
+etymology_hook: "lixo — origin uncertain, perhaps Latin lix 'ashes, lye'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C95-pente]
 <!-- hl-knowledge: introduces=[PT-LEX-C96-CASA96-01]; assesses=[] -->
 
 **o lixo** — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lixo** — its origin is uncertain, perhaps Latin *lix*, "ashes, lye". EtymDB 2.1 records no ancestor for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

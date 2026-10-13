@@ -13,7 +13,8 @@ gloss: "to defend"
 concept_tag: PT-VERB-DEFENDER
 prerequisites: [PT-C179-recuar, PT-C179-baixar]
 sounds: []
-roots: []
+roots: [defendere-latin]
+etymology_hook: "defender ← Latin defendere 'to ward off' — English defend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C179-baixar]
 <!-- hl-knowledge: introduces=[PT-LEX-C179-VERBOS179-05]; assesses=[] -->
 
 **defender** — "to defend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**defender** ← Latin *defendere*, "to ward off" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

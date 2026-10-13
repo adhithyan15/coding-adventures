@@ -14,6 +14,7 @@ concept_tag: GE-THING204-HOLZ
 prerequisites: [GE-C203-seide, GE-C204-leder]
 sounds: []
 roots: []
+etymology_hook: "Holz ← Old High German holz 'wood' — the same word as English holt, 'a wood'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C204-leder]
 <!-- hl-knowledge: introduces=[GE-LEX-C204-THING204-02]; assesses=[] -->
 
 **das Holz** — "wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Holz** ← Middle High German *holz* ← Old High German *holz*, "wood" — inherited, the same word as English *holt*, "a small wood". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

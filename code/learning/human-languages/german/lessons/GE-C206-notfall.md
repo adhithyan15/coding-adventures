@@ -14,6 +14,7 @@ concept_tag: GE-THING206-NOTFALL
 prerequisites: [GE-C206-salbe, GE-C206-spritze]
 sounds: []
 roots: []
+etymology_hook: "Notfall — the word for 'need, distress' + Fall 'case': a case of need"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C206-spritze]
 <!-- hl-knowledge: introduces=[GE-LEX-C206-THING206-05]; assesses=[] -->
 
 **der Notfall** — "an emergency".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Notfall** is the word for "need, distress", Middle High German *nōt*, a cousin of English *need* (EtymDB 2.1), + the word for "case, fall": a case of distress.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

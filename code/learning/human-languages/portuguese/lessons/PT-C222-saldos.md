@@ -13,7 +13,8 @@ gloss: "the sales"
 concept_tag: PT-COISAS222-SALDOS
 prerequisites: [PT-C222-promessa, PT-C222-desconto]
 sounds: []
-roots: []
+roots: [solidus-latin]
+etymology_hook: "saldos — plural of saldo ← Italian saldo 'settled, balance', from Latin solidus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C222-desconto]
 <!-- hl-knowledge: introduces=[PT-LEX-C222-COISAS222-04]; assesses=[] -->
 
 **os saldos** — "the sales".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saldos** is the plural of *saldo* ← Italian *saldo*, "settled, balance" — borrowed; behind it is Latin *solidus*, "solid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

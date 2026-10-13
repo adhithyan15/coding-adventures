@@ -13,7 +13,8 @@ gloss: "soft"
 concept_tag: IT-QUALITA128-MORBIDO
 prerequisites: [IT-C128-asciutto, IT-C128-fresco]
 sounds: []
-roots: []
+roots: [morbidus-latin]
+etymology_hook: "morbido ← Latin morbidus 'sickly', from morbus 'disease' — English morbid is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C128-fresco]
 <!-- hl-knowledge: introduces=[IT-LEX-C128-QUALITA128-05]; assesses=[] -->
 
 **morbido** — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**morbido** ← Latin *morbidus*, "sickly", from *morbus*, "disease" — a learned borrowing that softened in meaning. EtymDB 2.1 has no row for *morbido*; it derives French *morbide* and Spanish *mórbido* from *morbidus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

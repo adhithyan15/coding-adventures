@@ -13,7 +13,8 @@ gloss: "an actor"
 concept_tag: PT-COISAS159-ATOR
 prerequisites: [PT-C159-cantor-a-cantora, PT-C159-espetaculo]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "ator ← Latin actor 'doer, performer', from agere 'to do' — English actor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C159-espetaculo]
 <!-- hl-knowledge: introduces=[PT-LEX-C159-COISAS159-05]; assesses=[] -->
 
 **o ator** — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ator** ← Latin *actor*, "doer, performer" (EtymDB 2.1), from *agere*, "to do" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

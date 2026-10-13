@@ -13,7 +13,8 @@ gloss: "clean"
 concept_tag: PT-ADJ6-LIMPO
 prerequisites: [PT-C69-cinzento, PT-C69-doce]
 sounds: []
-roots: []
+roots: [limpidus-latin]
+etymology_hook: "limpo ← Latin limpidus 'clear' — English limpid shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C69-doce]
 <!-- hl-knowledge: introduces=[PT-LEX-C69-ADJ6-04]; assesses=[] -->
 
 **limpo** — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**limpo** ← Latin *limpidus*, "clear" (EtymDB 2.1) — inherited. It lost a whole syllable, as inherited words do.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

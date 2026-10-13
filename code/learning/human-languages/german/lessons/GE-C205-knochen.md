@@ -14,6 +14,7 @@ concept_tag: GE-THING205-KNOCHEN
 prerequisites: [GE-C204-kunststoff, GE-C204-koerper]
 sounds: []
 roots: []
+etymology_hook: "Knochen ← Middle High German knoche 'bone, knot' — a cousin of English knuckle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C204-koerper]
 <!-- hl-knowledge: introduces=[GE-LEX-C205-THING205-01]; assesses=[] -->
 
 **der Knochen** — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Knochen** ← Middle High German *knoche*, "bone, knot" ← Old High German *knohha* (EtymDB 2.1) — inherited. English *knuckle* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

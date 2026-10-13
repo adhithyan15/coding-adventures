@@ -14,6 +14,7 @@ concept_tag: GE-VERB-EINPACKEN
 prerequisites: [GE-C247-bluehen, GE-C247-diskutieren]
 sounds: []
 roots: []
+etymology_hook: "einpacken — ein- 'in' + packen 'to pack': to pack in"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C247-diskutieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C247-VERB247-05]; assesses=[] -->
 
 **einpacken** — "to pack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einpacken** is *ein-*, "in", + *packen*, "to pack", from Middle Low German *packen* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

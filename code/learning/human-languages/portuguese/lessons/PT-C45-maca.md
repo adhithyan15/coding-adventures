@@ -14,6 +14,7 @@ concept_tag: PT-FRUTA-MACA
 prerequisites: [PT-C44-frango, PT-C45-fruta]
 sounds: []
 roots: []
+etymology_hook: "maçã ← Latin malum Matianum, an apple named after a Roman called Matius"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C45-fruta]
 <!-- hl-knowledge: introduces=[PT-LEX-C45-FRUTA-02]; assesses=[] -->
 
 **a maçã** — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maçã** ← Latin *malum Matianum*, "Matian apple" — inherited. EtymDB 2.1 traces it only to Old Portuguese *maçãa*; it derives Spanish *manzana* from *malum Matianum*. The apple was named after a Roman called Matius.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

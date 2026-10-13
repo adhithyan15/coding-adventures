@@ -13,7 +13,8 @@ gloss: "to pick up, to gather"
 concept_tag: IT-VERB-RACCOGLIERE
 prerequisites: [IT-C210-produrre, IT-C210-proporre]
 sounds: []
-roots: []
+roots: [colligere-latin]
+etymology_hook: "raccogliere ← Latin recolligere 'to gather again' — English recollect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C210-proporre]
 <!-- hl-knowledge: introduces=[IT-LEX-C210-VERBI210-05]; assesses=[] -->
 
 **raccogliere** — "to pick up, to gather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raccogliere** ← Latin *recolligere*, "to gather again" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

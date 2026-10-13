@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 67,
-  "sourceHash": "fnv1a64:f63e7134b64784a3",
+  "sourceHash": "fnv1a64:19a4782268675de4",
   "lessonIds": [
     "PT-C67-barato",
     "PT-C67-alto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch67.txt",
   "json": "portuguese/narration/ch67.json",
-  "textHash": "fnv1a64:fa0162c410b17f1d",
-  "jsonHash": "fnv1a64:42ca3a2cd0916cd8",
+  "textHash": "fnv1a64:84a8792a69742114",
+  "jsonHash": "fnv1a64:3942a94106fdc682",
   "findings": []
 }

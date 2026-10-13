@@ -54,6 +54,11 @@ you have no idea when you will meet again.
 |---|---|---|
 | *bis später* | *hasta luego* | *à plus tard* |
 
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bis später** is *bis* + the comparative of *spät*, "late". *spät* ← Old High German *spāti* ← Proto-Germanic *\*spēdiz* — inherited. (EtymDB 2.1)
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BIS-SPAETER-01, GE-LEX-BIS-BALD-01] -->
 

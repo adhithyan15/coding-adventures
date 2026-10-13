@@ -13,7 +13,8 @@ gloss: "a salary"
 concept_tag: IT-LAV172-STIPENDIO
 prerequisites: [IT-C172-azienda, IT-C172-collega]
 sounds: []
-roots: []
+roots: [stipendium-latin]
+etymology_hook: "stipendio ← Latin stipendium 'a soldier's pay', a learned word — English stipend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C172-collega]
 <!-- hl-knowledge: introduces=[IT-LEX-C172-LAV172-04]; assesses=[] -->
 
 **lo stipendio** — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stipendio** ← Latin *stipendium*, "a soldier's pay" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

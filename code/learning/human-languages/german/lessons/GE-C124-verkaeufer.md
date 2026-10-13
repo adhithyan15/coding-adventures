@@ -13,7 +13,8 @@ gloss: "a shop assistant"
 concept_tag: GE-BERUF124-VERKAEUFER
 prerequisites: [GE-C124-koch, GE-C124-polizist]
 sounds: []
-roots: []
+roots: [caupo-latin]
+etymology_hook: "Verkäufer — the verb 'to sell' + -er; it is built on kaufen 'to buy' with ver- 'away'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C124-polizist]
 <!-- hl-knowledge: introduces=[GE-LEX-C124-BERUF124-05]; assesses=[] -->
 
 **der Verkäufer** — "a shop assistant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Verkäufer** is the verb "to sell" + *-er*: the seller. That verb is *ver-*, "away", + *kaufen*, "to buy", which goes back to Latin *caupō*, "tradesman" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

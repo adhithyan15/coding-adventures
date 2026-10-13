@@ -439,6 +439,9 @@ singular: der Abend. plural: die Abende. what changed: article, plus -e.
 singular: die Nacht. plural: die Nächte. what changed: article, plus -e, plus the umlaut a becomes ä.
 German plurals are not built from one rule the way English adds -s. Each noun carries its own plural, which is why a German noun is worth learning as a set of three: der Tag, die Tage. The one thing that never varies is the article.
 
+The word, taken apart.
+die goes back to Old High German dio, diu, plural forms of the pointing word "that" — inherited, from the same Proto-Germanic stem as English the and that. EtymDB 2.1 has no row for German die; it traces English that to Proto-Germanic þat.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "der Tag, die Tage" — singular, then plural]

@@ -10,10 +10,10 @@ gloss: there is, there are — literally "it gives", and it takes the done-to fo
 concept_tag: GE-EXISTENCE-ES-GIBT
 prerequisites: [GE-C34-praedikativ, GE-C34-den, GE-C03-es, GE-C22-hund-katze-more]
 sounds: []
-roots: []
+roots: [germanic-gebana]
 etymology_hook: "each language picks a different verb to say a thing exists: German gives it, French has it there, Spanish has it outright, English puts it there — and only German's choice makes the thing an object"
 duration:
-  max_seconds: 240
+  max_seconds: 265
 requires:
   knowledge: [GE-LEX-ES-01, GE-ETYMON-ES-02, GE-LEX-DEN-01, GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01, GE-LEX-EINEN-01, GE-LEX-KEINEN-01]
 introduces:
@@ -54,6 +54,11 @@ lessons ago.
 The phrase never changes shape. Whether one thing exists or twenty, it stays
 **es gibt** — the *es* is the same empty subject as in the weather, standing in
 a slot German insists on filling.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gibt** is a form of the verb "to give" ← Old High German *geban* ← Proto-Germanic *\*gebaną* — inherited, the same verb as English *give*. (EtymDB 2.1)
 
 ## Grammar Lens: what follows it is an object
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ES-GIBT-01, GE-LEX-DEN-01, GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01, GE-LEX-EINEN-01, GE-LEX-KEINEN-01, GE-LEX-HUND-02] -->

@@ -13,7 +13,8 @@ gloss: "a promise"
 concept_tag: PT-COISAS222-PROMESSA
 prerequisites: [PT-C221-viuvo-a-viuva, PT-C222-conselho]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "promessa ← Latin promissa 'things promised' — English promise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C222-conselho]
 <!-- hl-knowledge: introduces=[PT-LEX-C222-COISAS222-02]; assesses=[] -->
 
 **a promessa** — "a promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**promessa** ← Latin *promissa*, "things promised" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *promessa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

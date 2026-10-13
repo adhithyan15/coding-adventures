@@ -14,6 +14,7 @@ concept_tag: PT-COISAS224-JARRA
 prerequisites: [PT-C224-garagem, PT-C224-horta]
 sounds: []
 roots: []
+etymology_hook: "jarra ← Arabic jarra 'earthen jar' — English jar is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C224-horta]
 <!-- hl-knowledge: introduces=[PT-LEX-C224-COISAS224-04]; assesses=[] -->
 
 **a jarra** — "a vase, a jug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jarra** ← Arabic *jarra*, "earthen jar" — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

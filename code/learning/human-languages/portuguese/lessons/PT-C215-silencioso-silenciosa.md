@@ -13,7 +13,8 @@ gloss: "silent"
 concept_tag: PT-QUAL215-SILENCIOSO-SILENCIOSA
 prerequisites: [PT-C215-nervoso-nervosa, PT-C215-tranquilo-tranquila]
 sounds: []
-roots: []
+roots: [silere-latin]
+etymology_hook: "silencioso ← Latin silentiosus, from silentium 'silence' — English silent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C215-tranquilo-tranquila]
 <!-- hl-knowledge: introduces=[PT-LEX-C215-QUAL215-05]; assesses=[] -->
 
 **silencioso / silenciosa** — "silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**silencioso** ← Latin *silentiosus*, "silent" (EtymDB 2.1), from *silentium*, "silence" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

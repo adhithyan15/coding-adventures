@@ -14,6 +14,7 @@ concept_tag: PT-VERB-AVANCAR
 prerequisites: [PT-C178-respirar, PT-C179-agir]
 sounds: []
 roots: []
+etymology_hook: "avançar — probably from French avancer, from Late Latin abante 'from before' — English advance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C179-agir]
 <!-- hl-knowledge: introduces=[PT-LEX-C179-VERBOS179-02]; assesses=[] -->
 
 **avançar** — "to move forward".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avançar** — borrowed, probably from French *avancer*, from Late Latin *abante*, "from before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

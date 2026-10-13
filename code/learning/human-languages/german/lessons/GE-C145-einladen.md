@@ -14,6 +14,7 @@ concept_tag: GE-VERB-EINLADEN
 prerequisites: [GE-C145-benutzen, GE-C145-einkaufen]
 sounds: []
 roots: []
+etymology_hook: "einladen ← Old High German inladōn — ein- 'in' + an old verb 'to call, to summon'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C145-einkaufen]
 <!-- hl-knowledge: introduces=[GE-LEX-C145-VERB145-03]; assesses=[] -->
 
 **einladen** — "to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einladen** ← Old High German *inladōn* (EtymDB 2.1): *ein-*, "in", + an old verb meaning "to call, to summon". It is a different word from *Laden*, "shop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

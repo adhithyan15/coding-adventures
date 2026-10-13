@@ -14,6 +14,7 @@ concept_tag: GE-QUAL216-HERRLICH
 prerequisites: [GE-C216-gruendlich, GE-C216-haeufig]
 sounds: []
 roots: []
+etymology_hook: "herrlich ← Old High German hērlīh 'noble, splendid', from hēr 'noble, grey-haired'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C216-haeufig]
 <!-- hl-knowledge: introduces=[GE-LEX-C216-QUAL216-03]; assesses=[] -->
 
 **herrlich** — "wonderful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**herrlich** ← Middle High German *hērlich* ← Old High German *hērlīh*, "noble, splendid" (EtymDB 2.1), from *hēr*, "venerable", first "grey-haired". English *hoar* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to chase"
 concept_tag: PT-VERB-PERSEGUIR
 prerequisites: [PT-C144-unir, PT-C145-flutuar]
 sounds: []
-roots: []
+roots: [sequi-latin]
+etymology_hook: "perseguir ← Latin persequi 'to follow through', from sequi — English pursue"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C145-flutuar]
 <!-- hl-knowledge: introduces=[PT-LEX-C145-VERBOS145-02]; assesses=[] -->
 
 **perseguir** — "to chase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perseguir** ← Latin *persequi*, "to follow through", from *sequi*, "to follow" — inherited. EtymDB 2.1 has no ancestor row for *perseguir*; it derives Spanish *perseguir* from *persequi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

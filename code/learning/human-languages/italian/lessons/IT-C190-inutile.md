@@ -13,7 +13,8 @@ gloss: "useless"
 concept_tag: IT-QUAL190-INUTILE
 prerequisites: [IT-C189-curioso, IT-C190-utile]
 sounds: []
-roots: []
+roots: [utilis-latin]
+etymology_hook: "inutile ← Latin inutilis 'useless', in- 'not' + utilis 'useful'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C190-utile]
 <!-- hl-knowledge: introduces=[IT-LEX-C190-QUAL190-02]; assesses=[] -->
 
 **inutile** — "useless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inutile** ← Latin *inutilis*, "useless" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

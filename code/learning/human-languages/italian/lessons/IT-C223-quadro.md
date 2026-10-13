@@ -13,7 +13,8 @@ gloss: "a painting"
 concept_tag: IT-COSE223-QUADRO
 prerequisites: [IT-C222-tradizione, IT-C223-poesia]
 sounds: []
-roots: []
+roots: [quadrum-latin]
+etymology_hook: "quadro ← Latin quadrum 'a square' — English quadrant shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C223-poesia]
 <!-- hl-knowledge: introduces=[IT-LEX-C223-COSE223-02]; assesses=[] -->
 
 **il quadro** — "a painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quadro** ← Latin *quadrum*, "a square" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

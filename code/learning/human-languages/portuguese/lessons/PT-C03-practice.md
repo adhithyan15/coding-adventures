@@ -11,6 +11,7 @@ concept_tag: CH3-PRACTICE
 prerequisites: [PT-C03-eu, PT-C03-me-chamo, PT-C03-como-se-chama, PT-C03-prazer]
 sounds: []
 roots: []
+etymology_hook: "review: eu ← Latin ego 'I'; chamo ← Latin clamo 'I call out'; prazer ← Latin placere 'to please'"
 duration:
   max_seconds: 245
 requires:

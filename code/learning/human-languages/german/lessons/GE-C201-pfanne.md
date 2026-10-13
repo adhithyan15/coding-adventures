@@ -13,7 +13,8 @@ gloss: "a frying pan"
 concept_tag: GE-THING201-PFANNE
 prerequisites: [GE-C201-dose, GE-C201-topf]
 sounds: []
-roots: []
+roots: [patina-latin]
+etymology_hook: "Pfanne ← Old High German phanna, from Latin patina 'pan' — an early loan, like English pan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C201-topf]
 <!-- hl-knowledge: introduces=[GE-LEX-C201-THING201-03]; assesses=[] -->
 
 **die Pfanne** — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Pfanne** ← Middle High German *pfanne* ← Old High German *phanna* (EtymDB 2.1), from Latin *patina*, "pan, dish" — an early loan whose *p* shifted to *pf*. English *pan* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "behind"
 concept_tag: GE-RICHTUNG110-HINTER
 prerequisites: [GE-C110-neben, GE-C110-zwischen]
 sounds: []
-roots: []
+roots: [germanic-hinder]
+etymology_hook: "hinter ← Old High German hintar ← Proto-Germanic *hinder — the same word as English hinder 'rear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C110-zwischen]
 <!-- hl-knowledge: introduces=[GE-LEX-C110-RICHTUNG110-03]; assesses=[] -->
 
 **hinter** — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hinter** ← Old High German *hintar* ← Proto-Germanic *\*hinder* — inherited, the same word as English *hinder*, "rear", as in *hindquarters*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

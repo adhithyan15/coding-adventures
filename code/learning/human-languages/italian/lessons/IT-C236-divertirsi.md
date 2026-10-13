@@ -13,7 +13,8 @@ gloss: "to have fun"
 concept_tag: IT-VERB-DIVERTIRSI
 prerequisites: [IT-C236-pettinarsi, IT-C236-annoiarsi]
 sounds: []
-roots: []
+roots: [divertere-latin]
+etymology_hook: "divertirsi ← Latin divertere 'to turn aside' + -si: to turn aside from cares — English divert"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C236-annoiarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C236-VERBI236-05]; assesses=[] -->
 
 **divertirsi** — "to have fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**divertirsi** ← Latin *divertere* (EtymDB 2.1), "to turn aside" (Lewis & Short), with *-si*, "oneself": to turn aside from cares.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

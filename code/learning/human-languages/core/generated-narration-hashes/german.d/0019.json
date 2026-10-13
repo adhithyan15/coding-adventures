@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 19,
-  "sourceHash": "fnv1a64:c096febcd57fc975",
+  "sourceHash": "fnv1a64:3fdf43b2267a1941",
   "lessonIds": [
     "GE-C12-ziffer-plus-zehn",
     "GE-C12-dreizehn",
@@ -20,7 +20,7 @@
   "drivablePrefix": 12,
   "text": "german/narration/ch19.txt",
   "json": "german/narration/ch19.json",
-  "textHash": "fnv1a64:12d231ef6e6b4281",
-  "jsonHash": "fnv1a64:f5db07393bf5399a",
+  "textHash": "fnv1a64:0ccbc2f2a7c29951",
+  "jsonHash": "fnv1a64:75eaba9f0bd83e3f",
   "findings": []
 }

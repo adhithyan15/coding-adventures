@@ -13,7 +13,8 @@ gloss: "an ant"
 concept_tag: GE-TIERE3-AMEISE
 prerequisites: [GE-C87-affe, GE-C88-biene]
 sounds: []
-roots: []
+roots: [germanic-emaitijo]
+etymology_hook: "Ameise ← Old High German āmeiza, 'the one that cuts off' — the same word as old English emmet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C88-biene]
 <!-- hl-knowledge: introduces=[GE-LEX-C88-TIERE3-02]; assesses=[] -->
 
 **die Ameise** — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ameise** ← Old High German *āmeiza* ← Proto-Germanic *\*ēmaitijōn*, built from *\*ē-*, "off", and *\*maitaną*, "to cut": the one that cuts things off. (EtymDB 2.1) English *emmet*, an old word for "ant", is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

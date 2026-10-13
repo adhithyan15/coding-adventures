@@ -13,7 +13,7 @@ sounds: [ge-prefix, ch-ach, final-t]
 roots: [germanic-makon]
 etymology_hook: "machen's ch is the throat-scrape of Bach, and it survives untouched inside gemacht — the wrap adds to the edges of a verb and never disturbs its middle"
 duration:
-  max_seconds: 145
+  max_seconds: 175
 requires:
   knowledge: [GE-GRAMMAR-PARTIZIP-GE-T-01, GE-LEX-GESAGT-01]
 introduces:
@@ -51,6 +51,11 @@ the same *ch*.
 German uses this one participle where English chooses between two different
 words. *Ich habe das gemacht* is "I made that" and "I did that" alike; German
 never had to pick.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gemacht** is *ge-* + the stem of *machen* + *-t*. *machen* is the same verb as English *make*, which EtymDB 2.1 traces to Proto-Germanic *\*makōną*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GEMACHT-01] -->

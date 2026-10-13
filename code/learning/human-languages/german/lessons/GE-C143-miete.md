@@ -13,7 +13,8 @@ gloss: "the rent"
 concept_tag: GE-READ143-MIETE
 prerequisites: [GE-C142-naechstes-jahr, GE-C142-vorhaben]
 sounds: []
-roots: []
+roots: [germanic-mezdo]
+etymology_hook: "Miete ← Old High German miata 'payment' ← Proto-Germanic *mēzdō — English meed is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C142-vorhaben]
 <!-- hl-knowledge: introduces=[GE-LEX-C143-READ143-01]; assesses=[] -->
 
 **die Miete** — "the rent". The noun behind *mieten*: **Die Miete ist hoch.** — "The rent is high."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Miete** ← Old High German *miata*, "payment" ← Proto-Germanic *\*mēzdō* — inherited. (EtymDB 2.1) English *meed*, "reward", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-ROUPA1-ROUPA
 prerequisites: [PT-C76-teatro, PT-C76-biblioteca]
 sounds: []
 roots: []
+etymology_hook: "roupa ← Gothic raupa 'spoils, plunder' — English robe is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C76-biblioteca]
 <!-- hl-knowledge: introduces=[PT-LEX-C77-ROUPA1-01]; assesses=[] -->
 
 **a roupa** — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**roupa** ← Gothic *raupa*, "spoils, plunder" (EtymDB 2.1) — borrowed. Clothes were once what you took as plunder.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

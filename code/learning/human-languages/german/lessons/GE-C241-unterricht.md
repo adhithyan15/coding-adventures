@@ -13,7 +13,8 @@ gloss: "lessons, teaching"
 concept_tag: GE-THING241-UNTERRICHT
 prerequisites: [GE-C240-umgebung, GE-C241-umwelt]
 sounds: []
-roots: []
+roots: [germanic-rihtijana]
+etymology_hook: "Unterricht — 'under' + the verb 'to direct, to set right': instruction"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C241-umwelt]
 <!-- hl-knowledge: introduces=[GE-LEX-C241-THING241-02]; assesses=[] -->
 
 **der Unterricht** — "lessons, teaching".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Unterricht** is the noun of a verb built from the word for "under" + the verb "to direct, to set right", Old High German *rihten* (EtymDB 2.1): instruction.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

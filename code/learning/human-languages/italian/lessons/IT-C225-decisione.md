@@ -13,7 +13,8 @@ gloss: "a decision"
 concept_tag: IT-COSE225-DECISIONE
 prerequisites: [IT-C224-gemello, IT-C224-nipote]
 sounds: []
-roots: []
+roots: [decidere-latin]
+etymology_hook: "decisione ← Latin decisio 'a settlement', a learned word — English decision"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C224-nipote]
 <!-- hl-knowledge: introduces=[IT-LEX-C225-COSE225-01]; assesses=[] -->
 
 **la decisione** — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**decisione** ← Latin *decisio*, "a settlement" — a learned borrowing. EtymDB 2.1 has no row for *decisione*; it derives Spanish *decisión* and French *décision*, borrowed the same way, from *decisio*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

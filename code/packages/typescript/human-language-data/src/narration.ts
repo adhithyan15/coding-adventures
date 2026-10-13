@@ -812,6 +812,15 @@ export function narrateLesson(
 ): LessonNarration {
   const maxColumns = options.maxLinearisableTableColumns ?? DEFAULT_LINEARISABLE_TABLE_COLUMNS;
   const entry = deriveLessonModality(lesson, { maxLinearisableTableColumns: maxColumns });
+  return narrateLessonWithModality(lesson, entry, options);
+}
+
+function narrateLessonWithModality(
+  lesson: ParsedLesson,
+  entry: LessonModality,
+  options: NarrationOptions,
+): LessonNarration {
+  const maxColumns = options.maxLinearisableTableColumns ?? DEFAULT_LINEARISABLE_TABLE_COLUMNS;
   // The lesson's own pair first: when a neighbour romanizes the same headword
   // differently (ي is *yāʾ* in the letter lesson and *-ī* in the "my" lesson),
   // this lesson's reading is the one it is teaching, and pairRomanization keeps
@@ -978,8 +987,13 @@ export function narrateChapter(
       romanization: lesson.realization.romanization,
     })),
   ];
-  const ordered = orderLessons(lessons, options);
-  const narrated = ordered.map((lesson) => narrateLesson(lesson, { ...options, glossary }));
+  // Ordering already derives each lesson's modality. Reuse that verdict while
+  // narrating instead of scanning every block a second time for every chapter.
+  const orderedWithModality = orderLessons(lessons, options);
+  const ordered = orderedWithModality.map(({ lesson }) => lesson);
+  const narrated = orderedWithModality.map(({ lesson, modality }) =>
+    narrateLessonWithModality(lesson, modality, { ...options, glossary }),
+  );
   // The core, not the full modality, gates the prefix — see `drivablePrefix` in
   // `modality.ts`, which this mirrors so the header, the modality report and the
   // book's "Hands-free start" line can never disagree about the same chapter.
@@ -1011,19 +1025,25 @@ export function narrateChapter(
 function orderLessons(
   lessons: readonly ParsedLesson[],
   options: NarrationOptions,
-): ParsedLesson[] {
+): { lesson: ParsedLesson; modality: LessonModality }[] {
   const width = options.maxLinearisableTableColumns;
   const byId = new Map<string, ParsedLesson>();
+  const modalities = new Map<string, LessonModality>();
   const entries: LessonModality[] = [];
   for (const lesson of lessons) {
     byId.set(lesson.realization.lessonId, lesson);
-    entries.push(
-      deriveLessonModality(lesson, width === undefined ? {} : { maxLinearisableTableColumns: width }),
+    const entry = deriveLessonModality(
+      lesson,
+      width === undefined ? {} : { maxLinearisableTableColumns: width },
     );
+    entries.push(entry);
+    modalities.set(entry.lessonId, entry);
   }
-  return orderChapterLessons(entries)
-    .map((entry) => byId.get(entry.lessonId))
-    .filter((lesson): lesson is ParsedLesson => lesson !== undefined);
+  return orderChapterLessons(entries).flatMap((entry) => {
+    const lesson = byId.get(entry.lessonId);
+    const modality = modalities.get(entry.lessonId);
+    return lesson && modality ? [{ lesson, modality }] : [];
+  });
 }
 
 // ---------------------------------------------------------------------------

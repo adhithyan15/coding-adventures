@@ -10,10 +10,10 @@ gloss: sixteen — sechs without its s, because the s and the ts would collide
 concept_tag: GE-NUMBER-16
 prerequisites: [GE-C12-klippung]
 sounds: [ch-ach, z-ts]
-roots: []
+roots: [sehs-germanic, tehun-germanic]
 etymology_hook: "sechzehn drops the s of sechs, so the raspy ch runs straight into the ts of zehn and nothing gets stuck between them"
 duration:
-  max_seconds: 155
+  max_seconds: 156
 requires:
   knowledge: [GE-GRAMMAR-ZAHL-KLIPPUNG-01, GE-LEX-SECHS-01, GE-GRAMMAR-ZIFFER-PLUS-ZEHN-01, GE-LEX-FUENFZEHN-01]
 introduces:
@@ -45,6 +45,11 @@ reviews_of: [GE-C12-klippung, GE-C06-sechs]
 
 Try it with the *s* left in and you will hear the problem: *sechs-zehn* puts an
 *s* immediately before a *ts*, and the two will not sit next to each other.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sechzehn** ← Old High German *sehszehan* ← Proto-Germanic *\*sehstehun*, "six-ten" — the same compound as English *sixteen*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SECHZEHN-01] -->

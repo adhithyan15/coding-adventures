@@ -13,7 +13,8 @@ gloss: "a tax"
 concept_tag: IT-COSE253-TASSA
 prerequisites: [IT-C253-prestito, IT-C253-debito]
 sounds: []
-roots: []
+roots: [taxare-latin]
+etymology_hook: "tassa ← Medieval Latin taxa 'a charge', from taxare 'to appraise' — English tax"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C253-debito]
 <!-- hl-knowledge: introduces=[IT-LEX-C253-COSE253-04]; assesses=[] -->
 
 **la tassa** — "a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tassa** ← Medieval Latin *taxa*, "a charge", from Latin *taxare*, "to appraise" — taken from Medieval Latin. EtymDB 2.1 has no row for *tassa*; it derives Old French *taxe* from *taxa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a scientist"
 concept_tag: PT-COISAS160-CIENTISTA
 prerequisites: [PT-C159-ator, PT-C160-contabilista]
 sounds: []
-roots: []
+roots: [scientia-latin]
+etymology_hook: "cientista ← English scientist, built on Latin scientia 'knowledge'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C160-contabilista]
 <!-- hl-knowledge: introduces=[PT-LEX-C160-COISAS160-02]; assesses=[] -->
 
 **o cientista** — "a scientist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cientista** ← English *scientist* (EtymDB 2.1) — borrowed. The English word is built on Latin *scientia*, "knowledge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

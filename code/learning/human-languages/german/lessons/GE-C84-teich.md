@@ -13,7 +13,8 @@ gloss: "a pond"
 concept_tag: GE-NATUR3-TEICH
 prerequisites: [GE-C84-wolke, GE-C84-regen]
 sounds: []
-roots: []
+roots: [germanic-dikaz]
+etymology_hook: "Teich ← Old High German tīh ← Proto-Germanic *dīkaz 'pool' — English ditch and dike are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C84-regen]
 <!-- hl-knowledge: introduces=[GE-LEX-C84-NATUR3-04]; assesses=[] -->
 
 **der Teich** — "a pond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Teich** ← Old High German *tīh* ← Proto-Germanic *\*dīkaz*, "pool" — inherited. (EtymDB 2.1) English *ditch* and *dike*, a dug channel and its bank, are cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

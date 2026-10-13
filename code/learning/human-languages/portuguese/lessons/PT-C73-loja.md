@@ -14,6 +14,7 @@ concept_tag: PT-CIDADE1-LOJA
 prerequisites: [PT-C73-cidade, PT-C73-rua]
 sounds: []
 roots: []
+etymology_hook: "loja ← French loge 'lodge, booth', from Frankish — English lodge and lobby share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C73-rua]
 <!-- hl-knowledge: introduces=[PT-LEX-C73-CIDADE1-03]; assesses=[] -->
 
 **a loja** — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loja** ← French *loge*, "lodge, booth" (EtymDB 2.1) — borrowed. The French word is Frankish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

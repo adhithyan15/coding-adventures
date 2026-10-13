@@ -13,7 +13,8 @@ gloss: "a toothbrush"
 concept_tag: GE-HAUS114-ZAHNBUERSTE
 prerequisites: [GE-C114-handtuch, GE-C114-seife]
 sounds: []
-roots: []
+roots: [germanic-tanths]
+etymology_hook: "Zahnbürste — Zahn 'tooth' + the word for 'brush': a toothbrush"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C114-seife]
 <!-- hl-knowledge: introduces=[GE-LEX-C114-HAUS114-04]; assesses=[] -->
 
 **die Zahnbürste** — "a toothbrush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zahnbürste** is *Zahn*, "tooth", + the word for "brush". *Zahn* ← Proto-Germanic *\*tanþs*, English *tooth*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

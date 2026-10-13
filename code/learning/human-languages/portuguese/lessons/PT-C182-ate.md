@@ -13,7 +13,8 @@ gloss: "until, as far as"
 concept_tag: PT-TEMPO182-ATE
 prerequisites: [PT-C181-tedio, PT-C182-de-repente]
 sounds: []
-roots: []
+roots: [hatta-arabic]
+etymology_hook: "até — usually traced to Arabic ḥattā 'until'; some prefer Latin ad tenus; Spanish hasta is its twin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C182-de-repente]
 <!-- hl-knowledge: introduces=[PT-LEX-C182-TEMPO182-02]; assesses=[] -->
 
 **até** — "until, as far as".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**até** is usually traced to Arabic *ḥattā*, "until"; some prefer Latin *ad tenus*, "as far as". Spanish *hasta* is its twin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

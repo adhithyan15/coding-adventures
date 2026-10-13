@@ -13,7 +13,8 @@ gloss: "a ship"
 concept_tag: PT-VIAGEM92-NAVIO
 prerequisites: [PT-C91-bicicleta, PT-C92-mota]
 sounds: []
-roots: []
+roots: [navigare-latin]
+etymology_hook: "navio ← Latin navigium 'vessel', from navigare 'to sail' — English navy shares its root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C92-mota]
 <!-- hl-knowledge: introduces=[PT-LEX-C92-VIAGEM92-02]; assesses=[] -->
 
 **o navio** — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**navio** ← Latin *navigium*, "vessel" (EtymDB 2.1), from *navigare*, "to sail" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

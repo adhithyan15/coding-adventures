@@ -14,6 +14,7 @@ concept_tag: GE-WELT-JACKE
 prerequisites: [GE-C99-socke, GE-C100-guertel]
 sounds: []
 roots: []
+etymology_hook: "Jacke ← Old French jaque 'a short coat' — borrowed, like English jacket"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C100-guertel]
 <!-- hl-knowledge: introduces=[GE-LEX-C100-WELT-02]; assesses=[] -->
 
 **die Jacke** — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Jacke** ← Old French *jaque*, "a short padded coat" (EtymDB 2.1) — borrowed. English *jacket* is a diminutive of the same French word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-VERB-COMINCIARE
 prerequisites: [IT-C132-ottanta, IT-C132-novanta]
 sounds: []
 roots: []
+etymology_hook: "cominciare ← Vulgar Latin cominitiare, com- + initiare 'to begin' — English commence"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C132-novanta]
 <!-- hl-knowledge: introduces=[IT-LEX-C133-VERBI133-01]; assesses=[] -->
 
 **cominciare** — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cominciare** ← Vulgar Latin *cominitiare* — inherited. (EtymDB 2.1) It is *com-* plus Latin *initiare*, "to begin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

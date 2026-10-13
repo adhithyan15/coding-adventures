@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 125,
-  "sourceHash": "fnv1a64:badcc5aadd8bebb3",
+  "sourceHash": "fnv1a64:7be09db65ab52e8f",
   "lessonIds": [
     "PT-C125-pronto",
     "PT-C125-seguro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch125.txt",
   "json": "portuguese/narration/ch125.json",
-  "textHash": "fnv1a64:872798dc15f266b8",
-  "jsonHash": "fnv1a64:6b2a077afc57cad5",
+  "textHash": "fnv1a64:783e6adfbbc654d5",
+  "jsonHash": "fnv1a64:18463943123896e2",
   "findings": []
 }

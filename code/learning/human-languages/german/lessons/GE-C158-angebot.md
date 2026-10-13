@@ -14,6 +14,7 @@ concept_tag: GE-THING158-ANGEBOT
 prerequisites: [GE-C157-kreditkarte, GE-C157-preis]
 sounds: []
 roots: []
+etymology_hook: "Angebot — the noun of a verb 'to offer': an- + a verb 'to offer, to bid', kin to English bid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C157-preis]
 <!-- hl-knowledge: introduces=[GE-LEX-C158-THING158-01]; assesses=[] -->
 
 **das Angebot** — "an offer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Angebot** is the noun of the verb "to offer": *an-* + a verb meaning "to offer, to bid", which EtymDB 2.1 lists beside English *bid* and Dutch *bieden*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

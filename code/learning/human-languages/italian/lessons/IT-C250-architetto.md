@@ -13,7 +13,8 @@ gloss: "an architect"
 concept_tag: IT-COSE250-ARCHITETTO
 prerequisites: [IT-C249-pubblicita, IT-C250-giornalista]
 sounds: []
-roots: []
+roots: [architectus-latin]
+etymology_hook: "architetto ← Latin architectus, Greek architekton 'master builder' — English architect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C250-giornalista]
 <!-- hl-knowledge: introduces=[IT-LEX-C250-COSE250-02]; assesses=[] -->
 
 **l'architetto** — "an architect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**architetto** ← Latin *architectus*, from Greek *architekton*, "a master builder" — a learned borrowing. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

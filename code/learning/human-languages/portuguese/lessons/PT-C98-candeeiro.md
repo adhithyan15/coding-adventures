@@ -13,7 +13,8 @@ gloss: "a lamp"
 concept_tag: PT-CASA98-CANDEEIRO
 prerequisites: [PT-C98-cola, PT-C98-tesoura]
 sounds: []
-roots: []
+roots: [candela-latin]
+etymology_hook: "candeeiro — built from an old lamp word, which ← Latin candela 'candle' — English candle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C98-tesoura]
 <!-- hl-knowledge: introduces=[PT-LEX-C98-CASA98-04]; assesses=[] -->
 
 **o candeeiro** — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**candeeiro** is built from an old word for a lamp and *-eiro*. That word ← Latin *candela*, "candle" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

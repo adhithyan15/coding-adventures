@@ -13,7 +13,8 @@ gloss: "a bakery"
 concept_tag: PT-LUGARES90-PADARIA
 prerequisites: [PT-C90-quiosque, PT-C90-pastelaria]
 sounds: []
-roots: []
+roots: [panis-latin]
+etymology_hook: "padaria — built from the baker word + -aria 'shop'; like pão, it goes back to Latin panis 'bread'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C90-pastelaria]
 <!-- hl-knowledge: introduces=[PT-LEX-C90-LUGARES90-04]; assesses=[] -->
 
 **a padaria** — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**padaria** is built from the word for a baker and *-aria*, "shop". Like *pão*, it goes back to Latin *panis*, "bread" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

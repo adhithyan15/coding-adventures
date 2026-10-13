@@ -13,7 +13,8 @@ gloss: "a thread, a wire"
 concept_tag: PT-COISAS165-FIO
 prerequisites: [PT-C165-tijolo, PT-C165-saco]
 sounds: []
-roots: []
+roots: [filum-latin]
+etymology_hook: "fio ← Latin filum 'thread': the -l- fell out — English filament shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C165-saco]
 <!-- hl-knowledge: introduces=[PT-LEX-C165-COISAS165-05]; assesses=[] -->
 
 **o fio** — "a thread, a wire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fio** ← Latin *filum*, "thread" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

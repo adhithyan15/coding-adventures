@@ -13,7 +13,8 @@ gloss: "to bring"
 concept_tag: GE-VERB-BRINGEN
 prerequisites: [GE-C66-reisen, GE-C66-zeigen]
 sounds: []
-roots: []
+roots: [germanic-bringana]
+etymology_hook: "bringen ← Old High German bringan ← Proto-Germanic *bringaną — the same verb as English bring"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C66-zeigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C66-VERBEN3-04]; assesses=[] -->
 
 **bringen** — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bringen** ← Old High German *bringan* ← Proto-Germanic *\*bringaną* — inherited, the same verb as English *bring*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

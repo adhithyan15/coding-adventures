@@ -13,7 +13,8 @@ gloss: "although"
 concept_tag: PT-PORQUE152-EMBORA
 prerequisites: [PT-C152-portanto, PT-C152-de-qualquer-maneira]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "embora — fused from em boa hora 'in a good hour'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C152-de-qualquer-maneira]
 <!-- hl-knowledge: introduces=[PT-LEX-C152-PORQUE152-03]; assesses=[] -->
 
 **embora** — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**embora** is fused from *em boa hora*, "in a good hour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

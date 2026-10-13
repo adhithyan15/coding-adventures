@@ -13,7 +13,8 @@ gloss: "a newspaper"
 concept_tag: IT-LAV232-GIORNALE
 prerequisites: [IT-C232-numero, IT-C232-foglio]
 sounds: []
-roots: []
+roots: [diurnum]
+etymology_hook: "giornale ← Latin diurnalis 'daily', from diurnus — English journal is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C232-foglio]
 <!-- hl-knowledge: introduces=[IT-LEX-C232-LAV232-03]; assesses=[] -->
 
 **il giornale** — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giornale** ← Latin *diurnalis*, "daily", from *diurnus*, "of the day" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

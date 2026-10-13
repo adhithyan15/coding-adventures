@@ -13,7 +13,8 @@ gloss: "to get angry"
 concept_tag: IT-VERB-ARRABBIARSI
 prerequisites: [IT-C143-scusarsi, IT-C143-perdonare]
 sounds: []
-roots: []
+roots: [rabies-latin]
+etymology_hook: "arrabbiarsi — built on rabbia 'anger' ← Vulgar Latin rabia, + -si 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C143-perdonare]
 <!-- hl-knowledge: introduces=[IT-LEX-C144-VERBI144-01]; assesses=[] -->
 
 **arrabbiarsi** — "to get angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arrabbiarsi** — built on *rabbia*, "anger", with *-si*, "oneself": to fly into a rage. *rabbia* ← Vulgar Latin *rabia*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

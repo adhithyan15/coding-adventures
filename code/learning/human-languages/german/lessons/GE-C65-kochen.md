@@ -13,7 +13,8 @@ gloss: "to cook"
 concept_tag: GE-VERB-KOCHEN
 prerequisites: [GE-C65-warten, GE-C65-bezahlen]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "kochen ← Old High German kohhōn ← Latin coquere 'to cook' — borrowed, as English cook was"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C65-bezahlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C65-VERBEN2-03]; assesses=[] -->
 
 **kochen** — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kochen** ← Old High German *kohhōn* ← Latin *coquere*, "to cook" (EtymDB 2.1) — borrowed from Roman kitchens, as English *cook* was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

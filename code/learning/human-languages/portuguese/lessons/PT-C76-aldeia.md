@@ -14,6 +14,7 @@ concept_tag: PT-CIDADE4-ALDEIA
 prerequisites: [PT-C75-hotel, PT-C75-farmacia]
 sounds: []
 roots: []
+etymology_hook: "aldeia ← Arabic aḍ-ḍayʿa 'the farm, the village': al- is Arabic 'the'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C75-farmacia]
 <!-- hl-knowledge: introduces=[PT-LEX-C76-CIDADE4-01]; assesses=[] -->
 
 **a aldeia** — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aldeia** ← Arabic *aḍ-ḍayʿa*, "the farm, the village" (EtymDB 2.1) — borrowed. The *al-* is the Arabic word for "the".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

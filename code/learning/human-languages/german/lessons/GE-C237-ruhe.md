@@ -13,7 +13,8 @@ gloss: "quiet, calm"
 concept_tag: GE-THING237-RUHE
 prerequisites: [GE-C236-religion, GE-C237-rolle]
 sounds: []
-roots: []
+roots: [germanic-rowo]
+etymology_hook: "Ruhe ← Old High German ruowa 'rest' — inherited; Old English rōw was the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C237-rolle]
 <!-- hl-knowledge: introduces=[GE-LEX-C237-THING237-02]; assesses=[] -->
 
 **die Ruhe** — "quiet, calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ruhe** ← Middle High German *ruowe* ← Old High German *ruowa*, "peace, rest" ← Proto-Germanic *\*rōwō* — inherited; Old English *rōw* was the same word. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

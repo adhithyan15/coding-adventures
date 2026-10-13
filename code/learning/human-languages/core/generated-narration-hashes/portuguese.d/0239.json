@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 239,
-  "sourceHash": "fnv1a64:7b6855deaf37a5fe",
+  "sourceHash": "fnv1a64:f713a373c62050f3",
   "lessonIds": [
     "PT-C239-engordar",
     "PT-C239-emagrecer",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch239.txt",
   "json": "portuguese/narration/ch239.json",
-  "textHash": "fnv1a64:4e40cd34722e4cf8",
-  "jsonHash": "fnv1a64:441a8d466a097013",
+  "textHash": "fnv1a64:fb1694473594fd6b",
+  "jsonHash": "fnv1a64:93a320232ceffec6",
   "findings": []
 }

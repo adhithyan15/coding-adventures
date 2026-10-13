@@ -13,7 +13,8 @@ gloss: "a job, a position"
 concept_tag: GE-THING154-STELLE
 prerequisites: [GE-C154-kollegin, GE-C154-kollege]
 sounds: []
-roots: []
+roots: [germanic-stallijana]
+etymology_hook: "Stelle — 'a place', the noun beside stellen 'to put': a job is a position"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C154-kollege]
 <!-- hl-knowledge: introduces=[GE-LEX-C154-THING154-05]; assesses=[] -->
 
 **die Stelle** — "a job, a position".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Stelle**, "a place", is the noun beside *stellen*, "to put" ← Proto-Germanic *\*stallijaną* (EtymDB 2.1). A job is a place you are put in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
