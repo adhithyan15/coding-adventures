@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:f7fdefd877066c44",
+  "lessonIds": [
+    "PA-R174-form-card-cue-again"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch174.txt",
+  "json": "punjabi/narration/ch174.json",
+  "textHash": "fnv1a64:fcdffaa4707f0a18",
+  "jsonHash": "fnv1a64:89f69622e862b01f",
+  "findings": []
+}
