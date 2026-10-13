@@ -29,8 +29,40 @@ const ownerDirectory = resolve(packageRoot, "docs/feature-contracts");
 const packageReadme = resolve(packageRoot, "README.md");
 const strictOwnerName = /^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
 const reservedOwnerNames = new Set(["index.md", "manifest.md", "readme.md"]);
-const h1Opener = /^ {0,3}#(?!#)(?:[\t ]+|$)/gm;
 const openingH1 = /^ {0,3}#(?!#)[\t ]+\S.*(?:\n|$)/;
+
+const markdownStructure = (source: string): { balancedFences: boolean; h1s: number } => {
+  let fence: { character: "`" | "~"; length: number } | undefined;
+  let h1s = 0;
+
+  for (const line of source.split(/\r?\n/)) {
+    if (fence !== undefined) {
+      const close = line.match(/^ {0,3}(`+|~+)[\t ]*$/);
+      if (
+        close !== null &&
+        close[1]![0] === fence.character &&
+        close[1]!.length >= fence.length
+      ) {
+        fence = undefined;
+      }
+      continue;
+    }
+
+    const open = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+    if (open !== null) {
+      const marker = open[1]!;
+      const character = marker[0] as "`" | "~";
+      if (character === "~" || !open[2]!.includes("`")) {
+        fence = { character, length: marker.length };
+        continue;
+      }
+    }
+
+    if (/^ {0,3}#(?!#)(?:[\t ]+|$)/.test(line)) h1s += 1;
+  }
+
+  return { balancedFences: fence === undefined, h1s };
+};
 
 const discoverOwners = (directory: string): string[] => {
   const rootStat = lstatSync(directory);
@@ -61,10 +93,11 @@ const discoverOwners = (directory: string): string[] => {
 
       const source = readFileSync(path, "utf8");
       expect(source, `${name} starts with one level-1 heading`).toMatch(openingH1);
-      expect(
-        source.match(h1Opener),
-        `${name} has exactly one CommonMark level-1 heading`,
-      ).toHaveLength(1);
+      const structure = markdownStructure(source);
+      expect(structure.balancedFences, `${name} has balanced fenced code blocks`).toBe(
+        true,
+      );
+      expect(structure.h1s, `${name} has exactly one CommonMark level-1 heading`).toBe(1);
       return name;
     })
     .sort();
@@ -175,7 +208,7 @@ describe("Human Language Data feature-document ownership", () => {
     }
   });
 
-  it("rejects a missing or duplicate CommonMark level-1 heading", () => {
+  it("parses fenced examples and rejects malformed Markdown structure", () => {
     const root = mkdtempSync(resolve(tmpdir(), "human-language-feature-heading-"));
     try {
       writeFileSync(resolve(root, "missing.md"), "## Missing H1\n");
@@ -184,6 +217,17 @@ describe("Human Language Data feature-document ownership", () => {
 
       writeFileSync(resolve(root, "duplicate.md"), "# First #\n\n# Second\n");
       expect(() => discoverOwners(root)).toThrow();
+      unlinkSync(resolve(root, "duplicate.md"));
+
+      writeFileSync(
+        resolve(root, "balanced.md"),
+        "# Owner\n\n```markdown\n# Example, not an owner\n```\n",
+      );
+      expect(discoverOwners(root)).toEqual(["balanced.md"]);
+      unlinkSync(resolve(root, "balanced.md"));
+
+      writeFileSync(resolve(root, "unbalanced.md"), "# Owner\n\n```markdown\n# Example\n");
+      expect(() => discoverOwners(root)).toThrow(/balanced fenced code blocks/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
